@@ -24,7 +24,8 @@ namespace RetroDevStudio
       InitializeComponent();
 
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "Auto", RetroDevStudio.Types.AssemblerType.AUTO ) );
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64Studio/ACME", RetroDevStudio.Types.AssemblerType.C64_STUDIO ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64Studio", RetroDevStudio.Types.AssemblerType.C64_STUDIO ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "ACME", RetroDevStudio.Types.AssemblerType.ACME ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "PDS", RetroDevStudio.Types.AssemblerType.PDS ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "DASM", RetroDevStudio.Types.AssemblerType.DASM ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64ASM", RetroDevStudio.Types.AssemblerType.C64ASM ) );

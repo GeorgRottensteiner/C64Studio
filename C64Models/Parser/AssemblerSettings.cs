@@ -206,6 +206,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!TO", Types.MacroInfo.PseudoOpType.COMPILE_TARGET );
           AddPseudoOp( "!ZONE", Types.MacroInfo.PseudoOpType.ZONE );
           AddPseudoOp( "!ZN", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!LZONE", Types.MacroInfo.PseudoOpType.LZONE );
           AddPseudoOp( "!ERROR", Types.MacroInfo.PseudoOpType.ERROR );
           AddPseudoOp( "!SERIOUS", Types.MacroInfo.PseudoOpType.ERROR );
           AddPseudoOp( "!WARN", Types.MacroInfo.PseudoOpType.WARN );
@@ -232,6 +233,108 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!CPU", Types.MacroInfo.PseudoOpType.CPU );
           AddPseudoOp( "!SET", Types.MacroInfo.PseudoOpType.SET );
           AddPseudoOp( "!LIST", Types.MacroInfo.PseudoOpType.PREPROCESSED_LIST );
+
+          // helper pseudo ops from ACME to generate some address vs. value warnings
+          //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );
+          //AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.IGNORE );
+
+          POPrefix = "!";
+          MacroFunctionCallPrefix.Add( "+" );
+          GlobalLabelsAutoZone = false;
+          DefineSeparatorKeywords.Add( "=" );
+          IncludeExpectsStringLiteral = true;
+          StatementSeparatorChars.Add( ':' );
+          break;
+        case Types.AssemblerType.ACME:
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
+
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE + SQUARE_BRACKETS_OPEN;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE + SQUARE_BRACKETS_CLOSE;
+
+          LineSeparatorChars = ":";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "#";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "#";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEFx";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
+
+          AllowedSingleTokens = ",#{}*?" + OpenBracketChars + CloseBracketChars;
+
+          AddPseudoOp( "!ADDR", Types.MacroInfo.PseudoOpType.ADDRESS );
+          AddPseudoOp( "!ADDRESS", Types.MacroInfo.PseudoOpType.ADDRESS );
+          AddPseudoOp( "!BYTE", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!BY", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!BASIC", Types.MacroInfo.PseudoOpType.BASIC );
+          AddPseudoOp( "!8", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!08", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!WORD", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!WO", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!16", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!LE16", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!BE16", Types.MacroInfo.PseudoOpType.WORD_BE );
+          AddPseudoOp( "!DWORD", Types.MacroInfo.PseudoOpType.DWORD );
+          AddPseudoOp( "!32", Types.MacroInfo.PseudoOpType.DWORD );
+          AddPseudoOp( "!LE32", Types.MacroInfo.PseudoOpType.DWORD );
+          AddPseudoOp( "!BE32", Types.MacroInfo.PseudoOpType.DWORD_BE );
+          AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          AddPseudoOp( "!PET", Types.MacroInfo.PseudoOpType.TEXT_PET );
+          AddPseudoOp( "!RAW", Types.MacroInfo.PseudoOpType.TEXT_RAW );
+          AddPseudoOp( "!PSEUDOPC", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
+          AddPseudoOp( "!REALPC", Types.MacroInfo.PseudoOpType.REAL_PC );
+          AddPseudoOp( "!CONVTAB", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "!CT", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "!BINARY", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "!BIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "!BI", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "!SOURCE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "!SRC", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "!TO", Types.MacroInfo.PseudoOpType.COMPILE_TARGET );
+          AddPseudoOp( "!ZONE", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!ZN", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!ERROR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "!SERIOUS", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "!WARN", Types.MacroInfo.PseudoOpType.WARN );
+          AddPseudoOp( "!MESSAGE", Types.MacroInfo.PseudoOpType.MESSAGE );
+          AddPseudoOp( "!IFDEF", Types.MacroInfo.PseudoOpType.IFDEF );
+          AddPseudoOp( "!IFNDEF", Types.MacroInfo.PseudoOpType.IFNDEF );
+          AddPseudoOp( "!IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "!FILL", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "!FI", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "!ALIGN", Types.MacroInfo.PseudoOpType.ALIGN );
+          AddPseudoOp( "!REALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
+          AddPseudoOp( "!ENDOFFILE", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+          AddPseudoOp( "!EOF", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+          AddPseudoOp( "!NOWARN", Types.MacroInfo.PseudoOpType.NO_WARNING );
+          AddPseudoOp( "!FOR", Types.MacroInfo.PseudoOpType.FOR );
+          AddPseudoOp( "!END", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( "!MACRO", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "!HEX", Types.MacroInfo.PseudoOpType.HEX );
+          AddPseudoOp( "!H", Types.MacroInfo.PseudoOpType.HEX );
+          AddPseudoOp( "!SL", Types.MacroInfo.PseudoOpType.LABEL_FILE );
+          AddPseudoOp( "!CPU", Types.MacroInfo.PseudoOpType.CPU );
+          AddPseudoOp( "!SET", Types.MacroInfo.PseudoOpType.SET );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );

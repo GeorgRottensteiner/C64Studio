@@ -9527,7 +9527,11 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ZONE )
             {
-              POZone( stackScopes, lineIndex, info, lineTokenInfos );
+              POZone( stackScopes, lineIndex, info, lineTokenInfos, false );
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LZONE )
+            {
+              POZone( stackScopes, lineIndex, info, lineTokenInfos, true );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BANK )
             {
@@ -10501,7 +10505,11 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.ZONE )
           {
-            POZone( stackScopes, lineIndex, info, lineTokenInfos );
+            POZone( stackScopes, lineIndex, info, lineTokenInfos, false );
+          }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.LZONE )
+          {
+            POZone( stackScopes, lineIndex, info, lineTokenInfos, true );
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.MESSAGE )
           {
@@ -10823,7 +10831,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void POZone( List<ScopeInfo> stackScopes, int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos )
+    private void POZone( List<ScopeInfo> stackScopes, int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos, bool AutoGlobalLabel )
     {
       if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
       {
@@ -10862,6 +10870,10 @@ namespace RetroDevStudio.Parser
         info.Zone = m_CurrentZoneName;
 
         AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
+        if ( AutoGlobalLabel )
+        {
+          AddLabel( m_CurrentZoneName, m_CompileCurrentAddress, lineIndex, m_CurrentZoneName, zoneToken.StartPos, zoneToken.Length );
+        }
       }
     }
 

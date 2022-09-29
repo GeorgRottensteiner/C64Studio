@@ -31,6 +31,7 @@
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
       <li><a href="#list">!LIST</a></li>
+      <li><a href="#lzone">!LZONE</a></li>
       <li><a href="#macro">!MACRO</a></li>
       <li><a href="#media">!MEDIA</a></li>
       <li><a href="#mediasrc">!MEDIASRC</a></li>
@@ -448,6 +449,21 @@
     <br>
     <div id="code"><br>      !list off
     <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="lzone"></a>
+  <H2>!LZONE &lt;zone/label name&gt;</H2>
+  <div id="mybody">
+    This pseudo op declares a new zone plus a global label with the same name. Any local labels (labels starting with '.') are only accessible inside their containing zone.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !lzone MainZone
+      .locallabel
+      ...
+      !zone SubZone
+      .locallabel
+      <br></div>
     <br>
     <br>
   </div>

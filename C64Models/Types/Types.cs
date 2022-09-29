@@ -19,7 +19,8 @@ namespace RetroDevStudio.Types
     C64ASM,
     CBMPRGSTUDIO,
     TASM,
-    KICKASSEMBLER
+    KICKASSEMBLER,
+    ACME
   };
 
   public class MacroInfo
@@ -81,7 +82,8 @@ namespace RetroDevStudio.Types
       ADD_INCLUDE_SOURCE,   // DASM: Add directory to source code paths (custom library paths)
       CPU,                  // Set the procesor type
       PREPROCESSED_LIST,    // en/disable output for precompiled file
-      BREAK_POINT           // KickAssembler : include breakpoint
+      BREAK_POINT,          // KickAssembler : include breakpoint
+      LZONE                 // lzone
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;

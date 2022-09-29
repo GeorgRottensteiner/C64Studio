@@ -660,10 +660,10 @@ namespace RetroDevStudio.Documents
       }
       if ( exportToBasicPossible )
       {
-        item.DropDownItems.Add( "--" );
+        item.DropDownItems.Add( new ToolStripSeparator() );
         foreach ( var dialect in Core.Compiling.BASICDialects )
         {
-          subItem = new System.Windows.Forms.ToolStripMenuItem( "Export to Basic code: " + dialect.Key );
+          subItem = new System.Windows.Forms.ToolStripMenuItem( "Export to: " + dialect.Key );
           subItem.Tag = dialect.Value;
           subItem.Click += new EventHandler( itemExportToBasic_Click );
           item.DropDownItems.Add( subItem );
@@ -1065,7 +1065,18 @@ namespace RetroDevStudio.Documents
             break;
           }
         }
+        toolStripBtnOpenBASIC.DropDownItems.Clear();
         toolStripBtnOpenBASIC.Enabled = exportToBasicPossible;
+        if ( exportToBasicPossible )
+        {
+          foreach ( var dialect in Core.Compiling.BASICDialects )
+          {
+            var subItem = new System.Windows.Forms.ToolStripMenuItem( "Export with " + dialect.Key );
+            subItem.Tag = dialect.Value;
+            subItem.Click += new EventHandler( itemExportToBasic_Click );
+            toolStripBtnOpenBASIC.DropDownItems.Add( subItem );
+          }
+        }
       }
 
       if ( ( listFiles.Items.Count <= 1 )
@@ -1163,13 +1174,6 @@ namespace RetroDevStudio.Documents
     private void toolStripBtnOpenHex_Click( object sender, EventArgs e )
     {
       OpenSelectedItemsInHexEditor();
-    }
-
-
-
-    private void toolStripBtnOpenBASIC_Click( object sender, EventArgs e )
-    {
-      ExportSelectedItemsToBASIC( C64Models.BASIC.Dialect.BASICV2 );
     }
 
 

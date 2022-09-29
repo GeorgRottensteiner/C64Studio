@@ -65,7 +65,7 @@
       this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnExportToFile = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
-      this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripSplitButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
       this.importDirArtFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
@@ -412,7 +412,6 @@
       this.toolStripBtnOpenBASIC.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnOpenBASIC.Text = "toolStripButton1";
       this.toolStripBtnOpenBASIC.ToolTipText = "Open in BASIC editor";
-      this.toolStripBtnOpenBASIC.Click += new System.EventHandler(this.toolStripBtnOpenBASIC_Click);
       // 
       // labelMediaTitle
       // 
@@ -487,7 +486,7 @@
     private System.Windows.Forms.ToolStripMenuItem d64With40TracksToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     private System.Windows.Forms.ToolStripButton toolStripBtnOpenHex;
-    private System.Windows.Forms.ToolStripButton toolStripBtnOpenBASIC;
+    private System.Windows.Forms.ToolStripSplitButton toolStripBtnOpenBASIC;
     private System.Windows.Forms.ToolStripButton toolStripBtnExportToFile;
     private System.Windows.Forms.ToolStripButton toolStripBtnImportFile;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
