@@ -717,11 +717,21 @@ namespace RetroDevStudio.Documents
           {
             cutOffPos += 5;
           }
-          int     commaPos = firstLine.IndexOf( ',', cutOffPos );
-          if ( commaPos != -1 )
+          var  metaParams = firstLine.Substring( cutOffPos ).Split( ',' );
+          if ( metaParams.Length >= 1 )
           {
-            m_StartAddress      = firstLine.Substring( cutOffPos, commaPos - cutOffPos );
-            m_BASICDialectName = firstLine.Substring( commaPos + 1 );
+            m_StartAddress = metaParams[0];
+          }
+          if ( metaParams.Length >= 2 )
+          {
+            m_BASICDialectName = metaParams[0];
+          }
+          if ( metaParams.Length >= 3 )
+          {
+            if ( metaParams[2].ToUpper() == "LOWERCASE" )
+            {
+              m_LowerCaseMode = true;
+            }
           }
         }
 
@@ -770,6 +780,11 @@ namespace RetroDevStudio.Documents
         m_LabelMode = IsInLabelMode( basicText );
         m_InsideLoad = true;
         btnToggleLabelMode.Checked = m_LabelMode;
+
+        if ( m_LowerCaseMode )
+        {
+          basicText = MakeLowerCase( basicText, Core.Settings.BASICUseNonC64Font );
+        }
 
         editSource.Text = basicText;
         editSource.ClearUndo();
@@ -870,7 +885,13 @@ namespace RetroDevStudio.Documents
         string    content = GetContent();
 
         // add "meta data" in front
-        string metaData = "#RetroDevStudio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName + "\r\n";
+        string metaData = "#RetroDevStudio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName;
+        if ( m_LowerCaseMode )
+        {
+          metaData += ",lowercase";
+        }
+        metaData += "\r\n";
+
 
         System.IO.File.WriteAllText( FullPath, metaData + content );
       }
