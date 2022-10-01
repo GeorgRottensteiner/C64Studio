@@ -8,9 +8,11 @@
 #
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
 
 StartAddress=2049
 SafeLineLength=80
+HasTextLabels
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;eN
@@ -136,9 +138,9 @@ USE;642c;
 GLOBAL;642e;
 
 RESET;6430;
-PROC;6431;
-CALL;6432;
-EXEC;6433;
+PROC;6431;;prelabeltoken
+CALL;6432;;prelabeltoken
+EXEC;6433;;prelabeltoken
 END PROC;6434;
 EXIT;6435;
 END LOOP;6436;

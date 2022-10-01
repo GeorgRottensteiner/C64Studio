@@ -116,6 +116,11 @@ namespace RetroDevStudio
             dialect.HexPrefix = line.Substring( 10 );
             continue;
           }
+          else if ( line == "HasTextLabels" )
+          {
+            dialect.HasTextLabels = true;
+            continue;
+          }
 
           // skip header
           if ( firstLine )
@@ -155,6 +160,10 @@ namespace RetroDevStudio
                 if ( string.Compare( extraInfo[i], "COMMENT", true ) == 0 )
                 {
                   opCode.IsComment = true;
+                }
+                if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
+                {
+                  opCode.IsPreLabelToken = true;
                 }
               }
             }

@@ -7,11 +7,13 @@
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
 #OptionalInfo = a list of strings (comment means the rest of the line is a comment)
 #
-#StartAddress=xxxx  = sets the default BASIC start address
-#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#StartAddress=xxxx      = sets the default BASIC start address
+#SafeLineLength=xxxx    = sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
 
 StartAddress=2049
 SafeLineLength=80
+HasTextLabels
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;
@@ -140,9 +142,9 @@ USE;642c;uS
 GLOBAL;642e;gL
 
 RESET;6430;reS
-PROC;6431;pR
-CALL;6432;cA
-EXEC;6433;eX
+PROC;6431;pR;prelabeltoken
+CALL;6432;cA;prelabeltoken
+EXEC;6433;eX;prelabeltoken
 END PROC;6434;enD
 EXIT;6435;exI
 END LOOP;6436;end L

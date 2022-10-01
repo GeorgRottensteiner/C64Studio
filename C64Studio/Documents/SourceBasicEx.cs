@@ -106,7 +106,7 @@ namespace RetroDevStudio.Documents
       {
         comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, Dialect>( dialect.Key, dialect.Value ) );
       }
-      editSource.SyntaxHighlighter = new BASICSyntaxHighlighter();
+      editSource.SyntaxHighlighter = new BASICSyntaxHighlighter( this );
       comboBASICVersion.SelectedIndex = 0;
 
       btnToggleSymbolMode.Checked = Core.Settings.BASICShowControlCodesAsChars;
@@ -724,7 +724,7 @@ namespace RetroDevStudio.Documents
           }
           if ( metaParams.Length >= 2 )
           {
-            m_BASICDialectName = metaParams[0];
+            m_BASICDialectName = metaParams[1];
           }
           if ( metaParams.Length >= 3 )
           {

@@ -7,6 +7,8 @@ using RetroDevStudio.Parser;
 using GR.Memory;
 using RetroDevStudio;
 using System.Linq;
+using RetroDevStudio.Types;
+using static RetroDevStudio.Parser.BasicFileParser;
 
 namespace RetroDevStudio.Parser
 {
@@ -115,7 +117,8 @@ namespace RetroDevStudio.Parser
         MACRO,
         COMMENT,
         VARIABLE,
-        HARD_COMMENT
+        HARD_COMMENT,
+        TEXT_LABEL
       };
 
       public Type       TokenType = Type.DIRECT_TOKEN;
@@ -589,6 +592,30 @@ namespace RetroDevStudio.Parser
 
 
 
+    private string TokensToExpression( List<Token> Tokens, int StartIndex, int Count )
+    {
+      var sb = new StringBuilder();
+
+      for ( int i = 0; i < Count; ++i )
+      {
+        sb.Append( Tokens[StartIndex + i].Content );
+
+        if ( ( i + 1 < Count )
+        &&   ( Tokens[StartIndex + i].StartIndex + Tokens[StartIndex + i].Content.Length < Tokens[StartIndex + i + 1].StartIndex ) )
+        {
+          // requires spaces
+          int numSpaces = Tokens[StartIndex + i + 1].StartIndex - ( Tokens[StartIndex + i].StartIndex + Tokens[StartIndex + i].Content.Length );
+          for ( int j = 0; j < numSpaces; ++j )
+          {
+            sb.Append( ' ' );
+          }
+        }
+      }
+      return sb.ToString();
+    }
+
+
+
     internal LineInfo PureTokenizeLine( string Line )
     {
       var  lineInfo = new LineInfo();
@@ -787,28 +814,6 @@ namespace RetroDevStudio.Parser
             continue;
           }
         }
-        /*
-        if ( insideDataStatement )
-        {
-          // innerhalb von Data keine Token-Aufschlüsselung
-          if ( nextByte == ':' )
-          {
-            insideDataStatement = false;
-          }
-
-          AddDirectToken( info, nextByte, bytePos );
-          ++bytePos;
-          continue;
-        }
-        */
-
-        /*
-        // alternative comment char
-        if ( ( nextByte == 39 )
-        &&   ( IsLightningOrLaserBASIC() ) )
-        {
-          insideREMStatement = true;
-        }*/
 
         if ( nextByte == ' ' )
         {
@@ -825,6 +830,7 @@ namespace RetroDevStudio.Parser
         currentToken.Content = Line.Substring( tokenStartPos );
       }
 
+      // sanitize
       if ( ( lineInfo.Tokens.Count > 0 )
       &&   ( LabelMode )
       &&   ( lineInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL )
@@ -832,8 +838,71 @@ namespace RetroDevStudio.Parser
       {
         lineInfo.Tokens[0].TokenType = Token.Type.LINE_NUMBER;
       }
-      
+
+      if ( Settings.BASICDialect.HasTextLabels )
+      {
+        // variables after a token, or a separator and at the end or directly in front of an separator are labels (we hope)
+        int   startIndex = 1;
+        if ( LabelMode )
+        {
+          startIndex = 0;
+        }
+        for ( int i = startIndex; i < lineInfo.Tokens.Count; i++ )
+        {
+          // a variable
+          if ( ( lineInfo.Tokens[i].TokenType == Token.Type.VARIABLE )
+
+          // at the start of a statement (no EXEC/PROC)
+          &&   ( ( i == startIndex )
+          ||     ( ( lineInfo.Tokens[i - 1].TokenType == Token.Type.BASIC_TOKEN )
+          &&       ( IsPreLabelToken( lineInfo.Tokens[i - 1] ) ) )
+          ||     ( lineInfo.Tokens[i - 1].Content == ":" ) )
+
+          // no assignment, so probably really a label
+          && ( ( i + 1 >= lineInfo.Tokens.Count )
+          ||     ( lineInfo.Tokens[i + 1].Content != "=" ) ) )
+          {
+            // look up until next separator
+            int   lastValidTokenIndex = i;
+            bool  notALabel = false;
+
+            while ( ( lastValidTokenIndex + 1 < lineInfo.Tokens.Count )
+            &&      ( lineInfo.Tokens[lastValidTokenIndex + 1].Content != ":" ) )
+            {
+              if ( lineInfo.Tokens[lastValidTokenIndex + 1].Content == "=" )
+              {
+                // an set expression!
+                notALabel = true;
+                break;
+              }
+              ++lastValidTokenIndex;
+            }
+
+            if ( !notALabel )
+            {
+              string  fullLabel = TokensToExpression( lineInfo.Tokens, i, lastValidTokenIndex - i + 1 );
+
+              lineInfo.Tokens[i].TokenType = Token.Type.TEXT_LABEL;
+              lineInfo.Tokens[i].Content = fullLabel;
+
+              lineInfo.Tokens.RemoveRange( i + 1, lastValidTokenIndex - i );
+            }
+          }
+        }
+      }
+
       return lineInfo;
+    }
+
+
+
+    private bool IsPreLabelToken( Token Token )
+    {
+      if ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( (ushort)Token.ByteValue ) )
+      {
+        return false;
+      }
+      return Settings.BASICDialect.OpcodesFromByte[(ushort)Token.ByteValue].IsPreLabelToken;
     }
 
 
@@ -1866,6 +1935,11 @@ namespace RetroDevStudio.Parser
           continue;
         }
 
+        if ( !Settings.UpperCaseMode )
+        {
+          line = MakeUpperCase( line, !Settings.UseC64Font );
+        }
+
         var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
 
         var pureInfo = PureTokenizeLine( line );
@@ -1887,8 +1961,26 @@ namespace RetroDevStudio.Parser
         }
 
         int   tokenIndex = 0;
+        bool  insideDataStatement = false;
+        bool  insideStringLiteral = false;
         foreach ( var variable in pureInfo.Tokens )
         {
+          if ( variable.TokenType == Token.Type.BASIC_TOKEN )
+          {
+            insideDataStatement = true;
+          }
+          else if ( variable.Content == ":" )
+          {
+            if ( !insideStringLiteral )
+            {
+              insideDataStatement = false;
+            }
+          }
+          else if ( variable.Content == "\"" )
+          {
+            insideStringLiteral = !insideStringLiteral;
+          }
+
           if ( variable.TokenType == Token.Type.VARIABLE )
           {
             var     symbolType = SymbolInfo.Types.VARIABLE_NUMBER;
@@ -1945,7 +2037,8 @@ namespace RetroDevStudio.Parser
               }
             }
 
-            if ( origName != varName )
+            if ( ( origName != varName )
+            &&   ( !insideDataStatement ) )
             {
               if ( !ASMFileInfo.MappedVariables.ContainsKey( varName ) )
               {
@@ -1964,11 +2057,11 @@ namespace RetroDevStudio.Parser
                 symbolInfo.LocalLineIndex   = lineIndex;
                 symbolInfo.Type             = symbolType;
                 symbolInfo.String           = origName;
-                ASMFileInfo.Labels.Add( origName, symbolInfo );
+                //ASMFileInfo.Labels.Add( origName, symbolInfo );
 
                 if ( ASMFileInfo.MappedVariables[varName].Any() )
                 {
-                  Debug.Log( $"Duplicate shortcut variable name ({varName})" );
+                  //Debug.Log( $"Duplicate shortcut variable name ({varName})" );
                   var warning = AddWarning( lineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {origName} truncated to two characters is ambigious ({varName})",
                     variable.StartIndex, variable.Content.Length );
 
@@ -1983,7 +2076,7 @@ namespace RetroDevStudio.Parser
                   ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
                 }
               }
-              ASMFileInfo.Labels[origName].References.Add( lineIndex );
+              //ASMFileInfo.Labels[varName].References.Add( lineIndex );
             }
 
             if ( !ASMFileInfo.Labels.ContainsKey( varName ) )

@@ -1,4 +1,6 @@
 ﻿using FastColoredTextBoxNS;
+using RetroDevStudio.Documents;
+using RetroDevStudio.Parser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,16 @@ namespace RetroDevStudio.CustomRenderer
   {
     static Parser.BasicFileParser     _Parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
     static C64Models.BASIC.Dialect    _Dialect = null;
+
+
+    private SourceBasicEx             _SourceDoc = null;
+
+
+
+    public BASICSyntaxHighlighter( SourceBasicEx SourceDoc )
+    {
+      _SourceDoc = SourceDoc;
+    }
 
 
 
@@ -48,11 +60,12 @@ namespace RetroDevStudio.CustomRenderer
         {
           continue;
         }
+        if ( _SourceDoc.m_LowerCaseMode )
+        {
+          line = BasicFileParser.MakeUpperCase( line, _SourceDoc.Core.Settings.BASICUseNonC64Font );
+        }
 
         var info = _Parser.PureTokenizeLine( line );
-        /*
-        int dummyLine = -1;
-        var info = _Parser.TokenizeLine( line, -1, ref dummyLine );*/
 
         var lineRange = ChangedRange.tb.GetLine( i );
         lineRange.ClearStyle( StyleIndex.All );

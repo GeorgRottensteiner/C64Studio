@@ -13,6 +13,7 @@ namespace C64Models.BASIC
     public int            InsertionValue = -1;
     public string         ShortCut = null;
     public bool           IsComment = false;
+    public bool           IsPreLabelToken = false;
 
 
 
@@ -41,6 +42,7 @@ namespace C64Models.BASIC
     public string                           DefaultStartAddress = "2049";
     public int                              SafeLineLength = 80;
     public string                           HexPrefix = "";
+    public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
 
     public static Dialect                   BASICV2;
 
@@ -244,6 +246,10 @@ namespace C64Models.BASIC
                 if ( string.Compare( extraInfo[i], "COMMENT", true ) == 0 )
                 {
                   opCode.IsComment = true;
+                }
+                if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
+                {
+                  opCode.IsPreLabelToken = true;
                 }
               }
             }
