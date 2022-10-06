@@ -511,7 +511,8 @@ namespace RetroDevStudio
 
     internal static string DoubleToString( double Value )
     {
-      return Value.ToString( "G", System.Globalization.CultureInfo.InvariantCulture );
+      //return Value.ToString( "G", System.Globalization.CultureInfo.InvariantCulture );
+      return Value.ToString( "0." + new string( '#', 339 ) ).Replace( ",", "." );
     }
 
 

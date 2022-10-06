@@ -441,12 +441,9 @@ namespace RetroDevStudio.Documents
 
       foreach ( var entry in m_Project.ValueTable.Values )
       {
-        double    calcedValue = 0;
-        if ( double.TryParse( entry, out calcedValue ) )
-        {
-          min = Math.Min( min, calcedValue );
-          max = Math.Max( max, calcedValue );
-        }
+        var calcedValue = Util.StringToDouble( entry );
+        min = Math.Min( min, calcedValue );
+        max = Math.Max( max, calcedValue );
       }
       if ( min == max )
       {
@@ -459,12 +456,8 @@ namespace RetroDevStudio.Documents
       int   prevY = 0;
       foreach ( var entry in m_Project.ValueTable.Values )
       {
-        double    calcedValue = 0;
-        uint      color = 0xffff0000;
-        if ( double.TryParse( entry, out calcedValue ) )
-        {
-          color = 0xff000000;
-        }
+        uint      color = 0xff000000;
+        var calcedValue = Util.StringToDouble( entry );
 
         int     x1 = (int)( ( currentIndex - 1 ) * (double)pictureGraphPreview.DisplayPage.Width / ( m_Project.ValueTable.Values.Count - 1 ) );
         int     x2 = (int)( currentIndex * (double)pictureGraphPreview.DisplayPage.Width / ( m_Project.ValueTable.Values.Count - 1 ) );
@@ -547,15 +540,15 @@ namespace RetroDevStudio.Documents
         {
           if ( !firstValue )
           {
-            m_Project.ValueTable.Values.Add( ( resultValue - lastValue ).ToString() );
-            listValues.Items.Add( ( resultValue - lastValue ).ToString() );
+            m_Project.ValueTable.Values.Add( Util.DoubleToString( resultValue - lastValue ) );
+            listValues.Items.Add( Util.DoubleToString( resultValue - lastValue ) );
           }
           firstValue = false;
         }
         else
         {
-          m_Project.ValueTable.Values.Add( resultValue.ToString() );
-          listValues.Items.Add( resultValue.ToString() );
+          m_Project.ValueTable.Values.Add( Util.DoubleToString( resultValue ) );
+          listValues.Items.Add( Util.DoubleToString( resultValue ) );
         }
 
         lastValue = resultValue;
