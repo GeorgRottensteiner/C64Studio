@@ -10872,7 +10872,10 @@ namespace RetroDevStudio.Parser
         AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
         if ( AutoGlobalLabel )
         {
-          AddLabel( m_CurrentZoneName, m_CompileCurrentAddress, lineIndex, m_CurrentZoneName, zoneToken.StartPos, zoneToken.Length );
+          var label = AddLabel( m_CurrentZoneName, m_CompileCurrentAddress, lineIndex, m_CurrentZoneName, zoneToken.StartPos, zoneToken.Length );
+
+          label.Info = m_CurrentCommentSB.ToString();
+          m_CurrentCommentSB = new StringBuilder();
         }
       }
     }
