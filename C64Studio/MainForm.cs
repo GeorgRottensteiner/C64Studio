@@ -3930,7 +3930,13 @@ namespace RetroDevStudio
           {
             if ( StudioCore.Executing.RunProcess != null )
             {
-              StudioCore.Executing.RunProcess.Kill();
+              try
+              {
+                StudioCore.Executing.RunProcess.Kill();
+              }
+              catch ( Exception )
+              {
+              }
               StudioCore.Executing.RunProcess = null;
             }
 
@@ -3945,7 +3951,13 @@ namespace RetroDevStudio
           if ( StudioCore.Executing.RunProcess != null )
           {
             StudioCore.Executing.RunProcess.Exited -= runProcess_Exited;
-            StudioCore.Executing.RunProcess.Kill();
+            try
+            {
+              StudioCore.Executing.RunProcess.Kill();
+            }
+            catch ( Exception )
+            {
+            }
             StudioCore.Executing.RunProcess = null;
           }
 
