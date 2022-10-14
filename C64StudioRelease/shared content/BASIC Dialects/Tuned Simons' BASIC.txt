@@ -14,6 +14,7 @@
 StartAddress=2049
 SafeLineLength=80
 HasTextLabels
+ExtendedTokensRecognizedInsideComment
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;
@@ -224,6 +225,7 @@ ERRLN;647e;
 ERRN;647e;
 OUT;647f;oU
 CLS;64b3;cL
+@;40;
 
 #from here on it's extended opcodes, required for C64Studio extensions
 ExOpcodes

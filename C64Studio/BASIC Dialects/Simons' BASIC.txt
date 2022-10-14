@@ -13,6 +13,7 @@
 StartAddress=2049
 SafeLineLength=80
 HasTextLabels
+ExtendedTokensRecognizedInsideComment
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;eN

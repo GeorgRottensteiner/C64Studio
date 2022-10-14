@@ -192,7 +192,7 @@ namespace RetroDevStudio.Parser
       AllowedTokenChars[Token.Type.DIRECT_TOKEN] = "()+-,;:<>=!?'&/^{}";
       AllowedTokenEndChars[Token.Type.DIRECT_TOKEN] = "()+-,;:<>=!?'&/^{}";
 
-      AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@";
 
       AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*";
 
@@ -1138,6 +1138,28 @@ namespace RetroDevStudio.Parser
         {
           if ( !Settings.StripREM )
           {
+            if ( Settings.BASICDialect.ExtendedTokensRecognizedInsideComment )
+            {
+              // check for extended tokens
+              bool entryFound = DeterminePotentialTokenAtLocation( tempData, bytePos, out Opcode potentialOpcode );
+              if ( ( entryFound )
+              &&   ( potentialOpcode.InsertionValue > 255 ) )
+              {
+                // it's an extended token!
+                info.LineData.AppendU16NetworkOrder( (ushort)potentialOpcode.InsertionValue );
+
+                Token basicToken = new Token();
+                basicToken.TokenType = Token.Type.BASIC_TOKEN;
+                basicToken.ByteValue = potentialOpcode.InsertionValue;
+                basicToken.Content = potentialOpcode.Command;
+                basicToken.StartIndex = bytePos;
+                info.Tokens.Add( basicToken );
+
+                bytePos += potentialOpcode.Command.Length;
+                continue;
+              }
+            }
+
             AddDirectToken( info, nextByte, bytePos );
           }
           ++bytePos;
@@ -1700,36 +1722,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      bool entryFound = false;
-      Opcode potentialOpcode = null;
-      foreach ( var opcodeEntry in Settings.BASICDialect.Opcodes )
-      {
-        Opcode  opcode = opcodeEntry.Value;
-
-        entryFound = true;
-        for ( int i = 0; i < opcode.Command.Length; ++i )
-        {
-          if ( BytePos + i >= TempData.Length )
-          {
-            // can't be this token
-            entryFound = false;
-            break;
-          }
-          if ( TempData.ByteAt( BytePos + i ) != (byte)opcode.Command[i] )
-          {
-            entryFound = false;
-            break;
-          }
-        }
-        if ( entryFound )
-        {
-          if ( ( potentialOpcode == null )
-          ||   ( opcode.Command.Length > potentialOpcode.Command.Length ) )
-          {
-            potentialOpcode = opcode;
-          }
-        }
-      }
+      bool entryFound = DeterminePotentialTokenAtLocation( TempData, BytePos, out Opcode potentialOpcode );
       if ( potentialOpcode != null )
       {
         Token basicToken = new Token();
@@ -1821,6 +1814,44 @@ namespace RetroDevStudio.Parser
         }
       }
       return entryFound;
+    }
+
+
+
+    private bool DeterminePotentialTokenAtLocation( ByteBuffer TempData, int BytePos, out Opcode PotentialOpcode )
+    {
+      bool entryFound = false;
+      PotentialOpcode = null;
+
+      foreach ( var opcodeEntry in Settings.BASICDialect.Opcodes )
+      {
+        Opcode  opcode = opcodeEntry.Value;
+
+        entryFound = true;
+        for ( int i = 0; i < opcode.Command.Length; ++i )
+        {
+          if ( BytePos + i >= TempData.Length )
+          {
+            // can't be this token
+            entryFound = false;
+            break;
+          }
+          if ( TempData.ByteAt( BytePos + i ) != (byte)opcode.Command[i] )
+          {
+            entryFound = false;
+            break;
+          }
+        }
+        if ( entryFound )
+        {
+          if ( ( PotentialOpcode == null )
+          ||   ( opcode.Command.Length > PotentialOpcode.Command.Length ) )
+          {
+            PotentialOpcode = opcode;
+          }
+        }
+      }
+      return PotentialOpcode != null;
     }
 
 
@@ -2833,6 +2864,20 @@ namespace RetroDevStudio.Parser
             }
 
             // REM is only remark, no opcode parsing anymore, but only inside apostrophes!
+
+            // Simons' BASIC/TSB can store extended tokens inside REMs (argh!)
+            if ( Settings.BASICDialect.ExtendedTokensRecognizedInsideComment )
+            {
+              byte    nextValue = Data.ByteAt( dataPos + 1 );
+              ushort  extendedToken = (ushort)( ( byteValue << 8 ) + nextValue );
+
+              if ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( extendedToken ) )
+              {
+                lineContent += Settings.BASICDialect.OpcodesFromByte[extendedToken].Command;
+                dataPos += 2;
+                continue;
+              }
+            }
 
             if ( ( !insideStringLiteral )
             &&   ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) ) )
