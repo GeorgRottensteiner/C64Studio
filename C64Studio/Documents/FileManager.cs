@@ -640,14 +640,10 @@ namespace RetroDevStudio.Documents
       }
       System.Windows.Forms.ContextMenuStrip   contextMenu = new System.Windows.Forms.ContextMenuStrip();
 
-      System.Windows.Forms.ToolStripMenuItem item = new System.Windows.Forms.ToolStripMenuItem( "Export" );
+      System.Windows.Forms.ToolStripMenuItem item = new System.Windows.Forms.ToolStripMenuItem( "Export to file" );
       item.Tag = 0;
+      item.Click += new EventHandler( itemExport_Click );
       contextMenu.Items.Add( item );
-
-      System.Windows.Forms.ToolStripMenuItem subItem = new System.Windows.Forms.ToolStripMenuItem( "Export to file" );
-      subItem.Tag = 0;
-      subItem.Click += new EventHandler( itemExport_Click );
-      item.DropDownItems.Add( subItem );
 
       bool  exportToBasicPossible = true;
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
@@ -660,13 +656,16 @@ namespace RetroDevStudio.Documents
       }
       if ( exportToBasicPossible )
       {
-        item.DropDownItems.Add( new ToolStripSeparator() );
+        System.Windows.Forms.ToolStripMenuItem itemBASICOpen = new System.Windows.Forms.ToolStripMenuItem( "Open as" );
+        itemBASICOpen.Tag = 0;
+        contextMenu.Items.Add( itemBASICOpen );
+
         foreach ( var dialect in Core.Compiling.BASICDialects )
         {
-          subItem = new System.Windows.Forms.ToolStripMenuItem( "Export to: " + dialect.Key );
-          subItem.Tag = dialect.Value;
-          subItem.Click += new EventHandler( itemExportToBasic_Click );
-          item.DropDownItems.Add( subItem );
+          var itemDialect = new System.Windows.Forms.ToolStripMenuItem( dialect.Key );
+          itemDialect.Tag = dialect.Value;
+          itemDialect.Click += new EventHandler( itemExportToBasic_Click );
+          itemBASICOpen.DropDownItems.Add( itemDialect );
         }
       }
 
@@ -681,7 +680,7 @@ namespace RetroDevStudio.Documents
       //item.Click += new EventHandler( itemChangeType_Click );
       contextMenu.Items.Add( item );
 
-      subItem = new ToolStripMenuItem( "PRG" );
+      var subItem = new ToolStripMenuItem( "PRG" );
       subItem.Tag = FileType.PRG;
       subItem.Click += new EventHandler( itemChangeType_Click );
       item.DropDownItems.Add( subItem );
@@ -1071,7 +1070,7 @@ namespace RetroDevStudio.Documents
         {
           foreach ( var dialect in Core.Compiling.BASICDialects )
           {
-            var subItem = new System.Windows.Forms.ToolStripMenuItem( "Export with " + dialect.Key );
+            var subItem = new System.Windows.Forms.ToolStripMenuItem( "Open with " + dialect.Key );
             subItem.Tag = dialect.Value;
             subItem.Click += new EventHandler( itemExportToBasic_Click );
             toolStripBtnOpenBASIC.DropDownItems.Add( subItem );

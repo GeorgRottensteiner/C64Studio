@@ -121,6 +121,11 @@ namespace RetroDevStudio
             dialect.HasTextLabels = true;
             continue;
           }
+          else if ( line == "ExtendedTokensRecognizedInsideComment" )
+          {
+            dialect.ExtendedTokensRecognizedInsideComment = true;
+            continue;
+          }
 
           // skip header
           if ( firstLine )
@@ -446,9 +451,9 @@ namespace RetroDevStudio
       {
         fileTime = System.IO.File.GetLastWriteTime( FullPath );
       }
-      catch ( Exception ex )
+      catch ( Exception )
       {
-        Debug.Log( "FileLastWriteTime failed: " + ex.ToString() );
+        //Debug.Log( "FileLastWriteTime failed: " + ex.ToString() );
       }
       return fileTime;
     }
