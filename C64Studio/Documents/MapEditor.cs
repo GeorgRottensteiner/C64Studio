@@ -389,7 +389,6 @@ namespace RetroDevStudio.Documents
       int mColor1 = m_MapProject.MultiColor1;
       int mColor2 = m_MapProject.MultiColor2;
       int bgColor4 = m_MapProject.BGColor4;
-      /*
       if ( m_CurrentMap != null )
       {
         if ( m_CurrentMap.AlternativeBackgroundColor != -1 )
@@ -409,7 +408,6 @@ namespace RetroDevStudio.Documents
           bgColor4 = m_CurrentMap.AlternativeBGColor4;
         }
       }
-       */
       Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, m_MapProject.Charset.Colors.Palette, Char, TargetImage, X, Y, Color, bgColor, mColor1, mColor2, bgColor4 );
     }
 
