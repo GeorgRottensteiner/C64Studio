@@ -88,6 +88,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+      SuspendLayout();
       charEditor.Core = Core;
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
@@ -171,6 +172,7 @@ namespace RetroDevStudio.Documents
         panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+      ResumeLayout();
     }
 
 

@@ -62,6 +62,7 @@ namespace RetroDevStudio.Documents
 
       m_IsSaveable = true;
       InitializeComponent();
+      SuspendLayout();
 
       m_DefaultOutputFont = editDataExport.Font;
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportSpriteAsAssembly ) ) );
@@ -146,6 +147,7 @@ namespace RetroDevStudio.Documents
       RefreshDisplayOptions();
 
       m_AnimTimer.Tick += animTimer_Tick;
+      ResumeLayout();
     }
 
 

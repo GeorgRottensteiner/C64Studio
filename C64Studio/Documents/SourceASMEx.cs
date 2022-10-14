@@ -135,7 +135,10 @@ namespace RetroDevStudio.Documents
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
 
       m_IsSaveable = true;
+
       InitializeComponent();
+
+      SuspendLayout();
 
       DPIHandler.ResizeControlsForDPI( this );
 
@@ -215,6 +218,8 @@ namespace RetroDevStudio.Documents
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+
+      ResumeLayout();
     }
 
 

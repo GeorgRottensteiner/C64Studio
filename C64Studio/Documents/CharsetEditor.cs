@@ -54,6 +54,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+      SuspendLayout();
       characterEditor.Core = Core;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
@@ -90,6 +91,7 @@ namespace RetroDevStudio.Documents
       CreateDefaultUppercaseCharset();
 
       Modified = false;
+      ResumeLayout();
     }
 
 

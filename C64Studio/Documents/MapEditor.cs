@@ -95,6 +95,8 @@ namespace RetroDevStudio.Documents
 
       m_IsSaveable = true;
       InitializeComponent();
+      SuspendLayout();
+
       characterEditor.Core = Core;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
@@ -199,6 +201,8 @@ namespace RetroDevStudio.Documents
 
       characterEditor.CharsetUpdated( m_MapProject.Charset );
       Modified = false;
+
+      ResumeLayout();
     }
 
 
