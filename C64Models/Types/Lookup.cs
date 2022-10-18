@@ -484,6 +484,67 @@ namespace RetroDevStudio
 
 
 
+    internal static int ScreenWidthInCharacters( TextMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_ECM:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_40_X_25_NCM:
+        case TextMode.MEGA65_40_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_FCM:
+        case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_40_X_25_HIRES:
+        case TextMode.MEGA65_40_X_25_MULTICOLOR:
+          return 40;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          return 22;
+        case TextMode.MEGA65_80_X_25_NCM:
+        case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+          return 80;
+        default:
+          Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
+          return 40;
+      }
+    }
+
+
+
+    internal static int ScreenHeightInCharacters( TextMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_ECM:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_40_X_25_NCM:
+        case TextMode.MEGA65_40_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_FCM:
+        case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_40_X_25_HIRES:
+        case TextMode.MEGA65_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_80_X_25_NCM:
+        case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+          return 25;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          return 23;
+        default:
+          Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
+          return 25;
+      }
+    }
+
+
+
     internal static SpriteMode SpriteModeFromTileMode( GraphicTileMode Mode )
     {
       switch ( Mode )
@@ -563,6 +624,40 @@ namespace RetroDevStudio
           return TextCharMode.COMMODORE_MULTICOLOR;
       }
     }
+
+
+
+    internal static MachineType MachineTypeFromTextMode( TextMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_ECM:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+          return MachineType.C64;
+        case TextMode.MEGA65_40_X_25_NCM:
+        case TextMode.MEGA65_40_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_FCM:
+        case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_40_X_25_HIRES:
+        case TextMode.MEGA65_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_80_X_25_NCM:
+        case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+          return MachineType.MEGA65;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          return MachineType.VIC20;
+        default:
+          Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
+          return MachineType.C64;
+      }
+    }
+
+
+
   }
 
 }

@@ -124,9 +124,6 @@ namespace RetroDevStudio.Controls
       RefreshCategoryCounts();
 
       RedrawColorChooser();
-
-      panelCharacters.KeyDown += new KeyEventHandler( HandleKeyDown );
-      canvasEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( canvasEditor_PreviewKeyDown );
     }
 
 
@@ -164,30 +161,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    void canvasEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      KeyEventArgs ke = new KeyEventArgs( e.KeyData );
-      HandleKeyDown( sender, ke );
-    }
-
-
-
-    void HandleKeyDown( object sender, KeyEventArgs e )
-    {
-      if ( ( e.Modifiers == Keys.Control )
-      &&   ( e.KeyCode == Keys.C ) )
-      {
-        CopyToClipboard();
-      }
-      else if ( ( e.Modifiers == Keys.Control )
-      &&        ( e.KeyCode == Keys.V ) )
-      {
-        PasteClipboardImageToChar();
-      }
-    }
-
-
-
     public List<int> SelectedIndices
     {
       get
@@ -212,7 +185,8 @@ namespace RetroDevStudio.Controls
     {
       get
       {
-        return canvasEditor.Focused;
+        return ( ( canvasEditor.Focused )
+            ||   ( panelCharacters.Focused ) );
       }
     }
 
@@ -1545,7 +1519,7 @@ namespace RetroDevStudio.Controls
           }
         }
         else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        ||        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
+        &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
           {
@@ -1631,7 +1605,7 @@ namespace RetroDevStudio.Controls
           }
         }
         else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        ||        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
+        &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
           {
@@ -2960,6 +2934,20 @@ namespace RetroDevStudio.Controls
 
         TargetBuffer.Rectangle( x1, 0, x2 - x1, TargetBuffer.Height, selColor );
       }
+    }
+
+
+
+    public void Copy()
+    {
+      CopyToClipboard();
+    }
+
+
+
+    public void Paste()
+    {
+      PasteClipboardImageToChar();
     }
 
 

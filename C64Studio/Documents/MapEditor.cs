@@ -169,14 +169,14 @@ namespace RetroDevStudio.Documents
       comboExportOrientation.SelectedIndex = 0;
       comboExportData.SelectedIndex = 0;
 
-      foreach ( TextCharMode mode in Enum.GetValues( typeof( TextCharMode ) ) )
+      foreach ( TextMode mode in Enum.GetValues( typeof( TextMode ) ) )
       {
-        if ( mode != TextCharMode.UNKNOWN )
+        if ( mode != TextMode.UNKNOWN )
         {
-          comboTileMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+          comboMapProjectMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
         }
       }
-      comboTileMode.SelectedIndex = 0;
+      comboMapProjectMode.SelectedIndex = 0;
 
       comboMapAlternativeMode.Items.Add( "From Project" );
       foreach ( TextCharMode mode in Enum.GetValues( typeof( TextCharMode ) ) )
@@ -207,65 +207,130 @@ namespace RetroDevStudio.Documents
 
 
 
+    private int ScreenCharWidth
+    {
+      get
+      {
+        return Lookup.ScreenWidthInCharacters( m_MapProject.Mode );
+      }
+    }
+
+
+
+    private int ScreenCharHeight
+    {
+      get
+      {
+        return Lookup.ScreenHeightInCharacters( m_MapProject.Mode );
+      }
+    }
+
+
+
     public override bool ApplyFunction( Function Function )
     {
-      if ( !characterEditor.EditorFocused )
+      if ( characterEditor.EditorFocused )
       {
-        return false;
+        switch ( Function )
+        {
+          case Function.GRAPHIC_ELEMENT_MIRROR_H:
+            characterEditor.MirrorX();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MIRROR_V:
+            characterEditor.MirrorY();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_D:
+            characterEditor.ShiftDown();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_U:
+            characterEditor.ShiftUp();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_L:
+            characterEditor.ShiftLeft();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_R:
+            characterEditor.ShiftRight();
+            return true;
+          case Function.GRAPHIC_ELEMENT_ROTATE_L:
+            characterEditor.RotateLeft();
+            return true;
+          case Function.GRAPHIC_ELEMENT_ROTATE_R:
+            characterEditor.RotateRight();
+            return true;
+          case Function.GRAPHIC_ELEMENT_INVERT:
+            characterEditor.Invert();
+            return true;
+          case Function.GRAPHIC_ELEMENT_PREVIOUS:
+            characterEditor.Previous();
+            return true;
+          case Function.GRAPHIC_ELEMENT_NEXT:
+            characterEditor.Next();
+            return true;
+          case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+            characterEditor.CustomColor();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+            characterEditor.MultiColor1();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+            characterEditor.MultiColor2();
+            return true;
+          case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+            characterEditor.BackgroundColor();
+            return true;
+          case Function.COPY:
+            characterEditor.Copy();
+            return true;
+          case Function.PASTE:
+            characterEditor.Paste();
+            return true;
+        }
       }
-      switch ( Function )
+      else if ( pictureEditor.Focused )
       {
-        case Function.GRAPHIC_ELEMENT_MIRROR_H:
-          characterEditor.MirrorX();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MIRROR_V:
-          characterEditor.MirrorY();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_D:
-          characterEditor.ShiftDown();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_U:
-          characterEditor.ShiftUp();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_L:
-          characterEditor.ShiftLeft();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_R:
-          characterEditor.ShiftRight();
-          return true;
-        case Function.GRAPHIC_ELEMENT_ROTATE_L:
-          characterEditor.RotateLeft();
-          return true;
-        case Function.GRAPHIC_ELEMENT_ROTATE_R:
-          characterEditor.RotateRight();
-          return true;
-        case Function.GRAPHIC_ELEMENT_INVERT:
-          characterEditor.Invert();
-          return true;
-        case Function.GRAPHIC_ELEMENT_PREVIOUS:
-          characterEditor.Previous();
-          return true;
-        case Function.GRAPHIC_ELEMENT_NEXT:
-          characterEditor.Next();
-          return true;
-        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
-          characterEditor.CustomColor();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
-          characterEditor.MultiColor1();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
-          characterEditor.MultiColor2();
-          return true;
-        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
-          characterEditor.BackgroundColor();
-          return true;
+        switch ( Function )
+        {
+          case Function.COPY:
+            if ( m_ToolMode == ToolMode.SELECT )
+            {
+              CopyToClipboard();
+              return true;
+            }
+            break;
+          case Function.PASTE:
+            PasteFromClipboard();
+            return true;
+        }
       }
       return base.ApplyFunction( Function );
     }
-    
-    
-    
+
+
+
+    public override bool CopyPossible
+    {
+      get
+      {
+        return ( ( characterEditor.EditorFocused )
+        ||       ( ( m_ToolMode == ToolMode.SELECT )
+          &&       ( pictureEditor.Focused ) ) );
+      }
+    }
+
+
+
+    public override bool PastePossible
+    {
+      get
+      {
+        return ( ( characterEditor.EditorFocused )
+        ||       ( ( m_ToolMode == ToolMode.SELECT )
+          &&       ( pictureEditor.Focused ) ) );
+      }
+    }
+
+
+
     private void PictureEditor_PostPaint( GR.Image.FastImage TargetBuffer )
     {
       if ( m_MapProject.ShowGrid )
@@ -284,6 +349,15 @@ namespace RetroDevStudio.Documents
         int y1 = offsetY;
         int y2 = offsetY + m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height;
 
+        if ( x2 - offsetX > TargetBuffer.Width / ( m_CurrentMap.TileSpacingX * 16 ) )
+        {
+          x2 = TargetBuffer.Width / ( m_CurrentMap.TileSpacingX * 16 ) + offsetX;
+        }
+        if ( y2 - offsetY > TargetBuffer.Height / ( m_CurrentMap.TileSpacingY * 16 ) )
+        {
+          y2 = TargetBuffer.Height / ( m_CurrentMap.TileSpacingY * 16 ) + offsetY;
+        }
+
         for ( int y = y1; y <= y2; ++y )
         {
           for ( int x = x1; x <= x2; ++x )
@@ -292,6 +366,80 @@ namespace RetroDevStudio.Documents
           }
         }
       }
+
+      if ( ( m_CurrentMap == null )
+      ||   ( m_ToolMode != ToolMode.SELECT ) )
+      {
+        return;
+      }
+
+      // draw selection
+      uint    selectionColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
+      for ( int x = 0; x < m_CurrentMap.Tiles.Width; ++x )
+      {
+        for ( int y = 0; y < m_CurrentMap.Tiles.Height; ++y )
+        {
+          if ( m_SelectedTiles[x, y] )
+          {
+            int  sx1 = ( x - m_CurEditorOffsetX ) * m_CurrentMap.TileSpacingX * pictureEditor.ClientRectangle.Width / ScreenCharWidth;
+            int  sx2 = ( x + 1 - m_CurEditorOffsetX ) * m_CurrentMap.TileSpacingX * pictureEditor.ClientRectangle.Width / ScreenCharWidth;
+            int  sy1 = ( y - m_CurEditorOffsetY ) * m_CurrentMap.TileSpacingY * pictureEditor.ClientRectangle.Height / ScreenCharHeight;
+            int  sy2 = ( y + 1 - m_CurEditorOffsetY ) * m_CurrentMap.TileSpacingY * pictureEditor.ClientRectangle.Height / ScreenCharHeight;
+
+            --sx2;
+            --sy2;
+
+            if ( ( y == 0 )
+            ||   ( !m_SelectedTiles[x, y - 1] ) )
+            {
+              for ( int i = sx1; i <= sx2; ++i )
+              {
+                TargetBuffer.SetPixel( i, sy1, selectionColor );
+              }
+            }
+            if ( ( y == m_SelectedTiles.GetUpperBound( 1 ) )
+            ||   ( !m_SelectedTiles[x, y + 1] ) )
+            {
+              for ( int i = sx1; i <= sx2; ++i )
+              {
+                TargetBuffer.SetPixel( i, sy2, selectionColor );
+              }
+            }
+            if ( ( x == 0 )
+            ||   ( !m_SelectedTiles[x - 1, y] ) )
+            {
+              for ( int i = sy1; i <= sy2; ++i )
+              {
+                TargetBuffer.SetPixel( sx1, i, selectionColor );
+              }
+            }
+            if ( ( x == m_SelectedTiles.GetUpperBound( 0 ) )
+            ||   ( !m_SelectedTiles[x + 1, y] ) )
+            {
+              for ( int i = sy1; i <= sy2; ++i )
+              {
+                TargetBuffer.SetPixel( sx2, i, selectionColor );
+              }
+            }
+          }
+        }
+      }
+
+      // current dragged selection
+      if ( ( m_ToolMode == ToolMode.SELECT )
+      &&   ( m_LastDragEndPos.X != -1 ) )
+      {
+        System.Drawing.Point    o1, o2;
+
+        CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
+
+        TargetBuffer.Rectangle( ( o1.X - m_CurEditorOffsetX ) * m_CurrentMap.TileSpacingX * pictureEditor.ClientRectangle.Width / ScreenCharWidth,
+                                ( o1.Y - m_CurEditorOffsetY ) * m_CurrentMap.TileSpacingY * pictureEditor.ClientRectangle.Height / ScreenCharHeight,
+                                ( o2.X - o1.X + 1 ) * m_CurrentMap.TileSpacingX * pictureEditor.ClientRectangle.Width / ScreenCharWidth, 
+                                ( o2.Y - o1.Y + 1 ) * m_CurrentMap.TileSpacingY * pictureEditor.ClientRectangle.Height / ScreenCharHeight,
+                                selectionColor );
+      }
+
     }
 
 
@@ -597,8 +745,8 @@ namespace RetroDevStudio.Documents
         labelEditInfo.Text = "";
         return;
       }
-      int     charX = X / ( pictureEditor.ClientRectangle.Width / 40 );
-      int     charY = Y / ( pictureEditor.ClientRectangle.Height / 25 );
+      int     charX = X / ( pictureEditor.ClientRectangle.Width / ScreenCharWidth );
+      int     charY = Y / ( pictureEditor.ClientRectangle.Height / ScreenCharHeight );
 
       m_MousePos.X = charX / m_CurrentMap.TileSpacingX;
       m_MousePos.Y = charY / m_CurrentMap.TileSpacingY;
@@ -616,9 +764,9 @@ namespace RetroDevStudio.Documents
       int offsetY = m_CurEditorOffsetY;
 
       if ( ( charX < 0 )
-      ||   ( charX >= 40 )
+      ||   ( charX >= ScreenCharWidth )
       ||   ( charY < 0 )
-      ||   ( charY >= 25 ) )
+      ||   ( charY >= ScreenCharHeight ) )
       {
         return;
       }
@@ -919,29 +1067,12 @@ namespace RetroDevStudio.Documents
                 CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
 
                 pictureEditor.Invalidate( new System.Drawing.Rectangle( o1.X * 8, o1.Y * 8, ( o2.X - o1.X + 1 ) * 8, ( o2.Y - o1.Y + 1 ) * 8 ) );
-                /*
-                for ( int x = o1.X; x <= o2.X; ++x )
-                {
-                  for ( int y = o1.Y; y <= o2.Y; ++y )
-                  {
-                    m_SelectedChars[x, y] = false;
-                  }
-                }*/
               }
               m_LastDragEndPos = m_DragEndPos;
 
               System.Drawing.Point    p1, p2;
 
               CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
-
-              /*
-              for ( int x = p1.X; x <= p2.X; ++x )
-              {
-                for ( int y = p1.Y; y <= p2.Y; ++y )
-                {
-                  m_SelectedChars[x, y] = true;
-                }
-              }*/
 
               pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
               Redraw();
@@ -963,6 +1094,8 @@ namespace RetroDevStudio.Documents
         }
       }
     }
+
+
 
     private void DrawTile( int trueX, int trueY, int TileIndex )
     {
@@ -1191,7 +1324,7 @@ namespace RetroDevStudio.Documents
       comboTileMulticolor1.SelectedIndex = m_MapProject.MultiColor1;
       comboTileMulticolor2.SelectedIndex = m_MapProject.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_MapProject.BGColor4;
-      comboTileMode.SelectedIndex = (int)Lookup.TextCharModeFromTextMode( m_MapProject.Mode );
+      comboMapProjectMode.SelectedIndex = (int)m_MapProject.Mode;
       checkShowGrid.Checked = m_MapProject.ShowGrid;
 
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
@@ -1362,73 +1495,6 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-
-      // draw selection
-      uint    selectionColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
-      for ( int x = 0; x < m_CurrentMap.Tiles.Width; ++x )
-      {
-        for ( int y = 0; y < m_CurrentMap.Tiles.Height; ++y )
-        {
-          if ( m_SelectedTiles[x, y] )
-          {
-            if ( ( y == 0 )
-            ||   ( !m_SelectedTiles[x, y - 1] ) )
-            {
-              for ( int i = 0; i < m_CurrentMap.TileSpacingX * 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX + i,
-                                                    ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
-                                                    selectionColor );
-              }
-            }
-            if ( ( y == m_CurrentMap.Tiles.Height - 1 )
-            ||   ( !m_SelectedTiles[x, y + 1] ) )
-            {
-              for ( int i = 0; i < m_CurrentMap.TileSpacingX * 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX + i,
-                                                    ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY + 8 * m_CurrentMap.TileSpacingY - 1,
-                                                    selectionColor );
-              }
-            }
-            if ( ( x == 0 )
-            ||   ( !m_SelectedTiles[x - 1, y] ) )
-            {
-              for ( int i = 0; i < m_CurrentMap.TileSpacingY * 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
-                                                    ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY + i,
-                                                    selectionColor );
-              }
-            }
-            if ( ( x == m_CurrentMap.Tiles.Width - 1 )
-            ||   ( !m_SelectedTiles[x + 1, y] ) )
-            {
-              for ( int i = 0; i < m_CurrentMap.TileSpacingY * 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX + 8 * m_CurrentMap.TileSpacingX - 1,
-                                                    ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY + i,
-                                                    selectionColor );
-              }
-            }
-          }
-        }
-      }
-
-      // current dragged selection
-      if ( ( m_ToolMode == ToolMode.SELECT )
-      &&   ( m_LastDragEndPos.X != -1 ) )
-      {
-        System.Drawing.Point    o1, o2;
-
-        CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
-
-        pictureEditor.DisplayPage.Rectangle( ( o1.X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
-                                             ( o1.Y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
-                                             ( o2.X - o1.X + 1 ) * 8 * m_CurrentMap.TileSpacingX, ( o2.Y - o1.Y + 1 ) * 8 * m_CurrentMap.TileSpacingY,
-                                             selectionColor );
-      }
-
 
       if ( m_FloatingSelection != null )
       {
@@ -1685,7 +1751,7 @@ namespace RetroDevStudio.Documents
           return false;
         }
         m_MapProject.Mode = Lookup.TextModeFromTextCharMode( m_MapProject.Charset.Mode );
-        comboTileMode.SelectedIndex = (int)m_MapProject.Charset.Mode;
+        comboMapProjectMode.SelectedIndex = (int)m_MapProject.Mode;
 
         FullRebuild();
         characterEditor.CharsetUpdated( m_MapProject.Charset );
@@ -1996,7 +2062,7 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      if ( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width <= 40 )
+      if ( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width <= ScreenCharWidth )
       {
         mapHScroll.Maximum = 0;
         mapHScroll.Enabled = false;
@@ -2004,7 +2070,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        mapHScroll.Maximum = ( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width - 40 ) / m_CurrentMap.TileSpacingX + 1;
+        mapHScroll.Maximum = ( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width - ScreenCharWidth ) / m_CurrentMap.TileSpacingX + 1;
         mapHScroll.Enabled = true;
       }
       if ( m_CurEditorOffsetX > mapHScroll.Maximum )
@@ -2013,7 +2079,7 @@ namespace RetroDevStudio.Documents
       }
 
       mapVScroll.Minimum = 0;
-      if ( m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height <= 25 )
+      if ( m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height <= ScreenCharHeight )
       {
         mapVScroll.Maximum = 0;
         mapVScroll.Enabled = false;
@@ -2021,7 +2087,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        mapVScroll.Maximum = ( m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height - 25 ) / m_CurrentMap.TileSpacingY + 1;
+        mapVScroll.Maximum = ( m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height - ScreenCharHeight ) / m_CurrentMap.TileSpacingY + 1;
         mapVScroll.Enabled = true;
       }
       if ( m_CurEditorOffsetY > mapVScroll.Maximum )
@@ -2822,19 +2888,18 @@ namespace RetroDevStudio.Documents
       switch ( cpProject.DisplayModeFile )
       {
         case Formats.CharpadProject.DisplayMode.HIRES:
-          comboTileMode.SelectedIndex = (int)TextCharMode.COMMODORE_HIRES;
+          comboMapProjectMode.SelectedIndex = (int)TextMode.COMMODORE_40_X_25_HIRES;
           m_MapProject.Charset.Mode = TextCharMode.COMMODORE_HIRES;
           break;
         case Formats.CharpadProject.DisplayMode.MULTICOLOR:
-          comboTileMode.SelectedIndex = (int)TextCharMode.COMMODORE_MULTICOLOR;
+          comboMapProjectMode.SelectedIndex = (int)TextMode.COMMODORE_40_X_25_MULTICOLOR;
           m_MapProject.Charset.Mode = TextCharMode.COMMODORE_MULTICOLOR;
           break;
         case Formats.CharpadProject.DisplayMode.ECM:
-          comboTileMode.SelectedIndex = (int)TextCharMode.COMMODORE_ECM;
+          comboMapProjectMode.SelectedIndex = (int)TextMode.COMMODORE_40_X_25_ECM;
           m_MapProject.Charset.Mode = TextCharMode.COMMODORE_ECM;
           break;
       }
-
       characterEditor.CharsetUpdated( m_MapProject.Charset );
 
       for ( int i = 0; i < cpProject.NumTiles; ++i )
@@ -2903,15 +2968,47 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void RemoveFloatingSelection()
+    {
+      if ( m_FloatingSelection != null )
+      {
+        m_FloatingSelection = null;
+        Redraw();
+      }
+    }
+
+
+
     private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.SINGLE_TILE;
+    }
+
+
+
+    private void HideSelection()
+    {
+      if ( m_CurrentMap != null )
+      {
+        for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+        {
+          for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+          {
+            m_SelectedTiles[i, j] = false;
+          }
+        }
+        Redraw();
+      }
     }
 
 
 
     private void btnToolRect_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.RECTANGLE;
     }
 
@@ -2919,6 +3016,8 @@ namespace RetroDevStudio.Documents
 
     private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.FILLED_RECTANGLE;
     }
 
@@ -2926,6 +3025,8 @@ namespace RetroDevStudio.Documents
 
     private void btnToolFill_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.FILL;
     }
 
@@ -2940,6 +3041,7 @@ namespace RetroDevStudio.Documents
 
     private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
+      /*
       if ( m_ToolMode == ToolMode.SELECT )
       {
         if ( ( e.Modifiers == Keys.Control )
@@ -2952,14 +3054,10 @@ namespace RetroDevStudio.Documents
       &&   ( e.KeyCode == Keys.V ) )
       {
         PasteFromClipboard();
-      }
+      }*/
       if ( e.KeyCode == Keys.Escape )
       {
-        if ( m_FloatingSelection != null )
-        {
-          m_FloatingSelection = null;
-          Redraw();
-        }
+        RemoveFloatingSelection();
       }
     }
 
@@ -3145,35 +3243,6 @@ namespace RetroDevStudio.Documents
       // force refresh
       listTileInfo_SelectedIndexChanged( null, null );
       listTileChars_SelectedIndexChanged( null, null );
-    }
-
-
-
-    private void comboTileMode_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      m_MapProject.Charset.Mode = (TextCharMode)comboTileMode.SelectedIndex;
-      m_MapProject.Mode = Lookup.TextModeFromTextCharMode( m_MapProject.Charset.Mode );
-
-      switch ( m_MapProject.Mode )
-      {
-        case TextMode.COMMODORE_40_X_25_ECM:
-        case TextMode.COMMODORE_40_X_25_HIRES:
-        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-          m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
-          break;
-        case TextMode.COMMODORE_VIC20_22_X_23:
-          m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
-          break;
-      }
-
-      for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
-      {
-        RebuildCharImage( i );
-      }
-      Modified = true;
-      panelCharacters.Invalidate();
-      RedrawColorChooser();
-      RedrawMap();
     }
 
 
@@ -3665,6 +3734,29 @@ namespace RetroDevStudio.Documents
       }
       RedrawMap();
       RedrawTile();
+    }
+
+
+
+    private void comboMapProjectMode_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      //TODO Undo!
+
+      m_MapProject.Mode = (TextMode)comboMapProjectMode.SelectedIndex;
+
+      // TODO - that should change all kind of values inside the charset! (TotalNumberOfCharacters!)
+      m_MapProject.Charset.Mode = Lookup.TextCharModeFromTextMode( m_MapProject.Mode );
+
+      m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( Lookup.MachineTypeFromTextMode( m_MapProject.Mode ) );
+
+      for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      Modified = true;
+      panelCharacters.Invalidate();
+      RedrawColorChooser();
+      RedrawMap();
     }
 
 

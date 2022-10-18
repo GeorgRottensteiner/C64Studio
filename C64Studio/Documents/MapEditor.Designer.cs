@@ -72,6 +72,7 @@
       this.editMapExtraData = new System.Windows.Forms.TextBox();
       this.label20 = new System.Windows.Forms.Label();
       this.comboTiles = new System.Windows.Forms.ComboBox();
+      this.comboMapProjectMode = new System.Windows.Forms.ComboBox();
       this.comboMaps = new System.Windows.Forms.ComboBox();
       this.groupSize = new System.Windows.Forms.GroupBox();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
@@ -101,6 +102,7 @@
       this.editMapWidth = new System.Windows.Forms.TextBox();
       this.mapHScroll = new System.Windows.Forms.HScrollBar();
       this.mapVScroll = new System.Windows.Forms.VScrollBar();
+      this.label25 = new System.Windows.Forms.Label();
       this.label19 = new System.Windows.Forms.Label();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabMapEditor = new System.Windows.Forms.TabControl();
@@ -108,7 +110,6 @@
       this.btnTileApply = new System.Windows.Forms.Button();
       this.btnCopyTileCharToNextIncreased = new System.Windows.Forms.Button();
       this.btnSetNextTileChar = new System.Windows.Forms.Button();
-      this.comboTileMode = new System.Windows.Forms.ComboBox();
       this.btnMoveTileDown = new System.Windows.Forms.Button();
       this.btnMoveTileUp = new System.Windows.Forms.Button();
       this.btnTileDelete = new System.Windows.Forms.Button();
@@ -127,7 +128,6 @@
       this.editTileHeight = new System.Windows.Forms.TextBox();
       this.editTileWidth = new System.Windows.Forms.TextBox();
       this.label17 = new System.Windows.Forms.Label();
-      this.label24 = new System.Windows.Forms.Label();
       this.labelTilesBGColor4 = new System.Windows.Forms.Label();
       this.labelTilesMulticolor2 = new System.Windows.Forms.Label();
       this.label16 = new System.Windows.Forms.Label();
@@ -472,10 +472,12 @@
       this.tabEditor.Controls.Add(this.labelEditInfo);
       this.tabEditor.Controls.Add(this.groupMapExtraData);
       this.tabEditor.Controls.Add(this.comboTiles);
+      this.tabEditor.Controls.Add(this.comboMapProjectMode);
       this.tabEditor.Controls.Add(this.comboMaps);
       this.tabEditor.Controls.Add(this.groupSize);
       this.tabEditor.Controls.Add(this.mapHScroll);
       this.tabEditor.Controls.Add(this.mapVScroll);
+      this.tabEditor.Controls.Add(this.label25);
       this.tabEditor.Controls.Add(this.label19);
       this.tabEditor.Controls.Add(this.pictureEditor);
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
@@ -566,7 +568,7 @@
       // 
       this.groupMapExtraData.Controls.Add(this.editMapExtraData);
       this.groupMapExtraData.Controls.Add(this.label20);
-      this.groupMapExtraData.Location = new System.Drawing.Point(681, 222);
+      this.groupMapExtraData.Location = new System.Drawing.Point(681, 247);
       this.groupMapExtraData.Name = "groupMapExtraData";
       this.groupMapExtraData.Size = new System.Drawing.Size(272, 161);
       this.groupMapExtraData.TabIndex = 31;
@@ -598,12 +600,22 @@
       this.comboTiles.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboTiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboTiles.FormattingEnabled = true;
-      this.comboTiles.Location = new System.Drawing.Point(684, 389);
+      this.comboTiles.Location = new System.Drawing.Point(684, 414);
       this.comboTiles.Name = "comboTiles";
       this.comboTiles.Size = new System.Drawing.Size(264, 21);
       this.comboTiles.TabIndex = 30;
       this.comboTiles.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboTiles_DrawItem);
       this.comboTiles.SelectedIndexChanged += new System.EventHandler(this.comboTiles_SelectedIndexChanged);
+      // 
+      // comboMapProjectMode
+      // 
+      this.comboMapProjectMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboMapProjectMode.FormattingEnabled = true;
+      this.comboMapProjectMode.Location = new System.Drawing.Point(752, 33);
+      this.comboMapProjectMode.Name = "comboMapProjectMode";
+      this.comboMapProjectMode.Size = new System.Drawing.Size(254, 21);
+      this.comboMapProjectMode.TabIndex = 29;
+      this.comboMapProjectMode.SelectedIndexChanged += new System.EventHandler(this.comboMapProjectMode_SelectedIndexChanged);
       // 
       // comboMaps
       // 
@@ -643,7 +655,7 @@
       this.groupSize.Controls.Add(this.editTileSpacingW);
       this.groupSize.Controls.Add(this.label3);
       this.groupSize.Controls.Add(this.editMapWidth);
-      this.groupSize.Location = new System.Drawing.Point(681, 33);
+      this.groupSize.Location = new System.Drawing.Point(681, 58);
       this.groupSize.Name = "groupSize";
       this.groupSize.Size = new System.Drawing.Size(325, 183);
       this.groupSize.TabIndex = 28;
@@ -912,6 +924,15 @@
       this.mapVScroll.TabIndex = 23;
       this.mapVScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapVScroll_Scroll);
       // 
+      // label25
+      // 
+      this.label25.AutoSize = true;
+      this.label25.Location = new System.Drawing.Point(678, 36);
+      this.label25.Name = "label25";
+      this.label25.Size = new System.Drawing.Size(37, 13);
+      this.label25.TabIndex = 25;
+      this.label25.Text = "Mode:";
+      // 
       // label19
       // 
       this.label19.AutoSize = true;
@@ -955,7 +976,6 @@
       this.tabTiles.Controls.Add(this.btnTileApply);
       this.tabTiles.Controls.Add(this.btnCopyTileCharToNextIncreased);
       this.tabTiles.Controls.Add(this.btnSetNextTileChar);
-      this.tabTiles.Controls.Add(this.comboTileMode);
       this.tabTiles.Controls.Add(this.btnMoveTileDown);
       this.tabTiles.Controls.Add(this.btnMoveTileUp);
       this.tabTiles.Controls.Add(this.btnTileDelete);
@@ -967,7 +987,6 @@
       this.tabTiles.Controls.Add(this.editTileHeight);
       this.tabTiles.Controls.Add(this.editTileWidth);
       this.tabTiles.Controls.Add(this.label17);
-      this.tabTiles.Controls.Add(this.label24);
       this.tabTiles.Controls.Add(this.labelTilesBGColor4);
       this.tabTiles.Controls.Add(this.labelTilesMulticolor2);
       this.tabTiles.Controls.Add(this.label16);
@@ -1023,16 +1042,6 @@
       this.toolTip1.SetToolTip(this.btnSetNextTileChar, "Copy char/color to next slot");
       this.btnSetNextTileChar.UseVisualStyleBackColor = true;
       this.btnSetNextTileChar.Click += new System.EventHandler(this.btnSetNextTileChar_Click);
-      // 
-      // comboTileMode
-      // 
-      this.comboTileMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboTileMode.FormattingEnabled = true;
-      this.comboTileMode.Location = new System.Drawing.Point(701, 92);
-      this.comboTileMode.Name = "comboTileMode";
-      this.comboTileMode.Size = new System.Drawing.Size(227, 21);
-      this.comboTileMode.TabIndex = 27;
-      this.comboTileMode.SelectedIndexChanged += new System.EventHandler(this.comboTileMode_SelectedIndexChanged);
       // 
       // btnMoveTileDown
       // 
@@ -1183,15 +1192,6 @@
       this.label17.Size = new System.Drawing.Size(38, 13);
       this.label17.TabIndex = 22;
       this.label17.Text = "Name:";
-      // 
-      // label24
-      // 
-      this.label24.AutoSize = true;
-      this.label24.Location = new System.Drawing.Point(658, 95);
-      this.label24.Name = "label24";
-      this.label24.Size = new System.Drawing.Size(37, 13);
-      this.label24.TabIndex = 22;
-      this.label24.Text = "Mode:";
       // 
       // labelTilesBGColor4
       // 
@@ -1869,8 +1869,6 @@
     private System.Windows.Forms.ComboBox comboMapBGColor;
     private System.Windows.Forms.Label label22;
     private System.Windows.Forms.Label label23;
-    private System.Windows.Forms.ComboBox comboTileMode;
-    private System.Windows.Forms.Label label24;
     private System.Windows.Forms.Label labelTilesBGColor4;
     private System.Windows.Forms.ComboBox comboTileBGColor4;
     private System.Windows.Forms.ComboBox comboMapAlternativeMode;
@@ -1890,5 +1888,7 @@
     private System.Windows.Forms.Button btnMoveMapDown;
     private System.Windows.Forms.Button btnMoveMapUp;
     private System.Windows.Forms.Button btnCopyMapImage;
-  }
+        private System.Windows.Forms.ComboBox comboMapProjectMode;
+        private System.Windows.Forms.Label label25;
+    }
 }

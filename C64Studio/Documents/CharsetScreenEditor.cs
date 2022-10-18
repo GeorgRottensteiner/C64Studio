@@ -2467,16 +2467,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      if ( m_ToolMode == ToolMode.SELECT )
-      {
-        // TODO - use configured accelerator!
-        if ( ( e.Modifiers == Keys.Control )
-        &&   ( e.KeyCode == Keys.C ) )
-        {
-          CopyToClipboard();
-        }
-      }
-
       if ( ( m_ToolMode == ToolMode.RECTANGLE )
       ||   ( m_ToolMode == ToolMode.FILLED_RECTANGLE ) )
       {
@@ -2488,13 +2478,6 @@ namespace RetroDevStudio.Documents
             Redraw();
           }
         }
-      }
-
-      // TODO - use configured accelerator!
-      if ( ( e.Modifiers == Keys.Control )
-      &&   ( e.KeyCode == Keys.V ) )
-      {
-        PasteFromClipboard();
       }
     }
 
@@ -2928,57 +2911,77 @@ namespace RetroDevStudio.Documents
 
     public override bool ApplyFunction( Function Function )
     {
-      if ( !charEditor.EditorFocused )
+      if ( charEditor.EditorFocused )
       {
-        return false;
+        switch ( Function )
+        {
+          case Function.GRAPHIC_ELEMENT_MIRROR_H:
+            charEditor.MirrorX();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MIRROR_V:
+            charEditor.MirrorY();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_D:
+            charEditor.ShiftDown();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_U:
+            charEditor.ShiftUp();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_L:
+            charEditor.ShiftLeft();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_R:
+            charEditor.ShiftRight();
+            return true;
+          case Function.GRAPHIC_ELEMENT_ROTATE_L:
+            charEditor.RotateLeft();
+            return true;
+          case Function.GRAPHIC_ELEMENT_ROTATE_R:
+            charEditor.RotateRight();
+            return true;
+          case Function.GRAPHIC_ELEMENT_INVERT:
+            charEditor.Invert();
+            return true;
+          case Function.GRAPHIC_ELEMENT_PREVIOUS:
+            charEditor.Previous();
+            return true;
+          case Function.GRAPHIC_ELEMENT_NEXT:
+            charEditor.Next();
+            return true;
+          case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+            charEditor.CustomColor();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+            charEditor.MultiColor1();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+            charEditor.MultiColor2();
+            return true;
+          case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+            charEditor.BackgroundColor();
+            return true;
+          case Function.COPY:
+            charEditor.Copy();
+            return true;
+          case Function.PASTE:
+            charEditor.Paste();
+            return true;
+        }
       }
-      switch ( Function )
+      else if ( pictureEditor.Focused )
       {
-        case Function.GRAPHIC_ELEMENT_MIRROR_H:
-          charEditor.MirrorX();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MIRROR_V:
-          charEditor.MirrorY();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_D:
-          charEditor.ShiftDown();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_U:
-          charEditor.ShiftUp();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_L:
-          charEditor.ShiftLeft();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_R:
-          charEditor.ShiftRight();
-          return true;
-        case Function.GRAPHIC_ELEMENT_ROTATE_L:
-          charEditor.RotateLeft();
-          return true;
-        case Function.GRAPHIC_ELEMENT_ROTATE_R:
-          charEditor.RotateRight();
-          return true;
-        case Function.GRAPHIC_ELEMENT_INVERT:
-          charEditor.Invert();
-          return true;
-        case Function.GRAPHIC_ELEMENT_PREVIOUS:
-          charEditor.Previous();
-          return true;
-        case Function.GRAPHIC_ELEMENT_NEXT:
-          charEditor.Next();
-          return true;
-        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
-          charEditor.CustomColor();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
-          charEditor.MultiColor1();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
-          charEditor.MultiColor2();
-          return true;
-        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
-          charEditor.BackgroundColor();
-          return true;
+        switch ( Function )
+        {
+          case Function.COPY:
+            if ( m_ToolMode == ToolMode.SELECT )
+            {
+              CopyToClipboard();
+            }
+            return true;
+          case Function.PASTE:
+            PasteFromClipboard();
+            return true;
+        }
       }
       return base.ApplyFunction( Function );
     }
@@ -3358,6 +3361,28 @@ namespace RetroDevStudio.Documents
         DocumentInfo.UndoManager.AddUndoTask( undo4, false );
         Modified = true;
         RedrawFullScreen();
+      }
+    }
+
+
+
+    public override bool CopyPossible
+    {
+      get
+      {
+        return ( ( charEditor.EditorFocused )
+          ||     ( pictureEditor.Focused ) );
+      }
+    }
+
+
+
+    public override bool PastePossible
+    {
+      get
+      {
+        return ( ( charEditor.EditorFocused )
+          ||     ( pictureEditor.Focused ) );
       }
     }
 

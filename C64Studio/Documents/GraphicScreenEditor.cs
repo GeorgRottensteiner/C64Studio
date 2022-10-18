@@ -181,16 +181,6 @@ namespace RetroDevStudio.Documents
         }
       }
       comboCharScreens.SelectedIndex = 0;
-
-      pictureEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( pictureEditor_PreviewKeyDown );
-    }
-
-
-
-    void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      KeyEventArgs ke = new KeyEventArgs( e.KeyData );
-      HandleKeyDown( sender, ke );
     }
 
 
@@ -232,24 +222,6 @@ namespace RetroDevStudio.Documents
           SetUnmodified();
         }
         saveCharsetProjectToolStripMenuItem.Enabled = Modified;
-      }
-    }
-
-
-
-    void HandleKeyDown( object sender, KeyEventArgs e )
-    {
-      if ( ( e.Modifiers == Keys.Control )
-      &&   ( e.KeyCode == Keys.C ) )
-      {
-        // copy
-        CopySelectedImageToClipboard();
-      }
-      else if ( ( e.Modifiers == Keys.Control )
-      &&        ( e.KeyCode == Keys.V ) )
-      {
-        // paste
-        PasteClipboardImageToSelectedChar();
       }
     }
 
@@ -3489,6 +3461,12 @@ namespace RetroDevStudio.Documents
         case Function.GRAPHIC_ELEMENT_SHIFT_U:
           ShiftUp();
           return true;
+        case Function.COPY:
+          CopySelectedImageToClipboard();
+          return true;
+        case Function.PASTE:
+          PasteClipboardImageToSelectedChar();
+          return true;
       }
       return base.ApplyFunction( Function );
     }
@@ -3668,6 +3646,26 @@ namespace RetroDevStudio.Documents
       checkMulticolor.Checked = m_GraphicScreenProject.MultiColor;
       comboMulticolor1.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor1;
       comboMulticolor2.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor2;
+    }
+
+
+
+    public override bool CopyPossible
+    {
+      get
+      {
+        return pictureEditor.Focused;
+      }
+    }
+
+
+
+    public override bool PastePossible
+    {
+      get
+      {
+        return pictureEditor.Focused;
+      }
     }
 
 

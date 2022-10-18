@@ -989,18 +989,21 @@ namespace RetroDevStudio.Documents
 
     public virtual void Cut()
     {
+      ApplyFunction( Function.CUT );
     }
 
 
 
     public virtual void Copy()
     {
+      ApplyFunction( Function.COPY );
     }
 
 
 
     public virtual void Paste()
     {
+      ApplyFunction( Function.PASTE );
     }
 
 

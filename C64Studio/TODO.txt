@@ -52,7 +52,6 @@ weiter      lda #$00
             rts
 o When I move somewhere in the code, I would like the label combobox to point to the previous global or local label instead of the immediate 
   label which, as far as I'm concerned, is of little use.
-o Option to remove the immediate labels from the combobox list above the text editor
 o label .NOP gets coloring of opcode
 o Same version info for C64Studio and C64Ass
 o Scaling: At a ".charscreen" element, we can change the actual color to be used for drawing, 
@@ -253,8 +252,6 @@ o TODO - Nested for loops using a local label from outside:
     lda .LABEL + ROW * 5 + COL
     !end
     !end
-o float point Konstante eingebe? z.B. wie beim CBM Program Studio, da ging das irgendwie (habs nicht ganz parat) so: !flp 32.442.
-Das ist logisch auf den ersten Blick, es wäre aber cool, wenn man auch sigened values eintippen könnte und der Assembler das gleich umrechnet in die entsprechende 2-complement Zahl.
 o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char offsets (+$40,$80,$c0)
 o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon gibt und ich nur nicht weiß, wo der Knopf ist):
   Im Debugger würde ich gerne die Cycle-Zahl auf NULL stellen können, um die Cycles ab einem bestimmten Punkt starten und zählen zu können.
@@ -266,7 +263,6 @@ o Linux:
   WINEPREFIX=~/.winedir wine RetroDevStudio.exe 
 
 o Docs: list illegal opcodes in help
-o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
 o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
 o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
 o Automated code formatting

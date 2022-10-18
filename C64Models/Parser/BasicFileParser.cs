@@ -2021,6 +2021,8 @@ namespace RetroDevStudio.Parser
             ASMFileInfo.OriginalVariables.Add( varName );
 
             // verify next token
+            bool varNameCutShort = false;
+
             if ( variable.Content.EndsWith( "$" ) )
             {
               symbolType = SymbolInfo.Types.VARIABLE_STRING;
@@ -2028,6 +2030,7 @@ namespace RetroDevStudio.Parser
               {
                 // cut to signifact characters
                 varName = varName.Substring( 0, 2 ) + "$";
+                varNameCutShort = true;
               }
             }
             else if ( variable.Content.EndsWith( "%" ) )
@@ -2037,6 +2040,7 @@ namespace RetroDevStudio.Parser
               {
                 // cut to signifact characters
                 varName = varName.Substring( 0, 2 ) + "%";
+                varNameCutShort = true;
               }
             }
             else if ( ( tokenIndex + 1 < pureInfo.Tokens.Count )
@@ -2050,6 +2054,7 @@ namespace RetroDevStudio.Parser
                 {
                   // cut to signifact characters
                   varName = varName.Substring( 0, 2 );
+                  varNameCutShort = true;
                 }
                 varName += "(";
               }
@@ -2057,6 +2062,7 @@ namespace RetroDevStudio.Parser
               {
                 // cut to signifact characters
                 varName = varName.Substring( 0, 2 );
+                varNameCutShort = true;
               }
             }
             else
@@ -2065,10 +2071,12 @@ namespace RetroDevStudio.Parser
               {
                 // cut to signifact characters
                 varName = varName.Substring( 0, 2 );
+                varNameCutShort = true;
               }
             }
 
             if ( ( origName != varName )
+            &&   ( varNameCutShort )
             &&   ( !insideDataStatement ) )
             {
               if ( !ASMFileInfo.MappedVariables.ContainsKey( varName ) )

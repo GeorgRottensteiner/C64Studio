@@ -2802,7 +2802,7 @@ namespace RetroDevStudio
     {
       if ( ParentProject != null )
       {
-        var dialogResult = System.Windows.Forms.MessageBox.Show( "Add the new document to the current project?\r\nIf you choose no, the document will be created not as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
+        var dialogResult = System.Windows.Forms.MessageBox.Show( "Add the new document to the current project?\r\nIf you choose no, the document will not be created as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
         if ( dialogResult == DialogResult.Cancel )
         {
           return;
@@ -2815,27 +2815,9 @@ namespace RetroDevStudio
         // fall through
       }
 
-      // project-less doc
-
-      string newFilename;
-      if ( !ChooseFilename( Type, Description, ParentProject, out newFilename ) )
-      {
-        return;
-      }
-
-      if ( System.IO.File.Exists( newFilename ) )
-      {
-        var result = System.Windows.Forms.MessageBox.Show( "There is already an existing file at " + newFilename + ".\r\nDo you want to overwrite it?", "Overwrite existing file?", MessageBoxButtons.YesNo );
-        if ( result == DialogResult.No )
-        {
-          return;
-        }
-      }
-      var doc = CreateNewDocument(Type, null);
-      doc.SetDocumentFilename( newFilename );
+      // project-less doc - no forced file name
+      var doc = CreateNewDocument( Type, null );
       doc.SetModified();
-
-      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, newFilename, this );
     }
 
 

@@ -327,6 +327,8 @@
     </PostBuildEvent>
     <ApplicationIcon>c64.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net3.5|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
