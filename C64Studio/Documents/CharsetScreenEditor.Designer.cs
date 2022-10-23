@@ -91,7 +91,7 @@
       this.labelBGColor4 = new System.Windows.Forms.Label();
       this.labelMColor2 = new System.Windows.Forms.Label();
       this.labelMColor1 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
+      this.labelBGColor = new System.Windows.Forms.Label();
       this.panelCharacters = new GR.Forms.ImageListbox();
       this.comboBGColor4 = new System.Windows.Forms.ComboBox();
       this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
@@ -365,7 +365,9 @@
             "characters, then colors",
             "characters only",
             "colors only",
-            "colors, then characters"});
+            "colors, then characters",
+            "character set",
+            "characters and colors interleaved (X16)"});
       this.comboExportData.Location = new System.Drawing.Point(90, 6);
       this.comboExportData.Name = "comboExportData";
       this.comboExportData.Size = new System.Drawing.Size(350, 21);
@@ -406,7 +408,7 @@
       this.tabEditor.Controls.Add(this.labelBGColor4);
       this.tabEditor.Controls.Add(this.labelMColor2);
       this.tabEditor.Controls.Add(this.labelMColor1);
-      this.tabEditor.Controls.Add(this.label1);
+      this.tabEditor.Controls.Add(this.labelBGColor);
       this.tabEditor.Controls.Add(this.panelCharacters);
       this.tabEditor.Controls.Add(this.comboBGColor4);
       this.tabEditor.Controls.Add(this.comboMulticolor2);
@@ -772,14 +774,14 @@
       this.labelMColor1.TabIndex = 22;
       this.labelMColor1.Text = "Multicolor 1:";
       // 
-      // label1
+      // labelBGColor
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(677, 63);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(68, 13);
-      this.label1.TabIndex = 22;
-      this.label1.Text = "Background:";
+      this.labelBGColor.AutoSize = true;
+      this.labelBGColor.Location = new System.Drawing.Point(677, 63);
+      this.labelBGColor.Name = "labelBGColor";
+      this.labelBGColor.Size = new System.Drawing.Size(68, 13);
+      this.labelBGColor.TabIndex = 22;
+      this.labelBGColor.Text = "Background:";
       // 
       // panelCharacters
       // 
@@ -1016,7 +1018,7 @@
     private GR.Forms.FastPictureBox panelCharColors;
     private System.Windows.Forms.Label labelMColor2;
     private System.Windows.Forms.Label labelMColor1;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label labelBGColor;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.ComboBox comboExportData;
     private System.Windows.Forms.VScrollBar screenVScroll;

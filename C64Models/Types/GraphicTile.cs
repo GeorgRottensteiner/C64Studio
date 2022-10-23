@@ -71,6 +71,7 @@ namespace RetroDevStudio.Types
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.X16_HIRES:
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
             int   byteValue = Data.ByteAt( bytePos );
@@ -181,6 +182,7 @@ namespace RetroDevStudio.Types
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.X16_HIRES:
           {
             if ( ( Data.ByteAt( Y * ( ( Width + 7 ) / 8 ) + X / 8 ) & ( 1 << ( 7 - ( X % 8 ) ) ) ) != 0 )
             {

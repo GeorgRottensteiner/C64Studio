@@ -93,7 +93,7 @@
 ;| Bit  7-2 |    Tile Base Address (16:11)
 ;| Bits 1   |    Tile Height
 ;| Bit  0   |    Tile Width
-.L0_CONFIG          = $9f2f
+.L0_TILEBASE        = $9f2f
 
 ;h-scroll (7:0)
 .L0_HSCROLL_L       = $9f30
@@ -123,7 +123,7 @@
 ;| Bit  7-2 |    Tile Base Address (16:11)
 ;| Bits 1   |    Tile Height
 ;| Bit  1   |    Tile Width
-.L1_CONFIG          = $9f36
+.L1_TILEBASE        = $9f36
 
 ;h-scroll (7:0)
 .L1_HSCROLL_L       = $9f37

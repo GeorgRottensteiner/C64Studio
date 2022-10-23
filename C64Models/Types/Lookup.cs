@@ -52,6 +52,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_MULTICOLOR:
         case TextCharMode.VIC20:
         case TextCharMode.MEGA65_NCM:
+        case TextCharMode.X16_HIRES:
           return 16;
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
@@ -76,6 +77,7 @@ namespace RetroDevStudio
         case TextCharMode.VIC20:
         case TextCharMode.MEGA65_ECM:
         case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.X16_HIRES:
           return 8;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -152,6 +154,14 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_NCM:
         case TextMode.MEGA65_40_X_25_NCM:
           return TextCharMode.MEGA65_NCM;
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_20_X_30:
+        case TextMode.X16_40_X_15:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_40_X_60:
+        case TextMode.X16_80_X_30:
+        case TextMode.X16_80_X_60:
+          return TextCharMode.X16_HIRES;
         default:
           Debug.Log( "TextCharModeFromTextMode unsupported Mode " + Mode );
           return TextCharMode.COMMODORE_HIRES;
@@ -171,6 +181,7 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.VIC20:
+        case TextCharMode.X16_HIRES:
           return 256;
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
@@ -193,6 +204,7 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_ECM:
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.VIC20:
+        case TextCharMode.X16_HIRES:
           return true;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -229,6 +241,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.X16_HIRES:
           return false;
         case GraphicTileMode.MEGA65_NCM:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
@@ -313,6 +326,8 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
           return GraphicTileMode.MEGA65_FCM_256_COLORS;
+        case TextCharMode.X16_HIRES:
+          return GraphicTileMode.X16_HIRES;
         default:
           Debug.Log( "GraphicTileModeFromTextCharMode unsupported mode " + Mode );
           return GraphicTileMode.COMMODORE_HIRES;
@@ -417,6 +432,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.X16_HIRES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterWidthInPixel - unsupported mode " + Mode );
@@ -435,6 +451,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.X16_HIRES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterHeightInPixel - unsupported mode " + Mode );
@@ -497,6 +514,10 @@ namespace RetroDevStudio
         case TextMode.MEGA65_40_X_25_FCM_16BIT:
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_40_X_25_MULTICOLOR:
+        case TextMode.X16_40_X_15:
+        case TextMode.X16_40_X_25:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_40_X_60:
           return 40;
         case TextMode.COMMODORE_VIC20_22_X_23:
           return 22;
@@ -506,7 +527,12 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
+        case TextMode.X16_80_X_30:
+        case TextMode.X16_80_X_60:
           return 80;
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_20_X_30:
+          return 20;
         default:
           Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
           return 40;
@@ -534,9 +560,20 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
+        case TextMode.X16_40_X_25:
           return 25;
         case TextMode.COMMODORE_VIC20_22_X_23:
           return 23;
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_40_X_15:
+          return 15;
+        case TextMode.X16_20_X_30:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_80_X_30:
+          return 30;
+        case TextMode.X16_40_X_60:
+        case TextMode.X16_80_X_60:
+          return 60;
         default:
           Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
           return 25;
@@ -631,6 +668,14 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_20_X_30:
+        case TextMode.X16_40_X_15:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_40_X_60:
+        case TextMode.X16_80_X_30:
+        case TextMode.X16_80_X_60:
+          return MachineType.COMMANDER_X16;
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
@@ -653,6 +698,25 @@ namespace RetroDevStudio
         default:
           Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
           return MachineType.C64;
+      }
+    }
+
+
+
+    internal static bool TextModeInterleavesCharAndColor( TextMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_20_X_30:
+        case TextMode.X16_40_X_15:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_40_X_60:
+        case TextMode.X16_80_X_30:
+        case TextMode.X16_80_X_60:
+          return true;
+        default:
+          return false;
       }
     }
 

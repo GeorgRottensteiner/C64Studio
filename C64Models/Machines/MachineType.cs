@@ -23,7 +23,9 @@ namespace RetroDevStudio
     [Description( "Mega 65" )]
     MEGA65,
     [Description( "Nintendo NES" )]
-    NES
+    NES,
+    [Description( "Commander X16" )]
+    COMMANDER_X16
   }
 
 

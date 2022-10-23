@@ -21,6 +21,9 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsECMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsX16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsNCMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -44,6 +47,9 @@
     </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\PopupControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\CSButton.cs">
       <SubType>Component</SubType>

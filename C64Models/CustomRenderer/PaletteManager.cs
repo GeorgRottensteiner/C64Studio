@@ -16,6 +16,8 @@ namespace RetroDevStudio
           return ConstantData.PaletteMega65_256();
         case MachineType.VIC20:
           return ConstantData.PaletteVIC20();
+        case MachineType.COMMANDER_X16:
+          return ConstantData.PaletteCommanderX16();
       }
     }
 

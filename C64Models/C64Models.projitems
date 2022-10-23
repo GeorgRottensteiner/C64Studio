@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteCommanderX16.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65_256.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteVIC20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC64.cs" />
@@ -53,6 +54,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.BASIC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.AddLibraryPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.CPU.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.ACMEHex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Fill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.LoopStart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Media.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.Include.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />

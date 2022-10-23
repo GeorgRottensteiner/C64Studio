@@ -10,8 +10,7 @@ using RetroDevStudio.Formats;
 using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
-
-
+using GR.Forms;
 
 namespace RetroDevStudio.Controls
 {
@@ -152,9 +151,33 @@ namespace RetroDevStudio.Controls
 
     private void RedrawColorChooser()
     {
-      for ( byte i = 0; i < _NumColorsInColorSelector; ++i )
+      if ( m_Project.Mode == TextCharMode.X16_HIRES )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
+
+        // click for more
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 32, panelCharColors.DisplayPage, 8, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 3, panelCharColors.DisplayPage, 16, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 12, panelCharColors.DisplayPage, 24, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 9, panelCharColors.DisplayPage, 32, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 3, panelCharColors.DisplayPage, 40, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 11, panelCharColors.DisplayPage, 48, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 32, panelCharColors.DisplayPage, 56, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 6, panelCharColors.DisplayPage, 64, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 15, panelCharColors.DisplayPage, 72, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 18, panelCharColors.DisplayPage, 80, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 32, panelCharColors.DisplayPage, 88, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 13, panelCharColors.DisplayPage, 96, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 15, panelCharColors.DisplayPage, 104, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 18, panelCharColors.DisplayPage, 112, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 5, panelCharColors.DisplayPage, 120, 0, 1 );
+      }
+      else
+      {
+        for ( byte i = 0; i < _NumColorsInColorSelector; ++i )
+        {
+          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
+        }
       }
       panelCharColors.Invalidate();
     }
@@ -1358,6 +1381,36 @@ namespace RetroDevStudio.Controls
 
     private void HandleMouseOnColorChooser( int X, int Y, MouseButtons Buttons )
     {
+      if ( ( Buttons ==  MouseButtons.Left )
+      &&   ( m_Project.Mode == TextCharMode.X16_HIRES )
+      &&   ( panelCharColors.ClientRectangle.Contains( X, Y ) ) )
+      {
+        var popupControl = new FastPictureBox();
+        popupControl.DisplayPage = new FastImage( 128, 128 );
+        popupControl.Size = new Size( 256, 256 );
+
+        var popup = new PopupControl( popupControl );
+        popup.ClientSize = new Size( 256, 256 );
+
+        // build all variations
+        for ( byte i = 0; i < 16; ++i )
+        {
+          for ( byte j = 0; j < 16; ++j )
+          {
+            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, popupControl.DisplayPage, 
+              i * 8, j * 8, j * 16 + i );
+          }
+        }
+
+        var screenPos = panelCharColors.Parent.PointToScreen( panelCharColors.Location );
+        popup.Location = new Point( screenPos.X, screenPos.Y - popup.Height + panelCharColors.Height );
+        popup.Clicked += m_ColorChoserPopup_Clicked;
+        popup.Show();
+        popup.Focus();
+        return;
+      }
+
+
       if ( ( X < 0 )
       ||   ( X >= panelCharColors.ClientSize.Width ) )
       {
@@ -1369,6 +1422,15 @@ namespace RetroDevStudio.Controls
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
       }
+    }
+
+
+
+    private void m_ColorChoserPopup_Clicked( int X, int Y )
+    {
+      int colorIndex = ( X / 16 ) + ( Y / 16 ) * 16;
+      m_CurrentColor = (byte)colorIndex;
+      RedrawColorChooser();
     }
 
 
@@ -2026,6 +2088,12 @@ namespace RetroDevStudio.Controls
         case TextCharMode.MEGA65_FCM_16BIT:
           _ColorSettingsDlg = new ColorSettingsMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
+        case TextCharMode.X16_HIRES:
+          _ColorSettingsDlg = new ColorSettingsX16( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        default:
+          Debug.Log( "ChangeColorSettingsDialog unsupported Mode " + m_Project.Mode );
+          return;
       }
       panelColorSettings.Controls.Add( _ColorSettingsDlg );
       _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
@@ -2249,6 +2317,12 @@ namespace RetroDevStudio.Controls
           break;
         case TextCharMode.VIC20:
           m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+          break;
+        case TextCharMode.X16_HIRES:
+          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.COMMANDER_X16 );
+          break;
+        default:
+          Debug.Log( "UpdatePalette - unsupported TextCharMode " + m_Project.Mode );
           break;
       }
 
@@ -2525,27 +2599,8 @@ namespace RetroDevStudio.Controls
 
     private void AdjustCharacterSizes()
     {
-      switch ( m_Project.Mode )
-      {
-        case TextCharMode.MEGA65_NCM:
-          m_CharacterWidth  = 16;
-          m_CharacterHeight = 8;
-          break;
-        case TextCharMode.COMMODORE_HIRES:
-        case TextCharMode.COMMODORE_ECM:
-        case TextCharMode.COMMODORE_MULTICOLOR:
-        case TextCharMode.MEGA65_HIRES:
-        case TextCharMode.MEGA65_ECM:
-        case TextCharMode.MEGA65_FCM:
-        case TextCharMode.MEGA65_FCM_16BIT:
-        case TextCharMode.VIC20:
-          m_CharacterWidth  = 8;
-          m_CharacterHeight = 8;
-          break;
-        default:
-          Debug.Log( "AdjustCharacterSizes, unsupported mode " + m_Project.Mode );
-          break;
-      }
+      m_CharacterWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 0 ) );
+      m_CharacterHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 0 ) );
 
       // adjust aspect ratio of the editor
       int   biggerSize = Math.Max( m_CharacterWidth, m_CharacterHeight );
@@ -2925,6 +2980,11 @@ namespace RetroDevStudio.Controls
 
     private void panelCharColors_PostPaint( FastImage TargetBuffer )
     {
+      if ( m_Project.Mode == TextCharMode.X16_HIRES )
+      {
+        return;
+      }
+
       int     x1 = m_CurrentColor * TargetBuffer.Width / _NumColorsInColorSelector;
       int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / _NumColorsInColorSelector;
 

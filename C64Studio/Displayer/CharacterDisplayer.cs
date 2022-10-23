@@ -418,6 +418,10 @@ namespace RetroDevStudio.Displayer
       {
         DisplayVIC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
+      else if ( AlternativeMode == TextCharMode.X16_HIRES )
+      {
+        DisplayHiResChar( Char.Tile.Data, ( AlternativeColor >> 4 ) & 0x0f, AlternativeColor & 0x0f, Context );
+      }
       else
       {
         Debug.Log( "DisplayChar unsupported mode " + AlternativeMode );
@@ -503,6 +507,10 @@ namespace RetroDevStudio.Displayer
       else if ( AlternativeMode == TextCharMode.VIC20 )
       {
         DisplayVIC20Char( Char.Tile.Data, Palette, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+      }
+      else if ( AlternativeMode == TextCharMode.X16_HIRES )
+      {
+        DisplayHiResChar( Char.Tile.Data, Palette, ( AlternativeColor >> 4 ) & 0x0f, AlternativeColor & 0x0f, TargetImage, X, Y );
       }
       else
       {

@@ -12,7 +12,8 @@ namespace RetroDevStudio.Formats
       CHAR_ONLY,
       COLOR_ONLY,
       COLOR_THEN_CHAR,
-      CHARSET
+      CHARSET,
+      CHAR_AND_COLOR_INTERLEAVED
     }
 
     public CharsetScreenProject       Charscreen;
