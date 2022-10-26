@@ -272,11 +272,12 @@ namespace RetroDevStudio.Documents
       // mark selected char
       if ( m_SelectedChar.X != -1 )
       {
-        int  sx1 = ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sx2 = ( m_SelectedChar.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sy1 = ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-        int  sy2 = ( m_SelectedChar.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+        int  sx1 = ( ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+        int  sx2 = ( ( m_SelectedChar.X + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+        int  sy1 = ( ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+        int  sy2 = ( ( m_SelectedChar.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
 
+        /*
         if ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX == m_CharsWidth - 1 )
         {
           --sx2;
@@ -284,7 +285,7 @@ namespace RetroDevStudio.Documents
         if ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY == m_CharsHeight - 1 )
         {
           --sy2;
-        }
+        }*/
 
         TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, selColor );
       }
@@ -297,19 +298,10 @@ namespace RetroDevStudio.Documents
 
         CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
 
-        int  sx1 = ( o1.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sx2 = ( o2.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sy1 = ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-        int  sy2 = ( o2.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-
-        if ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX == m_CharsWidth - 1 )
-        {
-          --sx2;
-        }
-        if ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY == m_CharsHeight - 1 )
-        {
-          --sy2;
-        }
+        int  sx1 = ( ( o1.X - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+        int  sx2 = ( ( o2.X + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+        int  sy1 = ( ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+        int  sy2 = ( ( o2.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
 
         TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, selColor );
       }
@@ -351,19 +343,10 @@ namespace RetroDevStudio.Documents
         {
           if ( m_SelectedChars[x, y] )
           {
-            int  sx1 = ( x - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-            int  sx2 = ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-            int  sy1 = ( y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-            int  sy2 = ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-
-            if ( x == x2 )
-            {
-              --sx2;
-            }
-            if ( y == y2 )
-            {
-              --sy2;
-            }
+            int  sx1 = ( ( x - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+            int  sx2 = ( ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+            int  sy1 = ( ( y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+            int  sy2 = ( ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
 
             if ( ( y == 0 )
             ||   ( !m_SelectedChars[x, y - 1] ) )
@@ -2781,7 +2764,6 @@ namespace RetroDevStudio.Documents
         case TextMode.X16_20_X_15:
         case TextMode.X16_20_X_30:
         case TextMode.X16_40_X_15:
-        case TextMode.X16_40_X_25:
         case TextMode.X16_40_X_30:
         case TextMode.X16_40_X_60:
         case TextMode.X16_80_X_30:

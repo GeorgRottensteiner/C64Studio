@@ -11,7 +11,6 @@ VIDEO_RAM = $01b000
 
           lda #( VIDEO_RAM >> 16 ) | $10
           sta VERA.ADDRx_H
-
           lda #( VIDEO_RAM >> 8 ) & $ff
           sta VERA.ADDRx_M
           lda #VIDEO_RAM & $ff
@@ -31,11 +30,11 @@ VIDEO_RAM = $01b000
           ;clear DC sel
           stz VERA.CTRL
 
-          ; text mode: disable layer 0
+          ; text mode: disable layer 2
           lda VERA.DC_VIDEO
           and #$ef
           sta VERA.DC_VIDEO
-          lda #6 << 4 | 1 ; blue on white
+          ;lda #6 << 4 | 1 ; blue on white
           ;sta where?
 
           ;map width/height?
@@ -69,19 +68,19 @@ VIDEO_RAM = $01b000
 ;scale:  .byte $00, $01, $10, $11, $12, $21, $22, $11 ; hi-nyb: x >> n, lo-nyb: y >> n
 
           ;scaling 1:1
-          lda #64 ;128
+          lda #128
           sta VERA.DC_HSCALE
           ;scaling 1:1
-          lda #64 ;128
+          lda #128
           sta VERA.DC_VSCALE
 
-          lda #40
+          lda #80
           sta $d9 ;llen  .res 1           ;$D9 x resolution
-          lda #25
+          lda #60
           sta $da ;nlines  .res 1           ;$DA y resolution
-          lda #26
+          lda #61
           sta $db ;nlinesp1 .res 1          ;    X16: y resolution + 1
-          lda #24
+          lda #59
           sta $de ;nlinesm1 .res 1          ;    X16: y resolution - 1
 
 
@@ -94,28 +93,27 @@ VIDEO_RAM = $01b000
           sta VERA.DATA0
 
           inx
-          cpx #40 * 2
+          cpx #80 * 2
           bne -
 
-          ;skip over stride minus width bytes
--
-          sta VERA.DATA0
-          inx
-          bne -
+          ;jump to next line
+          inc VERA.ADDRx_M
+          stz VERA.ADDRx_L
 
+          ;update source data pointer
           lda .ReadPos
           clc
-          adc #40 * 2
+          adc #80 * 2
           sta .ReadPos
           bcc +
           inc .ReadPos + 1
 +
           iny
-          cpy #30
+          cpy #60
           bne --
 
           rts
 
 
 SCREEN_DATA
-          !media "textscreen40x30.charscreen",CHARCOLORINTERLEAVED
+          !media "textscreen80x60.charscreen",CHARCOLORINTERLEAVED

@@ -25,6 +25,7 @@ namespace RetroDevStudio.Controls
       comboImportFromDefault.Items.Add( "VIC20 Lowercase" );
       comboImportFromDefault.Items.Add( "Commander X16 Uppercase" );
       comboImportFromDefault.Items.Add( "Commander X16 Lowercase" );
+      comboImportFromDefault.Items.Add( "Commander X16 ISO-8859-15" );
 
       comboImportFromDefault.SelectedIndex = 0;
     }
@@ -96,6 +97,17 @@ namespace RetroDevStudio.Controls
             for ( int j = 0; j < 8; ++j )
             {
               CharScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetCommanderX16.ByteAt( i * 8 + j ) );
+            }
+            CharScreen.CharSet.Characters[i].Tile.CustomColor = 1;
+          }
+          Editor.CharsetChanged();
+          return true;
+        case 6:
+          for ( int i = 0; i < 256; ++i )
+          {
+            for ( int j = 0; j < 8; ++j )
+            {
+              CharScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.ISO8859CommanderX16.ByteAt( i * 8 + j ) );
             }
             CharScreen.CharSet.Characters[i].Tile.CustomColor = 1;
           }

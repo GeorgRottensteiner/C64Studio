@@ -51,9 +51,7 @@ namespace RetroDevStudio
     [Description( "Commander X16 20x30" )]
     X16_20_X_30,
     [Description( "Commander X16 20x15" )]
-    X16_20_X_15,
-    [Description( "Commander X16 40x25" )]
-    X16_40_X_25
+    X16_20_X_15
   }
 
 }

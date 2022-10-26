@@ -515,7 +515,6 @@ namespace RetroDevStudio
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_40_X_25_MULTICOLOR:
         case TextMode.X16_40_X_15:
-        case TextMode.X16_40_X_25:
         case TextMode.X16_40_X_30:
         case TextMode.X16_40_X_60:
           return 40;
@@ -560,7 +559,6 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
-        case TextMode.X16_40_X_25:
           return 25;
         case TextMode.COMMODORE_VIC20_22_X_23:
           return 23;
