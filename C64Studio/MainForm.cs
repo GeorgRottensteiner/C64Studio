@@ -689,7 +689,14 @@ namespace RetroDevStudio
           }
         }
       }
+
       StudioCore.Settings.SanitizeSettings();
+
+      if ( StudioCore.Settings.MainWindowPlacement != "" )
+      {
+        GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
+      }
+
       RefreshDisplayOnAllDocuments();
       ApplyMenuShortCuts();
 
@@ -712,10 +719,6 @@ namespace RetroDevStudio
       // place all toolbars
       SetToolPerspective( Perspective.EDIT );
 
-      if ( StudioCore.Settings.MainWindowPlacement != "" )
-      {
-        GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
-      }
       m_FindReplace.Fill( StudioCore.Settings );
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
@@ -2403,6 +2406,7 @@ namespace RetroDevStudio
       }
       else
       {
+        //Debug.Log( Text );
         m_Output.AppendText( Text );
         m_Output.Show();
       }

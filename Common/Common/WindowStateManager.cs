@@ -7,12 +7,14 @@ namespace GR
   {
     public class WindowStateManager
     {
-      private static bool GeometryIsBizarreLocation( Point loc, Size size )
+      private static bool GeometryLocationIsGood( Point loc, Size size )
       {
         Rectangle rect = new Rectangle( loc, size );
 
         return ( Screen.FromRectangle( rect ) == null ) ? false : true;
       }
+
+
 
       public static void GeometryFromString( string thisWindowGeometry, Form formIn )
       {
@@ -31,35 +33,36 @@ namespace GR
           Point windowPoint = new Point( int.Parse( numbers[0] ), int.Parse( numbers[1] ) );
           Size windowSize = new Size( int.Parse( numbers[2] ), int.Parse( numbers[3] ) );
 
-          bool locOkay = GeometryIsBizarreLocation( windowPoint, windowSize );
-          bool sizeOkay = GeometryIsBizarreSize( windowSize );
+          bool locOkay = GeometryLocationIsGood( windowPoint, windowSize );
+          bool sizeOkay = GeometrySizeIsGood( windowSize );
 
-          if ( locOkay == true && sizeOkay == true )
+          if ( ( locOkay ) 
+          &&   ( sizeOkay ) )
           {
-            formIn.Location = windowPoint;
-            formIn.Size = windowSize;
-            formIn.StartPosition = FormStartPosition.Manual;
-            formIn.WindowState = FormWindowState.Normal;
+            formIn.Location       = windowPoint;
+            formIn.Size           = windowSize;
+            formIn.StartPosition  = FormStartPosition.Manual;
+            formIn.WindowState    = FormWindowState.Normal;
           }
-          else if ( sizeOkay == true )
+          else if ( sizeOkay )
           {
             formIn.Size = windowSize;
           }
         }
         else if ( windowString == "Maximized" )
         {
-          formIn.Location = new Point( 100, 100 );
-          formIn.StartPosition = FormStartPosition.Manual;
-          formIn.WindowState = FormWindowState.Maximized;
+          formIn.Location       = new Point( 100, 100 );
+          formIn.StartPosition  = FormStartPosition.Manual;
+          formIn.WindowState    = FormWindowState.Maximized;
         }
       }
 
 
 
-      private static bool GeometryIsBizarreSize( Size size )
+      private static bool GeometrySizeIsGood( Size size )
       {
-        return ( size.Height <= Screen.PrimaryScreen.WorkingArea.Height &&
-            size.Width <= Screen.PrimaryScreen.WorkingArea.Width );
+        return ( size.Height <= Screen.PrimaryScreen.WorkingArea.Height ) 
+          &&   ( size.Width <= Screen.PrimaryScreen.WorkingArea.Width );
       }
 
 

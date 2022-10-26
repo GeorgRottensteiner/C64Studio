@@ -1837,7 +1837,7 @@
       this.Controls.Add(this.mainMenu);
       this.Controls.Add(this.panelMain);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-      this.IsMdiContainer = true;
+      this.IsMdiContainer = false;
       this.MainMenuStrip = this.mainMenu;
       this.Name = "MainForm";
       this.Text = "C64Studio";

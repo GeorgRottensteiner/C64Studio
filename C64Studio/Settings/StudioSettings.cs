@@ -851,7 +851,7 @@ namespace RetroDevStudio
       }
       Main.CloseAllDocuments();
 
-      //Debug.Log( Data.ToAsciiString() );
+      
 
       if ( ( Data.Length >= 3 )
       &&   ( Data.ByteAt( 0 ) == 0xef )
