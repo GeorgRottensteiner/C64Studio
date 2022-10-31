@@ -3,6 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
+
+
 
 namespace GR.Image
 {
@@ -1181,6 +1186,9 @@ namespace GR.Image
 
 
 
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
     public System.Drawing.Bitmap GetAsBitmap()
     {
       GR.Image.FastImage    fastImage = new FastImage( Width, Height, PixelFormat );
@@ -1363,7 +1371,7 @@ namespace GR.Image
       int   origBytesPerLine = BitsPerPixel * Width / 8;
       int   bytesPerLine = BitsPerPixel * NewWidth / 8;
 
-      var newImageData = new ByteBuffer(  (uint)( bytesPerLine * Height ) );
+      var newImageData = new ByteBuffer(  (uint)( bytesPerLine * NewHeight ) );
 
       for ( int j = 0; j < safeHeight; ++j )
       {

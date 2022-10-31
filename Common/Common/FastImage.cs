@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace GR.Image
 {
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
   public class FastImage : IDisposable, IImage
   {
     [StructLayout( LayoutKind.Sequential )]
@@ -421,6 +427,9 @@ namespace GR.Image
 
 
 
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
     public System.Drawing.Imaging.BitmapData BitmapData
     {
       get

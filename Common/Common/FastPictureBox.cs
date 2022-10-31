@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 
 
 namespace GR.Forms
 {
+#if NET5_0_OR_GREATER
+  [SupportedOSPlatform("windows")]
+#endif
   public class FastPictureBox : System.Windows.Forms.PictureBox
   {
     [DllImport( "user32.dll" )]
