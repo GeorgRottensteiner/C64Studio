@@ -3046,6 +3046,14 @@ namespace RetroDevStudio.Parser
       int curLine = LineStart;
       foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
       {
+        int   dummyLineNum = curLine;
+        var tokenLineInfo = TokenizeLine( lineInfo.Value.Line, 0, ref dummyLineNum );
+        // skip hard comments
+        if ( ( tokenLineInfo.Tokens.Count == 1 )
+        &&   ( tokenLineInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+        {
+          continue;
+        }
         if ( ( lineInfo.Value.LineNumber >= FirstLineNumber )
         &&   ( lineInfo.Value.LineNumber <= LastLineNumber ) )
         {
@@ -3066,7 +3074,6 @@ namespace RetroDevStudio.Parser
           sb.Append( "\r\n" );
           ++firstLineIndex;
         }
-        //var lineInfo = PureTokenizeLine( lineInfoOrig.Value.Line, lineInfoOrig.Value.LineNumber );
         var lineInfo = TokenizeLine( lineInfoOrig.Value.Line, 0, ref curLine );
         for ( int i = 0; i < lineInfo.Tokens.Count; ++i )
         {
@@ -3204,8 +3211,6 @@ namespace RetroDevStudio.Parser
           }
         }
         sb.Append( "\r\n" );
-        //sb.Append( lineInfo.Value.Line + "\r\n" );
-        // TODO - replace goto/numbers with label
       }
 
       // strip last line break
