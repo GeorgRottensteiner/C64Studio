@@ -2220,7 +2220,7 @@ namespace RetroDevStudio.Parser
       }
       if ( !HasError() )
       {
-        m_LastErrorInfo.Set( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
+        m_LastErrorInfo.Set( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos + 1, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
       }
       return false;
     }
@@ -2813,15 +2813,9 @@ namespace RetroDevStudio.Parser
             if ( ( ( lineInfo.Opcode == null )
             ||     ( ( lineInfo.Opcode != null )
             &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_RELATIVE )
-            //&&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.RELATIVE_16 )
             &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y ) ) )
             &&   ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, lineInfo.LineCodeMapping, out value ) ) )
             {
-              /*
-              Debug.Log( "need to assemble unparsed expression:" );
-              Debug.Log( "=> Could not parse!" );
-              Debug.Log( "=> from line: " + lineInfo.Line );
-               */
               if ( !HasError() )
               {
                 Debug.Log( "EvaluateTokens failed without error info!" );
@@ -6234,13 +6228,20 @@ namespace RetroDevStudio.Parser
           {
             if ( info.Opcode.NumOperands == 0 )
             {
-              if ( info.LineData == null )
+              if ( lineTokenInfos.Count > 1 )
               {
-                info.LineData = new GR.Memory.ByteBuffer();
+                AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Garbage at end of line", lineTokenInfos[1].StartPos, parseLine.Length - lineTokenInfos[1].StartPos );
               }
-              HandleM65OpcodePrefixes( info );
-              info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
-              info.NeededParsedExpression = null;
+              else
+              {
+                if ( info.LineData == null )
+                {
+                  info.LineData = new GR.Memory.ByteBuffer();
+                }
+                HandleM65OpcodePrefixes( info );
+                info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
+                info.NeededParsedExpression = null;
+              }
             }
             else if ( info.Opcode.NumOperands == 1 )
             {
