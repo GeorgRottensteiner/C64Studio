@@ -117,6 +117,9 @@ namespace RetroDevStudio.Controls
           return;
         }
         string NewText = Text.Substring( 0, m_CursorPos ) + value + Text.Substring( m_CursorPos + 1 );
+
+        NewText = NewText.TrimEnd( (char)160 );
+        NewText = NewText.PadRight( MaxLength, EMPTY_CHAR );
         base.Text = NewText;
         Invalidate();
       }
@@ -244,13 +247,13 @@ namespace RetroDevStudio.Controls
           if ( HasSelection )
           {
             if ( ( m_SelectionStartPos > m_SelectionEndPos )
-            && ( i >= m_SelectionEndPos )
-            && ( i < m_SelectionStartPos ) )
+            &&   ( i >= m_SelectionEndPos )
+            &&   ( i < m_SelectionStartPos ) )
             {
               pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
             }
             else if ( ( i >= m_SelectionStartPos )
-            && ( i < m_SelectionEndPos ) )
+            &&        ( i < m_SelectionEndPos ) )
             {
               pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
             }
