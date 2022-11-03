@@ -13,6 +13,23 @@
 ;                Default Value: ? $08/8 (%00001000).
 .ADDRx_H            = $9f22
 
+.ADDRESS_INCREASE_1     = $10
+.ADDRESS_INCREASE_2     = $20
+.ADDRESS_INCREASE_4     = $30
+.ADDRESS_INCREASE_8     = $40
+.ADDRESS_INCREASE_16    = $50
+.ADDRESS_INCREASE_32    = $60
+.ADDRESS_INCREASE_64    = $70
+.ADDRESS_INCREASE_128   = $80
+.ADDRESS_INCREASE_256   = $90
+.ADDRESS_INCREASE_512   = $a0
+.ADDRESS_INCREASE_40    = $b0
+.ADDRESS_INCREASE_80    = $c0
+.ADDRESS_INCREASE_160   = $d0
+.ADDRESS_INCREASE_320   = $e0
+.ADDRESS_INCREASE_640   = $f0
+.ADDRESS_DECREASE       = $08
+
 ;VRAM data port 0
 .DATA0              = $9f23
 
@@ -25,6 +42,13 @@
 ;| Bit  0   |    ADDRSEL
 ;                Default Value: ? $08/8 (%00001000).
 .CTRL               = $9f25
+
+.CTRL_ADDRSEL_0   = $00
+.CTRL_ADDRSEL_1   = $01
+.CTRL_DCSEL_0     = $00
+.CTRL_DCSEL_1     = $02
+.CTRL_RESET       = $80
+
 
 ;| Bits 7   |    IRQ line (8)
 ;| Bit  6-4 |    unused
@@ -49,14 +73,28 @@
 
 ;| Bits 7   |    Current Field
 ;| Bit  6   |    Sprites Enable
-;| Bit  5   |    Layer 1 enable
-;| Bit  4   |    Layer 2 enable
+;| Bit  5   |    Layer 0 enable
+;| Bit  4   |    Layer 1 enable
 ;| Bit  3   |    unused
 ;| Bit  2   |    Chroma disable
 ;| Bit  1-0 |    Output mode
+;                00 = disabled
+;                01 = VGA
+;                10 = NTSC composite
+;                11 = RGB interlaced, composite sync (VGA)
 ;(DCSEL=0)
-;                Default Value: ? $08/8 (%00001000).
+;                Default Value: $31
 .DC_VIDEO           = $9f29
+
+.DC_VIDEO_CURRENT_FIELD         = $80
+.DC_VIDEO_SPRITES_ENABLE        = $40
+.DC_VIDEO_LAYER_0_ENABLE        = $20
+.DC_VIDEO_LAYER_1_ENABLE        = $10
+.DC_VIDEO_CHROMA_DISABLE        = $04
+.DC_VIDEO_OUTPUT_NONE           = $00
+.DC_VIDEO_OUTPUT_VGA            = $01
+.DC_VIDEO_OUTPUT_NTSC           = $02
+.DC_VIDEO_OUTPUT_RGB_INTERLACED = $03
 
 ;active display H scale (DCSEL=0)
 .DC_HSCALE          = $9f2a
@@ -161,5 +199,59 @@
 ;| Bit  0   |    select
 .SPI_CTRL           = $9f3f
 
+
+
+.SPRITE_MODE_4BPP = $00
+.SPRITE_MODE_8BPP = $80
+
+.SPRITE_DISABLE                           = $00
+.SPRITE_BETWEEN_BACKGROUND_AND_LAYER_0    = $04
+.SPRITE_BETWEEN_LAYER_0_AND_LAYER_1       = $08
+.SPRITE_IN_FRONT_OF_LAYER_1               = $0c
+
+.SPRITE_WIDTH_8                           = $00
+.SPRITE_WIDTH_16                          = $10
+.SPRITE_WIDTH_32                          = $20
+.SPRITE_WIDTH_64                          = $30
+.SPRITE_HEIGHT_8                          = $00
+.SPRITE_HEIGHT_16                         = $40
+.SPRITE_HEIGHT_32                         = $80
+.SPRITE_HEIGHT_64                         = $c0
+
+
+.VRAM_PSG_REGISTERS       = $01F9C0
+
+.VRAM_PALETTE             = $01FA00
+
+
+;128 entries of the following format:
+;
+;Offset  Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
+;0       Address (12:5)
+;1       Mode  - Address (16:13)
+;2       X (7:0)
+;3                        -                    X (9:8)
+;4       Y (7:0)
+;5                        -                    Y (9:8)
+;6       Collision mask            Z-depth  V-flip  H-flip
+;7       Sprite height  Sprite width   Palette offset
+.VRAM_SPRITE_ATTRIBUTES   = $01FC00
+
+.SPRITE_PALETTE_OFFSET_0    = 0
+.SPRITE_PALETTE_OFFSET_16   = 1
+.SPRITE_PALETTE_OFFSET_32   = 2
+.SPRITE_PALETTE_OFFSET_48   = 3
+.SPRITE_PALETTE_OFFSET_64   = 4
+.SPRITE_PALETTE_OFFSET_80   = 5
+.SPRITE_PALETTE_OFFSET_96   = 6
+.SPRITE_PALETTE_OFFSET_112  = 7
+.SPRITE_PALETTE_OFFSET_128  = 8
+.SPRITE_PALETTE_OFFSET_144  = 9
+.SPRITE_PALETTE_OFFSET_160  = 10
+.SPRITE_PALETTE_OFFSET_176  = 11
+.SPRITE_PALETTE_OFFSET_192  = 12
+.SPRITE_PALETTE_OFFSET_208  = 13
+.SPRITE_PALETTE_OFFSET_224  = 14
+.SPRITE_PALETTE_OFFSET_240  = 15
 
 !zone

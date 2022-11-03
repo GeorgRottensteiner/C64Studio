@@ -1411,7 +1411,7 @@ namespace RetroDevStudio.Documents
       }
       if ( Modified )
       {
-        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your character set. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
+        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your map project. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
         if ( doSave == DialogResult.Cancel )
         {
           return;

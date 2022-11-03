@@ -53,6 +53,8 @@ namespace RetroDevStudio.Dialogs
     private List<ErrorRange>        m_Errors = new List<ErrorRange>();
 
     private int                     m_Zoom = 1024;
+    private int                     m_ItemWidth = 8;
+    private int                     m_ItemHeight = 8;
 
     private GR.Image.MemoryImage    m_OriginalImage = new GR.Image.MemoryImage( 20, 20, GR.Drawing.PixelFormat.Format8bppIndexed );
     private GR.Image.MemoryImage    m_ImportImage = new GR.Image.MemoryImage( 20, 20, GR.Drawing.PixelFormat.Format8bppIndexed );
@@ -69,15 +71,23 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    public DlgGraphicImport( StudioCore Core, Types.GraphicType ImportType, GR.Image.FastImage IncomingImage, string Filename, ColorSettings MCSettings )
+    public DlgGraphicImport( StudioCore Core, 
+                             Types.GraphicType ImportType, 
+                             GR.Image.IImage IncomingImage, 
+                             string Filename, 
+                             ColorSettings MCSettings,
+                             int ItemWidth, int ItemHeight )
     {
       this.Core = Core;
-      m_ImportType = ImportType;
-      m_CurPalette = MCSettings.Palette;
-      MultiColorSettings = MCSettings;
+      m_ImportType        = ImportType;
+      m_ItemWidth         = ItemWidth;
+      m_ItemHeight        = ItemHeight;
+      m_CurPalette        = MCSettings.Palette;
+      MultiColorSettings  = MCSettings;
 
       InitializeComponent();
 
+      // TODO - adjust to used machine type!!
       comboBackground.Items.Add( "[Any]" );
       comboMulticolor1.Items.Add( "[Any]" );
       comboMulticolor2.Items.Add( "[Any]" );
@@ -93,6 +103,7 @@ namespace RetroDevStudio.Dialogs
         comboTargetPalette.Items.Add( MCSettings.Palettes[i].Name );
       }
       if ( ( ImportType == Types.GraphicType.SPRITES_16_COLORS )
+      ||   ( ImportType == Types.GraphicType.SPRITES_256_COLORS )
       ||   ( ImportType == Types.GraphicType.CHARACTERS_FCM )
       ||   ( ImportType == Types.GraphicType.BITMAP ) )
       {
@@ -185,7 +196,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void OpenImage( GR.Image.FastImage newImage )
+    private void OpenImage( GR.Image.IImage newImage )
     {
       if ( newImage == null )
       {
@@ -392,9 +403,9 @@ namespace RetroDevStudio.Dialogs
 
     private void CheckAsCharacters( bool MultiColor )
     {
-      for ( int sy = 0; sy < ( m_OrigSize.Height + 7 ) / 8; ++sy )
+      for ( int sy = 0; sy < ( m_OrigSize.Height + m_ItemWidth - 1 ) / m_ItemWidth; ++sy )
       {
-        for ( int sx = 0; sx < ( m_OrigSize.Width + 7 ) / 8; ++sx )
+        for ( int sx = 0; sx < ( m_OrigSize.Width + m_ItemHeight - 1 ) / m_ItemHeight; ++sx )
         {
           // determine single/multi color
           bool[] usedColor = new bool[16];
@@ -405,20 +416,20 @@ namespace RetroDevStudio.Dialogs
           int determinedMultiColor1 = comboMulticolor1.SelectedIndex - 1;
           int determinedMultiColor2 = comboMulticolor2.SelectedIndex - 1;
 
-          for ( int y = 0; y < 8; ++y )
+          for ( int y = 0; y < m_ItemHeight; ++y )
           {
-            for ( int x = 0; x < 8; ++x )
+            for ( int x = 0; x < m_ItemWidth; ++x )
             {
-              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * 8 + x, sy * 8 + y );
+              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x, sy * m_ItemHeight + y );
               if ( colorIndex >= 16 )
               {
-                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * 8 + x, sy * 8 + y, 1, 1 );
+                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
               }
               else
               {
                 if ( ( x % 2 ) == 0 )
                 {
-                  if ( colorIndex != (int)picPreview.DisplayPage.GetPixelData( sx * 8 + x + 1, sy * 8 + y ) )
+                  if ( colorIndex != (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x + 1, sy * m_ItemHeight + y ) )
                   {
                     // not a double pixel, must be single color then
                     hasSinglePixel = true;
@@ -460,20 +471,20 @@ namespace RetroDevStudio.Dialogs
             }
             if ( !safeUseOfHires )
             {
-              AddError( "Chosen multicolor, but has a single pixel", sx * 8, sy * 8, 8, 8 );
+              AddError( "Chosen multicolor, but has a single pixel", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
               continue;
             }
           }
           if ( ( hasSinglePixel )
           &&   ( numColors > 2 ) )
           {
-            AddError( "Has a single pixel, but more than two colors", sx * 8, sy * 8, 8, 8 );
+            AddError( "Has a single pixel, but more than two colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( !MultiColor )
           &&   ( numColors > 2 ) )
           {
-            AddError( "Chosen HiRes, but more than two colors", sx * 8, sy * 8, 8, 8 );
+            AddError( "Chosen HiRes, but more than two colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( hasSinglePixel )
@@ -512,7 +523,7 @@ namespace RetroDevStudio.Dialogs
               }
               if ( !usedBGColor )
               {
-                AddError( "Has a single pixel, but two colors, and none is the background color", sx * 8, sy * 8, 8, 8 );
+                AddError( "Has a single pixel, but two colors, and none is the background color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
                 continue;
               }
             }
@@ -534,13 +545,13 @@ namespace RetroDevStudio.Dialogs
           &&   ( !usedBackgroundColor )
           &&   ( numColors >= 4 ) )
           {
-            AddError( "Looks like single color, but doesn't use the set background color and there are no more free custom colors.", sx * 8, sy * 8, 8, 8 );
+            AddError( "Looks like single color, but doesn't use the set background color and there are no more free custom colors.", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             return;
           }
           if ( ( !hasSinglePixel )
           &&   ( numColors > 4 ) )
           {
-            AddError( "Uses more than 4 colors", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses more than 4 colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( !hasSinglePixel )
@@ -577,7 +588,7 @@ namespace RetroDevStudio.Dialogs
           &&   ( numColors == 4 )
           &&   ( !usedBackgroundColor ) )
           {
-            AddError( "Uses 4 colors, but doesn't use the set background color", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses 4 colors, but doesn't use the set background color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             return;
           }
           if ( ( hasSinglePixel )
@@ -598,7 +609,7 @@ namespace RetroDevStudio.Dialogs
                   {
                     if ( usedFreeColor != -1 )
                     {
-                      AddError( "Uses more than one free color", sx * 8, sy * 8, 8, 8 );
+                      AddError( "Uses more than one free color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
                       continue;
                     }
                     usedFreeColor = i;
@@ -609,7 +620,7 @@ namespace RetroDevStudio.Dialogs
             if ( ( MultiColor )
             &&   ( usedFreeColor >= 8 ) )
             {
-              AddError( "Chosen multi color but used free color with index >= 8", sx * 8, sy * 8, 8, 8 );
+              AddError( "Chosen multi color but used free color with index >= 8", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
               continue;
             }
           }
@@ -637,14 +648,14 @@ namespace RetroDevStudio.Dialogs
             if ( ( MultiColor )
             &&   ( usedFreeColor >= 8 ) )
             {
-              AddError( "Chosen multi color but used free color with index >= 8", sx * 8, sy * 8, 8, 8 );
+              AddError( "Chosen multi color but used free color with index >= 8", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
               continue;
             }
 
             if ( numColors - usedMultiColors > 1 )
             {
               // only one free color allowed
-              AddError( "Uses more than one free color", sx * 8, sy * 8, 8, 8 );
+              AddError( "Uses more than one free color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
               continue;
             }
           }
@@ -657,9 +668,9 @@ namespace RetroDevStudio.Dialogs
 
     private void CheckAsHiResBitmap()
     {
-      for ( int sy = 0; sy < ( m_OrigSize.Height + 7 ) / 8; ++sy )
+      for ( int sy = 0; sy < ( m_OrigSize.Height + m_ItemWidth - 1 ) / m_ItemWidth; ++sy )
       {
-        for ( int sx = 0; sx < ( m_OrigSize.Width + 7 ) / 8; ++sx )
+        for ( int sx = 0; sx < ( m_OrigSize.Width + m_ItemHeight - 1 ) / m_ItemHeight; ++sx )
         {
           // determine single/multi color
           bool[] usedColor = new bool[16];
@@ -667,14 +678,14 @@ namespace RetroDevStudio.Dialogs
           bool usedBackgroundColor = false;
           int determinedBackgroundColor = comboBackground.SelectedIndex - 1;
 
-          for ( int y = 0; y < 8; ++y )
+          for ( int y = 0; y < m_ItemHeight; ++y )
           {
-            for ( int x = 0; x < 8; ++x )
+            for ( int x = 0; x < m_ItemWidth; ++x )
             {
-              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * 8 + x, sy * 8 + y );
+              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x, sy * m_ItemHeight + y );
               if ( colorIndex >= 16 )
               {
-                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * 8 + x, sy * 8 + y, 1, 1 );
+                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
               }
               else
               {
@@ -693,7 +704,7 @@ namespace RetroDevStudio.Dialogs
           }
           if ( numColors > 2 )
           {
-            AddError( "Uses more than two colors", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses more than two colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           /*
@@ -720,7 +731,7 @@ namespace RetroDevStudio.Dialogs
           &&   ( !usedBackgroundColor )
           &&   ( numColors >= 2 ) )
           {
-            AddError( "Looks like single color, but doesn't use the set background color", sx * 8, sy * 8, 8, 8 );
+            AddError( "Looks like single color, but doesn't use the set background color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           int usedFreeColor = -1;
@@ -733,7 +744,7 @@ namespace RetroDevStudio.Dialogs
               {
                 if ( usedFreeColor != -1 )
                 {
-                  AddError( "Uses more than one free color", sx * 8, sy * 8, 8, 8 );
+                  AddError( "Uses more than one free color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
                   continue;
                 }
                 usedFreeColor = i;
@@ -748,9 +759,9 @@ namespace RetroDevStudio.Dialogs
 
     private void CheckAsMCBitmap()
     {
-      for ( int sy = 0; sy < ( m_OrigSize.Height + 7 ) / 8; ++sy )
+      for ( int sy = 0; sy < ( m_OrigSize.Height + m_ItemWidth - 1 ) / m_ItemWidth; ++sy )
       {
-        for ( int sx = 0; sx < ( m_OrigSize.Width + 7 ) / 8; ++sx )
+        for ( int sx = 0; sx < ( m_OrigSize.Width + m_ItemHeight - 1 ) / m_ItemHeight; ++sx )
         {
           // determine single/multi color
           bool[] usedColor = new bool[16];
@@ -761,20 +772,20 @@ namespace RetroDevStudio.Dialogs
           int determinedMultiColor1 = comboMulticolor1.SelectedIndex - 1;
           int determinedMultiColor2 = comboMulticolor2.SelectedIndex - 1;
 
-          for ( int y = 0; y < 8; ++y )
+          for ( int y = 0; y < m_ItemHeight; ++y )
           {
-            for ( int x = 0; x < 8; ++x )
+            for ( int x = 0; x < m_ItemWidth; ++x )
             {
-              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * 8 + x, sy * 8 + y );
+              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x, sy * m_ItemHeight + y );
               if ( colorIndex >= 16 )
               {
-                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * 8 + x, sy * 8 + y, 1, 1 );
+                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
               }
               else
               {
                 if ( ( x % 2 ) == 0 )
                 {
-                  if ( colorIndex != (int)picPreview.DisplayPage.GetPixelData( sx * 8 + x + 1, sy * 8 + y ) )
+                  if ( colorIndex != (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x + 1, sy * m_ItemHeight + y ) )
                   {
                     // not a double pixel, must be single color then
                     hasSinglePixel = true;
@@ -797,19 +808,19 @@ namespace RetroDevStudio.Dialogs
           //bool couldBeHiresInMC = false;
           if ( hasSinglePixel )
           {
-            AddError( "Has a single pixel", sx * 8, sy * 8, 8, 8 );
+            AddError( "Has a single pixel", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( determinedBackgroundColor != -1 )
           &&   ( !usedBackgroundColor )
           &&   ( numColors >= 4 ) )
           {
-            AddError( "Uses more than 3 colors, but doesn't use the set background color and there are no more free custom colors.", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses more than 3 colors, but doesn't use the set background color and there are no more free custom colors.", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( numColors > 4 )
           {
-            AddError( "Uses more than 4 colors", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses more than 4 colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( determinedBackgroundColor == -1 )
@@ -845,7 +856,7 @@ namespace RetroDevStudio.Dialogs
           &&   ( numColors == 4 )
           &&   ( !usedBackgroundColor ) )
           {
-            AddError( "Uses 4 colors, but doesn't use the set background color", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses 4 colors, but doesn't use the set background color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             return;
           }
           // multi color
@@ -880,7 +891,7 @@ namespace RetroDevStudio.Dialogs
           if ( numColors - usedMultiColors > 1 )
           {
             // only one free color allowed
-            AddError( "Uses more than one free color", sx * 8, sy * 8, 8, 8 );
+            AddError( "Uses more than one free color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
         }
@@ -891,9 +902,14 @@ namespace RetroDevStudio.Dialogs
 
     private void CheckAsSprites()
     {
-      for ( int sy = 0; sy < ( m_OrigSize.Height + 20 ) / 21; ++sy )
+      if ( m_ImportType == GraphicType.SPRITES_256_COLORS )
       {
-        for ( int sx = 0; sx < ( m_OrigSize.Width + 23 ) / 24; ++sx )
+        return;
+      }
+
+      for ( int sy = 0; sy < ( m_OrigSize.Height + m_ItemHeight - 1 ) / m_ItemHeight; ++sy )
+      {
+        for ( int sx = 0; sx < ( m_OrigSize.Width + m_ItemWidth - 1 ) / m_ItemWidth; ++sx )
         {
           // determine single/multi color
           bool[] usedColor = new bool[16];
@@ -904,20 +920,29 @@ namespace RetroDevStudio.Dialogs
           int determinedMultiColor1 = comboMulticolor1.SelectedIndex - 1;
           int determinedMultiColor2 = comboMulticolor2.SelectedIndex - 1;
 
-          for ( int y = 0; y < 21; ++y )
+          for ( int y = 0; y < m_ItemHeight; ++y )
           {
-            for ( int x = 0; x < 24; ++x )
+            for ( int x = 0; x < m_ItemWidth; ++x )
             {
-              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * 24 + x, sy * 21 + y );
-              if ( colorIndex >= 16 )
+              int colorIndex = (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x, sy * m_ItemHeight + y );
+
+              if ( m_ImportType == GraphicType.SPRITES_16_COLORS )
               {
-                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * 24 + x, sy * 21 + y, 1, 1 );
+                if ( colorIndex >= 16 )
+                {
+                  AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
+                }
+                continue;
+              }
+              else if ( colorIndex >= 16 )
+              {
+                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
               }
               else
               {
                 if ( ( x % 2 ) == 0 )
                 {
-                  if ( colorIndex != (int)picPreview.DisplayPage.GetPixelData( sx * 24 + x + 1, sy * 21 + y ) )
+                  if ( colorIndex != (int)picPreview.DisplayPage.GetPixelData( sx * m_ItemWidth + x + 1, sy * m_ItemHeight + y ) )
                   {
                     // not a double pixel, must be single color then
                     hasSinglePixel = true;
@@ -940,7 +965,7 @@ namespace RetroDevStudio.Dialogs
           if ( ( hasSinglePixel )
           &&   ( numColors > 2 ) )
           {
-            AddError( "Has a single pixel, but more than two colors", sx * 24, sy * 21, 24, 21 );
+            AddError( "Has a single pixel, but more than two colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( hasSinglePixel )
@@ -974,13 +999,13 @@ namespace RetroDevStudio.Dialogs
           &&   ( numColors > 1 )
           &&   ( !usedBackgroundColor ) )
           {
-            AddError( "Looks like single color, but doesn't use the set background color", sx * 24, sy * 21, 24, 21 );
+            AddError( "Looks like single color, but doesn't use the set background color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             return;
           }*/
           if ( ( !hasSinglePixel )
           &&   ( numColors > 4 ) )
           {
-            AddError( "Uses more than 4 colors", sx * 24, sy * 21, 24, 21 );
+            AddError( "Uses more than 4 colors", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             continue;
           }
           if ( ( !hasSinglePixel )
@@ -1022,7 +1047,7 @@ namespace RetroDevStudio.Dialogs
           &&   ( numColors == 4 )
           &&   ( !usedBackgroundColor ) )
           {
-            AddError( "Uses 4 colors, but doesn't use the set background color", sx * 24, sy * 21, 24, 21 );
+            AddError( "Uses 4 colors, but doesn't use the set background color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
             return;
           }
           if ( ( hasSinglePixel )
@@ -1053,7 +1078,7 @@ namespace RetroDevStudio.Dialogs
                 {
                   if ( usedFreeColor != -1 )
                   {
-                    AddError( "Uses more than one free color", sx * 24, sy * 21, 24, 21 );
+                    AddError( "Uses more than one free color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
                     continue;
                   }
                   usedFreeColor = i;
@@ -1085,7 +1110,7 @@ namespace RetroDevStudio.Dialogs
             if ( numColors - usedMultiColors > 1 )
             {
               // only one free color allowed
-              AddError( "Uses more than one free color", sx * 24, sy * 21, 24, 21 );
+              AddError( "Uses more than one free color", sx * m_ItemWidth, sy * m_ItemHeight, m_ItemWidth, m_ItemHeight );
               continue;
             }
           }

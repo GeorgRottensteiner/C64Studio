@@ -6736,7 +6736,7 @@ namespace RetroDevStudio
 
 
 
-    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, out GR.Image.FastImage MappedImage, out ColorSettings NewMCSettings, out bool PasteAsBlock )
+    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, out GR.Image.FastImage MappedImage, out ColorSettings NewMCSettings, out bool PasteAsBlock )
     {
       PasteAsBlock = false;
 
@@ -6769,7 +6769,7 @@ namespace RetroDevStudio
         }
       }
 
-      DlgGraphicImport importGFX = new DlgGraphicImport( StudioCore, ImportType, IncomingImage, Filename, MCSettings );
+      DlgGraphicImport importGFX = new DlgGraphicImport( StudioCore, ImportType, IncomingImage, Filename, MCSettings, ItemWidth, ItemHeight );
       if ( importGFX.ShowDialog() != DialogResult.OK )
       {
         IncomingImage.Dispose();

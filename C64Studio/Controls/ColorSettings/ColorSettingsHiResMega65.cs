@@ -13,7 +13,7 @@ namespace RetroDevStudio.Controls
 {
   public partial class ColorSettingsHiResMega65 : ColorSettingsBase
   {
-    public override int CustomColor
+    public override byte CustomColor
     {
       get
       {
@@ -63,7 +63,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorSettingsHiResMega65( StudioCore Core, ColorSettings Colors, int CustomColor ) :
+    public ColorSettingsHiResMega65( StudioCore Core, ColorSettings Colors, byte CustomColor ) :
       base( Core, Colors, CustomColor )
     {
       InitializeComponent();
@@ -113,7 +113,7 @@ namespace RetroDevStudio.Controls
 
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
-      CustomColor = comboCharColor.SelectedIndex;
+      CustomColor = (byte)comboCharColor.SelectedIndex;
       radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }

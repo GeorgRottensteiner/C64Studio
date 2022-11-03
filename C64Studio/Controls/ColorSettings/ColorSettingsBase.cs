@@ -17,12 +17,14 @@ namespace RetroDevStudio.Controls
     public ColorSettings                Colors = null;
 
     protected ColorType                 _CurrentColorType;
-    protected int                       _CustomColor = 1;
+    protected byte                      _CustomColor = 1;
+    protected byte                      _SelectedCustomColor = 1;
 
     public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor, List<int> PaletteIndexMapping );
     public delegate void PaletteSelectedHandler( ColorSettings Colors );
     public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
     public delegate void ColorSelectedHandler( ColorType Color );
+    public delegate void CustomColorSelectedHandler( int SelectedCustomColor );
     public delegate void ExchangeColorsHandler( ColorType Color1, ColorType Color2 );
     public delegate void MulticolorFlagChangedHandler();
 
@@ -30,18 +32,26 @@ namespace RetroDevStudio.Controls
     public event PaletteSelectedHandler       PaletteSelected;
     public event ColorsModifiedHandler        ColorsModified;
     public event ColorSelectedHandler         SelectedColorChanged;
+    public event CustomColorSelectedHandler   SelectedCustomColorChanged;
     public event ExchangeColorsHandler        ColorsExchanged;
     public event MulticolorFlagChangedHandler MulticolorFlagChanged;
 
 
 
-    public virtual int CustomColor
+    public virtual byte CustomColor
     {
       get; set;
     }
 
 
-   
+
+    public virtual int PaletteOffset
+    {
+      get; set;
+    }
+
+
+
     public virtual ColorType SelectedColor
     {
       get
@@ -51,6 +61,20 @@ namespace RetroDevStudio.Controls
       set
       {
         _CurrentColorType = value;
+      }
+    }
+
+
+
+    public virtual byte SelectedCustomColor
+    {
+      get
+      {
+        return _SelectedCustomColor;
+      }
+      set
+      {
+        _SelectedCustomColor = value;
       }
     }
 
@@ -89,7 +113,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorSettingsBase( StudioCore Core, ColorSettings Colors, int CustomColor )
+    public ColorSettingsBase( StudioCore Core, ColorSettings Colors, byte CustomColor )
     {
       this.Colors       = new ColorSettings( Colors );
       this.Core         = Core;
@@ -135,6 +159,16 @@ namespace RetroDevStudio.Controls
       if ( SelectedColorChanged != null )
       {
         SelectedColorChanged( _CurrentColorType );
+      }
+    }
+
+
+
+    protected void RaiseCustomColorSelectedEvent()
+    {
+      if ( SelectedCustomColorChanged != null )
+      {
+        SelectedCustomColorChanged( _SelectedCustomColor );
       }
     }
 

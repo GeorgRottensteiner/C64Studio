@@ -789,7 +789,7 @@ namespace RetroDevStudio.Documents
       System.Windows.Forms.DialogResult saveResult = DialogResult.Cancel;
       if ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
       {
-        saveResult = System.Windows.Forms.MessageBox.Show( "The " + DocumentInfo.Type.ToString() + " has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel );
+        saveResult = System.Windows.Forms.MessageBox.Show( "The unnamed document has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel );
       }
       else
       {

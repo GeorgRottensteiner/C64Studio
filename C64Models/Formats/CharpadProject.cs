@@ -100,7 +100,7 @@ namespace RetroDevStudio.Formats
     public class SingleChar
     {
       public GR.Memory.ByteBuffer     Data = new GR.Memory.ByteBuffer( 8 );
-      public int                      Color = 1;
+      public byte                     Color = 1;
     };
 
     public class Tile
@@ -207,7 +207,7 @@ namespace RetroDevStudio.Formats
       {
         SingleChar    newChar = new SingleChar();
         newChar.Data = Data.SubBuffer( 24 + charIndex * 8, 8 );
-        newChar.Color = Data.ByteAt( offsetToCharAttribs + charIndex ) & 0x0f;
+        newChar.Color = (byte)( Data.ByteAt( offsetToCharAttribs + charIndex ) & 0x0f );
 
         Characters.Add( newChar );
       }
@@ -374,11 +374,11 @@ namespace RetroDevStudio.Formats
         newChar.Data = Data.SubBuffer( offsetToCharData + charIndex * 8, 8 );
         if ( TileColorMode == ColorMode.PER_CHAR )
         {
-          newChar.Color = Data.ByteAt( offsetToCharAttribs + charIndex ) & 0x0f;
+          newChar.Color = (byte)( Data.ByteAt( offsetToCharAttribs + charIndex ) & 0x0f );
         }
         else
         {
-          newChar.Color = CustomColor;
+          newChar.Color = (byte)CustomColor;
         }
 
         Characters.Add( newChar );
@@ -408,11 +408,11 @@ namespace RetroDevStudio.Formats
             newChar.Data = new GR.Memory.ByteBuffer( 8 );
             if ( TileColorMode == ColorMode.PER_CHAR )
             {
-              newChar.Color = Data.ByteAt( offsetToCharAttribs + i ) & 0x0f;
+              newChar.Color = (byte)( Data.ByteAt( offsetToCharAttribs + i ) & 0x0f );
             }
             else
             {
-              newChar.Color = CustomColor;
+              newChar.Color = (byte)CustomColor;
             }
 
             Characters.Add( newChar );
@@ -657,7 +657,7 @@ namespace RetroDevStudio.Formats
           {
             SingleChar    newChar = new SingleChar();
             newChar.Data = new GR.Memory.ByteBuffer();
-            newChar.Color = CustomColor;
+            newChar.Color = (byte)CustomColor;
             reader.ReadBlock( newChar.Data, 8 );
             Characters.Add( newChar );
           }
@@ -671,7 +671,7 @@ namespace RetroDevStudio.Formats
               {
                 SingleChar    newChar = new SingleChar();
                 newChar.Data = new GR.Memory.ByteBuffer( 8 );
-                newChar.Color = CustomColor;
+                newChar.Color = (byte)CustomColor;
 
                 Characters.Add( newChar );
               }
@@ -688,7 +688,7 @@ namespace RetroDevStudio.Formats
           {
             if ( TileColorMode == ColorMode.PER_CHAR )
             {
-              Characters[charIndex].Color = reader.ReadUInt8() & 0x0f;
+              Characters[charIndex].Color = (byte)( reader.ReadUInt8() & 0x0f );
               if ( !tileSysEnabled )
               {
                 Tiles[charIndex].ColorData.SetU8At( 0, (byte)Characters[charIndex].Color );
@@ -790,7 +790,7 @@ namespace RetroDevStudio.Formats
           {
             SingleChar    newChar = new SingleChar();
             newChar.Data = new GR.Memory.ByteBuffer();
-            newChar.Color = CustomColor;
+            newChar.Color = (byte)CustomColor;
             reader.ReadBlock( newChar.Data, 8 );
             Characters.Add( newChar );
           }
@@ -804,7 +804,7 @@ namespace RetroDevStudio.Formats
               {
                 SingleChar    newChar = new SingleChar();
                 newChar.Data = new GR.Memory.ByteBuffer( 8 );
-                newChar.Color = CustomColor;
+                newChar.Color = (byte)CustomColor;
 
                 Characters.Add( newChar );
               }
@@ -821,7 +821,7 @@ namespace RetroDevStudio.Formats
           {
             if ( TileColorMode == ColorMode.PER_CHAR )
             {
-              Characters[charIndex].Color = reader.ReadUInt8() & 0x0f;
+              Characters[charIndex].Color = (byte)( reader.ReadUInt8() & 0x0f );
               if ( !tileSysEnabled )
               {
                 Tiles[charIndex].ColorData.SetU8At( 0, (byte)Characters[charIndex].Color );

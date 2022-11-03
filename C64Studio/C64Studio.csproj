@@ -21,6 +21,12 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsECMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsX16Sprites256.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsX16Sprites16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsX16.cs">
       <SubType>UserControl</SubType>
     </Compile>

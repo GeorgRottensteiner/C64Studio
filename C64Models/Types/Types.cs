@@ -362,8 +362,10 @@ namespace RetroDevStudio.Types
     BITMAP_HIRES,
     [Description( "Multicolor Bitmap" )]
     BITMAP_MULTICOLOR,
-    [Description( "Sprites 16color" )]
-    SPRITES_16_COLORS
+    [Description( "Sprites 16 color" )]
+    SPRITES_16_COLORS,
+    [Description( "Sprites 256 color" )]
+    SPRITES_256_COLORS
   };
 
 

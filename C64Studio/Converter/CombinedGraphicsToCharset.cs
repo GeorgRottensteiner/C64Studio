@@ -252,11 +252,11 @@ namespace RetroDevStudio.Converter
       {
         chosenCharColor = 0;
       }
-      cd.Tile.CustomColor = chosenCharColor;
+      cd.Tile.CustomColor = (byte)chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        cd.Tile.CustomColor = chosenCharColor + 8;
+        cd.Tile.CustomColor = (byte)( chosenCharColor + 8 );
       }
       return true;
     }

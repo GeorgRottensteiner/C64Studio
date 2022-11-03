@@ -112,10 +112,14 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMANDERX16_HIRES:
           return ( ( Width + 7 ) / 8 ) * Height;
-        case GraphicTileMode.MEGA65_NCM:
+        case GraphicTileMode.MEGA65_NCM_CHARACTERS:
+        case GraphicTileMode.MEGA65_NCM_SPRITES:
+        case GraphicTileMode.COMMANDERX16_16_COLORS:
           return ( ( Width + 1 ) / 2 ) * Height;
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
+        case GraphicTileMode.COMMANDERX16_256_COLORS:
           return Width * Height;
         default:
           Debug.Log( "Lookup.NumBytes unsupported mode " + Mode );
@@ -241,10 +245,13 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
-        case GraphicTileMode.X16_HIRES:
           return false;
-        case GraphicTileMode.MEGA65_NCM:
+        case GraphicTileMode.MEGA65_NCM_CHARACTERS :
+        case GraphicTileMode.MEGA65_NCM_SPRITES:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
+        case GraphicTileMode.COMMANDERX16_HIRES:
+        case GraphicTileMode.COMMANDERX16_16_COLORS:
+        case GraphicTileMode.COMMANDERX16_256_COLORS:
           return true;
         default:
           Debug.Log( "HasCustomPalette unsupported Mode " + Mode );
@@ -263,6 +270,46 @@ namespace RetroDevStudio
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
           return 168;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+          return 32;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+          return 64;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+          return 128;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+          return 256;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+          return 512;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+          return 1024;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+          return 2048;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return 4096;
         default:
           Debug.Log( "NumBytesOfSingleSprite unsupported Mode " + Mode );
           return 63;
@@ -280,6 +327,46 @@ namespace RetroDevStudio
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
           return 192;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+          return 32;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+          return 64;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+          return 128;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+          return 256;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+          return 512;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+          return 1024;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+          return 2048;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return 4096;
         default:
           Debug.Log( "NumPaddedBytesOfSingleSprite unsupported Mode " + Mode );
           return 64;
@@ -295,6 +382,7 @@ namespace RetroDevStudio
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
           return 16;
         default:
           Debug.Log( "NumberOfColorsInSprite unsupported Mode " + Mode );
@@ -322,12 +410,12 @@ namespace RetroDevStudio
           }
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case TextCharMode.MEGA65_NCM:
-          return GraphicTileMode.MEGA65_NCM;
+          return GraphicTileMode.MEGA65_NCM_CHARACTERS;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
           return GraphicTileMode.MEGA65_FCM_256_COLORS;
         case TextCharMode.X16_HIRES:
-          return GraphicTileMode.X16_HIRES;
+          return GraphicTileMode.COMMANDERX16_HIRES;
         default:
           Debug.Log( "GraphicTileModeFromTextCharMode unsupported mode " + Mode );
           return GraphicTileMode.COMMODORE_HIRES;
@@ -347,7 +435,7 @@ namespace RetroDevStudio
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case SpriteDisplayMode.MEGA65_8_X_21_16_COLORS:
         case SpriteDisplayMode.MEGA65_16_X_21_16_COLORS:
-          return GraphicTileMode.MEGA65_NCM;
+          return GraphicTileMode.MEGA65_NCM_SPRITES;
       }
     }
 
@@ -359,10 +447,46 @@ namespace RetroDevStudio
       {
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
-        default:
           return GraphicTileMode.COMMODORE_HIRES;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
-          return GraphicTileMode.MEGA65_NCM;
+          return GraphicTileMode.MEGA65_NCM_SPRITES;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+          return GraphicTileMode.COMMANDERX16_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return GraphicTileMode.COMMANDERX16_256_COLORS;
+        default:
+          Debug.Log( "GraphicTileModeFromSpriteProjectMode unsupported mode " + Mode );
+          return GraphicTileMode.COMMODORE_HIRES;
       }
     }
 
@@ -372,6 +496,23 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
+        /*
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:*/
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
           return true;
       }
@@ -384,8 +525,10 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
-        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
         default:
+          Debug.Log( "SpriteModeFromSpriteProjectMode unsupported mode " + Mode );
+          return SpriteMode.COMMODORE_24_X_21_HIRES;
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
           // TODO - not correct!
           return SpriteMode.COMMODORE_24_X_21_HIRES;
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
@@ -393,6 +536,70 @@ namespace RetroDevStudio
           return SpriteMode.MEGA65_64_X_21_16_HIRES;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           return SpriteMode.MEGA65_16_X_21_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+          return SpriteMode.COMMANDER_X16_8_8_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+          return SpriteMode.COMMANDER_X16_16_8_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+          return SpriteMode.COMMANDER_X16_32_8_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+          return SpriteMode.COMMANDER_X16_64_8_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+          return SpriteMode.COMMANDER_X16_8_16_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+          return SpriteMode.COMMANDER_X16_16_16_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+          return SpriteMode.COMMANDER_X16_32_16_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+          return SpriteMode.COMMANDER_X16_64_16_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+          return SpriteMode.COMMANDER_X16_8_32_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+          return SpriteMode.COMMANDER_X16_16_32_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+          return SpriteMode.COMMANDER_X16_32_32_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+          return SpriteMode.COMMANDER_X16_64_32_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+          return SpriteMode.COMMANDER_X16_8_64_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+          return SpriteMode.COMMANDER_X16_16_64_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+          return SpriteMode.COMMANDER_X16_32_64_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+          return SpriteMode.COMMANDER_X16_64_64_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+          return SpriteMode.COMMANDER_X16_8_8_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+          return SpriteMode.COMMANDER_X16_16_8_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+          return SpriteMode.COMMANDER_X16_32_8_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+          return SpriteMode.COMMANDER_X16_64_8_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+          return SpriteMode.COMMANDER_X16_8_16_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+          return SpriteMode.COMMANDER_X16_16_16_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+          return SpriteMode.COMMANDER_X16_32_16_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+          return SpriteMode.COMMANDER_X16_64_16_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+          return SpriteMode.COMMANDER_X16_8_32_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+          return SpriteMode.COMMANDER_X16_16_32_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+          return SpriteMode.COMMANDER_X16_32_32_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+          return SpriteMode.COMMANDER_X16_64_32_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+          return SpriteMode.COMMANDER_X16_8_64_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+          return SpriteMode.COMMANDER_X16_16_64_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+          return SpriteMode.COMMANDER_X16_32_64_256_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return SpriteMode.COMMANDER_X16_64_64_256_COLORS;
       }
     }
 
@@ -426,13 +633,13 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
-        case GraphicTileMode.MEGA65_NCM:
+        case GraphicTileMode.MEGA65_NCM_CHARACTERS:
           return 16;
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
-        case GraphicTileMode.X16_HIRES:
+        case GraphicTileMode.COMMANDERX16_HIRES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterWidthInPixel - unsupported mode " + Mode );
@@ -446,12 +653,12 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
-        case GraphicTileMode.MEGA65_NCM:
+        case GraphicTileMode.MEGA65_NCM_CHARACTERS:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
-        case GraphicTileMode.X16_HIRES:
+        case GraphicTileMode.COMMANDERX16_HIRES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterHeightInPixel - unsupported mode " + Mode );
@@ -590,7 +797,7 @@ namespace RetroDevStudio
           return SpriteMode.COMMODORE_24_X_21_HIRES;
         case GraphicTileMode.COMMODORE_MULTICOLOR:
           return SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
-        case GraphicTileMode.MEGA65_NCM:
+        case GraphicTileMode.MEGA65_NCM_SPRITES:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
           return SpriteMode.MEGA65_16_X_21_16_COLORS;
       }
@@ -608,7 +815,7 @@ namespace RetroDevStudio
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
         case SpriteMode.MEGA65_64_X_21_16_HIRES:
-          return GraphicTileMode.MEGA65_NCM;
+          return GraphicTileMode.MEGA65_NCM_SPRITES;
         default:
           return GraphicTileMode.COMMODORE_HIRES;
       }
@@ -694,7 +901,7 @@ namespace RetroDevStudio
         case TextMode.COMMODORE_VIC20_22_X_23:
           return MachineType.VIC20;
         default:
-          Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
+          Debug.Log( "MachineTypeFromTextMode unsupported mode " + Mode );
           return MachineType.C64;
       }
     }
@@ -715,6 +922,160 @@ namespace RetroDevStudio
           return true;
         default:
           return false;
+      }
+    }
+
+
+
+    internal static int SpriteWidth( SpriteProject.SpriteProjectMode Mode )
+    {
+      switch ( Mode )
+      {
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+          return 24;
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+          return 16;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+          return 32;
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return 64;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+          return 8;
+        default:
+          Debug.Log( "Lookup.SpriteWidth, unsupported mode " + Mode );
+          return 64;
+      }
+    }
+
+
+
+    internal static int SpriteHeight( SpriteProject.SpriteProjectMode Mode )
+    {
+      switch ( Mode )
+      {
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+          return 21;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+          return 8;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+          return 16;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+          return 32;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return 64;
+        default:
+          Debug.Log( "Lookup.SpriteHeight, unsupported mode " + Mode );
+          return 21;
+      }
+    }
+
+
+
+    internal static GraphicType GraphicImportTypeFromMode( SpriteProject.SpriteProjectMode Mode )
+    {
+      switch ( Mode )
+      {
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+          return GraphicType.SPRITES_16_COLORS;
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return GraphicType.SPRITES_256_COLORS;
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+          return GraphicType.SPRITES;
+        default:
+          Debug.Log( "Lookup.GraphicImportTypeFromMode, unsupported mode " + Mode );
+          return GraphicType.SPRITES;
       }
     }
 

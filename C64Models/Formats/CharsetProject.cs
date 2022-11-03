@@ -332,7 +332,7 @@ namespace RetroDevStudio.Formats
         string charsetFilename = memIn.ReadString();
         for ( int i = 0; i < TotalNumberOfCharacters; ++i )
         {
-          Characters[i].Tile.CustomColor = memIn.ReadInt32();
+          Characters[i].Tile.CustomColor = (byte)memIn.ReadInt32();
         }
 
         bool  hasAnyMC = false;
@@ -488,7 +488,7 @@ namespace RetroDevStudio.Formats
                     var charData = new CharData();
 
                     subMemIn.ReadInt32(); // was TextCharMode
-                    charData.Tile.CustomColor = subMemIn.ReadInt32();
+                    charData.Tile.CustomColor = (byte)subMemIn.ReadInt32();
                     charData.Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( Mode, charData.Tile.CustomColor );
 
                     charData.Category = subMemIn.ReadInt32();
@@ -521,7 +521,7 @@ namespace RetroDevStudio.Formats
         }
         if ( Colors.Palettes.Count == 0 )
         {
-          Colors.Palettes.Add( PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( Mode ) ) );
+          Colors.Palettes.Add( PaletteManager.PaletteFromMode( Mode ) );
         }
       }
       else

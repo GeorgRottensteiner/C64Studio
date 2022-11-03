@@ -4,10 +4,17 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
+
 
 namespace Tiny64
 {
-	public unsafe class Display
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
+  public unsafe class Display
 	{
 		private Control     _TargetControl = null;
 		private Bitmap      _Screen;

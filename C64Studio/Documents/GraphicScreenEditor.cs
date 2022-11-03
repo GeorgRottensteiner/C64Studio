@@ -560,7 +560,7 @@ namespace RetroDevStudio.Documents
     {
       if ( m_SelectedChar.X != -1 )
       {
-        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Tile.CustomColor = comboCharColor.SelectedIndex;
+        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Tile.CustomColor = (byte)comboCharColor.SelectedIndex;
       }
     }
 
@@ -584,7 +584,8 @@ namespace RetroDevStudio.Documents
       {
         importType = GraphicType.CHARACTERS_FCM;
       }
-      if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
+                                       8, 8, out mappedImage, out mcSettings, out pasteAsBlock ) )
       {
         return false;
       }
@@ -1454,11 +1455,11 @@ namespace RetroDevStudio.Documents
       {
         chosenCharColor = 0;
       }
-      cd.Tile.CustomColor = chosenCharColor;
+      cd.Tile.CustomColor = (byte)chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        cd.Tile.CustomColor = chosenCharColor + 8;
+        cd.Tile.CustomColor = (byte)( chosenCharColor + 8 );
       }
       return true;
     }
@@ -2460,16 +2461,11 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      int     numColors = Lookup.NumberOfColorsInDisplayMode( m_GraphicScreenProject.SelectedCheckType );
+      m_GraphicScreenProject.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
+      PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
 
-      if ( numColors != m_GraphicScreenProject.Colors.Palette.NumColors )
-      {
-        m_GraphicScreenProject.Colors.Palette = PaletteManager.PaletteFromNumColors( numColors );
-        PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
-        PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
-
-        pictureEditor.Invalidate();
-      }
+      pictureEditor.Invalidate();
     }
 
 

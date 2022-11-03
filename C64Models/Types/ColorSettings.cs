@@ -12,6 +12,7 @@ namespace RetroDevStudio.Types
     public int            BGColor4        = 0;
 
     public int            ActivePalette   = 0;
+    public int            PaletteOffset   = 0;
 
     public List<Palette>  Palettes = new List<Palette>();
 

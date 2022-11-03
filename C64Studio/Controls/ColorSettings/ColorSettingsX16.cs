@@ -9,7 +9,7 @@ namespace RetroDevStudio.Controls
 {
   public partial class ColorSettingsX16 : ColorSettingsBase
   {
-    public override int CustomColor
+    public override byte CustomColor
     {
       get
       {
@@ -77,7 +77,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorSettingsX16( StudioCore Core, ColorSettings Colors, int CustomColor ) :
+    public ColorSettingsX16( StudioCore Core, ColorSettings Colors, byte CustomColor ) :
       base( Core, Colors, CustomColor )
     {
       InitializeComponent();
@@ -88,8 +88,8 @@ namespace RetroDevStudio.Controls
         comboCharColor.Items.Add( i.ToString( "d2" ) );
         comboBackground.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = Colors.BackgroundColor;
-      comboCharColor.SelectedIndex = CustomColor;
+      comboBackground.SelectedIndex = Colors.BackgroundColor % 16;
+      comboCharColor.SelectedIndex = CustomColor % 16;
 
       radioCharColor.Checked = true;
 
@@ -122,7 +122,7 @@ namespace RetroDevStudio.Controls
 
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
-      CustomColor = ( comboBackground.SelectedIndex << 4 ) | comboCharColor.SelectedIndex; ;
+      CustomColor = (byte)( ( comboBackground.SelectedIndex << 4 ) | comboCharColor.SelectedIndex );
       radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
@@ -131,7 +131,7 @@ namespace RetroDevStudio.Controls
 
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
-      CustomColor = ( comboBackground.SelectedIndex << 4 ) | comboCharColor.SelectedIndex; ;
+      CustomColor = (byte)( ( comboBackground.SelectedIndex << 4 ) | comboCharColor.SelectedIndex );
       radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }

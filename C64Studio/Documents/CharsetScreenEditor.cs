@@ -1398,7 +1398,7 @@ namespace RetroDevStudio.Documents
       }
       if ( Modified )
       {
-        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your character set. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
+        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your character screen project. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
         if ( doSave == DialogResult.Cancel )
         {
           return;
@@ -2885,12 +2885,7 @@ namespace RetroDevStudio.Documents
         comboBackground.EndUpdate();
       }
 
-      if ( m_CharsetScreen.CharSet.Colors.Palette.NumColors == numColors )
-      {
-        // palette is already matching, keep existing
-        return;
-      }
-      m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromNumColors( numColors );
+      m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
     }
 
 

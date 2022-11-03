@@ -1,9 +1,33 @@
-﻿using System;
+﻿using RetroDevStudio.Formats;
+using System;
 
 namespace RetroDevStudio
 {
   internal class PaletteManager
   {
+    public static Palette PaletteFromMode( TextCharMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextCharMode.X16_HIRES:
+          return ConstantData.PaletteCommanderX16();
+        case TextCharMode.MEGA65_NCM:
+        case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.MEGA65_ECM:
+          return ConstantData.PaletteMega65_256();
+        case TextCharMode.COMMODORE_ECM:
+        case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.COMMODORE_MULTICOLOR:
+          return ConstantData.PaletteC64();
+        case TextCharMode.VIC20:
+          return ConstantData.PaletteVIC20();
+      }
+      return ConstantData.PaletteC64();
+    }
+
+
+
     public static Palette PaletteFromMachine( MachineType Machine )
     {
       switch ( Machine )
@@ -43,16 +67,50 @@ namespace RetroDevStudio
 
 
 
-    internal static Palette PaletteFromNumColors( int NumColors )
+    public static Palette PaletteFromMode( SpriteProject.SpriteProjectMode Mode )
     {
-      switch ( NumColors )
+      switch ( Mode )
       {
-        case 16:
-        default:
-          return ConstantData.PaletteC64();
-        case 256:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+          return ConstantData.PaletteCommanderX16();
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
           return ConstantData.PaletteMega65_256();
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+          return ConstantData.PaletteC64();
       }
+      return ConstantData.PaletteC64();
     }
 
 

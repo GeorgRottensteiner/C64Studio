@@ -11,6 +11,7 @@ using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 using GR.Forms;
+using GR.Generic;
 
 namespace RetroDevStudio.Controls
 {
@@ -300,7 +301,7 @@ namespace RetroDevStudio.Controls
 
           if ( pastePos == m_CurrentChar )
           {
-            _ColorSettingsDlg.CustomColor = m_Project.Characters[pastePos].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[pastePos].Tile.CustomColor;
           }
         }
         canvasEditor.Invalidate();
@@ -359,12 +360,12 @@ namespace RetroDevStudio.Controls
             UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), i == 0 );
 
             var mode = (TextCharMode)memIn.ReadInt32();
-            m_Project.Characters[pastePos].Tile.CustomColor = memIn.ReadInt32();
+            m_Project.Characters[pastePos].Tile.CustomColor = (byte)memIn.ReadInt32();
 
             // TODO - mapping the color would be wiser
             if ( m_Project.Characters[pastePos].Tile.CustomColor >= m_Project.Colors.Palette.NumColors )
             {
-              m_Project.Characters[pastePos].Tile.CustomColor %= m_Project.Colors.Palette.NumColors;
+              m_Project.Characters[pastePos].Tile.CustomColor %= (byte)m_Project.Colors.Palette.NumColors;
             }
 
             uint width   = memIn.ReadUInt32();
@@ -422,7 +423,7 @@ namespace RetroDevStudio.Controls
 
             if ( pastePos == m_CurrentChar )
             {
-              _ColorSettingsDlg.CustomColor = m_Project.Characters[pastePos].Tile.CustomColor;
+              _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[pastePos].Tile.CustomColor;
             }
           }
           canvasEditor.Invalidate();
@@ -501,7 +502,7 @@ namespace RetroDevStudio.Controls
       if ( currentCharChanged )
       {
         panelCharacters_SelectionChanged( null, null );
-        _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+        _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
 
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
@@ -568,7 +569,7 @@ namespace RetroDevStudio.Controls
       {
         importType = Types.GraphicType.CHARACTERS_FCM;
       }
-      if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, m_CharacterWidth, m_CharacterHeight, out mappedImage, out mcSettings, out pasteAsBlock ) )
       {
         Image.Dispose();
         return;
@@ -660,7 +661,7 @@ namespace RetroDevStudio.Controls
 
           if ( currentTargetChar == m_CurrentChar )
           {
-            _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
           }
           if ( !pasteAsBlock )
           {
@@ -688,7 +689,7 @@ namespace RetroDevStudio.Controls
         {
           if ( _ColorSettingsDlg.CustomColor != m_Project.Characters[m_CurrentChar].Tile.CustomColor )
           {
-            _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
           }
         }
         else
@@ -915,11 +916,11 @@ namespace RetroDevStudio.Controls
       {
         chosenCharColor = 0;
       }
-      m_Project.Characters[CharIndex].Tile.CustomColor = chosenCharColor;
+      m_Project.Characters[CharIndex].Tile.CustomColor = (byte)chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        m_Project.Characters[CharIndex].Tile.CustomColor = chosenCharColor + 8;
+        m_Project.Characters[CharIndex].Tile.CustomColor = (byte)( chosenCharColor + 8 );
       }
       RebuildCharImage( CharIndex );
       return true;
@@ -1062,24 +1063,20 @@ namespace RetroDevStudio.Controls
         affectedChar = m_Project.Characters[affectedCharIndex];
       }
 
-      int     colorIndex = _ColorSettingsDlg.CustomColor;
-      if ( ( m_Project.Mode != TextCharMode.MEGA65_FCM )
-      &&   ( m_Project.Mode != TextCharMode.MEGA65_FCM_16BIT ) )
-      {
-        colorIndex = (int)m_CurrentColorType;
-      }
+      var newColor = new Tupel<ColorType,byte>( _ColorSettingsDlg.SelectedColor, _ColorSettingsDlg.SelectedCustomColor );
 
       if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
       &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
       {
         Buttons = MouseButtons.Left;
-        colorIndex = (int)ColorType.BACKGROUND;
+        newColor.first  = ColorType.BACKGROUND;
+        newColor.second = 0;
       }
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
         var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex, 1 );
-        if ( affectedChar.Tile.SetPixel( charX, charY, colorIndex ) )
+        if ( affectedChar.Tile.SetPixel( charX, charY, newColor ) )
         {
           if ( m_ButtonReleased )
           {
@@ -1109,24 +1106,10 @@ namespace RetroDevStudio.Controls
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        int   pickedColor = affectedChar.Tile.GetPixel( charX, charY );
+        var   pickedColor = affectedChar.Tile.GetPixel( charX, charY );
 
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_NCM )
-        &&   ( (ColorType)pickedColor != ColorType.BACKGROUND ) )
-        {
-          _ColorSettingsDlg.CustomColor = pickedColor;
-          _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
-        }
-        else
-        {
-          _ColorSettingsDlg.SelectedColor = (ColorType)pickedColor;
-        }
-
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
-        {
-          affectedChar.Tile.CustomColor = pickedColor;
-        }
+        _ColorSettingsDlg.SelectedColor       = pickedColor.first;
+        _ColorSettingsDlg.SelectedCustomColor = pickedColor.second;
       }
     }
 
@@ -2034,7 +2017,7 @@ namespace RetroDevStudio.Controls
         m_Project.Characters[i].Tile.Image.Resize( m_CharacterWidth, m_CharacterHeight );
         if ( m_Project.Characters[i].Tile.CustomColor >= Lookup.NumberOfColorsInCharacter( m_Project.Mode ) )
         {
-          m_Project.Characters[i].Tile.CustomColor %= Lookup.NumberOfColorsInCharacter( m_Project.Mode );
+          m_Project.Characters[i].Tile.CustomColor %= (byte)Lookup.NumberOfColorsInCharacter( m_Project.Mode );
         }
 
         RebuildCharImage( i );
@@ -2101,7 +2084,14 @@ namespace RetroDevStudio.Controls
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
       _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
+      _ColorSettingsDlg.SelectedCustomColorChanged += _ColorSettingsDlg_SelectedCustomColorChanged;
       _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_SelectedCustomColorChanged( int SelectedCustomColor )
+    {
     }
 
 
@@ -2183,15 +2173,15 @@ namespace RetroDevStudio.Controls
         {
           for ( int x = 0; x < charInfo.Tile.Width; x += Lookup.PixelWidth( charInfo.Tile.Mode ) )
           {
-            ColorType pixel = (ColorType)charInfo.Tile.GetPixel( x, y );
+            ColorType pixel = charInfo.Tile.GetPixel( x, y ).first;
 
             if ( pixel == Color1 )
             {
-              charInfo.Tile.SetPixel( x, y, Color2 );
+              charInfo.Tile.SetPixel( x, y, new Tupel<ColorType, byte>( Color2, 0 ) );
             }
             else if ( pixel == Color2 )
             {
-              charInfo.Tile.SetPixel( x, y, Color1 );
+              charInfo.Tile.SetPixel( x, y, new Tupel<ColorType, byte>( Color1, 0 ) );
             }
           }
         }
@@ -2249,12 +2239,12 @@ namespace RetroDevStudio.Controls
               {
                 if ( m_Project.Characters[selChar].Tile.CustomColor != CustomColor )
                 {
-                  if ( ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
-                  ||   ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.MEGA65_NCM ) )
+                  //if ( ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
+                  //||   ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.MEGA65_NCM_CHARACTERS ) )
                   {
                     UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), modified == false );
 
-                    m_Project.Characters[selChar].Tile.CustomColor = CustomColor;
+                    m_Project.Characters[selChar].Tile.CustomColor = (byte)CustomColor;
                     m_Project.Characters[selChar].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[selChar].Tile.CustomColor );
                     RebuildCharImage( selChar );
                     modified = true;
@@ -2301,7 +2291,7 @@ namespace RetroDevStudio.Controls
       if ( m_Project.Colors.Palette.NumColors != numColors )
       {
         // palette is not matching, create new
-        m_Project.Colors.Palette = PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( m_Project.Mode ) );
+        m_Project.Colors.Palette = PaletteManager.PaletteFromMode( m_Project.Mode );
       }
 
       int   colorsInSelector = 16;
@@ -2320,6 +2310,10 @@ namespace RetroDevStudio.Controls
           break;
         case TextCharMode.X16_HIRES:
           m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.COMMANDER_X16 );
+          break;
+        case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
+          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.MEGA65 );
           break;
         default:
           Debug.Log( "UpdatePalette - unsupported TextCharMode " + m_Project.Mode );

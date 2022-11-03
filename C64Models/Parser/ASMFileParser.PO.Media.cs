@@ -188,9 +188,11 @@ namespace RetroDevStudio.Parser
         if ( ( method != "CHAR" )
         &&   ( method != "CHARCOLOR" )
         &&   ( method != "PALETTE" ) 
-        &&   ( method != "PALETTESWIZZLED" ) )
+        &&   ( method != "PALETTESWIZZLED" )
+        &&   ( method != "PALETTERGB" ) 
+        &&   ( method != "PALETTERGBSWIZZLED" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, CHARCOLOR, PALETTE or PALETTESWIZZLED." );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, CHARCOLOR, PALETTE, PALETTERGB, PALETTESWIZZLED or PALETTERGBSWIZZLED." );
           return false;
         }
         int startIndex = 0;
@@ -233,11 +235,13 @@ namespace RetroDevStudio.Parser
         }
 
         if ( ( method == "PALETTE" )
-        ||   ( method == "PALETTESWIZZLED" ) )
+        ||   ( method == "PALETTESWIZZLED" )
+        ||   ( method == "PALETTERGB" )
+        ||   ( method == "PALETTERGBSWIZZLED" ) )
         {
           if ( !Binary )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE(SWIZZLED) is only supported for binary" );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as palette is only supported for binary" );
             return false;
           }
 
@@ -260,7 +264,7 @@ namespace RetroDevStudio.Parser
                   + charProject.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method == "PALETTESWIZZLED" );
+          dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method.EndsWith( "SWIZZLED" ), method.Contains( "RGB" ) );
         }
         else
         {
@@ -513,18 +517,22 @@ namespace RetroDevStudio.Parser
         &&   ( method != "SPRITEOPTIMIZE" )
         &&   ( method != "SPRITEDATAOPTIMIZE" )
         &&   ( method != "PALETTE" )
-        &&   ( method != "PALETTESWIZZLED" ) )
+        &&   ( method != "PALETTESWIZZLED" )
+        &&   ( method != "PALETTERGB" )
+        &&   ( method != "PALETTERGBSWIZZLED" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE, SPRITEOPTIMIZE, SPRITEDATA, SPRITEDATAOPTIMIZE, PALETTE or PALETTESWIZZLED" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE, SPRITEOPTIMIZE, SPRITEDATA, SPRITEDATAOPTIMIZE, PALETTE, PALETTERGB, PALETTESWIZZLED or PALETTERGBSWIZZLED" );
           return false;
         }
 
         if ( ( method == "PALETTE" )
-        ||   ( method == "PALETTESWIZZLED" ) )
+        ||   ( method == "PALETTESWIZZLED" )
+        ||   ( method == "PALETTERGB" )
+        ||   ( method == "PALETTERGBSWIZZLED" ) )
         {
           if ( !Binary )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE(SWIZZLED) is only supported for binary" );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as palette is only supported for binary" );
             return false;
           }
 
@@ -581,7 +589,7 @@ namespace RetroDevStudio.Parser
                   + totalNumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = spriteProject.GetPaletteExportData( startIndex, numColors, method == "PALETTESWIZZLED" );
+          dataToInclude = spriteProject.GetPaletteExportData( startIndex, numColors, method.EndsWith( "SWIZZLED" ), method.Contains( "RGB" ) );
         }
 
         // sprite set file
@@ -1027,9 +1035,11 @@ namespace RetroDevStudio.Parser
         &&   ( method != "CHARCOLORVERT" )
         &&   ( method != "COLORCHARVERT" )
         &&   ( method != "PALETTE" )
-        &&   ( method != "PALETTESWIZZLED" ) )
+        &&   ( method != "PALETTESWIZZLED" )
+        &&   ( method != "PALETTERGB" )
+        &&   ( method != "PALETTERGBSWIZZLED" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT, CHARCOLORINTERLEAVED, CHARCOLORINTERLEAVEDVERT, CHARSET, PALETTE and PALETTESWIZZLED" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT, CHARCOLORINTERLEAVED, CHARCOLORINTERLEAVEDVERT, CHARSET, PALETTE, PALETTERGB, PALETTESWIZZLED and PALETTERGBSWIZZLED" );
           return false;
         }
 
@@ -1096,11 +1106,13 @@ namespace RetroDevStudio.Parser
           dataToInclude = screenProject.CharSet.CharacterData( startIndex, numChars );
         }
         else if ( ( method == "PALETTE" )
-        ||        ( method == "PALETTESWIZZLED" ) )
+        ||        ( method == "PALETTESWIZZLED" )
+        ||        ( method == "PALETTERGB" )
+        ||        ( method == "PALETTERGBSWIZZLED" ) )
         {
           if ( !Binary )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE(SWIZZLED) is only supported for binary" );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as palette is only supported for binary" );
             return false;
           }
 
@@ -1134,7 +1146,7 @@ namespace RetroDevStudio.Parser
                   + screenProject.CharSet.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = screenProject.CharSet.Colors.Palette.GetExportData( startIndex, numColors, method == "PALETTESWIZZLED" );
+          dataToInclude = screenProject.CharSet.Colors.Palette.GetExportData( startIndex, numColors, method.EndsWith( "SWIZZLED" ), method.Contains( "RGB" ) );
         }
         else
         {
