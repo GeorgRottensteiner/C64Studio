@@ -503,7 +503,6 @@ namespace RetroDevStudio
       debugToolStripMenuItem.Visible = false;
 #endif
 
-
       statusProgress.Visible = false;
 
       StudioCore.MainForm = this;
