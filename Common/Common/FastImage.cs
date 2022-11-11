@@ -174,8 +174,9 @@ namespace GR.Image
     static extern bool InvalidateRect( IntPtr hWnd, IntPtr lpRect, bool bErase );
     [DllImport( "user32.dll" )]
     static extern bool ValidateRect( IntPtr hWnd, ref GR.Image.FastImage.RECT lpRect );
+
     //[DllImport( "Kernel32.dll", EntryPoint = "CopyMemory" )]
-    [DllImport( "Kernel32.dll", EntryPoint = "RtlCopyMemory" )]
+    [DllImport( "Kernel32.dll", EntryPoint = "RtlCopyMemory" )]   // not working in Ubuntu?
     static extern void CopyMemory( IntPtr dest, IntPtr src, uint length );
 
     [DllImport( "user32.dll" )]

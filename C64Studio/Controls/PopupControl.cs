@@ -73,7 +73,6 @@ namespace RetroDevStudio.Controls
     {
       base.OnMouseLeave( e );
       DestroyHandle();
-      Debug.Log( "mouse left" );
     }
 
 
