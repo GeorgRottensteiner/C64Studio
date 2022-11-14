@@ -235,8 +235,13 @@ namespace GR.Image
       return DIBNumColors( InfoHeader ) * System.Runtime.InteropServices.Marshal.SizeOf( typeof( RGBQUAD ) );
     }
 
+#if NET5_0_OR_GREATER
     [DllImport( "Kernel32.dll", EntryPoint = "RtlCopyMemory" )]
+#else
+    [DllImport( "Kernel32.dll", EntryPoint = "CopyMemory" )]
+#endif
     static extern void CopyMemory( IntPtr dest, IntPtr src, uint length );
+
     [DllImport( "kernel32.dll" )]
     static extern IntPtr GlobalLock( IntPtr hMem );
     [DllImport( "kernel32.dll" )]
