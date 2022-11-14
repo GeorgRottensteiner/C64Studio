@@ -81,7 +81,7 @@ Version history:
                           Fix issue #69 (VICE remote binary monitor interface hang)
                           Fix: char screen editor - stupid bug that nixed all color in "affect only color" mode
                           Add: Convert data statements from decimal to hex and vice versa
-                          Port project files to SDK format,
+                          Port project files to SDK format
 
 06.07.2022 - 7.2:         Update Mega65 samples
                           Fix opcode doc formatting
