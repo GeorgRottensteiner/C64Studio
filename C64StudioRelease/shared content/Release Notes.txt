@@ -17,6 +17,72 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+14.11.2022 - 7.3:         Fix: File Manager rename dialog would remove Shift-Spaces after double clicking a letter in the list
+                          Add: Preliminary Commander X16 support (charset, charscreen, sprites 16/256 colors)
+                          Fix: BASIC renumber issue with hard comments (they'd make line numbers skip)
+                          Fix: abort with error if implicit opcode ends with garbage
+                          Add: Commander X16 charset and hiRes 16 color charscreen support and sample
+                          Fix issue #72 (Maximized C64Studio starting up empty)
+                          Add: Preliminary Commander X16 support for 16 color text modes to charset and char screen
+                          Update: Map Editor selection display
+                          Re-Add: Map Editor - draw tiles with override color
+                          Fix: lzone label did not get cached comments
+                          Add: FileManager: Rename Export to BASIC variants to Open As
+                          Verify charscreen property reloading
+                          Add: Allow BASIC parser to recognize extended tokens inside REM (SB, TSB)
+                          Fix !lzone label not having comments
+                          Add: BASIC detect extended tokens inside REM
+                          Fix: inprecision in value table editor/export
+                          Add: BASIC files store case
+                          Add: !lzone pseudo op
+                          Fix: Potential crashes
+                          Add: Double click in debug breakpoint window jumps to source (if any)
+                          Fix: Overflowexception stopping mousewheel down scrolling in ImageListBox
+                          Fix: Character editor import with "Any" choice for color settings could crash
+                          Upd/Fix: Toggle upper/lower case would screw up shifted letters
+                          Upd: TSB dialect file, add new token CLS
+                          Hack/Fix: Keep bookmarks intact during replace all and followup undo/redo
+                          Fix: BASIC crash on nagivate back/forward, if it was not created by opening a file
+                          Fix: BASIC searching in lower case display now working (hopefully)
+                          Fix: new add label feature in disassembler
+                          Fix: Not switching GUI back from debug mode after stopping non debuggable emulator
+                          Add: Label concattenation via ##
+                          Add: Disassembler add label from address value
+                          Add: Starts of very rudimentary KickAss support
+                          Fix: Adjust caret height to actual line height
+                          Update: Tiny64 internal debugger, better IO reading (still a lot of VIC registers not properly handled)
+                          Add: Proper theming also for selected menu items, list view header and tab headers
+                          "Fix": Unit test for tan(45) would result in values extremely close to 1, but not exactly
+                          Fix: ImageListBox not removing scrollbar if content would fit exactly
+                          Fix: Restore Save As functionality as it was, it caused too much confusion
+                          Add: BASIC65 - VSYNC Token
+                          Add: Charscreen export to BASIC now properly handles colors >= 16 (Ctrl-A/Ctrl-D)
+                          Fix: File manager save of new created media not working
+                          Add: Line number color configurable
+                          Fix: triple click only react on left button
+                          Fix: Sprite editor preview, bg was not drawn transparent
+                          Fix: BASIC autoselect tokens in lowercase mode
+                          Add/Fix: Sprite editor - import errors are now written to the output window
+                          Fix: Another duplicate caret issue in FastColoredTextBox during dragging text
+                          Add: immediate label toggle in ASM file
+                          Refix icon/bitmap confusion of blue flag icon
+                          Add: WiC64 samples
+                          Fix: BASIC pressing enter in string entry mode now properly ends the line
+                          Fix: Typing ? inside comments is not expanded to PRINT anymore
+                          Add: Paste files from explorer are added/copied to the project
+                          Add: Option to toggle shortcut labels in ASM view
+                          Fix: Stray non-blinking caret after drag/drop of text inside FastColoredTextBox
+                          Fix: Compile Result stealing focus when put in foreground/unhidden
+                          Add: Disassembler, options for displaying addresses/data
+                          Add: Direct option for BASIC C64 Font size if using the internal font
+                          Fix: Pound character in !text/!pet
+                          Add: Rename solution
+                          Add: Build support for .NET 3.5 (original version), 4.8 and 6.0
+                          Fix issue #69 (VICE remote binary monitor interface hang)
+                          Fix: char screen editor - stupid bug that nixed all color in "affect only color" mode
+                          Add: Convert data statements from decimal to hex and vice versa
+                          Port project files to SDK format,
+
 06.07.2022 - 7.2:         Update Mega65 samples
                           Fix opcode doc formatting
                           "Fix" potential errors in dir art import
