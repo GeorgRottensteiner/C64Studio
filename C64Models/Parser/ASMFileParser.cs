@@ -11,8 +11,7 @@ using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Formats;
 using Tiny64;
-
-
+using RetroDevStudio.Converter;
 
 namespace RetroDevStudio.Parser
 {
@@ -1783,6 +1782,8 @@ namespace RetroDevStudio.Parser
               symbol.Type = SymbolInfo.Types.CONSTANT_STRING;
               symbol.String = Tokens[StartIndex].Content;
               NumBytesGiven = Tokens[StartIndex].Length;
+
+              symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, TextCodeMapping, out bool hadError );
               ResultingToken = symbol;
             }
             return true;
@@ -6192,7 +6193,8 @@ namespace RetroDevStudio.Parser
             continue;
           }
 
-          info.Line = parseLine;
+          info.Line             = parseLine;
+          info.LineCodeMapping  = textCodeMapping;
           var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info );
           if ( estimatedOpcode != null )
           {
