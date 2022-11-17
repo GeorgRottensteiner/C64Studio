@@ -2843,6 +2843,7 @@ namespace RetroDevStudio.Documents
       int numColors = Lookup.NumberOfColorsInCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
 
       // hard coded palettes
+      int     numColorsBackground = 16;
       int     numColorsInChooser = 16;
 
       switch ( m_CharsetScreen.Mode )
@@ -2850,15 +2851,17 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_HIRES:
           numColorsInChooser = 32;
+          numColorsBackground = 32;
           break;
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
-          return;
+          break;
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
-          return;
+          numColorsBackground = 8;
+          break;
       }
 
       if ( m_NumColorsInColorChooser != numColorsInChooser )
@@ -2869,19 +2872,18 @@ namespace RetroDevStudio.Documents
         RedrawColorChooser();
       }
 
-      if ( comboBackground.Items.Count != numColors )
+      if ( comboBackground.Items.Count != numColorsBackground )
       {
         comboBackground.BeginUpdate();
 
-        while ( comboBackground.Items.Count < numColors )
+        while ( comboBackground.Items.Count < numColorsBackground )
         {
           comboBackground.Items.Add( comboBackground.Items.Count.ToString( "d2" ) );
         }
-        while ( comboBackground.Items.Count > numColors )
+        while ( comboBackground.Items.Count > numColorsBackground )
         {
-          comboBackground.Items.RemoveAt( numColors );
+          comboBackground.Items.RemoveAt( numColorsBackground );
         }
-
         comboBackground.EndUpdate();
       }
 
