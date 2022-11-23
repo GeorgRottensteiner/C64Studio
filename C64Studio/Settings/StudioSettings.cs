@@ -267,6 +267,7 @@ namespace RetroDevStudio
       RegisterFunction( Function.CUT, "Cut", Types.FunctionStudioState.ANY );
       RegisterFunction( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
+      RegisterFunction( Function.RENAME_ALL_REFERENCES, "Rename all references", FunctionStudioState.ANY );
 
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_H, "Mirror Horizontal", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_V, "Mirror Vertical", FunctionStudioState.ANY );
