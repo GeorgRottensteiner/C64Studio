@@ -1925,10 +1925,10 @@ namespace RetroDevStudio.Documents
       if ( ( lineBelow.StartsWith( "!SOURCE" ) )
       ||   ( lineBelow.StartsWith( "!SRC" ) ) )
       {
-        string    fileName = lineBelow.Substring( 4 ).Trim();
+        string    fileName = editSource.Lines[m_ContextMenuLineIndex].Trim().Substring( 4 ).Trim();
         if ( lineBelow.StartsWith( "!SOURCE" ) )
         {
-          fileName = lineBelow.Substring( 7 ).Trim();
+          fileName = editSource.Lines[m_ContextMenuLineIndex].Trim().Substring( 7 ).Trim();
         }
 
         if ( ( fileName.Length > 2 )
