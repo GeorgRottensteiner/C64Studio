@@ -1893,13 +1893,11 @@ namespace RetroDevStudio.Documents
       {
         commentSelectionToolStripMenuItem.Enabled = true;
         uncommentSelectionToolStripMenuItem.Enabled = true;
-        //separatorCommenting.Visible = true;
       }
       else
       {
         commentSelectionToolStripMenuItem.Enabled = false;
         uncommentSelectionToolStripMenuItem.Enabled = false;
-        //separatorCommenting.Visible = false;
       }
       if ( !Core.Settings.ASMShowMiniView )
       {
@@ -1927,10 +1925,10 @@ namespace RetroDevStudio.Documents
       if ( ( lineBelow.StartsWith( "!SOURCE" ) )
       ||   ( lineBelow.StartsWith( "!SRC" ) ) )
       {
-        string    fileName = lineBelow.Substring( 4 ).Trim();
+        string    fileName = editSource.Lines[m_ContextMenuLineIndex].Trim().Substring( 4 ).Trim();
         if ( lineBelow.StartsWith( "!SOURCE" ) )
         {
-          fileName = lineBelow.Substring( 7 ).Trim();
+          fileName = editSource.Lines[m_ContextMenuLineIndex].Trim().Substring( 7 ).Trim();
         }
 
         if ( ( fileName.Length > 2 )
@@ -2016,10 +2014,6 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
-      //if ( DocumentInfo.FullPath.EndsWith( "objects.asm" ) )
-      //{
-        //Debug.Log( "collapsing " + DocumentInfo.CollapsedFoldingBlocks.Count + " folded blocks" );
-      //}
       UpdateFoldingBlocks();
 
 
@@ -2027,22 +2021,15 @@ namespace RetroDevStudio.Documents
       var collapsedBlocks = new GR.Collections.Set<int>( DocumentInfo.CollapsedFoldingBlocks );
       foreach ( int blockStart in collapsedBlocks )
       {
-        //Debug.Log( "Trying to collapse for " + DocumentInfo.FullPath + ", line " + blockStart );
         if ( ( blockStart < 0 )
         ||   ( blockStart >= editSource.LinesCount ) )
         {
           // out of bounds
-          //Debug.Log( "-out of bounds" );
           continue;
         }
         if ( editSource.TextSource[blockStart].FoldingStartMarker != null )
         {
           editSource.CollapseFoldingBlock( blockStart );
-          //Debug.Log( "-ok" );
-        }
-        else
-        {
-          //Debug.Log( "-no folding start marker set" );
         }
       }
       m_InsertingText = false;
@@ -3005,6 +2992,9 @@ namespace RetroDevStudio.Documents
         case Function.FIND_ALL_REFERENCES:
           FindAllReferences( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
           return true;
+        case Function.RENAME_ALL_REFERENCES:
+          RenameAllReferences( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
+          return true;
       }
       return false;
     }
@@ -3596,14 +3586,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void FindAllReferences()
+    private bool FindReferences( int PositionInCode, int LineIndexInCode, out Types.ASM.FileInfo FileInfo, out SymbolInfo FoundSymbol )
     {
-    }
+      FoundSymbol = null;
+      FileInfo    = null;
 
 
-
-    private void FindAllReferences( int PositionInCode, int LineIndexInCode )
-    {
       int     lineIndex = LineIndexInCode;
       string  wordBelow = FindWordFromPosition( PositionInCode, LineIndexInCode );
 
@@ -3627,32 +3615,60 @@ namespace RetroDevStudio.Documents
           else
           {
             System.Windows.Forms.MessageBox.Show( "Could not determine symbol from selection" );
-            return;
+            return false;
           }
         }
       }
 
-      Types.ASM.FileInfo debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
-      if ( debugFileInfo == null )
+      FileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
+      if ( FileInfo == null )
       {
         System.Windows.Forms.MessageBox.Show( "Could not determine symbol of " + wordBelow );
-        return;
+        return false;
       }
 
       string zone;
       string cheapLabelParent;
 
-      debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
+      FileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
 
-      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
-      if ( tokenInfo == null )
+      FoundSymbol = FileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      if ( FoundSymbol == null )
       {
         System.Windows.Forms.MessageBox.Show( "Unrecognized symbol, a recompile may be required" );
+        return false;
+      }
+
+      // TODO - verify all files (and thus references) are up to date
+      //foreach ( var reference in tokenInfo.References
+
+      return true;
+    }
+
+
+
+    private void FindAllReferences( int PositionInCode, int LineIndexInCode )
+    {
+      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo tokenInfo ) )
+      {
         return;
       }
-      
       Core.MainForm.m_FindReferences.UpdateReferences( DocumentInfo.Project, debugFileInfo, tokenInfo );
       Core.MainForm.m_FindReferences.Show();
+    }
+
+
+
+    private void RenameAllReferences( int PositionInCode, int LineIndexInCode )
+    {
+      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo tokenInfo ) )
+      {
+        return;
+      }
+
+      var dlgRename = new FormRenameReference( Core, tokenInfo, debugFileInfo, Parser );
+
+      dlgRename.ShowDialog();
     }
 
 
@@ -3865,6 +3881,27 @@ namespace RetroDevStudio.Documents
       Core.Settings.ASMShowShortCutLabels = !Core.Settings.ASMShowShortCutLabels;
 
       Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.SETTING_MODIFIED ) { OriginalValue = "ASMShowShortCutLabels" }  );
+    }
+
+
+
+    private void renameAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      RenameAllReferences( m_ContextMenuPosition, m_ContextMenuLineIndex );
+    }
+
+
+
+    public void SetLineText( string ReplacedText, int LineIndex )
+    {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= editSource.LinesCount ) )
+      {
+        return;
+      }
+      editSource.Selection.Start  = new Place( 0, LineIndex );
+      editSource.Selection.End    = new Place( editSource.Lines[LineIndex].Length, LineIndex );
+      editSource.SelectedText     = ReplacedText;
     }
 
 

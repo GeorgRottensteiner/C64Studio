@@ -77,11 +77,14 @@ namespace RetroDevStudio.Controls
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {
         comboCharColor.Items.Add( i.ToString( "d2" ) );
-        comboBackground.Items.Add( i.ToString( "d2" ) );
+        if ( i < 8 )
+        {
+          comboBackground.Items.Add( i.ToString( "d2" ) );
+        }
         comboMulticolor1.Items.Add( i.ToString( "d2" ) );
         comboMulticolor2.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = Colors.BackgroundColor;
+      comboBackground.SelectedIndex = Colors.BackgroundColor % 8;
       comboMulticolor1.SelectedIndex = Colors.MultiColor1;
       comboMulticolor2.SelectedIndex = Colors.MultiColor2;
       comboCharColor.SelectedIndex = CustomColor;

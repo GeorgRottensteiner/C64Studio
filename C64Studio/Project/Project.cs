@@ -789,6 +789,10 @@ namespace RetroDevStudio
         }
         Core.MainForm.m_Outline.RefreshFromDocument( Element.DocumentInfo.BaseDoc );
       }
+      else
+      {
+        Element.Document.Show();
+      }
       Element.Document.Select();
       Element.IsShown = true;
       Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_OPENED, Element.DocumentInfo ) );

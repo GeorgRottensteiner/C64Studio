@@ -627,6 +627,7 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.BUILD_TO_PREPROCESSED_FILE].MenuItem = preprocessedFileToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_ALL_REFERENCES].MenuItem = findAllReferencesToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_BACK].MenuItem = navigateBackwardToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.RENAME_ALL_REFERENCES].MenuItem = renameAllReferencesToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_BACK].ToolBarButton = btnNavigateBackward;
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].MenuItem = navigateForwardToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].ToolBarButton = btnNavigateForward;
@@ -5102,6 +5103,7 @@ namespace RetroDevStudio
           ActiveContent.Cut();
           return true;
         case Function.FIND_ALL_REFERENCES:
+        case Function.RENAME_ALL_REFERENCES:
           {
             DocumentInfo docToHandle = DetermineDocument();
 
