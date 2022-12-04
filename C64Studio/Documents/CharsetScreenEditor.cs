@@ -13,6 +13,7 @@ using RetroDevStudio;
 using RetroDevStudio.Controls;
 using GR.Forms;
 using System.Drawing;
+using System.Linq;
 
 namespace RetroDevStudio.Documents
 {
@@ -26,6 +27,12 @@ namespace RetroDevStudio.Documents
       FILL,
       SELECT,
       TEXT
+    };
+
+    private enum CharlistLayout
+    { 
+      PLAIN,
+      PETSCII_EDITOR
     };
 
 
@@ -44,6 +51,8 @@ namespace RetroDevStudio.Documents
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
     private bool[,]                     m_SelectedChars = new bool[40, 25];
     private bool[,]                     m_ReverseCache = new bool[40, 25];
+    private ushort[]                    m_CharlistLayout = new ushort[256];
+    private CharlistLayout              m_CurrentLayout = CharlistLayout.PLAIN;
 
     private System.Drawing.Rectangle    m_SelectionBounds = new System.Drawing.Rectangle();
 
@@ -143,6 +152,14 @@ namespace RetroDevStudio.Documents
       comboExportArea.Items.Add( "Selection" );
       comboExportArea.Items.Add( "Custom Area" );
       comboExportArea.SelectedIndex = 0;
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        m_CharlistLayout[i] = (ushort)i;
+      }
+      comboCharlistLayout.Items.Add( "Default" );
+      comboCharlistLayout.Items.Add( "PETSCII Editor" );
+      comboCharlistLayout.SelectedIndex = 0;
 
       foreach ( TextMode mode in Enum.GetValues( typeof( TextMode ) ) )
       {
@@ -1002,7 +1019,14 @@ namespace RetroDevStudio.Documents
       {
         m_CurrentChar = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] & 0xffff );
         m_CurrentColor = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] >> 16 );
-        panelCharacters.SelectedIndex = m_CurrentChar;
+        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+        {
+          if ( m_CharlistLayout[i] == m_CurrentChar )
+          {
+            panelCharacters.SelectedIndex = i;
+            break;
+          }
+        }
         labelInfo.Text = InfoText();
         RedrawColorChooser();
       }
@@ -1650,7 +1674,7 @@ namespace RetroDevStudio.Documents
 
     private void panelCharacters_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_CurrentChar = (ushort)panelCharacters.SelectedIndex;
+      m_CurrentChar = (ushort)m_CharlistLayout[(ushort)panelCharacters.SelectedIndex];
 
       RedrawColorChooser();
       labelInfo.Text = InfoText();
@@ -3485,6 +3509,68 @@ namespace RetroDevStudio.Documents
         return ( ( charEditor.EditorFocused )
           ||     ( pictureEditor.Focused ) );
       }
+    }
+
+
+
+    private void comboCharlistLayout_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      SetCharlistLayout( (CharlistLayout)comboCharlistLayout.SelectedIndex );
+    }
+
+
+
+    private void SetCharlistLayout( CharlistLayout Layout )
+    {
+      if ( ( Layout == m_CurrentLayout )
+      &&   ( m_CharlistLayout.Length == m_CharsetScreen.CharSet.TotalNumberOfCharacters ) )
+      {
+        return;
+      }
+
+      m_CharlistLayout = new ushort[m_CharsetScreen.CharSet.TotalNumberOfCharacters];
+
+      switch ( Layout )
+      {
+        case CharlistLayout.PLAIN:
+          for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+          {
+            m_CharlistLayout[i] = (ushort)i;
+          }
+          break;
+        case CharlistLayout.PETSCII_EDITOR:
+          {
+            // PETSCII editor
+            var petsciiList = new ushort[]
+            {
+              32, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+              16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 46, 44, 59, 33, 63,
+              48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 34, 35, 36, 37, 38, 39,
+              112, 110, 85, 73, 79, 80, 108, 123, 78, 77, 40, 64, 42, 27, 29, 58,
+              109, 125, 74, 75, 76, 122, 124, 126, 95, 105, 114, 91, 113, 104, 102, 92,
+              100, 111, 82, 70, 67, 68, 69, 119, 99, 86, 106, 89, 96, 66, 101, 93,
+              118, 103, 107, 72, 115, 116, 71, 117, 84, 121, 47, 45, 127, 98, 120, 97,
+              60, 62, 61, 42, 43, 30, 31, 65, 88, 83, 87, 81, 90, 94, 28, 0
+            };
+
+            for ( int i = 0; i < 128; ++i )
+            {
+              m_CharlistLayout[i] = petsciiList[i];
+              m_CharlistLayout[i + 128] = (ushort)( 128 + petsciiList[i] );
+            }
+            for ( int i = 256; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+            {
+              m_CharlistLayout[i] = (ushort)i;
+            }
+          }
+          break;
+      }
+      m_CurrentLayout = Layout;
+      for ( int i = 0; i < 256; ++i )
+      {
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[m_CharlistLayout[i]].Tile.Image;
+      }
+      panelCharacters.Invalidate();
     }
 
 

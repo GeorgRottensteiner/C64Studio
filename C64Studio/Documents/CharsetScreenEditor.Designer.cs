@@ -58,6 +58,7 @@
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.comboCharlistLayout = new System.Windows.Forms.ComboBox();
       this.btnPaste = new System.Windows.Forms.Button();
       this.btnCopy = new System.Windows.Forms.Button();
       this.editCharOffset = new System.Windows.Forms.TextBox();
@@ -91,6 +92,7 @@
       this.labelBGColor4 = new System.Windows.Forms.Label();
       this.labelMColor2 = new System.Windows.Forms.Label();
       this.labelMColor1 = new System.Windows.Forms.Label();
+      this.label1 = new System.Windows.Forms.Label();
       this.labelBGColor = new System.Windows.Forms.Label();
       this.panelCharacters = new GR.Forms.ImageListbox();
       this.comboBGColor4 = new System.Windows.Forms.ComboBox();
@@ -375,6 +377,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.comboCharlistLayout);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
       this.tabEditor.Controls.Add(this.editCharOffset);
@@ -408,6 +411,7 @@
       this.tabEditor.Controls.Add(this.labelBGColor4);
       this.tabEditor.Controls.Add(this.labelMColor2);
       this.tabEditor.Controls.Add(this.labelMColor1);
+      this.tabEditor.Controls.Add(this.label1);
       this.tabEditor.Controls.Add(this.labelBGColor);
       this.tabEditor.Controls.Add(this.panelCharacters);
       this.tabEditor.Controls.Add(this.comboBGColor4);
@@ -424,6 +428,16 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // comboCharlistLayout
+      // 
+      this.comboCharlistLayout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboCharlistLayout.FormattingEnabled = true;
+      this.comboCharlistLayout.Location = new System.Drawing.Point(726, 442);
+      this.comboCharlistLayout.Name = "comboCharlistLayout";
+      this.comboCharlistLayout.Size = new System.Drawing.Size(211, 21);
+      this.comboCharlistLayout.TabIndex = 49;
+      this.comboCharlistLayout.SelectedIndexChanged += new System.EventHandler(this.comboCharlistLayout_SelectedIndexChanged);
       // 
       // btnPaste
       // 
@@ -774,6 +788,15 @@
       this.labelMColor1.TabIndex = 22;
       this.labelMColor1.Text = "Multicolor 1:";
       // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(677, 445);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(42, 13);
+      this.label1.TabIndex = 22;
+      this.label1.Text = "Layout:";
+      // 
       // labelBGColor
       // 
       this.labelBGColor.AutoSize = true;
@@ -1080,5 +1103,7 @@
     public System.Windows.Forms.ComboBox comboMulticolor1;
     public System.Windows.Forms.ComboBox comboBGColor4;
     public System.Windows.Forms.ComboBox comboCharsetMode;
-  }
+        private System.Windows.Forms.ComboBox comboCharlistLayout;
+        private System.Windows.Forms.Label label1;
+    }
 }
