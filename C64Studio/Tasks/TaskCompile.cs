@@ -116,7 +116,8 @@ namespace RetroDevStudio.Tasks
       }
       Core.Debugging.DebugType = targetType;
 
-      string breakPointFile = Core.Debugging.PrepareAfterStartBreakPoints();
+      string symbolFile = Core.Debugging.PrepareAfterStartBreakPoints();
+      string breakPointFile = "";
       string command = toolRun.DebugArguments;
 
       if ( Parser.ASMFileParser.IsCartridge( targetType ) )
@@ -127,15 +128,21 @@ namespace RetroDevStudio.Tasks
       if ( ( toolRun.PassLabelsToEmulator )
       &&   ( Core.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
       {
-        breakPointFile += Core.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
+        symbolFile += Core.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
+      }
+      if ( ( EmulatorInfo.LabelFormat( toolRun ) == Types.ASM.LabelFileFormat.C64DEBUGGER )
+      &&   ( Core.Debugging.DebuggedASMBase.ASMFileInfo != null )
+      &&   ( Core.Debugging.BreakPoints.Count > 0 ) )
+      {
+        breakPointFile = Core.Debugging.BreakpointsToFile();
       }
 
-      if ( breakPointFile.Length > 0 )
+      if ( symbolFile.Length > 0 )
       {
         try
         {
           Core.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
-          System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, breakPointFile );
+          System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, symbolFile );
           switch ( EmulatorInfo.LabelFormat( toolRun ) )
           {
             case Types.ASM.LabelFileFormat.VICE:
@@ -154,8 +161,27 @@ namespace RetroDevStudio.Tasks
           return false;
         }
       }
-
-      //ParserASM.CompileTarget != Types.CompileTargetType.NONE ) ? ParserASM.CompileTarget : DocumentToRun.Element.TargetType;
+      if ( breakPointFile.Length > 0 )
+      {
+        try
+        {
+          Core.Debugging.TempDebuggerBreakpointFilename = System.IO.Path.GetTempFileName();
+          System.IO.File.WriteAllText( Core.Debugging.TempDebuggerBreakpointFilename, breakPointFile );
+          switch ( EmulatorInfo.LabelFormat( toolRun ) )
+          {
+            case Types.ASM.LabelFileFormat.C64DEBUGGER:
+              command += " -breakpoints \"" + Core.Debugging.TempDebuggerBreakpointFilename + "\"";
+              break;
+          }
+        }
+        catch ( System.IO.IOException ioe )
+        {
+          Core.MessageBox( ioe.Message, "Error writing temporary file" );
+          Core.AddToOutput( "Error writing temporary file" );
+          Core.Debugging.TempDebuggerBreakpointFilename = "";
+          return false;
+        }
+      }
 
       // need to adjust initial breakpoint address for late added store/load breakpoints?
 

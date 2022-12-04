@@ -7,8 +7,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
 using RetroDevStudio.Types;
 using RetroDevStudio.Documents;
-
-
+using System.Linq;
 
 namespace RetroDevStudio
 {
@@ -28,6 +27,7 @@ namespace RetroDevStudio
     public int              LateBreakpointOverrideDebugStart = -1;
     public bool             FirstActionAfterBreak = false;
     public string           TempDebuggerStartupFilename = "";
+    public string           TempDebuggerBreakpointFilename = "";
     public DocumentInfo     DebuggedASMBase       = null;
     public DocumentInfo     DebugBaseDocumentRun  = null;
     public Disassembly      DebugDisassembly      = null;
@@ -784,6 +784,37 @@ namespace RetroDevStudio
         }
       }
       BreakPoints.Clear();
+    }
+
+
+
+    // C64Debugger format - doesn't support different breakpoint types?
+    internal string BreakpointsToFile()
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      foreach ( var bpFiles in Core.Debugging.BreakPoints )
+      {
+        foreach ( var bp in bpFiles.Value )
+        {
+          //if ( bp.Value.Any( x => x.TriggerOnExec ) )
+          {
+            sb.Append( "break " );
+            sb.Append( bp.Address.ToString( "X" ) );
+            sb.AppendLine();
+          }
+          /*
+          if ( ( bp.Value.Any( x => x.TriggerOnLoad ) )
+          ||   ( bp.Value.Any( x => x.TriggerOnStore ) ) )
+          {
+            sb.Append( "breakmemory " );
+            sb.Append( bp.Value[0].Address );
+            sb.AppendLine();
+          }*/
+        }
+      }
+
+      return sb.ToString();
     }
 
 

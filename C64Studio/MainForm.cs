@@ -2546,7 +2546,8 @@ namespace RetroDevStudio
               switch ( EmulatorInfo.LabelFormat( toolRun ) )
               {
                 case Types.ASM.LabelFileFormat.C64DEBUGGER:
-                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" "
+                      + runArguments;
                   break;
                 case Types.ASM.LabelFileFormat.VICE:
                 default:
@@ -3958,6 +3959,18 @@ namespace RetroDevStudio
               StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerStartupFilename + ", " + ex.Message + Environment.NewLine );
             }
             StudioCore.Debugging.TempDebuggerStartupFilename = "";
+          }
+          if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
+          {
+            try
+            {
+              System.IO.File.Delete( StudioCore.Debugging.TempDebuggerBreakpointFilename );
+            }
+            catch ( Exception ex )
+            {
+              StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerBreakpointFilename + ", " + ex.Message + Environment.NewLine );
+            }
+            StudioCore.Debugging.TempDebuggerBreakpointFilename = "";
           }
 
           if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
