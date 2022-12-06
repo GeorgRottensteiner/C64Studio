@@ -242,10 +242,6 @@ namespace RetroDevStudio
       {
         WrapByteCount = 80;
       }
-      if ( WrapCharCount < 20 )
-      {
-        WrapCharCount = 20;
-      }
       if ( LineOffset <= 0 )
       {
         LineOffset = 1;
@@ -268,6 +264,10 @@ namespace RetroDevStudio
 
         if ( WrapCharCount > 0 )
         {
+          if ( WrapCharCount < 20 )
+          {
+            WrapCharCount = 20;
+          }
           // length of line number plus token
           numBytesInLine = StartLine.ToString().Length + 1;
 

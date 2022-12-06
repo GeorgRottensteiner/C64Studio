@@ -37,6 +37,7 @@
       this.editDeleteNthByte = new System.Windows.Forms.TextBox();
       this.btnExport = new System.Windows.Forms.Button();
       this.btnImport = new System.Windows.Forms.Button();
+      this.btnSwizzle = new System.Windows.Forms.Button();
       this.btnPackNibble = new System.Windows.Forms.Button();
       this.btnDeleteNthByte = new System.Windows.Forms.Button();
       this.btnUpsize = new System.Windows.Forms.Button();
@@ -65,7 +66,8 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnSwizzle = new System.Windows.Forms.Button();
+      this.editWrapCharsCount = new System.Windows.Forms.TextBox();
+      this.label4 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -178,6 +180,16 @@
       this.btnImport.UseVisualStyleBackColor = true;
       this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
       // 
+      // btnSwizzle
+      // 
+      this.btnSwizzle.Location = new System.Drawing.Point(6, 163);
+      this.btnSwizzle.Name = "btnSwizzle";
+      this.btnSwizzle.Size = new System.Drawing.Size(75, 23);
+      this.btnSwizzle.TabIndex = 0;
+      this.btnSwizzle.Text = "Swizzle";
+      this.btnSwizzle.UseVisualStyleBackColor = true;
+      this.btnSwizzle.Click += new System.EventHandler(this.btnSwizzle_Click);
+      // 
       // btnPackNibble
       // 
       this.btnPackNibble.Location = new System.Drawing.Point(6, 134);
@@ -222,9 +234,11 @@
       // 
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupBox1.Controls.Add(this.label4);
       this.groupBox1.Controls.Add(this.label3);
       this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.label1);
+      this.groupBox1.Controls.Add(this.editWrapCharsCount);
       this.groupBox1.Controls.Add(this.editWrapCount);
       this.groupBox1.Controls.Add(this.editToBASICLineDelta);
       this.groupBox1.Controls.Add(this.btnFromBASICHex);
@@ -250,9 +264,9 @@
       this.label3.AutoSize = true;
       this.label3.Location = new System.Drawing.Point(402, 215);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(67, 13);
+      this.label3.Size = new System.Drawing.Size(96, 13);
       this.label3.TabIndex = 3;
-      this.label3.Text = "Wrap Count:";
+      this.label3.Text = "Wrap Bytes Count:";
       // 
       // label2
       // 
@@ -295,7 +309,7 @@
       // btnFromBASICHex
       // 
       this.btnFromBASICHex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromBASICHex.Location = new System.Drawing.Point(401, 364);
+      this.btnFromBASICHex.Location = new System.Drawing.Point(401, 396);
       this.btnFromBASICHex.Name = "btnFromBASICHex";
       this.btnFromBASICHex.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASICHex.TabIndex = 1;
@@ -306,7 +320,7 @@
       // btnFromBASIC
       // 
       this.btnFromBASIC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromBASIC.Location = new System.Drawing.Point(401, 335);
+      this.btnFromBASIC.Location = new System.Drawing.Point(401, 367);
       this.btnFromBASIC.Name = "btnFromBASIC";
       this.btnFromBASIC.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASIC.TabIndex = 1;
@@ -326,7 +340,7 @@
       // button2
       // 
       this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.button2.Location = new System.Drawing.Point(401, 306);
+      this.button2.Location = new System.Drawing.Point(401, 338);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(109, 23);
       this.button2.TabIndex = 1;
@@ -337,7 +351,7 @@
       // btnFromASM
       // 
       this.btnFromASM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromASM.Location = new System.Drawing.Point(401, 277);
+      this.btnFromASM.Location = new System.Drawing.Point(401, 309);
       this.btnFromASM.Name = "btnFromASM";
       this.btnFromASM.Size = new System.Drawing.Size(109, 23);
       this.btnFromASM.TabIndex = 1;
@@ -467,15 +481,24 @@
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
       // 
-      // btnSwizzle
+      // editWrapCharsCount
       // 
-      this.btnSwizzle.Location = new System.Drawing.Point(6, 163);
-      this.btnSwizzle.Name = "btnSwizzle";
-      this.btnSwizzle.Size = new System.Drawing.Size(75, 23);
-      this.btnSwizzle.TabIndex = 0;
-      this.btnSwizzle.Text = "Swizzle";
-      this.btnSwizzle.UseVisualStyleBackColor = true;
-      this.btnSwizzle.Click += new System.EventHandler(this.btnSwizzle_Click);
+      this.editWrapCharsCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.editWrapCharsCount.Location = new System.Drawing.Point(401, 270);
+      this.editWrapCharsCount.Name = "editWrapCharsCount";
+      this.editWrapCharsCount.Size = new System.Drawing.Size(75, 20);
+      this.editWrapCharsCount.TabIndex = 2;
+      this.editWrapCharsCount.Text = "40";
+      // 
+      // label4
+      // 
+      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(402, 254);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(97, 13);
+      this.label4.TabIndex = 3;
+      this.label4.Text = "Wrap Chars Count:";
       // 
       // BinaryDisplay
       // 
@@ -540,5 +563,7 @@
     private System.Windows.Forms.Button btnDeleteNthByte;
     private System.Windows.Forms.Button btnPackNibble;
     private System.Windows.Forms.Button btnSwizzle;
-  }
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox editWrapCharsCount;
+    }
 }
