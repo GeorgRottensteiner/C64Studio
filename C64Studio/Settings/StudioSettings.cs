@@ -8,8 +8,7 @@ using GR.Memory;
 using RetroDevStudio.Types;
 using System.Drawing;
 using RetroDevStudio.Documents;
-
-
+using System.Linq;
 
 namespace RetroDevStudio
 {
@@ -492,14 +491,14 @@ namespace RetroDevStudio
 
     public AcceleratorKey DetermineAccelerator( Types.Function Function )
     {
-      foreach ( var accPair in Accelerators )
-      {
-        if ( accPair.Value.Function == Function )
-        {
-          return accPair.Value;
-        }
-      }
-      return null;
+      return Accelerators.Values.FirstOrDefault( acc => acc.Function == Function );
+    }
+
+
+
+    public AcceleratorKey FindAccelerator( Keys KeyCombination )
+    {
+      return Accelerators.Values.FirstOrDefault( acc => ( acc.Key == KeyCombination ) || ( acc.SecondaryKey == KeyCombination ) );
     }
 
 

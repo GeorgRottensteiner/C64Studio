@@ -1201,7 +1201,7 @@ namespace RetroDevStudio.Documents
       if ( ( keyData == m_ControlKeyReplacement )
       ||   ( keyData == m_CommodoreKeyReplacement ) )
       {
-        // we misuse tab as command key, avoid common processing -> TODO only inside string mode!
+        // we misuse tab as command key, avoid common processing
         return true;
       }
 
@@ -1221,6 +1221,11 @@ namespace RetroDevStudio.Documents
         {
           editSource.ChangeFontSize( -2 );
           return true;
+        }
+        // no Commodore combinations outside of string mode
+        if ( ( keyData & Keys.Control ) == Keys.Control )
+        {
+          return false;
         }
       }
 
