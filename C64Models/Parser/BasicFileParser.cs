@@ -1977,8 +1977,13 @@ namespace RetroDevStudio.Parser
 
         // remember last line source if a line number was present
         if ( ( pureInfo.Tokens.Count > 0 )
-        &&   ( pureInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL ) )
+        &&   ( pureInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
         {
+          if ( LabelMode )
+          {
+            AddError( lineIndex, ErrorCode.E3008_BASIC_DOES_NOT_MATCH_LABEL_MODE, "The code contains line numbers, but label mode was expected" );
+            return;
+          }
           DocumentAndLineFromGlobalLine( lineIndex, out _LastLineNumberDocument, out _LastLineNumberDocLineIndex );
         }
 

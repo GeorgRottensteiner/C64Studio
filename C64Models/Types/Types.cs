@@ -259,6 +259,7 @@ namespace RetroDevStudio.Types
     E3005_BASIC_UNKNOWN_MACRO               = 0x3005,
     E3006_BASIC_LINE_TOO_LONG               = 0x3006,
     E3007_BASIC_MALFORMED_METADATA          = 0x3007,
+    E3008_BASIC_DOES_NOT_MATCH_LABEL_MODE   = 0x3008,
 
 
     WARNING_START                           = 0x7FFF,

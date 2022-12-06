@@ -141,12 +141,12 @@
       // btnToggleLabelMode
       // 
       this.btnToggleLabelMode.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToggleLabelMode.AutoSize = true;
       this.btnToggleLabelMode.Location = new System.Drawing.Point(0, 27);
       this.btnToggleLabelMode.Name = "btnToggleLabelMode";
-      this.btnToggleLabelMode.Size = new System.Drawing.Size(73, 23);
+      this.btnToggleLabelMode.Size = new System.Drawing.Size(100, 23);
       this.btnToggleLabelMode.TabIndex = 2;
-      this.btnToggleLabelMode.Text = "Label Mode";
+      this.btnToggleLabelMode.Text = "To Label Mode";
+      this.toolTip1.SetToolTip(this.btnToggleLabelMode, "To Label Mode (Line Number Mode is active)");
       this.btnToggleLabelMode.UseVisualStyleBackColor = true;
       this.btnToggleLabelMode.CheckedChanged += new System.EventHandler(this.btnToggleLabelMode_CheckedChanged);
       // 
@@ -181,7 +181,7 @@
       this.btnToggleSymbolMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleSymbolMode.AutoSize = true;
       this.btnToggleSymbolMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSymbolMode.Image")));
-      this.btnToggleSymbolMode.Location = new System.Drawing.Point(79, 27);
+      this.btnToggleSymbolMode.Location = new System.Drawing.Point(106, 27);
       this.btnToggleSymbolMode.Name = "btnToggleSymbolMode";
       this.btnToggleSymbolMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleSymbolMode.TabIndex = 2;
@@ -194,7 +194,7 @@
       this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleUpperLowerCase.AutoSize = true;
       this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
-      this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(107, 27);
+      this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(134, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
       this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
       this.btnToggleUpperLowerCase.TabIndex = 2;
@@ -207,7 +207,7 @@
       this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleStringEntryMode.AutoSize = true;
       this.btnToggleStringEntryMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleStringEntryMode.Image")));
-      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(135, 27);
+      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(162, 27);
       this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
       this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleStringEntryMode.TabIndex = 2;
@@ -217,7 +217,7 @@
       // 
       // editBASICStartAddress
       // 
-      this.editBASICStartAddress.Location = new System.Drawing.Point(250, 29);
+      this.editBASICStartAddress.Location = new System.Drawing.Point(277, 29);
       this.editBASICStartAddress.MaxLength = 7;
       this.editBASICStartAddress.Name = "editBASICStartAddress";
       this.editBASICStartAddress.Size = new System.Drawing.Size(65, 20);
@@ -228,7 +228,7 @@
       // labelStartAddress
       // 
       this.labelStartAddress.AutoSize = true;
-      this.labelStartAddress.Location = new System.Drawing.Point(171, 32);
+      this.labelStartAddress.Location = new System.Drawing.Point(198, 32);
       this.labelStartAddress.Name = "labelStartAddress";
       this.labelStartAddress.Size = new System.Drawing.Size(73, 13);
       this.labelStartAddress.TabIndex = 5;
@@ -237,7 +237,7 @@
       // labelBASICVersion
       // 
       this.labelBASICVersion.AutoSize = true;
-      this.labelBASICVersion.Location = new System.Drawing.Point(333, 32);
+      this.labelBASICVersion.Location = new System.Drawing.Point(360, 32);
       this.labelBASICVersion.Name = "labelBASICVersion";
       this.labelBASICVersion.Size = new System.Drawing.Size(79, 13);
       this.labelBASICVersion.TabIndex = 5;
@@ -247,7 +247,7 @@
       // 
       this.comboBASICVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBASICVersion.FormattingEnabled = true;
-      this.comboBASICVersion.Location = new System.Drawing.Point(418, 28);
+      this.comboBASICVersion.Location = new System.Drawing.Point(445, 28);
       this.comboBASICVersion.Name = "comboBASICVersion";
       this.comboBASICVersion.Size = new System.Drawing.Size(150, 21);
       this.comboBASICVersion.TabIndex = 6;
