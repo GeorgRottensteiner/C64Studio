@@ -1227,7 +1227,7 @@ namespace RetroDevStudio.Documents
         // no Commodore combinations outside of string mode
         if ( ( keyData & Keys.Control ) == Keys.Control )
         {
-          return false;
+          return Core.MainForm.HandleCmdKey( ref msg, keyData );
         }
       }
 
