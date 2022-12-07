@@ -1738,6 +1738,7 @@ namespace RetroDevStudio.Documents
 
       var compilerConfig = new RetroDevStudio.Parser.CompileConfig() { Assembler = RetroDevStudio.Types.AssemblerType.AUTO };
       compilerConfig.InputFile = DocumentInfo.FullPath;
+      compilerConfig.DoNotExpandStringLiterals = true;
 
       string basicSource = editSource.Text;
 
@@ -1765,6 +1766,8 @@ namespace RetroDevStudio.Documents
       {
         Result = parser.DecodeFromLabels();
       }
+
+      /*
       if ( m_SymbolMode )
       {
         Result = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( Result, out bool hadError );
@@ -1772,7 +1775,7 @@ namespace RetroDevStudio.Documents
       else
       {
         Result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( Result );
-      }
+      }*/
 
       if ( parser.Errors > 0 )
       {

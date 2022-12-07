@@ -9,6 +9,8 @@ using RetroDevStudio;
 using System.Linq;
 using RetroDevStudio.Types;
 using static RetroDevStudio.Parser.BasicFileParser;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace RetroDevStudio.Parser
 {
@@ -891,6 +893,29 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      UpdateLineNumberReferences( lineInfo );
+      for ( int i = 0; i < lineInfo.Tokens.Count; ++i )
+      {
+        var token = lineInfo.Tokens[i];
+        if ( ( token.TokenType == Token.Type.VARIABLE )
+        &&   ( token.Content.StartsWith( "LABEL" ) )
+        &&   ( token.Content.Length > 5 )
+        &&   ( char.IsDigit( token.Content[5] ) ) )
+        {
+
+          token.TokenType = Token.Type.EX_BASIC_TOKEN;
+          token.ByteValue = 240;
+
+          var numberToken = new Token()
+          {
+            Content = token.Content.Substring( 5 ),
+            TokenType = Token.Type.NUMERIC_LITERAL,
+            StartIndex = token.StartIndex + 5
+          };
+          lineInfo.Tokens.Insert( i + 1, numberToken );
+        }
+      }
+
       return lineInfo;
     }
 
@@ -1185,16 +1210,23 @@ namespace RetroDevStudio.Parser
             int     startIndex = bytePos;
             do
             {
-              var c64Key = ConstantData.FindC64KeyByPETSCII( nextByte );
-              if ( ( c64Key != null )
-              &&   ( nextByte != 32 )   // do not replace for Space
-              &&   ( c64Key.Replacements.Count > 0 ) )
+              if ( m_CompileConfig.DoNotExpandStringLiterals )
               {
-                stringLiteral += "{" + c64Key.Replacements[0] + "}";
+                stringLiteral += (char)nextByte;
               }
               else
               {
-                stringLiteral += ConstantData.PetSCIIToChar[nextByte].CharValue;
+                var c64Key = ConstantData.FindC64KeyByPETSCII( nextByte );
+                if ( ( c64Key != null )
+                &&   ( nextByte != 32 )   // do not replace for Space
+                &&   ( c64Key.Replacements.Count > 0 ) )
+                {
+                  stringLiteral += "{" + c64Key.Replacements[0] + "}";
+                }
+                else
+                {
+                  stringLiteral += ConstantData.PetSCIIToChar[nextByte].CharValue;
+                }
               }
               info.LineData.AppendU8( nextByte );
               ++bytePos;
@@ -1312,7 +1344,6 @@ namespace RetroDevStudio.Parser
                 {
                   info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
                 }
-                //BytePos += opcode.Command.Length;
                 insideDataStatement = ( foundOpcode.Command == "DATA" );
               }
               else
@@ -1348,8 +1379,22 @@ namespace RetroDevStudio.Parser
       {
         AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
       }
-      
 
+
+      UpdateLineNumberReferences( info );
+      
+      // offset by line number
+      for ( int i = 1; i < info.Tokens.Count; ++i )
+      {
+        info.Tokens[i].StartIndex += endOfDigitPos + 1 + numCharsSkipped;
+      }
+      return info;
+    }
+
+
+
+    private void UpdateLineNumberReferences( LineInfo info )
+    {
       // update line number references
       for ( int i = 0; i < info.Tokens.Count; ++i )
       {
@@ -1390,7 +1435,7 @@ namespace RetroDevStudio.Parser
           // look up next token, is it a line number? (spaces are ignored)
           int nextTokenIndex = FindNextToken( info.Tokens, i );
           if ( ( nextTokenIndex != -1 )
-          && ( nextTokenIndex < info.Tokens.Count ) )
+          &&   ( nextTokenIndex < info.Tokens.Count ) )
           {
             if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
             {
@@ -1401,12 +1446,6 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-      // offset by line number
-      for ( int i = 1; i < info.Tokens.Count; ++i )
-      {
-        info.Tokens[i].StartIndex += endOfDigitPos + 1 + numCharsSkipped;
-      }
-      return info;
     }
 
 
@@ -1460,6 +1499,17 @@ namespace RetroDevStudio.Parser
     private int TranslateCharactersToPETSCII( string Line, int LineIndex, int endOfDigitPos, ref int posInLine, ref bool insideMacro, ref int macroStartPos, ByteBuffer tempData )
     {
       int numCharsSkipped = 0;
+
+      if ( m_CompileConfig.DoNotExpandStringLiterals )
+      {
+        for ( int i = posInLine; i < Line.Length; ++i )
+        {
+          ++numCharsSkipped;
+          ++posInLine;
+          tempData.AppendU8( (byte)Line[i] );
+        }
+        return numCharsSkipped;
+      }
 
       while ( posInLine < Line.Length )
       {
@@ -1585,7 +1635,7 @@ namespace RetroDevStudio.Parser
           else
           {
             if ( ( curChar != 32 )
-            || ( posInLine > endOfDigitPos + 1 ) )
+            ||   ( posInLine > endOfDigitPos + 1 ) )
             {
               // strip spaces after line numbers
 
@@ -1974,6 +2024,7 @@ namespace RetroDevStudio.Parser
         var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
 
         var pureInfo = PureTokenizeLine( line );
+        pureInfo.LineNumber = lastLineNumber;
 
         // remember last line source if a line number was present
         if ( ( pureInfo.Tokens.Count > 0 )
@@ -2144,7 +2195,14 @@ namespace RetroDevStudio.Parser
           ++tokenIndex;
         }
 
-        m_LineInfos[info.LineIndex] = info;
+        if ( m_CompileConfig.DoNotExpandStringLiterals )
+        {
+          m_LineInfos[info.LineIndex] = pureInfo;
+        }
+        else
+        {
+          m_LineInfos[info.LineIndex] = info;
+        }
       }
     }
 
@@ -2479,6 +2537,11 @@ namespace RetroDevStudio.Parser
         for ( int i = 0; i < lineInfo.Value.Tokens.Count; ++i )
         {
           Token token = lineInfo.Value.Tokens[i];
+          if ( ( i == 0 )
+          &&   ( token.TokenType == Token.Type.NUMERIC_LITERAL ) )
+          {
+            continue;
+          }
           if ( token.TokenType == Token.Type.LINE_NUMBER )
           {
             continue;
@@ -2563,7 +2626,7 @@ namespace RetroDevStudio.Parser
                 else
                 {
                   if ( ( nextToken.TokenType != Token.Type.DIRECT_TOKEN )
-                  ||   ( nextToken.ByteValue != ',' ) )
+                  ||   ( nextToken.Content != "," ) )
                   {
                     // error or end, not a comma
                     --nextIndex;
