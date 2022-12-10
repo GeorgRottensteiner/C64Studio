@@ -57,12 +57,14 @@
 
     public const ushort    MULTICOLOR_DATA       = 0x1500;
     public const ushort    CHARSET_DATA          = 0x1501;   // multicolor-data und binary data
-    public const ushort    PALETTE                = 0x1502;   // int num entries, n * ARGB (uint)
+    public const ushort    PALETTE               = 0x1502;   // int num entries, n * ARGB (uint)
 
     public const ushort    DISASSEMBLY_INFO      = 0x1600;
     public const ushort    DISASSEMBLY_DATA      = 0x1601;
     public const ushort    DISASSEMBLY_JUMP_ADDRESSES = 0x1602;
     public const ushort    DISASSEMBLY_NAMED_LABELS = 0x1603;
+
+    public const ushort    BOOKMARKS             = 0x1700;
 
     public const ushort    SETTINGS_TOOL         = 0x2000;
     public const ushort    SETTINGS_ACCELERATOR  = 0x2001;

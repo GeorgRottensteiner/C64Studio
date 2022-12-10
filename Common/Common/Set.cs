@@ -98,6 +98,16 @@ namespace GR.Collections
 
 
 
+    public void AddRange( IEnumerable<TValue> Collection )
+    {
+      foreach ( TValue key in Collection )
+      {
+        Add( key );
+      }
+    }
+
+
+
     public bool ContainsValue( TValue Value )
 		{
       if ( Value == null )

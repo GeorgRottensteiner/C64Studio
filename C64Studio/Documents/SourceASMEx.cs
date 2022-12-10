@@ -186,6 +186,9 @@ namespace RetroDevStudio.Documents
       editSource.LineInserted += new EventHandler<FastColoredTextBoxNS.LineInsertedEventArgs>( editSource_LineInserted );
       editSource.LineRemoved += new EventHandler<FastColoredTextBoxNS.LineRemovedEventArgs>( editSource_LineRemoved );
 
+      editSource.BookmarkAdded += EditSource_BookmarkAdded;
+      editSource.BookmarkRemoved += EditSource_BookmarkRemoved;
+
       editSource.UndoRedoStateChanged += new EventHandler<EventArgs>( editSource_UndoRedoStateChanged );
 
       editSource.LeftBracket = '(';
@@ -220,6 +223,30 @@ namespace RetroDevStudio.Documents
       contextSource.Opened += new EventHandler( contextSource_Opened );
 
       ResumeLayout();
+    }
+
+
+
+    private void EditSource_BookmarkRemoved( object sender, BookmarkEventArgs e )
+    {
+      if ( m_InsertingText )
+      {
+        return;
+      }
+      StoreBookmarks();
+      SetModified();
+    }
+
+
+
+    private void EditSource_BookmarkAdded( object sender, BookmarkEventArgs e )
+    {
+      if ( m_InsertingText )
+      {
+        return;
+      }
+      StoreBookmarks();
+      SetModified();
     }
 
 
@@ -2032,6 +2059,18 @@ namespace RetroDevStudio.Documents
           editSource.CollapseFoldingBlock( blockStart );
         }
       }
+
+      var bookmarks = new GR.Collections.Set<int>( DocumentInfo.Bookmarks );
+      foreach ( int lineIndex in bookmarks )
+      {
+        if ( ( lineIndex < 0 )
+        ||   ( lineIndex >= editSource.LinesCount ) )
+        {
+          // out of bounds
+          continue;
+        }
+        editSource.Bookmarks.Add( lineIndex );
+      }
       m_InsertingText = false;
 
 
@@ -2148,14 +2187,18 @@ namespace RetroDevStudio.Documents
           }
         }
       }
+    }
 
 
-      /*
-      foreach ( var block in editSource.FoldedBlocks )
+
+    private void StoreBookmarks()
+    {
+      if ( m_InsertingText )
       {
-        DocumentInfo.CollapsedFoldingBlocks.Add( block.Key );
-        Debug.Log( "Store for " + DocumentInfo.FullPath + ", line " + block.Key );
-      }*/
+        return;
+      }
+      DocumentInfo.Bookmarks.Clear();
+      DocumentInfo.Bookmarks.AddRange( editSource.Bookmarks.Select( bm => bm.LineIndex ) );
     }
 
 
@@ -3430,6 +3473,9 @@ namespace RetroDevStudio.Documents
 
     public override ByteBuffer SaveToBuffer()
     {
+      var currentBookmarks = new List<int>();
+      currentBookmarks.AddRange( editSource.Bookmarks.Select( x => x.LineIndex ) );
+
       var sourceData = new GR.IO.FileChunk( FileChunkConstants.SOURCE_ASM );
 
       // version
@@ -3437,6 +3483,14 @@ namespace RetroDevStudio.Documents
       sourceData.AppendString( editSource.Text );
       sourceData.AppendI32( CursorLine );
       sourceData.AppendI32( CursorPosInLine );
+
+      var bookmarkData = new GR.IO.FileChunk( FileChunkConstants.BOOKMARKS );
+      bookmarkData.AppendI32( currentBookmarks.Count );
+      foreach ( var bookmarkLine in currentBookmarks )
+      {
+        bookmarkData.AppendI32( bookmarkLine );
+      }
+      sourceData.Append( bookmarkData.ToBuffer() );
 
       return sourceData.ToBuffer();
     }
@@ -3467,6 +3521,34 @@ namespace RetroDevStudio.Documents
       int   cursorPos = reader.ReadInt32();
 
       SetCursorToLine( cursorLine, cursorPos, false );
+
+
+      var subChunk = new GR.IO.FileChunk();
+
+      while ( subChunk.ReadFromStream( Reader ) )
+      {
+        var subReader = subChunk.MemoryReader();
+        switch ( subChunk.Type )
+        {
+          case FileChunkConstants.BOOKMARKS:
+            {
+              var   bookmarks = new List<int>();
+              int   numBookmarks = subReader.ReadInt32();
+              for ( int i = 0; i < numBookmarks; ++i )
+              {
+                bookmarks.Add( subReader.ReadInt32() );
+              }
+
+              editSource.BeginAutoUndo();
+              editSource.Bookmarks.Clear();
+              foreach ( var origBookmark in bookmarks )
+              {
+                editSource.Bookmarks.Add( origBookmark );
+              }
+            }
+            break;
+        }
+      }
 
       return true;
     }

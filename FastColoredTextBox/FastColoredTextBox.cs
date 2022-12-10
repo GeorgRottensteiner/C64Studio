@@ -2595,6 +2595,20 @@ namespace FastColoredTextBoxNS
     public event EventHandler<LineRemovedEventArgs> LineRemoved;
 
     /// <summary>
+    /// Occurs when bookmark was added
+    /// </summary>
+    [Browsable( true )]
+    [Description( "Occurs when bookmark was added" )]
+    public event EventHandler<BookmarkEventArgs> BookmarkAdded;
+
+    /// <summary>
+    /// Occurs when bookmark was removed
+    /// </summary>
+    [Browsable( true )]
+    [Description( "Occurs when bookmark was removed" )]
+    public event EventHandler<BookmarkEventArgs> BookmarkRemoved;
+
+    /// <summary>
     /// Occurs when current highlighted folding area is changed.
     /// Current folding area see in StartFoldingLine and EndFoldingLine.
     /// </summary>
@@ -9025,6 +9039,23 @@ window.status = ""#print"";
           LineRemoved( this, new LineRemovedEventArgs( index, count, removedLineIds ) );
     }
 
+    internal void OnBookmarkAdded( int index, Bookmark bookmark )
+    {
+      if ( BookmarkAdded != null )
+      {
+        BookmarkAdded( this, new BookmarkEventArgs( index, bookmark ) );
+      }
+    }
+
+    internal void OnBookmarkRemoved( int index, Bookmark bookmark )
+    {
+      if ( BookmarkRemoved != null )
+      {
+        BookmarkRemoved( this, new BookmarkEventArgs( index, bookmark ) );
+      }
+    }
+
+
     /// <summary>
     /// Open text file
     /// </summary>
@@ -9843,6 +9874,35 @@ window.status = ""#print"";
     /// UniqueIds of removed lines
     /// </summary>
     public List<int> RemovedLineUniqueIds
+    {
+      get;
+      private set;
+    }
+  }
+
+
+
+  public class BookmarkEventArgs : EventArgs
+  {
+    public BookmarkEventArgs( int index, Bookmark bookmark )
+    {
+      Index = index;
+      Bookmark = bookmark;
+    }
+
+    /// <summary>
+    /// bookmark line index
+    /// </summary>
+    public int Index
+    {
+      get;
+      private set;
+    }
+
+    /// <summary>
+    /// affected Bookmark
+    /// </summary>
+    public Bookmark Bookmark
     {
       get;
       private set;

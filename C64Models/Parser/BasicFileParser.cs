@@ -199,6 +199,8 @@ namespace RetroDevStudio.Parser
       AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*";
 
       SetBasicDialect( Settings.BASICDialect );
+
+      m_CompileConfig = new CompileConfig();
     }
 
 

@@ -4,12 +4,12 @@ ASM_START
           ldx #0
           ldy #1
           lda #1
-ANOTHERLABEL          
+ANOTHERLABEL
           sta $0400,x
           inx
           bne ANOTHERLABEL
           rts
-          
-          
+
+
 TEXT
           !text "what? me worry?"

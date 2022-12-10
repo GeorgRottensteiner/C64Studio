@@ -1156,9 +1156,9 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 91 - 64, true, 91, true, '[', true );//(char)0xee1b, true );//'[', true );
       AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.NORMAL, KeyType.NORMAL, 92 - 64, true, 92, true, '£', true ).Replacements.Add( "POUND" );
       AddC64Key( KeyboardKey.KEY_SEMI_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 93 - 64, true, 93, true, ']', true );//(char)0xee1d, true );// ']', true );
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, '^', true, "ARROW UP" ).Replacements.Add( "ARROW UP" );
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.Add( "ARROW UP" );
-      AddC64Key( KeyboardKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" ).Replacements.Add( "ARROW LEFT" ); // arrow left
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, '^', true, "ARROW UP" ).Replacements.AddRange( new string[] { "ARROW UP", "ARROWUP", "ARROW-UP" } );
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.AddRange( new string[] { "ARROW UP", "ARROWUP", "ARROW-UP" } );
+      AddC64Key( KeyboardKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" ).Replacements.AddRange( new string[] { "ARROW LEFT", "ARROWLEFT", "ARROW-LEFT" } ); // arrow left
       //  96-127 $60-$7F     -32 $E0         64- 95 $40-$5F  
       AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96, true, (char)0xee40, true, "SHIFT *" ).Replacements.Add( "SHIFT-*" );   // Shift *
       AddC64Key( KeyboardKey.KEY_A, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 97 - 32, true, 97, true, (char)0xee41, true, "SHIFT A" ).Replacements.Add( "SHIFT-A" );   // Shift-A
@@ -1187,15 +1187,15 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_X, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 120 - 32, true, 120, true, (char)0xee58, true, "SHIFT X" ).Replacements.Add( "SHIFT-X" );   // Shift-X
       AddC64Key( KeyboardKey.KEY_Y, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 121 - 32, true, 121, true, (char)0xee59, true, "SHIFT Y" ).Replacements.Add( "SHIFT-Y" );   // Shift-Y
       AddC64Key( KeyboardKey.KEY_Z, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 122 - 32, true, 122, true, (char)0xee5a, true, "SHIFT Z" ).Replacements.Add( "SHIFT-Z" );   // Shift-Z
-      AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 123 - 32, true, 123, true, (char)0xee5b, true, "SHIFT +" );   // Shift +
+      AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 123 - 32, true, 123, true, (char)0xee5b, true, "SHIFT +" ).Replacements.Add( "Shift-+" );   // Shift +
       AddC64Key( KeyboardKey.KEY_MINUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 124 - 32, true, 124, true, (char)0xee5c, true, "CBM -" ).Replacements.Add( "CBM--" );   // C= -
       AddC64Key( KeyboardKey.KEY_MINUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 125 - 32, true, 125, true, (char)0xee5d, true, "SHIFT -" ).Replacements.Add( "SHIFT--" );   // Shift -
       AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
       AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 126, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
-      AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127, true, (char)0xee5f, true, "CBM *" );   // C= *
+      AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127, true, (char)0xee5f, true, "CBM *" ).Replacements.Add( "CBM-*" );   // C= *
 
       // 128-159 $80-$9F     +64 $40        192-223 $C0-$DF  
-      AddC64Key( KeyboardKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 192, true, (char)0xeec0, true, "REVERSE SHIFT @" );
+      AddC64Key( KeyboardKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 192, true, (char)0xeec0, true, "REVERSE SHIFT @" ).Replacements.Add( "REVERSE SHIFT-@" );
 
       AddC64Key( KeyboardKey.KEY_1, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 129 + 64, true, 129, true, (char)0xeec1, -1, 0, true, "ORANGE", "ORN" ).Replacements.AddRange( new string[] { "ORANGE", "ORN", "ORNG" } );   // orange
 
@@ -1205,7 +1205,7 @@ namespace RetroDevStudio
 
       AddC64Key( KeyboardKey.KEY_RUN_STOP, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 131 + 64, true, 131, true, (char)0xeec3, -1, 0, true, "LOAD+RUN", "L+R" );   // TODO load+run
 
-      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 196, true, (char)0xeec4, true, "REVERSE SHIFT D" );
+      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 196, true, (char)0xeec4, true, "REVERSE SHIFT D" ).Replacements.Add( "REVERSE SHIFT-D" );
 
       AddC64Key( KeyboardKey.KEY_F1, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 133 + 64, true, 133, true, (char)0xeec5, true, "F1" ).Replacements.Add( "F1" );   // TODO F1
       AddC64Key( KeyboardKey.KEY_F3, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 134 + 64, true, 134, true, (char)0xeec6, true, "F3" ).Replacements.Add( "F3" );   // TODO F3
@@ -1238,7 +1238,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_4, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 159 + 64, true, 159, true, (char)0xeedf, -1, 0, true, "CYAN", "CYN" ).Replacements.AddRange( new string[] { "CYAN", "CYN" } );      // TODO cyan
 
       // 160-191 $A0-$BF     -64 $C0         96-127 $60-$7F  
-      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 160 - 64, true, 160, true, (char)0xee60, true, "SHIFT SPACE" ).Replacements.AddRange( new string[] { "SHIFT SPACE", "SH SPACE" } );   // shift-space
+      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 160 - 64, true, 160, true, (char)0xee60, true, "SHIFT SPACE" ).Replacements.AddRange( new string[] { "SHIFT-SPACE", "SH SPACE" } );   // shift-space
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 161 - 64, true, 161, true, (char)0xee61, true, "CBM K" ).Replacements.Add( "CBM-K" );   // C= K
       AddC64Key( KeyboardKey.KEY_I, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 162 - 64, true, 162, true, (char)0xee62, true, "CBM I" ).Replacements.Add( "CBM-I" );   // C= I
       AddC64Key( KeyboardKey.KEY_T, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 163 - 64, true, 163, true, (char)0xee63, true, "CBM T" ).Replacements.Add( "CBM-T" );   // C= T
@@ -1246,8 +1246,8 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 165 - 64, true, 165, true, (char)0xee65, true, "CBM G" ).Replacements.Add( "CBM-G" );   // C= G
       AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 166 - 64, true, 166, true, (char)0xee66, true, "CBM +" ).Replacements.Add( "CBM-+" );   // C= +
       AddC64Key( KeyboardKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 167 - 64, true, 167, true, (char)0xee67, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= N
-      AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 168 - 64, true, 168, true, (char)0xee68, true, "CBM £" ).Replacements.Add( "CBM-POUND" );   // C= Insert 
-      AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 169 - 64, true, 169, true, (char)0xee69, true, "SHIFT £" ).Replacements.Add( "SHIFT-POUND" );   // Shift Insert 
+      AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 168 - 64, true, 168, true, (char)0xee68, true, "CBM £" ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
+      AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 169 - 64, true, 169, true, (char)0xee69, true, "SHIFT £" ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
       AddC64Key( KeyboardKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 170 - 64, true, 170, true, (char)0xee6a, true, "CBM M" ).Replacements.Add( "CBM-M" );   // C= M
       AddC64Key( KeyboardKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 171 - 64, true, 171, true, (char)0xee6b, true, "CBM Q" ).Replacements.Add( "CBM-Q" );   // C= Q
       AddC64Key( KeyboardKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 172 - 64, true, 172, true, (char)0xee6c, true, "CBM D" ).Replacements.Add( "CBM-D" );   // C= D
@@ -1341,7 +1341,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_V, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 254 - 128, true, 254, true, (char)0xee7e, true, "CBM V" ).Replacements.Add( "CBM-V" );   // C= V
 
       // 255 $FF                                 94 $5E  
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 158, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.AddRange( new string[] { "PI", "SHIFT-ARROWUP" } );   // PI
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 158, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.AddRange( new string[] { "PI", "SHIFT-ARROWUP", "SHIFT ARROWUP", "SHIFT ARROW-UP" } );   // PI
 
       // reverse keys!
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 160, true, 0, false, (char)0xeee0, true, "REVERSE SPACE" );   // reverse space
