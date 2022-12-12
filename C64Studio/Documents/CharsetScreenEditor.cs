@@ -1911,6 +1911,9 @@ namespace RetroDevStudio.Documents
       {
         SetScreenSize( 40, 25 );
       }
+      // update bg color
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       if ( Data.Length >= m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
       {

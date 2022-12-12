@@ -494,6 +494,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_CHARSET = "Charset Project or File|*.charsetproject;*.chr|";
     public static string FILEFILTER_CHARSET_CHARPAD = "Charpad Project|*.ctm|";
     public static string FILEFILTER_MARQS_PETSCII = "Marq's PETSCII Editor File|*.c|";
+    public static string FILEFILTER_CHARSCREEN_SUPPORTED_FILES = "Supported Files|*.ctm;*.c|";
     public static string FILEFILTER_CHARSET_SCREEN = "Charset Screen Project|*.charscreen|";
     public static string FILEFILTER_SPRITE_PROJECT = "Sprite Project|*.spriteproject|";
     public static string FILEFILTER_SPRITE_FILE = "Sprite File|*.spr|";
