@@ -225,7 +225,8 @@ namespace RetroDevStudio.Controls
             }
             // border and BG first
 
-            if ( dataType != "DIRART" )
+            if ( ( dataType != "DIRART" )
+            &&   ( dataType != "PET" ) )
             {
               CharScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
               screenData = screenData.SubBuffer( 2 );
