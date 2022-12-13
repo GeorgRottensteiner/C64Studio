@@ -3106,6 +3106,9 @@ namespace RetroDevStudio.Parser
       // UGLY HACK - > TODO make it clean later (as if) -> store stripping settings
       bool settingsStripSpaces = Settings.StripSpaces;
       bool settingsStripREM = Settings.StripREM;
+
+      m_CompileConfig.DoNotExpandStringLiterals = true;
+
       Settings.StripSpaces = false;
       Settings.StripREM = false;
 
@@ -3145,12 +3148,19 @@ namespace RetroDevStudio.Parser
           ++firstLineIndex;
         }
         var lineInfo = TokenizeLine( lineInfoOrig.Value.Line, 0, ref curLine );
+        lineInfo = PureTokenizeLine( lineInfoOrig.Value.Line );
         for ( int i = 0; i < lineInfo.Tokens.Count; ++i )
         {
           Token token = lineInfo.Tokens[i];
-          if ( token.TokenType == Token.Type.LINE_NUMBER )
+          if ( ( token.TokenType == Token.Type.LINE_NUMBER )
+          ||   ( ( i == 0 )
+          &&     ( token.TokenType == Token.Type.NUMERIC_LITERAL ) ) )
           {
             // replace starting line number
+            if ( token.TokenType == Token.Type.NUMERIC_LITERAL )
+            {
+              lineInfo.LineNumber = GR.Convert.ToI32( token.Content );
+            }
             if ( ( lineInfo.LineNumber >= FirstLineNumber )
             &&   ( lineInfo.LineNumber <= LastLineNumber ) )
             {

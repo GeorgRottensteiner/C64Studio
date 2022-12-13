@@ -102,6 +102,7 @@ namespace RetroDevStudio.Dialogs
 
       string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
 
+      /*
       if ( m_SymbolMode )
       {
         bool hadError = false;
@@ -110,7 +111,7 @@ namespace RetroDevStudio.Dialogs
       else
       {
         newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText );
-      }
+      }*/
 
       if ( m_Basic.m_LowerCaseMode )
       {
