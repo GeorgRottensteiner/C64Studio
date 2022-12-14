@@ -4885,6 +4885,11 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      if ( m_LoadedFiles[ParentFilename].Contains( subFilename ) )
+      {
+        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
+        return ParseLineResult.RETURN_NULL;
+      }
       m_LoadedFiles[ParentFilename].Add( subFilename );
 
       string[]  subFile = null;

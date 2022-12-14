@@ -111,7 +111,9 @@ namespace RetroDevStudio.Types.ASM
 
     public void Clear()
     {
+      Debug.Log( "Clear" );
       SourceInfo.Clear();
+      Debug.Log( "Clear done" );
       AddressToLine.Clear();
       LineInfo.Clear();
 
@@ -186,17 +188,17 @@ namespace RetroDevStudio.Types.ASM
       LocalLineIndex = -1;
       SrcInfo = null;
 
-      //dh.Log( "FindTrueLineSource for " + LineIndex );
+      //Debug.Log( "FindTrueLinesource for " + LineIndex );
       foreach ( Types.ASM.SourceInfo sourceInfo in SourceInfo.Values )
       {
         if ( ( LineIndex >= sourceInfo.GlobalStartLine )
         &&   ( LineIndex < sourceInfo.GlobalStartLine + sourceInfo.LineCount ) )
         {
           Filename = sourceInfo.Filename;
-          //LocalLineIndex = LineIndex + sourceInfo.LocalStartLine - sourceInfo.GlobalStartLine;
           LocalLineIndex = LineIndex + sourceInfo.LocalStartLine - sourceInfo.GlobalStartLine;
 
           SrcInfo = sourceInfo;
+          //Debug.Log( "FindTrueLinesource done" );
           return true;
         }
       }
@@ -331,6 +333,7 @@ namespace RetroDevStudio.Types.ASM
         }
       }
 
+      Debug.Log( "InsertLines" );
       List<SourceInfo>    sourceInfosToMove = new List<ASM.SourceInfo>();
       foreach ( var sourceInfo in SourceInfo )
       {
@@ -355,6 +358,7 @@ namespace RetroDevStudio.Types.ASM
         sourceInfoToMove.LocalStartLine += LineCount;
         SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
       }
+      Debug.Log( "InsertLines done" );
 
       foreach ( var tempLabel in TempLabelInfo )
       {
@@ -518,6 +522,7 @@ namespace RetroDevStudio.Types.ASM
         // cutting a part out of this
         sourceInfo.Value.LineCount -= LineCount;
       }
+      Debug.Log( "RemoveLines" );
       foreach ( var sourceInfoToMove in sourceInfosToMove )
       {
         SourceInfo.Remove( sourceInfoToMove.GlobalStartLine );
@@ -536,6 +541,7 @@ namespace RetroDevStudio.Types.ASM
           SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
         }
       }
+      Debug.Log( "RemoveLines done" );
 
       foreach ( var tempLabel in TempLabelInfo )
       {
