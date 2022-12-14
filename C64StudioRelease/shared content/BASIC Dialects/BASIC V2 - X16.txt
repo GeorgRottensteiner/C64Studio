@@ -93,9 +93,13 @@ MID$;CA;mI
 
 #X16 tokens
 BIN$;ce9e;
+BLOAD;ce95;
 BOOT;ce93;
+BVERIFY;ce97;
+BVLOAD;ce96;
 CHAR;ce8b;
 CLS;ce90;
+CODEX;ce91;
 COLOR;ce8d;
 DOS;ce81;
 FRAME;ce89;
@@ -115,6 +119,7 @@ PSET;ce87;
 RECT;ce8a;
 RESET;ce8f;
 SCREEN;ce86;
+TEST;ce8e;
 VPEEK;ce98;
 VPOKE;ce84;
 VLOAD;ce85;
