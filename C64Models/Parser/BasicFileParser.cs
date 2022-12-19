@@ -641,6 +641,7 @@ namespace RetroDevStudio.Parser
       bool      insideDataStatement = false;
       int       tokenStartPos = 0;
       bool      insideStringLiteral = false;
+      bool      insideMacro = false;
       Token     currentToken = null;
 
 
@@ -659,6 +660,43 @@ namespace RetroDevStudio.Parser
 
             tokenStartPos = posInLine + 1;
           }
+          ++posInLine;
+          continue;
+        }
+        else if ( insideMacro )
+        {
+          if ( nextByte == '}' )
+          {
+            insideMacro = false;
+            currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos + 1 );
+            currentToken = null;
+            insideStringLiteral = false;
+
+            tokenStartPos = posInLine + 1;
+          }
+          ++posInLine;
+          continue;
+        }
+
+        if ( nextByte == '{' )
+        {
+          insideMacro = true;
+          if ( ( currentToken != null )
+          &&   ( currentToken.TokenType != Token.Type.MACRO ) )
+          {
+            // end of previous token
+            currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
+            currentToken = null;
+          }
+
+          currentToken = new Token();
+          currentToken.TokenType = Token.Type.MACRO;
+          currentToken.StartIndex = posInLine;
+          insideStringLiteral = true;
+
+          tokenStartPos = posInLine;
+          lineInfo.Tokens.Add( currentToken );
+
           ++posInLine;
           continue;
         }

@@ -111,9 +111,7 @@ namespace RetroDevStudio.Types.ASM
 
     public void Clear()
     {
-      Debug.Log( "Clear" );
       SourceInfo.Clear();
-      Debug.Log( "Clear done" );
       AddressToLine.Clear();
       LineInfo.Clear();
 

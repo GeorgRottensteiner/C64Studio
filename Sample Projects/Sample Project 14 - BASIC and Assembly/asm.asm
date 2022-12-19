@@ -1,5 +1,5 @@
 * = 16384
-ASM_START
+ASM_START_DATA
           inc $d020
           ldx #0
           ldy #1
