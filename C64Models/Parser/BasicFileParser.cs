@@ -670,7 +670,6 @@ namespace RetroDevStudio.Parser
             insideMacro = false;
             currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos + 1 );
             currentToken = null;
-            insideStringLiteral = false;
 
             tokenStartPos = posInLine + 1;
           }
@@ -692,7 +691,6 @@ namespace RetroDevStudio.Parser
           currentToken = new Token();
           currentToken.TokenType = Token.Type.MACRO;
           currentToken.StartIndex = posInLine;
-          insideStringLiteral = true;
 
           tokenStartPos = posInLine;
           lineInfo.Tokens.Add( currentToken );
@@ -3317,14 +3315,16 @@ namespace RetroDevStudio.Parser
               continue;
             }
           }
+
           // if we got here there was no label inserted
           sb.Append( token.Content );
-          if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
+          if ( ( i + 1 < lineInfo.Tokens.Count )
+          &&   ( token.StartIndex + token.Content.Length < lineInfo.Tokens[i + 1].StartIndex ) )
           {
-            if ( !IsComment( token ) )
+            // keep spaces intact
+            for ( int j = 0; j < lineInfo.Tokens[i + 1].StartIndex - ( token.StartIndex + token.Content.Length ); ++j )
             {
-              //sb.Append( " " );
+              sb.Append( ' ' );
             }
           }
         }

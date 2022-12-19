@@ -16,13 +16,15 @@ namespace RetroDevStudio.Tasks
     private Solution        m_Solution;
     private bool            CreatePreProcessedFile = false;
     private bool            CreateRelocationFile = false;
+    private bool            DisplayOutput = false;
 
 
 
-    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile )
+    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile, bool DisplayOutput = true )
     {
       this.CreatePreProcessedFile = CreatePreProcessedFile;
       this.CreateRelocationFile = CreateRelocationFile;
+      this.DisplayOutput = DisplayOutput;
       m_DocumentToBuild = DocumentToBuild;
       m_DocumentToDebug = DocumentToDebug;
       m_DocumentToRun = DocumentToRun;
@@ -373,6 +375,11 @@ namespace RetroDevStudio.Tasks
 
     protected override bool ProcessTask()
     {
+      if ( !DisplayOutput )
+      {
+        Core.SuppressOutput();
+      }
+
       Core.SetStatus( "Building..." );
       Core.ClearOutput();
       Core.Compiling.m_RebuiltFiles.Clear();
@@ -388,6 +395,11 @@ namespace RetroDevStudio.Tasks
           {
             Core.SetStatus( "Failed to save project" );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+            if ( !DisplayOutput )
+            {
+              Core.UnsuppressOutput();
+            }
             return false;
           }
         }
@@ -398,6 +410,11 @@ namespace RetroDevStudio.Tasks
           {
             Core.SetStatus( "Failed to save project" );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+            if ( !DisplayOutput )
+            {
+              Core.UnsuppressOutput();
+            }
             return false;
           }
         }
@@ -408,6 +425,11 @@ namespace RetroDevStudio.Tasks
       {
         Core.SetStatus( "No active document" );
         Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+        if ( !DisplayOutput )
+        {
+          Core.UnsuppressOutput();
+        }
         return false;
       }
       if ( ( baseDoc.Element == null )
@@ -416,6 +438,11 @@ namespace RetroDevStudio.Tasks
         Core.AddToOutput( "Document is not part of project, cannot build" + System.Environment.NewLine );
         Core.SetStatus( "Document is not part of project, cannot build" );
         Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+        if ( !DisplayOutput )
+        {
+          Core.UnsuppressOutput();
+        }
         return false;
       }
       Core.AddToOutput( "Determined " + baseDoc.DocumentFilename + " as active document" + System.Environment.NewLine );
@@ -448,6 +475,11 @@ namespace RetroDevStudio.Tasks
         {
           Core.SetStatus( "Build failed" );
           Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+          if ( !DisplayOutput )
+          {
+            Core.UnsuppressOutput();
+          }
           return false;
         }
 
@@ -472,7 +504,6 @@ namespace RetroDevStudio.Tasks
       }
       if ( Core.Navigating.DetermineASMFileInfo( baseDoc ) == Core.Navigating.DetermineASMFileInfo( m_ActiveDocument ) )
       {
-        //Debug.Log( "m_Outline.RefreshFromDocument after compile" );
         Core.MainForm.m_Outline.RefreshFromDocument( baseDoc.BaseDoc );
       }
       Core.SetStatus( "Build successful" );
@@ -523,6 +554,11 @@ namespace RetroDevStudio.Tasks
             if ( !Core.MainForm.RunCompiledFile( m_DocumentToRun, targetType ) )
             {
               Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+              if ( !DisplayOutput )
+              {
+                Core.UnsuppressOutput();
+              }
               return false;
             }
           }
@@ -532,6 +568,11 @@ namespace RetroDevStudio.Tasks
           if ( !DebugCompiledFile( m_DocumentToDebug, m_DocumentToRun ) )
           {
             Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+            if ( !DisplayOutput )
+            {
+              Core.UnsuppressOutput();
+            }
             return false;
           }
           break;
@@ -540,6 +581,10 @@ namespace RetroDevStudio.Tasks
           break;
       }
 
+      if ( !DisplayOutput )
+      {
+        Core.UnsuppressOutput();
+      }
       return true;
     }
 
@@ -595,7 +640,6 @@ namespace RetroDevStudio.Tasks
             if ( !Core.Compiling.NeedsRebuild( elementDependency.DocumentInfo, ConfigSetting ) )
             {
               Core.AddToOutput( "Dependency " + dependency.Filename + " is current for config " + ConfigSetting + System.Environment.NewLine );
-
               if ( ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
               ||   ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
               {
@@ -715,33 +759,6 @@ namespace RetroDevStudio.Tasks
             //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
           }
           additionalPredefines = AdditionalPredefines;
-
-          /*
-          // add pre/post build chain entries as externally included files to validate their time stamps
-          if ( ( configSetting != null )
-          &&   ( configSetting.PreBuildChain.Active ) )
-          {
-            foreach ( var chainEntry in configSetting.PreBuildChain.Entries )
-            {
-              var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
-              if ( chainProject != null )
-              {
-                ( (Parser.ASMFileParser)parser ).ExternallyIncludedFiles.Add( chainProject.FullPath( chainEntry.DocumentFilename ) );
-              }
-            }
-          }
-          if ( ( configSetting != null )
-          &&   ( configSetting.PostBuildChain.Active ) )
-          {
-            foreach ( var chainEntry in configSetting.PostBuildChain.Entries )
-            {
-              var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
-              if ( chainProject != null )
-              {
-                ( (Parser.ASMFileParser)parser ).ExternallyIncludedFiles.Add( chainProject.FullPath( chainEntry.DocumentFilename ) );
-              }
-            }
-          }*/
         }
         else if ( parser is Parser.BasicFileParser )
         {
@@ -751,10 +768,6 @@ namespace RetroDevStudio.Tasks
           if ( Doc.BaseDoc != null )
           {
             ( (Parser.BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)Doc.BaseDoc ).m_LowerCaseMode;
-          }
-          if ( combinedFileInfo != null )
-          {
-            //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
           }
           Doc.ASMFileInfo = combinedFileInfo;
         }
@@ -927,33 +940,8 @@ namespace RetroDevStudio.Tasks
           {
             ++assemblyEndAddress;
           }
-
-          Core.AddToOutput( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
-                            + " to $" + assemblyEndAddress.ToString( "X4" )
-                            + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" + System.Environment.NewLine );
-          Core.AddToOutput( "Memory Map:" + System.Environment.NewLine );
-          if ( parser.AssembledOutput.MemoryMap != null )
-          {
-            foreach ( var mapEntry in parser.AssembledOutput.MemoryMap.Entries )
-            {
-              int     endAddress = mapEntry.StartAddress + mapEntry.Length - 1;
-              if ( mapEntry.Length == 0 )
-              {
-                endAddress = mapEntry.StartAddress;
-              }
-              if ( string.IsNullOrEmpty( mapEntry.Description ) )
-              {
-                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
-              }
-              else
-              {
-                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
-              }
-            }
-          }
+          DisplayMemoryMap( parser, assemblyEndAddress );
           Core.AddToOutput( "Compiled to file " + BuildInfo.TargetFile + ", " + parser.AssembledOutput.Assembly.Length + " bytes" + System.Environment.NewLine );
-
-          //Debug.Log( "File " + Doc.DocumentFilename + " was rebuilt for config " + ConfigSetting + " this round" );
         }
 
         if ( ( configSetting != null )
@@ -1043,6 +1031,35 @@ namespace RetroDevStudio.Tasks
       {
         Core.AddToOutput( "An error occurred during building an element\r\n" + ex.ToString() );
         return false;
+      }
+    }
+
+
+
+    private void DisplayMemoryMap( Parser.ParserBase parser, int assemblyEndAddress )
+    {
+      Core.AddToOutput( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
+                + " to $" + assemblyEndAddress.ToString( "X4" )
+                + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" + System.Environment.NewLine );
+      Core.AddToOutput( "Memory Map:" + System.Environment.NewLine );
+      if ( parser.AssembledOutput.MemoryMap != null )
+      {
+        foreach ( var mapEntry in parser.AssembledOutput.MemoryMap.Entries )
+        {
+          int     endAddress = mapEntry.StartAddress + mapEntry.Length - 1;
+          if ( mapEntry.Length == 0 )
+          {
+            endAddress = mapEntry.StartAddress;
+          }
+          if ( string.IsNullOrEmpty( mapEntry.Description ) )
+          {
+            Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
+          }
+          else
+          {
+            Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
+          }
+        }
       }
     }
 
