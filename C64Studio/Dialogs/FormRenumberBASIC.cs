@@ -109,7 +109,7 @@ namespace RetroDevStudio.Dialogs
       }
       else
       {
-        newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText );
+        newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText, false );
       }
 
       if ( m_Basic.m_LowerCaseMode )

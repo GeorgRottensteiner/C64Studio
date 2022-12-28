@@ -3169,7 +3169,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    public string ReplaceAllSymbolsByMacros( string BasicText )
+    public string ReplaceAllSymbolsByMacros( string BasicText, bool LowerCaseMode )
     {
       for ( int i = 0; i < BasicText.Length; ++i )
       {
@@ -3198,7 +3198,10 @@ namespace RetroDevStudio.Parser
                 replacement = numCharsToReplace.ToString() + replacement;
               }
 
-
+              if ( LowerCaseMode )
+              {
+                replacement = replacement.ToLower();
+              }
               BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + numCharsToReplace );
               i += replacement.Length - numCharsToReplace;
             }

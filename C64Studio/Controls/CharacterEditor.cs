@@ -92,7 +92,7 @@ namespace RetroDevStudio.Controls
       InitializeComponent();
 
       picturePlayground.DisplayPage.Create( 128, 128, GR.Drawing.PixelFormat.Format32bppRgb );
-      panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb ;
+      panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
       panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
       m_ImagePlayground.Create( 256, 256, GR.Drawing.PixelFormat.Format32bppRgb );
@@ -198,7 +198,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public CharsetProject CharacterSet 
+    public CharsetProject CharacterSet
     {
       get
       {
@@ -208,7 +208,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public bool EditorFocused 
+    public bool EditorFocused
     {
       get
       {
@@ -946,7 +946,7 @@ namespace RetroDevStudio.Controls
       {
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
-      
+
 
       ChangeColorSettingsDialog();
       UpdatePalette();
@@ -972,7 +972,7 @@ namespace RetroDevStudio.Controls
       }
       RefreshCategoryCounts();
 
-      checkShowGrid.Checked           = m_Project.ShowGrid;
+      checkShowGrid.Checked = m_Project.ShowGrid;
 
       _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, m_Project.Colors.BackgroundColor );
       _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, m_Project.Colors.MultiColor1 );
@@ -2478,8 +2478,8 @@ namespace RetroDevStudio.Controls
       e.Graphics.FillRectangle( System.Drawing.Brushes.Black, 0, 0, canvasEditor.ClientSize.Width, canvasEditor.ClientSize.Height );
 
       Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, new CustomDrawControlContext( e.Graphics, canvasEditor.ClientSize.Width, canvasEditor.ClientSize.Height )
-        {
-          Palette = m_Project.Colors.Palette
+      {
+        Palette = m_Project.Colors.Palette
       } );
 
       if ( m_CurrentChar >= m_Project.Characters.Count )
@@ -2823,11 +2823,11 @@ namespace RetroDevStudio.Controls
       btnCollapseCategory.Enabled = collapseAllowed;
       btnReseatCategory.Enabled = collapseAllowed;
 
-      btnMoveCategoryDown.Enabled = ( ( listCategories.Items.Count > 1 ) 
-                                   && ( listCategories.SelectedIndices.Count > 0 ) 
+      btnMoveCategoryDown.Enabled = ( ( listCategories.Items.Count > 1 )
+                                   && ( listCategories.SelectedIndices.Count > 0 )
                                    && ( listCategories.SelectedIndices[0] + 1 < listCategories.Items.Count ) );
-      btnMoveCategoryUp.Enabled = ( ( listCategories.Items.Count > 1 ) 
-                                 && ( listCategories.SelectedIndices.Count > 0 ) 
+      btnMoveCategoryUp.Enabled = ( ( listCategories.Items.Count > 1 )
+                                 && ( listCategories.SelectedIndices.Count > 0 )
                                  && ( listCategories.SelectedIndices[0] > 0 ) );
     }
 
@@ -2961,8 +2961,6 @@ namespace RetroDevStudio.Controls
         TargetBuffer.Rectangle( x1, 0, x2 - x1, TargetBuffer.Height, selColor );
       }
     }
-
-
 
   }
 }

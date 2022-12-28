@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Hot-Reload in VICE
 o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
   Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 
 o Schön wäre es wenn man im "Memory View" Fenster, nachdem man "Goto Address" angeklickt hat ein Label eingeben könnte.
