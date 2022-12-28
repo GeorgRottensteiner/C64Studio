@@ -3576,7 +3576,5 @@ namespace RetroDevStudio.Documents
       panelCharacters.Invalidate();
     }
 
-
-
   } 
 }

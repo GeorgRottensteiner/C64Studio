@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Hot-Reload in VICE
 o BASIC - Ein #IFDEF ähnliches Konstrukt, um verschiedene BASIC Versionen im selben Code zu verwenden wär super.
 o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
   Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 

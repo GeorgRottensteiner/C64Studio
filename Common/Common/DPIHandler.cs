@@ -224,6 +224,10 @@ namespace GR.Image
 
     public static System.Drawing.Image GetImageStretchedDPI( this System.Drawing.Image imageIn )
     {
+      if ( imageIn == null )
+      {
+        return null;
+      }
       var newWidth  = (int)( imageIn.Width * DPIX / 96.0f );
       var newHeight = (int)( imageIn.Height * DPIY / 96.0f );
       var newBitmap = new Bitmap( newWidth, newHeight );

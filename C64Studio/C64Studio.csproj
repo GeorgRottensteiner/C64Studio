@@ -329,7 +329,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">
       copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetFileName)"
       if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"

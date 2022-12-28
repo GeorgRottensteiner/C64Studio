@@ -742,7 +742,7 @@ namespace RetroDevStudio.Documents
 
         if ( !m_SymbolMode )
         {
-          basicText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( basicText );
+          basicText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( basicText, false );
         }
 
         if ( DocumentInfo.Element != null )
@@ -1952,7 +1952,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( editSource.Text );
+        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( editSource.Text, m_LowerCaseMode );
       }
       if ( hadError )
       {

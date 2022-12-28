@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -1374,11 +1375,13 @@ namespace RetroDevStudio.Dialogs
       {
         comboSearchText.Items.Add( findArg );
       }
-      comboReplaceSearchText.Items.Clear();
+      comboReplaceSearchText.Items.AddRange( Settings.ReplaceArguments );
+      comboReplaceSearchText.Items.Add( "lsmf" );
+      /*
       foreach ( var replaceArg in Settings.ReplaceArguments )
       {
         comboReplaceSearchText.Items.Add( replaceArg );
-      }
+      }*/
       comboReplaceWith.Items.Clear();
       foreach ( var replaceArg in Settings.ReplaceWithArguments )
       {
@@ -1401,11 +1404,7 @@ namespace RetroDevStudio.Dialogs
       {
         Settings.FindArguments.Add( (string)obj );
       }
-      Settings.ReplaceArguments.Clear();
-      foreach ( object obj in comboReplaceSearchText.Items )
-      {
-        Settings.ReplaceArguments.Add( (string)obj );
-      }
+      Settings.ReplaceArguments = comboReplaceSearchText.Items.ToList();
       Settings.ReplaceWithArguments.Clear();
       foreach ( object obj in comboReplaceWith.Items )
       {

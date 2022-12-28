@@ -1,4 +1,6 @@
-﻿namespace RetroDevStudio.Dialogs
+﻿using RetroDevStudio.Controls;
+
+namespace RetroDevStudio.Dialogs
 {
   partial class FormFindReplace
   {
@@ -57,7 +59,7 @@
       this.checkReplaceIgnoreCase = new System.Windows.Forms.CheckBox();
       this.comboReplaceTarget = new System.Windows.Forms.ComboBox();
       this.comboReplaceWith = new System.Windows.Forms.ComboBox();
-      this.comboReplaceSearchText = new System.Windows.Forms.ComboBox();
+      this.comboReplaceSearchText = new RetroDevStudio.Controls.CSAutoCompleteComboBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
@@ -239,7 +241,6 @@
       // 
       this.comboSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboSearchText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
       this.comboSearchText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
       this.comboSearchText.FormattingEnabled = true;
       this.comboSearchText.Location = new System.Drawing.Point(6, 19);
@@ -438,9 +439,7 @@
       // 
       this.comboReplaceSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboReplaceSearchText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-      this.comboReplaceSearchText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-      this.comboReplaceSearchText.FormattingEnabled = true;
+      this.comboReplaceSearchText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.comboReplaceSearchText.Location = new System.Drawing.Point(6, 19);
       this.comboReplaceSearchText.Name = "comboReplaceSearchText";
       this.comboReplaceSearchText.Size = new System.Drawing.Size(328, 21);
@@ -534,7 +533,7 @@
     public System.Windows.Forms.Button btnFindNext;
     public System.Windows.Forms.ComboBox comboReplaceTarget;
     public System.Windows.Forms.Button btnFindAll;
-    public System.Windows.Forms.ComboBox comboReplaceSearchText;
+    public CSAutoCompleteComboBox comboReplaceSearchText;
     public System.Windows.Forms.ComboBox comboSearchText;
   }
 }

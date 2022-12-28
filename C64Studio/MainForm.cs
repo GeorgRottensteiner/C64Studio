@@ -4661,6 +4661,7 @@ namespace RetroDevStudio
           m_FindReplace.FindNext( ActiveDocument );
           return true;
         case RetroDevStudio.Types.Function.FIND:
+          if ( ActiveDocumentInfo != null )
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
             if ( compilableDoc != null )
@@ -4702,6 +4703,7 @@ namespace RetroDevStudio
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           return true;
         case RetroDevStudio.Types.Function.FIND_REPLACE:
+          if ( ActiveDocumentInfo != null )
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
             if ( compilableDoc != null )
