@@ -148,7 +148,7 @@ namespace RetroDevStudio.Controls
       }
 
       _PopupList = new PopupControl( _AutoCompleteListBox );
-      _PopupList.Show( this );
+      //_PopupList.Show( this );
       _AutoCompleteListBox.Visible = true;
       _PopupList.Visible = true;
       SetTopMost( _PopupList );

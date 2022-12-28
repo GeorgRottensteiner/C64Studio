@@ -61,7 +61,9 @@ namespace RetroDevStudio.Dialogs
       this.groupBox6 = new System.Windows.Forms.GroupBox();
       this.checkImportColorsSorted = new System.Windows.Forms.CheckBox();
       this.checkImportSwizzle = new System.Windows.Forms.CheckBox();
+      this.btnImportFromAssembly = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
+      this.editDataImport = new System.Windows.Forms.TextBox();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.checkExportSwizzled = new System.Windows.Forms.CheckBox();
       this.checkExportHex = new System.Windows.Forms.CheckBox();
@@ -73,8 +75,7 @@ namespace RetroDevStudio.Dialogs
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
-      this.editDataImport = new System.Windows.Forms.TextBox();
-      this.btnImportFromAssembly = new System.Windows.Forms.Button();
+      this.comboPaletteExportFormat = new System.Windows.Forms.ComboBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -89,7 +90,7 @@ namespace RetroDevStudio.Dialogs
       // btnCancel
       // 
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(654, 354);
+      this.btnCancel.Location = new System.Drawing.Point(654, 439);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 1;
@@ -98,7 +99,7 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnOK
       // 
-      this.btnOK.Location = new System.Drawing.Point(573, 354);
+      this.btnOK.Location = new System.Drawing.Point(573, 439);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 1;
@@ -333,7 +334,7 @@ namespace RetroDevStudio.Dialogs
       this.tabPalette.Location = new System.Drawing.Point(12, 12);
       this.tabPalette.Name = "tabPalette";
       this.tabPalette.SelectedIndex = 0;
-      this.tabPalette.Size = new System.Drawing.Size(717, 336);
+      this.tabPalette.Size = new System.Drawing.Size(717, 421);
       this.tabPalette.TabIndex = 7;
       // 
       // tabEditor
@@ -357,7 +358,7 @@ namespace RetroDevStudio.Dialogs
       this.tabImportExport.Location = new System.Drawing.Point(4, 22);
       this.tabImportExport.Name = "tabImportExport";
       this.tabImportExport.Padding = new System.Windows.Forms.Padding(3);
-      this.tabImportExport.Size = new System.Drawing.Size(709, 310);
+      this.tabImportExport.Size = new System.Drawing.Size(709, 395);
       this.tabImportExport.TabIndex = 1;
       this.tabImportExport.Text = "Import/Export";
       this.tabImportExport.UseVisualStyleBackColor = true;
@@ -371,7 +372,7 @@ namespace RetroDevStudio.Dialogs
       this.groupBox6.Controls.Add(this.editDataImport);
       this.groupBox6.Location = new System.Drawing.Point(318, 6);
       this.groupBox6.Name = "groupBox6";
-      this.groupBox6.Size = new System.Drawing.Size(388, 298);
+      this.groupBox6.Size = new System.Drawing.Size(388, 383);
       this.groupBox6.TabIndex = 1;
       this.groupBox6.TabStop = false;
       this.groupBox6.Text = "Import";
@@ -400,6 +401,16 @@ namespace RetroDevStudio.Dialogs
       this.checkImportSwizzle.Text = "De-Swizzle";
       this.checkImportSwizzle.UseVisualStyleBackColor = true;
       // 
+      // btnImportFromAssembly
+      // 
+      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 44);
+      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
+      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromAssembly.TabIndex = 1;
+      this.btnImportFromAssembly.Text = "From assembly";
+      this.btnImportFromAssembly.UseVisualStyleBackColor = true;
+      this.btnImportFromAssembly.Click += new System.EventHandler(this.btnImportFromAssembly_Click);
+      // 
       // btnImportFromFile
       // 
       this.btnImportFromFile.Location = new System.Drawing.Point(6, 15);
@@ -410,8 +421,24 @@ namespace RetroDevStudio.Dialogs
       this.btnImportFromFile.UseVisualStyleBackColor = true;
       this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
       // 
+      // editDataImport
+      // 
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(6, 94);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(376, 283);
+      this.editDataImport.TabIndex = 29;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
+      this.editDataImport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
+      // 
       // groupBox5
       // 
+      this.groupBox5.Controls.Add(this.comboPaletteExportFormat);
       this.groupBox5.Controls.Add(this.checkExportSwizzled);
       this.groupBox5.Controls.Add(this.checkExportHex);
       this.groupBox5.Controls.Add(this.editPrefix);
@@ -424,7 +451,7 @@ namespace RetroDevStudio.Dialogs
       this.groupBox5.Controls.Add(this.btnExportToData);
       this.groupBox5.Location = new System.Drawing.Point(6, 6);
       this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(306, 298);
+      this.groupBox5.Size = new System.Drawing.Size(306, 383);
       this.groupBox5.TabIndex = 0;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Export";
@@ -434,7 +461,7 @@ namespace RetroDevStudio.Dialogs
       this.checkExportSwizzled.AutoSize = true;
       this.checkExportSwizzled.Checked = true;
       this.checkExportSwizzled.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkExportSwizzled.Location = new System.Drawing.Point(216, 42);
+      this.checkExportSwizzled.Location = new System.Drawing.Point(214, 42);
       this.checkExportSwizzled.Name = "checkExportSwizzled";
       this.checkExportSwizzled.Size = new System.Drawing.Size(61, 17);
       this.checkExportSwizzled.TabIndex = 27;
@@ -508,11 +535,11 @@ namespace RetroDevStudio.Dialogs
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(0, 94);
+      this.editDataExport.Location = new System.Drawing.Point(0, 119);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(300, 198);
+      this.editDataExport.Size = new System.Drawing.Size(300, 258);
       this.editDataExport.TabIndex = 29;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -538,30 +565,14 @@ namespace RetroDevStudio.Dialogs
       this.btnExportToData.UseVisualStyleBackColor = true;
       this.btnExportToData.Click += new System.EventHandler(this.btnExportToData_Click);
       // 
-      // editDataImport
+      // comboPaletteExportFormat
       // 
-      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataImport.Location = new System.Drawing.Point(6, 94);
-      this.editDataImport.Multiline = true;
-      this.editDataImport.Name = "editDataImport";
-      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(376, 198);
-      this.editDataImport.TabIndex = 29;
-      this.editDataImport.WordWrap = false;
-      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
-      this.editDataImport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
-      // 
-      // btnImportFromAssembly
-      // 
-      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 44);
-      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
-      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromAssembly.TabIndex = 1;
-      this.btnImportFromAssembly.Text = "From assembly";
-      this.btnImportFromAssembly.UseVisualStyleBackColor = true;
-      this.btnImportFromAssembly.Click += new System.EventHandler(this.btnImportFromAssembly_Click);
+      this.comboPaletteExportFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboPaletteExportFormat.FormattingEnabled = true;
+      this.comboPaletteExportFormat.Location = new System.Drawing.Point(118, 92);
+      this.comboPaletteExportFormat.Name = "comboPaletteExportFormat";
+      this.comboPaletteExportFormat.Size = new System.Drawing.Size(139, 21);
+      this.comboPaletteExportFormat.TabIndex = 30;
       // 
       // DlgPaletteEditor
       // 
@@ -569,7 +580,7 @@ namespace RetroDevStudio.Dialogs
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(738, 386);
+      this.ClientSize = new System.Drawing.Size(738, 474);
       this.Controls.Add(this.tabPalette);
       this.Controls.Add(this.btnOK);
       this.Controls.Add(this.btnCancel);
@@ -643,5 +654,6 @@ namespace RetroDevStudio.Dialogs
     private System.Windows.Forms.CheckBox checkImportColorsSorted;
     private System.Windows.Forms.Button btnImportFromAssembly;
     private System.Windows.Forms.TextBox editDataImport;
-  }
+        private System.Windows.Forms.ComboBox comboPaletteExportFormat;
+    }
 }

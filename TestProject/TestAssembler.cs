@@ -7,6 +7,27 @@ namespace TestProject
   public partial class TestAssembler
   {
     [TestMethod]
+    public void TestAssemblyOpcodeImplicitNoGarbage()
+    {
+      string      source = @"* = $1000
+                            GNU = *
+                            iny GNU";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null );
+      Assert.IsFalse( parseResult );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyOpcodeDetectionAbsolute()
     {
       string      source = @"* = $1000

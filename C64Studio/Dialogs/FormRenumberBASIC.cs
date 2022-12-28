@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Tasks;
 using System;
 using System.Windows.Forms;
 
@@ -101,17 +102,6 @@ namespace RetroDevStudio.Dialogs
       int     lastLineNumber  = GR.Convert.ToI32( editLastLineNumber.Text );
 
       string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
-
-      if ( m_SymbolMode )
-      {
-        bool hadError = false;
-        newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
-      }
-      else
-      {
-        newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText, false );
-      }
-
       if ( m_Basic.m_LowerCaseMode )
       {
         newText = Parser.BasicFileParser.MakeLowerCase( newText, !m_Core.Settings.BASICUseNonC64Font );
@@ -135,7 +125,12 @@ namespace RetroDevStudio.Dialogs
       {
         config = m_Basic.DocumentInfo.Project.Settings.Configuration( configName );
       }
-      if ( !m_Core.MainForm.ParseFile( m_Core.Compiling.ParserBasic, m_Basic.DocumentInfo, config, null, true, false, false ) )
+
+      var taskCompile = new TaskCompile( m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Core.Navigating.Solution, false, false, false );
+      taskCompile.Core = m_Core;
+      taskCompile.RunTask();
+      if ( !taskCompile.TaskSuccessful )
+      //if ( !m_Core.MainForm.ParseFile( m_Core.Compiling.ParserBasic, m_Basic.DocumentInfo, config, null, true, false, false ) )
       {
         System.Windows.Forms.MessageBox.Show( "Renumber is only possible on compilable code", "Cannot renumber" );
         Close();

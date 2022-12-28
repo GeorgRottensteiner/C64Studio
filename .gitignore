@@ -271,3 +271,25 @@
 /C64StudioRelease/net3.5/MediaManager.exe
 /Sample Projects/MacroTest/text-pound.prg
 /Sample Projects/MacroTest/macro_label_replacement.prg
+/Sample Projects/MacroTest/loops_numbered_local_labels.prg
+/Sample Projects/TSB Sample/sample2.prg
+/Sample Projects/TSB Sample/testtokeninrem.prg
+/Sample Projects/Commander X16/textscreen.prg
+/Sample Projects/MacroTest/commanderx16.prg
+/C64Studio/BaseLib/commanderx16.prg
+/Sample Projects/Commander X16/TextScreen 20x30/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 40x15/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 40x30/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 80x60/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 20x15/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 80x15/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 80x30/textscreen.prg
+/Sample Projects/Commander X16/TextScreen 40x60/textscreen.prg
+/Sample Projects/Commander X16/Sprites/sprites.prg
+/Sample Projects/MacroTest/shouldnotcompile.prg
+/C64Studio/commanderx16palette.pal
+/Sample Projects/Commander X16/Sprites 16 Colors/sprites.prg
+/Sample Projects/Commander X16/Sprites 256 Colors/sprites.prg
+/Sample Projects/MacroTest/po_text_pet_scr.prg
+/Sample Projects/MacroTest/includetest_source.prg
+/Sample Projects/MacroTest/datastringswithoutapostrophes.prg

@@ -139,7 +139,7 @@ namespace RetroDevStudio.Types
         entry.Index = memIn.ReadInt32();
 
         entry.Tile.Mode                 = (GraphicTileMode)memIn.ReadInt32();
-        entry.Tile.CustomColor          = memIn.ReadInt32();
+        entry.Tile.CustomColor          = (byte)memIn.ReadInt32();
         int palIndex = memIn.ReadInt32();
         entry.Tile.Width                = memIn.ReadInt32();
         entry.Tile.Height               = memIn.ReadInt32();

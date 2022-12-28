@@ -68,7 +68,7 @@ namespace RetroDevStudio.Dialogs
       System.Drawing.Brush  brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
       System.Drawing.Pen  penBorder = new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
-      g.FillRectangle( brushBackground, 0, 0, 80, 40 );
+      g.FillRectangle( brushBackground, 0, 0, 79, 39 );
       g.DrawRectangle( penBorder, 0, 0, 80, 40 );
 
       System.Drawing.Brush  brush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );

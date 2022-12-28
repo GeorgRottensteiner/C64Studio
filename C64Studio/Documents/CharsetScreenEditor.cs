@@ -11,6 +11,9 @@ using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio;
 using RetroDevStudio.Controls;
+using GR.Forms;
+using System.Drawing;
+using System.Linq;
 
 namespace RetroDevStudio.Documents
 {
@@ -24,6 +27,12 @@ namespace RetroDevStudio.Documents
       FILL,
       SELECT,
       TEXT
+    };
+
+    private enum CharlistLayout
+    { 
+      PLAIN,
+      PETSCII_EDITOR
     };
 
 
@@ -42,6 +51,8 @@ namespace RetroDevStudio.Documents
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
     private bool[,]                     m_SelectedChars = new bool[40, 25];
     private bool[,]                     m_ReverseCache = new bool[40, 25];
+    private ushort[]                    m_CharlistLayout = new ushort[256];
+    private CharlistLayout              m_CurrentLayout = CharlistLayout.PLAIN;
 
     private System.Drawing.Rectangle    m_SelectionBounds = new System.Drawing.Rectangle();
 
@@ -79,6 +90,8 @@ namespace RetroDevStudio.Documents
     private ExportCharscreenFormBase    m_ExportForm = null;
     private ImportCharscreenFormBase    m_ImportForm = null;
 
+    private bool                        m_ColorChooserPopupActive = false;
+
 
 
     public CharsetScreenEditor( StudioCore Core )
@@ -88,6 +101,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+      SuspendLayout();
       charEditor.Core = Core;
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
@@ -139,6 +153,14 @@ namespace RetroDevStudio.Documents
       comboExportArea.Items.Add( "Custom Area" );
       comboExportArea.SelectedIndex = 0;
 
+      for ( int i = 0; i < 256; ++i )
+      {
+        m_CharlistLayout[i] = (ushort)i;
+      }
+      comboCharlistLayout.Items.Add( "Default" );
+      comboCharlistLayout.Items.Add( "PETSCII Editor" );
+      comboCharlistLayout.SelectedIndex = 0;
+
       foreach ( TextMode mode in Enum.GetValues( typeof( TextMode ) ) )
       {
         if ( mode != TextMode.UNKNOWN )
@@ -171,6 +193,7 @@ namespace RetroDevStudio.Documents
         panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+      ResumeLayout();
     }
 
 
@@ -266,11 +289,12 @@ namespace RetroDevStudio.Documents
       // mark selected char
       if ( m_SelectedChar.X != -1 )
       {
-        int  sx1 = ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sx2 = ( m_SelectedChar.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sy1 = ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-        int  sy2 = ( m_SelectedChar.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+        int  sx1 = ( ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+        int  sx2 = ( ( m_SelectedChar.X + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+        int  sy1 = ( ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+        int  sy2 = ( ( m_SelectedChar.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
 
+        /*
         if ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX == m_CharsWidth - 1 )
         {
           --sx2;
@@ -278,7 +302,7 @@ namespace RetroDevStudio.Documents
         if ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY == m_CharsHeight - 1 )
         {
           --sy2;
-        }
+        }*/
 
         TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, selColor );
       }
@@ -291,19 +315,10 @@ namespace RetroDevStudio.Documents
 
         CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
 
-        int  sx1 = ( o1.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sx2 = ( o2.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-        int  sy1 = ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-        int  sy2 = ( o2.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-
-        if ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX == m_CharsWidth - 1 )
-        {
-          --sx2;
-        }
-        if ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY == m_CharsHeight - 1 )
-        {
-          --sy2;
-        }
+        int  sx1 = ( ( o1.X - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+        int  sx2 = ( ( o2.X + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+        int  sy1 = ( ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+        int  sy2 = ( ( o2.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
 
         TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, selColor );
       }
@@ -345,19 +360,10 @@ namespace RetroDevStudio.Documents
         {
           if ( m_SelectedChars[x, y] )
           {
-            int  sx1 = ( x - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-            int  sx2 = ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-            int  sy1 = ( y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-            int  sy2 = ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-
-            if ( x == x2 )
-            {
-              --sx2;
-            }
-            if ( y == y2 )
-            {
-              --sy2;
-            }
+            int  sx1 = ( ( x - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+            int  sx2 = ( ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+            int  sy1 = ( ( y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+            int  sy2 = ( ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
 
             if ( ( y == 0 )
             ||   ( !m_SelectedChars[x, y - 1] ) )
@@ -1013,7 +1019,14 @@ namespace RetroDevStudio.Documents
       {
         m_CurrentChar = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] & 0xffff );
         m_CurrentColor = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] >> 16 );
-        panelCharacters.SelectedIndex = m_CurrentChar;
+        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+        {
+          if ( m_CharlistLayout[i] == m_CurrentChar )
+          {
+            panelCharacters.SelectedIndex = i;
+            break;
+          }
+        }
         labelInfo.Text = InfoText();
         RedrawColorChooser();
       }
@@ -1409,7 +1422,7 @@ namespace RetroDevStudio.Documents
       }
       if ( Modified )
       {
-        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your character set. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
+        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your character screen project. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
         if ( doSave == DialogResult.Cancel )
         {
           return;
@@ -1661,7 +1674,7 @@ namespace RetroDevStudio.Documents
 
     private void panelCharacters_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_CurrentChar = (ushort)panelCharacters.SelectedIndex;
+      m_CurrentChar = (ushort)m_CharlistLayout[(ushort)panelCharacters.SelectedIndex];
 
       RedrawColorChooser();
       labelInfo.Text = InfoText();
@@ -1671,11 +1684,42 @@ namespace RetroDevStudio.Documents
 
     private void RedrawColorChooser()
     {
+      if ( m_CharsetScreen.CharSet.Mode == TextCharMode.X16_HIRES )
+      {
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
+
+        // click for more
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 32, panelCharColors.DisplayPage, 8, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 3, panelCharColors.DisplayPage, 16, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 12, panelCharColors.DisplayPage, 24, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 9, panelCharColors.DisplayPage, 32, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 3, panelCharColors.DisplayPage, 40, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 11, panelCharColors.DisplayPage, 48, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 32, panelCharColors.DisplayPage, 56, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 6, panelCharColors.DisplayPage, 64, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 15, panelCharColors.DisplayPage, 72, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 18, panelCharColors.DisplayPage, 80, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 32, panelCharColors.DisplayPage, 88, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 13, panelCharColors.DisplayPage, 96, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 15, panelCharColors.DisplayPage, 104, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 18, panelCharColors.DisplayPage, 112, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 5, panelCharColors.DisplayPage, 120, 0, 1 );
+      }
+      else
+      {
+        for ( byte i = 0; i < m_NumColorsInColorChooser; ++i )
+        {
+          Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * m_CharacterWidth, 0, i );
+        }
+      }
+      panelCharColors.Invalidate();
+
+      /*
       for ( byte i = 0; i < m_NumColorsInColorChooser; ++i )
       {
         DrawCharImage( panelCharColors.DisplayPage, i * m_CharacterHeight, 0, m_CurrentChar, i );
       }
-      panelCharColors.Invalidate();
+      panelCharColors.Invalidate();*/
     }
 
 
@@ -1696,11 +1740,49 @@ namespace RetroDevStudio.Documents
 
     private void HandleMouseOnColorChooser( int X, int Y, MouseButtons Buttons )
     {
+      if ( m_ColorChooserPopupActive )
+      {
+        return;
+      }
+
+      if ( ( Buttons == MouseButtons.Left )
+      &&   ( m_CharsetScreen.CharSet.Mode == TextCharMode.X16_HIRES )
+      &&   ( panelCharColors.ClientRectangle.Contains( X, Y ) ) )
+      {
+        var popupControl = new FastPictureBox();
+        popupControl.DisplayPage = new FastImage( 128, 128 );
+        popupControl.Size = new Size( 256, 256 );
+
+        var popup = new PopupControl( popupControl );
+        popup.ClientSize = new Size( 256, 256 );
+
+        // build all variations
+        for ( byte i = 0; i < 16; ++i )
+        {
+          for ( byte j = 0; j < 16; ++j )
+          {
+            Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, m_CurrentChar, popupControl.DisplayPage,
+              i * 8, j * 8, j * 16 + i );
+          }
+        }
+
+
+        var screenPos = panelCharColors.Parent.PointToScreen( panelCharColors.Location );
+        popup.Location = new Point( screenPos.X, screenPos.Y - popup.Height + panelCharColors.Height );
+        popup.Clicked += m_ColorChoserPopup_Clicked;
+        popup.HandleDestroyed += Popup_HandleDestroyed;
+        popup.Show();
+        popup.Focus();
+        m_ColorChooserPopupActive = true;
+        return;
+      }
+
       if ( ( X < 0 )
       ||   ( X >= panelCharColors.ClientSize.Width ) )
       {
         return;
       }
+
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
         int colorIndex = (int)( ( m_NumColorsInColorChooser * X ) / panelCharColors.ClientSize.Width );
@@ -1713,6 +1795,22 @@ namespace RetroDevStudio.Documents
           RebuildCharPanelImages();
         }
       }
+    }
+
+
+
+    private void Popup_HandleDestroyed( object sender, EventArgs e )
+    {
+      m_ColorChooserPopupActive = false;
+    }
+
+
+
+    private void m_ColorChoserPopup_Clicked( int X, int Y )
+    {
+      int colorIndex = ( X / 16 ) + ( Y / 16 ) * 16;
+      m_CurrentColor = (byte)colorIndex;
+      RedrawColorChooser();
     }
 
 
@@ -1813,6 +1911,9 @@ namespace RetroDevStudio.Documents
       {
         SetScreenSize( 40, 25 );
       }
+      // update bg color
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       if ( Data.Length >= m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
       {
@@ -2465,16 +2566,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      if ( m_ToolMode == ToolMode.SELECT )
-      {
-        // TODO - use configured accelerator!
-        if ( ( e.Modifiers == Keys.Control )
-        &&   ( e.KeyCode == Keys.C ) )
-        {
-          CopyToClipboard();
-        }
-      }
-
       if ( ( m_ToolMode == ToolMode.RECTANGLE )
       ||   ( m_ToolMode == ToolMode.FILLED_RECTANGLE ) )
       {
@@ -2486,13 +2577,6 @@ namespace RetroDevStudio.Documents
             Redraw();
           }
         }
-      }
-
-      // TODO - use configured accelerator!
-      if ( ( e.Modifiers == Keys.Control )
-      &&   ( e.KeyCode == Keys.V ) )
-      {
-        PasteFromClipboard();
       }
     }
 
@@ -2621,6 +2705,18 @@ namespace RetroDevStudio.Documents
           comboMulticolor1.Enabled = false;
           comboMulticolor2.Enabled = false;
           comboBGColor4.Enabled = false;
+          labelBGColor.Enabled = true;
+          comboBackground.Enabled = true;
+          break;
+        case TextCharMode.X16_HIRES:
+          labelMColor1.Enabled = false;
+          labelMColor2.Enabled = false;
+          labelBGColor4.Enabled = false;
+          comboMulticolor1.Enabled = false;
+          comboMulticolor2.Enabled = false;
+          comboBGColor4.Enabled = false;
+          labelBGColor.Enabled = false;
+          comboBackground.Enabled = false;
           break;
         case TextCharMode.VIC20:
           labelMColor1.Enabled = true;
@@ -2631,6 +2727,8 @@ namespace RetroDevStudio.Documents
           comboMulticolor1.Enabled = true;
           comboMulticolor2.Enabled = true;
           comboBGColor4.Enabled = false;
+          labelBGColor.Enabled = true;
+          comboBackground.Enabled = true;
           break;
         case TextCharMode.COMMODORE_MULTICOLOR:
           labelMColor1.Enabled = true;
@@ -2641,6 +2739,8 @@ namespace RetroDevStudio.Documents
           comboMulticolor1.Enabled = true;
           comboMulticolor2.Enabled = true;
           comboBGColor4.Enabled = false;
+          labelBGColor.Enabled = true;
+          comboBackground.Enabled = true;
           break;
         case TextCharMode.COMMODORE_ECM:
           labelMColor1.Enabled = true;
@@ -2651,6 +2751,8 @@ namespace RetroDevStudio.Documents
           comboMulticolor1.Enabled = true;
           comboMulticolor2.Enabled = true;
           comboBGColor4.Enabled = true;
+          labelBGColor.Enabled = true;
+          comboBackground.Enabled = true;
           break;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -2661,6 +2763,8 @@ namespace RetroDevStudio.Documents
           comboMulticolor1.Enabled = false;
           comboMulticolor2.Enabled = false;
           comboBGColor4.Enabled = false;
+          labelBGColor.Enabled = true;
+          comboBackground.Enabled = true;
           break;
         default:
           Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
@@ -2669,6 +2773,9 @@ namespace RetroDevStudio.Documents
 
       m_CharacterWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       m_CharacterHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
+
+      m_CharsWidth = Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode );
+      m_CharsHeight = Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode );
 
       switch ( m_CharsetScreen.Mode )
       {
@@ -2679,13 +2786,19 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_40_X_25_FCM_16BIT:
         case TextMode.MEGA65_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_HIRES:
-          m_CharsWidth = 40;
-          m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
+          break;
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_20_X_30:
+        case TextMode.X16_40_X_15:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_40_X_60:
+        case TextMode.X16_80_X_30:
+        case TextMode.X16_80_X_60:
+          pictureEditor.DisplayPage.Create( m_CharsWidth * 8, m_CharsHeight * 8, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_40_X_25_NCM:
           m_CharsWidth = 20;
-          m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_80_X_25_HIRES:
@@ -2693,18 +2806,13 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_80_X_25_FCM:
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_ECM:
-          m_CharsWidth = 80;
-          m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_80_X_25_NCM:
           m_CharsWidth = 40;
-          m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.COMMODORE_VIC20_22_X_23:
-          m_CharsWidth = 22;
-          m_CharsHeight = 23;
           pictureEditor.DisplayPage.Create( 176, 184, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         default:
@@ -2762,6 +2870,7 @@ namespace RetroDevStudio.Documents
       int numColors = Lookup.NumberOfColorsInCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
 
       // hard coded palettes
+      int     numColorsBackground = 16;
       int     numColorsInChooser = 16;
 
       switch ( m_CharsetScreen.Mode )
@@ -2769,15 +2878,17 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_HIRES:
           numColorsInChooser = 32;
+          numColorsBackground = 32;
           break;
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
-          return;
+          break;
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
-          return;
+          numColorsBackground = 8;
+          break;
       }
 
       if ( m_NumColorsInColorChooser != numColorsInChooser )
@@ -2788,28 +2899,22 @@ namespace RetroDevStudio.Documents
         RedrawColorChooser();
       }
 
-      if ( comboBackground.Items.Count != numColors )
+      if ( comboBackground.Items.Count != numColorsBackground )
       {
         comboBackground.BeginUpdate();
 
-        while ( comboBackground.Items.Count < numColors )
+        while ( comboBackground.Items.Count < numColorsBackground )
         {
           comboBackground.Items.Add( comboBackground.Items.Count.ToString( "d2" ) );
         }
-        while ( comboBackground.Items.Count > numColors )
+        while ( comboBackground.Items.Count > numColorsBackground )
         {
-          comboBackground.Items.RemoveAt( numColors );
+          comboBackground.Items.RemoveAt( numColorsBackground );
         }
-
         comboBackground.EndUpdate();
       }
 
-      if ( m_CharsetScreen.CharSet.Colors.Palette.NumColors == numColors )
-      {
-        // palette is already matching, keep existing
-        return;
-      }
-      m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromNumColors( numColors );
+      m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
     }
 
 
@@ -2926,57 +3031,77 @@ namespace RetroDevStudio.Documents
 
     public override bool ApplyFunction( Function Function )
     {
-      if ( !charEditor.EditorFocused )
+      if ( charEditor.EditorFocused )
       {
-        return false;
+        switch ( Function )
+        {
+          case Function.GRAPHIC_ELEMENT_MIRROR_H:
+            charEditor.MirrorX();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MIRROR_V:
+            charEditor.MirrorY();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_D:
+            charEditor.ShiftDown();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_U:
+            charEditor.ShiftUp();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_L:
+            charEditor.ShiftLeft();
+            return true;
+          case Function.GRAPHIC_ELEMENT_SHIFT_R:
+            charEditor.ShiftRight();
+            return true;
+          case Function.GRAPHIC_ELEMENT_ROTATE_L:
+            charEditor.RotateLeft();
+            return true;
+          case Function.GRAPHIC_ELEMENT_ROTATE_R:
+            charEditor.RotateRight();
+            return true;
+          case Function.GRAPHIC_ELEMENT_INVERT:
+            charEditor.Invert();
+            return true;
+          case Function.GRAPHIC_ELEMENT_PREVIOUS:
+            charEditor.Previous();
+            return true;
+          case Function.GRAPHIC_ELEMENT_NEXT:
+            charEditor.Next();
+            return true;
+          case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+            charEditor.CustomColor();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+            charEditor.MultiColor1();
+            return true;
+          case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+            charEditor.MultiColor2();
+            return true;
+          case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+            charEditor.BackgroundColor();
+            return true;
+          case Function.COPY:
+            charEditor.Copy();
+            return true;
+          case Function.PASTE:
+            charEditor.Paste();
+            return true;
+        }
       }
-      switch ( Function )
+      else if ( pictureEditor.Focused )
       {
-        case Function.GRAPHIC_ELEMENT_MIRROR_H:
-          charEditor.MirrorX();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MIRROR_V:
-          charEditor.MirrorY();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_D:
-          charEditor.ShiftDown();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_U:
-          charEditor.ShiftUp();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_L:
-          charEditor.ShiftLeft();
-          return true;
-        case Function.GRAPHIC_ELEMENT_SHIFT_R:
-          charEditor.ShiftRight();
-          return true;
-        case Function.GRAPHIC_ELEMENT_ROTATE_L:
-          charEditor.RotateLeft();
-          return true;
-        case Function.GRAPHIC_ELEMENT_ROTATE_R:
-          charEditor.RotateRight();
-          return true;
-        case Function.GRAPHIC_ELEMENT_INVERT:
-          charEditor.Invert();
-          return true;
-        case Function.GRAPHIC_ELEMENT_PREVIOUS:
-          charEditor.Previous();
-          return true;
-        case Function.GRAPHIC_ELEMENT_NEXT:
-          charEditor.Next();
-          return true;
-        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
-          charEditor.CustomColor();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
-          charEditor.MultiColor1();
-          return true;
-        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
-          charEditor.MultiColor2();
-          return true;
-        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
-          charEditor.BackgroundColor();
-          return true;
+        switch ( Function )
+        {
+          case Function.COPY:
+            if ( m_ToolMode == ToolMode.SELECT )
+            {
+              CopyToClipboard();
+            }
+            return true;
+          case Function.PASTE:
+            PasteFromClipboard();
+            return true;
+        }
       }
       return base.ApplyFunction( Function );
     }
@@ -3237,12 +3362,20 @@ namespace RetroDevStudio.Documents
 
     private void panelCharColors_PostPaint( FastImage TargetBuffer )
     {
+      if ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) == TextCharMode.X16_HIRES )
+      {
+        return;
+      }
+
       int     x1 = m_CurrentColor * TargetBuffer.Width / m_NumColorsInColorChooser;
       int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / m_NumColorsInColorChooser;
 
-      uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
+      if ( Core != null )
+      {
+        uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
 
-      TargetBuffer.Rectangle( x1, 0, x2 - x1, TargetBuffer.Height, selColor );
+        TargetBuffer.Rectangle( x1, 0, x2 - x1, TargetBuffer.Height, selColor );
+      }
     }
 
 
@@ -3357,6 +3490,90 @@ namespace RetroDevStudio.Documents
         Modified = true;
         RedrawFullScreen();
       }
+    }
+
+
+
+    public override bool CopyPossible
+    {
+      get
+      {
+        return ( ( charEditor.EditorFocused )
+          ||     ( pictureEditor.Focused ) );
+      }
+    }
+
+
+
+    public override bool PastePossible
+    {
+      get
+      {
+        return ( ( charEditor.EditorFocused )
+          ||     ( pictureEditor.Focused ) );
+      }
+    }
+
+
+
+    private void comboCharlistLayout_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      SetCharlistLayout( (CharlistLayout)comboCharlistLayout.SelectedIndex );
+    }
+
+
+
+    private void SetCharlistLayout( CharlistLayout Layout )
+    {
+      if ( ( Layout == m_CurrentLayout )
+      &&   ( m_CharlistLayout.Length == m_CharsetScreen.CharSet.TotalNumberOfCharacters ) )
+      {
+        return;
+      }
+
+      m_CharlistLayout = new ushort[m_CharsetScreen.CharSet.TotalNumberOfCharacters];
+
+      switch ( Layout )
+      {
+        case CharlistLayout.PLAIN:
+          for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+          {
+            m_CharlistLayout[i] = (ushort)i;
+          }
+          break;
+        case CharlistLayout.PETSCII_EDITOR:
+          {
+            // PETSCII editor
+            var petsciiList = new ushort[]
+            {
+              32, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+              16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 46, 44, 59, 33, 63,
+              48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 34, 35, 36, 37, 38, 39,
+              112, 110, 85, 73, 79, 80, 108, 123, 78, 77, 40, 64, 42, 27, 29, 58,
+              109, 125, 74, 75, 76, 122, 124, 126, 95, 105, 114, 91, 113, 104, 102, 92,
+              100, 111, 82, 70, 67, 68, 69, 119, 99, 86, 106, 89, 96, 66, 101, 93,
+              118, 103, 107, 72, 115, 116, 71, 117, 84, 121, 47, 45, 127, 98, 120, 97,
+              60, 62, 61, 42, 43, 30, 31, 65, 88, 83, 87, 81, 90, 94, 28, 0
+            };
+
+            for ( int i = 0; i < 128; ++i )
+            {
+              m_CharlistLayout[i] = petsciiList[i];
+              m_CharlistLayout[i + 128] = (ushort)( 128 + petsciiList[i] );
+            }
+            for ( int i = 256; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+            {
+              m_CharlistLayout[i] = (ushort)i;
+            }
+          }
+          break;
+      }
+      m_CurrentLayout = Layout;
+      for ( int i = 0; i < 256; ++i )
+      {
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[m_CharlistLayout[i]].Tile.Image;
+      }
+      panelCharacters.Invalidate();
     }
 
   } 

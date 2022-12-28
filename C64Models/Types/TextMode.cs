@@ -37,7 +37,21 @@ namespace RetroDevStudio
     [Description( "Mega 65 40x25 NCM" )]
     MEGA65_40_X_25_NCM,
     [Description( "Mega 65 80x25 NCM" )]
-    MEGA65_80_X_25_NCM
+    MEGA65_80_X_25_NCM,
+    [Description( "Commander X16 80x60" )]
+    X16_80_X_60,
+    [Description( "Commander X16 80x30" )]
+    X16_80_X_30,
+    [Description( "Commander X16 40x60" )]
+    X16_40_X_60,
+    [Description( "Commander X16 40x30" )]
+    X16_40_X_30,
+    [Description( "Commander X16 40x15" )]
+    X16_40_X_15,
+    [Description( "Commander X16 20x30" )]
+    X16_20_X_30,
+    [Description( "Commander X16 20x15" )]
+    X16_20_X_15
   }
 
 }

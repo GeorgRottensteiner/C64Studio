@@ -135,7 +135,10 @@ namespace RetroDevStudio.Documents
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
 
       m_IsSaveable = true;
+
       InitializeComponent();
+
+      SuspendLayout();
 
       DPIHandler.ResizeControlsForDPI( this );
 
@@ -183,6 +186,9 @@ namespace RetroDevStudio.Documents
       editSource.LineInserted += new EventHandler<FastColoredTextBoxNS.LineInsertedEventArgs>( editSource_LineInserted );
       editSource.LineRemoved += new EventHandler<FastColoredTextBoxNS.LineRemovedEventArgs>( editSource_LineRemoved );
 
+      editSource.BookmarkAdded += EditSource_BookmarkAdded;
+      editSource.BookmarkRemoved += EditSource_BookmarkRemoved;
+
       editSource.UndoRedoStateChanged += new EventHandler<EventArgs>( editSource_UndoRedoStateChanged );
 
       editSource.LeftBracket = '(';
@@ -215,6 +221,32 @@ namespace RetroDevStudio.Documents
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+
+      ResumeLayout();
+    }
+
+
+
+    private void EditSource_BookmarkRemoved( object sender, BookmarkEventArgs e )
+    {
+      if ( m_InsertingText )
+      {
+        return;
+      }
+      StoreBookmarks();
+      SetModified();
+    }
+
+
+
+    private void EditSource_BookmarkAdded( object sender, BookmarkEventArgs e )
+    {
+      if ( m_InsertingText )
+      {
+        return;
+      }
+      StoreBookmarks();
+      SetModified();
     }
 
 
@@ -1888,13 +1920,11 @@ namespace RetroDevStudio.Documents
       {
         commentSelectionToolStripMenuItem.Enabled = true;
         uncommentSelectionToolStripMenuItem.Enabled = true;
-        //separatorCommenting.Visible = true;
       }
       else
       {
         commentSelectionToolStripMenuItem.Enabled = false;
         uncommentSelectionToolStripMenuItem.Enabled = false;
-        //separatorCommenting.Visible = false;
       }
       if ( !Core.Settings.ASMShowMiniView )
       {
@@ -1922,10 +1952,10 @@ namespace RetroDevStudio.Documents
       if ( ( lineBelow.StartsWith( "!SOURCE" ) )
       ||   ( lineBelow.StartsWith( "!SRC" ) ) )
       {
-        string    fileName = lineBelow.Substring( 4 ).Trim();
+        string    fileName = editSource.Lines[m_ContextMenuLineIndex].Trim().Substring( 4 ).Trim();
         if ( lineBelow.StartsWith( "!SOURCE" ) )
         {
-          fileName = lineBelow.Substring( 7 ).Trim();
+          fileName = editSource.Lines[m_ContextMenuLineIndex].Trim().Substring( 7 ).Trim();
         }
 
         if ( ( fileName.Length > 2 )
@@ -2011,10 +2041,6 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
-      //if ( DocumentInfo.FullPath.EndsWith( "objects.asm" ) )
-      //{
-        //Debug.Log( "collapsing " + DocumentInfo.CollapsedFoldingBlocks.Count + " folded blocks" );
-      //}
       UpdateFoldingBlocks();
 
 
@@ -2022,23 +2048,28 @@ namespace RetroDevStudio.Documents
       var collapsedBlocks = new GR.Collections.Set<int>( DocumentInfo.CollapsedFoldingBlocks );
       foreach ( int blockStart in collapsedBlocks )
       {
-        //Debug.Log( "Trying to collapse for " + DocumentInfo.FullPath + ", line " + blockStart );
         if ( ( blockStart < 0 )
         ||   ( blockStart >= editSource.LinesCount ) )
         {
           // out of bounds
-          //Debug.Log( "-out of bounds" );
           continue;
         }
         if ( editSource.TextSource[blockStart].FoldingStartMarker != null )
         {
           editSource.CollapseFoldingBlock( blockStart );
-          //Debug.Log( "-ok" );
         }
-        else
+      }
+
+      var bookmarks = new GR.Collections.Set<int>( DocumentInfo.Bookmarks );
+      foreach ( int lineIndex in bookmarks )
+      {
+        if ( ( lineIndex < 0 )
+        ||   ( lineIndex >= editSource.LinesCount ) )
         {
-          //Debug.Log( "-no folding start marker set" );
+          // out of bounds
+          continue;
         }
+        editSource.Bookmarks.Add( lineIndex );
       }
       m_InsertingText = false;
 
@@ -2156,14 +2187,18 @@ namespace RetroDevStudio.Documents
           }
         }
       }
+    }
 
 
-      /*
-      foreach ( var block in editSource.FoldedBlocks )
+
+    private void StoreBookmarks()
+    {
+      if ( m_InsertingText )
       {
-        DocumentInfo.CollapsedFoldingBlocks.Add( block.Key );
-        Debug.Log( "Store for " + DocumentInfo.FullPath + ", line " + block.Key );
-      }*/
+        return;
+      }
+      DocumentInfo.Bookmarks.Clear();
+      DocumentInfo.Bookmarks.AddRange( editSource.Bookmarks.Select( bm => bm.LineIndex ) );
     }
 
 
@@ -3000,6 +3035,9 @@ namespace RetroDevStudio.Documents
         case Function.FIND_ALL_REFERENCES:
           FindAllReferences( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
           return true;
+        case Function.RENAME_ALL_REFERENCES:
+          RenameAllReferences( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
+          return true;
       }
       return false;
     }
@@ -3435,6 +3473,9 @@ namespace RetroDevStudio.Documents
 
     public override ByteBuffer SaveToBuffer()
     {
+      var currentBookmarks = new List<int>();
+      currentBookmarks.AddRange( editSource.Bookmarks.Select( x => x.LineIndex ) );
+
       var sourceData = new GR.IO.FileChunk( FileChunkConstants.SOURCE_ASM );
 
       // version
@@ -3442,6 +3483,14 @@ namespace RetroDevStudio.Documents
       sourceData.AppendString( editSource.Text );
       sourceData.AppendI32( CursorLine );
       sourceData.AppendI32( CursorPosInLine );
+
+      var bookmarkData = new GR.IO.FileChunk( FileChunkConstants.BOOKMARKS );
+      bookmarkData.AppendI32( currentBookmarks.Count );
+      foreach ( var bookmarkLine in currentBookmarks )
+      {
+        bookmarkData.AppendI32( bookmarkLine );
+      }
+      sourceData.Append( bookmarkData.ToBuffer() );
 
       return sourceData.ToBuffer();
     }
@@ -3472,6 +3521,34 @@ namespace RetroDevStudio.Documents
       int   cursorPos = reader.ReadInt32();
 
       SetCursorToLine( cursorLine, cursorPos, false );
+
+
+      var subChunk = new GR.IO.FileChunk();
+
+      while ( subChunk.ReadFromStream( Reader ) )
+      {
+        var subReader = subChunk.MemoryReader();
+        switch ( subChunk.Type )
+        {
+          case FileChunkConstants.BOOKMARKS:
+            {
+              var   bookmarks = new List<int>();
+              int   numBookmarks = subReader.ReadInt32();
+              for ( int i = 0; i < numBookmarks; ++i )
+              {
+                bookmarks.Add( subReader.ReadInt32() );
+              }
+
+              editSource.BeginAutoUndo();
+              editSource.Bookmarks.Clear();
+              foreach ( var origBookmark in bookmarks )
+              {
+                editSource.Bookmarks.Add( origBookmark );
+              }
+            }
+            break;
+        }
+      }
 
       return true;
     }
@@ -3591,14 +3668,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void FindAllReferences()
+    private bool FindReferences( int PositionInCode, int LineIndexInCode, out Types.ASM.FileInfo FileInfo, out SymbolInfo FoundSymbol )
     {
-    }
+      FoundSymbol = null;
+      FileInfo    = null;
 
 
-
-    private void FindAllReferences( int PositionInCode, int LineIndexInCode )
-    {
       int     lineIndex = LineIndexInCode;
       string  wordBelow = FindWordFromPosition( PositionInCode, LineIndexInCode );
 
@@ -3622,32 +3697,60 @@ namespace RetroDevStudio.Documents
           else
           {
             System.Windows.Forms.MessageBox.Show( "Could not determine symbol from selection" );
-            return;
+            return false;
           }
         }
       }
 
-      Types.ASM.FileInfo debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
-      if ( debugFileInfo == null )
+      FileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
+      if ( FileInfo == null )
       {
         System.Windows.Forms.MessageBox.Show( "Could not determine symbol of " + wordBelow );
-        return;
+        return false;
       }
 
       string zone;
       string cheapLabelParent;
 
-      debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
+      FileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
 
-      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
-      if ( tokenInfo == null )
+      FoundSymbol = FileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      if ( FoundSymbol == null )
       {
         System.Windows.Forms.MessageBox.Show( "Unrecognized symbol, a recompile may be required" );
+        return false;
+      }
+
+      // TODO - verify all files (and thus references) are up to date
+      //foreach ( var reference in tokenInfo.References
+
+      return true;
+    }
+
+
+
+    private void FindAllReferences( int PositionInCode, int LineIndexInCode )
+    {
+      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo tokenInfo ) )
+      {
         return;
       }
-      
       Core.MainForm.m_FindReferences.UpdateReferences( DocumentInfo.Project, debugFileInfo, tokenInfo );
       Core.MainForm.m_FindReferences.Show();
+    }
+
+
+
+    private void RenameAllReferences( int PositionInCode, int LineIndexInCode )
+    {
+      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo tokenInfo ) )
+      {
+        return;
+      }
+
+      var dlgRename = new FormRenameReference( Core, tokenInfo, debugFileInfo, Parser );
+
+      dlgRename.ShowDialog();
     }
 
 
@@ -3860,6 +3963,27 @@ namespace RetroDevStudio.Documents
       Core.Settings.ASMShowShortCutLabels = !Core.Settings.ASMShowShortCutLabels;
 
       Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.SETTING_MODIFIED ) { OriginalValue = "ASMShowShortCutLabels" }  );
+    }
+
+
+
+    private void renameAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      RenameAllReferences( m_ContextMenuPosition, m_ContextMenuLineIndex );
+    }
+
+
+
+    public void SetLineText( string ReplacedText, int LineIndex )
+    {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= editSource.LinesCount ) )
+      {
+        return;
+      }
+      editSource.Selection.Start  = new Place( 0, LineIndex );
+      editSource.Selection.End    = new Place( editSource.Lines[LineIndex].Length, LineIndex );
+      editSource.SelectedText     = ReplacedText;
     }
 
 

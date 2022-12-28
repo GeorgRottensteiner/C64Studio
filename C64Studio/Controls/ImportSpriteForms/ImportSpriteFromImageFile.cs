@@ -43,7 +43,9 @@ namespace RetroDevStudio.Controls
       }
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( filename, null, importType, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( filename, null, importType, mcSettings, 
+                                       Lookup.SpriteWidth( Project.Mode ), Lookup.SpriteHeight( Project.Mode ),
+                                       out spriteImage, out mcSettings, out pasteAsBlock ) )
       {
         return false;
       }
@@ -64,8 +66,6 @@ namespace RetroDevStudio.Controls
       int   curY = 0;
       while ( curY + Editor.m_SpriteHeight <= spriteImage.Height )
       {
-        //DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, Project, currentSpriteIndex ), firstUndoStep );
-
         Editor.ImportSprite( spriteImage.GetImage( curX, curY, Editor.m_SpriteWidth, Editor.m_SpriteHeight ) as GR.Image.FastImage, currentSpriteIndex );
         Editor.SpriteChanged( currentSpriteIndex );
 

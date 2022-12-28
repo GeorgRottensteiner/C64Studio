@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Memory;
+using RetroDevStudio;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -92,6 +93,17 @@ namespace RetroDevStudio.Controls
         return true;
       }
 
+      ByteBuffer  interleavedBuffer = null;
+      if ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED )
+      {
+        interleavedBuffer = new ByteBuffer( Info.ScreenCharData.Length + Info.ScreenColorData.Length );
+        for ( int i = 0; i < Info.ScreenCharData.Length; ++i )
+        {
+          interleavedBuffer.SetU8At( i * 2, Info.ScreenCharData.ByteAt( i ) );
+          interleavedBuffer.SetU8At( i * 2 + 1, Info.ScreenColorData.ByteAt( i ) );
+        }
+      }
+
       string screenData = Util.ToASMData( Info.ScreenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
       string colorData  = Util.ToASMData( Info.ScreenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
 
@@ -114,6 +126,12 @@ namespace RetroDevStudio.Controls
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR:
           sb.Append( ";screen color data" + Environment.NewLine + colorData + Environment.NewLine + ";screen char data" + Environment.NewLine + screenData );
+          break;
+        case ExportCharsetScreenInfo.ExportData.CHARSET:
+          sb.Append( ";charset data" + Environment.NewLine + Util.ToASMData( Info.CharsetData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+          break;
+        case ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED:
+          sb.Append( ";interleaved data" + Environment.NewLine + Util.ToASMData( interleavedBuffer, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
           break;
         default:
           return false;

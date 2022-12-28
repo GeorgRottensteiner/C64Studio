@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using System.Diagnostics;
 
 namespace RetroDevStudio.CustomRenderer
 {
@@ -292,11 +293,21 @@ namespace RetroDevStudio.CustomRenderer
 
     public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
     {
+      DrawSingleColorComboBox( Combo, e, Pal, 0 );
+    }
+
+
+
+    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal, int PaletteOffset )
+    {
       e.DrawBackground();
       if ( e.Index == -1 )
       {
         return;
       }
+
+      int   indexToDraw = e.Index;
+      int   indexInPalette = e.Index + PaletteOffset;
 
       int offset = (int)e.Graphics.MeasureString( "22", Combo.Font ).Width + 5 + 3;
 
@@ -304,17 +315,17 @@ namespace RetroDevStudio.CustomRenderer
       if ( ( e.State & DrawItemState.Disabled ) != 0 )
       {
         e.Graphics.FillRectangle( System.Drawing.SystemBrushes.GrayText, itemRect );
-        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Gray ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.DrawString( Combo.Items[indexToDraw].ToString(), Combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Gray ), 3.0f, e.Bounds.Top + 1.0f );
       }
       else if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
-        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
-        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[indexInPalette], itemRect );
+        e.Graphics.DrawString( Combo.Items[indexToDraw].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
       else
       {
-        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
-        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[indexInPalette], itemRect );
+        e.Graphics.DrawString( Combo.Items[indexToDraw].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
     }
 

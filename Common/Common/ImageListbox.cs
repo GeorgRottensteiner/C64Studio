@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 
 namespace GR.Forms
 {
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
   public class ImageListbox : CustomAutoScrollPanel.ScrollablePanel
   {
     public class ImageListItem

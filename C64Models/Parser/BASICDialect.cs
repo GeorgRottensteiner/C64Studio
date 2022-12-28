@@ -43,6 +43,7 @@ namespace C64Models.BASIC
     public int                              SafeLineLength = 80;
     public string                           HexPrefix = "";
     public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
+    public bool                             ExtendedTokensRecognizedInsideComment = false;
 
     public static Dialect                   BASICV2;
 
@@ -210,6 +211,17 @@ namespace C64Models.BASIC
             dialect.HexPrefix = line.Substring( 10 );
             continue;
           }
+          else if ( line == "HasTextLabels" )
+          {
+            dialect.HasTextLabels = true;
+            continue;
+          }
+          else if ( line == "ExtendedTokensRecognizedInsideComment" )
+          {
+            dialect.ExtendedTokensRecognizedInsideComment = true;
+            continue;
+          }
+
           // skip header
           if ( firstLine )
           {

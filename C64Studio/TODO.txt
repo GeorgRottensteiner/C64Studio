@@ -1,31 +1,36 @@
 ﻿C64Studio
 o Hot-Reload in VICE
+o BASIC - Ein #IFDEF ähnliches Konstrukt, um verschiedene BASIC Versionen im selben Code zu verwenden wär super.
 o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
   Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 
+o Same version info for C64Studio and C64Ass
 o Schön wäre es wenn man im "Memory View" Fenster, nachdem man "Goto Address" angeklickt hat ein Label eingeben könnte.
-o Die Kommentier & Unkommentierfunktion würde ich mir auch für Basic mit dem Prefix # wünschen.
+o BASIC: Die Kommentier & Unkommentierfunktion würde ich mir auch für Basic mit dem Prefix # wünschen.
 o Allow change of the default palettes
 o BASIC: Lange Variablennamen erkennen und automatisch durch kürzere ersetzen, und dabei auch noch eventuelle Duplikate vermeiden, interessante Idee :)
-o Since there is no "Clone Solution" command !, 
-o to create a new solution based on an existing one (without having to import the files each time and recreate the virtual folders in the 
-  browser), I copy the existing folder, rename the new one and rename the file .s64.
 o Now that you have added the name of the current solution in the title bar of the program, I see that the name of the solution does 
   not match the name of the new folder but the name of the previous solution (match name of solution to filename!)
-o I repeat, I am in enormous difficulty from this point of view. You could fix all this stuff. 
-o The "Clone Project" command also throws an exception and is unusable. The "Rename Project" command should also rename the .c64 file. I suggest you to provide real and not virtual folders (as Visual Studio does) so that even at the file level, everything is more organized and easier to manage. The commands "Import Project", "Import File" and "Import Folder" should also exist. There should also be multiple selection for files in the browser. I understand that all of this involves a lot of work, but I think you might want to consider it.
-Beyond all this, at the moment, what is the most practical and fastest way to create a new solution starting from an existing one without having to import the files and without having to recreate the virtual folders every time (also considering that every time I create a virtual folder, I have to drag and drop files one by one)?
+o The "Clone Project" command also throws an exception and is unusable. 
+o The "Rename Project" command should also rename the .c64 file. 
+I suggest you to provide real and not virtual folders (as Visual Studio does) so that even at the file level, everything is more organized and 
+easier to manage. 
+The commands "Import Folder" should also exist. There should also be multiple selection for files in the browser. 
+I understand that all of this involves a lot of work, but I think you might want to consider it.
+Beyond all this, at the moment, what is the most practical and fastest way to create a new solution starting from an existing one without having 
+to import the files and without having to recreate the virtual folders every time (also considering that every time I create a virtual folder, I have 
+to drag and drop files one by one)?
 
 o Screen-Editor Shift UDLR, Mirror
 o Basic-Dateien im VICE-petcat-Format schreiben lassen? 
 o Would it be possible to see the total number of cycles taken by a macro?
-o Maybe when a sprite is copied from one cell to another, the "Multicolor" property might be copied as well?
-o suppose that in the sprite editor I have a hundred sprites and that I want to insert one at position 20. How can I do this? I don't see the Move command like in the char editor. 
-  At the moment I copy (Copy to Clipboard) the sprites from the 20th position onwards and paste them one position further. It works, but I see that the Copy to 
-  Clipboard command is quite slow (it takes a few seconds).
+o suppose that in the sprite editor I have a hundred sprites and that I want to insert one at position 20. How can I do this? I don't see the Move 
+  command like in the char editor. 
+  At the moment I copy (Copy to Clipboard) the sprites from the 20th position onwards and paste them one position further. 
 o I use a tab size of 8. If I insert the line "jsr routine" preceded by a tab, move the cursor right after "jsr" (before the space), 
   and hit enter, I would expect the new line to consist of a tab followed by a space followed by "routine". Instead I have a line 
   that starts with 8 spaces followed by "routine" and the cursor is in the 7th column. To return to the previous situation, I have to press Undo twice.
-o If I select an entire line and, while holding Ctrl, drag it to the beginning of the immediately following line or to the beginning of the line itself, it is not copied. Other text editors do this instead.
+o If I select an entire line and, while holding Ctrl, drag it to the beginning of the immediately following line or to the beginning of the line itself, it is not copied. 
+  Other text editors do this instead.
 o Sometimes, after opening a project, the list in the combo next to the "to Charset..." button does not show the charsets 
   contained in the project. If I close and reopen the program, the list correctly shows the charsets:
 o I used Find/Replace to replace all occurrences of "_Lo" with "_lo". The next day I changed my mind and wanted to replace 
@@ -38,10 +43,7 @@ o If you move the cursor inside a pair of brackets, they are highlighted. If you
 o suppose I have the following line:
   zone.label,x
   Now suppose I delete "label". I would expect Intellisense to appear but it doesn't.
-
-o Funktion um alle Zones zuzuklappen
 o BASIC - Rename Variables, list all occurrences
-o Rename Project in Solution Explorer, also rename .c64 file!
 o Beim "Graphic Screen" -> "Export" optionale "Load Address (hex)" wie beim Character Set
 o Disassembler: Special case "bit" shortcat, e.g. target label is not placed
 *=$033c
@@ -53,9 +55,7 @@ weiter      lda #$00
             rts
 o When I move somewhere in the code, I would like the label combobox to point to the previous global or local label instead of the immediate 
   label which, as far as I'm concerned, is of little use.
-o Option to remove the immediate labels from the combobox list above the text editor
 o label .NOP gets coloring of opcode
-o Same version info for C64Studio and C64Ass
 o Scaling: At a ".charscreen" element, we can change the actual color to be used for drawing, 
   from the row showing the selected character with all colors. If I click on this row to choose a color, 
   the actually chosen one will be picked by a scaled position, not where I clicked. At the left (black color) it's ok, 
@@ -254,8 +254,6 @@ o TODO - Nested for loops using a local label from outside:
     lda .LABEL + ROW * 5 + COL
     !end
     !end
-o float point Konstante eingebe? z.B. wie beim CBM Program Studio, da ging das irgendwie (habs nicht ganz parat) so: !flp 32.442.
-Das ist logisch auf den ersten Blick, es wäre aber cool, wenn man auch sigened values eintippen könnte und der Assembler das gleich umrechnet in die entsprechende 2-complement Zahl.
 o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char offsets (+$40,$80,$c0)
 o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon gibt und ich nur nicht weiß, wo der Knopf ist):
   Im Debugger würde ich gerne die Cycle-Zahl auf NULL stellen können, um die Cycles ab einem bestimmten Punkt starten und zählen zu können.
@@ -267,7 +265,6 @@ o Linux:
   WINEPREFIX=~/.winedir wine RetroDevStudio.exe 
 
 o Docs: list illegal opcodes in help
-o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
 o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
 o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
 o Automated code formatting

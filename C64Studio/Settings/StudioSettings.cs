@@ -8,8 +8,7 @@ using GR.Memory;
 using RetroDevStudio.Types;
 using System.Drawing;
 using RetroDevStudio.Documents;
-
-
+using System.Linq;
 
 namespace RetroDevStudio
 {
@@ -267,6 +266,7 @@ namespace RetroDevStudio
       RegisterFunction( Function.CUT, "Cut", Types.FunctionStudioState.ANY );
       RegisterFunction( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
+      RegisterFunction( Function.RENAME_ALL_REFERENCES, "Rename all references", FunctionStudioState.ANY );
 
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_H, "Mirror Horizontal", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_V, "Mirror Vertical", FunctionStudioState.ANY );
@@ -491,14 +491,14 @@ namespace RetroDevStudio
 
     public AcceleratorKey DetermineAccelerator( Types.Function Function )
     {
-      foreach ( var accPair in Accelerators )
-      {
-        if ( accPair.Value.Function == Function )
-        {
-          return accPair.Value;
-        }
-      }
-      return null;
+      return Accelerators.Values.FirstOrDefault( acc => acc.Function == Function );
+    }
+
+
+
+    public AcceleratorKey FindAccelerator( Keys KeyCombination )
+    {
+      return Accelerators.Values.FirstOrDefault( acc => ( acc.Key == KeyCombination ) || ( acc.SecondaryKey == KeyCombination ) );
     }
 
 
@@ -851,7 +851,7 @@ namespace RetroDevStudio
       }
       Main.CloseAllDocuments();
 
-      //Debug.Log( Data.ToAsciiString() );
+      
 
       if ( ( Data.Length >= 3 )
       &&   ( Data.ByteAt( 0 ) == 0xef )

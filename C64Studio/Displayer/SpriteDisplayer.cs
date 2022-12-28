@@ -202,5 +202,95 @@ namespace RetroDevStudio.Displayer
 
 
 
+    public static void DisplayX1616ColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int PaletteOffset, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool TransparentBackground )
+    {
+      int     pixelStepX = 1;
+      int     pixelStepY = 1;
+
+      int   lineBytes = ( Width + 1 ) / 2;
+      for ( int j = 0; j < Height; ++j )
+      {
+        for ( int pp = 0; pp < pixelStepY; ++pp )
+        {
+          for ( int i = 0; i < Width; i += 2 )
+          {
+            byte  pixelDuo = Data.ByteAt( j * lineBytes + i / 2 );
+
+            byte  colorToUse = (byte)BGColor;
+            if ( ( pixelDuo >> 4 ) != 0 )
+            {
+              colorToUse = (byte)( pixelDuo >> 4 );
+            }
+            else if ( TransparentBackground )
+            {
+              continue;
+            }
+
+            uint color = Palette.ColorValues[PaletteOffset + colorToUse];
+            if ( colorToUse == 0 )
+            {
+              color = Palette.ColorValues[0];
+            }
+
+            Target.SetPixel( ( X + i ) * pixelStepX, Y + j * pixelStepY + pp, color );
+            if ( pixelStepX == 2 )
+            {
+              Target.SetPixel( ( X + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
+            }
+
+            colorToUse = (byte)BGColor;
+            if ( ( pixelDuo & 0x0f ) != 0 )
+            {
+              colorToUse = (byte)( pixelDuo & 0x0f );
+            }
+
+            if ( colorToUse == 0 )
+            {
+              color = Palette.ColorValues[0];
+            }
+            else
+            {
+              color = Palette.ColorValues[PaletteOffset + colorToUse];
+            }
+
+            Target.SetPixel( ( X + i + 1 ) * pixelStepX, Y + j * pixelStepY + pp, color );
+            if ( pixelStepX == 2 )
+            {
+              Target.SetPixel( ( X + i + 1 ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
+            }
+          }
+        }
+      }
+    }
+
+
+
+    public static void DisplayX16256ColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int PaletteOffset, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool TransparentBackground )
+    {
+      int   lineBytes = Width;
+      for ( int j = 0; j < Height; ++j )
+      {
+        for ( int i = 0; i < Width; ++i )
+        {
+          byte  pixel = Data.ByteAt( j * lineBytes + i );
+
+          if ( ( pixel == 0 )
+          &&   ( TransparentBackground ) )
+          {
+            continue;
+          }
+
+          // palette offset only affects colors 0 to 15
+          if ( ( pixel < 16 )
+          &&   ( pixel > 0 ) )
+          {
+            pixel = (byte)( pixel + PaletteOffset );
+          }
+
+          Target.SetPixel( X + i, Y + j, Palette.ColorValues[pixel] );
+        }
+      }
+    }
+
   }
 }

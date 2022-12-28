@@ -29,6 +29,7 @@ namespace RetroDevStudio
     private GR.Collections.MultiMap<string, SymbolInfo> m_KnownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
 
     public GR.Collections.Set<int>        CollapsedFoldingBlocks = new GR.Collections.Set<int>();
+    public GR.Collections.Set<int>        Bookmarks = new GR.Collections.Set<int>();
 
 
 

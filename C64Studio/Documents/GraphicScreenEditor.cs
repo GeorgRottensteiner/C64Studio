@@ -181,16 +181,6 @@ namespace RetroDevStudio.Documents
         }
       }
       comboCharScreens.SelectedIndex = 0;
-
-      pictureEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( pictureEditor_PreviewKeyDown );
-    }
-
-
-
-    void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      KeyEventArgs ke = new KeyEventArgs( e.KeyData );
-      HandleKeyDown( sender, ke );
     }
 
 
@@ -232,24 +222,6 @@ namespace RetroDevStudio.Documents
           SetUnmodified();
         }
         saveCharsetProjectToolStripMenuItem.Enabled = Modified;
-      }
-    }
-
-
-
-    void HandleKeyDown( object sender, KeyEventArgs e )
-    {
-      if ( ( e.Modifiers == Keys.Control )
-      &&   ( e.KeyCode == Keys.C ) )
-      {
-        // copy
-        CopySelectedImageToClipboard();
-      }
-      else if ( ( e.Modifiers == Keys.Control )
-      &&        ( e.KeyCode == Keys.V ) )
-      {
-        // paste
-        PasteClipboardImageToSelectedChar();
       }
     }
 
@@ -588,7 +560,7 @@ namespace RetroDevStudio.Documents
     {
       if ( m_SelectedChar.X != -1 )
       {
-        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Tile.CustomColor = comboCharColor.SelectedIndex;
+        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Tile.CustomColor = (byte)comboCharColor.SelectedIndex;
       }
     }
 
@@ -612,7 +584,8 @@ namespace RetroDevStudio.Documents
       {
         importType = GraphicType.CHARACTERS_FCM;
       }
-      if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
+                                       8, 8, out mappedImage, out mcSettings, out pasteAsBlock ) )
       {
         return false;
       }
@@ -1482,11 +1455,11 @@ namespace RetroDevStudio.Documents
       {
         chosenCharColor = 0;
       }
-      cd.Tile.CustomColor = chosenCharColor;
+      cd.Tile.CustomColor = (byte)chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        cd.Tile.CustomColor = chosenCharColor + 8;
+        cd.Tile.CustomColor = (byte)( chosenCharColor + 8 );
       }
       return true;
     }
@@ -2488,16 +2461,11 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      int     numColors = Lookup.NumberOfColorsInDisplayMode( m_GraphicScreenProject.SelectedCheckType );
+      m_GraphicScreenProject.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
+      PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
 
-      if ( numColors != m_GraphicScreenProject.Colors.Palette.NumColors )
-      {
-        m_GraphicScreenProject.Colors.Palette = PaletteManager.PaletteFromNumColors( numColors );
-        PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
-        PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
-
-        pictureEditor.Invalidate();
-      }
+      pictureEditor.Invalidate();
     }
 
 
@@ -3489,6 +3457,12 @@ namespace RetroDevStudio.Documents
         case Function.GRAPHIC_ELEMENT_SHIFT_U:
           ShiftUp();
           return true;
+        case Function.COPY:
+          CopySelectedImageToClipboard();
+          return true;
+        case Function.PASTE:
+          PasteClipboardImageToSelectedChar();
+          return true;
       }
       return base.ApplyFunction( Function );
     }
@@ -3668,6 +3642,26 @@ namespace RetroDevStudio.Documents
       checkMulticolor.Checked = m_GraphicScreenProject.MultiColor;
       comboMulticolor1.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor1;
       comboMulticolor2.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor2;
+    }
+
+
+
+    public override bool CopyPossible
+    {
+      get
+      {
+        return pictureEditor.Focused;
+      }
+    }
+
+
+
+    public override bool PastePossible
+    {
+      get
+      {
+        return pictureEditor.Focused;
+      }
     }
 
 

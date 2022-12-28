@@ -16,7 +16,71 @@ namespace RetroDevStudio.Formats
       [Description( "Mega65 64x21" )]
       MEGA65_64_X_21_HIRES_OR_MC,
       [Description( "Mega65 16x21 16 colors" )]
-      MEGA65_16_X_21_16_COLORS
+      MEGA65_16_X_21_16_COLORS,
+      [Description( "Commander X16 8x8 16 colors" )]
+      COMMANDER_X16_8_8_16_COLORS,
+      [Description( "Commander X16 16x8 16 colors" )]
+      COMMANDER_X16_16_8_16_COLORS,
+      [Description( "Commander X16 32x8 16 colors" )]
+      COMMANDER_X16_32_8_16_COLORS,
+      [Description( "Commander X16 64x8 16 colors" )]
+      COMMANDER_X16_64_8_16_COLORS,
+      [Description( "Commander X16 8x16 16 colors" )]
+      COMMANDER_X16_8_16_16_COLORS,
+      [Description( "Commander X16 16x16 16 colors" )]
+      COMMANDER_X16_16_16_16_COLORS,
+      [Description( "Commander X16 32x16 16 colors" )]
+      COMMANDER_X16_32_16_16_COLORS,
+      [Description( "Commander X16 64x16 16 colors" )]
+      COMMANDER_X16_64_16_16_COLORS,
+      [Description( "Commander X16 8x32 16 colors" )]
+      COMMANDER_X16_8_32_16_COLORS,
+      [Description( "Commander X16 16x32 16 colors" )]
+      COMMANDER_X16_16_32_16_COLORS,
+      [Description( "Commander X16 32x32 16 colors" )]
+      COMMANDER_X16_32_32_16_COLORS,
+      [Description( "Commander X16 64x32 16 colors" )]
+      COMMANDER_X16_64_32_16_COLORS,
+      [Description( "Commander X16 8x64 16 colors" )]
+      COMMANDER_X16_8_64_16_COLORS,
+      [Description( "Commander X16 16x64 16 colors" )]
+      COMMANDER_X16_16_64_16_COLORS,
+      [Description( "Commander X16 32x64 16 colors" )]
+      COMMANDER_X16_32_64_16_COLORS,
+      [Description( "Commander X16 64x64 16 colors" )]
+      COMMANDER_X16_64_64_16_COLORS,
+      [Description( "Commander X16 8x8 256 colors" )]
+      COMMANDER_X16_8_8_256_COLORS,
+      [Description( "Commander X16 16x8 256 colors" )]
+      COMMANDER_X16_16_8_256_COLORS,
+      [Description( "Commander X16 32x8 256 colors" )]
+      COMMANDER_X16_32_8_256_COLORS,
+      [Description( "Commander X16 64x8 256 colors" )]
+      COMMANDER_X16_64_8_256_COLORS,
+      [Description( "Commander X16 8x16 256 colors" )]
+      COMMANDER_X16_8_16_256_COLORS,
+      [Description( "Commander X16 16x16 256 colors" )]
+      COMMANDER_X16_16_16_256_COLORS,
+      [Description( "Commander X16 32x16 256 colors" )]
+      COMMANDER_X16_32_16_256_COLORS,
+      [Description( "Commander X16 64x16 256 colors" )]
+      COMMANDER_X16_64_16_256_COLORS,
+      [Description( "Commander X16 8x32 256 colors" )]
+      COMMANDER_X16_8_32_256_COLORS,
+      [Description( "Commander X16 16x32 256 colors" )]
+      COMMANDER_X16_16_32_256_COLORS,
+      [Description( "Commander X16 32x32 256 colors" )]
+      COMMANDER_X16_32_32_256_COLORS,
+      [Description( "Commander X16 64x32 256 colors" )]
+      COMMANDER_X16_64_32_256_COLORS,
+      [Description( "Commander X16 8x64 256 colors" )]
+      COMMANDER_X16_8_64_256_COLORS,
+      [Description( "Commander X16 16x64 256 colors" )]
+      COMMANDER_X16_16_64_256_COLORS,
+      [Description( "Commander X16 32x64 256 colors" )]
+      COMMANDER_X16_32_64_256_COLORS,
+      [Description( "Commander X16 64x64 256 colors" )]
+      COMMANDER_X16_64_64_256_COLORS
     }
 
 
@@ -83,7 +147,6 @@ namespace RetroDevStudio.Formats
     public SpriteProject()
     {
       Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
-      Colors.Palettes.Add( Colors.Palette );
       for ( int i = 0; i < TotalNumberOfSprites; ++i )
       {
         Sprites.Add( new SpriteData( Colors ) );
@@ -132,6 +195,7 @@ namespace RetroDevStudio.Formats
         chunkSprite.AppendI32( (int)sprite.Tile.Data.Length );
         chunkSprite.Append( sprite.Tile.Data );
         chunkSprite.AppendI32( sprite.Tile.Colors.ActivePalette );
+        chunkSprite.AppendI32( sprite.Tile.Colors.PaletteOffset );
 
         chunkProject.Append( chunkSprite.ToBuffer() );
       }
@@ -292,19 +356,26 @@ namespace RetroDevStudio.Formats
 
                         sprite.Mode = (SpriteMode)subChunkReader.ReadInt32();
                         sprite.Tile.Mode = (GraphicTileMode)subChunkReader.ReadInt32();
-                        sprite.Tile.CustomColor = subChunkReader.ReadInt32();
+                        sprite.Tile.CustomColor = (byte)subChunkReader.ReadInt32();
                         sprite.Tile.Width = subChunkReader.ReadInt32();
                         sprite.Tile.Height = subChunkReader.ReadInt32();
                         int dataLength = subChunkReader.ReadInt32();
                         sprite.Tile.Data = new GR.Memory.ByteBuffer();
                         subChunkReader.ReadBlock( sprite.Tile.Data, (uint)dataLength );
-                        if ( sprite.Tile.CustomColor == -1 )
+                        if ( sprite.Tile.CustomColor == 255 )
                         {
                           sprite.Tile.CustomColor = 1;
                         }
 
                         sprite.Tile.Colors.ActivePalette = subChunkReader.ReadInt32();
+                        sprite.Tile.Colors.PaletteOffset = subChunkReader.ReadInt32();
                         sprite.Tile.Image = new GR.Image.MemoryImage( sprite.Tile.Width, sprite.Tile.Height, GR.Drawing.PixelFormat.Format32bppRgb );
+
+                        // bugfix - mega65 sprites have a different mode
+                        if ( sprite.Tile.Mode == GraphicTileMode.MEGA65_NCM_CHARACTERS )
+                        {
+                          sprite.Tile.Mode = GraphicTileMode.MEGA65_NCM_SPRITES;
+                        }
 
                         Sprites.Add( sprite );
                       }
@@ -371,7 +442,7 @@ namespace RetroDevStudio.Formats
       string name = memIn.ReadString();
       for ( int i = 0; i < numSprites; ++i )
       {
-        Sprites[i].Tile.CustomColor = memIn.ReadInt32();
+        Sprites[i].Tile.CustomColor = (byte)memIn.ReadInt32();
       }
       for ( int i = 0; i < numSprites; ++i )
       {
@@ -464,7 +535,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public ByteBuffer GetPaletteExportData( int StartIndex, int NumColors, bool Swizzled )
+    public ByteBuffer GetPaletteExportData( int StartIndex, int NumColors, bool Swizzled, bool SortedByColorTriplets )
     {
       // get all palette datas, first all R, then all G, then all B
       var palData = new ByteBuffer();
@@ -474,7 +545,7 @@ namespace RetroDevStudio.Formats
 
         //Debug.Log( "orig pal data: " + curPal.GetExportData( 0, curPal.NumColors, false ).ToString() );
 
-        palData.Append( curPal.GetExportData( 0, curPal.NumColors, Swizzled ) );
+        palData.Append( curPal.GetExportData( 0, curPal.NumColors, Swizzled, SortedByColorTriplets ) );
       }
 
       //Debug.Log( "Total Pal Data: " + palData.ToString() );

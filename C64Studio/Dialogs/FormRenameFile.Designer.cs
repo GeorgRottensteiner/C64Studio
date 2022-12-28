@@ -70,12 +70,14 @@ namespace RetroDevStudio.Dialogs
       // 
       // listPETSCII
       // 
+      this.listPETSCII.AutoScroll = true;
       this.listPETSCII.AutoScrollHorizontalMaximum = 100;
       this.listPETSCII.AutoScrollHorizontalMinimum = 0;
       this.listPETSCII.AutoScrollHPos = 0;
       this.listPETSCII.AutoScrollVerticalMaximum = 100;
       this.listPETSCII.AutoScrollVerticalMinimum = 0;
       this.listPETSCII.AutoScrollVPos = 0;
+      this.listPETSCII.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.listPETSCII.EnableAutoScrollHorizontal = true;
       this.listPETSCII.EnableAutoScrollVertical = true;
       this.listPETSCII.HottrackColor = ((uint)(2151694591u));

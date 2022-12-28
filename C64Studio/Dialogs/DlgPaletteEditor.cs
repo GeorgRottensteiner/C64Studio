@@ -41,7 +41,12 @@ namespace RetroDevStudio.Dialogs
 
       this.Colors = new ColorSettings( Colors );
       this.Core = Core;
+
       InitializeComponent();
+
+      comboPaletteExportFormat.Items.Add( "RRRR GGGG BBBB" );
+      comboPaletteExportFormat.Items.Add( "RGBRGBRGB..." );
+      comboPaletteExportFormat.SelectedIndex = 0;
 
       int palIndex = 0;
 
@@ -490,7 +495,7 @@ namespace RetroDevStudio.Dialogs
       {
         var curPal = Colors.Palettes[i];
 
-        palData.Append( curPal.GetExportData( 0, curPal.NumColors, checkExportSwizzled.Checked ) );
+        palData.Append( curPal.GetExportData( 0, curPal.NumColors, checkExportSwizzled.Checked, comboPaletteExportFormat.SelectedIndex == 0 ) );
       }
 
       // pal data has rgbrgbrgb, we need to copy all r,g,bs behind each other

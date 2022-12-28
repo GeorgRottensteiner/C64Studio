@@ -166,6 +166,8 @@ namespace RetroDevStudio.Documents
 
       m_StartAddress = "2049";
       editBASICStartAddress.Text = "2049";
+
+      UpdateLabelModeText();
     }
 
 
@@ -706,7 +708,6 @@ namespace RetroDevStudio.Documents
         else
         {
           firstLine = basicText;
-          //basicText = "";
         }
 
         if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
@@ -780,6 +781,7 @@ namespace RetroDevStudio.Documents
         m_LabelMode = IsInLabelMode( basicText );
         m_InsideLoad = true;
         btnToggleLabelMode.Checked = m_LabelMode;
+        UpdateLabelModeText();
 
         if ( m_LowerCaseMode )
         {
@@ -812,9 +814,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool IsInLabelMode( string basicText )
+    private bool IsInLabelMode( string BasicText )
     {
-      string[]  lines = basicText.Split( new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries );
+      string[]  lines = BasicText.Split( new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries );
 
       foreach ( var line in lines )
       {
@@ -1201,7 +1203,7 @@ namespace RetroDevStudio.Documents
       if ( ( keyData == m_ControlKeyReplacement )
       ||   ( keyData == m_CommodoreKeyReplacement ) )
       {
-        // we misuse tab as command key, avoid common processing -> TODO only inside string mode!
+        // we misuse tab as command key, avoid common processing
         return true;
       }
 
@@ -1221,6 +1223,11 @@ namespace RetroDevStudio.Documents
         {
           editSource.ChangeFontSize( -2 );
           return true;
+        }
+        // no Commodore combinations outside of string mode
+        if ( ( keyData & Keys.Control ) == Keys.Control )
+        {
+          return Core.MainForm.HandleCmdKey( ref msg, keyData );
         }
       }
 
@@ -1680,12 +1687,30 @@ namespace RetroDevStudio.Documents
       if ( !PerformLabelModeToggle( out toggledContent ) )
       {
         btnToggleLabelMode.Checked = false;
+        UpdateLabelModeText();
         return false;
       }
 
       editSource.Text = toggledContent;
       m_LabelMode = labelMode;
+      UpdateLabelModeText();
       return true;
+    }
+
+
+
+    private void UpdateLabelModeText()
+    {
+      if ( m_LabelMode )
+      {
+        toolTip1.SetToolTip( btnToggleLabelMode, "To Line Number Mode (Label Mode is active)" );
+        btnToggleLabelMode.Text = "To Number Mode";
+      }
+      else
+      {
+        toolTip1.SetToolTip( btnToggleLabelMode, "To Label Mode (Line Number Mode is active)" );
+        btnToggleLabelMode.Text = "To Label Mode";
+      }
     }
 
 
@@ -1713,6 +1738,7 @@ namespace RetroDevStudio.Documents
 
       var compilerConfig = new RetroDevStudio.Parser.CompileConfig() { Assembler = RetroDevStudio.Types.AssemblerType.AUTO };
       compilerConfig.InputFile = DocumentInfo.FullPath;
+      compilerConfig.DoNotExpandStringLiterals = true;
 
       string basicSource = editSource.Text;
 
@@ -1740,14 +1766,16 @@ namespace RetroDevStudio.Documents
       {
         Result = parser.DecodeFromLabels();
       }
+
+      /*
       if ( m_SymbolMode )
       {
         Result = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( Result, out bool hadError );
       }
       else
       {
-        Result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( Result, false );
-      }
+        Result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( Result );
+      }*/
 
       if ( parser.Errors > 0 )
       {
@@ -2228,6 +2256,7 @@ namespace RetroDevStudio.Documents
 
       m_LabelMode     = ( reader.ReadUInt8() == 1 );
       btnToggleLabelMode.Checked = m_LabelMode;
+      UpdateLabelModeText();
 
       btnToggleSymbolMode.Checked = ( reader.ReadUInt8() == 1 );
       btnToggleSymbolMode_CheckedChanged( this, new EventArgs() );

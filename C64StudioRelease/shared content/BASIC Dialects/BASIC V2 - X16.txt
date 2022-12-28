@@ -1,0 +1,133 @@
+#C64 Studio BASIC declaration file
+#Comments start with #
+#CSV Format 
+#Token        = actual name of command
+#ByteValues   = one or more byte values (hex)
+#Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#
+#StartAddress=xxxx      > sets the default BASIC start address
+#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+
+StartAddress=2049
+SafeLineLength=80
+
+Token;ByteValues;Abbreviation[;OptionalInfo]
+END;80;eN
+FOR;81;fO
+NEXT;82;nE
+DATA;83;dA
+INPUT#;84;iN
+INPUT;85;
+DIM;86;dI
+READ;87;rE
+LET;88;lE
+GOTO;89;gO
+RUN;8A;rU
+IF;8B;
+RESTORE;8C;reS
+GOSUB;8D;goS
+RETURN;8E;reT
+REM;8F;;comment
+STOP;90;sT
+ON;91;
+WAIT;92;wA
+LOAD;93;lO
+SAVE;94;sA
+VERIFY;95;vE
+DEF;96;dE
+POKE;97;pO
+PRINT#;98;pR
+?;99;
+PRINT;99;
+CONT;9A;cO
+LIST;9B;lI
+CLR;9C;cL
+CMD;9D;cM
+SYS;9E;sY
+OPEN;9F;oP
+CLOSE;A0;clO
+GET;A1;gE
+NEW;A2;
+TAB(;A3;tA
+TO;A4;
+FN;A5;
+SPC(;A6;sP
+THEN;A7;tH
+NOT;A8;nO
+STEP;A9;stE
++;AA;
+-;AB;
+*;AC;
+/;AD;
+^;AE;
+AND;AF;aN
+OR;B0;
+>;B1;
+=;B2;
+<;B3;
+SGN;B4;sG
+INT;B5;
+ABS;B6;aB
+USR;B7;uS
+FRE;B8;fE
+POS;B9;
+SQR;BA;sQ
+RND;BB;rN
+LOG;BC;
+EXP;BD;eX
+COS;BE;
+SIN;BF;sI
+TAN;C0;
+ATN;C1;aT
+PEEK;C2;pE
+LEN;C3;
+STR$;C4;stR
+VAL;C5;vA
+ASC;C6;aS
+CHR$;C7;cH
+LEFT$;C8;leF
+RIGHT$;C9;rI
+MID$;CA;mI
+
+#X16 tokens
+BIN$;ce9e;
+BLOAD;ce95;
+BOOT;ce93;
+BVERIFY;ce97;
+BVLOAD;ce96;
+CHAR;ce8b;
+CLS;ce90;
+CODEX;ce91;
+COLOR;ce8d;
+DOS;ce81;
+FRAME;ce89;
+GEOS;ce83;
+HEX$;ce9d;
+JOY;ce9c;
+KEYMAP;ce94;
+LINE;ce88;
+LOCATE;ce92;
+MON;ce80;
+MOUSE;ce8c;
+MX;ce99;
+MY;ce9a;
+MB;ce9b;
+OLD;ce82;
+PSET;ce87;
+RECT;ce8a;
+RESET;ce8f;
+SCREEN;ce86;
+TEST;ce8e;
+VPEEK;ce98;
+VPOKE;ce84;
+VLOAD;ce85;
+
+
+
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
+#C64 Studio extension
+LABEL;F0;
+

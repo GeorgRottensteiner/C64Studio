@@ -31,6 +31,7 @@
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
       <li><a href="#list">!LIST</a></li>
+      <li><a href="#lzone">!LZONE</a></li>
       <li><a href="#macro">!MACRO</a></li>
       <li><a href="#media">!MEDIA</a></li>
       <li><a href="#mediasrc">!MEDIASRC</a></li>
@@ -451,6 +452,21 @@
     <br>
     <br>
   </div>
+  <a name="lzone"></a>
+  <H2>!LZONE &lt;zone/label name&gt;</H2>
+  <div id="mybody">
+    This pseudo op declares a new zone plus a global label with the same name. Any local labels (labels starting with '.') are only accessible inside their containing zone.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !lzone MainZone
+      .locallabel
+      ...
+      !zone SubZone
+      .locallabel
+      <br></div>
+    <br>
+    <br>
+  </div>
   <a name="macro"></a>
   <H2>!MACRO &lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]</H2>
   <div id="mybody">
@@ -632,6 +648,40 @@
           *.charsetproject
         </td>
         <td>
+          palettergb
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered as RGB triplets
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          palettergb
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered as RGB triplets
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
           paletteswizzled
         </td>
         <td>
@@ -639,6 +689,7 @@
         </td>
         <td>
           Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+          Used for Mega65
         </td>
       </tr>
       <tr>
@@ -656,6 +707,41 @@
         </td>
         <td>
           Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+          Used for Mega65
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          palettergbswizzled
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered as RGB triplets. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          palettergbswizzled
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered as RGB triplets. Color bytes are swizzled (nibbles swapped)
         </td>
       </tr>
       <tr>
@@ -814,6 +900,40 @@
           *.spriteproject
         </td>
         <td>
+          palettergb
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered as RGB triplets
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          palettergb
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered as RGB triplets
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
           paletteswizzled
         </td>
         <td>
@@ -838,6 +958,40 @@
         </td>
         <td>
           Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          palettergbswizzled
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered as RGB triplets. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          palettergbswizzled
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered as RGB triplets. Color bytes are swizzled (nibbles swapped)
         </td>
       </tr>
       <tr>
@@ -1207,6 +1361,142 @@
         </td>
         <td>
           Exports Count * 8 bytes starting at Index * 8 bytes of the character data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          palette
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          palette
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          palettergb
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered as RGB triplets
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          palettergb
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered as RGB triplets
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          paletteswizzled
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          paletteswizzled
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          palettergbswizzled
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered as RGB triplets. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          palettergbswizzled
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered as RGB triplets. Color bytes are swizzled (nibbles swapped)
         </td>
       </tr>
       <tr>

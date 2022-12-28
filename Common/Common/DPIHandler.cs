@@ -5,6 +5,11 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
+
+
 
 namespace GR.Image
 {
@@ -13,6 +18,9 @@ namespace GR.Image
     void ResizeControl();
   }
 
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
   public static class DPIHandler
   {
     public static bool DPIRatioIsOne = true;

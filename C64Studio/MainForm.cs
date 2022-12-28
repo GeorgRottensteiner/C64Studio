@@ -503,7 +503,6 @@ namespace RetroDevStudio
       debugToolStripMenuItem.Visible = false;
 #endif
 
-
       statusProgress.Visible = false;
 
       StudioCore.MainForm = this;
@@ -628,6 +627,7 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.BUILD_TO_PREPROCESSED_FILE].MenuItem = preprocessedFileToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_ALL_REFERENCES].MenuItem = findAllReferencesToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_BACK].MenuItem = navigateBackwardToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.RENAME_ALL_REFERENCES].MenuItem = renameAllReferencesToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_BACK].ToolBarButton = btnNavigateBackward;
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].MenuItem = navigateForwardToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].ToolBarButton = btnNavigateForward;
@@ -689,7 +689,14 @@ namespace RetroDevStudio
           }
         }
       }
+
       StudioCore.Settings.SanitizeSettings();
+
+      if ( StudioCore.Settings.MainWindowPlacement != "" )
+      {
+        GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
+      }
+
       RefreshDisplayOnAllDocuments();
       ApplyMenuShortCuts();
 
@@ -712,10 +719,6 @@ namespace RetroDevStudio
       // place all toolbars
       SetToolPerspective( Perspective.EDIT );
 
-      if ( StudioCore.Settings.MainWindowPlacement != "" )
-      {
-        GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
-      }
       m_FindReplace.Fill( StudioCore.Settings );
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
@@ -2403,6 +2406,7 @@ namespace RetroDevStudio
       }
       else
       {
+        //Debug.Log( Text );
         m_Output.AppendText( Text );
         m_Output.Show();
       }
@@ -2542,7 +2546,8 @@ namespace RetroDevStudio
               switch ( EmulatorInfo.LabelFormat( toolRun ) )
               {
                 case Types.ASM.LabelFileFormat.C64DEBUGGER:
-                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" "
+                      + runArguments;
                   break;
                 case Types.ASM.LabelFileFormat.VICE:
                 default:
@@ -2802,7 +2807,7 @@ namespace RetroDevStudio
     {
       if ( ParentProject != null )
       {
-        var dialogResult = System.Windows.Forms.MessageBox.Show( "Add the new document to the current project?\r\nIf you choose no, the document will be created not as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
+        var dialogResult = System.Windows.Forms.MessageBox.Show( "Add the new document to the current project?\r\nIf you choose no, the document will not be created as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
         if ( dialogResult == DialogResult.Cancel )
         {
           return;
@@ -2815,27 +2820,9 @@ namespace RetroDevStudio
         // fall through
       }
 
-      // project-less doc
-
-      string newFilename;
-      if ( !ChooseFilename( Type, Description, ParentProject, out newFilename ) )
-      {
-        return;
-      }
-
-      if ( System.IO.File.Exists( newFilename ) )
-      {
-        var result = System.Windows.Forms.MessageBox.Show( "There is already an existing file at " + newFilename + ".\r\nDo you want to overwrite it?", "Overwrite existing file?", MessageBoxButtons.YesNo );
-        if ( result == DialogResult.No )
-        {
-          return;
-        }
-      }
-      var doc = CreateNewDocument(Type, null);
-      doc.SetDocumentFilename( newFilename );
+      // project-less doc - no forced file name
+      var doc = CreateNewDocument( Type, null );
       doc.SetModified();
-
-      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, newFilename, this );
     }
 
 
@@ -3972,6 +3959,18 @@ namespace RetroDevStudio
               StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerStartupFilename + ", " + ex.Message + Environment.NewLine );
             }
             StudioCore.Debugging.TempDebuggerStartupFilename = "";
+          }
+          if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
+          {
+            try
+            {
+              System.IO.File.Delete( StudioCore.Debugging.TempDebuggerBreakpointFilename );
+            }
+            catch ( Exception ex )
+            {
+              StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerBreakpointFilename + ", " + ex.Message + Environment.NewLine );
+            }
+            StudioCore.Debugging.TempDebuggerBreakpointFilename = "";
           }
 
           if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
@@ -5119,6 +5118,7 @@ namespace RetroDevStudio
           ActiveContent.Cut();
           return true;
         case Function.FIND_ALL_REFERENCES:
+        case Function.RENAME_ALL_REFERENCES:
           {
             DocumentInfo docToHandle = DetermineDocument();
 
@@ -6752,7 +6752,7 @@ namespace RetroDevStudio
 
 
 
-    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, out GR.Image.FastImage MappedImage, out ColorSettings NewMCSettings, out bool PasteAsBlock )
+    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, out GR.Image.FastImage MappedImage, out ColorSettings NewMCSettings, out bool PasteAsBlock )
     {
       PasteAsBlock = false;
 
@@ -6785,7 +6785,7 @@ namespace RetroDevStudio
         }
       }
 
-      DlgGraphicImport importGFX = new DlgGraphicImport( StudioCore, ImportType, IncomingImage, Filename, MCSettings );
+      DlgGraphicImport importGFX = new DlgGraphicImport( StudioCore, ImportType, IncomingImage, Filename, MCSettings, ItemWidth, ItemHeight );
       if ( importGFX.ShowDialog() != DialogResult.OK )
       {
         IncomingImage.Dispose();

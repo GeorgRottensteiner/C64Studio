@@ -21,6 +21,15 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsECMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsX16Sprites256.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsX16Sprites16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsX16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsNCMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -44,6 +53,9 @@
     </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\PopupControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\CSButton.cs">
       <SubType>Component</SubType>
@@ -201,6 +213,9 @@
     <Compile Update="Controls\ZoomBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Dialogs\FormRenameReference.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\FormRenameSolution.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +264,7 @@
     <None Remove="BASIC Dialects\BASIC 65.txt" />
     <None Remove="BASIC Dialects\BASIC Lightning.txt" />
     <None Remove="BASIC Dialects\BASIC V10.txt" />
+    <None Remove="BASIC Dialects\BASIC V2 - X16.txt" />
     <None Remove="BASIC Dialects\BASIC V3.5.txt" />
     <None Remove="BASIC Dialects\BASIC V4.5.txt" />
     <None Remove="BASIC Dialects\BASIC V7.0.txt" />
@@ -264,6 +280,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\BASIC V10.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V2 - X16.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\BASIC V3.5.txt">
@@ -327,6 +346,8 @@
     </PostBuildEvent>
     <ApplicationIcon>c64.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net3.5|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>

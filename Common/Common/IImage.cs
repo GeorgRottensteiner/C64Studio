@@ -63,5 +63,10 @@ namespace GR.Image
     void SetPaletteColor( int Index, byte Red, byte Green, byte Blue );
     uint PaletteColor( int Index );
 
+    byte PaletteRed( int Index );
+    byte PaletteGreen( int Index );
+    byte PaletteBlue( int Index );
+
+
   }
 }

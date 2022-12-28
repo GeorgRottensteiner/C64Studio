@@ -9,15 +9,15 @@ namespace RetroDevStudio.Controls
 {
   public partial class ColorSettingsMega65 : ColorSettingsBase
   {
-    public override int CustomColor
+    public override byte SelectedCustomColor
     {
       get
       {
-        return _CustomColor;
+        return _SelectedCustomColor;
       }
       set
       {
-        _CustomColor = value;
+        _SelectedCustomColor = value;
         if ( comboCharColor != null )
         {
           comboCharColor.SelectedIndex = value;
@@ -35,8 +35,15 @@ namespace RetroDevStudio.Controls
       }
       set
       {
-        _CustomColor = (int)value;
-        comboCharColor.SelectedIndex = _CustomColor;
+        _CurrentColorType = value;
+        if ( _CurrentColorType == ColorType.CUSTOM_COLOR )
+        {
+          radioCharColor.Checked = true;
+        }
+        else
+        {
+          radioBackground.Checked = true;
+        }
       }
     }
 
@@ -64,7 +71,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorSettingsMega65( StudioCore Core, ColorSettings Colors, int CustomColor ) :
+    public ColorSettingsMega65( StudioCore Core, ColorSettings Colors, byte CustomColor ) :
       base( Core, Colors, CustomColor )
     {
       InitializeComponent();
@@ -117,9 +124,9 @@ namespace RetroDevStudio.Controls
 
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
-      CustomColor = comboCharColor.SelectedIndex;
+      SelectedCustomColor = (byte)comboCharColor.SelectedIndex;
       radioCharColor.Checked = true;
-      RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
+      RaiseCustomColorSelectedEvent();
     }
 
 

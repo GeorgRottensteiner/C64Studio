@@ -20,10 +20,12 @@ namespace RetroDevStudio
     public Executing          Executing;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
-    public const string       StudioVersion = "7.2";
+    public const string       StudioVersion = "7.3.1";
     public StudioTheme        Theming;
 
     public static StudioCore  StaticCore = null;
+
+    private int               SuppressOutputCount = 0;
 
 
 
@@ -210,6 +212,11 @@ namespace RetroDevStudio
 
     public void AddToOutput( string Text )
     {
+      if ( SuppressOutputCount > 0 )
+      {
+        return;
+      }
+
       if ( MainForm.InvokeRequired )
       {
         try
@@ -230,6 +237,11 @@ namespace RetroDevStudio
 
     public void MessageBox( string Text, string Caption )
     {
+      if ( SuppressOutputCount > 0 )
+      {
+        return;
+      }
+
       if ( MainForm.InvokeRequired )
       {
         try
@@ -280,6 +292,10 @@ namespace RetroDevStudio
 
     internal void ClearOutput()
     {
+      if ( SuppressOutputCount > 0 )
+      {
+        return;
+      }
       if ( MainForm.InvokeRequired )
       {
         MainForm.Invoke( new MainForm.ParameterLessCallback( ClearOutput ) );
@@ -294,6 +310,23 @@ namespace RetroDevStudio
     {
       Settings.Perspectives = new PerspectiveDetails( this );
       Compiling.Initialise();
+    }
+
+
+
+    public void SuppressOutput()
+    {
+      ++SuppressOutputCount;
+    }
+
+
+
+    public void UnsuppressOutput()
+    {
+      if ( SuppressOutputCount > 0 )
+      {
+        --SuppressOutputCount;
+      }
     }
 
 

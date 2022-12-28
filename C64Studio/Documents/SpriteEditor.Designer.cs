@@ -34,14 +34,14 @@ namespace RetroDevStudio.Documents
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnChangeMode = new RetroDevStudio.Controls.MenuButton();
       this.panelColorSettings = new System.Windows.Forms.Panel();
       this.btnToolEdit = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
-      this.comboSpriteProjectMode = new System.Windows.Forms.ComboBox();
       this.label11 = new System.Windows.Forms.Label();
       this.tabSpriteDetails = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -112,6 +112,47 @@ namespace RetroDevStudio.Documents
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.contextMenuChangeMode = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.c64HiResMultiColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.mega65ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.mega65_24x214ColorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.mega65_64x214ColorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.mega65_16x2116ColorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.commanderX16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16ColorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_256ColorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x8x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x8x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x8x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x8x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x16x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x16x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x16x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x16x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x32x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x32x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x32x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x32x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_8x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_16x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_32x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.x16_64x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -123,6 +164,7 @@ namespace RetroDevStudio.Documents
       this.tabExport.SuspendLayout();
       this.tabImport.SuspendLayout();
       this.menuStrip1.SuspendLayout();
+      this.contextMenuChangeMode.SuspendLayout();
       this.SuspendLayout();
       // 
       // tabSpriteEditor
@@ -134,15 +176,15 @@ namespace RetroDevStudio.Documents
       this.tabSpriteEditor.Location = new System.Drawing.Point(0, 24);
       this.tabSpriteEditor.Name = "tabSpriteEditor";
       this.tabSpriteEditor.SelectedIndex = 0;
-      this.tabSpriteEditor.Size = new System.Drawing.Size(782, 556);
+      this.tabSpriteEditor.Size = new System.Drawing.Size(987, 665);
       this.tabSpriteEditor.TabIndex = 0;
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnChangeMode);
       this.tabEditor.Controls.Add(this.panelColorSettings);
       this.tabEditor.Controls.Add(this.btnToolEdit);
       this.tabEditor.Controls.Add(this.btnToolFill);
-      this.tabEditor.Controls.Add(this.comboSpriteProjectMode);
       this.tabEditor.Controls.Add(this.label11);
       this.tabEditor.Controls.Add(this.tabSpriteDetails);
       this.tabEditor.Controls.Add(this.btnClearSprite);
@@ -164,14 +206,24 @@ namespace RetroDevStudio.Documents
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(774, 530);
+      this.tabEditor.Size = new System.Drawing.Size(979, 639);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Sprite";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // btnChangeMode
+      // 
+      this.btnChangeMode.Location = new System.Drawing.Point(269, 510);
+      this.btnChangeMode.Name = "btnChangeMode";
+      this.btnChangeMode.Size = new System.Drawing.Size(205, 23);
+      this.btnChangeMode.TabIndex = 60;
+      this.btnChangeMode.Text = "btnChangeMode";
+      this.btnChangeMode.UseVisualStyleBackColor = true;
+      this.btnChangeMode.Click += new System.EventHandler(this.btnChangeMode_Click);
+      // 
       // panelColorSettings
       // 
-      this.panelColorSettings.Location = new System.Drawing.Point(40, 294);
+      this.panelColorSettings.Location = new System.Drawing.Point(40, 365);
       this.panelColorSettings.Name = "panelColorSettings";
       this.panelColorSettings.Size = new System.Drawing.Size(220, 210);
       this.panelColorSettings.TabIndex = 59;
@@ -202,20 +254,10 @@ namespace RetroDevStudio.Documents
       this.btnToolFill.UseVisualStyleBackColor = true;
       this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
       // 
-      // comboSpriteProjectMode
-      // 
-      this.comboSpriteProjectMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboSpriteProjectMode.FormattingEnabled = true;
-      this.comboSpriteProjectMode.Location = new System.Drawing.Point(269, 442);
-      this.comboSpriteProjectMode.Name = "comboSpriteProjectMode";
-      this.comboSpriteProjectMode.Size = new System.Drawing.Size(171, 21);
-      this.comboSpriteProjectMode.TabIndex = 17;
-      this.comboSpriteProjectMode.SelectedIndexChanged += new System.EventHandler(this.comboSpriteProjectMode_SelectedIndexChanged);
-      // 
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(266, 423);
+      this.label11.Location = new System.Drawing.Point(266, 494);
       this.label11.Name = "label11";
       this.label11.Size = new System.Drawing.Size(37, 13);
       this.label11.TabIndex = 16;
@@ -228,10 +270,10 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.tabSpriteDetails.Controls.Add(this.tabPage1);
       this.tabSpriteDetails.Controls.Add(this.tabPage2);
-      this.tabSpriteDetails.Location = new System.Drawing.Point(446, 2);
+      this.tabSpriteDetails.Location = new System.Drawing.Point(480, 2);
       this.tabSpriteDetails.Name = "tabSpriteDetails";
       this.tabSpriteDetails.SelectedIndex = 0;
-      this.tabSpriteDetails.Size = new System.Drawing.Size(328, 520);
+      this.tabSpriteDetails.Size = new System.Drawing.Size(499, 563);
       this.tabSpriteDetails.TabIndex = 18;
       // 
       // tabPage1
@@ -240,7 +282,7 @@ namespace RetroDevStudio.Documents
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(320, 494);
+      this.tabPage1.Size = new System.Drawing.Size(491, 537);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Sprites";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -265,7 +307,7 @@ namespace RetroDevStudio.Documents
       this.panelSprites.Name = "panelSprites";
       this.panelSprites.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelSprites.SelectedIndex = -1;
-      this.panelSprites.Size = new System.Drawing.Size(314, 488);
+      this.panelSprites.Size = new System.Drawing.Size(485, 531);
       this.panelSprites.TabIndex = 4;
       this.panelSprites.TabStop = true;
       this.panelSprites.VisibleAutoScrollHorizontal = false;
@@ -299,7 +341,7 @@ namespace RetroDevStudio.Documents
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(320, 494);
+      this.tabPage2.Size = new System.Drawing.Size(491, 537);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "Preview";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -307,7 +349,7 @@ namespace RetroDevStudio.Documents
       // btnSavePreviewToGIF
       // 
       this.btnSavePreviewToGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 395);
+      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 438);
       this.btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
       this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
       this.btnSavePreviewToGIF.TabIndex = 13;
@@ -319,7 +361,7 @@ namespace RetroDevStudio.Documents
       // 
       this.checkAutoplayAnim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 452);
+      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 495);
       this.checkAutoplayAnim.Name = "checkAutoplayAnim";
       this.checkAutoplayAnim.Size = new System.Drawing.Size(132, 24);
       this.checkAutoplayAnim.TabIndex = 12;
@@ -402,7 +444,7 @@ namespace RetroDevStudio.Documents
       this.listLayers.SelectedIndex = -1;
       this.listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.listLayers.Size = new System.Drawing.Size(192, 198);
+      this.listLayers.Size = new System.Drawing.Size(192, 241);
       this.listLayers.TabIndex = 9;
       this.listLayers.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
       this.listLayers.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
@@ -443,7 +485,7 @@ namespace RetroDevStudio.Documents
       // 
       this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(224, 427);
+      this.label10.Location = new System.Drawing.Point(224, 470);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(37, 13);
       this.label10.TabIndex = 15;
@@ -453,7 +495,7 @@ namespace RetroDevStudio.Documents
       // 
       this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(224, 400);
+      this.label6.Location = new System.Drawing.Point(224, 443);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(38, 13);
       this.label6.TabIndex = 15;
@@ -462,7 +504,7 @@ namespace RetroDevStudio.Documents
       // editLayerDelay
       // 
       this.editLayerDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerDelay.Location = new System.Drawing.Point(268, 422);
+      this.editLayerDelay.Location = new System.Drawing.Point(268, 465);
       this.editLayerDelay.Name = "editLayerDelay";
       this.editLayerDelay.Size = new System.Drawing.Size(91, 20);
       this.editLayerDelay.TabIndex = 11;
@@ -471,7 +513,7 @@ namespace RetroDevStudio.Documents
       // editLayerName
       // 
       this.editLayerName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerName.Location = new System.Drawing.Point(268, 395);
+      this.editLayerName.Location = new System.Drawing.Point(268, 438);
       this.editLayerName.Name = "editLayerName";
       this.editLayerName.Size = new System.Drawing.Size(91, 20);
       this.editLayerName.TabIndex = 10;
@@ -550,18 +592,18 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage1;
+      this.layerPreview.DisplayPage = fastImage4;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
-      this.layerPreview.Size = new System.Drawing.Size(106, 386);
+      this.layerPreview.Size = new System.Drawing.Size(277, 429);
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
       // 
       // btnClearSprite
       // 
       this.btnClearSprite.Enabled = false;
-      this.btnClearSprite.Location = new System.Drawing.Point(270, 374);
+      this.btnClearSprite.Location = new System.Drawing.Point(270, 445);
       this.btnClearSprite.Name = "btnClearSprite";
       this.btnClearSprite.Size = new System.Drawing.Size(57, 23);
       this.btnClearSprite.TabIndex = 14;
@@ -572,7 +614,7 @@ namespace RetroDevStudio.Documents
       // btnDeleteSprite
       // 
       this.btnDeleteSprite.Enabled = false;
-      this.btnDeleteSprite.Location = new System.Drawing.Point(333, 374);
+      this.btnDeleteSprite.Location = new System.Drawing.Point(333, 445);
       this.btnDeleteSprite.Name = "btnDeleteSprite";
       this.btnDeleteSprite.Size = new System.Drawing.Size(57, 23);
       this.btnDeleteSprite.TabIndex = 15;
@@ -681,7 +723,7 @@ namespace RetroDevStudio.Documents
       // 
       // btnCopyToClipboard
       // 
-      this.btnCopyToClipboard.Location = new System.Drawing.Point(269, 345);
+      this.btnCopyToClipboard.Location = new System.Drawing.Point(269, 416);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnCopyToClipboard.TabIndex = 13;
@@ -691,7 +733,7 @@ namespace RetroDevStudio.Documents
       // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(269, 316);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(269, 387);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnPasteFromClipboard.TabIndex = 12;
@@ -701,7 +743,7 @@ namespace RetroDevStudio.Documents
       // 
       // labelCharNo
       // 
-      this.labelCharNo.Location = new System.Drawing.Point(266, 400);
+      this.labelCharNo.Location = new System.Drawing.Point(266, 471);
       this.labelCharNo.Name = "labelCharNo";
       this.labelCharNo.Size = new System.Drawing.Size(82, 23);
       this.labelCharNo.TabIndex = 16;
@@ -710,7 +752,7 @@ namespace RetroDevStudio.Documents
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(269, 294);
+      this.checkShowGrid.Location = new System.Drawing.Point(269, 365);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 11;
@@ -722,11 +764,11 @@ namespace RetroDevStudio.Documents
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
-      this.pictureEditor.Size = new System.Drawing.Size(357, 282);
+      this.pictureEditor.Size = new System.Drawing.Size(434, 353);
       this.pictureEditor.TabIndex = 0;
       this.pictureEditor.TabStop = false;
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
@@ -747,7 +789,7 @@ namespace RetroDevStudio.Documents
       this.tabExport.Location = new System.Drawing.Point(4, 22);
       this.tabExport.Name = "tabExport";
       this.tabExport.Padding = new System.Windows.Forms.Padding(3);
-      this.tabExport.Size = new System.Drawing.Size(774, 530);
+      this.tabExport.Size = new System.Drawing.Size(979, 639);
       this.tabExport.TabIndex = 2;
       this.tabExport.Text = "Export";
       this.tabExport.UseVisualStyleBackColor = true;
@@ -770,7 +812,7 @@ namespace RetroDevStudio.Documents
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(460, 523);
+      this.editDataExport.Size = new System.Drawing.Size(665, 632);
       this.editDataExport.TabIndex = 33;
       this.editDataExport.WordWrap = false;
       // 
@@ -809,7 +851,7 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Left)));
       this.panelExport.Location = new System.Drawing.Point(0, 61);
       this.panelExport.Name = "panelExport";
-      this.panelExport.Size = new System.Drawing.Size(308, 469);
+      this.panelExport.Size = new System.Drawing.Size(308, 578);
       this.panelExport.TabIndex = 28;
       // 
       // comboExportRange
@@ -854,7 +896,7 @@ namespace RetroDevStudio.Documents
       this.tabImport.Location = new System.Drawing.Point(4, 22);
       this.tabImport.Name = "tabImport";
       this.tabImport.Padding = new System.Windows.Forms.Padding(3);
-      this.tabImport.Size = new System.Drawing.Size(774, 530);
+      this.tabImport.Size = new System.Drawing.Size(979, 639);
       this.tabImport.TabIndex = 3;
       this.tabImport.Text = "Import";
       this.tabImport.UseVisualStyleBackColor = true;
@@ -866,7 +908,7 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.panelImport.Location = new System.Drawing.Point(0, 33);
       this.panelImport.Name = "panelImport";
-      this.panelImport.Size = new System.Drawing.Size(774, 497);
+      this.panelImport.Size = new System.Drawing.Size(979, 606);
       this.panelImport.TabIndex = 40;
       // 
       // btnImport
@@ -905,7 +947,7 @@ namespace RetroDevStudio.Documents
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(782, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(987, 24);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -955,10 +997,336 @@ namespace RetroDevStudio.Documents
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
       // 
+      // contextMenuChangeMode
+      // 
+      this.contextMenuChangeMode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.c64HiResMultiColorToolStripMenuItem,
+            this.mega65ToolStripMenuItem,
+            this.commanderX16ToolStripMenuItem});
+      this.contextMenuChangeMode.Name = "contextMenuChangeMode";
+      this.contextMenuChangeMode.Size = new System.Drawing.Size(223, 70);
+      // 
+      // c64HiResMultiColorToolStripMenuItem
+      // 
+      this.c64HiResMultiColorToolStripMenuItem.Name = "c64HiResMultiColorToolStripMenuItem";
+      this.c64HiResMultiColorToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+      this.c64HiResMultiColorToolStripMenuItem.Text = "C64 HiRes/MultiColor 24x21";
+      this.c64HiResMultiColorToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // mega65ToolStripMenuItem
+      // 
+      this.mega65ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mega65_24x214ColorsToolStripMenuItem,
+            this.mega65_64x214ColorsToolStripMenuItem,
+            this.mega65_16x2116ColorsToolStripMenuItem});
+      this.mega65ToolStripMenuItem.Name = "mega65ToolStripMenuItem";
+      this.mega65ToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+      this.mega65ToolStripMenuItem.Text = "Mega65";
+      // 
+      // mega65_24x214ColorsToolStripMenuItem
+      // 
+      this.mega65_24x214ColorsToolStripMenuItem.Name = "mega65_24x214ColorsToolStripMenuItem";
+      this.mega65_24x214ColorsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+      this.mega65_24x214ColorsToolStripMenuItem.Text = "24x21 4 Colors";
+      this.mega65_24x214ColorsToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // mega65_64x214ColorsToolStripMenuItem
+      // 
+      this.mega65_64x214ColorsToolStripMenuItem.Name = "mega65_64x214ColorsToolStripMenuItem";
+      this.mega65_64x214ColorsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+      this.mega65_64x214ColorsToolStripMenuItem.Text = "64x21 4 Colors";
+      this.mega65_64x214ColorsToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // mega65_16x2116ColorsToolStripMenuItem
+      // 
+      this.mega65_16x2116ColorsToolStripMenuItem.Name = "mega65_16x2116ColorsToolStripMenuItem";
+      this.mega65_16x2116ColorsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+      this.mega65_16x2116ColorsToolStripMenuItem.Text = "16x21 16 Colors";
+      this.mega65_16x2116ColorsToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // commanderX16ToolStripMenuItem
+      // 
+      this.commanderX16ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.x16_16ColorsToolStripMenuItem,
+            this.x16_256ColorsToolStripMenuItem});
+      this.commanderX16ToolStripMenuItem.Name = "commanderX16ToolStripMenuItem";
+      this.commanderX16ToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+      this.commanderX16ToolStripMenuItem.Text = "Commander X16";
+      // 
+      // x16_16ColorsToolStripMenuItem
+      // 
+      this.x16_16ColorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.x16_8x8ToolStripMenuItem,
+            this.x16_16x8ToolStripMenuItem,
+            this.x16_32x8ToolStripMenuItem,
+            this.x16_64x8ToolStripMenuItem,
+            this.x16_8x16ToolStripMenuItem,
+            this.x16_16x16ToolStripMenuItem,
+            this.x16_32x16ToolStripMenuItem,
+            this.x16_64x16ToolStripMenuItem,
+            this.x16_8x32ToolStripMenuItem,
+            this.x16_16x32ToolStripMenuItem,
+            this.x16_32x32ToolStripMenuItem,
+            this.x16_64x32ToolStripMenuItem,
+            this.x16_8x64ToolStripMenuItem,
+            this.x16_16x64ToolStripMenuItem,
+            this.x16_32x64ToolStripMenuItem,
+            this.x16_64x64ToolStripMenuItem});
+      this.x16_16ColorsToolStripMenuItem.Name = "x16_16ColorsToolStripMenuItem";
+      this.x16_16ColorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_16ColorsToolStripMenuItem.Text = "16 Colors";
+      // 
+      // x16_8x8ToolStripMenuItem
+      // 
+      this.x16_8x8ToolStripMenuItem.Name = "x16_8x8ToolStripMenuItem";
+      this.x16_8x8ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_8x8ToolStripMenuItem.Text = "8x8";
+      this.x16_8x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x8ToolStripMenuItem
+      // 
+      this.x16_16x8ToolStripMenuItem.Name = "x16_16x8ToolStripMenuItem";
+      this.x16_16x8ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_16x8ToolStripMenuItem.Text = "16x8";
+      this.x16_16x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x8ToolStripMenuItem
+      // 
+      this.x16_32x8ToolStripMenuItem.Name = "x16_32x8ToolStripMenuItem";
+      this.x16_32x8ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_32x8ToolStripMenuItem.Text = "32x8";
+      this.x16_32x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x8ToolStripMenuItem
+      // 
+      this.x16_64x8ToolStripMenuItem.Name = "x16_64x8ToolStripMenuItem";
+      this.x16_64x8ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_64x8ToolStripMenuItem.Text = "64x8";
+      this.x16_64x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_8x16ToolStripMenuItem
+      // 
+      this.x16_8x16ToolStripMenuItem.Name = "x16_8x16ToolStripMenuItem";
+      this.x16_8x16ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_8x16ToolStripMenuItem.Text = "8x16";
+      this.x16_8x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x16ToolStripMenuItem
+      // 
+      this.x16_16x16ToolStripMenuItem.Name = "x16_16x16ToolStripMenuItem";
+      this.x16_16x16ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_16x16ToolStripMenuItem.Text = "16x16";
+      this.x16_16x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x16ToolStripMenuItem
+      // 
+      this.x16_32x16ToolStripMenuItem.Name = "x16_32x16ToolStripMenuItem";
+      this.x16_32x16ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_32x16ToolStripMenuItem.Text = "32x16";
+      this.x16_32x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x16ToolStripMenuItem
+      // 
+      this.x16_64x16ToolStripMenuItem.Name = "x16_64x16ToolStripMenuItem";
+      this.x16_64x16ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_64x16ToolStripMenuItem.Text = "64x16";
+      this.x16_64x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_8x32ToolStripMenuItem
+      // 
+      this.x16_8x32ToolStripMenuItem.Name = "x16_8x32ToolStripMenuItem";
+      this.x16_8x32ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_8x32ToolStripMenuItem.Text = "8x32";
+      this.x16_8x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x32ToolStripMenuItem
+      // 
+      this.x16_16x32ToolStripMenuItem.Name = "x16_16x32ToolStripMenuItem";
+      this.x16_16x32ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_16x32ToolStripMenuItem.Text = "16x32";
+      this.x16_16x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x32ToolStripMenuItem
+      // 
+      this.x16_32x32ToolStripMenuItem.Name = "x16_32x32ToolStripMenuItem";
+      this.x16_32x32ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_32x32ToolStripMenuItem.Text = "32x32";
+      this.x16_32x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x32ToolStripMenuItem
+      // 
+      this.x16_64x32ToolStripMenuItem.Name = "x16_64x32ToolStripMenuItem";
+      this.x16_64x32ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_64x32ToolStripMenuItem.Text = "64x32";
+      this.x16_64x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_8x64ToolStripMenuItem
+      // 
+      this.x16_8x64ToolStripMenuItem.Name = "x16_8x64ToolStripMenuItem";
+      this.x16_8x64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_8x64ToolStripMenuItem.Text = "8x64";
+      this.x16_8x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x64ToolStripMenuItem
+      // 
+      this.x16_16x64ToolStripMenuItem.Name = "x16_16x64ToolStripMenuItem";
+      this.x16_16x64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_16x64ToolStripMenuItem.Text = "16x64";
+      this.x16_16x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x64ToolStripMenuItem
+      // 
+      this.x16_32x64ToolStripMenuItem.Name = "x16_32x64ToolStripMenuItem";
+      this.x16_32x64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_32x64ToolStripMenuItem.Text = "32x64";
+      this.x16_32x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x64ToolStripMenuItem
+      // 
+      this.x16_64x64ToolStripMenuItem.Name = "x16_64x64ToolStripMenuItem";
+      this.x16_64x64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_64x64ToolStripMenuItem.Text = "64x64";
+      this.x16_64x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_256ColorsToolStripMenuItem
+      // 
+      this.x16_256ColorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.x16_8x8x256ToolStripMenuItem,
+            this.x16_16x8x256ToolStripMenuItem,
+            this.x16_32x8x256ToolStripMenuItem,
+            this.x16_64x8x256ToolStripMenuItem,
+            this.x16_8x16x256ToolStripMenuItem,
+            this.x16_16x16x256ToolStripMenuItem,
+            this.x16_32x16x256ToolStripMenuItem,
+            this.x16_64x16x256ToolStripMenuItem,
+            this.x16_8x32x256ToolStripMenuItem,
+            this.x16_16x32x256ToolStripMenuItem,
+            this.x16_32x32x256ToolStripMenuItem,
+            this.x16_64x32x256ToolStripMenuItem,
+            this.x16_8x64x256ToolStripMenuItem,
+            this.x16_16x64x256ToolStripMenuItem,
+            this.x16_32x64x256ToolStripMenuItem,
+            this.x16_64x64x256ToolStripMenuItem});
+      this.x16_256ColorsToolStripMenuItem.Name = "x16_256ColorsToolStripMenuItem";
+      this.x16_256ColorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.x16_256ColorsToolStripMenuItem.Text = "256 Colors";
+      // 
+      // x16_8x8x256ToolStripMenuItem
+      // 
+      this.x16_8x8x256ToolStripMenuItem.Name = "x16_8x8x256ToolStripMenuItem";
+      this.x16_8x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x8x256ToolStripMenuItem.Text = "8x8";
+      this.x16_8x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x8x256ToolStripMenuItem
+      // 
+      this.x16_16x8x256ToolStripMenuItem.Name = "x16_16x8x256ToolStripMenuItem";
+      this.x16_16x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x8x256ToolStripMenuItem.Text = "16x8";
+      this.x16_16x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x8x256ToolStripMenuItem
+      // 
+      this.x16_32x8x256ToolStripMenuItem.Name = "x16_32x8x256ToolStripMenuItem";
+      this.x16_32x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x8x256ToolStripMenuItem.Text = "32x8";
+      this.x16_32x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x8x256ToolStripMenuItem
+      // 
+      this.x16_64x8x256ToolStripMenuItem.Name = "x16_64x8x256ToolStripMenuItem";
+      this.x16_64x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x8x256ToolStripMenuItem.Text = "64x8";
+      this.x16_64x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_8x16x256ToolStripMenuItem
+      // 
+      this.x16_8x16x256ToolStripMenuItem.Name = "x16_8x16x256ToolStripMenuItem";
+      this.x16_8x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x16x256ToolStripMenuItem.Text = "8x16";
+      this.x16_8x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x16x256ToolStripMenuItem
+      // 
+      this.x16_16x16x256ToolStripMenuItem.Name = "x16_16x16x256ToolStripMenuItem";
+      this.x16_16x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x16x256ToolStripMenuItem.Text = "16x16";
+      this.x16_16x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x16x256ToolStripMenuItem
+      // 
+      this.x16_32x16x256ToolStripMenuItem.Name = "x16_32x16x256ToolStripMenuItem";
+      this.x16_32x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x16x256ToolStripMenuItem.Text = "32x16";
+      this.x16_32x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x16x256ToolStripMenuItem
+      // 
+      this.x16_64x16x256ToolStripMenuItem.Name = "x16_64x16x256ToolStripMenuItem";
+      this.x16_64x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x16x256ToolStripMenuItem.Text = "64x16";
+      this.x16_64x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_8x32x256ToolStripMenuItem
+      // 
+      this.x16_8x32x256ToolStripMenuItem.Name = "x16_8x32x256ToolStripMenuItem";
+      this.x16_8x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x32x256ToolStripMenuItem.Text = "8x32";
+      this.x16_8x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x32x256ToolStripMenuItem
+      // 
+      this.x16_16x32x256ToolStripMenuItem.Name = "x16_16x32x256ToolStripMenuItem";
+      this.x16_16x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x32x256ToolStripMenuItem.Text = "16x32";
+      this.x16_16x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x32x256ToolStripMenuItem
+      // 
+      this.x16_32x32x256ToolStripMenuItem.Name = "x16_32x32x256ToolStripMenuItem";
+      this.x16_32x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x32x256ToolStripMenuItem.Text = "32x32";
+      this.x16_32x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x32x256ToolStripMenuItem
+      // 
+      this.x16_64x32x256ToolStripMenuItem.Name = "x16_64x32x256ToolStripMenuItem";
+      this.x16_64x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x32x256ToolStripMenuItem.Text = "64x32";
+      this.x16_64x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_8x64x256ToolStripMenuItem
+      // 
+      this.x16_8x64x256ToolStripMenuItem.Name = "x16_8x64x256ToolStripMenuItem";
+      this.x16_8x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x64x256ToolStripMenuItem.Text = "8x64";
+      this.x16_8x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_16x64x256ToolStripMenuItem
+      // 
+      this.x16_16x64x256ToolStripMenuItem.Name = "x16_16x64x256ToolStripMenuItem";
+      this.x16_16x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x64x256ToolStripMenuItem.Text = "16x64";
+      this.x16_16x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_32x64x256ToolStripMenuItem
+      // 
+      this.x16_32x64x256ToolStripMenuItem.Name = "x16_32x64x256ToolStripMenuItem";
+      this.x16_32x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x64x256ToolStripMenuItem.Text = "32x64";
+      this.x16_32x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
+      // x16_64x64x256ToolStripMenuItem
+      // 
+      this.x16_64x64x256ToolStripMenuItem.Name = "x16_64x64x256ToolStripMenuItem";
+      this.x16_64x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x64x256ToolStripMenuItem.Text = "64x64";
+      this.x16_64x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
+      // 
       // SpriteEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(782, 580);
+      this.ClientSize = new System.Drawing.Size(987, 689);
       this.Controls.Add(this.tabSpriteEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -980,6 +1348,7 @@ namespace RetroDevStudio.Documents
       this.tabImport.PerformLayout();
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
+      this.contextMenuChangeMode.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1041,7 +1410,6 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.TextBox editLayerDelay;
     private System.Windows.Forms.CheckBox checkAutoplayAnim;
     private System.Windows.Forms.Button btnSavePreviewToGIF;
-    private System.Windows.Forms.ComboBox comboSpriteProjectMode;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.RadioButton btnToolFill;
     private System.Windows.Forms.RadioButton btnToolEdit;
@@ -1063,5 +1431,47 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Panel panelImport;
+        private MenuButton btnChangeMode;
+        private System.Windows.Forms.ContextMenuStrip contextMenuChangeMode;
+        private System.Windows.Forms.ToolStripMenuItem c64HiResMultiColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mega65ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem commanderX16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_16ColorsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_8x8ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_16x8ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_32x8ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_64x8ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_8x16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_16x16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_32x16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_64x16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_8x32ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_16x32ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_32x32ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_64x32ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_8x64ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_16x64ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_32x64ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_64x64ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x16_256ColorsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_8x8x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_16x8x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_32x8x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_64x8x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_8x16x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_16x16x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_32x16x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_64x16x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_8x32x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_16x32x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_32x32x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_64x32x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_8x64x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_16x64x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_32x64x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem x16_64x64x256ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem mega65_24x214ColorsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem mega65_64x214ColorsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem mega65_16x2116ColorsToolStripMenuItem;
   }
 }

@@ -29,7 +29,7 @@ namespace RetroDevStudio.Controls
     {
       string filename;
 
-      if ( Editor.OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
+      if ( Editor.OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSCREEN_SUPPORTED_FILES + Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
@@ -225,7 +225,8 @@ namespace RetroDevStudio.Controls
             }
             // border and BG first
 
-            if ( dataType != "DIRART" )
+            if ( ( dataType != "DIRART" )
+            &&   ( dataType != "PET" ) )
             {
               CharScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
               screenData = screenData.SubBuffer( 2 );

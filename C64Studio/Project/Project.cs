@@ -175,6 +175,13 @@ namespace RetroDevStudio
       // replaces basicversion!
       chunkElement.AppendString( Element.BASICDialect );
 
+      // bookmarks
+      chunkElement.AppendI32( Element.DocumentInfo.Bookmarks.Count );
+      foreach ( int lineIndex in Element.DocumentInfo.Bookmarks )
+      {
+        chunkElement.AppendI32( lineIndex );
+      }
+
       buffer.Append( chunkElement.ToBuffer() );
 
       if ( Element.Document != null )
@@ -575,6 +582,15 @@ namespace RetroDevStudio
                 }
               }
 
+              // bookmarks
+              int     numBookmarks = memChunk.ReadInt32();
+              element.DocumentInfo.Bookmarks = new GR.Collections.Set<int>();
+              for ( int i = 0; i < numBookmarks; ++i )
+              {
+                int   lineIndex = memChunk.ReadInt32();
+                element.DocumentInfo.Bookmarks.Add( lineIndex );
+              }
+
               // TODO - load other stuff
               if ( ( element != null )
               &&   ( element.IsShown )
@@ -788,6 +804,10 @@ namespace RetroDevStudio
           }
         }
         Core.MainForm.m_Outline.RefreshFromDocument( Element.DocumentInfo.BaseDoc );
+      }
+      else
+      {
+        Element.Document.Show();
       }
       Element.Document.Select();
       Element.IsShown = true;

@@ -54,6 +54,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+      SuspendLayout();
       characterEditor.Core = Core;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
@@ -90,6 +91,7 @@ namespace RetroDevStudio.Documents
       CreateDefaultUppercaseCharset();
 
       Modified = false;
+      ResumeLayout();
     }
 
 
@@ -551,6 +553,12 @@ namespace RetroDevStudio.Documents
         case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
           characterEditor.BackgroundColor();
           return true;
+        case Function.COPY:
+          characterEditor.Copy();
+          return true;
+        case Function.PASTE:
+          characterEditor.Paste();
+          return true;
       }
       return base.ApplyFunction( Function );
     }
@@ -699,6 +707,23 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override bool CopyPossible
+    {
+      get
+      {
+        return characterEditor.EditorFocused;
+      }
+    }
+
+
+
+    public override bool PastePossible
+    {
+      get
+      {
+        return characterEditor.EditorFocused;
+      }
+    }
   }
 }
 

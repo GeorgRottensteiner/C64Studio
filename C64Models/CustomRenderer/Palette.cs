@@ -84,7 +84,7 @@ namespace RetroDevStudio
 
 
 
-    internal ByteBuffer GetExportData( int StartIndex, int CountColors, bool Swizzled )
+    internal ByteBuffer GetExportData( int StartIndex, int CountColors, bool Swizzled, bool SortedByRRRGGGBBB )
     {
       if ( ( StartIndex < 0 )
       ||   ( StartIndex + CountColors > NumColors ) )
@@ -94,17 +94,30 @@ namespace RetroDevStudio
       }
       var result = new ByteBuffer();
       result.Reserve( CountColors * 3 );
-      for ( int i = 0; i < CountColors; ++i )
+
+      if ( SortedByRRRGGGBBB )
       {
-        result.AppendU8( (byte)( ( ColorValues[i] & 0x00ff0000 ) >> 16 ) );
+        for ( int i = 0; i < CountColors; ++i )
+        {
+          result.AppendU8( (byte)( ( ColorValues[i] & 0x00ff0000 ) >> 16 ) );
+        }
+        for ( int i = 0; i < CountColors; ++i )
+        {
+          result.AppendU8( (byte)( ( ColorValues[i] & 0x0000ff00 ) >> 8 ) );
+        }
+        for ( int i = 0; i < CountColors; ++i )
+        {
+          result.AppendU8( (byte)( ( ColorValues[i] & 0x000000ff ) ) );
+        }
       }
-      for ( int i = 0; i < CountColors; ++i )
+      else
       {
-        result.AppendU8( (byte)( ( ColorValues[i] & 0x0000ff00 ) >> 8 ) );
-      }
-      for ( int i = 0; i < CountColors; ++i )
-      {
-        result.AppendU8( (byte)( ( ColorValues[i] & 0x000000ff ) ) );
+        for ( int i = 0; i < CountColors; ++i )
+        {
+          result.AppendU8( (byte)( ( ColorValues[i] & 0x00ff0000 ) >> 16 ) );
+          result.AppendU8( (byte)( ( ColorValues[i] & 0x0000ff00 ) >> 8 ) );
+          result.AppendU8( (byte)( ( ColorValues[i] & 0x000000ff ) ) );
+        }
       }
       if ( Swizzled )
       {

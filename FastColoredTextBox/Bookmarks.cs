@@ -77,6 +77,7 @@ namespace FastColoredTextBoxNS
 
                 if(was)
                 {
+                    tb.OnBookmarkRemoved( i, items[i] );
                     items.RemoveAt(i);
                     i--;
                 }else
@@ -143,6 +144,7 @@ namespace FastColoredTextBoxNS
 
             items.Add(bookmark);
             counter++;
+            tb.OnBookmarkAdded( bookmark.LineIndex, bookmark );
             tb.Invalidate();
         }
 
@@ -176,8 +178,17 @@ namespace FastColoredTextBoxNS
 
         public override bool Remove(Bookmark item)
         {
+            if ( !items.Contains( item ) )
+            {
+              return false;
+            }
             tb.Invalidate();
-            return items.Remove(item);
+            if ( !items.Remove( item ) )
+            {
+              return false;
+            }
+            tb.OnBookmarkRemoved( item.LineIndex, item );
+            return true;
         }
 
         /// <summary>
@@ -189,9 +200,11 @@ namespace FastColoredTextBoxNS
             for (int i = 0; i < Count; i++)
             if (items[i].LineIndex == lineIndex)
             {
+                var oldBookmark = items[i];
                 items.RemoveAt(i);
                 i--;
                 was = true;
+                tb.OnBookmarkRemoved( lineIndex, oldBookmark );
             }
             tb.Invalidate();
 
