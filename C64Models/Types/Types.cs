@@ -589,6 +589,7 @@ namespace RetroDevStudio.Types
     KEY_F3,
     KEY_F5,
     KEY_F7,
+    KEY_FLASH,
 
     LAST_ENTRY
   }
@@ -1202,11 +1203,11 @@ namespace RetroDevStudio
 
       //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0, false, 130, true, (char)0, false, "130" );
 
-      AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 194, true, 157, true, (char)0xeec2, true, "REVERSE SHIFT B" );
+      //AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 194, true, 157, true, (char)0xeec2, true, "REVERSE SHIFT B" );
 
       AddC64Key( KeyboardKey.KEY_RUN_STOP, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 131 + 64, true, 131, true, (char)0xeec3, -1, 0, true, "LOAD+RUN", "L+R" );   // TODO load+run
 
-      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 196, true, (char)0xeec4, true, "REVERSE SHIFT D" ).Replacements.Add( "REVERSE SHIFT-D" );
+      //AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 196, true, (char)0xeec4, true, "REVERSE SHIFT D" ).Replacements.Add( "REVERSE SHIFT-D" );
 
       AddC64Key( KeyboardKey.KEY_F1, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 133 + 64, true, 133, true, (char)0xeec5, true, "F1" ).Replacements.Add( "F1" );   // TODO F1
       AddC64Key( KeyboardKey.KEY_F3, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 134 + 64, true, 134, true, (char)0xeec6, true, "F3" ).Replacements.Add( "F3" );   // TODO F3
@@ -1398,9 +1399,9 @@ namespace RetroDevStudio
 
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 240, true, 0, false, (char)0xeef0, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 241, true, 0, false, (char)0xeef1, true, "" );
-      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 242, true, 0, false, (char)0xeef2, true, "" );
+      //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 242, true, 0, false, (char)0xeef2, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 243, true, 0, false, (char)0xeef3, true, "" );
-      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 244, true, 0, false, (char)0xeef4, true, "" );
+      //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 244, true, 0, false, (char)0xeef4, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 245, true, 0, false, (char)0xeef5, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 246, true, 0, false, (char)0xeef6, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 247, true, 0, false, (char)0xeef7, true, "" );
@@ -1412,6 +1413,10 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 253, true, 0, false, (char)0xeefd, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 254, true, 0, false, (char)0xeefe, true, "" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 255, true, 0, false, (char)0xeeff, true, "" );
+
+      // plus 4
+      AddC64Key( KeyboardKey.KEY_FLASH, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0xc2, true, 0x82, true, (char)0xeec2, true, "FLASH ON" ).Replacements.Add( "FLASH ON" );
+      AddC64Key( KeyboardKey.KEY_FLASH, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 0xc4, true, 0x84, true, (char)0xeec4, true, "FLASH OFF" ).Replacements.Add( "FLASH OFF" );
     }
 
 

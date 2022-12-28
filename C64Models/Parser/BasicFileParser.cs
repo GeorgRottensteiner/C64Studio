@@ -88,7 +88,11 @@ namespace RetroDevStudio.Parser
       F4,
       F6,
       F8,
-      INDIRECT_KEY
+      INDIRECT_KEY,
+
+      // plus 4
+      FLASH_ON,
+      FLASH_OFF
     };
 
     public enum RenumberResult
@@ -378,6 +382,8 @@ namespace RetroDevStudio.Parser
       AddActionToken( TokenValue.F4, "{F4}", 138 );
       AddActionToken( TokenValue.F6, "{F6}", 139 );
       AddActionToken( TokenValue.F8, "{F8}", 140 );
+      AddActionToken( TokenValue.FLASH_ON, "{flash on}", 194 );
+      AddActionToken( TokenValue.FLASH_OFF, "{flash off}", 196 );
     }
 
 

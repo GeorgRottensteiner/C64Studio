@@ -1123,9 +1123,11 @@ namespace RetroDevStudio.Dialogs
         Core.Settings.BASICKeyMap.Keymap.Remove( m_PressedKeyMapKey );
 
         keyMapEntry = Core.Settings.BASICKeyMap.AllKeyInfos[realKey];
-        keyMapEntry.Key = m_PressedKeyMapKey;
-        Core.Settings.BASICKeyMap.Keymap.Add( m_PressedKeyMapKey, keyMapEntry );
-        
+        if ( keyMapEntry != null )
+        {
+          keyMapEntry.Key = m_PressedKeyMapKey;
+          Core.Settings.BASICKeyMap.Keymap.Add( m_PressedKeyMapKey, keyMapEntry );
+        }        
 
         listBASICKeyMap.SelectedItems[0].SubItems[2].Text = m_PressedKeyMapKey.ToString();
         btnUnbindBASICKeyMapBinding.Enabled = true;
