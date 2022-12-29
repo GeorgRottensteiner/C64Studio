@@ -43,6 +43,9 @@
       // editBuildChainDefines
       // 
       this.editBuildChainDefines.AcceptsReturn = true;
+      this.editBuildChainDefines.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.editBuildChainDefines.Enabled = false;
       this.editBuildChainDefines.Location = new System.Drawing.Point(281, 96);
       this.editBuildChainDefines.Multiline = true;

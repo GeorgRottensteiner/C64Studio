@@ -15,6 +15,7 @@ namespace RetroDevStudio
     ProjectElement                  Element;
     StudioCore                      Core;
     PropertyTabs.PropertyTabBase    BuildEventDetails = null;
+    bool                            _DuringInit = true;
 
 
 
@@ -38,6 +39,7 @@ namespace RetroDevStudio
         comboConfig.Items.Add( configName );
       }
       comboConfig.SelectedItem = Element.DocumentInfo.Project.Settings.CurrentConfig.Name;
+      _DuringInit = false;
     }
 
 
@@ -82,10 +84,13 @@ namespace RetroDevStudio
       Core.Theming.ApplyTheme( BuildEventDetails );
 
       BuildEventDetails.Parent    = this;
-      BuildEventDetails.Location  = new Point( 6, 68 );
+      BuildEventDetails.Location  = new Point( 0, 68 );
       BuildEventDetails.Visible   = true;
 
-      GR.Image.DPIHandler.ResizeControlsForDPI( BuildEventDetails );
+      if ( !_DuringInit )
+      {
+        GR.Image.DPIHandler.ResizeControlsForDPI( BuildEventDetails );
+      }
     }
 
 
