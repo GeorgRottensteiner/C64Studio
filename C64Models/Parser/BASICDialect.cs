@@ -130,7 +130,7 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "LEFT$", 0xC8, "leF" );
       BASICV2.AddOpcode( "RIGHT$", 0xC9, "rI" );
       BASICV2.AddOpcode( "MID$", 0xCA, "mI" );
-      //AddOpcode( "GO", 0xCB );
+      BASICV2.AddOpcode( "GO", 0xCB );
 
       // C64Studio extension
       BASICV2.AddExOpcode( "LABEL", 0xF0 );

@@ -6314,6 +6314,8 @@ namespace FastColoredTextBoxNS
       if ( tripleClickCount >= 3 )
       {
         // this means the trip click happened - do something
+        CaretBlinking = true;
+        HideCaret( Handle );
         OnTripleClick();
         tripleClickCount = 0;
         return;

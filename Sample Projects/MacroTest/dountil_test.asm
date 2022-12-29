@@ -7,10 +7,10 @@ START
 
 
 !set i=0
-!do {
+;!do {
 !byte <tilesdata_HR+i*4
 !set i = i + 1
- } until i > num_tiles
+; } until i > num_tiles
 
 
  !for i=0 to num_tiles
