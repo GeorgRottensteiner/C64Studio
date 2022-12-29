@@ -17,6 +17,7 @@ namespace MediaManager
         System.Console.WriteLine( "  [-d64,-d81 <disk image>]" );
         System.Console.WriteLine( "  [-t64 <tape file>]" );
         System.Console.WriteLine( "  [-import <file name>[,load address]]" );
+        System.Console.WriteLine( "  [-filetype <prg,seq,rel,usr,del>" );
         System.Console.WriteLine( "  [-export <file name>]" );
         System.Console.WriteLine( "  [-rename <file name>]" );
         System.Console.WriteLine( "  [-renameto <file name>]" );
@@ -34,6 +35,7 @@ namespace MediaManager
       string  expectingParameterName = "";
       string  methodToUse = "";
       bool    verboseLog = true;
+      RetroDevStudio.Types.FileType fileType = RetroDevStudio.Types.FileType.PRG;
 
       GR.Collections.Map<string,string>   paramMap = new GR.Collections.Map<string,string>();
 
@@ -43,6 +45,32 @@ namespace MediaManager
         {
           paramMap[expectingParameterName] = args[i];
           expectingParameter = false;
+
+          if ( expectingParameterName == "-FILETYPE" )
+          { 
+            switch ( args[i].ToUpper() )
+            {
+              case "PRG":
+                fileType = RetroDevStudio.Types.FileType.PRG;
+                break;
+              case "SEQ":
+                fileType = RetroDevStudio.Types.FileType.SEQ;
+                break;
+              case "REL":
+                fileType = RetroDevStudio.Types.FileType.REL;
+                break;
+              case "USR":
+                fileType = RetroDevStudio.Types.FileType.USR;
+                break;
+              case "DEL":
+                fileType = RetroDevStudio.Types.FileType.DEL;
+                break;
+              default:
+                System.Console.Error.WriteLine( "Unsupported file type " + args[i] );
+                System.Console.Error.WriteLine( "Only PRG, USR, SEQ, REL and DEL are allowed" );
+                return 1;
+            }
+          }
         }
         else if ( ( args[i].ToUpper() == "-D64" )
         ||        ( args[i].ToUpper() == "-D81" )
@@ -63,6 +91,11 @@ namespace MediaManager
           {
             methodToUse = expectingParameterName;
           }
+        }
+        else if ( args[i].ToUpper() == "-FILETYPE" )
+        {
+          expectingParameter = true;
+          expectingParameterName = args[i].ToUpper();
         }
         else if ( args[i].ToUpper() == "-LISTFILES" )
         {
@@ -232,7 +265,7 @@ namespace MediaManager
         {
           filenameImport = paramMap["-RENAMETO"];
         }
-        if ( !medium.WriteFile( Util.ToFilename( filenameImport ), data, RetroDevStudio.Types.FileType.PRG ) )
+        if ( !medium.WriteFile( Util.ToFilename( filenameImport ), data, fileType ) )
         {
           System.Console.Error.WriteLine( "Could not write file to medium: " + medium.LastError );
           return 1;

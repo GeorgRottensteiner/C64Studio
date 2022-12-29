@@ -18,6 +18,7 @@
     mediamanager.exe [-d64/-d81 &lt;disk image&gt;]
                      [-t64 &lt;tape file&gt;]
                      [-import &lt;file name&gt;[,load address]]
+                     [-filetype &lt;prg,usr,seq,rel,del&gt;]
                      [-export &lt;file name&gt;]
                      [-rename &lt;file name&gt;]
                      [-renameto &lt;file name&gt;]
@@ -52,6 +53,13 @@
     <br>
     <br>
     The load address is interpreted as decimal unless $ or 0x is prefixed, then it is treated as hexadecimal.
+    <br>
+    <br>
+  </div>
+  <a name="-filetype"></a>
+  <H2>-filetype &lt;prg,usr,seq,rel,del&gt;</H2>
+  <div id="mybody">
+    Defines as which kind of file type the file is imported. This just sets the type bits, no special processing is done.<br>
     <br>
     <br>
   </div>
