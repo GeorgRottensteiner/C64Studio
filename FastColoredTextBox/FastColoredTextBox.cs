@@ -6330,11 +6330,16 @@ namespace FastColoredTextBoxNS
       }
 
       isLineSelect = false;
+      
 
       if ( e.Button == System.Windows.Forms.MouseButtons.Left )
       {
         if ( mouseIsDragDrop )
+        {
+          CaretBlinking = true;
+          HideCaret( Handle );
           OnMouseClickText( e );
+        }
       }
     }
 
