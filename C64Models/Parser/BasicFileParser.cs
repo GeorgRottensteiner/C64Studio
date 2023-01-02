@@ -3246,6 +3246,16 @@ namespace RetroDevStudio.Parser
                     sb.Append( lineInfo.Tokens[i + 1].Content );
                     ++i;
                   }
+
+                  if ( token.StartIndex + token.Content.Length < lineInfo.Tokens[i + 1].StartIndex )
+                  {
+                    // keep spaces
+                    for ( int j = 0; j < lineInfo.Tokens[i + 1].StartIndex - ( token.StartIndex + token.Content.Length ); ++j )
+                    {
+                      sb.Append( ' ' );
+                    }
+                  }
+
                   if ( ( refNo >= FirstLineNumber )
                   &&   ( refNo <= LastLineNumber ) )
                   {
@@ -3266,6 +3276,7 @@ namespace RetroDevStudio.Parser
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
               sb.Append( token.Content );
+
               int nextIndex = i + 1;
               bool mustBeComma = false;
               while ( nextIndex < lineInfo.Tokens.Count )
@@ -3276,6 +3287,16 @@ namespace RetroDevStudio.Parser
                   if ( nextToken.TokenType == Token.Type.NUMERIC_LITERAL )
                   {
                     // numeric!
+                    if ( ( nextIndex > 0 )
+                    &&   ( lineInfo.Tokens[nextIndex - 1].StartIndex + lineInfo.Tokens[nextIndex - 1].Content.Length < nextToken.StartIndex ) )
+                    {
+                      // keep spaces
+                      for ( int j = 0; j < nextToken.StartIndex - ( lineInfo.Tokens[nextIndex - 1].StartIndex + lineInfo.Tokens[nextIndex - 1].Content.Length ); ++j )
+                      {
+                        sb.Append( ' ' );
+                      }
+                    }
+
                     int refNo = GR.Convert.ToI32( nextToken.Content );
                     if ( ( refNo >= FirstLineNumber )
                     &&   ( refNo <= LastLineNumber )
@@ -3306,8 +3327,17 @@ namespace RetroDevStudio.Parser
                 }
                 else
                 {
-                  if ( ( nextToken.TokenType != Token.Type.DIRECT_TOKEN )
-                  ||   ( nextToken.ByteValue != ',' ) )
+                  if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
+                  &&   ( nextToken.Content == " " ) )
+                  {
+                    // space is valid
+                    sb.Append( nextToken.Content );
+                    ++nextIndex;
+                    i = nextIndex - 1;
+                    continue;
+                  }
+                  else if ( ( nextToken.TokenType != Token.Type.DIRECT_TOKEN )
+                  ||        ( nextToken.Content != "," ) )
                   {
                     // error or end, not a comma
                     break;

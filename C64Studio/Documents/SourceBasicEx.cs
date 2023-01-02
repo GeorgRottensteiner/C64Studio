@@ -254,8 +254,18 @@ namespace RetroDevStudio.Documents
         if ( ( token.StartIndex <= e.Place.iChar )
         &&   ( e.Place.iChar < token.StartIndex + token.Content.Length ) )
         {
-          editSource.Selection = new FastColoredTextBoxNS.Range( editSource, token.StartIndex, e.Place.iLine, token.StartIndex + token.Content.Length, e.Place.iLine );
+          if ( ( token.Content.StartsWith( "{" ) )
+          &&   ( token.Content.Length >= 2 )
+          &&   ( token.Content.EndsWith( "}" ) ) )
+          {
+            editSource.Selection = new FastColoredTextBoxNS.Range( editSource, token.StartIndex + 1, e.Place.iLine, token.StartIndex + token.Content.Length - 1, e.Place.iLine );
+          }
+          else
+          {
+            editSource.Selection = new FastColoredTextBoxNS.Range( editSource, token.StartIndex, e.Place.iLine, token.StartIndex + token.Content.Length, e.Place.iLine );
+          }
           e.Handled = true;
+          return;
         }
       }
     }
