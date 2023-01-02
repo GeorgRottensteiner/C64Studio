@@ -17,14 +17,16 @@ namespace RetroDevStudio.Tasks
     private bool            CreatePreProcessedFile = false;
     private bool            CreateRelocationFile = false;
     private bool            DisplayOutput = false;
+    private bool            AutoFollowupAction = true;
 
 
 
-    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile, bool DisplayOutput = true )
+    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile, bool DisplayOutput = true, bool AutoFollowupAction = true )
     {
       this.CreatePreProcessedFile = CreatePreProcessedFile;
       this.CreateRelocationFile = CreateRelocationFile;
       this.DisplayOutput = DisplayOutput;
+      this.AutoFollowupAction = AutoFollowupAction;
       m_DocumentToBuild = DocumentToBuild;
       m_DocumentToDebug = DocumentToDebug;
       m_DocumentToRun = DocumentToRun;
@@ -508,50 +510,66 @@ namespace RetroDevStudio.Tasks
       }
       Core.SetStatus( "Build successful" );
 
-      switch ( Core.MainForm.AppState )
+      if ( AutoFollowupAction )
       {
-        case StudioState.COMPILE:
-        case StudioState.BUILD:
-        case StudioState.BUILD_PRE_PROCESSED_FILE:
-        case StudioState.BUILD_RELOCATION_FILE:
-          if ( Core.Settings.PlaySoundOnSuccessfulBuild )
-          {
-            System.Media.SystemSounds.Asterisk.Play();
-
-            if ( Core.MainForm.AppState == StudioState.BUILD_PRE_PROCESSED_FILE )
+        switch ( Core.MainForm.AppState )
+        {
+          case StudioState.COMPILE:
+          case StudioState.BUILD:
+          case StudioState.BUILD_PRE_PROCESSED_FILE:
+          case StudioState.BUILD_RELOCATION_FILE:
+            if ( Core.Settings.PlaySoundOnSuccessfulBuild )
             {
-              Core.MainForm.AppState = Types.StudioState.NORMAL;
+              System.Media.SystemSounds.Asterisk.Play();
 
-              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
-              Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
-            }
-            else if ( Core.MainForm.AppState == StudioState.BUILD_RELOCATION_FILE )
-            {
-              Core.MainForm.AppState = Types.StudioState.NORMAL;
-
-              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".loc" );
-              Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
-            }
-          }
-          Core.MainForm.AppState = Types.StudioState.NORMAL;
-          break;
-        case Types.StudioState.BUILD_AND_RUN:
-          // run program
-          {
-            Types.CompileTargetType targetType = buildInfo.TargetType;
-            if ( m_DocumentToRun.Element != null )
-            {
-              if ( m_DocumentToRun.Element.TargetType != RetroDevStudio.Types.CompileTargetType.NONE )
+              if ( Core.MainForm.AppState == StudioState.BUILD_PRE_PROCESSED_FILE )
               {
-                targetType = m_DocumentToRun.Element.TargetType;
+                Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+                string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
+                Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
               }
-              ProjectElement.PerConfigSettings  configSetting = m_DocumentToRun.Element.Settings[m_DocumentToRun.Project.Settings.CurrentConfig.Name];
-              if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
+              else if ( Core.MainForm.AppState == StudioState.BUILD_RELOCATION_FILE )
               {
-                targetType = configSetting.DebugFileType;
+                Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+                string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".loc" );
+                Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
               }
             }
-            if ( !Core.MainForm.RunCompiledFile( m_DocumentToRun, targetType ) )
+            Core.MainForm.AppState = Types.StudioState.NORMAL;
+            break;
+          case Types.StudioState.BUILD_AND_RUN:
+            // run program
+            {
+              Types.CompileTargetType targetType = buildInfo.TargetType;
+              if ( m_DocumentToRun.Element != null )
+              {
+                if ( m_DocumentToRun.Element.TargetType != RetroDevStudio.Types.CompileTargetType.NONE )
+                {
+                  targetType = m_DocumentToRun.Element.TargetType;
+                }
+                ProjectElement.PerConfigSettings  configSetting = m_DocumentToRun.Element.Settings[m_DocumentToRun.Project.Settings.CurrentConfig.Name];
+                if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
+                {
+                  targetType = configSetting.DebugFileType;
+                }
+              }
+              if ( !Core.MainForm.RunCompiledFile( m_DocumentToRun, targetType ) )
+              {
+                Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+                if ( !DisplayOutput )
+                {
+                  Core.UnsuppressOutput();
+                }
+                return false;
+              }
+            }
+            break;
+          case Types.StudioState.BUILD_AND_DEBUG:
+            // run program
+            if ( !DebugCompiledFile( m_DocumentToDebug, m_DocumentToRun ) )
             {
               Core.MainForm.AppState = Types.StudioState.NORMAL;
 
@@ -561,26 +579,12 @@ namespace RetroDevStudio.Tasks
               }
               return false;
             }
-          }
-          break;
-        case Types.StudioState.BUILD_AND_DEBUG:
-          // run program
-          if ( !DebugCompiledFile( m_DocumentToDebug, m_DocumentToRun ) )
-          {
+            break;
+          default:
             Core.MainForm.AppState = Types.StudioState.NORMAL;
-
-            if ( !DisplayOutput )
-            {
-              Core.UnsuppressOutput();
-            }
-            return false;
-          }
-          break;
-        default:
-          Core.MainForm.AppState = Types.StudioState.NORMAL;
-          break;
+            break;
+        }
       }
-
       if ( !DisplayOutput )
       {
         Core.UnsuppressOutput();

@@ -126,7 +126,7 @@ namespace RetroDevStudio.Dialogs
         config = m_Basic.DocumentInfo.Project.Settings.Configuration( configName );
       }
 
-      var taskCompile = new TaskCompile( m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Core.Navigating.Solution, false, false, false );
+      var taskCompile = new TaskCompile( m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Core.Navigating.Solution, false, false, false, false );
       taskCompile.Core = m_Core;
       taskCompile.RunTask();
       if ( !taskCompile.TaskSuccessful )

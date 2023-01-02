@@ -331,7 +331,6 @@ namespace RetroDevStudio.Types.ASM
         }
       }
 
-      Debug.Log( "InsertLines" );
       List<SourceInfo>    sourceInfosToMove = new List<ASM.SourceInfo>();
       foreach ( var sourceInfo in SourceInfo )
       {
@@ -356,7 +355,6 @@ namespace RetroDevStudio.Types.ASM
         sourceInfoToMove.LocalStartLine += LineCount;
         SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
       }
-      Debug.Log( "InsertLines done" );
 
       foreach ( var tempLabel in TempLabelInfo )
       {
@@ -520,7 +518,6 @@ namespace RetroDevStudio.Types.ASM
         // cutting a part out of this
         sourceInfo.Value.LineCount -= LineCount;
       }
-      Debug.Log( "RemoveLines" );
       foreach ( var sourceInfoToMove in sourceInfosToMove )
       {
         SourceInfo.Remove( sourceInfoToMove.GlobalStartLine );
@@ -539,7 +536,6 @@ namespace RetroDevStudio.Types.ASM
           SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
         }
       }
-      Debug.Log( "RemoveLines done" );
 
       foreach ( var tempLabel in TempLabelInfo )
       {
