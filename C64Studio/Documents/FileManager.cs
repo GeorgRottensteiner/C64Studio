@@ -449,12 +449,12 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      if ( !e.Data.GetDataPresent( "RetroDevStudio.FileManager+DragData" ) )
+      if ( !e.Data.GetDataPresent( "RetroDevStudio.Documents.FileManager+DragData" ) )
       {
         e.Effect = DragDropEffects.None;
         return;
       }
-      DragData dragData = (DragData)e.Data.GetData( "RetroDevStudio.FileManager+DragData" );
+      DragData dragData = (DragData)e.Data.GetData( "RetroDevStudio.Documents.FileManager+DragData" );
 
       if ( dragData.Parent == this )
       {
@@ -495,13 +495,13 @@ namespace RetroDevStudio.Documents
         }
         return;
       }
-      else if ( !e.Data.GetDataPresent( "RetroDevStudio.FileManager+DragData" ) )
+      else if ( !e.Data.GetDataPresent( "RetroDevStudio.Documents.FileManager+DragData" ) )
       {
         return;
       }
       else
       {
-        dragData = (DragData)e.Data.GetData( "RetroDevStudio.FileManager+DragData" );
+        dragData = (DragData)e.Data.GetData( "RetroDevStudio.Documents.FileManager+DragData" );
         if ( dragData.Parent == this )
         {
           return;
