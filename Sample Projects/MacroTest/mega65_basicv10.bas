@@ -1,4 +1,4 @@
-#C64Studio.MetaData.BASIC:8193,BASIC 65
+#RetroDevStudio.MetaData.BASIC:,BASIC V10
 10 AND
 20 APPEND
 30 ASC

@@ -1,4 +1,4 @@
-#C64Studio.MetaData.BASIC:8193,BASIC V10
+#RetroDevStudio.MetaData.BASIC:8193,BASIC 65
 # IT'S A TEST
 20 SCREENCLR
 

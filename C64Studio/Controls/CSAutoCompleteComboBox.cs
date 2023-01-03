@@ -118,6 +118,33 @@ namespace RetroDevStudio.Controls
 
 
 
+    private void ResizeListBoxToContent()
+    {
+      var g = _AutoCompleteListBox.CreateGraphics();
+
+      int     maxWidth = 0;
+      int     maxHeight = _AutoCompleteListBox.Items.Count * _AutoCompleteListBox.Font.Height;
+
+      var currentScreen = Screen.FromHandle( _AutoCompleteListBox.Handle );
+      if ( maxHeight > currentScreen.Bounds.Height )
+      {
+        maxHeight = currentScreen.Bounds.Height;
+      }
+
+      foreach ( string item in _AutoCompleteListBox.Items )
+      {
+        int   itemWidth = (int)g.MeasureString( item, _AutoCompleteListBox.Font ).Width;
+
+        if ( itemWidth > maxWidth )
+        {
+          maxWidth = itemWidth;
+        }
+      }
+      _AutoCompleteListBox.ClientSize = new Size( maxWidth, maxHeight );
+    }
+
+
+
     [DllImport( "user32.dll" )]
     static extern bool SetWindowPos( IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags );
 
@@ -147,13 +174,35 @@ namespace RetroDevStudio.Controls
         return;
       }
 
+      if ( _AutoCompleteListBox == null )
+      {
+        _AutoCompleteListBox = new ListBox();
+        _AutoCompleteListBox.Visible = false;
+        UpdateItemList();
+      }
+
+      ResizeListBoxToContent();
+
       _PopupList = new PopupControl( _AutoCompleteListBox );
-      //_PopupList.Show( this );
+      _PopupList.Closed += _PopupList_Closed;
+      _PopupList.Show( this );
       _AutoCompleteListBox.Visible = true;
       _PopupList.Visible = true;
       SetTopMost( _PopupList );
     }
 
+
+
+    private void _PopupList_Closed( object sender, ToolStripDropDownClosedEventArgs e )
+    {
+      /*
+      if ( _AutoCompleteListBox == null )
+      {
+        return;
+      }
+      _AutoCompleteListBox.Dispose();
+      _AutoCompleteListBox = null;*/
+    }
 
 
 

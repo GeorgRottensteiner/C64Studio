@@ -54,7 +54,7 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\PopupControl.cs">
+    <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\CSButton.cs">
@@ -344,6 +344,8 @@
       rm -f "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects\*.*" /Q
       cp "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
     <ApplicationIcon>c64.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>

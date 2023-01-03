@@ -1,1 +1,2 @@
+#RetroDevStudio.MetaData.BASIC:,BASIC V10
 10DIRECTORY

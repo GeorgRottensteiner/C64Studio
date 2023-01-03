@@ -1753,7 +1753,7 @@ namespace RetroDevStudio.Documents
         popupControl.DisplayPage = new FastImage( 128, 128 );
         popupControl.Size = new Size( 256, 256 );
 
-        var popup = new PopupControl( popupControl );
+        var popup = new SingleActionPopupControl( popupControl );
         popup.ClientSize = new Size( 256, 256 );
 
         // build all variations
