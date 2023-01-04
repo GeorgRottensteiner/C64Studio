@@ -15,6 +15,8 @@ using GR.Forms;
 using System.Drawing;
 using System.Linq;
 
+
+
 namespace RetroDevStudio.Documents
 {
   public partial class CharsetScreenEditor : BaseDocument
@@ -662,7 +664,22 @@ namespace RetroDevStudio.Documents
       sb.Append( charY );
       sb.Append( "  Offset $" );
       sb.Append( ( charX + charY * m_CharsetScreen.ScreenWidth ).ToString( "X4" ) );
-      sb.Append( "  Char $" );
+
+      int     screenOffset = PreferredScreenOffset( PreferredMachineType );
+      if ( screenOffset != -1 )
+      {
+        sb.Append( "/$" );
+        sb.Append( ( screenOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( "X4" ) );
+      }
+      int     colorOffset = PreferredColorOffset( PreferredMachineType );
+      if ( colorOffset != -1 )
+      {
+        sb.Append( "/$" );
+        sb.Append( ( colorOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( "X4" ) );
+      }
+      sb.AppendLine();
+
+      sb.Append( "Char $" );
       if ( numBytesOfSingleChar == 2 )
       {
         sb.Append( m_CurrentChar.ToString( "X4" ) );
@@ -712,6 +729,48 @@ namespace RetroDevStudio.Documents
       }
 
       return sb.ToString();
+    }
+
+
+
+    private int PreferredScreenOffset( MachineType MachineType )
+    { 
+      //             BASIC        SCREEN       COLOR
+      // Unexpanded  $1000 -$1DFF $1E00 -$1FFF $9600 -$97FF
+      //       + 3K  $0400 -$1DFF $1E00 -$1FFF $9600 -$97FF
+      //       + 8K  $1200 -$3FFF $1000 -$11FF $9400 -$95FF
+      //       + 16K $1200 -$5FFF $1000 -$11FF $9400 -$95FF
+      //       + 24K $1200 -$7FFF $1000 -$11FF $9400 -$95FF
+
+      switch ( MachineType )
+      {
+        case MachineType.C64:
+          return 0x0400;
+        case MachineType.PLUS4:
+          return 0x0c00;
+        case MachineType.VIC20:
+          return 0x1e00;
+        default:
+          return -1;
+      }
+    }
+
+
+
+    private int PreferredColorOffset( MachineType MachineType )
+    {
+      switch ( MachineType )
+      {
+        case MachineType.C64:
+        case MachineType.C128:
+          return 0xd800;
+        case MachineType.PLUS4:
+          return 0x0800;
+        case MachineType.VIC20:
+          return 0x9e00;
+        default:
+          return -1;
+      }
     }
 
 
@@ -3513,6 +3572,7 @@ namespace RetroDevStudio.Documents
           ||     ( pictureEditor.Focused ) );
       }
     }
+
 
 
 

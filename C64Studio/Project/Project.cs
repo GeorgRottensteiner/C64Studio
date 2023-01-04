@@ -16,6 +16,7 @@ namespace RetroDevStudio
     public StudioCore         Core = null;
     private bool              m_Modified = false;
     public System.Windows.Forms.TreeNode           Node = null;
+    public MachineType        PreferredMachineType = MachineType.C64;
 
 
     public List<ProjectElement>   Elements = new List<ProjectElement>();
@@ -238,6 +239,7 @@ namespace RetroDevStudio
       }
       uint  flags = 0;
       chunkProject.AppendU32( flags );
+      chunkProject.AppendU32( (uint)PreferredMachineType );
 
       bufferProject.Append( chunkProject.ToBuffer() );
 
@@ -368,7 +370,11 @@ namespace RetroDevStudio
             currentConfig         = memChunk.ReadString();
             activeElement         = memChunk.ReadString();
             memChunk.ReadUInt32();    // flags (all free)
-
+            PreferredMachineType  = (MachineType)memChunk.ReadUInt32();
+            if ( PreferredMachineType == MachineType.UNKNOWN )
+            {
+              PreferredMachineType = MachineType.C64;
+            }
             if ( projectVersion == 1 )
             {
               if ( origDebugStartAddress == 2049 )

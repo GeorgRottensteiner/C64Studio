@@ -190,6 +190,8 @@ namespace RetroDevStudio
     public int                                  MemoryDisplaySpriteMulticolor1 = 5;
     public int                                  MemoryDisplaySpriteMulticolor2 = 10;
 
+    public MachineType                          PreferredMachineType = MachineType.C64;
+
     public Encoding                             SourceFileEncoding = Encoding.UTF8;
 
     public bool                                 CheckForUpdates = true;
@@ -617,6 +619,7 @@ namespace RetroDevStudio
 
       GR.IO.FileChunk chunkDefaults = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DEFAULTS );
       chunkDefaults.AppendString( DefaultProjectBasePath );
+      chunkDefaults.AppendU32( (uint)PreferredMachineType );
       SettingsData.Append( chunkDefaults.ToBuffer() );
 
       // dockpanel layout
@@ -1060,7 +1063,12 @@ namespace RetroDevStudio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              DefaultProjectBasePath = binIn.ReadString();
+              DefaultProjectBasePath  = binIn.ReadString();
+              PreferredMachineType    = (MachineType)binIn.ReadUInt32();
+              if ( PreferredMachineType == MachineType.UNKNOWN )
+              {
+                PreferredMachineType = MachineType.C64;
+              }
             }
             break;
           case FileChunkConstants.SETTINGS_OUTLINE:

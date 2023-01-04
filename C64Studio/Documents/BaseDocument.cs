@@ -1125,6 +1125,21 @@ namespace RetroDevStudio.Documents
     }
 
 
-    
+
+    public MachineType PreferredMachineType
+    {
+      get
+      {
+        if ( DocumentInfo.Project != null )
+        {
+          return DocumentInfo.Project.PreferredMachineType;
+        }
+        return Core.Settings.PreferredMachineType;
+      }
+    }
+
+
+
+
   }
 }

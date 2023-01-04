@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 #if NET5_0_OR_GREATER
 using System.Runtime.Versioning;
 #endif
@@ -130,6 +131,7 @@ namespace GR.Forms
     private int                   m_DisplayWidth = -1;
     private int                   m_DisplayHeight = -1;
     private bool                  m_UpdateLockActive = false;
+    private ToolTip               m_ToolTip = new ToolTip();
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -256,6 +258,13 @@ namespace GR.Forms
 
 
 
+    public bool AllowPopup
+    {
+      get; set;
+    } = false;
+
+
+
     public int SelectedIndex
     {
       get
@@ -354,9 +363,32 @@ namespace GR.Forms
 
       HottrackColor = 0x804040ff;
 
+      m_ToolTip.Draw += m_ToolTip_Draw;
+      m_ToolTip.OwnerDraw = true;
+      m_ToolTip.Hide( this );
+      m_ToolTip.Popup += m_ToolTip_Popup;
+
       // Set the value of the double-buffering style bits to true.
       SetStyle( ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Selectable, true );
       UpdateStyles();
+    }
+
+
+
+    private void m_ToolTip_Popup( object sender, PopupEventArgs e )
+    {
+      e.ToolTipSize = new Size( ItemWidth, ItemHeight );
+    }
+
+    
+    
+    
+    private void m_ToolTip_Draw( object sender, DrawToolTipEventArgs e )
+    {
+      if ( DrawItem != null )
+      {
+        DrawItem( sender, new DrawItemEventArgs( e.Graphics, e.Font, new Rectangle( 0, 0, ItemWidth, ItemHeight ), SelectedIndex, DrawItemState.Default ) );
+      }
     }
 
 
@@ -1255,6 +1287,21 @@ namespace GR.Forms
       {
         m_UpdateLockActive = false;
         ItemsModified();
+      }
+    }
+
+
+
+    protected override void OnMouseHover( EventArgs e )
+    {
+      base.OnMouseHover( e );
+      if ( m_ItemUnderMouse != -1 )
+      {
+        int     xoffset = ( m_ItemUnderMouse - m_Offset * m_ItemsPerLine ) % m_ItemsPerLine;
+        int     yoffset = ( m_ItemUnderMouse - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
+        var itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
+
+        m_ToolTip.Show( "", this, itemRect.Location );
       }
     }
 
