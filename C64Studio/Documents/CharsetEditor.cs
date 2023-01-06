@@ -85,6 +85,7 @@ namespace RetroDevStudio.Documents
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image file", typeof( ImportCharsetFromImageFile ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportCharsetFromASM ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC DATA statements", typeof( ImportCharsetFromBASICDATA ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from HEX", typeof( ImportCharsetFromHex ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "set default character sets", typeof( ImportCharsetFromDefault ) ) );
       comboImportMethod.SelectedIndex = 0;
 

@@ -54,6 +54,9 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromHex.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>
     </Compile>
