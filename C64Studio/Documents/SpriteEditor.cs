@@ -616,7 +616,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public bool ImportSprites( string Filename, bool OnlyImportFromProject, bool AddUndo )
+    public bool ImportSprites( string Filename, bool OnlyImportFromProject, bool AddUndo, int BytesToSkip = 0 )
     {
       Clear();
 
@@ -679,6 +679,12 @@ namespace RetroDevStudio.Documents
       }
       else if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
       {
+        if ( ( BytesToSkip > 0 )
+        &&   ( BytesToSkip < projectFile.Length ) )
+        {
+          projectFile = projectFile.SubBuffer( BytesToSkip );
+        }
+
         btnChangeMode.Text = GR.EnumHelper.GetDescription( SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC );
 
         int numSprites = (int)projectFile.Length / 64;

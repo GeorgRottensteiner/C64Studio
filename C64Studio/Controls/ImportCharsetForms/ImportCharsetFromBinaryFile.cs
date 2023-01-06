@@ -27,7 +27,12 @@ namespace RetroDevStudio.Controls
     {
       string filename;
 
-      //Clear();
+      int bytesToSkip = GR.Convert.ToI32( editImportSkipBytes.Text );
+      if ( bytesToSkip < 0 )
+      {
+        bytesToSkip = 0;
+      }
+
       if ( Editor.OpenFile( "Open charset", RetroDevStudio.Types.Constants.FILEFILTER_CHARSET + RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
@@ -88,6 +93,12 @@ namespace RetroDevStudio.Controls
 
         // treat as binary .chr file
         GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( filename );
+
+        if ( ( bytesToSkip > 0 )
+        &&   ( bytesToSkip < charData.Length ) )
+        {
+          charData = charData.SubBuffer( bytesToSkip );
+        }
 
         Editor.ImportFromData( charData );
       }

@@ -25,12 +25,17 @@ namespace RetroDevStudio.Controls
     public override bool HandleImport( SpriteProject Project, SpriteEditor Editor )
     {
       string filename;
+      int bytesToSkip = GR.Convert.ToI32( editImportSkipBytes.Text );
+      if ( bytesToSkip < 0 )
+      {
+        bytesToSkip = 0;
+      }
 
       if ( !Editor.OpenFile( "Open sprite file", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_SPRITE_SPRITEPAD + Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         return false;
       }
-      return Editor.ImportSprites( filename, true, true );
+      return Editor.ImportSprites( filename, true, true, bytesToSkip );
     }
 
 

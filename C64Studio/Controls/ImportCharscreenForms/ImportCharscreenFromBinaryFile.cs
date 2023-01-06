@@ -28,6 +28,11 @@ namespace RetroDevStudio.Controls
     public override bool HandleImport( CharsetScreenProject CharScreen, CharsetScreenEditor Editor )
     {
       string filename;
+      int bytesToSkip = GR.Convert.ToI32( editImportSkipBytes.Text );
+      if ( bytesToSkip < 0 )
+      {
+        bytesToSkip = 0;
+      }
 
       if ( Editor.OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSCREEN_SUPPORTED_FILES + Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
       {
@@ -238,6 +243,12 @@ namespace RetroDevStudio.Controls
         else
         {
           GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
+
+          if ( ( bytesToSkip > 0 )
+          &&   ( bytesToSkip < data.Length ) )
+          {
+            data = data.SubBuffer( bytesToSkip );
+          }
 
           Editor.ImportFromData( data );
         }

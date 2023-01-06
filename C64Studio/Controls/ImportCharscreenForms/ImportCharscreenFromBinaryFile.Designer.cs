@@ -29,18 +29,43 @@ namespace RetroDevStudio.Controls
     /// </summary>
     private void InitializeComponent()
     {
+      this.label1 = new System.Windows.Forms.Label();
+      this.editImportSkipBytes = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
       // 
-      // ImportFromBinaryFile
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(3, 6);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(59, 13);
+      this.label1.TabIndex = 5;
+      this.label1.Text = "Skip bytes:";
+      // 
+      // editImportSkipBytes
+      // 
+      this.editImportSkipBytes.Location = new System.Drawing.Point(68, 3);
+      this.editImportSkipBytes.Name = "editImportSkipBytes";
+      this.editImportSkipBytes.Size = new System.Drawing.Size(179, 20);
+      this.editImportSkipBytes.TabIndex = 4;
+      this.editImportSkipBytes.Text = "0";
+      // 
+      // ImportCharscreenFromBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Name = "ImportFromBinaryFile";
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.editImportSkipBytes);
+      this.Name = "ImportCharscreenFromBinaryFile";
       this.Size = new System.Drawing.Size(317, 317);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
-    #endregion
-  }
+        #endregion
+
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox editImportSkipBytes;
+    }
 }
