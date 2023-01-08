@@ -15,6 +15,8 @@ using RetroDevStudio.Dialogs;
 using System.Linq;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
 
+
+
 namespace RetroDevStudio
 {
   public partial class MainForm : Form
@@ -5667,6 +5669,7 @@ namespace RetroDevStudio
         EmulatorInfo.SetDefaultRunArguments( toolEmulator );
 
         StudioCore.Settings.ToolInfos.Add( toolEmulator );
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }
     }
 
