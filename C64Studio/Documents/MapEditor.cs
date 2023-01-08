@@ -3219,14 +3219,14 @@ namespace RetroDevStudio.Documents
         }
       }
       pictureEditor.DisplayPage.DrawTo( m_Image,
-                      X * 8 * m_CurrentMap.TileSpacingX,
-                      Y * 8 * m_CurrentMap.TileSpacingY,
-                      X * 8 * m_CurrentMap.TileSpacingX,
-                      Y * 8 * m_CurrentMap.TileSpacingY,
+                      ( X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
+                      ( Y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
+                      ( X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
+                      ( Y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
                       Width * 8 * m_CurrentMap.TileSpacingX, Height * 8 * m_CurrentMap.TileSpacingY );
 
-      pictureEditor.Invalidate( new System.Drawing.Rectangle( X * m_CurrentMap.TileSpacingX * 8,
-                                                              Y * m_CurrentMap.TileSpacingY * 8,
+      pictureEditor.Invalidate( new System.Drawing.Rectangle( ( X - m_CurEditorOffsetX ) * m_CurrentMap.TileSpacingX * 8,
+                                                              ( Y - m_CurEditorOffsetY ) * m_CurrentMap.TileSpacingY * 8,
                                                               Width * m_CurrentMap.TileSpacingY * 8,
                                                               Height * m_CurrentMap.TileSpacingY * 8 ) );
     }
