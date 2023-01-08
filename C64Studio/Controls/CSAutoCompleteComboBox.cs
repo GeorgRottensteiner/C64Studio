@@ -45,6 +45,20 @@ namespace RetroDevStudio.Controls
 
 
 
+    public override string Text
+    {
+      get
+      {
+        return _EditItems.Text;
+      }
+      set
+      {
+        _EditItems.Text = value;
+      }
+    }
+
+
+
     protected override void WndProc( ref Message m )
     {
       /*
