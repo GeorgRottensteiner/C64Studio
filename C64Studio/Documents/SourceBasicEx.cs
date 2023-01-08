@@ -40,6 +40,7 @@ namespace RetroDevStudio.Documents
 
     private Parser.BasicFileParser            m_Parser = null;
     private bool                              m_InsideLoad = false;
+    private bool                              m_InsideToggleSymbolHandler = false;
 
 
 
@@ -1949,32 +1950,52 @@ namespace RetroDevStudio.Documents
 
     private void btnToggleSymbolMode_CheckedChanged( object sender, EventArgs e )
     {
+      if ( m_InsideToggleSymbolHandler )
+      {
+        return;
+      }
+      m_InsideToggleSymbolHandler = true;
       m_SymbolMode = btnToggleSymbolMode.Checked;
 
       btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
 
       bool    hadError = false;
-      string  newText;
+      string  newText = editSource.Text;
+
+      if ( m_LowerCaseMode )
+      {
+        newText = Parser.BasicFileParser.MakeUpperCase( newText, Core.Settings.BASICUseNonC64Font );
+      }
 
       if ( m_SymbolMode )
       {
-        newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( editSource.Text, out hadError );
+        newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
       }
       else
       {
-        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( editSource.Text, m_LowerCaseMode );
+        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText, false );// m_LowerCaseMode );
       }
       if ( hadError )
       {
         m_SymbolMode = !m_SymbolMode;
+        btnToggleSymbolMode.Checked = m_SymbolMode;
         btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
+
+        m_InsideToggleSymbolHandler = false;
         return;
       }
       int     offset = editSource.VerticalScroll.Value;
 
+      if ( m_LowerCaseMode )
+      {
+        newText = Parser.BasicFileParser.MakeLowerCase( newText, Core.Settings.BASICUseNonC64Font );
+      }
+
       editSource.Text = newText;
       editSource.VerticalScroll.Value = offset;
       editSource.UpdateScrollbars();
+
+      m_InsideToggleSymbolHandler = false;
     }
 
 

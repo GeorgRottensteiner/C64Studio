@@ -3440,6 +3440,17 @@ namespace RetroDevStudio.Parser
         char    curChar = BasicText[posInLine];
         if ( insideMacro )
         {
+          if ( curChar == '\n' )
+          {
+            // the macro was not closed
+            insideMacro = false;
+
+            // simply re-append
+            string macro = BasicText.Substring( macroStartPos, posInLine - macroStartPos );
+            sb.Append( macro );
+            ++posInLine;
+            continue;
+          }
           if ( curChar == '}' )
           {
             insideMacro = false;
@@ -3465,8 +3476,15 @@ namespace RetroDevStudio.Parser
             if ( !foundMacro )
             {
               //Debug.Log( "Unknown macro " + macro );
+              // simply re-append
+              sb.Append( '{' );
+              sb.Append( BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ) );
+              sb.Append( '}' );
+              ++posInLine;
+              continue;
+              /*
               HadError = true;
-              return null;
+              return null;*/
             }
           }
           ++posInLine;
@@ -3568,6 +3586,13 @@ namespace RetroDevStudio.Parser
         {
           if ( ( singleChar & 0xff00 ) == 0xef00 )
           {
+            if ( ( singleChar >= 0xef41 )
+            &&   ( singleChar <= 0xef41 + 25 ) )
+            {
+              // lower case A-Z
+              sb.Append( (char)( singleChar - 0xef41 + 0xee41 ) );
+              continue;
+            }
             char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
             if ( ( newChar >= 0xee01 )
             &&   ( newChar <= 0xee01 + 25 ) )
