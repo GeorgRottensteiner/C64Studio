@@ -507,6 +507,7 @@
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
       this.btnToolSelect.TabIndex = 36;
+      this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
       this.btnToolSelect.UseVisualStyleBackColor = true;
       this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
@@ -518,6 +519,7 @@
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
       this.btnToolFill.TabIndex = 37;
+      this.toolTip1.SetToolTip(this.btnToolFill, "Flood Fill");
       this.btnToolFill.UseVisualStyleBackColor = true;
       this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
       // 
@@ -529,6 +531,7 @@
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
       this.btnToolQuad.TabIndex = 35;
+      this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Rectangle");
       this.btnToolQuad.UseVisualStyleBackColor = true;
       this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
@@ -540,6 +543,7 @@
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
       this.btnToolRect.TabIndex = 33;
+      this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
       this.btnToolRect.UseVisualStyleBackColor = true;
       this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
       // 
@@ -553,6 +557,7 @@
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
       this.btnToolEdit.TabIndex = 34;
       this.btnToolEdit.TabStop = true;
+      this.toolTip1.SetToolTip(this.btnToolEdit, "Place/Pick Single Tile");
       this.btnToolEdit.UseVisualStyleBackColor = true;
       this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
@@ -1249,6 +1254,7 @@
       // 
       // panelCharacters
       // 
+      this.panelCharacters.AllowPopup = false;
       this.panelCharacters.AutoScroll = true;
       this.panelCharacters.AutoScrollHorizontalMaximum = 100;
       this.panelCharacters.AutoScrollHorizontalMinimum = 0;
@@ -1419,6 +1425,7 @@
       // 
       // imageListbox1
       // 
+      this.imageListbox1.AllowPopup = false;
       this.imageListbox1.AutoScroll = true;
       this.imageListbox1.AutoScrollHorizontalMaximum = 100;
       this.imageListbox1.AutoScrollHorizontalMinimum = 0;

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using RetroDevStudio.Formats;
 
 namespace RetroDevStudio.Documents
 {
@@ -1099,6 +1100,11 @@ namespace RetroDevStudio.Documents
 
     private void DrawTile( int trueX, int trueY, int TileIndex )
     {
+      if ( ( TileIndex < 0 )
+      ||   ( TileIndex >= m_MapProject.Tiles.Count ) )
+      {
+        return;
+      }
       for ( int j = 0; j < m_MapProject.Tiles[TileIndex].Chars.Height; ++j )
       {
         for ( int i = 0; i < m_MapProject.Tiles[TileIndex].Chars.Width; ++i )
@@ -1336,6 +1342,19 @@ namespace RetroDevStudio.Documents
       characterEditor.CharsetUpdated( m_MapProject.Charset );
       Modified = false;
       DocumentInfo.DocumentFilename = File;
+
+      if ( ( comboMaps.Items.Count > 0 )
+      &&   ( comboMaps.SelectedIndex == -1 ) )
+      {
+        comboMaps.SelectedIndex = 0;
+      }
+      if ( ( listTileInfo.Items.Count > 0 )
+      &&   ( listTileInfo.SelectedIndices.Count == 0 ) )
+      {
+        listTileInfo.SelectedIndices.Add( 0 );
+      }
+
+
 
       EnableFileWatcher();
       return true;
@@ -1912,7 +1931,7 @@ namespace RetroDevStudio.Documents
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Save data as";
-      saveDlg.Filter = "Binary Data|*.bin|All Files|*.*";
+      saveDlg.Filter = "Map Data|*.map|Binary Data|*.bin|All Files|*.*";
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
@@ -2815,14 +2834,13 @@ namespace RetroDevStudio.Documents
     {
       string filename;
 
-      //Clear();
-      if ( OpenFile( "Open map project", RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open map project", RetroDevStudio.Types.Constants.FILEFILTER_MAP_SUPPORTED_FILES + RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
         {
           OpenExternalCharset( filename );
           if ( ( DocumentInfo.Project == null )
-          ||   ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) ) )
+          || ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) ) )
           {
             m_MapProject.ExternalCharset = filename;
           }
@@ -2841,6 +2859,10 @@ namespace RetroDevStudio.Documents
             return;
           }
           return;
+        }
+        else
+        {
+          OpenProject( filename );
         }
       }
     }
