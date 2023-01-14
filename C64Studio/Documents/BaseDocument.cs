@@ -787,13 +787,19 @@ namespace RetroDevStudio.Documents
     public virtual DialogResult CloseAfterModificationRequest()
     {
       System.Windows.Forms.DialogResult saveResult = DialogResult.Cancel;
+
+      var endButtons = MessageBoxButtons.YesNoCancel;
+      if ( Core.ShuttingDown )
+      {
+        endButtons = MessageBoxButtons.YesNo;
+      }
       if ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
       {
-        saveResult = System.Windows.Forms.MessageBox.Show( "The unnamed document has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel );
+        saveResult = System.Windows.Forms.MessageBox.Show( "The unnamed document has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
       }
       else
       {
-        saveResult = System.Windows.Forms.MessageBox.Show( "The item " + DocumentInfo.DocumentFilename + " has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel );
+        saveResult = System.Windows.Forms.MessageBox.Show( "The item " + DocumentInfo.DocumentFilename + " has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
       }
       if ( ( saveResult == DialogResult.Cancel )
       ||   ( saveResult == DialogResult.No ) )

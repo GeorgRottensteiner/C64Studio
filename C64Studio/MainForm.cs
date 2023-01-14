@@ -2997,7 +2997,12 @@ namespace RetroDevStudio
 
       if ( changes )
       {
-        DialogResult res = System.Windows.Forms.MessageBox.Show("There are changes in one or more items. Do you want to save them before closing?", "Unsaved changes, save now?", MessageBoxButtons.YesNoCancel);
+        var endButtons = MessageBoxButtons.YesNoCancel;
+        if ( StudioCore.ShuttingDown )
+        {
+          endButtons = MessageBoxButtons.YesNo;
+        }
+        DialogResult res = System.Windows.Forms.MessageBox.Show("There are changes in one or more items. Do you want to save them before closing?", "Unsaved changes, save now?", endButtons );
         if ( res == DialogResult.Cancel )
         {
           return false;
@@ -5586,33 +5591,50 @@ namespace RetroDevStudio
       }
 
       // check ALL projects
+      List<string>  itemsWithChanges = new List<string>();
+
+      foreach ( BaseDocument doc in panelMain.Documents )
+      {
+        if ( doc.Modified )
+        {
+          itemsWithChanges.Add( doc.Name );
+        }
+      }
+
       if ( StudioCore.Navigating.Solution != null )
       {
         foreach ( Project project in StudioCore.Navigating.Solution.Projects )
         {
-          if ( ( project != null )
-          &&   ( project.Modified ) )
+          if ( project != null )
           {
-            DialogResult result = System.Windows.Forms.MessageBox.Show( "The project " + project.Settings.Name + " has unsaved changes, save now?", "Save Project?", MessageBoxButtons.YesNoCancel );
-            if ( result == DialogResult.Cancel )
+            if ( project.Modified )
             {
-              e.Cancel = true;
-              return;
+              itemsWithChanges.Add( project.Settings.Name );
             }
-            e.Cancel = false;
-            if ( result == DialogResult.Yes )
+            foreach ( var element in project.Elements )
             {
-              project.Save( project.Settings.Filename );
+              if ( ( element.Document != null )
+              &&   ( element.Document.Modified ) )
+              {
+                itemsWithChanges.Add( element.Name );
+              }
             }
-          }
-          else
-          {
-            e.Cancel = false;
           }
         }
       }
-      SaveSettings();
+
+      if ( itemsWithChanges.Any() )
+      {
+        DialogResult result = System.Windows.Forms.MessageBox.Show( "There are unsaved changes, Really shut down?", "Unsaved changes! Shut down?", MessageBoxButtons.YesNo );
+        if ( result != DialogResult.Yes )
+        {
+          e.Cancel = true;
+          return;
+        }
+      }
+      e.Cancel = false;
       StudioCore.ShuttingDown = true;
+      SaveSettings();
     }
 
 

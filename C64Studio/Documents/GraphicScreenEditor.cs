@@ -830,7 +830,12 @@ namespace RetroDevStudio.Documents
       }
       if ( Modified )
       {
-        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your graphic screen. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
+        var endButtons = MessageBoxButtons.YesNoCancel;
+        if ( Core.ShuttingDown )
+        {
+          endButtons = MessageBoxButtons.YesNo;
+        }
+        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your graphic screen. Save now?", "Save changes?", endButtons );
         if ( doSave == DialogResult.Cancel )
         {
           return;

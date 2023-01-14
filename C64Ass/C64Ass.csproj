@@ -16,11 +16,11 @@
   <ItemGroup>
     <Compile Remove="CompileConfig.cs" />
   </ItemGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
     <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
 copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass\C64Ass.exe"
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
