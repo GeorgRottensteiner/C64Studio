@@ -850,25 +850,6 @@ namespace RetroDevStudio.Parser
 
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
-        /*
-        SymbolInfo token = new SymbolInfo();
-        token.Type            = SymbolInfo.Types.CONSTANT_2;
-        token.AddressOrValue  = Value;
-        token.Name            = Name;
-        token.LineIndex       = SourceLine;
-        token.Info            = Info;
-        token.DocumentFilename = filename;
-        token.LocalLineIndex  = localIndex;
-        token.SourceInfo      = srcInfo;
-        token.References.Add( SourceLine );
-
-        if ( Value < 256 )
-        {
-          token.Type = SymbolInfo.Types.CONSTANT_1;
-        }
-        token.Zone = Zone;
-        ASMFileInfo.Labels.Add( Name, token );
-        */
         Value.Name              = Name;
         Value.LineIndex         = SourceLine;
         Value.Info              = Info;

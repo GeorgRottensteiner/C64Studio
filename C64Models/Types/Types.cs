@@ -1219,7 +1219,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_F5, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 139 + 64, true, 139, true, (char)0xeecb, true, "F6" ).Replacements.Add( "F6" );   // TODO F6
       AddC64Key( KeyboardKey.KEY_F7, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 140 + 64, true, 140, true, (char)0xeecc, true, "F8" ).Replacements.Add( "F8" );   // TODO F8
       AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 141 + 64, true, 141, true, (char)0xeecd, -1, 0, true, "SHIFT RETURN", "SH RET" ).Replacements.AddRange( new string[] { "SHIFT-RETURN", "SRET" } );   // TODO Shift-Return
-      AddC64Key( KeyboardKey.KEY_N, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 142 + 64, true, 142, true, (char)0xeece, -1, 0, true, "UPPERCASE", "UPCASE" ).Replacements.AddRange( new string[] { "CTRL-N", "SWUC" } );   // TODO Uppercase
+      AddC64Key( KeyboardKey.KEY_N, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 14, true, 142, true, (char)0xee8e, -1, 0, true, "LOWERCASE", "LOWCASE" ).Replacements.AddRange( new string[] { "CTRL-N", "SWLC" } );
 
       AddC64Key( KeyboardKey.KEY_O, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 207, true, 0, false, (char)0xeecf, true, "REVERSE SHIFT O" );
 
