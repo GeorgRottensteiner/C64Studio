@@ -222,6 +222,21 @@
     <Compile Update="Dialogs\FormRenameSolution.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\PrefTools.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefBASICEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefASMEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefSounds.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

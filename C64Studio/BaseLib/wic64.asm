@@ -1,12 +1,13 @@
-﻿!source <c64.asm>
+!source <c64.asm>
 
 !zone WiC64 {
 
 .ZEROPAGE_POINTER_1 = $fe
 
+;Sends a command, max. supported length 256 bytes!
 ;x = lo byte of command
 ;y = hi byte of command
-;Sends a command, max. supported length 256 bytes!
+;returns with carry set in case of an error
 .SendCommand
           stx .ZEROPAGE_POINTER_1
           sty .ZEROPAGE_POINTER_1 + 1

@@ -105,6 +105,7 @@
       this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.findReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.findAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.renameAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
       this.navigateBackwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.navigateForwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -217,7 +218,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.renameAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -271,6 +272,7 @@
             this.fileRecentlyOpenedProjectsToolStripMenuItem,
             this.toolStripSeparatorBelowMRU,
             this.filePreferencesToolStripMenuItem,
+            this.preferencesToolStripMenuItem,
             this.fileSetupWizardToolStripMenuItem,
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
@@ -849,6 +851,12 @@
       this.findAllReferencesToolStripMenuItem.Name = "findAllReferencesToolStripMenuItem";
       this.findAllReferencesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
       this.findAllReferencesToolStripMenuItem.Text = "Find all references";
+      // 
+      // renameAllReferencesToolStripMenuItem
+      // 
+      this.renameAllReferencesToolStripMenuItem.Name = "renameAllReferencesToolStripMenuItem";
+      this.renameAllReferencesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+      this.renameAllReferencesToolStripMenuItem.Text = "Rename all references...";
       // 
       // toolStripSeparator16
       // 
@@ -1828,11 +1836,12 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // renameAllReferencesToolStripMenuItem
+      // preferencesToolStripMenuItem
       // 
-      this.renameAllReferencesToolStripMenuItem.Name = "renameAllReferencesToolStripMenuItem";
-      this.renameAllReferencesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-      this.renameAllReferencesToolStripMenuItem.Text = "Rename all references...";
+      this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+      this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.preferencesToolStripMenuItem.Text = "Preferences++";
+      this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
       // 
       // MainForm
       // 
@@ -2057,6 +2066,7 @@
     private System.Windows.Forms.ToolStripMenuItem relocationFileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem solutionRenameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameAllReferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
     }
 }
 

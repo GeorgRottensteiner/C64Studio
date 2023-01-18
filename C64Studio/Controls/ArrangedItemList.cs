@@ -85,7 +85,8 @@ namespace RetroDevStudio.Controls
 
       if ( e.Index != -1 )
       {
-        var rect = listItems.GetItemRectangle( e.Index );
+        //var rect = listItems.GetItemRectangle( e.Index );
+        var rect = e.Bounds;
 
         var textColor = ForeColor;
         if ( ( e.State & DrawItemState.Selected ) == DrawItemState.Selected )
@@ -103,7 +104,6 @@ namespace RetroDevStudio.Controls
         e.Graphics.DrawString( Items[e.Index].Text, Font, new SolidBrush( textColor ), rect );
       }
       e.DrawFocusRectangle();
-      //e.Graphics.FillRectangle( Brushes.Aqua, e.Bounds );
     }
 
 
@@ -120,7 +120,6 @@ namespace RetroDevStudio.Controls
         e.DrawDefault = true;
         return;
       }
-      //e.DrawBackground();
       e.Graphics.FillRectangle( Brushes.Aqua, e.SubItem.Bounds );
       e.DrawText();
       e.DrawDefault = false;

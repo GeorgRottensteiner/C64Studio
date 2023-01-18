@@ -7563,5 +7563,14 @@ namespace RetroDevStudio
 
 
 
+    private void preferencesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var prefDlg = new FormPreferences( StudioCore );
+
+      prefDlg.ShowDialog();
+    }
+
+
+
   }
 }

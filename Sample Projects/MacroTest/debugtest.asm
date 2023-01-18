@@ -2,6 +2,8 @@
 
 ;!basic
 
+
+
 * = $2000
 
 fgna
@@ -10,6 +12,8 @@ lda #6
 adc #3 ; Breakpoint hier!
 adc #250
 adc #$A
+
+jsr test
 
 .gnu
 
@@ -24,3 +28,8 @@ bne -
 
 jmp fgna
 rts
+
+
+
+
+!source "debugtest2.asm"

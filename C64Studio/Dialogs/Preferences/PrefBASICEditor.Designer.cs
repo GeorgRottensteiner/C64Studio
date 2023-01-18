@@ -1,0 +1,167 @@
+﻿namespace RetroDevStudio.Dialogs.Preferences
+{
+  partial class PrefBASICEditor
+  {
+    /// <summary> 
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary> 
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose( bool disposing )
+    {
+      if ( disposing && ( components != null ) )
+      {
+        components.Dispose();
+      }
+      base.Dispose( disposing );
+    }
+
+    #region Component Designer generated code
+
+    /// <summary> 
+    /// Required method for Designer support - do not modify 
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.btnExportSettings = new System.Windows.Forms.Button();
+      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.editBASICC64FontSize = new System.Windows.Forms.TextBox();
+      this.labelBASICC64FontSize = new System.Windows.Forms.Label();
+      this.checkBASICUseC64Font = new System.Windows.Forms.CheckBox();
+      this.btnChangeBASICFont = new System.Windows.Forms.Button();
+      this.labelBASICFontPreview = new System.Windows.Forms.Label();
+      this.groupBox1.SuspendLayout();
+      this.SuspendLayout();
+      // 
+      // btnExportSettings
+      // 
+      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnExportSettings.Location = new System.Drawing.Point(819, 107);
+      this.btnExportSettings.Name = "btnExportSettings";
+      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
+      this.btnExportSettings.TabIndex = 12;
+      this.btnExportSettings.Text = "Export here";
+      this.btnExportSettings.UseVisualStyleBackColor = true;
+      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      // 
+      // btnImportSettings
+      // 
+      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnImportSettings.Location = new System.Drawing.Point(738, 107);
+      this.btnImportSettings.Name = "btnImportSettings";
+      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
+      this.btnImportSettings.TabIndex = 13;
+      this.btnImportSettings.Text = "Import here";
+      this.btnImportSettings.UseVisualStyleBackColor = true;
+      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.label1);
+      this.groupBox1.Controls.Add(this.editBASICC64FontSize);
+      this.groupBox1.Controls.Add(this.labelBASICC64FontSize);
+      this.groupBox1.Controls.Add(this.checkBASICUseC64Font);
+      this.groupBox1.Controls.Add(this.btnChangeBASICFont);
+      this.groupBox1.Controls.Add(this.labelBASICFontPreview);
+      this.groupBox1.Controls.Add(this.btnExportSettings);
+      this.groupBox1.Controls.Add(this.btnImportSettings);
+      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.groupBox1.Location = new System.Drawing.Point(0, 0);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(900, 136);
+      this.groupBox1.TabIndex = 18;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "BASIC Editor";
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(19, 25);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(31, 13);
+      this.label1.TabIndex = 23;
+      this.label1.Text = "Font:";
+      // 
+      // editBASICC64FontSize
+      // 
+      this.editBASICC64FontSize.Enabled = false;
+      this.editBASICC64FontSize.Location = new System.Drawing.Point(204, 68);
+      this.editBASICC64FontSize.MaxLength = 3;
+      this.editBASICC64FontSize.Name = "editBASICC64FontSize";
+      this.editBASICC64FontSize.Size = new System.Drawing.Size(91, 20);
+      this.editBASICC64FontSize.TabIndex = 22;
+      this.editBASICC64FontSize.TextChanged += new System.EventHandler(this.editBASICC64FontSize_TextChanged);
+      // 
+      // labelBASICC64FontSize
+      // 
+      this.labelBASICC64FontSize.AutoSize = true;
+      this.labelBASICC64FontSize.Enabled = false;
+      this.labelBASICC64FontSize.Location = new System.Drawing.Point(168, 71);
+      this.labelBASICC64FontSize.Name = "labelBASICC64FontSize";
+      this.labelBASICC64FontSize.Size = new System.Drawing.Size(30, 13);
+      this.labelBASICC64FontSize.TabIndex = 21;
+      this.labelBASICC64FontSize.Text = "Size:";
+      // 
+      // checkBASICUseC64Font
+      // 
+      this.checkBASICUseC64Font.AutoSize = true;
+      this.checkBASICUseC64Font.Location = new System.Drawing.Point(22, 70);
+      this.checkBASICUseC64Font.Name = "checkBASICUseC64Font";
+      this.checkBASICUseC64Font.Size = new System.Drawing.Size(88, 17);
+      this.checkBASICUseC64Font.TabIndex = 20;
+      this.checkBASICUseC64Font.Text = "Use C64 font";
+      this.checkBASICUseC64Font.UseVisualStyleBackColor = true;
+      this.checkBASICUseC64Font.CheckedChanged += new System.EventHandler(this.checkBASICUseC64Font_CheckedChanged);
+      // 
+      // btnChangeBASICFont
+      // 
+      this.btnChangeBASICFont.Enabled = false;
+      this.btnChangeBASICFont.Location = new System.Drawing.Point(171, 19);
+      this.btnChangeBASICFont.Name = "btnChangeBASICFont";
+      this.btnChangeBASICFont.Size = new System.Drawing.Size(124, 23);
+      this.btnChangeBASICFont.TabIndex = 19;
+      this.btnChangeBASICFont.Text = "Change Font";
+      this.btnChangeBASICFont.UseVisualStyleBackColor = true;
+      this.btnChangeBASICFont.Click += new System.EventHandler(this.btnChangeBASICFont_Click);
+      // 
+      // labelBASICFontPreview
+      // 
+      this.labelBASICFontPreview.Location = new System.Drawing.Point(301, 25);
+      this.labelBASICFontPreview.Name = "labelBASICFontPreview";
+      this.labelBASICFontPreview.Size = new System.Drawing.Size(209, 35);
+      this.labelBASICFontPreview.TabIndex = 18;
+      this.labelBASICFontPreview.Text = "BASIC Font Preview";
+      // 
+      // PrefBASICEditor
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.groupBox1);
+      this.Name = "PrefBASICEditor";
+      this.Size = new System.Drawing.Size(900, 136);
+      this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
+      this.ResumeLayout(false);
+
+    }
+
+        #endregion
+
+        private System.Windows.Forms.Button btnExportSettings;
+        private System.Windows.Forms.Button btnImportSettings;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox editBASICC64FontSize;
+        private System.Windows.Forms.Label labelBASICC64FontSize;
+        private System.Windows.Forms.CheckBox checkBASICUseC64Font;
+        private System.Windows.Forms.Button btnChangeBASICFont;
+        private System.Windows.Forms.Label labelBASICFontPreview;
+        private System.Windows.Forms.Label label1;
+    }
+}

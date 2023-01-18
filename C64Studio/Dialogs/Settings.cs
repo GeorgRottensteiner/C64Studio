@@ -2142,7 +2142,6 @@ namespace RetroDevStudio.Dialogs
       {
         Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }
-
     }
 
 

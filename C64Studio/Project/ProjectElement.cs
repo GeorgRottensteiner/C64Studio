@@ -123,9 +123,9 @@ namespace RetroDevStudio
     public bool IsDependentOn( string OtherDocumentFile )
     {
       // UGLY HACK to avoid racing condition when accessing the collection while it might be modified by pre parsing tasks
-      lock ( DocumentInfo.DeducedDependency )
+      var localCopy = new GR.Collections.Map<string,DependencyBuildState>( DocumentInfo.DeducedDependency );
       {
-        foreach ( var deducedDependency in DocumentInfo.DeducedDependency.Values )
+        foreach ( var deducedDependency in localCopy.Values )
         {
           foreach ( var dependencyFile in deducedDependency.BuildState.Keys )
           {
@@ -137,9 +137,9 @@ namespace RetroDevStudio
         }
       }
 
-      lock ( ForcedDependency.DependentOnFile )
+      var localCopy2 = new List<FileDependency.DependencyInfo>( ForcedDependency.DependentOnFile );
       {
-        foreach ( var dependency in ForcedDependency.DependentOnFile )
+        foreach ( var dependency in localCopy2 )
         {
           if ( string.Compare( dependency.Filename, System.IO.Path.GetFileName( OtherDocumentFile ), true ) == 0 )
           {
