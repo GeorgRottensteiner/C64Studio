@@ -222,6 +222,12 @@
     <Compile Update="Dialogs\FormRenameSolution.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\PrefKeyBindings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefColors.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\PrefTools.cs">
       <SubType>UserControl</SubType>
     </Compile>

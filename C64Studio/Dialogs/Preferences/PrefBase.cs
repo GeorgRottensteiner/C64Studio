@@ -42,7 +42,19 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public bool MatchesKeyword( string Keyword )
     {
-      return _Keywords.Contains( Keyword.ToUpper() );
+      if ( string.IsNullOrEmpty( Keyword ) )
+      {
+        return true;
+      }
+      string  kw = Keyword.ToUpper();
+      foreach ( var keyword in _Keywords )
+      {
+        if ( keyword.ToUpper().Contains( kw ) )
+        {
+          return true;
+        }
+      }
+      return false;
     }
 
 

@@ -26,12 +26,14 @@ namespace RetroDevStudio.Dialogs
 
       DPIHandler.ResizeControlsForDPI( this );
 
+      _PreferencePanes.Add( new PrefColors( Core ) );
       _PreferencePanes.Add( new PrefTools( Core ) );
       _PreferencePanes.Add( new PrefApplication( Core ) );
       _PreferencePanes.Add( new PrefSounds( Core ) );
       _PreferencePanes.Add( new PrefASMEditor( Core ) );
       _PreferencePanes.Add( new PrefBASICEditor( Core ) );
-      
+      _PreferencePanes.Add( new PrefKeyBindings( Core ) );
+
 
       int   curY = 0;
       foreach ( var entry in _PreferencePanes )
@@ -88,6 +90,46 @@ namespace RetroDevStudio.Dialogs
 
     private void btnImportAllSettings_Click( object sender, EventArgs e )
     {
+
+    }
+
+
+
+    private void editPreferencesFilter_TextChanged( object sender, EventArgs e )
+    {
+      string[]    keyWords = editPreferencesFilter.Text.Split( ' ' );
+
+      int   curY = 0;
+
+      panelPreferences.Controls.Clear();
+
+      foreach ( var entry in _PreferencePanes )
+      {
+        bool    matches = false;
+        foreach ( var keyword in keyWords )
+        {
+          if ( entry.MatchesKeyword( keyword ) )
+          {
+            matches = true;
+            break;
+          }
+        }
+
+        if ( matches )
+        {
+          entry.Location = new Point( 0, curY );
+          entry.Width = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+          curY += entry.Height;
+          if ( !panelPreferences.Controls.Contains( entry ) )
+          {
+            panelPreferences.Controls.Add( entry );
+          }
+        }
+        else if ( panelPreferences.Controls.Contains( entry ) ) 
+        { 
+          panelPreferences.Controls.Remove( entry );
+        }
+      }
 
     }
 
