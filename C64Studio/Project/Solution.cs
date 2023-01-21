@@ -357,6 +357,15 @@ namespace RetroDevStudio
         {
           foreach ( var element in project.Elements )
           {
+            foreach ( var dependency in element.ForcedDependency.DependentOnFile )
+            {
+              var depProject = GetProjectByName( dependency.Project );
+              string  fullPath = depProject.FullPath( dependency.Filename );
+              if ( GR.Path.IsPathEqual( fullPath, OldFilename ) )
+              {
+                dependency.Filename = System.IO.Path.GetFileName( NewFilename );
+              }
+            }
             foreach ( var perConfigSettings in element.Settings.Values )
             {
               foreach ( var buildChainEntry in perConfigSettings.PreBuildChain.Entries )
