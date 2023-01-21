@@ -1041,89 +1041,92 @@ namespace RetroDevStudio.Documents
       bool      hadPotentialEntry = false;
       int[]     potentialCycles = new int[3];
 
+      int     startLine = editSource.Selection.Start.iLine;
+      int     endLine = startLine;
+
       if ( !editSource.Selection.IsEmpty )
       {
-        int     startLine = editSource.Selection.Start.iLine;
-        int     endLine = editSource.Selection.End.iLine;
+        startLine = editSource.Selection.Start.iLine;
+        endLine = editSource.Selection.End.iLine;
         if ( startLine > endLine )
         {
           startLine = endLine;
           endLine = editSource.Selection.Start.iLine;
         }
-        for ( int i = startLine; i <= endLine; ++i )
+      }
+      for ( int i = startLine; i <= endLine; ++i )
+      {
+        var lineInfo = FetchLineInfo( i );
+        if ( lineInfo != null )
         {
-          var lineInfo = FetchLineInfo( i );
-          if ( lineInfo != null )
+          numBytes += lineInfo.NumBytes;
+          if ( lineInfo.Opcode != null )
           {
-            numBytes += lineInfo.NumBytes;
-            if ( lineInfo.Opcode != null )
-            {
-              numCycles += lineInfo.Opcode.NumCycles;
+            numCycles += lineInfo.Opcode.NumCycles;
 
-              if ( lineInfo.Opcode.PageBoundaryCycles != 0 )
-              {
-                potentialCycles[0] += lineInfo.Opcode.PageBoundaryCycles;
-                hadPotentialEntry = true;
-              }
-              if ( lineInfo.Opcode.BranchOtherPagePenalty != 0 )
-              {
-                potentialCycles[1] += lineInfo.Opcode.BranchOtherPagePenalty;
-                hadPotentialEntry = true;
-              }
-              if ( lineInfo.Opcode.BranchSamePagePenalty != 0 )
-              {
-                potentialCycles[2] += lineInfo.Opcode.BranchSamePagePenalty;
-                hadPotentialEntry = true;
-              }
+            if ( lineInfo.Opcode.PageBoundaryCycles != 0 )
+            {
+              potentialCycles[0] += lineInfo.Opcode.PageBoundaryCycles;
+              hadPotentialEntry = true;
+            }
+            if ( lineInfo.Opcode.BranchOtherPagePenalty != 0 )
+            {
+              potentialCycles[1] += lineInfo.Opcode.BranchOtherPagePenalty;
+              hadPotentialEntry = true;
+            }
+            if ( lineInfo.Opcode.BranchSamePagePenalty != 0 )
+            {
+              potentialCycles[2] += lineInfo.Opcode.BranchSamePagePenalty;
+              hadPotentialEntry = true;
             }
           }
         }
+      }
 
-        if ( editSource.Selection.End.iLine != editSource.Selection.Start.iLine )
+      if ( editSource.Selection.End.iLine != editSource.Selection.Start.iLine )
+      {
+        var selRange = new FastColoredTextBoxNS.Range( editSource, editSource.Selection.Start, editSource.Selection.End );
+        selRange.Normalize();
+
+        int   numLines = selRange.End.iLine - selRange.Start.iLine + 1;
+        if ( ( selRange.Start.iLine >= 0 )
+        &&   ( selRange.End.iLine < editSource.LinesCount ) )
         {
-          var selRange = new FastColoredTextBoxNS.Range( editSource, editSource.Selection.Start, editSource.Selection.End );
-          selRange.Normalize();
-
-          int   numLines = selRange.End.iLine - selRange.Start.iLine + 1;
-          if ( ( selRange.Start.iLine >= 0 )
-          &&   ( selRange.End.iLine < editSource.LinesCount ) )
+          string    selText = selRange.Text;
+          if ( selText.EndsWith( System.Environment.NewLine ) )
           {
-            string    selText = selRange.Text;
-            if ( selText.EndsWith( System.Environment.NewLine ) )
+            --numLines;
+          }
+        }
+        newInfo += ", " + editSource.SelectionLength.ToString() + " characters, " + numLines.ToString() + " lines selected";
+
+      }
+      else
+      {
+        newInfo += ", " + editSource.SelectionLength.ToString() + " characters selected";
+      }
+      if ( !hadPotentialEntry )
+      {
+        newInfo += ", " + numBytes + " bytes, " + numCycles + " cycles";
+      }
+      else
+      {
+        newInfo += ", " + numBytes + " bytes, " + numCycles + "(+";
+        for ( int i = 0; i < 3; ++i )
+        {
+          if ( potentialCycles[i] > 0 )
+          {
+            if ( i + 1 < 3 )
             {
-              --numLines;
+              newInfo += potentialCycles[i] + "/";
+            }
+            else
+            {
+              newInfo += potentialCycles[i];
             }
           }
-          newInfo += ", " + editSource.SelectionLength.ToString() + " characters, " + numLines.ToString() + " lines selected";
-
         }
-        else
-        {
-          newInfo += ", " + editSource.SelectionLength.ToString() + " characters selected";
-        }
-        if ( !hadPotentialEntry )
-        {
-          newInfo += ", " + numBytes + " bytes, " + numCycles + " cycles";
-        }
-        else
-        {
-          newInfo += ", " + numBytes + " bytes, " + numCycles + "(+";
-          for ( int i = 0; i < 3; ++i )
-          {
-            if ( potentialCycles[i] > 0 )
-            {
-              if ( i + 1 < 3 )
-              {
-                newInfo += potentialCycles[i] + "/";
-              }
-              else
-              {
-                newInfo += potentialCycles[i];
-              }
-            }
-          }
-          newInfo += ") cycles";
-        }
+        newInfo += ") cycles";
       }
       Core.MainForm.statusEditorDetails.Text = newInfo;
 
