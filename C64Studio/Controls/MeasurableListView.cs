@@ -150,7 +150,14 @@ namespace RetroDevStudio.Controls
 
     protected override void WndProc( ref System.Windows.Forms.Message m )
     {
-      base.WndProc( ref m );
+      try
+      {
+        base.WndProc( ref m );
+      }
+      catch ( Exception )
+      {
+        // oh boy -> clicking outside the right would throw an exception inside the bowels of WinForms otherwise
+      }
 
       switch ( m.Msg )
       {

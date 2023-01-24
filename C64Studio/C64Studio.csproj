@@ -222,10 +222,19 @@
     <Compile Update="Dialogs\FormRenameSolution.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\PrefAssembler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefBASICKeyBindings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\PrefKeyBindings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefColors.cs">
+    <Compile Update="Dialogs\Preferences\PrefColorTheme.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefBASICParser.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Dialogs\Preferences\PrefTools.cs">

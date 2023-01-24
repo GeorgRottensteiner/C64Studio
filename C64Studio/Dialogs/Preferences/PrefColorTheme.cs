@@ -12,16 +12,16 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
-  public partial class PrefColors : PrefBase
+  public partial class PrefColorTheme : PrefBase
   {
-    public PrefColors()
+    public PrefColorTheme()
     {
       InitializeComponent();
     }
 
 
 
-    public PrefColors( StudioCore Core ) : base( Core )
+    public PrefColorTheme( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "colors", "display", "theme" } );
       InitializeComponent();

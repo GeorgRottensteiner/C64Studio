@@ -1,0 +1,219 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+
+
+namespace RetroDevStudio.Dialogs.Preferences
+{
+  public partial class PrefBASICKeyBindings : PrefBase
+  {
+    private System.Windows.Forms.Keys       m_PressedKeyMapKey = Keys.None;
+
+
+    public PrefBASICKeyBindings()
+    {
+      InitializeComponent();
+    }
+
+
+
+    public PrefBASICKeyBindings( StudioCore Core ) : base( Core )
+    {
+      _Keywords.AddRange( new string[] { "keys", "binding", "hotkey", "basic" } );
+      InitializeComponent();
+
+      RefillBASICKeyMappingList();
+    }
+
+
+
+    private void btnImportSettings_Click( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void btnExportSettings_Click( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void RefillBASICKeyMappingList()
+    {
+      listBASICKeyMap.Items.Clear();
+      foreach ( RetroDevStudio.Types.KeyboardKey realKey in Enum.GetValues( typeof( RetroDevStudio.Types.KeyboardKey ) ) )
+      {
+        if ( !IsKeyMappable( realKey ) )
+        {
+          continue;
+        }
+
+        ListViewItem    item = new ListViewItem( realKey.ToString() );
+
+        if ( ConstantData.PhysicalKeyInfo.ContainsKey( realKey ) )
+        {
+          var charInfo = ConstantData.PhysicalKeyInfo[realKey];
+
+          item.Text = charInfo.Normal.Desc;
+          item.SubItems.Add( charInfo.Normal.PetSCIIValue.ToString( "X02" ) );
+        }
+        else
+        {
+          item.SubItems.Add( "??" );
+        }
+
+        var keyMapEntry = FindBASICKeyMapEntry( realKey );
+        if ( keyMapEntry != null )
+        {
+          item.SubItems.Add( keyMapEntry.Key.ToString() );
+        }
+        else
+        {
+          item.SubItems.Add( "--" );
+        }
+        // ?
+        item.SubItems.Add( "--" );
+
+        item.Tag = realKey;
+        listBASICKeyMap.Items.Add( item );
+      }
+    }
+
+
+
+    private bool IsKeyMappable( Types.KeyboardKey Key )
+    {
+      if ( ( Key == RetroDevStudio.Types.KeyboardKey.UNDEFINED )
+      || ( Key == Types.KeyboardKey.LAST_ENTRY )
+      || ( Key == Types.KeyboardKey.KEY_RESTORE )
+      || ( Key == Types.KeyboardKey.KEY_SHIFT_LOCK )
+      || ( Key == Types.KeyboardKey.KEY_COMMODORE )
+      || ( Key == Types.KeyboardKey.KEY_SHIFT_LEFT )
+      || ( Key == Types.KeyboardKey.KEY_SHIFT_RIGHT )
+      || ( Key == Types.KeyboardKey.KEY_CTRL ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+    private KeymapEntry FindBASICKeyMapEntry( Types.KeyboardKey RealKey )
+    {
+      foreach ( var entry in Core.Settings.BASICKeyMap.Keymap )
+      {
+        if ( entry.Value.KeyboardKey == RealKey )
+        {
+          return entry.Value;
+        }
+      }
+      return null;
+    }
+
+
+
+    private void editBASICKeyMapBinding_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      m_PressedKeyMapKey = e.KeyData;
+      editBASICKeyMapBinding.Text = e.KeyData.ToString();
+      e.IsInputKey = true;
+    }
+
+
+
+    private void btnBindBASICKeyMapBinding_Click( object sender, EventArgs e )
+    {
+      if ( listBASICKeyMap.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      var   realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
+      var   keyMapEntry = FindBASICKeyMapEntry( realKey );
+
+      if ( ( m_PressedKeyMapKey != Keys.None )
+      &&   ( ( keyMapEntry == null )
+      ||     ( m_PressedKeyMapKey != keyMapEntry.Key ) ) )
+      {
+        restart: ;
+        foreach ( var keyInfo in Core.Settings.BASICKeyMap.Keymap )
+        {
+          if ( keyInfo.Value.KeyboardKey == realKey )
+          {
+            Core.Settings.BASICKeyMap.Keymap.Remove( keyInfo.Key );
+            goto restart;
+          }
+        }
+        Core.Settings.BASICKeyMap.Keymap.Remove( m_PressedKeyMapKey );
+
+        keyMapEntry = Core.Settings.BASICKeyMap.AllKeyInfos[realKey];
+        if ( keyMapEntry != null )
+        {
+          keyMapEntry.Key = m_PressedKeyMapKey;
+          Core.Settings.BASICKeyMap.Keymap.Add( m_PressedKeyMapKey, keyMapEntry );
+        }        
+
+        listBASICKeyMap.SelectedItems[0].SubItems[2].Text = m_PressedKeyMapKey.ToString();
+        btnUnbindBASICKeyMapBinding.Enabled = true;
+      }
+    }
+
+
+
+    private void btnUnbindBASICKeyMapBinding_Click( object sender, EventArgs e )
+    {
+      if ( listBASICKeyMap.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      var    realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
+
+      restart:;
+      foreach ( var keyInfo in Core.Settings.BASICKeyMap.Keymap )
+      {
+        if ( keyInfo.Value.KeyboardKey == realKey )
+        {
+          Core.Settings.BASICKeyMap.Keymap.Remove( keyInfo.Key );
+          goto restart;
+        }
+      }
+      Core.Settings.BASICKeyMap.AllKeyInfos[realKey].Key = Keys.None;
+      listBASICKeyMap.SelectedItems[0].SubItems[2].Text = "--";
+      btnUnbindBASICKeyMapBinding.Enabled = false;
+    }
+
+
+
+    private void listBASICKeyMap_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( listBASICKeyMap.SelectedItems.Count == 0 )
+      {
+        editBASICKeyMapBinding.Enabled = false;
+        btnUnbindBASICKeyMapBinding.Enabled = false;
+        btnBindBASICKeyMapBinding.Enabled = false;
+        return;
+      }
+      var    realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
+
+      var keyMapEntry = FindBASICKeyMapEntry( realKey );
+      btnUnbindBASICKeyMapBinding.Enabled = ( keyMapEntry != null );
+      editBASICKeyMapBinding.Enabled = true;
+      btnBindBASICKeyMapBinding.Enabled = true;
+    }
+
+
+
+  }
+
+
+
+}

@@ -26,23 +26,27 @@ namespace RetroDevStudio.Dialogs
 
       DPIHandler.ResizeControlsForDPI( this );
 
-      _PreferencePanes.Add( new PrefColors( Core ) );
       _PreferencePanes.Add( new PrefTools( Core ) );
+      _PreferencePanes.Add( new PrefKeyBindings( Core ) );
+      _PreferencePanes.Add( new PrefColorTheme( Core ) );
       _PreferencePanes.Add( new PrefApplication( Core ) );
       _PreferencePanes.Add( new PrefSounds( Core ) );
       _PreferencePanes.Add( new PrefASMEditor( Core ) );
+      _PreferencePanes.Add( new PrefAssembler( Core ) );
       _PreferencePanes.Add( new PrefBASICEditor( Core ) );
-      _PreferencePanes.Add( new PrefKeyBindings( Core ) );
+      _PreferencePanes.Add( new PrefBASICKeyBindings( Core ) );
+      _PreferencePanes.Add( new PrefBASICParser( Core ) );
 
 
       int   curY = 0;
       foreach ( var entry in _PreferencePanes )
       {
-        DPIHandler.ResizeControlsForDPI( entry );
         entry.Location = new Point( 0, curY );
         entry.Width = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
         curY += entry.Height;
         panelPreferences.Controls.Add( entry );
+
+        DPIHandler.ResizeControlsForDPI( entry );
       }
       panelPreferences.SizeChanged += PanelPreferences_SizeChanged;
 

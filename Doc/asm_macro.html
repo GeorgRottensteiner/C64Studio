@@ -234,6 +234,8 @@
     <br>
     A byte list is treated as a pair of bytes, first the original character, second the replacement byte. A mapping list can be split over several lines.<br>
     <br>
+    !text defaults to raw encoding.<br>
+    <br>
     <div id="code"><br>      !CONVTAB scr
       !text "HELLO WORLD"
 
@@ -2632,6 +2634,8 @@
     Expressions are evaluated during the final pass. They must evaluate to a valid byte value.<br>
     Any values are subject to being mapped to the currently set conversation table.<br>
     !SCR will insert screen codes, while !PET works like !TEXT, but reverses character casing. !RAW inserts bytes untouched.<br>
+    <br>
+    !text defaults to raw encoding.<br>
     <br>
     <br>
     <div id="code"><br>      !text "HELLO WORLD"
