@@ -59,5 +59,83 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    public bool SaveLocalSettings()
+    {
+      SaveFileDialog    saveDlg = new SaveFileDialog();
+
+      saveDlg.Title = "Choose a target file";
+      saveDlg.Filter = "XML Files|*.xml|All Files|*.*";
+
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
+      }
+
+      GR.Strings.XMLParser      xml = new GR.Strings.XMLParser();
+      GR.Strings.XMLElement     xmlRoot = new GR.Strings.XMLElement( "RetroDevStudioSettings" );
+
+      xml.AddChild( xmlRoot );
+
+      ExportSettings( xmlRoot );
+
+      GR.IO.File.WriteAllText( saveDlg.FileName, xml.ToText() );
+
+      return true;
+    }
+
+
+
+    public virtual void ExportSettings( GR.Strings.XMLElement SettingsRoot )
+    {
+    }
+
+
+
+    public bool ImportLocalSettings()
+    {
+      OpenFileDialog    openDlg = new OpenFileDialog();
+
+      openDlg.Title = "Choose a settings file";
+      openDlg.Filter = "XML Files|*.xml|All Files|*.*";
+
+      if ( openDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
+      }
+
+      string    file = GR.IO.File.ReadAllText( openDlg.FileName );
+      if ( string.IsNullOrEmpty( file ) )
+      {
+        return false;
+      }
+
+      GR.Strings.XMLParser      xml = new GR.Strings.XMLParser();
+      if ( !xml.Parse( file ) )
+      {
+        return false;
+      }
+
+      var xmlSettings = xml.FindByTypeRecursive( "C64StudioSettings" );
+      if ( xmlSettings == null )
+      {
+        xmlSettings = xml.FindByTypeRecursive( "RetroDevStudioSettings" );
+        if ( xmlSettings == null )
+        {
+          return false;
+        }
+      }
+      ImportSettings( xmlSettings );
+      return true;
+    }
+
+
+
+    public virtual void ImportSettings( GR.Strings.XMLElement SettingsRoot )
+    {
+    }
+
+
+
+
   }
 }

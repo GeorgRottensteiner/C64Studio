@@ -31,6 +31,7 @@ namespace RetroDevStudio.Dialogs
       _PreferencePanes.Add( new PrefColorTheme( Core ) );
       _PreferencePanes.Add( new PrefApplication( Core ) );
       _PreferencePanes.Add( new PrefSounds( Core ) );
+      _PreferencePanes.Add( new PrefEditorBehaviour( Core ) );
       _PreferencePanes.Add( new PrefASMEditor( Core ) );
       _PreferencePanes.Add( new PrefAssembler( Core ) );
       _PreferencePanes.Add( new PrefBASICEditor( Core ) );

@@ -237,6 +237,9 @@
     <Compile Update="Dialogs\Preferences\PrefBASICParser.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\PrefEditorBehaviour.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\PrefTools.cs">
       <SubType>UserControl</SubType>
     </Compile>
