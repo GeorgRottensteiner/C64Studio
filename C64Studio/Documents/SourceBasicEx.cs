@@ -743,6 +743,7 @@ namespace RetroDevStudio.Documents
             if ( metaParams[2].ToUpper() == "LOWERCASE" )
             {
               m_LowerCaseMode = true;
+              UpdateCaseButtonCaption();
             }
           }
         }
@@ -2082,6 +2083,13 @@ namespace RetroDevStudio.Documents
       editSource.VerticalScroll.Value = topLine;
       editSource.UpdateScrollbars();
 
+      UpdateCaseButtonCaption();
+    }
+
+
+
+    private void UpdateCaseButtonCaption()
+    {
       if ( m_LowerCaseMode )
       {
         btnToggleUpperLowerCase.Image = Properties.Resources.toolbar_basic_toggle_upperlowercase_up;
