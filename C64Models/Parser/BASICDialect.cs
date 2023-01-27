@@ -42,6 +42,7 @@ namespace C64Models.BASIC
     public string                           DefaultStartAddress = "2049";
     public int                              SafeLineLength = 80;
     public string                           HexPrefix = "";
+    public string                           BinPrefix = "";
     public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
     public bool                             ExtendedTokensRecognizedInsideComment = false;
 
@@ -209,6 +210,11 @@ namespace C64Models.BASIC
           else if ( line.StartsWith( "HexPrefix=" ) )
           {
             dialect.HexPrefix = line.Substring( 10 );
+            continue;
+          }
+          else if ( line.StartsWith( "BinPrefix=" ) )
+          {
+            dialect.BinPrefix = line.Substring( 10 );
             continue;
           }
           else if ( line == "HasTextLabels" )

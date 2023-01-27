@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Documents;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -20,7 +21,7 @@ namespace RetroDevStudio
     public Executing          Executing;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
-    public const string       StudioVersion = "7.3.3";
+    public const string       StudioVersion = "7.3.5";
     public StudioTheme        Theming;
 
     public static StudioCore  StaticCore = null;
@@ -262,15 +263,21 @@ namespace RetroDevStudio
 
     public void SetStatus( string Text, bool ProgressVisible, int ProgressValue )
     {
-      if ( MainForm.InvokeRequired )
+      try
       {
-        MainForm.Invoke( new delSetStatus( SetStatus ), new object[] { Text, ProgressVisible, ProgressValue } );
+        if ( MainForm.InvokeRequired )
+        {
+          MainForm.Invoke( new delSetStatus( SetStatus ), new object[] { Text, ProgressVisible, ProgressValue } );
+        }
+        else
+        {
+          MainForm.statusProgress.Visible = ProgressVisible;
+          MainForm.statusProgress.Value = ProgressValue;
+          MainForm.statusLabelInfo.Text = Text;
+        }
       }
-      else
+      catch ( Exception )
       {
-        MainForm.statusProgress.Visible = ProgressVisible;
-        MainForm.statusProgress.Value = ProgressValue;
-        MainForm.statusLabelInfo.Text = Text;
       }
     }
 

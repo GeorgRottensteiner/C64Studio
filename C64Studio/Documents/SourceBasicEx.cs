@@ -551,7 +551,7 @@ namespace RetroDevStudio.Documents
 
     void UpdateStatusInfo()
     {
-      string    details = "Line " + ( CursorLine + 1 ).ToString() + ", Row " + editSource.Selection.Start.iChar.ToString();
+      string    details = "Line " + ( CursorLine + 1 ).ToString() + ", Col " + editSource.Selection.Start.iChar.ToString();
 
       if ( !editSource.Selection.IsEmpty )
       {

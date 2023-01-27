@@ -249,6 +249,10 @@ namespace RetroDevStudio.Parser
           AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.HexPrefix;
           AllowedTokenChars[Token.Type.NUMERIC_LITERAL] += "ABCDEF";
         }
+        if ( !string.IsNullOrEmpty( Dialect.BinPrefix ) )
+        {
+          AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.BinPrefix;
+        }
       }
 
       ActionTokens.Clear();

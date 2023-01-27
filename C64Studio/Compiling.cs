@@ -116,6 +116,11 @@ namespace RetroDevStudio
             dialect.HexPrefix = line.Substring( 10 );
             continue;
           }
+          else if ( line.StartsWith( "BinPrefix=" ) )
+          {
+            dialect.BinPrefix = line.Substring( 10 );
+            continue;
+          }
           else if ( line == "HasTextLabels" )
           {
             dialect.HasTextLabels = true;
