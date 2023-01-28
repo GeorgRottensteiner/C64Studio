@@ -798,6 +798,18 @@ namespace RetroDevStudio.Documents
       {
         m_MouseButtonReleased = true;
 
+        // clear reverse cache
+        if ( m_ReverseChars )
+        {
+          for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
+          {
+            for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
+            {
+              m_ReverseCache[x, y] = false;
+            }
+          }
+        }
+
         switch ( m_ToolMode )
         {
           case ToolMode.RECTANGLE:
@@ -944,6 +956,15 @@ namespace RetroDevStudio.Documents
             if ( ( m_ReverseChars )
             ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) ) ) )
             {
+              if ( m_ReverseChars )
+              {
+                if ( m_ReverseCache[charX, charY] )
+                {
+                  return;
+                }
+                m_ReverseCache[charX, charY] = true;
+              }
+
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ), m_MouseButtonReleased );
               m_MouseButtonReleased = false;
 
@@ -1133,14 +1154,20 @@ namespace RetroDevStudio.Documents
       {
         byte  origChar = (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff );
 
-        DrawCharImage( pictureEditor.DisplayPage, 
-                       ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
+        DrawCharImage( pictureEditor.DisplayPage,
+                       ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
                        (ushort)( origChar ^ 0x80 ), Color );
         m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( origChar ^ 0x80 ) | ( Color << 16 ) );
         return;
       }
+      SetCharacterWithoutReverse( X, Y, Char, Color );
+    }
 
+
+
+    public void SetCharacterWithoutReverse( int X, int Y, ushort Char, ushort Color )
+    {
       if ( ( m_AffectChars )
       &&   ( m_AffectColors ) )
       {
@@ -2516,6 +2543,11 @@ namespace RetroDevStudio.Documents
             int     charX = m_SelectedChar.X;
             int     charY = m_SelectedChar.Y;
 
+            if ( m_ReverseChars )
+            {
+              charIndex ^= 0x80;
+            }
+
             if ( m_TextEntryStartedInLine == -1 )
             {
               m_TextEntryStartedInLine = charY;
@@ -2605,7 +2637,7 @@ namespace RetroDevStudio.Documents
               {
                 ushort  origChar = (ushort)( m_TextEntryEnteredText[i] & 0xffff );
                 ushort  origColor = (ushort)( m_TextEntryEnteredText[i] >> 16 );
-                SetCharacter( newX + i, m_SelectedChar.Y, origChar, origColor );
+                SetCharacterWithoutReverse( newX + i, m_SelectedChar.Y, origChar, origColor );
               }
               pictureEditor.DisplayPage.DrawTo( m_Image,
                                                 newX * m_CharacterWidth, m_SelectedChar.Y * m_CharacterHeight,
@@ -2616,7 +2648,7 @@ namespace RetroDevStudio.Documents
             }
             else
             {
-              SetCharacter( charX, charY, charIndex, m_CurrentColor );
+              SetCharacterWithoutReverse( charX, charY, charIndex, m_CurrentColor );
               pictureEditor.DisplayPage.DrawTo( m_Image,
                                                 charX * m_CharacterWidth, charY * m_CharacterHeight,
                                                 ( charX - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( charY - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
@@ -3266,8 +3298,6 @@ namespace RetroDevStudio.Documents
             m_ReverseCache[x, y] = false;
           }
         }
-        checkApplyCharacter.Checked = false;
-        checkApplyColors.Checked    = false;
         checkReverse.Image = Properties.Resources.charscreen_reverse_on;
       }
       else
