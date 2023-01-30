@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Controls;
+﻿using GR.Strings;
+using RetroDevStudio.Controls;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,93 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      var xmlTools = SettingsRoot.AddChild( "Tools" );
+
+      foreach ( var tool in Core.Settings.ToolInfos )
+      {
+        var xmlTool = xmlTools.AddChild( "Tool" );
+
+        xmlTool.AddAttribute( "Type", tool.Type.ToString() );
+
+        xmlTool.AddAttribute( "Executable", tool.Filename );
+        xmlTool.AddAttribute( "Name", tool.Name );
+        xmlTool.AddAttribute( "WorkPath", tool.WorkPath );
+        xmlTool.AddAttribute( "PassLabelsToEmulator", tool.PassLabelsToEmulator ? "yes" : "no" );
+        xmlTool.AddAttribute( "CartArgs", tool.CartArguments );
+        xmlTool.AddAttribute( "DebugArgs", tool.DebugArguments );
+        xmlTool.AddAttribute( "PRGArgs", tool.PRGArguments );
+        xmlTool.AddAttribute( "TrueDriveOffArgs", tool.TrueDriveOffArguments );
+        xmlTool.AddAttribute( "TrueDriveOnArgs", tool.TrueDriveOnArguments );
+        /*
+        // new format with dynamic arguments?
+        var xmlToolArg = xmlTool.AddChild( "Arguments" );
+        AddArgument( xmlToolArg, "TrueDriveOn", tool.TrueDriveOnArguments );
+        AddArgument( xmlToolArg, "RunCartridge", tool.CartArguments );
+        AddArgument( xmlToolArg, "Debug", tool.DebugArguments );
+        AddArgument( xmlToolArg, "RunSingleImage", tool.PRGArguments );
+        AddArgument( xmlToolArg, "RunContainer", tool.PRGArguments );
+        AddArgument( xmlToolArg, "TrueDriveOff", tool.TrueDriveOffArguments );
+        AddArgument( xmlToolArg, "TrueDriveOn", tool.TrueDriveOnArguments );
+        */
+      }
+    }
+
+
+
+    private void AddArgument( XMLElement XMLToolArguments, string ArgType, string Arguments )
+    {
+      var xmlToolArg = new XMLElement( "Argument", Arguments );
+      XMLToolArguments.AddChild( xmlToolArg );
+      xmlToolArg.AddAttribute( "ArgType", ArgType );
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      var xmlTools = SettingsRoot.FindByType( "Tools" );
+      if ( xmlTools != null )
+      {
+        Core.Settings.ToolInfos.Clear();
+
+        foreach ( var xmlTool in xmlTools.ChildElements )
+        {
+          if ( xmlTool.Type != "Tool" )
+          {
+            continue;
+          }
+          var toolInfo = new ToolInfo();
+
+          toolInfo.Name                   = xmlTool.Attribute( "Name" );
+          toolInfo.Filename               = xmlTool.Attribute( "Executable" );
+          toolInfo.Type                   = (ToolInfo.ToolType)Enum.Parse( typeof( ToolInfo.ToolType ), xmlTool.Attribute( "Type" ), true );
+          toolInfo.WorkPath               = xmlTool.Attribute( "WorkPath" );
+          toolInfo.CartArguments          = xmlTool.Attribute( "CartArgs" );
+          toolInfo.DebugArguments         = xmlTool.Attribute( "DebugArgs" );
+          toolInfo.PRGArguments           = xmlTool.Attribute( "PRGArgs" );
+          toolInfo.TrueDriveOffArguments  = xmlTool.Attribute( "TrueDriveOffArgs" );
+          toolInfo.TrueDriveOnArguments   = xmlTool.Attribute( "TrueDriveOnArgs" );
+          toolInfo.PassLabelsToEmulator   = IsSettingTrue( xmlTool.Attribute( "PassLabelsToEmulator" ) );
+
+          Core.Settings.ToolInfos.Add( toolInfo );
+        }
+        RefillToolInfoList();
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+      }
     }
 
 

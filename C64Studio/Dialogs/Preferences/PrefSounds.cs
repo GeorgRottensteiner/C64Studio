@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -34,14 +35,68 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      var xmlSounds = SettingsRoot.AddChild( "Generic.Sounds", "" );
+
+      var xmlSound = new XMLElement( "Sound" );
+      xmlSound.AddAttribute( "Reason", "FailedBuild" );
+      xmlSound.AddAttribute( "Play", Core.Settings.PlaySoundOnBuildFailure ? "yes" : "no" );
+      xmlSounds.AddChild( xmlSound );
+
+      xmlSound = new XMLElement( "Sound" );
+      xmlSound.AddAttribute( "Reason", "SuccessfulBuild" );
+      xmlSound.AddAttribute( "Play", Core.Settings.PlaySoundOnSuccessfulBuild ? "yes" : "no" );
+      xmlSounds.AddChild( xmlSound );
+
+      xmlSound = new XMLElement( "Sound" );
+      xmlSound.AddAttribute( "Reason", "SearchFoundNoItem" );
+      xmlSound.AddAttribute( "Play", Core.Settings.PlaySoundOnSearchFoundNoItem ? "yes" : "no" );
+      xmlSounds.AddChild( xmlSound );
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      var sounds = SettingsRoot.FindByType( "Generic.Sounds" );
+      if ( sounds != null )
+      {
+        foreach ( var child in sounds.ChildElements )
+        {
+          if ( child.Type != "Sound" )
+          {
+            continue;
+          }
+          string  reason = child.Attribute( "Reason" ).ToUpper();
+          bool playYes = IsSettingTrue( child.Attribute( "Play" ) );
+
+          switch ( reason )
+          {
+            case "FAILEDBUILD":
+              checkPlaySoundCompileFail.Checked = playYes;
+              break;
+            case "SEARCHFOUNDNOITEM":
+              checkPlaySoundSearchTextNotFound.Checked = playYes;
+              break;
+            case "SUCCESSFULBUILD":
+              checkPlaySoundCompileSuccessful.Checked = playYes;
+              break;
+          }
+        }
+      }
     }
 
 

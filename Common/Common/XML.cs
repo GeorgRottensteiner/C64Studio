@@ -225,7 +225,7 @@ namespace GR
       // adds new element(s)
       // several tags can be concattenated by dots
       //         in that case as many subelements as tags are created
-      public XMLElement AddChild( string TagName, string Content )
+      public XMLElement AddChild( string TagName, string Content = "" )
       {
         string[]    parts = TagName.Split( '.' );
 

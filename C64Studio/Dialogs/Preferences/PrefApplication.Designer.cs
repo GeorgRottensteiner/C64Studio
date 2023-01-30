@@ -74,7 +74,7 @@
             "Portable Mode (settings local)"});
       this.comboAppMode.Location = new System.Drawing.Point(225, 19);
       this.comboAppMode.Name = "comboAppMode";
-      this.comboAppMode.Size = new System.Drawing.Size(140, 21);
+      this.comboAppMode.Size = new System.Drawing.Size(322, 21);
       this.comboAppMode.TabIndex = 15;
       this.comboAppMode.SelectedIndexChanged += new System.EventHandler(this.comboAppMode_SelectedIndexChanged);
       // 
@@ -109,7 +109,7 @@
       // 
       // btnBrowseDefaultOpenSolutionPath
       // 
-      this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(371, 99);
+      this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(524, 99);
       this.btnBrowseDefaultOpenSolutionPath.Name = "btnBrowseDefaultOpenSolutionPath";
       this.btnBrowseDefaultOpenSolutionPath.Size = new System.Drawing.Size(23, 20);
       this.btnBrowseDefaultOpenSolutionPath.TabIndex = 18;
@@ -121,7 +121,7 @@
       // 
       this.editDefaultOpenSolutionPath.Location = new System.Drawing.Point(225, 99);
       this.editDefaultOpenSolutionPath.Name = "editDefaultOpenSolutionPath";
-      this.editDefaultOpenSolutionPath.Size = new System.Drawing.Size(140, 20);
+      this.editDefaultOpenSolutionPath.Size = new System.Drawing.Size(293, 20);
       this.editDefaultOpenSolutionPath.TabIndex = 17;
       this.editDefaultOpenSolutionPath.TextChanged += new System.EventHandler(this.editDefaultOpenSolutionPath_TextChanged);
       // 
@@ -130,7 +130,7 @@
       this.editMaxMRUEntries.Location = new System.Drawing.Point(225, 46);
       this.editMaxMRUEntries.MaxLength = 2;
       this.editMaxMRUEntries.Name = "editMaxMRUEntries";
-      this.editMaxMRUEntries.Size = new System.Drawing.Size(140, 20);
+      this.editMaxMRUEntries.Size = new System.Drawing.Size(322, 20);
       this.editMaxMRUEntries.TabIndex = 21;
       this.editMaxMRUEntries.TextChanged += new System.EventHandler(this.editMaxMRUEntries_TextChanged);
       // 
@@ -157,7 +157,7 @@
       this.checkAutoOpenLastSolution.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
       this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(9, 72);
       this.checkAutoOpenLastSolution.Name = "checkAutoOpenLastSolution";
-      this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(356, 24);
+      this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(230, 24);
       this.checkAutoOpenLastSolution.TabIndex = 16;
       this.checkAutoOpenLastSolution.Text = "Open last solution on startup";
       this.checkAutoOpenLastSolution.UseVisualStyleBackColor = true;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,13 +23,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefApplication( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "application", "general", "generic", "mode" } );
+      _Keywords.AddRange( new string[] { "application", "general", "generic", "mode", "mru" } );
 
       InitializeComponent();
 
       comboAppMode.SelectedIndex        = (int)Core.Settings.StudioAppMode;
       editDefaultOpenSolutionPath.Text  = Core.Settings.DefaultProjectBasePath;
       editMaxMRUEntries.Text            = Core.Settings.MRUMaxCount.ToString();
+      checkAutoOpenLastSolution.Checked = Core.Settings.AutoOpenLastSolution;
     }
 
 
@@ -42,18 +44,44 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
-
+      SaveLocalSettings();
     }
 
 
 
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      var xmlEnvironment = SettingsRoot.AddChild( "Generic.Environment" );
+
+      xmlEnvironment.AddAttribute( "OpenLastSolutionOnStartup", Core.Settings.AutoOpenLastSolution ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "MaxMRUCount", Core.Settings.MRUMaxCount.ToString() );
+      xmlEnvironment.AddAttribute( "DefaultOpenSolutionPath", Core.Settings.DefaultProjectBasePath );
+      xmlEnvironment.AddAttribute( "ApplicationMode", ( (int)Core.Settings.StudioAppMode ).ToString() );
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      var xmlEnvironment = SettingsRoot.FindByType( "Generic.Environment" );
+      if ( xmlEnvironment != null )
+      {
+        checkAutoOpenLastSolution.Checked = IsSettingTrue( xmlEnvironment.Attribute( "OpenLastSolutionOnStartup" ) );
+        editMaxMRUEntries.Text            = GR.Convert.ToI32( xmlEnvironment.Attribute( "MaxMRUCount" ) ).ToString();
+        editDefaultOpenSolutionPath.Text  = xmlEnvironment.Attribute( "DefaultOpenSolutionPath" );
+        comboAppMode.SelectedIndex        = GR.Convert.ToI32( xmlEnvironment.Attribute( "ApplicationMode" ) );
+      }
+    }
+    
+    
+    
     private void checkAutoOpenLastSolution_CheckedChanged( object sender, EventArgs e )
     {
       if ( Core.Settings.AutoOpenLastSolution != checkAutoOpenLastSolution.Checked )

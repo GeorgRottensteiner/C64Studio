@@ -136,6 +136,17 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    protected bool IsSettingTrue( string Value )
+    {
+      if ( ( !string.IsNullOrEmpty( Value ) )
+      &&   ( Value.ToUpper() == "YES" ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
 
   }
 }

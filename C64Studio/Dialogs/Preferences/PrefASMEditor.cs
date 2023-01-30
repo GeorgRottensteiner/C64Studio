@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,14 +44,82 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      var xmlGeneric = SettingsRoot.AddChild( "Generic" );
+      var xmlTabs = xmlGeneric.AddChild( "Tabs" );
+      var xmlASMEditor = xmlGeneric.AddChild( "AssemblerEditor" );
+      var xmlFonts = xmlGeneric.AddChild( "Fonts" );
+
+      xmlTabs.AddAttribute( "TabSize", Core.Settings.TabSize.ToString() );
+      xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.TabConvertToSpaces ? "yes" : "no" );
+      xmlTabs.AddAttribute( "StripTrailingSpaces", Core.Settings.StripTrailingSpaces ? "yes" : "no" );
+
+      xmlASMEditor.AddAttribute( "ShowLineNumbers", !Core.Settings.ASMHideLineNumbers ? "yes" : "no" );
+      xmlASMEditor.AddAttribute( "ShowByteSize", Core.Settings.ASMShowBytes ? "yes" : "no" );
+      xmlASMEditor.AddAttribute( "ShowCycles", Core.Settings.ASMShowCycles ? "yes" : "no" );
+      xmlASMEditor.AddAttribute( "ShowMiniView", Core.Settings.ASMShowMiniView ? "yes" : "no" );
+      xmlASMEditor.AddAttribute( "ShowAddress", Core.Settings.ASMShowAddress ? "yes" : "no" );
+      xmlASMEditor.AddAttribute( "ShowAutoComplete", Core.Settings.ASMShowAutoComplete ? "yes" : "no" );
+
+      var xmlFont = xmlFonts.AddChild( "Font" );
+      xmlFont.AddAttribute( "Type", "ASM" );
+      xmlFont.AddAttribute( "Family", Core.Settings.SourceFontFamily );
+      xmlFont.AddAttribute( "Size", Util.DoubleToString( Core.Settings.SourceFontSize ) );
+      xmlFont.AddAttribute( "Style", ( (int)Core.Settings.SourceFontStyle ).ToString() );
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      var xmlTabs = SettingsRoot.FindByType( "Generic.Tabs" );
+      if ( xmlTabs != null )
+      {
+        editTabSize.Text = GR.Convert.ToI32( xmlTabs.Attribute( "TabSize" ) ).ToString();
+        checkConvertTabsToSpaces.Checked = IsSettingTrue( xmlTabs.Attribute( "ConvertTabsToSpaces" ) );
+        checkStripTrailingSpaces.Checked = IsSettingTrue( xmlTabs.Attribute( "StripTrailingSpaces" ) );
+      }
+
+      var xmlASMEditor = SettingsRoot.FindByType( "Generic.AssemblerEditor" );
+      if ( xmlASMEditor != null )
+      {
+        checkASMShowLineNumbers.Checked   = IsSettingTrue( xmlASMEditor.Attribute( "ShowLineNumbers" ) );
+        checkASMShowAddress.Checked       = IsSettingTrue( xmlASMEditor.Attribute( "ShowAddress" ) );
+        checkASMShowAutoComplete.Checked  = IsSettingTrue( xmlASMEditor.Attribute( "ShowAutoComplete" ) );
+        checkASMShowCycles.Checked        = IsSettingTrue( xmlASMEditor.Attribute( "ShowCycles" ) );
+        checkASMShowMiniMap.Checked       = IsSettingTrue( xmlASMEditor.Attribute( "ShowMiniView" ) );
+        checkASMShowSizes.Checked         = IsSettingTrue( xmlASMEditor.Attribute( "ShowByteSize" ) );
+      }
+
+      var xmlFonts = SettingsRoot.FindByType( "Generic.Fonts" );
+      if ( xmlFonts != null )
+      {
+        foreach ( var xmlFont in xmlFonts )
+        {
+          if ( xmlFont.Attribute( "Type" ) == "ASM" )
+          {
+            Core.Settings.SourceFontFamily = xmlFont.Attribute( "Family" );
+            Core.Settings.SourceFontSize = (float)Util.StringToDouble( xmlFont.Attribute( "Size" ) );
+            Core.Settings.SourceFontStyle = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "Style" ) );
+
+            labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+          }
+        }
+      }
+      RefreshDisplayOnDocuments();
     }
 
 
