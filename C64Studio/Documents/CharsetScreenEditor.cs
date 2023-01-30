@@ -2592,6 +2592,10 @@ namespace RetroDevStudio.Documents
                 }
                 DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
                 charIndex = 32;
+                if ( m_ReverseChars )
+                {
+                  charIndex ^= 0x80;
+                }
               }
             }
             else if ( m_AutoCenterText )

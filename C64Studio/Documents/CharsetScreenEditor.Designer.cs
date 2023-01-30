@@ -632,7 +632,7 @@
       // 
       this.labelInfo.Location = new System.Drawing.Point(337, 438);
       this.labelInfo.Name = "labelInfo";
-      this.labelInfo.Size = new System.Drawing.Size(315, 45);
+      this.labelInfo.Size = new System.Drawing.Size(315, 74);
       this.labelInfo.TabIndex = 33;
       this.labelInfo.Text = "Pos: 0,0  Offset: $0000\r\nline 2";
       // 
@@ -808,6 +808,7 @@
       // 
       // panelCharacters
       // 
+      this.panelCharacters.AllowPopup = false;
       this.panelCharacters.AutoScroll = true;
       this.panelCharacters.AutoScrollHorizontalMaximum = 100;
       this.panelCharacters.AutoScrollHorizontalMinimum = 0;
