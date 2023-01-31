@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -36,14 +37,72 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      var xmlAccelerators = SettingsRoot.AddChild( "Accelerators" );
+
+      foreach ( Types.Function function in Enum.GetValues( typeof( Types.Function ) ) )
+      {
+        if ( function == RetroDevStudio.Types.Function.NONE )
+        {
+          continue;
+        }
+
+        AcceleratorKey key = Core.Settings.DetermineAccelerator( function );
+        if ( key != null )
+        {
+          var xmlKey = new GR.Strings.XMLElement( "Function" );
+          xmlKey.AddAttribute( "Function", function.ToString() );
+          xmlKey.AddAttribute( "Key", key.Key.ToString() );
+
+          xmlAccelerators.AddChild( xmlKey );
+        }
+      }
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "Accelerators" );
+      if ( xmlSettingRoot == null )
+      {
+        return;
+      }
+
+      Core.Settings.Accelerators.Clear();
+      foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+      {
+        if ( xmlKey.Type == "Function" )
+        {
+          try
+          {
+            Types.Function function = (Types.Function)Enum.Parse( typeof( Types.Function ), xmlKey.Attribute( "Function" ), true );
+
+            Keys key = (Keys)Enum.Parse( typeof( Keys ), xmlKey.Attribute( "Key" ), true );
+
+            Core.Settings.Accelerators.Add( key, new AcceleratorKey( key, function ) );
+          }
+          catch ( Exception ex )
+          {
+            Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+          }
+        }
+      }
+      RefillAcceleratorList();
+      RefreshDisplayOnDocuments();
     }
 
 
