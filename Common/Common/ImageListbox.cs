@@ -213,7 +213,7 @@ namespace GR.Forms
           actualWidth -= System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
         }
 
-        if ( m_ItemWidth == -1 )
+        if ( m_ItemWidth <= 0 )
         {
           m_ItemWidth = ClientRectangle.Width;
         }

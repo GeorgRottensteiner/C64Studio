@@ -21,7 +21,7 @@ namespace RetroDevStudio
     public Executing          Executing;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
-    public const string       StudioVersion = "7.3.5";
+    public const string       StudioVersion = "7.3.6";
     public StudioTheme        Theming;
 
     public static StudioCore  StaticCore = null;

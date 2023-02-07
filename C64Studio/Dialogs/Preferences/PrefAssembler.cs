@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Controls;
+﻿using GR.Strings;
+using RetroDevStudio.Controls;
 using RetroDevStudio.Parser;
 using System;
 using System.Collections.Generic;
@@ -36,31 +37,137 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         asmLibraryPathList.Items.Add( libPath );
       }
-
-      var allEncodings = System.Text.Encoding.GetEncodings();
-
-      foreach ( var encoding in allEncodings )
-      {
-        comboASMEncoding.Items.Add( new GR.Generic.Tupel<string, Encoding>( encoding.DisplayName + "    Codepage " + encoding.CodePage, encoding.GetEncoding() ) );
-        if ( encoding.GetEncoding() == Core.Settings.SourceFileEncoding )
-        {
-          comboASMEncoding.SelectedIndex = comboASMEncoding.Items.Count - 1;
-        }
-      }
     }
 
 
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "IgnoredMessages" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      foreach ( Types.ErrorCode element in Core.Settings.IgnoredWarnings )
+      {
+        var xmlColor = new GR.Strings.XMLElement( "Message" );
+        xmlColor.AddAttribute( "Index", ( (int)element ).ToString() );
+
+        xmlSettingRoot.AddChild( xmlColor );
+      }
+
+      xmlSettingRoot = new GR.Strings.XMLElement( "WarningsAsErrors" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      foreach ( Types.ErrorCode element in Core.Settings.TreatWarningsAsErrors )
+      {
+        var xmlColor = new GR.Strings.XMLElement( "Message" );
+        xmlColor.AddAttribute( "Index", ( (int)element ).ToString() );
+
+        xmlSettingRoot.AddChild( xmlColor );
+      }
+
+      xmlSettingRoot = new GR.Strings.XMLElement( "AssemblerHacks" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      foreach ( var hack in Core.Settings.EnabledC64StudioHacks )
+      {
+        var xmlHack = new GR.Strings.XMLElement( "Hack" );
+        xmlHack.AddAttribute( "Type", hack.ToString() );
+
+        xmlSettingRoot.AddChild( xmlHack );
+      }
+
+      xmlSettingRoot = new GR.Strings.XMLElement( "LibraryPaths" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      foreach ( var path in Core.Settings.ASMLibraryPaths )
+      {
+        xmlSettingRoot.AddChild( "Path", path );
+      }
+
+      SettingsRoot.AddChild( "AutoTruncateLiterals" ).AddAttribute( "Enabled", Core.Settings.ASMAutoTruncateLiteralValues ? "yes" : "no" );
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "IgnoredMessages" );
+      if ( xmlSettingRoot != null )
+      {
+        Core.Settings.IgnoredWarnings.Clear();
+        foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+        {
+          if ( xmlKey.Type == "Message" )
+          {
+            try
+            {
+              Types.ErrorCode   message = (Types.ErrorCode)GR.Convert.ToI32( xmlKey.Attribute( "Index" ) );
+              Core.Settings.IgnoredWarnings.Add( message );
+            }
+            catch ( Exception ex )
+            {
+              Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+            }
+          }
+        }
+        RefillIgnoredMessageList();
+      }
+
+      xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "WarningsAsErrors" );
+      if ( xmlSettingRoot != null )
+      {
+        Core.Settings.TreatWarningsAsErrors.Clear();
+        foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+        {
+          if ( xmlKey.Type == "Message" )
+          {
+            try
+            {
+              Types.ErrorCode   message = (Types.ErrorCode)GR.Convert.ToI32( xmlKey.Attribute( "Index" ) );
+              Core.Settings.TreatWarningsAsErrors.Add( message );
+            }
+            catch ( Exception ex )
+            {
+              Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+            }
+          }
+        }
+        RefillWarningsAsErrorList();
+      }
+
+      var xmlAutoTruncateLiterals = SettingsRoot.FindByTypeRecursive( "AutoTruncateLiterals" );
+      if ( xmlAutoTruncateLiterals != null )
+      {
+        Core.Settings.ASMAutoTruncateLiteralValues = IsSettingTrue( xmlAutoTruncateLiterals.Attribute( "Enabled" ) );
+      }
+
+      xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "LibraryPaths" );
+      if ( xmlSettingRoot != null )
+      {
+        asmLibraryPathList.Items.Clear();
+        foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+        {
+          if ( xmlKey.Type == "Path" )
+          {
+            asmLibraryPathList.Items.Add( xmlKey.Content );
+          }
+        }
+        ApplyLibraryPathsFromList();
+      }
     }
 
 
@@ -228,15 +335,6 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.EnabledC64StudioHacks.Add( item.second );
       }
-    }
-
-
-
-    private void comboASMEncoding_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      var  newEncoding = (GR.Generic.Tupel<string, Encoding>)comboASMEncoding.SelectedItem;
-
-      Core.Settings.SourceFileEncoding = newEncoding.second;
     }
 
 

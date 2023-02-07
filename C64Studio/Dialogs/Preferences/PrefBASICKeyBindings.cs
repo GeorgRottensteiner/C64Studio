@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -35,14 +36,64 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "BASICKeyMap" );
+      if ( xmlSettingRoot == null )
+      {
+        return;
+      }
+
+      Core.Settings.BASICKeyMap.Keymap.Clear();
+      foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+      {
+        if ( xmlKey.Type == "Key" )
+        {
+          string    c64key = xmlKey.Attribute( "C64Key" );
+
+          try
+          {
+            Keys key = (Keys)Enum.Parse( typeof( Keys ), xmlKey.Attribute( "FormsKey" ), true );
+            Types.KeyboardKey c64Key = (Types.KeyboardKey)Enum.Parse( typeof( Types.KeyboardKey ), xmlKey.Attribute( "C64Key" ), true );
+
+            Core.Settings.BASICKeyMap.Keymap.Add( key, new KeymapEntry() { Key = key, KeyboardKey = c64Key } );
+          }
+          catch ( Exception ex )
+          {
+            Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+          }
+        }
+      }
+      RefillBASICKeyMappingList();
+    }
+
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "BASICKeyMap" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      foreach ( var entry in Core.Settings.BASICKeyMap.Keymap )
+      {
+        var xmlKey = new GR.Strings.XMLElement( "Key" );
+        xmlKey.AddAttribute( "FormsKey", entry.Key.ToString() );
+        xmlKey.AddAttribute( "C64Key", entry.Value.KeyboardKey.ToString() );
+
+        xmlSettingRoot.AddChild( xmlKey );
+      }
     }
 
 

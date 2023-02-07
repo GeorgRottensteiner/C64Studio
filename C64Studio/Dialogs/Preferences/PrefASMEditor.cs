@@ -38,6 +38,17 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkASMShowMiniMap.Checked       = Core.Settings.ASMShowMiniView;
       checkASMShowAutoComplete.Checked  = Core.Settings.ASMShowAutoComplete;
       checkASMShowAddress.Checked       = Core.Settings.ASMShowAddress;
+
+      var allEncodings = System.Text.Encoding.GetEncodings();
+
+      foreach ( var encoding in allEncodings )
+      {
+        comboASMEncoding.Items.Add( new GR.Generic.Tupel<string, Encoding>( encoding.DisplayName + "      Codepage " + encoding.CodePage, encoding.GetEncoding() ) );
+        if ( encoding.Name == Core.Settings.SourceFileEncoding.WebName )
+        {
+          comboASMEncoding.SelectedIndex = comboASMEncoding.Items.Count - 1;
+        }
+      }
     }
 
 
@@ -74,6 +85,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlASMEditor.AddAttribute( "ShowAddress", Core.Settings.ASMShowAddress ? "yes" : "no" );
       xmlASMEditor.AddAttribute( "ShowAutoComplete", Core.Settings.ASMShowAutoComplete ? "yes" : "no" );
 
+      xmlASMEditor.AddAttribute( "Encoding", Core.Settings.SourceFileEncoding.WebName );
+
       var xmlFont = xmlFonts.AddChild( "Font" );
       xmlFont.AddAttribute( "Type", "ASM" );
       xmlFont.AddAttribute( "Family", Core.Settings.SourceFontFamily );
@@ -102,6 +115,24 @@ namespace RetroDevStudio.Dialogs.Preferences
         checkASMShowCycles.Checked        = IsSettingTrue( xmlASMEditor.Attribute( "ShowCycles" ) );
         checkASMShowMiniMap.Checked       = IsSettingTrue( xmlASMEditor.Attribute( "ShowMiniView" ) );
         checkASMShowSizes.Checked         = IsSettingTrue( xmlASMEditor.Attribute( "ShowByteSize" ) );
+
+        try
+        {
+          string  encodingName = xmlASMEditor.Attribute( "Encoding" );
+          int   itemIndex = 0;
+          foreach ( GR.Generic.Tupel<string, Encoding> encodingItem in comboASMEncoding.Items )
+          {
+            if ( encodingItem.second.WebName == encodingName )
+            {
+              comboASMEncoding.SelectedIndex = itemIndex;
+              break;
+            }
+            ++itemIndex;
+          }
+        }
+        catch ( Exception )
+        { 
+        }
       }
 
       var xmlFonts = SettingsRoot.FindByType( "Generic.Fonts" );
@@ -248,6 +279,15 @@ namespace RetroDevStudio.Dialogs.Preferences
         Core.Settings.ASMShowAddress = checkASMShowAddress.Checked;
         RefreshDisplayOnDocuments();
       }
+    }
+
+
+
+    private void comboASMEncoding_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      var  newEncoding = (GR.Generic.Tupel<string, Encoding>)comboASMEncoding.SelectedItem;
+
+      Core.Settings.SourceFileEncoding = newEncoding.second;
     }
 
 

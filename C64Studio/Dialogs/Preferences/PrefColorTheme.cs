@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Types;
+﻿using GR.Strings;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,14 +48,80 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "EditorColors" );
+      if ( xmlSettingRoot == null )
+      {
+        return;
+      }
+
+      Core.Settings.SetDefaultColors();
+
+      foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+      {
+        if ( xmlKey.Type == "Color" )
+        {
+          try
+          {
+            Types.ColorableElement element = (Types.ColorableElement)Enum.Parse( typeof( Types.ColorableElement ), xmlKey.Attribute( "Element" ), true );
+
+            Core.Settings.SetSyntaxColor( element,
+                                          GR.Convert.ToU32( xmlKey.Attribute( "FGColor" ), 16 ),
+                                          GR.Convert.ToU32( xmlKey.Attribute( "BGColor" ), 16 ),
+                                          ( xmlKey.Attribute( "BGColor" ).ToUpper() == "AUTO" ) );
+          }
+          catch ( Exception ex )
+          {
+            Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+          }
+        }
+      }
+      RefillColorList();
+
+      listColoring.SelectedIndices.Add( 0 );
+      ColorsChanged( Types.ColorableElement.EMPTY_SPACE );
+    }
+
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "EditorColors" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
+      {
+        if ( element == RetroDevStudio.Types.ColorableElement.LAST_ENTRY )
+        {
+          continue;
+        }
+        var xmlColor = new GR.Strings.XMLElement( "Color" );
+        xmlColor.AddAttribute( "Element", element.ToString() );
+
+        xmlColor.AddAttribute( "FGColor", Core.Settings.FGColor( element ).ToString( "X4" ) );
+        if ( Core.Settings.BGColorIsAuto( element ) )
+        {
+          xmlColor.AddAttribute( "BGColor", "Auto" );
+        }
+        else
+        {
+          xmlColor.AddAttribute( "BGColor", Core.Settings.BGColor( element ).ToString( "X4" ) );
+        }
+        xmlSettingRoot.AddChild( xmlColor );
+      }
     }
 
 

@@ -31,6 +31,12 @@
       this.btnExportSettings = new System.Windows.Forms.Button();
       this.btnImportSettings = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.checkASMShowAddress = new System.Windows.Forms.CheckBox();
+      this.checkASMShowAutoComplete = new System.Windows.Forms.CheckBox();
+      this.checkASMShowMiniMap = new System.Windows.Forms.CheckBox();
+      this.checkASMShowSizes = new System.Windows.Forms.CheckBox();
+      this.checkASMShowCycles = new System.Windows.Forms.CheckBox();
+      this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
       this.btnSetDefaultsFont = new System.Windows.Forms.Button();
       this.btnChooseFont = new System.Windows.Forms.Button();
       this.labelFontPreview = new System.Windows.Forms.Label();
@@ -39,19 +45,15 @@
       this.label14 = new System.Windows.Forms.Label();
       this.checkStripTrailingSpaces = new System.Windows.Forms.CheckBox();
       this.checkConvertTabsToSpaces = new System.Windows.Forms.CheckBox();
-      this.checkASMShowAddress = new System.Windows.Forms.CheckBox();
-      this.checkASMShowAutoComplete = new System.Windows.Forms.CheckBox();
-      this.checkASMShowMiniMap = new System.Windows.Forms.CheckBox();
-      this.checkASMShowSizes = new System.Windows.Forms.CheckBox();
-      this.checkASMShowCycles = new System.Windows.Forms.CheckBox();
-      this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
+      this.comboASMEncoding = new System.Windows.Forms.ComboBox();
+      this.label35 = new System.Windows.Forms.Label();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // btnExportSettings
       // 
       this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 334);
+      this.btnExportSettings.Location = new System.Drawing.Point(819, 378);
       this.btnExportSettings.Name = "btnExportSettings";
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
@@ -62,7 +64,7 @@
       // btnImportSettings
       // 
       this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 334);
+      this.btnImportSettings.Location = new System.Drawing.Point(738, 378);
       this.btnImportSettings.Name = "btnImportSettings";
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
@@ -72,6 +74,8 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.comboASMEncoding);
+      this.groupBox1.Controls.Add(this.label35);
       this.groupBox1.Controls.Add(this.checkASMShowAddress);
       this.groupBox1.Controls.Add(this.checkASMShowAutoComplete);
       this.groupBox1.Controls.Add(this.checkASMShowMiniMap);
@@ -91,10 +95,76 @@
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 363);
+      this.groupBox1.Size = new System.Drawing.Size(900, 407);
       this.groupBox1.TabIndex = 18;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "ASM Editor";
+      // 
+      // checkASMShowAddress
+      // 
+      this.checkASMShowAddress.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowAddress.Location = new System.Drawing.Point(16, 313);
+      this.checkASMShowAddress.Name = "checkASMShowAddress";
+      this.checkASMShowAddress.Size = new System.Drawing.Size(279, 24);
+      this.checkASMShowAddress.TabIndex = 25;
+      this.checkASMShowAddress.Text = "Show Address";
+      this.checkASMShowAddress.UseVisualStyleBackColor = true;
+      this.checkASMShowAddress.CheckedChanged += new System.EventHandler(this.checkASMShowAddress_CheckedChanged);
+      // 
+      // checkASMShowAutoComplete
+      // 
+      this.checkASMShowAutoComplete.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowAutoComplete.Location = new System.Drawing.Point(16, 283);
+      this.checkASMShowAutoComplete.Name = "checkASMShowAutoComplete";
+      this.checkASMShowAutoComplete.Size = new System.Drawing.Size(279, 24);
+      this.checkASMShowAutoComplete.TabIndex = 26;
+      this.checkASMShowAutoComplete.Text = "Show Auto-Complete";
+      this.checkASMShowAutoComplete.UseVisualStyleBackColor = true;
+      this.checkASMShowAutoComplete.CheckedChanged += new System.EventHandler(this.checkASMShowAutoComplete_CheckedChanged);
+      // 
+      // checkASMShowMiniMap
+      // 
+      this.checkASMShowMiniMap.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowMiniMap.Location = new System.Drawing.Point(16, 253);
+      this.checkASMShowMiniMap.Name = "checkASMShowMiniMap";
+      this.checkASMShowMiniMap.Size = new System.Drawing.Size(279, 24);
+      this.checkASMShowMiniMap.TabIndex = 24;
+      this.checkASMShowMiniMap.Text = "Show Mini View";
+      this.checkASMShowMiniMap.UseVisualStyleBackColor = true;
+      this.checkASMShowMiniMap.CheckedChanged += new System.EventHandler(this.checkASMShowMiniMap_CheckedChanged);
+      // 
+      // checkASMShowSizes
+      // 
+      this.checkASMShowSizes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowSizes.Location = new System.Drawing.Point(16, 223);
+      this.checkASMShowSizes.Name = "checkASMShowSizes";
+      this.checkASMShowSizes.Size = new System.Drawing.Size(279, 24);
+      this.checkASMShowSizes.TabIndex = 23;
+      this.checkASMShowSizes.Text = "Show Sizes";
+      this.checkASMShowSizes.UseVisualStyleBackColor = true;
+      this.checkASMShowSizes.CheckedChanged += new System.EventHandler(this.checkASMShowSizes_CheckedChanged);
+      // 
+      // checkASMShowCycles
+      // 
+      this.checkASMShowCycles.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowCycles.Location = new System.Drawing.Point(16, 193);
+      this.checkASMShowCycles.Name = "checkASMShowCycles";
+      this.checkASMShowCycles.Size = new System.Drawing.Size(279, 24);
+      this.checkASMShowCycles.TabIndex = 22;
+      this.checkASMShowCycles.Text = "Show Cycles";
+      this.checkASMShowCycles.UseVisualStyleBackColor = true;
+      this.checkASMShowCycles.CheckedChanged += new System.EventHandler(this.checkASMShowCycles_CheckedChanged);
+      // 
+      // checkASMShowLineNumbers
+      // 
+      this.checkASMShowLineNumbers.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowLineNumbers.Location = new System.Drawing.Point(16, 163);
+      this.checkASMShowLineNumbers.Name = "checkASMShowLineNumbers";
+      this.checkASMShowLineNumbers.Size = new System.Drawing.Size(279, 24);
+      this.checkASMShowLineNumbers.TabIndex = 21;
+      this.checkASMShowLineNumbers.Text = "Show Line Numbers";
+      this.checkASMShowLineNumbers.UseVisualStyleBackColor = true;
+      this.checkASMShowLineNumbers.CheckedChanged += new System.EventHandler(this.checkASMShowLineNumbers_CheckedChanged);
       // 
       // btnSetDefaultsFont
       // 
@@ -173,71 +243,24 @@
       this.checkConvertTabsToSpaces.UseVisualStyleBackColor = true;
       this.checkConvertTabsToSpaces.CheckedChanged += new System.EventHandler(this.checkConvertTabsToSpaces_CheckedChanged);
       // 
-      // checkASMShowAddress
+      // comboASMEncoding
       // 
-      this.checkASMShowAddress.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowAddress.Location = new System.Drawing.Point(16, 313);
-      this.checkASMShowAddress.Name = "checkASMShowAddress";
-      this.checkASMShowAddress.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowAddress.TabIndex = 25;
-      this.checkASMShowAddress.Text = "Show Address";
-      this.checkASMShowAddress.UseVisualStyleBackColor = true;
-      this.checkASMShowAddress.CheckedChanged += new System.EventHandler(this.checkASMShowAddress_CheckedChanged);
+      this.comboASMEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboASMEncoding.FormattingEnabled = true;
+      this.comboASMEncoding.Location = new System.Drawing.Point(171, 343);
+      this.comboASMEncoding.Name = "comboASMEncoding";
+      this.comboASMEncoding.Size = new System.Drawing.Size(555, 21);
+      this.comboASMEncoding.TabIndex = 31;
+      this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
       // 
-      // checkASMShowAutoComplete
+      // label35
       // 
-      this.checkASMShowAutoComplete.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowAutoComplete.Location = new System.Drawing.Point(16, 283);
-      this.checkASMShowAutoComplete.Name = "checkASMShowAutoComplete";
-      this.checkASMShowAutoComplete.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowAutoComplete.TabIndex = 26;
-      this.checkASMShowAutoComplete.Text = "Show Auto-Complete";
-      this.checkASMShowAutoComplete.UseVisualStyleBackColor = true;
-      this.checkASMShowAutoComplete.CheckedChanged += new System.EventHandler(this.checkASMShowAutoComplete_CheckedChanged);
-      // 
-      // checkASMShowMiniMap
-      // 
-      this.checkASMShowMiniMap.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowMiniMap.Location = new System.Drawing.Point(16, 253);
-      this.checkASMShowMiniMap.Name = "checkASMShowMiniMap";
-      this.checkASMShowMiniMap.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowMiniMap.TabIndex = 24;
-      this.checkASMShowMiniMap.Text = "Show Mini View";
-      this.checkASMShowMiniMap.UseVisualStyleBackColor = true;
-      this.checkASMShowMiniMap.CheckedChanged += new System.EventHandler(this.checkASMShowMiniMap_CheckedChanged);
-      // 
-      // checkASMShowSizes
-      // 
-      this.checkASMShowSizes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowSizes.Location = new System.Drawing.Point(16, 223);
-      this.checkASMShowSizes.Name = "checkASMShowSizes";
-      this.checkASMShowSizes.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowSizes.TabIndex = 23;
-      this.checkASMShowSizes.Text = "Show Sizes";
-      this.checkASMShowSizes.UseVisualStyleBackColor = true;
-      this.checkASMShowSizes.CheckedChanged += new System.EventHandler(this.checkASMShowSizes_CheckedChanged);
-      // 
-      // checkASMShowCycles
-      // 
-      this.checkASMShowCycles.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowCycles.Location = new System.Drawing.Point(16, 193);
-      this.checkASMShowCycles.Name = "checkASMShowCycles";
-      this.checkASMShowCycles.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowCycles.TabIndex = 22;
-      this.checkASMShowCycles.Text = "Show Cycles";
-      this.checkASMShowCycles.UseVisualStyleBackColor = true;
-      this.checkASMShowCycles.CheckedChanged += new System.EventHandler(this.checkASMShowCycles_CheckedChanged);
-      // 
-      // checkASMShowLineNumbers
-      // 
-      this.checkASMShowLineNumbers.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowLineNumbers.Location = new System.Drawing.Point(16, 163);
-      this.checkASMShowLineNumbers.Name = "checkASMShowLineNumbers";
-      this.checkASMShowLineNumbers.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowLineNumbers.TabIndex = 21;
-      this.checkASMShowLineNumbers.Text = "Show Line Numbers";
-      this.checkASMShowLineNumbers.UseVisualStyleBackColor = true;
-      this.checkASMShowLineNumbers.CheckedChanged += new System.EventHandler(this.checkASMShowLineNumbers_CheckedChanged);
+      this.label35.AutoSize = true;
+      this.label35.Location = new System.Drawing.Point(16, 346);
+      this.label35.Name = "label35";
+      this.label35.Size = new System.Drawing.Size(55, 13);
+      this.label35.TabIndex = 32;
+      this.label35.Text = "Encoding:";
       // 
       // PrefASMEditor
       // 
@@ -245,7 +268,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.groupBox1);
       this.Name = "PrefASMEditor";
-      this.Size = new System.Drawing.Size(900, 363);
+      this.Size = new System.Drawing.Size(900, 407);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
@@ -271,5 +294,7 @@
         private System.Windows.Forms.CheckBox checkASMShowSizes;
         private System.Windows.Forms.CheckBox checkASMShowCycles;
         private System.Windows.Forms.CheckBox checkASMShowLineNumbers;
+        private System.Windows.Forms.ComboBox comboASMEncoding;
+        private System.Windows.Forms.Label label35;
     }
 }

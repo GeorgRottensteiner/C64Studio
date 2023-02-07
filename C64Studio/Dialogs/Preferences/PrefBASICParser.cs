@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -35,14 +36,59 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnImportSettings_Click( object sender, EventArgs e )
     {
-
+      ImportLocalSettings();
     }
 
 
 
     private void btnExportSettings_Click( object sender, EventArgs e )
     {
+      SaveLocalSettings();
+    }
 
+
+
+    public override void ExportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "BASICEditor" );
+      SettingsRoot.AddChild( xmlSettingRoot );
+
+      xmlSettingRoot.AddChild( "StripSpaces", Core.Settings.BASICStripSpaces ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "ShowControlCodesAsChars", Core.Settings.BASICShowControlCodesAsChars ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "AutoToggleEntryMode", Core.Settings.BASICAutoToggleEntryMode ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "StripREM", Core.Settings.BASICStripREM ? "yes" : "no" );
+    }
+
+
+
+    public override void ImportSettings( XMLElement SettingsRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "BASICEditor" );
+      if ( xmlSettingRoot == null )
+      {
+        return;
+      }
+
+      foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+      {
+        if ( xmlKey.Type == "StripSpaces" )
+        {
+          Core.Settings.BASICStripSpaces = IsSettingTrue( xmlKey.Content );
+        }
+        else if ( xmlKey.Type == "StripREM " )
+        {
+          Core.Settings.BASICStripREM = IsSettingTrue( xmlKey.Content );
+        }
+        else if ( xmlKey.Type == "AutoToggleEntryMode" )
+        {
+          Core.Settings.BASICAutoToggleEntryMode = IsSettingTrue( xmlKey.Content );
+        }
+        else if ( xmlKey.Type == "ShowControlCodesAsChars" )
+        {
+          Core.Settings.BASICShowControlCodesAsChars = IsSettingTrue( xmlKey.Content );
+        }
+      }
+      checkBASICStripSpaces.Checked = Core.Settings.BASICStripSpaces;
     }
 
 

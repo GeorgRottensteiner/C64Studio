@@ -31,8 +31,6 @@
       this.btnExportSettings = new System.Windows.Forms.Button();
       this.btnImportSettings = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.comboASMEncoding = new System.Windows.Forms.ComboBox();
-      this.label35 = new System.Windows.Forms.Label();
       this.btmASMLibraryPathBrowse = new System.Windows.Forms.Button();
       this.editASMLibraryPath = new System.Windows.Forms.TextBox();
       this.label30 = new System.Windows.Forms.Label();
@@ -71,8 +69,6 @@
       // 
       // groupBox1
       // 
-      this.groupBox1.Controls.Add(this.comboASMEncoding);
-      this.groupBox1.Controls.Add(this.label35);
       this.groupBox1.Controls.Add(this.btmASMLibraryPathBrowse);
       this.groupBox1.Controls.Add(this.editASMLibraryPath);
       this.groupBox1.Controls.Add(this.label30);
@@ -94,28 +90,9 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Assembler";
       // 
-      // comboASMEncoding
-      // 
-      this.comboASMEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboASMEncoding.FormattingEnabled = true;
-      this.comboASMEncoding.Location = new System.Drawing.Point(15, 620);
-      this.comboASMEncoding.Name = "comboASMEncoding";
-      this.comboASMEncoding.Size = new System.Drawing.Size(603, 21);
-      this.comboASMEncoding.TabIndex = 7;
-      this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
-      // 
-      // label35
-      // 
-      this.label35.AutoSize = true;
-      this.label35.Location = new System.Drawing.Point(6, 604);
-      this.label35.Name = "label35";
-      this.label35.Size = new System.Drawing.Size(55, 13);
-      this.label35.TabIndex = 30;
-      this.label35.Text = "Encoding:";
-      // 
       // btmASMLibraryPathBrowse
       // 
-      this.btmASMLibraryPathBrowse.Location = new System.Drawing.Point(583, 570);
+      this.btmASMLibraryPathBrowse.Location = new System.Drawing.Point(830, 569);
       this.btmASMLibraryPathBrowse.Name = "btmASMLibraryPathBrowse";
       this.btmASMLibraryPathBrowse.Size = new System.Drawing.Size(35, 20);
       this.btmASMLibraryPathBrowse.TabIndex = 6;
@@ -127,7 +104,7 @@
       // 
       this.editASMLibraryPath.Location = new System.Drawing.Point(15, 570);
       this.editASMLibraryPath.Name = "editASMLibraryPath";
-      this.editASMLibraryPath.Size = new System.Drawing.Size(562, 20);
+      this.editASMLibraryPath.Size = new System.Drawing.Size(798, 20);
       this.editASMLibraryPath.TabIndex = 5;
       // 
       // label30
@@ -223,7 +200,7 @@
       // checkASMAutoTruncateLiteralValues
       // 
       this.checkASMAutoTruncateLiteralValues.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMAutoTruncateLiteralValues.Location = new System.Drawing.Point(6, 343);
+      this.checkASMAutoTruncateLiteralValues.Location = new System.Drawing.Point(6, 336);
       this.checkASMAutoTruncateLiteralValues.Name = "checkASMAutoTruncateLiteralValues";
       this.checkASMAutoTruncateLiteralValues.Size = new System.Drawing.Size(349, 24);
       this.checkASMAutoTruncateLiteralValues.TabIndex = 3;
@@ -260,7 +237,5 @@
         private System.Windows.Forms.TextBox editASMLibraryPath;
         private System.Windows.Forms.Label label30;
         private Controls.ArrangedItemList asmLibraryPathList;
-        private System.Windows.Forms.ComboBox comboASMEncoding;
-        private System.Windows.Forms.Label label35;
     }
 }
