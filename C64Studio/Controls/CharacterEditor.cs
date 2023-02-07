@@ -2053,6 +2053,7 @@ namespace RetroDevStudio.Controls
           _ColorSettingsDlg = new ColorSettingsECMMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
           _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.MEGA65_NCM:
@@ -2304,6 +2305,9 @@ namespace RetroDevStudio.Controls
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
           m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+          break;
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
+          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C128 );
           break;
         case TextCharMode.VIC20:
           m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );

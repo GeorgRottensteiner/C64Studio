@@ -51,7 +51,9 @@ namespace RetroDevStudio
     [Description( "Commander X16 20x30" )]
     X16_20_X_30,
     [Description( "Commander X16 20x15" )]
-    X16_20_X_15
+    X16_20_X_15,
+    [Description( "Commodore C128 80x25 HiRes" )]
+    COMMODORE_128_VDC_80_X_25_HIRES,
   }
 
 }

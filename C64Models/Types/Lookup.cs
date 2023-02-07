@@ -53,6 +53,7 @@ namespace RetroDevStudio
         case TextCharMode.VIC20:
         case TextCharMode.MEGA65_NCM:
         case TextCharMode.X16_HIRES:
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
           return 16;
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
@@ -78,6 +79,7 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_ECM:
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.X16_HIRES:
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
           return 8;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -133,6 +135,8 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
+        case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
+          return TextCharMode.COMMODORE_128_VDC_HIRES;
         case TextMode.COMMODORE_40_X_25_ECM:
           return TextCharMode.COMMODORE_ECM;
         case TextMode.MEGA65_80_X_25_ECM:
@@ -186,6 +190,7 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.VIC20:
         case TextCharMode.X16_HIRES:
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
           return 256;
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
@@ -209,6 +214,7 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.VIC20:
         case TextCharMode.X16_HIRES:
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
           return true;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -245,6 +251,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           return false;
         case GraphicTileMode.MEGA65_NCM_CHARACTERS :
         case GraphicTileMode.MEGA65_NCM_SPRITES:
@@ -416,6 +423,8 @@ namespace RetroDevStudio
           return GraphicTileMode.MEGA65_FCM_256_COLORS;
         case TextCharMode.X16_HIRES:
           return GraphicTileMode.COMMANDERX16_HIRES;
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
+          return GraphicTileMode.COMMODORE_128_VDC_HIRES;
         default:
           Debug.Log( "GraphicTileModeFromTextCharMode unsupported mode " + Mode );
           return GraphicTileMode.COMMODORE_HIRES;
@@ -640,6 +649,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
         case GraphicTileMode.COMMANDERX16_HIRES:
+        case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterWidthInPixel - unsupported mode " + Mode );
@@ -659,6 +669,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
         case GraphicTileMode.COMMANDERX16_HIRES:
+        case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterHeightInPixel - unsupported mode " + Mode );
@@ -735,6 +746,7 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
         case TextMode.X16_80_X_30:
         case TextMode.X16_80_X_60:
+        case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
           return 80;
         case TextMode.X16_20_X_15:
         case TextMode.X16_20_X_30:
@@ -766,6 +778,7 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
+        case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
           return 25;
         case TextMode.COMMODORE_VIC20_22_X_23:
           return 23;

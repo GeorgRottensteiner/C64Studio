@@ -22,6 +22,8 @@ namespace RetroDevStudio
           return ConstantData.PaletteC64();
         case TextCharMode.VIC20:
           return ConstantData.PaletteVIC20();
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
+          return ConstantData.PaletteC128();
       }
       return ConstantData.PaletteC64();
     }
@@ -33,9 +35,10 @@ namespace RetroDevStudio
       switch ( Machine )
       {
         case MachineType.C64:
-        case MachineType.C128:
         default:
           return ConstantData.PaletteC64();
+        case MachineType.C128:
+          return ConstantData.PaletteC128();
         case MachineType.MEGA65:
           return ConstantData.PaletteMega65_256();
         case MachineType.VIC20:

@@ -2799,6 +2799,7 @@ namespace RetroDevStudio.Documents
       {
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
           labelMColor1.Enabled = false;
           labelMColor2.Enabled = false;
           labelBGColor4.Enabled = false;
@@ -2906,6 +2907,7 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_80_X_25_FCM:
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
           pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_80_X_25_NCM:
@@ -2979,6 +2981,9 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_80_X_25_HIRES:
           numColorsInChooser = 32;
           numColorsBackground = 32;
+          break;
+        case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
+          m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C128 );
           break;
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:

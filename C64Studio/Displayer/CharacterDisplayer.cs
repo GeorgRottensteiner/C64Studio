@@ -401,7 +401,8 @@ namespace RetroDevStudio.Displayer
         DisplayMultiColorChar( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
       else if ( ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
-      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES ) )
+      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES )
+      ||        ( AlternativeMode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
         DisplayHiResChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
       }
@@ -491,7 +492,8 @@ namespace RetroDevStudio.Displayer
         DisplayMultiColorChar( Char.Tile.Data, Palette, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
       }
       else if ( ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
-      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES ) )
+      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES )
+      ||        ( AlternativeMode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
         DisplayHiResChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
       }

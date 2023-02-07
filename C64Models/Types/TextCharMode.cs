@@ -25,7 +25,9 @@ namespace RetroDevStudio
     [Description( "Mega65 NCM (16 colors, 16bit chars)" )]
     MEGA65_NCM,
     [Description( "Commander X16 HiRes" )]
-    X16_HIRES
+    X16_HIRES,
+    [Description( "C128 VDC HiRes" )]
+    COMMODORE_128_VDC_HIRES
   }
 
 }
