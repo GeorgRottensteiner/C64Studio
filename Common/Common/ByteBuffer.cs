@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 
 namespace GR
 {
@@ -216,9 +217,12 @@ namespace GR
           return false;
         }
 
+        int   curPos = (int)Length;
+        Resize( (uint)( Length + HexData.Length / 2 ) );
         for ( int i = 0; i < HexData.Length; i += 2 )
         {
-          AppendU8( GR.Convert.ToU8( HexData.Substring( i, 2 ), 16 ) );
+          m_Data[curPos] = GR.Convert.ToU8( HexData.Substring( i, 2 ), 16 );
+          ++curPos;
         }
         return true;
       }

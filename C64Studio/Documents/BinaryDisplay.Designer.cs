@@ -43,9 +43,11 @@
       this.btnUpsize = new System.Windows.Forms.Button();
       this.btnInterleave = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
+      this.editWrapCharsCount = new System.Windows.Forms.TextBox();
       this.editWrapCount = new System.Windows.Forms.TextBox();
       this.editToBASICLineDelta = new System.Windows.Forms.TextBox();
       this.btnFromBASICHex = new System.Windows.Forms.Button();
@@ -66,8 +68,6 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.editWrapCharsCount = new System.Windows.Forms.TextBox();
-      this.label4 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -258,6 +258,16 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Text Data";
       // 
+      // label4
+      // 
+      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(402, 254);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(97, 13);
+      this.label4.TabIndex = 3;
+      this.label4.Text = "Wrap Chars Count:";
+      // 
       // label3
       // 
       this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -287,6 +297,15 @@
       this.label1.Size = new System.Drawing.Size(55, 13);
       this.label1.TabIndex = 3;
       this.label1.Text = "Start Line:";
+      // 
+      // editWrapCharsCount
+      // 
+      this.editWrapCharsCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.editWrapCharsCount.Location = new System.Drawing.Point(401, 270);
+      this.editWrapCharsCount.Name = "editWrapCharsCount";
+      this.editWrapCharsCount.Size = new System.Drawing.Size(75, 20);
+      this.editWrapCharsCount.TabIndex = 2;
+      this.editWrapCharsCount.Text = "40";
       // 
       // editWrapCount
       // 
@@ -408,7 +427,7 @@
       this.textBinaryData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.textBinaryData.Location = new System.Drawing.Point(6, 19);
-      this.textBinaryData.MaxLength = 1000000;
+      this.textBinaryData.MaxLength = 10000000;
       this.textBinaryData.Multiline = true;
       this.textBinaryData.Name = "textBinaryData";
       this.textBinaryData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -480,25 +499,6 @@
       this.interleaveToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
-      // 
-      // editWrapCharsCount
-      // 
-      this.editWrapCharsCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.editWrapCharsCount.Location = new System.Drawing.Point(401, 270);
-      this.editWrapCharsCount.Name = "editWrapCharsCount";
-      this.editWrapCharsCount.Size = new System.Drawing.Size(75, 20);
-      this.editWrapCharsCount.TabIndex = 2;
-      this.editWrapCharsCount.Text = "40";
-      // 
-      // label4
-      // 
-      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(402, 254);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(97, 13);
-      this.label4.TabIndex = 3;
-      this.label4.Text = "Wrap Chars Count:";
       // 
       // BinaryDisplay
       // 

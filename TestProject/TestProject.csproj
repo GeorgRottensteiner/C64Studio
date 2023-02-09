@@ -42,4 +42,12 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Compare Files\MagicDeskBin1MB.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Compare Files\MagicDeskCrt1MB.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

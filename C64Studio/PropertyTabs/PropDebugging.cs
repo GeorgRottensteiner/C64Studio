@@ -35,12 +35,30 @@ namespace RetroDevStudio
         AddType( CompileTargetType.CARTRIDGE_8K_CRT );
         AddType( CompileTargetType.CARTRIDGE_16K_BIN );
         AddType( CompileTargetType.CARTRIDGE_16K_CRT );
-        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN );
-        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN_32K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT_32K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN_64K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT_64K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN_128K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT_128K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN_256K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT_256K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN_512K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT_512K );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN_1M );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT_1M );
         AddType( CompileTargetType.CARTRIDGE_EASYFLASH_BIN );
         AddType( CompileTargetType.CARTRIDGE_EASYFLASH_CRT );
         AddType( CompileTargetType.CARTRIDGE_RGCD_BIN );
         AddType( CompileTargetType.CARTRIDGE_RGCD_CRT );
+        AddType( CompileTargetType.CARTRIDGE_GMOD2_BIN );
+        AddType( CompileTargetType.CARTRIDGE_GMOD2_CRT );
+        AddType( CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN );
+        AddType( CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT );
+        AddType( CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN );
+        AddType( CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT );
+        AddType( CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN );
+        AddType( CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT );
       }
 
       foreach ( var configName in Element.DocumentInfo.Project.Settings.GetConfigurationNames() )

@@ -62,9 +62,9 @@ namespace GR
       return (sbyte)ToI64( strValue );
     }
 
-    public static byte ToU8( string strValue, int iBase )
+    public static byte ToU8( string Value, int Base )
     {
-      return (byte)ToU64( strValue, iBase );
+      return (byte)ToU64( Value, Base );
     }
 
     public static byte ToU8( string strValue )

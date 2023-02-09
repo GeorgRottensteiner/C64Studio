@@ -122,8 +122,8 @@ namespace TestProject
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
-      Assert.AreEqual( @"10 GOTO13
-13 GOTO10", result );
+      Assert.AreEqual( @"10 GOTO 13
+13 GOTO 10", result );
     }
 
 

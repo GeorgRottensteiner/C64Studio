@@ -55,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.AssembleTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.BASIC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.AddLibraryPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.CPU.cs" />

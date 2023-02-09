@@ -310,10 +310,10 @@ namespace RetroDevStudio.Types
     CARTRIDGE_16K_CRT,
     [Description( "D64 Disk Image" )]
     D64,
-    [Description( "Magic Desk Cartridge Binary" )]
-    CARTRIDGE_MAGICDESK_BIN,
-    [Description( "Magic Desk Cartridge CRT" )]
-    CARTRIDGE_MAGICDESK_CRT,
+    [Description( "Magic Desk Cartridge 64k Binary" )]
+    CARTRIDGE_MAGICDESK_BIN_64K,
+    [Description( "Magic Desk Cartridge 64k CRT" )]
+    CARTRIDGE_MAGICDESK_CRT_64K,
     [Description( "TAP Tape Image" )]
     TAP,
     [Description( "Easyflash Cartridge Binary" )]
@@ -341,7 +341,27 @@ namespace RetroDevStudio.Types
     [Description( "Ultimax Cartridge 16k Binary" )]
     CARTRIDGE_ULTIMAX_16K_BIN,
     [Description( "Ultimax Cartridge 16k CRT" )]
-    CARTRIDGE_ULTIMAX_16K_CRT
+    CARTRIDGE_ULTIMAX_16K_CRT,
+    [Description( "Magic Desk Cartridge 32k Binary" )]
+    CARTRIDGE_MAGICDESK_BIN_32K,
+    [Description( "Magic Desk Cartridge 32k CRT" )]
+    CARTRIDGE_MAGICDESK_CRT_32K,
+    [Description( "Magic Desk Cartridge 128k Binary" )]
+    CARTRIDGE_MAGICDESK_BIN_128K,
+    [Description( "Magic Desk Cartridge 128k CRT" )]
+    CARTRIDGE_MAGICDESK_CRT_128K,
+    [Description( "Magic Desk Cartridge 256k Binary" )]
+    CARTRIDGE_MAGICDESK_BIN_256K,
+    [Description( "Magic Desk Cartridge 256k CRT" )]
+    CARTRIDGE_MAGICDESK_CRT_256K,
+    [Description( "Magic Desk Cartridge 512k Binary" )]
+    CARTRIDGE_MAGICDESK_BIN_512K,
+    [Description( "Magic Desk Cartridge 512k CRT" )]
+    CARTRIDGE_MAGICDESK_CRT_512K,
+    [Description( "Magic Desk Cartridge 1M Binary" )]
+    CARTRIDGE_MAGICDESK_BIN_1M,
+    [Description( "Magic Desk Cartridge 1M CRT" )]
+    CARTRIDGE_MAGICDESK_CRT_1M
   };
 
 
