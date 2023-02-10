@@ -5636,6 +5636,7 @@ namespace RetroDevStudio.Parser
         ParseAndAddPreDefines( Configuration.Defines, textCodeMapping );
       }
       AddPreprocessorConstant( "ASSEMBLER_C64STUDIO", 1, -1 );
+      AddPreprocessorConstant( "ASSEMBLER_RETRODEVSTUDIO", 1, -1 );
 
       Dictionary<string,string> previousMinusLabel = new Dictionary<string, string>();
 
