@@ -1998,6 +1998,10 @@ namespace RetroDevStudio.Documents
 
     public bool ImportFromData( ByteBuffer Data )
     {
+      if ( Data == null )
+      {
+        return false;
+      }
       if ( Data.Length == 1000 )
       {
         SetScreenSize( 40, 25 );
@@ -2006,25 +2010,35 @@ namespace RetroDevStudio.Documents
       comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
-      if ( Data.Length >= m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
+      int   curBytePos = 0;
+      if ( curBytePos < Data.Length )
       {
         // chars first
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
           {
-            m_CharsetScreen.SetCharacterAt( i, j, Data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) );
+            m_CharsetScreen.SetCharacterAt( i, j, Data.ByteAt( curBytePos ) );
+            ++curBytePos;
+            if ( curBytePos >= Data.Length )
+            {
+              break;
+            }
+          }
+          if ( curBytePos >= Data.Length )
+          {
+            break;
           }
         }
       }
-      if ( Data.Length >= 2 * m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
+      if ( curBytePos < Data.Length )
       {
         // colors
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
           {
-            ushort colorValue = Data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth );
+            ushort colorValue = Data.ByteAt( curBytePos );
             colorValue &= 0x4f;
 
             if ( ( m_CharsetScreen.Mode == TextMode.MEGA65_80_X_25_HIRES )
@@ -2042,6 +2056,15 @@ namespace RetroDevStudio.Documents
             }
 
             m_CharsetScreen.SetColorAt( i, j, colorValue );
+            ++curBytePos;
+            if ( curBytePos >= Data.Length )
+            {
+              break;
+            }
+          }
+          if ( curBytePos >= Data.Length )
+          {
+            break;
           }
         }
       }
