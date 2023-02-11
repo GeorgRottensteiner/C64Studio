@@ -1915,11 +1915,17 @@ namespace RetroDevStudio.Documents
 
     void contextSource_Opening( object sender, CancelEventArgs e )
     {
-      copyToolStripMenuItem.ShortcutKeys        = Core.Settings.DetermineAcceleratorKeyForFunction( Function.COPY, Core.State );
-      pasteToolStripMenuItem.ShortcutKeys       = Core.Settings.DetermineAcceleratorKeyForFunction( Function.PASTE, Core.State );
-      cutToolStripMenuItem.ShortcutKeys         = Core.Settings.DetermineAcceleratorKeyForFunction( Function.CUT, Core.State );
-      runToCursorToolStripMenuItem.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( Function.DEBUG_RUN_TO, Core.State );
-      gotoDeclarationToolStripMenuItem.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( Function.GO_TO_DECLARATION, Core.State );
+      foreach ( var item in contextSource.Items )
+      {
+        if ( item is ToolStripMenuItem )
+        {
+          var menu = (ToolStripMenuItem)item;
+          if ( menu.Tag is Function )
+          {
+            menu.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( (Function)menu.Tag, Core.State );
+          }
+        }
+      }
 
       if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
       ||   ( Core.MainForm.AppState == Types.StudioState.NORMAL ) )

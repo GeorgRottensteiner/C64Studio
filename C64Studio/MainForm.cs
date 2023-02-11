@@ -5161,7 +5161,41 @@ namespace RetroDevStudio
 
     protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
     {
-      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator( keyData, AppState);
+      if ( keyData == (Keys)( Keys.Control | Keys.Tab ) )
+      {
+        int curIndex = 0;
+        foreach ( var doc in panelMain.Documents )
+        {
+          if ( doc == panelMain.ActiveDocument )
+          {
+            int nextIndex = ( curIndex + 1 ) % panelMain.DocumentsCount;
+
+            IDockContent    nextDoc = panelMain.Documents.ElementAt( nextIndex );
+            nextDoc.DockHandler.Activate();
+            break;
+          }
+          ++curIndex;
+        }
+        return true;
+      }
+      if ( keyData == (Keys)( Keys.Control | Keys.Tab | Keys.Shift ) )
+      {
+        int curIndex = 0;
+        foreach ( var doc in panelMain.Documents )
+        {
+          if ( doc == panelMain.ActiveDocument )
+          {
+            int nextIndex = ( curIndex + panelMain.DocumentsCount - 1 ) % panelMain.DocumentsCount;
+
+            IDockContent    nextDoc = panelMain.Documents.ElementAt( nextIndex );
+            nextDoc.DockHandler.Activate();
+            break;
+          }
+          ++curIndex;
+        }
+        return true;
+      }
+      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator( keyData, AppState );
       if ( usedAccelerator != null )
       {
         if ( ApplyFunction( usedAccelerator.Function ) )
