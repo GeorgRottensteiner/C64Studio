@@ -138,6 +138,17 @@ namespace RetroDevStudio.Documents
 
       InitializeComponent();
 
+      copyToolStripMenuItem.Tag                 = Function.COPY;
+      pasteToolStripMenuItem.Tag                = Function.PASTE;
+      cutToolStripMenuItem.Tag                  = Function.CUT;
+      runToCursorToolStripMenuItem.Tag          = Function.DEBUG_RUN_TO;
+      gotoDeclarationToolStripMenuItem.Tag      = Function.GO_TO_DECLARATION;
+      findAllReferencesToolStripMenuItem.Tag    = Function.FIND_ALL_REFERENCES;
+      renameAllReferencesToolStripMenuItem.Tag  = Function.RENAME_ALL_REFERENCES;
+      helpToolStripMenuItem.Tag                 = Function.HELP;
+      commentSelectionToolStripMenuItem.Tag     = Function.COMMENT_SELECTION;
+      uncommentSelectionToolStripMenuItem.Tag   = Function.UNCOMMENT_SELECTION;
+
       SuspendLayout();
 
       DPIHandler.ResizeControlsForDPI( this );
@@ -1904,6 +1915,12 @@ namespace RetroDevStudio.Documents
 
     void contextSource_Opening( object sender, CancelEventArgs e )
     {
+      copyToolStripMenuItem.ShortcutKeys        = Core.Settings.DetermineAcceleratorKeyForFunction( Function.COPY, Core.State );
+      pasteToolStripMenuItem.ShortcutKeys       = Core.Settings.DetermineAcceleratorKeyForFunction( Function.PASTE, Core.State );
+      cutToolStripMenuItem.ShortcutKeys         = Core.Settings.DetermineAcceleratorKeyForFunction( Function.CUT, Core.State );
+      runToCursorToolStripMenuItem.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( Function.DEBUG_RUN_TO, Core.State );
+      gotoDeclarationToolStripMenuItem.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( Function.GO_TO_DECLARATION, Core.State );
+
       if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
       ||   ( Core.MainForm.AppState == Types.StudioState.NORMAL ) )
       {
