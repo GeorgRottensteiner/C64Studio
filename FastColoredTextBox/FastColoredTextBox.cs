@@ -4008,7 +4008,6 @@ namespace FastColoredTextBoxNS
     /// <param name="rect"></param>
     private void DoVisibleRectangle( Rectangle rect )
     {
-      int oldV = VerticalScroll.Value;
       int v = VerticalScroll.Value;
       int h = HorizontalScroll.Value;
 
@@ -4021,30 +4020,81 @@ namespace FastColoredTextBoxNS
         h += rect.Right - ClientRectangle.Width;
       else if ( rect.Left < LeftIndent )
         h += rect.Left - LeftIndent;
-      //
+
+      SetScrollOffsets( h, v );
+    }
+
+
+
+    public void SetScrollOffset( int VerticalPos )
+    {
+      int oldV = VerticalScroll.Value;
+
       if ( !Multiline )
-        v = 0;
-      //
-      v = Math.Max( VerticalScroll.Minimum, v ); // was 0
-      h = Math.Max( HorizontalScroll.Minimum, h ); // was 0
-      //
+      {
+        VerticalPos = 0;
+      }
+      VerticalPos = Math.Max( VerticalScroll.Minimum, VerticalPos );
       try
       {
-        if ( VerticalScroll.Visible || !ShowScrollBars )
-          VerticalScroll.Value = Math.Min( v, VerticalScroll.Maximum );
-        if ( HorizontalScroll.Visible || !ShowScrollBars )
-          HorizontalScroll.Value = Math.Min( h, HorizontalScroll.Maximum );
+        if ( ( VerticalScroll.Visible )
+        || ( !ShowScrollBars ) )
+        {
+          VerticalScroll.Value = Math.Min( VerticalPos, VerticalScroll.Maximum );
+        }
       }
       catch ( ArgumentOutOfRangeException )
       {
-        ;
+      }
+
+      UpdateScrollbars();
+      if ( oldV != VerticalScroll.Value )
+      {
+        OnVisibleRangeChanged();
+      }
+    }
+
+
+
+    public void SetScrollOffsets( int H, int V )
+    {
+      int oldV = VerticalScroll.Value;
+
+      //
+      if ( !Multiline )
+      {
+        V = 0;
+      }
+      //
+      V = Math.Max( VerticalScroll.Minimum, V ); // was 0
+      H = Math.Max( HorizontalScroll.Minimum, H ); // was 0
+      //
+      try
+      {
+        if ( ( VerticalScroll.Visible )
+        ||   ( !ShowScrollBars ) )
+        {
+          VerticalScroll.Value = Math.Min( V, VerticalScroll.Maximum );
+        }
+        if ( ( HorizontalScroll.Visible )
+        ||   ( !ShowScrollBars ) )
+        {
+          HorizontalScroll.Value = Math.Min( H, HorizontalScroll.Maximum );
+        }
+      }
+      catch ( ArgumentOutOfRangeException )
+      {
       }
 
       UpdateScrollbars();
       //
       if ( oldV != VerticalScroll.Value )
+      {
         OnVisibleRangeChanged();
+      }
     }
+
+
 
     /// <summary>
     /// Updates scrollbar position after Value changed

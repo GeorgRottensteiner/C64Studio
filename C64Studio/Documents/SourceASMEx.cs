@@ -3984,9 +3984,15 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
+
+      int oldV = editSource.VerticalScroll.Value;
+      int oldH = editSource.HorizontalScroll.Value;
+
       editSource.Selection.Start  = new Place( 0, LineIndex );
       editSource.Selection.End    = new Place( editSource.Lines[LineIndex].Length, LineIndex );
       editSource.SelectedText     = ReplacedText;
+
+      editSource.SetScrollOffsets( oldH, oldV );
     }
 
 

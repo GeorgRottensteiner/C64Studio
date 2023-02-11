@@ -42,7 +42,7 @@ namespace RetroDevStudio.Dialogs
       // btnCancel
       // 
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(426, 234);
+      this.btnCancel.Location = new System.Drawing.Point(418, 116);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 1;
@@ -52,7 +52,7 @@ namespace RetroDevStudio.Dialogs
       // btnOK
       // 
       this.btnOK.Enabled = false;
-      this.btnOK.Location = new System.Drawing.Point(345, 234);
+      this.btnOK.Location = new System.Drawing.Point(337, 116);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 1;
@@ -81,7 +81,7 @@ namespace RetroDevStudio.Dialogs
       // 
       this.labelRenameInfo.Location = new System.Drawing.Point(13, 44);
       this.labelRenameInfo.Name = "labelRenameInfo";
-      this.labelRenameInfo.Size = new System.Drawing.Size(480, 172);
+      this.labelRenameInfo.Size = new System.Drawing.Size(480, 69);
       this.labelRenameInfo.TabIndex = 4;
       this.labelRenameInfo.Text = "label2";
       // 
@@ -91,7 +91,7 @@ namespace RetroDevStudio.Dialogs
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(505, 261);
+      this.ClientSize = new System.Drawing.Size(505, 153);
       this.Controls.Add(this.labelRenameInfo);
       this.Controls.Add(this.editReferenceName);
       this.Controls.Add(this.label1);
