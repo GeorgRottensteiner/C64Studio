@@ -179,7 +179,7 @@ namespace GR.Image
     [DllImport( "Kernel32.dll", EntryPoint = "RtlCopyMemory" )]
 #else
     [DllImport( "Kernel32.dll", EntryPoint = "CopyMemory" )]
-    #endif
+#endif
     static extern void CopyMemory( IntPtr dest, IntPtr src, uint length );
 
     [DllImport( "user32.dll" )]

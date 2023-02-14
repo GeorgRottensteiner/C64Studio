@@ -64,7 +64,7 @@
       this.fileRecentlyOpenedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileRecentlyOpenedProjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparatorBelowMRU = new System.Windows.Forms.ToolStripSeparator();
-      this.filePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileSetupWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -218,7 +218,6 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -271,7 +270,6 @@
             this.fileRecentlyOpenedFilesToolStripMenuItem,
             this.fileRecentlyOpenedProjectsToolStripMenuItem,
             this.toolStripSeparatorBelowMRU,
-            this.filePreferencesToolStripMenuItem,
             this.preferencesToolStripMenuItem,
             this.fileSetupWizardToolStripMenuItem,
             this.toolStripSeparator4,
@@ -524,12 +522,12 @@
       this.toolStripSeparatorBelowMRU.Name = "toolStripSeparatorBelowMRU";
       this.toolStripSeparatorBelowMRU.Size = new System.Drawing.Size(204, 6);
       // 
-      // filePreferencesToolStripMenuItem
+      // preferencesToolStripMenuItem
       // 
-      this.filePreferencesToolStripMenuItem.Name = "filePreferencesToolStripMenuItem";
-      this.filePreferencesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-      this.filePreferencesToolStripMenuItem.Text = "&Preferences...";
-      this.filePreferencesToolStripMenuItem.Click += new System.EventHandler(this.filePreferencesToolStripMenuItem_Click);
+      this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+      this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.preferencesToolStripMenuItem.Text = "Preferences...";
+      this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
       // 
       // fileSetupWizardToolStripMenuItem
       // 
@@ -1836,13 +1834,6 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // preferencesToolStripMenuItem
-      // 
-      this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-      this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-      this.preferencesToolStripMenuItem.Text = "Preferences++";
-      this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
-      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -1903,7 +1894,6 @@
     private System.Windows.Forms.ToolStripMenuItem debugDisconnectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem debugTestToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-    private System.Windows.Forms.ToolStripMenuItem filePreferencesToolStripMenuItem;
     private System.Windows.Forms.ToolStripButton mainToolDebug;
     private System.Windows.Forms.ToolStrip debugTools;
     private System.Windows.Forms.ToolStripButton mainDebugGo;

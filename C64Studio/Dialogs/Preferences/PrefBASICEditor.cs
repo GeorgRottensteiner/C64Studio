@@ -79,7 +79,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public override void ExportSettings( XMLElement SettingsRoot )
     {
-      var xmlFont = SettingsRoot.AddChild( "Fonts.Font" );
+      var xmlFont = SettingsRoot.AddChild( "Generic.Fonts.Font" );
 
       xmlFont.AddAttribute( "Type", "BASIC" );
       xmlFont.AddAttribute( "Family", Core.Settings.BASICSourceFontFamily );

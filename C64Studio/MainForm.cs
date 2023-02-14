@@ -3657,15 +3657,6 @@ namespace RetroDevStudio
 
 
 
-    private void filePreferencesToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      Settings prefDlg = new Settings( StudioCore, RetroDevStudio.Dialogs.Settings.TabPage.GENERAL );
-
-      prefDlg.ShowDialog();
-    }
-
-
-
     private void SaveSettings()
     {
       StudioCore.Settings.MainWindowPlacement = GR.Forms.WindowStateManager.GeometryToString( this );

@@ -3,8 +3,7 @@ using GR.Memory;
 using System;
 using System.Collections.Generic;
 using RetroDevStudio.Documents;
-
-
+using System.Windows.Forms;
 
 namespace RetroDevStudio
 {
@@ -118,6 +117,7 @@ namespace RetroDevStudio
 
     private void Log( string Message )
     {
+      //Core.AddToOutput( Message + Environment.NewLine );
       System.Diagnostics.Debug.WriteLine( Message );
       Debug.Log( Message );
     }
@@ -160,17 +160,19 @@ namespace RetroDevStudio
           client.Disconnect( false );
           client.Close();
         }
+        Core.AddToOutput( "Connecting to VICE binary interface..." + Environment.NewLine );
         client = new System.Net.Sockets.Socket( System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp );
         client.BeginConnect( "127.0.0.1", 6510, new AsyncCallback( Connected ), client );
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        Core.AddToOutput( "RemoteDebugger.Connect Exception:" + se.ToString() );
+        Core.AddToOutput( "RemoteDebugger.Connect Exception:" + se.ToString() + Environment.NewLine );
         return false;
       }
       while ( !connectResultReceived )
       {
         System.Threading.Thread.Sleep( 50 );
+        Application.DoEvents();
       }
       if ( client.Connected )
       {
@@ -194,12 +196,12 @@ namespace RetroDevStudio
       try
       {
         client.EndConnect( iar );
+        Core.AddToOutput( "Connected to VICE binary interface successfully" + Environment.NewLine );
         client.BeginReceive( data, 0, size, System.Net.Sockets.SocketFlags.None, new AsyncCallback( ReceiveData ), client );
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        Core.AddToOutput( "RemoteDebugger.Connected Exception:" + se.ToString() );
-        //conStatus.Text = "Error connecting";
+        Core.AddToOutput( "Connecting to VICE binary interface failed: " + se.ToString() );
       }
       connectResultReceived = true;
     }

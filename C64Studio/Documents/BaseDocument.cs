@@ -738,7 +738,6 @@ namespace RetroDevStudio.Documents
       this.TabPageContextMenuStrip = this.contextMenuTab;
       this.contextMenuTab.ResumeLayout( false );
       this.ResumeLayout( false );
-
     }
 
 
@@ -1037,6 +1036,23 @@ namespace RetroDevStudio.Documents
     {
       Core.Theming.ApplyTheme( this );
     }
+
+
+
+    /*
+    protected override void OnMouseWheel( MouseEventArgs e )
+    {
+      Debug.Log( "wheeled!" );
+      if ( Core.MainForm.panelMain.ActiveDocumentPane.TabStripControl != null )
+      {
+        Debug.Log( "wheeled, tab control exists!" );
+        if ( Core.MainForm.panelMain.ActiveDocumentPane.TabStripControl.Bounds.Contains( e.Location ) )
+        {
+          Debug.Log( "wheeled inside tabs!" );
+        }
+      }
+      base.OnMouseWheel( e );
+    }*/
 
 
 

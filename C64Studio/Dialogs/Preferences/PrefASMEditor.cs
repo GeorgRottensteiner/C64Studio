@@ -69,10 +69,9 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public override void ExportSettings( XMLElement SettingsRoot )
     {
-      var xmlGeneric = SettingsRoot.AddChild( "Generic" );
-      var xmlTabs = xmlGeneric.AddChild( "Tabs" );
-      var xmlASMEditor = xmlGeneric.AddChild( "AssemblerEditor" );
-      var xmlFonts = xmlGeneric.AddChild( "Fonts" );
+      var xmlTabs = SettingsRoot.AddChild( "Generic.Tabs" );
+      var xmlASMEditor = SettingsRoot.AddChild( "Generic.AssemblerEditor" );
+      var xmlFonts = SettingsRoot.AddChild( "Generic.Fonts" );
 
       xmlTabs.AddAttribute( "TabSize", Core.Settings.TabSize.ToString() );
       xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.TabConvertToSpaces ? "yes" : "no" );
