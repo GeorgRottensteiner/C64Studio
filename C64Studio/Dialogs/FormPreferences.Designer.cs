@@ -109,7 +109,7 @@
       this.Name = "FormPreferences";
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
-      this.Text = "FormPreferences";
+      this.Text = "Preferences";
       this.ResumeLayout(false);
       this.PerformLayout();
 

@@ -19,7 +19,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    public FormPreferences( StudioCore Core )
+    public FormPreferences( StudioCore Core, string Key = "" )
     {
       this.Core = Core;
       InitializeComponent();
@@ -52,6 +52,8 @@ namespace RetroDevStudio.Dialogs
       panelPreferences.SizeChanged += PanelPreferences_SizeChanged;
 
       Core.Theming.ApplyTheme( this );
+
+      editPreferencesFilter.Text = Key;
     }
 
 

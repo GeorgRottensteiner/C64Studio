@@ -335,7 +335,7 @@ namespace RetroDevStudio.Documents
 
     private void manageWarningIgnoreListToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      var prefDlg = new Settings( Core, RetroDevStudio.Dialogs.Settings.TabPage.ERRORS_WARNINGS );
+      var prefDlg = new FormPreferences( Core, "Warnings" );
 
       prefDlg.ShowDialog();
     }
