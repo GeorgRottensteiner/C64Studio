@@ -6129,7 +6129,9 @@ namespace RetroDevStudio.Parser
 
               if ( ( opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE )
               ||   ( opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
-              ||   ( opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
+              ||   ( opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y )
+              ||   ( opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
+              ||   ( opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y ) )
               {
                 possibleOpcodes.RemoveAt( i );
                 --i;
@@ -6161,7 +6163,9 @@ namespace RetroDevStudio.Parser
 
               if ( ( opcode.Addressing != Tiny64.Opcode.AddressingType.ZEROPAGE )
               &&   ( opcode.Addressing != Tiny64.Opcode.AddressingType.ZEROPAGE_X )
-              &&   ( opcode.Addressing != Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
+              &&   ( opcode.Addressing != Tiny64.Opcode.AddressingType.ZEROPAGE_Y )
+              &&   ( opcode.Addressing != Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
+              &&   ( opcode.Addressing != Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y ) )
               {
                 possibleOpcodes.RemoveAt( i );
                 --i;
@@ -12259,6 +12263,7 @@ namespace RetroDevStudio.Parser
       int expressionTokenStartIndex = 1;
       int expressionTokenCount = LineTokens.Count - 1;
       int expressionTokenCountForLaterEvaluation = LineTokens.Count - 1;
+
       if ( LineTokens.Count >= 2 )
       {
         if ( ( LineTokens[LineTokens.Count - 2].Content == "," )
@@ -12314,6 +12319,8 @@ namespace RetroDevStudio.Parser
           expressionTokenStartIndex = 2;
           expressionTokenCount -= 2;
 
+          bool  endsWithClosingBrace = IsClosingBraceChar( LineTokens[expressionTokenStartIndex + expressionTokenCount].Content );
+
           while ( ( tokenPos < expressionTokenStartIndex + expressionTokenCount )
           &&      ( ( !IsMatchingBrace( LineTokens[1].Content, LineTokens[tokenPos].Content ) )
           ||        ( numBracketCount > 1 ) ) )
@@ -12365,7 +12372,8 @@ namespace RetroDevStudio.Parser
             //expressionTokenCount = tokenPos - expressionTokenStartIndex;
           }
           if ( ( numBracketPairs > 1 )
-          &&   ( tokenPos != expressionTokenCount ) )
+          &&   ( tokenPos != expressionTokenCount )
+          &&   ( !endsWithClosingBrace ) )
           {
             // no matching brackets
             oneParamInBrackets = false;
