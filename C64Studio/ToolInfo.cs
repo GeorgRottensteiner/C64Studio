@@ -105,7 +105,14 @@ namespace RetroDevStudio
         DynamicArgument   dynArg = (DynamicArgument)reader.ReadInt32();
         string    arg = reader.ReadString();
 
-        DynamicArguments.Add( dynArg, arg );
+        if ( !DynamicArguments.ContainsKey( dynArg ) )
+        {
+          DynamicArguments.Add( dynArg, arg );
+        }
+        else
+        {
+          DynamicArguments[dynArg] = arg;
+        }
       }
 
       MoveArgument( PRGArguments, DynamicArgument.CALL_SINGLE_FILE_TAPE );
