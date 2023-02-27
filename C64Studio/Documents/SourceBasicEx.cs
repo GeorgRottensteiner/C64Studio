@@ -1494,7 +1494,7 @@ namespace RetroDevStudio.Documents
           if ( ( m_StringEnterMode )
           &&   ( c64Key.PetSCIIValue == 13 ) )
           {
-            // enter breaks out of string mode
+            // real enter breaks out of string mode
             ToggleStringEntryMode();
             InsertOrReplaceChar( (char)13 );
             return true;
