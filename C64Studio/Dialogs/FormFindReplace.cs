@@ -1340,7 +1340,8 @@ namespace RetroDevStudio.Dialogs
         }
         var edit = EditFromDocumentEx( LastSearchFound.FoundInDocument );
         var searchFound =  RangeFromSearchLocation( edit, LastSearchFound );
-        ///searchFound.StartingLine.AddMarker( edit.FindReplace.Marker );
+
+        edit.Bookmarks.Add( searchFound.Start.iLine );
       }
     }
 

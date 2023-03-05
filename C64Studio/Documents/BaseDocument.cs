@@ -26,7 +26,11 @@ namespace RetroDevStudio.Documents
         NONE = 0,
         BREAKPOINT_ADDED,
         BREAKPOINT_REMOVED,
-        BREAKPOINT_UPDATED
+        BREAKPOINT_UPDATED,
+        BOOKMARK_ADDED,
+        BOOKMARK_REMOVED,
+        ALL_BOOKMARKS_OF_DOCUMENT_REMOVED,
+        BOOKMARKS_UPDATED                   // sent when lines are inserted/deleted (and bookmarks move)
       }
 
       public Type EventType     = Type.NONE;

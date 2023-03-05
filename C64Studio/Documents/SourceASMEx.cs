@@ -138,16 +138,19 @@ namespace RetroDevStudio.Documents
 
       InitializeComponent();
 
-      copyToolStripMenuItem.Tag                 = Function.COPY;
-      pasteToolStripMenuItem.Tag                = Function.PASTE;
-      cutToolStripMenuItem.Tag                  = Function.CUT;
-      runToCursorToolStripMenuItem.Tag          = Function.DEBUG_RUN_TO;
-      gotoDeclarationToolStripMenuItem.Tag      = Function.GO_TO_DECLARATION;
-      findAllReferencesToolStripMenuItem.Tag    = Function.FIND_ALL_REFERENCES;
-      renameAllReferencesToolStripMenuItem.Tag  = Function.RENAME_ALL_REFERENCES;
-      helpToolStripMenuItem.Tag                 = Function.HELP;
-      commentSelectionToolStripMenuItem.Tag     = Function.COMMENT_SELECTION;
-      uncommentSelectionToolStripMenuItem.Tag   = Function.UNCOMMENT_SELECTION;
+      copyToolStripMenuItem.Tag                         = Function.COPY;
+      pasteToolStripMenuItem.Tag                        = Function.PASTE;
+      cutToolStripMenuItem.Tag                          = Function.CUT;
+      runToCursorToolStripMenuItem.Tag                  = Function.DEBUG_RUN_TO;
+      gotoDeclarationToolStripMenuItem.Tag              = Function.GO_TO_DECLARATION;
+      findAllReferencesToolStripMenuItem.Tag            = Function.FIND_ALL_REFERENCES;
+      renameAllReferencesToolStripMenuItem.Tag          = Function.RENAME_ALL_REFERENCES;
+      helpToolStripMenuItem.Tag                         = Function.HELP;
+      commentSelectionToolStripMenuItem.Tag             = Function.COMMENT_SELECTION;
+      uncommentSelectionToolStripMenuItem.Tag           = Function.UNCOMMENT_SELECTION;
+      addBookmarkHereToolStripMenuItem.Tag              = Function.BOOKMARK_ADD;
+      removeBookmarkToolStripMenuItem.Tag               = Function.BOOKMARK_DELETE;
+      removeAllBookmarksOfThisFileToolStripMenuItem.Tag = Function.BOOKMARK_DELETE_ALL;
 
       SuspendLayout();
 
@@ -244,8 +247,8 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
+      RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARK_REMOVED, e.Index ) );
       StoreBookmarks();
-      SetModified();
     }
 
 
@@ -256,8 +259,8 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
+      RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARK_ADDED, e.Index ) );
       StoreBookmarks();
-      SetModified();
     }
 
 
@@ -737,6 +740,15 @@ namespace RetroDevStudio.Documents
 
     void editSource_LineInserted( object sender, FastColoredTextBoxNS.LineInsertedEventArgs e )
     {
+      DocumentInfo.Bookmarks.Clear();
+      foreach ( var bm in editSource.Bookmarks )
+      {
+        DocumentInfo.Bookmarks.Add( bm.LineIndex );
+      }
+      RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
+
+
+
       /*
       // special case, if we insert an empty line, insert "below"
       int     indexToNotify = e.Index;
@@ -799,6 +811,13 @@ namespace RetroDevStudio.Documents
 
     void editSource_LineRemoved( object sender, FastColoredTextBoxNS.LineRemovedEventArgs e )
     {
+      DocumentInfo.Bookmarks.Clear();
+      foreach ( var bm in editSource.Bookmarks )
+      {
+        DocumentInfo.Bookmarks.Add( bm.LineIndex );
+      }
+      RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
+
       /*
       Core.Navigating.RemoveLines( DocumentInfo, e.Index, e.Count );
 
@@ -1240,6 +1259,12 @@ namespace RetroDevStudio.Documents
     void editSource_SelectionChanged( object sender, EventArgs e )
     {
       UpdateStatusInfo();
+
+      System.Drawing.Point mousePos = editSource.PointToClient( Control.MousePosition );
+
+      int position            = editSource.PointToPosition( mousePos );
+      m_ContextMenuLineIndex  = editSource.PositionToPlace( position ).iLine;
+      m_ContextMenuPosition   = position;
     }
 
 
@@ -1915,6 +1940,12 @@ namespace RetroDevStudio.Documents
 
     void contextSource_Opening( object sender, CancelEventArgs e )
     {
+      System.Drawing.Point mousePos = editSource.PointToClient( Control.MousePosition );
+
+      int position            = editSource.PointToPosition( mousePos );
+      m_ContextMenuLineIndex  = editSource.PositionToPlace( position ).iLine;
+      m_ContextMenuPosition   = position;
+
       foreach ( var item in contextSource.Items )
       {
         if ( item is ToolStripMenuItem )
@@ -1926,6 +1957,11 @@ namespace RetroDevStudio.Documents
           }
         }
       }
+
+      // bookmarks
+      addBookmarkHereToolStripMenuItem.Enabled = !editSource.Bookmarks.Any( bm => bm.LineIndex == m_ContextMenuLineIndex );
+      removeBookmarkToolStripMenuItem.Enabled = editSource.Bookmarks.Any( bm => bm.LineIndex == m_ContextMenuLineIndex );
+      removeAllBookmarksOfThisFileToolStripMenuItem.Enabled = editSource.Bookmarks.Any();
 
       if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
       ||   ( Core.MainForm.AppState == Types.StudioState.NORMAL ) )
@@ -1967,12 +2003,6 @@ namespace RetroDevStudio.Documents
 
     void contextSource_Opened( object sender, EventArgs e )
     {
-      System.Drawing.Point mousePos = editSource.PointToClient( Control.MousePosition );
-
-      int position            = editSource.PointToPosition( mousePos );
-      m_ContextMenuLineIndex  = editSource.PositionToPlace( position ).iLine;
-      m_ContextMenuPosition   = position;
-
       bool    showOpenFile = false;
       string    lineBelow = editSource.Lines[m_ContextMenuLineIndex].Trim().ToUpper();
       if ( ( lineBelow.StartsWith( "!SOURCE" ) )
@@ -3055,7 +3085,14 @@ namespace RetroDevStudio.Documents
           JumpToLine();
           return true;
         case Function.BOOKMARK_DELETE_ALL:
+          if ( !editSource.Bookmarks.Any() )
+          {
+            return true;
+          }
           editSource.Bookmarks.Clear();
+
+          RaiseDocEvent( new DocEvent( DocEvent.Type.ALL_BOOKMARKS_OF_DOCUMENT_REMOVED ) );
+          StoreBookmarks();
           editSource.Invalidate();
           return true;
         case Function.FIND_ALL_REFERENCES:
@@ -4016,6 +4053,35 @@ namespace RetroDevStudio.Documents
       editSource.SelectedText     = ReplacedText;
 
       editSource.SetScrollOffsets( oldH, oldV );
+    }
+
+
+
+    private void addBookmarkHereToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( editSource.Bookmarks.Any( bm => bm.LineIndex == m_ContextMenuLineIndex ) )
+      {
+        return;
+      }
+      editSource.Bookmarks.Add( m_ContextMenuLineIndex );
+    }
+
+
+
+    private void removeBookmarkToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( !editSource.Bookmarks.Any( bm => bm.LineIndex == m_ContextMenuLineIndex ) )
+      {
+        return;
+      }
+      editSource.Bookmarks.Remove( m_ContextMenuLineIndex );
+    }
+
+
+
+    private void removeAllBookmarksOfThisFileToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.BOOKMARK_DELETE_ALL );
     }
 
 

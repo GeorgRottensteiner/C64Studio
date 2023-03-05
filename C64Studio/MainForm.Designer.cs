@@ -218,6 +218,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
+      this.bookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -1087,6 +1088,7 @@
             this.spriteEditorToolStripMenuItem,
             this.valueTableEditorToolStripMenuItem,
             this.toolStripSeparator13,
+            this.bookmarksToolStripMenuItem,
             this.calculatorToolStripMenuItem,
             this.compileResulttoolStripMenuItem,
             this.disassemblerToolStripMenuItem,
@@ -1834,6 +1836,12 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
+      // bookmarksToolStripMenuItem
+      // 
+      this.bookmarksToolStripMenuItem.Name = "bookmarksToolStripMenuItem";
+      this.bookmarksToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.bookmarksToolStripMenuItem.Text = "Bookmarks";
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -2057,6 +2065,7 @@
     private System.Windows.Forms.ToolStripMenuItem solutionRenameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameAllReferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-    }
+    private System.Windows.Forms.ToolStripMenuItem bookmarksToolStripMenuItem;
+  }
 }
 

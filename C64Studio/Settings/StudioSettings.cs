@@ -71,7 +71,9 @@ namespace RetroDevStudio
     [Description( "Value Table Editor" )]
     VALUE_TABLE_EDITOR,
     [Description( "Find References" )]
-    FIND_REFERENCES
+    FIND_REFERENCES,
+    [Description( "Bookmarks") ]
+    BOOKMARKS
   };
 
   public enum MemoryDisplayType

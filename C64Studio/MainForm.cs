@@ -49,6 +49,7 @@ namespace RetroDevStudio
 
     public SearchResults          m_SearchResults = new SearchResults();
     public FindReferences         m_FindReferences = new FindReferences();
+    public Bookmarks              m_Bookmarks = null;
     public Perspective            m_ActivePerspective = Perspective.DEBUG;
 
     public System.Diagnostics.Process CompilerProcess = null;
@@ -531,6 +532,7 @@ namespace RetroDevStudio
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
       m_FindReplace         = new FormFindReplace( StudioCore );
       m_Help                = new Documents.Help( StudioCore );
+      m_Bookmarks           = new Bookmarks( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -570,6 +572,7 @@ namespace RetroDevStudio
       AddToolWindow( ToolWindowType.SEARCH_RESULTS, m_SearchResults, DockState.DockBottom, searchResultsToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.VALUE_TABLE_EDITOR, m_ValueTableEditor, DockState.Document, valueTableEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.FIND_REFERENCES, m_FindReferences, DockState.DockBottom, findReferencesToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.BOOKMARKS, m_Bookmarks, DockState.DockBottom, bookmarksToolStripMenuItem, false, false );
 
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTLINE )]            = m_Outline;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SOLUTION_EXPLORER )]  = m_SolutionExplorer;
@@ -2782,6 +2785,18 @@ namespace RetroDevStudio
 
       switch ( Event.EventType )
       {
+        case BaseDocument.DocEvent.Type.BOOKMARK_ADDED:
+          m_Bookmarks.AddBookmark( Event.LineIndex, Event.Doc.DocumentInfo );
+          break;
+        case BaseDocument.DocEvent.Type.BOOKMARK_REMOVED:
+          m_Bookmarks.RemoveBookmark( Event.LineIndex, Event.Doc.DocumentInfo );
+          break;
+        case BaseDocument.DocEvent.Type.ALL_BOOKMARKS_OF_DOCUMENT_REMOVED:
+          m_Bookmarks.RemoveAllBookmarksForDocument( Event.Doc.DocumentInfo );
+          break;
+        case BaseDocument.DocEvent.Type.BOOKMARKS_UPDATED:
+          m_Bookmarks.UpdateAllBookmarksForDocument( Event.Doc.DocumentInfo );
+          break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_ADDED:
           if ( ( AppState == Types.StudioState.NORMAL )
           ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
