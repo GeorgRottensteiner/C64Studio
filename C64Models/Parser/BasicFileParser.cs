@@ -1337,6 +1337,22 @@ namespace RetroDevStudio.Parser
           // is there a token now?
           if ( FindOpcode( tempData, ref bytePos, info, ref insideDataStatement, ref insideREMStatement ) )
           {
+            if ( insideREMStatement )
+            {
+              Token basicToken = new Token();
+              basicToken.TokenType = Token.Type.COMMENT;
+              basicToken.StartIndex = bytePos;
+
+              while ( bytePos < tempData.Length )
+              {
+                basicToken.Content += ConstantData.PetSCIIToChar[tempData.ByteAt( bytePos )].CharValue;
+                info.LineData.AppendU8( tempData.ByteAt( bytePos ) );
+
+                ++bytePos;
+              }
+
+              info.Tokens.Add( basicToken );
+            }
             continue;
           }
 
@@ -1393,6 +1409,24 @@ namespace RetroDevStudio.Parser
                   info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
                 }
                 insideDataStatement = ( foundOpcode.Command == "DATA" );
+
+                if ( insideREMStatement )
+                {
+                  Token basicToken = new Token();
+                  basicToken.TokenType = Token.Type.COMMENT;
+                  basicToken.StartIndex = bytePos;
+
+                  while ( bytePos < tempData.Length )
+                  {
+                    basicToken.Content += ConstantData.PetSCIIToChar[tempData.ByteAt( bytePos )].CharValue;
+                    info.LineData.AppendU8( tempData.ByteAt( bytePos ) );
+
+                    ++bytePos;
+                  }
+
+                  info.Tokens.Add( basicToken );
+                  continue;
+                }
               }
               else
               {
@@ -2100,7 +2134,8 @@ namespace RetroDevStudio.Parser
         bool  insideStringLiteral = false;
         foreach ( var variable in pureInfo.Tokens )
         {
-          if ( variable.TokenType == Token.Type.BASIC_TOKEN )
+          if ( ( variable.TokenType == Token.Type.BASIC_TOKEN )
+          &&   ( Settings.BASICDialect.OpcodesFromByte[(ushort)variable.ByteValue].Command == "DATA" ) )
           {
             insideDataStatement = true;
           }

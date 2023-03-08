@@ -1315,6 +1315,7 @@ namespace RetroDevStudio.Documents
               if ( ( actualChar != "?" )
               &&   ( isInsideComment ) )
               {
+                editSource.SelectedText = actualChar;
                 return true;
               }
 
