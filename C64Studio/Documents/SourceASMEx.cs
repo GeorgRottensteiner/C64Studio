@@ -1953,7 +1953,13 @@ namespace RetroDevStudio.Documents
           var menu = (ToolStripMenuItem)item;
           if ( menu.Tag is Function )
           {
-            menu.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( (Function)menu.Tag, Core.State );
+            try
+            {
+              menu.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( (Function)menu.Tag, Core.State );
+            }
+            catch ( Exception )
+            {
+            }
           }
         }
       }
