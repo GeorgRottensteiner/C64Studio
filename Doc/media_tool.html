@@ -21,6 +21,7 @@
                   [-chars &lt;raw/binary charset file&gt;]
                   [-charscreen &lt;charscreen project file&gt;]
                   [-graphicscreen &lt;graphicscreen project file&gt;]
+                  [.mapproject &lt;map project file&gt;]
                   [-binary &lt;binaryfile&gt;]
                   [-type &lt;export format&gt;]
                   [-export &lt;file name&gt;]
@@ -164,6 +165,17 @@
       </tr>
       <tr>
         <td>
+          -CHARSCREEN
+        </td>
+        <td>
+          CHARSET
+        </td>
+        <td>
+          A number of characters, 8 bytes each (INDEX/COUNT optionally)
+        </td>
+      </tr>
+      <tr>
+        <td>
           -GRAPHICSCREEN
         </td>
         <td>
@@ -270,6 +282,39 @@
         </td>
         <td>
           A number of 8x8 blocks, first hires bitmap
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -MAPPROJECT
+        </td>
+        <td>
+          MAPDATA
+        </td>
+        <td>
+          All map data in bytes, in order map, row, columns
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -MAPPROJECT
+        </td>
+        <td>
+          MAPDATAASM
+        </td>
+        <td>
+          All map data as assembly, in order map, row, columns
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -MAPPROJECT
+        </td>
+        <td>
+          CHARSET
+        </td>
+        <td>
+          A number of characters, 8 bytes each (INDEX/COUNT optionally)
         </td>
       </tr>
       <tr>

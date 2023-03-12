@@ -43,6 +43,7 @@ namespace MediaTool
       argParser.AddSwitchValue( "TYPE", "CHARS" );
       argParser.AddSwitchValue( "TYPE", "CHARSCOLORS" );
       argParser.AddSwitchValue( "TYPE", "COLORS" );
+      argParser.AddSwitchValue( "TYPE", "CHARSET" );
       argParser.AddSwitchValue( "TYPE", "BYTES" );
       argParser.AddSwitchValue( "TYPE", "MULTICOLORBITMAP" );
       argParser.AddSwitchValue( "TYPE", "MULTICOLORBITMAPCOLORS" );

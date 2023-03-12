@@ -1,4 +1,5 @@
 ﻿using GR.Memory;
+using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace MediaTool
   {
     private int HandleMapProject( GR.Text.ArgumentParser ArgParser )
     {
-      if ( !ValidateExportType( "map project file", ArgParser.Parameter( "TYPE" ), new string[] { "MAPDATA", "MAPDATAASM" } ) )
+      if ( !ValidateExportType( "map project file", ArgParser.Parameter( "TYPE" ), new string[] { "MAPDATA", "MAPDATAASM", "CHARSET" } ) )
       {
         return 1;
       }
@@ -57,6 +58,40 @@ namespace MediaTool
               resultingData.AppendU8( (byte)map.Tiles[i,j] );
             }
           }
+        }
+      }
+      else if ( ArgParser.Parameter( "TYPE" ).Contains( "CHARSET" ) )
+      {
+        int     count = -1;
+        int     firstChar = 0;
+        if ( ArgParser.IsParameterSet( "OFFSET" ) )
+        {
+          firstChar = GR.Convert.ToI32( ArgParser.Parameter( "OFFSET" ) );
+        }
+        if ( ArgParser.IsParameterSet( "COUNT" ) )
+        {
+          count = GR.Convert.ToI32( ArgParser.Parameter( "COUNT" ) );
+        }
+        if ( count == -1 )
+        {
+          count = mapProject.Charset.Characters.Count;
+        }
+        if ( ( firstChar < 0 )
+        ||   ( firstChar >= mapProject.Charset.Characters.Count ) )
+        {
+          System.Console.WriteLine( "OFFSET is invalid" );
+          return 1;
+        }
+        if ( ( count <= 0 )
+        ||   ( firstChar + count > mapProject.Charset.Characters.Count ) )
+        {
+          System.Console.WriteLine( "COUNT is invalid" );
+          return 1;
+        }
+        resultingData = new GR.Memory.ByteBuffer( (uint)( count * 8 ) );
+        for ( int i = 0; i < count; ++i )
+        {
+          mapProject.Charset.Characters[firstChar + i].Tile.Data.CopyTo( resultingData, 0, 8, i * 8 );
         }
       }
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), resultingData ) )

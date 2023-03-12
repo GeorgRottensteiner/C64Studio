@@ -8,7 +8,7 @@ namespace MediaTool
   {
     private int HandleCharscreenFile( GR.Text.ArgumentParser ArgParser )
     {
-      if ( !ValidateExportType( "charscreen file", ArgParser.Parameter( "TYPE" ), new string[] { "CHARS", "CHARSCOLORS", "COLORS" } ) )
+      if ( !ValidateExportType( "charscreen file", ArgParser.Parameter( "TYPE" ), new string[] { "CHARS", "CHARSCOLORS", "COLORS", "CHARSET" } ) )
       {
         return 1;
       }
@@ -64,7 +64,8 @@ namespace MediaTool
 
       GR.Memory.ByteBuffer    resultingData = new GR.Memory.ByteBuffer();
 
-      if ( ArgParser.Parameter( "TYPE" ).Contains( "CHARS" ) )
+      if ( ( ArgParser.Parameter( "TYPE" ) == "CHARS" )
+      ||   ( ArgParser.Parameter( "TYPE" ) == "CHARSCOLORS" ) )
       {
         for ( int j = y; j < y + height; ++j )
         {
@@ -74,7 +75,8 @@ namespace MediaTool
           }
         }
       }
-      if ( ArgParser.Parameter( "TYPE" ).Contains( "COLORS" ) )
+      if ( ( ArgParser.Parameter( "TYPE" ) == "COLORS" )
+      ||   ( ArgParser.Parameter( "TYPE" ) == "CHARSCOLORS" ) )
       {
         for ( int j = y; j < y + height; ++j )
         {
@@ -82,6 +84,40 @@ namespace MediaTool
           {
             resultingData.AppendU8( (byte)( charScreenProject.Chars[i + j * charScreenProject.ScreenWidth] >> 8 ) );
           }
+        }
+      }
+      if ( ArgParser.Parameter( "TYPE" ) == "CHARSET" )
+      {
+        int     count = -1;
+        int     firstChar = 0;
+        if ( ArgParser.IsParameterSet( "OFFSET" ) )
+        {
+          firstChar = GR.Convert.ToI32( ArgParser.Parameter( "OFFSET" ) );
+        }
+        if ( ArgParser.IsParameterSet( "COUNT" ) )
+        {
+          count = GR.Convert.ToI32( ArgParser.Parameter( "COUNT" ) );
+        }
+        if ( count == -1 )
+        {
+          count = charScreenProject.CharSet.Characters.Count;
+        }
+        if ( ( firstChar < 0 )
+        ||   ( firstChar >= charScreenProject.CharSet.Characters.Count ) )
+        {
+          System.Console.WriteLine( "OFFSET is invalid" );
+          return 1;
+        }
+        if ( ( count <= 0 )
+        ||   ( firstChar + count > charScreenProject.CharSet.Characters.Count ) )
+        {
+          System.Console.WriteLine( "COUNT is invalid" );
+          return 1;
+        }
+        resultingData = new GR.Memory.ByteBuffer( (uint)( count * 8 ) );
+        for ( int i = 0; i < count; ++i )
+        {
+          charScreenProject.CharSet.Characters[firstChar + i].Tile.Data.CopyTo( resultingData, 0, 8, i * 8 );
         }
       }
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), resultingData ) )
