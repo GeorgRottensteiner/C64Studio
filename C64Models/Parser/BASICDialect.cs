@@ -152,7 +152,11 @@ namespace C64Models.BASIC
     {
       var opcode = new Opcode( Opcode, ByteValue );
       Opcodes[Opcode] = opcode;
-      OpcodesFromByte[(ushort)ByteValue] = opcode;
+
+      if ( !OpcodesFromByte.ContainsKey( (ushort)ByteValue ) )
+      {
+        OpcodesFromByte[(ushort)ByteValue] = opcode;
+      }
 
       return opcode;
     }
@@ -163,7 +167,10 @@ namespace C64Models.BASIC
     {
       var opcode = new Opcode( Opcode, ByteValue, ShortCut );
       Opcodes[Opcode] = opcode;
-      OpcodesFromByte[(ushort)ByteValue] = opcode;
+      if ( !OpcodesFromByte.ContainsKey( (ushort)ByteValue ) )
+      {
+        OpcodesFromByte[(ushort)ByteValue] = opcode;
+      }
 
       return opcode;
     }

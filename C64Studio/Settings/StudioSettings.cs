@@ -875,7 +875,7 @@ namespace RetroDevStudio
       }
       catch ( Exception ex )
       {
-        Debug.Log( "SetLayoutFromData: " + ex.Message );
+        Debug.Log( "SetLayoutFromData: " + ex.ToString() );
       }
 
       memIn.Close();

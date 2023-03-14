@@ -246,12 +246,18 @@ namespace RetroDevStudio.Parser
       {
         if ( !string.IsNullOrEmpty( Dialect.HexPrefix ) )
         {
-          AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.HexPrefix;
-          AllowedTokenChars[Token.Type.NUMERIC_LITERAL] += "ABCDEF";
+          if ( !AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL].Contains( Dialect.HexPrefix ) )
+          {
+            AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.HexPrefix;
+            AllowedTokenChars[Token.Type.NUMERIC_LITERAL] += "ABCDEF";
+          }
         }
         if ( !string.IsNullOrEmpty( Dialect.BinPrefix ) )
         {
-          AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.BinPrefix;
+          if ( !AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL].Contains( Dialect.BinPrefix ) )
+          {
+            AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.BinPrefix;
+          }
         }
       }
 
@@ -790,7 +796,14 @@ namespace RetroDevStudio.Parser
               tokenStartPos = posInLine;
               continue;
             }
-            if ( AllowedTokenChars[currentToken.TokenType].IndexOf( nextByte ) != -1 )
+            if ( ( currentToken.TokenType == BasicFileParser.Token.Type.NUMERIC_LITERAL )
+            &&   ( Line.Substring( currentToken.StartIndex, posInLine - currentToken.StartIndex ).Contains( "." ) )
+            &&   ( nextByte >= 'A' )
+            &&   ( nextByte <= 'F' ) )
+            {
+              // in case of hex literals they are not allowed after a dot!
+            }
+            else if ( AllowedTokenChars[currentToken.TokenType].IndexOf( nextByte ) != -1 )
             {
               ++posInLine;
               continue;
@@ -882,11 +895,19 @@ namespace RetroDevStudio.Parser
 
       // sanitize
       if ( ( lineInfo.Tokens.Count > 0 )
-      &&   ( LabelMode )
-      &&   ( lineInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL )
-      &&   ( lineInfo.Tokens[0].Content.IndexOf( '.' ) == -1 ) )
+      &&   ( !LabelMode )
+      &&   ( lineInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL ) )
       {
         lineInfo.Tokens[0].TokenType = Token.Type.LINE_NUMBER;
+        if ( lineInfo.Tokens[0].Content.Contains( "." ) )
+        {
+          int   dotPos = lineInfo.Tokens[0].Content.IndexOf( "." );
+          var otherToken              = new Token() { TokenType = Token.Type.DIRECT_TOKEN };
+          otherToken.Content          = lineInfo.Tokens[0].Content.Substring( dotPos );
+          otherToken.StartIndex       = lineInfo.Tokens[0].StartIndex + dotPos;
+          lineInfo.Tokens[0].Content  = lineInfo.Tokens[0].Content.Substring( 0, dotPos );
+          lineInfo.Tokens.Insert( 1, otherToken );
+        }
       }
 
       if ( Settings.BASICDialect.HasTextLabels )
@@ -900,7 +921,8 @@ namespace RetroDevStudio.Parser
         for ( int i = startIndex; i < lineInfo.Tokens.Count; i++ )
         {
           // a variable
-          if ( ( lineInfo.Tokens[i].TokenType == Token.Type.VARIABLE )
+          if ( ( ( lineInfo.Tokens[i].TokenType == Token.Type.VARIABLE )
+          ||     ( lineInfo.Tokens[i].Content == "." ) )
 
           // at the start of a statement (no EXEC/PROC)
           &&   ( ( i == startIndex )
