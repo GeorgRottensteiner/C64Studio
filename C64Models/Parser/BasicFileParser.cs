@@ -200,7 +200,7 @@ namespace RetroDevStudio.Parser
 
       AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@";
 
-      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*";
+      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#";
 
       SetBasicDialect( Settings.BASICDialect );
 
@@ -3260,7 +3260,8 @@ namespace RetroDevStudio.Parser
           &&     ( token.TokenType == Token.Type.NUMERIC_LITERAL ) ) )
           {
             // replace starting line number
-            if ( token.TokenType == Token.Type.NUMERIC_LITERAL )
+            if ( ( token.TokenType == Token.Type.NUMERIC_LITERAL )
+            ||   ( token.TokenType == Token.Type.LINE_NUMBER ) )
             {
               lineInfo.LineNumber = GR.Convert.ToI32( token.Content );
             }

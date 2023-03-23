@@ -186,6 +186,7 @@ namespace TestProject
     public void TestEncodeToLabels()
     {
       string      source = @"10 PRINT ""HALLO""
+                          15 GET#2,A$
                           20 GOTO 10";
 
       var parser = CreateParser( "BASIC V2" );
@@ -201,6 +202,7 @@ namespace TestProject
       Assert.AreEqual( @"
 LABEL10
 PRINT ""HALLO""
+GET#2,A$
 GOTO LABEL10
 ", encoded );
     }

@@ -99,15 +99,18 @@ namespace RetroDevStudio.Controls
         _AttachControl.Move -= _AttachControl_Move;
         _AttachControl.LocationChanged -= _AttachControl_LocationChanged;
 
-        _AttachControl.Parent = null;
-        _AttachControl.Visible = false;
+        Parent = null;
+        Visible = false;
+        //_AttachControl.Parent = null;
+        //_AttachControl.Visible = false;
 
         _AttachControl = null;
         //OnClosed( new ToolStripDropDownClosedEventArgs( ToolStripDropDownCloseReason.AppFocusChange ) );
 
+        /*
         Debug.Log( "predisp" );
         Dispose();
-        Debug.Log( "postdisp" );
+        Debug.Log( "postdisp" );*/
         return;
       }
     }

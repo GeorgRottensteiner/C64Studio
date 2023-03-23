@@ -16,7 +16,7 @@ namespace RetroDevStudio.Controls
     private ItemCollection    _Items;
     private TextBox           _EditItems;
     private CSButton          _BtnDropDown;
-    private PopupControl      _PopupList; 
+    private PopupControl      _PopupList;
     private ListBox           _AutoCompleteListBox = new ListBox();
 
 
@@ -36,11 +36,47 @@ namespace RetroDevStudio.Controls
 
 
 
+    public bool AutoFilterListItems
+    {
+      get;
+      set;
+    }
+
+
+
     public CSAutoCompleteComboBox()
     {
+      AutoFilterListItems           = false;
       _Items = new ItemCollection( this );
       _AutoCompleteListBox.Visible = false;
+      _AutoCompleteListBox.MouseClick += _AutoCompleteListBox_MouseClick;
       InitializeComponent();
+    }
+
+
+
+    private void _AutoCompleteListBox_MouseClick( object sender, MouseEventArgs e )
+    {
+      for ( int i = 0; i < _AutoCompleteListBox.Items.Count; i++ )
+      {
+        if ( _AutoCompleteListBox.GetItemRectangle( i ).Contains( e.Location ) )
+        {
+          CloseDropDown();
+          _EditItems.Text = (string)_AutoCompleteListBox.Items[i];
+          return;
+        }
+      }
+    }
+
+
+
+    private void CloseDropDown()
+    {
+      if ( !_AutoCompleteListBox.Visible )
+      {
+        return;
+      }
+      _PopupList.Close();
     }
 
 
@@ -111,13 +147,18 @@ namespace RetroDevStudio.Controls
 
     protected void OnTextUpdate( EventArgs e )
     {
-      var Values = Items.Where( x => x.ToString().ToLower().Contains( Text.ToLower() ) );
+      IEnumerable<string>     items = Items;
+
+      if ( AutoFilterListItems )
+      {
+        items = Items.Where( x => x.ToString().ToLower().Contains( Text.ToLower() ) );
+      }
 
       string  origText = Text;
       _AutoCompleteListBox.Items.Clear();
       if ( Text != string.Empty )
       {
-        _AutoCompleteListBox.Items.AddRange( Values.ToArray() );
+        _AutoCompleteListBox.Items.AddRange( items.ToArray() );
       }
       else
       {
@@ -125,9 +166,7 @@ namespace RetroDevStudio.Controls
       }
       _EditItems.SelectionStart = origText.Length;
       _EditItems.SelectionLength = Text.Length - origText.Length;
-      //DroppedDown = true;
-      //Cursor.Current = Cursors.Default;
-      //Focus();
+      ResizeListBoxToContent();
     }
 
 
@@ -136,8 +175,10 @@ namespace RetroDevStudio.Controls
     {
       var g = _AutoCompleteListBox.CreateGraphics();
 
+      int   numItems = Math.Min( 20, _AutoCompleteListBox.Items.Count );
+
       int     maxWidth = 0;
-      int     maxHeight = _AutoCompleteListBox.Items.Count * _AutoCompleteListBox.Font.Height;
+      int     maxHeight = numItems * _AutoCompleteListBox.Font.Height;
 
       var currentScreen = Screen.FromHandle( _AutoCompleteListBox.Handle );
       if ( maxHeight > currentScreen.Bounds.Height )
@@ -154,7 +195,15 @@ namespace RetroDevStudio.Controls
           maxWidth = itemWidth;
         }
       }
+      if ( maxWidth < Width )
+      {
+        maxWidth = Width;
+      }
       _AutoCompleteListBox.ClientSize = new Size( maxWidth, maxHeight );
+      if ( _PopupList != null )
+      {
+        _PopupList.Size = new Size( maxWidth, maxHeight );
+      }
     }
 
 
@@ -328,6 +377,7 @@ namespace RetroDevStudio.Controls
       public void Add( string Item )
       {
         _Items.Add( Item );
+        _Items.Distinct().ToList();
         _Owner.UpdateItemList();
       }
 
@@ -358,6 +408,7 @@ namespace RetroDevStudio.Controls
       public void Insert( int Index, string Text )
       {
         _Items.Insert( Index, Text );
+        _Items = _Items.Distinct().ToList();
         _Owner.UpdateItemList();
       }
 
@@ -366,6 +417,7 @@ namespace RetroDevStudio.Controls
       public void AddRange( IEnumerable<string> List )
       {
         _Items.AddRange( List );
+        _Items = _Items.Distinct().ToList();
         _Owner.UpdateItemList();
       }
     }
