@@ -33,6 +33,7 @@ namespace RetroDevStudio.Controls
       }
       MinimumSize = _MinimumSize;
       ClientSize = _Content.Size;
+      Padding = new Padding( 0 );
       InitializeComponent();
 
       var host = new ToolStripControlHost( _Content );
@@ -89,12 +90,10 @@ namespace RetroDevStudio.Controls
     {
       base.OnLostFocus( e );
 
-      Debug.Log( "lost focus" );
       if ( ( _AttachControl != null )
       &&   ( !_AttachControl.Focused )
       &&   ( !ContainsFocus ) )
       {
-        Debug.Log( "focus futsch" );
         _AttachControl.LostFocus -= _AttachControl_LostFocus;
         _AttachControl.Move -= _AttachControl_Move;
         _AttachControl.LocationChanged -= _AttachControl_LocationChanged;

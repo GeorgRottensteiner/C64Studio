@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.CustomRenderer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,6 +19,8 @@ namespace RetroDevStudio.Controls
     private CSButton          _BtnDropDown;
     private PopupControl      _PopupList;
     private ListBox           _AutoCompleteListBox = new ListBox();
+
+    private int               _ListBoxMouseOverItemIndex = -1;
 
 
 
@@ -50,7 +53,64 @@ namespace RetroDevStudio.Controls
       _Items = new ItemCollection( this );
       _AutoCompleteListBox.Visible = false;
       _AutoCompleteListBox.MouseClick += _AutoCompleteListBox_MouseClick;
+      _AutoCompleteListBox.MouseMove += _AutoCompleteListBox_MouseMove;
+      _AutoCompleteListBox.DrawItem += _AutoCompleteListBox_DrawItem;
+      _AutoCompleteListBox.DrawMode = DrawMode.OwnerDrawFixed;
       InitializeComponent();
+    }
+
+
+
+    private void _AutoCompleteListBox_DrawItem( object sender, DrawItemEventArgs e )
+    {
+      if ( e.Index == _ListBoxMouseOverItemIndex )
+      {
+        e.DrawBackground();
+      }
+      else
+      {
+        e.DrawBackground();
+      }
+
+      if ( e.Index != -1 )
+      {
+        e.Graphics.DrawString( _AutoCompleteListBox.Items[e.Index].ToString(), e.Font, new SolidBrush( e.ForeColor ),
+          e.Bounds, 
+          StringFormat.GenericDefault );
+      }
+
+      // If the ListBox has focus, draw a focus rectangle around the selected item.
+      e.DrawFocusRectangle();
+    }
+
+
+
+    private int DetermineListBoxItemUnderMouse()
+    {
+      Point screenPosition = Control.MousePosition;
+      Point listBoxClientAreaPosition = _AutoCompleteListBox.PointToClient( screenPosition );
+
+      return _AutoCompleteListBox.IndexFromPoint( listBoxClientAreaPosition );
+    }
+
+
+
+    private void _AutoCompleteListBox_MouseMove( object sender, MouseEventArgs e )
+    {
+      int   newItem = DetermineListBoxItemUnderMouse();
+      if ( newItem != _ListBoxMouseOverItemIndex )
+      {
+        if ( _ListBoxMouseOverItemIndex != -1 )
+        {
+          _AutoCompleteListBox.Invalidate( _AutoCompleteListBox.GetItemRectangle( _ListBoxMouseOverItemIndex ) );
+        }
+
+        _ListBoxMouseOverItemIndex = newItem;
+        if ( _ListBoxMouseOverItemIndex != -1 )
+        {
+          _AutoCompleteListBox.Invalidate( _AutoCompleteListBox.GetItemRectangle( _ListBoxMouseOverItemIndex ) );
+        }
+      }
     }
 
 
@@ -151,7 +211,7 @@ namespace RetroDevStudio.Controls
 
       if ( AutoFilterListItems )
       {
-        items = Items.Where( x => x.ToString().ToLower().Contains( Text.ToLower() ) );
+        items = Items.Where( x => x.ToString().ToLower().Contains( _EditItems.Text.ToLower() ) );
       }
 
       string  origText = Text;
@@ -284,7 +344,7 @@ namespace RetroDevStudio.Controls
       this._EditItems.Location = new System.Drawing.Point(3, 3);
       this._EditItems.Multiline = true;
       this._EditItems.Name = "_EditItems";
-      this._EditItems.Size = new System.Drawing.Size(202, 14);
+      this._EditItems.Size = new System.Drawing.Size(138, 19);
       this._EditItems.TabIndex = 0;
       this._EditItems.TextChanged += new System.EventHandler(this.editItems_TextChanged);
       // 
@@ -293,9 +353,9 @@ namespace RetroDevStudio.Controls
       this._BtnDropDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this._BtnDropDown.Image = null;
-      this._BtnDropDown.Location = new System.Drawing.Point(205, 0);
+      this._BtnDropDown.Location = new System.Drawing.Point(141, 0);
       this._BtnDropDown.Name = "_BtnDropDown";
-      this._BtnDropDown.Size = new System.Drawing.Size(20, 20);
+      this._BtnDropDown.Size = new System.Drawing.Size(20, 25);
       this._BtnDropDown.TabIndex = 1;
       this._BtnDropDown.Text = "▼";
       this._BtnDropDown.UseVisualStyleBackColor = true;
@@ -307,7 +367,7 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this._BtnDropDown);
       this.Controls.Add(this._EditItems);
       this.Name = "CSAutoCompleteComboBox";
-      this.Size = new System.Drawing.Size(225, 20);
+      this.Size = new System.Drawing.Size(161, 25);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -331,13 +391,18 @@ namespace RetroDevStudio.Controls
 
     private void UpdateItemList()
     {
-      var Values = Items.Where( x => x.ToString().ToLower().Contains( _EditItems.Text.ToLower() ) );
+      IEnumerable<string>     items = Items;
+
+      if ( AutoFilterListItems )
+      {
+        items = Items.Where( x => x.ToString().ToLower().Contains( _EditItems.Text.ToLower() ) );
+      }
 
       string  origText = _EditItems.Text;
       _AutoCompleteListBox.Items.Clear();
       if ( _EditItems.Text != string.Empty )
       {
-        _AutoCompleteListBox.Items.AddRange( Values.ToArray() );
+        _AutoCompleteListBox.Items.AddRange( items.ToArray() );
       }
       else
       {
