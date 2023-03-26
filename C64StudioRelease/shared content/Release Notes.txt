@@ -17,6 +17,70 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+26.03.2023 - 7.4:         Add: Tiny64 Interface to not tie it to Windows directly
+                          Add: Shared version info
+                          Fix: label mode toggle would loose the # on a GET#2 (probably others too)
+                          Fix: BASIC TSB label parsing for syntax coloring
+                          Add: MediaTool: Charset export from map and charscreen projects
+                          Fix: Potential exception when using numbers as shortcut keys and setting them in the context menu
+                          Fix: REM content was handled as separate tokens (and wreaking havoc if a token ended up as an opcode)
+                          Add: Bookmark window, menu/context menu entries for bookmarking
+                          Fix: BASIC Several Ctrl-letter short working (Ctrl-E, Ctrl-M, Ctrl-N, Ctrl-Q, Ctrl-R, Ctrl-S, Ctrl-T)
+                          Fix: Potential crash on duplicate argument entries for a tool (which shouldn't happen)
+                          Fix: opcode size forcing for zeropage did not work if nested brackets were used
+                          Add: Preferences completely replaced
+                          Add: Toggle document tabs via Ctrl-Tab/Ctrl-Shift-Tab
+                          Add: Show shortcut keys on asm source editor context menu
+                          Fix: Rename references keeps scroll offset intact
+                          Fix: Unit tests for cartridge compilation use external compare files now (the constants were getting too long)
+                          Fix: Allow incomplete data import in charscreen editor
+                          Add: Cartridge support for all magic desk size variants (32k,128k,256k,512k,1M)
+                          Fix: easyflash cartridge sample to actually work (Ultimax mode!)
+                          Add: New preferences dialog, with local import/export for ALL options
+                          Add: C128 VDC 80x25 charset mode (and C128 palette)
+                          Fix: https://github.com/GeorgRottensteiner/C64Studio/issues/81
+                          Fix: char screen editor reverse mode, now works for text entry and also uses the intended cache (https://github.com/GeorgRottensteiner/C64Studio/issues/80)
+                          Fix: BASIC It's column, not row, damnit!
+                          Fix: BASIC Update case button caption/image if loading a lower case file
+                          Fix: Renaming a file in Solution Explorer now also properly adjusts dependencies
+                          Add: Show bytes/cycle count of current line, when nothing is selected
+                          Fix: BASIC Ctrl-N would insert the wrong character
+                          Fix: Issue #78, cancel on C64Studio closing (X) would still shut down
+                          Fix: Map editor undo would not update display if scrolled
+                          WIP-Fix: Autocomplete combo in Replace dialog at least works now, not final
+                          Fix: Emulator combo would be empty on first startup, after emulator setup wizard ran
+                          add/fix: Map editor, several convenience functions (default select a map/tile if opened)
+                          Fix: BASIC toggling case would mess up macro casing inside string literals
+                          Add: Import from binary file now allows to skip a number of bytes
+                          Add: Charset editor, import from hex
+                          Fix: BASIC renumber keep spaces between numbers intact
+                          Fix: Broken BASIC renumber would run emulator sometimes
+                          Fix: FileManager drag&drop was broken due to renaming the main namespace
+                          Fix: Remove shadow cursor after triple click
+                          Fix: Scaling issues on high DPI for build event tab
+                          Fix: "Shadow" caret when clicking inside selection
+                          Add: MediaManager support for file types
+                          Update: TSB dialect file
+                          Fix: BASIC auto scan for renumber properly builds with dependencies as well
+                          Fix: BASIC Macro with BASIC token inside would mess up (during renumber, etc.)
+                          Add/Fix: Proper detection of circular inclusion
+                          Add: missing BASIC X16 tokens (again?)
+                          Fix: BASIC renumber with macros inside
+                          Fix: MarQ import without bg colors crashing
+                          Add/Fix: Import charscreen from CTM/Marqs editor now properly updated background color, open file dialog preselects all supported file types
+                          Add: Saving/Restoring bookmarks in assembly view
+                          Fix: BASIC - Re-allow Ctrl-key bindings to work (Ctrl-S, etc. didn't work anymore)
+                          Fix: BASIC toggling label mode would auto-insert macros, now they're kept intact
+                          Fix: Binary editor export to BASIC, adhere to wrap counts
+                          Add: BASIC better label button description plus tool tip
+                          Fix: BASIC editor: Regular Ctrl-key combinations working outside of string enter mode
+                          Add: Layout choice of character list for better PETSCII
+                          Add: C64Debugger breakpoint file (currently all breakpoints are added as break on exec)
+                          Fix: Show <source file> on right click now uses correct casing
+                          Add: Rename all references
+                          Fix: VIC20 only allows 8 background colors
+                          Add: Allow text macros in string literals
+
 14.11.2022 - 7.3:         Fix: File Manager rename dialog would remove Shift-Spaces after double clicking a letter in the list
                           Add: Preliminary Commander X16 support (charset, charscreen, sprites 16/256 colors)
                           Fix: BASIC renumber issue with hard comments (they'd make line numbers skip)
