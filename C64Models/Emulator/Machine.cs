@@ -25,7 +25,7 @@ namespace Tiny64
     public CIA2       CIA2;
     public SID        SID = new SID();
 
-    public Display    Display = new Display();
+    public IDisplay   Display = null;
 
     public bool       SkipNextBreakpointCheck = false;
 

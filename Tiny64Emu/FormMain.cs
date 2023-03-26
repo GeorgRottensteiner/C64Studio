@@ -473,7 +473,7 @@ namespace Tiny64Emu
 
       m_BW.DoWork += OnEmulatorRun;
 
-      m_Emulator.Machine.Display.SetTarget( pictureOutput );
+      m_Emulator.Machine.Display = new Display( pictureOutput );
 
       //m_Emulator.AddBreakpoint( 0xb824, false, false, true );
       //m_Emulator.AddBreakpoint( 0xa57c, false, false, true );

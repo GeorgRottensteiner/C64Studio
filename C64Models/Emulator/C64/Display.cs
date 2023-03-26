@@ -14,7 +14,7 @@ namespace Tiny64
 #if NET5_0_OR_GREATER
     [SupportedOSPlatform("windows")]
 #endif
-  public unsafe class Display
+  public unsafe class Display : IDisplay
 	{
 		private Control     _TargetControl = null;
 		private Bitmap      _Screen;
@@ -34,7 +34,7 @@ namespace Tiny64
 
 
 
-		public unsafe Display()
+		public unsafe Display( Control Target )
 		{
 			_ColorValues[0] = 0xff000000;
 			_ColorValues[1] = 0xffffffff;
@@ -68,6 +68,7 @@ namespace Tiny64
 			{
 				_bitmapPtr[i] = 0xffffff;
 			}
+			SetTarget( Target );
 		}
 
 

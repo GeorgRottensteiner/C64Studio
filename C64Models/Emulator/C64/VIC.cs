@@ -282,7 +282,7 @@ namespace Tiny64
 
 
 
-    public void RunCycle( Memory Memory, Display Display )
+    public void RunCycle( Memory Memory, IDisplay Display )
     {
       // toggle border state
       if ( !TopBottomBorderActive )
@@ -424,7 +424,7 @@ namespace Tiny64
 
 
 
-    private void UpdateNextPixelSlice( Display Display, Memory Memory )
+    private void UpdateNextPixelSlice( IDisplay Display, Memory Memory )
     {
       // TODO - display disabled
 
@@ -445,7 +445,7 @@ namespace Tiny64
 
 
 
-    private void RenderGraphicModeSlice( Display Display, Memory Memory, GraphicMode Mode )
+    private void RenderGraphicModeSlice( IDisplay Display, Memory Memory, GraphicMode Mode )
     {
       // TODO !
       switch ( CurrentMode )

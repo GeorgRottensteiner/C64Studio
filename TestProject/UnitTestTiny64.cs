@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tiny64;
 
 namespace TestProject
 {
@@ -11,6 +12,7 @@ namespace TestProject
     {
       Tiny64.Machine    machine = new Tiny64.Machine();
 
+      machine.Display = new Display( null );
       machine.RunCycle();
     }
 
