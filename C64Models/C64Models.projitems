@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\IDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Display.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\PhysicalKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\SID.cs" />
@@ -96,5 +97,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\DisassemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)version\StudioVersion.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Version\" />
   </ItemGroup>
 </Project>

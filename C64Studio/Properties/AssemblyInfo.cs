@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
@@ -34,5 +36,8 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( RetroDevStudio.StudioCore.StudioVersion )]
-[assembly: AssemblyFileVersion( RetroDevStudio.StudioCore.StudioVersion )]
+#if NET5_0_OR_GREATER
+[assembly: SupportedOSPlatform( "windows" )]
+#endif
+[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + ".0" )]
+[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + ".0" )]

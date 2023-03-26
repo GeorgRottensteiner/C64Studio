@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "" )]
 [assembly: AssemblyProduct( "C64Ass" )]
-[assembly: AssemblyCopyright( "Copyright ©  2016 - 2022" )]
+[assembly: AssemblyCopyright( "Copyright ©  2016 - 2023" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -31,6 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "7.3.0.0" )]
-[assembly: AssemblyFileVersion( "7.3.0.0" )]
+[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + ".0" )]
+[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + ".0" )]
