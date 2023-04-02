@@ -3195,6 +3195,21 @@ namespace RetroDevStudio
 
         projectToolStripMenuItem.Visible = true;
 
+        if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
+        {
+          StudioCore.AddToOutput( "Project is under source control\n" );
+          newProject.SourceControl = new SourceControl.Controller( newProject.FullPath( "" ) );
+
+          foreach ( var file in newProject.SourceControl.CurrentAddedFiles() )
+          {
+            StudioCore.AddToOutput( "File under source control " + file + "\n" );
+          }
+        }
+        else
+        {
+          StudioCore.AddToOutput( "Project is not under source control\n" );
+        }
+
         if ( createdNewSolution )
         {
           RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );

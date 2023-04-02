@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+
+
 namespace RetroDevStudio
 {
   public partial class NoDblClkTreeView : TreeView
@@ -89,11 +91,13 @@ namespace RetroDevStudio
     protected override void OnNotifyMessage( Message m )
     {
       if ( TriggerLabelEdit )
+      {
         if ( m.Msg == WM_TIMER )
         {
           TriggerLabelEdit = false;
           StartLabelEdit();
         }
+      }
       base.OnNotifyMessage( m );
     }
 
@@ -103,8 +107,7 @@ namespace RetroDevStudio
     {
       TreeNode tn = this.SelectedNode;
       viewedLabel = tn.Text;
-      NodeLabelEditEventArgs e =
-                new NodeLabelEditEventArgs(tn);
+      var e = new NodeLabelEditEventArgs( tn );
       base.OnBeforeLabelEdit( e );
       editedLabel = tn.Text;
       this.LabelEdit = true;
@@ -137,7 +140,9 @@ namespace RetroDevStudio
         if ( tn == this.GetNodeAt( e.X, e.Y ) )
         {
           if ( wasDoubleClick )
+          {
             wasDoubleClick = false;
+          }
           else if ( LabelEdit )
           {
             TriggerLabelEdit = true;
@@ -166,5 +171,92 @@ namespace RetroDevStudio
 
 
 
+    // Returns the bounds of the specified node, including the region 
+    // occupied by the node label and any node tag displayed.
+    private Rectangle NodeBounds( TreeNode Node )
+    {
+      // Set the return value to the normal node bounds.
+      Rectangle bounds = Node.Bounds;
+      /*
+      if ( node.Tag != null )
+      {
+        // Retrieve a Graphics object from the TreeView handle
+        // and use it to calculate the display width of the tag.
+        
+      }*/
+
+      Font nodeFont = Node.NodeFont;
+      if ( nodeFont == null )
+      {
+        nodeFont = Font;
+      }
+      Graphics g = CreateGraphics();
+      int tagWidth = (int)g.MeasureString( Node.Text, nodeFont ).Width + 4;
+
+      // Adjust the node bounds using the calculated value.
+      bounds.Width = tagWidth;
+      //bounds.Offset( tagWidth / 2, 0 );
+      //bounds = Rectangle.Inflate( bounds, tagWidth / 2, 0 );
+      g.Dispose();
+
+      return bounds;
+    }
+
+
+
+    private void NoDblClkTreeView_DrawNode( object sender, DrawTreeNodeEventArgs e )
+    {
+      Font nodeFont = e.Node.NodeFont;
+      if ( nodeFont == null )
+      {
+        nodeFont = ( (TreeView)sender ).Font;
+      }
+      var bounds = NodeBounds( e.Node );
+      var textBounds = Rectangle.Inflate( bounds, 3, 0 );
+      var bgBounds = new Rectangle( bounds.Location, bounds.Size );
+      bgBounds.Offset( -3, 0 );
+
+      // Draw the background and node text for a selected node.
+      if ( ( e.State & TreeNodeStates.Selected ) != 0 )
+      {
+        // Draw the background of the selected node. The NodeBounds
+        // method makes the highlight rectangle large enough to
+        // include the text of a node tag, if one is present.
+        e.Graphics.FillRectangle( Brushes.Green, bgBounds );
+
+        // Retrieve the node font. If the node font has not been set, use the TreeView font.
+        e.Graphics.DrawString( e.Node.Text, nodeFont, Brushes.White, textBounds );
+      }
+      else
+      {
+        if ( ( e.State & TreeNodeStates.Focused ) != 0 )
+        {
+          e.Graphics.FillRectangle( Brushes.LightBlue, bgBounds );
+        }
+        e.Graphics.DrawString( e.Node.Text, nodeFont, Brushes.Black, textBounds );
+        //e.DrawDefault = true;
+      }
+
+      // If a node tag is present, draw its string representation 
+      // to the right of the label text.
+      /*
+      if ( e.Node.Tag != null )
+      {
+        e.Graphics.DrawString( e.Node.Tag.ToString(), Font, Brushes.Yellow, e.Bounds.Right + 2, e.Bounds.Top );
+      }*/
+
+      // If the node has focus, draw the focus rectangle large, making
+      // it large enough to include the text of the node tag, if present.
+      if ( ( e.State & TreeNodeStates.Focused ) != 0 )
+      {
+        using ( Pen focusPen = new Pen( Color.Black ) )
+        {
+          focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+          bounds.Size = new Size( bgBounds.Width - 1, bgBounds.Height - 1 );
+          bounds.Offset( -3, 0 );
+          e.Graphics.DrawRectangle( focusPen, bounds );
+        }
+      }
+    }
   }
 }

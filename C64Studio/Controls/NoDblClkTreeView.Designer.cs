@@ -28,8 +28,16 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
+      this.SuspendLayout();
+      // 
+      // NoDblClkTreeView
+      // 
+      this.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+      this.LineColor = System.Drawing.Color.Black;
       this.Text = "NoDblClkTreeView";
+      this.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.NoDblClkTreeView_DrawNode);
+      this.ResumeLayout(false);
+
     }
 
     #endregion

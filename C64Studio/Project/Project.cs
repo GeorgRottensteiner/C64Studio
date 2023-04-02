@@ -5,8 +5,7 @@ using System.Linq;
 using WeifenLuo.WinFormsUI.Docking;
 using static RetroDevStudio.Parser.BasicFileParser;
 using RetroDevStudio.Documents;
-
-
+using SourceControl;
 
 namespace RetroDevStudio
 {
@@ -17,6 +16,7 @@ namespace RetroDevStudio
     private bool              m_Modified = false;
     public System.Windows.Forms.TreeNode           Node = null;
     public MachineType        PreferredMachineType = MachineType.C64;
+    public Controller         SourceControl = null;
 
 
     public List<ProjectElement>   Elements = new List<ProjectElement>();

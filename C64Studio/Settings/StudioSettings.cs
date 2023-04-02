@@ -1098,16 +1098,19 @@ namespace RetroDevStudio
               {
                 FindArguments.Add( binIn.ReadString() );
               }
+              FindArguments = FindArguments.Distinct().ToList();
               int numReplaceArguments = binIn.ReadInt32();
               for ( int i = 0; i < numReplaceArguments; ++i )
               {
                 ReplaceArguments.Add( binIn.ReadString() );
               }
+              ReplaceArguments = ReplaceArguments.Distinct().ToList();
               int numReplaceWithArguments = binIn.ReadInt32();
               for ( int i = 0; i < numReplaceWithArguments; ++i )
               {
                 ReplaceWithArguments.Add( binIn.ReadString() );
               }
+              ReplaceWithArguments = ReplaceWithArguments.Distinct().ToList();
             }
             break;
           case FileChunkConstants.SETTINGS_IGNORED_WARNINGS:

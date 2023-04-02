@@ -940,7 +940,8 @@ namespace RetroDevStudio.Controls
       DoNotAddUndo = true;
 
       m_Project = Project;
-      if ( comboCharsetMode.SelectedIndex != (int)m_Project.Mode )
+      if ( ( comboCharsetMode.SelectedIndex != (int)m_Project.Mode )
+      &&   ( (int)m_Project.Mode < comboCharsetMode.Items.Count ) )
       {
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }

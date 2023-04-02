@@ -204,9 +204,7 @@
     <Compile Update="Controls\EditC64Filename.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\NoDblClkTreeView.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="Controls\NoDblClkTreeView.cs" />
     <Compile Update="Controls\HexPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -353,6 +351,7 @@
       <Aliases></Aliases>
     </ProjectReference>
     <ProjectReference Include="..\HexBox\HexBox.csproj" />
+    <ProjectReference Include="..\SourceControl\SourceControl.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Documents\ReadOnlyFile.resx">
