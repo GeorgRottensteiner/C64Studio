@@ -211,10 +211,29 @@ namespace RetroDevStudio
       {
         nodeFont = ( (TreeView)sender ).Font;
       }
+      e.DrawDefault = false;
       var bounds = NodeBounds( e.Node );
       var textBounds = Rectangle.Inflate( bounds, 3, 0 );
       var bgBounds = new Rectangle( bounds.Location, bounds.Size );
       bgBounds.Offset( -3, 0 );
+
+      /*
+      UInt32      color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+      if ( ( e.Item.Pressed )
+      ||   ( e.Item.Selected ) )
+      {
+        e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), 0, 0, e.Item.Width, e.Item.Height );
+
+        color = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+
+        // make transparent
+        if ( ( color & 0xff000000 ) == 0xff000000 )
+        {
+          color = ( color & 0x00ffffff ) | 0x40000000;
+        }
+      }
+      e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), 0, 0, e.Item.Width, e.Item.Height );
+      */
 
       // Draw the background and node text for a selected node.
       if ( ( e.State & TreeNodeStates.Selected ) != 0 )
@@ -225,7 +244,7 @@ namespace RetroDevStudio
         e.Graphics.FillRectangle( Brushes.Green, bgBounds );
 
         // Retrieve the node font. If the node font has not been set, use the TreeView font.
-        e.Graphics.DrawString( e.Node.Text, nodeFont, Brushes.White, textBounds );
+        e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( BackColor ), textBounds );
       }
       else
       {
@@ -233,17 +252,8 @@ namespace RetroDevStudio
         {
           e.Graphics.FillRectangle( Brushes.LightBlue, bgBounds );
         }
-        e.Graphics.DrawString( e.Node.Text, nodeFont, Brushes.Black, textBounds );
-        //e.DrawDefault = true;
+        e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( ForeColor ), textBounds );
       }
-
-      // If a node tag is present, draw its string representation 
-      // to the right of the label text.
-      /*
-      if ( e.Node.Tag != null )
-      {
-        e.Graphics.DrawString( e.Node.Tag.ToString(), Font, Brushes.Yellow, e.Bounds.Right + 2, e.Bounds.Top );
-      }*/
 
       // If the node has focus, draw the focus rectangle large, making
       // it large enough to include the text of the node tag, if present.

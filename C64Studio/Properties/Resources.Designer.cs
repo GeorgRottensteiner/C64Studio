@@ -361,7 +361,7 @@ namespace RetroDevStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon flag_blue_on {
             get {
@@ -446,6 +446,56 @@ namespace RetroDevStudio.Properties {
         internal static System.Drawing.Icon project {
             get {
                 object obj = ResourceManager.GetObject("project", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon se_sc_changes {
+            get {
+                object obj = ResourceManager.GetObject("se_sc_changes", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon se_sc_conflict {
+            get {
+                object obj = ResourceManager.GetObject("se_sc_conflict", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon se_sc_ignore {
+            get {
+                object obj = ResourceManager.GetObject("se_sc_ignore", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon se_sc_new {
+            get {
+                object obj = ResourceManager.GetObject("se_sc_new", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon se_sc_uptodate {
+            get {
+                object obj = ResourceManager.GetObject("se_sc_uptodate", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

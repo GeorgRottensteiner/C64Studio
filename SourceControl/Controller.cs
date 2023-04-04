@@ -8,6 +8,17 @@ namespace SourceControl
 {
   public class Controller
   {
+    public static bool IsFunctional()
+    {
+#if NET6_0_OR_GREATER
+      return true;
+#else
+      return false;
+#endif
+    }
+
+
+
     public static bool IsFolderUnderSourceControl( string Folder )
     {
 #if NET6_0_OR_GREATER
