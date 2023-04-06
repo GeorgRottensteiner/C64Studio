@@ -1,4 +1,4 @@
-﻿!cpu m65
+!cpu m65
 
 !zone VIC3
 
@@ -142,6 +142,9 @@
 ;xxxx 11xx = SPRPALSEL    - sprite palette bank
 ;xxxx xx11 = ABTPALSEL    - VIC4 alternative bitmap/text palette bank
 .PALSEL         = $d070
+
+;Sprite V400 enable
+.SPRENV400      = $d076
 
 ;palette red entries (up to $d1ff) - nibbles are switched in 8bit color mode
 .PALRED         = $d100
