@@ -4965,7 +4965,10 @@ namespace RetroDevStudio
             {
               if ( docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename ) )
               {
-                OpenFile( newFilename );
+                if ( StudioCore.Navigating.FindDocumentByFilename( newFilename ) == null )
+                {
+                  OpenFile( newFilename );
+                }
               }
               return true;
             }
