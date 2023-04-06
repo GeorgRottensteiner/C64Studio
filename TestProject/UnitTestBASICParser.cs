@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Intrinsics.Arm;
 using C64Models.BASIC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,14 +34,14 @@ namespace TestProject
 
 
 
-    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName )
+    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, bool StripREM = false )
     {
-      return TestCompile( Source, BASICDialectName, 2049 );
+      return TestCompile( Source, BASICDialectName, 2049, StripREM );
     }
 
 
 
-    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, ushort StartAddress )
+    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, ushort StartAddress, bool StripREM = false )
     {
       var parser = CreateParser( BASICDialectName );
 
@@ -48,6 +49,8 @@ namespace TestProject
       config.OutputFile   = "test.prg";
       config.TargetType   = RetroDevStudio.Types.CompileTargetType.PRG;
       config.StartAddress = StartAddress;
+
+      parser.Settings.StripREM = StripREM;
 
       bool parseResult = parser.Parse( Source, null, config, null );
       if ( !parseResult )
@@ -285,6 +288,32 @@ GOTO LABEL10
       var result = TestCompile( source, "BASIC V2" );
 
       Assert.AreEqual( "0108110842008BB5284229B3B142A73636000000", result.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestBASICStripREM()
+    {
+      string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
+                           20 PRINT""WELT""";
+
+      var result = TestCompile( source, "BASIC V2", true );
+
+      Assert.AreEqual( "01080E080A00992248414C4C4F22001A081400992257454C5422000000", result.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestBASICStripREMNoStrip()
+    {
+      string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
+                           20 PRINT""WELT""";
+
+      var result = TestCompile( source, "BASIC V2" );
+
+      Assert.AreEqual( "01081C080A00992248414C4C4F223A8F205052494E54224855525A220028081400992257454C5422000000", result.ToString() );
     }
 
 
