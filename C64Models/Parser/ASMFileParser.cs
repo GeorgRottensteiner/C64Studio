@@ -11061,6 +11061,13 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      if ( lowestStart == 65536 )
+      {
+        // no real data here, and no start address either
+        AddError( 0, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Code without start address encountered (missing *=)" );
+        return false;
+      }
+
       // check for overlaps
       if ( builtSegments.Count > 1 )
       {
@@ -12849,7 +12856,9 @@ namespace RetroDevStudio.Parser
           }
           else if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, TextCodeMapping, out result ) )
           {
-            return "";
+            // treat as empty string (e.g. undefined symbol)
+            //return "";
+            result = new SymbolInfo();
           }
           sb.Append( result.ToString() );
         }
