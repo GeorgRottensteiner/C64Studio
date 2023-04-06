@@ -303,3 +303,7 @@
 /Sample Projects/MacroTest/c64asm.bin
 /SourceControl/bin
 /SourceControl/obj
+/C64StudioRelease/net6.0-windows/SourceControl.dll
+/C64StudioRelease/net6.0-windows/LibGit2Sharp.dll
+/C64StudioRelease/net4.8/SourceControl.dll
+/C64StudioRelease/net3.5/SourceControl.dll
