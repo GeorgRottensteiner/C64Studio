@@ -207,8 +207,9 @@ namespace RetroDevStudio.Documents
           continue;
         }
 
-        System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
-        bool addNode = true;
+        var   node = new System.Windows.Forms.TreeNode();
+        bool  addNode = true;
+        bool  addToGlobalNode = false;
 
         node.Text = token.Name;
         node.Tag = token;
@@ -264,12 +265,18 @@ namespace RetroDevStudio.Documents
           continue;
         }
 
+        if ( !token.Name.StartsWith( curZone + "." ) )
+        {
+          addToGlobalNode = true;
+        }
+
         // cut off zone
         try
         {
           // find parent node
           if ( ( string.IsNullOrEmpty( token.Zone ) )
-          ||   ( !zoneNodes.ContainsKey( token.Zone ) ) )
+          ||   ( !zoneNodes.ContainsKey( token.Zone ) )
+          ||   ( addToGlobalNode ) )
           {
             globalZone.Nodes.Add( node );
             if ( ( _ExpandedNodes.ContainsKey( globalZone.Text ) )
