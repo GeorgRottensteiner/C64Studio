@@ -1316,7 +1316,6 @@ namespace RetroDevStudio.Documents
         m_ToolTip.Hide( editSource );
         return;
       }
-
       Types.ASM.FileInfo    debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( debugFileInfo == null )
       {
@@ -1338,7 +1337,9 @@ namespace RetroDevStudio.Documents
 
       debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineNumber, out zone, out cheapLabelParent );
 
-      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      debugFileInfo.FindGlobalLineIndex( lineNumber, DocumentInfo.FullPath, out int globalLineIndex );
+
+      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent, globalLineIndex );
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.Type != SymbolInfo.Types.UNKNOWN ) )
       {
