@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio.Dialogs;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
@@ -395,6 +396,83 @@ namespace RetroDevStudio.Documents
       bufferData.AppendI32( (int)listMessages.Sorting );
       return bufferData;
     }
+
+
+
+    private void listMessages_DrawSubItem( object sender, DrawListViewSubItemEventArgs e )
+    {
+      var trimming = StringTrimming.None;
+      bool firstItem = ( e.Item.SubItems.IndexOf( e.SubItem ) == 0 );
+      if ( e.Item.SubItems.IndexOf( e.SubItem ) == 3 )
+      {
+        trimming = StringTrimming.EllipsisPath;
+      }
+
+      // the file path
+      var itemBounds = e.SubItem.Bounds;
+      if ( firstItem )
+      {
+        itemBounds = new Rectangle( itemBounds.Left, itemBounds.Top, listMessages.Columns[0].Width, itemBounds.Height );
+      }
+      var textBounds = new Rectangle( itemBounds.Left + 3, itemBounds.Top, itemBounds.Width - 6, itemBounds.Height );
+
+      if ( e.Item.Selected )
+      {
+        var color = Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT );
+        // make transparent
+        if ( ( color & 0xff000000 ) == 0xff000000 )
+        {
+          color = ( color & 0x00ffffff ) | 0x40000000;
+        }
+
+        e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), e.Bounds );
+        if ( ( firstItem )
+        &&   ( e.Item.ImageList != null ) )
+        {
+          var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+          e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
+          textBounds = new Rectangle( textBounds.Left + image.Width + 6, textBounds.Top, textBounds.Width - image.Width - 6, textBounds.Height );
+        }
+
+        e.Graphics.DrawString( e.SubItem.Text, e.SubItem.Font, new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) ) ), textBounds,
+          new StringFormat() { Trimming = trimming, LineAlignment = StringAlignment.Center, FormatFlags = StringFormatFlags.NoWrap }  );
+      }
+      else
+      {
+        e.DrawBackground();
+        if ( ( firstItem )
+        &&   ( e.Item.ImageList != null ) )
+        {
+          var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+          e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
+          textBounds = new Rectangle( textBounds.Left + image.Width + 6, textBounds.Top, textBounds.Width - image.Width - 6, textBounds.Height );
+        }
+
+        e.Graphics.DrawString( e.SubItem.Text, e.SubItem.Font, new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.CONTROL_TEXT ) ) ), textBounds,
+          new StringFormat() { Trimming = trimming, LineAlignment = StringAlignment.Center, FormatFlags = StringFormatFlags.NoWrap } );
+      }
+
+      if ( e.ItemState == ListViewItemStates.Focused )
+      {
+        e.DrawFocusRectangle( e.Bounds );
+      }
+      //e.DrawDefault = true;
+    }
+
+
+
+    private void listMessages_DrawColumnHeader( object sender, DrawListViewColumnHeaderEventArgs e )
+    {
+      e.DrawDefault = true;
+    }
+
+
+
+    private void listMessages_DrawItem( object sender, DrawListViewItemEventArgs e )
+    {
+      
+    }
+
 
 
   }
