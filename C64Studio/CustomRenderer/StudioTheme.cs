@@ -188,7 +188,21 @@ namespace RetroDevStudio.CustomRenderer
             tabControl.DrawItem += TabControl_DrawItem;
           }
         }
-        if ( control is ListView )
+        if ( control is CSListView )
+        {
+          var lv = control as CSListView;
+
+          lv.SelectedTextColor    = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+          lv.SelectedTextBGColor  = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+          // make transparent
+          if ( ( lv.SelectedTextBGColor & 0xff000000 ) == 0xff000000 )
+          {
+            lv.SelectedTextBGColor = ( lv.SelectedTextBGColor & 0x00ffffff ) | 0x40000000;
+          }
+          lv.ForeColor            = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
+          lv.BackColor            = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+        }
+        else if ( control is ListView )
         {
           var lv = control as ListView;
 

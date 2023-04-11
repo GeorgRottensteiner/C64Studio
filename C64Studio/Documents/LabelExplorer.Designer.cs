@@ -1,6 +1,6 @@
 ﻿namespace RetroDevStudio.Documents
 {
-  partial class Outline
+  partial class LabelExplorer
   {
     /// <summary>
     /// Erforderliche Designervariable.
@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Outline));
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LabelExplorer));
       this.treeProject = new RetroDevStudio.NoDblClkTreeView();
       this.m_ImageListOutline = new System.Windows.Forms.ImageList(this.components);
       this.toolStripOutline = new System.Windows.Forms.ToolStrip();
@@ -39,7 +39,7 @@
       this.checkSortBySource = new System.Windows.Forms.ToolStripButton();
       this.checkSortAlphabetically = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-      this.editOutlineFilter = new System.Windows.Forms.ToolStripTextBox();
+      this.editLabelExplorerFilter = new System.Windows.Forms.ToolStripTextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStripOutline.SuspendLayout();
       this.SuspendLayout();
@@ -79,7 +79,7 @@
             this.checkSortBySource,
             this.checkSortAlphabetically,
             this.toolStripSeparator2,
-            this.editOutlineFilter});
+            this.editLabelExplorerFilter});
       this.toolStripOutline.Location = new System.Drawing.Point(0, 0);
       this.toolStripOutline.Name = "toolStripOutline";
       this.toolStripOutline.Size = new System.Drawing.Size(534, 25);
@@ -138,24 +138,23 @@
       this.toolStripSeparator2.Name = "toolStripSeparator2";
       this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
       // 
-      // editOutlineFilter
+      // editLabelExplorerFilter
       // 
-      this.editOutlineFilter.AutoSize = false;
-      this.editOutlineFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.editOutlineFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-      this.editOutlineFilter.Name = "editOutlineFilter";
-      this.editOutlineFilter.Size = new System.Drawing.Size(200, 23);
-      this.editOutlineFilter.ToolTipText = "Label Filter";
-      this.editOutlineFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
+      this.editLabelExplorerFilter.AutoSize = false;
+      this.editLabelExplorerFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.editLabelExplorerFilter.Name = "editLabelExplorerFilter";
+      this.editLabelExplorerFilter.Size = new System.Drawing.Size(200, 23);
+      this.editLabelExplorerFilter.ToolTipText = "Label Filter";
+      this.editLabelExplorerFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
       // 
-      // Outline
+      // LabelExplorer
       // 
       this.ClientSize = new System.Drawing.Size(534, 390);
       this.Controls.Add(this.toolStripOutline);
       this.Controls.Add(this.treeProject);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-      this.Name = "Outline";
-      this.Text = "Outline";
+      this.Name = "LabelExplorer";
+      this.Text = "Label Explorer";
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       this.toolStripOutline.ResumeLayout(false);
       this.toolStripOutline.PerformLayout();
@@ -173,7 +172,7 @@
     public System.Windows.Forms.ToolStripButton checkShowShortCutLabels;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    private System.Windows.Forms.ToolStripTextBox editOutlineFilter;
+    private System.Windows.Forms.ToolStripTextBox editLabelExplorerFilter;
     public System.Windows.Forms.ToolStripButton checkSortBySource;
     public System.Windows.Forms.ToolStripButton checkSortAlphabetically;
   }

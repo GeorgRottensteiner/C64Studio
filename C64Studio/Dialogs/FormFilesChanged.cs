@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -33,7 +34,9 @@ namespace RetroDevStudio.Dialogs
       ChangedDocuments.Add( Document );
       if ( listChangedFiles != null )
       {
-        listChangedFiles.Items.Add( Document.FullPath );
+        var newItem = new ListViewItem();
+        newItem.SubItems[0] = new CSListViewSubItem( Document.FullPath, StringTrimming.EllipsisPath );
+        listChangedFiles.Items.Add( newItem );
       }
     }
 
@@ -58,7 +61,9 @@ namespace RetroDevStudio.Dialogs
     {
       foreach ( var doc in ChangedDocuments )
       {
-        listChangedFiles.Items.Add( doc.FullPath );
+        var newItem = new ListViewItem();
+        newItem.SubItems[0] = new CSListViewSubItem( doc.FullPath, StringTrimming.EllipsisPath );
+        listChangedFiles.Items.Add( newItem );
       }
     }
 

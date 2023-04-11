@@ -1722,6 +1722,7 @@ namespace RetroDevStudio.Parser
 
               symbol.RealValue = Util.StringToDouble( Tokens[StartIndex].Content );
               symbol.Type = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
+              symbol.LineIndex = LineIndex;
 
               int result = (int)symbol.RealValue;
               result &= 0xffff;
@@ -1745,6 +1746,7 @@ namespace RetroDevStudio.Parser
                 return false;
               }
               symbol.Type = SymbolInfo.Types.CONSTANT_1;
+              symbol.LineIndex = LineIndex;
 
               long result = symbol.AddressOrValue;
               result &= 0xffff;
@@ -1762,6 +1764,7 @@ namespace RetroDevStudio.Parser
               symbol.AddressOrValue = 1;
               symbol.Type = SymbolInfo.Types.CONSTANT_STRING;
               symbol.String = Tokens[StartIndex].Content;
+              symbol.LineIndex = LineIndex;
               NumBytesGiven = Tokens[StartIndex].Length;
 
               symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, TextCodeMapping, out bool hadError );
@@ -1773,6 +1776,7 @@ namespace RetroDevStudio.Parser
               var symbol = new SymbolInfo();
               symbol.AddressOrValue = (byte)Tokens[StartIndex].Content[1];
               symbol.Type = SymbolInfo.Types.CONSTANT_1;
+              symbol.LineIndex = LineIndex;
               NumBytesGiven = 1;
               ResultingToken = symbol;
             }

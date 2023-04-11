@@ -31,7 +31,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.btnKeepFiles = new System.Windows.Forms.Button();
       this.btnReloadAll = new System.Windows.Forms.Button();
-      this.listChangedFiles = new System.Windows.Forms.ListView();
+      this.listChangedFiles = new Controls.CSListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.SuspendLayout();
       // 
@@ -113,7 +113,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Button btnKeepFiles;
     private System.Windows.Forms.Button btnReloadAll;
-    private System.Windows.Forms.ListView listChangedFiles;
+    private Controls.CSListView listChangedFiles;
     private System.Windows.Forms.ColumnHeader columnHeader1;
   }
 }

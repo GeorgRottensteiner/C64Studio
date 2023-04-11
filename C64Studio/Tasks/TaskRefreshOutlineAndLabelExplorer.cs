@@ -4,13 +4,13 @@
 
 namespace RetroDevStudio.Tasks
 {
-  public class TaskRefreshOutline : Task
+  public class TaskRefreshOutlineAndLabelExplorer : Task
   {
     private BaseDocument    m_Document;
 
 
 
-    public TaskRefreshOutline( BaseDocument Document )
+    public TaskRefreshOutlineAndLabelExplorer( BaseDocument Document )
     {
       m_Document = Document;
     }
@@ -20,6 +20,7 @@ namespace RetroDevStudio.Tasks
     protected override bool ProcessTask()
     {
       Core.MainForm.m_Outline.RefreshFromDocument( m_Document );
+      Core.MainForm.m_LabelExplorer.RefreshFromDocument( m_Document );
       return true;
     }
   }

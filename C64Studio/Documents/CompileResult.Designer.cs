@@ -30,7 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompileResult));
-      this.listMessages = new System.Windows.Forms.ListView();
+      //this.listMessages = new System.Windows.Forms.ListView();
+      this.listMessages = new Controls.CSListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -60,16 +61,12 @@
       this.listMessages.HideSelection = false;
       this.listMessages.Location = new System.Drawing.Point(0, 0);
       this.listMessages.Name = "listMessages";
-      this.listMessages.OwnerDraw = true;
       this.listMessages.Size = new System.Drawing.Size(678, 200);
       this.listMessages.SmallImageList = this.imageListCompileResult;
       this.listMessages.TabIndex = 0;
       this.listMessages.UseCompatibleStateImageBehavior = false;
       this.listMessages.View = System.Windows.Forms.View.Details;
       this.listMessages.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listMessages_ColumnClick);
-      this.listMessages.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.listMessages_DrawColumnHeader);
-      this.listMessages.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listMessages_DrawItem);
-      this.listMessages.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.listMessages_DrawSubItem);
       this.listMessages.ItemActivate += new System.EventHandler(this.listMessages_ItemActivate);
       // 
       // columnHeader1
@@ -159,7 +156,8 @@
 
     #endregion
 
-    private System.Windows.Forms.ListView listMessages;
+    //private System.Windows.Forms.ListView listMessages;
+    private Controls.CSListView listMessages;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader3;
