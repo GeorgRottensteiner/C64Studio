@@ -28,6 +28,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       InitializeComponent();
 
       checkBASICUseC64Font.Checked = !Core.Settings.BASICUseNonC64Font;
+      editBASICC64FontSize.Enabled = !Core.Settings.BASICUseNonC64Font;
       if ( !Core.Settings.BASICUseNonC64Font )
       {
         labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
