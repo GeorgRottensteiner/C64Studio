@@ -2637,6 +2637,19 @@ namespace RetroDevStudio.Parser
 
       foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
       {
+        if ( lineInfo.Value.Tokens.Count == 0 )
+        {
+          continue;
+        }
+
+        // remember cut off length so we can properly fill up with blanks below
+        int   lineStartLength = sb.Length;
+        int   lineLengthOffset = lineInfo.Value.Tokens[0].Content.Length;
+        if ( lineInfo.Value.Tokens.Count > 1 )
+        {
+          lineLengthOffset = lineInfo.Value.Tokens[1].StartIndex;
+        }
+
         if ( lineNumberReference.ContainsKey( lineInfo.Value.LineNumber ) )
         {
           // something is referencing this line
@@ -2749,6 +2762,11 @@ namespace RetroDevStudio.Parser
               i = nextIndex;
               continue;
             }
+          }
+          // fill up with blanks
+          while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
+          {
+            sb.Append( ' ' );
           }
           // if we got here there was no label inserted
           sb.Append( token.Content );
@@ -2866,6 +2884,11 @@ namespace RetroDevStudio.Parser
         }
 
         sb.Append( lineNumber.ToString() + " " );
+
+        // remember cut off length so we can properly fill up with blanks below
+        int   lineStartLength = sb.Length;
+        int   lineLengthOffset = lineInfo.Value.Tokens[0].StartIndex;
+
         for ( int tokenIndex = 0; tokenIndex < lineInfo.Value.Tokens.Count; ++tokenIndex  )
         {
 
@@ -2885,6 +2908,11 @@ namespace RetroDevStudio.Parser
             hadREM = true;
           }
 
+          // fill up with blanks
+          while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
+          {
+            sb.Append( ' ' );
+          }
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
           &&   ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
