@@ -57,6 +57,9 @@
     <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromHex.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\CSListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -254,6 +257,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Documents\Bookmarks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Documents\LabelExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">

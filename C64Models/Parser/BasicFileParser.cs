@@ -1361,6 +1361,10 @@ namespace RetroDevStudio.Parser
           {
             if ( insideREMStatement )
             {
+              if ( Settings.StripREM )
+              {
+                return info;
+              }
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.COMMENT;
               basicToken.StartIndex = bytePos;

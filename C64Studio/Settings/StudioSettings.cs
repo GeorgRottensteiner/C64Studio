@@ -73,7 +73,9 @@ namespace RetroDevStudio
     [Description( "Find References" )]
     FIND_REFERENCES,
     [Description( "Bookmarks") ]
-    BOOKMARKS
+    BOOKMARKS,
+    [Description( "Label Explorer" )]
+    LABEL_EXPLORER
   };
 
   public enum MemoryDisplayType
@@ -146,6 +148,12 @@ namespace RetroDevStudio
     public bool                                 OutlineSortByIndex = true;
     public bool                                 OutlineSortByAlphabet = false;
     public string                               OutlineFilter = "";
+
+    public bool                                 LabelExplorerShowLocalLabels = true;
+    public bool                                 LabelExplorerShowShortCutLabels = true;
+    public bool                                 LabelExplorerSortByIndex = true;
+    public bool                                 LabelExplorerSortByAlphabet = true;
+    public string                               LabelExplorerFilter = "";
 
     public bool                                 ToolbarActiveMain = true;
     public bool                                 ToolbarActiveDebugger = true;
@@ -749,7 +757,17 @@ namespace RetroDevStudio
       chunkOutline.AppendU8( (byte)( !OutlineShowLocalLabels ? 1 : 0 ) );
       chunkOutline.AppendU8( (byte)( !OutlineShowShortCutLabels ? 1 : 0 ) );
       chunkOutline.AppendU8( (byte)( !OutlineSortByIndex ? 1 : 0 ) );
+      chunkOutline.AppendString( OutlineFilter );
       SettingsData.Append( chunkOutline.ToBuffer() );
+
+      // Label Explorer settings
+      GR.IO.FileChunk chunkLabelExplorer = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_LABEL_EXPLORER );
+      chunkLabelExplorer.AppendU8( (byte)( !LabelExplorerShowLocalLabels ? 1 : 0 ) );
+      chunkLabelExplorer.AppendU8( (byte)( !LabelExplorerShowShortCutLabels ? 1 : 0 ) );
+      chunkLabelExplorer.AppendU8( (byte)( !LabelExplorerSortByIndex ? 1 : 0 ) );
+      chunkLabelExplorer.AppendString( LabelExplorerFilter );
+      SettingsData.Append( chunkLabelExplorer.ToBuffer() );
+
 
       // BASIC settings
       GR.IO.FileChunk chunkBASICParser = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BASIC_PARSER );
@@ -1077,10 +1095,22 @@ namespace RetroDevStudio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              OutlineShowLocalLabels = ( binIn.ReadUInt8() == 0 );
+              OutlineShowLocalLabels    = ( binIn.ReadUInt8() == 0 );
               OutlineShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
-              OutlineSortByIndex = ( binIn.ReadUInt8() == 0 );
-              OutlineSortByAlphabet = !OutlineSortByIndex;
+              OutlineSortByIndex        = ( binIn.ReadUInt8() == 0 );
+              OutlineFilter             = binIn.ReadString();
+              OutlineSortByAlphabet     = !OutlineSortByIndex;
+            }
+            break;
+          case FileChunkConstants.SETTINGS_LABEL_EXPLORER:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              LabelExplorerShowLocalLabels    = ( binIn.ReadUInt8() == 0 );
+              LabelExplorerShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
+              LabelExplorerSortByIndex        = ( binIn.ReadUInt8() == 0 );
+              LabelExplorerFilter             = binIn.ReadString();
+              LabelExplorerSortByAlphabet     = !LabelExplorerSortByIndex;
             }
             break;
           case FileChunkConstants.SETTINGS_FIND_REPLACE:

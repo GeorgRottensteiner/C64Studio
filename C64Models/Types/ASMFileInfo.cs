@@ -591,7 +591,7 @@ namespace RetroDevStudio.Types.ASM
 
 
 
-    public SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent )
+    public SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent, int GlobalLineIndex = -1 )
     {
       if ( AssemblerSettings != null )
       {
@@ -614,7 +614,24 @@ namespace RetroDevStudio.Types.ASM
           return Labels[Zone + Token];
         }
 
-        var tempLabel = TempLabelInfo.FirstOrDefault( tl => tl.Name == Token );
+        if ( Token.StartsWith( "." ) )
+        {
+          Token = Zone + Token;
+        }
+
+        TemporaryLabelInfo    tempLabel = null;
+        if ( GlobalLineIndex != -1 )
+        {
+          tempLabel = TempLabelInfo.FirstOrDefault( tl => 
+                 ( tl.Name == Token ) 
+              && ( GlobalLineIndex >= tl.LineIndex ) 
+              && ( ( tl.LineCount == -1 ) 
+              ||   ( GlobalLineIndex < tl.LineIndex + tl.LineCount ) ) );
+        }
+        else
+        {
+          tempLabel = TempLabelInfo.FirstOrDefault( tl => tl.Name == Token );
+        }
         if ( tempLabel != null )
         {
           return tempLabel.Symbol;

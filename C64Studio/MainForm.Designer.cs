@@ -147,6 +147,7 @@
       this.spriteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.valueTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+      this.bookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.calculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.compileResulttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -218,7 +219,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.bookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.labelExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -1093,6 +1094,7 @@
             this.compileResulttoolStripMenuItem,
             this.disassemblerToolStripMenuItem,
             this.findReferencesToolStripMenuItem,
+            this.labelExplorerToolStripMenuItem,
             this.outlineToolStripMenuItem,
             this.outputToolStripMenuItem,
             this.petSCIITableToolStripMenuItem,
@@ -1182,6 +1184,12 @@
       // 
       this.toolStripSeparator13.Name = "toolStripSeparator13";
       this.toolStripSeparator13.Size = new System.Drawing.Size(184, 6);
+      // 
+      // bookmarksToolStripMenuItem
+      // 
+      this.bookmarksToolStripMenuItem.Name = "bookmarksToolStripMenuItem";
+      this.bookmarksToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.bookmarksToolStripMenuItem.Text = "Bookmarks";
       // 
       // calculatorToolStripMenuItem
       // 
@@ -1836,11 +1844,11 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // bookmarksToolStripMenuItem
+      // labelExplorerToolStripMenuItem
       // 
-      this.bookmarksToolStripMenuItem.Name = "bookmarksToolStripMenuItem";
-      this.bookmarksToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.bookmarksToolStripMenuItem.Text = "Bookmarks";
+      this.labelExplorerToolStripMenuItem.Name = "labelExplorerToolStripMenuItem";
+      this.labelExplorerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.labelExplorerToolStripMenuItem.Text = "Label Explorer";
       // 
       // MainForm
       // 
@@ -2066,6 +2074,7 @@
         private System.Windows.Forms.ToolStripMenuItem renameAllReferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem bookmarksToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem labelExplorerToolStripMenuItem;
   }
 }
 

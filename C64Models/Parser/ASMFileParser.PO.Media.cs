@@ -264,7 +264,7 @@ namespace RetroDevStudio.Parser
                   + charProject.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method.EndsWith( "SWIZZLED" ), method.Contains( "RGB" ) );
+          dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method.EndsWith( "SWIZZLED" ), !method.Contains( "RGB" ) );
         }
         else
         {
@@ -589,7 +589,7 @@ namespace RetroDevStudio.Parser
                   + totalNumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = spriteProject.GetPaletteExportData( startIndex, numColors, method.EndsWith( "SWIZZLED" ), method.Contains( "RGB" ) );
+          dataToInclude = spriteProject.GetPaletteExportData( startIndex, numColors, method.EndsWith( "SWIZZLED" ), !method.Contains( "RGB" ) );
         }
 
         // sprite set file
@@ -1146,7 +1146,7 @@ namespace RetroDevStudio.Parser
                   + screenProject.CharSet.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = screenProject.CharSet.Colors.Palette.GetExportData( startIndex, numColors, method.EndsWith( "SWIZZLED" ), method.Contains( "RGB" ) );
+          dataToInclude = screenProject.CharSet.Colors.Palette.GetExportData( startIndex, numColors, method.EndsWith( "SWIZZLED" ), !method.Contains( "RGB" ) );
         }
         else
         {

@@ -11,22 +11,22 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroDevStudio.Documents
 {
-  public partial class Outline : BaseDocument
+  public partial class LabelExplorer : BaseDocument
   {
     public System.Windows.Forms.TreeNode      NodeRoot = null;
-    private Project                           OutlineProject = null;
-    private GR.Collections.MultiMap<string,SymbolInfo>       OutlineTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
+    private Project                           LabelExplorerProject = null;
+    private GR.Collections.MultiMap<string,SymbolInfo>       LabelExplorerTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
     private GR.Collections.Map<string,bool>   _ExpandedNodes = new GR.Collections.Map<string, bool>();
 
 
 
-    public Outline()
+    public LabelExplorer()
     {
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
-      NodeRoot = new System.Windows.Forms.TreeNode( "Outline" );
+      NodeRoot = new System.Windows.Forms.TreeNode( "All Labels" );
       NodeRoot.ImageIndex = 0;
       NodeRoot.SelectedImageIndex = 0;
       treeProject.Nodes.Add( NodeRoot );
@@ -48,7 +48,7 @@ namespace RetroDevStudio.Documents
         //MainForm.OpenDocumentAndGotoLine( tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
         return;
       }
-      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
+      Core.Navigating.OpenDocumentAndGotoLine( LabelExplorerProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
     }
 
 
@@ -58,7 +58,7 @@ namespace RetroDevStudio.Documents
       if ( ( e.Button == System.Windows.Forms.MouseButtons.Right )
       &&   ( e.Node != null ) )
       {
-        if ( OutlineProject == null )
+        if ( LabelExplorerProject == null )
         {
           return;
         }
@@ -85,8 +85,8 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      if ( ( OutlineProject == Doc.DocumentInfo.Project )
-      &&   ( OutlineTokens == Doc.DocumentInfo.KnownTokens ) )
+      if ( ( LabelExplorerProject == Doc.DocumentInfo.Project )
+      &&   ( LabelExplorerTokens == Doc.DocumentInfo.KnownTokens ) )
       {
         // nothing to do
         return;
@@ -98,9 +98,8 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      OutlineProject = Doc.DocumentInfo.Project;
-      OutlineTokens = Doc.DocumentInfo.KnownTokens;
-      //Debug.Log( "Set to " + OutlineTokens.Count + " tokens from doc " + Doc.DocumentInfo.DocumentFilename );
+      LabelExplorerProject = Doc.DocumentInfo.Project;
+      LabelExplorerTokens = Doc.DocumentInfo.KnownTokens;
 
       StoreOpenNodes();
       RefreshNodes();
@@ -116,14 +115,14 @@ namespace RetroDevStudio.Documents
       IList<SymbolInfo>     sortedTokens = null;
 
       // sort by line number
-      if ( Core.Settings.OutlineSortByIndex )
+      if ( Core.Settings.LabelExplorerSortByIndex )
       {
         GR.Collections.MultiMap<int, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
-        foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
+        foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
         {
-          if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+          if ( !string.IsNullOrEmpty( Core.Settings.LabelExplorerFilter ) )
           {
-            if ( token.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+            if ( token.Key.ToUpper().Contains( Core.Settings.LabelExplorerFilter.ToUpper() ) )
             {
               sortedTokensInner.Add( token.Value.LineIndex, token.Value );
             }
@@ -139,11 +138,11 @@ namespace RetroDevStudio.Documents
       else
       {
         GR.Collections.MultiMap<string, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<string, SymbolInfo>();
-        foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
+        foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
         {
-          if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+          if ( !string.IsNullOrEmpty( Core.Settings.LabelExplorerFilter ) )
           {
-            if ( token.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+            if ( token.Key.ToUpper().Contains( Core.Settings.LabelExplorerFilter.ToUpper() ) )
             {
               sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
             }
@@ -238,12 +237,12 @@ namespace RetroDevStudio.Documents
             break;
           case SymbolInfo.Types.LABEL:
             if ( ( token.Name.Contains( "." ) )
-            &&   ( !Core.Settings.OutlineShowLocalLabels ) )
+            &&   ( !Core.Settings.LabelExplorerShowLocalLabels ) )
             {
               addNode = false;
             }
             if ( ( token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
-            &&   ( !Core.Settings.OutlineShowShortCutLabels ) )
+            &&   ( !Core.Settings.LabelExplorerShowShortCutLabels ) )
             {
               addNode = false;
             }
@@ -269,13 +268,21 @@ namespace RetroDevStudio.Documents
         {
           addToGlobalNode = true;
         }
+        int     dotPos = token.Name.IndexOf( '.' );
+        string  tokenZone = token.Zone;
+        if ( ( dotPos != -1 )
+        &&   ( dotPos > 0 ) )
+        {
+          tokenZone = token.Name.Substring( 0, dotPos );
+          addToGlobalNode = false;
+        }
 
         // cut off zone
         try
         {
           // find parent node
-          if ( ( string.IsNullOrEmpty( token.Zone ) )
-          ||   ( !zoneNodes.ContainsKey( token.Zone ) )
+          if ( ( string.IsNullOrEmpty( tokenZone ) )
+          ||   ( !zoneNodes.ContainsKey( tokenZone ) )
           ||   ( addToGlobalNode ) )
           {
             globalZone.Nodes.Add( node );
@@ -287,9 +294,19 @@ namespace RetroDevStudio.Documents
           }
           else 
           {
-            var   parentZoneNode = zoneNodes[token.Zone];
+            if ( !zoneNodes.ContainsKey( tokenZone ) )
+            {
+              var zoneNode = new System.Windows.Forms.TreeNode();
 
-            int dotPos = node.Text.IndexOf( '.' );
+              zoneNode.Text = tokenZone;
+              zoneNode.Tag  = null;
+              zoneNode.ImageIndex = zoneNode.SelectedImageIndex = 0;
+              NodeRoot.Nodes.Add( zoneNode );
+              zoneNodes.Add( zoneNode.Text, zoneNode );
+            }
+            var   parentZoneNode = zoneNodes[tokenZone];
+
+            dotPos = node.Text.IndexOf( '.' );
             string    nodeParentText = parentZoneNode.Text;
             if ( dotPos != -1 )
             {
@@ -332,9 +349,9 @@ namespace RetroDevStudio.Documents
 
     private void checkShowLocalLabels_Click( object sender, EventArgs e )
     {
-      Core.Settings.OutlineShowLocalLabels = !Core.Settings.OutlineShowLocalLabels;
+      Core.Settings.LabelExplorerShowLocalLabels = !Core.Settings.LabelExplorerShowLocalLabels;
 
-      checkShowLocalLabels.Image = Core.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
+      checkShowLocalLabels.Image = Core.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
 
       StoreOpenNodes();
       RefreshNodes();
@@ -344,9 +361,9 @@ namespace RetroDevStudio.Documents
 
     private void checkShowShortCutLabels_Click( object sender, EventArgs e )
     {
-      Core.Settings.OutlineShowShortCutLabels = !Core.Settings.OutlineShowShortCutLabels;
+      Core.Settings.LabelExplorerShowShortCutLabels = !Core.Settings.LabelExplorerShowShortCutLabels;
 
-      checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      checkShowShortCutLabels.Image = Core.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
       StoreOpenNodes();
       RefreshNodes();
@@ -356,11 +373,11 @@ namespace RetroDevStudio.Documents
 
     private void checkSortBySource_Click( object sender, EventArgs e )
     {
-      Core.Settings.OutlineSortByIndex    = true;
-      Core.Settings.OutlineSortByAlphabet = false;
+      Core.Settings.LabelExplorerSortByIndex    = true;
+      Core.Settings.LabelExplorerSortByAlphabet = false;
 
       checkSortAlphabetically.Enabled = true;
-      checkSortBySource.Enabled = false;
+      checkSortBySource.Enabled       = false;
 
       StoreOpenNodes();
       RefreshNodes();
@@ -370,8 +387,8 @@ namespace RetroDevStudio.Documents
 
     private void checkSortAlphabetically_Click( object sender, EventArgs e )
     {
-      Core.Settings.OutlineSortByIndex = false;
-      Core.Settings.OutlineSortByAlphabet = true;
+      Core.Settings.LabelExplorerSortByIndex = false;
+      Core.Settings.LabelExplorerSortByAlphabet = true;
 
       checkSortBySource.Enabled = true;
       checkSortAlphabetically.Enabled = false;
@@ -384,7 +401,7 @@ namespace RetroDevStudio.Documents
 
     private void editOutlineFilter_TextChanged( object sender, EventArgs e )
     {
-      Core.Settings.OutlineFilter = editOutlineFilter.Text;
+      Core.Settings.LabelExplorerFilter = editLabelExplorerFilter.Text;
       StoreOpenNodes();
       RefreshNodes();
     }

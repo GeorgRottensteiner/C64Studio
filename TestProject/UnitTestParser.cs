@@ -1367,7 +1367,7 @@ namespace TestProject
     [TestMethod]
     public void TestMacroBinaryCollapseHang()
     {
-      string      source = @"
+      string      source = @"* = $2000
                     !macro SBAHN_CHECK_SPRITE_COLLISION sprite_x_reg, sprite_pointer_reg, .additional_x_bit_mask {
                   lda sprite_pointer_reg
                   cmp #$E9
@@ -1390,21 +1390,22 @@ namespace TestProject
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "0000", assembly.ToString() );
+      Assert.AreEqual( "0020", assembly.ToString() );
     }
 
 
     [TestMethod]
     public void TestPseudoOpIfndefWithIndention()
     {
-      string      source = @"idt1 = 1
+      string      source = @"* = $2000
+                              idt1 = 1
                               !ifndef idt1 {
                                 !error ""!!!""
                                 }
                             ";
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "0000", assembly.ToString() );
+      Assert.AreEqual( "0020", assembly.ToString() );
     }
 
 
@@ -1587,6 +1588,60 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "00C0A9418D000460", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroWithArgumentAsNewLabel()
+    {
+      string      source = @";a proposed macro definition
+                      !macro set_ifndef var, val, var_str {
+                        !ifndef var {
+                            var = val
+                          !message ""mathlib: "", var_str, "" defaulted to: "", var
+                          } else {
+                          !message ""mathlib: "", var_str, "" overridden to: "", var
+                        }
+                      }
+
+                      * = $2000
+                                +set_ifndef .page_high, $c2, "".page_high""
+
+
+                                +set_ifndef .page_high, $c2, "".page_high""
+                                rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroWithArgumentAsNewDefine()
+    {
+      string      source = @";a proposed macro definition
+                      !macro set_ifndef var, val, var_str {
+                        !ifndef var {
+                            !set var = val
+                          !message ""mathlib: "", var_str, "" defaulted to: "", var
+                          } else {
+                          !message ""mathlib: "", var_str, "" overridden to: "", var
+                        }
+                      }
+
+                      * = $2000
+                                +set_ifndef .page_high, $c3, "".page_high""
+
+
+                                +set_ifndef .page_high, $c3, "".page_high""
+                                rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002060", assembly.ToString() );
     }
 
 

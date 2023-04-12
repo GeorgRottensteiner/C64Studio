@@ -1,6 +1,8 @@
-﻿using RetroDevStudio.Dialogs;
+﻿using RetroDevStudio.Controls;
+using RetroDevStudio.Dialogs;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
@@ -142,7 +144,7 @@ namespace RetroDevStudio.Documents
         }
         if ( documentFile != null )
         {
-          item.SubItems.Add( documentFile.ToString() );
+          item.SubItems.Add( new CSListViewSubItem( documentFile.ToString() ) { Trimming = StringTrimming.EllipsisPath } );
         }
         else
         {
@@ -395,6 +397,7 @@ namespace RetroDevStudio.Documents
       bufferData.AppendI32( (int)listMessages.Sorting );
       return bufferData;
     }
+
 
 
   }

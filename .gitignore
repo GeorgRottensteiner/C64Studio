@@ -303,3 +303,11 @@
 /Sample Projects/MacroTest/c64asm.bin
 /SourceControl/bin
 /SourceControl/obj
+/C64StudioRelease/net6.0-windows/SourceControl.dll
+/C64StudioRelease/net6.0-windows/LibGit2Sharp.dll
+/C64StudioRelease/net4.8/SourceControl.dll
+/C64StudioRelease/net3.5/SourceControl.dll
+/Sample Projects/MacroTest/striprem.prg
+/Sample Projects/MacroTest/globallabelsinoutline.prg
+/Sample Projects/MacroTest/macro_ifndef.prg
+/Sample Projects/MacroTest/zone.variable in outline.prg

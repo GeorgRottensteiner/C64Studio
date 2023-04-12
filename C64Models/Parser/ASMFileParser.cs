@@ -1722,6 +1722,7 @@ namespace RetroDevStudio.Parser
 
               symbol.RealValue = Util.StringToDouble( Tokens[StartIndex].Content );
               symbol.Type = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
+              symbol.LineIndex = LineIndex;
 
               int result = (int)symbol.RealValue;
               result &= 0xffff;
@@ -1745,6 +1746,7 @@ namespace RetroDevStudio.Parser
                 return false;
               }
               symbol.Type = SymbolInfo.Types.CONSTANT_1;
+              symbol.LineIndex = LineIndex;
 
               long result = symbol.AddressOrValue;
               result &= 0xffff;
@@ -1762,6 +1764,7 @@ namespace RetroDevStudio.Parser
               symbol.AddressOrValue = 1;
               symbol.Type = SymbolInfo.Types.CONSTANT_STRING;
               symbol.String = Tokens[StartIndex].Content;
+              symbol.LineIndex = LineIndex;
               NumBytesGiven = Tokens[StartIndex].Length;
 
               symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, TextCodeMapping, out bool hadError );
@@ -1773,6 +1776,7 @@ namespace RetroDevStudio.Parser
               var symbol = new SymbolInfo();
               symbol.AddressOrValue = (byte)Tokens[StartIndex].Content[1];
               symbol.Type = SymbolInfo.Types.CONSTANT_1;
+              symbol.LineIndex = LineIndex;
               NumBytesGiven = 1;
               ResultingToken = symbol;
             }
@@ -5853,6 +5857,7 @@ namespace RetroDevStudio.Parser
 
         // identify internal labels as such
         DetectInternalLabels( lineIndex, lineTokenInfos );
+        StripInternalBrackets( lineTokenInfos, 1 );
 
         string  upToken = lineTokenInfos[0].Content.ToUpper();
 
@@ -8484,6 +8489,24 @@ namespace RetroDevStudio.Parser
 
 
 
+    private void StripInternalBrackets( List<TokenInfo> LineTokenInfos, int CenterTokenIndex )
+    {
+      if ( ( CenterTokenIndex < 1 )
+      ||   ( CenterTokenIndex + 1 >= LineTokenInfos.Count ) )
+      {
+        return;
+      }
+      if ( ( LineTokenInfos[CenterTokenIndex - 1].Content == AssemblerSettings.INTERNAL_OPENING_BRACE )
+      &&   ( LineTokenInfos[CenterTokenIndex + 1].Content == AssemblerSettings.INTERNAL_CLOSING_BRACE )
+      &&   ( IsTokenLabel( LineTokenInfos[CenterTokenIndex].Type ) ) )
+      {
+        LineTokenInfos.RemoveAt( CenterTokenIndex + 1 );
+        LineTokenInfos.RemoveAt( CenterTokenIndex - 1 );
+      }
+    }
+
+
+
     private void POPreprocessedList( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, ref bool HideInPreprocessedOutput )
     {
       if ( lineTokenInfos.Count != 2 )
@@ -8514,6 +8537,7 @@ namespace RetroDevStudio.Parser
       {
         return ParseLineResult.CALL_CONTINUE;
       }
+      StripInternalBrackets( lineTokenInfos, 1 );
       int equPos = lineTokenInfos[1].StartPos;
       string defineName = lineTokenInfos[0].Content;
       if ( !m_AssemblerSettings.CaseSensitive )
@@ -9560,7 +9584,6 @@ namespace RetroDevStudio.Parser
             {
               tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
             }
-            //tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
         }
         bool modifiedToken = false;
@@ -9755,10 +9778,20 @@ namespace RetroDevStudio.Parser
         {
           replacementLines[replacementLineIndex] = Lines[i];
         }
-        //Debug.Log( replacementLines[replacementLineIndex] );
         ++replacementLineIndex;
       }
       return replacementLines;
+    }
+
+
+
+    private void StripInternalBrackets( TokenInfo Token )
+    {
+      if ( ( Token.Content.StartsWith( AssemblerSettings.INTERNAL_OPENING_BRACE ) )
+      &&   ( Token.Content.EndsWith( AssemblerSettings.INTERNAL_CLOSING_BRACE ) ) )
+      {
+        Token.Content = Token.Content.Substring( 1, Token.Content.Length - 2 );
+      }
     }
 
 
@@ -9784,9 +9817,6 @@ namespace RetroDevStudio.Parser
             if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
             {
               // need to take loop into account, force new local label!
-              /*
-              token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
-                            + GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;*/
               token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
                             + AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX
                             + GetLoopGUID( Scopes ) + "_" + lineIndex.ToString() + "_" + token.Content;
@@ -9795,7 +9825,6 @@ namespace RetroDevStudio.Parser
             else if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
             {
               // need to take loop into account, force new local label!
-              //token.Content += GetLoopGUID( Scopes ) + "_" + lineIndex.ToString();
               replacedParam = true;
             }
           }
@@ -9809,7 +9838,6 @@ namespace RetroDevStudio.Parser
         {
           replacementLines[replacementLineIndex] = Lines[i];
         }
-        //Debug.Log( replacementLines[replacementLineIndex] );
         ++replacementLineIndex;
       }
       return replacementLines;
@@ -11059,6 +11087,13 @@ namespace RetroDevStudio.Parser
         {
           lowestStart = newLowestStart;
         }
+      }
+
+      if ( lowestStart == 65536 )
+      {
+        // no real data here, and no start address either
+        AddError( 0, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Code without start address encountered (missing *=)" );
+        return false;
       }
 
       // check for overlaps
@@ -12849,7 +12884,9 @@ namespace RetroDevStudio.Parser
           }
           else if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, TextCodeMapping, out result ) )
           {
-            return "";
+            // treat as empty string (e.g. undefined symbol)
+            //return "";
+            result = new SymbolInfo();
           }
           sb.Append( result.ToString() );
         }
