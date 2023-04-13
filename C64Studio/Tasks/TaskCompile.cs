@@ -507,9 +507,11 @@ namespace RetroDevStudio.Tasks
       if ( Core.Navigating.DetermineASMFileInfo( baseDoc ) == Core.Navigating.DetermineASMFileInfo( m_ActiveDocument ) )
       {
         Core.MainForm.m_Outline.RefreshFromDocument( baseDoc.BaseDoc );
+        Core.MainForm.m_LabelExplorer.RefreshFromDocument( baseDoc.BaseDoc );
       }
       Core.SetStatus( "Build successful" );
 
+      //Core.TaskManager.AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc.BaseDoc ) );
       if ( AutoFollowupAction )
       {
         switch ( Core.MainForm.AppState )

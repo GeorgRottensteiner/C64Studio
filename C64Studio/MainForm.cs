@@ -714,11 +714,13 @@ namespace RetroDevStudio
       m_Outline.checkShowShortCutLabels.Image       = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
       m_Outline.checkSortAlphabetically.Enabled     = StudioCore.Settings.OutlineSortByIndex;
       m_Outline.checkSortBySource.Enabled           = !StudioCore.Settings.OutlineSortByIndex;
+      m_Outline.editOutlineFilter.Text              = StudioCore.Settings.OutlineFilter;
 
       m_LabelExplorer.checkShowLocalLabels.Image      = StudioCore.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
       m_LabelExplorer.checkShowShortCutLabels.Image   = StudioCore.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
       m_LabelExplorer.checkSortAlphabetically.Enabled = StudioCore.Settings.LabelExplorerSortByIndex;
       m_LabelExplorer.checkSortBySource.Enabled       = !StudioCore.Settings.LabelExplorerSortByIndex;
+      m_LabelExplorer.editLabelExplorerFilter.Text    = StudioCore.Settings.LabelExplorerFilter;
 
       EmulatorListUpdated();
 
@@ -1499,7 +1501,6 @@ namespace RetroDevStudio
           if ( m_ActiveSource != baseDoc )
           {
             m_ActiveSource = baseDoc;
-            //Debug.Log( "m_Outline.RefreshFromDocument after active content change" );
             AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc ) );
           }
         }

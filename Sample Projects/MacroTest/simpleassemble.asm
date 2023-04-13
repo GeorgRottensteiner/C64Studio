@@ -14,3 +14,7 @@ jmp Zeropage_Routine
 
 Zeropage_Routine2
 
+
+!lzone dummy4
+
+.localdummylabel

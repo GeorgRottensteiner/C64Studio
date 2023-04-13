@@ -172,7 +172,7 @@
     public System.Windows.Forms.ToolStripButton checkShowShortCutLabels;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    private System.Windows.Forms.ToolStripTextBox editLabelExplorerFilter;
+    public System.Windows.Forms.ToolStripTextBox editLabelExplorerFilter;
     public System.Windows.Forms.ToolStripButton checkSortBySource;
     public System.Windows.Forms.ToolStripButton checkSortAlphabetically;
   }
