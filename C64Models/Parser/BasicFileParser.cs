@@ -1363,7 +1363,8 @@ namespace RetroDevStudio.Parser
             {
               if ( Settings.StripREM )
               {
-                return info;
+                // break out so we update references
+                break;
               }
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.COMMENT;

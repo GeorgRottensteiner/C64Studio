@@ -318,6 +318,44 @@ GOTO LABEL10
 
 
 
+    // we had a bug where GOTO/GOSUB in front of a REM was not added to references when REM stripping was active
+    [TestMethod]
+    public void TestBASICStripREMWithGOTOInFront()
+    {
+      string    source = @"10 GOTO 20:REM PRINT""HURZ""
+                           20 PRINT""WELT""";
+
+      var parser = CreateParser( "BASIC V2" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      parser.Settings.StripREM = true;
+
+      bool parseResult = parser.Parse( source, null, config, null );
+      if ( !parseResult )
+      {
+        foreach ( var msg in parser.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+        Assert.Fail( "Testassemble failed:" );
+      }
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      Assert.AreEqual( "01080A080A00892032300016081400992257454C5422000000", parser.AssembledOutput.Assembly.ToString() );
+
+      var renumbered = parser.Renumber( 1, 1, 10, 20 );
+
+      string    renumberedSource = @"1 GOTO 2:REM PRINT""HURZ""
+2 PRINT""WELT""";
+
+      Assert.AreEqual( renumberedSource, renumbered );
+    }
+
+
+
     [TestMethod]
     public void TestLaserBASICKeywords()
     {

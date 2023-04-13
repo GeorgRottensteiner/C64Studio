@@ -1,9 +1,10 @@
 ﻿C64Studio
+o Das aktuelle Studio übersetzt das {DOWN} nach einem "Toggle symbol/macro" in ein {CTRL-Q} .
+  Läuft zwar, ist aber unschön. (BASIC V2, siehe Zeile 11)
 o Hot-Reload in VICE
 o BASIC - Ein #IFDEF ähnliches Konstrukt, um verschiedene BASIC Versionen im selben Code zu verwenden wär super.
 o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
   Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 
-o Same version info for C64Studio and C64Ass
 o Schön wäre es wenn man im "Memory View" Fenster, nachdem man "Goto Address" angeklickt hat ein Label eingeben könnte.
 o BASIC: Die Kommentier & Unkommentierfunktion würde ich mir auch für Basic mit dem Prefix # wünschen.
 o Allow change of the default palettes
