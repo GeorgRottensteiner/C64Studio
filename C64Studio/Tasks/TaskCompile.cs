@@ -511,7 +511,6 @@ namespace RetroDevStudio.Tasks
       }
       Core.SetStatus( "Build successful" );
 
-      //Core.TaskManager.AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc.BaseDoc ) );
       if ( AutoFollowupAction )
       {
         switch ( Core.MainForm.AppState )

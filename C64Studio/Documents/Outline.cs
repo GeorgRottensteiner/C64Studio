@@ -1,8 +1,10 @@
 ﻿using RetroDevStudio;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -14,9 +16,14 @@ namespace RetroDevStudio.Documents
   public partial class Outline : BaseDocument
   {
     public System.Windows.Forms.TreeNode      NodeRoot = null;
+
     private Project                           OutlineProject = null;
     private GR.Collections.MultiMap<string,SymbolInfo>       OutlineTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
-    private GR.Collections.Map<string,bool>   _ExpandedNodes = new GR.Collections.Map<string, bool>();
+    private DocumentInfo                      ActiveDocumentInfo = null;
+    private Types.ASM.FileInfo                ActiveASMFileInfo = null;
+
+    private Dictionary<Types.ASM.FileInfo,GR.Collections.Map<string, bool>> _ExpandedNodesPerProject = new Dictionary<Types.ASM.FileInfo, GR.Collections.Map<string, bool>>();
+    private Dictionary<string,Types.ASM.FileInfo>     _FileInfoPerFileCache = new Dictionary<string, Types.ASM.FileInfo>();
 
 
 
@@ -67,13 +74,45 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.PROJECT_OPENED:
+          break;
+        case ApplicationEvent.Type.DOCUMENT_CLOSED:
+          if ( _ExpandedNodesPerProject.ContainsKey( Event.Doc.ASMFileInfo ) )
+          {
+            _ExpandedNodesPerProject.Remove( Event.Doc.ASMFileInfo );
+          }
+          if ( ActiveDocumentInfo == Event.Doc )
+          {
+            ActiveDocumentInfo = null;
+            NodeRoot.Nodes.Clear();
+          }
+          break;
+        case ApplicationEvent.Type.PROJECT_CLOSED:
+          
+          break;
+      }
+    }
+
+
+
     private void StoreOpenNodes()
     {
-      _ExpandedNodes.Clear();
-
-      foreach ( TreeNode node in NodeRoot.Nodes )
+      if ( ActiveDocumentInfo != null )
       {
-        _ExpandedNodes[node.Text] = node.IsExpanded;
+        if ( !_ExpandedNodesPerProject.ContainsKey( ActiveDocumentInfo.ASMFileInfo ) )
+        {
+          _ExpandedNodesPerProject.Add( ActiveDocumentInfo.ASMFileInfo, new GR.Collections.Map<string, bool>() );
+        }
+        var expandedNodesEntry = _ExpandedNodesPerProject[ActiveDocumentInfo.ASMFileInfo];
+        expandedNodesEntry.Clear();
+        foreach ( TreeNode node in NodeRoot.Nodes )
+        {
+          expandedNodesEntry[node.Text] = node.IsExpanded;
+        }
       }
     }
 
@@ -81,16 +120,29 @@ namespace RetroDevStudio.Documents
 
     public void RefreshFromDocument( BaseDocument Doc )
     {
-      if ( Doc == null )
+      if ( ( Doc == null )
+      ||   ( Doc.DocumentInfo.FullPath == null ) )
       {
         return;
       }
-      if ( ( OutlineProject == Doc.DocumentInfo.Project )
-      &&   ( OutlineTokens == Doc.DocumentInfo.KnownTokens ) )
+
+      if ( ActiveASMFileInfo == Doc.DocumentInfo.ASMFileInfo )
       {
         // nothing to do
+        ActiveDocumentInfo  = Doc.DocumentInfo;
+        OutlineProject      = Doc.DocumentInfo.Project;
         return;
       }
+
+      if ( _FileInfoPerFileCache.TryGetValue( Doc.DocumentInfo.FullPath, out Types.ASM.FileInfo cachedASMFileInfo ) )
+      {
+        if ( cachedASMFileInfo != Doc.DocumentInfo.ASMFileInfo )
+        {
+          _ExpandedNodesPerProject.Remove( cachedASMFileInfo );
+        }
+        _FileInfoPerFileCache.Remove( Doc.DocumentInfo.FullPath );
+      }
+      _FileInfoPerFileCache.Add( Doc.DocumentInfo.FullPath, Doc.DocumentInfo.ASMFileInfo );
 
       if ( InvokeRequired )
       {
@@ -98,11 +150,14 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      OutlineProject = Doc.DocumentInfo.Project;
-      OutlineTokens = Doc.DocumentInfo.KnownTokens;
-      //Debug.Log( "Set to " + OutlineTokens.Count + " tokens from doc " + Doc.DocumentInfo.DocumentFilename );
-
       StoreOpenNodes();
+
+      ActiveDocumentInfo  = Doc.DocumentInfo;
+      OutlineProject      = Doc.DocumentInfo.Project;
+
+      ActiveASMFileInfo   = Doc.DocumentInfo.ASMFileInfo;
+      OutlineTokens       = Doc.DocumentInfo.KnownTokens;
+      
       RefreshNodes();
     }
 
@@ -112,6 +167,12 @@ namespace RetroDevStudio.Documents
     {
       treeProject.BeginUpdate();
       NodeRoot.Nodes.Clear();
+
+      if ( !_ExpandedNodesPerProject.ContainsKey( ActiveASMFileInfo ) )
+      {
+        _ExpandedNodesPerProject.Add( ActiveASMFileInfo, new GR.Collections.Map<string, bool>() );
+      }
+      var expandedNodes = _ExpandedNodesPerProject[ActiveASMFileInfo];
 
       IList<SymbolInfo>     sortedTokens = null;
 
@@ -279,8 +340,8 @@ namespace RetroDevStudio.Documents
           ||   ( addToGlobalNode ) )
           {
             globalZone.Nodes.Add( node );
-            if ( ( _ExpandedNodes.ContainsKey( globalZone.Text ) )
-            &&   ( _ExpandedNodes[globalZone.Text] ) )
+            if ( ( expandedNodes.ContainsKey( globalZone.Text ) )
+            &&   ( expandedNodes[globalZone.Text] ) )
             {
               globalZone.Expand();
             }
@@ -297,8 +358,8 @@ namespace RetroDevStudio.Documents
             }
             parentZoneNode.Nodes.Add( node );
 
-            if ( ( _ExpandedNodes.ContainsKey( nodeParentText ) )
-            &&   ( _ExpandedNodes[nodeParentText] ) )
+            if ( ( expandedNodes.ContainsKey( nodeParentText ) )
+            &&   ( expandedNodes[nodeParentText] ) )
             {
               parentZoneNode.Expand();
             }

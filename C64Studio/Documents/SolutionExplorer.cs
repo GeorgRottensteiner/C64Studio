@@ -179,7 +179,6 @@ namespace RetroDevStudio.Documents
 
             if ( isProject )
             {
-
               if ( Core.Navigating.Solution.ActiveProject == project.Settings.Name )
               {
                 var itemUnmark = new System.Windows.Forms.ToolStripMenuItem( "Unmark as active project" );

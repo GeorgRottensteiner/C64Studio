@@ -641,6 +641,9 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].ToolBarButton = btnNavigateForward;
       StudioCore.Settings.Functions[Function.BUILD_TO_RELOCATION_FILE].MenuItem = relocationFileToolStripMenuItem;
 
+      ApplicationEvent += m_Outline.OnApplicationEvent;
+      ApplicationEvent += m_LabelExplorer.OnApplicationEvent;
+
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();
 
@@ -1514,7 +1517,7 @@ namespace RetroDevStudio
 
     void AddToolWindow( ToolWindowType Type, BaseDocument Document, DockState DockState, ToolStripMenuItem MenuItem, bool VisibleEdit, bool VisibleDebug )
     {
-      ToolWindow tool = new ToolWindow();
+      var tool = new ToolWindow();
 
       tool.Document = Document;
       tool.Document.Core = StudioCore;
@@ -2915,6 +2918,10 @@ namespace RetroDevStudio
       newProject.Node.Expand();
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+      foreach ( var project in StudioCore.Navigating.Solution.Projects )
+      {
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, project ) );
+      }
 
       SetActiveProject( newProject );
 
@@ -2939,21 +2946,17 @@ namespace RetroDevStudio
     public Project AddNewProject()
     {
       string projectName = "New Project";
-      Project newProject = NewProjectWizard(projectName);
+      Project newProject = NewProjectWizard( projectName );
       if ( newProject == null )
       {
         return null;
       }
       projectToolStripMenuItem.Visible = true;
-
-      //m_ProjectExplorer.NodeProject.Text  = newProject.Settings.Name;
-      //m_ProjectExplorer.NodeProject.Tag   = newProject;
-
       foreach ( var configName in newProject.Settings.GetConfigurationNames() )
       {
         mainToolConfig.Items.Add( configName );
         if ( ( newProject.Settings.CurrentConfig != null )
-        && ( configName == newProject.Settings.CurrentConfig.Name ) )
+        &&   ( configName == newProject.Settings.CurrentConfig.Name ) )
         {
           mainToolConfig.SelectedItem = configName;
         }
@@ -3063,8 +3066,9 @@ namespace RetroDevStudio
       {
       }
 
-      // TODO - adjust GUI to changed project
+      // adjust GUI to changed project
       StudioCore.Navigating.Solution.RemoveProject( ProjectToClose );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_CLOSED, ProjectToClose ) );
       if ( m_CurrentProject == ProjectToClose )
       {
         mainToolConfig.Items.Clear();
@@ -3225,6 +3229,7 @@ namespace RetroDevStudio
         {
           RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
         }
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, newProject ) );
 
         SetActiveProject( newProject );
 
@@ -6248,6 +6253,10 @@ namespace RetroDevStudio
               StudioCore.Navigating.Solution = taskOS.Solution;
               StudioCore.Navigating.Solution.Modified = false;
               RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+              foreach ( var project in StudioCore.Navigating.Solution.Projects )
+              {
+                RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, project ) );
+              }
             }
           }
           break;
@@ -6823,6 +6832,7 @@ namespace RetroDevStudio
           newProject.Node.Collapse();
 
           RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, newProject ) );
 
           SetActiveProject( newProject );
           projectToolStripMenuItem.Visible = true;
