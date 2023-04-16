@@ -297,7 +297,8 @@ namespace RetroDevStudio.Tasks
       Core.MainForm.SetGUIForWaitOnExternalTool( true );
 
       if ( ( toolRun.IsInternal )
-      ||   ( Core.Executing.RunProcess.Start() ) )
+      ||   ( ( Core.Executing.RunProcess != null )
+      &&     ( Core.Executing.RunProcess.Start() ) ) )
       {
         DateTime    current = DateTime.Now;
         int   numConnectionAttempts = 1;

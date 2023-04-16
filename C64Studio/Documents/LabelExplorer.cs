@@ -173,6 +173,12 @@ namespace RetroDevStudio.Documents
       treeProject.BeginUpdate();
       NodeRoot.Nodes.Clear();
 
+      if ( ActiveASMFileInfo == null )
+      {
+        treeProject.EndUpdate();
+        return;
+      }
+
       if ( !_ExpandedNodesPerProject.ContainsKey( ActiveASMFileInfo ) )
       {
         _ExpandedNodesPerProject.Add( ActiveASMFileInfo, new GR.Collections.Map<string, bool>() );

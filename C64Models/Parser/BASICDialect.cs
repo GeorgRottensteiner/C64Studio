@@ -79,8 +79,8 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "DEF", 0x96, "dE" );
       BASICV2.AddOpcode( "POKE", 0x97, "pO" );
       BASICV2.AddOpcode( "PRINT#", 0x98, "pR" );
-      BASICV2.AddOpcode( "?", 0x99 );
       BASICV2.AddOpcode( "PRINT", 0x99 );
+      BASICV2.AddOpcode( "?", 0x99 );
       BASICV2.AddOpcode( "CONT", 0x9A, "cO" );
       BASICV2.AddOpcode( "LIST", 0x9B, "lI" );
       BASICV2.AddOpcode( "CLR", 0x9C, "cL" );
@@ -157,6 +157,9 @@ namespace C64Models.BASIC
       {
         OpcodesFromByte[(ushort)ByteValue] = opcode;
       }
+      else
+      {
+      }
 
       return opcode;
     }
@@ -170,6 +173,9 @@ namespace C64Models.BASIC
       if ( !OpcodesFromByte.ContainsKey( (ushort)ByteValue ) )
       {
         OpcodesFromByte[(ushort)ByteValue] = opcode;
+      }
+      else
+      {
       }
 
       return opcode;
