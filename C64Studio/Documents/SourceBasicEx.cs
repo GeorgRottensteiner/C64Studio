@@ -42,6 +42,9 @@ namespace RetroDevStudio.Documents
     private bool                              m_InsideLoad = false;
     private bool                              m_InsideToggleSymbolHandler = false;
 
+    public string                             m_LastLabelAutoRenumberStartLine  = "10";
+    public string                             m_LastLabelAutoRenumberLineStep   = "10";
+
 
 
     public override int CursorLine
@@ -746,6 +749,14 @@ namespace RetroDevStudio.Documents
               UpdateCaseButtonCaption();
             }
           }
+          if ( metaParams.Length >= 4 )
+          {
+            m_LastLabelAutoRenumberStartLine = metaParams[3];
+          }
+          if ( metaParams.Length >= 5 )
+          {
+            m_LastLabelAutoRenumberLineStep = metaParams[4];
+          }
         }
 
         // quick compatibility hack with petcat
@@ -899,11 +910,17 @@ namespace RetroDevStudio.Documents
         string    content = GetContent();
 
         // add "meta data" in front
-        string metaData = "#RetroDevStudio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName;
+        string metaData = $"#RetroDevStudio.MetaData.BASIC:{m_StartAddress},{m_BASICDialectName}";
         if ( m_LowerCaseMode )
         {
           metaData += ",lowercase";
         }
+        else
+        {
+          metaData += ",uppercase";
+        }
+        metaData += $",{m_LastLabelAutoRenumberStartLine},{m_LastLabelAutoRenumberLineStep}";
+
         metaData += "\r\n";
 
 
@@ -1716,13 +1733,19 @@ namespace RetroDevStudio.Documents
     {
       if ( m_LabelMode )
       {
-        toolTip1.SetToolTip( btnToggleLabelMode, "To Line Number Mode (Label Mode is active)" );
+        toolTip1.SetToolTip( btnToggleLabelMode, $"To Line Number Mode (Label Mode is active), start line {m_LastLabelAutoRenumberStartLine}, line step {m_LastLabelAutoRenumberLineStep}" );
         btnToggleLabelMode.Text = "To Number Mode";
+        btnToggleLabelMode.ShowDropDownArrow  = true;
+        btnToggleLabelMode.ShowSplitBar       = true;
+        btnToggleLabelMode.Menu               = contextMenuLabelButton;
       }
       else
       {
         toolTip1.SetToolTip( btnToggleLabelMode, "To Label Mode (Line Number Mode is active)" );
         btnToggleLabelMode.Text = "To Label Mode";
+        btnToggleLabelMode.ShowDropDownArrow  = false;
+        btnToggleLabelMode.ShowSplitBar       = false;
+        btnToggleLabelMode.Menu               = null;
       }
     }
 
@@ -1777,7 +1800,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        Result = parser.DecodeFromLabels();
+        Result = parser.DecodeFromLabels( GR.Convert.ToI32( m_LastLabelAutoRenumberStartLine ), GR.Convert.ToI32( m_LastLabelAutoRenumberLineStep ) );
       }
 
       /*
@@ -2336,6 +2359,63 @@ namespace RetroDevStudio.Documents
     public override void HighlightText( int LineIndex, int CharPos, int Length )
     {
       editSource.Selection = new FastColoredTextBoxNS.Range( editSource, CharPos, LineIndex, CharPos + Length, LineIndex );
+    }
+
+
+
+    private void autoRenumberWith1010ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_InsideLoad )
+      {
+        return;
+      }
+      m_LastLabelAutoRenumberLineStep = "10";
+      m_LastLabelAutoRenumberStartLine = "10";
+      ToggleLabelMode();
+    }
+
+
+
+    private void autoRenumberWith11ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_InsideLoad )
+      {
+        return;
+      }
+      m_LastLabelAutoRenumberLineStep = "1";
+      m_LastLabelAutoRenumberStartLine = "1";
+      ToggleLabelMode();
+    }
+
+
+
+    private void autoRenumberSettingsToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var formRenumberSettings = new FormRenumberBASICLabelMode( Core, this );
+
+      if ( formRenumberSettings.ShowDialog() == DialogResult.OK )
+      {
+        UpdateLabelModeText();
+      }
+    }
+
+
+
+    private void autoRenumberWithLastValuesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_InsideLoad )
+      {
+        return;
+      }
+
+      ToggleLabelMode();
+    }
+
+
+
+    private void contextMenuLabelButton_Opening( object sender, CancelEventArgs e )
+    {
+      autoRenumberWithLastValuesToolStripMenuItem.Text = $"Auto renumber with last values {m_LastLabelAutoRenumberStartLine}, {m_LastLabelAutoRenumberLineStep}";
     }
 
 

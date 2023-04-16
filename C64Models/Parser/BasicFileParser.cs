@@ -2651,7 +2651,8 @@ namespace RetroDevStudio.Parser
           lineLengthOffset = lineInfo.Value.Tokens[1].StartIndex;
         }
 
-        if ( lineNumberReference.ContainsKey( lineInfo.Value.LineNumber ) )
+        if ( ( lineNumberReference.ContainsKey( lineInfo.Value.LineNumber ) )
+        &&   ( lineInfo.Value.Tokens[0].TokenType != Token.Type.HARD_COMMENT ) )
         {
           // something is referencing this line
           sb.AppendLine();
@@ -2817,12 +2818,14 @@ namespace RetroDevStudio.Parser
 
 
 
-    public string DecodeFromLabels()
+    public string DecodeFromLabels( int StartLineNumber = 10, int LineStep = 10 )
     {
       StringBuilder sb = new StringBuilder();
       GR.Collections.Map<string,int>     labelToNumber = new GR.Collections.Map<string, int>();
 
-      int     lineNumber = 10;
+      int     startLineNumber = StartLineNumber;
+      int     lineNumberStep  = LineStep;
+      int     lineNumber      = startLineNumber;
 
       // collect labels
       foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
@@ -2852,9 +2855,9 @@ namespace RetroDevStudio.Parser
           }
           continue;
         }
-        lineNumber += 10;
+        lineNumber += lineNumberStep;
       }
-      lineNumber = 10;
+      lineNumber = startLineNumber;
       foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
       {
         if ( ( lineInfo.Value.Tokens.Count == 1 )
@@ -2993,7 +2996,7 @@ namespace RetroDevStudio.Parser
           }
         }
         sb.Append( "\r\n" );
-        lineNumber += 10;
+        lineNumber += lineNumberStep;
       }
       return sb.ToString();
     }

@@ -149,12 +149,6 @@ namespace RetroDevStudio.Documents
       }
       _FileInfoPerFileCache.Add( Doc.DocumentInfo.FullPath, Doc.DocumentInfo.ASMFileInfo );
 
-      if ( InvokeRequired )
-      {
-        Invoke( new MainForm.DocCallback( RefreshFromDocument ), new object[] { Doc } );
-        return;
-      }
-
       StoreOpenNodes();
 
       ActiveDocumentInfo    = Doc.DocumentInfo;

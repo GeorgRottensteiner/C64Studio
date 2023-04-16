@@ -1,4 +1,6 @@
-﻿namespace RetroDevStudio.Documents
+﻿using RetroDevStudio.Controls;
+
+namespace RetroDevStudio.Documents
 {
   partial class SourceBasicEx
   {
@@ -37,7 +39,12 @@
       this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.renumberToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnToggleLabelMode = new System.Windows.Forms.CheckBox();
+      this.btnToggleLabelMode = new RetroDevStudio.Controls.MenuButton();
+      this.contextMenuLabelButton = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.autoRenumberWithLastValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.autoRenumberWith1010ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.autoRenumberWith11ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.autoRenumberSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuBASIC = new System.Windows.Forms.MenuStrip();
       this.bASICToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +59,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
+      this.contextMenuLabelButton.SuspendLayout();
       this.menuBASIC.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -140,15 +148,56 @@
       // 
       // btnToggleLabelMode
       // 
-      this.btnToggleLabelMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleLabelMode.Location = new System.Drawing.Point(0, 27);
+      this.btnToggleLabelMode.Menu = this.contextMenuLabelButton;
       this.btnToggleLabelMode.Name = "btnToggleLabelMode";
-      this.btnToggleLabelMode.Size = new System.Drawing.Size(100, 23);
+      this.btnToggleLabelMode.ShowDropDownArrow = false;
+      this.btnToggleLabelMode.ShowSplitBar = true;
+      this.btnToggleLabelMode.Size = new System.Drawing.Size(130, 23);
       this.btnToggleLabelMode.TabIndex = 2;
       this.btnToggleLabelMode.Text = "To Label Mode";
       this.toolTip1.SetToolTip(this.btnToggleLabelMode, "To Label Mode (Line Number Mode is active)");
       this.btnToggleLabelMode.UseVisualStyleBackColor = true;
       this.btnToggleLabelMode.CheckedChanged += new System.EventHandler(this.btnToggleLabelMode_CheckedChanged);
+      // 
+      // contextMenuLabelButton
+      // 
+      this.contextMenuLabelButton.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.autoRenumberWithLastValuesToolStripMenuItem,
+            this.autoRenumberWith1010ToolStripMenuItem,
+            this.autoRenumberWith11ToolStripMenuItem,
+            this.autoRenumberSettingsToolStripMenuItem});
+      this.contextMenuLabelButton.Name = "contextMenuLabelButton";
+      this.contextMenuLabelButton.Size = new System.Drawing.Size(239, 114);
+      this.contextMenuLabelButton.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuLabelButton_Opening);
+      // 
+      // autoRenumberWithLastValuesToolStripMenuItem
+      // 
+      this.autoRenumberWithLastValuesToolStripMenuItem.Name = "autoRenumberWithLastValuesToolStripMenuItem";
+      this.autoRenumberWithLastValuesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+      this.autoRenumberWithLastValuesToolStripMenuItem.Text = "Auto renumber with last values";
+      this.autoRenumberWithLastValuesToolStripMenuItem.Click += new System.EventHandler(this.autoRenumberWithLastValuesToolStripMenuItem_Click);
+      // 
+      // autoRenumberWith1010ToolStripMenuItem
+      // 
+      this.autoRenumberWith1010ToolStripMenuItem.Name = "autoRenumberWith1010ToolStripMenuItem";
+      this.autoRenumberWith1010ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+      this.autoRenumberWith1010ToolStripMenuItem.Text = "Auto renumber with 10,10";
+      this.autoRenumberWith1010ToolStripMenuItem.Click += new System.EventHandler(this.autoRenumberWith1010ToolStripMenuItem_Click);
+      // 
+      // autoRenumberWith11ToolStripMenuItem
+      // 
+      this.autoRenumberWith11ToolStripMenuItem.Name = "autoRenumberWith11ToolStripMenuItem";
+      this.autoRenumberWith11ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+      this.autoRenumberWith11ToolStripMenuItem.Text = "Auto renumber with 1,1";
+      this.autoRenumberWith11ToolStripMenuItem.Click += new System.EventHandler(this.autoRenumberWith11ToolStripMenuItem_Click);
+      // 
+      // autoRenumberSettingsToolStripMenuItem
+      // 
+      this.autoRenumberSettingsToolStripMenuItem.Name = "autoRenumberSettingsToolStripMenuItem";
+      this.autoRenumberSettingsToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+      this.autoRenumberSettingsToolStripMenuItem.Text = "Auto renumber settings...";
+      this.autoRenumberSettingsToolStripMenuItem.Click += new System.EventHandler(this.autoRenumberSettingsToolStripMenuItem_Click);
       // 
       // menuBASIC
       // 
@@ -181,7 +230,7 @@
       this.btnToggleSymbolMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleSymbolMode.AutoSize = true;
       this.btnToggleSymbolMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSymbolMode.Image")));
-      this.btnToggleSymbolMode.Location = new System.Drawing.Point(106, 27);
+      this.btnToggleSymbolMode.Location = new System.Drawing.Point(136, 27);
       this.btnToggleSymbolMode.Name = "btnToggleSymbolMode";
       this.btnToggleSymbolMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleSymbolMode.TabIndex = 2;
@@ -194,7 +243,7 @@
       this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleUpperLowerCase.AutoSize = true;
       this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
-      this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(134, 27);
+      this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(164, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
       this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
       this.btnToggleUpperLowerCase.TabIndex = 2;
@@ -207,7 +256,7 @@
       this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleStringEntryMode.AutoSize = true;
       this.btnToggleStringEntryMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleStringEntryMode.Image")));
-      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(162, 27);
+      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(192, 27);
       this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
       this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleStringEntryMode.TabIndex = 2;
@@ -217,7 +266,7 @@
       // 
       // editBASICStartAddress
       // 
-      this.editBASICStartAddress.Location = new System.Drawing.Point(277, 29);
+      this.editBASICStartAddress.Location = new System.Drawing.Point(307, 29);
       this.editBASICStartAddress.MaxLength = 7;
       this.editBASICStartAddress.Name = "editBASICStartAddress";
       this.editBASICStartAddress.Size = new System.Drawing.Size(65, 20);
@@ -228,7 +277,7 @@
       // labelStartAddress
       // 
       this.labelStartAddress.AutoSize = true;
-      this.labelStartAddress.Location = new System.Drawing.Point(198, 32);
+      this.labelStartAddress.Location = new System.Drawing.Point(228, 32);
       this.labelStartAddress.Name = "labelStartAddress";
       this.labelStartAddress.Size = new System.Drawing.Size(73, 13);
       this.labelStartAddress.TabIndex = 5;
@@ -237,7 +286,7 @@
       // labelBASICVersion
       // 
       this.labelBASICVersion.AutoSize = true;
-      this.labelBASICVersion.Location = new System.Drawing.Point(360, 32);
+      this.labelBASICVersion.Location = new System.Drawing.Point(390, 32);
       this.labelBASICVersion.Name = "labelBASICVersion";
       this.labelBASICVersion.Size = new System.Drawing.Size(79, 13);
       this.labelBASICVersion.TabIndex = 5;
@@ -247,7 +296,7 @@
       // 
       this.comboBASICVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBASICVersion.FormattingEnabled = true;
-      this.comboBASICVersion.Location = new System.Drawing.Point(445, 28);
+      this.comboBASICVersion.Location = new System.Drawing.Point(475, 28);
       this.comboBASICVersion.Name = "comboBASICVersion";
       this.comboBASICVersion.Size = new System.Drawing.Size(150, 21);
       this.comboBASICVersion.TabIndex = 6;
@@ -272,6 +321,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).EndInit();
       this.contextSource.ResumeLayout(false);
+      this.contextMenuLabelButton.ResumeLayout(false);
       this.menuBASIC.ResumeLayout(false);
       this.menuBASIC.PerformLayout();
       this.ResumeLayout(false);
@@ -283,7 +333,8 @@
 
     public FastColoredTextBoxNS.FastColoredTextBox    editSource;
     private System.Windows.Forms.ContextMenuStrip contextSource;
-    private System.Windows.Forms.CheckBox btnToggleLabelMode;
+    //private System.Windows.Forms.CheckBox btnToggleLabelMode;
+    MenuButton btnToggleLabelMode;
     private System.Windows.Forms.MenuStrip menuBASIC;
     private System.Windows.Forms.ToolStripMenuItem bASICToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
@@ -300,5 +351,10 @@
     private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem1;
+    private System.Windows.Forms.ContextMenuStrip contextMenuLabelButton;
+    private System.Windows.Forms.ToolStripMenuItem autoRenumberWith1010ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem autoRenumberWith11ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem autoRenumberSettingsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem autoRenumberWithLastValuesToolStripMenuItem;
   }
 }
