@@ -7221,6 +7221,8 @@ namespace RetroDevStudio.Parser
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
 
+                PrefixZoneToLocalLabels( ref cheapLabelParent, tokens, ref upToken );
+
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
                 if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
@@ -7268,6 +7270,8 @@ namespace RetroDevStudio.Parser
                 string expressionCheck = parseLine.Substring( posAfterMacro, startBracket - posAfterMacro ).Trim();
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length, textCodeMapping );
+
+                PrefixZoneToLocalLabels( ref cheapLabelParent, tokens, ref upToken );
 
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
