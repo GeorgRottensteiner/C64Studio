@@ -18,7 +18,8 @@
       VARIABLE_INTEGER,
       VARIABLE_STRING,
       VARIABLE_ARRAY,
-      TEMP_LABEL
+      TEMP_LABEL,
+      MACRO
     };
 
     public Types      Type = Types.UNKNOWN;

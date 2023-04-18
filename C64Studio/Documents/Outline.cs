@@ -193,7 +193,17 @@ namespace RetroDevStudio.Documents
           {
             sortedTokensInner.Add( token.Value.LineIndex, token.Value );
           }
-          
+        }
+        foreach ( var macro in ActiveASMFileInfo.Macros )
+        {
+          if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+          {
+            sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
+          }
+          else if ( macro.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+          {
+            sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
+          }
         }
         sortedTokens = sortedTokensInner.Values;
       }
@@ -212,6 +222,17 @@ namespace RetroDevStudio.Documents
           else
           {
             sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+          }
+        }
+        foreach ( var macro in ActiveASMFileInfo.Macros )
+        {
+          if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+          {
+            sortedTokensInner.Add( macro.Key.ToUpper(), macro.Value.Symbol );
+          }
+          else if ( macro.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+          {
+            sortedTokensInner.Add( macro.Key.ToUpper(), macro.Value.Symbol );
           }
         }
         sortedTokens = sortedTokensInner.Values;
@@ -318,6 +339,13 @@ namespace RetroDevStudio.Documents
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
           case SymbolInfo.Types.UNKNOWN:
+            break;
+          case SymbolInfo.Types.MACRO:
+            node.ImageIndex = node.SelectedImageIndex = 4;
+            if ( ActiveASMFileInfo.Macros[token.Name].ParameterNames.Count > 0 ) 
+            {
+              node.Text += " " + string.Join( ", ", ActiveASMFileInfo.Macros[token.Name].ParameterNames.ToArray() );
+            }
             break;
         }
 

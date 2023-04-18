@@ -810,6 +810,7 @@ namespace RetroDevStudio
           }
         }
         Core.MainForm.m_Outline.RefreshFromDocument( Element.DocumentInfo.BaseDoc );
+        Core.MainForm.m_LabelExplorer.RefreshFromDocument( Element.DocumentInfo.BaseDoc );
       }
       else
       {

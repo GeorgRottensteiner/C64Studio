@@ -69,6 +69,7 @@
       this.m_ImageListOutline.Images.SetKeyName(1, "outline-label.ico");
       this.m_ImageListOutline.Images.SetKeyName(2, "outline-constant.ico");
       this.m_ImageListOutline.Images.SetKeyName(3, "outline-preprocessor-constant.ico");
+      this.m_ImageListOutline.Images.SetKeyName(4, "outline-macro.ico");
       // 
       // toolStripOutline
       // 

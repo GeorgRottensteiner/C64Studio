@@ -12,6 +12,7 @@ using RetroDevStudio;
 using RetroDevStudio.Formats;
 using Tiny64;
 using RetroDevStudio.Converter;
+using System.Security.Policy;
 
 namespace RetroDevStudio.Parser
 {
@@ -7164,7 +7165,7 @@ namespace RetroDevStudio.Parser
               int localLineIndex = 0;
               ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-              if ( POMacro( labelInFront, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+              if ( POMacro( labelInFront, m_CurrentZoneName, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
@@ -8094,7 +8095,7 @@ namespace RetroDevStudio.Parser
             int localLineIndex = 0;
             ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-            if ( POMacro( labelInFront, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+            if ( POMacro( labelInFront, m_CurrentZoneName, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
@@ -9845,7 +9846,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool POMacro( string LabelInFront, GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
+    private bool POMacro( string LabelInFront, string Zone, GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
                           string OuterFilename,
                           int lineIndex, 
                           List<Types.TokenInfo> lineTokenInfos, 
@@ -9885,8 +9886,14 @@ namespace RetroDevStudio.Parser
 
         macroFunction.Symbol                  = new SymbolInfo();
         macroFunction.Symbol.Name             = LabelInFront;
-        macroFunction.Symbol.LineIndex        = lineIndex;
+        macroFunction.Symbol.LocalLineIndex   = lineIndex;
+        macroFunction.Symbol.Type             = SymbolInfo.Types.MACRO;
+        macroFunction.Symbol.DocumentFilename = OuterFilename;
+        macroFunction.Symbol.Zone             = Zone;
         macroFunction.Symbol.References.Add( lineIndex );
+        
+
+
 
         macroFunctions.Add( LabelInFront, macroFunction );
 
@@ -9995,8 +10002,11 @@ namespace RetroDevStudio.Parser
             macroFunction.UsesBracket             = hasBracket;
 
             macroFunction.Symbol                  = new SymbolInfo();
-            macroFunction.Symbol.Name             = LabelInFront;
-            macroFunction.Symbol.LineIndex        = lineIndex;
+            macroFunction.Symbol.Name             = macroName;
+            macroFunction.Symbol.LocalLineIndex   = lineIndex;
+            macroFunction.Symbol.Type             = SymbolInfo.Types.MACRO;
+            macroFunction.Symbol.DocumentFilename = OuterFilename;
+            macroFunction.Symbol.Zone             = Zone;
             macroFunction.Symbol.References.Add( lineIndex );
 
             macroFunctions.Add( macroName, macroFunction );
