@@ -18,3 +18,5 @@ Zeropage_Routine2
 !lzone dummy4
 
 .localdummylabel
+
+!message ".localdummylabel = ", .localdummylabel

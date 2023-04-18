@@ -12888,7 +12888,14 @@ namespace RetroDevStudio.Parser
             //return "";
             result = new SymbolInfo();
           }
-          sb.Append( result.ToString() );
+          if ( result.IsInteger() )
+          {
+            sb.Append( $"{result.ToString()}/$" + result.AddressOrValue.ToString( "X" ) );
+          }
+          else
+          {
+            sb.Append( result.ToString() );
+          }
         }
       }
       return sb.ToString();
