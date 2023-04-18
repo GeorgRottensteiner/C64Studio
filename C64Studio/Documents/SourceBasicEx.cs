@@ -705,7 +705,7 @@ namespace RetroDevStudio.Documents
       }
       try
       {
-        string basicText = System.IO.File.ReadAllText( DocumentInfo.FullPath );
+        string basicText = System.IO.File.ReadAllText( DocumentInfo.FullPath, Core.Settings.SourceFileEncoding );
 
         // meta data on top?
         int     endOfLine = basicText.IndexOf( '\n' );
@@ -762,6 +762,12 @@ namespace RetroDevStudio.Documents
         // quick compatibility hack with petcat
         basicText = basicText.Replace( "~", "{SHIFT-ARROW UP}" );
         basicText = basicText.Replace( "\\", "{POUND}" );
+
+        // ugly hack to fix wrong flash on chars in non Basic 3.5 dialects
+        if ( !m_BASICDialectName.Contains( "3.5" ) )
+        {
+          basicText = basicText.Replace( "\ueec2", "\ueedd" );
+        }
 
         if ( !m_SymbolMode )
         {

@@ -1076,7 +1076,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, true, (char)0xee90, true, "REVERSE P" ).Replacements.Add( "CTRL-P" );
 
       AddC64Key( KeyboardKey.KEY_CURSOR_UP_DOWN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, -1, 0, true, "CURSOR DOWN", "CUR DOWN" ).Replacements.Add( "DOWN" );
-      AddC64Key( KeyboardKey.KEY_Q, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, true, "REVERSE Q" ).Replacements.Add( "CTRL-Q" );
+      AddC64Key( KeyboardKey.KEY_Q, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, true, "REVERSE Q" ).Replacements.AddRange( new string[] { "DOWN", "CTRL-Q" } );
 
       AddC64Key( KeyboardKey.KEY_9, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, -1, 0, true, "REVERSE ON", "RVS ON" ).Replacements.AddRange( new string[] { "RVSON", "RVON", "RVS", "REVERSE ON" } );
       AddC64Key( KeyboardKey.KEY_R, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, true, "REVERSE R" ).Replacements.AddRange( new string[] { "CTRL-R" } );

@@ -673,7 +673,8 @@ namespace RetroDevStudio.Documents
       range.ClearFoldingMarkers();
       //set folding markers
       range.SetFoldingMarkers( "{", "}" );
-      range.SetFoldingMarkers( "!zone", "!zone" );
+      range.SetFoldingMarkers( "![l]{0,1}zone", "![l]{0,1}zone" );
+      //range.SetFoldingMarkers( "!lzone", "![l]{0,1}zone" );
       range.SetFoldingMarkers( "!macro", "!end" );
       range.SetFoldingMarkers( "!for", "!end" );
       range.SetFoldingMarkers( "!region", "!endregion" );
