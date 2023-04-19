@@ -60,7 +60,9 @@ namespace RetroDevStudio.Controls
 
         e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), e.Bounds );
         if ( ( firstItem )
-        &&   ( e.Item.ImageList != null ) )
+        &&   ( e.Item.ImageList != null )
+        &&   ( e.Item.ImageIndex >= 0 )
+        &&   ( e.Item.ImageIndex < e.Item.ImageList.Images.Count ) )
         {
           var image = e.Item.ImageList.Images[e.Item.ImageIndex];
           e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
@@ -74,7 +76,9 @@ namespace RetroDevStudio.Controls
       {
         e.DrawBackground();
         if ( ( firstItem )
-        &&   ( e.Item.ImageList != null ) )
+        &&   ( e.Item.ImageList != null )
+        &&   ( e.Item.ImageIndex >= 0 )
+        &&   ( e.Item.ImageIndex < e.Item.ImageList.Images.Count ) )
         {
           var image = e.Item.ImageList.Images[e.Item.ImageIndex];
           e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );

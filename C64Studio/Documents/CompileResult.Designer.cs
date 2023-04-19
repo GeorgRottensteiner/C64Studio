@@ -30,8 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompileResult));
-      //this.listMessages = new System.Windows.Forms.ListView();
-      this.listMessages = new Controls.CSListView();
+      this.listMessages = new RetroDevStudio.Controls.CSListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -61,6 +60,9 @@
       this.listMessages.HideSelection = false;
       this.listMessages.Location = new System.Drawing.Point(0, 0);
       this.listMessages.Name = "listMessages";
+      this.listMessages.OwnerDraw = true;
+      this.listMessages.SelectedTextBGColor = ((uint)(4278190335u));
+      this.listMessages.SelectedTextColor = ((uint)(4294967295u));
       this.listMessages.Size = new System.Drawing.Size(678, 200);
       this.listMessages.SmallImageList = this.imageListCompileResult;
       this.listMessages.TabIndex = 0;
@@ -140,6 +142,7 @@
       this.imageListCompileResult.Images.SetKeyName(0, "icon_error.bmp");
       this.imageListCompileResult.Images.SetKeyName(1, "icon_warning.bmp");
       this.imageListCompileResult.Images.SetKeyName(2, "icon_severe_warning.png");
+      this.imageListCompileResult.Images.SetKeyName(3, "icon_info.bmp");
       // 
       // CompileResult
       // 

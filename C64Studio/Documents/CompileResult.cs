@@ -129,6 +129,7 @@ namespace RetroDevStudio.Documents
         }
         else
         {
+          item.ImageIndex = 3;
           item.Text = "3";
         }
         item.SubItems.Add( documentLine.ToString() );
