@@ -1426,33 +1426,33 @@ namespace RetroDevStudio.Parser
         }
         else if ( opText == "=" )
         {
-          Symbol = CreateIntegerSymbol( ( firstArg == secondArg ) ? 1 : 0 );
+          Symbol = CreateIntegerSymbol( ( firstArg == secondArg ) ? 0xff : 0 );
           return true;
         }
         else if ( ( opText == "!=" )
         ||        ( opText == "<>" ) )
         {
-          Symbol = CreateIntegerSymbol( ( firstArg != secondArg ) ? 1 : 0 );
+          Symbol = CreateIntegerSymbol( ( firstArg != secondArg ) ? 0xff : 0 );
           return true;
         }
         else if ( opText == ">" )
         {
-          Symbol = CreateIntegerSymbol( ( firstArg > secondArg ) ? 1 : 0 );
+          Symbol = CreateIntegerSymbol( ( firstArg > secondArg ) ? 0xff : 0 );
           return true;
         }
         else if ( opText == "<" )
         {
-          Symbol = CreateIntegerSymbol( ( firstArg < secondArg ) ? 1 : 0 );
+          Symbol = CreateIntegerSymbol( ( firstArg < secondArg ) ? 0xff : 0 );
           return true;
         }
         else if ( opText == ">=" )
         {
-          Symbol = CreateIntegerSymbol( ( firstArg >= secondArg ) ? 1 : 0 );
+          Symbol = CreateIntegerSymbol( ( firstArg >= secondArg ) ? 0xff : 0 );
           return true;
         }
         else if ( opText == "<=" )
         {
-          Symbol = CreateIntegerSymbol( ( firstArg <= secondArg ) ? 1 : 0 );
+          Symbol = CreateIntegerSymbol( ( firstArg <= secondArg ) ? 0xff : 0 );
           return true;
         }
         return false;
@@ -1541,33 +1541,33 @@ namespace RetroDevStudio.Parser
       }
       else if ( opText == "=" )
       {
-        Symbol = CreateIntegerSymbol( ( arg1 == arg2 ) ? 1 : 0 );
+        Symbol = CreateIntegerSymbol( ( arg1 == arg2 ) ? 0xff : 0 );
         return true;
       }
       else if ( ( opText == "!=" )
       ||        ( opText == "<>" ) )
       {
-        Symbol = CreateIntegerSymbol( ( arg1 != arg2 ) ? 1 : 0 );
+        Symbol = CreateIntegerSymbol( ( arg1 != arg2 ) ? 0xff : 0 );
         return true;
       }
       else if ( opText == ">" )
       {
-        Symbol = CreateIntegerSymbol( ( arg1 > arg2 ) ? 1 : 0 );
+        Symbol = CreateIntegerSymbol( ( arg1 > arg2 ) ? 0xff : 0 );
         return true;
       }
       else if ( opText == "<" )
       {
-        Symbol = CreateIntegerSymbol( ( arg1 < arg2 ) ? 1 : 0 );
+        Symbol = CreateIntegerSymbol( ( arg1 < arg2 ) ? 0xff : 0 );
         return true;
       }
       else if ( opText == ">=" )
       {
-        Symbol = CreateIntegerSymbol( ( arg1 >= arg2 ) ? 1 : 0 );
+        Symbol = CreateIntegerSymbol( ( arg1 >= arg2 ) ? 0xff : 0 );
         return true;
       }
       else if ( opText == "<=" )
       {
-        Symbol = CreateIntegerSymbol( ( arg1 <= arg2 ) ? 1 : 0 );
+        Symbol = CreateIntegerSymbol( ( arg1 <= arg2 ) ? 0xff : 0 );
         return true;
       }
       return false;
