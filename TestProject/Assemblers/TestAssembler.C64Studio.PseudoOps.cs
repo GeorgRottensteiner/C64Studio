@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject
@@ -358,6 +359,26 @@ namespace TestProject
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( "002001020304050607180100020003000400050006000700020003000400050006000700000100020003000400050006000704030201080706050C0B0A09CCDDEEFF02000000030000000400000005000000060000000700000000000001", assembly.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestPseudoOpMessage()
+    {
+      string      source = @"* = $2000
+                          !zone zone
+                          .local = 1
+                          !message ""#1 "", .local
+                          !message ""#2 "", zone.local";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( 2, messages.Count );
+      Assert.AreEqual( "#1 1/$1", messages.Values.First().Message );
+      Assert.AreEqual( "#2 1/$1", messages.Values[1].Message );
+
+      Assert.AreEqual( "0020", assembly.ToString() );
     }
 
 

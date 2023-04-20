@@ -1280,6 +1280,33 @@ namespace TestProject
     }
 
 
+
+    [TestMethod]
+    public void TestPseudoOpIfBool()
+    {
+      string    source = @"* = $2000
+          lsmf = 1=1
+
+          !IF lsmf {
+          !byte 0
+          } else {
+          !byte 1
+          }
+
+          !IF !lsmf {
+          !byte 1
+          } else {
+          !byte 0
+          }
+          ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00200000", assembly.ToString() );
+    }
+
+
+
     [TestMethod]
     public void TestErrorOnIndirectAddressingForNOnSupportingOpCodes()
     {

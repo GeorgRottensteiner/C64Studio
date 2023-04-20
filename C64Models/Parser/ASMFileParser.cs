@@ -7221,8 +7221,6 @@ namespace RetroDevStudio.Parser
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
 
-                PrefixZoneToLocalLabels( ref cheapLabelParent, tokens, ref upToken );
-
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
                 if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
@@ -7270,8 +7268,6 @@ namespace RetroDevStudio.Parser
                 string expressionCheck = parseLine.Substring( posAfterMacro, startBracket - posAfterMacro ).Trim();
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length, textCodeMapping );
-
-                PrefixZoneToLocalLabels( ref cheapLabelParent, tokens, ref upToken );
 
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
@@ -8843,7 +8839,9 @@ namespace RetroDevStudio.Parser
 
     private void PrefixZoneToLocalLabels( ref string cheapLabelParent, List<TokenInfo> lineTokenInfos, ref string upToken )
     {
-      if ( lineTokenInfos[0].Type == TokenInfo.TokenType.PSEUDO_OP )
+      if ( ( lineTokenInfos[0].Type == TokenInfo.TokenType.PSEUDO_OP )
+      &&   ( m_AssemblerSettings.PseudoOps.ContainsKey( upToken ) )
+      &&   ( m_AssemblerSettings.PseudoOps[upToken].Type == MacroInfo.PseudoOpType.MACRO ) )
       {
         // no prefixing for macro arguments!
         return;

@@ -253,6 +253,36 @@ namespace TestProject
 
 
 
+    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages )
+    {
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( Source, null, config, null );
+      Messages = parser.Messages;
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in parser.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+
+      Assert.IsTrue( parseResult );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      return parser.AssembledOutput.Assembly;
+    }
+
+
+
     private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source )
     {
       return TestAssembleC64Studio( Source, out RetroDevStudio.Types.ASM.FileInfo Info );
