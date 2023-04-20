@@ -45,13 +45,13 @@ namespace RetroDevStudio.Controls
             radioBackground.Checked = true;
             break;
           case ColorType.MULTICOLOR_1:
-            radioMultiColor1.Checked = true;
+            radioBorderColor.Checked = true;
             break;
           case ColorType.MULTICOLOR_2:
             radioCharColor.Checked = true;
             break;
           case ColorType.CUSTOM_COLOR:
-            radioMulticolor2.Checked = true;
+            radioAuxColor.Checked = true;
             break;
           default:
             return;
@@ -79,14 +79,14 @@ namespace RetroDevStudio.Controls
         comboCharColor.Items.Add( i.ToString( "d2" ) );
         if ( i < 8 )
         {
-          comboBackground.Items.Add( i.ToString( "d2" ) );
+          comboBorderColor.Items.Add( i.ToString( "d2" ) );
         }
-        comboMulticolor1.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor2.Items.Add( i.ToString( "d2" ) );
+        comboBackground.Items.Add( i.ToString( "d2" ) );
+        comboAuxColor.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = Colors.BackgroundColor % 8;
-      comboMulticolor1.SelectedIndex = Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = Colors.MultiColor2;
+      comboBackground.SelectedIndex = Colors.BackgroundColor;
+      comboBorderColor.SelectedIndex = Colors.MultiColor1 % 8;
+      comboAuxColor.SelectedIndex = Colors.MultiColor2;
       comboCharColor.SelectedIndex = CustomColor;
 
       radioCharColor.Checked = true;
@@ -124,8 +124,8 @@ namespace RetroDevStudio.Controls
 
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
-      Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-      radioMultiColor1.Checked = true;
+      Colors.MultiColor1 = comboBorderColor.SelectedIndex;
+      radioBorderColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_1 );
     }
 
@@ -133,8 +133,8 @@ namespace RetroDevStudio.Controls
 
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
-      Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-      radioMulticolor2.Checked = true;
+      Colors.MultiColor2 = comboAuxColor.SelectedIndex;
+      radioAuxColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_2 );
     }
 
@@ -196,10 +196,10 @@ namespace RetroDevStudio.Controls
           comboBackground.SelectedIndex = Value % comboBackground.Items.Count;
           break;
         case ColorType.MULTICOLOR_1:
-          comboMulticolor1.SelectedIndex = Value % comboMulticolor1.Items.Count;
+          comboBorderColor.SelectedIndex = Value % comboBorderColor.Items.Count;
           break;
         case ColorType.MULTICOLOR_2:
-          comboMulticolor2.SelectedIndex = Value % comboMulticolor2.Items.Count;
+          comboAuxColor.SelectedIndex = Value % comboAuxColor.Items.Count;
           break;
         case ColorType.CUSTOM_COLOR:
           comboCharColor.SelectedIndex = Value % comboCharColor.Items.Count;

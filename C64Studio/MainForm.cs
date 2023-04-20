@@ -3977,6 +3977,7 @@ namespace RetroDevStudio
 
             SetGUIForDebugging( false );
             SetGUIForWaitOnExternalTool( false );
+            StudioCore.Executing.BringStudioToForeground();
             return;
           }
 
@@ -4052,6 +4053,7 @@ namespace RetroDevStudio
 
           SetGUIForDebugging( false );
           SetGUIForWaitOnExternalTool( false );
+          StudioCore.Executing.BringStudioToForeground();
         }
         catch ( System.Exception ex )
         {
@@ -4093,7 +4095,7 @@ namespace RetroDevStudio
     private void refreshRegistersToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      || ( AppState == Types.StudioState.DEBUGGING_RUN ) )
+      ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
       {
         StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
         if ( AppState == Types.StudioState.DEBUGGING_RUN )

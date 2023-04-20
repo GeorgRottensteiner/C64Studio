@@ -31,14 +31,14 @@ namespace RetroDevStudio.Controls
     {
       this.components = new System.ComponentModel.Container();
       this.comboBackground = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor1 = new System.Windows.Forms.ComboBox();
+      this.comboBorderColor = new System.Windows.Forms.ComboBox();
       this.comboCharColor = new System.Windows.Forms.ComboBox();
       this.radioBackground = new System.Windows.Forms.RadioButton();
-      this.radioMultiColor1 = new System.Windows.Forms.RadioButton();
-      this.radioMulticolor2 = new System.Windows.Forms.RadioButton();
+      this.radioBorderColor = new System.Windows.Forms.RadioButton();
+      this.radioAuxColor = new System.Windows.Forms.RadioButton();
       this.radioCharColor = new System.Windows.Forms.RadioButton();
       this.btnExchangeColors = new RetroDevStudio.Controls.MenuButton();
-      this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
+      this.comboAuxColor = new System.Windows.Forms.ComboBox();
       this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor1WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,15 +60,15 @@ namespace RetroDevStudio.Controls
       // 
       // comboMulticolor1
       // 
-      this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(93, 38);
-      this.comboMulticolor1.Name = "comboMulticolor1";
-      this.comboMulticolor1.Size = new System.Drawing.Size(71, 21);
-      this.comboMulticolor1.TabIndex = 31;
-      this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
+      this.comboBorderColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      this.comboBorderColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboBorderColor.FormattingEnabled = true;
+      this.comboBorderColor.Location = new System.Drawing.Point(93, 38);
+      this.comboBorderColor.Name = "comboMulticolor1";
+      this.comboBorderColor.Size = new System.Drawing.Size(71, 21);
+      this.comboBorderColor.TabIndex = 31;
+      this.comboBorderColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboBorderColor.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
       // 
       // comboCharColor
       // 
@@ -95,25 +95,25 @@ namespace RetroDevStudio.Controls
       // 
       // radioMultiColor1
       // 
-      this.radioMultiColor1.AutoSize = true;
-      this.radioMultiColor1.Location = new System.Drawing.Point(4, 39);
-      this.radioMultiColor1.Name = "radioMultiColor1";
-      this.radioMultiColor1.Size = new System.Drawing.Size(83, 17);
-      this.radioMultiColor1.TabIndex = 36;
-      this.radioMultiColor1.Text = "Border Color";
-      this.radioMultiColor1.UseVisualStyleBackColor = true;
-      this.radioMultiColor1.CheckedChanged += new System.EventHandler(this.radioMultiColor1_CheckedChanged);
+      this.radioBorderColor.AutoSize = true;
+      this.radioBorderColor.Location = new System.Drawing.Point(4, 39);
+      this.radioBorderColor.Name = "radioMultiColor1";
+      this.radioBorderColor.Size = new System.Drawing.Size(83, 17);
+      this.radioBorderColor.TabIndex = 36;
+      this.radioBorderColor.Text = "Border Color";
+      this.radioBorderColor.UseVisualStyleBackColor = true;
+      this.radioBorderColor.CheckedChanged += new System.EventHandler(this.radioMultiColor1_CheckedChanged);
       // 
       // radioMulticolor2
       // 
-      this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(4, 65);
-      this.radioMulticolor2.Name = "radioMulticolor2";
-      this.radioMulticolor2.Size = new System.Drawing.Size(73, 17);
-      this.radioMulticolor2.TabIndex = 37;
-      this.radioMulticolor2.Text = "Aux. Color";
-      this.radioMulticolor2.UseVisualStyleBackColor = true;
-      this.radioMulticolor2.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
+      this.radioAuxColor.AutoSize = true;
+      this.radioAuxColor.Location = new System.Drawing.Point(4, 65);
+      this.radioAuxColor.Name = "radioMulticolor2";
+      this.radioAuxColor.Size = new System.Drawing.Size(73, 17);
+      this.radioAuxColor.TabIndex = 37;
+      this.radioAuxColor.Text = "Aux. Color";
+      this.radioAuxColor.UseVisualStyleBackColor = true;
+      this.radioAuxColor.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
       // 
       // radioCharColor
       // 
@@ -140,15 +140,15 @@ namespace RetroDevStudio.Controls
       // 
       // comboMulticolor2
       // 
-      this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(93, 65);
-      this.comboMulticolor2.Name = "comboMulticolor2";
-      this.comboMulticolor2.Size = new System.Drawing.Size(71, 21);
-      this.comboMulticolor2.TabIndex = 51;
-      this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
+      this.comboAuxColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      this.comboAuxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboAuxColor.FormattingEnabled = true;
+      this.comboAuxColor.Location = new System.Drawing.Point(93, 65);
+      this.comboAuxColor.Name = "comboMulticolor2";
+      this.comboAuxColor.Size = new System.Drawing.Size(71, 21);
+      this.comboAuxColor.TabIndex = 51;
+      this.comboAuxColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboAuxColor.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
       // 
       // contextMenuExchangeColors
       // 
@@ -185,14 +185,14 @@ namespace RetroDevStudio.Controls
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.comboMulticolor2);
+      this.Controls.Add(this.comboAuxColor);
       this.Controls.Add(this.btnExchangeColors);
       this.Controls.Add(this.comboBackground);
-      this.Controls.Add(this.comboMulticolor1);
+      this.Controls.Add(this.comboBorderColor);
       this.Controls.Add(this.comboCharColor);
       this.Controls.Add(this.radioBackground);
-      this.Controls.Add(this.radioMultiColor1);
-      this.Controls.Add(this.radioMulticolor2);
+      this.Controls.Add(this.radioBorderColor);
+      this.Controls.Add(this.radioAuxColor);
       this.Controls.Add(this.radioCharColor);
       this.Name = "ColorSettingsVC20";
       this.contextMenuExchangeColors.ResumeLayout(false);
@@ -204,14 +204,14 @@ namespace RetroDevStudio.Controls
     #endregion
 
     private System.Windows.Forms.ComboBox comboBackground;
-    private System.Windows.Forms.ComboBox comboMulticolor1;
+    private System.Windows.Forms.ComboBox comboBorderColor;
     private System.Windows.Forms.ComboBox comboCharColor;
     private System.Windows.Forms.RadioButton radioBackground;
-    private System.Windows.Forms.RadioButton radioMultiColor1;
-    private System.Windows.Forms.RadioButton radioMulticolor2;
+    private System.Windows.Forms.RadioButton radioBorderColor;
+    private System.Windows.Forms.RadioButton radioAuxColor;
     private System.Windows.Forms.RadioButton radioCharColor;
     private MenuButton btnExchangeColors;
-    private System.Windows.Forms.ComboBox comboMulticolor2;
+    private System.Windows.Forms.ComboBox comboAuxColor;
     private System.Windows.Forms.ContextMenuStrip contextMenuExchangeColors;
     private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithBGColorToolStripMenuItem;

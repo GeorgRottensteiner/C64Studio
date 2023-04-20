@@ -7,7 +7,7 @@ using RetroDevStudio.Types;
 
 namespace RetroDevStudio
 {
-  public class Util
+  public partial class Util
   {
     public static double StringToDouble( string Text )
     {

@@ -14,6 +14,7 @@ using RetroDevStudio.Controls;
 using GR.Forms;
 using System.Drawing;
 using System.Linq;
+using GR.Color;
 
 
 
@@ -2997,6 +2998,7 @@ namespace RetroDevStudio.Documents
       // hard coded palettes
       int     numColorsBackground = 16;
       int     numColorsInChooser = 16;
+      int     numColorsMulticolor1 = 16;
 
       switch ( m_CharsetScreen.Mode )
       {
@@ -3015,7 +3017,7 @@ namespace RetroDevStudio.Documents
           break;
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
-          numColorsBackground = 8;
+          numColorsMulticolor1 = 8;
           break;
       }
 
@@ -3027,21 +3029,8 @@ namespace RetroDevStudio.Documents
         RedrawColorChooser();
       }
 
-      if ( comboBackground.Items.Count != numColorsBackground )
-      {
-        comboBackground.BeginUpdate();
-
-        while ( comboBackground.Items.Count < numColorsBackground )
-        {
-          comboBackground.Items.Add( comboBackground.Items.Count.ToString( "d2" ) );
-        }
-        while ( comboBackground.Items.Count > numColorsBackground )
-        {
-          comboBackground.Items.RemoveAt( numColorsBackground );
-        }
-        comboBackground.EndUpdate();
-      }
-
+      RetroDevStudio.UtilForms.UpdateColorComboItemCount( comboBackground, numColorsBackground );
+      RetroDevStudio.UtilForms.UpdateColorComboItemCount( comboMulticolor1, numColorsMulticolor1 );
       m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
     }
 
