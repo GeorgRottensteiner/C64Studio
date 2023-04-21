@@ -112,6 +112,8 @@ namespace RetroDevStudio.Parser
     private int                         m_TemporaryFillLoopPos = -1;
     private bool                        m_CurrentSegmentIsVirtual = false;
 
+    private const int                   HIGHEST_OPERATOR_PRECEDENCE = 8;
+
 
 
     public ASMFileParser()
@@ -2016,7 +2018,7 @@ namespace RetroDevStudio.Parser
               if ( subTokenRange[tokenIndex].Content == oper.Key )
               {
                 if ( ( tokenIndex == 0 )
-                &&   ( oper.Value != 7 ) )
+                &&   ( oper.Value != HIGHEST_OPERATOR_PRECEDENCE ) )
                 {
                   // only allow < and > on first pos
                   continue;
@@ -2041,7 +2043,7 @@ namespace RetroDevStudio.Parser
             SymbolInfo result = null;
 
             // check if we've got a hi/lo byte operator
-            if ( highestPrecedence == 7 )
+            if ( highestPrecedence == HIGHEST_OPERATOR_PRECEDENCE )
             {
               // must be directly connected
               // the token before must not be a evaluatable type
@@ -5775,7 +5777,6 @@ namespace RetroDevStudio.Parser
           }
         }
 
-
         if ( ( lineTokenInfos.Count > 0 )
         &&   ( lineTokenInfos[0].Content != "}" )
         &&   ( !isDASMScopePseudoOP ) )
@@ -6656,19 +6657,28 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ERROR )
             {
-              AddError( lineIndex, Types.ErrorCode.E1308_USER_ERROR, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+              if ( !ScopeInsideMacroDefinition( stackScopes ) )
+              {
+                AddError( lineIndex, Types.ErrorCode.E1308_USER_ERROR, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+              }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WARN )
             {
-              AddWarning( lineIndex,
-                          Types.ErrorCode.W0005_USER_WARNING,
-                          EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ),
-                          lineTokenInfos[0].StartPos,
-                          lineTokenInfos[0].Length );
+              if ( !ScopeInsideMacroDefinition( stackScopes ) )
+              {
+                AddWarning( lineIndex,
+                            Types.ErrorCode.W0005_USER_WARNING,
+                            EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ),
+                            lineTokenInfos[0].StartPos,
+                            lineTokenInfos[0].Length );
+              }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MESSAGE )
             {
-              AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+              if ( !ScopeInsideMacroDefinition( stackScopes ) )
+              {
+                AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+              }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SET )
             {
@@ -8326,7 +8336,10 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.MESSAGE )
           {
-            AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+            if ( !ScopeInsideMacroDefinition( stackScopes ) )
+            {
+              AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+            }
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
           {
@@ -8540,6 +8553,8 @@ namespace RetroDevStudio.Parser
       }
       StripInternalBrackets( lineTokenInfos, 1 );
       int equPos = lineTokenInfos[1].StartPos;
+      string operatorToken = lineTokenInfos[1].Content;
+
       string defineName = lineTokenInfos[0].Content;
       if ( !m_AssemblerSettings.CaseSensitive )
       {
@@ -8562,7 +8577,7 @@ namespace RetroDevStudio.Parser
 
         List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
         if ( ( tokens.Count > 0 )
-        && ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
+        &&   ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
         {
           info.AddressSource = "*" + tokens[tokens.Count - 1].Content;
           tokens.RemoveAt( tokens.Count - 1 );
@@ -8572,7 +8587,15 @@ namespace RetroDevStudio.Parser
           AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           return ParseLineResult.ERROR_ABORT;
         }
-        programStepPos = newStepPosSymbol.ToInt32();
+
+        var origPos = CreateIntegerSymbol( programStepPos );
+        if ( !HandleAssignmentOperator( lineIndex, lineTokenInfos, origPos, operatorToken, newStepPosSymbol, out SymbolInfo resultingValue ) )
+        {
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        //programStepPos = newStepPosSymbol.ToInt32();
+        programStepPos = resultingValue.ToInt32();
         m_CompileCurrentAddress = programStepPos;
         trueCompileCurrentAddress = programStepPos;
 
@@ -8586,27 +8609,170 @@ namespace RetroDevStudio.Parser
         }
         if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
         {
+          if ( !IsPlainAssignment( operatorToken ) )
+          {
+            AddError( lineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Assignment operators must be solvable in one pass" );
+            return ParseLineResult.ERROR_ABORT;
+          }
           AddUnparsedLabel( defineName, defineValue, lineIndex );
         }
         else
         {
-          if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+          EvaluateTokens( lineIndex, lineTokenInfos, 0, 1, textCodeMapping, out SymbolInfo originalValue );
+          if ( !HandleAssignmentOperator( lineIndex, lineTokenInfos, originalValue, operatorToken, addressSymbol, out SymbolInfo resultingValue ) )
           {
-            AddConstantF( defineName, addressSymbol.RealValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            return ParseLineResult.ERROR_ABORT;
           }
-          else if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
+
+          if ( resultingValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
           {
-            AddConstantString( defineName, addressSymbol.String, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            AddConstantF( defineName, resultingValue.RealValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+          else if ( resultingValue.Type == SymbolInfo.Types.CONSTANT_STRING )
+          {
+            AddConstantString( defineName, resultingValue.String, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           }
           else
           {
-            AddConstant( defineName, addressSymbol, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            AddConstant( defineName, resultingValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           }
         }
       }
       m_CurrentCommentSB = new StringBuilder();
 
       return ParseLineResult.CALL_CONTINUE;
+    }
+
+
+
+    private bool IsPlainAssignment( string operatorToken )
+    {
+      return m_AssemblerSettings.PlainAssignmentOperatos.Contains( operatorToken );
+    }
+
+
+
+    private bool HandleAssignmentOperator( int lineIndex, List<TokenInfo> lineTokenInfos, SymbolInfo originalValue, string operatorToken, SymbolInfo newValue, out SymbolInfo resultingValue )
+    {
+      resultingValue = null;
+      switch ( operatorToken )
+      {
+        case "+=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type == SymbolInfo.Types.CONSTANT_STRING )
+          {
+            resultingValue = CreateStringSymbol( originalValue.ToString() + newValue.ToString() );
+            return true;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() + newValue.ToInteger() );
+          return true;
+        case "-=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() - newValue.ToInteger() );
+          return true;
+        case "*=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() * newValue.ToInteger() );
+          return true;
+        case "/=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          if ( newValue.ToInteger() == 0 )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Divide by zero detected" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() / newValue.ToInteger() );
+          return true;
+        case "%=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          if ( newValue.ToInteger() == 0 )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Divide by zero detected" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() % newValue.ToInteger() );
+          return true;
+        case "<<=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() << newValue.ToInt32() );
+          return true;
+        case ">>=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( originalValue.Type != newValue.Type )
+          {
+            AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() >> newValue.ToInt32() );
+          return true;
+        default:
+          if ( m_AssemblerSettings.PlainAssignmentOperatos.Contains( operatorToken ) )
+          {
+            resultingValue = newValue;
+            return true;
+          }
+          break;
+      }
+      AddError( lineIndex, ErrorCode.E1012_IMPLEMENTATION_MISSING, $"Implementation for operator '{operatorToken}' is missing!" );
+      return false;
     }
 
 
@@ -11194,7 +11360,7 @@ namespace RetroDevStudio.Parser
     {
       ClearErrorInfo();
 
-      List<Types.TokenInfo> result = new List<Types.TokenInfo>();
+      List <Types.TokenInfo> result = new List<Types.TokenInfo>();
 
       if ( ( String.IsNullOrEmpty( Source ) )
       ||   ( Start >= Source.Length )
@@ -11217,22 +11383,30 @@ namespace RetroDevStudio.Parser
           // operators are special
           int possibleOperators = 0;
           int completeOperators = 0;
+          int completeOperatorLength = 0;
+
           foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
           {
             if ( op.Length >= charPos - tokenStartPos + 1 )
             {
-              if ( string.Compare( op, 0, Source, tokenStartPos, charPos - tokenStartPos + 1 ) == 0 )
+              if ( ( tokenStartPos + op.Length <= Source.Length )
+              &&   ( string.Compare( op, 0, Source, tokenStartPos, op.Length ) == 0 ) )
               {
-                if ( op.Length == charPos - tokenStartPos + 1 )
+                // in case of overlap choose the longer match
+                if ( op.Length > completeOperatorLength )
                 {
-                  ++completeOperators;
+                  completeOperators = 0;
                 }
+                ++completeOperators;
+                completeOperatorLength = Math.Max( op.Length, completeOperatorLength );
                 ++possibleOperators;
               }
             }
           }
+          /*
           if ( ( possibleOperators == 1 )
-          &&   ( completeOperators == 1 ) )
+          &&   ( completeOperators == 1 ) )*/
+          if ( completeOperators == 1 )
           {
             if ( ( charPos + 1 < Start + Length )
             &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
@@ -11245,13 +11419,13 @@ namespace RetroDevStudio.Parser
               Types.TokenInfo token = new Types.TokenInfo();
               token.Type = Types.TokenInfo.TokenType.OPERATOR;
               token.OriginatingString = Source;
-              token.StartPos = tokenStartPos;
-              token.Length = charPos - tokenStartPos + 1;
+              token.StartPos  = tokenStartPos;
+              token.Length    = completeOperatorLength;
               result.Add( token );
 
               currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
-              tokenStartPos = charPos + 1;
-              ++charPos;
+              tokenStartPos = tokenStartPos + completeOperatorLength;
+              charPos       = tokenStartPos;
               continue;
             }
           }

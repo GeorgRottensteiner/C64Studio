@@ -272,6 +272,120 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssignmentPlusOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 5
+                               label1 += 4
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001009", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssignmentMinusOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 5
+                               label1 -= 4
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001001", assembly.ToString() );
+    }
+
+
+
+    // cannot use, ambigious with * = xxx
+    /*
+    [TestMethod]
+    public void TestAssignmentMultiplyOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 5
+                               label1 *= 4
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001014", assembly.ToString() );
+    }*/
+
+
+
+    [TestMethod]
+    public void TestAssignmentDivideOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 9
+                               label1 /= 4
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001002", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssignmentModulusOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 5
+                               label1 %= 3
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001002", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssignmentShiftLeftOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 5
+                               label1 <<= 2
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001014", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssignmentShiftRightOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 5
+                               label1 >>= 2
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001001", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTempLabelLateResolution()
     {
       // 100.35 is truncated to 100

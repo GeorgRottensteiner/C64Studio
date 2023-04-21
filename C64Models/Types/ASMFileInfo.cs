@@ -51,11 +51,11 @@ namespace RetroDevStudio.Types.ASM
   {
     public string Name = "";
     public string ToEval = "";
-    public int LineIndex = -1;
-    public bool Used = false;
+    public int    LineIndex = -1;
+    public bool   Used = false;
     public string Zone = "";
-    public int CharIndex = -1;
-    public int Length = 0;
+    public int    CharIndex = -1;
+    public int    Length = 0;
   };
 
 

@@ -34,6 +34,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     DoWithoutParameterIsUntil = false;
     public bool                                                     LabelsMustBeAtStartOfLine = false;
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
+    public GR.Collections.Set<string>                               PlainAssignmentOperatos = new GR.Collections.Set<string>();
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
     public bool                                                     LoopEndHasNoScope = false;
@@ -81,6 +82,7 @@ namespace RetroDevStudio.Parser
       AllowedTokenEndChars.Clear();
       AllowedTokenStartChars.Clear();
       DefineSeparatorKeywords.Clear();
+      PlainAssignmentOperatos.Clear();
       PseudoOps.Clear();
       StatementSeparatorChars.Clear();
       POPrefix = "";
@@ -116,24 +118,33 @@ namespace RetroDevStudio.Parser
       OperatorPrecedence["eor"] = 3;
       OperatorPrecedence["XOR"] = 3;
       OperatorPrecedence["xor"] = 3;
-      OperatorPrecedence["^"] = 6;
       OperatorPrecedence["OR"] = 4;
       OperatorPrecedence["or"] = 4;
       OperatorPrecedence["|"] = 4;
       OperatorPrecedence["AND"] = 5;
       OperatorPrecedence["and"] = 5;
       OperatorPrecedence["&"] = 5;
-      OperatorPrecedence[">>"] = 6;
-      OperatorPrecedence["<<"] = 6;
-      OperatorPrecedence["<>"] = 6;
-      OperatorPrecedence[">="] = 6;
-      OperatorPrecedence["<="] = 6;
-      OperatorPrecedence["!="] = 6;
-      OperatorPrecedence["="] = 6;
-      OperatorPrecedence[">"] = 7;
-      OperatorPrecedence["<"] = 7;
-      OperatorPrecedence["!"] = 7;
-      OperatorPrecedence["~"] = 7;
+
+      OperatorPrecedence[">>="] = 6;
+      OperatorPrecedence["<<="] = 6;
+      OperatorPrecedence["+="] = 6;
+      OperatorPrecedence["-="] = 6;
+      //OperatorPrecedence["*="] = 6;
+      OperatorPrecedence["/="] = 6;
+      OperatorPrecedence["%="] = 6;
+
+      OperatorPrecedence["^"] = 7;
+      OperatorPrecedence[">>"] = 7;
+      OperatorPrecedence["<<"] = 7;
+      OperatorPrecedence["<>"] = 7;
+      OperatorPrecedence[">="] = 7;
+      OperatorPrecedence["<="] = 7;
+      OperatorPrecedence["!="] = 7;
+      OperatorPrecedence["="] = 7;
+      OperatorPrecedence[">"] = 8;
+      OperatorPrecedence["<"] = 8;
+      OperatorPrecedence["!"] = 8;
+      OperatorPrecedence["~"] = 8;
 
       switch ( Type )
       {
@@ -241,7 +252,8 @@ namespace RetroDevStudio.Parser
           POPrefix = "!";
           MacroFunctionCallPrefix.Add( "+" );
           GlobalLabelsAutoZone = false;
-          DefineSeparatorKeywords.Add( "=" );
+          DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=" }  );
+          PlainAssignmentOperatos.AddRange( new string[] { "=" } );
           IncludeExpectsStringLiteral = true;
           StatementSeparatorChars.Add( ':' );
           break;
@@ -344,6 +356,7 @@ namespace RetroDevStudio.Parser
           MacroFunctionCallPrefix.Add( "+" );
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.Add( "=" );
+          PlainAssignmentOperatos.Add( "=" );
           IncludeExpectsStringLiteral = true;
           StatementSeparatorChars.Add( ':' );
           break;
@@ -417,9 +430,8 @@ namespace RetroDevStudio.Parser
           LabelPostfix = ":";
           MacroFunctionCallPrefix.Add( ":" );
           GlobalLabelsAutoZone = false;
-          DefineSeparatorKeywords.Add( "SET" );
-          DefineSeparatorKeywords.Add( "EQU" );
-          DefineSeparatorKeywords.Add( "=" );
+          DefineSeparatorKeywords.AddRange( new string[] { "SET", "EQU", "=" } );
+          PlainAssignmentOperatos.AddRange( new string[] { "SET", "EQU", "=" } );
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;
@@ -486,6 +498,7 @@ namespace RetroDevStudio.Parser
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( ".VAR" );
           DefineSeparatorKeywords.Add( "=" );
+          PlainAssignmentOperatos.AddRange( new string[] { ".VAR", "=" } );
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           CaseSensitive = false;
@@ -581,6 +594,7 @@ namespace RetroDevStudio.Parser
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( "EQU" );
           DefineSeparatorKeywords.Add( "=" );
+          PlainAssignmentOperatos.AddRange( new string[] { "EQU", "=" } );
           CaseSensitive = false;
           IncludeExpectsStringLiteral = false;
           IncludeHasOnlyFilename = true;
@@ -630,6 +644,7 @@ namespace RetroDevStudio.Parser
 
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( "=" );
+          PlainAssignmentOperatos.AddRange( new string[] { "=" } );
           CaseSensitive = false;
           IncludeExpectsStringLiteral = true;
           break;
@@ -707,6 +722,7 @@ namespace RetroDevStudio.Parser
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.Add( "SET" );
           DefineSeparatorKeywords.Add( "=" );
+          PlainAssignmentOperatos.AddRange( new string[] { "SET", "=" } );
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;
@@ -752,6 +768,7 @@ namespace RetroDevStudio.Parser
           MacroFunctionCallPrefix.Add( ":" );
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.Add( "=" );
+          PlainAssignmentOperatos.AddRange( new string[] { "=" } );
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;

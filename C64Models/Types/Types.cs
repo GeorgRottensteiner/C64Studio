@@ -215,6 +215,8 @@ namespace RetroDevStudio.Types
     E1008_MISSING_LOOP_END                  = 0x1008,
     E1009_INVALID_VALUE                     = 0x1009,
     E1010_UNKNOWN_LABEL                     = 0x1010,
+    E1011_TYPE_MISMATCH                     = 0x1011,
+    E1012_IMPLEMENTATION_MISSING            = 0x1012,
 
     E1100_RELATIVE_JUMP_TOO_FAR             = 0x1100,
     E1101_BANK_TOO_BIG                      = 0x1101,

@@ -22,7 +22,7 @@ namespace TestProject
         Debug.Log( "Testassemble failed:" );
         foreach ( var msg in parser.Messages.Values )
         {
-          Debug.Log( msg.Message );
+          Debug.Log( msg.AlternativeFile + msg.AlternativeLineIndex + msg.Message );
         }
       }
 
