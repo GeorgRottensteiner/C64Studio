@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject
@@ -597,6 +598,37 @@ namespace TestProject
       Assert.AreEqual( "0020A000B90104990004C8C927D0F5BD28208D2704A000B92904992804C8C927D0F5BD28218D4F04A000B95104995004C8C927D0F5BD28228D7704A000B97904997804C8C927D0F5BD28238D9F04A000B9A10499A004C8C927D0F5BD28248DC704A000B9C90499C804C8C927D0F5BD28258DEF04A000B9F10499F004C8C927D0F5BD28268D1705A000B91905991805C8C927D0F5BD28278D3F05A000B94105994005C8C927D0F5BD28288D6705A000B96905996805C8C927D0F5BD28298D8F05A000B99105999005C8C927D0F5BD282A8DB705A000B9B90599B805C8C927D0F5BD282B8DDF05A000B9E10599E005C8C927D0F5BD282C8D0706A000B90906990806C8C927D0F5BD282D8D2F06A000B93106993006C8C927D0F5BD282E8D5706A000B95906995806C8C927D0F5BD282F8D7F06A000B98106998006C8C927D0F5BD28308DA706A000B9A90699A806C8C927D0F5BD28318DCF06A000B9D10699D006C8C927D0F5BD28328DF706A000B9F90699F806C8C927D0F5BD28338D1F07A000B92107992007C8C927D0F5BD28348D4707A000B94907994807C8C927D0F5BD28358D6F07A000B97107997007C8C927D0F5BD28368D9707A000B99907999807C8C927D0F5BD28378DBF07A000B9C10799C007C8C927D0F5BD28388DE707A000B9E90799E807C8C927D0F5BD28398D0F0860", assembly.ToString() );
     }
 
+
+
+    [TestMethod]
+    public void TestIfnDefLocalLabels()
+    {
+      string      source = @"* = $c000
+                        !zone library
+                        .local = 2
+                        !message ""library.test = "", library.local
+                        !message ""(library.)test = "", .local
+                        !ifndef library.local {
+                              !message ""not defined""
+                        } else {
+                        !message ""defined""
+                        }
+                        !ifndef.local {
+                        !message ""not defined""
+                        } else {
+                          !message ""defined""
+                        }";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( 4, messages.Count );
+      Assert.AreEqual( "library.test = 2/$2", messages.Values[0].Message );
+      Assert.AreEqual( "(library.)test = 2/$2", messages.Values[1].Message );
+      Assert.AreEqual( "defined", messages.Values[2].Message );
+      Assert.AreEqual( "defined", messages.Values[3].Message );
+
+      Assert.AreEqual( "00C0", assembly.ToString() );
+    }
 
 
 

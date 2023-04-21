@@ -7226,14 +7226,16 @@ namespace RetroDevStudio.Parser
               }
               else
               {
+                /*
                 int     pseudoOpEndPos = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
                 string defineCheck = parseLine.Substring( pseudoOpEndPos, startBracket - pseudoOpEndPos ).Trim();
 
-                List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
+                List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );*/
 
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
-                if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                //if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
