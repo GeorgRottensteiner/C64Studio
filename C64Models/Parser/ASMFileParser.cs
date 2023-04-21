@@ -7087,12 +7087,9 @@ namespace RetroDevStudio.Parser
               }
               else
               {
-                //string defineCheck = parseLine.Substring( 6, startBracket - 6 ).Trim();
-
                 List<Types.TokenInfo> tokens = lineTokenInfos.GetRange( 1, openingBracketTokenIndex - 1 );
                 List<Types.TokenInfo> trailingtokens = lineTokenInfos.GetRange( openingBracketTokenIndex + 1, lineTokenInfos.Count - openingBracketTokenIndex - 1 );
 
-                //Debug.Log( "TODO - check if trailing tokens } else {, " + trailingtokens.Count + " tokens found" );
                 bool hadElse = false;
                 if ( trailingtokens.Count > 0 )
                 {
@@ -7100,8 +7097,8 @@ namespace RetroDevStudio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -7226,15 +7223,8 @@ namespace RetroDevStudio.Parser
               }
               else
               {
-                /*
-                int     pseudoOpEndPos = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
-                string defineCheck = parseLine.Substring( pseudoOpEndPos, startBracket - pseudoOpEndPos ).Trim();
-
-                List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );*/
-
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
-                //if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
                   scope.Active = true;
@@ -7277,16 +7267,12 @@ namespace RetroDevStudio.Parser
                 {
                   posAfterMacro = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
                 }
-                string expressionCheck = parseLine.Substring( posAfterMacro, startBracket - posAfterMacro ).Trim();
-
-                List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length, textCodeMapping );
-
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
 
-                if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
-                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 2 ) );
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
                   HadFatalError = true;
@@ -7315,7 +7301,6 @@ namespace RetroDevStudio.Parser
                 continue;
               }
 
-              //Debug.Log( "other else" );
               if ( stackScopes.Count == 0 )
               {
                 AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1309_ELSE_WITHOUT_IF, "Else statement without if encountered" );
@@ -7323,8 +7308,6 @@ namespace RetroDevStudio.Parser
               else
               {
                 stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].IfChainHadActiveEntry;
-                //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
-                //Debug.Log( "toggle scope active " + lineIndex );
               }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.END_IF )
@@ -7339,7 +7322,6 @@ namespace RetroDevStudio.Parser
                 continue;
               }
 
-              //Debug.Log( "other endif" );
               if ( stackScopes.Count == 0 )
               {
                 AddError( lineIndex, Types.ErrorCode.E1310_END_IF_WITHOUT_SCOPE, "End if without scope" );
