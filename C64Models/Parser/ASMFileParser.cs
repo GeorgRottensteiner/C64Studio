@@ -770,21 +770,31 @@ namespace RetroDevStudio.Parser
 
 
 
-    public void AddConstantF( string Name, double Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
+    public void AddConstantF( string Name, SymbolInfo Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
     {
       string      filename = "";
       int         localIndex = -1;
       SourceInfo  srcInfo;
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
+      // check if temp label exists
+      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
+      {
+        if ( tempLabel.Name == Name )
+        {
+          AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
+          return;
+        }
+      }
+
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
-        token.Type = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
-        token.RealValue = Value;
-        token.Name = Name;
-        token.LineIndex = SourceLine;
-        token.Info = Info;
+        token.Type              = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
+        token.RealValue         = Value.RealValue;
+        token.Name              = Name;
+        token.LineIndex         = SourceLine;
+        token.Info              = Info;
         token.DocumentFilename  = filename;
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
@@ -795,40 +805,103 @@ namespace RetroDevStudio.Parser
       }
       else
       {
-        ASMFileInfo.Labels[Name].RealValue = Value;
-        ASMFileInfo.Labels[Name].Type = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
+        if ( ( ASMFileInfo.Labels[Name].RealValue != Value.RealValue )
+        ||   ( ASMFileInfo.Labels[Name].Type != Value.Type ) )
+        {
+          if ( Name != "*" )
+          {
+            // allow redefinition, turn into temp label
+            var origLabel = ASMFileInfo.Labels[Name];
+
+            ASMFileInfo.Labels.Remove( Name );
+
+            // re-add orig as temp
+            AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
+
+            // add new label
+            Value.Name              = Name;
+            Value.LineIndex         = SourceLine;
+            Value.Info              = Info;
+            Value.DocumentFilename  = filename;
+            Value.LocalLineIndex    = localIndex;
+            Value.SourceInfo        = srcInfo;
+            Value.References.Add( SourceLine );
+            Value.Zone              = Zone;
+            AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
+            return;
+          }
+        }
+        ASMFileInfo.Labels[Name].RealValue  = Value.RealValue;
+        ASMFileInfo.Labels[Name].Type       = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
       }
     }
 
 
 
-    public void AddConstantString( string Name, string Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
+    public void AddConstantString( string Name, SymbolInfo Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
     {
       string      filename = "";
       int         localIndex = -1;
       SourceInfo  srcInfo;
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
+      // check if temp label exists
+      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
+      {
+        if ( tempLabel.Name == Name )
+        {
+          AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
+          return;
+        }
+      }
+
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
-        token.Type = SymbolInfo.Types.CONSTANT_STRING;
-        token.String = Value;
-        token.Name = Name;
-        token.LineIndex = SourceLine;
-        token.Info = Info;
-        token.DocumentFilename = filename;
-        token.LocalLineIndex = localIndex;
-        token.SourceInfo = srcInfo;
-        token.Zone = Zone;
+        token.Type              = SymbolInfo.Types.CONSTANT_STRING;
+        token.String            = Value.String;
+        token.Name              = Name;
+        token.LineIndex         = SourceLine;
+        token.Info              = Info;
+        token.DocumentFilename  = filename;
+        token.LocalLineIndex    = localIndex;
+        token.SourceInfo        = srcInfo;
+        token.Zone              = Zone;
         token.References.Add( SourceLine );
 
         ASMFileInfo.Labels.Add( Name, token );
       }
       else
       {
-        ASMFileInfo.Labels[Name].String = Value;
-        ASMFileInfo.Labels[Name].Type = SymbolInfo.Types.CONSTANT_STRING;
+        if ( ( ASMFileInfo.Labels[Name].String != Value.String )
+        ||   ( ASMFileInfo.Labels[Name].Type != Value.Type ) )
+        {
+          if ( Name != "*" )
+          {
+            // allow redefinition, turn into temp label
+            var origLabel = ASMFileInfo.Labels[Name];
+
+            ASMFileInfo.Labels.Remove( Name );
+
+            // re-add orig as temp
+            AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
+
+            // add new label
+            Value.Name              = Name;
+            Value.LineIndex         = SourceLine;
+            Value.Info              = Info;
+            Value.DocumentFilename  = filename;
+            Value.LocalLineIndex    = localIndex;
+            Value.SourceInfo        = srcInfo;
+            Value.References.Add( SourceLine );
+            Value.Zone              = Zone;
+            AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
+            return;
+          }
+        }
+
+        ASMFileInfo.Labels[Name].String = Value.String;
+        ASMFileInfo.Labels[Name].Type   = SymbolInfo.Types.CONSTANT_STRING;
       }
     }
 
@@ -866,7 +939,8 @@ namespace RetroDevStudio.Parser
       }
       else
       {
-        if ( ASMFileInfo.Labels[Name] != Value )
+        if ( ( ASMFileInfo.Labels[Name] != Value )
+        ||   ( ASMFileInfo.Labels[Name].Type != Value.Type ) )
         {
           if ( Name != "*" )
           {
@@ -1239,7 +1313,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private SymbolInfo CreateNumberSymbol( double Value )
+    public SymbolInfo CreateNumberSymbol( double Value )
     {
       var symbol = new SymbolInfo();
 
@@ -1251,7 +1325,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private SymbolInfo CreateStringSymbol( string Value )
+    public SymbolInfo CreateStringSymbol( string Value )
     {
       var symbol = new SymbolInfo();
 
@@ -1263,7 +1337,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private SymbolInfo CreateIntegerSymbol( long Value )
+    public SymbolInfo CreateIntegerSymbol( long Value )
     {
       int     dummy;
 
@@ -1272,7 +1346,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private SymbolInfo CreateIntegerSymbol( long Value, out int NumBytesGiven )
+    public SymbolInfo CreateIntegerSymbol( long Value, out int NumBytesGiven )
     {
       var symbol = new SymbolInfo();
 
@@ -8610,11 +8684,11 @@ namespace RetroDevStudio.Parser
 
           if ( resultingValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
           {
-            AddConstantF( defineName, resultingValue.RealValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            AddConstantF( defineName, resultingValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           }
           else if ( resultingValue.Type == SymbolInfo.Types.CONSTANT_STRING )
           {
-            AddConstantString( defineName, resultingValue.String, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            AddConstantString( defineName, resultingValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           }
           else
           {

@@ -527,7 +527,7 @@ namespace RetroDevStudio.Documents
 
       do
       {
-        m_Parser.AddConstantF( "x", curValue, 0, "", "", 0, 1 );
+        m_Parser.AddConstantF( "x", m_Parser.CreateNumberSymbol( curValue ), 0, "", "", 0, 1 );
         var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length, m_Parser.m_TextCodeMappingRaw );
         if ( tokens == null )
         {
