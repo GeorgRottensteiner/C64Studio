@@ -190,7 +190,6 @@ namespace RetroDevStudio.Parser
           sb.Append( "$" );
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
         }
-        //sb.Append( "          !byte " );
         sb.Append( "!byte " );
         for ( int i = 0; i < wrapSize; ++i )
         {
@@ -200,7 +199,6 @@ namespace RetroDevStudio.Parser
             sb.Append( "," );
           }
         }
-        //Debug.Log( outputB );
         sb.Append( "\r\n" );
         ExportStartAddress += wrapSize;
         Length -= wrapSize;
@@ -212,7 +210,6 @@ namespace RetroDevStudio.Parser
           sb.Append( "$" );
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
         }
-        //sb.Append( "          !byte " );
         sb.Append( "!byte " );
         for ( int i = 0; i < Length; ++i )
         {
@@ -222,7 +219,6 @@ namespace RetroDevStudio.Parser
             sb.Append( "," );
           }
         }
-        //Debug.Log( outputB );
         sb.Append( "\r\n" );
       }
       return sb.ToString();
@@ -302,12 +298,6 @@ namespace RetroDevStudio.Parser
         progStepPos = sysAddress;
         addressesToCheck.Add( progStepPos );
       }
-        /*
-      else
-      {
-        // automatically check at data start address
-        addressesToCheck.Add( DataStartAddress );
-      }*/
 
       int     codeStartPos = progStepPos;
 
@@ -316,7 +306,6 @@ namespace RetroDevStudio.Parser
       while ( addressesToCheck.Count > 0 )
       {
         progStepPos = addressesToCheck.First;
-        //Debug.Log( "check address:" + progStepPos );
         addressesToCheck.Remove( progStepPos );
         if ( addressesChecked.ContainsValue( progStepPos ) )
         {
@@ -328,11 +317,6 @@ namespace RetroDevStudio.Parser
           {
             break;
           }
-          /*
-            sb.Append( "Jumped to address before data\r\n" );
-            Disassembly = sb.ToString();
-            return false;
-          }*/
           if ( progStepPos >= DataStartAddress + m_SourceData.Length )
           {
             // reached the end
@@ -357,8 +341,6 @@ namespace RetroDevStudio.Parser
           }
 
           addressesChecked.Add( progStepPos );
-          //Debug.Log( "Mnemonic: " + OpcodeToString( opcode, Data, progStepPos + 1 - DataStartAddress ) );
-          //Debug.Log( progStepPos.ToString( "X4" ) + ": " + MnemonicToString( opcode, Data, DataStartAddress, progStepPos ) );
 
           if ( ( opcode.ByteValue == 0x4c )     // jmp
           ||   ( opcode.ByteValue == 0x20 ) )   // jsr
@@ -366,7 +348,6 @@ namespace RetroDevStudio.Parser
             // absolute jump
             accessedAddresses.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
             addressesToCheck.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
-            //Debug.Log( "access address " + Data.UInt16At( progStepPos + 1 ).ToString( "X4" ) );
           }
           else if ( opcode.ByteValue == 0x6c )     // jmp indirect
           {
@@ -390,14 +371,11 @@ namespace RetroDevStudio.Parser
             break;
           }
 
-          //string output = MnemonicToString( opcode, Data, DataStartAddress, progStepPos );
-          //Debug.Log( output );
           progStepPos += opcode.NumOperands + 1;
         }
       }
 
       progStepPos = codeStartPos;
-      //foreach ( KeyValuePair<ushort,GR.Generic.Tupel<Opcode, ushort>> instruction in disassembly )
 
       // remove potential labels that are not in our code
       GR.Collections.Set<ushort>    addressesToRemove = new GR.Collections.Set<ushort>();
@@ -500,7 +478,7 @@ namespace RetroDevStudio.Parser
           else if ( instruction.first.NumOperands > 0 )
           {
             // is there a label jumping in the middle of the next opcode?
-            var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + instruction.first.NumOperands ) );
+            var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.NumOperands ) );
             foreach ( var addressInside in addressesInside )
             {
               sb.AppendLine();
