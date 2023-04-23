@@ -742,8 +742,8 @@ namespace RetroDevStudio.Formats
         }
         sbMaps.AppendLine();
         sbMaps.Append( Util.ToASMData( mapDataBuffer, WrapData, WrapByteCount, DataByteDirective ) );
-        if ( ( hasExtraData )
-        &&   ( map.ExtraDataText.Length > 0 ) )
+        if ( hasExtraData )
+        //&&   ( map.ExtraDataText.Length > 0 ) )
         {
           sbMaps.AppendLine( ";extra data" );
           sbMaps.Append( LabelPrefix );
@@ -840,8 +840,8 @@ namespace RetroDevStudio.Formats
       {
         var map = Maps[i];
 
-        if ( ( hasExtraData )
-        &&   ( map.ExtraDataText.Length > 0 ) )
+        if ( hasExtraData )
+        //&&   ( map.ExtraDataText.Length > 0 ) )
         {
           sbMaps.AppendLine( ";extra data" );
           sbMaps.Append( LabelPrefix );

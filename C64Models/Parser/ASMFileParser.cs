@@ -1172,6 +1172,25 @@ namespace RetroDevStudio.Parser
 
 
 
+    public bool ParseLiteralValueString( string Value, out bool Failed, out string Result )
+    {
+      Result = "";
+      Failed = false;
+
+      if ( ( Value.Length < 2 )
+      ||   ( !Value.StartsWith( "\"" ) )
+      ||   ( !Value.EndsWith( "\"" ) ) )
+      {
+        Failed = true;
+        return false;
+      }
+
+      Result = Value.Substring( 1, Value.Length - 2 );
+      return true;
+    }
+
+
+
     private bool IsBinary( string ConvertValue )
     {
       for ( int i = 0; i < ConvertValue.Length; ++i )
@@ -1223,6 +1242,11 @@ namespace RetroDevStudio.Parser
       if ( ParseLiteralValueNumeric( Value, out failed, out numericResult ) )
       {
         ResultingSymbol = CreateNumberSymbol( numericResult );
+        return true;
+      }
+      if ( ParseLiteralValueString( Value, out bool failedDummy, out string stringResult ) )
+      {
+        ResultingSymbol = CreateStringSymbol( stringResult );
         return true;
       }
       if ( failed )
@@ -1442,23 +1466,40 @@ namespace RetroDevStudio.Parser
       }
 
       // TODO - elevate to numeric if required!
-      if ( ( token1.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      &&   ( token1.Type != SymbolInfo.Types.CONSTANT_1 )
-      &&   ( token1.Type != SymbolInfo.Types.TEMP_LABEL )
-      &&   ( token1.Type != SymbolInfo.Types.CONSTANT_2 ) )
+      if ( ( token1.Type == SymbolInfo.Types.CONSTANT_STRING )
+      &&   ( opText == "+" ) )
       {
-        AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot use arithmetic on non-numeric first argument", Token1.StartPos, Token1.Length );
-        m_LastErrorInfo.Pos += Token1.StartPos;
-        return false;
+        // allows anything
+        if ( token2.IsInteger() )
+        {
+          Symbol = CreateStringSymbol( token1.ToString() + token2.AddressOrValue.ToString() + "/$" + token2.AddressOrValue.ToString( "X" ) );
+        }
+        else
+        {
+          Symbol = CreateStringSymbol( token1.ToString() + token2.ToString() );
+        }
+        return true;
       }
-      if ( ( token2.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      &&   ( token2.Type != SymbolInfo.Types.CONSTANT_1 )
-      &&   ( token2.Type != SymbolInfo.Types.TEMP_LABEL )
-      &&   ( token2.Type != SymbolInfo.Types.CONSTANT_2 ) )
+      else
       {
-        AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot use arithmetic on non-numeric second argument", Token2.StartPos, Token2.Length );
-        m_LastErrorInfo.Pos += Token2.StartPos;
-        return false;
+        if ( ( token1.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+        &&   ( token1.Type != SymbolInfo.Types.CONSTANT_1 )
+        &&   ( token1.Type != SymbolInfo.Types.TEMP_LABEL )
+        &&   ( token1.Type != SymbolInfo.Types.CONSTANT_2 ) )
+        {
+          AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot use arithmetic on non-numeric first argument", Token1.StartPos, Token1.Length );
+          m_LastErrorInfo.Pos += Token1.StartPos;
+          return false;
+        }
+        if ( ( token2.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+        &&   ( token2.Type != SymbolInfo.Types.CONSTANT_1 )
+        &&   ( token2.Type != SymbolInfo.Types.TEMP_LABEL )
+        &&   ( token2.Type != SymbolInfo.Types.CONSTANT_2 ) )
+        {
+          AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot use arithmetic on non-numeric second argument", Token2.StartPos, Token2.Length );
+          m_LastErrorInfo.Pos += Token2.StartPos;
+          return false;
+        }
       }
       if ( ( token1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       ||   ( token2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
@@ -2069,6 +2110,11 @@ namespace RetroDevStudio.Parser
             tokenResult.Content = Util.DoubleToString( resultValue.RealValue );
             tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
           }
+          else if ( resultValue.Type == SymbolInfo.Types.CONSTANT_STRING )
+          {
+            tokenResult.Content = '"' + resultValue.ToString() + '"';
+            tokenResult.Type    = Types.TokenInfo.TokenType.LITERAL_STRING;
+          }
           else
           {
             tokenResult.Content = resultValue.ToInteger().ToString();
@@ -2260,6 +2306,11 @@ namespace RetroDevStudio.Parser
                 {
                   tokenResult.Content = Util.DoubleToString( result.RealValue );
                   tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+                }
+                else if ( result.Type == SymbolInfo.Types.CONSTANT_STRING )
+                {
+                  tokenResult.Content = '"' + result.ToString() + '"';
+                  tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_STRING;
                 }
                 else
                 {
@@ -8664,6 +8715,10 @@ namespace RetroDevStudio.Parser
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           return ParseLineResult.CALL_CONTINUE;
+        }
+        if ( lineIndex == 11 )
+        {
+          Debug.Log( "bg" );
         }
         if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
         {
