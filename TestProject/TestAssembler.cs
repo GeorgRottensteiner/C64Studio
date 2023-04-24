@@ -879,6 +879,21 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssemblyStringLiteralsTakeOnlyFirstChar()
+    {
+      // assembles as raw mapping of the first character
+
+      string      source = @"* = $1000
+                            lda #""hello""";
+
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010A968", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyCharLiterals()
     {
       // assembles as raw mapping of the first character

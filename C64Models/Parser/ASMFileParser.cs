@@ -1096,27 +1096,6 @@ namespace RetroDevStudio.Parser
         Failed = true;
         return false;
       }
-      else if ( Value.StartsWith( "\"" ) )
-      {
-        if ( !Value.EndsWith( "\"" ) )
-        {
-          Failed = true;
-          return false;
-        }
-        if ( Value.Length != 3 )
-        {
-          Failed = true;
-          return false;
-        }
-        char dummy;
-        if ( char.TryParse( Value.Substring( 1, 1 ), out dummy ) )
-        {
-          Result = dummy;
-          return true;
-        }
-        Failed = true;
-        return false;
-      }
 
       if ( ( Value == "*" )
       ||   ( Value == "." ) )
@@ -1484,6 +1463,7 @@ namespace RetroDevStudio.Parser
       {
         if ( ( token1.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
         &&   ( token1.Type != SymbolInfo.Types.CONSTANT_1 )
+        &&   ( token1.Type != SymbolInfo.Types.CONSTANT_STRING )
         &&   ( token1.Type != SymbolInfo.Types.TEMP_LABEL )
         &&   ( token1.Type != SymbolInfo.Types.CONSTANT_2 ) )
         {
@@ -1493,6 +1473,7 @@ namespace RetroDevStudio.Parser
         }
         if ( ( token2.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
         &&   ( token2.Type != SymbolInfo.Types.CONSTANT_1 )
+        &&   ( token2.Type != SymbolInfo.Types.CONSTANT_STRING )
         &&   ( token2.Type != SymbolInfo.Types.TEMP_LABEL )
         &&   ( token2.Type != SymbolInfo.Types.CONSTANT_2 ) )
         {
@@ -1501,8 +1482,50 @@ namespace RetroDevStudio.Parser
           return false;
         }
       }
-      if ( ( token1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      ||   ( token2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
+      if ( ( token1.Type == SymbolInfo.Types.CONSTANT_STRING )
+      ||   ( token2.Type == SymbolInfo.Types.CONSTANT_STRING ) )
+      {
+        string  firstArg  = token1.ToString();
+        string  secondArg = token2.ToString();
+
+        if ( opText == "=" )
+        {
+          Symbol = CreateIntegerSymbol( ( firstArg == secondArg ) ? 0xff : 0 );
+          return true;
+        }
+        else if ( ( opText == "!=" )
+        || ( opText == "<>" ) )
+        {
+          Symbol = CreateIntegerSymbol( ( firstArg != secondArg ) ? 0xff : 0 );
+          return true;
+        }
+        else if ( opText == ">" )
+        {
+          int   stringCompareResult = string.Compare( firstArg, secondArg );
+          Symbol = CreateIntegerSymbol( ( stringCompareResult > 0 ) ? 0xff : 0 );
+          return true;
+        }
+        else if ( opText == "<" )
+        {
+          int   stringCompareResult = string.Compare( firstArg, secondArg );
+          Symbol = CreateIntegerSymbol( ( stringCompareResult < 0 ) ? 0xff : 0 );
+          return true;
+        }
+        else if ( opText == ">=" )
+        {
+          int   stringCompareResult = string.Compare( firstArg, secondArg );
+          Symbol = CreateIntegerSymbol( ( stringCompareResult >= 0 ) ? 0xff : 0 );
+          return true;
+        }
+        else if ( opText == "<=" )
+        {
+          int   stringCompareResult = string.Compare( firstArg, secondArg );
+          Symbol = CreateIntegerSymbol( ( stringCompareResult <= 0 ) ? 0xff : 0 );
+          return true;
+        }
+      }
+      else if ( ( token1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      ||        ( token2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
       {
         // elevate to real number!
         double    firstArg = (double)token1.AddressOrValue;
@@ -8703,7 +8726,6 @@ namespace RetroDevStudio.Parser
           return ParseLineResult.ERROR_ABORT;
         }
 
-        //programStepPos = newStepPosSymbol.ToInt32();
         programStepPos = resultingValue.ToInt32();
         m_CompileCurrentAddress = programStepPos;
         trueCompileCurrentAddress = programStepPos;
@@ -8715,10 +8737,6 @@ namespace RetroDevStudio.Parser
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           return ParseLineResult.CALL_CONTINUE;
-        }
-        if ( lineIndex == 11 )
-        {
-          Debug.Log( "bg" );
         }
         if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
         {
@@ -13160,12 +13178,6 @@ namespace RetroDevStudio.Parser
         {
           sb.Append( token.Content.Substring( 1, token.Content.Length - 2 ) );
         }
-        /*
-        else if ( ( StartIndex + Count - startTokenIndex == 1 )
-        &&        ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
-        {
-          sb.Append( token.Content.Substring( 1, token.Content.Length - 2 ) );
-        }*/
         else
         {
           SymbolInfo  result;

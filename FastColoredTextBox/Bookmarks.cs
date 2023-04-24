@@ -59,39 +59,42 @@ namespace FastColoredTextBoxNS
             tb.LineRemoved += tb_LineRemoved;
         }
 
-        protected virtual void tb_LineRemoved(object sender, LineRemovedEventArgs e)
+
+
+        protected virtual void tb_LineRemoved( object sender, LineRemovedEventArgs e )
         {
-            for(int i=0; i<Count; i++)
-            if (items[i].LineIndex >= e.Index)
+          for ( int i = 0; i < Count; i++ )
+          {
+            if ( items[i].LineIndex >= e.Index )
             {
-                if (items[i].LineIndex >= e.Index + e.Count)
+              if ( items[i].LineIndex >= e.Index + e.Count )
+              {
+                items[i].LineIndex = items[i].LineIndex - e.Count;
+                continue;
+              }
+
+              var was = e.Index <= 0;
+              foreach ( var b in items )
+              {
+                if ( b.LineIndex == e.Index - 1 )
                 {
-                    items[i].LineIndex = items[i].LineIndex - e.Count;
-                    continue;
+                  was = true;
+                  break;
                 }
+              }
 
-                var was = e.Index <= 0;
-                foreach (var b in items)
-                    if (b.LineIndex == e.Index - 1)
-                        was = true;
-
-                if(was)
-                {
-                    tb.OnBookmarkRemoved( i, items[i] );
-                    items.RemoveAt(i);
-                    i--;
-                }else
-                    items[i].LineIndex = e.Index - 1;
-
-                //if (items[i].LineIndex == e.Index + e.Count - 1)
-                //{
-                //    items[i].LineIndex = items[i].LineIndex - e.Count;
-                //    continue;
-                //}
-                //
-                //items.RemoveAt(i);
-                //i--;
+              if ( was )
+              {
+                tb.OnBookmarkRemoved( i, items[i] );
+                items.RemoveAt( i );
+                i--;
+              }
+              else
+              {
+                items[i].LineIndex = e.Index - 1;
+              }
             }
+          }
         }
 
         protected virtual void tb_LineInserted(object sender, LineInsertedEventArgs e)

@@ -14,6 +14,7 @@ msg="A=" + a ;msg="A=1/$1"
 a="hello"
 b="there"
 msg=a + " " + b ;msg = "hello there"
+!message msg
 
 a = "the value is "
 b = 1

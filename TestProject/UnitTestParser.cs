@@ -1948,7 +1948,37 @@ ContrivedTest:
     }
 
 
-    
+
+    [TestMethod]
+    public void StringComparison()
+    {
+      string      source = @"*=$0801
+                             label = ""a""
+                            
+                              !if label < ""b"" {
+                              !byte 0
+                              }
+                              !if label = ""a"" {
+                              !byte 0
+                              }
+                              !if label >= ""a"" {
+                              !byte 0
+                              }
+                              !if label <= ""a"" {
+                              !byte 0
+                              }
+                              !if label != ""b"" {
+                              !byte 0
+                              }
+                              ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080000000000", assembly.ToString() );
+    }
+
+
+
     [TestMethod]
     public void TestLineSeparators()
     {
