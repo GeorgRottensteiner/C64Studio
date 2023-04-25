@@ -6146,6 +6146,7 @@ namespace RetroDevStudio.Parser
                               lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
                     scope.Active = true;
                     scope.IfChainHadActiveEntry = true;
+                    return null;
                   }
 
                   defineResult = defineResultSymbol.ToInteger();
