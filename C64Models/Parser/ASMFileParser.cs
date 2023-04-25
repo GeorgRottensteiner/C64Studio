@@ -5404,299 +5404,6 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult POCallMacro( List<Types.TokenInfo> lineTokenInfos, 
-                                         ref int lineIndex, 
-                                         Types.ASM.LineInfo info, 
-                                         string parseLine,
-                                         string ParentFilename, 
-                                         string labelInFront,
-                                         GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
-                                         ref string[] Lines, 
-                                         List<Types.ScopeInfo> Scopes, 
-                                         out int lineSizeInBytes )
-    {
-      // +macro Macroname [param1[,param2]]
-      lineSizeInBytes = 0;
-
-      if ( ( m_AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
-      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix[0].Length >= lineTokenInfos[0].Content.Length ) )
-      {
-        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unnamed macro function" );
-        return ParseLineResult.OK;
-      }
-
-      string functionName = lineTokenInfos[0].Content;
-      if ( m_AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
-      {
-        foreach ( var prefix in m_AssemblerSettings.MacroFunctionCallPrefix )
-        {
-          if ( functionName.StartsWith( prefix ) )
-          {
-            functionName = functionName.Substring( prefix.Length );
-          }
-        }
-      }
-      if ( ( !macroFunctions.ContainsKey( functionName ) )
-      ||   ( macroFunctions[functionName].LineEnd == -1 ) )
-      {
-        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-      }
-      else
-      {
-        Types.MacroFunctionInfo  functionInfo = macroFunctions[functionName];
-
-        List<string>  param = new List<string>();
-        List<bool>    paramIsRef = new List<bool>();
-        int           startIndex = 1;
-        bool          hadError = false;
-
-        functionInfo.Symbol.References.Add( lineIndex );
-
-        for ( int i = 1; i < lineTokenInfos.Count; ++i )
-        {
-          if ( lineTokenInfos[i].Content == "," )
-          {
-            // separator
-            // we're using a custom internal brace to not mix up opcode detection with expression parsing
-            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
-
-            // is reference properly matched?
-            if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-            {
-              if ( param.Count > functionInfo.ParametersAreReferences.Count )
-              {
-                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-                hadError = true;
-              }
-              else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
-              {
-                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-                hadError = true;
-              }
-            }
-
-            if ( ( !hadError )
-            &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-            &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
-            {
-              param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
-
-              string paramName = param[param.Count - 1];
-
-              if ( ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
-              {
-                AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
-              }
-            }
-            startIndex = i + 1;
-          }
-        }
-        if ( ( startIndex == lineTokenInfos.Count )
-        &&   ( startIndex > 1 ) )
-        {
-          param.Add( "" );
-        }
-        else if ( startIndex < lineTokenInfos.Count )
-        {
-          // why was there this substring statement?
-          //param.Add( parseLine.Substring( lineTokenInfos[startIndex].StartPos ) );
-          if ( lineTokenInfos.Count - startIndex == 1 )
-          {
-            param.Add( TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) );
-          }
-          else
-          {
-            // braces so potential original operators are evaluated before the rest is
-            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
-          }
-          //param.Add( lineTokenInfos[startIndex].Content );
-          // is reference properly matched?
-          if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-          {
-            if ( param.Count > functionInfo.ParametersAreReferences.Count )
-            {
-              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-              hadError = true;
-            }
-            else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
-            {
-              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-              hadError = true;
-            }
-          }
-          if ( ( !hadError )
-          &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-          &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
-          {
-            param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
-            string paramName = param[param.Count - 1];
-
-            if ( ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
-            {
-              AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
-            }
-          }
-        }
-        if ( ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-        &&   ( param.Count != functionInfo.ParameterNames.Count ) )
-        {
-          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
-        }
-        else if ( !hadError )
-        {
-          //string[] replacementLines = RelabelLocalLabels( functionInfo.Content );
-
-          int lineIndexInMacro = -1;
-          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
-          if ( replacementLines == null )
-          {
-            AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
-          }
-          else
-          {
-            // insert macro code with clearing macro call line
-            // readd label if there was one before the +macro
-            //if ( labelInFront.Length > 0 )
-            {
-              // if label in front insert macro one line below!
-              string[] newLines = new string[Lines.Length + replacementLines.Length];
-
-              System.Array.Copy( Lines, 0, newLines, 0, lineIndex + 1 );
-              System.Array.Copy( replacementLines, 0, newLines, lineIndex + 1, replacementLines.Length );
-              if ( Lines.Length - lineIndex - 1 >= 1 )
-              {
-                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + 1 + replacementLines.Length, Lines.Length - lineIndex - 1 );
-              }
-
-              newLines[lineIndex] = labelInFront;
-
-              // adjust source infos to make lookup work correctly
-              Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-              sourceInfo.Filename = functionInfo.ParentFileName;
-              sourceInfo.FullPath = functionInfo.ParentFileName;
-              sourceInfo.GlobalStartLine = lineIndex + 1;
-              sourceInfo.LineCount = replacementLines.Length;
-              string dummy;
-              ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
-
-              //Debug.Log( "Add subfile section at " + ( LineOffset + lineIndex + 1 ) + " for " + ParentFilename + " with " + sourceInfo.LineCount + " lines" );
-              InsertSourceInfo( sourceInfo );
-
-              Lines = newLines;
-
-              return ParseLineResult.CALL_CONTINUE;
-            }
-            /*
-            else
-            {
-              string[] newLines = new string[Lines.Length + replacementLines.Length - 1];
-
-              System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
-              System.Array.Copy( replacementLines, 0, newLines, lineIndex, replacementLines.Length );
-              if ( Lines.Length - lineIndex - 1 >= 1 )
-              {
-                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + replacementLines.Length, Lines.Length - lineIndex - 1 );
-              }
-
-              // remove probably stored info on line
-              ASMFileInfo.LineInfo.Remove( lineIndex );
-
-              if ( replacementLines.Length > 0 )
-              {
-                // adjust source infos to make lookup work correctly
-                Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-                sourceInfo.Filename = ParentFilename;
-                sourceInfo.FullPath = ParentFilename;
-                sourceInfo.GlobalStartLine = lineIndex;
-                sourceInfo.LineCount = replacementLines.Length;
-                //sourceInfo.LocalStartLine = functionInfo.LineIndex + 1;
-                string dummy;
-                ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
-
-                sourceInfo.Filename = dummy;
-                sourceInfo.FullPath = dummy;
-
-                //Debug.Log( "Add subfile section at " + ( LineOffset + lineIndex + 1 ) + " for " + ParentFilename + " with " + sourceInfo.LineCount + " lines" );
-                InsertSourceInfo( sourceInfo );
-              }
-              Lines = newLines;
-            }*/
-
-            /*
-            // readd label if there was one before the +macro
-            if ( labelInFront.Length > 0 )
-            {
-              // if label in front insert macro one line below!
-              string[] newLines = new string[Lines.Length + replacementLines.Length];
-
-              System.Array.Copy( Lines, 0, newLines, 0, lineIndex + 1  );
-              System.Array.Copy( replacementLines, 0, newLines, lineIndex + 1, replacementLines.Length );
-              if ( Lines.Length - lineIndex - 1 >= 1 )
-              {
-                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + 1 + replacementLines.Length, Lines.Length - lineIndex - 1 );
-              }
-
-              newLines[lineIndex] = labelInFront;
-
-              // adjust source infos to make lookup work correctly
-              Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-              sourceInfo.Filename = ParentFilename;
-              sourceInfo.FullPath = ParentFilename;
-              sourceInfo.GlobalStartLine = lineIndex + 1;
-              sourceInfo.LineCount = replacementLines.Length;
-              string dummy;
-              ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
-
-              //Debug.Log( "Add subfile section at " + ( LineOffset + lineIndex + 1 ) + " for " + ParentFilename + " with " + sourceInfo.LineCount + " lines" );
-              InsertSourceInfo( sourceInfo );
-
-              Lines = newLines;
-
-              return ParseLineResult.CALL_CONTINUE;
-            }
-            else
-            {
-              string[] newLines = new string[Lines.Length + replacementLines.Length - 1];
-
-              System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
-              System.Array.Copy( replacementLines, 0, newLines, lineIndex, replacementLines.Length );
-              if ( Lines.Length - lineIndex - 1 >= 1 )
-              {
-                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + replacementLines.Length, Lines.Length - lineIndex - 1 );
-              }
-
-              // remove probably stored info on line
-              ASMFileInfo.LineInfo.Remove( lineIndex );
-
-              if ( replacementLines.Length > 0 )
-              {
-                // adjust source infos to make lookup work correctly
-                Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-                sourceInfo.Filename = ParentFilename;
-                sourceInfo.FullPath = ParentFilename;
-                sourceInfo.GlobalStartLine = lineIndex;
-                sourceInfo.LineCount = replacementLines.Length;
-                //sourceInfo.LocalStartLine = functionInfo.LineIndex + 1;
-                string dummy;
-                ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
-
-                sourceInfo.Filename = dummy;
-                sourceInfo.FullPath = dummy;
-
-                //Debug.Log( "Add subfile section at " + ( LineOffset + lineIndex + 1 ) + " for " + ParentFilename + " with " + sourceInfo.LineCount + " lines" );
-                InsertSourceInfo( sourceInfo );
-              }
-              Lines = newLines;
-            }
-            --lineIndex;
-            return ParseLineResult.CALL_CONTINUE;*/
-          }
-        }
-      }
-      return ParseLineResult.OK;
-    }
-
-
     Dictionary<string,string[]>   OrigLines = null;
 
 
@@ -7264,6 +6971,8 @@ namespace RetroDevStudio.Parser
                   scope.StartIndex = lineIndex;
 
                   // only evaluate the first token
+
+                  StripInternalBrackets( tokens, 1 );
                   // TODO - have to evaluate the rest of the line if it exists!!
                   if ( !EvaluateTokens( lineIndex, tokens, 0, 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                   {
@@ -8031,6 +7740,7 @@ namespace RetroDevStudio.Parser
             string defineCheck = parseLine.Substring( pseudoOpEndPos ).Trim();
 
             List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
+            StripInternalBrackets( tokens );
 
             if ( ( tokens.Count != 1 )
             ||   ( !IsTokenLabel( tokens[0].Type ) ) )
@@ -8632,6 +8342,33 @@ namespace RetroDevStudio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private void StripInternalBrackets( TokenInfo Token )
+    {
+      if ( ( Token.Content.StartsWith( AssemblerSettings.INTERNAL_OPENING_BRACE ) )
+      &&   ( Token.Content.EndsWith( AssemblerSettings.INTERNAL_CLOSING_BRACE ) ) )
+      {
+        Token.Content = Token.Content.Substring( 1, Token.Content.Length - 2 );
+      }
+    }
+
+
+
+    private void StripInternalBrackets( List<TokenInfo> LineTokenInfos )
+    {
+      if ( LineTokenInfos.Count < 2 )
+      {
+        return;
+      }
+      if ( ( LineTokenInfos[0].Content == AssemblerSettings.INTERNAL_OPENING_BRACE )
+      &&   ( LineTokenInfos.Last().Content == AssemblerSettings.INTERNAL_CLOSING_BRACE ) )
+      {
+        LineTokenInfos.RemoveAt( 0 );
+        LineTokenInfos.RemoveAt( LineTokenInfos.Count - 1 );
+      }
     }
 
 
@@ -10082,17 +9819,6 @@ namespace RetroDevStudio.Parser
         ++replacementLineIndex;
       }
       return replacementLines;
-    }
-
-
-
-    private void StripInternalBrackets( TokenInfo Token )
-    {
-      if ( ( Token.Content.StartsWith( AssemblerSettings.INTERNAL_OPENING_BRACE ) )
-      &&   ( Token.Content.EndsWith( AssemblerSettings.INTERNAL_CLOSING_BRACE ) ) )
-      {
-        Token.Content = Token.Content.Substring( 1, Token.Content.Length - 2 );
-      }
     }
 
 
