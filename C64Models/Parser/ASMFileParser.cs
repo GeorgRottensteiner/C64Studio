@@ -6972,7 +6972,7 @@ namespace RetroDevStudio.Parser
 
                   // only evaluate the first token
 
-                  StripInternalBrackets( tokens, 1 );
+                  StripInternalBrackets( tokens );//, 1 );
                   // TODO - have to evaluate the rest of the line if it exists!!
                   if ( !EvaluateTokens( lineIndex, tokens, 0, 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                   {
@@ -8359,12 +8359,9 @@ namespace RetroDevStudio.Parser
 
     private void StripInternalBrackets( List<TokenInfo> LineTokenInfos )
     {
-      if ( LineTokenInfos.Count < 2 )
-      {
-        return;
-      }
-      if ( ( LineTokenInfos[0].Content == AssemblerSettings.INTERNAL_OPENING_BRACE )
-      &&   ( LineTokenInfos.Last().Content == AssemblerSettings.INTERNAL_CLOSING_BRACE ) )
+      while ( ( LineTokenInfos.Count >= 2 )
+      &&      ( LineTokenInfos[0].Content == AssemblerSettings.INTERNAL_OPENING_BRACE )
+      &&      ( LineTokenInfos.Last().Content == AssemblerSettings.INTERNAL_CLOSING_BRACE ) )
       {
         LineTokenInfos.RemoveAt( 0 );
         LineTokenInfos.RemoveAt( LineTokenInfos.Count - 1 );
@@ -8380,9 +8377,11 @@ namespace RetroDevStudio.Parser
       {
         return;
       }
-      if ( ( LineTokenInfos[CenterTokenIndex - 1].Content == AssemblerSettings.INTERNAL_OPENING_BRACE )
-      &&   ( LineTokenInfos[CenterTokenIndex + 1].Content == AssemblerSettings.INTERNAL_CLOSING_BRACE )
-      &&   ( IsTokenLabel( LineTokenInfos[CenterTokenIndex].Type ) ) )
+      while ( ( CenterTokenIndex >= 1 )
+      &&      ( CenterTokenIndex + 1 < LineTokenInfos.Count )
+      &&      ( LineTokenInfos[CenterTokenIndex - 1].Content == AssemblerSettings.INTERNAL_OPENING_BRACE )
+      &&      ( LineTokenInfos[CenterTokenIndex + 1].Content == AssemblerSettings.INTERNAL_CLOSING_BRACE )
+      &&      ( IsTokenLabel( LineTokenInfos[CenterTokenIndex].Type ) ) )
       {
         LineTokenInfos.RemoveAt( CenterTokenIndex + 1 );
         LineTokenInfos.RemoveAt( CenterTokenIndex - 1 );
