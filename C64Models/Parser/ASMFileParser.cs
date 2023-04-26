@@ -8536,6 +8536,11 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateStringSymbol( originalValue.ToString() + newValue.ToString() );
             return true;
           }
+          if ( NeedsPromotionToNumber( originalValue, newValue ) )
+          {
+            resultingValue = CreateNumberSymbol( originalValue.ToNumber() + newValue.ToNumber() );
+            return true;
+          }
           if ( originalValue.Type != newValue.Type )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
@@ -8548,6 +8553,11 @@ namespace RetroDevStudio.Parser
           {
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
+          }
+          if ( NeedsPromotionToNumber( originalValue, newValue ) )
+          {
+            resultingValue = CreateNumberSymbol( originalValue.ToNumber() - newValue.ToNumber() );
+            return true;
           }
           if ( originalValue.Type != newValue.Type )
           {
@@ -8562,6 +8572,11 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
           }
+          if ( NeedsPromotionToNumber( originalValue, newValue ) )
+          {
+            resultingValue = CreateNumberSymbol( originalValue.ToNumber() * newValue.ToNumber() );
+            return true;
+          }
           if ( originalValue.Type != newValue.Type )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
@@ -8574,6 +8589,17 @@ namespace RetroDevStudio.Parser
           {
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
+          }
+          if ( NeedsPromotionToNumber( originalValue, newValue ) )
+          {
+            if ( newValue.ToNumber() == 0 )
+            {
+              AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Divide by zero detected" );
+              return false;
+            }
+
+            resultingValue = CreateNumberSymbol( originalValue.ToNumber() / newValue.ToNumber() );
+            return true;
           }
           if ( originalValue.Type != newValue.Type )
           {
@@ -8592,6 +8618,17 @@ namespace RetroDevStudio.Parser
           {
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
+          }
+          if ( NeedsPromotionToNumber( originalValue, newValue ) )
+          {
+            if ( newValue.ToNumber() == 0 )
+            {
+              AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Divide by zero detected" );
+              return false;
+            }
+
+            resultingValue = CreateNumberSymbol( originalValue.ToNumber() % newValue.ToNumber() );
+            return true;
           }
           if ( originalValue.Type != newValue.Type )
           {
@@ -8640,6 +8677,20 @@ namespace RetroDevStudio.Parser
           break;
       }
       AddError( lineIndex, ErrorCode.E1012_IMPLEMENTATION_MISSING, $"Implementation for operator '{operatorToken}' is missing!" );
+      return false;
+    }
+
+
+
+    private bool NeedsPromotionToNumber( SymbolInfo OriginalValue, SymbolInfo NewValue )
+    {
+      if ( ( ( OriginalValue.IsInteger() )
+      &&     ( NewValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
+      ||   ( ( OriginalValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      &&     ( NewValue.IsInteger() ) ) )
+      {
+        return true;
+      }
       return false;
     }
 
