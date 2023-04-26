@@ -8687,7 +8687,9 @@ namespace RetroDevStudio.Parser
       if ( ( ( OriginalValue.IsInteger() )
       &&     ( NewValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
       ||   ( ( OriginalValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      &&     ( NewValue.IsInteger() ) ) )
+      &&     ( NewValue.IsInteger() ) )
+      ||   ( ( OriginalValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      &&     ( NewValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) ) )
       {
         return true;
       }
