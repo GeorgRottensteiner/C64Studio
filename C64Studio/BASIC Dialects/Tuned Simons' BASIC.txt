@@ -108,7 +108,6 @@ ROT;6409;rO
 DRAW;640a;dR
 CHAR;640b;cH
 HI COL;640c;hi C
-HICOL;640c;hi C
 INV;640d;iN
 FRAC;640e;fR
 MOVE;640f;mO
@@ -134,7 +133,7 @@ FLASH;641f;fL
 
 REPEAT;6420;reP
 PLAY;6421;
-DO;6422;
+DO;6422;;comment
 CENTRE;6423;cE
 ENVELOPE;6424;eN
 CGOTO;6425;cG
@@ -164,7 +163,7 @@ CIRCLE;6442;cI
 ON ERROR;6443;on E
 NO ERROR;6444;nO
 LOCAL;6445;loC
-RCOMP;6446;rC
+RCOMP;6446;rC;prelabeltoken
 ELSE;6447;eL;prelabeltoken
 RETRACE;6448;reT
 TRACE;6449;tR
@@ -225,7 +224,7 @@ ERRLN;647e;
 ERRN;647e;
 OUT;647f;oU
 CLS;64b3;cL
-@;40;
+@;40;;comment
 
 #from here on it's extended opcodes, required for C64Studio extensions
 ExOpcodes
