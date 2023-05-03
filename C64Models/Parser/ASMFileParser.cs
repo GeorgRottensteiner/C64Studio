@@ -5933,18 +5933,13 @@ namespace RetroDevStudio.Parser
           if ( lineTokenInfos.Count > 1 )
           {
             info.Line = parseLine.Substring( lineTokenInfos[1].StartPos );
-            //info.Line = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
-            //TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
-            //parseLine.Substring( lineTokenInfos[1].StartPos );
-            //parseLine = parseLine.Substring( lineTokenInfos[1].StartPos );
             parseLine = info.Line;
 
             // shift all tokens back
-            lineTokenInfos = ParseTokenInfo( parseLine, 0, parseLine.Length, textCodeMapping );
-
-            PrefixZoneToLocalLabels( ref cheapLabelParent, lineTokenInfos, ref upToken );
-
-            AdjustLabelCasing( lineTokenInfos );
+            //lineTokenInfos = ParseTokenInfo( parseLine, 0, parseLine.Length, textCodeMapping );
+            lineTokenInfos.RemoveAt( 0 );
+            //PrefixZoneToLocalLabels( ref cheapLabelParent, lineTokenInfos, ref upToken );
+            //AdjustLabelCasing( lineTokenInfos );
             // insert dummy entry to be removed later
             lineTokenInfos.Insert( 0, new TokenInfo() );
           }
@@ -5954,6 +5949,19 @@ namespace RetroDevStudio.Parser
             info.Line = "";
           }
           lineTokenInfos.RemoveAt( 0 );
+
+          // butt ugly woraround, we could have e.g. "label *=*+2"
+          if ( IsDefine( lineTokenInfos ) )
+          {
+            // a define
+            var callReturn = PODefine( stackScopes, lineTokenInfos, lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+            if ( callReturn == ParseLineResult.ERROR_ABORT )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+            continue;
+          }
           if ( lineTokenInfos.Count == 0 )
           {
             upToken = "";
@@ -12531,6 +12539,7 @@ namespace RetroDevStudio.Parser
               {
                 if ( opcode.Addressing == Tiny64.Opcode.AddressingType.IMPLICIT )
                 {
+                  LineTokens.RemoveAt( 1 );
                   return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
                 }
               }

@@ -793,6 +793,19 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestLabelInFrontOfPOText()
+    {
+      string      source = @"*=$c000
+                          label !text ""hurz"",0";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00C06875727A00", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestIfWithHiLoByteNotEqualAndLabelInFrontAndEqualsOperator()
     {
       string      source = @"*=$c000

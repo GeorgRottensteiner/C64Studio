@@ -66,7 +66,8 @@ namespace RetroDevStudio.Parser
           {
             // separator
             // we're using a custom internal brace to not mix up opcode detection with expression parsing
-            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
+            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, i - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
+            //parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
 
             // is reference properly matched?
             if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
