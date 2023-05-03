@@ -2624,10 +2624,10 @@ namespace RetroDevStudio.Documents
             }
             else if ( m_AutoCenterText )
             {
-              if ( m_TextEntryEnteredText.Count >= m_CharsWidth )
+              if ( m_TextEntryEnteredText.Count >= m_CharsetScreen.ScreenWidth )
               {
                 ++m_SelectedChar.Y;
-                if ( m_SelectedChar.Y >= m_CharsHeight )
+                if ( m_SelectedChar.Y >= m_CharsetScreen.ScreenHeight )
                 {
                   m_SelectedChar.Y = 0;
                 }
@@ -2640,11 +2640,11 @@ namespace RetroDevStudio.Documents
             else
             {
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
-              if ( m_SelectedChar.X >= m_CharsWidth - 1 )
+              if ( m_SelectedChar.X >= m_CharsetScreen.ScreenWidth - 1 )
               {
                 m_SelectedChar.X = 0;
                 ++m_SelectedChar.Y;
-                if ( m_SelectedChar.Y >= m_CharsHeight - 1 )
+                if ( m_SelectedChar.Y >= m_CharsetScreen.ScreenHeight - 1 )
                 {
                   m_SelectedChar.Y = 0;
                 }
