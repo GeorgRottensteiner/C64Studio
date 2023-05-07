@@ -74,6 +74,11 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( "Unknown location" );
           item.Tag = null;
         }
+        else if ( foundInfo.FoundInDocument.DocumentFilename == null )
+        {
+          item.SubItems.Add( "(unnamed file)" );
+          item.Tag = foundInfo.FoundInDocument;
+        }
         else
         {
           item.SubItems.Add( foundInfo.FoundInDocument.DocumentFilename );
@@ -188,19 +193,27 @@ namespace RetroDevStudio.Documents
       int     lineNumber = GR.Convert.ToI32( listResults.Items[index].Text );
       string  fileName = listResults.Items[index].SubItems[1].Text;
       string  fullPath = ( (DocumentInfo)listResults.Items[index].Tag ).FullPath;
+
+      DocumentInfo    docToOpen = null;
       if ( !string.IsNullOrEmpty( fullPath ) )
       {
         fileName = fullPath;
+        docToOpen = Core.Navigating.FindDocumentInfoByPath( fileName );
       }
       else
       {
-        if ( ( m_ListProject != null )
-        &&   ( !System.IO.Path.IsPathRooted( fileName ) ) )
+        if ( fileName == "(unnamed file)" )
+        {
+          docToOpen = (DocumentInfo)listResults.Items[index].Tag;
+        }
+        else if ( ( m_ListProject != null )
+        &&        ( !System.IO.Path.IsPathRooted( fileName ) ) )
         {
           fileName = GR.Path.Normalize( GR.Path.Append( m_ListProject.Settings.BasePath, fileName ), false );
+          docToOpen = Core.Navigating.FindDocumentInfoByPath( fileName );
         }
       }
-      Core.Navigating.OpenDocumentAndGotoLine( m_ListProject, Core.Navigating.FindDocumentInfoByPath( fileName ), lineNumber - 1 );
+      Core.Navigating.OpenDocumentAndGotoLine( m_ListProject, docToOpen, lineNumber - 1 );
     }
 
 
