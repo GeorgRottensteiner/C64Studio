@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net3.5;net4.8</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <RootNamespace>RetroDevStudio</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

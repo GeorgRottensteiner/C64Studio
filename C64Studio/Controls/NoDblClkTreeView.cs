@@ -204,6 +204,7 @@ namespace RetroDevStudio
 
 
 
+    /*
     private void NoDblClkTreeView_DrawNode( object sender, DrawTreeNodeEventArgs e )
     {
       Font nodeFont = e.Node.NodeFont;
@@ -215,7 +216,7 @@ namespace RetroDevStudio
       var bounds = NodeBounds( e.Node );
       var textBounds = Rectangle.Inflate( bounds, 3, 0 );
       var bgBounds = new Rectangle( bounds.Location, bounds.Size );
-      bgBounds.Offset( -3, 0 );
+      bgBounds.Offset( -3, 0 );*/
 
       /*
       UInt32      color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
@@ -235,6 +236,7 @@ namespace RetroDevStudio
       e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), 0, 0, e.Item.Width, e.Item.Height );
       */
 
+    /*
       // Draw the background and node text for a selected node.
       if ( ( e.State & TreeNodeStates.Selected ) != 0 )
       {
@@ -267,6 +269,7 @@ namespace RetroDevStudio
           e.Graphics.DrawRectangle( focusPen, bounds );
         }
       }
-    }
+    }*/
+
   }
 }

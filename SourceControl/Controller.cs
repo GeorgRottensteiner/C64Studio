@@ -8,10 +8,33 @@ namespace SourceControl
 {
   public class Controller
   {
-    public static bool IsFunctional()
+    public static bool IsFunctional
+    {
+      get
+      {
+#if NET6_0_OR_GREATER
+        return true;
+#else
+        return false;
+#endif
+      }
+    }
+
+
+
+    public static bool CreateRepositoryInFolder( string Folder )
     {
 #if NET6_0_OR_GREATER
-      return true;
+      try
+      {
+        //System.IO.Directory.CreateDirectory( System.IO.Path.Combine( Folder, ".git" ) );
+        Repository.Init( System.IO.Path.Combine( Folder, ".git" ), true );
+        return true;
+      }
+      catch ( Exception ) 
+      {
+        return false;
+      }
 #else
       return false;
 #endif
@@ -29,7 +52,7 @@ namespace SourceControl
         }
         return true;
       }
-      catch ( Exception ex ) 
+      catch ( Exception ) 
       {
         return false;
       }
@@ -61,13 +84,16 @@ namespace SourceControl
 
 
 
-    public List<string> CurrentAddedFiles()
+    public List<FileInfo> CurrentAddedFiles()
     {
-      var files = new List<string>();
+      var files = new List<FileInfo>();
 #if NET6_0_OR_GREATER
-      foreach ( var item in _GITRepo.RetrieveStatus() ) 
+      if ( !_GITRepo.Info.IsBare )
       {
-        files.Add( item.FilePath + " - " + item.State.ToString() );
+        foreach ( var item in _GITRepo.RetrieveStatus() )
+        {
+          files.Add( new FileInfo() { Filename = item.FilePath, FileState = (FileState)(int)item.State } );
+        }
       }
 #endif
       return files;

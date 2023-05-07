@@ -201,7 +201,7 @@ namespace RetroDevStudio
       // child elements
       foreach ( System.Windows.Forms.TreeNode node in Element.Node.Nodes )
       {
-        ProjectElement subElement = (ProjectElement)node.Tag;
+        ProjectElement subElement = ( (SolutionExplorer.TreeItemInfo)node.Tag ).Element;
 
         buffer.Append( ElementToBuffer( subElement ) );
       }
@@ -245,7 +245,7 @@ namespace RetroDevStudio
 
       foreach ( System.Windows.Forms.TreeNode node in Node.Nodes )
       {
-        ProjectElement element = (ProjectElement)node.Tag;
+        ProjectElement element = ( (SolutionExplorer.TreeItemInfo)node.Tag ).Element;
 
         bufferProject.Append( ElementToBuffer( element ) );
       }
@@ -342,7 +342,7 @@ namespace RetroDevStudio
       string activeElement = "";
 
       Node = new System.Windows.Forms.TreeNode();
-      Node.Tag = this;
+      Node.Tag = new SolutionExplorer.TreeItemInfo() { Project = this };
       Node.Collapse();
 
       GR.IO.MemoryReader memIn = new GR.IO.MemoryReader( ProjectData );
@@ -836,7 +836,7 @@ namespace RetroDevStudio
       if ( ParentNode != null )
       {
         element.Node = new System.Windows.Forms.TreeNode();
-        element.Node.Tag = element;
+        element.Node.Tag = new SolutionExplorer.TreeItemInfo() { Element = element };
         element.Node.ImageIndex = (int)Type;
         element.Node.SelectedImageIndex = (int)Type;
 

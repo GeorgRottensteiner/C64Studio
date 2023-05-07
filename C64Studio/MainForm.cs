@@ -2890,8 +2890,8 @@ namespace RetroDevStudio
       newProject.Settings.Filename = projectWizard.ProjectFilename;
       newProject.Settings.BasePath = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
       newProject.Node = new TreeNode();
-      newProject.Node.Tag = newProject;
-      newProject.Node.Text = newProject.Settings.Name;
+      newProject.Node.Tag   = new SolutionExplorer.TreeItemInfo() { Project = newProject };
+      newProject.Node.Text  = newProject.Settings.Name;
 
 
       try
@@ -6743,7 +6743,7 @@ namespace RetroDevStudio
       Debug.Log( "by project:" );
       foreach ( TreeNode node in m_SolutionExplorer.treeProject.Nodes )
       {
-        Project project = (Project)node.Tag;
+        Project project = m_SolutionExplorer.ProjectFromNode( node );
         Debug.Log( "Project " + project.Settings.Name );
 
         foreach ( ProjectElement element in project.Elements )
@@ -6823,8 +6823,8 @@ namespace RetroDevStudio
           newProject.Settings.Filename = solWizard.ProjectFilename;
           newProject.Settings.BasePath = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
           newProject.Node = new TreeNode();
-          newProject.Node.Tag = newProject;
-          newProject.Node.Text = newProject.Settings.Name;
+          newProject.Node.Tag   = new SolutionExplorer.TreeItemInfo() { Project = newProject };
+          newProject.Node.Text  = newProject.Settings.Name;
 
           Text += " - " + newProject.Settings.Name;
 

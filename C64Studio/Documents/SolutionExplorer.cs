@@ -5,8 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using RetroDevStudio.Dialogs;
-
-
+using RetroDevStudio.Types;
 
 namespace RetroDevStudio.Documents
 {
@@ -105,7 +104,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       Project project = ProjectFromNode( e.Node );
-      ProjectElement element = (ProjectElement)e.Node.Tag;
+      ProjectElement element = ElementFromNode( e.Node );
       if ( element.Document == null )
       {
         element.Document = project.ShowDocument( element );
@@ -298,11 +297,28 @@ namespace RetroDevStudio.Documents
             item.Tag = 0;
             item.Click += new EventHandler( treeProjectProperties_Click );
             contextMenu.Items.Add( item );
+
+            if ( ( isProject )
+            &&   ( global::SourceControl.Controller.IsFunctional ) )
+            {
+              contextMenu.Items.Add( "-" );
+
+              if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
+              {
+              }
+              else
+              {
+                item = new System.Windows.Forms.ToolStripMenuItem( "Create Repository" );
+                item.Tag = 0;
+                item.Click += CreateRepository;
+                contextMenu.Items.Add( item );
+              }
+            }
           }
           else
           {
             // element properties
-            ProjectElement element = (ProjectElement)m_ContextMenuNode.Tag;
+            ProjectElement element = ElementFromNode( m_ContextMenuNode );
 
             System.Windows.Forms.ToolStripMenuItem item;
 
@@ -408,6 +424,19 @@ namespace RetroDevStudio.Documents
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void CreateRepository( object sender, EventArgs e )
+    {
+      var project = ProjectFromNode( m_ContextMenuNode );
+      if ( project == null )
+      {
+        return;
+      }
+
+      global::SourceControl.Controller.CreateRepositoryInFolder( project.FullPath( "" ) );
     }
 
 
@@ -950,7 +979,7 @@ namespace RetroDevStudio.Documents
         }
         return;
       }
-      ProjectElement element = (ProjectElement)Node.Tag;
+      ProjectElement element = ElementFromNode( Node );
 
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
       {
@@ -1105,7 +1134,7 @@ namespace RetroDevStudio.Documents
 
     void treeElementProperties_Click( object sender, EventArgs e )
     {
-      ProjectElement element = (ProjectElement)m_ContextMenuNode.Tag;
+      ProjectElement element = ElementFromNode( m_ContextMenuNode );
 
       ElementProperties   dlgProps = new ElementProperties( Core, element );
 
@@ -1125,7 +1154,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        ProjectElement element = (ProjectElement)m_ContextMenuNode.Tag;
+        ProjectElement element = ElementFromNode( m_ContextMenuNode );
 
         if ( element.Document == null )
         {
@@ -1174,7 +1203,7 @@ namespace RetroDevStudio.Documents
         e.CancelEdit = true;
         return;
       }
-      ProjectElement element = (ProjectElement)e.Node.Tag;
+      ProjectElement element = ElementFromNode( e.Node );
       if ( ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
       {
@@ -1212,7 +1241,7 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      ProjectElement element = (ProjectElement)e.Node.Tag;
+      ProjectElement element = ElementFromNode( e.Node );
       if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       {
         newText = e.Label + System.IO.Path.GetExtension( e.Node.Text );
@@ -1468,7 +1497,7 @@ namespace RetroDevStudio.Documents
       {
         return null;
       }
-      return (Project)Node.Tag;
+      return ( (TreeItemInfo)Node.Tag ).Project;
     }
 
 
@@ -1480,7 +1509,7 @@ namespace RetroDevStudio.Documents
       {
         return null;
       }
-      return (ProjectElement)Node.Tag;
+      return ( (TreeItemInfo)Node.Tag ).Element;
     }
 
 
@@ -2091,5 +2120,223 @@ namespace RetroDevStudio.Documents
 
 
 
+    // Returns the bounds of the specified node, including the region 
+    // occupied by the node label and any node tag displayed.
+    private Rectangle NodeBounds( TreeNode Node )
+    {
+      // Set the return value to the normal node bounds.
+      Rectangle bounds = Node.Bounds;
+      /*
+      if ( node.Tag != null )
+      {
+        // Retrieve a Graphics object from the TreeView handle
+        // and use it to calculate the display width of the tag.
+        
+      }*/
+
+      Font nodeFont = Node.NodeFont;
+      if ( nodeFont == null )
+      {
+        nodeFont = Font;
+      }
+      Graphics g = CreateGraphics();
+      int tagWidth = (int)g.MeasureString( Node.Text, nodeFont ).Width + 4;
+
+      // Adjust the node bounds using the calculated value.
+      bounds.Width = tagWidth;
+      //bounds.Offset( tagWidth / 2, 0 );
+      //bounds = Rectangle.Inflate( bounds, tagWidth / 2, 0 );
+      g.Dispose();
+
+      return bounds;
+    }
+
+
+
+    private void treeProject_DrawNode( object sender, DrawTreeNodeEventArgs e )
+    {
+      //e.DrawDefault = true;
+      Rectangle nodeRect = NodeBounds( e.Node );// e.Node.Bounds;
+
+      // 1. draw expand/collapse icon
+      if ( e.Node.Nodes.Count > 1 )
+      {
+        Point ptExpand = new Point( nodeRect.Location.X - 36, nodeRect.Location.Y + ( nodeRect.Height - 8 ) / 2 );
+        if ( e.Node.IsExpanded )
+        {
+          e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
+          e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
+        }
+        else
+        {
+          e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
+          e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
+          e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 4, ptExpand.Y + 2, ptExpand.X + 4, ptExpand.Y + 6 );
+        }
+      }
+
+      // 2. draw node icon
+      if ( treeProject.ImageList != null )
+      {
+        if ( treeProject.ImageList.Images.ContainsKey( e.Node.ImageKey ) )
+        {
+          Image nodeImg = treeProject.ImageList.Images[e.Node.ImageKey];
+
+          Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
+
+          e.Graphics.DrawImage( nodeImg, ptNodeIcon );
+        }
+        else if ( e.Node.ImageIndex < treeProject.ImageList.Images.Count )
+        {
+          // autofallback to first image??
+          if ( e.Node.ImageIndex == -1 )
+          {
+            e.Node.ImageIndex = 0;
+          }
+          Image nodeImg = treeProject.ImageList.Images[e.Node.ImageIndex];
+
+          Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
+
+          e.Graphics.DrawImage( nodeImg, ptNodeIcon );
+        }
+      }
+      Font nodeFont = e.Node.NodeFont;
+      if ( nodeFont == null )
+      {
+        nodeFont = ( (TreeView)sender ).Font;
+      }
+      e.DrawDefault = false;
+
+      // node text
+      var bounds = NodeBounds( e.Node );
+      var textBounds = Rectangle.Inflate( bounds, 3, 0 );
+      var bgBounds = new Rectangle( bounds.Location, bounds.Size );
+      bgBounds.Offset( -3, 0 );
+
+      // Draw the background and node text for a selected node.
+      if ( ( e.State & TreeNodeStates.Selected ) != 0 )
+      {
+        // Draw the background of the selected node. The NodeBounds
+        // method makes the highlight rectangle large enough to
+        // include the text of a node tag, if one is present.
+        uint color = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+        uint bgColor = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+
+        // make transparent
+        if ( ( color & 0xff000000 ) == 0xff000000 )
+        {
+          color = ( color & 0x00ffffff ) | 0x40000000;
+          color = ModulateColor( color, bgColor );
+        }
+        e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
+
+        // Retrieve the node font. If the node font has not been set, use the TreeView font.
+        uint colorText = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+        e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
+      }
+      else
+      {
+        if ( ( e.State & TreeNodeStates.Focused ) != 0 )
+        {
+          uint color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+
+          e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
+        }
+        uint colorText = Core.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+        e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
+      }
+
+      // If the node has focus, draw the focus rectangle large, making
+      // it large enough to include the text of the node tag, if present.
+      if ( ( e.State & TreeNodeStates.Focused ) != 0 )
+      {
+        using ( Pen focusPen = new Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) ) )
+        {
+          focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+          bounds.Size = new Size( bgBounds.Width - 1, bgBounds.Height - 1 );
+          bounds.Offset( -3, 0 );
+          e.Graphics.DrawRectangle( focusPen, bounds );
+        }
+      }
+    }
+
+
+
+    private uint ModulateColor( uint Color1, uint Color2 )
+    {
+      uint a1 = ( Color1 >> 24 );
+      uint r1 = ( Color1 >> 16 ) & 0xff;
+      uint g1 = ( Color1 >> 8  ) & 0xff;
+      uint b1 = Color1 & 0xff;
+
+      uint a2 = ( Color2 >> 24 );
+      uint r2 = ( Color2 >> 16 ) & 0xff;
+      uint g2 = ( Color2 >> 8  ) & 0xff;
+      uint b2 = Color2 & 0xff;
+
+      if ( a1 + a2 == 0 )
+      {
+        return 0xff000000;
+      }
+
+      uint color = 0xff000000
+        | ( ( ( r1 * a1 + r2 * a2 ) / ( a1 + a2 ) ) << 16 )
+        | ( ( ( g1 * a1 + g2 * a2 ) / ( a1 + a2 ) ) << 8 )
+        | ( ( ( b1 * a1 + b2 * a2 ) / ( a1 + a2 ) ) << 0 );
+
+      return color;
+    }
+
+
+
+    private void RefreshSourceControlState()
+    {
+      if ( !global::SourceControl.Controller.IsFunctional )
+      {
+        return;
+      }
+
+      bool  modified = false;
+
+      foreach ( TreeNode projectNode in treeProject.Nodes )
+      {
+        var itemInfo = (TreeItemInfo)projectNode.Tag;
+        if ( itemInfo.FileState != global::SourceControl.FileState.Nonexistent )
+        {
+          itemInfo.FileState = global::SourceControl.FileState.Nonexistent;
+          modified = true;
+        }
+
+        var project = ProjectFromNode( projectNode );
+
+        var fileStates = project.SourceControl.CurrentAddedFiles();
+
+        /*
+        if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
+        {
+          itemInfo.FileState = global::SourceControl.Controller.F
+        }
+        else
+        {
+        }*/
+      }
+      if ( modified )
+      {
+        treeProject.Invalidate();
+      }
+    }
+
+
+
+    public class TreeItemInfo
+    {
+      // per project
+      public Project                          Project = null;
+
+      // per element
+      public ProjectElement                   Element = null;
+      public global::SourceControl.FileState  FileState = global::SourceControl.FileState.Nonexistent;
+
+    }
   }
 }

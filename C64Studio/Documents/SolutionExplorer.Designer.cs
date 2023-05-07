@@ -59,6 +59,7 @@
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.treeProject.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
       this.treeProject.ImageIndex = 0;
       this.treeProject.ImageList = this.imageListExplorer;
       this.treeProject.LabelEdit = true;
@@ -72,6 +73,7 @@
       this.treeProject.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeProject_AfterLabelEdit);
       this.treeProject.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterCollapse);
       this.treeProject.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterExpand);
+      this.treeProject.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeProject_DrawNode);
       this.treeProject.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeProject_ItemDrag);
       this.treeProject.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterSelect);
       this.treeProject.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);
