@@ -28,7 +28,7 @@ namespace SourceControl
       try
       {
         //System.IO.Directory.CreateDirectory( System.IO.Path.Combine( Folder, ".git" ) );
-        Repository.Init( System.IO.Path.Combine( Folder, ".git" ), true );
+        Repository.Init( System.IO.Path.Combine( Folder, ".git" ), false );
         return true;
       }
       catch ( Exception ) 
@@ -97,6 +97,44 @@ namespace SourceControl
       }
 #endif
       return files;
+    }
+
+
+
+    public bool AddFileToIndex( string FullPath )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        _GITRepo.Index.Add( FullPath );
+        _GITRepo.Index.Write();
+        return true;
+      }
+      catch ( Exception )
+      {
+        return false;
+      }
+      #else
+      return false;
+#endif
+    }
+
+
+
+    public FileState GetFileState( string FullPath )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        return (FileState)(int)_GITRepo.RetrieveStatus( FullPath );
+      }
+      catch ( Exception )
+      {
+        return FileState.Nonexistent;
+      }
+#else
+      return FileState.Nonexistent;
+#endif
     }
 
 

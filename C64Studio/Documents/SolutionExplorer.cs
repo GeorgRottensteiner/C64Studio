@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using RetroDevStudio.Dialogs;
 using RetroDevStudio.Types;
+using System.Linq;
+using SourceControl;
+using static System.Windows.Forms.AxHost;
 
 namespace RetroDevStudio.Documents
 {
@@ -138,6 +141,7 @@ namespace RetroDevStudio.Documents
           bool isProjectOrFolder = ( e.Node.Level == 0 );
           bool isFolder = false;
           bool isProject = ( e.Node.Level == 0 );
+          var info = (TreeItemInfo)e.Node.Tag;
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
           &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
@@ -305,6 +309,10 @@ namespace RetroDevStudio.Documents
 
               if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
               {
+                item = new System.Windows.Forms.ToolStripMenuItem( "Refresh State" );
+                item.Tag = 0;
+                item.Click += SourceControlRefreshState;
+                contextMenu.Items.Add( item );
               }
               else
               {
@@ -420,10 +428,48 @@ namespace RetroDevStudio.Documents
             item.Click += new EventHandler( treeElementProperties_Click );
             contextMenu.Items.Add( item );
 
+            if ( ( global::SourceControl.Controller.IsFunctional )
+            &&   ( project.SourceControl != null ) )
+            {
+              contextMenu.Items.Add( "-" );
+
+              int scImageIndex = SourceControlIconFromState( info.FileState );
+              // new, upd, change, ignore, conflict
+              if ( ( scImageIndex == 0 )
+              ||   ( scImageIndex == -1 ) )
+              {
+                item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
+                item.Tag = info;
+                item.Click += SourceControlAddToRepo;
+                contextMenu.Items.Add( item );
+              }
+            }
           }
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void SourceControlAddToRepo( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)( (ToolStripMenuItem)sender ).Tag;
+
+      var project = info.Element.DocumentInfo.Project;
+
+      if ( project.SourceControl.AddFileToIndex( info.Element.DocumentInfo.DocumentFilename ) )
+      {
+        info.FileState = project.SourceControl.GetFileState( info.Element.DocumentInfo.DocumentFilename );
+        treeProject.Invalidate( info.Element.Node.Bounds );
+      }
+    }
+
+
+
+    private void SourceControlRefreshState( object sender, EventArgs e )
+    {
+      RefreshSourceControlState();
     }
 
 
@@ -2158,6 +2204,8 @@ namespace RetroDevStudio.Documents
       //e.DrawDefault = true;
       Rectangle nodeRect = NodeBounds( e.Node );// e.Node.Bounds;
 
+      TreeItemInfo info = (TreeItemInfo)e.Node.Tag; 
+
       // 1. draw expand/collapse icon
       if ( e.Node.Nodes.Count > 1 )
       {
@@ -2198,6 +2246,15 @@ namespace RetroDevStudio.Documents
           Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
 
           e.Graphics.DrawImage( nodeImg, ptNodeIcon );
+
+          var scImageIndex = SourceControlIconFromState( info.FileState );
+
+          if ( scImageIndex != -1 )
+          {
+            Point ptSCIcon = new Point( ptNodeIcon.X + nodeImg.Width - 8, ptNodeIcon.Y + nodeImg.Height - 8 );
+
+            e.Graphics.DrawImage( imageListSourceControlOverlay.Images[scImageIndex], ptSCIcon.X, ptSCIcon.Y, 8, 8 );
+          } 
         }
       }
       Font nodeFont = e.Node.NodeFont;
@@ -2262,6 +2319,36 @@ namespace RetroDevStudio.Documents
 
 
 
+    private int SourceControlIconFromState( FileState State )
+    {
+      if ( State == FileState.Nonexistent )
+      {
+        return 0;
+      }
+
+      // new, upd, change, ignore, conflict
+      if ( State == FileState.Ignored )
+      {
+        return 3;
+      }
+      if ( ( State == FileState.ModifiedInIndex )
+      ||   ( State == FileState.NewInIndex ) )
+      {
+        return 2;
+      }
+      if ( State == FileState.Conflicted )
+      {
+        return 4;
+      }
+      if ( State == FileState.Unaltered )
+      {
+        return 1;
+      }
+      return 0;
+    }
+
+
+
     private uint ModulateColor( uint Color1, uint Color2 )
     {
       uint a1 = ( Color1 >> 24 );
@@ -2308,21 +2395,46 @@ namespace RetroDevStudio.Documents
         }
 
         var project = ProjectFromNode( projectNode );
-
-        var fileStates = project.SourceControl.CurrentAddedFiles();
-
-        /*
-        if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
+        var scInfos = new List<SourceControl.FileInfo>();
+        if ( project.SourceControl != null )
         {
-          itemInfo.FileState = global::SourceControl.Controller.F
+          scInfos = project.SourceControl.CurrentAddedFiles();
         }
-        else
+
+        // iterate recursively over all nodes
+        foreach ( TreeNode node in projectNode.Nodes )
         {
-        }*/
+          RefreshNodeState( node, project, scInfos );
+        }
       }
       if ( modified )
       {
         treeProject.Invalidate();
+      }
+    }
+
+
+
+    private void RefreshNodeState( TreeNode Node, Project Project, List<SourceControl.FileInfo> SCInfos )
+    {
+      var element = ElementFromNode( Node );
+      if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
+      {
+        foreach ( TreeNode node in Node.Nodes )
+        {
+          RefreshNodeState( node, Project, SCInfos );
+        }
+        return;
+      }
+      var treeInfo = (TreeItemInfo)Node.Tag;
+      var scEntry = SCInfos.FirstOrDefault( sc => sc.Filename == element.DocumentInfo.FullPath );
+      if ( scEntry != null )
+      {
+        treeInfo.FileState = (SourceControl.FileState)(int)scEntry.FileState;
+      }
+      else
+      {
+        treeInfo.FileState = global::SourceControl.FileState.NewInWorkdir;
       }
     }
 

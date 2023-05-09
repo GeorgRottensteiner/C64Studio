@@ -49,6 +49,7 @@
       this.seBtnDelete = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.seBtnCloneSolution = new System.Windows.Forms.ToolStripButton();
+      this.imageListSourceControlOverlay = new System.Windows.Forms.ImageList(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -244,6 +245,16 @@
       this.seBtnCloneSolution.Text = "Clone Solution";
       this.seBtnCloneSolution.Click += new System.EventHandler(this.seBtnCloneSolution_Click);
       // 
+      // imageListSourceControlOverlay
+      // 
+      this.imageListSourceControlOverlay.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSourceControlOverlay.ImageStream")));
+      this.imageListSourceControlOverlay.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageListSourceControlOverlay.Images.SetKeyName(0, "se_sc_new.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(1, "se_sc_uptodate.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(2, "se_sc_changes.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(3, "se_sc_ignore.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(4, "se_sc_conflict.ico");
+      // 
       // SolutionExplorer
       // 
       this.ClientSize = new System.Drawing.Size(534, 390);
@@ -281,5 +292,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripButton seBtnCloneSolution;
+    private System.Windows.Forms.ImageList imageListSourceControlOverlay;
   }
 }
