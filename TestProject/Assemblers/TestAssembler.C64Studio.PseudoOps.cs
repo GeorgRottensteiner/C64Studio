@@ -498,6 +498,34 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPseudoOpMessageLabelArithmetic()
+    {
+      string      source = @"n1 = ""a""
+                            m1 = n1 + 1
+                            !message ""m1='"", m1, ""'""
+
+                            n2 = ""abc""
+                            m2 = n2 + 1
+                            !message ""m2='"", m2, ""'""
+
+                            ; 'a1/$1'
+                            o = 1
+                            !message ""o='"", o, ""'""";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( 3, messages.Count );
+      Assert.AreEqual( "m1='b'", messages.Values[0].Message );
+      Assert.AreEqual( "m2='abc1'", messages.Values[1].Message );
+      Assert.AreEqual( "o='1/$1'", messages.Values[2].Message );
+
+      Assert.AreEqual( "0000", assembly.ToString() );
+    }
+
+    
+
+
+    [TestMethod]
     public void TestMacroC64Studio()
     {
       // do not shift the lines, they need to be on the very left

@@ -14,6 +14,8 @@ using Tiny64;
 using RetroDevStudio.Converter;
 using System.Security.Policy;
 
+
+
 namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
@@ -1449,9 +1451,11 @@ namespace RetroDevStudio.Parser
       &&   ( opText == "+" ) )
       {
         // allows anything
-        if ( token2.IsInteger() )
+        if ( ( token1.String.Length == 3 )    // 3 = " + char + "
+        &&   ( token2.IsInteger() ) )
         {
-          Symbol = CreateStringSymbol( token1.ToString() + token2.AddressOrValue.ToString() + "/$" + token2.AddressOrValue.ToString( "X" ) );
+          // special case, string of length 1 is treated as char!
+          Symbol = CreateStringSymbol( "" + (char)( token1.String[1] + token2.AddressOrValue ) );
         }
         else
         {
@@ -11185,7 +11189,9 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      if ( lowestStart == 65536 )
+      if ( ( lowestStart == 65536 )
+      &&   ( ( memoryMap.Entries.Count != 0 )
+      ||     ( builtSegments.Count > 0 ) ) )
       {
         // no real data here, and no start address either
         AddError( 0, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Code without start address encountered (missing *=)" );
