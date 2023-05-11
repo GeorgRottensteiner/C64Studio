@@ -1348,13 +1348,16 @@ namespace RetroDevStudio.Documents
       {
         comboMaps.SelectedIndex = 0;
       }
+      if ( ( comboTiles.Items.Count > 0 )
+      &&   ( comboTiles.SelectedIndex == -1 ) )
+      {
+        comboTiles.SelectedIndex = 0;
+      }
       if ( ( listTileInfo.Items.Count > 0 )
       &&   ( listTileInfo.SelectedIndices.Count == 0 ) )
       {
         listTileInfo.SelectedIndices.Add( 0 );
       }
-
-
 
       EnableFileWatcher();
       return true;
@@ -2750,9 +2753,6 @@ namespace RetroDevStudio.Documents
       tupel1.second = tile2;
       tupel2.second = tile1;
          
-      //comboTiles.Items[Index1]
-      //comboTiles.Items[Index1] = tupel2;
-      //comboTiles.Items[Index2] = tupel1;
       comboTiles.Items[Index1] = tupel1;
       comboTiles.Items[Index2] = tupel2;
 
