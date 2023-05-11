@@ -180,17 +180,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    public ParseMessage AddError( int Line, Types.ErrorCode Code, string Text )
-    {
-      ParseMessage errorMessage = new ParseMessage( ParseMessage.LineType.ERROR, Code, Text, -1, 0 );
-      Messages.Add( Line, errorMessage );
-      ++m_ErrorMessages;
-      return errorMessage;
-    }
-
-
-
-    public ParseMessage AddError( int Line, Types.ErrorCode Code, string Text, int CharIndex, int Length )
+    public ParseMessage AddError( int Line, Types.ErrorCode Code, string Text, int CharIndex = -1, int Length = 0 )
     {
       ParseMessage errorMessage = new ParseMessage( ParseMessage.LineType.ERROR, Code, Text, CharIndex, Length );
       Messages.Add( Line, errorMessage );

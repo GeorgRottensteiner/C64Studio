@@ -2201,6 +2201,7 @@ namespace RetroDevStudio.Parser
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Content != "*" )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_CHAR )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_STRING )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
                 // eval hi/lo byte, only locally for next token!!
