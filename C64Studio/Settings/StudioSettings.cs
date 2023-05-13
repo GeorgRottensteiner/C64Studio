@@ -140,6 +140,7 @@ namespace RetroDevStudio
     public bool                                 ASMShowAddress      = true;
     public List<string>                         ASMLibraryPaths     = new List<string>();
     public bool                                 ASMShowShortCutLabels = true;
+    public int                                  ASMShowMaxLineLengthIndicatorLength = 0;
 
     public bool                                 StripTrailingSpaces = false;
 
@@ -167,6 +168,7 @@ namespace RetroDevStudio
     public float                                BASICSourceFontSize = 9.0f;
     public FontStyle                            BASICSourceFontStyle = FontStyle.Regular;
     public bool                                 BASICUseNonC64Font = false;
+    public int                                  BASICShowMaxLineLengthIndicatorLength = 80;
 
     public bool                                 BehaviourRightClickIsBGColorPaint = false;
 
@@ -587,6 +589,8 @@ namespace RetroDevStudio
       chunkTabs.AppendU8( (byte)( TabConvertToSpaces ? 1 : 0 ) );
       chunkTabs.AppendU8( (byte)( StripTrailingSpaces ? 1 : 0 ) );
       chunkTabs.AppendString( SourceFileEncoding.WebName );
+      chunkTabs.AppendI32( BASICShowMaxLineLengthIndicatorLength );
+      chunkTabs.AppendI32( ASMShowMaxLineLengthIndicatorLength );
       SettingsData.Append( chunkTabs.ToBuffer() );
 
       GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FONT );
@@ -998,6 +1002,19 @@ namespace RetroDevStudio
                 {
                   SourceFileEncoding = new System.Text.UTF8Encoding( false );
                 }
+              }
+
+              BASICShowMaxLineLengthIndicatorLength = binIn.ReadInt32();
+              if ( ( BASICShowMaxLineLengthIndicatorLength <= 0 )
+              ||   ( BASICShowMaxLineLengthIndicatorLength >= 200 ) )
+              {
+                BASICShowMaxLineLengthIndicatorLength = 80;
+              }
+              ASMShowMaxLineLengthIndicatorLength = binIn.ReadInt32();
+              if ( ( ASMShowMaxLineLengthIndicatorLength <= 0 )
+              ||   ( ASMShowMaxLineLengthIndicatorLength >= 200 ) )
+              {
+                ASMShowMaxLineLengthIndicatorLength = 0;
               }
             }
             break;

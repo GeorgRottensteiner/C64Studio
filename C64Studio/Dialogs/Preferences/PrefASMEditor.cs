@@ -38,6 +38,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkASMShowMiniMap.Checked       = Core.Settings.ASMShowMiniView;
       checkASMShowAutoComplete.Checked  = Core.Settings.ASMShowAutoComplete;
       checkASMShowAddress.Checked       = Core.Settings.ASMShowAddress;
+      editMaxLineLengthIndicatorColumn.Text = Core.Settings.ASMShowMaxLineLengthIndicatorLength.ToString();
+      checkEditorShowMaxLineLengthIndicator.Checked = ( Core.Settings.ASMShowMaxLineLengthIndicatorLength != 0 );
 
       var allEncodings = System.Text.Encoding.GetEncodings();
 
@@ -83,6 +85,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlASMEditor.AddAttribute( "ShowMiniView", Core.Settings.ASMShowMiniView ? "yes" : "no" );
       xmlASMEditor.AddAttribute( "ShowAddress", Core.Settings.ASMShowAddress ? "yes" : "no" );
       xmlASMEditor.AddAttribute( "ShowAutoComplete", Core.Settings.ASMShowAutoComplete ? "yes" : "no" );
+      xmlASMEditor.AddAttribute( "ShowMaxLineLengthIndicatorLength", Core.Settings.ASMShowMaxLineLengthIndicatorLength.ToString() );
 
       xmlASMEditor.AddAttribute( "Encoding", Core.Settings.SourceFileEncoding.WebName );
 
@@ -114,6 +117,7 @@ namespace RetroDevStudio.Dialogs.Preferences
         checkASMShowCycles.Checked        = IsSettingTrue( xmlASMEditor.Attribute( "ShowCycles" ) );
         checkASMShowMiniMap.Checked       = IsSettingTrue( xmlASMEditor.Attribute( "ShowMiniView" ) );
         checkASMShowSizes.Checked         = IsSettingTrue( xmlASMEditor.Attribute( "ShowByteSize" ) );
+        editMaxLineLengthIndicatorColumn.Text = xmlASMEditor.Attribute( "ShowMaxLineLengthIndicatorLength" );
 
         try
         {
@@ -287,6 +291,35 @@ namespace RetroDevStudio.Dialogs.Preferences
       var  newEncoding = (GR.Generic.Tupel<string, Encoding>)comboASMEncoding.SelectedItem;
 
       Core.Settings.SourceFileEncoding = newEncoding.second;
+    }
+
+
+
+    private void checkEditorShowMaxLineLengthIndicator_CheckedChanged( object sender, EventArgs e )
+    {
+      editMaxLineLengthIndicatorColumn.Enabled = checkEditorShowMaxLineLengthIndicator.Checked;
+      if ( !checkEditorShowMaxLineLengthIndicator.Checked )
+      {
+        Core.Settings.ASMShowMaxLineLengthIndicatorLength = 0;
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
+
+    private void editMaxLineLengthIndicatorColumn_TextChanged( object sender, EventArgs e )
+    {
+      int   maxColIndicator = GR.Convert.ToI32( editMaxLineLengthIndicatorColumn.Text );
+      if ( ( maxColIndicator <= 0 )
+      ||   ( maxColIndicator >= 200 ) )
+      {
+        maxColIndicator = 0;
+      }
+      if ( Core.Settings.ASMShowMaxLineLengthIndicatorLength != maxColIndicator )
+      {
+        Core.Settings.ASMShowMaxLineLengthIndicatorLength = maxColIndicator;
+        RefreshDisplayOnDocuments();
+      }
     }
 
 

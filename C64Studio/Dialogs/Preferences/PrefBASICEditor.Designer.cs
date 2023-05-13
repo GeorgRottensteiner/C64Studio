@@ -31,7 +31,10 @@
       this.btnExportSettings = new System.Windows.Forms.Button();
       this.btnImportSettings = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.checkBASICEditorShowMaxLineLengthIndicator = new System.Windows.Forms.CheckBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.editMaxLineLengthIndicatorColumn = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.editBASICC64FontSize = new System.Windows.Forms.TextBox();
       this.labelBASICC64FontSize = new System.Windows.Forms.Label();
       this.checkBASICUseC64Font = new System.Windows.Forms.CheckBox();
@@ -43,7 +46,7 @@
       // btnExportSettings
       // 
       this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 107);
+      this.btnExportSettings.Location = new System.Drawing.Point(819, 68);
       this.btnExportSettings.Name = "btnExportSettings";
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
@@ -54,7 +57,7 @@
       // btnImportSettings
       // 
       this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 107);
+      this.btnImportSettings.Location = new System.Drawing.Point(738, 68);
       this.btnImportSettings.Name = "btnImportSettings";
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
@@ -64,7 +67,10 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.checkBASICEditorShowMaxLineLengthIndicator);
       this.groupBox1.Controls.Add(this.label1);
+      this.groupBox1.Controls.Add(this.editMaxLineLengthIndicatorColumn);
+      this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.editBASICC64FontSize);
       this.groupBox1.Controls.Add(this.labelBASICC64FontSize);
       this.groupBox1.Controls.Add(this.checkBASICUseC64Font);
@@ -75,10 +81,21 @@
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 136);
+      this.groupBox1.Size = new System.Drawing.Size(900, 97);
       this.groupBox1.TabIndex = 18;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "BASIC Editor";
+      // 
+      // checkBASICEditorShowMaxLineLengthIndicator
+      // 
+      this.checkBASICEditorShowMaxLineLengthIndicator.AutoSize = true;
+      this.checkBASICEditorShowMaxLineLengthIndicator.Location = new System.Drawing.Point(22, 73);
+      this.checkBASICEditorShowMaxLineLengthIndicator.Name = "checkBASICEditorShowMaxLineLengthIndicator";
+      this.checkBASICEditorShowMaxLineLengthIndicator.Size = new System.Drawing.Size(169, 17);
+      this.checkBASICEditorShowMaxLineLengthIndicator.TabIndex = 24;
+      this.checkBASICEditorShowMaxLineLengthIndicator.Text = "Show max line length indicator";
+      this.checkBASICEditorShowMaxLineLengthIndicator.UseVisualStyleBackColor = true;
+      this.checkBASICEditorShowMaxLineLengthIndicator.CheckedChanged += new System.EventHandler(this.checkBASICEditorShowMaxLineLengthIndicator_CheckedChanged);
       // 
       // label1
       // 
@@ -89,10 +106,30 @@
       this.label1.TabIndex = 23;
       this.label1.Text = "Font:";
       // 
+      // editMaxLineLengthIndicatorColumn
+      // 
+      this.editMaxLineLengthIndicatorColumn.Enabled = false;
+      this.editMaxLineLengthIndicatorColumn.Location = new System.Drawing.Point(258, 71);
+      this.editMaxLineLengthIndicatorColumn.MaxLength = 3;
+      this.editMaxLineLengthIndicatorColumn.Name = "editMaxLineLengthIndicatorColumn";
+      this.editMaxLineLengthIndicatorColumn.Size = new System.Drawing.Size(91, 20);
+      this.editMaxLineLengthIndicatorColumn.TabIndex = 22;
+      this.editMaxLineLengthIndicatorColumn.TextChanged += new System.EventHandler(this.editMaxLineLengthIndicatorColumn_TextChanged);
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Enabled = false;
+      this.label2.Location = new System.Drawing.Point(222, 74);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(25, 13);
+      this.label2.TabIndex = 21;
+      this.label2.Text = "Col:";
+      // 
       // editBASICC64FontSize
       // 
       this.editBASICC64FontSize.Enabled = false;
-      this.editBASICC64FontSize.Location = new System.Drawing.Point(204, 68);
+      this.editBASICC64FontSize.Location = new System.Drawing.Point(258, 48);
       this.editBASICC64FontSize.MaxLength = 3;
       this.editBASICC64FontSize.Name = "editBASICC64FontSize";
       this.editBASICC64FontSize.Size = new System.Drawing.Size(91, 20);
@@ -103,7 +140,7 @@
       // 
       this.labelBASICC64FontSize.AutoSize = true;
       this.labelBASICC64FontSize.Enabled = false;
-      this.labelBASICC64FontSize.Location = new System.Drawing.Point(168, 71);
+      this.labelBASICC64FontSize.Location = new System.Drawing.Point(222, 51);
       this.labelBASICC64FontSize.Name = "labelBASICC64FontSize";
       this.labelBASICC64FontSize.Size = new System.Drawing.Size(30, 13);
       this.labelBASICC64FontSize.TabIndex = 21;
@@ -112,7 +149,7 @@
       // checkBASICUseC64Font
       // 
       this.checkBASICUseC64Font.AutoSize = true;
-      this.checkBASICUseC64Font.Location = new System.Drawing.Point(22, 70);
+      this.checkBASICUseC64Font.Location = new System.Drawing.Point(22, 50);
       this.checkBASICUseC64Font.Name = "checkBASICUseC64Font";
       this.checkBASICUseC64Font.Size = new System.Drawing.Size(88, 17);
       this.checkBASICUseC64Font.TabIndex = 20;
@@ -123,7 +160,7 @@
       // btnChangeBASICFont
       // 
       this.btnChangeBASICFont.Enabled = false;
-      this.btnChangeBASICFont.Location = new System.Drawing.Point(171, 19);
+      this.btnChangeBASICFont.Location = new System.Drawing.Point(225, 19);
       this.btnChangeBASICFont.Name = "btnChangeBASICFont";
       this.btnChangeBASICFont.Size = new System.Drawing.Size(124, 23);
       this.btnChangeBASICFont.TabIndex = 19;
@@ -133,7 +170,7 @@
       // 
       // labelBASICFontPreview
       // 
-      this.labelBASICFontPreview.Location = new System.Drawing.Point(301, 25);
+      this.labelBASICFontPreview.Location = new System.Drawing.Point(355, 25);
       this.labelBASICFontPreview.Name = "labelBASICFontPreview";
       this.labelBASICFontPreview.Size = new System.Drawing.Size(209, 35);
       this.labelBASICFontPreview.TabIndex = 18;
@@ -145,7 +182,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.groupBox1);
       this.Name = "PrefBASICEditor";
-      this.Size = new System.Drawing.Size(900, 136);
+      this.Size = new System.Drawing.Size(900, 97);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
@@ -163,5 +200,8 @@
         private System.Windows.Forms.Button btnChangeBASICFont;
         private System.Windows.Forms.Label labelBASICFontPreview;
         private System.Windows.Forms.Label label1;
-    }
+    private System.Windows.Forms.CheckBox checkBASICEditorShowMaxLineLengthIndicator;
+    private System.Windows.Forms.TextBox editMaxLineLengthIndicatorColumn;
+    private System.Windows.Forms.Label label2;
+  }
 }

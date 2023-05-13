@@ -38,6 +38,8 @@ namespace RetroDevStudio.Dialogs.Preferences
         labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
       editBASICC64FontSize.Text = ( (int)Core.Settings.BASICSourceFontSize ).ToString();
+      editMaxLineLengthIndicatorColumn.Text = Core.Settings.BASICShowMaxLineLengthIndicatorLength.ToString();
+      checkBASICEditorShowMaxLineLengthIndicator.Checked = ( Core.Settings.BASICShowMaxLineLengthIndicatorLength != 0 );
     }
 
 
@@ -65,14 +67,31 @@ namespace RetroDevStudio.Dialogs.Preferences
         {
           if ( xmlFont.Attribute( "Type" ) == "BASIC" )
           {
-            Core.Settings.BASICSourceFontFamily = xmlFont.Attribute( "Family" );
-            Core.Settings.BASICSourceFontSize   = GR.Convert.ToF32( xmlFont.Attribute( "Size" ) );
-            Core.Settings.BASICSourceFontStyle  = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "FontStyle" ) );
-            Core.Settings.BASICUseNonC64Font    = !IsSettingTrue( xmlFont.Attribute( "UseC64Font" ) );
+            Core.Settings.BASICSourceFontFamily                 = xmlFont.Attribute( "Family" );
+            Core.Settings.BASICSourceFontSize                   = GR.Convert.ToF32( xmlFont.Attribute( "Size" ) );
+            Core.Settings.BASICSourceFontStyle                  = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "FontStyle" ) );
+            Core.Settings.BASICUseNonC64Font                    = !IsSettingTrue( xmlFont.Attribute( "UseC64Font" ) );
 
-            labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+            checkBASICUseC64Font.Checked = !Core.Settings.BASICUseNonC64Font;
+            editBASICC64FontSize.Enabled = !Core.Settings.BASICUseNonC64Font;
+            if ( !Core.Settings.BASICUseNonC64Font )
+            {
+              labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+            }
+            else
+            {
+              labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+            }
+            editBASICC64FontSize.Text = ( (int)Core.Settings.BASICSourceFontSize ).ToString();
+            editMaxLineLengthIndicatorColumn.Text = Core.Settings.BASICShowMaxLineLengthIndicatorLength.ToString();
+            checkBASICEditorShowMaxLineLengthIndicator.Checked = ( Core.Settings.BASICShowMaxLineLengthIndicatorLength != 0 );
           }
         }
+      }
+      var xmlBASICEditor = SettingsRoot.FindByType( "BASICEditor" );
+      if ( xmlBASICEditor != null )
+      {
+        Core.Settings.BASICShowMaxLineLengthIndicatorLength = GR.Convert.ToI32( xmlBASICEditor.Attribute( "ShowMaxLineLengthIndicatorLength" ) );
       }
     }
 
@@ -87,6 +106,9 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlFont.AddAttribute( "Size", Core.Settings.BASICSourceFontSize.ToString() );
       xmlFont.AddAttribute( "Style", ( (int)Core.Settings.BASICSourceFontStyle ).ToString() );
       xmlFont.AddAttribute( "UseC64Font", Core.Settings.BASICUseNonC64Font ? "no" : "yes" );
+
+      var xmlBASICEditor = SettingsRoot.AddChild( "BASICEditor" );
+      xmlBASICEditor.AddAttribute( "ShowMaxLineLengthIndicatorLength", Core.Settings.BASICShowMaxLineLengthIndicatorLength.ToString() );
     }
 
 
@@ -147,6 +169,35 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.BASICSourceFontSize = fontSize;
         labelBASICFontPreview.Font = new Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
+
+    private void checkBASICEditorShowMaxLineLengthIndicator_CheckedChanged( object sender, EventArgs e )
+    {
+      editMaxLineLengthIndicatorColumn.Enabled = checkBASICEditorShowMaxLineLengthIndicator.Checked;
+      if ( !checkBASICEditorShowMaxLineLengthIndicator.Checked )
+      {
+        Core.Settings.BASICShowMaxLineLengthIndicatorLength = 0;
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
+
+    private void editMaxLineLengthIndicatorColumn_TextChanged( object sender, EventArgs e )
+    {
+      int   maxColIndicator = GR.Convert.ToI32( editMaxLineLengthIndicatorColumn.Text );
+      if ( ( maxColIndicator <= 0 )
+      ||   ( maxColIndicator >= 200 ) )
+      {
+        maxColIndicator = 80;
+      }
+      if ( Core.Settings.BASICShowMaxLineLengthIndicatorLength != maxColIndicator )
+      {
+        Core.Settings.BASICShowMaxLineLengthIndicatorLength = maxColIndicator;
         RefreshDisplayOnDocuments();
       }
     }
