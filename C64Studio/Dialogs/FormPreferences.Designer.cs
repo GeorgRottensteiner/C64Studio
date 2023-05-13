@@ -55,6 +55,8 @@
       // 
       // panelPreferences
       // 
+      this.panelPreferences.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
       this.panelPreferences.AutoScroll = true;
       this.panelPreferences.Location = new System.Drawing.Point(12, 32);
       this.panelPreferences.Name = "panelPreferences";
@@ -63,6 +65,7 @@
       // 
       // btnOK
       // 
+      this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnOK.Location = new System.Drawing.Point(855, 529);
       this.btnOK.Name = "btnOK";
@@ -74,6 +77,7 @@
       // 
       // btnExportAllSettings
       // 
+      this.btnExportAllSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnExportAllSettings.Location = new System.Drawing.Point(12, 529);
       this.btnExportAllSettings.Name = "btnExportAllSettings";
       this.btnExportAllSettings.Size = new System.Drawing.Size(75, 23);
@@ -84,6 +88,7 @@
       // 
       // btnImportAllSettings
       // 
+      this.btnImportAllSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnImportAllSettings.Location = new System.Drawing.Point(93, 529);
       this.btnImportAllSettings.Name = "btnImportAllSettings";
       this.btnImportAllSettings.Size = new System.Drawing.Size(75, 23);
@@ -103,13 +108,14 @@
       this.Controls.Add(this.panelPreferences);
       this.Controls.Add(this.editPreferencesFilter);
       this.Controls.Add(this.label1);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "FormPreferences";
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Preferences";
+      this.Load += new System.EventHandler(this.FormPreferences_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 

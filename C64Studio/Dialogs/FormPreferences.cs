@@ -198,5 +198,17 @@ namespace RetroDevStudio.Dialogs
 
 
 
+    private void FormPreferences_Load( object sender, EventArgs e )
+    {
+      if ( Height > Screen.PrimaryScreen.WorkingArea.Height )
+      {
+        Height = Screen.PrimaryScreen.WorkingArea.Height;
+      }
+      MinimumSize = Size;
+      MaximumSize = new Size( MinimumSize.Width, Screen.PrimaryScreen.WorkingArea.Height );
+    }
+
+
+
   }
 }
