@@ -5637,20 +5637,26 @@ namespace RetroDevStudio.Parser
           }
         }
 
+        bool isScopingActive = true;
+        bool isOuterScopingActive = true;
+        for ( int i = 0; i < stackScopes.Count; ++i )
+        {
+          if ( !stackScopes[i].Active )
+          {
+            if ( ( i + 1 ) < stackScopes.Count )
+            {
+              isOuterScopingActive = false;
+            }
+            isScopingActive = false;
+            break;
+          }
+        }
+
         if ( ( lineTokenInfos.Count > 0 )
         &&   ( lineTokenInfos[0].Content != "}" )
         &&   ( !isDASMScopePseudoOP ) )
         {
-          bool isActive = true;
-          for ( int i = 0; i < stackScopes.Count; ++i )
-          {
-            if ( !stackScopes[i].Active )
-            {
-              isActive = false;
-              break;
-            }
-          }
-          if ( !isActive )
+          if ( !isScopingActive )
           {
             // defined away
             Types.ScopeInfo.ScopeType   detectedScopeType = ScopeInfo.ScopeType.UNKNOWN;
@@ -5852,8 +5858,15 @@ namespace RetroDevStudio.Parser
                   Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                   scope.StartIndex = lineIndex;
 
-                  if ( ( prevScope.Active )
-                  ||   ( prevScope.IfChainHadActiveEntry ) )
+
+                  if ( !isOuterScopingActive )
+                  {
+                    // need no evaluation, can skip over this one, since it is inactive anyway
+                    scope.Active = false;
+                    scope.IfChainHadActiveEntry = false;
+                  }
+                  else if ( ( prevScope.Active )
+                  ||        ( prevScope.IfChainHadActiveEntry ) )
                   {
                     // need no evaluation, can skip over this one, since it is inactive anyway
                     scope.Active = false;
@@ -5868,24 +5881,26 @@ namespace RetroDevStudio.Parser
                                 lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
                       scope.Active = true;
                       scope.IfChainHadActiveEntry = true;
-                      return null;
-                    }
-
-                    defineResult = defineResultSymbol.ToInteger();
-                    if ( defineResult == 0 )
-                    {
-                      scope.Active = false;
+                      //return null;
                     }
                     else
                     {
-                      scope.Active = true;
-                      scope.IfChainHadActiveEntry = true;
-                    }
-                    // if chain already had an active entry?
-                    if ( prevScope.IfChainHadActiveEntry )
-                    {
-                      scope.Active = false;
-                      scope.IfChainHadActiveEntry = true;
+                      defineResult = defineResultSymbol.ToInteger();
+                      if ( defineResult == 0 )
+                      {
+                        scope.Active = false;
+                      }
+                      else
+                      {
+                        scope.Active = true;
+                        scope.IfChainHadActiveEntry = true;
+                      }
+                      // if chain already had an active entry?
+                      if ( prevScope.IfChainHadActiveEntry )
+                      {
+                        scope.Active = false;
+                        scope.IfChainHadActiveEntry = true;
+                      }
                     }
                   }
                   stackScopes.Add( scope );
@@ -5901,7 +5916,6 @@ namespace RetroDevStudio.Parser
               }
               break;
           }
-          //++lineIndex;
           continue;
         }
         else if ( IsDefine( lineTokenInfos ) )
