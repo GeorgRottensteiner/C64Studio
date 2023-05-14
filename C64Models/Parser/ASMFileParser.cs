@@ -5852,7 +5852,8 @@ namespace RetroDevStudio.Parser
                   Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                   scope.StartIndex = lineIndex;
 
-                  if ( prevScope.Active )
+                  if ( ( prevScope.Active )
+                  ||   ( prevScope.IfChainHadActiveEntry ) )
                   {
                     // need no evaluation, can skip over this one, since it is inactive anyway
                     scope.Active = false;
