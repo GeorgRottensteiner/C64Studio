@@ -5851,31 +5851,41 @@ namespace RetroDevStudio.Parser
 
                   Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                   scope.StartIndex = lineIndex;
-                  if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
-                  {
-                    AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
-                              + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
-                              lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
-                    scope.Active = true;
-                    scope.IfChainHadActiveEntry = true;
-                    return null;
-                  }
 
-                  defineResult = defineResultSymbol.ToInteger();
-                  if ( defineResult == 0 )
+                  if ( prevScope.Active )
                   {
+                    // need no evaluation, can skip over this one, since it is inactive anyway
                     scope.Active = false;
+                    scope.IfChainHadActiveEntry = true;
                   }
                   else
                   {
-                    scope.Active = true;
-                    scope.IfChainHadActiveEntry = true;
-                  }
-                  // if chain already had an active entry?
-                  if ( prevScope.IfChainHadActiveEntry )
-                  {
-                    scope.Active = false;
-                    scope.IfChainHadActiveEntry = true;
+                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                    {
+                      AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
+                                + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                                lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                      scope.Active = true;
+                      scope.IfChainHadActiveEntry = true;
+                      return null;
+                    }
+
+                    defineResult = defineResultSymbol.ToInteger();
+                    if ( defineResult == 0 )
+                    {
+                      scope.Active = false;
+                    }
+                    else
+                    {
+                      scope.Active = true;
+                      scope.IfChainHadActiveEntry = true;
+                    }
+                    // if chain already had an active entry?
+                    if ( prevScope.IfChainHadActiveEntry )
+                    {
+                      scope.Active = false;
+                      scope.IfChainHadActiveEntry = true;
+                    }
                   }
                   stackScopes.Add( scope );
                 }

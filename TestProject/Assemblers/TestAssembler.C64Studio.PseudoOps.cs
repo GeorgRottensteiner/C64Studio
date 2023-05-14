@@ -542,5 +542,38 @@ namespace TestProject
     }
 
 
+
+    [TestMethod]
+    public void TestPseudoOpIfDefChainAvoidingEvaluationInElseBranches()
+    {
+      string    source = @"*=$c000
+        !macro mult8_snippet2 .mand {
+          ;load mand into Y
+          !ifndef .mand {
+            !message ""address with forward reference""
+            ldy.mand 
+          } else if .mand != ""Y"" {
+            !message ""address with non-forward reference""
+            ldy.mand ;3/4 cycles
+          } else {
+            ; mand is Y
+            !message ""mand is Y""
+            }; !ifndef mand
+          } ; !macro mult8_snippet2
+
+        +mult8_snippet2 addr_forward
+        addr_forward: nop";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( 3, messages.Count );
+      Assert.AreEqual( "address with forward reference", messages.Values[0].Message );
+      Assert.AreEqual( "Unused label ldy.mand", messages.Values[1].Message );
+      Assert.AreEqual( "Unused label addr_forward", messages.Values[2].Message );
+
+      Assert.AreEqual( "00C0EA", assembly.ToString() );
+    }
+
+
   }
 }

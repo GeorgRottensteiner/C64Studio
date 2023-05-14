@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Breakpoints speichern!
 o Das aktuelle Studio übersetzt das {DOWN} nach einem "Toggle symbol/macro" in ein {CTRL-Q} .
   Läuft zwar, ist aber unschön. (BASIC V2, siehe Zeile 11)
 o Hot-Reload in VICE
