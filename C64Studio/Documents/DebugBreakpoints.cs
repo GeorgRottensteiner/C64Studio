@@ -194,7 +194,10 @@ namespace RetroDevStudio.Documents
               var sourceFile = element.Document as SourceASMEx;
               bp.LineIndex = lineIndex;
               bp.DocumentFilename = DocumentFilename;
-              sourceFile.AddBreakpoint( bp );
+              if ( sourceFile != null )
+              {
+                sourceFile.AddBreakpoint( bp );
+              }
             }
           }
         }

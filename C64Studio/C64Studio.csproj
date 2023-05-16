@@ -54,11 +54,34 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsBinaryFile.cs" />
+    <Compile Update="Controls\ExportMapForms\ExportMapAsCharscreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsCharset.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapAsBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromHex.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\CSListView.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportMapForms\ImportMapFromBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportMapForms\ImportMapCharsetFromCharsetFile.cs" />
+    <Compile Update="Controls\ImportMapForms\ImportMapFormBase.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>

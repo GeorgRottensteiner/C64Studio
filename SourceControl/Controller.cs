@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 #if NET6_0_OR_GREATER
 using LibGit2Sharp;
 #endif
@@ -84,6 +85,20 @@ namespace SourceControl
 
 
 
+    public bool HasChanges
+    {
+      get
+      {
+#if NET6_0_OR_GREATER
+        return _GITRepo.Diff.Compare<TreeChanges>().Any();
+#else
+        return false;
+#endif
+      }
+    }
+
+
+
     public List<FileInfo> CurrentAddedFiles()
     {
       var files = new List<FileInfo>();
@@ -93,6 +108,10 @@ namespace SourceControl
         foreach ( var item in _GITRepo.RetrieveStatus() )
         {
           files.Add( new FileInfo() { Filename = item.FilePath, FileState = (FileState)(int)item.State } );
+        }
+        foreach ( var item in _GITRepo.Index )
+        {
+          files.Add( new FileInfo() { Filename = item.Path, FileState = FileState.Unaltered } );
         }
       }
 #endif
@@ -114,7 +133,7 @@ namespace SourceControl
       {
         return false;
       }
-      #else
+#else
       return false;
 #endif
     }
@@ -134,6 +153,69 @@ namespace SourceControl
       }
 #else
       return FileState.Nonexistent;
+#endif
+    }
+
+
+
+    public bool RemoveFileFromIndex( string FullPath )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        _GITRepo.Index.Remove( FullPath );
+        _GITRepo.Index.Write();
+        return true;
+      }
+      catch ( Exception )
+      {
+        return false;
+      }
+#else
+      return false;
+#endif
+    }
+
+
+
+    public bool Ignore( string FullPath )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        //_GITRepo.Ignore.AddTemporaryRules( new List<string>() { FullPath }  );
+        //_GITRepo.Ignore.Write();
+        return true;
+      }
+      catch ( Exception )
+      {
+        return false;
+      }
+#else
+      return false;
+#endif
+    }
+
+
+
+    public bool CommitChanges()
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        var author = new Signature( "ich", "email", DateTime.Now );
+        var committer = author;
+
+        var commit = _GITRepo.Commit( "Commit message", author, committer );
+
+        return ( commit != null );
+      }
+      catch ( Exception )
+      {
+        return false;
+      }
+#else
+      return false;
 #endif
     }
 

@@ -9,8 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
-
+using GR.Memory;
 
 namespace RetroDevStudio.Controls
 {
@@ -71,9 +70,25 @@ namespace RetroDevStudio.Controls
       }
       if ( finalData != null )
       {
+        if ( checkPrefixLoadAddress.Checked )
+        {
+          ushort address = GR.Convert.ToU16( editPrefixLoadAddress.Text, 16 );
+
+          var addressData = new ByteBuffer();
+          addressData.AppendU16( address );
+          finalData = addressData + finalData;
+        }
+
         GR.IO.File.WriteAllBytes( saveDlg.FileName, finalData );
       }
       return true;
+    }
+
+
+
+    private void checkPrefixLoadAddress_CheckedChanged( object sender, EventArgs e )
+    {
+      editPrefixLoadAddress.Enabled = checkPrefixLoadAddress.Checked;
     }
 
 

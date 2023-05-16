@@ -154,7 +154,7 @@ namespace RetroDevStudio.Documents
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
 
-      editSource.PreferredLineWidth = 80;
+      editSource.PreferredLineWidth = Core.Settings.BASICShowMaxLineLengthIndicatorLength;
 
 
       editSource.KeyPressing += EditSource_KeyPressing;
@@ -369,6 +369,7 @@ namespace RetroDevStudio.Documents
       RecalcCharHeight();
 
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
+      editSource.PreferredLineWidth = Core.Settings.BASICShowMaxLineLengthIndicatorLength;
 
       // adjust caret color (Thanks Tulan!)
       System.Drawing.Color    backColorForCaret = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.EMPTY_SPACE ) );

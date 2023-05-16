@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Formats;
+using RetroDevStudio.Controls;
+using System.Runtime.InteropServices;
 
 namespace RetroDevStudio.Documents
 {
@@ -23,20 +25,6 @@ namespace RetroDevStudio.Documents
     };
 
 
-
-    private enum ExportType
-    {
-      [Description("tile data as elements")]
-      TILE_DATA_AS_ELEMENTS,
-      [Description( "tile data" )]
-      TILE_DATA,
-      [Description( "map data" )]
-      MAP_DATA,
-      [Description( "tile data, then map data" )]
-      TILE_AND_MAP_DATA,
-      [Description( "map data from selection" )]
-      MAP_DATA_SELECTION
-    }
 
     private Formats.MapProject          m_MapProject = new RetroDevStudio.Formats.MapProject();
 
@@ -69,6 +57,9 @@ namespace RetroDevStudio.Documents
     private List<GR.Generic.Tupel<bool,int>>          m_FloatingSelection = null;
     private System.Drawing.Size                       m_FloatingSelectionSize;
     private System.Drawing.Point                      m_FloatingSelectionPos;
+
+    private ExportMapFormBase           m_ExportForm = null;
+    private ImportMapFormBase           m_ImportForm = null;
 
 
 
@@ -105,22 +96,21 @@ namespace RetroDevStudio.Documents
       characterEditor.UndoManager = DocumentInfo.UndoManager;
       characterEditor.Core = Core;
 
-      foreach ( ExportType exportType in Enum.GetValues( typeof( ExportType ) ) )
-      {
-        comboExportData.Items.Add( new GR.Generic.Tupel<string,ExportType>( GR.EnumHelper.GetDescription( exportType ), exportType ) );
-      }
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportMapAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportMapAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "charset to charset project", typeof( ExportMapCharsetAsCharset ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "charset to binary file", typeof( ExportMapCharsetAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "map to char screen project", typeof( ExportMapAsCharscreen ) ) );
+      comboExportMethod.SelectedIndex = 0;
 
-      comboCharScreens.Items.Add( new Types.ComboItem( "To new char screen project" ) );
-      foreach ( BaseDocument doc in Core.MainForm.panelMain.Documents )
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "charset from character set file", typeof( ImportMapCharsetFromCharsetFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "map/charset from binary/charpad file", typeof( ImportMapFromBinaryFile ) ) );
+      comboImportMethod.SelectedIndex = 0;
+
+      foreach ( MapExportType exportType in Enum.GetValues( typeof( MapExportType ) ) )
       {
-        if ( doc.DocumentInfo.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
-        {
-          var item = new Types.ComboItem( doc.DocumentInfo.DocumentFilename, doc.DocumentInfo );
-          item.Tag = doc.DocumentInfo;
-          comboCharScreens.Items.Add( item );
-        }
+        comboExportData.Items.Add( new GR.Generic.Tupel<string, MapExportType>( GR.EnumHelper.GetDescription( exportType ), exportType ) );
       }
-      comboCharScreens.SelectedIndex = 0;
 
       pictureEditor.MouseWheel += pictureEditor_MouseWheel;
       pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
@@ -190,9 +180,6 @@ namespace RetroDevStudio.Documents
       comboMapAlternativeMode.SelectedIndex = 0;
 
       Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
-
-      checkExportToDataIncludeRes.Checked = true;
-      checkExportToDataWrap.Checked = true;
 
       for ( int i = 0; i < 256; ++i )
       {
@@ -473,34 +460,6 @@ namespace RetroDevStudio.Documents
 
     void MainForm_ApplicationEvent( RetroDevStudio.Types.ApplicationEvent Event )
     {
-      if ( Event.EventType == RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_CREATED )
-      {
-        if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
-        {
-          string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
-          var item = new Types.ComboItem( nameToUse, Event.Doc );
-          item.Tag = Event.Doc;
-          comboCharScreens.Items.Add( item );
-        }
-      }
-      if ( Event.EventType == RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_REMOVED )
-      {
-        if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
-        {
-          foreach ( Types.ComboItem comboItem in comboCharScreens.Items )
-          {
-            if ( (DocumentInfo)comboItem.Tag == Event.Doc )
-            {
-              comboCharScreens.Items.Remove( comboItem );
-              if ( comboCharScreens.SelectedIndex == -1 )
-              {
-                comboCharScreens.SelectedIndex = 0;
-              }
-              break;
-            }
-          }
-        }
-      }
     }
 
 
@@ -1466,20 +1425,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkExportToDataWrap_CheckedChanged( object sender, EventArgs e )
-    {
-      editWrapByteCount.Enabled = checkExportToDataWrap.Checked;
-    }
-
-
-
-    private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
-    {
-      editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
-    }
-
-
-
     private bool ImportCharset( string Filename )
     {
       GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( Filename );
@@ -1503,13 +1448,6 @@ namespace RetroDevStudio.Documents
       }
       characterEditor.CharsetUpdated( m_MapProject.Charset );
       return true;
-    }
-
-
-
-    private void btnImportCharset_Click( object sender, EventArgs e )
-    {
-      ImportCharset();
     }
 
 
@@ -1762,7 +1700,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool OpenExternalCharset( string Filename )
+    public bool OpenExternalCharset( string Filename )
     {
       string extension = System.IO.Path.GetExtension( Filename ).ToUpper();
 
@@ -1798,7 +1736,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void ImportCharset()
+    public void ImportCharset()
     {
       string filename;
 
@@ -1817,119 +1755,6 @@ namespace RetroDevStudio.Documents
         m_MapProject.ExternalCharset = GR.Path.RelativePathTo( filename, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
       }
       Modified = true;
-    }
-
-
-
-    private void btnExportToData_Click( object sender, EventArgs e )
-    {
-      // prepare data
-      string prefix = editPrefix.Text;
-
-      bool wrapData = checkExportToDataWrap.Checked;
-      bool prefixRes = checkExportToDataIncludeRes.Checked;
-      if ( !prefixRes )
-      {
-        prefix = "";
-      }
-
-      ExportType exportType = (ExportType)comboExportData.SelectedIndex;
-
-      string tileData = "";
-      string mapData = "";
-
-      if ( exportType == ExportType.TILE_DATA_AS_ELEMENTS )
-      {
-        m_MapProject.ExportTilesAsElements( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
-      }
-      if ( ( exportType == ExportType.TILE_DATA )
-      ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
-      {
-        m_MapProject.ExportTilesAsAssembly( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
-      }
-      if ( exportType == ExportType.MAP_DATA_SELECTION )
-      {
-        bool    vertical = ( comboExportOrientation.SelectedIndex != 0 );
-
-        if ( m_CurrentMap != null )
-        {
-          GR.Memory.ByteBuffer      selectionData = new GR.Memory.ByteBuffer();
-          bool                      hasSelection = false;
-
-          if ( vertical )
-          {
-            for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
-            {
-              for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
-              {
-                if ( m_SelectedTiles[i, j] )
-                {
-                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
-                  hasSelection = true;
-                }
-              }
-            }
-            if ( !hasSelection )
-            {
-              // select all
-              for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
-              {
-                for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
-                {
-                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
-                }
-              }
-            }
-          }
-          else
-          {
-            for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
-            {
-              for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
-              {
-                if ( m_SelectedTiles[i, j] )
-                {
-                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
-                  hasSelection = true;
-                }
-              }
-            }
-            if ( !hasSelection )
-            {
-              // select all
-              for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
-              {
-                for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
-                {
-                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
-                }
-              }
-            }
-          }
-          mapData = Util.ToASMData( selectionData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
-        }
-      }
-      if ( ( exportType == ExportType.MAP_DATA )
-      ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
-      {
-        m_MapProject.ExportMapsAsAssembly( comboExportOrientation.SelectedIndex != 0, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
-      }
-
-
-      switch ( (ExportType)comboExportData.SelectedIndex )
-      {
-        case ExportType.TILE_DATA:
-        case ExportType.TILE_DATA_AS_ELEMENTS:
-          editDataExport.Text = tileData;
-          break;
-        case ExportType.MAP_DATA:
-        case ExportType.MAP_DATA_SELECTION:
-          editDataExport.Text = mapData;
-          break;
-        case ExportType.TILE_AND_MAP_DATA:
-          editDataExport.Text = tileData + mapData;
-          break;
-      }
     }
 
 
@@ -1955,18 +1780,18 @@ namespace RetroDevStudio.Documents
 
       GR.Memory.ByteBuffer finalData = null;
 
-      switch ( (ExportType)comboExportData.SelectedIndex )
+      switch ( (MapExportType)comboExportData.SelectedIndex )
       {
-        case ExportType.TILE_DATA:
+        case MapExportType.TILE_DATA:
           m_MapProject.ExportTilesAsBuffer( comboExportOrientation.SelectedIndex == 0, out tileData );
           finalData = tileData;
           break;
-        case ExportType.TILE_AND_MAP_DATA:
+        case MapExportType.TILE_AND_MAP_DATA:
           m_MapProject.ExportTilesAsBuffer( comboExportOrientation.SelectedIndex == 0, out tileData );
           mapData = m_MapProject.ExportMapsAsBuffer( comboExportOrientation.SelectedIndex == 0 );
           finalData = tileData + mapData;
           break;
-        case ExportType.MAP_DATA:
+        case MapExportType.MAP_DATA:
           {
             bool    vertical = ( comboExportOrientation.SelectedIndex != 0 );
 
@@ -2000,7 +1825,7 @@ namespace RetroDevStudio.Documents
             }
           }
           break;
-        case ExportType.MAP_DATA_SELECTION:
+        case MapExportType.MAP_DATA_SELECTION:
           {
             bool    vertical = ( comboExportOrientation.SelectedIndex != 0 );
 
@@ -2064,7 +1889,7 @@ namespace RetroDevStudio.Documents
           }
           break;
         default:
-          MessageBox.Show( "The export type " + (ExportType)comboExportData.SelectedIndex + " is not supported for binary export.", "Export type not supported" );
+          MessageBox.Show( "The export type " + (MapExportType)comboExportData.SelectedIndex + " is not supported for binary export.", "Export type not supported" );
           return;
       }
       if ( finalData != null )
@@ -2835,45 +2660,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImportFromFile_Click( object sender, EventArgs e )
-    {
-      string filename;
-
-      if ( OpenFile( "Open map project", RetroDevStudio.Types.Constants.FILEFILTER_MAP_SUPPORTED_FILES + RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
-      {
-        if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
-        {
-          OpenExternalCharset( filename );
-          if ( ( DocumentInfo.Project == null )
-          || ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) ) )
-          {
-            m_MapProject.ExternalCharset = filename;
-          }
-          else
-          {
-            m_MapProject.ExternalCharset = GR.Path.RelativePathTo( filename, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
-          }
-          Modified = true;
-          return;
-        }
-        else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
-        {
-          // a charpad project file
-          if ( !OpenCharpadFile( filename ) )
-          {
-            return;
-          }
-          return;
-        }
-        else
-        {
-          OpenProject( filename );
-        }
-      }
-    }
-
-
-
     public bool OpenCharpadFile( string filename )
     {
       GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
@@ -3501,83 +3287,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToCharScreen_Click( object sender, EventArgs e )
-    {
-      var mapToExport = m_CurrentMap;
-
-      if ( mapToExport == null )
-      {
-        if ( m_MapProject.Maps.Count == 0 )
-        {
-          MessageBox.Show( "There is no map to export.", "Cannot export" );
-          return;
-        }
-        mapToExport = m_MapProject.Maps[0];
-      }
-
-      GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( mapToExport.Tiles.Width * mapToExport.TileSpacingX * mapToExport.Tiles.Height * mapToExport.TileSpacingY ) );
-      GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( mapToExport.Tiles.Width * mapToExport.TileSpacingX * mapToExport.Tiles.Height * mapToExport.TileSpacingY ) );
-
-      for ( int y = 0; y < mapToExport.Tiles.Height; ++y )
-      {
-        for ( int x = 0; x < mapToExport.Tiles.Width; ++x )
-        {
-          int tileIndex = mapToExport.Tiles[x, y];
-          if ( tileIndex < m_MapProject.Tiles.Count )
-          {
-            // a real tile
-            var tile = m_MapProject.Tiles[tileIndex];
-
-            for ( int j = 0; j < tile.Chars.Height; ++j )
-            {
-              for ( int i = 0; i < tile.Chars.Width; ++i )
-              {
-                charData.SetU8At( x * mapToExport.TileSpacingX + i + ( y * mapToExport.TileSpacingY + j ) * ( mapToExport.Tiles.Width * mapToExport.TileSpacingX ), tile.Chars[i, j].Character );
-                colorData.SetU8At( x * mapToExport.TileSpacingX + i + ( y * mapToExport.TileSpacingY + j ) * ( mapToExport.Tiles.Width * mapToExport.TileSpacingX ), tile.Chars[i, j].Color );
-              }
-            }
-          }
-        }
-      }
-
-      Types.ComboItem comboItem = (Types.ComboItem)comboCharScreens.SelectedItem;
-      if ( comboItem.Tag == null )
-      {
-        // to new file
-        BaseDocument document = null;
-        if ( DocumentInfo.Project == null )
-        {
-          document = Core.MainForm.CreateNewDocument( ProjectElement.ElementType.CHARACTER_SCREEN, null );
-        }
-        else
-        {
-          document = Core.MainForm.CreateNewElement( ProjectElement.ElementType.CHARACTER_SCREEN, "Charset Screen", DocumentInfo.Project ).Document;
-        }
-        if ( document.DocumentInfo.Element != null )
-        {
-          document.SetDocumentFilename( "New Charset Screen.charscreen" );
-          document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
-        }
-        CharsetScreenEditor   charEditor = (CharsetScreenEditor)document;
-        charEditor.ImportFromData( mapToExport.TileSpacingX * mapToExport.Tiles.Width,
-                                   mapToExport.TileSpacingY * mapToExport.Tiles.Height,
-                                   charData, colorData, m_MapProject.Charset );
-        document.SetModified();
-        document.Save( SaveMethod.SAVE );
-      }
-      else
-      {
-        var docInfo = (DocumentInfo)comboItem.Tag;
-        CharsetScreenEditor   charEditor = (CharsetScreenEditor)docInfo.BaseDoc;
-        charEditor.ImportFromData( mapToExport.TileSpacingX * mapToExport.Tiles.Width,
-                                   mapToExport.TileSpacingY * mapToExport.Tiles.Height,
-                                   charData, colorData, m_MapProject.Charset );
-        charEditor.SetModified();
-      }
-    }
-
-
-
     private void checkShowGrid_CheckedChanged( object sender, EventArgs e )
     {
       m_MapProject.ShowGrid = checkShowGrid.Checked;
@@ -3784,6 +3493,95 @@ namespace RetroDevStudio.Documents
       panelCharacters.Invalidate();
       RedrawColorChooser();
       RedrawMap();
+    }
+
+
+
+    private void btnExport_Click( object sender, EventArgs e )
+    {
+      var exportInfo = new ExportMapInfo()
+      {
+        Map             = m_MapProject,
+        RowByRow        = ( comboExportOrientation.SelectedIndex == 0 ),
+        ExportType      = (MapExportType)comboExportData.SelectedIndex,
+        SelectedTiles   = m_SelectedTiles,
+        CurrentMap      = m_CurrentMap
+      };
+
+      editDataExport.Text = "";
+      m_ExportForm.HandleExport( exportInfo, editDataExport, DocumentInfo );
+    }
+
+
+
+    private void comboExportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ExportForm != null )
+      {
+        m_ExportForm.Dispose();
+        m_ExportForm = null;
+      }
+
+      editDataExport.Text = "";
+
+      var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
+      {
+        return;
+      }
+      m_ExportForm = (ExportMapFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ExportForm.Parent = panelExport;
+      m_ExportForm.CreateControl();
+    }
+
+
+
+    private void btnImport_Click( object sender, EventArgs e )
+    {
+      // Undo?
+      var undo = new Undo.UndoMapCharsetChange( m_MapProject, this );
+
+      if ( m_ImportForm.HandleImport( m_MapProject, this ) )
+      {
+        Modified = true;
+        DocumentInfo.UndoManager.AddUndoTask( undo );
+        RedrawMap();
+        RedrawColorChooser();
+        RedrawTile();
+      }
+    }
+
+
+
+    private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ImportForm != null )
+      {
+        m_ImportForm.Dispose();
+        m_ImportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
+      {
+        return;
+      }
+      m_ImportForm = (ImportMapFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ImportForm.Parent = panelImport;
+      m_ImportForm.Size = panelImport.ClientSize;
+      m_ImportForm.CreateControl();
+    }
+
+
+
+    internal void CharsetChanged()
+    {
+      characterEditor.CharsetUpdated( m_MapProject.Charset );
+      RedrawMap();
+      RedrawColorChooser();
+      RedrawTile();
     }
 
 

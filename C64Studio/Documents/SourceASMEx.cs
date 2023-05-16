@@ -211,6 +211,7 @@ namespace RetroDevStudio.Documents
       editSource.RightBracket2 = '\x0';
       editSource.CommentPrefix = ";";
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
+      editSource.PreferredLineWidth = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
 
       btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
@@ -2994,6 +2995,7 @@ namespace RetroDevStudio.Documents
       editSource.ConvertTabsToSpaces  = Core.Settings.TabConvertToSpaces;
       editSource.TabLength            = Core.Settings.TabSize;
       editSource.ShowLineNumbers      = !Core.Settings.ASMHideLineNumbers;
+      editSource.PreferredLineWidth   = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
 
       if ( Core.Settings.ASMShowMiniView )
       {

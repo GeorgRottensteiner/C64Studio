@@ -9,6 +9,8 @@ using RetroDevStudio.Types;
 using System.Linq;
 using SourceControl;
 using static System.Windows.Forms.AxHost;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace RetroDevStudio.Documents
 {
@@ -92,6 +94,10 @@ namespace RetroDevStudio.Documents
             }
           }
           seBtnCloneSolution.Enabled = true;
+          RefreshSourceControlState();
+          break;
+        case ApplicationEvent.Type.DOCUMENT_SAVED:
+          RefreshSourceControlState();
           break;
       }
     }
@@ -142,6 +148,8 @@ namespace RetroDevStudio.Documents
           bool isFolder = false;
           bool isProject = ( e.Node.Level == 0 );
           var info = (TreeItemInfo)e.Node.Tag;
+
+          Debug.Log( $"{e.Node.Text} = {info.FileState}" );
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
           &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
@@ -313,6 +321,37 @@ namespace RetroDevStudio.Documents
                 item.Tag = 0;
                 item.Click += SourceControlRefreshState;
                 contextMenu.Items.Add( item );
+
+                if ( project.SourceControl.HasChanges )
+                {
+                  item = new System.Windows.Forms.ToolStripMenuItem( "Stage Changes" );
+                  item.Tag = 0;
+                  item.Click += SourceControlCommitChanges;
+                  contextMenu.Items.Add( item );
+                }
+
+                if ( info.FileState == FileState.NewInWorkdir )
+                {
+                  item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
+                  item.Tag = info;
+                  item.Click += SourceControlAddToRepo;
+                  contextMenu.Items.Add( item );
+
+                  item = new System.Windows.Forms.ToolStripMenuItem( "Ignore" );
+                  item.Tag = info;
+                  item.Click += SourceControlIgnore;
+                  contextMenu.Items.Add( item );
+                }
+                if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
+                ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
+                ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
+                ||   ( ( info.FileState & FileState.TypeChangeInIndex ) != 0 ) )
+                {
+                  item = new System.Windows.Forms.ToolStripMenuItem( "Remove from repository" );
+                  item.Tag = info;
+                  item.Click += SourceControlRemoveFromRepo;
+                  contextMenu.Items.Add( item );
+                }
               }
               else
               {
@@ -433,14 +472,26 @@ namespace RetroDevStudio.Documents
             {
               contextMenu.Items.Add( "-" );
 
-              int scImageIndex = SourceControlIconFromState( info.FileState );
-              // new, upd, change, ignore, conflict
-              if ( ( scImageIndex == 0 )
-              ||   ( scImageIndex == -1 ) )
+              if ( info.FileState == FileState.NewInWorkdir )
               {
                 item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
                 item.Tag = info;
                 item.Click += SourceControlAddToRepo;
+                contextMenu.Items.Add( item );
+
+                item = new System.Windows.Forms.ToolStripMenuItem( "Ignore" );
+                item.Tag = info;
+                item.Click += SourceControlIgnore;
+                contextMenu.Items.Add( item );
+              }
+              if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
+              ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
+              ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
+              ||   ( ( info.FileState & FileState.TypeChangeInIndex ) != 0 ) )
+              {
+                item = new System.Windows.Forms.ToolStripMenuItem( "Remove from repository" );
+                item.Tag = info;
+                item.Click += SourceControlRemoveFromRepo;
                 contextMenu.Items.Add( item );
               }
             }
@@ -452,16 +503,87 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void SourceControlCommitChanges( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)m_ContextMenuNode.Tag;
+      if ( info.Project.SourceControl.CommitChanges() )
+      {
+        RefreshSourceControlState();
+      }
+    }
+
+
+
+    private void SourceControlIgnore( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)( (ToolStripMenuItem)sender ).Tag;
+
+      var project = ProjectFromNode( m_ContextMenuNode );
+      if ( info.Project != null )
+      {
+        if ( project.SourceControl.Ignore( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        {
+          info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
+          treeProject.Invalidate();
+        }
+      }
+      else
+      {
+        if ( project.SourceControl.Ignore( info.Element.DocumentInfo.DocumentFilename ) )
+        {
+          info.FileState = project.SourceControl.GetFileState( info.Element.DocumentInfo.DocumentFilename );
+          treeProject.Invalidate();
+        }
+      }
+    }
+
+
+
+    private void SourceControlRemoveFromRepo( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)( (ToolStripMenuItem)sender ).Tag;
+
+      var project = ProjectFromNode( m_ContextMenuNode );
+      if ( info.Project != null )
+      {
+        if ( project.SourceControl.RemoveFileFromIndex( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        {
+          info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
+          treeProject.Invalidate();
+        }
+      }
+      else
+      {
+        if ( project.SourceControl.RemoveFileFromIndex( info.Element.DocumentInfo.DocumentFilename ) )
+        {
+          info.FileState = project.SourceControl.GetFileState( info.Element.DocumentInfo.DocumentFilename );
+          treeProject.Invalidate();
+        }
+      }
+    }
+
+
+
     private void SourceControlAddToRepo( object sender, EventArgs e )
     {
       var info = (TreeItemInfo)( (ToolStripMenuItem)sender ).Tag;
 
-      var project = info.Element.DocumentInfo.Project;
-
-      if ( project.SourceControl.AddFileToIndex( info.Element.DocumentInfo.DocumentFilename ) )
+      var project = ProjectFromNode( m_ContextMenuNode );
+      if ( info.Project != null )
       {
-        info.FileState = project.SourceControl.GetFileState( info.Element.DocumentInfo.DocumentFilename );
-        treeProject.Invalidate( info.Element.Node.Bounds );
+        if ( project.SourceControl.AddFileToIndex( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        {
+          info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
+          treeProject.Invalidate();
+        }
+      }
+      else
+      {
+        if ( project.SourceControl.AddFileToIndex( info.Element.DocumentInfo.DocumentFilename ) )
+        {
+          info.FileState = project.SourceControl.GetFileState( info.Element.DocumentInfo.DocumentFilename );
+          treeProject.Invalidate();
+        }
       }
     }
 
@@ -2323,7 +2445,7 @@ namespace RetroDevStudio.Documents
     {
       if ( State == FileState.Nonexistent )
       {
-        return 0;
+        return -1;
       }
 
       // new, upd, change, ignore, conflict
@@ -2331,8 +2453,12 @@ namespace RetroDevStudio.Documents
       {
         return 3;
       }
+      if ( ( State & FileState.NewInIndex ) != 0 )
+      {
+        return 0;
+      }
       if ( ( State == FileState.ModifiedInIndex )
-      ||   ( State == FileState.NewInIndex ) )
+      ||   ( State == FileState.ModifiedInWorkdir ) )
       {
         return 2;
       }
@@ -2344,7 +2470,7 @@ namespace RetroDevStudio.Documents
       {
         return 1;
       }
-      return 0;
+      return -1;
     }
 
 
@@ -2399,6 +2525,15 @@ namespace RetroDevStudio.Documents
         if ( project.SourceControl != null )
         {
           scInfos = project.SourceControl.CurrentAddedFiles();
+          var scEntry = scInfos.FirstOrDefault( sc => sc.Filename == System.IO.Path.GetFileName( project.Settings.Filename ) );
+          if ( scEntry != null )
+          {
+            itemInfo.FileState = (SourceControl.FileState)(int)scEntry.FileState;
+          }
+          else
+          {
+            itemInfo.FileState = global::SourceControl.FileState.Nonexistent;
+          }
         }
 
         // iterate recursively over all nodes
@@ -2427,14 +2562,14 @@ namespace RetroDevStudio.Documents
         return;
       }
       var treeInfo = (TreeItemInfo)Node.Tag;
-      var scEntry = SCInfos.FirstOrDefault( sc => sc.Filename == element.DocumentInfo.FullPath );
+      var scEntry = SCInfos.FirstOrDefault( sc => sc.Filename == element.DocumentInfo.DocumentFilename );
       if ( scEntry != null )
       {
         treeInfo.FileState = (SourceControl.FileState)(int)scEntry.FileState;
       }
       else
       {
-        treeInfo.FileState = global::SourceControl.FileState.NewInWorkdir;
+        treeInfo.FileState = global::SourceControl.FileState.Nonexistent;
       }
     }
 

@@ -521,6 +521,7 @@ namespace RetroDevStudio.Documents
           {
             return false;
           }
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_SAVED, DocumentInfo ) );
           SetUnmodified();
           return true;
         }
@@ -572,6 +573,7 @@ namespace RetroDevStudio.Documents
             Core.Navigating.Solution.RenameElement( DocumentInfo.Element, oldName, newName );
           }
           DocumentInfo?.Project?.SetModified();
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_SAVED, DocumentInfo ) );
           SetUnmodified();
           return true;
         }
@@ -579,6 +581,7 @@ namespace RetroDevStudio.Documents
         {
           return false;
         }
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_SAVED, DocumentInfo ) );
         SetUnmodified();
         return true;
       }
@@ -587,6 +590,7 @@ namespace RetroDevStudio.Documents
       {
         return false;
       }
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_SAVED, DocumentInfo ) );
       SetUnmodified();
       return true;
     }
