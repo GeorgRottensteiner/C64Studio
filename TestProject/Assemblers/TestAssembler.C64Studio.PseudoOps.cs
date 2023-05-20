@@ -288,6 +288,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssignmentAndOperator()
+    {
+      string      source = @"  * = $1000
+                               label1 = 255
+                               label1 &= 129
+
+                                !byte label1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "001081", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssignmentMinusOperator()
     {
       string      source = @"  * = $1000

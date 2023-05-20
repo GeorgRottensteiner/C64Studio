@@ -132,6 +132,7 @@ namespace RetroDevStudio.Parser
       //OperatorPrecedence["*="] = 6;
       OperatorPrecedence["/="] = 6;
       OperatorPrecedence["%="] = 6;
+      OperatorPrecedence["&="] = 6;
 
       OperatorPrecedence["^"] = 7;
       OperatorPrecedence[">>"] = 7;
@@ -252,7 +253,7 @@ namespace RetroDevStudio.Parser
           POPrefix = "!";
           MacroFunctionCallPrefix.Add( "+" );
           GlobalLabelsAutoZone = false;
-          DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=" }  );
+          DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=", "&=" }  );
           PlainAssignmentOperatos.AddRange( new string[] { "=" } );
           IncludeExpectsStringLiteral = true;
           StatementSeparatorChars.Add( ':' );

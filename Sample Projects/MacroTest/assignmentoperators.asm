@@ -1,7 +1,16 @@
 * = $2000
 
+.TRUE = -1
+.FALSE = 0
+.UNKNOWN = 2
+
+.b = 22
+.b &= 23
+
+!message ".b&=.TRUE=", .b
+
 label1 = 5
-label1 *= 4
+;label1 *= 4
 
 !byte label1
 
@@ -25,3 +34,4 @@ gnu += "lsmf"
 !message "value is ",value
 
 +hurz
+

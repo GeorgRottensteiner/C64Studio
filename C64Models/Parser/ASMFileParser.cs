@@ -8680,6 +8680,24 @@ namespace RetroDevStudio.Parser
           }
           resultingValue = CreateIntegerSymbol( originalValue.ToInteger() % newValue.ToInteger() );
           return true;
+        case "&=":
+          if ( originalValue == null )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
+            return false;
+          }
+          if ( !originalValue.IsInteger() )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Type must be integer for binary and" );
+            return false;
+          }
+          if ( !newValue.IsInteger() )
+          {
+            AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Type must be integer for binary and" );
+            return false;
+          }
+          resultingValue = CreateIntegerSymbol( originalValue.ToInteger() & newValue.ToInteger() );
+          return true;
         case "<<=":
           if ( originalValue == null )
           {
