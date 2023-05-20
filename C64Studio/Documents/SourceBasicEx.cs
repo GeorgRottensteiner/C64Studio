@@ -1773,7 +1773,8 @@ namespace RetroDevStudio.Documents
       bool labelMode = !m_LabelMode;
 
       var settings = new Parser.BasicFileParser.ParserSettings();
-      settings.StripSpaces = Core.Settings.BASICStripSpaces;
+      settings.StripSpaces  = false;
+      settings.StripREM     = false;
       settings.BASICDialect = m_BASICDialect;
 
       Parser.BasicFileParser parser = new RetroDevStudio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
@@ -1809,16 +1810,6 @@ namespace RetroDevStudio.Documents
       {
         Result = parser.DecodeFromLabels( GR.Convert.ToI32( m_LastLabelAutoRenumberStartLine ), GR.Convert.ToI32( m_LastLabelAutoRenumberLineStep ) );
       }
-
-      /*
-      if ( m_SymbolMode )
-      {
-        Result = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( Result, out bool hadError );
-      }
-      else
-      {
-        Result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( Result );
-      }*/
 
       if ( parser.Errors > 0 )
       {
