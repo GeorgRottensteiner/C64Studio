@@ -14,7 +14,7 @@ namespace RetroDevStudio
   {
     public NoDblClkTreeView()
     {
-      SetStyle( ControlStyles.EnableNotifyMessage, true );
+      SetStyle( ControlStyles.EnableNotifyMessage | ControlStyles.OptimizedDoubleBuffer, true );
       InitializeComponent();
     }
 

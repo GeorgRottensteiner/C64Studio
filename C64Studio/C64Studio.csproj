@@ -240,6 +240,9 @@
     <Compile Update="Controls\ZoomBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Dialogs\FormCommitChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\FormRenameReference.cs">
       <SubType>Form</SubType>
     </Compile>

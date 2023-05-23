@@ -99,7 +99,7 @@ namespace SourceControl
 
 
 
-    public List<FileInfo> CurrentAddedFiles()
+    public List<FileInfo> GetCurrentRepositoryState()
     {
       var files = new List<FileInfo>();
 #if NET6_0_OR_GREATER
@@ -111,7 +111,10 @@ namespace SourceControl
         }
         foreach ( var item in _GITRepo.Index )
         {
-          files.Add( new FileInfo() { Filename = item.Path, FileState = FileState.Unaltered } );
+          if ( !files.Any( f => f.Filename == item.Path ) )
+          {
+            files.Add( new FileInfo() { Filename = item.Path, FileState = FileState.Unaltered } );
+          }
         }
       }
 #endif
@@ -120,7 +123,7 @@ namespace SourceControl
 
 
 
-    public bool AddFileToIndex( string FullPath )
+    public bool AddFileToRepository( string FullPath )
     {
 #if NET6_0_OR_GREATER
       try
@@ -198,15 +201,61 @@ namespace SourceControl
 
 
 
-    public bool CommitChanges()
+    public bool StageChanges( IEnumerable<string> Files )
     {
 #if NET6_0_OR_GREATER
       try
       {
-        var author = new Signature( "ich", "email", DateTime.Now );
-        var committer = author;
+        foreach ( var filePath in Files )
+        {
+          _GITRepo.Index.Add( filePath );
+        }
+        _GITRepo.Index.Write();
+        return true;
+      }
+      catch ( Exception ex )
+      {
+        Console.WriteLine( "Exception:RepoActions:StageChanges " + ex.Message );
+      }
+#endif
+      return false;
+    }
 
-        var commit = _GITRepo.Commit( "Commit message", author, committer );
+
+
+    public bool StageAllChanges()
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        RepositoryStatus status = _GITRepo.RetrieveStatus();
+        List<string> filePaths = status.Modified.Select(mods => mods.FilePath).ToList();
+
+        foreach ( var filePath in filePaths ) 
+        { 
+          _GITRepo.Index.Add( filePath ); 
+        }
+        _GITRepo.Index.Write();
+        return true;
+      }
+      catch ( Exception ex )
+      {
+        Console.WriteLine( "Exception:RepoActions:StageAllChanges " + ex.Message );
+      }
+#endif
+      return false;
+    }
+
+
+
+    public bool CommitAllChanges( string Author, string Email, string CommitMessage )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        var author = new Signature( Author, Email, DateTime.Now );
+        var committer = author;
+        var commit = _GITRepo.Commit( CommitMessage, author, committer );
 
         return ( commit != null );
       }

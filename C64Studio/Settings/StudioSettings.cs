@@ -231,8 +231,10 @@ namespace RetroDevStudio
     private DeserializeDockContent m_deserializeDockContent;
 
     public PerspectiveDetails                   Perspectives = null;
-    
-    
+
+    public SourceControlInfo                    SourceControlInfo = new SourceControlInfo();
+
+
 
     public StudioSettings()
     {
@@ -862,6 +864,12 @@ namespace RetroDevStudio
       }
       SettingsData.Append( chunkMRUFiles.ToBuffer() );
 
+      // SC info
+      GR.IO.FileChunk chunkSC = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_SOURCE_CONTROL );
+      chunkSC.AppendString( SourceControlInfo.CommitAuthor );
+      chunkSC.AppendString( SourceControlInfo.CommitAuthorEmail );
+      SettingsData.Append( chunkSC.ToBuffer() );
+
       return SettingsData;
     }
 
@@ -1389,6 +1397,14 @@ namespace RetroDevStudio
                 string    file = binIn.ReadString();
                 MRUFiles.Add( file );
               }
+            }
+            break;
+          case FileChunkConstants.SETTINGS_SOURCE_CONTROL:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              SourceControlInfo.CommitAuthor      = binIn.ReadString();
+              SourceControlInfo.CommitAuthorEmail = binIn.ReadString();
             }
             break;
         }

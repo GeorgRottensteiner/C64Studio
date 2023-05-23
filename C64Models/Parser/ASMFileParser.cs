@@ -11295,6 +11295,15 @@ namespace RetroDevStudio.Parser
         assembledData.SetU16At( 0, (ushort)lowestStart );
       }
 
+      // empty?
+      if ( ( lowestStart == 65536 )
+      &&   ( highestEnd == -1 ) )
+      {
+        lowestStart = 0;
+        highestEnd = 0;
+      }
+
+
       //Assembly = result;
       AssembledOutput = new AssemblyOutput();
       AssembledOutput.Assembly = assembledData;

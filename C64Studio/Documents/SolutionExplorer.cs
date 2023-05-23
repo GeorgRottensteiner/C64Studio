@@ -99,6 +99,9 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.DOCUMENT_SAVED:
           RefreshSourceControlState();
           break;
+        case ApplicationEvent.Type.ELEMENT_ADDED:
+          RefreshSourceControlState( Event.Element.Node );
+          break;
       }
     }
 
@@ -324,7 +327,7 @@ namespace RetroDevStudio.Documents
 
                 if ( project.SourceControl.HasChanges )
                 {
-                  item = new System.Windows.Forms.ToolStripMenuItem( "Stage Changes" );
+                  item = new System.Windows.Forms.ToolStripMenuItem( "Commit Changes" );
                   item.Tag = 0;
                   item.Click += SourceControlCommitChanges;
                   contextMenu.Items.Add( item );
@@ -334,7 +337,7 @@ namespace RetroDevStudio.Documents
                 {
                   item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
                   item.Tag = info;
-                  item.Click += SourceControlAddToRepo;
+                  item.Click += SourceControlAddFileToRepository;
                   contextMenu.Items.Add( item );
 
                   item = new System.Windows.Forms.ToolStripMenuItem( "Ignore" );
@@ -468,7 +471,8 @@ namespace RetroDevStudio.Documents
             contextMenu.Items.Add( item );
 
             if ( ( global::SourceControl.Controller.IsFunctional )
-            &&   ( project.SourceControl != null ) )
+            &&   ( project.SourceControl != null )
+            &&   ( info.FileState != FileState.Unaltered ) )
             {
               contextMenu.Items.Add( "-" );
 
@@ -476,7 +480,7 @@ namespace RetroDevStudio.Documents
               {
                 item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
                 item.Tag = info;
-                item.Click += SourceControlAddToRepo;
+                item.Click += SourceControlAddFileToRepository;
                 contextMenu.Items.Add( item );
 
                 item = new System.Windows.Forms.ToolStripMenuItem( "Ignore" );
@@ -494,6 +498,16 @@ namespace RetroDevStudio.Documents
                 item.Click += SourceControlRemoveFromRepo;
                 contextMenu.Items.Add( item );
               }
+              if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
+              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
+              ||   ( ( info.FileState & FileState.NewInIndex ) != 0 ) )
+              {
+                item = new System.Windows.Forms.ToolStripMenuItem( "Commit Changes" );
+                item.Tag = 0;
+                item.Click += SourceControlCommitChangesSingleFile;
+                contextMenu.Items.Add( item );
+              }
+
             }
           }
         }
@@ -503,12 +517,44 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void SourceControlCommitChangesSingleFile( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)m_ContextMenuNode.Tag;
+      var project = ProjectFromNode( m_ContextMenuNode );
+      if ( project.SourceControl.HasChanges )
+      {
+        var formCommit = new FormCommitChanges( Core, project, info.Element, imageListExplorer, imageListSourceControlOverlay );
+        if ( formCommit.ShowDialog() == DialogResult.OK )
+        {
+          if ( project.SourceControl.StageChanges( formCommit.SelectedFiles ) )
+          {
+            project.SourceControl.CommitAllChanges( Core.Settings.SourceControlInfo.CommitAuthor,
+                                                    Core.Settings.SourceControlInfo.CommitAuthorEmail,
+                                                    formCommit.CommitMessage );
+            RefreshSourceControlState();
+          }
+        }
+      }
+    }
+
+
+
     private void SourceControlCommitChanges( object sender, EventArgs e )
     {
       var info = (TreeItemInfo)m_ContextMenuNode.Tag;
-      if ( info.Project.SourceControl.CommitChanges() )
+      if ( info.Project.SourceControl.HasChanges )
       {
-        RefreshSourceControlState();
+        var formCommit = new FormCommitChanges( Core, info.Project, imageListExplorer, imageListSourceControlOverlay );
+        if ( formCommit.ShowDialog() == DialogResult.OK )
+        {
+          if ( info.Project.SourceControl.StageChanges( formCommit.SelectedFiles ) )
+          {
+            info.Project.SourceControl.CommitAllChanges( Core.Settings.SourceControlInfo.CommitAuthor,
+                                                         Core.Settings.SourceControlInfo.CommitAuthorEmail,
+                                                         formCommit.CommitMessage );
+            RefreshSourceControlState();
+          }
+        }
       }
     }
 
@@ -564,14 +610,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void SourceControlAddToRepo( object sender, EventArgs e )
+    private void SourceControlAddFileToRepository( object sender, EventArgs e )
     {
       var info = (TreeItemInfo)( (ToolStripMenuItem)sender ).Tag;
 
       var project = ProjectFromNode( m_ContextMenuNode );
       if ( info.Project != null )
       {
-        if ( project.SourceControl.AddFileToIndex( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        if ( project.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
         {
           info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
           treeProject.Invalidate();
@@ -579,7 +625,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        if ( project.SourceControl.AddFileToIndex( info.Element.DocumentInfo.DocumentFilename ) )
+        if ( project.SourceControl.AddFileToRepository( info.Element.DocumentInfo.DocumentFilename ) )
         {
           info.FileState = project.SourceControl.GetFileState( info.Element.DocumentInfo.DocumentFilename );
           treeProject.Invalidate();
@@ -1054,10 +1100,7 @@ namespace RetroDevStudio.Documents
           {
             return;
           }
-          foreach ( var fileToPaste in files )
-          {
-            Core.MainForm.AddExistingFileToProject( project, parentNodeToInsertTo, fileToPaste, true );
-          }
+          Core.MainForm.AddExistingFilesToProject( project, parentNodeToInsertTo, files, true );
         }
       }
     }
@@ -2323,8 +2366,7 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_DrawNode( object sender, DrawTreeNodeEventArgs e )
     {
-      //e.DrawDefault = true;
-      Rectangle nodeRect = NodeBounds( e.Node );// e.Node.Bounds;
+      Rectangle nodeRect = NodeBounds( e.Node );
 
       TreeItemInfo info = (TreeItemInfo)e.Node.Tag; 
 
@@ -2363,20 +2405,7 @@ namespace RetroDevStudio.Documents
           {
             e.Node.ImageIndex = 0;
           }
-          Image nodeImg = treeProject.ImageList.Images[e.Node.ImageIndex];
-
-          Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
-
-          e.Graphics.DrawImage( nodeImg, ptNodeIcon );
-
-          var scImageIndex = SourceControlIconFromState( info.FileState );
-
-          if ( scImageIndex != -1 )
-          {
-            Point ptSCIcon = new Point( ptNodeIcon.X + nodeImg.Width - 8, ptNodeIcon.Y + nodeImg.Height - 8 );
-
-            e.Graphics.DrawImage( imageListSourceControlOverlay.Images[scImageIndex], ptSCIcon.X, ptSCIcon.Y, 8, 8 );
-          } 
+          DrawDocumentIcon( e.Graphics, nodeRect, e.Node.ImageIndex, info.FileState );
         }
       }
       Font nodeFont = e.Node.NodeFont;
@@ -2441,7 +2470,26 @@ namespace RetroDevStudio.Documents
 
 
 
-    private int SourceControlIconFromState( FileState State )
+    public void DrawDocumentIcon( Graphics G, Rectangle NodeRect, int ImageIndex, FileState FileState )
+    {
+      Image nodeImg = treeProject.ImageList.Images[ImageIndex];
+      Point ptNodeIcon = new Point( NodeRect.Location.X - 20, NodeRect.Location.Y + ( NodeRect.Height - nodeImg.Height ) / 2 );
+
+      G.DrawImage( nodeImg, ptNodeIcon );
+
+      var scImageIndex = SourceControlIconFromState( FileState );
+
+      if ( scImageIndex != -1 )
+      {
+        Point ptSCIcon = new Point( ptNodeIcon.X + nodeImg.Width - 8, ptNodeIcon.Y + nodeImg.Height - 8 );
+
+        G.DrawImage( imageListSourceControlOverlay.Images[scImageIndex], ptSCIcon.X, ptSCIcon.Y, 8, 8 );
+      }
+    }
+
+
+
+    public static int SourceControlIconFromState( FileState State )
     {
       if ( State == FileState.Nonexistent )
       {
@@ -2524,7 +2572,7 @@ namespace RetroDevStudio.Documents
         var scInfos = new List<SourceControl.FileInfo>();
         if ( project.SourceControl != null )
         {
-          scInfos = project.SourceControl.CurrentAddedFiles();
+          scInfos = project.SourceControl.GetCurrentRepositoryState();
           var scEntry = scInfos.FirstOrDefault( sc => sc.Filename == System.IO.Path.GetFileName( project.Settings.Filename ) );
           if ( scEntry != null )
           {
@@ -2562,7 +2610,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       var treeInfo = (TreeItemInfo)Node.Tag;
-      var scEntry = SCInfos.FirstOrDefault( sc => sc.Filename == element.DocumentInfo.DocumentFilename );
+      var scEntry = SCInfos.FirstOrDefault( sc => sc.Filename == System.IO.Path.GetFileName( element.DocumentInfo.DocumentFilename ) );
       if ( scEntry != null )
       {
         treeInfo.FileState = (SourceControl.FileState)(int)scEntry.FileState;
@@ -2572,6 +2620,34 @@ namespace RetroDevStudio.Documents
         treeInfo.FileState = global::SourceControl.FileState.Nonexistent;
       }
     }
+
+
+
+    private void RefreshSourceControlState( TreeNode Node )
+    {
+      if ( !global::SourceControl.Controller.IsFunctional )
+      {
+        return;
+      }
+
+      bool  modified = false;
+
+      var project = ProjectFromNode( Node );
+      var element = ElementFromNode( Node );
+      var itemInfo = (TreeItemInfo)Node.Tag;
+
+      var newState = project.SourceControl.GetFileState( element.DocumentInfo.FullPath );
+      if ( itemInfo.FileState != newState )
+      {
+        itemInfo.FileState = newState;
+        modified = true;
+      }
+      if ( modified )
+      {
+        treeProject.Invalidate();
+      }
+    }
+
 
 
 

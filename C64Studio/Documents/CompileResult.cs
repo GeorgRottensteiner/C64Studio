@@ -145,13 +145,13 @@ namespace RetroDevStudio.Documents
         }
         if ( documentFile != null )
         {
-          item.SubItems.Add( new CSListViewSubItem( documentFile.ToString() ) { Trimming = StringTrimming.EllipsisPath } );
+          item.SubItems.Add( new CSListViewSubItem( documentFile ) { Trimming = StringTrimming.EllipsisPath } );
         }
         else
         {
           item.SubItems.Add( "--" );
         }
-        item.SubItems.Add( message.Message );
+        item.SubItems.Add( new CSListViewSubItem( message.Message ) { Trimming = StringTrimming.EllipsisPath } );
         item.Tag = message;
 
         listMessages.Items.Add( item );
@@ -200,8 +200,8 @@ namespace RetroDevStudio.Documents
             {
               childItem.SubItems.Add( childMessage.Code.ToString() );
             }
-            childItem.SubItems.Add( messageDoc.ToString() );
-            childItem.SubItems.Add( childMessage.Message );
+            childItem.SubItems.Add( new CSListViewSubItem( messageDoc ) { Trimming = StringTrimming.EllipsisPath } );
+            childItem.SubItems.Add( new CSListViewSubItem( childMessage.Message ) { Trimming = StringTrimming.EllipsisPath } );
             childItem.Tag = childMessage;
 
             listMessages.Items.Add( childItem );

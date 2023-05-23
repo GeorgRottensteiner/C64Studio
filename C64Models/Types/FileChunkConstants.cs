@@ -95,6 +95,7 @@
     public const ushort    SETTINGS_C64STUDIO_HACKS     = 0x201A;
     public const ushort    SETTINGS_EDITOR_BEHAVIOURS   = 0x201B;
     public const ushort    SETTINGS_LABEL_EXPLORER      = 0x201C;
+    public const ushort    SETTINGS_SOURCE_CONTROL      = 0x201D;
   }
 
 }

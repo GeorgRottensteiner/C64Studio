@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using GR.Image;
+using static System.Windows.Forms.AxHost;
+using System.Windows.Forms.VisualStyles;
 
 namespace RetroDevStudio.Controls
 {
@@ -12,6 +14,11 @@ namespace RetroDevStudio.Controls
   {
     public uint SelectedTextColor { get; set; }
     public uint SelectedTextBGColor { get; set; }
+
+    public delegate void DrawItemImageHandler( Graphics G, int X, int Y, ListViewItem Item, ListViewItem.ListViewSubItem SubItem );
+
+
+    public event DrawItemImageHandler     DrawItemImage;
 
 
 
@@ -45,6 +52,11 @@ namespace RetroDevStudio.Controls
         trimming = ( (CSListViewSubItem)e.SubItem ).Trimming;
       }
       bool firstItem = ( e.Item.SubItems.IndexOf( e.SubItem ) == 0 );
+      bool realFirstItem = firstItem;
+      if ( CheckBoxes )
+      {
+        firstItem = ( e.Item.SubItems.IndexOf( e.SubItem ) == 1 );
+      }
 
       // the file path
       var itemBounds = e.SubItem.Bounds;
@@ -54,18 +66,37 @@ namespace RetroDevStudio.Controls
       }
       var textBounds = new Rectangle( itemBounds.Left + 3, itemBounds.Top, itemBounds.Width - 6, itemBounds.Height );
 
+      var checkBoxSize = CheckBoxRenderer.GetGlyphSize( e.Graphics, e.Item.Checked ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal );
+
       if ( e.Item.Selected )
       {
         var color = SelectedTextBGColor;
 
         e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), e.Bounds );
+
+        if ( ( realFirstItem )
+        &&   ( CheckBoxes ) )
+        {
+          CheckBoxRenderer.DrawCheckBox( e.Graphics,
+                                         new Point( itemBounds.Location.X + ( Columns[0].Width - checkBoxSize.Width ) / 2,
+                                                    itemBounds.Location.Y + ( itemBounds.Height - checkBoxSize.Height ) / 2 ),
+                                         e.Item.Checked ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal );
+        }
         if ( ( firstItem )
         &&   ( e.Item.ImageList != null )
         &&   ( e.Item.ImageIndex >= 0 )
         &&   ( e.Item.ImageIndex < e.Item.ImageList.Images.Count ) )
         {
           var image = e.Item.ImageList.Images[e.Item.ImageIndex];
-          e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
+
+          if ( DrawItemImage != null )
+          {
+            DrawItemImage( e.Graphics, itemBounds.Left + 3, itemBounds.Top, e.Item, e.SubItem );
+          }
+          else
+          {
+            e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
+          }
           textBounds = new Rectangle( textBounds.Left + image.Width + 6, textBounds.Top, textBounds.Width - image.Width - 6, textBounds.Height );
         }
 
@@ -75,13 +106,31 @@ namespace RetroDevStudio.Controls
       else
       {
         e.DrawBackground();
+
+        if ( ( realFirstItem )
+        &&   ( CheckBoxes ) )
+        {
+          CheckBoxRenderer.DrawCheckBox( e.Graphics,
+                                         new Point( itemBounds.Location.X + ( Columns[0].Width - checkBoxSize.Width ) / 2,
+                                                    itemBounds.Location.Y + ( itemBounds.Height - checkBoxSize.Height ) / 2 ),
+                                         e.Item.Checked ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal );
+        }
+
         if ( ( firstItem )
         &&   ( e.Item.ImageList != null )
         &&   ( e.Item.ImageIndex >= 0 )
         &&   ( e.Item.ImageIndex < e.Item.ImageList.Images.Count ) )
         {
           var image = e.Item.ImageList.Images[e.Item.ImageIndex];
-          e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
+
+          if ( DrawItemImage != null )
+          {
+            DrawItemImage( e.Graphics, itemBounds.Left + 3, itemBounds.Top, e.Item, e.SubItem );
+          }
+          else
+          {
+            e.Graphics.DrawImage( image, itemBounds.Left + 3, itemBounds.Top );
+          }
           textBounds = new Rectangle( textBounds.Left + image.Width + 6, textBounds.Top, textBounds.Width - image.Width - 6, textBounds.Height );
         }
 

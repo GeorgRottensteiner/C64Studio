@@ -19,6 +19,7 @@ namespace RetroDevStudio.Types
       ELEMENT_OPENED,
       ELEMENT_CLOSED,
       ELEMENT_REMOVED,
+      ELEMENT_ADDED,
       ACTIVE_PROJECT_CHANGED,
       SOLUTION_OPENED,
       SOLUTION_CLOSED,

@@ -3461,11 +3461,18 @@ namespace RetroDevStudio
         return false;
       }
 
-      foreach ( var fileName in openDlg.FileNames )
-      {
-        AddExistingFileToProject( projectToAddTo, Node, fileName, false );
-      }
+      AddExistingFilesToProject( projectToAddTo, Node, openDlg.FileNames, false );
       return true;
+    }
+
+
+
+    public void AddExistingFilesToProject( Project ProjectToAddTo, TreeNode Node, string[] Filenames, bool CopyToProjectFolderWithoutAsking )
+    {
+      foreach ( var fileName in Filenames )
+      {
+        AddExistingFileToProject( ProjectToAddTo, Node, fileName, CopyToProjectFolderWithoutAsking );
+      }
     }
 
 
@@ -3583,6 +3590,7 @@ namespace RetroDevStudio
       {
         element.Document.SetDocumentFilename( relativeFilename );
       }
+      RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.ELEMENT_ADDED, element ) );
       ProjectToAddTo.SetModified();
     }
 
