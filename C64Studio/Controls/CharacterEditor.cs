@@ -1564,7 +1564,8 @@ namespace RetroDevStudio.Controls
             }
           }
         }
-        else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
         &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
@@ -1650,7 +1651,8 @@ namespace RetroDevStudio.Controls
             }
           }
         }
-        else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
         &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
@@ -1830,7 +1832,8 @@ namespace RetroDevStudio.Controls
             }
             m_Project.Characters[index].Tile.Data.SetU8At( y * 8 + 7, temp );
           }
-          else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
           &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
           {
             byte result = (byte)( (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0xc0 ) >> 6 )
@@ -1874,7 +1877,8 @@ namespace RetroDevStudio.Controls
             }
             m_Project.Characters[index].Tile.Data.SetU8At( y * 8, temp );
           }
-          else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
           &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
           {
             byte result = (byte)( (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0xfc ) >> 2 )
