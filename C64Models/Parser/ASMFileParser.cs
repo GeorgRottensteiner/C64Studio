@@ -2017,7 +2017,7 @@ namespace RetroDevStudio.Parser
           {
             if ( value.IsInteger() )
             {
-              ResultingToken = value;
+              ResultingToken = CreateIntegerSymbol( value.ToInteger() );
               if ( NumBytesGiven == 2 )
               {
                 ResultingToken.AddressOrValue = 0xffff ^ ResultingToken.AddressOrValue;
