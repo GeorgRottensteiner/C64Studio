@@ -22,7 +22,9 @@ namespace RetroDevStudio.Controls
       set
       {
         _CustomColor = value;
-        if ( comboCustomColor != null )
+        if ( ( comboCustomColor != null )
+        &&   ( value >= 0 )
+        &&   ( value < comboCustomColor.Items.Count ) )
         {
           comboCustomColor.SelectedIndex = value;
         }
