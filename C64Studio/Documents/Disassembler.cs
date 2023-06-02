@@ -282,7 +282,19 @@ namespace RetroDevStudio.Documents
 
         int firstLine = editDisassembly.VisibleRange.Start.iLine;
 
-        editDisassembly.VerticalScroll.Value += topLine - firstLine;
+        // we try to keep the offset
+        int newOffset = editDisassembly.VerticalScroll.Value + topLine - firstLine;
+
+        if ( editDisassembly.VerticalScroll.Visible )
+        {
+          newOffset = Math.Max( 0, newOffset );
+          newOffset = Math.Min( editDisassembly.VerticalScroll.Maximum, newOffset );
+          editDisassembly.VerticalScroll.Value = newOffset;
+        }
+        else
+        {
+          editDisassembly.VerticalScroll.Value = 0;
+        }
       }
       else
       {
