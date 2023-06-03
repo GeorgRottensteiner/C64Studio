@@ -5993,7 +5993,7 @@ namespace RetroDevStudio
       {
         document.SetDocumentFilename( Filename );
         document.Text = System.IO.Path.GetFileName( Filename );
-        if ( !document.Load() )
+        if ( !document.LoadDocument() )
         {
           document.ToolTipText = "";
           return null;
@@ -6458,7 +6458,7 @@ namespace RetroDevStudio
             {
               int cursorLine = changedDoc.BaseDoc.CursorLine;
               int charPos = changedDoc.BaseDoc.CursorPosInLine;
-              changedDoc.BaseDoc.Load();
+              changedDoc.BaseDoc.LoadDocument();
               //changedDoc.BaseDoc.SetModified();
               changedDoc.BaseDoc.SetCursorToLine( cursorLine, charPos, true );
             }
@@ -6548,7 +6548,7 @@ namespace RetroDevStudio
       document.ShowHint = DockState.Document;
       document.Core = StudioCore;
       document.Text = "New Graphic Screen";
-      document.Load();
+      document.LoadDocument();
       document.Show( panelMain );
     }
 
@@ -6591,7 +6591,7 @@ namespace RetroDevStudio
       document.ShowHint = DockState.Document;
       document.Core = StudioCore;
       document.Text = "New Character Screen";
-      document.Load();
+      document.LoadDocument();
       document.Show( panelMain );
     }
 
@@ -6690,7 +6690,7 @@ namespace RetroDevStudio
       document.ShowHint = DockState.Document;
       document.Core = StudioCore;
       document.Text = "New Binary Data";
-      document.Load();
+      document.LoadDocument();
       document.Show( panelMain );
     }
 
@@ -7350,7 +7350,7 @@ namespace RetroDevStudio
       document.ShowHint = DockState.Float;
       document.Core = StudioCore;
       document.Text = "Memory View";
-      document.Load();
+      document.LoadDocument();
       document.Show( panelMain );
     }
 

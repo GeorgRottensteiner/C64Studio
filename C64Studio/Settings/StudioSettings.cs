@@ -206,6 +206,8 @@ namespace RetroDevStudio
 
     public Encoding                             SourceFileEncoding = Encoding.UTF8;
 
+    public int                                  HelpZoomFactor = 100;
+
     public bool                                 CheckForUpdates = true;
     public DateTime                             LastUpdateCheck = DateTime.MinValue;
 
@@ -870,6 +872,11 @@ namespace RetroDevStudio
       chunkSC.AppendString( SourceControlInfo.CommitAuthorEmail );
       SettingsData.Append( chunkSC.ToBuffer() );
 
+      // Help
+      GR.IO.FileChunk chunkHelp = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_HELP );
+      chunkHelp.AppendI32( HelpZoomFactor );
+      SettingsData.Append( chunkHelp.ToBuffer() );
+
       return SettingsData;
     }
 
@@ -1405,6 +1412,16 @@ namespace RetroDevStudio
 
               SourceControlInfo.CommitAuthor      = binIn.ReadString();
               SourceControlInfo.CommitAuthorEmail = binIn.ReadString();
+            }
+            break;
+          case FileChunkConstants.SETTINGS_HELP:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              HelpZoomFactor = binIn.ReadInt32();
+
+              HelpZoomFactor = Math.Max( 10, HelpZoomFactor );
+              HelpZoomFactor = Math.Min( 1000, HelpZoomFactor );
             }
             break;
         }

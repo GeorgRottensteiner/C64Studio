@@ -698,7 +698,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public override bool Load()
+    public override bool LoadDocument()
     {
       if ( DocumentInfo.DocumentFilename == null )
       {

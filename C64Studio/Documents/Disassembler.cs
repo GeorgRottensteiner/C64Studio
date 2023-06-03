@@ -806,7 +806,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public override bool Load()
+    public override bool LoadDocument()
     {
       m_DisassemblyProject.Description = DocumentInfo.DocumentFilename;
 

@@ -11,10 +11,6 @@ namespace RetroDevStudio.Documents
 {
   public partial class Help : BaseDocument
   {
-    private int         ZoomFactor = 100;
-
-
-
     public Help( StudioCore Core )
     {
       this.Core = Core;
@@ -35,6 +31,7 @@ namespace RetroDevStudio.Documents
 
         Core.AddToOutput( "Help Path: " + fullPath );
         webBrowser.Navigate( fullPath );
+        webBrowser.DocumentCompleted += WebBrowser_DocumentCompleted;
       }
       catch ( Exception ex )
       {
@@ -45,6 +42,14 @@ namespace RetroDevStudio.Documents
       webBrowser.CanGoForwardChanged += new EventHandler( webBrowser_CanGoForwardChanged );
       toolStripBtnForward.Enabled = webBrowser.CanGoForward;
       toolStripBtnBack.Enabled = webBrowser.CanGoBack;
+    }
+
+
+
+    private void WebBrowser_DocumentCompleted( object sender, WebBrowserDocumentCompletedEventArgs e )
+    {
+      webBrowser.Zoom( Core.Settings.HelpZoomFactor );
+      webBrowser.DocumentCompleted -= WebBrowser_DocumentCompleted;
     }
 
 
@@ -72,6 +77,7 @@ namespace RetroDevStudio.Documents
 
     private void toolStripBtnHome_Click( object sender, EventArgs e )
     {
+      webBrowser.Zoom( Core.Settings.HelpZoomFactor );
 #if DEBUG
       webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/main.html" ) );
 #else
@@ -83,6 +89,7 @@ namespace RetroDevStudio.Documents
 
     public void NavigateTo( string URL )
     {
+      webBrowser.Zoom( Core.Settings.HelpZoomFactor );
 #if DEBUG
       webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/" + URL ) );
 #else
@@ -101,31 +108,33 @@ namespace RetroDevStudio.Documents
 
     private void toolStripBtnZoomIn_Click( object sender, EventArgs e )
     {
-      if ( ZoomFactor < 1000 )
+      if ( Core.Settings.HelpZoomFactor < 1000 )
       {
-        ZoomFactor += 10;
+        Core.Settings.HelpZoomFactor += 10;
       }
-      webBrowser.Zoom( ZoomFactor ); 
+      webBrowser.Zoom( Core.Settings.HelpZoomFactor ); 
     }
 
 
 
     private void toolStripBtnZoomOut_Click( object sender, EventArgs e )
     {
-      
-      if ( ZoomFactor > 10 )
+      if ( Core.Settings.HelpZoomFactor > 10 )
       {
-        ZoomFactor -= 10;
+        Core.Settings.HelpZoomFactor -= 10;
       }
-      webBrowser.Zoom( ZoomFactor );
+      webBrowser.Zoom( Core.Settings.HelpZoomFactor );
     }
 
 
 
     private void toolStripBtnZoomReset_Click( object sender, EventArgs e )
     {
-      ZoomFactor = 100;
-      webBrowser.Zoom( ZoomFactor );
+      Core.Settings.HelpZoomFactor = 100;
+      webBrowser.Zoom( Core.Settings.HelpZoomFactor );
     }
+
+
+
   }
 }

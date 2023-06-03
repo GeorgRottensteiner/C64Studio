@@ -96,6 +96,7 @@
     public const ushort    SETTINGS_EDITOR_BEHAVIOURS   = 0x201B;
     public const ushort    SETTINGS_LABEL_EXPLORER      = 0x201C;
     public const ushort    SETTINGS_SOURCE_CONTROL      = 0x201D;
+    public const ushort    SETTINGS_HELP                = 0x201E;
   }
 
 }

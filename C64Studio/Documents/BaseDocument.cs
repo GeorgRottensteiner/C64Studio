@@ -434,7 +434,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public new virtual bool Load()
+    public virtual bool LoadDocument()
     {
       return false;
     }

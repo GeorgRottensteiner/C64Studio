@@ -14,6 +14,7 @@ namespace RetroDevStudio
     public enum OLECMDID
     {
       // ...
+      OLECMDID_ZOOM = 19,
       OLECMDID_OPTICAL_ZOOM = 63,
       OLECMDID_OPTICAL_GETZOOMRANGE = 64,
       // ...
@@ -291,6 +292,8 @@ namespace RetroDevStudio
       base.DetachInterfaces();
       this.axIWebBrowser2 = null;
     }
+
+
 
     public void Zoom( int factor )
     {

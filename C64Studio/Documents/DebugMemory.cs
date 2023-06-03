@@ -662,7 +662,7 @@ namespace RetroDevStudio.Documents
       document.ShowHint = DockState.Float;
       document.Core = Core;
       document.Text = "Memory View";
-      document.Load();
+      document.LoadDocument();
       document.RefreshDisplayOptions();
       document.Show( Core.MainForm.panelMain );
     }

@@ -746,7 +746,7 @@ namespace RetroDevStudio
           Element.Name = Element.Name;
           Element.Document.Show( Core.MainForm.panelMain );
         }
-        else if ( document.Load() )
+        else if ( document.LoadDocument() )
         {
           document.ToolTipText = document.DocumentInfo.FullPath;
           Element.Name = document.Text;
