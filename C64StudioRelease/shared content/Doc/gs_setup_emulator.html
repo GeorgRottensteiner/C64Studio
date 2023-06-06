@@ -32,6 +32,9 @@
     <br>
     <br>
     <img src="images/gs_preferences_tools2.png"><br>
+    <pre>The image shows the setup of the later VICE emulator, with debugging and true drive settings.
+For older VICE version you need to use the remote monitor interface, see below on how to enable.</pre>
+    <br>
     <br>
     Most arguments allow macros to be filled with project relevant data. See below for a list. These settings are available for configuration:<br>
     <br>
@@ -64,15 +67,26 @@
     <br>
     Default interface with older VICE versions:<br>
     <pre>-initbreak 0x$(DebugStartAddressHex) -remotemonitor</pre>
-    Starting with VICE 3.5 the new binary remote interface is available. To use it set these arguments for Debug:<br>
+    Starting with VICE 3.5 the new binary remote interface is available. Starting with VICE 3.6 the old remote monitor interface was removed. To use the new binary interface set these arguments for Debug:<br>
     <pre>-initbreak 0x$(DebugStartAddressHex) -binarymonitor -binarymonitoraddress 127.0.0.1:6510</pre>
     <br>
     <b>True Drive On</b><br>
     Argument to pass when true drive emulation is required<br>
     <br>
+    Pre VICE 3.6 this was<br>
+    <pre>-truedrive +virtualdev</pre>
+    With VICE 3.6 and higher you have to pass<br>
+    <pre>-drive8truedrive +virtualdev8</pre>
     <br>
     <b>True Drive Off</b><br>
     Argument to pass when true drive emulation is not wanted<br>
+
+    Pre VICE 3.6 this was "+truedrive -virtualdev", with VICE 3.6 and higher you have to pass "+drive8truedrive -virtualdev8"
+    <br>
+    Pre VICE 3.6 this was<br>
+    <pre>+truedrive -virtualdev</pre>
+    With VICE 3.6 and higher you have to pass<br>
+    <pre>+drive8truedrive -virtualdev8</pre>
     <br>
     <br>
     <b>Forward labels to emulator</b><br>
