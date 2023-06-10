@@ -90,7 +90,19 @@ namespace SourceControl
       get
       {
 #if NET6_0_OR_GREATER
-        return _GITRepo.Diff.Compare<TreeChanges>().Any();
+        var state = _GITRepo.RetrieveStatus();
+
+        return state.Any();
+        /*
+        return state.Added.Any() || state.Removed.Any() || state.Modified.Any() || state.RenamedInIndex.Any() || state.RenamedInWorkDir.Any();
+
+        state.Any(
+
+        bool hadAdded = _GITRepo.Diff.Compare<TreeChanges>().Added.Any();
+        bool hadModified = _GITRepo.Diff.Compare<TreeChanges>().Modified.Any();
+        bool hadDeleted = _GITRepo.Diff.Compare<TreeChanges>().Deleted.Any();
+        bool hadRenamed = _GITRepo.Diff.Compare<TreeChanges>().Renamed.Any();
+        return _GITRepo.Diff.Compare<TreeChanges>().Any();*/
 #else
         return false;
 #endif
