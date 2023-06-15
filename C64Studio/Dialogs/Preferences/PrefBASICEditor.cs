@@ -23,7 +23,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefBASICEditor( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "basic", "editor" }  );
+      _Keywords.AddRange( new string[] { "basic", "editor", "font" }  );
 
       InitializeComponent();
 
@@ -144,17 +144,23 @@ namespace RetroDevStudio.Dialogs.Preferences
       System.Windows.Forms.FontDialog fontDialog = new FontDialog();
 
       fontDialog.Font = labelBASICFontPreview.Font;
-
-      if ( fontDialog.ShowDialog() == DialogResult.OK )
+      try
       {
-        Core.Settings.BASICSourceFontFamily = fontDialog.Font.FontFamily.Name;
-        Core.Settings.BASICSourceFontSize   = fontDialog.Font.SizeInPoints;
-        labelBASICFontPreview.Font          = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
+        if ( fontDialog.ShowDialog() == DialogResult.OK )
+        {
+          Core.Settings.BASICSourceFontFamily = fontDialog.Font.FontFamily.Name;
+          Core.Settings.BASICSourceFontSize   = fontDialog.Font.SizeInPoints;
+          labelBASICFontPreview.Font          = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
 
-        RefreshDisplayOnDocuments();
+          RefreshDisplayOnDocuments();
+        }
+      }
+      catch ( Exception ex )
+      {
+        System.Windows.Forms.MessageBox.Show( $"The system returned the error {ex.Message}.\r\nPlease verify whether the chosen font is properly installed for all users.", "Error during selecting font" );
       }
     }
-
+  
     
     
     private void editBASICC64FontSize_TextChanged( object sender, EventArgs e )

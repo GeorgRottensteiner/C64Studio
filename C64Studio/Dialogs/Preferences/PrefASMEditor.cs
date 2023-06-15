@@ -23,7 +23,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefASMEditor( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "asm", "editor", "assembler" } );
+      _Keywords.AddRange( new string[] { "asm", "editor", "assembler", "font" } );
 
       InitializeComponent();
 
@@ -196,14 +196,21 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       fontDialog.Font = labelFontPreview.Font;
 
-      if ( fontDialog.ShowDialog() == DialogResult.OK )
+      try
       {
-        Core.Settings.SourceFontFamily  = fontDialog.Font.FontFamily.Name;
-        Core.Settings.SourceFontSize    = fontDialog.Font.SizeInPoints;
-        Core.Settings.SourceFontStyle   = fontDialog.Font.Style;
-        labelFontPreview.Font = fontDialog.Font;
+        if ( fontDialog.ShowDialog() == DialogResult.OK )
+        {
+          Core.Settings.SourceFontFamily  = fontDialog.Font.FontFamily.Name;
+          Core.Settings.SourceFontSize    = fontDialog.Font.SizeInPoints;
+          Core.Settings.SourceFontStyle   = fontDialog.Font.Style;
+          labelFontPreview.Font           = fontDialog.Font;
 
-        RefreshDisplayOnDocuments();
+          RefreshDisplayOnDocuments();
+        }
+      }
+      catch ( Exception ex )
+      {
+        System.Windows.Forms.MessageBox.Show( $"The system returned the error {ex.Message}.\r\nPlease verify whether the chosen font is properly installed for all users.", "Error during selecting font" );
       }
     }
 
