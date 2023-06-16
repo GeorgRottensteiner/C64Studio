@@ -1252,7 +1252,7 @@ namespace RetroDevStudio.Documents
       if ( m_Media != null )
       {
         var emptyFile = new ByteBuffer();
-        var fileName = Util.ToFilename( "NEW FILE" );
+        var fileName = Util.ToFilename( "new file" );
         if ( m_Media.WriteFile( fileName, emptyFile, RetroDevStudio.Types.FileType.PRG ) )
         {
           RefreshFileView();

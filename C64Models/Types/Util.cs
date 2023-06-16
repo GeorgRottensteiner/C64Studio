@@ -36,19 +36,18 @@ namespace RetroDevStudio
       {
         if ( i < Name.Length )
         {
-          /*
-          if ( ConstantData.PETSCII.ContainsKey( Name[i] ) )
-          {
-            bufName.AppendU8( ConstantData.PETSCII[Name[i]] );
-          }*/
-          var potChar = ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == Name[i] );
+          char     c = Name[i];
+
+          ToggleCase( ref c );
+
+          var potChar = ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == c );
           if ( potChar != null )
           {
             bufName.AppendU8( potChar.PetSCIIValue );
           }
           else
           {
-            bufName.AppendU8( (byte)Name[i] );
+            bufName.AppendU8( (byte)c );
           }
         }
         else
@@ -57,6 +56,22 @@ namespace RetroDevStudio
         }
       }
       return bufName;
+    }
+
+
+
+    public static void ToggleCase( ref char c )
+    {
+      if ( ( c >= 'A' )
+      &&   ( c <= 'Z' ) )
+      {
+        c = (char)( c + 'a' - 'A' );
+      }
+      else if ( ( c >= 'a' )
+      &&        ( c <= 'z' ) )
+      {
+        c = (char)( c - 'a' - 'A' );
+      }
     }
 
 

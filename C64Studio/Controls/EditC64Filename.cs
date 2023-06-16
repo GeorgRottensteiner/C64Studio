@@ -576,7 +576,7 @@ namespace RetroDevStudio.Controls
         {
           if ( HasSelection )
           {
-            ReplaceSelection( e.KeyChar.ToString() );
+            ReplaceSelection( char.ToUpper( e.KeyChar ).ToString() );
           }
           else
           {
@@ -587,7 +587,7 @@ namespace RetroDevStudio.Controls
               {
                 NewText = Text.Substring( 0, m_CursorPos );
               }
-              NewText += e.KeyChar + Text.Substring( m_CursorPos + 1 );
+              NewText += char.ToUpper( e.KeyChar ) + Text.Substring( m_CursorPos + 1 );
               Text = NewText;
               OnTextChanged( new EventArgs() );
             }
