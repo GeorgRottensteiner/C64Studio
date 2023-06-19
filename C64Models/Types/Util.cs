@@ -70,7 +70,7 @@ namespace RetroDevStudio
       else if ( ( c >= 'a' )
       &&        ( c <= 'z' ) )
       {
-        c = (char)( c - 'a' - 'A' );
+        c = (char)( c - 'a' + 'A' );
       }
     }
 

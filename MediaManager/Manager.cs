@@ -284,9 +284,9 @@ namespace MediaManager
           return 1;
         }
         string origFilename = paramMap["-RENAME"];
-        GR.Memory.ByteBuffer    origFilenameBuffer = Util.ToPETSCII( origFilename );
+        GR.Memory.ByteBuffer    origFilenameBuffer = Util.ToFilename( origFilename );
         string targetFilename = paramMap["-RENAMETO"];
-        GR.Memory.ByteBuffer    targetFilenameBuffer = Util.ToPETSCII( targetFilename );
+        GR.Memory.ByteBuffer    targetFilenameBuffer = Util.ToFilename( targetFilename );
 
         if ( !medium.RenameFile( origFilenameBuffer, targetFilenameBuffer ) )
         {

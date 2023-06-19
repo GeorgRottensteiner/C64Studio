@@ -306,13 +306,6 @@ namespace RetroDevStudio.Documents
               }
             }
 
-            contextMenu.Items.Add( "-" );
-
-            item = new System.Windows.Forms.ToolStripMenuItem( "Properties" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeProjectProperties_Click );
-            contextMenu.Items.Add( item );
-
             if ( ( isProject )
             &&   ( global::SourceControl.Controller.IsFunctional ) )
             {
@@ -364,6 +357,13 @@ namespace RetroDevStudio.Documents
                 contextMenu.Items.Add( item );
               }
             }
+
+            contextMenu.Items.Add( "-" );
+
+            item = new System.Windows.Forms.ToolStripMenuItem( "Properties" );
+            item.Tag = 0;
+            item.Click += new EventHandler( treeProjectProperties_Click );
+            contextMenu.Items.Add( item );
           }
           else
           {
@@ -463,13 +463,6 @@ namespace RetroDevStudio.Documents
             item.Click += new EventHandler( openFolderClick );
             contextMenu.Items.Add( item );
 
-            contextMenu.Items.Add( "-" );
-
-            item = new System.Windows.Forms.ToolStripMenuItem( "Properties" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeElementProperties_Click );
-            contextMenu.Items.Add( item );
-
             if ( ( global::SourceControl.Controller.IsFunctional )
             &&   ( project.SourceControl != null )
             &&   ( info.FileState != FileState.Unaltered ) )
@@ -488,6 +481,15 @@ namespace RetroDevStudio.Documents
                 item.Click += SourceControlIgnore;
                 contextMenu.Items.Add( item );
               }
+              if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
+              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
+              ||   ( ( info.FileState & FileState.NewInIndex ) != 0 ) )
+              {
+                item = new System.Windows.Forms.ToolStripMenuItem( "Commit Changes" );
+                item.Tag = 0;
+                item.Click += SourceControlCommitChangesSingleFile;
+                contextMenu.Items.Add( item );
+              }
               if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
               ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
               ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
@@ -498,17 +500,14 @@ namespace RetroDevStudio.Documents
                 item.Click += SourceControlRemoveFromRepo;
                 contextMenu.Items.Add( item );
               }
-              if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
-              ||   ( ( info.FileState & FileState.NewInIndex ) != 0 ) )
-              {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Commit Changes" );
-                item.Tag = 0;
-                item.Click += SourceControlCommitChangesSingleFile;
-                contextMenu.Items.Add( item );
-              }
-
             }
+
+            contextMenu.Items.Add( "-" );
+
+            item = new System.Windows.Forms.ToolStripMenuItem( "Properties" );
+            item.Tag = 0;
+            item.Click += new EventHandler( treeElementProperties_Click );
+            contextMenu.Items.Add( item );
           }
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
