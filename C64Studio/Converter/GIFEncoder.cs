@@ -72,13 +72,14 @@ namespace RetroDevStudio.Converter
       {
         img.Save( gifStream, ImageFormat.Gif );
 
-        System.IO.File.WriteAllBytes( "frame" + ( _isFirstImage ? "1" : "2" ), gifStream.ToArray() );
+        System.IO.File.WriteAllBytes( "frame" + ( _isFirstImage ? "1.gif" : "2.gif" ), gifStream.ToArray() );
         if ( _isFirstImage ) // Steal the global color table info
         {
           InitHeader( gifStream, img.Width, img.Height );
         }
         WriteGraphicControlBlock( gifStream, frameDelay.GetValueOrDefault( FrameDelay ) );
-        WriteImageBlock( gifStream, !_isFirstImage, x, y, img.Width, img.Height );
+        //WriteImageBlock( gifStream, !_isFirstImage, x, y, img.Width, img.Height );
+        WriteImageBlock( gifStream, true, x, y, img.Width, img.Height );
       }
       _isFirstImage = false;
     }
@@ -91,9 +92,9 @@ namespace RetroDevStudio.Converter
       WriteShort( _width.GetValueOrDefault( w ) ); // Initial Logical Width
       WriteShort( _height.GetValueOrDefault( h ) ); // Initial Logical Height
       sourceGif.Position = SourceGlobalColorInfoPosition;
-      WriteByte( sourceGif.ReadByte() ); // Global Color Table Info
-      WriteByte( 0 ); // Background Color Index
-      WriteByte( 0 ); // Pixel aspect ratio
+      WriteByte( 0xf7 );  // Global Color Table Info
+      WriteByte( 0 );     // Background Color Index
+      WriteByte( 0 );     // Pixel aspect ratio
       WriteColorTable( sourceGif );
 
       // App Extension Header
@@ -133,7 +134,7 @@ namespace RetroDevStudio.Converter
       sourceGif.Position = SourceImageBlockPosition; // Locating the image block
       var header = new byte[SourceImageBlockHeaderLength];
       sourceGif.Read( header, 0, header.Length );
-      WriteByte( header[0] ); // Separator
+      WriteByte( 0x2c );// header[0] ); // Separator
       WriteShort( x ); // Position X
       WriteShort( y ); // Position Y
       WriteShort( h ); // Height
@@ -142,7 +143,8 @@ namespace RetroDevStudio.Converter
       if ( includeColorTable ) // If first frame, use global color table - else use local
       {
         sourceGif.Position = SourceGlobalColorInfoPosition;
-        WriteByte( sourceGif.ReadByte() & 0x3f | 0x80 ); // Enabling local color table
+        //WriteByte( sourceGif.ReadByte() & 0x3f | 0x80 ); // Enabling local color table
+        WriteByte( sourceGif.ReadByte() & 0x07 | 0x80 ); // Enabling local color table
         WriteColorTable( sourceGif );
       }
       else

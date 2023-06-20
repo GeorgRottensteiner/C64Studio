@@ -10,6 +10,7 @@ using RetroDevStudio.Controls;
 using RetroDevStudio.Dialogs;
 using System.Drawing;
 using GR.Generic;
+using GR.Image;
 
 namespace RetroDevStudio.Documents
 {
@@ -2943,15 +2944,18 @@ namespace RetroDevStudio.Documents
 
       try
       {
+        var quantizer = new ColorQuantizer( 256 );
+
         using ( var outStream = new System.IO.FileStream( saveDlg.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write ) )
         using ( var gif = new GIFEncoder( outStream, maxX - minX, maxY - minY ) )
         {
-          var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, GR.Drawing.PixelFormat.Format32bppRgb );
-
-          layerImage.Box( 0, 0, maxX - minX, maxY - minY, m_SpriteProject.Colors.Palette.ColorValues[m_SpriteProject.Colors.BackgroundColor] );
+          var images = new List<MemoryImage>();
 
           foreach ( var layer in m_SpriteProject.SpriteLayers )
           {
+            var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, GR.Drawing.PixelFormat.Format32bppRgb );
+            layerImage.Box( 0, 0, maxX - minX, maxY - minY, m_SpriteProject.Colors.Palette.ColorValues[m_SpriteProject.Colors.BackgroundColor] );
+
             foreach ( var entry in layer.Sprites )
             {
               if ( m_SpriteProject.Sprites[entry.Index].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
@@ -2992,7 +2996,19 @@ namespace RetroDevStudio.Documents
               }
             }
 
-            gif.AddFrame( layerImage.GetAsBitmap(), minX, minY, new TimeSpan( 0, 0, 0, 0, layer.DelayMS ) );
+            images.Add( layerImage );
+            quantizer.AddSourceToColorCube( layerImage );
+          }
+
+          for ( int i = 0; i < images.Count; ++i )
+          {
+            var image = images[i];
+            var layer = m_SpriteProject.SpriteLayers[i];
+
+            var reducedImage = (MemoryImage)quantizer.Reduce( image );
+            var bitmap = reducedImage.GetAsBitmap();
+
+            gif.AddFrame( bitmap, minX, minY, new TimeSpan( 0, 0, 0, 0, ( layer.DelayMS == 0 ) ? 100 : layer.DelayMS ) );
           }
           gif.Close();
         }
