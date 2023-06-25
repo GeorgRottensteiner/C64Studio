@@ -53,6 +53,7 @@ namespace RetroDevStudio.Documents
           seBtnAddNewItem.Enabled = false;
           seBtnDelete.Enabled = false;
           seBtnCloneSolution.Enabled = false;
+          treeProject.Nodes.Clear();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
           // apply node expansions
@@ -195,17 +196,11 @@ namespace RetroDevStudio.Documents
             {
               if ( Core.Navigating.Solution.ActiveProject == project.Settings.Name )
               {
-                var itemUnmark = new System.Windows.Forms.ToolStripMenuItem( "Unmark as active project" );
-                itemUnmark.Tag = 0;
-                itemUnmark.Click += new EventHandler( treeMarkProjectAsActive_Click );
-                contextMenu.Items.Add( itemUnmark );
+                AddContextMenuItem( contextMenu.Items, "Unmark as active project", treeMarkProjectAsActive_Click, null );
               }
               else
               {
-                var itemMark = new System.Windows.Forms.ToolStripMenuItem( "Mark as active project" );
-                itemMark.Tag = 0;
-                itemMark.Click += new EventHandler( treeMarkProjectAsActive_Click );
-                contextMenu.Items.Add( itemMark );
+                AddContextMenuItem( contextMenu.Items, "Mark as active project", treeMarkProjectAsActive_Click, null );
               }
 
               System.Windows.Forms.ToolStripMenuItem subItemNewProject = new System.Windows.Forms.ToolStripMenuItem( "Project" );
@@ -260,20 +255,14 @@ namespace RetroDevStudio.Documents
 
             contextMenu.Items.Add( "-" );
 
-            item = new System.Windows.Forms.ToolStripMenuItem( "Open Explorer here" );
-            item.Tag = 0;
-            item.Click += new EventHandler( openFolderClick );
-            contextMenu.Items.Add( item );
+            AddContextMenuItem( contextMenu.Items, "Open Explorer here", openFolderClick, null );
 
             contextMenu.Items.Add( "-" );
 
             if ( ( isFolder )
             ||   ( isProject ) )
             {
-              System.Windows.Forms.ToolStripMenuItem folderItem = new System.Windows.Forms.ToolStripMenuItem( "Remove from solution" );
-              folderItem.Tag = 0;
-              folderItem.Click += new EventHandler( treeElementRemove_Click );
-              contextMenu.Items.Add( folderItem );
+              AddContextMenuItem( contextMenu.Items, "Remove from solution", treeElementRemove_Click, null );
             }
 
             if ( isFolder )
@@ -299,10 +288,7 @@ namespace RetroDevStudio.Documents
               }
               if ( onlyCharScreens )
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Calc combined charset" );
-                item.Tag = 0;
-                item.Click += new EventHandler( calcCombinedCharset_Click );
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Calc combined charset", calcCombinedCharset_Click, null );
               }
             }
 
@@ -313,57 +299,35 @@ namespace RetroDevStudio.Documents
 
               if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Refresh State" );
-                item.Tag = 0;
-                item.Click += SourceControlRefreshState;
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Refresh State", SourceControlRefreshState, null );
 
                 if ( project.SourceControl.HasChanges )
                 {
-                  item = new System.Windows.Forms.ToolStripMenuItem( "Commit Changes" );
-                  item.Tag = 0;
-                  item.Click += SourceControlCommitChanges;
-                  contextMenu.Items.Add( item );
+                  AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChanges, null );
                 }
 
                 if ( info.FileState == FileState.NewInWorkdir )
                 {
-                  item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
-                  item.Tag = info;
-                  item.Click += SourceControlAddFileToRepository;
-                  contextMenu.Items.Add( item );
-
-                  item = new System.Windows.Forms.ToolStripMenuItem( "Ignore" );
-                  item.Tag = info;
-                  item.Click += SourceControlIgnore;
-                  contextMenu.Items.Add( item );
+                  AddContextMenuItem( contextMenu.Items, "Add to repository", SourceControlAddFileToRepository, info );
+                  AddContextMenuItem( contextMenu.Items, "Ignore", SourceControlIgnore, info );
                 }
                 if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
                 ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
                 ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
                 ||   ( ( info.FileState & FileState.TypeChangeInIndex ) != 0 ) )
                 {
-                  item = new System.Windows.Forms.ToolStripMenuItem( "Remove from repository" );
-                  item.Tag = info;
-                  item.Click += SourceControlRemoveFromRepo;
-                  contextMenu.Items.Add( item );
+                  AddContextMenuItem( contextMenu.Items, "Remove from repository", SourceControlRemoveFromRepo, info );
                 }
               }
               else
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Create Repository" );
-                item.Tag = 0;
-                item.Click += CreateRepository;
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Create Repository", CreateRepository, null );
               }
             }
 
             contextMenu.Items.Add( "-" );
 
-            item = new System.Windows.Forms.ToolStripMenuItem( "Properties" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeProjectProperties_Click );
-            contextMenu.Items.Add( item );
+            AddContextMenuItem( contextMenu.Items, "Properties", treeProjectProperties_Click, null );
           }
           else
           {
@@ -376,32 +340,19 @@ namespace RetroDevStudio.Documents
             {
               if ( GR.Path.IsPathEqual( element.Filename, element.DocumentInfo.Project.Settings.MainDocument ) )
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Unmark as active element" );
-                item.Tag = 0;
-                item.Click += new EventHandler( treeMarkAsActive_Click );
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Unmark as active element", treeMarkAsActive_Click, null );
               }
               else
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Mark as active element" );
-                item.Tag = 0;
-                item.Click += new EventHandler( treeMarkAsActive_Click );
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Mark as active element", treeMarkAsActive_Click, null );
               }
             }
 
             contextMenu.Items.Add( "-" );
 
-            item = new System.Windows.Forms.ToolStripMenuItem( "Copy" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeCopyElement_Click );
-            contextMenu.Items.Add( item );
+            AddContextMenuItem( contextMenu.Items, "Copy", treeCopyElement_Click, null );
 
-            item = new System.Windows.Forms.ToolStripMenuItem( "Paste" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treePasteElement_Click );
-            contextMenu.Items.Add( item );
-
+            item = AddContextMenuItem( contextMenu.Items, "Paste", treePasteElement_Click, null );
             IDataObject dataObj = Clipboard.GetDataObject();
             if ( ( dataObj != null )
             &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
@@ -430,38 +381,23 @@ namespace RetroDevStudio.Documents
             if ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
             ||   ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
             {
-              item = new System.Windows.Forms.ToolStripMenuItem( "Build" );
-              item.Tag = 0;
-              item.Click += new EventHandler( treeElementBuild_Click );
+              item = AddContextMenuItem( contextMenu.Items, "Build", treeElementBuild_Click, null );
               item.Enabled = ( Core.MainForm.AppState == RetroDevStudio.Types.StudioState.NORMAL );
-              contextMenu.Items.Add( item );
 
-              item = new System.Windows.Forms.ToolStripMenuItem( "Rebuild" );
-              item.Tag = 0;
-              item.Click += new EventHandler( treeElementRebuild_Click );
+              item = AddContextMenuItem( contextMenu.Items, "Rebuild", treeElementRebuild_Click, null );
               item.Enabled = ( Core.MainForm.AppState == RetroDevStudio.Types.StudioState.NORMAL );
-              contextMenu.Items.Add( item );
             }
-            item = new System.Windows.Forms.ToolStripMenuItem( "Rename file" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeElementRename_Click );
-            contextMenu.Items.Add( item );
+            item = AddContextMenuItem( contextMenu.Items, "Rename file", treeElementRename_Click, null );
             if ( String.IsNullOrEmpty( element.Filename ) )
             {
               item.Enabled = false;
             }
 
-            item = new System.Windows.Forms.ToolStripMenuItem( "Remove from project" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeElementRemove_Click );
-            contextMenu.Items.Add( item );
+            AddContextMenuItem( contextMenu.Items, "Remove from project", treeElementRemove_Click, null );
 
             contextMenu.Items.Add( "-" );
 
-            item = new System.Windows.Forms.ToolStripMenuItem( "Open Explorer here" );
-            item.Tag = 0;
-            item.Click += new EventHandler( openFolderClick );
-            contextMenu.Items.Add( item );
+            AddContextMenuItem( contextMenu.Items, "Open Explorer here", openFolderClick, null );
 
             if ( ( global::SourceControl.Controller.IsFunctional )
             &&   ( project.SourceControl != null )
@@ -471,34 +407,26 @@ namespace RetroDevStudio.Documents
 
               if ( info.FileState == FileState.NewInWorkdir )
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Add to repository" );
-                item.Tag = info;
-                item.Click += SourceControlAddFileToRepository;
-                contextMenu.Items.Add( item );
-
-                item = new System.Windows.Forms.ToolStripMenuItem( "Ignore" );
-                item.Tag = info;
-                item.Click += SourceControlIgnore;
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Add to repository", SourceControlAddFileToRepository, info );
+                AddContextMenuItem( contextMenu.Items, "Ignore", SourceControlIgnore, info );
               }
               if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
               ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
               ||   ( ( info.FileState & FileState.NewInIndex ) != 0 ) )
-              {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Commit Changes" );
-                item.Tag = 0;
-                item.Click += SourceControlCommitChangesSingleFile;
-                contextMenu.Items.Add( item );
+              { 
+                AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChangesSingleFile, info ); // info was 0?
+              }
+              if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
+              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 ) )
+              { 
+                AddContextMenuItem( contextMenu.Items, "Revert Changes", SourceControlRevertChangesSingleFile, info );
               }
               if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
               ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
               ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
               ||   ( ( info.FileState & FileState.TypeChangeInIndex ) != 0 ) )
               {
-                item = new System.Windows.Forms.ToolStripMenuItem( "Remove from repository" );
-                item.Tag = info;
-                item.Click += SourceControlRemoveFromRepo;
-                contextMenu.Items.Add( item );
+                AddContextMenuItem( contextMenu.Items, "Remove from repository", SourceControlRemoveFromRepo, info );
               }
             }
 
@@ -512,6 +440,18 @@ namespace RetroDevStudio.Documents
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private ToolStripMenuItem AddContextMenuItem( ToolStripItemCollection Items, string Text, System.EventHandler ClickHandler, TreeItemInfo Info )
+    {
+      var item = new System.Windows.Forms.ToolStripMenuItem( Text );
+      item.Tag = Info;
+      item.Click += ClickHandler;
+      Items.Add( item );
+
+      return item;
     }
 
 
@@ -533,6 +473,19 @@ namespace RetroDevStudio.Documents
             RefreshSourceControlState();
           }
         }
+      }
+    }
+
+
+
+    private void SourceControlRevertChangesSingleFile( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)m_ContextMenuNode.Tag;
+      var project = ProjectFromNode( m_ContextMenuNode );
+
+      if ( project.SourceControl.RevertChanges( new List<string>() { info.Element.Filename } ) )
+      {
+        RefreshSourceControlState();
       }
     }
 

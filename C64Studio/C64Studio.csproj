@@ -389,6 +389,9 @@
     <ProjectReference Include="..\SourceControl\SourceControl.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.Design" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Update="Documents\ReadOnlyFile.resx">
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">

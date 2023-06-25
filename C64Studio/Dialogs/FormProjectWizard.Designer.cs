@@ -37,6 +37,7 @@
       this.label2 = new System.Windows.Forms.Label();
       this.editProjectName = new System.Windows.Forms.TextBox();
       this.labelProjectSummary = new System.Windows.Forms.Label();
+      this.checkCreateRepository = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // label1
@@ -122,6 +123,16 @@
       this.labelProjectSummary.TabIndex = 0;
       this.labelProjectSummary.Text = "summary";
       // 
+      // checkCreateRepository
+      // 
+      this.checkCreateRepository.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkCreateRepository.Location = new System.Drawing.Point(12, 115);
+      this.checkCreateRepository.Name = "checkCreateRepository";
+      this.checkCreateRepository.Size = new System.Drawing.Size(123, 24);
+      this.checkCreateRepository.TabIndex = 6;
+      this.checkCreateRepository.Text = "Create Repository";
+      this.checkCreateRepository.UseVisualStyleBackColor = true;
+      // 
       // FormProjectWizard
       // 
       this.AcceptButton = this.btnOK;
@@ -129,6 +140,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
       this.ClientSize = new System.Drawing.Size(545, 251);
+      this.Controls.Add(this.checkCreateRepository);
       this.Controls.Add(this.btnOK);
       this.Controls.Add(this.btnCancel);
       this.Controls.Add(this.btnBrowseBasePath);
@@ -162,5 +174,6 @@
     private System.Windows.Forms.Label label2;
     public System.Windows.Forms.TextBox editProjectName;
     private System.Windows.Forms.Label labelProjectSummary;
+    private System.Windows.Forms.CheckBox checkCreateRepository;
   }
 }

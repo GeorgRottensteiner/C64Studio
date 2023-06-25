@@ -1309,6 +1309,7 @@ namespace RetroDevStudio
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
+          m_CurrentProject = null;
           solutionToolStripMenuItem.Visible = false;
           solutionCloseToolStripMenuItem.Enabled = false;
           solutionSaveToolStripMenuItem1.Enabled = false;
@@ -1689,8 +1690,10 @@ namespace RetroDevStudio
 
     bool CloseAllProjects()
     {
-      if ( StudioCore.Navigating.Solution == null )
+      if ( ( StudioCore.Navigating.Solution == null )
+      ||   ( !System.IO.Directory.Exists( System.IO.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) ) )
       {
+        // we have no solution, or the solution was deleted externally
         return true;
       }
       SaveSolution();
@@ -2878,20 +2881,22 @@ namespace RetroDevStudio
 
     public Project NewProjectWizard( string ProjectName )
     {
-      FormProjectWizard projectWizard = new FormProjectWizard( ProjectName, StudioCore.Settings, StudioCore );
+      var projectWizard = new FormProjectWizard( ProjectName, StudioCore.Settings, StudioCore );
 
       if ( projectWizard.ShowDialog() != DialogResult.OK )
       {
         return null;
       }
+
       Project newProject = new Project();
-      newProject.Core = StudioCore;
-      newProject.Settings.Name = projectWizard.ProjectName;
-      newProject.Settings.Filename = projectWizard.ProjectFilename;
-      newProject.Settings.BasePath = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
-      newProject.Node = new TreeNode();
-      newProject.Node.Tag   = new SolutionExplorer.TreeItemInfo() { Project = newProject };
-      newProject.Node.Text  = newProject.Settings.Name;
+
+      newProject.Core               = StudioCore;
+      newProject.Settings.Name      = projectWizard.ProjectName;
+      newProject.Settings.Filename  = projectWizard.ProjectFilename;
+      newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
+      newProject.Node               = new TreeNode();
+      newProject.Node.Tag           = new SolutionExplorer.TreeItemInfo() { Project = newProject };
+      newProject.Node.Text          = newProject.Settings.Name;
 
 
       try
@@ -2907,11 +2912,25 @@ namespace RetroDevStudio
       Text += " - " + newProject.Settings.Name;
 
       // TODO - adjust GUI to changed project
+      bool addedSolution = false;
       if ( StudioCore.Navigating.Solution == null )
       {
         StudioCore.Navigating.Solution = new Solution( this );
+        addedSolution = true;
       }
       StudioCore.Navigating.Solution.Projects.Add( newProject );
+
+      if ( projectWizard.CreateRepository )
+      {
+        global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ) );
+        if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
+        {
+          newProject.SourceControl = new SourceControl.Controller( newProject.FullPath( "" ) );
+
+          // add the project file .c64
+          newProject.SourceControl.AddFileToRepository( newProject.Settings.Filename );
+        }
+      }
 
       // TODO - should be different
       m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
@@ -2925,7 +2944,19 @@ namespace RetroDevStudio
 
       SetActiveProject( newProject );
 
-      SaveProject( newProject );
+      if ( SaveProject( newProject ) )
+      {
+        if ( projectWizard.CreateRepository )
+        {
+          if ( addedSolution )
+          {
+            newProject.SourceControl.AddFileToRepository( StudioCore.Navigating.Solution.Filename );
+          }
+          newProject.SourceControl.StageAllChanges();
+          newProject.SourceControl.CommitAllChanges( StudioCore.Settings.SourceControlInfo.CommitAuthor, StudioCore.Settings.SourceControlInfo.CommitAuthorEmail, "Initial" );
+        }
+      }
+
       UpdateUndoSettings();
       return newProject;
     }
@@ -2945,6 +2976,11 @@ namespace RetroDevStudio
 
     public Project AddNewProject()
     {
+      if ( StudioCore.Navigating.Solution == null )
+      {
+        return AddNewProjectAndOrSolution();
+      }
+
       string projectName = "New Project";
       Project newProject = NewProjectWizard( projectName );
       if ( newProject == null )
@@ -6794,11 +6830,11 @@ namespace RetroDevStudio
 
 
 
-    private void AddNewProjectAndOrSolution()
+    private Project AddNewProjectAndOrSolution()
     {
       if ( StudioCore.Navigating.Solution == null )
       {
-        FormSolutionWizard solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
+        var solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
         if ( solWizard.ShowDialog() == DialogResult.OK )
         {
           try
@@ -6808,7 +6844,7 @@ namespace RetroDevStudio
           catch ( System.Exception ex )
           {
             System.Windows.Forms.MessageBox.Show( "Could not create solution folder:" + System.Environment.NewLine + ex.Message, "Could not create solution folder" );
-            return;
+            return null;
           }
 
           StudioCore.Navigating.Solution = new Solution( this );
@@ -6817,9 +6853,9 @@ namespace RetroDevStudio
 
           Project newProject = new Project();
           newProject.Core = StudioCore;
-          newProject.Settings.Name = solWizard.SolutionName;
-          newProject.Settings.Filename = solWizard.ProjectFilename;
-          newProject.Settings.BasePath = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
+          newProject.Settings.Name      = solWizard.SolutionName;
+          newProject.Settings.Filename  = solWizard.ProjectFilename;
+          newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
           newProject.Node = new TreeNode();
           newProject.Node.Tag   = new SolutionExplorer.TreeItemInfo() { Project = newProject };
           newProject.Node.Text  = newProject.Settings.Name;
@@ -6828,24 +6864,45 @@ namespace RetroDevStudio
 
           StudioCore.Navigating.Solution.Projects.Add( newProject );
 
+          if ( solWizard.CreateRepository )
+          {
+            global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ) );
+            if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
+            {
+              newProject.SourceControl = new SourceControl.Controller( newProject.FullPath( "" ) );
+            }
+          }
+
           m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
           newProject.Node.Collapse();
-
-          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
-          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, newProject ) );
 
           SetActiveProject( newProject );
           projectToolStripMenuItem.Visible = true;
 
           SaveSolution();
-          SaveProject( newProject );
+          if ( SaveProject( newProject ) )
+          {
+            if ( solWizard.CreateRepository )
+            {
+              if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
+              {
+                newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( newProject.Settings.Filename ) );
+                newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( StudioCore.Navigating.Solution.Filename ) );
+                newProject.SourceControl.StageAllChanges();
+                newProject.SourceControl.CommitAllChanges( StudioCore.Settings.SourceControlInfo.CommitAuthor, StudioCore.Settings.SourceControlInfo.CommitAuthorEmail, "Initial" );
+              }
+            }
+          }
+          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, newProject ) );
+
           UpdateUndoSettings();
+
+          return newProject;
         }
+        return null;
       }
-      else
-      {
-        AddNewProject();
-      }
+      return AddNewProject();
     }
 
 

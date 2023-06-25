@@ -28,8 +28,12 @@ namespace SourceControl
 #if NET6_0_OR_GREATER
       try
       {
-        //System.IO.Directory.CreateDirectory( System.IO.Path.Combine( Folder, ".git" ) );
         Repository.Init( System.IO.Path.Combine( Folder, ".git" ), false );
+
+        using ( var repo = new Repository( Folder ) )
+        {
+          repo.CreateBranch( "master" );
+        }
         return true;
       }
       catch ( Exception ) 
@@ -279,6 +283,45 @@ namespace SourceControl
       return false;
 #endif
     }
+
+
+
+    public bool RevertChanges( IEnumerable<string> Files )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        foreach ( var filePath in Files )
+        {
+          var state = _GITRepo.RetrieveStatus( filePath );
+          /*
+           * 
+If your file is already staged (happens when you do a git add etc after the file is edited) to unstage your changes.
+
+Use
+
+git reset HEAD <file>
+Then
+
+git checkout <file>
+If not already staged, just use
+
+git checkout <file>*/
+
+          //_GITRepo.CheckoutPaths( "", filePath, new CheckoutOptions(){ CheckoutModifiers.
+          //_GITRepo.Revert(.Index.Add( filePath );
+        }
+        //_GITRepo.Index.Write();
+        return true;
+      }
+      catch ( Exception ex )
+      {
+        Console.WriteLine( "Exception:RepoActions:RevertChanges " + ex.Message );
+      }
+#endif
+      return false;
+    }
+
 
 
 

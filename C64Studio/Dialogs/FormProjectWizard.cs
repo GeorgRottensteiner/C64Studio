@@ -13,6 +13,7 @@ namespace RetroDevStudio.Dialogs
     public string           ProjectPath = "";
     public string           ProjectName = "";
     public string           ProjectFilename = "";
+    public bool             CreateRepository = false;
 
     private StudioSettings  Settings;
 
@@ -24,6 +25,9 @@ namespace RetroDevStudio.Dialogs
       editProjectName.Text = ProjectName;
       editBasePath.Text = Settings.DefaultProjectBasePath;
 
+      checkCreateRepository.Visible = global::SourceControl.Controller.IsFunctional;
+      checkCreateRepository.Checked = global::SourceControl.Controller.IsFunctional;
+
       btnOK.Enabled = false;
       UpdateSummary();
 
@@ -34,13 +38,15 @@ namespace RetroDevStudio.Dialogs
 
     private void btnOK_Click( object sender, EventArgs e )
     {
-      DialogResult = DialogResult.OK;
-      ProjectName = editProjectName.Text;
-      ProjectFilename = editBasePath.Text;
+      DialogResult                    = DialogResult.OK;
+      ProjectName                     = editProjectName.Text;
+      ProjectFilename                 = editBasePath.Text;
       Settings.DefaultProjectBasePath = ProjectFilename;
-      ProjectFilename = System.IO.Path.Combine( ProjectFilename, ProjectName );
-      ProjectPath = ProjectFilename;
-      ProjectFilename = System.IO.Path.Combine( ProjectFilename, ProjectName + ".c64" );
+      ProjectFilename                 = System.IO.Path.Combine( ProjectFilename, ProjectName );
+      ProjectPath                     = ProjectFilename;
+      ProjectFilename                 = System.IO.Path.Combine( ProjectFilename, ProjectName + ".c64" );
+      CreateRepository                = checkCreateRepository.Checked;
+
       Close();
     }
 
@@ -80,7 +86,6 @@ namespace RetroDevStudio.Dialogs
       FolderBrowserDialog  dlgFolder = new FolderBrowserDialog();
 
       dlgFolder.Description = "Select new project base path";
-      //dlgFolder.RootFolder = Environment.SpecialFolder..CommonApplicationData;
       dlgFolder.SelectedPath = editBasePath.Text;
       dlgFolder.ShowNewFolderButton = true;
       if ( dlgFolder.ShowDialog() == DialogResult.OK )
@@ -104,6 +109,8 @@ namespace RetroDevStudio.Dialogs
     {
       UpdateSummary();
     }
+
+
 
   }
 }
