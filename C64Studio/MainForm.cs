@@ -6017,6 +6017,14 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
         ( (MapEditor)document ).OpenCharpadFile( Filename );
       }
+      else if ( extension == ".SPD" )
+      {
+        // a SpritePad file
+        openDirectFile = false;
+        document = new SpriteEditor( StudioCore );
+        document.ShowHint = DockState.Document;
+        ( (SpriteEditor)document ).ImportSprites( Filename, true, true );
+      }
       else
       {
         document = new SourceASMEx( StudioCore );
