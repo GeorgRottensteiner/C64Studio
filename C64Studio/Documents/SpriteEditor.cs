@@ -653,7 +653,8 @@ namespace RetroDevStudio.Documents
 
             spritePad.Sprites[i].Data.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, 63 );
             m_SpriteProject.Sprites[i].Tile.CustomColor = (byte)spritePad.Sprites[i].Color;
-            m_SpriteProject.Sprites[i].Mode   = spritePad.Sprites[i].Multicolor ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
+            m_SpriteProject.Sprites[i].Mode       = spritePad.Sprites[i].Multicolor ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
+            m_SpriteProject.Sprites[i].Tile.Mode  = Lookup.GraphicTileModeFromSpriteMode( m_SpriteProject.Sprites[i].Mode );
           }
         }
         ChangeColorSettingsDialog();
