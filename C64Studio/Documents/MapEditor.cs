@@ -312,8 +312,7 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( characterEditor.EditorFocused )
-        ||       ( ( m_ToolMode == ToolMode.SELECT )
-          &&       ( pictureEditor.Focused ) ) );
+        ||       ( pictureEditor.Focused ) );
       }
     }
 
@@ -1496,6 +1495,7 @@ namespace RetroDevStudio.Documents
       int     x2 = 0;
       int     y1 = m_CurrentMap.Tiles.Height;
       int     y2 = 0;
+      bool    selectAll = false;
 
       for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
       {
@@ -1524,8 +1524,12 @@ namespace RetroDevStudio.Documents
       }
       if ( x1 == m_CurrentMap.Tiles.Width )
       {
-        // no selection
-        return;
+        // no selection, select all
+        x1 = 0;
+        y1 = 0;
+        x2 = m_CurrentMap.Tiles.Width - 1;
+        y2 = m_CurrentMap.Tiles.Height - 1;
+        selectAll = true;
       }
 
       GR.Memory.ByteBuffer dataSelection = new GR.Memory.ByteBuffer();
@@ -1538,7 +1542,8 @@ namespace RetroDevStudio.Documents
       {
         for ( int x = 0; x < x2 - x1 + 1; ++x )
         {
-          if ( m_SelectedTiles[x1 + x, y1 + y] )
+          if ( ( selectAll )
+          ||   ( m_SelectedTiles[x1 + x, y1 + y] ) )
           {
             dataSelection.AppendU8( 1 );
             dataSelection.AppendI32( m_CurrentMap.Tiles[x1 + x, y1 + y] );
@@ -2854,20 +2859,6 @@ namespace RetroDevStudio.Documents
 
     private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
-      /*
-      if ( m_ToolMode == ToolMode.SELECT )
-      {
-        if ( ( e.Modifiers == Keys.Control )
-        &&   ( e.KeyCode == Keys.C ) )
-        {
-          CopyToClipboard();
-        }
-      }
-      if ( ( e.Modifiers == Keys.Control )
-      &&   ( e.KeyCode == Keys.V ) )
-      {
-        PasteFromClipboard();
-      }*/
       if ( e.KeyCode == Keys.Escape )
       {
         RemoveFloatingSelection();
