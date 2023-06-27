@@ -3351,52 +3351,59 @@ namespace RetroDevStudio.Documents
 
     internal void SetLineInfos( Types.ASM.FileInfo FileInfo )
     {
-      GR.Collections.Set<int>   setLines = new GR.Collections.Set<int>();
-      string                    myFullPath = DocumentInfo.FullPath;
-
-      foreach ( var lineInfo in FileInfo.LineInfo )
+      try
       {
-        FileInfo.FindTrueLineSource( lineInfo.Key, out string filename, out int localLineIndex );
+        GR.Collections.Set<int>   setLines = new GR.Collections.Set<int>();
+        string                    myFullPath = DocumentInfo.FullPath;
 
-        // Windows filenames don't care for case (as the gods intended)
-        if ( string.Compare( filename, myFullPath, true ) == 0 )
+        foreach ( var lineInfo in FileInfo.LineInfo )
         {
-          var newInfo = lineInfo.Value;
+          FileInfo.FindTrueLineSource( lineInfo.Key, out string filename, out int localLineIndex );
 
-          if ( !setLines.ContainsValue( localLineIndex ) )
+          // Windows filenames don't care for case (as the gods intended)
+          if ( string.Compare( filename, myFullPath, true ) == 0 )
           {
-            while ( localLineIndex >= m_LineInfos.Count )
+            var newInfo = lineInfo.Value;
+
+            if ( !setLines.ContainsValue( localLineIndex ) )
             {
-              m_LineInfos.Add( new Types.ASM.LineInfo() );
+              while ( localLineIndex >= m_LineInfos.Count )
+              {
+                m_LineInfos.Add( new Types.ASM.LineInfo() );
+              }
+              m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+              {
+                AddressStart = newInfo.AddressStart,
+                NumBytes = newInfo.NumBytes,
+                Line = newInfo.Line,
+                LineIndex = localLineIndex,
+                Zone = newInfo.Zone,
+                Opcode = newInfo.Opcode
+              };
+
+              setLines.Add( localLineIndex );
             }
-            m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+            else
             {
-              AddressStart = newInfo.AddressStart,
-              NumBytes = newInfo.NumBytes,
-              Line = newInfo.Line,
-              LineIndex = localLineIndex,
-              Zone = newInfo.Zone,
-              Opcode = newInfo.Opcode
-            };
+              while ( localLineIndex >= m_LineInfos.Count )
+              {
+                m_LineInfos.Add( new Types.ASM.LineInfo() );
+              }
 
-            setLines.Add( localLineIndex );
-          }
-          else
-          {
-            while ( localLineIndex >= m_LineInfos.Count )
-            {
-              m_LineInfos.Add( new Types.ASM.LineInfo() );
+              // accumulate values!
+              var curInfo = m_LineInfos[localLineIndex];
+
+              curInfo.NumBytes += newInfo.NumBytes;
+
+              // TODO - cycles!
+              curInfo.HasCollapsedContent = true;
             }
-
-            // accumulate values!
-            var curInfo = m_LineInfos[localLineIndex];
-
-            curInfo.NumBytes += newInfo.NumBytes;
-
-            // TODO - cycles!
-            curInfo.HasCollapsedContent = true;
           }
         }
+      }
+      catch ( InvalidOperationException )
+      {
+        // HACK - this one may happen if another thread parses and we try to use the collection at the same time
       }
     }
 

@@ -216,18 +216,26 @@ namespace RetroDevStudio.Types.ASM
 
       //dh.Log( "FindTrueLineSource for " + LineIndex );
       Types.ASM.SourceInfo    lastFound = null;
-      foreach ( Types.ASM.SourceInfo sourceInfo in SourceInfo.Values )
+      try
       {
-        if ( ( GR.Path.IsPathEqual( Filename, sourceInfo.Filename ) ) //( Filename.ToUpper() == sourceInfo.Filename.ToUpper() )
-        &&   ( LineIndex >= sourceInfo.LocalStartLine )
-        &&   ( LineIndex < sourceInfo.LocalStartLine + sourceInfo.LineCount ) )
+        foreach ( Types.ASM.SourceInfo sourceInfo in SourceInfo.Values )
         {
-          // ugh, outer source info (for nested for loops) is wrong!
-          lastFound = sourceInfo;
-          //return true;
+          if ( ( GR.Path.IsPathEqual( Filename, sourceInfo.Filename ) ) //( Filename.ToUpper() == sourceInfo.Filename.ToUpper() )
+          &&   ( LineIndex >= sourceInfo.LocalStartLine )
+          &&   ( LineIndex < sourceInfo.LocalStartLine + sourceInfo.LineCount ) )
+          {
+            // ugh, outer source info (for nested for loops) is wrong!
+            lastFound = sourceInfo;
+            //return true;
+          }
         }
+        //Debug.Log( "FindTrueLineSource for " + LineIndex + " failed" );
       }
-      //Debug.Log( "FindTrueLineSource for " + LineIndex + " failed" );
+      catch ( System.InvalidOperationException )
+      {
+        // SourceInfo.Values may be modified -> the actual issue
+        return false;
+      }
 
       if ( lastFound == null )
       {
