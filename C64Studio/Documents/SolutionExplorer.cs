@@ -400,8 +400,7 @@ namespace RetroDevStudio.Documents
             AddContextMenuItem( contextMenu.Items, "Open Explorer here", openFolderClick, null );
 
             if ( ( global::SourceControl.Controller.IsFunctional )
-            &&   ( project.SourceControl != null )
-            &&   ( info.FileState != FileState.Unaltered ) )
+            &&   ( project.SourceControl != null ) )
             {
               contextMenu.Items.Add( "-" );
 
@@ -414,10 +413,11 @@ namespace RetroDevStudio.Documents
               ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
               ||   ( ( info.FileState & FileState.NewInIndex ) != 0 ) )
               { 
-                AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChangesSingleFile, info ); // info was 0?
+                AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChangesSingleFile, info );
               }
               if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 ) )
+              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
+              ||   ( info.FileState == FileState.Unaltered ) )
               { 
                 AddContextMenuItem( contextMenu.Items, "Revert Changes", SourceControlRevertChangesSingleFile, info );
               }

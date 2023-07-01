@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 #if NET6_0_OR_GREATER
 using LibGit2Sharp;
@@ -294,6 +295,11 @@ namespace SourceControl
         foreach ( var filePath in Files )
         {
           var state = _GITRepo.RetrieveStatus( filePath );
+          if ( ( ( state & FileStatus.ModifiedInIndex ) == FileStatus.ModifiedInIndex )
+          ||   ( ( state & FileStatus.ModifiedInWorkdir ) == FileStatus.ModifiedInWorkdir ) )
+          {
+            _GITRepo.CheckoutPaths( _GITRepo.Head.FriendlyName, new[] { filePath }, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force } );
+          }
           /*
            * 
 If your file is already staged (happens when you do a git add etc after the file is edited) to unstage your changes.
@@ -311,7 +317,7 @@ git checkout <file>*/
           //_GITRepo.CheckoutPaths( "", filePath, new CheckoutOptions(){ CheckoutModifiers.
           //_GITRepo.Revert(.Index.Add( filePath );
         }
-        //_GITRepo.Index.Write();
+        _GITRepo.Index.Write();
         return true;
       }
       catch ( Exception ex )
