@@ -60,11 +60,28 @@ namespace FastColoredTextBoxNS
     public virtual CompareResult Compare( string fragmentText )
     {
       // this filters all items from the list containing the fragment
+      string[]  origParts = Text.Split( '.' );
+      string[]  fragParts = fragmentText.Split( '.' );
+      int       sharedCount = Math.Min( origParts.Length, fragParts.Length );
+
+      if ( fragParts.Length > sharedCount )
+      {
+        return CompareResult.Hidden;
+      }
+
+      for ( int i = 0; i < sharedCount; ++i )
+      {
+        if ( origParts[i].IndexOf( fragParts[i], StringComparison.InvariantCultureIgnoreCase ) < 0 )
+        {
+          return CompareResult.Hidden;
+        }
+      }
+      /*
       if ( Text.IndexOf( fragmentText, StringComparison.InvariantCultureIgnoreCase ) >= 0 )
       {
         return CompareResult.VisibleAndSelected;
-      }
-      return CompareResult.Hidden;
+      }*/
+      return CompareResult.VisibleAndSelected;
     }
 
     /// <summary>

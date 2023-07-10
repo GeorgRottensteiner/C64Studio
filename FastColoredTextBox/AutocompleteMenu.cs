@@ -352,6 +352,16 @@ namespace FastColoredTextBoxNS
       }
     }
 
+    public List<AutocompleteItem> AllItems
+    { 
+      get 
+      { 
+        return visibleItems; 
+      } 
+    }
+
+
+
     AutocompleteMenu Menu
     {
       get
@@ -551,7 +561,9 @@ namespace FastColoredTextBoxNS
           item.Parent = Menu;
           CompareResult res = item.Compare( text );
           if ( res != CompareResult.Hidden )
+          {
             visibleItems.Add( item );
+          }
           if ( res == CompareResult.VisibleAndSelected && !foundSelected )
           {
             foundSelected = true;

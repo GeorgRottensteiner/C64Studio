@@ -400,42 +400,62 @@ namespace RetroDevStudio.Documents
     {
       GR.Collections.MultiMap<int,AutocompleteItem>     sortedItems = new GR.Collections.MultiMap<int, AutocompleteItem>();
 
-      foreach ( var item in e.FilteredItems )
-      {
-        int     relevance = 100000;
+      string[]  filterParts = e.FilterText.Split( '.' );
 
-        if ( item.Text == e.FilterText )
+      foreach ( var item in AutoComplete.Items.AllItems )// e.FilteredItems )
+      {
+        int     bestRelevance = 100000;
+
+        string[] itemParts = item.Text.Split( '.' );
+
+        if ( filterParts.Length <= itemParts.Length )
         {
-          // full match
-          relevance = 0;
+          for ( int i = 0; i < Math.Min( filterParts.Length, itemParts.Length ); ++i )
+          {
+            int   relevance = 100000;
+
+            string    itemText = itemParts[i];
+            string    filterText = filterParts[i];
+
+            if ( itemText == filterText )
+            {
+              // full match
+              relevance = 0;
+            }
+            else if ( string.Compare( itemText, filterText, true ) == 0 )
+            {
+              // full match but case mismatch
+              relevance = 1;
+            }
+            else if ( itemText.StartsWith( filterText ) )
+            {
+              // starting with exact match -> TODO - number of chars appended?
+              relevance = 2;
+            }
+            else if ( string.Compare( itemText, 0, filterText, 0, filterText.Length, true ) == 0 )
+            {
+              // starting with exact match but mismatching case -> TODO - number of chars appended?
+              relevance = 3;
+            }
+            else if ( itemText.Contains( filterText ) )
+            {
+              // containing exact match -> TODO - number of chars appended?
+              relevance = 5;
+            }
+            else if ( CultureInfo.InvariantCulture.CompareInfo.IndexOf( itemText, filterText, CompareOptions.IgnoreCase ) > 0 )
+            {
+              // containing case mismatch -> TODO - number of chars appended?
+              relevance = 6;
+            }
+            //Debug.Log( "Item " + item.Text + ", relevance " + relevance );
+
+            if ( relevance < bestRelevance )
+            {
+              bestRelevance = relevance;
+            }
+          }
         }
-        else if ( string.Compare( item.Text, e.FilterText, true ) == 0 )
-        {
-          // full match but case mismatch
-          relevance = 1;
-        }
-        else if ( item.Text.StartsWith( e.FilterText ) )
-        {
-          // starting with exact match -> TODO - number of chars appended?
-          relevance = 2;
-        }
-        else if ( string.Compare( item.Text, 0, e.FilterText, 0, e.FilterText.Length, true ) == 0 )
-        {
-          // starting with exact match but mismatching case -> TODO - number of chars appended?
-          relevance = 3;
-        }
-        else if ( item.Text.Contains( e.FilterText ) )
-        {
-          // containing exact match -> TODO - number of chars appended?
-          relevance = 5;
-        }
-        else if ( CultureInfo.InvariantCulture.CompareInfo.IndexOf( item.Text, e.FilterText, CompareOptions.IgnoreCase ) > 0 )
-        {
-          // containing case mismatch -> TODO - number of chars appended?
-          relevance = 6;
-        }
-        //Debug.Log( "Item " + item.Text + ", relevance " + relevance );
-        sortedItems.Add( relevance, item );
+        sortedItems.Add( bestRelevance, item );
       }
 
       e.FilteredItems = sortedItems.Values;
