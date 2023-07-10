@@ -24,17 +24,15 @@ namespace SourceControl
 
 
 
-    public static bool CreateRepositoryInFolder( string Folder )
+    public static bool CreateRepositoryInFolder( string Folder, out Controller Controller )
     {
+      Controller = null;
 #if NET6_0_OR_GREATER
       try
       {
         Repository.Init( System.IO.Path.Combine( Folder, ".git" ), false );
 
-        using ( var repo = new Repository( Folder ) )
-        {
-          repo.CreateBranch( "master" );
-        }
+        Controller = new Controller( Folder );
         return true;
       }
       catch ( Exception ) 

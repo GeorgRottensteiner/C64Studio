@@ -90,6 +90,7 @@ namespace RetroDevStudio.Dialogs
         var item = new ListViewItem( "" );
         item.SubItems.Add( state.FileState.ToString() );
         item.SubItems.Add( state.Filename );
+        item.SubItems.Add( System.IO.Path.GetExtension( state.Filename ) );
         item.Tag = state.FileState;
 
         var element = _Project.GetElementByFilename( state.Filename );
@@ -135,6 +136,7 @@ namespace RetroDevStudio.Dialogs
         var item = new ListViewItem( "" );
         item.SubItems.Add( state.FileState.ToString() );
         item.SubItems.Add( state.Filename );
+        item.SubItems.Add( System.IO.Path.GetExtension( state.Filename ) );
         item.Tag = state.FileState;
 
         var element = _Project.GetElementByFilename( state.Filename );

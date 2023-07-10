@@ -1613,7 +1613,7 @@ namespace RetroDevStudio.Documents
       string fullPath = DocumentInfo.FullPath;
       foreach ( string key in keySet )
       {
-        List<SymbolInfo> listValues = DocumentInfo.KnownTokens.GetValues( key, false );
+        List<SymbolInfo> listValues = DocumentInfo.KnownTokens.GetValues( key );
         foreach ( SymbolInfo symbol in listValues )
         {
           if ( ( symbol.Type == SymbolInfo.Types.CONSTANT_1 )

@@ -602,7 +602,12 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      global::SourceControl.Controller.CreateRepositoryInFolder( project.FullPath( "" ) );
+      if ( global::SourceControl.Controller.CreateRepositoryInFolder( project.FullPath( "" ), out Controller controller ) )
+      {
+        project.SourceControl = controller;
+
+        RefreshSourceControlState();
+      }
     }
 
 

@@ -2922,10 +2922,10 @@ namespace RetroDevStudio
 
       if ( projectWizard.CreateRepository )
       {
-        global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ) );
+        global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ), out SourceControl.Controller controller );
         if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
         {
-          newProject.SourceControl = new SourceControl.Controller( newProject.FullPath( "" ) );
+          newProject.SourceControl = controller;
 
           // add the project file .c64
           newProject.SourceControl.AddFileToRepository( newProject.Settings.Filename );
@@ -6874,10 +6874,10 @@ namespace RetroDevStudio
 
           if ( solWizard.CreateRepository )
           {
-            global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ) );
+            global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ), out SourceControl.Controller controller );
             if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
             {
-              newProject.SourceControl = new SourceControl.Controller( newProject.FullPath( "" ) );
+              newProject.SourceControl = controller;
             }
           }
 

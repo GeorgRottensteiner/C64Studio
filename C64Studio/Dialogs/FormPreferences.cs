@@ -37,6 +37,7 @@ namespace RetroDevStudio.Dialogs
       _PreferencePanes.Add( new PrefBASICEditor( Core ) );
       _PreferencePanes.Add( new PrefBASICKeyBindings( Core ) );
       _PreferencePanes.Add( new PrefBASICParser( Core ) );
+      _PreferencePanes.Add( new PrefSourceControl( Core ) );
 
 
       int   curY = 0;

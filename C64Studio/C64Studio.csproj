@@ -252,6 +252,9 @@
     <Compile Update="Dialogs\FormRenumberBASICLabelMode.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\PrefSourceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\PrefAssembler.cs">
       <SubType>UserControl</SubType>
     </Compile>

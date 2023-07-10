@@ -85,6 +85,13 @@ namespace RetroDevStudio
           // file
           returnVal = string.Compare( ( (ListViewItem)x ).SubItems[2].Text, ( (ListViewItem)y ).SubItems[2].Text, true );
         }
+        if ( ( col == 3 )
+        ||   ( ( returnVal == 0 )
+        &&     ( col < 3 ) ) )
+        {
+          // extension
+          returnVal = string.Compare( ( (ListViewItem)x ).SubItems[3].Text, ( (ListViewItem)y ).SubItems[3].Text, true );
+        }
       }
       // Determine whether the sort order is descending.
       if ( order == SortOrder.Descending )

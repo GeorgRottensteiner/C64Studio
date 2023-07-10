@@ -224,7 +224,7 @@ namespace GR.Collections
 		}
 
 
-		public List<TValue> GetValues( TKey Key, bool ReturnEmptySetIfKeyNotFound )
+		public List<TValue> GetValues( TKey Key, bool ReturnEmptySetIfKeyNotFound = true )
 		{
 			List<TValue> toReturn = null;
       if ( ( !Dictionary.TryGetValue( Key, out toReturn ) )

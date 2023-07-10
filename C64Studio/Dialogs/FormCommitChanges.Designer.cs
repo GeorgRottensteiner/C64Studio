@@ -35,14 +35,15 @@ namespace RetroDevStudio.Dialogs
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.editCommitMessage = new System.Windows.Forms.TextBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.groupBox4 = new System.Windows.Forms.GroupBox();
-      this.editCommitAuthor = new System.Windows.Forms.TextBox();
-      this.editCommitEmail = new System.Windows.Forms.TextBox();
       this.listCommitFiles = new RetroDevStudio.Controls.CSListView();
       this.columnCheck = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.editCommitAuthor = new System.Windows.Forms.TextBox();
+      this.groupBox4 = new System.Windows.Forms.GroupBox();
+      this.editCommitEmail = new System.Windows.Forms.TextBox();
+      this.columnExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -110,42 +111,6 @@ namespace RetroDevStudio.Dialogs
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Files to Commit";
       // 
-      // groupBox3
-      // 
-      this.groupBox3.Controls.Add(this.editCommitAuthor);
-      this.groupBox3.Location = new System.Drawing.Point(12, 13);
-      this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(270, 40);
-      this.groupBox3.TabIndex = 0;
-      this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Author";
-      // 
-      // groupBox4
-      // 
-      this.groupBox4.Controls.Add(this.editCommitEmail);
-      this.groupBox4.Location = new System.Drawing.Point(288, 13);
-      this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(286, 40);
-      this.groupBox4.TabIndex = 1;
-      this.groupBox4.TabStop = false;
-      this.groupBox4.Text = "Email";
-      // 
-      // editCommitAuthor
-      // 
-      this.editCommitAuthor.Location = new System.Drawing.Point(6, 14);
-      this.editCommitAuthor.Name = "editCommitAuthor";
-      this.editCommitAuthor.Size = new System.Drawing.Size(258, 20);
-      this.editCommitAuthor.TabIndex = 0;
-      this.editCommitAuthor.TextChanged += new System.EventHandler(this.editCommitAuthor_TextChanged);
-      // 
-      // editCommitEmail
-      // 
-      this.editCommitEmail.Location = new System.Drawing.Point(6, 14);
-      this.editCommitEmail.Name = "editCommitEmail";
-      this.editCommitEmail.Size = new System.Drawing.Size(274, 20);
-      this.editCommitEmail.TabIndex = 0;
-      this.editCommitEmail.TextChanged += new System.EventHandler(this.editCommitEmail_TextChanged);
-      // 
       // listCommitFiles
       // 
       this.listCommitFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -155,7 +120,8 @@ namespace RetroDevStudio.Dialogs
       this.listCommitFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnCheck,
             this.columnType,
-            this.columnFile});
+            this.columnFile,
+            this.columnExtension});
       this.listCommitFiles.FullRowSelect = true;
       this.listCommitFiles.HideSelection = false;
       this.listCommitFiles.Location = new System.Drawing.Point(6, 19);
@@ -186,6 +152,46 @@ namespace RetroDevStudio.Dialogs
       // 
       this.columnFile.Text = "Filename";
       this.columnFile.Width = 400;
+      // 
+      // groupBox3
+      // 
+      this.groupBox3.Controls.Add(this.editCommitAuthor);
+      this.groupBox3.Location = new System.Drawing.Point(12, 13);
+      this.groupBox3.Name = "groupBox3";
+      this.groupBox3.Size = new System.Drawing.Size(270, 40);
+      this.groupBox3.TabIndex = 0;
+      this.groupBox3.TabStop = false;
+      this.groupBox3.Text = "Author";
+      // 
+      // editCommitAuthor
+      // 
+      this.editCommitAuthor.Location = new System.Drawing.Point(6, 14);
+      this.editCommitAuthor.Name = "editCommitAuthor";
+      this.editCommitAuthor.Size = new System.Drawing.Size(258, 20);
+      this.editCommitAuthor.TabIndex = 0;
+      this.editCommitAuthor.TextChanged += new System.EventHandler(this.editCommitAuthor_TextChanged);
+      // 
+      // groupBox4
+      // 
+      this.groupBox4.Controls.Add(this.editCommitEmail);
+      this.groupBox4.Location = new System.Drawing.Point(288, 13);
+      this.groupBox4.Name = "groupBox4";
+      this.groupBox4.Size = new System.Drawing.Size(286, 40);
+      this.groupBox4.TabIndex = 1;
+      this.groupBox4.TabStop = false;
+      this.groupBox4.Text = "Email";
+      // 
+      // editCommitEmail
+      // 
+      this.editCommitEmail.Location = new System.Drawing.Point(6, 14);
+      this.editCommitEmail.Name = "editCommitEmail";
+      this.editCommitEmail.Size = new System.Drawing.Size(274, 20);
+      this.editCommitEmail.TabIndex = 0;
+      this.editCommitEmail.TextChanged += new System.EventHandler(this.editCommitEmail_TextChanged);
+      // 
+      // columnExtension
+      // 
+      this.columnExtension.Text = "Extension";
       // 
       // FormCommitChanges
       // 
@@ -234,5 +240,6 @@ namespace RetroDevStudio.Dialogs
     private System.Windows.Forms.TextBox editCommitAuthor;
     private System.Windows.Forms.GroupBox groupBox4;
     private System.Windows.Forms.TextBox editCommitEmail;
+    private System.Windows.Forms.ColumnHeader columnExtension;
   }
 }
