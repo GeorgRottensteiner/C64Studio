@@ -355,7 +355,7 @@ namespace Tiny64
         if ( RasterLinePos == NumberOfLines )
         {
           RasterLinePos = 0;
-          Display.Flush();
+          Display?.Flush();
           VideoCounterBase = 0;
 
           FrameCompleted();
@@ -427,6 +427,10 @@ namespace Tiny64
     private void UpdateNextPixelSlice( IDisplay Display, Memory Memory )
     {
       // TODO - display disabled
+      if ( Display == null )
+      {
+        return;
+      }
 
       if ( ( SideBorderActive )
       ||   ( TopBottomBorderActive ) )
