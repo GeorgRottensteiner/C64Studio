@@ -231,9 +231,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\NoDblClkTreeView.cs" />
-    <Compile Update="Controls\HexPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="Controls\HexPanel.cs" />
     <EmbeddedResource Include="C64_Pro_Mono_v1.0-STYLE.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -390,9 +388,6 @@
     </ProjectReference>
     <ProjectReference Include="..\HexBox\HexBox.csproj" />
     <ProjectReference Include="..\SourceControl\SourceControl.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Design" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Documents\ReadOnlyFile.resx">

@@ -16,6 +16,7 @@ namespace RetroDevStudio.Dialogs
     public string           SolutionName = "";
     public string           SolutionFilename = "";
     public string           ProjectFilename = "";
+    public bool             CreateNewFolderForSolution = true;
     public bool             CreateRepository = false;
     public bool             CreateRepositoryForProject = false;
 
@@ -48,8 +49,12 @@ namespace RetroDevStudio.Dialogs
       Settings.DefaultProjectBasePath = ProjectFilename;
 
       string    finalSolutionPath = editBasePath.Text;
-      finalSolutionPath = System.IO.Path.Combine( finalSolutionPath, editSolutionName.Text );
+      if ( CreateNewFolderForSolution )
+      {
+        finalSolutionPath = System.IO.Path.Combine( finalSolutionPath, editSolutionName.Text );
+      }
       string finalPathProject = finalSolutionPath;
+
       if ( checkCreateProjectInSeparateFolder.Checked )
       {
         finalPathProject = System.IO.Path.Combine( finalSolutionPath, editProjectName.Text );
@@ -57,11 +62,17 @@ namespace RetroDevStudio.Dialogs
       string solutionPath = System.IO.Path.Combine( finalSolutionPath, editSolutionName.Text + ".s64" );
       string projectPath  = System.IO.Path.Combine( finalPathProject, editProjectName.Text + ".c64" );
 
-      SolutionPath                    = editBasePath.Text;
+      SolutionPath                    = finalSolutionPath;
       SolutionFilename                = solutionPath;
       ProjectFilename                 = projectPath;
       CreateRepository                = checkCreateRepository.Checked;
-      CreateRepositoryForProject      = checkSeparateRepositoryForProject.Checked = true;
+      CreateRepositoryForProject      = checkSeparateRepositoryForProject.Checked;
+
+      if ( global::SourceControl.Controller.IsFolderUnderSourceControl( finalSolutionPath ) )
+      {
+        CreateRepository            = false;
+        CreateRepositoryForProject  = false;
+      }
 
       Close();
     }
@@ -88,8 +99,12 @@ namespace RetroDevStudio.Dialogs
         btnOK.Enabled = false;
         return;
       }
+
       string    finalPath = editBasePath.Text;
-      finalPath           = System.IO.Path.Combine( finalPath, editSolutionName.Text );
+      if ( CreateNewFolderForSolution )
+      {
+        finalPath = System.IO.Path.Combine( finalPath, editSolutionName.Text );
+      }
       string finalPathProject = finalPath;
       if ( checkCreateProjectInSeparateFolder.Checked )
       {
@@ -101,6 +116,8 @@ namespace RetroDevStudio.Dialogs
       labelSolutionSummary.Text = "The solution file will be created as " + solutionPath + "." + System.Environment.NewLine
                                 + "The project file will be created as " + projectPath + "." + System.Environment.NewLine;
 
+      checkCreateRepository.Enabled             = true;
+      checkSeparateRepositoryForProject.Enabled = true;
       if ( checkCreateRepository.Checked )
       {
         if ( checkSeparateRepositoryForProject.Checked )
@@ -192,6 +209,14 @@ namespace RetroDevStudio.Dialogs
 
     private void editProjectName_TextChanged( object sender, EventArgs e )
     {
+      UpdateSummary();
+    }
+
+
+
+    private void checkCreateNewSolutionFolder_CheckedChanged( object sender, EventArgs e )
+    {
+      CreateNewFolderForSolution = checkCreateSolutionFolder.Checked;
       UpdateSummary();
     }
 

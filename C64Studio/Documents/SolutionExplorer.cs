@@ -48,6 +48,9 @@ namespace RetroDevStudio.Documents
     {
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.SOURCE_CONTROL_STATE_MODIFIED:
+          RefreshSourceControlState();
+          break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
           seBtnAddExisting.Enabled = false;
           seBtnAddNewItem.Enabled = false;
@@ -297,7 +300,8 @@ namespace RetroDevStudio.Documents
             {
               contextMenu.Items.Add( "-" );
 
-              if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
+              //if ( global::SourceControl.Controller.IsFolderUnderSourceControl( project.FullPath( "" ) ) )
+              if ( project.SourceControl != null )
               {
                 AddContextMenuItem( contextMenu.Items, "Refresh State", SourceControlRefreshState, null );
 
@@ -306,15 +310,15 @@ namespace RetroDevStudio.Documents
                   AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChanges, null );
                 }
 
-                if ( info.FileState == FileState.NewInWorkdir )
+                if ( project.SourceControl.CanAddToRepository( info.FileState ) )
                 {
                   AddContextMenuItem( contextMenu.Items, "Add to repository", SourceControlAddFileToRepository, info );
+                }
+                if ( project.SourceControl.CanAddToIgnore( info.FileState ) )
+                {
                   AddContextMenuItem( contextMenu.Items, "Ignore", SourceControlIgnore, info );
                 }
-                if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
-                ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
-                ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
-                ||   ( ( info.FileState & FileState.TypeChangeInIndex ) != 0 ) )
+                if ( project.SourceControl.CanRemoveFromRepository( info.FileState ) )
                 {
                   AddContextMenuItem( contextMenu.Items, "Remove from repository", SourceControlRemoveFromRepo, info );
                 }
@@ -364,18 +368,6 @@ namespace RetroDevStudio.Documents
               item.Enabled = false;
             }
 
-            /*
-            item = new System.Windows.Forms.ToolStripMenuItem( "Save As" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeSaveAsElement_Click );
-            contextMenu.Items.Add( item );
-
-            item = new System.Windows.Forms.ToolStripMenuItem( "Save Copy As" );
-            item.Tag = 0;
-            item.Click += new EventHandler( treeSaveCopyAsElement_Click );
-            contextMenu.Items.Add( item );
-            */
-
             contextMenu.Items.Add( "-" );
 
             if ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
@@ -404,27 +396,23 @@ namespace RetroDevStudio.Documents
             {
               contextMenu.Items.Add( "-" );
 
-              if ( info.FileState == FileState.NewInWorkdir )
+              if ( project.SourceControl.CanAddToRepository( info.FileState ) )
               {
                 AddContextMenuItem( contextMenu.Items, "Add to repository", SourceControlAddFileToRepository, info );
+              }
+              if ( project.SourceControl.CanAddToIgnore( info.FileState ) )
+              {
                 AddContextMenuItem( contextMenu.Items, "Ignore", SourceControlIgnore, info );
               }
-              if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
-              ||   ( ( info.FileState & FileState.NewInIndex ) != 0 ) )
+              if ( project.SourceControl.CanCommit( info.FileState ) )
               { 
                 AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChangesSingleFile, info );
               }
-              if ( ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.ModifiedInWorkdir ) != 0 )
-              ||   ( info.FileState == FileState.Unaltered ) )
+              if ( project.SourceControl.CanRevertChanges( info.FileState ) )
               { 
                 AddContextMenuItem( contextMenu.Items, "Revert Changes", SourceControlRevertChangesSingleFile, info );
               }
-              if ( ( ( info.FileState & FileState.NewInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.ModifiedInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.RenamedInIndex ) != 0 )
-              ||   ( ( info.FileState & FileState.TypeChangeInIndex ) != 0 ) )
+              if ( project.SourceControl.CanRemoveFromRepository( info.FileState ) )
               {
                 AddContextMenuItem( contextMenu.Items, "Remove from repository", SourceControlRemoveFromRepo, info );
               }
@@ -2593,11 +2581,14 @@ namespace RetroDevStudio.Documents
       var element = ElementFromNode( Node );
       var itemInfo = (TreeItemInfo)Node.Tag;
 
-      var newState = project.SourceControl.GetFileState( element.DocumentInfo.FullPath );
-      if ( itemInfo.FileState != newState )
+      if ( project.SourceControl != null )
       {
-        itemInfo.FileState = newState;
-        modified = true;
+        var newState = project.SourceControl.GetFileState( element.DocumentInfo.FullPath );
+        if ( itemInfo.FileState != newState )
+        {
+          itemInfo.FileState = newState;
+          modified = true;
+        }
       }
       if ( modified )
       {

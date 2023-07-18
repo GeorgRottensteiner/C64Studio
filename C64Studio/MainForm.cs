@@ -6845,14 +6845,17 @@ namespace RetroDevStudio
         var solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
         if ( solWizard.ShowDialog() == DialogResult.OK )
         {
-          try
+          if ( solWizard.CreateNewFolderForSolution )
           {
-            System.IO.Directory.CreateDirectory( solWizard.SolutionPath );
-          }
-          catch ( System.Exception ex )
-          {
-            System.Windows.Forms.MessageBox.Show( "Could not create solution folder:" + System.Environment.NewLine + ex.Message, "Could not create solution folder" );
-            return null;
+            try
+            {
+              System.IO.Directory.CreateDirectory( solWizard.SolutionPath );
+            }
+            catch ( System.Exception ex )
+            {
+              System.Windows.Forms.MessageBox.Show( "Could not create solution folder:" + System.Environment.NewLine + ex.Message, "Could not create solution folder" );
+              return null;
+            }
           }
 
           StudioCore.Navigating.Solution = new Solution( this );
