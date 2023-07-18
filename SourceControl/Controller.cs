@@ -71,6 +71,8 @@ namespace SourceControl
     private Repository    _GITRepo = null;
 #endif
 
+    private string        _BasePath = null;
+
 
 
     public Controller( string Folder )
@@ -78,12 +80,23 @@ namespace SourceControl
 #if NET6_0_OR_GREATER
       try
       {
-        _GITRepo = new Repository( Folder );
+        _GITRepo  = new Repository( Folder );
+        _BasePath = Folder;
       }
       catch ( Exception )
       {
       }
 #endif
+    }
+
+
+
+    public string BasePath
+    {
+      get
+      {
+        return _BasePath;
+      }
     }
 
 
@@ -143,6 +156,11 @@ namespace SourceControl
 #if NET6_0_OR_GREATER
       try
       {
+        if ( ( System.IO.Path.IsPathRooted( FullPath ) )
+        &&   ( GR.PathSC.IsSubPath( _BasePath, FullPath ) ) )
+        {
+          FullPath = GR.PathSC.RelativePathTo( _BasePath, true, FullPath, false );
+        }
         _GITRepo.Index.Add( FullPath );
         _GITRepo.Index.Write();
         return true;
@@ -326,6 +344,59 @@ git checkout <file>*/
       return false;
     }
 
+
+
+    public bool CanAddToRepository( FileState FileState )
+    {
+      return ( FileState == FileState.NewInWorkdir );
+    }
+
+
+
+    public bool CanAddToIgnore( FileState FileState )
+    {
+      return ( FileState == FileState.NewInWorkdir );
+    }
+
+
+
+    public bool CanRemoveFromRepository( FileState FileState )
+    {
+      if ( ( ( FileState & FileState.NewInIndex ) != 0 )
+      ||   ( ( FileState & FileState.ModifiedInIndex ) != 0 )
+      ||   ( ( FileState & FileState.RenamedInIndex ) != 0 )
+      ||   ( ( FileState & FileState.TypeChangeInIndex ) != 0 ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public bool CanCommit( FileState FileState )
+    {
+      if ( ( ( FileState & FileState.ModifiedInIndex ) != 0 )
+      ||   ( ( FileState & FileState.ModifiedInWorkdir ) != 0 )
+      ||   ( ( FileState & FileState.NewInIndex ) != 0 ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public bool CanRevertChanges( FileState FileState )
+    {
+      if ( ( ( FileState & FileState.ModifiedInIndex ) != 0 )
+      ||   ( ( FileState & FileState.ModifiedInWorkdir ) != 0 )
+      ||   ( FileState == FileState.Unaltered ) )
+      {
+        return true;
+      }
+      return false;
+    }
 
 
 

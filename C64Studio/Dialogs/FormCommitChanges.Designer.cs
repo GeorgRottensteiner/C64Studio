@@ -39,11 +39,11 @@ namespace RetroDevStudio.Dialogs
       this.columnCheck = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.editCommitAuthor = new System.Windows.Forms.TextBox();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editCommitEmail = new System.Windows.Forms.TextBox();
-      this.columnExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -137,6 +137,7 @@ namespace RetroDevStudio.Dialogs
       this.listCommitFiles.DrawItemImage += new RetroDevStudio.Controls.CSListView.DrawItemImageHandler(this.listCommitFiles_DrawItemImage);
       this.listCommitFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listCommitFiles_ColumnClick);
       this.listCommitFiles.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.listCommitFiles_ColumnWidthChanging);
+      this.listCommitFiles.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listCommitFiles_MouseClick);
       // 
       // columnCheck
       // 
@@ -152,6 +153,10 @@ namespace RetroDevStudio.Dialogs
       // 
       this.columnFile.Text = "Filename";
       this.columnFile.Width = 400;
+      // 
+      // columnExtension
+      // 
+      this.columnExtension.Text = "Extension";
       // 
       // groupBox3
       // 
@@ -188,10 +193,6 @@ namespace RetroDevStudio.Dialogs
       this.editCommitEmail.Size = new System.Drawing.Size(274, 20);
       this.editCommitEmail.TabIndex = 0;
       this.editCommitEmail.TextChanged += new System.EventHandler(this.editCommitEmail_TextChanged);
-      // 
-      // columnExtension
-      // 
-      this.columnExtension.Text = "Extension";
       // 
       // FormCommitChanges
       // 

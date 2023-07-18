@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace RetroDevStudio.Dialogs
 {
@@ -99,8 +100,6 @@ namespace RetroDevStudio.Dialogs
           item.ImageIndex = (int)element.DocumentInfo.Type;
         }
 
-        SolutionExplorer.SourceControlIconFromState( state.FileState );
-
         if ( state.Filename == _Element.Filename )
         {
           item.Checked = true;
@@ -156,11 +155,7 @@ namespace RetroDevStudio.Dialogs
           item.ImageIndex = 12;
         }
 
-        SolutionExplorer.SourceControlIconFromState( state.FileState );
-
-        if ( ( state.FileState == FileState.ModifiedInIndex )
-        ||   ( state.FileState == FileState.ModifiedInWorkdir )
-        ||   ( state.FileState == FileState.NewInIndex ) )
+        if ( _Project.SourceControl.CanCommit( state.FileState ) )
         {
           item.Checked = true;
         }
@@ -291,6 +286,160 @@ namespace RetroDevStudio.Dialogs
       editCommitMessage.Focus();
     }
 
+
+
+    private void listCommitFiles_MouseClick( object sender, MouseEventArgs e )
+    {
+      if ( e.Button == MouseButtons.Right )
+      {
+        bool    canAdd = true;
+        bool    canRemove = true;
+        bool    canIgnore = true;
+        bool    canRevert = true;
+
+        foreach ( ListViewItem selItem in listCommitFiles.SelectedItems )
+        {
+          var fileState = (FileState)selItem.Tag;
+
+          if ( !_Project.SourceControl.CanAddToRepository( fileState ) )
+          {
+            canAdd = false;
+          }
+          if ( !_Project.SourceControl.CanRemoveFromRepository( fileState ) )
+          {
+            canRemove = false;
+          }
+          if ( !_Project.SourceControl.CanAddToIgnore( fileState ) )
+          {
+            canIgnore = false;
+          }
+          if ( !_Project.SourceControl.CanRevertChanges( fileState ) )
+          {
+            canRevert = false;
+          }
+        }
+        if ( ( !canAdd )
+        &&   ( !canRemove )
+        &&   ( !canIgnore ) 
+        &&   ( !canRevert ) )
+        {
+          return;
+        }
+        var menu = new ContextMenuStrip();
+        if ( canAdd )
+        {
+          menu.Items.Add( new ToolStripMenuItem( "Add to Repository", null, OnAddToRepository ) );
+        }
+        if ( canRemove )
+        {
+          menu.Items.Add( new ToolStripMenuItem( "Remove from Repository", null, OnRemoveFromRepository ) );
+        }
+        if ( canIgnore )
+        {
+          menu.Items.Add( new ToolStripMenuItem( "Add to Ignore", null, OnAddToIgnore ) );
+        }
+        if ( canRevert )
+        {
+          menu.Items.Add( new ToolStripMenuItem( "Revert Changes", null, OnRevertChanges ) );
+        }
+        menu.Show( listCommitFiles.PointToScreen( e.Location ) );
+      }
+    }
+
+
+
+    private void OnAddToRepository( object sender, EventArgs e )
+    {
+      bool  hadChanges = false;
+      foreach ( ListViewItem selItem in listCommitFiles.SelectedItems )
+      {
+        var fileName = selItem.SubItems[2].Text;
+
+        if ( _Project.SourceControl.AddFileToRepository( fileName ) )
+        {
+          selItem.Tag = _Project.SourceControl.GetFileState( fileName );
+          hadChanges = true;
+        }
+      }
+      if ( hadChanges )
+      {
+        listCommitFiles.Invalidate();
+
+        _Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.SOURCE_CONTROL_STATE_MODIFIED ) );
+      }
+    }
+
+
+
+    private void OnAddToIgnore( object sender, EventArgs e )
+    {
+      bool  hadChanges = false;
+      foreach ( ListViewItem selItem in listCommitFiles.SelectedItems )
+      {
+        var fileName = selItem.SubItems[2].Text;
+
+        if ( _Project.SourceControl.Ignore( fileName ) )
+        {
+          selItem.Tag = _Project.SourceControl.GetFileState( fileName );
+          hadChanges = true;
+        }
+      }
+      if ( hadChanges )
+      {
+        listCommitFiles.Invalidate();
+
+        _Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.SOURCE_CONTROL_STATE_MODIFIED ) );
+      }
+    }
+
+
+
+    private void OnRemoveFromRepository( object sender, EventArgs e )
+    {
+      bool  hadChanges = false;
+      foreach ( ListViewItem selItem in listCommitFiles.SelectedItems )
+      {
+        var fileName = selItem.SubItems[2].Text;
+
+        if ( _Project.SourceControl.RemoveFileFromIndex( fileName ) )
+        {
+          hadChanges = true;
+          selItem.Tag = _Project.SourceControl.GetFileState( fileName );
+        }
+      }
+      if ( hadChanges )
+      {
+        listCommitFiles.Invalidate();
+
+        _Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.SOURCE_CONTROL_STATE_MODIFIED ) );
+      }
+    }
+
+
+
+    private void OnRevertChanges( object sender, EventArgs e )
+    {
+      var files = new List<string>();
+
+      foreach ( ListViewItem selItem in listCommitFiles.SelectedItems )
+      {
+        var fileName = selItem.SubItems[2].Text;
+        files.Add( fileName );
+      }
+
+
+      if ( _Project.SourceControl.RevertChanges( files ) )
+      {
+        foreach ( ListViewItem selItem in listCommitFiles.SelectedItems )
+        {
+          var fileName = selItem.SubItems[2].Text;
+          selItem.Tag = _Project.SourceControl.GetFileState( fileName );
+        }
+        listCommitFiles.Invalidate();
+
+        _Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.SOURCE_CONTROL_STATE_MODIFIED ) );
+      }
+    }
 
 
   }

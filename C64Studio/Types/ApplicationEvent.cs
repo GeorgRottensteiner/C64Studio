@@ -32,7 +32,8 @@ namespace RetroDevStudio.Types
       PROJECT_RENAMED,
       SETTING_MODIFIED,         // Originalvalue = name of modified setting
       PROJECT_OPENED,
-      PROJECT_CLOSED
+      PROJECT_CLOSED,
+      SOURCE_CONTROL_STATE_MODIFIED
     }
 
     public Type             EventType = Type.NONE;
