@@ -2641,9 +2641,9 @@ namespace RetroDevStudio
             StudioCore.Executing.EventErrCompleted = null;
           }
 
-          StudioCore.AddToOutput( "Run exited with result code " + StudioCore.Executing.RunProcess.ExitCode + System.Environment.NewLine );
-          StudioCore.Executing.RunProcess.Close();
-          StudioCore.Executing.RunProcess.Dispose();
+          StudioCore.AddToOutput( "Run exited with result code " + StudioCore.Executing.RunProcess?.ExitCode + System.Environment.NewLine );
+          StudioCore.Executing.RunProcess?.Close();
+          StudioCore.Executing.RunProcess?.Dispose();
         }
         catch ( System.Exception ex )
         {
