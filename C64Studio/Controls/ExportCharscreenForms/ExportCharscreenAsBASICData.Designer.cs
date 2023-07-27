@@ -126,6 +126,7 @@ namespace RetroDevStudio.Controls
       this.checkWrapAtMaxChars.TabIndex = 2;
       this.checkWrapAtMaxChars.Text = "Wrap at";
       this.checkWrapAtMaxChars.UseVisualStyleBackColor = true;
+      this.checkWrapAtMaxChars.CheckedChanged += new System.EventHandler(this.checkWrapAtMaxChars_CheckedChanged);
       // 
       // editWrapCharCount
       // 

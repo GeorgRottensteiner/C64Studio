@@ -285,7 +285,7 @@ namespace RetroDevStudio
             WrapCharCount = 20;
           }
           // length of line number plus token
-          numBytesInLine = StartLine.ToString().Length + 1;
+          numBytesInLine = StartLine.ToString().Length + 4;
 
           while ( ( numBytesInLine < WrapCharCount )
           &&      ( dataPos < Data.Length ) )

@@ -134,5 +134,12 @@ namespace RetroDevStudio.Controls
 
 
 
+    private void checkWrapAtMaxChars_CheckedChanged( object sender, EventArgs e )
+    {
+      editWrapCharCount.Enabled = checkWrapAtMaxChars.Checked;
+    }
+
+
+
   }
 }
