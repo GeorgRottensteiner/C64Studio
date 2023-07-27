@@ -44,6 +44,19 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssemblyOpcodeDetectionAbsoluteNotIndirect()
+    {
+      string      source = @"* = $1000
+                            cmp ($1234 + 4 ) * 10";
+
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010CD30B6", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyOpcodeDetectionAbsoluteSet()
     {
       string      source = @"!set * = $1000

@@ -18,7 +18,7 @@ namespace RetroDevStudio.Types
     DASM,
     C64ASM,
     CBMPRGSTUDIO,
-    TASM,
+    TASM,             // also Tass
     KICKASSEMBLER,
     ACME
   };
@@ -36,6 +36,8 @@ namespace RetroDevStudio.Types
       TEXT,
       SCREEN_TAB,
       CONVERSION_TAB,
+      CONVERSION_TAB_TASS,          // .enc
+      CONVERSION_TAB_TASS_ENTRY,    // .def
       PSEUDO_PC,
       REAL_PC,
       BANK,

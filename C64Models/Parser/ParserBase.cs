@@ -241,12 +241,15 @@ namespace RetroDevStudio.Parser
       bool hasORG = false;
       bool hasMAC = false;
       bool hasInclude = false;
+      bool hasDotInclude = false;
+      bool hasDotByte = false;
       bool hasTo = false;
       bool hasEQU = false;
       bool hasByte = false;
       bool hasText = false;
       bool hasZone = false;
       bool hasProcessor = false;
+      bool hasSemicolonComments = false;
 
       var memoryReader = new GR.IO.MemoryReader( Encoding.UTF8.GetBytes( Text ) );
 
@@ -257,7 +260,7 @@ namespace RetroDevStudio.Parser
         if ( line.StartsWith( ";" ) )
         {
           // must be a comment
-          return Types.AssemblerType.C64_STUDIO;
+          hasSemicolonComments = true;
         }
         int     orgPos = -1;
         if ( ( ( orgPos = line.IndexOf( "ORG " ) ) != -1 ) 
@@ -277,6 +280,16 @@ namespace RetroDevStudio.Parser
         ||   ( line.IndexOf( "INCLUDE " ) != -1 ) )
         {
           hasInclude = true;
+        }
+        if ( ( line.ToUpper().IndexOf( ".INCLUDE " ) != -1 ) 
+        ||   ( line.ToUpper().IndexOf( ".INCLUDE " ) != -1 ) )
+        {
+          hasDotInclude = true;
+        }
+        if ( ( line.ToUpper().IndexOf( ".BYTE " ) != -1 ) 
+        ||   ( line.ToUpper().IndexOf( ".BYTE " ) != -1 ) )
+        {
+          hasDotByte = true;
         }
         if ( ( line.IndexOf( "!to " ) != -1 )
         ||   ( line.IndexOf( "!TO " ) != -1 ) )
@@ -334,9 +347,15 @@ namespace RetroDevStudio.Parser
         {
           return Types.AssemblerType.PDS;
         }
+        if ( ( hasDotInclude )
+        &&   ( hasDotByte ) )
+        {
+          return Types.AssemblerType.TASM;
+        }
       }
 
-      if ( hasByte )
+      if ( ( hasByte )
+      ||   ( hasSemicolonComments ) )
       {
         return Types.AssemblerType.C64_STUDIO;
       }

@@ -116,6 +116,8 @@ namespace RetroDevStudio.Parser
 
     private const int                   HIGHEST_OPERATOR_PRECEDENCE = 8;
 
+    private ParseContext                _ParseContext = null;
+
 
 
     public ASMFileParser()
@@ -2968,6 +2970,7 @@ namespace RetroDevStudio.Parser
                           lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
               }
               else if ( ( m_LastErrorInfo.Pos >= 0 )
+              &&        ( m_LastErrorInfo.Length > 0 )
               &&        ( m_LastErrorInfo.Pos + m_LastErrorInfo.Length <= lineInfo.Line.Length ) )
               {
                 AddError( lineIndex,
@@ -5464,7 +5467,8 @@ namespace RetroDevStudio.Parser
 
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, string AdditionalPredefines, out bool HadFatalError )
     {
-      List<Types.ScopeInfo>   stackScopes = new List<RetroDevStudio.Types.ScopeInfo>();
+      _ParseContext = new ParseContext();
+      var stackScopes = new List<RetroDevStudio.Types.ScopeInfo>();
 
       ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
@@ -5492,7 +5496,13 @@ namespace RetroDevStudio.Parser
       m_WarningMessages = 0;
       m_ErrorMessages = 0;
 
+      // default text code mapping
       var textCodeMapping = m_TextCodeMappingRaw;
+      if ( AssemblerSettings.AllowsCustomTextMappings )
+      {
+        _ParseContext.TextMappings["none"]    = m_TextCodeMappingRaw;
+        _ParseContext.TextMappings["screen"]  = m_TextCodeMappingScr;
+      }
 
       if ( !string.IsNullOrEmpty( AdditionalPredefines ) )
       {
@@ -6583,100 +6593,6 @@ namespace RetroDevStudio.Parser
                 return Lines;
               }
               continue;
-              /*
-              if ( ( lineTokenInfos.Count >= 4 )
-              &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
-              &&   ( ( m_AssemblerSettings.POPrefix.Length == 0 )
-              ||     ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.POPrefix ) ) ) ) )
-              {
-
-                if ( ScopeInsideMacroDefinition( stackScopes ) )
-                {
-                  continue;
-                }
-                // a define
-                int equPos = lineTokenInfos[2].StartPos;
-                string defineName = lineTokenInfos[1].Content;
-                if ( !m_AssemblerSettings.CaseSensitive )
-                {
-                  defineName = defineName.ToUpper();
-                }
-                string defineValue = parseLine.Substring( equPos + lineTokenInfos[2].Content.Length ).Trim();
-                List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
-                int address = -1;
-
-                if ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-                {
-                  defineName = m_CurrentZoneName + defineName;
-                }
-
-                if ( defineName == "*" )
-                {
-                  // set program step
-                  List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
-                  if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
-                  {
-                    AddError( lineIndex,
-                              Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                              "Could not evaluate * position value",
-                              lineTokenInfos[3].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
-                    HadFatalError = true;
-                    return Lines;
-                  }
-                  programStepPos = newStepPosSymbol.ToInteger();
-                  m_CompileCurrentAddress = programStepPos;
-                  trueCompileCurrentAddress = programStepPos;
-                }
-                else
-                {
-                  if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
-                  {
-                    if ( defineName == "*" )
-                    {
-                      AddError( lineIndex,
-                                Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                                "Cannot evaluate expression for *",
-                                valueTokens[0].StartPos,
-                                valueTokens[valueTokens.Count - 1].EndPos + 1 - valueTokens[0].StartPos );
-                    }
-                    else
-                    {
-                      AddUnparsedLabel( defineName, defineValue, lineIndex );
-                    }
-                  }
-                  else
-                  {
-                    AddConstant( defineName,
-                                 addressSymbol,
-                                 lineIndex,
-                                 m_CurrentCommentSB.ToString(),
-                                 m_CurrentZoneName,
-                                 valueTokens[0].StartPos,
-                                 valueTokens[valueTokens.Count - 1].EndPos + 1 - valueTokens[0].StartPos );
-                    if ( defineName == "*" )
-                    {
-                      if ( ( address >= 0 )
-                      &&   ( address <= 0xffff ) )
-                      {
-                        AddError( lineIndex,
-                                  Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                                  "Evaluated constant out of bounds, " + address + " must be >= 0 and <= 65535",
-                                  valueTokens[0].StartPos,
-                                  valueTokens[valueTokens.Count - 1].EndPos + 1 - valueTokens[0].StartPos );
-                      }
-                      else
-                      {
-                        programStepPos = address;
-                        trueCompileCurrentAddress = programStepPos;
-                        info.AddressSource = "*";
-                      }
-                    }
-                  }
-                }
-                m_CurrentCommentSB = new StringBuilder();
-                continue;
-              }*/
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.PSEUDO_PC )
             {
@@ -7445,8 +7361,8 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BYTE )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -7522,127 +7438,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB )
             {
-              if ( lineTokenInfos.Count < 2 )
-              {
-                AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expected !CT <Type = raw or scr or pet or mapping list>" );
-              }
-              else if ( lineTokenInfos[1].Content.ToUpper() == "RAW" )
-              {
-                textCodeMapping = m_TextCodeMappingRaw;
-              }
-              else if ( lineTokenInfos[1].Content.ToUpper() == "SCR" )
-              {
-                textCodeMapping = m_TextCodeMappingScr;
-              }
-              else if ( lineTokenInfos[1].Content.ToUpper() == "PET" )
-              {
-                textCodeMapping = m_TextCodeMappingPet;
-              }
-              else
-              {
-                // expecting mapping table
-                if ( ( textCodeMapping == m_TextCodeMappingPet )
-                || ( textCodeMapping == m_TextCodeMappingRaw )
-                || ( textCodeMapping == m_TextCodeMappingScr ) )
-                {
-                  // only reset mapping if previously mapping was a predefined one
-                  textCodeMapping = new GR.Collections.Map<byte, byte>();
-                }
-                else
-                {
-                  // create new instance to avoid modifying previously stored mappings
-                  textCodeMapping = new GR.Collections.Map<byte, byte>( textCodeMapping );
-                }
-
-                GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
-
-                int commaCount = 0;
-                int startTokenIndex = 1;
-                for ( int tokenIndex = 1; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
-                {
-                  string token = lineTokenInfos[tokenIndex].Content;
-
-                  if ( ( tokenIndex == 1 )
-                  && ( token == "#" ) )
-                  {
-                    // direct value?
-                    if ( ( lineTokenInfos.Count > 2 )
-                    && ( lineTokenInfos[2].Content != "#" )
-                    && ( lineTokenInfos[2].Content != "." ) )
-                    {
-                      // not a binary value
-                      continue;
-                    }
-                  }
-
-                  if ( token == "," )
-                  {
-                    if ( startTokenIndex < tokenIndex )
-                    {
-                      if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, tokenIndex - startTokenIndex, textCodeMapping, out SymbolInfo aByte ) )
-                      {
-                        data.AppendU8( (byte)aByte.ToInteger() );
-                      }
-                      else
-                      {
-                        // could not fully parse
-                        AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not parse " + TokensToExpression( lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex ) );
-                      }
-                    }
-                    ++commaCount;
-                    startTokenIndex = tokenIndex + 1;
-                  }
-                  /*
-                else if ( !parseFailed )
-                {
-                  int aByte = -1;
-
-                  if ( ParseValue( token, out aByte ) )
-                  {
-                    data.AppendU8( (byte)aByte );
-                  }
-                  else if ( token == "." )
-                  {
-                    data.AppendU8( 0 );
-                  }
-                  else if ( token == "#" )
-                  {
-                    data.AppendU8( 1 );
-                  }
-                  else
-                  {
-                    // could not fully parse
-                    //dh.Log( "Could not fully parse !byte line: " + parseLine );
-                    AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not parse " + token );
-                    parseFailed = true;
-                  }
-                }
-                   */
-                }
-                if ( startTokenIndex < lineTokenInfos.Count )
-                {
-                  if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex, textCodeMapping, out SymbolInfo aByte ) )
-                  {
-                    data.AppendU8( (byte)aByte.ToInteger() );
-                  }
-                  else
-                  {
-                    // could not fully parse
-                    AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not parse " + TokensToExpression( lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex ) );
-                  }
-                }
-                if ( ( data.Length % 2 ) != 0 )
-                {
-                  AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Mapping table must have pairs of bytes, found " + data.Length + " bytes" );
-                }
-                else
-                {
-                  for ( int mapping = 0; mapping < data.Length / 2; ++mapping )
-                  {
-                    textCodeMapping[data.ByteAt( mapping * 2 )] = data.ByteAt( mapping * 2 + 1 );
-                  }
-                }
-              }
+              textCodeMapping = POConversionTab( pseudoOp.Keyword, textCodeMapping, lineIndex, lineTokenInfos );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
             {
@@ -7681,9 +7477,22 @@ namespace RetroDevStudio.Parser
                 return Lines;
               }
             }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS )
+            {
+              textCodeMapping = POConversionTabTASS( pseudoOp.Keyword, textCodeMapping, lineIndex, lineTokenInfos );
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS_ENTRY )
+            {
+              var result = POConversionTabTASSEntry( pseudoOp.Keyword, textCodeMapping, lineIndex, lineTokenInfos, out textCodeMapping );
+              if ( result != ParseLineResult.OK )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+            }
             else
             {
-              AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Macro " + pseudoOp.Type + " currently has no effect!" );
+              AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, $"Macro {pseudoOp.Keyword} currently has no effect!" );
             }
           }
           evaluatedContent = true;
@@ -7746,7 +7555,7 @@ namespace RetroDevStudio.Parser
             List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
 
             if ( ( tokens.Count != 1 )
-            || ( !IsTokenLabel( tokens[0].Type ) ) )
+            ||   ( !IsTokenLabel( tokens[0].Type ) ) )
             {
               AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Expected single label" );
               HadFatalError = true;
@@ -12456,6 +12265,8 @@ namespace RetroDevStudio.Parser
       bool oneParamInBrackets = false;
       bool twoParamsInBrackets = false;
       bool secondParamIsSP = false;
+      bool startWithOpeningBrace = false;
+      bool endsWithClosingBrace = false;
       bool longMode = false;
       int numBytesFirstParam = 0;
       int expressionTokenStartIndex = 1;
@@ -12507,9 +12318,9 @@ namespace RetroDevStudio.Parser
           }
         }
 
-
         if ( IsTrueOpeningBraceChar( LineTokens[1].Content ) )
         {
+          startWithOpeningBrace = true;
           longMode = ( LineTokens[1].Content == AssemblerSettings.SQUARE_BRACKETS_OPEN );
           int tokenPos = 2;
           int numBracketCount = 1;
@@ -12517,7 +12328,7 @@ namespace RetroDevStudio.Parser
           expressionTokenStartIndex = 2;
           expressionTokenCount -= 2;
 
-          bool  endsWithClosingBrace = IsClosingBraceChar( LineTokens[expressionTokenStartIndex + expressionTokenCount].Content );
+          endsWithClosingBrace = IsClosingBraceChar( LineTokens[expressionTokenStartIndex + expressionTokenCount].Content );
 
           while ( ( tokenPos < expressionTokenStartIndex + expressionTokenCount )
           &&      ( ( !IsMatchingBrace( LineTokens[1].Content, LineTokens[tokenPos].Content ) )
@@ -12840,9 +12651,21 @@ namespace RetroDevStudio.Parser
         {
           addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z;
         }
-        else
+        else if ( ( startWithOpeningBrace )
+        &&        ( endsWithClosingBrace ) )
         {
           addressing = Tiny64.Opcode.AddressingType.INDIRECT;
+        }
+        else
+        {
+          if ( numBytesFirstParam == 1 )
+          {
+            addressing = Tiny64.Opcode.AddressingType.ZEROPAGE;
+          }
+          else
+          {
+            addressing = Tiny64.Opcode.AddressingType.ABSOLUTE;
+          }
         }
       }
       else if ( twoParamsInBrackets )

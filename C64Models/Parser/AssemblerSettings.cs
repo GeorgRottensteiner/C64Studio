@@ -43,6 +43,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     HasBinaryNot = true;
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
     public bool                                                     MessageAutoIncludesBlanksBetweenParameters = false;
+    public bool                                                     AllowsCustomTextMappings = false;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
 
@@ -472,7 +473,7 @@ namespace RetroDevStudio.Parser
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
@@ -490,9 +491,15 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( ".ALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
           AddPseudoOp( ".MACRO", Types.MacroInfo.PseudoOpType.MACRO );
           AddPseudoOp( ".ENDM", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( ".O", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( ".INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( ".TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( ".FILL", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( ".ENC", Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS );
+          AddPseudoOp( ".CDEF", Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS_ENTRY );
 
           RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
-
+          POPrefix = ".";
           LabelPostfix = ":";
           MacroFunctionCallPrefix.Add( "#" );
           MacroFunctionCallPrefix.Add( "." );
@@ -506,6 +513,8 @@ namespace RetroDevStudio.Parser
           LoopEndHasNoScope = true;
           DefaultTargetType = Types.CompileTargetType.PLAIN;
           DefaultTargetExtension = ".bin";
+          GreaterOrLessThanAtBeginningAffectFullExpression  = true;
+          AllowsCustomTextMappings                          = true;
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
