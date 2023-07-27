@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 #if NET6_0_OR_GREATER
 using LibGit2Sharp;
 #endif
@@ -219,8 +220,18 @@ namespace SourceControl
 #if NET6_0_OR_GREATER
       try
       {
-        //_GITRepo.Ignore.AddTemporaryRules( new List<string>() { FullPath }  );
-        //_GITRepo.Ignore.Write();
+        string    pathGITIgnoreFile = System.IO.Path.Combine( _BasePath, ".gitignore" );
+        if ( !System.IO.File.Exists( pathGITIgnoreFile ) )
+        {
+          System.IO.File.WriteAllText( pathGITIgnoreFile, "/" + FullPath + '\n', new UTF8Encoding( false ) );
+
+          AddFileToRepository( ".gitignore" );
+          return true;
+        }
+        if ( !_GITRepo.Ignore.IsPathIgnored( FullPath ) )
+        {
+          System.IO.File.AppendAllText( pathGITIgnoreFile, "/" + FullPath + '\n', new UTF8Encoding( false ) );
+        }
         return true;
       }
       catch ( Exception )
