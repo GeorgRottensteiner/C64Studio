@@ -17,6 +17,88 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+28.07.2023 - 7.5:         Fix: Export as DATA statements would calculate char wrap wrong (DATA treated as 1 byte)
+                          Fix: Assembler now allowed something like cmp ($124 + 4) * 10, previously rejected as "unsupported opcode"
+                          Fix another potential crash when exiting the emulator
+                          Add: GIT Support (rudimentary, only simplest functions, be careful with revert!)
+                          Add: Git support in Solution Wizard
+                          Fix: Tiny64 Debugger crashing while trying to access null device
+                          Add: Intellisense filtering now treats parts of a label separately
+                          Add: Preferences for Source Control
+                          Fix: Potential invalidoperationexception when parsing collides with source file opening
+                          Add: Map Editor copy/paste now copies full map if no selection exists, paste works in every mode
+                          Add: Dropping *.spd (SpritePad) file will now open in SpriteEditor
+                          Fix: SpriteEditor import from SpritePad would not set MC flag properly
+                          Add: Create Solution/Project
+                          Fix: Sprite Editor saving to GIF was broken since changing everything to 32bit
+                          Fix stupid bug in ToFilename, upper casing was broken
+                          Breaking fix: Adjust casing of filenames in building, MediaManager and File renaming dialog
+                          Catch potential crash when a font errors out in FontDialo
+                          Update emulator setup docs
+                          Add: Save/Restore help page zoom
+                          Fix: Disassembler, trying to keep scroll offset could result in code being out of the visible area
+                          Fix: Bug in assembler, when using ! operator in !message could modify value of previous set temp label
+                          Fix Potential crash in MC sprites color settings
+                          Fix: Char screen editor - layout screen had duplicate star but missing closing parenthesis
+                          Fix: Charset editor for VIC20, Shift/Rotate Left/Right ignored multicolor flag
+                          Add: ASM &= operator
+                          FIX: BAISC label mode To/From label mode was again hilariously broken
+                          Add: Mapeditor import/export forms
+                          Fix: avoid evaluation of conditions if inside an inactive scope
+                          Fix: Previous fix for if else chain with undefined label was not complete
+                          Fix: else if now skips evaluation conditions if a previous entry in the if/else chain was already handled postive
+                          Add: Setting for max line length indicator in BASIC and ASM editor
+                          Add/Fix: Make preferences dialog vertically resizable
+                          Add: Map Editor automatically select first tile on opening project
+                          Fix: comparison string > int could fail by trying to highbyte the int
+                          Fix: symbol arithmetic, plus treat single char string as char
+                          WIP: StringArithmetic
+                          WIP: More GIT, custom drawing of Solution Explorer
+                          Fix: Can't jump to search results for unnamed file search results
+                          Fix: Crash in charscreen editor in text entry mode when the "cursor" got outside the bottom right corner
+                          Fix: Tiny speedup by avoiding reparsing tokens for lines with label in front
+                          Add: Update TSB dialect file
+                          Add: Of course also use numbers for number x= number assignment
+                          Add: Auto promotion of int/float to float for assignment operators
+                          Fix: internal brackets in nested macros could cause !ifdef to fail
+                          Fix: !ifdef not working inside macro on any but the last parameter (due to internal bracket usage)
+                          Fix: Crash if failed to evaluate expression in else if
+                          Add: String comparison handling
+                          Actually staging before pushing
+                          Add: string label concattenation mostly working now
+                          Fix: Disassembler off by one error could lead to target labels inside an instruction not being added to the output
+                          Fix: Allow label reassignment with different types
+                          Fix borked local label qualification for !if PO
+                          Fix: local symbol qualification with !ifndef PO
+                          Add: Assignment operators (+=, -=, etc.)
+                          Fix: Border/Background palette color count messup for VC20
+                          Add unit tests
+                          Fix: comparison match now returns 0xff instead of 1
+                          Fix: Missing icon in compile result for !message would crash
+                          Fix: local labels not always fully qualified in !if/!ifdef/!ifndef paths
+                          Add: Macro listed in Outline
+                          Add: Message output displays integer decimal and hex
+                          Hack/Fix: Wrong cursor left characters (introduced between 7.3 and 7.4) auto fix if non 3.5 basic dialect
+                          Add: Auto-renumber settings for BASIC
+                          Fix: BASIC disassembler, PRINT preferred to ?
+                          Add: Outline/Label Explorer now properly storing states per ASM File info
+                          Fix: LabelExplorer/Outline did not update on simple compile
+                          Fix: BASIC bug, where referenced line numbers were ignored when the line had a REM at the end and REM stripping was active
+                          Fix: BASIC label mode toggling, keep spaces intact
+                          Add: Label Explorer to separate from Outline
+                          Add: Compile result, use ellipsis in file name, also use theming colors
+                          Fix: Setting parameterd labels inside macro would fail with syntax error
+                          Fix: Tool tips now take line number in account (temporary labels can have different values depending on location in file)
+                          Fix: Outline now shows global labels in global section instead of the zone they're placed inside (TODO - could be an option?)
+                          Fix: No duplicate opened doc when "Save Copy as" is used to overwrite already opened file
+                          Fix: Assembler generating a file with two zero bytes when no data contained, and no start address was given
+                          Fix: BASIC stripping REM was messed up
+                          Add source control dependency
+                          Fix: palette import via !media had the RGB flag wrong
+                          Fix: BASIC preferences not checking font
+                          WIP: Source Control #2
+                          WIP: Tree/Git
+
 26.03.2023 - 7.4:         Add: Tiny64 Interface to not tie it to Windows directly
                           Add: Shared version info
                           Fix: label mode toggle would loose the # on a GET#2 (probably others too)
