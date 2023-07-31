@@ -226,7 +226,7 @@
       this.seBtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.seBtnDelete.Name = "seBtnDelete";
       this.seBtnDelete.Size = new System.Drawing.Size(23, 22);
-      this.seBtnDelete.Text = "Delete";
+      this.seBtnDelete.Text = "Remove Item from Project";
       this.seBtnDelete.Click += new System.EventHandler(this.seBtnDelete_Click);
       // 
       // toolStripSeparator2
