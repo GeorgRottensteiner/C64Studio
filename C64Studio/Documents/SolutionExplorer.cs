@@ -2311,105 +2311,112 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_DrawNode( object sender, DrawTreeNodeEventArgs e )
     {
-      Rectangle nodeRect = NodeBounds( e.Node );
-
-      TreeItemInfo info = (TreeItemInfo)e.Node.Tag; 
-
-      // 1. draw expand/collapse icon
-      if ( e.Node.Nodes.Count > 1 )
+      try
       {
-        Point ptExpand = new Point( nodeRect.Location.X - 36, nodeRect.Location.Y + ( nodeRect.Height - 8 ) / 2 );
-        if ( e.Node.IsExpanded )
+        Rectangle nodeRect = NodeBounds( e.Node );
+
+        TreeItemInfo info = (TreeItemInfo)e.Node.Tag;
+
+        // 1. draw expand/collapse icon
+        if ( e.Node.Nodes.Count >= 1 )
         {
-          e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
-          e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
+          Point ptExpand = new Point( nodeRect.Location.X - 36, nodeRect.Location.Y + ( nodeRect.Height - 8 ) / 2 );
+          if ( e.Node.IsExpanded )
+          {
+            e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
+            e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
+          }
+          else
+          {
+            e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
+            e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
+            e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 4, ptExpand.Y + 2, ptExpand.X + 4, ptExpand.Y + 6 );
+          }
+        }
+
+        // 2. draw node icon
+        if ( treeProject.ImageList != null )
+        {
+          if ( treeProject.ImageList.Images.ContainsKey( e.Node.ImageKey ) )
+          {
+            Image nodeImg = treeProject.ImageList.Images[e.Node.ImageKey];
+
+            Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
+
+            e.Graphics.DrawImage( nodeImg, ptNodeIcon );
+          }
+          else if ( e.Node.ImageIndex < treeProject.ImageList.Images.Count )
+          {
+            // autofallback to first image??
+            if ( e.Node.ImageIndex == -1 )
+            {
+              e.Node.ImageIndex = 0;
+            }
+            DrawDocumentIcon( e.Graphics, nodeRect, e.Node.ImageIndex, info.FileState );
+          }
+        }
+        Font nodeFont = e.Node.NodeFont;
+        if ( nodeFont == null )
+        {
+          nodeFont = ( (TreeView)sender ).Font;
+        }
+        e.DrawDefault = false;
+
+        // node text
+        var bounds = NodeBounds( e.Node );
+        var textBounds = Rectangle.Inflate( bounds, 3, 0 );
+        var bgBounds = new Rectangle( bounds.Location, bounds.Size );
+        bgBounds.Offset( -3, 0 );
+
+        // Draw the background and node text for a selected node.
+        if ( ( e.State & TreeNodeStates.Selected ) != 0 )
+        {
+          // Draw the background of the selected node. The NodeBounds
+          // method makes the highlight rectangle large enough to
+          // include the text of a node tag, if one is present.
+          uint color = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+          uint bgColor = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+
+          // make transparent
+          if ( ( color & 0xff000000 ) == 0xff000000 )
+          {
+            color = ( color & 0x00ffffff ) | 0x40000000;
+            color = ModulateColor( color, bgColor );
+          }
+          e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
+
+          // Retrieve the node font. If the node font has not been set, use the TreeView font.
+          uint colorText = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+          e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
         }
         else
         {
-          e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
-          e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
-          e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 4, ptExpand.Y + 2, ptExpand.X + 4, ptExpand.Y + 6 );
-        }
-      }
-
-      // 2. draw node icon
-      if ( treeProject.ImageList != null )
-      {
-        if ( treeProject.ImageList.Images.ContainsKey( e.Node.ImageKey ) )
-        {
-          Image nodeImg = treeProject.ImageList.Images[e.Node.ImageKey];
-
-          Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
-
-          e.Graphics.DrawImage( nodeImg, ptNodeIcon );
-        }
-        else if ( e.Node.ImageIndex < treeProject.ImageList.Images.Count )
-        {
-          // autofallback to first image??
-          if ( e.Node.ImageIndex == -1 )
+          if ( ( e.State & TreeNodeStates.Focused ) != 0 )
           {
-            e.Node.ImageIndex = 0;
+            uint color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+
+            e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
           }
-          DrawDocumentIcon( e.Graphics, nodeRect, e.Node.ImageIndex, info.FileState );
+          uint colorText = Core.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+          e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
         }
-      }
-      Font nodeFont = e.Node.NodeFont;
-      if ( nodeFont == null )
-      {
-        nodeFont = ( (TreeView)sender ).Font;
-      }
-      e.DrawDefault = false;
 
-      // node text
-      var bounds = NodeBounds( e.Node );
-      var textBounds = Rectangle.Inflate( bounds, 3, 0 );
-      var bgBounds = new Rectangle( bounds.Location, bounds.Size );
-      bgBounds.Offset( -3, 0 );
-
-      // Draw the background and node text for a selected node.
-      if ( ( e.State & TreeNodeStates.Selected ) != 0 )
-      {
-        // Draw the background of the selected node. The NodeBounds
-        // method makes the highlight rectangle large enough to
-        // include the text of a node tag, if one is present.
-        uint color = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
-        uint bgColor = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
-
-        // make transparent
-        if ( ( color & 0xff000000 ) == 0xff000000 )
-        {
-          color = ( color & 0x00ffffff ) | 0x40000000;
-          color = ModulateColor( color, bgColor );
-        }
-        e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
-
-        // Retrieve the node font. If the node font has not been set, use the TreeView font.
-        uint colorText = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
-        e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
-      }
-      else
-      {
+        // If the node has focus, draw the focus rectangle large, making
+        // it large enough to include the text of the node tag, if present.
         if ( ( e.State & TreeNodeStates.Focused ) != 0 )
         {
-          uint color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
-
-          e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), bgBounds );
+          using ( Pen focusPen = new Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) ) )
+          {
+            focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+            bounds.Size = new Size( bgBounds.Width - 1, bgBounds.Height - 1 );
+            bounds.Offset( -3, 0 );
+            e.Graphics.DrawRectangle( focusPen, bounds );
+          }
         }
-        uint colorText = Core.Settings.FGColor( ColorableElement.CONTROL_TEXT );
-        e.Graphics.DrawString( e.Node.Text, nodeFont, new SolidBrush( GR.Color.Helper.FromARGB( colorText ) ), textBounds );
       }
-
-      // If the node has focus, draw the focus rectangle large, making
-      // it large enough to include the text of the node tag, if present.
-      if ( ( e.State & TreeNodeStates.Focused ) != 0 )
+      catch ( Exception ex )
       {
-        using ( Pen focusPen = new Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) ) )
-        {
-          focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-          bounds.Size = new Size( bgBounds.Width - 1, bgBounds.Height - 1 );
-          bounds.Offset( -3, 0 );
-          e.Graphics.DrawRectangle( focusPen, bounds );
-        }
+        Debug.Log( "AHA:" + ex.ToString() );
       }
     }
 
