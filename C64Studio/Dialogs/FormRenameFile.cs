@@ -86,7 +86,8 @@ namespace RetroDevStudio.Dialogs
 
     private void btnOK_Click( object sender, EventArgs e )
     {
-      Filename = Util.ToFilename( editFilename.Text );
+      //Filename = Util.ToFilename( editFilename.Text );
+      Filename = Util.ToPETSCII( editFilename.Text );
 
       while ( ( Filename.Length > 0 )
       &&      ( Filename.ByteAt( (int)Filename.Length - 1 ) == 32 ) )
