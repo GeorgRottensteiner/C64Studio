@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>BASIC - Pseudo Operations</H3>
+  <div id="mybody">
+    C64Studio supports a few pseudo ops, hidden in meta commentsThese pseudo ops are supported:<br>
+    <br>
+    <br>
+    <ul>
+      <li><a href="#bindata">#BINDATA</a></li>
+      <li><a href="#include">#INCLUDE</a></li>
+    </ul>
+    <br>
+    <br>
+  </div>
+  <a name="bindata"></a>
+  <H2>#BINDATA &lt;filename&gt;,&lt;length&gt;,&lt;offset&gt;,&lt;start line&gt;,&lt;line step&gt;</H2>
+  <div id="mybody">
+    This pseudo op allows to insert binary content as DATA lines.<br>
+    <br>
+    This pseudo op needs a few more parameters to let you control the output. If the length is given empty the full file is used.<br>
+    The length of the line is the maximum possible for proper manual entry (e.g. 80 for C64, not 254)<br>
+    <br>
+    <br>
+    Example: Include music data, the full length, but skip the first 2 bytes (load address). Generate DATA starting with line number 1000, increase the line numbers by 1.<br>
+    <br>
+    <div id="code"><br>       #BINDATA "music.bin",,2,1000,1
+      <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="include">
+  <H2>#INCLUDE &lt;filename&gt;</H2>
+  <div id="mybody">
+    #INCLUDE works similar to assembly's !src pseudo op. It expects a filename which will be included at the current location.<br>
+    <br>
+    <br>
+    main.bas content:<br>
+    <div id="code"><br>      10 PRINT "HELLO"
+      #INCLUDE "GREETING.BAS"
+      30 PRINT "THIS IS THE END"
+    <br></div><br>
+
+    greeting.bas content:<br>
+    <div id="code"><br>      20 PRINT "WORLD"
+    <br></div><br>
+    <br>
+    <br>
+    Which results in the final output:<br>
+    <br>
+    <div id="code"><br>      10 PRINT "HELLO"
+      20 PRINT "WORLD"
+      30 PRINT "THIS IS THE END"
+    <br></div><br>
+
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

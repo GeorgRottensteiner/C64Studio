@@ -80,9 +80,12 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.PROJECT_OPENED:
           break;
         case ApplicationEvent.Type.DOCUMENT_CLOSED:
-          if ( _ExpandedNodesPerProject.ContainsKey( Event.Doc.ASMFileInfo ) )
+          if ( Event.Doc.ASMFileInfo != null )
           {
-            _ExpandedNodesPerProject.Remove( Event.Doc.ASMFileInfo );
+            if ( _ExpandedNodesPerProject.ContainsKey( Event.Doc.ASMFileInfo ) )
+            {
+              _ExpandedNodesPerProject.Remove( Event.Doc.ASMFileInfo );
+            }
           }
           if ( ActiveDocumentInfo == Event.Doc )
           {

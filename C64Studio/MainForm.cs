@@ -1300,20 +1300,22 @@ namespace RetroDevStudio
           UpdateMenuMRU();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
-          solutionToolStripMenuItem.Visible = true;
+          solutionToolStripMenuItem.Enabled = true;
+          solutionAddNewProjectToolStripMenuItem.Enabled = true;
+          solutionAddExistingProjectToolStripMenuItem.Enabled = true;
           solutionCloseToolStripMenuItem.Enabled = true;
           solutionSaveToolStripMenuItem1.Enabled = true;
-          closeSolutionToolStripMenuItem.Enabled = true;
           solutionCloneToolStripMenuItem.Enabled = true;
           solutionRenameToolStripMenuItem.Enabled = !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename );
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
           m_CurrentProject = null;
-          solutionToolStripMenuItem.Visible = false;
+          solutionToolStripMenuItem.Enabled = false;
+          solutionAddNewProjectToolStripMenuItem.Enabled = false;
+          solutionAddExistingProjectToolStripMenuItem.Enabled = false;
           solutionCloseToolStripMenuItem.Enabled = false;
           solutionSaveToolStripMenuItem1.Enabled = false;
-          closeSolutionToolStripMenuItem.Enabled = false;
           solutionCloneToolStripMenuItem.Enabled = false;
           solutionRenameToolStripMenuItem.Enabled = false;
 

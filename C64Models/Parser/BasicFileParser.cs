@@ -1594,6 +1594,8 @@ namespace RetroDevStudio.Parser
           return true;
         case "INCLUDE":
           return MetaDataInclude( LineIndex, MetaData, metaDataParams );
+        case "BINDATA":
+          return MetaDataBinaryData( LineIndex, MetaData, metaDataParams );
       }
       return false;
     }
