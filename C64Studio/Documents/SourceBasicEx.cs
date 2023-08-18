@@ -677,6 +677,24 @@ namespace RetroDevStudio.Documents
 
     void contextSource_Opening( object sender, CancelEventArgs e )
     {
+      foreach ( var item in contextSource.Items )
+      {
+        if ( item is ToolStripMenuItem )
+        {
+          var menu = (ToolStripMenuItem)item;
+          if ( menu.Tag is Function )
+          {
+            try
+            {
+              menu.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( (Function)menu.Tag, Core.State );
+            }
+            catch ( Exception )
+            {
+            }
+          }
+        }
+      }
+
       commentSelectionToolStripMenuItem.Enabled = ( editSource.SelectionLength > 0 );
       uncommentSelectionToolStripMenuItem.Enabled = ( editSource.SelectionLength > 0 );
     }
