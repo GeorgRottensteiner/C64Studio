@@ -4,6 +4,8 @@
 
 .ZEROPAGE_POINTER_1 = $fe
 
+
+
 ;Sends a command, max. supported length 256 bytes!
 ;x = lo byte of command
 ;y = hi byte of command
@@ -54,8 +56,10 @@
           rts
 
 .WaitHandshake
-          lda #40               ; short timeout
+          lda #$40              ; short timeout
           sta .OuterLoopCount   ; looplength for timeout
+          lda #$0
+          sta .InnerLoopCount
 
 -
           ;check handshake, wait for NMI FLAG2
@@ -92,6 +96,7 @@
           sta CIA2.DATA_DIRECTION_REGISTER_A
 
           ;PA2 auf HIGH = ESP im Empfangsmodus
+          ;= WiC64 ready for reading data from C64
           lda CIA2.DATA_PORT_A
           ora #$04
           sta CIA2.DATA_PORT_A
@@ -99,7 +104,11 @@
           ;Datenrichtung Port B Ausgang
           lda #$ff
           sta CIA2.DATA_DIRECTION_REGISTER_B
+
+          ;reset flag2 handshake
+          lda CIA2.NMI_CONTROL
           rts
+
 
 
 ;prepare WiC64 for reading the result of a command
@@ -112,6 +121,7 @@
           lda CIA2.DATA_PORT_A
           and #251          ;PA2 auf LOW = ESP im Sendemodus
           sta CIA2.DATA_PORT_A
+
 
           ;Dummy Byte - IRQ anschieben
           jsr WiC64.ReadByte

@@ -117,6 +117,8 @@ namespace RetroDevStudio.Documents
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
 
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
+      commentSelectionToolStripMenuItem.Tag = Function.COMMENT_SELECTION;
+      uncommentSelectionToolStripMenuItem.Tag = Function.UNCOMMENT_SELECTION;
 
       editSource.AutoIndentChars = false;
       editSource.SelectingWord += EditSource_SelectingWord;
@@ -675,6 +677,8 @@ namespace RetroDevStudio.Documents
 
     void contextSource_Opening( object sender, CancelEventArgs e )
     {
+      commentSelectionToolStripMenuItem.Enabled = ( editSource.SelectionLength > 0 );
+      uncommentSelectionToolStripMenuItem.Enabled = ( editSource.SelectionLength > 0 );
     }
 
 
@@ -1902,8 +1906,38 @@ namespace RetroDevStudio.Documents
         case Function.JUMP_TO_LINE:
           JumpToLine();
           return true;
+        case Types.Function.COMMENT_SELECTION:
+          CommentSelection();
+          return true;
+        case Types.Function.UNCOMMENT_SELECTION:
+          UncommentSelection();
+          return true;
       }
       return false;
+    }
+
+
+
+    private void CommentSelection()
+    {
+      if ( editSource.Selection.IsEmpty )
+      {
+        return;
+      }
+      editSource.InsertLinePrefix( "#" );
+      SetModified();
+    }
+
+
+
+    private void UncommentSelection()
+    {
+      if ( editSource.SelectionLength == 0 )
+      {
+        return;
+      }
+      editSource.RemoveLinePrefix( "#" );
+      SetModified();
     }
 
 
@@ -2414,6 +2448,20 @@ namespace RetroDevStudio.Documents
     private void contextMenuLabelButton_Opening( object sender, CancelEventArgs e )
     {
       autoRenumberWithLastValuesToolStripMenuItem.Text = $"Auto renumber with last values {m_LastLabelAutoRenumberStartLine}, {m_LastLabelAutoRenumberLineStep}";
+    }
+
+
+
+    private void commentSelectionToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      CommentSelection();
+    }
+
+
+
+    private void uncommentSelectionToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      UncommentSelection();
     }
 
 

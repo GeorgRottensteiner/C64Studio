@@ -325,3 +325,7 @@
 /Sample Projects/MacroTest/encodelabeltest.prg
 /Sample Projects/MacroTest/empty.prg
 /C64StudioRelease/net6.0-windows
+/C64StudioRelease/shared content/Sample Projects/WiC64/FetchDateTime/FetchDateTime.prg
+/C64StudioRelease/shared content/Sample Projects/WiC64/Highscore/highscore.prg
+/C64StudioRelease/shared content/Sample Projects/WiC64/ReadUserName/ReadUserName.prg
+/C64StudioRelease/shared content/Sample Projects/WiC64/SecurityID/securityid.prg

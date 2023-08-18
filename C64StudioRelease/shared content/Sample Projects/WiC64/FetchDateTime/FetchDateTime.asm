@@ -1,4 +1,4 @@
-﻿;Sample for using the WiC64 hardware
+;Sample for using the WiC64 hardware
 ;
 ; Sends the command $15 (fetch current data/time from NTP) and displays the reply on screen
 

@@ -56,6 +56,9 @@ namespace RetroDevStudio.Documents
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
+      this.commentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -108,41 +111,44 @@ namespace RetroDevStudio.Documents
             this.copyToolStripMenuItem,
             this.cutToolStripMenuItem,
             this.pasteToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.commentSelectionToolStripMenuItem,
+            this.uncommentSelectionToolStripMenuItem,
             this.toolStripSeparator1,
             this.renumberToolStripMenuItem1});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(139, 98);
+      this.contextSource.Size = new System.Drawing.Size(193, 170);
       // 
       // copyToolStripMenuItem
       // 
       this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-      this.copyToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+      this.copyToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
       this.copyToolStripMenuItem.Text = "&Copy";
       this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
       // 
       // cutToolStripMenuItem
       // 
       this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-      this.cutToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+      this.cutToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
       this.cutToolStripMenuItem.Text = "C&ut";
       this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
       // 
       // pasteToolStripMenuItem
       // 
       this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
       this.pasteToolStripMenuItem.Text = "&Paste";
       this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(189, 6);
       // 
       // renumberToolStripMenuItem1
       // 
       this.renumberToolStripMenuItem1.Name = "renumberToolStripMenuItem1";
-      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
       this.renumberToolStripMenuItem1.Text = "Renumber...";
       this.renumberToolStripMenuItem1.Click += new System.EventHandler(this.renumberToolStripMenuItem_Click);
       // 
@@ -168,7 +174,7 @@ namespace RetroDevStudio.Documents
             this.autoRenumberWith11ToolStripMenuItem,
             this.autoRenumberSettingsToolStripMenuItem});
       this.contextMenuLabelButton.Name = "contextMenuLabelButton";
-      this.contextMenuLabelButton.Size = new System.Drawing.Size(239, 114);
+      this.contextMenuLabelButton.Size = new System.Drawing.Size(239, 92);
       this.contextMenuLabelButton.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuLabelButton_Opening);
       // 
       // autoRenumberWithLastValuesToolStripMenuItem
@@ -302,6 +308,25 @@ namespace RetroDevStudio.Documents
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
+      // commentSelectionToolStripMenuItem
+      // 
+      this.commentSelectionToolStripMenuItem.Name = "commentSelectionToolStripMenuItem";
+      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.commentSelectionToolStripMenuItem.Text = "Comment Selection";
+      this.commentSelectionToolStripMenuItem.Click += new System.EventHandler(this.commentSelectionToolStripMenuItem_Click);
+      // 
+      // uncommentSelectionToolStripMenuItem
+      // 
+      this.uncommentSelectionToolStripMenuItem.Name = "uncommentSelectionToolStripMenuItem";
+      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.uncommentSelectionToolStripMenuItem.Text = "Uncomment Selection";
+      this.uncommentSelectionToolStripMenuItem.Click += new System.EventHandler(this.uncommentSelectionToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator2
+      // 
+      this.toolStripSeparator2.Name = "toolStripSeparator2";
+      this.toolStripSeparator2.Size = new System.Drawing.Size(189, 6);
+      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
@@ -356,5 +381,8 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem autoRenumberWith11ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem autoRenumberSettingsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem autoRenumberWithLastValuesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+    private System.Windows.Forms.ToolStripMenuItem commentSelectionToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem uncommentSelectionToolStripMenuItem;
   }
 }
