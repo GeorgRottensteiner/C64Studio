@@ -762,6 +762,11 @@ namespace RetroDevStudio.Documents
 
     void editSource_LineInserted( object sender, FastColoredTextBoxNS.LineInsertedEventArgs e )
     {
+      if ( m_InsertingText )
+      {
+        return;
+      }
+
       DocumentInfo.Bookmarks.Clear();
       foreach ( var bm in editSource.Bookmarks )
       {
