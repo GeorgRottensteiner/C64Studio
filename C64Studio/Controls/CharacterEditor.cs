@@ -278,9 +278,9 @@ namespace RetroDevStudio.Controls
           var targetTile = m_Project.Characters[pastePos].Tile;
 
           if ( ( ( entry.Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
-          ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) )
+          ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS ) )
           &&   ( ( targetTile.Mode == GraphicTileMode.COMMODORE_HIRES )
-          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) ) )
+          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS ) ) )
           {
             // can copy mode
             targetTile.Mode = entry.Tile.Mode;

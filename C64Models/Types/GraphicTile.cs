@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
+
 namespace RetroDevStudio.Types
 {
   public class GraphicTile
@@ -84,7 +86,7 @@ namespace RetroDevStudio.Types
             }
           }
           break;
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
 
@@ -106,6 +108,39 @@ namespace RetroDevStudio.Types
                 break;
               case ColorType.MULTICOLOR_2:
                 replacementBytes = 2;
+                break;
+            }
+            newByte |= (byte)( replacementBytes << ( 2 * X ) );
+
+            if ( Data.ByteAt( bytePos ) != newByte )
+            {
+              Data.SetU8At( bytePos, newByte );
+              return true;
+            }
+          }
+          break;
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
+          {
+            int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
+
+            // mc mode
+            X = ( X % 8 ) / 2;
+            X = 3 - X;
+
+            byte newByte = (byte)( Data.ByteAt( bytePos ) & ~( 3 << ( 2 * X ) ) );
+
+            int     replacementBytes = 0;
+
+            switch ( Color.first )
+            {
+              case ColorType.CUSTOM_COLOR:
+                replacementBytes = 2;
+                break;
+              case ColorType.MULTICOLOR_1:
+                replacementBytes = 1;
+                break;
+              case ColorType.MULTICOLOR_2:
+                replacementBytes = 3;
                 break;
             }
             newByte |= (byte)( replacementBytes << ( 2 * X ) );
@@ -215,7 +250,7 @@ namespace RetroDevStudio.Types
             }
             return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
           }
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
           {
             // multi color
             int innerX = ( X % 8 ) / 2;
@@ -235,6 +270,28 @@ namespace RetroDevStudio.Types
               case 0x03:
               default:
                 return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 3 );
+            }
+          }
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
+          {
+            // multi color
+            int innerX = ( X % 8 ) / 2;
+            innerX = 3 - innerX;
+
+            int   bitPattern = Data.ByteAt( Y * ( ( Width + 7 ) / 8 ) + X / 8 ) & ( 3 << ( 2 * innerX ) );
+            bitPattern >>= innerX * 2;
+
+            switch ( bitPattern )
+            {
+              case 0x00:
+                return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+              case 0x01:
+                return new Tupel<ColorType, byte>( ColorType.MULTICOLOR_1, 1 );
+              case 0x03:
+                return new Tupel<ColorType, byte>( ColorType.MULTICOLOR_2, 3 );
+              case 0x02:
+              default:
+                return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 2 );
             }
           }
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
@@ -336,7 +393,8 @@ namespace RetroDevStudio.Types
           potentialColors.Add( Colors.Palette.ColorValues[CustomColor] );
           potentialColorTypes.Add( ColorType.CUSTOM_COLOR );
           break;
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
           potentialColors.Add( Colors.Palette.ColorValues[Colors.BackgroundColor] );
           potentialColorTypes.Add( ColorType.BACKGROUND );
           potentialColors.Add( Colors.Palette.ColorValues[Colors.MultiColor1] );
@@ -430,7 +488,7 @@ namespace RetroDevStudio.Types
       }
 
       var   origColor = GetPixel( X, Y );
-      if ( origColor == NewColor )
+      if ( IsSameColor( origColor, NewColor ) )
       {
         return false;
       }
@@ -446,33 +504,44 @@ namespace RetroDevStudio.Types
         System.Drawing.Point    point = pointsToCheck[pointsToCheck.Count - 1];
         pointsToCheck.RemoveAt( pointsToCheck.Count - 1 );
 
-        if ( GetPixel( point.X, point.Y ) != NewColor )
+        if ( !IsSameColor( GetPixel( point.X, point.Y ), NewColor ) )
         {
           SetPixel( point.X, point.Y, NewColor );
 
           if ( ( point.X - pixelWidth >= 0 )
-          &&   ( GetPixel( point.X - pixelWidth, point.Y ) == origColor ) )
+          &&   ( IsSameColor( GetPixel( point.X - pixelWidth, point.Y ), origColor ) ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X - pixelWidth, point.Y ) );
           }
           if ( ( point.X + pixelWidth < Width )
-          &&   ( GetPixel( point.X + pixelWidth, point.Y ) == origColor ) )
+          &&   ( IsSameColor( GetPixel( point.X + pixelWidth, point.Y ), origColor ) ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X + pixelWidth, point.Y ) );
           }
           if ( ( point.Y > 0 )
-          &&   ( GetPixel( point.X, point.Y - 1 ) == origColor ) )
+          &&   ( IsSameColor( GetPixel( point.X, point.Y - 1 ), origColor ) ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y - 1 ) );
           }
           if ( ( point.Y + 1 < Height )
-          &&   ( GetPixel( point.X, point.Y + 1 ) == origColor ) )
+          &&   ( IsSameColor( GetPixel( point.X, point.Y + 1 ), origColor ) ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y + 1 ) );
           }
         }
       }
       return true;
+    }
+
+
+
+    private bool IsSameColor( Tupel<ColorType, byte> Color1, Tupel<ColorType, byte> Color2 )
+    {
+      if ( Lookup.HasCustomPalette( Mode ) )
+      {
+        return Color1 == Color2;
+      }
+      return Color1.first == Color2.first;
     }
 
 

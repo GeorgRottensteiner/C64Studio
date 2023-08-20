@@ -123,7 +123,8 @@ namespace RetroDevStudio
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
         case GraphicTileMode.COMMANDERX16_HIRES:
           return ( ( Width + 7 ) / 8 ) * Height;
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
@@ -260,7 +261,8 @@ namespace RetroDevStudio
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           return false;
         case GraphicTileMode.MEGA65_NCM_CHARACTERS :
@@ -425,7 +427,7 @@ namespace RetroDevStudio
           {
             return GraphicTileMode.COMMODORE_HIRES;
           }
-          return GraphicTileMode.COMMODORE_MULTICOLOR;
+          return GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS;
         case TextCharMode.MEGA65_NCM:
           return GraphicTileMode.MEGA65_NCM_CHARACTERS;
         case TextCharMode.MEGA65_FCM:
@@ -451,7 +453,7 @@ namespace RetroDevStudio
         default:
           return GraphicTileMode.COMMODORE_HIRES;
         case SpriteDisplayMode.COMMODORE_24_X_21_MULTICOLOR:
-          return GraphicTileMode.COMMODORE_MULTICOLOR;
+          return GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES;
         case SpriteDisplayMode.MEGA65_8_X_21_16_COLORS:
         case SpriteDisplayMode.MEGA65_16_X_21_16_COLORS:
           return GraphicTileMode.MEGA65_NCM_SPRITES;
@@ -657,7 +659,7 @@ namespace RetroDevStudio
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_ECM:
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           return 8;
@@ -677,7 +679,7 @@ namespace RetroDevStudio
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_ECM:
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           return 8;
@@ -693,7 +695,8 @@ namespace RetroDevStudio
     {
       switch ( Mode )
       {
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
           return 2;
       }
       return 1;
@@ -818,7 +821,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_HIRES:
         default:
           return SpriteMode.COMMODORE_24_X_21_HIRES;
-        case GraphicTileMode.COMMODORE_MULTICOLOR:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
           return SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
         case GraphicTileMode.MEGA65_NCM_SPRITES:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
@@ -835,7 +838,7 @@ namespace RetroDevStudio
         case SpriteMode.COMMODORE_24_X_21_HIRES:
           return GraphicTileMode.COMMODORE_HIRES;
         case SpriteMode.COMMODORE_24_X_21_MULTICOLOR:
-          return GraphicTileMode.COMMODORE_MULTICOLOR;
+          return GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
         case SpriteMode.MEGA65_64_X_21_16_HIRES:
           return GraphicTileMode.MEGA65_NCM_SPRITES;

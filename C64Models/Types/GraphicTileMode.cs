@@ -8,8 +8,10 @@ namespace RetroDevStudio
     UNKNOWN = -1,
     [Description( "Commodore HiRes" )]
     COMMODORE_HIRES = 0,
-    [Description( "Commodore Multicolor" )]
-    COMMODORE_MULTICOLOR,
+    [Description( "Commodore Multicolor Sprites" )]
+    COMMODORE_MULTICOLOR_SPRITES,
+    [Description( "Commodore Multicolor Chars" )]
+    COMMODORE_MULTICOLOR_CHARACTERS,
     [Description( "Commodore ECM" )]
     COMMODORE_ECM,
     [Description( "Mega65 Nibble Color Mode 16 colors" )]

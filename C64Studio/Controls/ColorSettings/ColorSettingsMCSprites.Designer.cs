@@ -35,7 +35,7 @@ namespace RetroDevStudio.Controls
       this.comboCustomColor = new System.Windows.Forms.ComboBox();
       this.radioBackground = new System.Windows.Forms.RadioButton();
       this.radioMultiColor1 = new System.Windows.Forms.RadioButton();
-      this.radioMulticolor2 = new System.Windows.Forms.RadioButton();
+      this.radioMultiColor2 = new System.Windows.Forms.RadioButton();
       this.radioCustomColor = new System.Windows.Forms.RadioButton();
       this.btnExchangeColors = new RetroDevStudio.Controls.MenuButton();
       this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
@@ -112,15 +112,15 @@ namespace RetroDevStudio.Controls
       // 
       // radioMulticolor2
       // 
-      this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(4, 65);
-      this.radioMulticolor2.Name = "radioMulticolor2";
-      this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
-      this.radioMulticolor2.TabIndex = 37;
-      this.radioMulticolor2.TabStop = true;
-      this.radioMulticolor2.Text = "Multicolor 2";
-      this.radioMulticolor2.UseVisualStyleBackColor = true;
-      this.radioMulticolor2.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
+      this.radioMultiColor2.AutoSize = true;
+      this.radioMultiColor2.Location = new System.Drawing.Point(4, 65);
+      this.radioMultiColor2.Name = "radioMulticolor2";
+      this.radioMultiColor2.Size = new System.Drawing.Size(79, 17);
+      this.radioMultiColor2.TabIndex = 37;
+      this.radioMultiColor2.TabStop = true;
+      this.radioMultiColor2.Text = "Multicolor 2";
+      this.radioMultiColor2.UseVisualStyleBackColor = true;
+      this.radioMultiColor2.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
       // 
       // radioCustomColor
       // 
@@ -234,7 +234,7 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.comboCustomColor);
       this.Controls.Add(this.radioBackground);
       this.Controls.Add(this.radioMultiColor1);
-      this.Controls.Add(this.radioMulticolor2);
+      this.Controls.Add(this.radioMultiColor2);
       this.Controls.Add(this.radioCustomColor);
       this.Name = "ColorSettingsMCSprites";
       this.contextMenuExchangeColors.ResumeLayout(false);
@@ -250,7 +250,7 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.ComboBox comboCustomColor;
     private System.Windows.Forms.RadioButton radioBackground;
     private System.Windows.Forms.RadioButton radioMultiColor1;
-    private System.Windows.Forms.RadioButton radioMulticolor2;
+    private System.Windows.Forms.RadioButton radioMultiColor2;
     private System.Windows.Forms.RadioButton radioCustomColor;
     private MenuButton btnExchangeColors;
     private System.Windows.Forms.ComboBox comboMulticolor2;

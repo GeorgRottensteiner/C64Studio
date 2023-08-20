@@ -428,17 +428,6 @@ namespace RetroDevStudio.Documents
 
       var     newColor = new Tupel<ColorType,byte>( _ColorSettingsDlg.SelectedColor, _ColorSettingsDlg.SelectedCustomColor );
 
-      if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
-      {
-        if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
-        ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
-        {
-          ColorType   replaceColor = (ColorType)newColor.first;
-          SwitchMultiColors( ref replaceColor );
-          newColor.first = replaceColor;
-        }
-      }
-
       if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
       &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
       {
@@ -489,22 +478,6 @@ namespace RetroDevStudio.Documents
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
         var pickedColor = affectedSprite.Tile.GetPixel( charX, charY );
-
-        if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
-        {
-          // MC sprite bit patterns are different than charset bit patterns
-          if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
-          ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
-          {
-            if ( ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-            ||   ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
-            {
-              ColorType   replaceColor = pickedColor.first;
-              SwitchMultiColors( ref replaceColor );
-              pickedColor.first = replaceColor;
-            }
-          }
-        }
 
         _ColorSettingsDlg.SelectedColor = pickedColor.first;
         if ( pickedColor.first == ColorType.CUSTOM_COLOR )
@@ -1088,9 +1061,9 @@ namespace RetroDevStudio.Documents
           var targetTile = m_SpriteProject.Sprites[pastePos].Tile;
 
           if ( ( ( entry.Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
-          ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) )
+          ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES ) )
           &&   ( ( targetTile.Mode == GraphicTileMode.COMMODORE_HIRES )
-          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) ) )
+          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES ) ) )
           {
             // can copy mode
             targetTile.Mode = entry.Tile.Mode;
@@ -1124,7 +1097,7 @@ namespace RetroDevStudio.Documents
           if ( pastePos == m_CurrentSprite )
           {
             _ColorSettingsDlg.CustomColor       = m_SpriteProject.Sprites[pastePos].Tile.CustomColor;
-            _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[pastePos].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
+            _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[pastePos].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES );
             _ColorSettingsDlg.ActivePalette     = m_SpriteProject.Sprites[pastePos].Tile.Colors.ActivePalette;
           }
         }
@@ -3117,7 +3090,7 @@ namespace RetroDevStudio.Documents
           _ColorSettingsDlg = new ColorSettingsMCSprites( Core, 
                                                           m_SpriteProject.Colors, 
                                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor, 
-                                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
+                                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES );
           break;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           _ColorSettingsDlg = new ColorSettingsMega65( Core, m_SpriteProject.Colors, m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor );
@@ -3225,7 +3198,7 @@ namespace RetroDevStudio.Documents
             DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
 
             SetMulticolorMode( ref m_SpriteProject.Sprites[i].Mode, _ColorSettingsDlg.MultiColorEnabled );
-            m_SpriteProject.Sprites[i].Tile.Mode  = _ColorSettingsDlg.MultiColorEnabled ? GraphicTileMode.COMMODORE_MULTICOLOR : GraphicTileMode.COMMODORE_HIRES;
+            m_SpriteProject.Sprites[i].Tile.Mode  = _ColorSettingsDlg.MultiColorEnabled ? GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES : GraphicTileMode.COMMODORE_HIRES;
 
             Modified = true;
             RebuildSpriteImage( i );
@@ -3322,12 +3295,6 @@ namespace RetroDevStudio.Documents
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
         firstEntry = false;
 
-        if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
-        ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
-        {
-          SwitchMultiColors( ref Color1 );
-          SwitchMultiColors( ref Color2 );
-        }
         ReplaceSpriteColors( sprite, Color1, Color2 );
 
         RebuildSpriteImage( spriteIndex );
@@ -3337,20 +3304,6 @@ namespace RetroDevStudio.Documents
         {
           pictureEditor.Invalidate();
         }
-      }
-    }
-
-
-
-    private void SwitchMultiColors( ref ColorType Color )
-    {
-      if ( Color == ColorType.MULTICOLOR_2 )
-      {
-        Color = ColorType.CUSTOM_COLOR;
-      }
-      else if ( Color == ColorType.CUSTOM_COLOR )
-      {
-        Color = ColorType.MULTICOLOR_2;
       }
     }
 
