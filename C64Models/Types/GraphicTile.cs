@@ -421,6 +421,14 @@ namespace RetroDevStudio.Types
 
     public bool Fill( int X, int Y, Tupel<ColorType,byte> NewColor )
     {
+      if ( ( X < 0 )
+      ||   ( X >= Width )
+      ||   ( Y < 0 )
+      ||   ( Y >= Height ) )
+      {
+        return false;
+      }
+
       var   origColor = GetPixel( X, Y );
       if ( origColor == NewColor )
       {
