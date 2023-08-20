@@ -12,6 +12,8 @@ using RetroDevStudio;
 using RetroDevStudio.Types;
 using GR.Forms;
 using GR.Generic;
+using GR.Collections;
+using GR.Memory;
 
 namespace RetroDevStudio.Controls
 {
@@ -3012,6 +3014,63 @@ namespace RetroDevStudio.Controls
     {
       PasteClipboardImageToChar();
     }
+
+
+
+    private void btnHighlightDuplicates_Click( object sender, EventArgs e )
+    {
+      var duplicateGroups = new Map<ByteBuffer,int>();
+      var itemGroup       = new Map<int,int>();
+
+      panelCharacters.BeginUpdate();
+      bool  hasHighlight = false;
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        if ( panelCharacters.Items[i].Highlighted )
+        {
+          hasHighlight = true;
+          panelCharacters.Items[i].Highlighted = false;
+        }
+      }
+      if ( hasHighlight )
+      {
+        panelCharacters.EndUpdate();
+        return;
+      }
+
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        panelCharacters.Items[i].Highlighted = false;
+      }
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters - 1; ++i )
+      {
+        for ( int j = i + 1; j < m_Project.TotalNumberOfCharacters; ++j )
+        {
+          if ( m_Project.Characters[i].Tile.Data == m_Project.Characters[j].Tile.Data )
+          {
+            int duplicateGroup = -1;
+            if ( duplicateGroups.TryGetValue( m_Project.Characters[i].Tile.Data, out duplicateGroup ) )
+            {
+              itemGroup.Add( i, duplicateGroup );
+              itemGroup.Add( j, duplicateGroup );
+            }
+            else
+            {
+              duplicateGroup = duplicateGroups.Count;
+              itemGroup.Add( i, duplicateGroup );
+              itemGroup.Add( j, duplicateGroup );
+              duplicateGroups.Add( m_Project.Characters[i].Tile.Data, duplicateGroup );
+            }
+
+            panelCharacters.Items[i].SetHighlightGroup( duplicateGroup );
+            panelCharacters.Items[j].SetHighlightGroup( duplicateGroup );
+          }
+        }
+      }
+      panelCharacters.EndUpdate();
+    }
+
+
 
   }
 }

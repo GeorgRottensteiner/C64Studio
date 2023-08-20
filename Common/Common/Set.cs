@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace GR.Collections
 {
+  [DebuggerDisplay( "Count = {Count}, First = {First}" )]
 	public class Set<TValue> : IEnumerable<TValue>
 	{
     private Dictionary<TValue,int>    Dictionary = new Dictionary<TValue, int>();

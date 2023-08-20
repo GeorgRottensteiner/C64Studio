@@ -11,6 +11,7 @@ using RetroDevStudio.Dialogs;
 using System.Drawing;
 using GR.Generic;
 using GR.Image;
+using GR.Collections;
 
 namespace RetroDevStudio.Documents
 {
@@ -3653,5 +3654,59 @@ namespace RetroDevStudio.Documents
 
 
 
-  }
-}
+    private void btnHighlightDuplicates_Click( object sender, EventArgs e )
+    {
+      var duplicateGroups = new Map<ByteBuffer,int>();
+      var itemGroup       = new Map<int,int>();
+
+      panelSprites.BeginUpdate();
+      bool  hasHighlight = false;
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        if ( panelSprites.Items[i].Highlighted )
+        {
+          hasHighlight = true;
+          panelSprites.Items[i].Highlighted = false;
+        }
+      }
+      if ( hasHighlight )
+      {
+        panelSprites.EndUpdate();
+        return;
+      }
+
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        panelSprites.Items[i].Highlighted = false;
+      }
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites - 1; ++i )
+      {
+        for ( int j = i + 1; j < m_SpriteProject.TotalNumberOfSprites; ++j )
+        {
+          if ( m_SpriteProject.Sprites[i].Tile.Data == m_SpriteProject.Sprites[j].Tile.Data )
+          {
+            int duplicateGroup = -1;
+            if ( duplicateGroups.TryGetValue( m_SpriteProject.Sprites[i].Tile.Data, out duplicateGroup ) )
+            {
+              itemGroup.Add( i, duplicateGroup );
+              itemGroup.Add( j, duplicateGroup );
+            }
+            else
+            {
+              duplicateGroup = duplicateGroups.Count;
+              itemGroup.Add( i, duplicateGroup );
+              itemGroup.Add( j, duplicateGroup );
+              duplicateGroups.Add( m_SpriteProject.Sprites[i].Tile.Data, duplicateGroup );
+            }
+
+            panelSprites.Items[i].SetHighlightGroup( duplicateGroup );
+            panelSprites.Items[j].SetHighlightGroup( duplicateGroup );
+          }
+        }
+      }
+      panelSprites.EndUpdate();
+    }
+
+
+
+  }}

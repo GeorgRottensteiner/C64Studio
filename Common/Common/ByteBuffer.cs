@@ -9,7 +9,7 @@ namespace GR
 	  /// <summary>
 	  /// Zusammenfassung für ByteBuffer.
 	  /// </summary>
-	  public class ByteBuffer
+	  public class ByteBuffer : IComparable<ByteBuffer> 
 	  {
       private static readonly byte[] EmptyByteArray = new byte[0];  // alternatively alias System.Array.Empty<byte>()
 
@@ -972,6 +972,15 @@ namespace GR
         m_PinnedHandle = default( System.Runtime.InteropServices.GCHandle );
       }
 
-	  }
+
+
+      public int CompareTo( ByteBuffer OtherBuffer )
+      {
+        return Compare( OtherBuffer );
+      }
+
+
+
+    }
   }
 }

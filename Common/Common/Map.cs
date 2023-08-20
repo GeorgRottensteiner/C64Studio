@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using GR.Memory;
 
 namespace GR.Collections
 {
@@ -157,6 +158,15 @@ namespace GR.Collections
 			}
 		}
 
-	}
+
+
+    public bool TryGetValue( TKey Key, out TValue Value )
+    {
+      return Dictionary.TryGetValue( Key, out Value );
+    }
+
+
+
+  }
 }
 

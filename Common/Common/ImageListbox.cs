@@ -18,11 +18,16 @@ namespace GR.Forms
   {
     public class ImageListItem
     {
-      ImageListbox          m_Container = null;
+      ImageListbox          _Container = null;
+      bool                  _Highlighted = false;
+      int                   _HighlightGroup = -1;
+      int                   _Index = -1;
+
+
 
       public ImageListItem( ImageListbox Container )
       {
-        m_Container = Container;
+        _Container = Container;
       }
 
 
@@ -43,7 +48,68 @@ namespace GR.Forms
         get;
         set;
       }
+
+      public int Index
+      {
+        get
+        {
+          return _Index;
+        }
+      }
+
+
+
+      public int HighlightGroup
+      {
+        get
+        {
+          return _HighlightGroup;
+        }
+        set
+        {
+          if ( _HighlightGroup != value )
+          {
+            _HighlightGroup = value;
+            _Container.ItemModified( Index );
+          }
+        }
+      }
+
+
+
+      public bool Highlighted
+      {
+        get
+        {
+          return _Highlighted;
+        }
+        set
+        {
+          if ( _Highlighted != value )
+          {
+            _Highlighted = value;
+            if ( !_Highlighted )
+            {
+              _HighlightGroup = -1;
+            }
+            _Container.ItemModified( Index );
+          }
+        }
+      }
+
+
+
+      public void SetHighlightGroup( int Group )
+      {
+        Highlighted     = true;
+        HighlightGroup  = Group;
+      }
+
+
+
     }
+
+
 
     public class ObjectCollection : List<ImageListItem>
     {
@@ -132,6 +198,7 @@ namespace GR.Forms
     private int                   m_DisplayHeight = -1;
     private bool                  m_UpdateLockActive = false;
     private ToolTip               m_ToolTip = new ToolTip();
+    private List<uint>            m_HighlightColors = new List<uint>();
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -167,6 +234,13 @@ namespace GR.Forms
       {
         return m_ItemsPerLine;
       }
+    }
+
+
+
+    private void ItemModified( int Index )
+    {
+      InvalidateItemRect( Index );
     }
 
 
@@ -368,6 +442,12 @@ namespace GR.Forms
       m_ToolTip.Hide( this );
       m_ToolTip.Popup += m_ToolTip_Popup;
 
+      m_HighlightColors.AddRange( new List<uint>() { 0x80ff4040, 0x8040ff40, 0x804040ff, 0x80ffff40, 0x80ff40ff, 0x8040ffff,
+                                                     0x80800000, 0x80008000, 0x80000080, 0x80808000, 0x80800080, 0x80008080,
+                                                     0x80ff8080, 0x8080ff80, 0x808080ff, 0x80ffff80, 0x80ff80ff, 0x8080ffff,
+                                                     0x80404040, 0x80808080, 0x80c0c0c0, 0x80ffffff } );
+
+
       // Set the value of the double-buffering style bits to true.
       SetStyle( ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Selectable, true );
       UpdateStyles();
@@ -548,7 +628,7 @@ namespace GR.Forms
         {
           potentialItemsPerLine = 1;
         }
-        int scrollLength = ( Items.Count / potentialItemsPerLine ) - visibleItems;
+        int scrollLength = ( ( Items.Count + potentialItemsPerLine - 1 ) / potentialItemsPerLine ) - visibleItems;
         if ( scrollLength <= 0 )
         {
           m_ItemsPerLine = potentialItemsPerLine;
@@ -565,12 +645,8 @@ namespace GR.Forms
       {
         m_ItemsPerLine = 1;
       }
-      int scrollLength2 = ( Items.Count / m_ItemsPerLine ) - visibleItems;
+      int scrollLength2 = ( ( Items.Count + m_ItemsPerLine - 1 ) / m_ItemsPerLine ) - visibleItems;
 
-      if ( ( Items.Count % m_ItemsPerLine ) != 0 )
-      {
-        ++scrollLength2;
-      }
       if ( scrollLength2 <= 0 )
       {
         VisibleAutoScrollVertical = false;
@@ -627,7 +703,7 @@ namespace GR.Forms
         }
       }
       int     itemY = -1;
-      for ( int i = 0; i < numItemsY; ++i )
+      for ( int i = 0; i <= numItemsY; ++i )
       {
         if ( ( Y >= i * itemHeight )
         &&   ( Y < ( i + 1 ) * itemHeight ) )
@@ -935,6 +1011,7 @@ namespace GR.Forms
         {
           m_DisplayPage.DrawImage( Items[itemIndex].MemoryImage, itemRect.X, itemRect.Y );
         }
+
         ++itemIndex;
         itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
       }
@@ -956,6 +1033,29 @@ namespace GR.Forms
       {
         e.Graphics.FillRectangle( hottrackBrush, ItemRect( m_ItemUnderMouse ) );
       }
+
+      itemIndex = m_Offset * m_ItemsPerLine;
+      itemInLine = 0;
+      while ( itemIndex < Items.Count )
+      {
+        if ( itemIndex < 0 )
+        {
+          ++itemIndex;
+          itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
+
+          continue;
+        }
+        if ( Items[itemIndex].Highlighted )
+        {
+          System.Drawing.SolidBrush highlightColorBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( m_HighlightColors[Items[itemIndex].HighlightGroup % m_HighlightColors.Count] ) );
+          e.Graphics.FillRectangle( highlightColorBrush, ItemRect( itemIndex ) );
+        }
+        ++itemIndex;
+        itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
+      }
+
+
+
       if ( m_SelectedItem != -1 )
       {
         if ( m_SelectionAnchor != -1 )

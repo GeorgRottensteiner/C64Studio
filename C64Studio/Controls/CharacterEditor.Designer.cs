@@ -82,6 +82,7 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
+      this.btnHighlightDuplicates = new System.Windows.Forms.Button();
       this.groupBox2.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.tabCharacterEditor.SuspendLayout();
@@ -109,7 +110,7 @@
       this.btnClearChars.Location = new System.Drawing.Point(6, 21);
       this.btnClearChars.Name = "btnClearChars";
       this.btnClearChars.Size = new System.Drawing.Size(48, 22);
-      this.btnClearChars.TabIndex = 6;
+      this.btnClearChars.TabIndex = 0;
       this.btnClearChars.Text = "Clear";
       this.btnClearChars.UseVisualStyleBackColor = true;
       this.btnClearChars.Click += new System.EventHandler(this.btnClear_Click);
@@ -121,7 +122,7 @@
       this.comboCategories.Location = new System.Drawing.Point(387, 218);
       this.comboCategories.Name = "comboCategories";
       this.comboCategories.Size = new System.Drawing.Size(121, 21);
-      this.comboCategories.TabIndex = 37;
+      this.comboCategories.TabIndex = 10;
       this.comboCategories.SelectedIndexChanged += new System.EventHandler(this.comboCategories_SelectedIndexChanged);
       // 
       // btnPasteFromClipboard
@@ -129,7 +130,7 @@
       this.btnPasteFromClipboard.Location = new System.Drawing.Point(578, 269);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(97, 26);
-      this.btnPasteFromClipboard.TabIndex = 36;
+      this.btnPasteFromClipboard.TabIndex = 17;
       this.btnPasteFromClipboard.Text = "Paste Image";
       this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Image");
       this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
@@ -158,7 +159,7 @@
       this.checkShowGrid.Location = new System.Drawing.Point(280, 246);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
-      this.checkShowGrid.TabIndex = 32;
+      this.checkShowGrid.TabIndex = 11;
       this.checkShowGrid.Text = "Show Grid";
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
@@ -169,7 +170,7 @@
       this.checkPasteMultiColor.Location = new System.Drawing.Point(280, 275);
       this.checkPasteMultiColor.Name = "checkPasteMultiColor";
       this.checkPasteMultiColor.Size = new System.Drawing.Size(145, 17);
-      this.checkPasteMultiColor.TabIndex = 31;
+      this.checkPasteMultiColor.TabIndex = 12;
       this.checkPasteMultiColor.Text = "Force Multicolor on paste";
       this.checkPasteMultiColor.UseVisualStyleBackColor = true;
       // 
@@ -190,7 +191,7 @@
       this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 20);
       this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
       this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
-      this.btnMoveSelectionToTarget.TabIndex = 2;
+      this.btnMoveSelectionToTarget.TabIndex = 1;
       this.btnMoveSelectionToTarget.Text = "Move";
       this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
       this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
@@ -200,7 +201,7 @@
       this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 21);
       this.editMoveTargetIndex.Name = "editMoveTargetIndex";
       this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
-      this.editMoveTargetIndex.TabIndex = 1;
+      this.editMoveTargetIndex.TabIndex = 0;
       // 
       // label10
       // 
@@ -217,7 +218,7 @@
       this.btnPaste.Location = new System.Drawing.Point(546, 269);
       this.btnPaste.Name = "btnPaste";
       this.btnPaste.Size = new System.Drawing.Size(26, 26);
-      this.btnPaste.TabIndex = 46;
+      this.btnPaste.TabIndex = 16;
       this.toolTip1.SetToolTip(this.btnPaste, "Paste Characters");
       this.btnPaste.UseVisualStyleBackColor = true;
       this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
@@ -228,7 +229,7 @@
       this.btnCopy.Location = new System.Drawing.Point(514, 269);
       this.btnCopy.Name = "btnCopy";
       this.btnCopy.Size = new System.Drawing.Size(26, 26);
-      this.btnCopy.TabIndex = 45;
+      this.btnCopy.TabIndex = 15;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy Characters to Clipboard");
       this.btnCopy.UseVisualStyleBackColor = true;
       this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
@@ -239,7 +240,7 @@
       this.btnInvert.Location = new System.Drawing.Point(198, 269);
       this.btnInvert.Name = "btnInvert";
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
-      this.btnInvert.TabIndex = 44;
+      this.btnInvert.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnInvert, "Invert");
       this.btnInvert.UseVisualStyleBackColor = true;
       this.btnInvert.Click += new System.EventHandler(this.btnInvert_Click);
@@ -250,7 +251,7 @@
       this.btnMirrorY.Location = new System.Drawing.Point(166, 269);
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
-      this.btnMirrorY.TabIndex = 43;
+      this.btnMirrorY.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Y");
       this.btnMirrorY.UseVisualStyleBackColor = true;
       this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
@@ -261,7 +262,7 @@
       this.btnMirrorX.Location = new System.Drawing.Point(134, 269);
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
-      this.btnMirrorX.TabIndex = 47;
+      this.btnMirrorX.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror X");
       this.btnMirrorX.UseVisualStyleBackColor = true;
       this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
@@ -272,7 +273,7 @@
       this.btnShiftDown.Location = new System.Drawing.Point(102, 269);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftDown.TabIndex = 48;
+      this.btnShiftDown.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.UseVisualStyleBackColor = true;
       this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
@@ -283,7 +284,7 @@
       this.btnShiftUp.Location = new System.Drawing.Point(70, 269);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftUp.TabIndex = 38;
+      this.btnShiftUp.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
       this.btnShiftUp.UseVisualStyleBackColor = true;
       this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
@@ -294,7 +295,7 @@
       this.btnShiftRight.Location = new System.Drawing.Point(38, 269);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftRight.TabIndex = 39;
+      this.btnShiftRight.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
       this.btnShiftRight.UseVisualStyleBackColor = true;
       this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
@@ -305,7 +306,7 @@
       this.button3.Location = new System.Drawing.Point(38, 301);
       this.button3.Name = "button3";
       this.button3.Size = new System.Drawing.Size(26, 26);
-      this.button3.TabIndex = 42;
+      this.button3.TabIndex = 8;
       this.toolTip1.SetToolTip(this.button3, "Rotate Right");
       this.button3.UseVisualStyleBackColor = true;
       this.button3.Click += new System.EventHandler(this.btnRotateRight_Click);
@@ -316,7 +317,7 @@
       this.btnRotateLeft.Location = new System.Drawing.Point(6, 301);
       this.btnRotateLeft.Name = "btnRotateLeft";
       this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
-      this.btnRotateLeft.TabIndex = 41;
+      this.btnRotateLeft.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnRotateLeft, "Rotate Left");
       this.btnRotateLeft.UseVisualStyleBackColor = true;
       this.btnRotateLeft.Click += new System.EventHandler(this.btnRotateLeft_Click);
@@ -327,7 +328,7 @@
       this.btnShiftLeft.Location = new System.Drawing.Point(6, 269);
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftLeft.TabIndex = 40;
+      this.btnShiftLeft.TabIndex = 0;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
@@ -341,10 +342,11 @@
       this.tabCharacterEditor.Name = "tabCharacterEditor";
       this.tabCharacterEditor.SelectedIndex = 0;
       this.tabCharacterEditor.Size = new System.Drawing.Size(1057, 490);
-      this.tabCharacterEditor.TabIndex = 55;
+      this.tabCharacterEditor.TabIndex = 0;
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnHighlightDuplicates);
       this.tabEditor.Controls.Add(this.panelColorSettings);
       this.tabEditor.Controls.Add(this.canvasEditor);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
@@ -384,7 +386,7 @@
       this.panelColorSettings.Location = new System.Drawing.Point(277, 3);
       this.panelColorSettings.Name = "panelColorSettings";
       this.panelColorSettings.Size = new System.Drawing.Size(231, 186);
-      this.panelColorSettings.TabIndex = 55;
+      this.panelColorSettings.TabIndex = 9;
       // 
       // canvasEditor
       // 
@@ -405,7 +407,7 @@
       this.comboCharsetMode.Location = new System.Drawing.Point(322, 322);
       this.comboCharsetMode.Name = "comboCharsetMode";
       this.comboCharsetMode.Size = new System.Drawing.Size(169, 21);
-      this.comboCharsetMode.TabIndex = 16;
+      this.comboCharsetMode.TabIndex = 13;
       this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
       // labelCharsetMode
@@ -448,6 +450,7 @@
       // 
       // panelCharacters
       // 
+      this.panelCharacters.AllowPopup = false;
       this.panelCharacters.AutoScroll = true;
       this.panelCharacters.AutoScrollHorizontalMaximum = 100;
       this.panelCharacters.AutoScrollHorizontalMinimum = 0;
@@ -466,7 +469,7 @@
       this.panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelCharacters.SelectedIndex = -1;
       this.panelCharacters.Size = new System.Drawing.Size(260, 260);
-      this.panelCharacters.TabIndex = 33;
+      this.panelCharacters.TabIndex = 14;
       this.panelCharacters.TabStop = true;
       this.panelCharacters.VisibleAutoScrollHorizontal = false;
       this.panelCharacters.VisibleAutoScrollVertical = false;
@@ -649,6 +652,16 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
+      // btnHighlightDuplicates
+      // 
+      this.btnHighlightDuplicates.Location = new System.Drawing.Point(681, 269);
+      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
+      this.btnHighlightDuplicates.Size = new System.Drawing.Size(93, 26);
+      this.btnHighlightDuplicates.TabIndex = 18;
+      this.btnHighlightDuplicates.Text = "Duplicates";
+      this.btnHighlightDuplicates.UseVisualStyleBackColor = true;
+      this.btnHighlightDuplicates.Click += new System.EventHandler(this.btnHighlightDuplicates_Click);
+      // 
       // CharacterEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -725,5 +738,6 @@
     private System.Windows.Forms.ComboBox comboCharsetMode;
     private System.Windows.Forms.Label labelCharsetMode;
     private System.Windows.Forms.Panel panelColorSettings;
+    private System.Windows.Forms.Button btnHighlightDuplicates;
   }
 }
