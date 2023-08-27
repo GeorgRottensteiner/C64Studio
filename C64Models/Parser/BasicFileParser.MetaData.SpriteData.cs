@@ -1,4 +1,5 @@
 ﻿using GR.Memory;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
@@ -8,7 +9,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class BasicFileParser : ParserBase
   {
-    private bool MetaDataBinaryData( int LineIndex, string MetaData, string MetaDataParams )
+    private bool MetaDataSpriteData( int LineIndex, string MetaData, string MetaDataParams )
     {
       var  parms = PureTokenizeLine( MetaDataParams );
 
@@ -32,7 +33,7 @@ namespace RetroDevStudio.Parser
       }
 
       // followed by string literal for file name
-      if ( ( cleanedParms.Count < 5 )
+      if ( ( cleanedParms.Count != 5 )
       ||   ( cleanedParms[0].Count != 1 )
       ||   ( cleanedParms[1].Count > 1 )
       ||   ( cleanedParms[2].Count > 1 )
@@ -41,7 +42,7 @@ namespace RetroDevStudio.Parser
       ||   ( !cleanedParms[0][0].StartsWith( "\"" ) )
       ||   ( !cleanedParms[0][0].EndsWith( "\"" ) ) )
       {
-        AddError( LineIndex, Types.ErrorCode.E3007_BASIC_MALFORMED_METADATA, "BinData expects <Filename>,<Length>,<Offset>,<Start Line No>,<Line Step>" );
+        AddError( LineIndex, Types.ErrorCode.E3007_BASIC_MALFORMED_METADATA, "SpriteData expects <Filename>,<Offset>,<Count>,<Start Line No>,<Line Step>" );
         return false;
       }
 
@@ -63,11 +64,12 @@ namespace RetroDevStudio.Parser
         return false;
       }
 
-      ByteBuffer subFile;
+      var spriteProject = new SpriteProject();
 
       try
       {
-        subFile = GR.IO.File.ReadAllBytes( subFilenameFull );
+        var subFile = GR.IO.File.ReadAllBytes( subFilenameFull );
+        spriteProject.ReadFromBuffer( subFile );
       }
       catch ( System.IO.IOException )
       {
@@ -75,38 +77,41 @@ namespace RetroDevStudio.Parser
         return false;
       }
 
-      int length    = (int)subFile.Length;
-      int offset    = 0;
+      int offset    = GR.Convert.ToI32( cleanedParms[1][0] );
+      int count     = GR.Convert.ToI32( cleanedParms[2][0] );
       int startLine = GR.Convert.ToI32( cleanedParms[3][0] );
       int stepLine  = GR.Convert.ToI32( cleanedParms[4][0] );
 
-      if ( cleanedParms[1].Count > 0 )
-      {
-        length = GR.Convert.ToI32( cleanedParms[1][0] );
-      }
-      if ( cleanedParms[2].Count > 0 )
-      {
-        offset = GR.Convert.ToI32( cleanedParms[2][0] );
-      }
-
-      if ( ( length <= 0 )
-      ||   ( offset >= subFile.Length )
-      ||   ( offset + length <= 0 ) )
+      if ( ( count <= 0 )
+      ||   ( offset >= spriteProject.TotalNumberOfSprites )
+      ||   ( offset + count <= 0 ) )
       {
         return true;
       }
 
       if ( offset < 0 )
       {
-        length += offset;
+        count += offset;
         offset = 0;
       }
-      if ( offset + length > subFile.Length )
+      if ( offset + count > spriteProject.TotalNumberOfSprites )
       {
-        length = (int)subFile.Length - offset;
+        count = spriteProject.TotalNumberOfSprites - offset;
       }
 
-      string basicDatas = Util.ToBASICData( subFile.SubBuffer( offset, length ), startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength );
+      int spriteSize = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+
+      var spriteData = new GR.Memory.ByteBuffer( (uint)( count * spriteSize - 1 ) );
+
+      for ( int i = 0; i < count; ++i )
+      {
+        spriteProject.Sprites[offset + i].Tile.Data.CopyTo( spriteData,
+                                                            0,
+                                                            (int)spriteProject.Sprites[offset + i].Tile.Data.Length,
+                                                            i * spriteSize );
+      }
+
+      string basicDatas = Util.ToBASICData( spriteData, startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength );
 
       string[]  newLines = basicDatas.Split( new string[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries );
 

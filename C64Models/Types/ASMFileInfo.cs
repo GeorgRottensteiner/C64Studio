@@ -16,12 +16,20 @@ namespace RetroDevStudio.Types.ASM
 
   public class SourceInfo
   {
-    public string         Filename = "";
-    public string         FilenameParent = "";
-    public string         FullPath = "";
-    public int            GlobalStartLine = 0;
-    public int            LocalStartLine = 0;
-    public int            LineCount = 0;
+    public enum SourceInfoSource
+    {
+      CODE_DIRECT = 0,
+      CODE_INCLUDE,
+      MEDIA_INCLUDE
+    }
+
+    public string             Filename = "";
+    public string             FilenameParent = "";
+    public string             FullPath = "";
+    public int                GlobalStartLine = 0;
+    public int                LocalStartLine = 0;
+    public int                LineCount = 0;
+    public SourceInfoSource   Source = SourceInfoSource.CODE_DIRECT;
   };
 
 
@@ -302,6 +310,22 @@ namespace RetroDevStudio.Types.ASM
       }
       foreach ( var label in Labels )
       {
+        if ( label.Value.References.Any( r => r >= GlobalLineIndex ) )
+        {
+          var newSet = new Set<int>();
+          foreach ( var reference in label.Value.References )
+          {
+            if ( reference >= GlobalLineIndex )
+            {
+              newSet.Add( reference + LineCount );
+            }
+            else
+            {
+              newSet.Add( reference );
+            }
+          }
+          label.Value.References = newSet;
+        }
         if ( label.Value.LineIndex >= GlobalLineIndex )
         {
           label.Value.LineIndex += LineCount;

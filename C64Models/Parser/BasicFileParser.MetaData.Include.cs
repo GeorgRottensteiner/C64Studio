@@ -54,11 +54,12 @@ namespace RetroDevStudio.Parser
       }
 
       Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-      sourceInfo.Filename = subFilenameFull;
-      sourceInfo.FullPath = subFilenameFull;
-      sourceInfo.GlobalStartLine = LineIndex;
-      sourceInfo.LineCount = subFile.Length;
-      sourceInfo.FilenameParent = filename;
+      sourceInfo.Filename         = subFilenameFull;
+      sourceInfo.FullPath         = subFilenameFull;
+      sourceInfo.GlobalStartLine  = LineIndex;
+      sourceInfo.LineCount        = subFile.Length;
+      sourceInfo.FilenameParent   = filename;
+      sourceInfo.Source           = Types.ASM.SourceInfo.SourceInfoSource.CODE_INCLUDE;
 
       //SourceInfoLog( "-include at global index " + LineIndex );
       //SourceInfoLog( "-has " + subFile.Length + " lines" );

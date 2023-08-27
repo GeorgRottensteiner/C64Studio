@@ -5676,6 +5676,8 @@ namespace RetroDevStudio
         return;
       }
 
+      Program.s_Exiting = true;
+
       if ( m_CurrentProject == null )
       {
         try

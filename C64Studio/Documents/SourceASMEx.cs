@@ -283,12 +283,6 @@ namespace RetroDevStudio.Documents
       // special case, if we insert an empty line, insert "below"
       int     indexToNotify = firstLine;
 
-      /*
-      if ( editSource.Lines[firstLine].Trim().Length == 0 )
-      {
-        ++indexToNotify;
-      }*/
-
       if ( !m_InsertingText )
       {
         Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
@@ -339,8 +333,6 @@ namespace RetroDevStudio.Documents
         {
           m_BreakPoints[bp.LineIndex] = bp;
         }
-        //UpdateFoldingBlocks();
-        //StoreFoldedBlocks();
       }
     }
 
