@@ -1975,7 +1975,7 @@ namespace RetroDevStudio.Documents
     private void renumberToolStripMenuItem_Click( object sender, EventArgs e )
     {
       int     firstLineNumber = 0;
-      int     lastLineNumber  = 64000;
+      int     lastLineNumber  = BASICDialect.MaxLineNumber;
       if ( editSource.Selection.Start != editSource.Selection.End )
       {
         int     firstLine = editSource.Selection.Start.iLine;

@@ -51,9 +51,9 @@ namespace RetroDevStudio.Dialogs
       int     lineStep        = GR.Convert.ToI32( editLineStep.Text );
 
       if ( ( lineStart < 0 )
-      ||   ( lineStart >= 64000 ))
+      ||   ( lineStart > m_Basic.BASICDialect.MaxLineNumber ) )
       {
-        labelRenumberInfo.Text = "Starting line number is invalid, must be greater or equal zero and less than 64000";
+        labelRenumberInfo.Text = $"Starting line number is invalid, must be greater or equal zero and less or equal than {m_Basic.BASICDialect.MaxLineNumber}";
         btnOK.Enabled = false;
         return;
       }

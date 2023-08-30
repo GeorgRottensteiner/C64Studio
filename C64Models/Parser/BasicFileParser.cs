@@ -2716,12 +2716,6 @@ namespace RetroDevStudio.Parser
 
                   sb.Append( token.Content + " " + lineNumberReference[refNo].ToString() );
                   ++i;
-                  /*
-                  // fill up with blanks
-                  while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-                  {
-                    sb.Append( ' ' );
-                  }*/
                   continue;
                 }
               }
@@ -2750,24 +2744,19 @@ namespace RetroDevStudio.Parser
                       Debug.Log( "Error, found linenumber without reference " + refNo + " in line " + lineInfo.Value.LineNumber );
                       continue;
                     }
-                    /*
-                    // fill up with blanks
-                    for ( int j = 0; j < nextToken.StartIndex - token.StartIndex - token.Content.Length; ++j )
-                    {
-                      sb.Append( ' ' );
-                    }*/
                     sb.Append( lineNumberReference[refNo].ToString() );
                   }
                   else if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
                   &&        ( nextToken.Content == " " ) )
                   {
-                    /*
-                    // fill up with blanks
-                    while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-                    {
-                      sb.Append( ' ' );
-                    }*/
                     sb.Append( nextToken.Content );
+                    ++nextIndex;
+                    continue;
+                  }
+                  else if ( nextToken.Content == "," )
+                  {
+                    // comma after comma, is valid
+                    sb.Append( ',' );
                     ++nextIndex;
                     continue;
                   }
@@ -2787,12 +2776,6 @@ namespace RetroDevStudio.Parser
                     --nextIndex;
                     break;
                   }
-                  /*
-                  // fill up with blanks
-                  while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-                  {
-                    sb.Append( ' ' );
-                  }*/
                   sb.Append( ',' );
                   mustBeComma = false;
                 }
@@ -2977,6 +2960,22 @@ namespace RetroDevStudio.Parser
             while ( ( nextTokenIndex != -1 )
             &&      ( nextTokenIndex2 != -1 ) )
             {
+              if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.DIRECT_TOKEN )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex].Content == "," ) )
+              {
+                // comma is valid
+                sb.Append( "," );
+                nextTokenIndex = nextTokenIndex2;
+                nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                while ( nextTokenIndex2 - nextTokenIndex > 1 )
+                {
+                  sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
+                  ++nextTokenIndex;
+                }
+                continue;
+              }
+
+
               if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
@@ -3273,16 +3272,16 @@ namespace RetroDevStudio.Parser
       {
         return RenumberResult.NOTHING_TO_DO;
       }
-      if ( LineStart + LineStep * ( m_LineInfos.Count - 1 ) >= 64000 )
+      if ( LineStart + LineStep * ( m_LineInfos.Count - 1 ) > Settings.BASICDialect.MaxLineNumber )
       {
         return RenumberResult.TOO_MANY_LINES;
       }
       if ( ( LineStart < 0 )
-      ||   ( LineStart >= 64000 )
+      ||   ( LineStart > Settings.BASICDialect.MaxLineNumber )
       ||   ( FirstLineNumber < 0 )
-      ||   ( FirstLineNumber >= 64000 )
+      ||   ( FirstLineNumber > Settings.BASICDialect.MaxLineNumber )
       ||   ( LastLineNumber < 0 )
-      ||   ( LastLineNumber >= 64000 ) )
+      ||   ( LastLineNumber > Settings.BASICDialect.MaxLineNumber ) )
       {
         return RenumberResult.INVALID_VALUES;
       }
@@ -3412,16 +3411,6 @@ namespace RetroDevStudio.Parser
                     sb.Append( lineInfo.Tokens[i + 1].Content );
                     ++i;
                   }
-                  /*
-                  if ( token.StartIndex + token.Content.Length < lineInfo.Tokens[i + 1].StartIndex )
-                  {
-                    // keep spaces
-                    for ( int j = 0; j < lineInfo.Tokens[i + 1].StartIndex - ( token.StartIndex + token.Content.Length ); ++j )
-                    {
-                      sb.Append( ' ' );
-                    }
-                  }*/
-
                   if ( ( refNo >= FirstLineNumber )
                   &&   ( refNo <= LastLineNumber ) )
                   {
@@ -3482,6 +3471,14 @@ namespace RetroDevStudio.Parser
                   {
                     sb.Append( nextToken.Content );
                     // space is valid, skip
+                    ++nextIndex;
+                    continue;
+                  }
+                  else if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
+                  &&        ( nextToken.Content == "," ) )
+                  {
+                    // comma after comma is valid
+                    sb.Append( nextToken.Content );
                     ++nextIndex;
                     continue;
                   }

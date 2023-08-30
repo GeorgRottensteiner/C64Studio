@@ -111,6 +111,11 @@ namespace RetroDevStudio
             dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
             continue;
           }
+          else if ( line.StartsWith( "MaxLineNumber=" ) )
+          {
+            dialect.MaxLineNumber = GR.Convert.ToI32( line.Substring( 14 ) );
+            continue;
+          }
           else if ( line.StartsWith( "HexPrefix=" ) )
           {
             dialect.HexPrefix = line.Substring( 10 );

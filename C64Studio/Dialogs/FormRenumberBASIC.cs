@@ -55,9 +55,9 @@ namespace RetroDevStudio.Dialogs
       int     lastLineNumber  = GR.Convert.ToI32( editLastLineNumber.Text );
 
       if ( ( lineStart < 0 )
-      ||   ( lineStart >= 64000 ))
+      ||   ( lineStart > m_Basic.BASICDialect.MaxLineNumber ) )
       {
-        labelRenumberInfo.Text = "Starting line number is invalid, must be greater or equal zero and less than 64000";
+        labelRenumberInfo.Text = $"Starting line number is invalid, must be greater or equal zero and less or equal than {m_Basic.BASICDialect.MaxLineNumber}";
         btnOK.Enabled = false;
         return;
       }
@@ -82,11 +82,11 @@ namespace RetroDevStudio.Dialogs
           btnOK.Enabled = true;
           break;
         case RetroDevStudio.Parser.BasicFileParser.RenumberResult.TOO_MANY_LINES:
-          labelRenumberInfo.Text = "Last line number is higher or equal 64000, reduce step value";
+          labelRenumberInfo.Text = $"Last line number is higher than {m_Basic.BASICDialect.MaxLineNumber}, reduce step value";
           btnOK.Enabled = false;
           break;
         case RetroDevStudio.Parser.BasicFileParser.RenumberResult.NOTHING_TO_DO:
-          labelRenumberInfo.Text = "Nothing to do (Maybe parsing was not completed yet)";
+          labelRenumberInfo.Text = "Nothing to do (Maybe parsing was not completed yet, try to rebuild manually)";
           btnOK.Enabled = false;
           break;
       }
@@ -130,7 +130,6 @@ namespace RetroDevStudio.Dialogs
       taskCompile.Core = m_Core;
       taskCompile.RunTask();
       if ( !taskCompile.TaskSuccessful )
-      //if ( !m_Core.MainForm.ParseFile( m_Core.Compiling.ParserBasic, m_Basic.DocumentInfo, config, null, true, false, false ) )
       {
         System.Windows.Forms.MessageBox.Show( "Renumber is only possible on compilable code", "Cannot renumber" );
         Close();

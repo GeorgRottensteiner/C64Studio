@@ -45,6 +45,7 @@ namespace C64Models.BASIC
     public string                           BinPrefix = "";
     public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
     public bool                             ExtendedTokensRecognizedInsideComment = false;
+    public int                              MaxLineNumber = 63999;
 
     public static Dialect                   BASICV2;
 
@@ -218,6 +219,11 @@ namespace C64Models.BASIC
           else if ( line.StartsWith( "SafeLineLength=" ) )
           {
             dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
+            continue;
+          }
+          else if ( line.StartsWith( "MaxLineNumber=" ) )
+          {
+            dialect.MaxLineNumber = GR.Convert.ToI32( line.Substring( 14 ) );
             continue;
           }
           else if ( line.StartsWith( "HexPrefix=" ) )
