@@ -2055,7 +2055,6 @@ namespace RetroDevStudio.Documents
           showOpenFile = true;
           openFileToolStripMenuItem.Text = "Open <" + fileName.Substring( 1, fileName.Length - 2 ) + ">";
           m_FilenameToOpen = fileName.Substring( 1, fileName.Length - 2 );
-
           m_FilenameToOpen = DetermineFullLibraryFilePath( m_FilenameToOpen );
         }
       }
@@ -2691,6 +2690,11 @@ namespace RetroDevStudio.Documents
       string zone;
       string cheapLabelParent;
 
+      if ( string.IsNullOrEmpty( wordBelow ) )
+      {
+        return;
+      }
+
       Core.Navigating.VisitedLine( DocumentInfo, m_ContextMenuLineIndex );
 
       FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
@@ -2732,6 +2736,13 @@ namespace RetroDevStudio.Documents
 
     private void openFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      OpenFileFromSource( m_FilenameToOpen );
+    }
+
+
+
+    private void OpenFileFromSource( string Filename )
+    {
       if ( DocumentInfo == null )
       {
         return;
@@ -2742,7 +2753,7 @@ namespace RetroDevStudio.Documents
       {
         docBasePath = DocumentInfo.Project.Settings.BasePath;
       }
-      string            fullPath = m_FilenameToOpen;
+      string            fullPath = Filename;
 
       if ( !System.IO.Path.IsPathRooted( fullPath ) )
       {
@@ -3303,6 +3314,62 @@ namespace RetroDevStudio.Documents
       {
         ToggleBreakpointOnEvent( editSource.PointToPlace( e.Location ).iLine );
       }
+      else if ( e.X >= editSource.LeftIndent )
+      {
+        if ( ( Control.ModifierKeys & Keys.Control ) == Keys.Control )
+        {
+          // Ctrl-click
+          if ( IsFilenameUnderCursor( out string filename ) )
+          {
+            OpenFileFromSource( filename );
+          }
+          else
+          {
+            GoToDeclaration();
+          }
+        }
+      }
+    }
+
+
+
+    private bool IsFilenameUnderCursor( out string Filename )
+    {
+      Filename = "";
+
+      System.Drawing.Point mousePos = editSource.PointToClient( Control.MousePosition );
+
+      int position  = editSource.PointToPosition( mousePos );
+      int lineIndex = editSource.PositionToPlace( position ).iLine;
+
+      string    lineBelow = editSource.Lines[lineIndex].Trim().ToUpper();
+      var pseudoOps = Parser.AssemblerSettings.PseudoOps.Where( po => po.Value.Type == MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+      foreach ( var po in pseudoOps )
+      {
+        if ( lineBelow.StartsWith( po.Value.Keyword.ToUpper() ) )
+        {
+          Filename = editSource.Lines[lineIndex].Trim().Substring( po.Value.Keyword.Length ).Trim();
+
+          // local file
+          if ( ( Filename.Length > 2 )
+          &&   ( Filename.StartsWith( "\"" ) )
+          &&   ( Filename.EndsWith( "\"" ) ) )
+          {
+            Filename = Filename.Substring( 1, Filename.Length - 2 );
+            return true;
+          }
+          // library file
+          if ( ( Filename.Length > 2 )
+          &&   ( Filename.StartsWith( "<" ) )
+          &&   ( Filename.EndsWith( ">" ) ) )
+          {
+            Filename = Filename.Substring( 1, Filename.Length - 2 );
+            Filename = DetermineFullLibraryFilePath( Filename );
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
 
