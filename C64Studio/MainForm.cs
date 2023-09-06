@@ -3558,7 +3558,8 @@ namespace RetroDevStudio
       {
         type = ProjectElement.ElementType.GRAPHIC_SCREEN;
       }
-      else if ( newFileExtension == ".BAS" )
+      else if ( ( newFileExtension == ".BAS" )
+      ||        ( newFileExtension == ".B" ) )
       {
         type = ProjectElement.ElementType.BASIC_SOURCE;
       }
@@ -6003,7 +6004,8 @@ namespace RetroDevStudio
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
-      else if ( extension == ".BAS" )
+      else if ( ( extension == ".BAS" )
+      ||        ( extension == ".B" ) )
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;

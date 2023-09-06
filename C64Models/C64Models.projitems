@@ -57,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.65816.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.ParseContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.ConversionTab.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.CallMacro.cs" />

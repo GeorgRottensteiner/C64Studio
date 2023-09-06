@@ -28,7 +28,7 @@ namespace Tiny64
         case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           targetAddress = Memory.ReadWordDirect( (ushort)( CodePos + 1 ) );
           break;
-        case Tiny64.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU:
           targetAddress = Memory.ReadByteDirect( (ushort)( CodePos + 1 ) );
           twoBytes = false;
           break;
@@ -98,7 +98,7 @@ namespace Tiny64
         case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           output += " " + addressPlacement + ", y";
           break;
-        case Tiny64.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU:
           output += " #" + addressPlacement;
           break;
         case Tiny64.Opcode.AddressingType.INDIRECT:

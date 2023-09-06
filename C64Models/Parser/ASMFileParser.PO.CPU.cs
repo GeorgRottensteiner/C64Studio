@@ -15,7 +15,7 @@ namespace RetroDevStudio.Parser
     {
       if ( lineTokenInfos.Count != 2 )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502 and M65 are supported" );
+        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502, M65 and 65816 are supported" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -48,8 +48,11 @@ namespace RetroDevStudio.Parser
         case "M65":
           m_Processor = Processor.CreateM65();
           break;
+        case "65816":
+          m_Processor = Processor.Create65816();
+          break;
         default:
-          AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502 and M65 are supported" );
+          AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502, M65 and 65816 are supported" );
           return ParseLineResult.RETURN_NULL;
       }
 

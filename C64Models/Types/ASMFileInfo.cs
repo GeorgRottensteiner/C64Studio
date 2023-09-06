@@ -51,6 +51,10 @@ namespace RetroDevStudio.Types.ASM
     public GR.Memory.ByteBuffer   LineData = null;
     public bool                   HasCollapsedContent = false;
     public bool                   HideInPreprocessedOutput = false;
+
+    // used for 65816 modes
+    public bool                   Accu16Bit = false;
+    public bool                   Registers16Bit = false;
   };
 
 

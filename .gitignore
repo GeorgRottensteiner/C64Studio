@@ -330,3 +330,5 @@
 /C64StudioRelease/shared content/Sample Projects/WiC64/ReadUserName/ReadUserName.prg
 /C64StudioRelease/shared content/Sample Projects/WiC64/SecurityID/securityid.prg
 /Sample Projects/MacroTest/renumbertestongoto.prg
+/Sample Projects/MacroTest/m65.prg
+/Sample Projects/MacroTest/cpu_65816.prg

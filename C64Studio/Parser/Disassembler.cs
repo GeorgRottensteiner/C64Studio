@@ -72,7 +72,7 @@ namespace RetroDevStudio.Parser
         case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
-        case Tiny64.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
@@ -142,7 +142,7 @@ namespace RetroDevStudio.Parser
         case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           output += " " + addressPlacement + ", y";
           break;
-        case Tiny64.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU:
           output += " #" + addressPlacement;
           break;
         case Tiny64.Opcode.AddressingType.INDIRECT:

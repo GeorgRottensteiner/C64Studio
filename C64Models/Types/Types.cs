@@ -79,13 +79,17 @@ namespace RetroDevStudio.Types
       SET,
       ALIGN_DASM,
       BASIC,
-      ADDRESS,              // ACME: !ADDR with or without braces
-      REPEAT,               // PDS: Repeat <x> times next line
-      ADD_INCLUDE_SOURCE,   // DASM: Add directory to source code paths (custom library paths)
-      CPU,                  // Set the procesor type
-      PREPROCESSED_LIST,    // en/disable output for precompiled file
-      BREAK_POINT,          // KickAssembler : include breakpoint
-      LZONE                 // lzone
+      ADDRESS,                          // ACME: !ADDR with or without braces
+      REPEAT,                           // PDS: Repeat <x> times next line
+      ADD_INCLUDE_SOURCE,               // DASM: Add directory to source code paths (custom library paths)
+      CPU,                              // Set the procesor type
+      PREPROCESSED_LIST,                // en/disable output for precompiled file
+      BREAK_POINT,                      // KickAssembler : include breakpoint
+      LZONE,                            // lzone
+      ASSUME_16BIT_ACCUMULATOR_65816,
+      ASSUME_8BIT_ACCUMULATOR_65816,
+      ASSUME_16BIT_REGISTERS_65816,
+      ASSUME_8BIT_REGISTERS_65816
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;
@@ -219,6 +223,7 @@ namespace RetroDevStudio.Types
     E1010_UNKNOWN_LABEL                     = 0x1010,
     E1011_TYPE_MISMATCH                     = 0x1011,
     E1012_IMPLEMENTATION_MISSING            = 0x1012,
+    E1013_VALUE_OUT_OF_BOUNDS_24BIT         = 0x1013,
 
     E1100_RELATIVE_JUMP_TOO_FAR             = 0x1100,
     E1101_BANK_TOO_BIG                      = 0x1101,
@@ -511,7 +516,7 @@ namespace RetroDevStudio.Types
   {
     public static string FILEFILTER_ALL = "All Files|*.*|";
     public static string FILEFILTER_ASM = "ASM File|*.asm;*.a|";
-    public static string FILEFILTER_BASIC = "Basic File|*.bas|";
+    public static string FILEFILTER_BASIC = "Basic File|*.bas;*.b|";
     public static string FILEFILTER_DISASSEMBLY = "Disassembly Project|*.disassembly|";
     public static string FILEFILTER_CHARSET_FILE = "Charset File|*.chr|";
     public static string FILEFILTER_CHARSET_PROJECT = "Charset Project|*.charsetproject|";
@@ -534,8 +539,8 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_PROJECT = "C64 Studio Project Files|*.c64|";
     public static string FILEFILTER_SOLUTION = "C64 Studio Solution Files|*.s64|";
     public static string FILEFILTER_SOLUTION_OR_PROJECTS = "C64 Studio Solution or Project Files|*.s64;*.c64|";
-    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly|";
-    public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas|";
+    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly|";
+    public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas;*.a;*.b|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";
     public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81|";
     public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|";

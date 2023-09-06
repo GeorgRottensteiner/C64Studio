@@ -10,7 +10,9 @@ namespace Tiny64
     {
       UNKNOWN,
       IMPLICIT,                 // e.g. lsr a, dex
-      IMMEDIATE,                // e.g. lda #02
+      IMMEDIATE_ACCU,           // e.g. lda #02
+      IMMEDIATE_REGISTER,       // e.g. ldy #02
+      IMMEDIATE_8BIT,           // always 8bit, sep and rep (65816)
       ABSOLUTE,
       ABSOLUTE_X,
       ABSOLUTE_Y,
@@ -29,9 +31,20 @@ namespace Tiny64
 
       // 65SC02
       ZEROPAGE_INDIRECT_Z,      // lda ($12),z
-      RELATIVE_16,              // e.g. LBNE 16BIT_DELTA
-      ZEROPAGE_INDIRECT_SP_Y,   // lda ($zp,SP),y
-      IMMEDIATE_16              // phw #$nnnn
+      RELATIVE_16,              // e.g. LBNE 16BIT_DELTA    rl
+      ZEROPAGE_INDIRECT_SP_Y,   // lda ($zp,SP),y           (d,s),y
+      IMMEDIATE_16,             // phw #$nnnn
+
+      // 65816
+      ABSOLUTE_LONG_X,          // adc $123456,x            al,x
+      ABSOLUTE_LONG,            // adc $123456              al
+      ABSOLUTE_INDIRECT_LONG,   // jmp [$hhll]
+      BLOCK_MOVE_XYC,           // mv $12,$34
+      ZEROPAGE_INDIRECT_SP,     // (d,s)
+      ZEROPAGE_INDIRECT_LONG,   // [d]
+      ZEROPAGE_INDIRECT_Y_LONG, // [d],y
+      STACK_RELATIVE            // d,s
+
     };
 
     public string Mnemonic = "";
@@ -56,7 +69,7 @@ namespace Tiny64
           case AddressingType.ABSOLUTE:
           case AddressingType.ABSOLUTE_X:
           case AddressingType.ABSOLUTE_Y:
-          case AddressingType.IMMEDIATE:
+          case AddressingType.IMMEDIATE_ACCU:
           case AddressingType.IMMEDIATE_16:
           case AddressingType.IMPLICIT:
           case AddressingType.RELATIVE:
@@ -71,6 +84,7 @@ namespace Tiny64
           case AddressingType.ZEROPAGE_INDIRECT_Z:
           case AddressingType.ZEROPAGE_X:
           case AddressingType.ZEROPAGE_Y:
+          case AddressingType.ZEROPAGE_INDIRECT_Y_LONG:
             // jmp ($1234,x)
             // jsr ($1234)
             // and ($12)
@@ -92,6 +106,21 @@ namespace Tiny64
     {
       get
       {
+        switch ( Addressing )
+        {
+          case AddressingType.ABSOLUTE_X:
+          case AddressingType.ZEROPAGE_X:
+          case AddressingType.ABSOLUTE_Y:
+          case AddressingType.ZEROPAGE_Y:
+          case AddressingType.ABSOLUTE_LONG_X:
+          case AddressingType.STACK_RELATIVE:
+            // use ,<something>
+            return 2;
+          case AddressingType.ZEROPAGE_INDIRECT_Y_LONG:
+            return 3;
+          case AddressingType.ABSOLUTE_INDIRECT_X:
+            return 4;
+        }
         return 0;
       }
     }

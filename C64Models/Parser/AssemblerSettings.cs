@@ -246,6 +246,10 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!CPU", Types.MacroInfo.PseudoOpType.CPU );
           AddPseudoOp( "!SET", Types.MacroInfo.PseudoOpType.SET );
           AddPseudoOp( "!LIST", Types.MacroInfo.PseudoOpType.PREPROCESSED_LIST );
+          AddPseudoOp( "!AL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_ACCUMULATOR_65816 );
+          AddPseudoOp( "!AS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_ACCUMULATOR_65816 );
+          AddPseudoOp( "!RL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_REGISTERS_65816 );
+          AddPseudoOp( "!RS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_REGISTERS_65816 );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );
@@ -349,6 +353,10 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!SL", Types.MacroInfo.PseudoOpType.LABEL_FILE );
           AddPseudoOp( "!CPU", Types.MacroInfo.PseudoOpType.CPU );
           AddPseudoOp( "!SET", Types.MacroInfo.PseudoOpType.SET );
+          AddPseudoOp( "!AL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_ACCUMULATOR_65816 );
+          AddPseudoOp( "!AS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_ACCUMULATOR_65816 );
+          AddPseudoOp( "!RL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_REGISTERS_65816 );
+          AddPseudoOp( "!RS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_REGISTERS_65816 );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );
