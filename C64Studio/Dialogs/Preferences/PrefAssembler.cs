@@ -37,6 +37,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         asmLibraryPathList.Items.Add( libPath );
       }
+      checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
     }
 
 
@@ -153,6 +154,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       if ( xmlAutoTruncateLiterals != null )
       {
         Core.Settings.ASMAutoTruncateLiteralValues = IsSettingTrue( xmlAutoTruncateLiterals.Attribute( "Enabled" ) );
+        checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
       }
 
       xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "LibraryPaths" );
