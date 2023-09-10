@@ -88,6 +88,13 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override void RemoveBookmark( int LineIndex )
+    {
+      editSource.Bookmarks.Remove( LineIndex );
+    }
+
+
+
     public override int CursorLine
     {
       get
