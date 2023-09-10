@@ -6,8 +6,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+
+
 
 namespace RetroDevStudio.Dialogs
 {
@@ -16,6 +19,7 @@ namespace RetroDevStudio.Dialogs
     private StudioCore            Core = null;
 
     private List<PrefBase>        _PreferencePanes = new List<PrefBase>();
+    private List<PrefBase>        _VisiblePanes = new List<PrefBase>();
 
 
 
@@ -51,6 +55,7 @@ namespace RetroDevStudio.Dialogs
         DPIHandler.ResizeControlsForDPI( entry );
       }
       panelPreferences.SizeChanged += PanelPreferences_SizeChanged;
+      _VisiblePanes = _PreferencePanes;
 
       Core.Theming.ApplyTheme( this );
 
@@ -162,10 +167,9 @@ namespace RetroDevStudio.Dialogs
     private void editPreferencesFilter_TextChanged( object sender, EventArgs e )
     {
       string[]    keyWords = editPreferencesFilter.Text.Split( ' ' );
-
-      int   curY = 0;
-
-      panelPreferences.Controls.Clear();
+      var         matchingPreferences = new List<PrefBase>();
+      int         curY = 0;
+      bool        changed = false;
 
       foreach ( var entry in _PreferencePanes )
       {
@@ -184,17 +188,42 @@ namespace RetroDevStudio.Dialogs
           entry.Location = new Point( 0, curY );
           entry.Width = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
           curY += entry.Height;
-          if ( !panelPreferences.Controls.Contains( entry ) )
+
+          if ( !_VisiblePanes.Contains( entry ) )
           {
-            panelPreferences.Controls.Add( entry );
+            changed = true;
           }
+          matchingPreferences.Add( entry );
         }
-        else if ( panelPreferences.Controls.Contains( entry ) ) 
-        { 
-          panelPreferences.Controls.Remove( entry );
+        else if ( _VisiblePanes.Contains( entry ) )
+        {
+          changed = true;
         }
       }
 
+      if ( changed )
+      {
+        const int WM_SETREDRAW = 11;
+
+        SendMessage( panelPreferences.Handle, WM_SETREDRAW, false, 0 );
+        foreach ( var match in matchingPreferences )
+        {
+          if ( !panelPreferences.Controls.Contains( match ) )
+          {
+            panelPreferences.Controls.Add( match );
+          }
+        }
+        foreach ( PrefBase pref in panelPreferences.Controls )
+        {
+          if ( panelPreferences.Controls.Contains( pref ) )
+          {
+            panelPreferences.Controls.Remove( pref );
+          }
+        }
+        _VisiblePanes = matchingPreferences;
+        SendMessage( panelPreferences.Handle, WM_SETREDRAW, true, 0 );
+        panelPreferences.Refresh();
+      }
     }
 
 
@@ -210,6 +239,9 @@ namespace RetroDevStudio.Dialogs
     }
 
 
+
+    [DllImport( "user32.dll" )]
+    public static extern int SendMessage( IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam );
 
   }
 }
