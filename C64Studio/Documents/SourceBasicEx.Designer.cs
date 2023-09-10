@@ -37,6 +37,9 @@ namespace RetroDevStudio.Documents
       this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.commentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.renumberToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.btnToggleLabelMode = new RetroDevStudio.Controls.MenuButton();
@@ -56,9 +59,10 @@ namespace RetroDevStudio.Documents
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
-      this.commentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.addBookmarkHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeAllBookmarksOfThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -111,44 +115,67 @@ namespace RetroDevStudio.Documents
             this.copyToolStripMenuItem,
             this.cutToolStripMenuItem,
             this.pasteToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.addBookmarkHereToolStripMenuItem,
+            this.removeBookmarkToolStripMenuItem,
+            this.removeAllBookmarksOfThisFileToolStripMenuItem,
             this.toolStripSeparator2,
             this.commentSelectionToolStripMenuItem,
             this.uncommentSelectionToolStripMenuItem,
             this.toolStripSeparator1,
             this.renumberToolStripMenuItem1});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(193, 170);
+      this.contextSource.Size = new System.Drawing.Size(250, 242);
       // 
       // copyToolStripMenuItem
       // 
       this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-      this.copyToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.copyToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
       this.copyToolStripMenuItem.Text = "&Copy";
       this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
       // 
       // cutToolStripMenuItem
       // 
       this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-      this.cutToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.cutToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
       this.cutToolStripMenuItem.Text = "C&ut";
       this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
       // 
       // pasteToolStripMenuItem
       // 
       this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
       this.pasteToolStripMenuItem.Text = "&Paste";
       this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator2
+      // 
+      this.toolStripSeparator2.Name = "toolStripSeparator2";
+      this.toolStripSeparator2.Size = new System.Drawing.Size(246, 6);
+      // 
+      // commentSelectionToolStripMenuItem
+      // 
+      this.commentSelectionToolStripMenuItem.Name = "commentSelectionToolStripMenuItem";
+      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.commentSelectionToolStripMenuItem.Text = "Comment Selection";
+      this.commentSelectionToolStripMenuItem.Click += new System.EventHandler(this.commentSelectionToolStripMenuItem_Click);
+      // 
+      // uncommentSelectionToolStripMenuItem
+      // 
+      this.uncommentSelectionToolStripMenuItem.Name = "uncommentSelectionToolStripMenuItem";
+      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.uncommentSelectionToolStripMenuItem.Text = "Uncomment Selection";
+      this.uncommentSelectionToolStripMenuItem.Click += new System.EventHandler(this.uncommentSelectionToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(189, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(246, 6);
       // 
       // renumberToolStripMenuItem1
       // 
       this.renumberToolStripMenuItem1.Name = "renumberToolStripMenuItem1";
-      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
+      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(249, 22);
       this.renumberToolStripMenuItem1.Text = "Renumber...";
       this.renumberToolStripMenuItem1.Click += new System.EventHandler(this.renumberToolStripMenuItem_Click);
       // 
@@ -308,24 +335,31 @@ namespace RetroDevStudio.Documents
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
-      // commentSelectionToolStripMenuItem
+      // addBookmarkHereToolStripMenuItem
       // 
-      this.commentSelectionToolStripMenuItem.Name = "commentSelectionToolStripMenuItem";
-      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-      this.commentSelectionToolStripMenuItem.Text = "Comment Selection";
-      this.commentSelectionToolStripMenuItem.Click += new System.EventHandler(this.commentSelectionToolStripMenuItem_Click);
+      this.addBookmarkHereToolStripMenuItem.Name = "addBookmarkHereToolStripMenuItem";
+      this.addBookmarkHereToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.addBookmarkHereToolStripMenuItem.Text = "Add Bookmark here";
+      this.addBookmarkHereToolStripMenuItem.Click += new System.EventHandler(this.addBookmarkHereToolStripMenuItem_Click);
       // 
-      // uncommentSelectionToolStripMenuItem
+      // removeBookmarkToolStripMenuItem
       // 
-      this.uncommentSelectionToolStripMenuItem.Name = "uncommentSelectionToolStripMenuItem";
-      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-      this.uncommentSelectionToolStripMenuItem.Text = "Uncomment Selection";
-      this.uncommentSelectionToolStripMenuItem.Click += new System.EventHandler(this.uncommentSelectionToolStripMenuItem_Click);
+      this.removeBookmarkToolStripMenuItem.Name = "removeBookmarkToolStripMenuItem";
+      this.removeBookmarkToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.removeBookmarkToolStripMenuItem.Text = "Remove Bookmark";
+      this.removeBookmarkToolStripMenuItem.Click += new System.EventHandler(this.removeBookmarkToolStripMenuItem_Click);
       // 
-      // toolStripSeparator2
+      // removeAllBookmarksOfThisFileToolStripMenuItem
       // 
-      this.toolStripSeparator2.Name = "toolStripSeparator2";
-      this.toolStripSeparator2.Size = new System.Drawing.Size(189, 6);
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Name = "removeAllBookmarksOfThisFileToolStripMenuItem";
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Text = "Remove all bookmarks of this file";
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Click += new System.EventHandler(this.removeAllBookmarksOfThisFileToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator5
+      // 
+      this.toolStripSeparator5.Name = "toolStripSeparator5";
+      this.toolStripSeparator5.Size = new System.Drawing.Size(246, 6);
       // 
       // SourceBasicEx
       // 
@@ -384,5 +418,9 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripMenuItem commentSelectionToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem uncommentSelectionToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+    private System.Windows.Forms.ToolStripMenuItem addBookmarkHereToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem removeBookmarkToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem removeAllBookmarksOfThisFileToolStripMenuItem;
   }
 }

@@ -1,5 +1,8 @@
-﻿using RetroDevStudio.Dialogs;
+﻿using GR.Collections;
+using RetroDevStudio.Dialogs;
+using RetroDevStudio.Types;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Forms;
@@ -212,6 +215,52 @@ namespace RetroDevStudio.Documents
         AddBookmark( bm, Doc );
       }
       listMessages.EndUpdate();
+    }
+
+
+
+    private void deleteBookmarkToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var bookmarksToDelete = new List<GR.Generic.Tupel<DocumentInfo,int>>();
+
+      foreach ( ListViewItem selectedItem in listMessages.SelectedItems )
+      {
+        var doc = (DocumentInfo)selectedItem.Tag;
+        int lineNumber = -1;
+        int.TryParse( selectedItem.SubItems[1].Text, out lineNumber );
+
+        bookmarksToDelete.Add( new GR.Generic.Tupel<DocumentInfo, int>( doc, lineNumber ) );
+      }
+
+      foreach ( var bookmark in bookmarksToDelete )
+      {
+        bookmark.first.Bookmarks.Remove( bookmark.second - 1 );
+        if ( bookmark.first.BaseDoc != null )
+        {
+          bookmark.first.BaseDoc.RemoveBookmark( bookmark.second - 1 );
+        }
+      }
+    }
+
+
+
+    private void deleteAllBookmarksToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var docsToDeleteFrom = new Set<DocumentInfo>();
+
+      foreach ( ListViewItem selectedItem in listMessages.SelectedItems )
+      {
+        var doc = (DocumentInfo)selectedItem.Tag;
+        docsToDeleteFrom.Add( doc );
+      }
+      foreach ( var doc in docsToDeleteFrom )
+      {
+        doc.Bookmarks.Clear();
+        if ( doc.BaseDoc != null )
+        {
+          doc.BaseDoc.ApplyFunction( Function.BOOKMARK_DELETE_ALL );
+        }
+      }
     }
 
 

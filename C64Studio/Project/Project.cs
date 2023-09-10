@@ -765,7 +765,8 @@ namespace RetroDevStudio
         }
 
         if ( ( Element.Document != null )
-        &&   ( Element.Document is SourceASMEx ) )
+        &&   ( ( Element.Document is SourceASMEx )
+        ||     ( Element.Document is SourceBasicEx ) ) )
         {
           Element.Document.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
         }

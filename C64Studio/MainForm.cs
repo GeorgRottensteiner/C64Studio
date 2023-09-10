@@ -6009,6 +6009,7 @@ namespace RetroDevStudio
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;
+        document.DocumentEvent += new BaseDocument.DocumentEventHandler( StudioCore.MainForm.Document_DocumentEvent );
       }
       else if ( extension == ".MAPPROJECT" )
       {

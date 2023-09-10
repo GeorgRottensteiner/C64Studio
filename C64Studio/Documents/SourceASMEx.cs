@@ -765,65 +765,6 @@ namespace RetroDevStudio.Documents
         DocumentInfo.Bookmarks.Add( bm.LineIndex );
       }
       RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
-
-
-
-      /*
-      // special case, if we insert an empty line, insert "below"
-      int     indexToNotify = e.Index;
-
-      if ( editSource.Lines[e.Index].Trim().Length == 0 )
-      {
-        ++indexToNotify;
-      }
-
-      if ( !m_InsertingText )
-      {
-        Core.Navigating.InsertLines( DocumentInfo, e.Index, e.Count );
-      }
-
-      // move related breakpoints!
-      for ( int i = 0; i < e.Count; ++i )
-      {
-        var info = new Types.ASM.LineInfo();
-        if ( ( indexToNotify > 0 )
-        &&   ( indexToNotify - 1 < m_LineInfos.Count ) )
-        {
-          info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
-        }
-        m_LineInfos.Insert( indexToNotify - 1, info );
-      }
-
-      if ( !m_InsertingText )
-      {
-        int                         insertedAtLine = e.Index;
-
-        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
-        List<Types.Breakpoint>                     movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
-
-        foreach ( int breakpointLine in origBreakpoints.Keys )
-        {
-          var bp = origBreakpoints[breakpointLine];
-
-          if ( breakpointLine >= insertedAtLine )
-          {
-            bp.LineIndex += e.Count;
-            movedBreakpoints.Add( bp );
-          }
-          else
-          {
-            movedBreakpoints.Add( bp );
-          }
-        }
-        m_BreakPoints.Clear();
-
-        foreach ( var bp in movedBreakpoints )
-        {
-          m_BreakPoints[bp.LineIndex] = bp;
-        }
-        //UpdateFoldingBlocks();
-        //StoreFoldedBlocks();
-      }*/
     }
 
 
@@ -836,38 +777,6 @@ namespace RetroDevStudio.Documents
         DocumentInfo.Bookmarks.Add( bm.LineIndex );
       }
       RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
-
-      /*
-      Core.Navigating.RemoveLines( DocumentInfo, e.Index, e.Count );
-
-      //Debug.Log( "Lines removed " + e.Index + ", " + e.Count );
-      m_LineInfos.RemoveRange( e.Index - 1, e.Count );
-
-      // move related breakpoints!
-      int deletedAtLine = e.Index;
-
-      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
-
-      foreach ( int breakpointLine in origBreakpoints.Keys )
-      {
-        if ( ( breakpointLine >= deletedAtLine )
-        &&   ( breakpointLine < deletedAtLine + e.Count ) )
-        {
-          // BP was deleted!
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, origBreakpoints[breakpointLine] ) );
-        }
-        else if ( breakpointLine >= deletedAtLine )
-        {
-          Types.Breakpoint bpToMove = m_BreakPoints[breakpointLine];
-          m_BreakPoints.Remove( breakpointLine );
-          m_BreakPoints.Add( breakpointLine - e.Count, bpToMove );
-          bpToMove.LineIndex -= e.Count;
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
-        }
-      }
-      //UpdateFoldingBlocks();
-      //StoreFoldedBlocks();
-      */
     }
 
 

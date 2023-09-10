@@ -1156,6 +1156,12 @@ namespace RetroDevStudio.Documents
 
 
 
+    public virtual void RemoveBookmark( int LineIndex )
+    {
+    }
+
+
+
     public MachineType PreferredMachineType
     {
       get

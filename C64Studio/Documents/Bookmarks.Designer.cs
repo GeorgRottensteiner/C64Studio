@@ -34,11 +34,14 @@
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.contextCompilerMessage = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.contextMenuBookmarks = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.jumpToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.imageListCompileResult = new System.Windows.Forms.ImageList(this.components);
+      this.deleteBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.deleteAllBookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
-      this.contextCompilerMessage.SuspendLayout();
+      this.contextMenuBookmarks.SuspendLayout();
       this.SuspendLayout();
       // 
       // listMessages
@@ -47,7 +50,7 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-      this.listMessages.ContextMenuStrip = this.contextCompilerMessage;
+      this.listMessages.ContextMenuStrip = this.contextMenuBookmarks;
       this.listMessages.Dock = System.Windows.Forms.DockStyle.Fill;
       this.listMessages.FullRowSelect = true;
       this.listMessages.HideSelection = false;
@@ -76,17 +79,20 @@
       this.columnHeader3.Text = "File";
       this.columnHeader3.Width = 500;
       // 
-      // contextCompilerMessage
+      // contextMenuBookmarks
       // 
-      this.contextCompilerMessage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.jumpToFileToolStripMenuItem});
-      this.contextCompilerMessage.Name = "contextCompilerMessage";
-      this.contextCompilerMessage.Size = new System.Drawing.Size(137, 26);
+      this.contextMenuBookmarks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.jumpToFileToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.deleteBookmarkToolStripMenuItem,
+            this.deleteAllBookmarksToolStripMenuItem});
+      this.contextMenuBookmarks.Name = "contextCompilerMessage";
+      this.contextMenuBookmarks.Size = new System.Drawing.Size(185, 98);
       // 
       // jumpToFileToolStripMenuItem
       // 
       this.jumpToFileToolStripMenuItem.Name = "jumpToFileToolStripMenuItem";
-      this.jumpToFileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+      this.jumpToFileToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
       this.jumpToFileToolStripMenuItem.Text = "&Jump to file";
       this.jumpToFileToolStripMenuItem.Click += new System.EventHandler(this.jumpToFileToolStripMenuItem_Click);
       // 
@@ -96,6 +102,25 @@
       this.imageListCompileResult.TransparentColor = System.Drawing.Color.Magenta;
       this.imageListCompileResult.Images.SetKeyName(0, "bookmark-icon.ico");
       // 
+      // deleteBookmarkToolStripMenuItem
+      // 
+      this.deleteBookmarkToolStripMenuItem.Name = "deleteBookmarkToolStripMenuItem";
+      this.deleteBookmarkToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+      this.deleteBookmarkToolStripMenuItem.Text = "Delete bookmark";
+      this.deleteBookmarkToolStripMenuItem.Click += new System.EventHandler(this.deleteBookmarkToolStripMenuItem_Click);
+      // 
+      // deleteAllBookmarksToolStripMenuItem
+      // 
+      this.deleteAllBookmarksToolStripMenuItem.Name = "deleteAllBookmarksToolStripMenuItem";
+      this.deleteAllBookmarksToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+      this.deleteAllBookmarksToolStripMenuItem.Text = "Delete all bookmarks";
+      this.deleteAllBookmarksToolStripMenuItem.Click += new System.EventHandler(this.deleteAllBookmarksToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
+      // 
       // Bookmarks
       // 
       this.ClientSize = new System.Drawing.Size(678, 200);
@@ -104,7 +129,7 @@
       this.Name = "Bookmarks";
       this.Text = "Bookmarks";
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
-      this.contextCompilerMessage.ResumeLayout(false);
+      this.contextMenuBookmarks.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }
@@ -116,10 +141,10 @@
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader3;
     private System.Windows.Forms.ImageList imageListCompileResult;
-    private System.Windows.Forms.ContextMenuStrip contextCompilerMessage;
+    private System.Windows.Forms.ContextMenuStrip contextMenuBookmarks;
     private System.Windows.Forms.ToolStripMenuItem jumpToFileToolStripMenuItem;
-
-
-
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+    private System.Windows.Forms.ToolStripMenuItem deleteBookmarkToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem deleteAllBookmarksToolStripMenuItem;
   }
 }
