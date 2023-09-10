@@ -1336,9 +1336,7 @@ namespace RetroDevStudio.Documents
       {
         // simply insert, no key mapping!
         // need uppercase when lowercase mode is not active!
-        if ( //( !m_LowerCaseMode )
-        //&&   ( !commodorePushed )
-             ( !commodorePushed )
+        if ( ( !commodorePushed )
         &&   ( !altPushed ) )
         {
           string  actualChar = KeyCodeToUnicode( keyData );
@@ -1368,6 +1366,14 @@ namespace RetroDevStudio.Documents
               if ( actualChar == "?" )
               {
                 if ( isInsideComment )
+                {
+                  editSource.SelectedText = "?";
+                  return true;
+                }
+                int   numApostrophes = 0;
+                numApostrophes = tokens.Tokens.Count( t => ( t.StartIndex < editSource.Selection.Start.iChar )
+                                        && ( t.Content == "\"" ) );
+                if ( ( numApostrophes % 2 ) != 0 )
                 {
                   editSource.SelectedText = "?";
                   return true;
