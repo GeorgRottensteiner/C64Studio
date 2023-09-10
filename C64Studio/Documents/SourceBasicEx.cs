@@ -155,6 +155,7 @@ namespace RetroDevStudio.Documents
       editSource.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler( editSource_PreviewKeyDown );
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
+      editSource.SelectionChanged += EditSource_SelectionChanged;
 
       editSource.PreferredLineWidth = Core.Settings.BASICShowMaxLineLengthIndicatorLength;
 
@@ -174,6 +175,60 @@ namespace RetroDevStudio.Documents
       editBASICStartAddress.Text = "2049";
 
       UpdateLabelModeText();
+    }
+
+
+
+    private void EditSource_SelectionChanged( object sender, EventArgs e )
+    {
+      if ( !Core.Settings.BASICAutoToggleEntryModeOnPosition )
+      {
+        return;
+      }
+
+      string  leftText = editSource.GetLineText( CursorLine );
+      if ( m_LowerCaseMode )
+      {
+        leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+      }
+
+      var tokens = m_Parser.PureTokenizeLine( leftText );
+      bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) );
+      if ( isInsideComment )
+      {
+        if ( m_StringEnterMode )
+        {
+          ToggleStringEntryMode();
+        }
+        return;
+      }
+
+      var stringLiteral = tokens.Tokens.FirstOrDefault( t => ( t.StartIndex < editSource.Selection.Start.iChar )
+                              && ( t.TokenType == Token.Type.STRING_LITERAL )
+                              && ( editSource.Selection.Start.iChar <= t.StartIndex + t.Content.Length ) );
+      if ( stringLiteral != null )
+      {
+        // is it a full string literal (trailing "), then disable if cursor is after the second "
+        if ( ( stringLiteral.Content.Length > 1 )
+        &&   ( stringLiteral.Content.EndsWith( "\"" ) )
+        &&   ( editSource.Selection.Start.iChar == stringLiteral.StartIndex + stringLiteral.Content.Length ) )
+        {
+          stringLiteral = null;
+        }
+      }
+
+      bool insideStringLiteral = ( stringLiteral != null );
+      bool needStringEnterMode = insideStringLiteral;
+
+      if ( tokens.Tokens.Any( t => ( t.StartIndex <= editSource.Selection.Start.iChar )
+                                              && ( t.Content == "\"" ) ) )
+      {
+        needStringEnterMode = true;
+      }
+      if ( needStringEnterMode != m_StringEnterMode )
+      {
+        ToggleStringEntryMode();
+      }
     }
 
 

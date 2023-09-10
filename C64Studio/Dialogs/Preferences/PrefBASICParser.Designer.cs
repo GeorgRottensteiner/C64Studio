@@ -35,6 +35,7 @@
       this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
       this.checkBASICStripREM = new System.Windows.Forms.CheckBox();
       this.checkBASICStripSpaces = new System.Windows.Forms.CheckBox();
+      this.checkBASICAutoToggleEntryModeOnPosition = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -62,6 +63,7 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.checkBASICAutoToggleEntryModeOnPosition);
       this.groupBox1.Controls.Add(this.checkBASICAutoToggleEntryMode);
       this.groupBox1.Controls.Add(this.checkBASICShowControlCodes);
       this.groupBox1.Controls.Add(this.checkBASICStripREM);
@@ -120,6 +122,17 @@
       this.checkBASICStripSpaces.UseVisualStyleBackColor = true;
       this.checkBASICStripSpaces.CheckedChanged += new System.EventHandler(this.checkBASICStripSpaces_CheckedChanged);
       // 
+      // checkBASICAutoToggleEntryModeOnPosition
+      // 
+      this.checkBASICAutoToggleEntryModeOnPosition.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkBASICAutoToggleEntryModeOnPosition.Location = new System.Drawing.Point(6, 139);
+      this.checkBASICAutoToggleEntryModeOnPosition.Name = "checkBASICAutoToggleEntryModeOnPosition";
+      this.checkBASICAutoToggleEntryModeOnPosition.Size = new System.Drawing.Size(266, 24);
+      this.checkBASICAutoToggleEntryModeOnPosition.TabIndex = 14;
+      this.checkBASICAutoToggleEntryModeOnPosition.Text = "Auto toggle entry mode on position";
+      this.checkBASICAutoToggleEntryModeOnPosition.UseVisualStyleBackColor = true;
+      this.checkBASICAutoToggleEntryModeOnPosition.CheckedChanged += new System.EventHandler(this.checkBASICAutoToggleEntryModeOnPosition_CheckedChanged);
+      // 
       // PrefBASICParser
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -141,5 +154,6 @@
         private System.Windows.Forms.CheckBox checkBASICShowControlCodes;
         private System.Windows.Forms.CheckBox checkBASICStripREM;
         private System.Windows.Forms.CheckBox checkBASICStripSpaces;
-    }
+    private System.Windows.Forms.CheckBox checkBASICAutoToggleEntryModeOnPosition;
+  }
 }

@@ -26,10 +26,11 @@ namespace RetroDevStudio.Dialogs.Preferences
       _Keywords.AddRange( new string[] { "basic", "parser" } );
       InitializeComponent();
 
-      checkBASICStripSpaces.Checked           = Core.Settings.BASICStripSpaces;
-      checkBASICShowControlCodes.Checked      = Core.Settings.BASICShowControlCodesAsChars;
-      checkBASICAutoToggleEntryMode.Checked   = Core.Settings.BASICAutoToggleEntryMode;
-      checkBASICStripREM.Checked              = Core.Settings.BASICStripREM;
+      checkBASICStripSpaces.Checked                   = Core.Settings.BASICStripSpaces;
+      checkBASICShowControlCodes.Checked              = Core.Settings.BASICShowControlCodesAsChars;
+      checkBASICAutoToggleEntryMode.Checked           = Core.Settings.BASICAutoToggleEntryMode;
+      checkBASICStripREM.Checked                      = Core.Settings.BASICStripREM;
+      checkBASICAutoToggleEntryModeOnPosition.Checked = Core.Settings.BASICAutoToggleEntryModeOnPosition;
     }
 
 
@@ -56,6 +57,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlSettingRoot.AddChild( "StripSpaces", Core.Settings.BASICStripSpaces ? "yes" : "no" );
       xmlSettingRoot.AddChild( "ShowControlCodesAsChars", Core.Settings.BASICShowControlCodesAsChars ? "yes" : "no" );
       xmlSettingRoot.AddChild( "AutoToggleEntryMode", Core.Settings.BASICAutoToggleEntryMode ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "AutoToggleEntryModeOnPosition", Core.Settings.BASICAutoToggleEntryModeOnPosition ? "yes" : "no" );
       xmlSettingRoot.AddChild( "StripREM", Core.Settings.BASICStripREM ? "yes" : "no" );
     }
 
@@ -83,12 +85,20 @@ namespace RetroDevStudio.Dialogs.Preferences
         {
           Core.Settings.BASICAutoToggleEntryMode = IsSettingTrue( xmlKey.Content );
         }
+        else if ( xmlKey.Type == "AutoToggleEntryModeOnPosition" )
+        {
+          Core.Settings.BASICAutoToggleEntryModeOnPosition = IsSettingTrue( xmlKey.Content );
+        }
         else if ( xmlKey.Type == "ShowControlCodesAsChars" )
         {
           Core.Settings.BASICShowControlCodesAsChars = IsSettingTrue( xmlKey.Content );
         }
       }
-      checkBASICStripSpaces.Checked = Core.Settings.BASICStripSpaces;
+      checkBASICStripSpaces.Checked                   = Core.Settings.BASICStripSpaces;
+      checkBASICShowControlCodes.Checked              = Core.Settings.BASICShowControlCodesAsChars;
+      checkBASICAutoToggleEntryMode.Checked           = Core.Settings.BASICAutoToggleEntryMode;
+      checkBASICStripREM.Checked                      = Core.Settings.BASICStripREM;
+      checkBASICAutoToggleEntryModeOnPosition.Checked = Core.Settings.BASICAutoToggleEntryModeOnPosition;
     }
 
 
@@ -120,6 +130,14 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       Core.Settings.BASICAutoToggleEntryMode = checkBASICAutoToggleEntryMode.Checked;
     }
+
+
+
+    private void checkBASICAutoToggleEntryModeOnPosition_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.BASICAutoToggleEntryModeOnPosition = checkBASICAutoToggleEntryModeOnPosition.Checked;
+    }
+
 
 
   }
