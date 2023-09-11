@@ -185,10 +185,9 @@ namespace RetroDevStudio.Dialogs
 
         if ( matches )
         {
-          entry.Location = new Point( 0, curY );
-          entry.Width = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
-          curY += entry.Height;
-
+          entry.Location  = new Point( 0, curY );
+          entry.Width     = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+          curY            += entry.Height;
           if ( !_VisiblePanes.Contains( entry ) )
           {
             changed = true;
@@ -213,12 +212,17 @@ namespace RetroDevStudio.Dialogs
             panelPreferences.Controls.Add( match );
           }
         }
+        var toRemove = new List<PrefBase>();
         foreach ( PrefBase pref in panelPreferences.Controls )
         {
-          if ( panelPreferences.Controls.Contains( pref ) )
+          if ( !matchingPreferences.Contains( pref ) )
           {
-            panelPreferences.Controls.Remove( pref );
+            toRemove.Add( pref );
           }
+        }
+        foreach ( var remove in toRemove )
+        {
+          panelPreferences.Controls.Remove( remove );
         }
         _VisiblePanes = matchingPreferences;
         SendMessage( panelPreferences.Handle, WM_SETREDRAW, true, 0 );

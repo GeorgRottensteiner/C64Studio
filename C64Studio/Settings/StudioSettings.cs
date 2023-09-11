@@ -1255,15 +1255,13 @@ namespace RetroDevStudio
                 Keys  key                 = (Keys)binIn.ReadUInt32();
                 Types.KeyboardKey  cmdKey = (RetroDevStudio.Types.KeyboardKey)binIn.ReadInt32();
 
-                //Debug.Log( "Key " + key.ToString() + " maps to " + cmdKey );
-
                 var keyMapEntry = new KeymapEntry();
 
                 foreach ( var entry in BASICKeyMap.DefaultKeymaps[neutralLang] )
                 {
                   if ( entry.Value.KeyboardKey == cmdKey )
                   {
-                    BASICKeyMap.Keymap[key] = entry.Value;
+                    BASICKeyMap.Keymap[key] = new KeymapEntry() { Key = key, KeyboardKey = cmdKey };
                     //Debug.Log( "-inserted" );
                     break;
                   }

@@ -1528,10 +1528,29 @@ namespace RetroDevStudio.Documents
                   editSource.SelectedText = "?";
                   return true;
                 }
-                int   numApostrophes = 0;
-                numApostrophes = tokens.Tokens.Count( t => ( t.StartIndex < editSource.Selection.Start.iChar )
-                                        && ( t.Content == "\"" ) );
-                if ( ( numApostrophes % 2 ) != 0 )
+
+                var stringLiteral = tokens.Tokens.FirstOrDefault( t => ( t.StartIndex < editSource.Selection.Start.iChar )
+                              && ( t.TokenType == Token.Type.STRING_LITERAL )
+                              && ( editSource.Selection.Start.iChar <= t.StartIndex + t.Content.Length ) );
+                if ( stringLiteral != null )
+                {
+                  // is it a full string literal (trailing "), then disable if cursor is after the second "
+                  if ( ( stringLiteral.Content.Length > 1 )
+                  &&   ( stringLiteral.Content.EndsWith( "\"" ) )
+                  &&   ( editSource.Selection.Start.iChar == stringLiteral.StartIndex + stringLiteral.Content.Length ) )
+                  {
+                    stringLiteral = null;
+                  }
+                }
+                bool insideStringLiteral = ( stringLiteral != null );
+                bool needStringEnterMode = insideStringLiteral;
+
+                if ( tokens.Tokens.Any( t => ( t.StartIndex <= editSource.Selection.Start.iChar )
+                                                        && ( t.Content == "\"" ) ) )
+                {
+                  needStringEnterMode = true;
+                }
+                if ( needStringEnterMode )
                 {
                   editSource.SelectedText = "?";
                   return true;
