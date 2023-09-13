@@ -250,6 +250,8 @@ namespace RetroDevStudio.Parser
       bool hasZone = false;
       bool hasProcessor = false;
       bool hasSemicolonComments = false;
+      bool hasDotText = false;
+      bool hasDotTarget = false;
 
       var memoryReader = new GR.IO.MemoryReader( Encoding.UTF8.GetBytes( Text ) );
 
@@ -291,7 +293,12 @@ namespace RetroDevStudio.Parser
         {
           hasDotByte = true;
         }
-        if ( ( line.IndexOf( "!to " ) != -1 )
+        if ((line.ToUpper().IndexOf(".TEXT ") != -1)
+        || (line.ToUpper().IndexOf(".TEXT ") != -1))
+        {
+            hasDotText = true;
+        }
+                if ( ( line.IndexOf( "!to " ) != -1 )
         ||   ( line.IndexOf( "!TO " ) != -1 ) )
         {
           hasTo = true;
@@ -322,9 +329,13 @@ namespace RetroDevStudio.Parser
         {
           hasProcessor = true;
         }
-
-        // early detection
-        if ( ( hasTo )
+        if ((line.IndexOf(".target ") != -1)
+        || (line.IndexOf(".TARGET ") != -1))
+        {
+            hasDotTarget = true;
+        }
+                // early detection
+                if ( ( hasTo )
         ||   ( hasByte )
         ||   ( hasZone ) )
         {
@@ -347,8 +358,7 @@ namespace RetroDevStudio.Parser
         {
           return Types.AssemblerType.PDS;
         }
-        if ( ( hasDotInclude )
-        &&   ( hasDotByte ) )
+        if ( ( hasDotByte && hasDotText && !hasORG && !hasEQU ) || hasDotTarget)
         {
           return Types.AssemblerType.TASM;
         }

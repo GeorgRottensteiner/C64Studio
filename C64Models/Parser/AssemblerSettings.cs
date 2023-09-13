@@ -505,8 +505,13 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( ".FILL", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( ".ENC", Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS );
           AddPseudoOp( ".CDEF", Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS_ENTRY );
+          AddPseudoOp( ".AL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_ACCUMULATOR_65816);
+          AddPseudoOp( ".AS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_ACCUMULATOR_65816);
+          AddPseudoOp( ".XL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_REGISTERS_65816);
+          AddPseudoOp( ".XS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_REGISTERS_65816);
+          AddPseudoOp(" .TARGET", Types.MacroInfo.PseudoOpType.CPU);
 
-          RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
+                    RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
           POPrefix = ".";
           LabelPostfix = ":";
           MacroFunctionCallPrefix.Add( "#" );
