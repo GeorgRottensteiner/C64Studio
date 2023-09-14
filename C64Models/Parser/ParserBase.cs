@@ -259,14 +259,15 @@ namespace RetroDevStudio.Parser
       {
         line = line.Trim();
 
+        var upperCaseLine = line.ToUpper();
+
         if ( line.StartsWith( ";" ) )
         {
           // must be a comment
           hasSemicolonComments = true;
         }
         int     orgPos = -1;
-        if ( ( ( orgPos = line.IndexOf( "ORG " ) ) != -1 ) 
-        ||   ( ( orgPos = line.IndexOf( "org " ) ) != -1 ) )
+        if ( ( orgPos = upperCaseLine.IndexOf( "ORG " ) ) != -1 ) 
         {
           if ( ( line.IndexOf( '"' ) != -1 )
           &&   ( line.IndexOf( '"' ) < orgPos ) )
@@ -278,64 +279,54 @@ namespace RetroDevStudio.Parser
         {
           hasMAC = true;
         }
-        if ( ( line.IndexOf( "INCLUDE " ) != -1 ) 
-        ||   ( line.IndexOf( "INCLUDE " ) != -1 ) )
+        if ( upperCaseLine.IndexOf( "INCLUDE " ) != -1 ) 
         {
           hasInclude = true;
         }
-        if ( ( line.ToUpper().IndexOf( ".INCLUDE " ) != -1 ) 
-        ||   ( line.ToUpper().IndexOf( ".INCLUDE " ) != -1 ) )
+        if ( upperCaseLine.ToUpper().IndexOf( ".INCLUDE " ) != -1 ) 
         {
           hasDotInclude = true;
         }
-        if ( ( line.ToUpper().IndexOf( ".BYTE " ) != -1 ) 
-        ||   ( line.ToUpper().IndexOf( ".BYTE " ) != -1 ) )
+        if ( upperCaseLine.IndexOf( ".BYTE " ) != -1 ) 
         {
           hasDotByte = true;
         }
-        if ((line.ToUpper().IndexOf(".TEXT ") != -1)
-        || (line.ToUpper().IndexOf(".TEXT ") != -1))
+        if ( upperCaseLine.IndexOf( ".TEXT " ) != -1 )
         {
             hasDotText = true;
         }
-                if ( ( line.IndexOf( "!to " ) != -1 )
-        ||   ( line.IndexOf( "!TO " ) != -1 ) )
+        if ( upperCaseLine.IndexOf( "!TO " ) != -1 )
         {
           hasTo = true;
         }
-        if ( line.IndexOf( "EQU " ) != -1 )
+        if ( upperCaseLine.IndexOf( "EQU " ) != -1 )
         {
           hasEQU = true;
         }
-        if ( ( line.IndexOf( "!byte" ) != -1 ) 
-        ||   ( line.IndexOf( "!BYTE" ) != -1 ) 
-        ||   ( line.IndexOf( "!BY " ) != -1 ) )
+        if ( ( upperCaseLine.IndexOf( "!BYTE" ) != -1 ) 
+        ||   ( upperCaseLine.IndexOf( "!BY " ) != -1 ) )
         {
           hasByte = true;
         }
-        if ( ( line.IndexOf( "!text" ) != -1 )
-        ||   ( line.IndexOf( "!TEXT" ) != -1 )
-        ||   ( line.IndexOf( "!TX " ) != -1 ) )
+        if ( ( upperCaseLine.IndexOf( "!TEXT" ) != -1 )
+        ||   ( upperCaseLine.IndexOf( "!TX " ) != -1 ) )
         {
           hasByte = true;
         }
-        if ( ( line.IndexOf( "!zone" ) != -1 ) 
-        ||   ( line.IndexOf( "!ZONE" ) != -1 ) )
+        if ( upperCaseLine.IndexOf( "!ZONE" ) != -1 )
         {
           hasZone = true;
         }
-        if ( ( line.IndexOf( "processor " ) != -1 ) 
-        ||   ( line.IndexOf( "PROCESSOR " ) != -1 ) )
+        if ( upperCaseLine.IndexOf( "PROCESSOR " ) != -1 )
         {
           hasProcessor = true;
         }
-        if ((line.IndexOf(".target ") != -1)
-        || (line.IndexOf(".TARGET ") != -1))
+        if ( upperCaseLine.IndexOf( ".TARGET " ) != -1 )
         {
-            hasDotTarget = true;
+          hasDotTarget = true;
         }
                 // early detection
-                if ( ( hasTo )
+        if ( ( hasTo )
         ||   ( hasByte )
         ||   ( hasZone ) )
         {
@@ -358,7 +349,12 @@ namespace RetroDevStudio.Parser
         {
           return Types.AssemblerType.PDS;
         }
-        if ( ( hasDotByte && hasDotText && !hasORG && !hasEQU ) || hasDotTarget)
+        if ( ( ( hasDotByte )
+        &&     ( hasDotText ) 
+        &&     ( !hasORG )
+        &&     ( !hasEQU ) ) 
+        ||   ( hasDotInclude ) 
+        ||   ( hasDotTarget ) )
         {
           return Types.AssemblerType.TASM;
         }
