@@ -3547,7 +3547,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult HandleScopeEnd( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions,
+    private ParseLineResult HandleScopeEnd( GR.Collections.Map<GR.Generic.Tupel<string,int>, Types.MacroFunctionInfo> macroFunctions,
                                  List<Types.ScopeInfo> ScopeList,
                                  List<TokenInfo> lineTokenInfos, 
                                  GR.Collections.Map<byte, byte> TextCodeMapping,
@@ -5538,7 +5538,7 @@ namespace RetroDevStudio.Parser
       ASMFileInfo.LineInfo.Clear();
       ASMFileInfo.TempLabelInfo.Clear();
       ASMFileInfo.Processor = Tiny64.Processor.Create6510();
-      ASMFileInfo.Macros    = new GR.Collections.Map<string, RetroDevStudio.Types.MacroFunctionInfo>();
+      ASMFileInfo.Macros    = new Map<GR.Generic.Tupel<string, int>, MacroFunctionInfo>();
 
       stackScopes.Clear();
       Messages.Clear();
@@ -8923,13 +8923,13 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void DetectPDSOrDASMMacroCall( Map<string, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
+    private void DetectPDSOrDASMMacroCall( Map<GR.Generic.Tupel<string,int>, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
     {
       // PDS?
       if ( ( lineTokenInfos.Count >= 1 )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count == 0 )
       &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-      &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
+      &&   ( macroFunctions.Keys.Any( m => m.first == lineTokenInfos[0].Content ) ) )
       {
         lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
       }
@@ -8938,7 +8938,7 @@ namespace RetroDevStudio.Parser
       &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count != 0 )
       &&   ( lineTokenInfos[0].Content.StartsWith( m_AssemblerSettings.MacroFunctionCallPrefix[0] ) )
-      &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
+      &&   ( macroFunctions.Keys.Any( m => m.first == lineTokenInfos[0].Content ) ) )
       {
         lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
       }
@@ -9996,7 +9996,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool POMacro( string LabelInFront, string Zone, GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
+    private bool POMacro( string LabelInFront, string Zone, GR.Collections.Map<GR.Generic.Tupel<string,int>, Types.MacroFunctionInfo> macroFunctions, 
                           string OuterFilename,
                           int lineIndex, 
                           List<Types.TokenInfo> lineTokenInfos, 
@@ -10022,9 +10022,9 @@ namespace RetroDevStudio.Parser
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect <Macroname> MACRO" );
           return false;
         }
-        if ( macroFunctions.ContainsKey( LabelInFront ) )
+        if ( macroFunctions.Keys.Any( m => m.first == LabelInFront ) )
         {
-          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro name is already in use" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, $"Macro name {LabelInFront} is already in use" );
           return false;
         }
         Types.MacroFunctionInfo macroFunction = new RetroDevStudio.Types.MacroFunctionInfo();
@@ -10041,11 +10041,10 @@ namespace RetroDevStudio.Parser
         macroFunction.Symbol.DocumentFilename = OuterFilename;
         macroFunction.Symbol.Zone             = Zone;
         macroFunction.Symbol.References.Add( lineIndex );
-        
+        macroFunction.Symbol.NumArguments     = -1;
 
 
-
-        macroFunctions.Add( LabelInFront, macroFunction );
+        macroFunctions.Add( new GR.Generic.Tupel<string, int>( LabelInFront, -1 ), macroFunction );
 
         MacroFunctionName = LabelInFront;
 
@@ -10079,10 +10078,10 @@ namespace RetroDevStudio.Parser
       {
         string macroName = lineTokenInfos[1].Content;
         
-
-        if ( macroFunctions.ContainsKey( macroName ) )
+        if ( ( !m_AssemblerSettings.MacrosCanBeOverloaded )
+        &&   ( macroFunctions.Keys.Any( m => m.first == macroName ) ) )
         {
-          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro function name is already in use" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, $"Macro name {macroName} is already in use" );
           hadError = true;
         }
         else
@@ -10157,9 +10156,10 @@ namespace RetroDevStudio.Parser
             macroFunction.Symbol.Type             = SymbolInfo.Types.MACRO;
             macroFunction.Symbol.DocumentFilename = OuterFilename;
             macroFunction.Symbol.Zone             = Zone;
+            macroFunction.Symbol.NumArguments     = param.Count;
             macroFunction.Symbol.References.Add( lineIndex );
 
-            macroFunctions.Add( macroName, macroFunction );
+            macroFunctions.Add( new GR.Generic.Tupel<string, int>( macroName, param.Count ), macroFunction );
 
             MacroFunctionName = macroName;
 

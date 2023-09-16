@@ -20,9 +20,9 @@ namespace TestProject
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in parser.Messages )
         {
-          Debug.Log( msg.AlternativeFile + msg.AlternativeLineIndex + msg.Message );
+          Debug.Log( msg.Key + ":" + msg.Value.AlternativeFile + ":" + msg.Value.AlternativeLineIndex + ":" + msg.Value.Message );
         }
       }
 

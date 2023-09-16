@@ -1,26 +1,27 @@
-﻿using GR.Memory;
+﻿using GR.Collections;
+using GR.Generic;
+using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
 using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
-
-
+using System.Linq;
 
 namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POCallMacro( List<Types.TokenInfo> lineTokenInfos, 
-                                         ref int lineIndex, 
-                                         Types.ASM.LineInfo info, 
+    private ParseLineResult POCallMacro( List<Types.TokenInfo> lineTokenInfos,
+                                         ref int lineIndex,
+                                         Types.ASM.LineInfo info,
                                          string parseLine,
-                                         string ParentFilename, 
+                                         string ParentFilename,
                                          string labelInFront,
-                                         GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
-                                         ref string[] Lines, 
-                                         List<Types.ScopeInfo> Scopes, 
+                                         GR.Collections.Map<GR.Generic.Tupel<string, int>, Types.MacroFunctionInfo> macroFunctions,
+                                         ref string[] Lines,
+                                         List<Types.ScopeInfo> Scopes,
                                          out int lineSizeInBytes )
     {
       // +macro Macroname [param1[,param2]]
@@ -44,14 +45,30 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-      if ( ( !macroFunctions.ContainsKey( functionName ) )
-      ||   ( macroFunctions[functionName].LineEnd == -1 ) )
+
+      int     numParams = 0;
+      if ( lineTokenInfos.Count > 1 )
+      {
+        ++numParams;
+      }
+      for ( int i = 1; i < lineTokenInfos.Count; ++i )
+      {
+        if ( lineTokenInfos[i].Content == "," )
+        {
+          ++numParams;
+        }
+      }
+
+      // TODO - num arguments!
+      var macroKey = new GR.Generic.Tupel<string,int>( functionName, numParams );
+
+      if ( !DoesMacroExist( macroFunctions, macroKey, out Types.MacroFunctionInfo macro ) )
       {
         AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
       }
       else
       {
-        Types.MacroFunctionInfo  functionInfo = macroFunctions[functionName];
+        Types.MacroFunctionInfo  functionInfo = macro;
 
         List<string>  param = new List<string>();
         List<bool>    paramIsRef = new List<bool>();
@@ -85,8 +102,8 @@ namespace RetroDevStudio.Parser
             }
 
             if ( ( !hadError )
-            &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-            &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
+            && ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+            && ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
             {
               param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
 
@@ -101,7 +118,7 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( startIndex == lineTokenInfos.Count )
-        &&   ( startIndex > 1 ) )
+        && ( startIndex > 1 ) )
         {
           param.Add( "" );
         }
@@ -131,8 +148,8 @@ namespace RetroDevStudio.Parser
             }
           }
           if ( ( !hadError )
-          &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-          &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
+          && ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+          && ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
           {
             param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
             string paramName = param[param.Count - 1];
@@ -144,7 +161,7 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-        &&   ( param.Count != functionInfo.ParameterNames.Count ) )
+        && ( param.Count != functionInfo.ParameterNames.Count ) )
         {
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
         }
@@ -195,6 +212,26 @@ namespace RetroDevStudio.Parser
     }
 
 
+
+    private bool DoesMacroExist( Map<Tupel<string, int>, MacroFunctionInfo> macroFunctions, GR.Generic.Tupel<string, int> Key, out MacroFunctionInfo Macro )
+    {
+      Macro = null;
+      if ( m_AssemblerSettings.MacrosCanBeOverloaded )
+      {
+        if ( !macroFunctions.ContainsKey( Key ) )
+        {
+          return false;
+        }
+        Macro = macroFunctions[Key];
+        return true;
+      }
+      if ( !macroFunctions.Keys.Any( m => m.first == Key.first ) )
+      {
+        return false;
+      }
+      Macro = macroFunctions.FirstOrDefault( m => m.Key.first == Key.first ).Value;
+      return true;
+    }
 
 
   }

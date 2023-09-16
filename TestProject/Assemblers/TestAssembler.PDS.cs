@@ -60,7 +60,7 @@ namespace TestProject
       Assert.AreEqual( "00C0A9B5", assembly.ToString() );
     }
 
-
+    
 
     [TestMethod]
     public void TestMacroPDS()

@@ -1303,7 +1303,8 @@ namespace RetroDevStudio.Documents
         }
         return;
       }
-      var macroInfo = debugFileInfo.MacroFromName( wordBelow );
+      Debug.Log( "TODO - num arguments" );
+      var macroInfo = debugFileInfo.MacroFromName( wordBelow, -1 );
       if ( macroInfo != null )
       {
         string toolTipText = macroInfo.Name;
@@ -1747,13 +1748,13 @@ namespace RetroDevStudio.Documents
       }
       foreach ( var entry in DocumentInfo.ASMFileInfo.Macros )
       {
-        if ( uniqueKeys.Contains( entry.Key ) )
+        if ( uniqueKeys.Contains( entry.Key.first ) )
         {
           // do not override entries!
           continue;
         }
         // list parameters
-        string    toolTipText =  entry.Key;
+        string    toolTipText =  entry.Key.first;
 
         foreach ( var parameter in entry.Value.ParameterNames )
         {

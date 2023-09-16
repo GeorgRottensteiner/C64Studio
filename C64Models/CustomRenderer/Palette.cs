@@ -10,8 +10,10 @@ namespace RetroDevStudio
   {
     public string                   Name = "";
     private int                     NumColorsUsed = 16;
+//#if OS_WINDOWS
     public System.Drawing.Color[]   Colors = new System.Drawing.Color[256]; 
     public System.Drawing.Brush[]   ColorBrushes = new System.Drawing.Brush[256];
+    //#endif
     public uint[]                   ColorValues = new uint[256];
 
 
@@ -58,7 +60,9 @@ namespace RetroDevStudio
       {
         ColorValues[i] = OtherPal.ColorValues[i];
       }
+      //#if OS_WINDOWS
       CreateBrushes();
+      //#endif
     }
 
 
@@ -73,6 +77,7 @@ namespace RetroDevStudio
 
 
 
+    //#if OS_WINDOWS
     internal void CreateBrushes()
     {
       for ( int i = 0; i < NumColorsUsed; ++i )
@@ -81,6 +86,7 @@ namespace RetroDevStudio
         ColorBrushes[i] = new System.Drawing.SolidBrush( Colors[i] );
       }
     }
+    //#endif
 
 
 
@@ -148,7 +154,9 @@ namespace RetroDevStudio
       {
         pal.ColorValues[i] = Reader.ReadUInt32();
       }
+      //#if OS_WINDOWS
       pal.CreateBrushes();
+      //#endif
 
       pal.Name = Reader.ReadString();
       if ( string.IsNullOrEmpty( pal.Name ) )

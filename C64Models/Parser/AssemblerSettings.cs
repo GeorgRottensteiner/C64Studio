@@ -29,6 +29,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     GlobalLabelsAutoZone = false;
     public bool                                                     MacroIsZone = false;
     public bool                                                     MacrosHaveVariableNumberOfArguments = false;
+    public bool                                                     MacrosCanBeOverloaded = false;
     public bool                                                     MacroKeywordAfterName = false;
     public bool                                                     MacrosUseCheapLabelsAsParameters = false;
     public bool                                                     DoWithoutParameterIsUntil = false;
@@ -91,6 +92,7 @@ namespace RetroDevStudio.Parser
       MacroFunctionCallPrefix.Clear();
       MacroIsZone = false;
       MacrosHaveVariableNumberOfArguments = false;
+      MacrosCanBeOverloaded = false;
       CaseSensitive = true;
       IncludeExpectsStringLiteral = true;
       IncludeHasOnlyFilename = false;
@@ -257,6 +259,7 @@ namespace RetroDevStudio.Parser
 
           POPrefix = "!";
           MacroFunctionCallPrefix.Add( "+" );
+          MacrosCanBeOverloaded = true;
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=", "&=" }  );
           PlainAssignmentOperatos.AddRange( new string[] { "=" } );
@@ -364,6 +367,7 @@ namespace RetroDevStudio.Parser
 
           POPrefix = "!";
           MacroFunctionCallPrefix.Add( "+" );
+          MacrosCanBeOverloaded = true;
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.Add( "=" );
           PlainAssignmentOperatos.Add( "=" );

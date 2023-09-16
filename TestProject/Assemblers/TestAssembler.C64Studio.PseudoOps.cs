@@ -538,7 +538,33 @@ namespace TestProject
       Assert.AreEqual( "0000", assembly.ToString() );
     }
 
-    
+
+
+
+    [TestMethod]
+    public void TestMacroOverloading()
+    {
+      // do not shift the lines, they need to be on the very left
+      string      source = @"* = $1000
+  !macro callme arg1, arg2
+            lda #arg1
+            sta arg2
+  !end
+
+  !macro callme arg1
+            lda #0
+            sta arg1
+  !end
+
+            +callme 14, $d020
+            +callme $d020
+            rts";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010A90E8D20D0A9008D20D060", assembly.ToString() );
+    }
+
 
 
     [TestMethod]

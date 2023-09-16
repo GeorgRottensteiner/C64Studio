@@ -354,7 +354,9 @@ namespace RetroDevStudio
       Types.ASM.FileInfo fileToDebug = DetermineASMFileInfo( ASMDoc );
 
       SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent );
-      var macro = ASMDoc.ASMFileInfo.MacroFromName( Word );
+      Debug.Log( "TODO - num arguments" );
+
+      var macro = ASMDoc.ASMFileInfo.MacroFromName( Word, -1 );
       if ( macro != null )
       {
         if ( fileToDebug.FindTrueLineSource( macro.LineIndex, out string fileName, out int localLineIndex ) )

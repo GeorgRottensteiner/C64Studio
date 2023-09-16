@@ -37,6 +37,7 @@
     public int        CharIndex = -1;
     public int        Length = 0;
     public RetroDevStudio.Types.ASM.SourceInfo SourceInfo = null;
+    public int        NumArguments = 0;
     public GR.Collections.Set<int>  References = new GR.Collections.Set<int>();
 
 
