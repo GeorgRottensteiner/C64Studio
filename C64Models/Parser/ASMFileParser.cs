@@ -5670,6 +5670,11 @@ namespace RetroDevStudio.Parser
           hadCommentInLine = true;
         }
 
+        if ( parseLine.Contains( "sta exod_zp_bitbuf - 1,x" ) )
+        {
+          Debug.Log( "aha" );
+        }
+
         Types.ASM.LineInfo info       = new Types.ASM.LineInfo();
         info.LineIndex                = lineIndex;
         info.Zone                     = m_CurrentZoneName;

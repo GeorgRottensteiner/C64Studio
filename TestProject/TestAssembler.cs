@@ -121,8 +121,6 @@ namespace TestProject
 
 
 
-    
-
     [TestMethod]
     public void TestAssemblyOpcodeDetectionNoIndirectAbsoluteX()
     {
@@ -234,6 +232,28 @@ namespace TestProject
 
       bool parseResult = parser.Parse( source, null, config, null );
       Assert.IsFalse( parseResult );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeEvaluationOpcodeOffsets()
+    {
+      string      source = @"!cpu 6510
+                        !to ""cpu6510.bin"",plain
+
+                        LABEL_VALUE = 128
+
+                        * = $1000
+
+                        sta LABEL_VALUE - 1,x
+                        sta LABEL_VALUE + 1,y
+                        sta ( LABEL_VALUE - 1 ),y
+                        sta ( LABEL_VALUE + 1, x )";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010957F998100917F8181", assembly.ToString() );
     }
 
 

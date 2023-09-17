@@ -76,14 +76,14 @@ namespace Tiny64
           case AddressingType.RELATIVE_16:
           case AddressingType.ZEROPAGE:
           case AddressingType.ZEROPAGE_RELATIVE:
+          case AddressingType.ZEROPAGE_X:
+          case AddressingType.ZEROPAGE_Y:
             return 0;
           case AddressingType.ABSOLUTE_INDIRECT_X:
           case AddressingType.INDIRECT:
           case AddressingType.ZEROPAGE_INDIRECT:
           case AddressingType.ZEROPAGE_INDIRECT_SP_Y:
           case AddressingType.ZEROPAGE_INDIRECT_Z:
-          case AddressingType.ZEROPAGE_X:
-          case AddressingType.ZEROPAGE_Y:
           case AddressingType.ZEROPAGE_INDIRECT_Y_LONG:
             // jmp ($1234,x)
             // jsr ($1234)
