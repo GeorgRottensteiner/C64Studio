@@ -9522,8 +9522,7 @@ namespace RetroDevStudio.Parser
       {
         if ( ( ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
         &&     ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
-        ||   ( ( lineTokenInfos[2].Content != "=" )
-        &&     ( lineTokenInfos[2].Content != "==" ) ) )
+        ||   ( lineTokenInfos[2].Content != "=" ) )
         {
           AddError( lineIndex,
                     RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -12310,8 +12309,7 @@ namespace RetroDevStudio.Parser
           break;
         }
         if ( ( Result[i].Content == ":" )
-        ||   ( Result[i].Content == "=" ) 
-        ||   ( Result[i].Content == "==" ) )
+        ||   ( Result[i].Content == "=" ) )
         {
           lastIndex = i - 1;
           break;
