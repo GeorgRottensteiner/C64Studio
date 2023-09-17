@@ -145,6 +145,7 @@ namespace RetroDevStudio.Parser
       OperatorPrecedence["<="] = 7;
       OperatorPrecedence["!="] = 7;
       OperatorPrecedence["="] = 7;
+      OperatorPrecedence["=="] = 7;
       OperatorPrecedence[">"] = 8;
       OperatorPrecedence["<"] = 8;
       OperatorPrecedence["!"] = 8;

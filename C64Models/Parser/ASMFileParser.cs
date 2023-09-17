@@ -1496,7 +1496,8 @@ namespace RetroDevStudio.Parser
         string  firstArg  = token1.ToString();
         string  secondArg = token2.ToString();
 
-        if ( opText == "=" )
+        if ( ( opText == "=" )
+        ||   ( opText == "==" ) )
         {
           Symbol = CreateIntegerSymbol( ( firstArg == secondArg ) ? 0xff : 0 );
           return true;
@@ -1572,7 +1573,8 @@ namespace RetroDevStudio.Parser
           Symbol = CreateNumberSymbol( Math.Pow( firstArg, secondArg ) );
           return true;
         }
-        else if ( opText == "=" )
+        else if ( ( opText == "=" )
+        ||        ( opText == "==" ) )
         {
           Symbol = CreateIntegerSymbol( ( firstArg == secondArg ) ? 0xff : 0 );
           return true;
@@ -1687,7 +1689,8 @@ namespace RetroDevStudio.Parser
         Symbol = CreateIntegerSymbol( arg1 << (int)arg2 );
         return true;
       }
-      else if ( opText == "=" )
+      else if ( ( opText == "=" )
+      ||        ( opText == "==" ) )
       {
         Symbol = CreateIntegerSymbol( ( arg1 == arg2 ) ? 0xff : 0 );
         return true;
@@ -5610,6 +5613,11 @@ namespace RetroDevStudio.Parser
         info.Accu16Bit                = m_Assume16BitAccu;
         info.Registers16Bit           = m_Assume16BitRegisters;
 
+        if ( parseLine.Contains( "wic64_optimize_for_size == 0" ) )
+        {
+          Debug.Log( "ahja" );
+        }
+
         if ( !ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -9514,7 +9522,8 @@ namespace RetroDevStudio.Parser
       {
         if ( ( ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
         &&     ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
-        ||   ( lineTokenInfos[2].Content != "=" ) )
+        ||   ( ( lineTokenInfos[2].Content != "=" )
+        &&     ( lineTokenInfos[2].Content != "==" ) ) )
         {
           AddError( lineIndex,
                     RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -12301,7 +12310,8 @@ namespace RetroDevStudio.Parser
           break;
         }
         if ( ( Result[i].Content == ":" )
-        ||   ( Result[i].Content == "=" ) )
+        ||   ( Result[i].Content == "=" ) 
+        ||   ( Result[i].Content == "==" ) )
         {
           lastIndex = i - 1;
           break;
