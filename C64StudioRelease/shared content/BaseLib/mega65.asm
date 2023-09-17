@@ -52,6 +52,12 @@
 ;xxxx 1111      = TEXTYPOS high nibble
 .SPRTILEN_TEXTYPOS  = $d04f
 
+;1xxx xxxx      = NORRDEL       when clear, raster rewrite double buffering is used
+;x1xx xxxx      = DBLRR         when set, the Raster Rewrite Buffer is only updated every 2nd raster line,
+;                               limiting resolution to V200, but allowing more cycles for Raster-Rewrite actions.
+;xx11 1111      = XPOS          Read horizontal raster scan position LSB
+.NORRDEL_DBLRR_XPOS = $d051
+
 ;VIC4 display settings
 ;1xxx xxxx      = ALPHEN        alpha compositor enable
 ;x1xx xxxx      = VFAST         C65GS FAST mode (48MHz)
@@ -100,7 +106,7 @@
 ;1xxx xxxx = EXGLYPH
 ;x0xx xxxx = unused
 ;xx11 xxxx = msb of CHRCOUNT
-;xxxx 1111 = msg of SCRNPTR
+;xxxx 1111 = msb of SCRNPTR
 .EXGLYPH_CHRCOUNT_SCRNPTR = $d063
 
 ;16 bit address offset of color RAM
@@ -136,6 +142,9 @@
 ;xxxx 11xx = SPRPALSEL    - sprite palette bank
 ;xxxx xx11 = ABTPALSEL    - VIC4 alternative bitmap/text palette bank
 .PALSEL         = $d070
+
+;Sprite V400 enable
+.SPRENV400      = $d076
 
 ;palette red entries (up to $d1ff) - nibbles are switched in 8bit color mode
 .PALRED         = $d100
@@ -454,3 +463,6 @@
     !word $0000
   }
 }
+
+
+!zone

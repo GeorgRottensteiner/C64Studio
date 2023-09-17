@@ -20,7 +20,8 @@ namespace RetroDevStudio.Types.ASM
     {
       CODE_DIRECT = 0,
       CODE_INCLUDE,
-      MEDIA_INCLUDE
+      MEDIA_INCLUDE,
+      MACRO
     }
 
     public string             Filename = "";

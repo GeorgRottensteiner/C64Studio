@@ -112,6 +112,7 @@ namespace RetroDevStudio.Parser
     private bool                        DoLogSourceInfo = false;
 
     private string                      m_CurrentZoneName = "";
+    private string                      m_CurrentGlobalZoneName = "";
 
     private int                         m_TemporaryFillLoopPos = -1;
     private bool                        m_CurrentSegmentIsVirtual = false;
@@ -1868,6 +1869,33 @@ namespace RetroDevStudio.Parser
         // an actual result
         switch ( Tokens[StartIndex].Type )
         {
+          case TokenInfo.TokenType.OPERATOR:
+            // a forward/backward label?
+            if ( Tokens[StartIndex].Content.StartsWith( "+" ) )
+            {
+              // special case of forward local label
+              if ( FindForwardLocalLabel( LineIndex, ASMFileInfo.LineInfo[LineIndex], Tokens[StartIndex].Content, out string closestLabel, out int closestLine ) )
+              {
+                Tokens[StartIndex].Content  = closestLabel;
+                Tokens[StartIndex].Type     = TokenInfo.TokenType.LABEL_LOCAL;
+
+                if ( EvaluateTokens( LineIndex, Tokens, StartIndex, 1, TextCodeMapping, out ResultingToken ) )
+                {
+                  int result = (int)ResultingToken.ToInteger();
+                  result &= 0xffff;
+                  if ( result > 255 )
+                  {
+                    NumBytesGiven = 2;
+                  }
+                  else
+                  {
+                    NumBytesGiven = 1;
+                  }
+                  return true;
+                }
+              }
+            }
+            break;
           case TokenInfo.TokenType.LITERAL_REAL_NUMBER:
             {
               var symbol = new SymbolInfo();
@@ -2934,25 +2962,7 @@ namespace RetroDevStudio.Parser
               if ( lineInfo.NeededParsedExpression[0].Content.StartsWith( "+" ) )
               {
                 // special case of forward local label
-                string    closestLabel = "";
-                int       closestLine = 5000000;
-                foreach ( string label in ASMFileInfo.Labels.Keys )
-                {
-                  if ( label.StartsWith( InternalLabelPrefix + lineInfo.NeededParsedExpression[0].Content + InternalLabelPostfix ) )
-                  {
-                    int lineNo = -1;
-                    if ( int.TryParse( label.Substring( ( InternalLabelPrefix + lineInfo.NeededParsedExpression[0].Content + InternalLabelPostfix ).Length ), out lineNo ) )
-                    {
-                      if ( ( lineNo > lineIndex )
-                      &&   ( lineNo < closestLine ) )
-                      {
-                        closestLine   = lineNo;
-                        closestLabel  = label;
-                      }
-                    }
-                  }
-                }
-                if ( closestLine != 5000000 )
+                if ( FindForwardLocalLabel( lineIndex, lineInfo, lineInfo.NeededParsedExpression[0].Content, out string closestLabel, out int closestLine ) )
                 {
                   lineInfo.NeededParsedExpression[0].Content = closestLabel;
                 }
@@ -3262,6 +3272,46 @@ namespace RetroDevStudio.Parser
         return false;
       }
       return ( ASMFileInfo.UnparsedLabels.Count == 0 );
+    }
+
+
+
+    private bool FindForwardLocalLabel( int LineIndex, LineInfo LineInfo, string Content, out string ClosestLabel, out int ClosestLine )
+    {
+      ClosestLabel = "";
+      ClosestLine = 5000000;
+      foreach ( string label in ASMFileInfo.Labels.Keys )
+      {
+        if ( ( LineInfo.NeededParsedExpression != null )
+        &&   ( label.StartsWith( InternalLabelPrefix + Content + InternalLabelPostfix ) ) )
+        {
+          int lineNo = -1;
+          if ( int.TryParse( label.Substring( ( InternalLabelPrefix + Content + InternalLabelPostfix ).Length ), out lineNo ) )
+          {
+            if ( ( lineNo > LineIndex )
+            &&   ( lineNo < ClosestLine ) )
+            {
+              ClosestLine = lineNo;
+              ClosestLabel = label;
+            }
+          }
+        }
+        else if ( ( LineInfo.NeededParsedExpression == null )
+        &&        ( label.StartsWith( InternalLabelPrefix + InternalLabelPostfix ) ) )
+        {
+          int lineNo = -1;
+          if ( int.TryParse( label.Substring( ( InternalLabelPrefix + InternalLabelPostfix ).Length ), out lineNo ) )
+          {
+            if ( ( lineNo > LineIndex )
+            &&   ( lineNo < ClosestLine ) )
+            {
+              ClosestLine = lineNo;
+              ClosestLabel = label;
+            }
+          }
+        }
+      }
+      return ClosestLine != 5000000;
     }
 
 
@@ -3589,22 +3639,37 @@ namespace RetroDevStudio.Parser
         System.Array.Copy( Lines, macroInfo.LineIndex + 1, macroInfo.Content, 0, macroInfo.LineEnd - macroInfo.LineIndex - 1 );
 
         // safety check, see if macro contains call to itself
-        for ( int i = 0; i < macroInfo.Content.Length; ++i )
+        if ( ASMFileInfo.FindTrueLineSource( lineIndex, out string filename, out int localLineIndex, out SourceInfo srcInfo ) )
         {
-          var lineTokens = ParseTokenInfo( macroInfo.Content[i], 0, macroInfo.Content[i].Length, TextCodeMapping );
-          if ( lineTokens != null )
+          for ( int i = 0; i < macroInfo.Content.Length; ++i )
           {
-            for ( int j = 0; j < lineTokens.Count; ++j )
+            var lineTokens = ParseTokenInfo( macroInfo.Content[i], 0, macroInfo.Content[i].Length, TextCodeMapping );
+            if ( lineTokens != null )
             {
-              if ( ( lineTokens[j].Type == TokenInfo.TokenType.OPERATOR )
-              &&   ( lineTokens[j].Content == "+" )
-              &&   ( j + 1 < lineTokens.Count )
-              &&   ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
-              &&   ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-              &&   ( lineTokens[j + 1].Content == macroInfo.Name ) )
+              for ( int j = 0; j < lineTokens.Count; ++j )
               {
-                AddError( macroInfo.LineIndex + 1 + i, ErrorCode.E1302_MALFORMED_MACRO, "Macro " + macroInfo.Name + " is calling itself" );
-                return ParseLineResult.ERROR_ABORT;
+                if ( ( lineTokens[j].Type == TokenInfo.TokenType.OPERATOR )
+                &&   ( lineTokens[j].Content == "+" )
+                &&   ( j + 1 < lineTokens.Count )
+                &&   ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
+                &&   ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+                &&   ( lineTokens[j + 1].Content == macroInfo.Name ) )
+                {
+                  if ( m_AssemblerSettings.MacrosCanBeOverloaded )
+                  {
+                    int numParams = EstimateNumberOfParameters( lineTokens, 2, lineTokens.Count - 2 );
+                    if ( numParams == macroInfo.ParameterNames.Count )
+                    {
+                      AddError( macroInfo.LineIndex + 1 + i, ErrorCode.E1302_MALFORMED_MACRO, $"Macro{macroInfo.Name} is calling itself" );
+                      return ParseLineResult.ERROR_ABORT;
+                    }
+                  }
+                  else
+                  {
+                    AddError( macroInfo.LineIndex + 1 + i, ErrorCode.E1302_MALFORMED_MACRO, $"Macro{macroInfo.Name} is calling itself" );
+                    return ParseLineResult.ERROR_ABORT;
+                  }
+                }
               }
             }
           }
@@ -5581,6 +5646,7 @@ namespace RetroDevStudio.Parser
       bool hadPseudoOp = false;
       bool hideInPreprocessedOutput = false;
       m_CurrentZoneName = "";
+      m_CurrentGlobalZoneName = "";
       m_CurrentSegmentIsVirtual = false;
 
       for ( int lineIndex = 0; lineIndex < Lines.Length; ++lineIndex )
@@ -5613,11 +5679,6 @@ namespace RetroDevStudio.Parser
         info.Accu16Bit                = m_Assume16BitAccu;
         info.Registers16Bit           = m_Assume16BitRegisters;
 
-        if ( parseLine.Contains( "wic64_optimize_for_size == 0" ) )
-        {
-          Debug.Log( "ahja" );
-        }
-
         if ( !ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -5630,7 +5691,7 @@ namespace RetroDevStudio.Parser
               info = ASMFileInfo.LineInfo[lineIndex];
 
               info.AddressStart = programStepPos;
-              info.Zone = m_CurrentZoneName;
+              info.Zone         = m_CurrentZoneName;
             }
             else
             {
@@ -5879,7 +5940,7 @@ namespace RetroDevStudio.Parser
               }
               OnScopeRemoved( lineIndex, stackScopes );
               stackScopes.RemoveAt( stackScopes.Count - 1 );
-              m_CurrentZoneName = "";
+              DetermineActiveZone( stackScopes );
               break;
             case Types.ScopeInfo.ScopeType.PSEUDO_PC:
               PORealPC( info );
@@ -6678,7 +6739,7 @@ namespace RetroDevStudio.Parser
 
           if ( !ScopeInsideMacroDefinition( stackScopes ) )
           {
-            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, ASMFileInfo.Macros, ref Lines, stackScopes, out lineSizeInBytes );
+            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, ASMFileInfo.Macros, ref Lines, stackScopes, textCodeMapping, out lineSizeInBytes );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;
@@ -7163,7 +7224,7 @@ namespace RetroDevStudio.Parser
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
                   m_CurrentZoneName = macroName;
-                  info.Zone = m_CurrentZoneName;
+                  info.Zone         = m_CurrentZoneName;
                 }
               }
             }
@@ -8010,7 +8071,7 @@ namespace RetroDevStudio.Parser
               if ( m_AssemblerSettings.MacroIsZone )
               {
                 m_CurrentZoneName = macroName;
-                info.Zone = m_CurrentZoneName;
+                info.Zone         = m_CurrentZoneName;
               }
             }
           }
@@ -8399,6 +8460,21 @@ namespace RetroDevStudio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private void DetermineActiveZone( List<ScopeInfo> Scopes )
+    {
+      for ( int i = Scopes.Count - 1; i >= 0; --i )
+      {
+        if ( Scopes[i].Type == ScopeInfo.ScopeType.ZONE )
+        {
+          m_CurrentZoneName = Scopes[i].Name;
+          return;
+        }
+      }
+      m_CurrentZoneName = m_CurrentGlobalZoneName;
     }
 
 
@@ -8832,6 +8908,8 @@ namespace RetroDevStudio.Parser
 
     private void POZone( List<ScopeInfo> stackScopes, int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos, bool AutoGlobalLabel )
     {
+      bool  scopedZone = false;
+
       if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
       {
         lineTokenInfos.RemoveAt( lineTokenInfos.Count - 1 );
@@ -8839,10 +8917,10 @@ namespace RetroDevStudio.Parser
         // TODO - check of zonescope exists, no nestes zone scopes!
 
         Types.ScopeInfo   zoneScope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
-        zoneScope.StartIndex = lineIndex;
-
+        zoneScope.StartIndex  = lineIndex;
         stackScopes.Add( zoneScope );
         OnScopeAdded( zoneScope );
+        scopedZone = true;
       }
       if ( lineTokenInfos.Count > 2 )
       {
@@ -8857,13 +8935,20 @@ namespace RetroDevStudio.Parser
           // TODO - really?
           //m_CurrentZoneName = "ANON_SCOPE_" + lineIndex.ToString();
           // back to global zone 
-          m_CurrentZoneName = "";
+          DetermineActiveZone( stackScopes );
           return;
         }
         else
         {
-          m_CurrentZoneName = DeQuote( lineTokenInfos[1].Content );
-
+          m_CurrentZoneName       = DeQuote( lineTokenInfos[1].Content );
+          if ( !scopedZone )
+          {
+            m_CurrentGlobalZoneName = m_CurrentZoneName;
+          }
+          else
+          {
+            stackScopes.Last().Name = m_CurrentZoneName;
+          }
           zoneToken = lineTokenInfos[1];
         }
         info.Zone = m_CurrentZoneName;
@@ -9781,8 +9866,8 @@ namespace RetroDevStudio.Parser
               token.Content = param[paramIndex - 1];
 
               if ( ( tokenIndex == 0 )
-              && ( token.Content.StartsWith( AssemblerSettings.INTERNAL_OPENING_BRACE ) )
-              && ( token.Content.EndsWith( AssemblerSettings.INTERNAL_CLOSING_BRACE ) ) )
+              &&   ( token.Content.StartsWith( AssemblerSettings.INTERNAL_OPENING_BRACE ) )
+              &&   ( token.Content.EndsWith( AssemblerSettings.INTERNAL_CLOSING_BRACE ) ) )
               {
                 token.Content = token.Content.Substring( 1, token.Content.Length - 2 );
               }
@@ -12116,13 +12201,13 @@ namespace RetroDevStudio.Parser
         for ( int i = 0; i < result.Count - 1; ++i )
         {
           if ( ( ( ( result[i].Type == Types.TokenInfo.TokenType.OPERATOR )
-          && ( result[i].Length == 1 ) )
-          || ( result[i].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
-          && ( result[i + 1].Type == Types.TokenInfo.TokenType.OPERATOR )
-          && ( result[i + 1].Length == 1 )
-          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL].IndexOf( result[i].Content[0] ) != -1 )
-          && ( result[i].Content[0] == result[i + 1].Content[0] ) )
+          &&       ( result[i].Length == 1 ) )
+          ||     ( result[i].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+          &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.OPERATOR )
+          &&   ( result[i + 1].Length == 1 )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL].IndexOf( result[i].Content[0] ) != -1 )
+          &&   ( result[i].Content[0] == result[i + 1].Content[0] ) )
           {
             ++result[i].Length;
             result[i].Type = Types.TokenInfo.TokenType.LABEL_INTERNAL;
@@ -12132,14 +12217,14 @@ namespace RetroDevStudio.Parser
           }
           // internal label in front
           if ( ( result[i].Type == TokenInfo.TokenType.OPERATOR )
-          && ( ( result[i].Content.StartsWith( "+" ) )
-          || ( result[i].Content.StartsWith( "-" ) ) ) )
+          &&   ( ( result[i].Content.StartsWith( "+" ) )
+          ||     ( result[i].Content.StartsWith( "-" ) ) ) )
           {
             // is directly connected to global label then the internal label is split
             if ( ( result.Count > 1 )
-            && ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-            && ( result[i + 1].StartPos == result[i].StartPos + result[i].Length )
-            && ( result[i + 1].Content.StartsWith( InternalLabelPrefix ) ) )
+            &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+            &&   ( result[i + 1].StartPos == result[i].StartPos + result[i].Length )
+            &&   ( result[i + 1].Content.StartsWith( InternalLabelPrefix ) ) )
             {
               result[i].Type = TokenInfo.TokenType.LABEL_INTERNAL;
               result[i].Content += result[i + 1].Content;
@@ -12152,13 +12237,13 @@ namespace RetroDevStudio.Parser
         }
         // opcode followed by internal label?
         if ( ( result[0].Type == TokenInfo.TokenType.OPCODE )
-        || ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
-        || ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_ZP )
-        || ( result[0].Type == TokenInfo.TokenType.OPCODE_DIRECT_VALUE ) )
+        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_ZP )
+        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_DIRECT_VALUE ) )
         {
           if ( ( result[1].Type == TokenInfo.TokenType.OPERATOR )
-          && ( ( result[1].Content.StartsWith( "+" ) )
-          || ( result[1].Content.StartsWith( "-" ) ) ) )
+          &&   ( ( result[1].Content.StartsWith( "+" ) )
+          ||     ( result[1].Content.StartsWith( "-" ) ) ) )
           {
             result[1].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
@@ -12168,13 +12253,13 @@ namespace RetroDevStudio.Parser
       {
         // starting with internal label?
         if ( ( result[0].Type == TokenInfo.TokenType.OPERATOR )
-        && ( ( result[0].Content.StartsWith( "+" ) )
-        || ( result[0].Content.StartsWith( "-" ) ) ) )
+        &&   ( ( result[0].Content.StartsWith( "+" ) )
+        ||     ( result[0].Content.StartsWith( "-" ) ) ) )
         {
           if ( ( result.Count > 1 )
-          && ( result[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-          && ( result[1].StartPos == result[0].StartPos + result[0].Length )
-          && ( result[1].Content.StartsWith( InternalLabelPrefix ) ) )
+          &&   ( result[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( result[1].StartPos == result[0].StartPos + result[0].Length )
+          &&   ( result[1].Content.StartsWith( InternalLabelPrefix ) ) )
           {
             result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }

@@ -22,6 +22,7 @@ namespace RetroDevStudio.Parser
                                          GR.Collections.Map<GR.Generic.Tupel<string, int>, Types.MacroFunctionInfo> macroFunctions,
                                          ref string[] Lines,
                                          List<Types.ScopeInfo> Scopes,
+                                         GR.Collections.Map<byte, byte> TextCodeMapping,
                                          out int lineSizeInBytes )
     {
       // +macro Macroname [param1[,param2]]
@@ -46,20 +47,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      int     numParams = 0;
-      if ( lineTokenInfos.Count > 1 )
-      {
-        ++numParams;
-      }
-      for ( int i = 1; i < lineTokenInfos.Count; ++i )
-      {
-        if ( lineTokenInfos[i].Content == "," )
-        {
-          ++numParams;
-        }
-      }
-
-      // TODO - num arguments!
+      int numParams = EstimateNumberOfParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
       var macroKey = new GR.Generic.Tupel<string,int>( functionName, numParams );
 
       if ( !DoesMacroExist( macroFunctions, macroKey, out Types.MacroFunctionInfo macro ) )
@@ -102,8 +90,8 @@ namespace RetroDevStudio.Parser
             }
 
             if ( ( !hadError )
-            && ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-            && ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
+            &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+            &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
             {
               param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
 
@@ -118,7 +106,7 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( startIndex == lineTokenInfos.Count )
-        && ( startIndex > 1 ) )
+        &&   ( startIndex > 1 ) )
         {
           param.Add( "" );
         }
@@ -148,8 +136,8 @@ namespace RetroDevStudio.Parser
             }
           }
           if ( ( !hadError )
-          && ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-          && ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
+          &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+          &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
           {
             param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
             string paramName = param[param.Count - 1];
@@ -161,7 +149,7 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-        && ( param.Count != functionInfo.ParameterNames.Count ) )
+        &&   ( param.Count != functionInfo.ParameterNames.Count ) )
         {
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
         }
@@ -192,10 +180,11 @@ namespace RetroDevStudio.Parser
 
               // adjust source infos to make lookup work correctly
               Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-              sourceInfo.Filename = functionInfo.ParentFileName;
-              sourceInfo.FullPath = functionInfo.ParentFileName;
-              sourceInfo.GlobalStartLine = lineIndex + 1;
-              sourceInfo.LineCount = replacementLines.Length;
+              sourceInfo.Filename         = functionInfo.ParentFileName;
+              sourceInfo.FullPath         = functionInfo.ParentFileName;
+              sourceInfo.GlobalStartLine  = lineIndex + 1;
+              sourceInfo.LineCount        = replacementLines.Length;
+              sourceInfo.Source           = SourceInfo.SourceInfoSource.MACRO;
               string dummy;
               ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
 
@@ -209,6 +198,25 @@ namespace RetroDevStudio.Parser
         }
       }
       return ParseLineResult.OK;
+    }
+
+
+
+    public int EstimateNumberOfParameters( List<TokenInfo> TokenInfos, int StartIndex, int Count )
+    {
+      int     numParams = 0;
+      if ( TokenInfos.Count > 1 )
+      {
+        ++numParams;
+      }
+      for ( int i = StartIndex; i < StartIndex + Count; ++i )
+      {
+        if ( TokenInfos[i].Content == "," )
+        {
+          ++numParams;
+        }
+      }
+      return numParams;
     }
 
 

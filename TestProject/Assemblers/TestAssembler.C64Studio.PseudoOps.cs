@@ -455,6 +455,32 @@ namespace TestProject
     }
 
 
+
+    [TestMethod]
+    public void TestPseudoOpZone()
+    {
+      // nested zone end restores global zone
+      string      source = @"* = $1000 
+                             !zone gnu
+                             
+                             jmp .temp
+
+                              !zone inner {
+
+                              .temp !byte 0
+
+                              }
+
+                              .temp
+                              !byte 1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "00104C04100001", assembly.ToString() );
+    }
+
+
+
     [TestMethod]
     public void TestPseudoOpByteWordDWord()
     {

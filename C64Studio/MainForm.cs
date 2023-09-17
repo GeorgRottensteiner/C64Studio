@@ -5145,12 +5145,7 @@ namespace RetroDevStudio
 
             if ( sourceEx != null )
             {
-              string wordBelow = sourceEx.FindWordAtCaretPosition();
-              string zone;
-              string cheapLabelParent;
-
-              sourceEx.FindZoneAtCaretPosition( out zone, out cheapLabelParent );
-              StudioCore.Navigating.GotoDeclaration( docToHandle, wordBelow, zone, cheapLabelParent );
+              sourceEx.GoToDeclarationAtCaretPosition();
               return true;
             }
           }
