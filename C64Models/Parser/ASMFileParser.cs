@@ -5670,11 +5670,6 @@ namespace RetroDevStudio.Parser
           hadCommentInLine = true;
         }
 
-        if ( parseLine.Contains( "sta exod_zp_bitbuf - 1,x" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
         Types.ASM.LineInfo info       = new Types.ASM.LineInfo();
         info.LineIndex                = lineIndex;
         info.Zone                     = m_CurrentZoneName;
@@ -5746,7 +5741,6 @@ namespace RetroDevStudio.Parser
 
         AdjustLabelCasing( lineTokenInfos );
 
-
         // PDS/DASM macro call?
         DetectPDSOrDASMMacroCall( ASMFileInfo.Macros, lineTokenInfos );
 
@@ -5798,7 +5792,7 @@ namespace RetroDevStudio.Parser
             Types.ScopeInfo.ScopeType   detectedScopeType = ScopeInfo.ScopeType.UNKNOWN;
 
             // TODO - HACK UGLY - use keywords from AssemblerSettings!
-            if ( TokenIsConditionalThatStartsScope( lineTokenInfos[0] ) )
+            if ( TokenIsConditionalThatStartsScope( lineTokenInfos[tokenOffset] ) )
             {
               // a new block starts here!
               // false, since it doesn't matter
@@ -5809,7 +5803,7 @@ namespace RetroDevStudio.Parser
 
               OnScopeAdded( scope );
             }
-            else if ( ( TokenIsPseudoPC( lineTokenInfos[0] ) )
+            else if ( ( TokenIsPseudoPC( lineTokenInfos[tokenOffset] ) )
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style pseudo pc with bracket
@@ -5819,7 +5813,7 @@ namespace RetroDevStudio.Parser
               stackScopes.Add( scope );
               OnScopeAdded( scope );
             }
-            else if ( ( TokenStartsScope( lineTokenInfos, out detectedScopeType ) )
+            else if ( ( TokenStartsScope( lineTokenInfos, tokenOffset, out detectedScopeType ) )
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style other scopes with bracket
@@ -9318,23 +9312,23 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool TokenStartsScope( List<TokenInfo> Tokens, out Types.ScopeInfo.ScopeType Type )
+    private bool TokenStartsScope( List<TokenInfo> Tokens, int StartTokenIndex, out Types.ScopeInfo.ScopeType Type )
     {
       Type = ScopeInfo.ScopeType.UNKNOWN;
-      if ( Tokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
+      if ( Tokens[StartTokenIndex].Type == TokenInfo.TokenType.PSEUDO_OP )
       {
-        if ( MatchesMacroByType( Tokens[0].Content, MacroInfo.PseudoOpType.ADDRESS ) )
+        if ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.ADDRESS ) )
         {
           Type = ScopeInfo.ScopeType.ADDRESS;
           return true;
         }
-        if ( MatchesMacroByType( Tokens[0].Content, MacroInfo.PseudoOpType.ZONE ) )
+        if ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.ZONE ) )
         {
           Type = ScopeInfo.ScopeType.ZONE;
           return true;
         }
         // a ACME style !macro with opening bracket
-        if ( ( MatchesMacroByType( Tokens[0].Content, MacroInfo.PseudoOpType.MACRO ) )
+        if ( ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.MACRO ) )
         &&   ( Tokens[Tokens.Count - 1].Content == "{" ) )
         {
           Type = ScopeInfo.ScopeType.MACRO_FUNCTION;
