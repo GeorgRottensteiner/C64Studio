@@ -1,26 +1,28 @@
-﻿using GR.Memory;
+﻿using GR.Collections;
+using GR.Generic;
+using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
 using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
-
-
+using System.Linq;
 
 namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POCallMacro( List<Types.TokenInfo> lineTokenInfos, 
-                                         ref int lineIndex, 
-                                         Types.ASM.LineInfo info, 
+    private ParseLineResult POCallMacro( List<Types.TokenInfo> lineTokenInfos,
+                                         ref int lineIndex,
+                                         Types.ASM.LineInfo info,
                                          string parseLine,
-                                         string ParentFilename, 
+                                         string ParentFilename,
                                          string labelInFront,
-                                         GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
-                                         ref string[] Lines, 
-                                         List<Types.ScopeInfo> Scopes, 
+                                         GR.Collections.Map<GR.Generic.Tupel<string, int>, Types.MacroFunctionInfo> macroFunctions,
+                                         ref string[] Lines,
+                                         List<Types.ScopeInfo> Scopes,
+                                         GR.Collections.Map<byte, byte> TextCodeMapping,
                                          out int lineSizeInBytes )
     {
       // +macro Macroname [param1[,param2]]
@@ -44,14 +46,17 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-      if ( ( !macroFunctions.ContainsKey( functionName ) )
-      ||   ( macroFunctions[functionName].LineEnd == -1 ) )
+
+      int numParams = EstimateNumberOfParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+      var macroKey = new GR.Generic.Tupel<string,int>( functionName, numParams );
+
+      if ( !DoesMacroExist( macroFunctions, macroKey, out Types.MacroFunctionInfo macro ) )
       {
         AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
       }
       else
       {
-        Types.MacroFunctionInfo  functionInfo = macroFunctions[functionName];
+        Types.MacroFunctionInfo  functionInfo = macro;
 
         List<string>  param = new List<string>();
         List<bool>    paramIsRef = new List<bool>();
@@ -175,10 +180,11 @@ namespace RetroDevStudio.Parser
 
               // adjust source infos to make lookup work correctly
               Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-              sourceInfo.Filename = functionInfo.ParentFileName;
-              sourceInfo.FullPath = functionInfo.ParentFileName;
-              sourceInfo.GlobalStartLine = lineIndex + 1;
-              sourceInfo.LineCount = replacementLines.Length;
+              sourceInfo.Filename         = functionInfo.ParentFileName;
+              sourceInfo.FullPath         = functionInfo.ParentFileName;
+              sourceInfo.GlobalStartLine  = lineIndex + 1;
+              sourceInfo.LineCount        = replacementLines.Length;
+              sourceInfo.Source           = SourceInfo.SourceInfoSource.MACRO;
               string dummy;
               ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
 
@@ -195,6 +201,45 @@ namespace RetroDevStudio.Parser
     }
 
 
+
+    public int EstimateNumberOfParameters( List<TokenInfo> TokenInfos, int StartIndex, int Count )
+    {
+      int     numParams = 0;
+      if ( TokenInfos.Count > 1 )
+      {
+        ++numParams;
+      }
+      for ( int i = StartIndex; i < StartIndex + Count; ++i )
+      {
+        if ( TokenInfos[i].Content == "," )
+        {
+          ++numParams;
+        }
+      }
+      return numParams;
+    }
+
+
+
+    private bool DoesMacroExist( Map<Tupel<string, int>, MacroFunctionInfo> macroFunctions, GR.Generic.Tupel<string, int> Key, out MacroFunctionInfo Macro )
+    {
+      Macro = null;
+      if ( m_AssemblerSettings.MacrosCanBeOverloaded )
+      {
+        if ( !macroFunctions.ContainsKey( Key ) )
+        {
+          return false;
+        }
+        Macro = macroFunctions[Key];
+        return true;
+      }
+      if ( !macroFunctions.Keys.Any( m => m.first == Key.first ) )
+      {
+        return false;
+      }
+      Macro = macroFunctions.FirstOrDefault( m => m.Key.first == Key.first ).Value;
+      return true;
+    }
 
 
   }

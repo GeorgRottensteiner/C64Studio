@@ -9,7 +9,9 @@
 ;| Bit  4   |    Blank Screen to Border Color: 0 = Blank
 ;| Bit  3   |    Select 24/25 Row Text Display: 1 = 25 Rows
 ;| Bits 2-0 |    Smooth Scroll to Y Dot-Position (0-7)
+;Default Value: $9B/155 (%10011011).
 .CONTROL_1           = $d011
+
 .RASTER_POS          = $d012
 .STROBE_X            = $d013   ;light pen x
 .STROBE_Y            = $d014   ;light pen y
@@ -24,12 +26,15 @@
 .CONTROL_2           = $d016
 .SPRITE_EXPAND_Y     = $d017
 
-;| Bits 7-4 |   Video Matrix Base Address (inside VIC)
+;| Bits 7-4 |   Video Matrix Base (Screen) Address (inside VIC)
 ;| Bit  3   |   Bitmap-Mode: Select Base Address (inside VIC)
-;| Bits 3-1 |   Character Dot-Data Base Address (inside VIC)
+;| Bits 3-1 |   Character Dot-Data Base (Character set) Address (inside VIC)
 ;| Bit  0   |   Unused
+;Default Value: $14/20 (%00010100).
 .MEMORY_CONTROL      = $d018
+
 .IRQ_REQUEST         = $d019
+
 ;| Bit 7-4  |   Always 1
 ;| Bit 3    |   Light-Pen Triggered IRQ Flag
 ;| Bit 2    |   Sprite to Sprite Collision IRQ Flag     (see $D01E)
@@ -54,7 +59,80 @@
 
 
 !zone CIA1
-.DATA_PORT_A         = $dc00
+
+;| Bits 7-0 |   Write Keyboard Column Values for Keyboard Scan
+;| Bits 7-6 |   Paddles on: 01 = Port A, 10 = Port B
+;| Bit  4   |   Joystick A Fire Button: 0 = Pressed
+;| Bit  3   |   Joystick A Right: 0 = Pressed, or Paddle Button
+;| Bit  2   |   Joystick A Left : 0 = Pressed, or Paddle Button
+;| Bit  1   |   Joystick A Down : 0 = Pressed
+;| Bit  0   |   Joystick A Up   : 0 = Pressed
+;Do NOT use Paddles on both Ports at the same time!
+;Joystick A is the one plugged into Port 2.
+;Default Value: $7F/127 (%01111111)
+.DATA_PORT_A                = $dc00
+
+;| Bits 7-0 |   Read Keyboard Row Values for Keyboard Scan
+;| Bit  4   |   Joystick B Fire Button: 0 = Pressed
+;| Bit  3   |   Joystick B Right: 0 = Pressed, or Paddle Button
+;| Bit  2   |   Joystick B Left : 0 = Pressed, or Paddle Button
+;| Bit  1   |   Joystick B Down : 0 = Pressed
+;| Bit  0   |   Joystick B Up   : 0 = Pressed
+;Joystick B is the one plugged into Port 1.
+.DATA_PORT_B                = $dc01
+
+;| Bit  x   |   1 = Pin PAx set to Output, 0 = Input
+;Default Value: $FF/255 (%11111111)
+.DATA_DIRECTION_REGISTER_A  = $dc02
+
+;| Bit  x   |   1 = Pin PBx set to Output, 0 = Input
+;Default Value: $00/0 (%00000000)
+.DATA_DIRECTION_REGISTER_B  = $dc03
+
+;Read : Get current value
+;Write: Set Low-Byte of value to count down from
+;Default Value: $25/37 on PAL
+;               $95/149 on NTSC
+.TIMER_A_LO_BYTE            = $dc04
+
+;Read : Get current value
+;Write: Set High-Byte of value to count down from
+;Default Value: $40/64 on PAL
+;               $42/66 on NTSC
+.TIMER_A_HI_BYTE            = $dc05
+
+;Read : Get current value
+;Write: Set Low-Byte of value to count down from
+.TIMER_B_LO_BYTE            = $dc06
+
+;Read : Get current value
+;Write: Set High-Byte of value to count down from
+.TIMER_B_HI_BYTE            = $dc07
+
+;| Bits 7-4 | Always 0
+;| Bits 3-0 | 1/10 Seconds in BCD-Format
+.TIME_OF_DAY_CLOCK_10TH_SECONDS= $dc08
+
+;| Bit  7   |   Always 0
+;| Bits 6-4 |   10 Seconds in BCD-Format
+;| Bits 3-0 |    1 Seconds in BCD-Format
+.TIME_OF_DAY_CLOCK_SECONDS  = $dc09
+
+;| Bit  7   |   Always 0
+;| Bits 6-4 |   10 Minutes in BCD-Format
+;| Bits 3-0 |    1 Minutes in BCD-Format
+.TIME_OF_DAY_CLOCK_MINUTES  = $dc0a
+
+;| Bit  7   |   0 = AM / 1 = PM
+;| Bit  6-5 |   Always 0
+;| Bit  4   |   10 Hours in BCD-Format
+;| Bits 3-0 |    1 Hours in BCD-Format
+.TIME_OF_DAY_CLOCK_HOURS_APM= $dc0b
+
+;Synchronous Serial I/O Data Buffer
+;Bits to be send or received via Pin SP are stored in this register
+.SERIAL_SYNC_IO             = $dc0c
+
 ;| Bit 7 |   On Read:  1 = Interrupt occured
 ;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int-.Flags
 ;| Bit 4 |   FLAG1 IRQ (Cassette Read / Serial Bus SRQ Input)
@@ -62,11 +140,107 @@
 ;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
 ;| Bit 1 |   Timer B Interrupt (Tape, Serial Port)
 ;| Bit 0 |   Timer A Interrupt (Kernal-IRQ, Tape)
-.IRQ_CONTROL         = $dc0d
+;Your CIA does NOT clear this register! You have to do this by simply reading it.
+;Default Value: $81/129 (%10000001)
+.IRQ_CONTROL                = $dc0d
 
+;| Bit 7 |   Time-of-Day Clock Frequency: 1 = 50 Hz, 0 = 60 Hz
+;| Bit 6 |   Serial Port ($DC0C) I/O Mode: 1 = Output, 0 = Input
+;| Bit 5 |   Timer A Counts: 1 = CNT Signals, 0 = System 02 Clock
+;| Bit 4 |   Force Load Timer A: 1 = Yes
+;| Bit 3 |   Timer A Run Mode: 1 = One-Shot, 0 = Continuous
+;| Bit 2 |   Timer A Output Mode to PB6: 1 = Toggle, 0 = Pulse
+;| Bit 1 |   Timer A Output on PB6: 1 = Yes, 0 = No
+;| Bit 0 |   Start/Stop Timer A: 1 = Start, 0 = Stop
+;Default Value: $11/17 (%00010001)
+.CONTROL_REGISTER_A         = $dc0e
+
+;| Bit  7   |   Set Alarm/TOD-Clock: 1 = Alarm, 0 = Clock
+;| Bits 6-5 |   Timer B Mode Select:
+;|          |            00 = Count System 02 Clock Pulses
+;|          |            01 = Count Positive CNT Transitions
+;|          |            10 = Count Timer A Underflow Pulses
+;|          |            11 = Count Timer A Underflows While CNT
+;| Bit  4   |   Force Load Timer B: 1 = Yes
+;| Bit  3   |   Timer B Run Mode: 1 = One-Shot, 0 = Continuous
+;| Bit  2   |   Timer B Output Mode to PB7: 1 = Toggle, 0 = Pulse
+;| Bit  1   |   Timer B Output on PB7: 1 = Yes, 0 = No
+;| Bit  0   |   Start/Stop Timer B: 1 = Start, 0 = Stop
+;Default Value: $08/8 (%00001000)
+.CONTROL_REGISTER_B         = $dc0f
 
 !zone CIA2
-.DATA_PORT_A         = $dd00
+;| Bit  7   |  Serial Bus Data Input
+;| Bit  6   |  Serial Bus Clock Pulse Input
+;| Bit  5   |  Serial Bus Data Output
+;| Bit  4   |  Serial Bus Clock Pulse Output
+;| Bit  3   |  Serial Bus ATN Signal Output
+;| Bit  2   |  RS232 Data Output (User Port)
+;| Bit  1-0 |  VIC Chip System Memory Bank Select (low active!)
+;|          |  %00, 0: Bank 3: $C000-$FFFF, 49152-65535
+;|          |  %01, 1: Bank 2: $8000-$BFFF, 32768-49151
+;|          |  %10, 2: Bank 1: $4000-$7FFF, 16384-32767
+;|          |  %11, 3: Bank 0: $0000-$3FFF, 0-16383 (Standard)
+;Default Value: $17/23 (%00010111)
+.DATA_PORT_A                = $dd00
+
+;| Bit 7 |   User Port PB7 / RS232 Data Set Ready
+;| Bit 6 |   User Port PB6 / RS232 Clear to Send
+;| Bit 5 |   User Port PB5
+;| Bit 4 |   User Port PB4 / RS232 Carrier Detect
+;| Bit 3 |   User Port PB3 / RS232 Ring Indicator
+;| Bit 2 |   User Port PB2 / RS232 Data Terminal Ready
+;| Bit 1 |   User Port PB1 / RS232 Request to Send
+;| Bit 0 |   User Port PB0 / RS232 Received Data
+.DATA_PORT_B                = $dd01
+
+;| Bit  x   |   1 = Pin PAx set to Output, 0 = Input
+;Default Value: $3F/63 (%00111111)
+.DATA_DIRECTION_REGISTER_A  = $dd02
+
+;| Bit  x   |   1 = Pin PBx set to Output, 0 = Input
+;Default Value: $00/0 (%00000000)
+.DATA_DIRECTION_REGISTER_B  = $dd03
+
+;Read : Get current value
+;Write: Set Low-Byte of value to count down from
+.TIMER_A_LO_BYTE            = $dd04
+
+;Read : Get current value
+;Write: Set High-Byte of value to count down from
+.TIMER_A_HI_BYTE            = $dd05
+
+;Read : Get current value
+;Write: Set Low-Byte of value to count down from
+.TIMER_B_LO_BYTE            = $dd06
+
+;Read : Get current value
+;Write: Set High-Byte of value to count down from
+.TIMER_B_HI_BYTE            = $dd07
+
+;| Bits 7-4 | Always 0
+;| Bits 3-0 | 1/10 Seconds in BCD-Format
+.TIME_OF_DAY_CLOCK_10TH_SECONDS= $dd08
+
+;| Bit  7   |   Always 0
+;| Bits 6-4 |   10 Seconds in BCD-Format
+;| Bits 3-0 |    1 Seconds in BCD-Format
+.TIME_OF_DAY_CLOCK_SECONDS  = $dd09
+
+;| Bit  7   |   Always 0
+;| Bits 6-4 |   10 Minutes in BCD-Format
+;| Bits 3-0 |    1 Minutes in BCD-Format
+.TIME_OF_DAY_CLOCK_MINUTES  = $dd0a
+
+;| Bit  7   |   0 = AM / 1 = PM
+;| Bit  6-5 |   Always 0
+;| Bit  4   |   10 Hours in BCD-Format
+;| Bits 3-0 |    1 Hours in BCD-Format
+.TIME_OF_DAY_CLOCK_HOURS_APM= $dd0b
+
+;Synchronous Serial I/O Data Buffer
+;Bits to be send or received via Pin SP are stored in this register
+.SERIAL_SYNC_IO             = $dd0c
 
 ;| Bit 7 |   On Read:  1 = Interrupt occured
 ;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int.-Flags
@@ -75,10 +249,36 @@
 ;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
 ;| Bit 1 |   Timer B Interrupt (RS232)
 ;| Bit 0 |   Timer A Interrupt (RS232)
-.NMI_CONTROL            = $dd0d
+;Your CIA does NOT clear this register! You have to do this by simply reading it.
+;Default Value: $7F/127 (%01111111)
+.NMI_CONTROL                = $dd0d
 
+;| Bit 7 |   Time-of-Day Clock Frequency: 1 = 50 Hz, 0 = 60 Hz
+;| Bit 6 |   Serial Port ($DD0C) I/O Mode: 1 = Output, 0 = Input
+;| Bit 5 |   Timer A Counts: 1 = CNT Signals, 0 = System 02 Clock
+;| Bit 4 |   Force Load Timer A: 1 = Yes
+;| Bit 3 |   Timer A Run Mode: 1 = One-Shot, 0 = Continuous
+;| Bit 2 |   Timer A Output Mode to PB6: 1 = Toggle, 0 = Pulse
+;| Bit 1 |   Timer A Output on PB6: 1 = Yes, 0 = No
+;| Bit 0 |   Start/Stop Timer A: 1 = Start, 0 = Stop
+;Default Value: $08/8 (%00001000)
+.CONTROL_REGISTER_A         = $dd0e
 
-IRQ_RETURN_KERNAL       = $ea81
+;| Bit  7   |   Set Alarm/TOD-Clock: 1 = Alarm, 0 = Clock
+;| Bits 6-5 |   Timer B Mode Select:
+;|          |            00 = Count System 02 Clock Pulses
+;|          |            01 = Count Positive CNT Transitions
+;|          |            10 = Count Timer A Underflow Pulses
+;|          |            11 = Count Timer A Underflows While CNT
+;| Bit  4   |   Force Load Timer B: 1 = Yes
+;| Bit  3   |   Timer B Run Mode: 1 = One-Shot, 0 = Continuous
+;| Bit  2   |   Timer B Output Mode to PB7: 1 = Toggle, 0 = Pulse
+;| Bit  1   |   Timer B Output on PB7: 1 = Yes, 0 = No
+;| Bit  0   |   Start/Stop Timer B: 1 = Start, 0 = Stop
+;Default Value: $08/8 (%00001000)
+.CONTROL_REGISTER_B         = $dd0f
+
+IRQ_RETURN_KERNAL           = $ea81
 IRQ_RETURN_KERNAL_KEYBOARD  = $ea31
 
 JOYSTICK_PORT_II        = $dc00

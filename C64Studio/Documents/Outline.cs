@@ -204,7 +204,7 @@ namespace RetroDevStudio.Documents
           {
             sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
           }
-          else if ( macro.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+          else if ( macro.Key.first.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
           {
             sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
           }
@@ -232,11 +232,11 @@ namespace RetroDevStudio.Documents
         {
           if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
           {
-            sortedTokensInner.Add( macro.Key.ToUpper(), macro.Value.Symbol );
+            sortedTokensInner.Add( macro.Key.first.ToUpper(), macro.Value.Symbol );
           }
-          else if ( macro.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+          else if ( macro.Key.first.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
           {
-            sortedTokensInner.Add( macro.Key.ToUpper(), macro.Value.Symbol );
+            sortedTokensInner.Add( macro.Key.first.ToUpper(), macro.Value.Symbol );
           }
         }
         sortedTokens = sortedTokensInner.Values;
@@ -346,9 +346,9 @@ namespace RetroDevStudio.Documents
             break;
           case SymbolInfo.Types.MACRO:
             node.ImageIndex = node.SelectedImageIndex = 4;
-            if ( ActiveASMFileInfo.Macros[token.Name].ParameterNames.Count > 0 ) 
+            if ( ActiveASMFileInfo.Macros[new GR.Generic.Tupel<string,int>( token.Name, token.NumArguments )].ParameterNames.Count > 0 ) 
             {
-              node.Text += " " + string.Join( ", ", ActiveASMFileInfo.Macros[token.Name].ParameterNames.ToArray() );
+              node.Text += " " + string.Join( ", ", ActiveASMFileInfo.Macros[new GR.Generic.Tupel<string, int>( token.Name, token.NumArguments )].ParameterNames.ToArray() );
             }
             break;
         }

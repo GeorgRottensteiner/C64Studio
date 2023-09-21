@@ -1244,6 +1244,7 @@ namespace RetroDevStudio.Documents
       m_LastTooltipPos = editSource.PointToClient( System.Windows.Forms.Cursor.Position );
       int position = editSource.PointToPosition( m_LastTooltipPos );
 
+      int charPos = editSource.PositionToPlace( position ).iChar;
       int lineNumber = editSource.PositionToPlace( position ).iLine;
       string wordBelow = FindWordFromPosition( position, lineNumber );
       if ( wordBelow.Length == 0 )
@@ -1303,7 +1304,15 @@ namespace RetroDevStudio.Documents
         }
         return;
       }
-      var macroInfo = debugFileInfo.MacroFromName( wordBelow );
+      var tokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new GR.Collections.Map<byte, byte>() );
+      var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
+      int numArgs = -1;
+      if ( currentToken != null )
+      {
+        int tokenIndexOfMacro = tokens.IndexOf( currentToken );
+        numArgs = Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+      }
+      var macroInfo = debugFileInfo.MacroFromName( wordBelow, numArgs );
       if ( macroInfo != null )
       {
         string toolTipText = macroInfo.Name;
@@ -1747,13 +1756,13 @@ namespace RetroDevStudio.Documents
       }
       foreach ( var entry in DocumentInfo.ASMFileInfo.Macros )
       {
-        if ( uniqueKeys.Contains( entry.Key ) )
+        if ( uniqueKeys.Contains( entry.Key.first ) )
         {
           // do not override entries!
           continue;
         }
         // list parameters
-        string    toolTipText =  entry.Key;
+        string    toolTipText =  entry.Key.first;
 
         foreach ( var parameter in entry.Value.ParameterNames )
         {
@@ -2615,7 +2624,7 @@ namespace RetroDevStudio.Documents
 
       FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
-      Core.Navigating.GotoDeclaration( DocumentInfo, wordBelow, zone, cheapLabelParent );
+      Core.Navigating.GotoDeclaration( DocumentInfo, m_ContextMenuPosition, m_ContextMenuLineIndex, wordBelow, zone, cheapLabelParent );
       CenterOnCaret();
     }
 
@@ -4099,6 +4108,34 @@ namespace RetroDevStudio.Documents
     private void removeAllBookmarksOfThisFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( Function.BOOKMARK_DELETE_ALL );
+    }
+
+
+
+    internal int DetermineNumberOfMacroArguments( int LineIndex, int SourcePosition )
+    {
+      int   charPos = editSource.PositionToPlace( SourcePosition ).iChar;
+
+      var tokens = Parser.PrepareLineTokens( editSource.Lines[LineIndex], new GR.Collections.Map<byte, byte>() );
+      var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
+      if ( currentToken != null )
+      {
+        int tokenIndexOfMacro = tokens.IndexOf( currentToken );
+        return Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+      }
+      return -1;
+    }
+
+
+
+    internal void GoToDeclarationAtCaretPosition()
+    {
+      string wordBelow = FindWordAtCaretPosition();
+      string zone;
+      string cheapLabelParent;
+
+      FindZoneAtCaretPosition( out zone, out cheapLabelParent );
+      Core.Navigating.GotoDeclaration( DocumentInfo, CurrentPosition(), CurrentLineIndex, wordBelow, zone, cheapLabelParent );
     }
 
 

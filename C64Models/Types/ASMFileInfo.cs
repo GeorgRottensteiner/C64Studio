@@ -20,7 +20,8 @@ namespace RetroDevStudio.Types.ASM
     {
       CODE_DIRECT = 0,
       CODE_INCLUDE,
-      MEDIA_INCLUDE
+      MEDIA_INCLUDE,
+      MACRO
     }
 
     public string             Filename = "";
@@ -115,7 +116,7 @@ namespace RetroDevStudio.Types.ASM
     public Dictionary<int,Types.Breakpoint>       VirtualBreakpoints = new Dictionary<int,Breakpoint>();
     public string                                 LabelDumpFile = "";
     public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
-    public GR.Collections.Map<string, Types.MacroFunctionInfo>    Macros = new GR.Collections.Map<string, MacroFunctionInfo>();
+    public GR.Collections.Map<Tupel<string,int>, Types.MacroFunctionInfo>    Macros = new Map<Tupel<string, int>, MacroFunctionInfo>();
 
     public List<int>                              FixedBreakpoints = new List<int>();
 
@@ -673,9 +674,10 @@ namespace RetroDevStudio.Types.ASM
           return tempLabel.Symbol;
         }
 
-        if ( Macros.ContainsKey( Token ) )
+        var symbol = Macros.Keys.FirstOrDefault( m => m.first == Token );
+        if ( symbol != null ) 
         {
-          return Macros[Token].Symbol;
+          return Macros[symbol].Symbol;
         }
         return null;
       }
@@ -684,7 +686,7 @@ namespace RetroDevStudio.Types.ASM
 
 
 
-    public MacroFunctionInfo MacroFromName( string MacroName )
+    public MacroFunctionInfo MacroFromName( string MacroName, int NumParams )
     {
       if ( AssemblerSettings != null )
       {
@@ -693,11 +695,17 @@ namespace RetroDevStudio.Types.ASM
           MacroName = MacroName.ToUpper();
         }
       }
-      if ( !Macros.ContainsKey( MacroName ) )
+      if ( NumParams == -1 )
+      {
+        return Macros.FirstOrDefault( m => m.Key.first == MacroName ).Value;
+      }
+
+      var key = new Tupel<string, int>( MacroName, NumParams );
+      if ( !Macros.ContainsKey( key ) )
       {
         return null;
       }
-      return Macros[MacroName];
+      return Macros[key];
     }
 
 

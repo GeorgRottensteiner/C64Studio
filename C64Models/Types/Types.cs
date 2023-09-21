@@ -850,6 +850,7 @@ namespace RetroDevStudio.Types
     public Types.MacroFunctionInfo  Macro = null;
     public RepeatUntilInfo          RepeatUntil = null;
     public ScopeType                Type = ScopeType.LOOP;
+    public string                   Name = "";
 
     public ScopeInfo( ScopeType Type )
     {
