@@ -319,11 +319,11 @@ namespace RetroDevStudio.Parser
         {
           hasZone = true;
         }
-        if ( lineUppercase.IndexOf( "!LZONE" ) != -1 )
+        if ( upperCaseLine.IndexOf( "!LZONE" ) != -1 )
         {
           hasLZone = true;
         }
-        if ( lineUppercase.IndexOf( "PROCESSOR " ) != -1 )
+        if ( upperCaseLine.IndexOf( "PROCESSOR " ) != -1 )
         {
           hasProcessor = true;
         }
