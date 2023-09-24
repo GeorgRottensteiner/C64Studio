@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Text;
 
 namespace RetroDevStudio.Parser
@@ -248,6 +249,7 @@ namespace RetroDevStudio.Parser
       bool hasByte = false;
       bool hasText = false;
       bool hasZone = false;
+      bool hasLZone = false;
       bool hasProcessor = false;
       bool hasSemicolonComments = false;
       bool hasDotText = false;
@@ -317,6 +319,10 @@ namespace RetroDevStudio.Parser
         {
           hasZone = true;
         }
+        if ( upperCaseLine.IndexOf( "!LZONE" ) != -1 )
+        {
+          hasLZone = true;
+        }
         if ( upperCaseLine.IndexOf( "PROCESSOR " ) != -1 )
         {
           hasProcessor = true;
@@ -328,6 +334,7 @@ namespace RetroDevStudio.Parser
                 // early detection
         if ( ( hasTo )
         ||   ( hasByte )
+        ||   ( hasLZone )
         ||   ( hasZone ) )
         {
           return Types.AssemblerType.C64_STUDIO;
