@@ -1401,7 +1401,14 @@ namespace GR.Forms
         int     yoffset = ( m_ItemUnderMouse - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
         var itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
 
-        m_ToolTip.Show( "", this, itemRect.Location );
+        try
+        {
+          m_ToolTip.Show( "", this, itemRect.Location );
+        }
+        catch ( Exception )
+        {
+          // sometimes does objectdisposed exception
+        }
       }
     }
 

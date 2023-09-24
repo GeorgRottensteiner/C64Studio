@@ -1643,20 +1643,39 @@ namespace RetroDevStudio.Parser
 
             string macro = Line.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
             int macroCount = 1;
+            bool  foundMacro = false;
 
             macro = DetermineMacroCount( macro, out macroCount );
-
-            bool  foundMacro = false;
-            foreach ( var key in ConstantData.AllPhysicalKeyInfos )
+            if ( macro.Length == 0 )
             {
-              if ( key.Replacements.Contains( macro ) )
+              // the macro was a pure number, replace with PETSCII char
+              byte  petsciiValue = (byte)macroCount;
+              if ( ( petsciiValue >= 192 )
+              &&   ( petsciiValue <= 254 ) )
               {
-                for ( int i = 0; i < macroCount; ++i )
+                petsciiValue -= 64;
+              }
+              else if ( petsciiValue == 255 )
+              {
+                petsciiValue = 126;
+              }
+
+              tempData.AppendU8( petsciiValue );
+              foundMacro = true;
+            }
+            if ( !foundMacro )
+            {
+              foreach ( var key in ConstantData.AllPhysicalKeyInfos )
+              {
+                if ( key.Replacements.Contains( macro ) )
                 {
-                  tempData.AppendU8( key.PetSCIIValue );
+                  for ( int i = 0; i < macroCount; ++i )
+                  {
+                    tempData.AppendU8( key.PetSCIIValue );
+                  }
+                  foundMacro = true;
+                  break;
                 }
-                foundMacro = true;
-                break;
               }
             }
             if ( !foundMacro )

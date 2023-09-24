@@ -1076,7 +1076,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 139, true, 11, true, (char)0xee8b, true, "REVERSE K" ).Replacements.Add( "CTRL-K" );
       AddC64Key( KeyboardKey.KEY_L, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 140, true, 12, true, (char)0xee8c, true, "REVERSE L" ).Replacements.Add( "CTRL-L" );
 
-      AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, -1, 0, true, "RETURN", "RET" ).Replacements.Add( "CTRL-M" );  // return
+      AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, -1, 0, true, "RETURN", "RET" ).Replacements.AddRange( new string[] { "CTRL-M", "RETURN" } );  // return
       AddC64Key( KeyboardKey.KEY_M, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, true, "REVERSE M" ).Replacements.Add( "CTRL-M" );
 
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 142, true, 14, true, (char)0xee8e, -1, 0, true, "SHIFT C=", "SH C=" ).Replacements.AddRange( new string[] { "SWLC" } );  // toggle upper/lower
@@ -1353,6 +1353,7 @@ namespace RetroDevStudio
 
       // 224-254 $E0-$FE    -128 $80         96-126 $60-$7E  
       //AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 224 - 128, true, 224, true, (char)0xee60, true, "SHIFT SPACE" ).Replacements.Add( "SHIFT-SPACE" );   // shift-space
+
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 225 - 128, true, 225, true, (char)0xee61, true, "CBM K" ).Replacements.Add( "CBM-K" );   // C= K
       AddC64Key( KeyboardKey.KEY_I, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 226 - 128, true, 226, true, (char)0xee62, true, "CBM I" ).Replacements.Add( "CBM-I" );   // C= I
       AddC64Key( KeyboardKey.KEY_T, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 227 - 128, true, 227, true, (char)0xee63, true, "CBM T" ).Replacements.Add( "CBM-T" );   // C= T
@@ -1360,6 +1361,10 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 229 - 128, true, 229, true, (char)0xee65, true, "CBM G" ).Replacements.Add( "CBM-G" );   // C= G
       AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 230 - 128, true, 230, true, (char)0xee66, true, "CBM +" ).Replacements.Add( "CBM-+" );   // C= +
       AddC64Key( KeyboardKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 231 - 128, true, 231, true, (char)0xee67, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= N
+
+      //AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 232 - 128, true, 232, true, (char)0xee68, true, "CBM £" ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
+      //AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 233 - 128, true, 233, true, (char)0xee69, true, "SHIFT £" ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
+
       //AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 232 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );  // C= Insert 
       //AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 233 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );   // Shift Insert 
       AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 212, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );  // C= Insert 
