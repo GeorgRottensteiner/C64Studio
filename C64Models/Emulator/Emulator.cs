@@ -230,6 +230,84 @@ namespace Tiny64
       Machine.RunCycle();
     }
 
-    
+
+
+    public void UpdateKeyState( PhysicalKey physicalKey, bool shifted, int c64_key, bool KeyDown )
+    {
+      if ( physicalKey != PhysicalKey.NONE )
+      {
+        int c64Byte = ( (int)physicalKey >> 3 ) & 7;
+        int c64Bit = (int)physicalKey & 7;
+        if ( !KeyDown )
+        {
+          if ( shifted )
+          {
+            Machine.CIA1.KeyMatrix[6] |= 0x10;
+            Machine.CIA1.RevMatrix[4] |= 0x40;
+          }
+          Machine.CIA1.KeyMatrix[c64Byte] |= (byte)( 1 << c64Bit );
+          Machine.CIA1.RevMatrix[c64Bit] |= (byte)( 1 << c64Byte );
+        }
+        else
+        {
+          if ( shifted )
+          {
+            Machine.CIA1.KeyMatrix[6] &= 0xef;
+            Machine.CIA1.RevMatrix[4] &= 0xbf;
+          }
+          Machine.CIA1.KeyMatrix[c64Byte] &= (byte)~( 1 << c64Bit );
+          Machine.CIA1.RevMatrix[c64Bit] &= (byte)~( 1 << c64Byte );
+        }
+      }
+
+      if ( c64_key < 0 )
+      {
+        return;
+      }
+
+      // Handle joystick emulation
+      if ( ( c64_key & 0x40 ) != 0 )
+      {
+        c64_key &= 0x1f;
+        if ( !KeyDown )
+        {
+          Machine.CIA1.Joystick2 |= (byte)c64_key;
+        }
+        else
+        {
+          Machine.CIA1.Joystick2 &= (byte)~c64_key;
+        }
+        return;
+      }
+
+      /*
+      // Handle other keys
+      //bool shifted = (c64_key & 0x80) != 0;
+      int c64_byte = (c64_key >> 3) & 7;
+      int c64_bit = c64_key & 7;
+      if ( !KeyDown )
+      {
+        if ( shifted )
+        {
+          m_Emulator.Machine.CIA1.KeyMatrix[6] |= 0x10;
+          m_Emulator.Machine.CIA1.RevMatrix[4] |= 0x40;
+        }
+        m_Emulator.Machine.CIA1.KeyMatrix[c64_byte] |= (byte)( 1 << c64_bit );
+        m_Emulator.Machine.CIA1.RevMatrix[c64_bit] |= (byte)( 1 << c64_byte );
+      }
+      else
+      {
+        if ( shifted )
+        {
+          m_Emulator.Machine.CIA1.KeyMatrix[6] &= 0xef;
+          m_Emulator.Machine.CIA1.RevMatrix[4] &= 0xbf;
+        }
+        m_Emulator.Machine.CIA1.KeyMatrix[c64_byte] &= (byte)~( 1 << c64_bit );
+        m_Emulator.Machine.CIA1.RevMatrix[c64_bit] &= (byte)~( 1 << c64_byte );
+      }*/
+    }
+
+
+
   }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "C64Ass": {
+      "commandName": "Project",
+      "commandLineArgs": "d:\\projekte\\c64\\WiC64\\FetchDateTime\\FetchDateTime.asm -lib \"../../../C64Studio/C64Studio/BaseLib\""
+    }
+  }
+}

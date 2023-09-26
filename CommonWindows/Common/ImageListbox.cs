@@ -199,6 +199,7 @@ namespace GR.Forms
     private bool                  m_UpdateLockActive = false;
     private ToolTip               m_ToolTip = new ToolTip();
     private List<uint>            m_HighlightColors = new List<uint>();
+    private List<int>             m_SelectedIndices = new List<int>();
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -357,69 +358,7 @@ namespace GR.Forms
     {
       get
       {
-        List<int> selectedIndices = new List<int>();
-
-        if ( m_SelectedItem == -1 )
-        {
-          return selectedIndices;
-        }
-        if ( m_SelectionAnchor == -1 )
-        {
-          selectedIndices.Add( m_SelectedItem );
-        }
-        else if ( m_SelectionIsRange )
-        {
-          int i1 = m_SelectedItem;
-          int i2 = m_SelectionAnchor;
-          if ( i2 < i1 )
-          {
-            i1 = i2;
-            i2 = m_SelectedItem;
-          }
-          for ( int i = i1; i <= i2; ++i )
-          {
-            selectedIndices.Add( i );
-          }
-        }
-        else
-        {
-          // column selection
-          int i1 = m_SelectionAnchor;
-          int i2 = m_SelectedItem;
-          if ( i2 < i1 )
-          {
-            i1 = m_SelectedItem;
-            i2 = m_SelectionAnchor;
-          }
-
-          int x1 = i1 % m_ItemsPerLine;
-          int x2 = i2 % m_ItemsPerLine;
-          if ( x2 < x1 )
-          {
-            x1 = x2;
-            x2 = i1 % m_ItemsPerLine;
-          }
-
-          int y1 = m_SelectionAnchor / m_ItemsPerLine;
-          int y2 = m_SelectedItem / m_ItemsPerLine;
-          if ( y2 < y1 )
-          {
-            y1 = y2;
-            y2 = m_SelectionAnchor / m_ItemsPerLine;
-          }
-          i1 = y1 * m_ItemsPerLine + x1;
-          i2 = y2 * m_ItemsPerLine + x2;
-
-          for ( int i = i1; i <= i2; ++i )
-          {
-            if ( ( i % m_ItemsPerLine >= x1 )
-            &&   ( i % m_ItemsPerLine <= x2 ) )
-            {
-              selectedIndices.Add( i );
-            }
-          }
-        }
-        return selectedIndices;
+        return new List<int>( m_SelectedIndices );
       }
     }
 
@@ -735,24 +674,70 @@ namespace GR.Forms
 
     protected void InvalidateSelectedItems()
     {
-      if ( ( m_SelectionIsRange )
-      &&   ( m_SelectionAnchor != -1 ) )
+      foreach ( var item in m_SelectedIndices )
+      {
+        InvalidateItemRect( item );
+      }
+    }
+
+
+
+    protected void SetSelection( int SelectedIndex, bool SelectionIsRange, int AnchorIndex, bool ToggleSelectionState )
+    {
+      bool  selectedIndexChanged = ( m_SelectedItem != SelectedIndex );
+      bool  selectionIsRangeChanged = ( m_SelectionIsRange != SelectionIsRange );
+      bool  selectionAnchorChanged = ( m_SelectionAnchor != AnchorIndex );
+
+      int     oldItem = m_SelectedItem;
+
+      if ( ( selectedIndexChanged )
+      ||   ( selectionIsRangeChanged )
+      ||   ( selectionAnchorChanged ) )
+      {
+        InvalidateSelectedItems();
+      }
+
+      m_SelectionIsRange  = SelectionIsRange;
+      m_SelectionAnchor   = AnchorIndex;
+      m_SelectedItem      = SelectedIndex;
+
+      if ( !ToggleSelectionState )
+      {
+        m_SelectedIndices.Clear();
+      }
+
+      if ( m_SelectedItem == -1 )
+      {
+      }
+      else if ( m_SelectionAnchor == -1 )
+      {
+        if ( ( ToggleSelectionState )
+        &&   ( m_SelectedIndices.Contains( SelectedIndex ) ) )
+        {
+          m_SelectedIndices.Remove( SelectedIndex );
+        }
+        else
+        {
+          m_SelectedIndices.Add( SelectedIndex );
+        }
+      }
+      else if ( m_SelectionIsRange )
       {
         int i1 = m_SelectedItem;
         int i2 = m_SelectionAnchor;
         if ( i2 < i1 )
         {
-          i1 = m_SelectionAnchor;
+          i1 = i2;
           i2 = m_SelectedItem;
         }
         for ( int i = i1; i <= i2; ++i )
         {
-          InvalidateItemRect( i );
+          m_SelectedIndices.Add( i );
         }
       }
-      else if ( ( !m_SelectionIsRange )
-      &&        ( m_SelectionAnchor != -1 ) )
+      else
       {
+        // column selection
         int i1 = m_SelectionAnchor;
         int i2 = m_SelectedItem;
         if ( i2 < i1 )
@@ -782,38 +767,12 @@ namespace GR.Forms
         for ( int i = i1; i <= i2; ++i )
         {
           if ( ( i % m_ItemsPerLine >= x1 )
-          && ( i % m_ItemsPerLine <= x2 ) )
+          &&   ( i % m_ItemsPerLine <= x2 ) )
           {
-            InvalidateItemRect( i );
+            m_SelectedIndices.Add( i );
           }
         }
       }
-      else if ( m_SelectedItem != -1 )
-      {
-        InvalidateItemRect( m_SelectedItem );
-      }
-    }
-
-
-
-    protected void SetSelection( int SelectedIndex, bool SelectionIsRange, int AnchorIndex, bool ToggleSelectionState )
-    {
-      bool  selectedIndexChanged = ( m_SelectedItem != SelectedIndex );
-      bool  selectionIsRangeChanged = ( m_SelectionIsRange != SelectionIsRange );
-      bool  selectionAnchorChanged = ( m_SelectionAnchor != AnchorIndex );
-
-      int     oldItem = m_SelectedItem;
-
-      if ( ( selectedIndexChanged )
-      ||   ( selectionIsRangeChanged )
-      ||   ( selectionAnchorChanged ) )
-      {
-        InvalidateSelectedItems();
-      }
-
-      m_SelectionIsRange = SelectionIsRange;
-      m_SelectionAnchor = AnchorIndex;
-      m_SelectedItem = SelectedIndex;
 
       if ( ( selectedIndexChanged )
       ||   ( selectionIsRangeChanged )
@@ -1050,12 +1009,16 @@ namespace GR.Forms
           System.Drawing.SolidBrush highlightColorBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( m_HighlightColors[Items[itemIndex].HighlightGroup % m_HighlightColors.Count] ) );
           e.Graphics.FillRectangle( highlightColorBrush, ItemRect( itemIndex ) );
         }
-        ++itemIndex;
+        if ( m_SelectedIndices.Contains( itemIndex ) )
+        {
+          e.Graphics.FillRectangle( hottrackBrush, ItemRect( itemIndex ) );
+        }
+          ++itemIndex;
         itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
       }
 
 
-
+      /*
       if ( m_SelectedItem != -1 )
       {
         if ( m_SelectionAnchor != -1 )
@@ -1116,7 +1079,7 @@ namespace GR.Forms
         {
           e.Graphics.FillRectangle( hottrackBrush, ItemRect( m_SelectedItem ) );
         }
-      }
+      }*/
       hottrackBrush.Dispose();
     }
 

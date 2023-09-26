@@ -182,6 +182,7 @@ namespace RetroDevStudio.Documents
       RefreshDisplayOptions();
 
       m_AnimTimer.Tick += animTimer_Tick;
+      UpdateSpriteSelectionInfo();
       ResumeLayout();
     }
 
@@ -3662,4 +3663,21 @@ namespace RetroDevStudio.Documents
 
 
 
-  }}
+    private void panelSprites_SelectionChanged( object sender, EventArgs e )
+    {
+      UpdateSpriteSelectionInfo();
+    }
+
+
+
+    private void UpdateSpriteSelectionInfo()
+    {
+      int   numSelectedSprites = panelSprites.SelectedIndices.Count;
+
+      labelSelectionInfo.Text = $"Selected {numSelectedSprites} sprites";
+    }
+
+
+
+  }
+}

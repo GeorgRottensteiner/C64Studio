@@ -57,7 +57,7 @@ namespace RetroDevStudio.Documents
     private ushort[]                    m_CharlistLayout = new ushort[256];
     private CharlistLayout              m_CurrentLayout = CharlistLayout.PLAIN;
 
-    private System.Drawing.Rectangle    m_SelectionBounds = new System.Drawing.Rectangle();
+    private GR.Math.Rectangle           m_SelectionBounds = new GR.Math.Rectangle();
 
 
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
@@ -1936,28 +1936,28 @@ namespace RetroDevStudio.Documents
       }
       if ( minX == m_CharsetScreen.ScreenWidth )
       {
-        m_SelectionBounds = new System.Drawing.Rectangle();
+        m_SelectionBounds = new GR.Math.Rectangle();
         return;
       }
-      m_SelectionBounds = new System.Drawing.Rectangle( minX, minY, maxX - minX + 1, maxY - minY + 1 );
+      m_SelectionBounds = new GR.Math.Rectangle( minX, minY, maxX - minX + 1, maxY - minY + 1 );
     }
 
 
 
-    private System.Drawing.Rectangle DetermineExportRectangle()
+    private GR.Math.Rectangle DetermineExportRectangle()
     {
       switch ( comboExportArea.SelectedIndex )
       {
         case 0:
           // all
-          return new System.Drawing.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+          return new GR.Math.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
         case 1:
           // selection
           {
             if ( m_SelectionBounds.Width == 0 )
             {
               // no selection, select all
-              return new System.Drawing.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+              return new GR.Math.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
             }
             return m_SelectionBounds;
           }
@@ -1987,12 +1987,12 @@ namespace RetroDevStudio.Documents
             {
               height = m_CharsetScreen.ScreenHeight - minX;
             }
-            return new System.Drawing.Rectangle( minX, minY, width, height );
+            return new GR.Math.Rectangle( minX, minY, width, height );
           }
       }
 
       // should not happen
-      return new System.Drawing.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      return new GR.Math.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
     }
 
 
@@ -2357,7 +2357,7 @@ namespace RetroDevStudio.Documents
           m_SelectedChars[i, j] = false;
         }
       }
-      m_SelectionBounds = new System.Drawing.Rectangle();
+      m_SelectionBounds = new GR.Math.Rectangle();
       Redraw();
     }
 

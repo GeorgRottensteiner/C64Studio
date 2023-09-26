@@ -15,21 +15,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\ByteBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Convert.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\debug.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\DPIHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\FastImage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\FastPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\File.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\FileChunk.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\GenericHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\IImage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ImageListbox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\IReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\IWriter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ListViewItemComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\OS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Map.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\MemoryImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\MemoryReader.cs" />
@@ -37,13 +29,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\MultiMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\PixelFormat.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ScrollablePanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Set.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\TileLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\Util.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\WindowStateManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\XML.cs" />
   </ItemGroup>
 </Project>

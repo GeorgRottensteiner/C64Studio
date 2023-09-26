@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>42a48161-843f-4e9f-8c2d-aa2b05b04343</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CommonWindows</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DPIHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\FastImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\FastPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ImageListbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ListViewItemComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ScrollablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\WindowStateManager.cs" />
+  </ItemGroup>
+</Project>

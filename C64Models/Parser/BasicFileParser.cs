@@ -10,7 +10,8 @@ using System.Linq;
 using RetroDevStudio.Types;
 using static RetroDevStudio.Parser.BasicFileParser;
 using System.Diagnostics;
-using System.Drawing;
+
+
 
 namespace RetroDevStudio.Parser
 {
@@ -3181,7 +3182,6 @@ namespace RetroDevStudio.Parser
 
           if ( insideStringLiteral )
           {
-            //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
             // Codes 192-223 wie Codes  96-127
             // Codes 224-254 wie Codes 160-190
             // Code  255     wie Code  126
@@ -3236,16 +3236,9 @@ namespace RetroDevStudio.Parser
               if ( ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
               ||   ( Settings.BASICDialect.OpcodesFromByte[byteValue].Command.StartsWith( "{" ) ) )
               {
-                //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
                 if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
                 {
-                  char charToUse = ConstantData.PETSCIIToUnicode[byteValue];
-                  /*
-                  if ( KeyMap.KeymapEntryExists( (System.Windows.Forms.Keys)charToUse ) )
-                  {
-                    charToUse = KeyMap.GetKeymapEntry( (System.Windows.Forms.Keys)charToUse ).Normal;
-                  }*/
-                  lineContent += charToUse;
+                  lineContent += ConstantData.PETSCIIToUnicode[byteValue];
                 }
                 else if ( ActionTokenByByteValue.ContainsKey( byteValue ) )
                 {

@@ -159,7 +159,7 @@ namespace RetroDevStudio.Formats
       &&   ( version != 7 )
       &&   ( version != 8 ) )
       {
-        System.Windows.Forms.MessageBox.Show( "Currently only version 4, 5, 6 or 7 of Charpad project files is supported. Sorry!", "Unsupported version " + version );
+        Debug.Log( "Currently only version 4, 5, 6 or 7 of Charpad project files is supported. Sorry!\r\nUnsupported version " + version );
         return false;
       }
 

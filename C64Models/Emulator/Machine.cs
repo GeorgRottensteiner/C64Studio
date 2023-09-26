@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
+
+
 
 namespace Tiny64
 {
@@ -56,7 +57,7 @@ namespace Tiny64
 
     GR.Collections.MultiMap<ushort,Breakpoint>        Breakpoints = new GR.Collections.MultiMap<ushort, Breakpoint>();
     public List<Breakpoint>                           TriggeredBreakpoints = new List<Breakpoint>();
-    private List<Keys>                                KeysToInject = new List<Keys>();
+    private List<PhysicalKey>                         KeysToInject = new List<PhysicalKey>();
     private bool                                      KeyToInjectDown = true;
 
 
@@ -81,15 +82,33 @@ namespace Tiny64
       {
         if ( KeyToInjectDown )
         {
-          HandleKeyPress( KeysToInject[0], true );
+          PushKey( KeysToInject[0], true );
           KeyToInjectDown = false;
         }
         else
         {
-          HandleKeyPress( KeysToInject[0], false );
+          PushKey( KeysToInject[0], false );
           KeysToInject.RemoveAt( 0 );
           KeyToInjectDown = true;
         }
+      }
+    }
+
+
+
+    private void PushKey( PhysicalKey physicalKey, bool KeyDown )
+    {
+      int c64Byte = ( (int)physicalKey >> 3 ) & 7;
+      int c64Bit  = (int)physicalKey & 7;
+      if ( !KeyDown )
+      {
+        CIA1.KeyMatrix[c64Byte] |= (byte)( 1 << c64Bit );
+        CIA1.RevMatrix[c64Bit] |= (byte)( 1 << c64Byte );
+      }
+      else
+      {
+        CIA1.KeyMatrix[c64Byte] &= (byte)~( 1 << c64Bit );
+        CIA1.RevMatrix[c64Bit] &= (byte)~( 1 << c64Byte );
       }
     }
 
@@ -2822,10 +2841,10 @@ namespace Tiny64
 
             System.Array.Copy( InjectFileAfterStartup.Data(), 2, Memory.RAM, startAddress, InjectFileAfterStartup.Length - 2 );
 
-            KeysToInject.Add( Keys.R );
-            KeysToInject.Add( Keys.U );
-            KeysToInject.Add( Keys.N );
-            KeysToInject.Add( Keys.Return );
+            KeysToInject.Add( PhysicalKey.KEY_R );
+            KeysToInject.Add( PhysicalKey.KEY_U );
+            KeysToInject.Add( PhysicalKey.KEY_N );
+            KeysToInject.Add( PhysicalKey.KEY_RETURN );
           }
         }
       }
@@ -2848,6 +2867,7 @@ namespace Tiny64
 
 
 
+    /*
     private void HandleKeyPress( Keys KeyCode, bool KeyDown )
     {
       int c64_key = -1;
@@ -3171,6 +3191,7 @@ namespace Tiny64
         return;
       }
     }
+    */
 
 
 

@@ -28,7 +28,11 @@ namespace C64Ass
       var projectConfig = new ProjectConfig();
       // TODO - add defines if given
 
-      string  fullPath = System.IO.Path.GetFullPath( config.InputFile );
+      string fullPath = config.InputFile;
+      if ( !GR.Path.IsPathRooted( fullPath ) )
+      {
+        fullPath = System.IO.Path.GetFullPath( config.InputFile );
+      }
 
       if ( string.IsNullOrEmpty( config.OutputFile ) )
       {

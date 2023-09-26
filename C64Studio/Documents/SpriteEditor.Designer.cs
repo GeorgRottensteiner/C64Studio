@@ -34,10 +34,11 @@ namespace RetroDevStudio.Documents
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnHighlightDuplicates = new System.Windows.Forms.Button();
       this.btnChangeMode = new RetroDevStudio.Controls.MenuButton();
       this.panelColorSettings = new System.Windows.Forms.Panel();
       this.btnToolEdit = new System.Windows.Forms.RadioButton();
@@ -153,7 +154,7 @@ namespace RetroDevStudio.Documents
       this.x16_16x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.x16_32x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.x16_64x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnHighlightDuplicates = new System.Windows.Forms.Button();
+      this.labelSelectionInfo = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -182,6 +183,7 @@ namespace RetroDevStudio.Documents
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.labelSelectionInfo);
       this.tabEditor.Controls.Add(this.btnHighlightDuplicates);
       this.tabEditor.Controls.Add(this.btnChangeMode);
       this.tabEditor.Controls.Add(this.panelColorSettings);
@@ -212,6 +214,16 @@ namespace RetroDevStudio.Documents
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Sprite";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // btnHighlightDuplicates
+      // 
+      this.btnHighlightDuplicates.Location = new System.Drawing.Point(269, 552);
+      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
+      this.btnHighlightDuplicates.Size = new System.Drawing.Size(121, 23);
+      this.btnHighlightDuplicates.TabIndex = 61;
+      this.btnHighlightDuplicates.Text = "Duplicates";
+      this.btnHighlightDuplicates.UseVisualStyleBackColor = true;
+      this.btnHighlightDuplicates.Click += new System.EventHandler(this.btnHighlightDuplicates_Click);
       // 
       // btnChangeMode
       // 
@@ -317,6 +329,7 @@ namespace RetroDevStudio.Documents
       this.panelSprites.VisibleAutoScrollHorizontal = false;
       this.panelSprites.VisibleAutoScrollVertical = false;
       this.panelSprites.SelectedIndexChanged += new System.EventHandler(this.panelSprites_SelectedIndexChanged);
+      this.panelSprites.SelectionChanged += new System.EventHandler(this.panelSprites_SelectionChanged);
       this.panelSprites.Resize += new System.EventHandler(this.panelSprites_Resize);
       // 
       // tabPage2
@@ -596,7 +609,7 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage1;
+      this.layerPreview.DisplayPage = fastImage4;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
@@ -768,7 +781,7 @@ namespace RetroDevStudio.Documents
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1327,15 +1340,15 @@ namespace RetroDevStudio.Documents
       this.x16_64x64x256ToolStripMenuItem.Text = "64x64";
       this.x16_64x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
-      // btnHighlightDuplicates
+      // labelSelectionInfo
       // 
-      this.btnHighlightDuplicates.Location = new System.Drawing.Point(269, 552);
-      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
-      this.btnHighlightDuplicates.Size = new System.Drawing.Size(121, 23);
-      this.btnHighlightDuplicates.TabIndex = 61;
-      this.btnHighlightDuplicates.Text = "Duplicates";
-      this.btnHighlightDuplicates.UseVisualStyleBackColor = true;
-      this.btnHighlightDuplicates.Click += new System.EventHandler(this.btnHighlightDuplicates_Click);
+      this.labelSelectionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.labelSelectionInfo.Location = new System.Drawing.Point(484, 568);
+      this.labelSelectionInfo.Name = "labelSelectionInfo";
+      this.labelSelectionInfo.Size = new System.Drawing.Size(491, 23);
+      this.labelSelectionInfo.TabIndex = 62;
+      this.labelSelectionInfo.Text = "label1";
       // 
       // SpriteEditor
       // 
@@ -1488,5 +1501,6 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem mega65_64x214ColorsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem mega65_16x2116ColorsToolStripMenuItem;
     private System.Windows.Forms.Button btnHighlightDuplicates;
+    private System.Windows.Forms.Label labelSelectionInfo;
   }
 }

@@ -28,6 +28,7 @@
   </ItemGroup>
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="..\Common\Common.projitems" Label="Shared" />
+  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" />
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Condition="'$(TargetFramework)'=='net6.0-windows'" Command="copy &quot;$(TargetDir)/$(TargetName).exe&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetName).exe&quot;&#xD;&#xA;copy &quot;$(TargetDir)/$(TargetName).exe&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).exe&quot;" />
     <Exec Condition="'$(TargetFramework)'=='net6.0-windows'" Command="copy &quot;$(TargetDir)/$(TargetName).runtimeconfig.json&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetName).runtimeconfig.json&quot;&#xD;&#xA;copy &quot;$(TargetDir)/$(TargetName).runtimeconfig.json&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).runtimeconfig.json&quot;" />

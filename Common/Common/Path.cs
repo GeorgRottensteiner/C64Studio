@@ -532,5 +532,41 @@ namespace GR
 
 
 
+    public static bool IsPathRooted( string Path )
+    {
+      return IsPathRooted( Path, PotentialPathSeparators );
+    }
+
+
+
+    public static bool IsPathRooted( string Path, string Separators )
+    {
+      if ( string.IsNullOrEmpty( Path ) )
+      {
+        return false;
+      }
+      if ( GR.OS.IsWindows )
+      {
+        if ( Path.Length < 3 )
+        {
+          return false;
+        }
+        // drive letter?
+        if ( ( char.IsLetter( Path[0] ) )
+        &&   ( Path[1] == ':' )
+        &&   ( Separators.IndexOf( Path[2] ) != -1 ) )
+        {
+          return true;
+        }
+        // UNC format?
+        if ( Path.StartsWith( @"\\" ) )
+        {
+          return true;
+        }
+        return false;
+      }
+      // assume unix
+      return Separators.IndexOf( Path[0] ) != -1;
+    }
   }
 }

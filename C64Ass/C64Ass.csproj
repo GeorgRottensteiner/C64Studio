@@ -1,14 +1,30 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net3.5;net4.8;net6.0-windows;net6.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+	<UseWindowsForms Condition="'$(TargetFramework)' != 'net6.0'">true</UseWindowsForms>
+	<ImportWindowsDesktopTargets Condition="'$(TargetFramework)' != 'net6.0'">true</ImportWindowsDesktopTargets>
+	<RuntimeIdentifiers>win7-x86;win7-x64;linux-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>OS_WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	<DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>c64.ico</ApplicationIcon>
+    <PostBuildEvent>if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
+copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass\C64Ass.exe"
+if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
+if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
+</PostBuildEvent>
+    <PlatformTarget>anycpu</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="c64.ico" />
@@ -23,7 +39,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
 copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass\C64Ass.exe"
-copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
+if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
 if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\C64Ass"
 </PostBuildEvent>
   </PropertyGroup>
@@ -31,9 +47,9 @@ if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.js
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.6" />
   </ItemGroup>
 
   <Import Project="..\Common\Common.projitems" Label="Shared" />
+  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'net6.0'" />
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
 </Project>

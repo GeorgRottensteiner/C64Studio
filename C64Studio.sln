@@ -32,6 +32,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceControl", "SourceControl\SourceControl.csproj", "{9C873FB0-2E5F-4AD8-84E7-5A3F2CCADAB2}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CommonWindows", "CommonWindows\CommonWindows.shproj", "{42A48161-843F-4E9F-8C2D-AA2B05B04343}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,18 +89,25 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		C64Models\C64Models.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 5
 		Common\Common.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 5
 		C64Models\C64Models.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 5
 		Common\Common.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{42a48161-843f-4e9f-8c2d-aa2b05b04343}*SharedItemsImports = 13
 		C64Models\C64Models.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 5
 		Common\Common.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 5
 		C64Models\C64Models.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 5
 		Common\Common.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 5
 		C64Models\C64Models.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 5
 		Common\Common.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 5
 		Common\Common.projitems*{8b180733-2dfd-4e66-9351-965518ac3df5}*SharedItemsImports = 13
 		C64Models\C64Models.projitems*{b6f4568c-7d3f-48f5-a5ad-2f4dc2247c40}*SharedItemsImports = 13
 		C64Models\C64Models.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 5
+		CommonWindows\CommonWindows.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 5
 		Common\Common.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

@@ -1193,7 +1193,7 @@ namespace RetroDevStudio.Parser
 
           var exportInfo = new ExportCharsetScreenInfo();
           exportInfo.RowByRow = !method.EndsWith( "VERT" );
-          exportInfo.Area = new System.Drawing.Rectangle( x, y, w, h ); 
+          exportInfo.Area = new GR.Math.Rectangle( x, y, w, h ); 
 
           if ( !screenProject.ExportToBuffer( exportInfo ) )
           {

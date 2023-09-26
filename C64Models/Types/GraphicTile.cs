@@ -493,15 +493,15 @@ namespace RetroDevStudio.Types
         return false;
       }
 
-      List<System.Drawing.Point>      pointsToCheck = new List<System.Drawing.Point>();
+      List<GR.Math.Point>      pointsToCheck = new List<GR.Math.Point>();
 
-      pointsToCheck.Add( new System.Drawing.Point( X, Y ) );
+      pointsToCheck.Add( new GR.Math.Point( X, Y ) );
 
       int     pixelWidth = Lookup.PixelWidth( Mode );
 
       while ( pointsToCheck.Count != 0 )
       {
-        System.Drawing.Point    point = pointsToCheck[pointsToCheck.Count - 1];
+        GR.Math.Point    point = pointsToCheck[pointsToCheck.Count - 1];
         pointsToCheck.RemoveAt( pointsToCheck.Count - 1 );
 
         if ( !IsSameColor( GetPixel( point.X, point.Y ), NewColor ) )
@@ -511,22 +511,22 @@ namespace RetroDevStudio.Types
           if ( ( point.X - pixelWidth >= 0 )
           &&   ( IsSameColor( GetPixel( point.X - pixelWidth, point.Y ), origColor ) ) )
           {
-            pointsToCheck.Add( new System.Drawing.Point( point.X - pixelWidth, point.Y ) );
+            pointsToCheck.Add( new GR.Math.Point( point.X - pixelWidth, point.Y ) );
           }
           if ( ( point.X + pixelWidth < Width )
           &&   ( IsSameColor( GetPixel( point.X + pixelWidth, point.Y ), origColor ) ) )
           {
-            pointsToCheck.Add( new System.Drawing.Point( point.X + pixelWidth, point.Y ) );
+            pointsToCheck.Add( new GR.Math.Point( point.X + pixelWidth, point.Y ) );
           }
           if ( ( point.Y > 0 )
           &&   ( IsSameColor( GetPixel( point.X, point.Y - 1 ), origColor ) ) )
           {
-            pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y - 1 ) );
+            pointsToCheck.Add( new GR.Math.Point( point.X, point.Y - 1 ) );
           }
           if ( ( point.Y + 1 < Height )
           &&   ( IsSameColor( GetPixel( point.X, point.Y + 1 ), origColor ) ) )
           {
-            pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y + 1 ) );
+            pointsToCheck.Add( new GR.Math.Point( point.X, point.Y + 1 ) );
           }
         }
       }

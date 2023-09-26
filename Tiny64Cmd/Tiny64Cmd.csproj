@@ -15,4 +15,5 @@
   </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
+  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" />
 </Project>

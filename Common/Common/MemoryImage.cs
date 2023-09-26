@@ -1191,6 +1191,7 @@ namespace GR.Image
 
 
 
+#if !OS_CROSS_PLATFORM
 #if NET5_0_OR_GREATER
     [SupportedOSPlatform("windows")]
 #endif
@@ -1216,7 +1217,7 @@ namespace GR.Image
       
       return bitmap;
     }
-
+#endif
 
 
     public GR.Memory.ByteBuffer ToBuffer()
@@ -1370,8 +1371,8 @@ namespace GR.Image
     // resize and try to keep existing data intact
     public void Resize( int NewWidth, int NewHeight )
     {
-      int     safeWidth = Math.Min( Width, NewWidth );
-      int     safeHeight = Math.Min( Height, NewHeight );
+      int     safeWidth = System.Math.Min( Width, NewWidth );
+      int     safeHeight = System.Math.Min( Height, NewHeight );
 
       int   origBytesPerLine = BitsPerPixel * Width / 8;
       int   bytesPerLine = BitsPerPixel * NewWidth / 8;

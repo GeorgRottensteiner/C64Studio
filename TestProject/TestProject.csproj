@@ -14,7 +14,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <ProjectReference Include="..\C64Studio\C64Studio.csproj" />
+    <ProjectReference Include="..\Tiny64Emu\Tiny64Emu.csproj" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
@@ -35,6 +35,7 @@
     </When>
   </Choose>
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.27.2" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

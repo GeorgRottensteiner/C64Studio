@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.ComponentModel;
-using System.Windows.Forms;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 using GR.Collections;
@@ -875,24 +874,6 @@ namespace RetroDevStudio.Types
 
 
 
-  public class FunctionInfo
-  {
-    public Function             Function = Function.NONE;
-    public string               Description = "";
-    public FunctionStudioState  State = FunctionStudioState.ANY;
-    public ToolStripMenuItem    MenuItem = null;
-    public ToolStripButton      ToolBarButton = null;
-
-    public FunctionInfo( Function Func, string Desc, FunctionStudioState State )
-    {
-      Function = Func;
-      Description = Desc;
-      this.State = State;
-    }
-  };
-
-
-
   public class AutoCompleteItemInfo
   {
     public string       Token = "";
@@ -939,11 +920,13 @@ namespace RetroDevStudio
     {
       Palette = RetroDevStudio.ConstantData.PaletteC64();
 
+#if OS_WINDOWS
       for ( int i = 0; i < 256; ++i )
       {
         Palette.Colors[i] = GR.Color.Helper.FromARGB( Palette.ColorValues[i] );
         Palette.ColorBrushes[i] = new System.Drawing.SolidBrush( Palette.Colors[i] );
       }
+#endif
 
       ColorToPetSCIIChar[0] = 144;
       ColorToPetSCIIChar[1] = 5;
