@@ -52,7 +52,7 @@ namespace RetroDevStudio.Parser
 
       if ( !DoesMacroExist( macroFunctions, macroKey, out Types.MacroFunctionInfo macro ) )
       {
-        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, $"No matching macro with name {functionName} and {numParams + 1} arguments found", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
       }
       else
       {
@@ -226,6 +226,7 @@ namespace RetroDevStudio.Parser
       Macro = null;
       if ( m_AssemblerSettings.MacrosCanBeOverloaded )
       {
+        //if ( macroFunctions.Keys.Any( k => ( k.first == Key.first ) && ( k.second == Key.second ) ) )
         if ( !macroFunctions.ContainsKey( Key ) )
         {
           return false;

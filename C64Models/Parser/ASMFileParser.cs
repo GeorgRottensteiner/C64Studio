@@ -4031,14 +4031,13 @@ namespace RetroDevStudio.Parser
     int       dumpCount = 0;
     private void DumpLines( string[] lines, string Text )
     {
-      /*
       string    outName = "before" + dumpCount + ".txt";
       if ( Text == "b" )
       {
         outName = "after" + dumpCount + ".txt";
       }
       string    outPut = "Step " + dumpCount + "\r\n" + string.Join( "\r\n", lines );
-      System.IO.File.WriteAllText( outName, outPut );*/
+      System.IO.File.WriteAllText( outName, outPut );
     }
 
 
@@ -13151,6 +13150,16 @@ namespace RetroDevStudio.Parser
       foreach ( string label in ASMFileInfo.Labels.Keys )
       {
         Debug.Log( "Label " + label + " = " + ASMFileInfo.Labels[label].AddressOrValue.ToString( "x" ) );
+      }
+    }
+
+
+
+    public void DumpMacros()
+    {
+      foreach ( var macro in ASMFileInfo.Macros )
+      {
+        Debug.Log( $"Macro {macro.Key.first} in line {macro.Key.second}" );
       }
     }
 

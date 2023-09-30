@@ -21,6 +21,8 @@ namespace TestProject
       else
       {
         string error;
+
+        var temp = AppDomain.CurrentDomain.BaseDirectory;
         var dialect = Dialect.ReadBASICDialectForUnitTest( "BASIC Dialects/" + BASICDialectName + ".txt", out error );
         if ( dialect == null )
         {

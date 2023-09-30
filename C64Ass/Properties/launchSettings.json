@@ -3,6 +3,10 @@
     "C64Ass": {
       "commandName": "Project",
       "commandLineArgs": "d:\\projekte\\c64\\WiC64\\FetchDateTime\\FetchDateTime.asm -lib \"../../../C64Studio/C64Studio/BaseLib\""
+    },
+    "WiC64": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Georg\\Desktop\\wic64-library\\examples\\01-simple-execute\\main.asm -lib C:\\Users\\Georg\\Desktop\\wic64-library -I W1000"
     }
   }
 }

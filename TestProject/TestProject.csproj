@@ -14,6 +14,46 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <None Remove="BASIC Dialects\BASIC 65.txt" />
+    <None Remove="BASIC Dialects\BASIC Lightning.txt" />
+    <None Remove="BASIC Dialects\BASIC V10.txt" />
+    <None Remove="BASIC Dialects\BASIC V3.5.txt" />
+    <None Remove="BASIC Dialects\BASIC V4.5.txt" />
+    <None Remove="BASIC Dialects\BASIC V7.0.txt" />
+    <None Remove="BASIC Dialects\Laser BASIC.txt" />
+    <None Remove="BASIC Dialects\Simons%27 BASIC.txt" />
+    <None Remove="BASIC Dialects\Tuned Simons%27 BASIC.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BASIC Dialects\BASIC 65.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC Lightning.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V10.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V3.5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V4.5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V7.0.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Laser BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Simons' BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Tuned Simons' BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Tiny64Emu\Tiny64Emu.csproj" />
   </ItemGroup>
   <Choose>

@@ -29,7 +29,7 @@ namespace GR
   namespace Generic
   {
 
-    public class Tupel<T1, T2> : IComparable 
+    public class Tupel<T1, T2> : IComparable
     {
       public T1  first = default( T1 );
       public T2  second = default( T2 );
@@ -46,7 +46,7 @@ namespace GR
 
       public override int GetHashCode()
       {
-        return (int)( first.GetHashCode() * 17 + second.GetHashCode() * 31 );
+        return (int)( ( ( first.GetHashCode() << 5 ) + first.GetHashCode() ) ^ second.GetHashCode() );
       }
 
       public override string ToString()
@@ -115,6 +115,17 @@ namespace GR
         ||   ( !( obj is Tupel<T1,T2> ) ) )
         {
           return -1;
+        }
+        if ( ( this is IComparable )
+        &&   ( obj is IComparable ) )
+        {
+          var tupel = (Tupel<T1,T2>)obj;
+
+          if ( first.Equals( tupel.first ) )
+          {
+            return ( (IComparable)second ).CompareTo( tupel.second );
+          }
+          return ( (IComparable)first ).CompareTo( tupel.first );
         }
         return GetHashCode() - ( (Tupel<T1,T2>)obj ).GetHashCode();
       }
