@@ -1,7 +1,8 @@
 ﻿using RetroDevStudio.Types.ASM;
 using RetroDevStudio;
-
-
+using System;
+using GR.Memory;
+using System.Text;
 
 namespace RetroDevStudio.Types
 {
@@ -69,9 +70,18 @@ namespace RetroDevStudio.Types
         Tool.PRGArguments           = "\"$(RunFilename)\"";
         Tool.CartArguments          = "-cartcrt \"$(RunFilename)\"";
         Tool.DebugArguments         = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
-        Tool.TrueDriveOnArguments   = "-truedrive +virtualdev";
-        Tool.TrueDriveOffArguments  = "+truedrive -virtualdev";
         Tool.PassLabelsToEmulator   = true;
+
+        if ( IsVICEVersionOldTrueDrive( Tool ) )
+        {
+          Tool.TrueDriveOnArguments   = "-truedrive +virtualdev";
+          Tool.TrueDriveOffArguments  = "+truedrive -virtualdev";
+        }
+        else
+        {
+          Tool.TrueDriveOnArguments   = "-drive8truedrive +virtualdev";
+          Tool.TrueDriveOffArguments  = "+drive8truedrive -virtualdev";
+        }
       }
       else if ( upperCaseFilename.StartsWith( "CCS64" ) )
       {
@@ -97,6 +107,58 @@ namespace RetroDevStudio.Types
       }
     }
 
+
+
+    private static bool IsVICEVersionOldTrueDrive( ToolInfo Tool )
+    {
+      try
+      {
+        var executable = GR.IO.File.ReadAllBytes( Tool.Filename );
+
+        // look for "vice-logo-black.svg00About VICE00"
+        var searchKey = new ByteBuffer( "766963652d6c6f676f2d626c61636b2e7376670041626f7574205649434500" );
+        int versionPos = executable.Find( searchKey );
+        if ( versionPos == -1 )
+        {
+          // does not even have the version info
+          return true;
+        }
+        int zeroPos = executable.Find( 0, versionPos + (int)searchKey.Length );
+        if ( zeroPos == -1 )
+        {
+          return false;
+        }
+        // found the action version string
+        string    versionString = executable.SubBuffer( versionPos + (int)searchKey.Length, zeroPos - versionPos - (int)searchKey.Length ).ToAsciiString();
+        int   spacePos = versionString.IndexOf( ' ' );
+        if ( spacePos != -1 )
+        {
+          versionString = versionString.Substring( 0, spacePos );
+        }
+        string[]  versionParts = versionString.Split( '.' );
+        if ( ( versionParts.Length >= 1 )
+        &&   ( string.Compare( versionParts[0], "3" ) > 0 ) )
+        {
+          return false;
+        }
+        if ( ( versionParts.Length >= 1 )
+        &&   ( string.Compare( versionParts[0], "3" ) < 0 ) )
+        {
+          return true;
+        }
+        // < 3.6
+        if ( ( versionParts.Length >= 2 )
+        &&   ( string.Compare( versionParts[1], "6" ) < 0 ) )
+        {
+          return true;
+        }
+        return false;
+      }
+      catch ( Exception )
+      {
+        return false;
+      }
+    }
 
 
 

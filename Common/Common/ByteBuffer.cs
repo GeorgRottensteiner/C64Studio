@@ -898,6 +898,44 @@ namespace GR
 
 
 
+      public int Find( ByteBuffer Key )
+      {
+        return Find( Key, 0 );
+      }
+
+
+
+      public int Find( ByteBuffer Key, int StartIndex )
+      {
+        if ( m_Data == null )
+        {
+          return -1;
+        }
+        if ( StartIndex + Key.Length > Length )
+        {
+          return -1;
+        }
+        for ( int i = StartIndex; i < Length - Key.Length; ++i )
+        {
+          bool  foundMatch = true;
+          for ( int j = 0; j < Key.Length; ++j )
+          {
+            if ( m_Data[i + j] != Key.m_Data[j] )
+            {
+              foundMatch = false;
+              break;
+            }
+          }
+          if ( foundMatch )
+          {
+            return i;
+          }
+        }
+        return -1;
+      }
+
+
+
       public int PackedStringLength( string Text )
       {
         int   numBytes = Text.Length * 2;
