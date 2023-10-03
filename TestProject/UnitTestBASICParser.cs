@@ -54,11 +54,11 @@ namespace TestProject
 
       parser.Settings.StripREM = StripREM;
 
-      bool parseResult = parser.Parse( Source, null, config, null );
+      bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -81,7 +81,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
@@ -102,7 +102,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
@@ -123,7 +123,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
@@ -147,7 +147,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
@@ -174,7 +174,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
@@ -201,7 +201,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string  encoded = parser.EncodeToLabels();
       Assert.AreEqual( @"LABEL10
@@ -228,11 +228,11 @@ GOTO LABEL10";
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       parser.LabelMode = true;
 
-      bool parseResult = parser.Parse( source, null, config, null );
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -262,11 +262,11 @@ GOTO LABEL10";
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.DoNotExpandStringLiterals = true;
 
-      bool parseResult = parser.Parse( source, null, config, null );
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -281,11 +281,11 @@ GOTO LABEL10
 
       parser.LabelMode = true;
 
-      parseResult = parser.Parse( encoded, null, config, null );
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -312,11 +312,11 @@ GOTO LABEL10
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.DoNotExpandStringLiterals = true;
 
-      bool parseResult = parser.Parse( source, null, config, null );
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -331,11 +331,11 @@ GOTO LABEL10
 
       parser.LabelMode = true;
 
-      parseResult = parser.Parse( encoded, null, config, null );
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -362,11 +362,11 @@ GOTO LABEL10
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.DoNotExpandStringLiterals = true;
 
-      bool parseResult = parser.Parse( source, null, config, null );
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -385,11 +385,11 @@ ON X GOTO LABEL10, LABEL15, LABEL20
 
       parser.LabelMode = true;
 
-      parseResult = parser.Parse( encoded, null, config, null );
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }
@@ -415,7 +415,7 @@ ON X GOTO LABEL10, LABEL15, LABEL20
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string  encoded = parser.EncodeToLabels();
       Assert.AreEqual( @"LABEL10
@@ -446,7 +446,7 @@ ON X GOTO LABEL10,  LABEL15, LABEL20
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       string  encoded = parser.EncodeToLabels();
       Assert.AreEqual( @"LABEL10
@@ -551,10 +551,10 @@ GOTO LABEL10
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       parser.Settings.StripREM = true;
 
-      bool parseResult = parser.Parse( source, null, config, null );
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }

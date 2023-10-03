@@ -1,6 +1,7 @@
 ﻿using GR.Collections;
 using GR.Generic;
 using RetroDevStudio;
+using RetroDevStudio.Parser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,13 +113,22 @@ namespace RetroDevStudio.Types.ASM
 
     public List<BankInfo>                         Banks = new List<BankInfo>();
     public List<TemporaryLabelInfo>               TempLabelInfo = new List<TemporaryLabelInfo>();
-    public Parser.AssemblerSettings               AssemblerSettings = null;
+    public Parser.AssemblerSettings               AssemblerSettings = new AssemblerSettings();
     public Dictionary<int,Types.Breakpoint>       VirtualBreakpoints = new Dictionary<int,Breakpoint>();
     public string                                 LabelDumpFile = "";
     public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
     public GR.Collections.Map<Tupel<string,int>, Types.MacroFunctionInfo>    Macros = new Map<Tupel<string, int>, MacroFunctionInfo>();
 
     public List<int>                              FixedBreakpoints = new List<int>();
+
+    public GR.Collections.MultiMap<int, Parser.ParserBase.ParseMessage>   Messages = new GR.Collections.MultiMap<int, Parser.ParserBase.ParseMessage>();
+
+
+
+    public FileInfo()
+    {
+      AssemblerSettings.SetAssemblerType( Types.AssemblerType.C64_STUDIO );
+    }
 
 
 
@@ -138,6 +148,7 @@ namespace RetroDevStudio.Types.ASM
       MappedVariables.Clear();
       OriginalVariables.Clear();
       FixedBreakpoints.Clear();
+      Messages.Clear();
     }
 
 
@@ -199,7 +210,6 @@ namespace RetroDevStudio.Types.ASM
       LocalLineIndex = -1;
       SrcInfo = null;
 
-      //Debug.Log( "FindTrueLinesource for " + LineIndex );
       foreach ( Types.ASM.SourceInfo sourceInfo in SourceInfo.Values )
       {
         if ( ( LineIndex >= sourceInfo.GlobalStartLine )
@@ -209,11 +219,9 @@ namespace RetroDevStudio.Types.ASM
           LocalLineIndex = LineIndex + sourceInfo.LocalStartLine - sourceInfo.GlobalStartLine;
 
           SrcInfo = sourceInfo;
-          //Debug.Log( "FindTrueLinesource done" );
           return true;
         }
       }
-      //Debug.Log( "FindTrueLineSource for " + LineIndex + " failed" );
       return false;
     }
 
@@ -227,7 +235,6 @@ namespace RetroDevStudio.Types.ASM
         return false;
       }
 
-      //dh.Log( "FindTrueLineSource for " + LineIndex );
       Types.ASM.SourceInfo    lastFound = null;
       try
       {
@@ -239,10 +246,8 @@ namespace RetroDevStudio.Types.ASM
           {
             // ugh, outer source info (for nested for loops) is wrong!
             lastFound = sourceInfo;
-            //return true;
           }
         }
-        //Debug.Log( "FindTrueLineSource for " + LineIndex + " failed" );
       }
       catch ( System.InvalidOperationException )
       {
@@ -806,6 +811,66 @@ namespace RetroDevStudio.Types.ASM
 
       return sb.ToString();
     }
+
+
+
+    public MultiMap<string, SymbolInfo> KnownTokenInfo()
+    {
+      GR.Collections.MultiMap<string, SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
+
+      foreach ( var zoneList in Zones )
+      {
+        foreach ( var zone in zoneList.Value )
+        {
+          FindTrueLineSource( zone.LineIndex, out zone.DocumentFilename, out zone.LocalLineIndex, out zone.SourceInfo );
+          knownTokens.Add( zoneList.Key, zone );
+        }
+      }
+      foreach ( KeyValuePair<string, SymbolInfo> label in Labels )
+      {
+        if ( !label.Value.FromDependency )
+        {
+          FindTrueLineSource( label.Value.LineIndex, out label.Value.DocumentFilename, out label.Value.LocalLineIndex, out label.Value.SourceInfo );
+        }
+        knownTokens.Add( label.Key, label.Value );
+      }
+      foreach ( KeyValuePair<string, Types.ASM.UnparsedEvalInfo> label in UnparsedLabels )
+      {
+        var token = new SymbolInfo();
+
+        token.Name = label.Key;
+        FindTrueLineSource( label.Value.LineIndex, out token.DocumentFilename, out token.LineIndex, out token.SourceInfo );
+        knownTokens.Add( token.Name, token );
+      }
+      foreach ( var tempLabel in TempLabelInfo )
+      {
+        FindTrueLineSource( tempLabel.LineIndex, out tempLabel.Symbol.DocumentFilename, out tempLabel.Symbol.LocalLineIndex, out tempLabel.Symbol.SourceInfo );
+        knownTokens.Add( tempLabel.Name, tempLabel.Symbol );
+      }
+      return knownTokens;
+    }
+
+
+
+    public List<AutoCompleteItemInfo> KnownTokens()
+    {
+      List<Types.AutoCompleteItemInfo> knownTokens = new List<Types.AutoCompleteItemInfo>();
+
+      foreach ( var label in Labels )
+      {
+        knownTokens.Add( new Types.AutoCompleteItemInfo() { Symbol = label.Value, Token = label.Key, ToolTipTitle = label.Key } );
+      }
+      foreach ( var unparsedLabel in UnparsedLabels )
+      {
+        knownTokens.Add( new Types.AutoCompleteItemInfo() { Token = unparsedLabel.Key, ToolTipTitle = unparsedLabel.Key } );
+      }
+      foreach ( var opcode in Processor.Opcodes )
+      {
+        knownTokens.Add( new Types.AutoCompleteItemInfo() { Token = opcode.Key, ToolTipTitle = opcode.Key } );
+      }
+      return knownTokens;
+    }
+
 
 
   }

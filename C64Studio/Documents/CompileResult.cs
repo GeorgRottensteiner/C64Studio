@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static RetroDevStudio.Parser.ParserBase;
 
 
 
@@ -35,15 +36,15 @@ namespace RetroDevStudio.Documents
 
 
 
-    delegate void UpdateFromMessagesCallback( Parser.ParserBase Parser, Project ParsedProject );
+    delegate void UpdateFromMessagesCallback( Types.ASM.FileInfo ASMFileInfo, Project ParsedProject );
 
 
 
-    public void UpdateFromMessages( Parser.ParserBase Parser, Project ParsedProject )
+    public void UpdateFromMessages( Types.ASM.FileInfo ASMFileInfo, Project ParsedProject )
     {
       if ( InvokeRequired )
       {
-        Invoke( new UpdateFromMessagesCallback( UpdateFromMessages ), new object[] { Parser, ParsedProject } );
+        Invoke( new UpdateFromMessagesCallback( UpdateFromMessages ), new object[] { ASMFileInfo, ParsedProject } );
         return;
       }
 
@@ -55,13 +56,7 @@ namespace RetroDevStudio.Documents
       listMessages.Sorting = SortOrder.None;
       listMessages.ListViewItemSorter = null; 
 
-      foreach ( var docInfo in Core.MainForm.DocumentInfos )
-      {
-        var compilableDoc = docInfo.CompilableDocument;
-
-        compilableDoc?.RemoveAllErrorMarkings();
-      }
-      foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in Parser.Messages )
+      foreach ( var msg in ASMFileInfo.Messages )
       {
         int lineIndex = msg.Key;
         Parser.ParserBase.ParseMessage message = msg.Value;
@@ -76,36 +71,12 @@ namespace RetroDevStudio.Documents
 
         string documentFile = "";
         int documentLine = -1;
-        Parser.DocumentAndLineFromGlobalLine( lineIndex, out documentFile, out documentLine );
+
+        ASMFileInfo.FindTrueLineSource( lineIndex, out documentFile, out documentLine );
         if ( message.AlternativeFile == null )
         {
           message.AlternativeFile = documentFile;
           message.AlternativeLineIndex = documentLine;
-        }
-
-        if ( message.CharIndex != -1 )
-        {
-          CompilableDocument    compilableDoc = null;
-          if ( ParsedProject == null )
-          {
-            var sourceDocInfo = Core.MainForm.DetermineDocumentByFileName( documentFile );
-            if ( sourceDocInfo != null )
-            {
-              compilableDoc = sourceDocInfo.CompilableDocument;
-            }
-          }
-          else
-          {
-            var  sourceElement = ParsedProject.GetElementByFilename( documentFile );
-            if ( sourceElement != null )
-            {
-              if ( sourceElement.Document != null )
-              {
-                compilableDoc = sourceElement.DocumentInfo.CompilableDocument;
-              }
-            }
-          }
-          compilableDoc?.MarkTextAsError( documentLine, message.CharIndex, message.Length );
         }
 
         ++documentLine;

@@ -26,9 +26,9 @@ namespace RetroDevStudio
         }
         Application.EnableVisualStyles();
 #if NET6_0
-      Application.SetHighDpiMode(HighDpiMode.SystemAware);
+        Application.SetHighDpiMode(HighDpiMode.SystemAware);
 #endif
-      Application.SetCompatibleTextRenderingDefault( false );
+        Application.SetCompatibleTextRenderingDefault( false );
         Application.Run( new MainForm( args ) );
 #if !DEBUG
       }

@@ -287,7 +287,7 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -532,7 +532,7 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -811,7 +811,7 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -1093,7 +1093,7 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -1424,7 +1424,7 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -1746,7 +1746,7 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -2485,11 +2485,11 @@ namespace TestProject
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
-      bool parseResult = parser.Parse( source, null, config, null );
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }

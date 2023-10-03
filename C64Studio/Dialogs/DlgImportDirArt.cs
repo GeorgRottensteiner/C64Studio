@@ -41,7 +41,7 @@ namespace RetroDevStudio.Dialogs
       config.Assembler = Types.AssemblerType.C64_STUDIO;
 
       string    temp = "* = $0801\n" + editASMDirArt.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
+      if ( ( asmParser.Parse( temp, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
         GR.Memory.ByteBuffer data = asmParser.AssembledOutput.Assembly;

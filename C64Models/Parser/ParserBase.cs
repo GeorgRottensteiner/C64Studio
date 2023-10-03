@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio;
+using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -100,24 +101,25 @@ namespace RetroDevStudio.Parser
       }
     };
 
-    public GR.Collections.MultiMap<int, ParseMessage> Messages = new GR.Collections.MultiMap<int, ParseMessage>();
+    protected int                 m_ErrorMessages = 0;
+    protected int                 m_WarningMessages = 0;
+    protected int                 m_Messages = 0;
 
-    protected int               m_ErrorMessages = 0;
-    protected int               m_WarningMessages = 0;
-    protected int               m_Messages = 0;
-
-    protected CompileConfig     m_CompileConfig = null;
+    protected CompileConfig       m_CompileConfig = null;
 
     protected Types.CompileTargetType m_CompileTarget = Types.CompileTargetType.PRG;
 
-    protected string            m_CompileTargetFile = null;
-    protected string            m_DefaultTargetExtension = ".prg";
+    protected string              m_CompileTargetFile = null;
+    protected string              m_DefaultTargetExtension = ".prg";
 
-    protected string            m_DocBasePath = "";
-    protected string            m_Filename = "";
+    protected string              m_DocBasePath = "";
+    protected string              m_Filename = "";
+
+    protected Types.ASM.FileInfo  m_ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
+    public Types.ASM.FileInfo     InitialFileInfo = null;
 
 
-    public AssemblyOutput AssembledOutput = null;
+    public AssemblyOutput         AssembledOutput = null;
 
 
 
@@ -184,7 +186,7 @@ namespace RetroDevStudio.Parser
     public ParseMessage AddError( int Line, Types.ErrorCode Code, string Text, int CharIndex = -1, int Length = 0 )
     {
       ParseMessage errorMessage = new ParseMessage( ParseMessage.LineType.ERROR, Code, Text, CharIndex, Length );
-      Messages.Add( Line, errorMessage );
+      m_ASMFileInfo.Messages.Add( Line, errorMessage );
       ++m_ErrorMessages;
       return errorMessage;
     }
@@ -200,7 +202,7 @@ namespace RetroDevStudio.Parser
       }
 
       ParseMessage warningMessage = new ParseMessage( ParseMessage.LineType.WARNING, Code, Text, CharIndex, Length );
-      Messages.Add( Line, warningMessage );
+      m_ASMFileInfo.Messages.Add( Line, warningMessage );
       ++m_WarningMessages;
       return warningMessage;
     }
@@ -215,7 +217,7 @@ namespace RetroDevStudio.Parser
       }
 
       ParseMessage warningMessage = new ParseMessage( ParseMessage.LineType.SEVERE_WARNING, Code, Text );
-      Messages.Add( Line, warningMessage );
+      m_ASMFileInfo.Messages.Add( Line, warningMessage );
       ++m_WarningMessages;
       return warningMessage;
     }
@@ -225,7 +227,7 @@ namespace RetroDevStudio.Parser
     public void AddOutputMessage( int Line, string Text )
     {
       ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, Text );
-      Messages.Add( Line, message );
+      m_ASMFileInfo.Messages.Add( Line, message );
       ++m_Messages;
     }
 
@@ -233,7 +235,7 @@ namespace RetroDevStudio.Parser
 
     public abstract void Clear();
     public abstract bool Assemble( CompileConfig Config );
-    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines );
+    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out FileInfo ASMFileInfo );
 
 
 
@@ -377,8 +379,10 @@ namespace RetroDevStudio.Parser
 
 
 
-    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
+    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo  )
     {
+      ASMFileInfo = null;
+
       Clear();
 
       if ( string.IsNullOrEmpty( Filename ) )
@@ -419,7 +423,7 @@ namespace RetroDevStudio.Parser
         Config.Assembler = Types.AssemblerType.C64_STUDIO;
       }
 
-      return Parse( text, Configuration, Config, AdditionalPredefines );
+      return Parse( text, Configuration, Config, AdditionalPredefines, out ASMFileInfo );
     }
 
 
@@ -428,18 +432,17 @@ namespace RetroDevStudio.Parser
 
 
 
-    public virtual GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo()
+    public void ClearASMInfo()
     {
-      return new GR.Collections.MultiMap<string, SymbolInfo>();
+      m_ASMFileInfo.Clear();
     }
 
 
 
-    public virtual List<Types.AutoCompleteItemInfo> KnownTokens()
+    public void InjectASMFileInfo( Types.ASM.FileInfo ASMFileInfo )
     {
-      return new List<Types.AutoCompleteItemInfo>();
+      m_ASMFileInfo = ASMFileInfo;
     }
-
 
 
   }

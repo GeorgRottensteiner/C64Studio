@@ -1330,7 +1330,7 @@ namespace RetroDevStudio.Documents
       }
 
       string  upperWord = wordBelow.ToUpper();
-      if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperWord ) )
+      if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperWord ) )
       {
         return;
       }
@@ -1750,9 +1750,9 @@ namespace RetroDevStudio.Documents
 
       // add macros
       string  macroPrefix = "";
-      if ( Parser.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
+      if ( DocumentInfo.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
       {
-        macroPrefix = Parser.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix[0];
+        macroPrefix = DocumentInfo.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix[0];
       }
       foreach ( var entry in DocumentInfo.ASMFileInfo.Macros )
       {
@@ -1829,10 +1829,10 @@ namespace RetroDevStudio.Documents
 
       var   newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
 
-      if ( Parser.ASMFileInfo.AssemblerSettings != null )
+      if ( DocumentInfo.ASMFileInfo.AssemblerSettings != null )
       {
         // add pseudo ops
-        foreach ( var pseudoOp in Parser.ASMFileInfo.AssemblerSettings.PseudoOps )
+        foreach ( var pseudoOp in DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps )
         {
           newList.Add( new AutocompleteItem( pseudoOp.Key ) { ToolTipTitle = pseudoOp.Key, ToolTipText = "Pseudo OP" } );
         }
@@ -2374,8 +2374,8 @@ namespace RetroDevStudio.Documents
         // a pseudo op?
         string    potentialPseudoOp = '!' + wordBelow;
 
-        if ( ( Parser.ASMFileInfo.AssemblerSettings != null )
-        &&   ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( potentialPseudoOp.ToUpper() ) ) )
+        if ( ( DocumentInfo.ASMFileInfo.AssemblerSettings != null )
+        &&   ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( potentialPseudoOp.ToUpper() ) ) )
         {
           wordBelow = potentialPseudoOp;
         }
@@ -3693,9 +3693,9 @@ namespace RetroDevStudio.Documents
         &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
         {
           string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
-          if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
+          if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
           {
-            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
+            var pseudoOp = DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
 
             if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
@@ -3909,9 +3909,9 @@ namespace RetroDevStudio.Documents
         &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
         {
           string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
-          if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
+          if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
           {
-            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
+            var pseudoOp = DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
 
             if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
@@ -3999,9 +3999,9 @@ namespace RetroDevStudio.Documents
         &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
         {
           string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
-          if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
+          if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
           {
-            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
+            var pseudoOp = DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
 
             if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )

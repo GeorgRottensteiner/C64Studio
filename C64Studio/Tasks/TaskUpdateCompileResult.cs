@@ -1,20 +1,24 @@
-﻿using System;
+﻿using RetroDevStudio.Parser;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using static RetroDevStudio.Parser.ParserBase;
+
+
 
 namespace RetroDevStudio.Tasks
 {
   public class TaskUpdateCompileResult : Task
   {
-    private DocumentInfo      m_Doc;
-    private Parser.ParserBase m_Parser;
+    private DocumentInfo        m_Doc;
+    private Types.ASM.FileInfo  m_ASMFileInfo;
 
 
 
-    public TaskUpdateCompileResult( Parser.ParserBase Parser, DocumentInfo Document )
+    public TaskUpdateCompileResult( Types.ASM.FileInfo ASMFileInfo, DocumentInfo Document )
     {
-      m_Doc = Document;
-      m_Parser = Parser;
+      m_Doc         = Document;
+      m_ASMFileInfo = ASMFileInfo;
     }
 
 
@@ -25,10 +29,9 @@ namespace RetroDevStudio.Tasks
       {
         return (bool)Core.MainForm.Invoke( new ProcessTaskCallback( ProcessTask ) );
       }
-      Core.Navigating.UpdateFromMessages( m_Parser.Messages,
-                                          ( m_Parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)m_Parser ).ASMFileInfo : null,
+      Core.Navigating.UpdateFromMessages( m_ASMFileInfo,
                                           m_Doc.Project );
-      Core.MainForm.m_CompileResult.UpdateFromMessages( m_Parser, m_Doc.Project );
+      Core.MainForm.m_CompileResult.UpdateFromMessages( m_ASMFileInfo, m_Doc.Project );
       return true;
     }
 

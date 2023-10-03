@@ -24,6 +24,7 @@ namespace RetroDevStudio
 
     public Parser.ASMFileParser       ParserASM = new RetroDevStudio.Parser.ASMFileParser();
     public Parser.BasicFileParser     ParserBasic = new RetroDevStudio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
+    public Types.ASM.FileInfo         ASMFileInfo = new Types.ASM.FileInfo();
 
     public Dictionary<string,Dialect> BASICDialects = new Dictionary<string, Dialect>();
 

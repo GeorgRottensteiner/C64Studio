@@ -33,7 +33,7 @@ namespace RetroDevStudio.Controls
       config.Assembler = Types.AssemblerType.C64_STUDIO;
 
       string    temp = "* = $0801\n" + editInput.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
+      if ( ( asmParser.Parse( temp, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
         GR.Memory.ByteBuffer charData = asmParser.AssembledOutput.Assembly;

@@ -97,7 +97,7 @@ namespace RetroDevStudio.Parser
 
               string paramName = param[param.Count - 1];
 
-              if ( ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
+              if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
               {
                 AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
               }
@@ -142,7 +142,7 @@ namespace RetroDevStudio.Parser
             param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
             string paramName = param[param.Count - 1];
 
-            if ( ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
+            if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
             {
               AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
             }
@@ -186,7 +186,7 @@ namespace RetroDevStudio.Parser
               sourceInfo.LineCount        = replacementLines.Length;
               sourceInfo.Source           = SourceInfo.SourceInfoSource.MACRO;
               string dummy;
-              ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
+              m_ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
 
               InsertSourceInfo( sourceInfo );
 

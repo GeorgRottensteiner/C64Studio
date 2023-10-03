@@ -102,10 +102,6 @@ namespace RetroDevStudio.Parser
 
     private GR.Collections.Map<string,ExtFunctionInfo>    m_ExtFunctions = new GR.Collections.Map<string, ExtFunctionInfo>();
 
-    public Types.ASM.FileInfo           ASMFileInfo = new Types.ASM.FileInfo();
-
-    public Types.ASM.FileInfo           InitialFileInfo = null;
-
     private ErrorInfo                   m_LastErrorInfo = new ErrorInfo();
 
     private bool                        DoLogSourceInfo = false;
@@ -201,10 +197,10 @@ namespace RetroDevStudio.Parser
     public void SetAssemblerType( Types.AssemblerType Type )
     {
       m_AssemblerSettings.SetAssemblerType( Type );
-      if ( ASMFileInfo.AssemblerSettings == null )
+      if ( m_ASMFileInfo.AssemblerSettings == null )
       {
-        ASMFileInfo.AssemblerSettings = new AssemblerSettings();
-        ASMFileInfo.AssemblerSettings.SetAssemblerType( Type );
+        m_ASMFileInfo.AssemblerSettings = new AssemblerSettings();
+        m_ASMFileInfo.AssemblerSettings.SetAssemblerType( Type );
       }
     }
 
@@ -570,9 +566,9 @@ namespace RetroDevStudio.Parser
         Value.Name = Name;
       }
 
-      for ( int i = 0; i < ASMFileInfo.TempLabelInfo.Count; ++i )
+      for ( int i = 0; i < m_ASMFileInfo.TempLabelInfo.Count; ++i )
       {
-        var oldTempInfo = ASMFileInfo.TempLabelInfo[ASMFileInfo.TempLabelInfo.Count - i - 1];
+        var oldTempInfo = m_ASMFileInfo.TempLabelInfo[m_ASMFileInfo.TempLabelInfo.Count - i - 1];
 
         if ( oldTempInfo.Name == Name )
         {
@@ -591,7 +587,7 @@ namespace RetroDevStudio.Parser
 
             string    filename;
             int       localLine = 0;
-            if ( ASMFileInfo.FindTrueLineSource( oldTempInfo.LineIndex, out filename, out localLine ) )
+            if ( m_ASMFileInfo.FindTrueLineSource( oldTempInfo.LineIndex, out filename, out localLine ) )
             {
               msg.AddMessage( "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", filename, localLine, oldTempInfo.CharIndex, oldTempInfo.Length );
               //AddError( LineIndex, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", oldTempInfo.CharIndex, oldTempInfo.Length );
@@ -611,7 +607,7 @@ namespace RetroDevStudio.Parser
       tempInfo.CharIndex  = CharIndex;
       tempInfo.Length     = Length;
 
-      ASMFileInfo.TempLabelInfo.Add( tempInfo );
+      m_ASMFileInfo.TempLabelInfo.Add( tempInfo );
 
       return tempInfo;
     }
@@ -636,7 +632,7 @@ namespace RetroDevStudio.Parser
     {
       List<Types.ASM.TemporaryLabelInfo>    infosToAdd = new List<Types.ASM.TemporaryLabelInfo>();
 
-      foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
+      foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in m_ASMFileInfo.TempLabelInfo )
       {
         if ( ( oldTempInfo.LineCount != -1 )
         &&   ( oldTempInfo.LineIndex + oldTempInfo.LineCount > SourceIndex )
@@ -654,7 +650,7 @@ namespace RetroDevStudio.Parser
           tempInfo.Symbol     = new SymbolInfo( oldTempInfo.Symbol );
           tempInfo.Info       = oldTempInfo.Info;
 
-          foreach ( var origTempInfo in ASMFileInfo.TempLabelInfo )
+          foreach ( var origTempInfo in m_ASMFileInfo.TempLabelInfo )
           {
             // we're cloning a label after a trailing label (label till the end) of the same name -> adjust line count!
             if ( ( origTempInfo.LineCount == -1 )
@@ -670,7 +666,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      ASMFileInfo.TempLabelInfo.AddRange( infosToAdd );
+      m_ASMFileInfo.TempLabelInfo.AddRange( infosToAdd );
     }
 
 
@@ -681,9 +677,9 @@ namespace RetroDevStudio.Parser
       int             localIndex = 0;
       SourceInfo      sourceInfo = null;
 
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out sourceInfo );
+      m_ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out sourceInfo );
 
-      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         var token = new SymbolInfo();
         token.Type            = SymbolInfo.Types.LABEL;
@@ -697,33 +693,33 @@ namespace RetroDevStudio.Parser
         token.Length          = Length;
         token.SourceInfo      = sourceInfo;
 
-        ASMFileInfo.Labels.Add( Name, token );
+        m_ASMFileInfo.Labels.Add( Name, token );
         return token;
       }
-      if ( ASMFileInfo.Labels[Name].AddressOrValue != Value )
+      if ( m_ASMFileInfo.Labels[Name].AddressOrValue != Value )
       {
         if ( Name != "*" )
         {
           var message = AddError( SourceLine, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + Name, CharIndex, Length );
 
-          message.AddMessage( "  already defined in " + ASMFileInfo.Labels[Name].DocumentFilename + " at line " + ( ASMFileInfo.Labels[Name].LocalLineIndex + 1 ),
-                              ASMFileInfo.Labels[Name].DocumentFilename,
-                              ASMFileInfo.Labels[Name].LocalLineIndex,
-                              ASMFileInfo.Labels[Name].CharIndex,
-                              ASMFileInfo.Labels[Name].Length );
+          message.AddMessage( "  already defined in " + m_ASMFileInfo.Labels[Name].DocumentFilename + " at line " + ( m_ASMFileInfo.Labels[Name].LocalLineIndex + 1 ),
+                              m_ASMFileInfo.Labels[Name].DocumentFilename,
+                              m_ASMFileInfo.Labels[Name].LocalLineIndex,
+                              m_ASMFileInfo.Labels[Name].CharIndex,
+                              m_ASMFileInfo.Labels[Name].Length );
         }
       }
-      ASMFileInfo.Labels[Name].AddressOrValue = Value;
-      return ASMFileInfo.Labels[Name];
+      m_ASMFileInfo.Labels[Name].AddressOrValue = Value;
+      return m_ASMFileInfo.Labels[Name];
     }
 
 
 
     public void SetLabelValue( string Name, int Value )
     {
-      if ( ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
-        ASMFileInfo.Labels[Name].AddressOrValue = Value;
+        m_ASMFileInfo.Labels[Name].AddressOrValue = Value;
       }
     }
 
@@ -731,17 +727,17 @@ namespace RetroDevStudio.Parser
 
     public void RemoveLabel( string Name )
     {
-      ASMFileInfo.Labels.Remove( Name );
+      m_ASMFileInfo.Labels.Remove( Name );
     }
 
 
 
     public SymbolInfo AddPreprocessorLabel( string Name, int Value, int SourceLine )
     {
-      if ( ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         AddError( SourceLine, Types.ErrorCode.E1201_REDEFINITION_OF_PREPROCESSOR_DEFINE, "Preprocessor define " + Name + " declared more than once" );
-        return ASMFileInfo.Labels[Name];
+        return m_ASMFileInfo.Labels[Name];
       }
       SymbolInfo token = AddLabel( Name, Value, SourceLine, "", -1, 0 );
       token.Type = SymbolInfo.Types.PREPROCESSOR_LABEL;
@@ -755,7 +751,7 @@ namespace RetroDevStudio.Parser
       string        zoneFile;
       int           localLine;
       SourceInfo    srcInfo;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out zoneFile, out localLine, out srcInfo );
+      m_ASMFileInfo.FindTrueLineSource( SourceLine, out zoneFile, out localLine, out srcInfo );
 
       var token = new SymbolInfo();
       token.Type              = SymbolInfo.Types.ZONE;
@@ -767,11 +763,11 @@ namespace RetroDevStudio.Parser
       token.DocumentFilename  = zoneFile;
       token.SourceInfo        = srcInfo;
 
-      if ( !ASMFileInfo.Zones.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.Zones.ContainsKey( Name ) )
       {
-        ASMFileInfo.Zones.Add( Name, new List<SymbolInfo>() );
+        m_ASMFileInfo.Zones.Add( Name, new List<SymbolInfo>() );
       }
-      ASMFileInfo.Zones[Name].Add( token );
+      m_ASMFileInfo.Zones[Name].Add( token );
     }
 
 
@@ -781,10 +777,10 @@ namespace RetroDevStudio.Parser
       string      filename = "";
       int         localIndex = -1;
       SourceInfo  srcInfo;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
+      m_ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
       // check if temp label exists
-      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
+      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in m_ASMFileInfo.TempLabelInfo )
       {
         if ( tempLabel.Name == Name )
         {
@@ -793,7 +789,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
         token.Type              = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
@@ -807,19 +803,19 @@ namespace RetroDevStudio.Parser
         token.Zone              = Zone;
         token.References.Add( SourceLine );
 
-        ASMFileInfo.Labels.Add( Name, token );
+        m_ASMFileInfo.Labels.Add( Name, token );
       }
       else
       {
-        if ( ( ASMFileInfo.Labels[Name].RealValue != Value.RealValue )
-        ||   ( ASMFileInfo.Labels[Name].Type != Value.Type ) )
+        if ( ( m_ASMFileInfo.Labels[Name].RealValue != Value.RealValue )
+        ||   ( m_ASMFileInfo.Labels[Name].Type != Value.Type ) )
         {
           if ( Name != "*" )
           {
             // allow redefinition, turn into temp label
-            var origLabel = ASMFileInfo.Labels[Name];
+            var origLabel = m_ASMFileInfo.Labels[Name];
 
-            ASMFileInfo.Labels.Remove( Name );
+            m_ASMFileInfo.Labels.Remove( Name );
 
             // re-add orig as temp
             AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
@@ -837,8 +833,8 @@ namespace RetroDevStudio.Parser
             return;
           }
         }
-        ASMFileInfo.Labels[Name].RealValue  = Value.RealValue;
-        ASMFileInfo.Labels[Name].Type       = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
+        m_ASMFileInfo.Labels[Name].RealValue  = Value.RealValue;
+        m_ASMFileInfo.Labels[Name].Type       = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
       }
     }
 
@@ -849,10 +845,10 @@ namespace RetroDevStudio.Parser
       string      filename = "";
       int         localIndex = -1;
       SourceInfo  srcInfo;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
+      m_ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
       // check if temp label exists
-      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
+      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in m_ASMFileInfo.TempLabelInfo )
       {
         if ( tempLabel.Name == Name )
         {
@@ -861,7 +857,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
         token.Type              = SymbolInfo.Types.CONSTANT_STRING;
@@ -875,19 +871,19 @@ namespace RetroDevStudio.Parser
         token.Zone              = Zone;
         token.References.Add( SourceLine );
 
-        ASMFileInfo.Labels.Add( Name, token );
+        m_ASMFileInfo.Labels.Add( Name, token );
       }
       else
       {
-        if ( ( ASMFileInfo.Labels[Name].String != Value.String )
-        ||   ( ASMFileInfo.Labels[Name].Type != Value.Type ) )
+        if ( ( m_ASMFileInfo.Labels[Name].String != Value.String )
+        ||   ( m_ASMFileInfo.Labels[Name].Type != Value.Type ) )
         {
           if ( Name != "*" )
           {
             // allow redefinition, turn into temp label
-            var origLabel = ASMFileInfo.Labels[Name];
+            var origLabel = m_ASMFileInfo.Labels[Name];
 
-            ASMFileInfo.Labels.Remove( Name );
+            m_ASMFileInfo.Labels.Remove( Name );
 
             // re-add orig as temp
             AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
@@ -906,8 +902,8 @@ namespace RetroDevStudio.Parser
           }
         }
 
-        ASMFileInfo.Labels[Name].String = Value.String;
-        ASMFileInfo.Labels[Name].Type   = SymbolInfo.Types.CONSTANT_STRING;
+        m_ASMFileInfo.Labels[Name].String = Value.String;
+        m_ASMFileInfo.Labels[Name].Type   = SymbolInfo.Types.CONSTANT_STRING;
       }
     }
 
@@ -918,10 +914,10 @@ namespace RetroDevStudio.Parser
       string      filename = "";
       int         localIndex = -1;
       SourceInfo  srcInfo;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
+      m_ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
       // check if temp label exists
-      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
+      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in m_ASMFileInfo.TempLabelInfo )
       {
         if ( tempLabel.Name == Name )
         {
@@ -930,7 +926,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         Value.Name              = Name;
         Value.LineIndex         = SourceLine;
@@ -941,19 +937,19 @@ namespace RetroDevStudio.Parser
         Value.References.Add( SourceLine );
         Value.Zone              = Zone;
 
-        ASMFileInfo.Labels.Add( Name, Value );
+        m_ASMFileInfo.Labels.Add( Name, Value );
       }
       else
       {
-        if ( ( ASMFileInfo.Labels[Name] != Value )
-        ||   ( ASMFileInfo.Labels[Name].Type != Value.Type ) )
+        if ( ( m_ASMFileInfo.Labels[Name] != Value )
+        ||   ( m_ASMFileInfo.Labels[Name].Type != Value.Type ) )
         {
           if ( Name != "*" )
           {
             // allow redefinition, turn into temp label
-            var origLabel = ASMFileInfo.Labels[Name];
+            var origLabel = m_ASMFileInfo.Labels[Name];
 
-            ASMFileInfo.Labels.Remove( Name );
+            m_ASMFileInfo.Labels.Remove( Name );
 
             // re-add orig as temp
             AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
@@ -971,7 +967,7 @@ namespace RetroDevStudio.Parser
             return;
           }
         }
-        ASMFileInfo.Labels[Name] = Value;
+        m_ASMFileInfo.Labels[Name] = Value;
       }
     }
 
@@ -979,7 +975,7 @@ namespace RetroDevStudio.Parser
 
     public void AddPreprocessorConstant( string Name, long Value, int SourceLine )
     {
-      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
         token.Type = SymbolInfo.Types.PREPROCESSOR_CONSTANT_2;
@@ -993,11 +989,11 @@ namespace RetroDevStudio.Parser
           token.Type = SymbolInfo.Types.PREPROCESSOR_CONSTANT_1;
         }
 
-        ASMFileInfo.Labels.Add( Name, token );
+        m_ASMFileInfo.Labels.Add( Name, token );
       }
       else
       {
-        if ( ASMFileInfo.Labels[Name].AddressOrValue != Value )
+        if ( m_ASMFileInfo.Labels[Name].AddressOrValue != Value )
         {
           if ( Name != "*" )
           {
@@ -1005,7 +1001,7 @@ namespace RetroDevStudio.Parser
             AddError( SourceLine, Types.ErrorCode.E1203_REDEFINITION_OF_CONSTANT, "Redefinition of constant " + Name );
           }
         }
-        ASMFileInfo.Labels[Name].AddressOrValue = Value;
+        m_ASMFileInfo.Labels[Name].AddressOrValue = Value;
       }
     }
 
@@ -1013,13 +1009,13 @@ namespace RetroDevStudio.Parser
 
     public Types.ASM.UnparsedEvalInfo AddUnparsedLabel( string Name, string Value, int SourceLine )
     {
-      if ( !ASMFileInfo.UnparsedLabels.ContainsKey( Name ) )
+      if ( !m_ASMFileInfo.UnparsedLabels.ContainsKey( Name ) )
       {
         Types.ASM.UnparsedEvalInfo evalInfo = new Types.ASM.UnparsedEvalInfo();
         evalInfo.Name       = Name;
         evalInfo.LineIndex  = SourceLine;
         evalInfo.ToEval     = Value;
-        ASMFileInfo.UnparsedLabels.Add( Name, evalInfo );
+        m_ASMFileInfo.UnparsedLabels.Add( Name, evalInfo );
         return evalInfo;
       }
       if ( ( String.IsNullOrEmpty( Value ) )
@@ -1027,8 +1023,8 @@ namespace RetroDevStudio.Parser
       {
         AddError( SourceLine, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + Name );
       }
-      ASMFileInfo.UnparsedLabels[Name].ToEval = Value;
-      return ASMFileInfo.UnparsedLabels[Name];
+      m_ASMFileInfo.UnparsedLabels[Name].ToEval = Value;
+      return m_ASMFileInfo.UnparsedLabels[Name];
     }
 
 
@@ -1252,7 +1248,7 @@ namespace RetroDevStudio.Parser
       int     firstTempLabelLineIndex = 999999999;
       TemporaryLabelInfo    tempLabelInfo = null;
 
-      foreach ( Types.ASM.TemporaryLabelInfo labelInfo in ASMFileInfo.TempLabelInfo )
+      foreach ( Types.ASM.TemporaryLabelInfo labelInfo in m_ASMFileInfo.TempLabelInfo )
       {
         if ( ( LineIndex >= labelInfo.LineIndex )
         &&   ( ( LineIndex < labelInfo.LineIndex + labelInfo.LineCount )
@@ -1281,42 +1277,42 @@ namespace RetroDevStudio.Parser
 
 
       // parse labels
-      if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Value ) )
       {
         if ( ( IsLocalLabel( Value ) )
-        &&   ( ASMFileInfo.LineInfo.ContainsKey( LineIndex ) )
-        &&   ( !string.IsNullOrEmpty( ASMFileInfo.LineInfo[LineIndex].Zone ) ) )
+        &&   ( m_ASMFileInfo.LineInfo.ContainsKey( LineIndex ) )
+        &&   ( !string.IsNullOrEmpty( m_ASMFileInfo.LineInfo[LineIndex].Zone ) ) )
         {
           // a local label inside a zone has the actual zone name in front!
-          string    zoneName = ASMFileInfo.LineInfo[LineIndex].Zone;
-          if ( ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
+          string    zoneName = m_ASMFileInfo.LineInfo[LineIndex].Zone;
+          if ( m_ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
           {
-            ResultingSymbol = CreateIntegerSymbol( ASMFileInfo.Labels[zoneName + Value].AddressOrValue, out NumGivenBytes );
-            ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex );
+            ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[zoneName + Value].AddressOrValue, out NumGivenBytes );
+            m_ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex );
             return true;
           }
         }
-        if ( ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
+        if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
         {
-          ASMFileInfo.UnparsedLabels[Value].Used = true;
+          m_ASMFileInfo.UnparsedLabels[Value].Used = true;
         }
         m_LastErrorInfo = new ErrorInfo( LineIndex, 0, Value.Length, Types.ErrorCode.E1010_UNKNOWN_LABEL );
         return false;
       }
 
-      if ( ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      if ( m_ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       {
-        ResultingSymbol = CreateNumberSymbol( ASMFileInfo.Labels[Value].RealValue );
+        ResultingSymbol = CreateNumberSymbol( m_ASMFileInfo.Labels[Value].RealValue );
       }
-      else if ( ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_STRING )
+      else if ( m_ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_STRING )
       {
-        ResultingSymbol = CreateStringSymbol( ASMFileInfo.Labels[Value].String );
+        ResultingSymbol = CreateStringSymbol( m_ASMFileInfo.Labels[Value].String );
       }
       else
       {
-        ResultingSymbol = CreateIntegerSymbol( ASMFileInfo.Labels[Value].AddressOrValue, out NumGivenBytes );
+        ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[Value].AddressOrValue, out NumGivenBytes );
       }
-      ASMFileInfo.Labels[Value].References.Add( LineIndex );
+      m_ASMFileInfo.Labels[Value].References.Add( LineIndex );
       return true;
     }
 
@@ -1382,7 +1378,7 @@ namespace RetroDevStudio.Parser
       {
         return false;
       }
-      if ( ASMFileInfo.AssemblerSettings.AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL].IndexOf( LabelName[0] ) != -1 )
+      if ( m_ASMFileInfo.AssemblerSettings.AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL].IndexOf( LabelName[0] ) != -1 )
       {
         return true;
       }
@@ -1873,7 +1869,7 @@ namespace RetroDevStudio.Parser
             if ( Tokens[StartIndex].Content.StartsWith( "+" ) )
             {
               // special case of forward local label
-              if ( FindForwardLocalLabel( LineIndex, ASMFileInfo.LineInfo[LineIndex], Tokens[StartIndex].Content, out string closestLabel, out int closestLine ) )
+              if ( FindForwardLocalLabel( LineIndex, m_ASMFileInfo.LineInfo[LineIndex], Tokens[StartIndex].Content, out string closestLabel, out int closestLine ) )
               {
                 Tokens[StartIndex].Content  = closestLabel;
                 Tokens[StartIndex].Type     = TokenInfo.TokenType.LABEL_LOCAL;
@@ -2127,15 +2123,15 @@ namespace RetroDevStudio.Parser
             var countSymbol = new SymbolInfo() { Name = "i" };
             countSymbol.AddressOrValue = m_TemporaryFillLoopPos;
 
-            if ( ASMFileInfo.Labels.ContainsKey( "i" ) )
+            if ( m_ASMFileInfo.Labels.ContainsKey( "i" ) )
             {
-              oldValue = ASMFileInfo.Labels["i"];
-              ASMFileInfo.Labels["i"] = countSymbol;
+              oldValue = m_ASMFileInfo.Labels["i"];
+              m_ASMFileInfo.Labels["i"] = countSymbol;
             }
             else
             {
               // add temporary label inside expression
-              ASMFileInfo.Labels.Add( "i", countSymbol );
+              m_ASMFileInfo.Labels.Add( "i", countSymbol );
             }
 
             bool evaluationResult = EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, TextCodeMapping, out resultValue, out numBytesGiven );
@@ -2143,11 +2139,11 @@ namespace RetroDevStudio.Parser
             // restore temp symbol
             if ( oldValue == null )
             {
-              ASMFileInfo.Labels.Remove( "i" );
+              m_ASMFileInfo.Labels.Remove( "i" );
             }
             else
             {
-              ASMFileInfo.Labels["i"] = oldValue;
+              m_ASMFileInfo.Labels["i"] = oldValue;
             }
 
             if ( !evaluationResult )
@@ -2419,7 +2415,7 @@ namespace RetroDevStudio.Parser
       }
 
       // parse labels
-      if ( !ASMFileInfo.Labels.TryGetValue( TokenRange[Index].Content, out SymbolInfo tokenValue ) )
+      if ( !m_ASMFileInfo.Labels.TryGetValue( TokenRange[Index].Content, out SymbolInfo tokenValue ) )
       {
         return false;
       }
@@ -2663,9 +2659,9 @@ namespace RetroDevStudio.Parser
       int     trueCompileCurrentAddress = -1;
       m_CompileCurrentAddress = -1;
       string    zoneName = "";
-      foreach ( int lineIndex in ASMFileInfo.LineInfo.Keys )
+      foreach ( int lineIndex in m_ASMFileInfo.LineInfo.Keys )
       {
-        Types.ASM.LineInfo lineInfo = ASMFileInfo.LineInfo[lineIndex];
+        Types.ASM.LineInfo lineInfo = m_ASMFileInfo.LineInfo[lineIndex];
 
         if ( m_CompileCurrentAddress == -1 )
         {
@@ -2700,9 +2696,9 @@ namespace RetroDevStudio.Parser
 
       if ( m_CompileCurrentAddress == -1 )
       {
-        if ( ASMFileInfo.UnparsedLabels.Count > 0 )
+        if ( m_ASMFileInfo.UnparsedLabels.Count > 0 )
         {
-          foreach ( Types.ASM.UnparsedEvalInfo evalInfo in ASMFileInfo.UnparsedLabels.Values )
+          foreach ( Types.ASM.UnparsedEvalInfo evalInfo in m_ASMFileInfo.UnparsedLabels.Values )
           {
             AddError( evalInfo.LineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Code without start address encountered (missing *=)" );
           }
@@ -2715,13 +2711,13 @@ namespace RetroDevStudio.Parser
         newLabelDetermined = false;
 
         redo:;
-        foreach ( string label in ASMFileInfo.UnparsedLabels.Keys )
+        foreach ( string label in m_ASMFileInfo.UnparsedLabels.Keys )
         {
           long     result = -1;
 
           // set program counter
-          int     curLine = ASMFileInfo.UnparsedLabels[label].LineIndex;
-          while ( ( !ASMFileInfo.LineInfo.ContainsKey( curLine ) )
+          int     curLine = m_ASMFileInfo.UnparsedLabels[label].LineIndex;
+          while ( ( !m_ASMFileInfo.LineInfo.ContainsKey( curLine ) )
           &&      ( curLine >= 0 ) )
           {
             --curLine;
@@ -2730,14 +2726,14 @@ namespace RetroDevStudio.Parser
           {
             continue;
           }
-          m_CompileCurrentAddress = ASMFileInfo.LineInfo[curLine].AddressStart;
+          m_CompileCurrentAddress = m_ASMFileInfo.LineInfo[curLine].AddressStart;
           trueCompileCurrentAddress = m_CompileCurrentAddress;
 
-          if ( EvaluateLabel( ASMFileInfo.UnparsedLabels[label].LineIndex, ASMFileInfo.UnparsedLabels[label].ToEval, ASMFileInfo.LineInfo[curLine].LineCodeMapping, out result ) )
+          if ( EvaluateLabel( m_ASMFileInfo.UnparsedLabels[label].LineIndex, m_ASMFileInfo.UnparsedLabels[label].ToEval, m_ASMFileInfo.LineInfo[curLine].LineCodeMapping, out result ) )
           {
-            if ( ASMFileInfo.Labels.ContainsKey( label ) )
+            if ( m_ASMFileInfo.Labels.ContainsKey( label ) )
             {
-              AddError( ASMFileInfo.UnparsedLabels[label].LineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + ASMFileInfo.UnparsedLabels[label].Name );
+              AddError( m_ASMFileInfo.UnparsedLabels[label].LineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + m_ASMFileInfo.UnparsedLabels[label].Name );
               continue;
             }
 
@@ -2745,12 +2741,12 @@ namespace RetroDevStudio.Parser
             token.Type            = SymbolInfo.Types.LABEL;
             token.AddressOrValue  = result;
             token.Name            = label;
-            token.LineIndex       = ASMFileInfo.UnparsedLabels[label].LineIndex;
-            token.References.Add( ASMFileInfo.UnparsedLabels[label].LineIndex );
-            token.Zone            = ASMFileInfo.UnparsedLabels[label].Zone;
-            ASMFileInfo.Labels.Add( label, token );
+            token.LineIndex       = m_ASMFileInfo.UnparsedLabels[label].LineIndex;
+            token.References.Add( m_ASMFileInfo.UnparsedLabels[label].LineIndex );
+            token.Zone            = m_ASMFileInfo.UnparsedLabels[label].Zone;
+            m_ASMFileInfo.Labels.Add( label, token );
 
-            ASMFileInfo.UnparsedLabels.Remove( label );
+            m_ASMFileInfo.UnparsedLabels.Remove( label );
             newLabelDetermined = true;
             goto redo;
           }
@@ -2758,9 +2754,9 @@ namespace RetroDevStudio.Parser
       }
       while ( newLabelDetermined );
 
-      foreach ( int lineIndex in ASMFileInfo.LineInfo.Keys )
+      foreach ( int lineIndex in m_ASMFileInfo.LineInfo.Keys )
       {
-        Types.ASM.LineInfo lineInfo = ASMFileInfo.LineInfo[lineIndex];
+        Types.ASM.LineInfo lineInfo = m_ASMFileInfo.LineInfo[lineIndex];
 
         m_CompileCurrentAddress = lineInfo.AddressStart;
         if ( lineInfo.NeededParsedExpression != null )
@@ -3261,16 +3257,16 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      foreach ( string label in ASMFileInfo.UnparsedLabels.Keys )
+      foreach ( string label in m_ASMFileInfo.UnparsedLabels.Keys )
       {
         //dh.Log( "Still unevaluated label:" + label + ", " + m_UnparsedLabels[label].ToEval );
-        AddError( ASMFileInfo.UnparsedLabels[label].LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Failed to evaluate " + ASMFileInfo.UnparsedLabels[label].ToEval );
+        AddError( m_ASMFileInfo.UnparsedLabels[label].LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Failed to evaluate " + m_ASMFileInfo.UnparsedLabels[label].ToEval );
       }
       if ( m_ErrorMessages > 0 )
       {
         return false;
       }
-      return ( ASMFileInfo.UnparsedLabels.Count == 0 );
+      return ( m_ASMFileInfo.UnparsedLabels.Count == 0 );
     }
 
 
@@ -3279,7 +3275,7 @@ namespace RetroDevStudio.Parser
     {
       ClosestLabel = "";
       ClosestLine = 5000000;
-      foreach ( string label in ASMFileInfo.Labels.Keys )
+      foreach ( string label in m_ASMFileInfo.Labels.Keys )
       {
         if ( ( LineInfo.NeededParsedExpression != null )
         &&   ( label.StartsWith( InternalLabelPrefix + Content + InternalLabelPostfix ) ) )
@@ -3638,7 +3634,7 @@ namespace RetroDevStudio.Parser
         System.Array.Copy( Lines, macroInfo.LineIndex + 1, macroInfo.Content, 0, macroInfo.LineEnd - macroInfo.LineIndex - 1 );
 
         // safety check, see if macro contains call to itself
-        if ( ASMFileInfo.FindTrueLineSource( lineIndex, out string filename, out int localLineIndex, out SourceInfo srcInfo ) )
+        if ( m_ASMFileInfo.FindTrueLineSource( lineIndex, out string filename, out int localLineIndex, out SourceInfo srcInfo ) )
         {
           for ( int i = 0; i < macroInfo.Content.Length; ++i )
           {
@@ -3792,7 +3788,7 @@ namespace RetroDevStudio.Parser
           // adjust source infos to make lookup work correctly
           string outerFilename = "";
           int outerLineIndex = -1;
-          ASMFileInfo.FindTrueLineSource( repeatUntil.LineIndex, out outerFilename, out outerLineIndex );
+          m_ASMFileInfo.FindTrueLineSource( repeatUntil.LineIndex, out outerFilename, out outerLineIndex );
 
 
           Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
@@ -3983,7 +3979,7 @@ namespace RetroDevStudio.Parser
           // adjust source infos to make lookup work correctly
           string outerFilename = "";
           int outerLineIndex = -1;
-          ASMFileInfo.FindTrueLineSource( lastLoop.LineIndex, out outerFilename, out outerLineIndex );
+          m_ASMFileInfo.FindTrueLineSource( lastLoop.LineIndex, out outerFilename, out outerLineIndex );
 
 
           Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
@@ -5430,7 +5426,7 @@ namespace RetroDevStudio.Parser
             symbol.Info           = entry.Value.Info;
             symbol.SourceInfo     = entry.Value.SourceInfo;
 
-            ASMFileInfo.Labels.Add( entry.Key, symbol );
+            m_ASMFileInfo.Labels.Add( entry.Key, symbol );
           }
         }
       }
@@ -5444,8 +5440,8 @@ namespace RetroDevStudio.Parser
       {
         return false;
       }
-      return ( ASMFileInfo.Labels.ContainsKey( Token.Content ) )
-          || ( ASMFileInfo.UnparsedLabels.ContainsKey( Token.Content ) );
+      return ( m_ASMFileInfo.Labels.ContainsKey( Token.Content ) )
+          || ( m_ASMFileInfo.UnparsedLabels.ContainsKey( Token.Content ) );
     }
 
 
@@ -5455,7 +5451,7 @@ namespace RetroDevStudio.Parser
       _ParseContext = new ParseContext();
       var stackScopes = new List<RetroDevStudio.Types.ScopeInfo>();
 
-      ASMFileInfo.Labels.Clear();
+      m_ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
       HadFatalError = false;
 
@@ -5468,15 +5464,15 @@ namespace RetroDevStudio.Parser
 
       IncludePreviousSymbols();
 
-      ASMFileInfo.UnparsedLabels.Clear();
-      ASMFileInfo.Zones.Clear();
-      ASMFileInfo.LineInfo.Clear();
-      ASMFileInfo.TempLabelInfo.Clear();
-      ASMFileInfo.Processor = Tiny64.Processor.Create6510();
-      ASMFileInfo.Macros    = new Map<GR.Generic.Tupel<string, int>, MacroFunctionInfo>();
+      m_ASMFileInfo.UnparsedLabels.Clear();
+      m_ASMFileInfo.Zones.Clear();
+      m_ASMFileInfo.LineInfo.Clear();
+      m_ASMFileInfo.TempLabelInfo.Clear();
+      m_ASMFileInfo.Processor = Tiny64.Processor.Create6510();
+      m_ASMFileInfo.Macros    = new Map<GR.Generic.Tupel<string, int>, MacroFunctionInfo>();
 
       stackScopes.Clear();
-      Messages.Clear();
+      m_ASMFileInfo.Messages.Clear();
 
       m_WarningMessages = 0;
       m_ErrorMessages = 0;
@@ -5552,22 +5548,22 @@ namespace RetroDevStudio.Parser
           if ( ScopeInsideLoop( stackScopes ) )
           {
             // if a loop is repeated line infos may already exist
-            if ( ASMFileInfo.LineInfo.ContainsKey( lineIndex ) )
+            if ( m_ASMFileInfo.LineInfo.ContainsKey( lineIndex ) )
             {
               // TODO - add second address lookup entry
-              info = ASMFileInfo.LineInfo[lineIndex];
+              info = m_ASMFileInfo.LineInfo[lineIndex];
 
               info.AddressStart = programStepPos;
               info.Zone         = m_CurrentZoneName;
             }
             else
             {
-              ASMFileInfo.LineInfo.Add( lineIndex, info );
+              m_ASMFileInfo.LineInfo.Add( lineIndex, info );
             }
           }
           else
           {
-            ASMFileInfo.LineInfo.Add( lineIndex, info );
+            m_ASMFileInfo.LineInfo.Add( lineIndex, info );
           }
         }
 
@@ -5583,7 +5579,7 @@ namespace RetroDevStudio.Parser
         // split lines by ':'
         int   localIndex = 0;
         string filename = "";
-        if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+        if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
         {
           DumpSourceInfos( OrigLines, Lines );
           AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't determine filename from line" );
@@ -5609,7 +5605,7 @@ namespace RetroDevStudio.Parser
         AdjustLabelCasing( lineTokenInfos );
 
         // PDS/DASM macro call?
-        DetectPDSOrDASMMacroCall( ASMFileInfo.Macros, lineTokenInfos );
+        DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos );
 
         // do we have a DASM scope operator? (must skip scope check then)
         bool  isDASMScopePseudoOP = false;
@@ -5757,7 +5753,7 @@ namespace RetroDevStudio.Parser
                   AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
-                var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( m_ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -5785,7 +5781,7 @@ namespace RetroDevStudio.Parser
                 }
                 OnScopeRemoved( lineIndex, stackScopes );
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
-                var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( m_ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -6605,7 +6601,7 @@ namespace RetroDevStudio.Parser
 
           if ( !ScopeInsideMacroDefinition( stackScopes ) )
           {
-            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, ASMFileInfo.Macros, ref Lines, stackScopes, textCodeMapping, out lineSizeInBytes );
+            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, m_ASMFileInfo.Macros, ref Lines, stackScopes, textCodeMapping, out lineSizeInBytes );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;
@@ -6655,7 +6651,7 @@ namespace RetroDevStudio.Parser
             {
               string  traceFilename;
               int     localLineIndex = -1;
-              if ( ASMFileInfo.FindTrueLineSource( lineIndex, out traceFilename, out localLineIndex ) )
+              if ( m_ASMFileInfo.FindTrueLineSource( lineIndex, out traceFilename, out localLineIndex ) )
               {
                 AddVirtualBreakpoint( localLineIndex, traceFilename, TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
               }
@@ -6745,7 +6741,7 @@ namespace RetroDevStudio.Parser
 
               localIndex = 0;
               filename = "";
-              if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+              if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
                 DumpSourceInfos( OrigLines, Lines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
@@ -6786,7 +6782,7 @@ namespace RetroDevStudio.Parser
 
               localIndex = 0;
               filename = "";
-              if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+              if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
                 DumpSourceInfos( OrigLines, Lines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
@@ -6835,7 +6831,7 @@ namespace RetroDevStudio.Parser
             {
               string[] replacementLines = null;
               int dummy;
-              ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
+              m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
 
               if ( !POIncludeMedia( lineTokenInfos, lineIndex, true, info, filename, out lineSizeInBytes, out replacementLines ) )
               {
@@ -6847,7 +6843,7 @@ namespace RetroDevStudio.Parser
             {
               string[] replacementLines = null;
               int dummy;
-              ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
+              m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
               if ( !POIncludeMedia( lineTokenInfos, lineIndex, false, info, filename, out lineSizeInBytes, out replacementLines ) )
               {
                 HadFatalError = true;
@@ -6888,7 +6884,7 @@ namespace RetroDevStudio.Parser
 
               Lines = result;
 
-              ASMFileInfo.LineInfo.Remove( lineIndex );
+              m_ASMFileInfo.LineInfo.Remove( lineIndex );
 
               --lineIndex;
               continue;
@@ -7066,7 +7062,7 @@ namespace RetroDevStudio.Parser
                 HadFatalError = true;
                 return Lines;
               }
-              if ( !string.IsNullOrEmpty( ASMFileInfo.LabelDumpFile ) )
+              if ( !string.IsNullOrEmpty( m_ASMFileInfo.LabelDumpFile ) )
               {
                 AddWarning( lineIndex,
                             RetroDevStudio.Types.ErrorCode.W0006_LABEL_DUMP_FILE_ALREADY_GIVEN,
@@ -7076,16 +7072,16 @@ namespace RetroDevStudio.Parser
               }
 
               string fileName = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Content.Length - 2 );
-              ASMFileInfo.LabelDumpFile = fileName;
+              m_ASMFileInfo.LabelDumpFile = fileName;
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MACRO )
             {
               string macroName = "";
               string outerFilename = "";
               int localLineIndex = 0;
-              ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
+              m_ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-              if ( POMacro( labelInFront, m_CurrentZoneName, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+              if ( POMacro( labelInFront, m_CurrentZoneName, m_ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
@@ -7101,7 +7097,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.END )
             {
-              var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+              var result = HandleScopeEnd( m_ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 --lineIndex;
@@ -7310,10 +7306,10 @@ namespace RetroDevStudio.Parser
                 {
                   number = numberSymbol.ToInt32();
                   size = sizeSymbol.ToInt32();
-                  if ( ASMFileInfo.Banks.Count > 0 )
+                  if ( m_ASMFileInfo.Banks.Count > 0 )
                   {
                     // fill from previous bank
-                    Types.ASM.BankInfo lastBank = ASMFileInfo.Banks[ASMFileInfo.Banks.Count - 1];
+                    Types.ASM.BankInfo lastBank = m_ASMFileInfo.Banks[m_ASMFileInfo.Banks.Count - 1];
 
                     // size was not given, reuse from previous bank
                     if ( paramsSize.Count == 0 )
@@ -7348,7 +7344,7 @@ namespace RetroDevStudio.Parser
                   bank.StartLine = lineIndex;
                   bank.SizeInBytesStart = sizeInBytes + info.NumBytes;
 
-                  foreach ( Types.ASM.BankInfo oldBank in ASMFileInfo.Banks )
+                  foreach ( Types.ASM.BankInfo oldBank in m_ASMFileInfo.Banks )
                   {
                     if ( oldBank.Number == number )
                     {
@@ -7360,7 +7356,7 @@ namespace RetroDevStudio.Parser
                     }
                   }
 
-                  ASMFileInfo.Banks.Add( bank );
+                  m_ASMFileInfo.Banks.Add( bank );
                 }
               }
             }
@@ -7930,9 +7926,9 @@ namespace RetroDevStudio.Parser
 
             string outerFilename = "";
             int localLineIndex = 0;
-            ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
+            m_ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-            if ( POMacro( labelInFront, m_CurrentZoneName, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+            if ( POMacro( labelInFront, m_CurrentZoneName, m_ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
@@ -7949,7 +7945,7 @@ namespace RetroDevStudio.Parser
             {
               continue;
             }
-            var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+            var result = HandleScopeEnd( m_ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               --lineIndex;
@@ -8011,7 +8007,7 @@ namespace RetroDevStudio.Parser
 
             localIndex = 0;
             filename = "";
-            if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+            if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
               DumpSourceInfos( OrigLines, Lines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
@@ -8134,7 +8130,7 @@ namespace RetroDevStudio.Parser
 
             localIndex = 0;
             filename = "";
-            if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+            if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
               DumpSourceInfos( OrigLines, Lines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
@@ -8170,7 +8166,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
           {
-            ASMFileInfo.FixedBreakpoints.Add( m_CompileCurrentAddress );
+            m_ASMFileInfo.FixedBreakpoints.Add( m_CompileCurrentAddress );
             Debug.Log( $"TODO - Breakpoint needs to be stored {m_CompileCurrentAddress}" );
           }
           else if ( ( macroInfo.Type != MacroInfo.PseudoOpType.IGNORE )
@@ -8284,7 +8280,7 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-      foreach ( Types.MacroFunctionInfo macroFunction in ASMFileInfo.Macros.Values )
+      foreach ( Types.MacroFunctionInfo macroFunction in m_ASMFileInfo.Macros.Values )
       {
         if ( macroFunction.LineEnd == -1 )
         {
@@ -8292,14 +8288,14 @@ namespace RetroDevStudio.Parser
         }
       }
 
-      if ( ASMFileInfo.Banks.Count > 0 )
+      if ( m_ASMFileInfo.Banks.Count > 0 )
       {
         // fill from previous bank
         Types.ASM.LineInfo info = new Types.ASM.LineInfo();
 
         info.LineIndex = Lines.Length;
         info.HideInPreprocessedOutput = hideInPreprocessedOutput;
-        Types.ASM.BankInfo lastBank = ASMFileInfo.Banks[ASMFileInfo.Banks.Count - 1];
+        Types.ASM.BankInfo lastBank = m_ASMFileInfo.Banks[m_ASMFileInfo.Banks.Count - 1];
 
         if ( sizeInBytes <= lastBank.SizeInBytesStart + lastBank.SizeInBytes )
         {
@@ -9072,7 +9068,7 @@ namespace RetroDevStudio.Parser
       // adjust source infos to make lookup work correctly
       string outerFilename = "";
       int outerLineIndex = -1;
-      ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
+      m_ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
 
       for ( int i = 0; i < numRepeats - 1; ++i )
       {
@@ -9262,7 +9258,7 @@ namespace RetroDevStudio.Parser
 
         string  dummyFile = "";
         int     localFileIndex = -1;
-        ASMFileInfo.FindTrueLineSource( lineIndex, out dummyFile, out localFileIndex );
+        m_ASMFileInfo.FindTrueLineSource( lineIndex, out dummyFile, out localFileIndex );
         sourceInfo.LocalStartLine   = localFileIndex;
 
         SourceInfoLog( "-include at global index " + lineIndex );
@@ -9283,7 +9279,7 @@ namespace RetroDevStudio.Parser
 
         Lines = result;
 
-        ASMFileInfo.LineInfo.Remove( lineIndex );
+        m_ASMFileInfo.LineInfo.Remove( lineIndex );
 
         --lineIndex;
         return ParseLineResult.CALL_CONTINUE;
@@ -10147,7 +10143,7 @@ namespace RetroDevStudio.Parser
       virtualBP.LineIndex = LineIndex;
       virtualBP.Expression  = Expression;
       virtualBP.DocumentFilename = DocumentFilename;
-      ASMFileInfo.VirtualBreakpoints.Add( LineIndex, virtualBP );
+      m_ASMFileInfo.VirtualBreakpoints.Add( LineIndex, virtualBP );
     }
 
 
@@ -10156,7 +10152,7 @@ namespace RetroDevStudio.Parser
     {
       List<Types.ASM.SourceInfo>    infosToAdd = new List<RetroDevStudio.Types.ASM.SourceInfo>();
 
-      foreach ( Types.ASM.SourceInfo oldInfo in ASMFileInfo.SourceInfo.Values )
+      foreach ( Types.ASM.SourceInfo oldInfo in m_ASMFileInfo.SourceInfo.Values )
       {
         if ( ( oldInfo.LineCount != -1 )
         &&   ( oldInfo.GlobalStartLine >= SourceIndex )
@@ -10209,7 +10205,7 @@ namespace RetroDevStudio.Parser
       }*/
 
       // move zones
-      foreach ( var zoneList in ASMFileInfo.Zones.Values )
+      foreach ( var zoneList in m_ASMFileInfo.Zones.Values )
       {
         foreach ( var zoneInfo in zoneList )
         {
@@ -10228,7 +10224,7 @@ namespace RetroDevStudio.Parser
       }
 
       List<Types.ASM.SourceInfo> movedInfos = new List<Types.ASM.SourceInfo>();
-      foreach ( Types.ASM.SourceInfo oldInfo in ASMFileInfo.SourceInfo.Values )
+      foreach ( Types.ASM.SourceInfo oldInfo in m_ASMFileInfo.SourceInfo.Values )
       {
         if ( !AllowShifting )
         {
@@ -10324,11 +10320,11 @@ namespace RetroDevStudio.Parser
       }
       foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
       {
-        foreach ( int key in ASMFileInfo.SourceInfo.Keys )
+        foreach ( int key in m_ASMFileInfo.SourceInfo.Keys )
         {
-          if ( ASMFileInfo.SourceInfo[key] == oldInfo )
+          if ( m_ASMFileInfo.SourceInfo[key] == oldInfo )
           {
-            ASMFileInfo.SourceInfo.Remove( key );
+            m_ASMFileInfo.SourceInfo.Remove( key );
             break;
           }
         }
@@ -10336,25 +10332,25 @@ namespace RetroDevStudio.Parser
 
       bool    dumpInfos = false;
 
-      if ( ASMFileInfo.SourceInfo.ContainsKey( sourceInfo.GlobalStartLine ) )
+      if ( m_ASMFileInfo.SourceInfo.ContainsKey( sourceInfo.GlobalStartLine ) )
       {
         Debug.Log( "Source Info already exists at global line index " + sourceInfo.GlobalStartLine );
         return;
       }
 
-      ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
+      m_ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
       foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
       {
         if ( oldInfo.LineCount != 0 )
         {
-          if ( ASMFileInfo.SourceInfo.ContainsKey( oldInfo.GlobalStartLine ) )
+          if ( m_ASMFileInfo.SourceInfo.ContainsKey( oldInfo.GlobalStartLine ) )
           {
             Debug.Log( "Trying to insert duplicate source info at global line index " + oldInfo.GlobalStartLine );
             dumpInfos = true;
           }
           else
           {
-            ASMFileInfo.SourceInfo.Add( oldInfo.GlobalStartLine, oldInfo );
+            m_ASMFileInfo.SourceInfo.Add( oldInfo.GlobalStartLine, oldInfo );
           }
         }
       }
@@ -10363,7 +10359,7 @@ namespace RetroDevStudio.Parser
       {
         // dump source infos
         int fullLines = 0;
-        foreach ( var pair in ASMFileInfo.SourceInfo )
+        foreach ( var pair in m_ASMFileInfo.SourceInfo )
         {
           var info = pair.Value;
           //Debug.Log( "Key " + pair.Key + ": Source from " + info.GlobalStartLine + ", " + info.LineCount + " lines, from file " + info.Filename + " at offset " + info.LocalStartLine );
@@ -10384,72 +10380,12 @@ namespace RetroDevStudio.Parser
       ExternallyIncludedFiles.Clear();
 
       AssembledOutput = null;
-      Messages.Clear();
+      m_ASMFileInfo.Messages.Clear();
       m_ErrorMessages = 0;
       m_WarningMessages = 0;
-      ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
+      m_ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
       m_LoadedFiles.Clear();
       m_Filename = "";
-    }
-
-
-
-    public override GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo()
-    {
-      GR.Collections.MultiMap<string, SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
-
-      foreach ( var zoneList in ASMFileInfo.Zones )
-      {
-        foreach ( var zone in zoneList.Value )
-        {
-          DocumentAndLineFromGlobalLine( zone.LineIndex, out zone.DocumentFilename, out zone.LocalLineIndex, out zone.SourceInfo );
-          knownTokens.Add( zoneList.Key, zone );
-        }
-      }
-      foreach ( KeyValuePair<string, SymbolInfo> label in ASMFileInfo.Labels )
-      {
-        if ( !label.Value.FromDependency )
-        {
-          DocumentAndLineFromGlobalLine( label.Value.LineIndex, out label.Value.DocumentFilename, out label.Value.LocalLineIndex, out label.Value.SourceInfo );
-        }
-        knownTokens.Add( label.Key, label.Value );
-      }
-      foreach ( KeyValuePair<string, Types.ASM.UnparsedEvalInfo> label in ASMFileInfo.UnparsedLabels )
-      {
-        var token = new SymbolInfo();
-
-        token.Name = label.Key;
-        DocumentAndLineFromGlobalLine( label.Value.LineIndex, out token.DocumentFilename, out token.LineIndex, out token.SourceInfo );
-        knownTokens.Add( token.Name, token );
-      }
-      foreach ( var tempLabel in ASMFileInfo.TempLabelInfo )
-      {
-        DocumentAndLineFromGlobalLine( tempLabel.LineIndex, out tempLabel.Symbol.DocumentFilename, out tempLabel.Symbol.LocalLineIndex, out tempLabel.Symbol.SourceInfo );
-        knownTokens.Add( tempLabel.Name, tempLabel.Symbol );
-      }
-      return knownTokens;
-    }
-
-
-
-    public override List<Types.AutoCompleteItemInfo> KnownTokens()
-    {
-      List<Types.AutoCompleteItemInfo> knownTokens = new List<Types.AutoCompleteItemInfo>();
-
-      //knownTokens.AddRange( m_Zones.Keys );
-      foreach ( var label in ASMFileInfo.Labels )
-      {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Symbol = label.Value, Token = label.Key, ToolTipTitle = label.Key } );
-      }
-      foreach ( var unparsedLabel in ASMFileInfo.UnparsedLabels )
-      {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Token = unparsedLabel.Key, ToolTipTitle = unparsedLabel.Key } );
-      }
-      foreach ( var opcode in m_Processor.Opcodes )
-      {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Token = opcode.Key, ToolTipTitle = opcode.Key } );
-      }
-      return knownTokens;
     }
 
 
@@ -10493,7 +10429,7 @@ namespace RetroDevStudio.Parser
 
     private void DumpTempLabelInfos()
     {
-      foreach ( var entry in ASMFileInfo.TempLabelInfo )
+      foreach ( var entry in m_ASMFileInfo.TempLabelInfo )
       {
         if ( entry.LineCount == -1 )
         {
@@ -10510,7 +10446,7 @@ namespace RetroDevStudio.Parser
 
     private void DumpTempLabelInfos( string Name )
     {
-      foreach ( var entry in ASMFileInfo.TempLabelInfo )
+      foreach ( var entry in m_ASMFileInfo.TempLabelInfo )
       {
         if ( entry.Name == Name )
         {
@@ -10539,7 +10475,7 @@ namespace RetroDevStudio.Parser
 
 
       Debug.Log( "=======> Step " + dumpCount );
-      foreach ( KeyValuePair<int,Types.ASM.SourceInfo> pair in ASMFileInfo.SourceInfo )
+      foreach ( KeyValuePair<int,Types.ASM.SourceInfo> pair in m_ASMFileInfo.SourceInfo )
       {
         Debug.Log( "From line " + ( pair.Value.GlobalStartLine + 1 ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 + 1 ) + ", local " + ( pair.Value.LocalStartLine + 1 ) + ", " + pair.Value.LineCount + " lines from " + pair.Value.Filename );
         for ( int i = 0; i < pair.Value.LineCount; ++i )
@@ -10565,8 +10501,10 @@ namespace RetroDevStudio.Parser
 
 
 
-    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
+    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo  )
     {
+      ASMFileInfo = null;
+
       m_CompileConfig = Config;
       // clone list - don't modify original!
       m_CompileConfig.LibraryFiles = new List<string>( Config.LibraryFiles );
@@ -10589,10 +10527,10 @@ namespace RetroDevStudio.Parser
       sourceInfo.LineCount        = lines.Length;
       sourceInfo.FullPath         = m_Filename;
 
-      ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
-      ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
-      ASMFileInfo.AssemblerSettings = m_AssemblerSettings;
-      ASMFileInfo.LabelDumpFile     = Config.LabelDumpFile;
+      m_ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
+      m_ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
+      m_ASMFileInfo.AssemblerSettings = m_AssemblerSettings;
+      m_ASMFileInfo.LabelDumpFile     = Config.LabelDumpFile;
 
       m_WarningsToIgnore.Clear();
 
@@ -10604,8 +10542,8 @@ namespace RetroDevStudio.Parser
       if ( !hadFatalError )
       {
         DetermineUnparsedLabels();
-        ASMFileInfo.PopulateAddressToLine();
-        foreach ( SymbolInfo token in ASMFileInfo.Labels.Values )
+        m_ASMFileInfo.PopulateAddressToLine();
+        foreach ( SymbolInfo token in m_ASMFileInfo.Labels.Values )
         {
           if ( ( token.References.Count == 0 )
           &&   ( token.Name != "*" )
@@ -10624,14 +10562,15 @@ namespace RetroDevStudio.Parser
       // create preprocessed file even with errors (might be the reason to get the preprocessed file in the first place)
       if ( Config.CreatePreProcesseFile )
       {
-        CreatePreProcessedFile( Config.InputFile, lines, ASMFileInfo );
+        CreatePreProcessedFile( Config.InputFile, lines, m_ASMFileInfo );
       }
       if ( Config.CreateRelocationFile )
       {
-        CreateRelocationFile( Config.InputFile, lines, ASMFileInfo );
+        CreateRelocationFile( Config.InputFile, lines, m_ASMFileInfo );
       }
 
-      if ( ( ASMFileInfo.UnparsedLabels.Count > 0 )
+      ASMFileInfo = m_ASMFileInfo;
+      if ( ( m_ASMFileInfo.UnparsedLabels.Count > 0 )
       ||   ( m_ErrorMessages > 0 ) )
       {
         return false;
@@ -10735,7 +10674,7 @@ namespace RetroDevStudio.Parser
         ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Preprocessed file written to " + pathLog );
         message.AlternativeFile = pathLog;
         message.AlternativeLineIndex = 0;
-        Messages.Add( -1, message );
+        m_ASMFileInfo.Messages.Add( -1, message );
         ++m_Messages;
       }
       catch ( Exception ex )
@@ -10791,7 +10730,7 @@ namespace RetroDevStudio.Parser
         ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Relocation file written to " + pathLog );
         message.AlternativeFile = pathLog;
         message.AlternativeLineIndex = 0;
-        Messages.Add( -1, message );
+        m_ASMFileInfo.Messages.Add( -1, message );
         ++m_Messages;
       }
       catch ( Exception ex )
@@ -10880,7 +10819,7 @@ namespace RetroDevStudio.Parser
       int     fileStartAddress = -1;
       int     dataOffset = 0;
 
-      foreach ( Types.ASM.LineInfo line in ASMFileInfo.LineInfo.Values )
+      foreach ( Types.ASM.LineInfo line in m_ASMFileInfo.LineInfo.Values )
       {
         if ( line.AddressStart != -1 )
         {
@@ -10895,7 +10834,7 @@ namespace RetroDevStudio.Parser
 
       string  lastAddressSourceDesc = "";
       int     currentMemBlockActualSize = 0;
-      foreach ( Types.ASM.LineInfo line in ASMFileInfo.LineInfo.Values )
+      foreach ( Types.ASM.LineInfo line in m_ASMFileInfo.LineInfo.Values )
       {
         if ( currentAddress == -1 )
         {
@@ -10920,7 +10859,7 @@ namespace RetroDevStudio.Parser
             var asmSegment = new Types.ASMSegment();
             asmSegment.StartAddress = line.AddressStart;
             asmSegment.GlobalLineIndex = line.LineIndex;
-            ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+            m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
 
             builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
             currentResultBlock = asmSegment.Data;
@@ -10938,7 +10877,7 @@ namespace RetroDevStudio.Parser
             var asmSegment = new Types.ASMSegment();
             asmSegment.StartAddress = line.AddressStart;
             asmSegment.GlobalLineIndex = line.LineIndex;
-            ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+            m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
             builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
             currentResultBlock = asmSegment.Data;
           }
@@ -10987,7 +10926,7 @@ namespace RetroDevStudio.Parser
                 var asmSegment = new Types.ASMSegment();
                 asmSegment.StartAddress     = line.AddressStart;
                 asmSegment.GlobalLineIndex  = line.LineIndex;
-                ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+                m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
                 builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
                 currentResultBlock = asmSegment.Data;
               }
@@ -10997,7 +10936,7 @@ namespace RetroDevStudio.Parser
                 var asmSegment = new Types.ASMSegment();
                 asmSegment.StartAddress     = line.AddressStart;
                 asmSegment.GlobalLineIndex  = line.LineIndex;
-                ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+                m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
                 builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
                 currentResultBlock = asmSegment.Data;
 
@@ -11155,9 +11094,9 @@ namespace RetroDevStudio.Parser
         // ( segment.second.StartAddress + segment.second.Length >= 65535 ) )
         {
           int     globalLineIndex = -1;
-          if ( ASMFileInfo.AddressToLine.ContainsKey( mapSegment.StartAddress ) )
+          if ( m_ASMFileInfo.AddressToLine.ContainsKey( mapSegment.StartAddress ) )
           {
-            globalLineIndex = ASMFileInfo.AddressToLine[mapSegment.StartAddress];
+            globalLineIndex = m_ASMFileInfo.AddressToLine[mapSegment.StartAddress];
           }
           AddError( globalLineIndex,
                     Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS,
@@ -11415,11 +11354,11 @@ namespace RetroDevStudio.Parser
                 // make sure we don't accidentally identify a pseudo op as operator
                 bool    foundPseudoOp = false;
 
-                if ( ( !string.IsNullOrEmpty( ASMFileInfo.AssemblerSettings.POPrefix ) )
-                && ( op[0] == ASMFileInfo.AssemblerSettings.POPrefix[0] ) )
+                if ( ( !string.IsNullOrEmpty( m_ASMFileInfo.AssemblerSettings.POPrefix ) )
+                && ( op[0] == m_ASMFileInfo.AssemblerSettings.POPrefix[0] ) )
                 {
                   // is there a pseudo op following?
-                  foreach ( var pseudoOp in ASMFileInfo.AssemblerSettings.PseudoOps )
+                  foreach ( var pseudoOp in m_ASMFileInfo.AssemblerSettings.PseudoOps )
                   {
                     if ( ( Source.Length - charPos + 1 >= pseudoOp.Key.Length )
                     && ( string.Compare( Source, charPos - 1, pseudoOp.Key, 0, pseudoOp.Key.Length, true ) == 0 ) )
@@ -13133,23 +13072,23 @@ namespace RetroDevStudio.Parser
 
     public override bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine )
     {
-      return ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
+      return m_ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
     }
 
 
 
     public bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine, out SourceInfo SrcInfo )
     {
-      return ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine, out SrcInfo );
+      return m_ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine, out SrcInfo );
     }
 
 
 
     public void DumpLabels()
     {
-      foreach ( string label in ASMFileInfo.Labels.Keys )
+      foreach ( string label in m_ASMFileInfo.Labels.Keys )
       {
-        Debug.Log( "Label " + label + " = " + ASMFileInfo.Labels[label].AddressOrValue.ToString( "x" ) );
+        Debug.Log( "Label " + label + " = " + m_ASMFileInfo.Labels[label].AddressOrValue.ToString( "x" ) );
       }
     }
 
@@ -13157,7 +13096,7 @@ namespace RetroDevStudio.Parser
 
     public void DumpMacros()
     {
-      foreach ( var macro in ASMFileInfo.Macros )
+      foreach ( var macro in m_ASMFileInfo.Macros )
       {
         Debug.Log( $"Macro {macro.Key.first} in line {macro.Key.second}" );
       }

@@ -206,7 +206,7 @@ namespace RetroDevStudio.Documents
       config.Assembler  = Types.AssemblerType.C64_STUDIO;
 
       string    temp = "* = $0801\n" + textBinaryData.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
+      if ( ( asmParser.Parse( temp, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
         SetHexData( asmParser.AssembledOutput.Assembly );

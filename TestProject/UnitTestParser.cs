@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Parser;
 
 namespace TestProject
 {
@@ -16,11 +17,11 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      bool parseResult = parser.Parse( Source, null, config, null );
+      bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages )
+        foreach ( var msg in asmFileInfo.Messages )
         {
           Debug.Log( msg.Key + ":" + msg.Value.AlternativeFile + ":" + msg.Value.AlternativeLineIndex + ":" + msg.Value.Message );
         }
@@ -30,7 +31,7 @@ namespace TestProject
       Assert.IsTrue( parseResult );
       Assert.IsTrue( parser.Assemble( config ) );
 
-      Info = parser.ASMFileInfo;
+      Info = asmFileInfo;
 
       return parser.AssembledOutput.Assembly;
     }
@@ -60,9 +61,9 @@ namespace TestProject
 
       RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config, null ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
-      foreach ( var entry in parser.Messages.Values )
+      foreach ( var entry in asmFileInfo.Messages.Values )
       {
         code = entry.Code;
         break;
@@ -877,9 +878,9 @@ namespace TestProject
 
       RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config, null ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
-      foreach ( var entry in parser.Messages.Values )
+      foreach ( var entry in asmFileInfo.Messages.Values )
       {
         code = entry.Code;
         break;
@@ -935,9 +936,9 @@ namespace TestProject
 
       RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config, null ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
-      foreach ( var entry in parser.Messages.Values )
+      foreach ( var entry in asmFileInfo.Messages.Values )
       {
         code = entry.Code;
         break;
@@ -965,9 +966,9 @@ namespace TestProject
 
       RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config, null ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
-      foreach ( var entry in parser.Messages.Values )
+      foreach ( var entry in asmFileInfo.Messages.Values )
       {
         code = entry.Code;
         break;
@@ -1350,9 +1351,9 @@ namespace TestProject
 
       RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config, null ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
-      foreach ( var entry in parser.Messages.Values )
+      foreach ( var entry in asmFileInfo.Messages.Values )
       {
         code = entry.Code;
         break;
@@ -2172,7 +2173,7 @@ ContrivedTest:
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 

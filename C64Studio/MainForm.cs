@@ -2042,7 +2042,7 @@ namespace RetroDevStudio
         }
 
         var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length, parser.m_TextCodeMappingRaw );
-        parser.ASMFileInfo = Document.ASMFileInfo;
+        parser.InjectASMFileInfo( Document.ASMFileInfo );
         if ( !parser.EvaluateTokens( 0, tokens, parser.m_TextCodeMappingRaw, out SymbolInfo macroValueSymbol ) )
         {
           Error = true;
@@ -2438,9 +2438,9 @@ namespace RetroDevStudio
 
 
 
-    public void AddOutputMessages( Parser.ParserBase Parser )
+    public void AddOutputMessages( Types.ASM.FileInfo ASMFileInfo )
     {
-      foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in Parser.Messages )
+      foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in ASMFileInfo.Messages )
       {
         Parser.ParserBase.ParseMessage message = msg.Value;
         if ( message.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.MESSAGE )
@@ -3305,12 +3305,25 @@ namespace RetroDevStudio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false );
+            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false, out Types.ASM.FileInfo asmFileInfo );
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
             if ( element.Document != null )
             {
-              ( (SourceASMEx)element.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
+              ( (SourceASMEx)element.Document ).SetLineInfos( asmFileInfo );
+            }
+            var uniqueDocs = new GR.Collections.Set<string>();
+            foreach ( var doc in asmFileInfo.SourceInfo )
+            {
+              uniqueDocs.Add( doc.Value.FullPath );
+            }
+            foreach ( var doc in uniqueDocs )
+            {
+              var actualDoc = newProject.GetElementByFilename( doc );
+              if ( actualDoc != null )
+              {
+                actualDoc.DocumentInfo.SetASMFileInfo( asmFileInfo );
+              }
             }
 
             AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
@@ -3325,7 +3338,7 @@ namespace RetroDevStudio
                 {
                   if ( element2.Document != null )
                   {
-                    ( (SourceASMEx)element2.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
+                    ( (SourceASMEx)element2.Document ).SetLineInfos( asmFileInfo );
                   }
                   updatedFiles.Add( element2.DocumentInfo.FullPath );
                 }
@@ -3339,7 +3352,7 @@ namespace RetroDevStudio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false );
+            ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false, out Types.ASM.FileInfo asmFileInfo );
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
             AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
@@ -4439,11 +4452,11 @@ namespace RetroDevStudio
         return;
       }
       EnsureFileIsParsed();
-      foreach ( int address in StudioCore.Compiling.ParserASM.ASMFileInfo.AddressToLine.Keys )
+      foreach ( int address in doc.ASMFileInfo.AddressToLine.Keys )
       {
-        Debug.Log( "Line " + StudioCore.Compiling.ParserASM.ASMFileInfo.AddressToLine[address].ToString() + ": " + address + ", " + StudioCore.Compiling.ParserASM.ASMFileInfo.LineInfo[StudioCore.Compiling.ParserASM.ASMFileInfo.AddressToLine[address]].Line );
+        Debug.Log( "Line " + doc.ASMFileInfo.AddressToLine[address].ToString() + ": " + address + ", " + doc.ASMFileInfo.LineInfo[doc.ASMFileInfo.AddressToLine[address]].Line );
       }
-      foreach ( Types.ASM.SourceInfo sourceInfo in StudioCore.Compiling.ParserASM.ASMFileInfo.SourceInfo.Values )
+      foreach ( Types.ASM.SourceInfo sourceInfo in doc.ASMFileInfo.SourceInfo.Values )
       {
         Debug.Log( "Source " + sourceInfo.Filename + " in " + sourceInfo.FilenameParent + " from line " + sourceInfo.GlobalStartLine + " to " + ( sourceInfo.GlobalStartLine + sourceInfo.LineCount - 1 ) + " orig at " + sourceInfo.LocalStartLine + " to " + ( sourceInfo.LocalStartLine + sourceInfo.LineCount - 1 ) );
       }
@@ -4663,7 +4676,7 @@ namespace RetroDevStudio
         {
           m_Help.NavigateTo( "aay64h64/AAY64/B" + Keyword.ToUpper() + ".HTM" );
         }
-        else if ( StudioCore.Compiling.ParserASM.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) )
+        else if ( StudioCore.Compiling.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) )
         {
           m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
         }
@@ -5426,9 +5439,10 @@ namespace RetroDevStudio
 
 
 
-    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile, bool CreateRelocationFile )
+    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile, bool CreateRelocationFile, out RetroDevStudio.Types.ASM.FileInfo ASMFileInfo )
     {
-      //Debug.Log( "Parsefile called for " + Document.DocumentFilename );
+      ASMFileInfo = null;
+
       RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.Assembler = Types.AssemblerType.AUTO;
       if ( Document.Element != null )
@@ -5460,7 +5474,7 @@ namespace RetroDevStudio
         }
       }
 
-      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines );
+      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, out ASMFileInfo );
 
       if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
@@ -5477,7 +5491,7 @@ namespace RetroDevStudio
       {
         RetroDevStudio.Parser.ASMFileParser asmParser = (RetroDevStudio.Parser.ASMFileParser)Parser;
 
-        Document.ASMFileInfo = asmParser.ASMFileInfo;
+        Document.ASMFileInfo = ASMFileInfo;
       }
 
       DependencyBuildState buildState = null;
@@ -5515,8 +5529,8 @@ namespace RetroDevStudio
 
       if ( Document.Element != null )
       {
-        Document.Element.CompileTarget = Parser.CompileTarget;
-        Document.Element.CompileTargetFile = Parser.CompileTargetFile;
+        Document.Element.CompileTarget      = Parser.CompileTarget;
+        Document.Element.CompileTargetFile  = Parser.CompileTargetFile;
       }
       if ( buildState != null )
       {
@@ -5542,14 +5556,14 @@ namespace RetroDevStudio
           asm.DoNotFollowZoneSelectors = true;
         }
 
+        var knownTokens     = ASMFileInfo.KnownTokens();
+        var knownTokenInfos = ASMFileInfo.KnownTokenInfo();
+
         if ( ( Document.Project != null )
         &&   ( !string.IsNullOrEmpty( Document.Project.Settings.MainDocument ) )
         &&   ( System.IO.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
         {
           // give all other files the same keywords!
-          var knownTokens = StudioCore.Compiling.ParserASM.KnownTokens();
-          var knownTokenInfos = StudioCore.Compiling.ParserASM.KnownTokenInfo();
-
           // from source info
           GR.Collections.Set<string> filesToUpdate = new GR.Collections.Set<string>();
           foreach ( Types.ASM.SourceInfo sourceInfo in Document.ASMFileInfo.SourceInfo.Values )
@@ -5576,8 +5590,8 @@ namespace RetroDevStudio
             ProjectElement elementToUpdate = Document.Project.GetElementByFilename(fileToUpdate);
             if ( elementToUpdate != null )
             {
-              elementToUpdate.DocumentInfo.KnownKeywords = knownTokens;
-              elementToUpdate.DocumentInfo.KnownTokens = knownTokenInfos;
+              elementToUpdate.DocumentInfo.KnownKeywords  = knownTokens;
+              elementToUpdate.DocumentInfo.KnownTokens    = knownTokenInfos;
               if ( elementToUpdate.Document != null )
               {
                 AddTask( new Tasks.TaskUpdateKeywords( elementToUpdate.Document ) );
@@ -5591,13 +5605,13 @@ namespace RetroDevStudio
         {
           if ( Document != null )
           {
-            Document.KnownKeywords = StudioCore.Compiling.ParserASM.KnownTokens();
-            Document.KnownTokens = StudioCore.Compiling.ParserASM.KnownTokenInfo();
+            Document.KnownKeywords  = knownTokens;
+            Document.KnownTokens    = knownTokenInfos;
           }
 
           if ( !IsDocPartOfMainDocument( Document ) )
           {
-            m_DebugBreakpoints.SetTokens( StudioCore.Compiling.ParserASM.KnownTokenInfo() );
+            m_DebugBreakpoints.SetTokens( knownTokenInfos );
           }
         }
 
@@ -5608,13 +5622,13 @@ namespace RetroDevStudio
       }
       else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
       {
-        Document.KnownKeywords = StudioCore.Compiling.ParserBasic.KnownTokens();
-        Document.KnownTokens = StudioCore.Compiling.ParserBasic.KnownTokenInfo();
+        Document.KnownKeywords  = ASMFileInfo.KnownTokens();
+        Document.KnownTokens    = ASMFileInfo.KnownTokenInfo();
       }
 
       if ( OutputMessages )
       {
-        AddTask( new Tasks.TaskUpdateCompileResult( Parser, Document ) );
+        AddTask( new Tasks.TaskUpdateCompileResult( ASMFileInfo, Document ) );
       }
       if ( ( result )
       &&   ( Document.BaseDoc != null ) )
@@ -5629,8 +5643,8 @@ namespace RetroDevStudio
     public void EnsureFileIsParsed( DocumentInfo Document )
     {
       if ( ( ( Document.BaseDoc != null )
-      && ( !Document.BaseDoc.FileParsed ) )
-      || ( StudioCore.Compiling.NeedsRebuild( Document ) ) )
+      &&     ( !Document.BaseDoc.FileParsed ) )
+      ||   ( StudioCore.Compiling.NeedsRebuild( Document ) ) )
       {
         if ( StudioCore.Compiling.NeedsRebuild( Document ) )
         {
@@ -5651,7 +5665,7 @@ namespace RetroDevStudio
         {
           config = Document.Project.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
         }
-        ParseFile( StudioCore.DetermineParser( Document ), Document, config, null, false, false, false );
+        ParseFile( StudioCore.DetermineParser( Document ), Document, config, null, false, false, false, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       }
     }
 
@@ -6331,7 +6345,7 @@ namespace RetroDevStudio
         else*/
         {
           //Debug.Log( "Running threaded task" );
-          System.Threading.Thread workerThread = new System.Threading.Thread(new System.Threading.ThreadStart(m_CurrentTask.RunTask));
+          System.Threading.Thread workerThread = new System.Threading.Thread( new System.Threading.ThreadStart( m_CurrentTask.RunTask ) );
 
           StudioCore.SetStatus( m_CurrentTask.Description, true, 0 );
 

@@ -1215,11 +1215,11 @@ namespace RetroDevStudio.Documents
       while ( LineIndex >= 0 )
       {
         int     globalLineIndex = -1;
-        if ( Core.Compiling.ParserASM.ASMFileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
+        if ( Core.Compiling.ASMFileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
         {
-          if ( Core.Compiling.ParserASM.ASMFileInfo.LineInfo.ContainsKey( globalLineIndex ) )
+          if ( Core.Compiling.ASMFileInfo.LineInfo.ContainsKey( globalLineIndex ) )
           {
-            Types.ASM.LineInfo lineInfo = Core.Compiling.ParserASM.ASMFileInfo.LineInfo[globalLineIndex];
+            Types.ASM.LineInfo lineInfo = Core.Compiling.ASMFileInfo.LineInfo[globalLineIndex];
 
             zone = lineInfo.Zone;
             break;
@@ -1998,11 +1998,10 @@ namespace RetroDevStudio.Documents
         basicSource = Parser.BasicFileParser.MakeUpperCase( basicSource, !Core.Settings.BASICUseNonC64Font );
       }
 
-      if ( !parser.Parse( basicSource, null, compilerConfig, null ) )
+      if ( !parser.Parse( basicSource, null, compilerConfig, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
       {
-        Core.MainForm.m_CompileResult.UpdateFromMessages( parser, DocumentInfo.Project );
-        Core.Navigating.UpdateFromMessages( parser.Messages,
-                                            null,
+        Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, DocumentInfo.Project );
+        Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );
         Core.MainForm.m_CompileResult.Show();
         return false;
@@ -2018,11 +2017,10 @@ namespace RetroDevStudio.Documents
 
       if ( parser.Errors > 0 )
       {
-        Core.Navigating.UpdateFromMessages( parser.Messages,
-                                            null,
+        Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );
 
-        Core.MainForm.AddTask( new Tasks.TaskUpdateCompileResult( parser, DocumentInfo ) );
+        Core.MainForm.AddTask( new Tasks.TaskUpdateCompileResult( asmFileInfo, DocumentInfo ) );
         return false;
       }
 

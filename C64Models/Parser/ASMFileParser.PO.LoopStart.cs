@@ -87,7 +87,7 @@ namespace RetroDevStudio.Parser
               // adjust source infos to make lookup work correctly
               string outerFilename = "";
               int outerLineIndex = -1;
-              ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
+              m_ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
 
               //ASMFileInfo.LineInfo.Remove( lineIndex );
 

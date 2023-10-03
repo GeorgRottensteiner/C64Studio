@@ -56,7 +56,7 @@ namespace RetroDevStudio.Parser
           return ParseLineResult.RETURN_NULL;
       }
 
-      ASMFileInfo.Processor = m_Processor;
+      m_ASMFileInfo.Processor = m_Processor;
       return ParseLineResult.OK;
     }
 

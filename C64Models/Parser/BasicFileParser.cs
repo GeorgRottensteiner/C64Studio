@@ -151,9 +151,6 @@ namespace RetroDevStudio.Parser
     public GR.Collections.Map<byte, ActionToken>       ActionTokenByByteValue = new GR.Collections.Map<byte,ActionToken>();
     public ParserSettings       Settings = new ParserSettings();
 
-    public Types.ASM.FileInfo         ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
-    public Types.ASM.FileInfo         InitialFileInfo = null;
-
     public GR.Collections.Map<Token.Type, string>     AllowedTokenStartChars = new GR.Collections.Map<Token.Type, string>();
     public GR.Collections.Map<Token.Type, string>     AllowedTokenChars = new GR.Collections.Map<Token.Type, string>();
     public GR.Collections.Map<Token.Type, string>     AllowedTokenEndChars = new GR.Collections.Map<Token.Type, string>();
@@ -417,7 +414,6 @@ namespace RetroDevStudio.Parser
       m_CompileTargetFile = null;
 
       AssembledOutput = null;
-      Messages.Clear();
       m_LineInfos.Clear();
       m_ErrorMessages = 0;
       m_WarningMessages = 0;
@@ -438,8 +434,11 @@ namespace RetroDevStudio.Parser
 
 
 
-    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
+    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo )
     {
+      m_ASMFileInfo = new Types.ASM.FileInfo();
+      ASMFileInfo   = m_ASMFileInfo;
+
       m_CompileConfig = Config;
       m_LineInfos.Clear();
 
@@ -457,7 +456,7 @@ namespace RetroDevStudio.Parser
 
       CleanLines( lines );
 
-      ASMFileInfo.Clear();//.Labels.Clear();
+      m_ASMFileInfo.Clear();
       IncludePreviousSymbols();
 
       var sourceInfo = new Types.ASM.SourceInfo();
@@ -466,8 +465,8 @@ namespace RetroDevStudio.Parser
       sourceInfo.LineCount        = lines.Length;
       sourceInfo.FullPath         = m_CompileConfig.InputFile;
 
-      ASMFileInfo.SourceInfo.Clear();
-      ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
+      m_ASMFileInfo.SourceInfo.Clear();
+      m_ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
 
       ProcessLines( lines, LabelMode );
 
@@ -500,18 +499,20 @@ namespace RetroDevStudio.Parser
               // do not pass on internal local labels
               continue;
             }
-            var symbol = new SymbolInfo();
-            symbol.AddressOrValue = entry.Value.AddressOrValue;
-            symbol.DocumentFilename = entry.Value.DocumentFilename;
-            symbol.LocalLineIndex = entry.Value.LocalLineIndex;
-            symbol.Name = entry.Value.Name;
-            symbol.Type = entry.Value.Type;
-            symbol.Zone = entry.Value.Zone;
-            symbol.FromDependency = true;
-            symbol.Info = entry.Value.Info;
+            var symbol            = new SymbolInfo()
+            {
+              AddressOrValue    = entry.Value.AddressOrValue,
+              DocumentFilename  = entry.Value.DocumentFilename, 
+              LocalLineIndex    = entry.Value.LocalLineIndex,
+              Name              = entry.Value.Name,
+              Type              = entry.Value.Type,
+              Zone              = entry.Value.Zone,
+              FromDependency    = true, 
+              Info              = entry.Value.Info
+            };
             symbol.References.Add( entry.Value.LineIndex );
 
-            ASMFileInfo.Labels.Add( entry.Key, symbol );
+            m_ASMFileInfo.Labels.Add( entry.Key, symbol );
           }
         }
       }
@@ -1714,9 +1715,9 @@ namespace RetroDevStudio.Parser
               else
               {
                 // do we have a label?
-                if ( ASMFileInfo.Labels.ContainsKey( macro ) )
+                if ( m_ASMFileInfo.Labels.ContainsKey( macro ) )
                 {
-                  string value = ASMFileInfo.Labels[macro].AddressOrValue.ToString();
+                  string value = m_ASMFileInfo.Labels[macro].AddressOrValue.ToString();
 
                   for ( int j = 0; j < macroCount; ++j )
                   {
@@ -2215,7 +2216,7 @@ namespace RetroDevStudio.Parser
             string  varName = variable.Content;
             string  origName = varName;
 
-            ASMFileInfo.OriginalVariables.Add( varName );
+            m_ASMFileInfo.OriginalVariables.Add( varName );
 
             // verify next token
             bool varNameCutShort = false;
@@ -2276,12 +2277,12 @@ namespace RetroDevStudio.Parser
             &&   ( varNameCutShort )
             &&   ( !insideDataStatement ) )
             {
-              if ( !ASMFileInfo.MappedVariables.ContainsKey( varName ) )
+              if ( !m_ASMFileInfo.MappedVariables.ContainsKey( varName ) )
               {
-                ASMFileInfo.MappedVariables.Add( varName, new List<SymbolInfo>() );
+                m_ASMFileInfo.MappedVariables.Add( varName, new List<SymbolInfo>() );
               }
               // name is cut short
-              if ( !ASMFileInfo.Labels.ContainsKey( origName ) )
+              if ( !m_ASMFileInfo.Labels.ContainsKey( origName ) )
               {
                 var symbolInfo              = new SymbolInfo();
                 symbolInfo.AddressOrValue   = 0;
@@ -2295,27 +2296,27 @@ namespace RetroDevStudio.Parser
                 symbolInfo.String           = origName;
                 //ASMFileInfo.Labels.Add( origName, symbolInfo );
 
-                if ( ASMFileInfo.MappedVariables[varName].Any() )
+                if ( m_ASMFileInfo.MappedVariables[varName].Any() )
                 {
                   //Debug.Log( $"Duplicate shortcut variable name ({varName})" );
                   var warning = AddWarning( lineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {origName} truncated to two characters is ambigious ({varName})",
                     variable.StartIndex, variable.Content.Length );
 
-                  foreach ( var duplicate in ASMFileInfo.MappedVariables[varName] )
+                  foreach ( var duplicate in m_ASMFileInfo.MappedVariables[varName] )
                   {
                     DocumentAndLineFromGlobalLine( duplicate.LineIndex, out string curDoc, out int curLine );
                     warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
                   }
                 }
-                if ( !ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
+                if ( !m_ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
                 {
-                  ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
+                  m_ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
                 }
               }
               //ASMFileInfo.Labels[varName].References.Add( lineIndex );
             }
 
-            if ( !ASMFileInfo.Labels.ContainsKey( varName ) )
+            if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
             {
               var symbolInfo              = new SymbolInfo();
               symbolInfo.AddressOrValue   = 0;
@@ -2327,9 +2328,9 @@ namespace RetroDevStudio.Parser
               symbolInfo.LocalLineIndex   = lineIndex;
               symbolInfo.Type             = symbolType;
 
-              ASMFileInfo.Labels.Add( varName, symbolInfo );
+              m_ASMFileInfo.Labels.Add( varName, symbolInfo );
             }
-            var existingSymbolInfo = ASMFileInfo.Labels[varName];
+            var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
             existingSymbolInfo.References.Add( lineIndex );
             
           }
@@ -2349,39 +2350,6 @@ namespace RetroDevStudio.Parser
 
 
 
-    public override GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo()
-    {
-      GR.Collections.MultiMap<string, SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
-
-      foreach ( KeyValuePair<string, SymbolInfo> label in ASMFileInfo.Labels )
-      {
-        knownTokens.Add( label.Key, label.Value );
-      }
-      foreach ( KeyValuePair<string, Types.ASM.UnparsedEvalInfo> label in ASMFileInfo.UnparsedLabels )
-      {
-        var token = new SymbolInfo();
-
-        token.Name = label.Key;
-        knownTokens.Add( token.Name, token );
-      }
-      return knownTokens;
-    }
-
-
-
-    public override List<Types.AutoCompleteItemInfo> KnownTokens()
-    {
-      List<Types.AutoCompleteItemInfo> knownTokens = new List<Types.AutoCompleteItemInfo>();
-
-      foreach ( var label in ASMFileInfo.Labels )
-      {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Symbol = label.Value, Token = label.Key, ToolTipTitle = label.Key } );
-      }
-      return knownTokens;
-    }
-    
-    
-    
     public override bool Assemble( CompileConfig Config )
     {
       GR.Memory.ByteBuffer result = new GR.Memory.ByteBuffer();
@@ -2605,7 +2573,7 @@ namespace RetroDevStudio.Parser
 
     public override bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine )
     {
-      return ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
+      return m_ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
     }
 
 
@@ -3349,7 +3317,7 @@ namespace RetroDevStudio.Parser
           ++firstLineIndex;
         }
         // weed out dynamic DATAs generated by BINDATA, SPRITEDATA, ... directives
-        if ( ASMFileInfo.FindTrueLineSource( lineInfoOrig.Key, out string filename, out int localLineIndex, out Types.ASM.SourceInfo srcInfo ) )
+        if ( m_ASMFileInfo.FindTrueLineSource( lineInfoOrig.Key, out string filename, out int localLineIndex, out Types.ASM.SourceInfo srcInfo ) )
         {
           if ( srcInfo.Source == Types.ASM.SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
           {
@@ -3909,7 +3877,7 @@ namespace RetroDevStudio.Parser
       }*/
 
       // move zones
-      foreach ( var zoneList in ASMFileInfo.Zones.Values )
+      foreach ( var zoneList in m_ASMFileInfo.Zones.Values )
       {
         foreach ( var zoneInfo in zoneList )
         {
@@ -3928,7 +3896,7 @@ namespace RetroDevStudio.Parser
       }
 
       List<Types.ASM.SourceInfo> movedInfos = new List<Types.ASM.SourceInfo>();
-      foreach ( Types.ASM.SourceInfo oldInfo in ASMFileInfo.SourceInfo.Values )
+      foreach ( Types.ASM.SourceInfo oldInfo in m_ASMFileInfo.SourceInfo.Values )
       {
         if ( !AllowShifting )
         {
@@ -4024,11 +3992,11 @@ namespace RetroDevStudio.Parser
       }
       foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
       {
-        foreach ( int key in ASMFileInfo.SourceInfo.Keys )
+        foreach ( int key in m_ASMFileInfo.SourceInfo.Keys )
         {
-          if ( ASMFileInfo.SourceInfo[key] == oldInfo )
+          if ( m_ASMFileInfo.SourceInfo[key] == oldInfo )
           {
-            ASMFileInfo.SourceInfo.Remove( key );
+            m_ASMFileInfo.SourceInfo.Remove( key );
             break;
           }
         }
@@ -4036,25 +4004,25 @@ namespace RetroDevStudio.Parser
 
       bool    dumpInfos = false;
 
-      if ( ASMFileInfo.SourceInfo.ContainsKey( sourceInfo.GlobalStartLine ) )
+      if ( m_ASMFileInfo.SourceInfo.ContainsKey( sourceInfo.GlobalStartLine ) )
       {
         Debug.Log( "Source Info already exists at global line index " + sourceInfo.GlobalStartLine );
         return;
       }
 
-      ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
+      m_ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
       foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
       {
         if ( oldInfo.LineCount != 0 )
         {
-          if ( ASMFileInfo.SourceInfo.ContainsKey( oldInfo.GlobalStartLine ) )
+          if ( m_ASMFileInfo.SourceInfo.ContainsKey( oldInfo.GlobalStartLine ) )
           {
             Debug.Log( "Trying to insert duplicate source info at global line index " + oldInfo.GlobalStartLine );
             dumpInfos = true;
           }
           else
           {
-            ASMFileInfo.SourceInfo.Add( oldInfo.GlobalStartLine, oldInfo );
+            m_ASMFileInfo.SourceInfo.Add( oldInfo.GlobalStartLine, oldInfo );
           }
         }
       }
@@ -4063,7 +4031,7 @@ namespace RetroDevStudio.Parser
       {
         // dump source infos
         int fullLines = 0;
-        foreach ( var pair in ASMFileInfo.SourceInfo )
+        foreach ( var pair in m_ASMFileInfo.SourceInfo )
         {
           var info = pair.Value;
           //Debug.Log( "Key " + pair.Key + ": Source from " + info.GlobalStartLine + ", " + info.LineCount + " lines, from file " + info.Filename + " at offset " + info.LocalStartLine );

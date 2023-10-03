@@ -551,7 +551,7 @@ namespace RetroDevStudio
         temp = "  ORG $0801\n" + Text.Replace( ".BYTE", " .BYTE" );
       }
 
-      if ( ( asmParser.Parse( temp, null, config, null ) )
+      if ( ( asmParser.Parse( temp, null, config, null, out Types.ASM.FileInfo asmFileInfo ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
         return asmParser.AssembledOutput.Assembly;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Services.Description;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Types;
 
 namespace TestProject
 {
@@ -55,7 +57,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -63,15 +65,15 @@ namespace TestProject
 
       string    file;
       int       lineIndex;
-      parser.ASMFileInfo.DocumentAndLineFromAddress( 0x2000, out file, out lineIndex );
+      asmFileInfo.DocumentAndLineFromAddress( 0x2000, out file, out lineIndex );
 
-      Assert.IsTrue( parser.ASMFileInfo.Labels.ContainsKey( "CALLEDLED_MACRO" ) );
-      Assert.IsTrue( parser.ASMFileInfo.Labels.ContainsKey( "CALLEDLED_MACRO_END" ) );
+      Assert.IsTrue( asmFileInfo.Labels.ContainsKey( "CALLEDLED_MACRO" ) );
+      Assert.IsTrue( asmFileInfo.Labels.ContainsKey( "CALLEDLED_MACRO_END" ) );
 
       Assert.AreEqual( 28, lineIndex );
 
-      var label = parser.ASMFileInfo.Labels["CALLEDLED_MACRO"];
-      var label2 = parser.ASMFileInfo.Labels["CALLEDLED_MACRO_END"];
+      var label = asmFileInfo.Labels["CALLEDLED_MACRO"];
+      var label2 = asmFileInfo.Labels["CALLEDLED_MACRO_END"];
 
       Assert.AreEqual( 30, label.LocalLineIndex );
       Assert.AreEqual( 32, label2.LocalLineIndex );
@@ -79,11 +81,11 @@ namespace TestProject
       Assert.AreEqual( 0x2005, label.AddressOrValue );
       Assert.AreEqual( 0x201e, label2.AddressOrValue );
 
-      var tokenInfo = parser.ASMFileInfo.TokenInfoFromName( "CALLEDLED_MACRO", "", "" );
+      var tokenInfo = asmFileInfo.TokenInfoFromName( "CALLEDLED_MACRO", "", "" );
       Assert.IsNotNull( tokenInfo );
       Assert.AreEqual( 30, tokenInfo.LocalLineIndex );
 
-      tokenInfo = parser.ASMFileInfo.TokenInfoFromName( "CALLEDLED_MACRO_END", "", "" );
+      tokenInfo = asmFileInfo.TokenInfoFromName( "CALLEDLED_MACRO_END", "", "" );
       Assert.IsNotNull( tokenInfo );
       Assert.AreEqual( 32, tokenInfo.LocalLineIndex );
     }
@@ -184,7 +186,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       Assert.AreEqual( 7, (int)parser.AssembledOutput.Assembly.Length );
@@ -207,7 +209,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       Assert.AreEqual( 7, (int)parser.AssembledOutput.Assembly.Length );
@@ -445,9 +447,9 @@ namespace TestProject
       config.OutputFile = "test.crt";
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
-      Assert.AreEqual( 0, parser.Messages.Count );  // no warnings regarding overlapped segments
+      Assert.AreEqual( 0, asmFileInfo.Messages.Count );  // no warnings regarding overlapped segments
 
       var assembly = parser.AssembledOutput;
 
@@ -508,9 +510,9 @@ namespace TestProject
       config.OutputFile = "test.crt";
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
       Assert.IsTrue( parser.Assemble( config ) );
-      Assert.AreEqual( 0, parser.Messages.Count );  // no warnings regarding overlapped segments
+      Assert.AreEqual( 0, asmFileInfo.Messages.Count );  // no warnings regarding overlapped segments
 
       var assembly = parser.AssembledOutput;
 

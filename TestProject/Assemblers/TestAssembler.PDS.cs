@@ -15,11 +15,11 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.PDS;
 
-      bool parseResult = parser.Parse( Source, null, config, null );
+      bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in parser.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages.Values )
         {
           Debug.Log( msg.Message );
         }

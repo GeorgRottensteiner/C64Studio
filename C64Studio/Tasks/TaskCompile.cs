@@ -486,6 +486,7 @@ namespace RetroDevStudio.Tasks
           return false;
         }
 
+        Core.Compiling.ASMFileInfo      = dummyInfo;
         Core.Compiling.m_LastBuildInfo[baseDoc.FullPath] = buildInfo;
         Core.Compiling.m_BuildIsCurrent = true;
       }
@@ -759,7 +760,7 @@ namespace RetroDevStudio.Tasks
         string    additionalPredefines = null;
         if ( parser is Parser.ASMFileParser )
         {
-          ( (Parser.ASMFileParser)parser ).InitialFileInfo = combinedFileInfo;
+          parser.InitialFileInfo = combinedFileInfo;
           if ( combinedFileInfo != null )
           {
             //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
@@ -769,7 +770,7 @@ namespace RetroDevStudio.Tasks
         else if ( parser is Parser.BasicFileParser )
         {
           // BASIC may receive symbols from assembly
-          ( (Parser.BasicFileParser)parser ).InitialFileInfo = combinedFileInfo;
+          parser.InitialFileInfo = combinedFileInfo;
           ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (Parser.BasicFileParser)parser ).Settings.BASICDialect );
           if ( Doc.BaseDoc != null )
           {
@@ -779,6 +780,8 @@ namespace RetroDevStudio.Tasks
         }
 
         parser.AssembledOutput = null;
+
+        RetroDevStudio.Types.ASM.FileInfo asmFileInfo = null;
 
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
@@ -808,7 +811,7 @@ namespace RetroDevStudio.Tasks
             ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
           }
 
-          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile, CreateRelocationFile ) )
+          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile, CreateRelocationFile, out asmFileInfo ) )
           ||   ( !parser.Assemble( new RetroDevStudio.Parser.CompileConfig()
                                         {
                                           TargetType = Core.DetermineTargetType( Doc, parser ),
@@ -820,16 +823,15 @@ namespace RetroDevStudio.Tasks
                                         } ) )
           ||   ( parser.Errors > 0 ) )
           {
-            Core.MainForm.AddOutputMessages( parser );
+            Core.MainForm.AddOutputMessages( asmFileInfo );
 
             Core.AddToOutput( "Build failed, " + parser.Warnings.ToString() + " warnings, " + parser.Errors.ToString() + " errors encountered" + System.Environment.NewLine );
             // always show messages if we fail!
             //if ( OutputMessages )
             {
-              Core.Navigating.UpdateFromMessages( parser.Messages,
-                                                        ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
-                                                        Doc.Project );
-              Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
+              Core.Navigating.UpdateFromMessages( asmFileInfo,
+                                                  Doc.Project );
+              Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
             Core.ShowDocument( Core.MainForm.m_CompileResult, false );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
@@ -843,7 +845,7 @@ namespace RetroDevStudio.Tasks
 
           FileInfo = Doc.ASMFileInfo;
 
-          Core.MainForm.AddOutputMessages( parser );
+          Core.MainForm.AddOutputMessages( asmFileInfo );
 
           var compileTarget = Core.DetermineTargetType( Doc, parser );
           string compileTargetFile = Core.DetermineTargetFilename( Doc, parser );
@@ -875,11 +877,8 @@ namespace RetroDevStudio.Tasks
             }
             if ( OutputMessages )
             {
-              Core.Navigating.UpdateFromMessages( parser.Messages,
-                                              ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
-                                              Doc.Project );
-
-              Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
+              Core.Navigating.UpdateFromMessages( asmFileInfo, Doc.Project );
+              Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
             Core.ShowDocument( Core.MainForm.m_CompileResult, false );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
@@ -899,11 +898,9 @@ namespace RetroDevStudio.Tasks
           {
             if ( OutputMessages )
             {
-              Core.Navigating.UpdateFromMessages( parser.Messages,
-                                              ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
-                                              Doc.Project );
+              Core.Navigating.UpdateFromMessages( asmFileInfo, Doc.Project );
 
-              Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
+              Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
             Core.ShowDocument( Core.MainForm.m_CompileResult, false );
           }
@@ -987,45 +984,23 @@ namespace RetroDevStudio.Tasks
         BuildInfo.TimeStampOfTargetFile = Core.Compiling.FileLastWriteTime( BuildInfo.TargetFile );
         Doc.HasBeenSuccessfullyBuilt = true;
 
-        Types.ASM.FileInfo   fileInfo = null;
-        List<AutoCompleteItemInfo> knownTokens = null;
-        MultiMap<string,SymbolInfo> knownTokenInfo = null;
-        if ( parser is Parser.ASMFileParser )
-        {
-          fileInfo = ( (Parser.ASMFileParser)parser ).ASMFileInfo;
-          // update symbols in main asm file
-          knownTokens = parser.KnownTokens();
-          knownTokenInfo = parser.KnownTokenInfo();
-        }
-        else if ( parser is Parser.BasicFileParser )
-        {
-          fileInfo = ( (Parser.BasicFileParser)parser ).ASMFileInfo;
-          // update symbols in main asm file
-          knownTokens = parser.KnownTokens();
-          knownTokenInfo = parser.KnownTokenInfo();
-          //Doc.SetASMFileInfo( fileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
-        }
-
-        if ( fileInfo != null )
+        if ( asmFileInfo != null )
         {
           // spread asm info to all participating files
           foreach ( var document in Core.MainForm.DocumentInfos )
           {
             if ( document != null )
             {
-              if ( fileInfo.ContainsFile( document.FullPath ) )
+              if ( asmFileInfo.ContainsFile( document.FullPath ) )
               {
-                document.SetASMFileInfo( fileInfo, knownTokens, knownTokenInfo );
+                document.SetASMFileInfo( asmFileInfo );
               }
             }
           }
-        }
 
-        if ( fileInfo != null )
-        {
-          if ( !string.IsNullOrEmpty( fileInfo.LabelDumpFile ) )
+          if ( !string.IsNullOrEmpty( asmFileInfo.LabelDumpFile ) )
           {
-            Core.MainForm.DumpLabelFile( fileInfo );
+            Core.MainForm.DumpLabelFile( asmFileInfo );
           }
         }
 

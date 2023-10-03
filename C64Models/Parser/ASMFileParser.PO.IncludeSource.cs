@@ -133,7 +133,7 @@ namespace RetroDevStudio.Parser
 
       Lines = result;
 
-      ASMFileInfo.LineInfo.Remove( lineIndex );
+      m_ASMFileInfo.LineInfo.Remove( lineIndex );
 
       --lineIndex;
       return ParseLineResult.CALL_CONTINUE;

@@ -47,11 +47,11 @@ namespace RetroDevStudio.Tasks
           sourceCode = ( (SourceASMEx)m_Document.BaseDoc ).editSource.Text;
         }
 
-        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null );
+        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, out Types.ASM.FileInfo asmFileInfo );
 
         if ( ( compileConfig.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
-        && ( m_Document.BaseDoc != null )
-        && ( m_Document.Element != null ) )
+        &&   ( m_Document.BaseDoc != null )
+        &&   ( m_Document.Element != null ) )
         {
           if ( m_Document.Element.AssemblerType != compileConfig.Assembler )
           {
@@ -62,12 +62,9 @@ namespace RetroDevStudio.Tasks
 
         if ( m_Document.BaseDoc != null )
         {
-          ( (SourceASMEx)m_Document.BaseDoc ).SetLineInfos( parser.ASMFileInfo );
+          ( (SourceASMEx)m_Document.BaseDoc ).SetLineInfos( asmFileInfo );
         }
-        var knownTokens = parser.KnownTokens();
-        GR.Collections.MultiMap<string, SymbolInfo> knownTokenInfos = parser.KnownTokenInfo();
-
-        m_Document.SetASMFileInfo( parser.ASMFileInfo, knownTokens, knownTokenInfos );
+        m_Document.SetASMFileInfo( asmFileInfo );
       }
       else if ( m_Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
       {
@@ -92,7 +89,7 @@ namespace RetroDevStudio.Tasks
           sourceCode = ( (SourceBasicEx)m_Document.BaseDoc ).editSource.Text;
         }
 
-        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null );
+        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, out Types.ASM.FileInfo asmFileInfo );
       }
 
       var task = new Tasks.TaskUpdateKeywords( m_Document.BaseDoc );

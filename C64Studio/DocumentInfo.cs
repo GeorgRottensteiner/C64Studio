@@ -145,7 +145,7 @@ namespace RetroDevStudio
 
 
 
-    public void SetASMFileInfo( Types.ASM.FileInfo FileInfo, List<Types.AutoCompleteItemInfo> KnownTokenList, GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo )
+    public void SetASMFileInfo( Types.ASM.FileInfo FileInfo )
     {
       SourceASMEx   asm = null;
 
@@ -161,13 +161,69 @@ namespace RetroDevStudio
         asm.SetLineInfos( FileInfo );
       }
 
-      ASMFileInfo = FileInfo;
-
-      KnownKeywords = KnownTokenList;
-      KnownTokens = KnownTokenInfo;
+      ASMFileInfo   = FileInfo;
+      KnownKeywords = FileInfo.KnownTokens();
+      KnownTokens   = FileInfo.KnownTokenInfo();
       if ( BaseDoc != null )
       {
         BaseDoc.Core.MainForm.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
+      }
+
+      var compilableDoc = CompilableDocument;
+      if ( compilableDoc != null )
+      {
+        compilableDoc.RemoveAllErrorMarkings();
+        foreach ( var msg in ASMFileInfo.Messages )
+        {
+          int lineIndex = msg.Key;
+          Parser.ParserBase.ParseMessage message = msg.Value;
+
+          var msgType = message.Type;
+
+          if ( compilableDoc.Core.Settings.IgnoredWarnings.ContainsValue( message.Code ) )
+          {
+            // ignore warning
+            continue;
+          }
+
+          string documentFile = "";
+          int documentLine = -1;
+
+          ASMFileInfo.FindTrueLineSource( lineIndex, out documentFile, out documentLine );
+          if ( message.AlternativeFile == null )
+          {
+            message.AlternativeFile = documentFile;
+            message.AlternativeLineIndex = documentLine;
+          }
+
+          if ( message.CharIndex != -1 )
+          {
+            CompilableDocument    compilableDocToUse = null;
+            if ( Project == null )
+            {
+              var sourceDocInfo = compilableDoc.Core.MainForm.DetermineDocumentByFileName( documentFile );
+              if ( sourceDocInfo != null )
+              {
+                compilableDocToUse = sourceDocInfo.CompilableDocument;
+              }
+            }
+            else
+            {
+              var  sourceElement = Project.GetElementByFilename( documentFile );
+              if ( sourceElement != null )
+              {
+                if ( sourceElement.Document != null )
+                {
+                  compilableDocToUse = sourceElement.DocumentInfo.CompilableDocument;
+                }
+              }
+            }
+            if ( compilableDocToUse == compilableDoc )
+            {
+              compilableDoc.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+            }
+          }
+        }
       }
 
       if ( Element != null )
@@ -181,7 +237,7 @@ namespace RetroDevStudio
             if ( ( element != null )
             &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
             {
-              element.DocumentInfo.SetASMFileInfo( FileInfo, KnownTokenList, KnownTokenInfo );
+              element.DocumentInfo.SetASMFileInfo( FileInfo );
             }
           }
         }

@@ -20,7 +20,7 @@ namespace RetroDevStudio
     // last active BASIC or ASM source doc
     public DocumentInfo       LastActiveCodeDocument = null;
 
-    public int    LastShownMessageIndex = -1;
+    public int                LastShownMessageIndex = -1;
 
     public List<GR.Generic.Tupel<DocumentInfo,int>>   SourcesVisited = new List<GR.Generic.Tupel<DocumentInfo, int>>();
     private int               CurrentVisitedSource = -1;
@@ -38,13 +38,12 @@ namespace RetroDevStudio
 
 
 
-    public void UpdateFromMessages( GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages,
-                                    Types.ASM.FileInfo ASMInfo,
+    public void UpdateFromMessages( Types.ASM.FileInfo ASMInfo,
                                     Project ParsedProject )
     {
-      CompileMessages = Messages;
-      Project = ParsedProject;
-      this.ASMInfo = ASMInfo;
+      CompileMessages = ASMInfo.Messages;
+      Project         = ParsedProject;
+      this.ASMInfo    = ASMInfo;
 
       LastShownMessageIndex = -1;
     }
@@ -165,11 +164,11 @@ namespace RetroDevStudio
         {
           bool setFromMainDoc = false;
           if ( ( !setFromMainDoc )
-          &&   ( Core.Compiling.ParserASM.ASMFileInfo.ContainsFile( newDoc.DocumentInfo.FullPath ) ) )
+          &&   ( Core.Compiling.ASMFileInfo.ContainsFile( newDoc.DocumentInfo.FullPath ) ) )
           {
             if ( !Core.Compiling.IsCurrentlyBuilding() )
             {
-              newDoc.DocumentInfo.SetASMFileInfo( Core.Compiling.ParserASM.ASMFileInfo, Core.Compiling.ParserASM.KnownTokens(), Core.Compiling.ParserASM.KnownTokenInfo() );
+              newDoc.DocumentInfo.SetASMFileInfo( Core.Compiling.ASMFileInfo );
             }
           }
           //Debug.Log( "m_Outline.RefreshFromDocument after showdoc" );

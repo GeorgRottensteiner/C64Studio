@@ -784,7 +784,7 @@ namespace RetroDevStudio
             {
               if ( !Core.Compiling.IsCurrentlyBuilding() )
               {
-                Element.DocumentInfo.SetASMFileInfo( element.DocumentInfo.ASMFileInfo, element.DocumentInfo.KnownKeywords, element.DocumentInfo.KnownTokens );
+                Element.DocumentInfo.SetASMFileInfo( element.DocumentInfo.ASMFileInfo );
 
                 var sourceASM = (SourceASMEx)Element.Document;
                 foreach ( var bps in Core.Debugging.BreakPoints.Values )
@@ -803,11 +803,11 @@ namespace RetroDevStudio
           }
         }
         if ( ( !setFromMainDoc )
-        &&   ( Core.Compiling.ParserASM.ASMFileInfo.ContainsFile( Element.DocumentInfo.FullPath ) ) )
+        &&   ( Core.Compiling.ASMFileInfo.ContainsFile( Element.DocumentInfo.FullPath ) ) )
         {
           if ( !Core.Compiling.IsCurrentlyBuilding() )
           {
-            Element.DocumentInfo.SetASMFileInfo( Core.Compiling.ParserASM.ASMFileInfo, Core.Compiling.ParserASM.KnownTokens(), Core.Compiling.ParserASM.KnownTokenInfo() );
+            Element.DocumentInfo.SetASMFileInfo( Core.Compiling.ASMFileInfo );
           }
         }
         Core.MainForm.m_Outline.RefreshFromDocument( Element.DocumentInfo.BaseDoc );

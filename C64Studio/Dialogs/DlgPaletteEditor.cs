@@ -670,7 +670,7 @@ namespace RetroDevStudio.Dialogs
       config.Assembler = Types.AssemblerType.C64_STUDIO;
 
       string    temp = "* = $0801\n" + editDataImport.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
+      if ( ( asmParser.Parse( temp, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
         ImportFromData( asmParser.AssembledOutput.Assembly, checkImportSwizzle.Checked, checkImportColorsSorted.Checked );

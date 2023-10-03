@@ -28,7 +28,7 @@ namespace RetroDevStudio.Parser
 
       int localIndex = 0;
       string filename = "";
-      if ( !ASMFileInfo.FindTrueLineSource( LineIndex, out filename, out localIndex ) )
+      if ( !m_ASMFileInfo.FindTrueLineSource( LineIndex, out filename, out localIndex ) )
       {
         AddError( LineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
         return false;
@@ -81,7 +81,7 @@ namespace RetroDevStudio.Parser
 
       _Lines = result;
 
-      ASMFileInfo.LineInfo.Remove( LineIndex );
+      m_ASMFileInfo.LineInfo.Remove( LineIndex );
 
       //--LineIndex;
 

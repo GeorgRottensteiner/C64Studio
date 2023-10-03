@@ -20,7 +20,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_16K_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -45,7 +45,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_16K_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -70,7 +70,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_8K_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -95,7 +95,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_8K_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -120,7 +120,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -145,7 +145,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -170,7 +170,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -195,7 +195,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -220,7 +220,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -245,7 +245,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -270,7 +270,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_GMOD2_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -295,7 +295,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_GMOD2_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -320,7 +320,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -345,7 +345,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -370,7 +370,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN_32K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -395,7 +395,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_32K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -420,7 +420,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN_64K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -445,7 +445,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_64K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -470,7 +470,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN_128K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -495,7 +495,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_128K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -520,7 +520,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN_256K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -545,7 +545,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_256K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -570,7 +570,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN_512K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -595,7 +595,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_512K;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -620,7 +620,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN_1M;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -645,7 +645,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_1M;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -670,7 +670,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_RGCD_BIN;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -695,7 +695,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_RGCD_CRT;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 

@@ -41,12 +41,12 @@ namespace C64Ass
         config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       }
 
-      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines );
+      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines, out FileInfo asmFileInfo );
       if ( !result )
       {
         System.Console.WriteLine( "Parsing the file failed:" );
 
-        DisplayOutput( parser, WarningsToIgnore, showNoWarnings );
+        DisplayOutput( asmFileInfo, WarningsToIgnore, showNoWarnings );
         return 1;
       }
 
@@ -66,10 +66,10 @@ namespace C64Ass
       if ( !parser.Assemble( config ) )
       {
         System.Console.WriteLine( "Assembling the output failed" );
-        DisplayOutput( parser, WarningsToIgnore, showNoWarnings );
+        DisplayOutput( asmFileInfo, WarningsToIgnore, showNoWarnings );
         return 1;
       }
-      DisplayOutput( parser, WarningsToIgnore, showNoWarnings );
+      DisplayOutput( asmFileInfo, WarningsToIgnore, showNoWarnings );
       if ( !GR.IO.File.WriteAllBytes( config.OutputFile, parser.AssembledOutput.Assembly ) )
       {
         System.Console.WriteLine( "Failed to write output file" );
@@ -77,7 +77,7 @@ namespace C64Ass
       }
       if ( !string.IsNullOrEmpty( config.LabelDumpFile ) )
       {
-        DumpLabelFile( parser.ASMFileInfo );
+        DumpLabelFile( asmFileInfo );
       }
 
       return 0;
@@ -116,9 +116,9 @@ namespace C64Ass
 
 
 
-    private static void DisplayOutput( ASMFileParser Parser, List<string> WarningsToIgnore, bool ShowNoWarnings )
+    private static void DisplayOutput( FileInfo ASMFileInfo, List<string> WarningsToIgnore, bool ShowNoWarnings )
     {
-      foreach ( var entry in Parser.Messages )
+      foreach ( var entry in ASMFileInfo.Messages )
       {
         string    file;
         int       lineIndex;
@@ -138,7 +138,7 @@ namespace C64Ass
           }
         }
 
-        if ( Parser.ASMFileInfo.FindTrueLineSource( entry.Key, out file, out lineIndex ) )
+        if ( ASMFileInfo.FindTrueLineSource( entry.Key, out file, out lineIndex ) )
         {
           System.Console.WriteLine( file + "(" + lineIndex + "): " + entry.Value.Code.ToString() + " - " + entry.Value.Message );
         }

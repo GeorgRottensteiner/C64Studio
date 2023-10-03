@@ -20,15 +20,15 @@ LABEL
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.DASM;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, asmFileInfo.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, asmFileInfo.Messages.Values[0].Code );
 
       Assert.AreEqual( "00200102030405060708", assembly.Assembly.ToString() );
     }
@@ -52,15 +52,15 @@ LABEL
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.DASM;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, asmFileInfo.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, asmFileInfo.Messages.Values[0].Code );
 
       Assert.AreEqual( "0020EE00D04C0020", assembly.Assembly.ToString() );
     }
