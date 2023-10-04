@@ -14,37 +14,13 @@ namespace RetroDevStudio.Parser
       lineSizeInBytes = 0;
 
 
-      List<List<Types.TokenInfo>>   paramTokens = new List<List<RetroDevStudio.Types.TokenInfo>>();
-      paramTokens.Add( new List<RetroDevStudio.Types.TokenInfo>() );
+      //List<List<Types.TokenInfo>>   paramTokens = new List<List<RetroDevStudio.Types.TokenInfo>>();
+      //paramTokens.Add( new List<RetroDevStudio.Types.TokenInfo>() );
 
-      int             paramPos = 0;
+      ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<Types.TokenInfo>> paramTokens );
 
-      for ( int i = 1; i < lineTokenInfos.Count; ++i )
-      {
-        if ( lineTokenInfos[i].Content == "," )
-        {
-          ++paramPos;
-          if ( paramPos >= 7 )
-          {
-            if ( Binary )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !media <Filename>[,<MediaParams>...]" );
-            }
-            else
-            {
-              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !mediasrc <Filename>,SrcLabelPrefix[,<MediaParams>...]" );
-            }
-            return false;
-          }
-          paramTokens.Add( new List<RetroDevStudio.Types.TokenInfo>() );
-        }
-        else
-        {
-          paramTokens[paramPos].Add( lineTokenInfos[i] );
-        }
-      }
-
-      if ( paramTokens.Count < 2 )
+      if ( ( paramTokens.Count >= 7 )
+      ||   ( paramTokens.Count < 2 ) )
       {
         if ( Binary )
         {

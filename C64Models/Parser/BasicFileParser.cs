@@ -2176,7 +2176,7 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, ErrorCode.E3008_BASIC_DOES_NOT_MATCH_LABEL_MODE, "The code contains line numbers, but label mode was expected" );
             return;
           }
-          DocumentAndLineFromGlobalLine( lineIndex, out _LastLineNumberDocument, out _LastLineNumberDocLineIndex );
+          m_ASMFileInfo.FindTrueLineSource( lineIndex, out _LastLineNumberDocument, out _LastLineNumberDocLineIndex );
         }
 
         if ( ( pureInfo.Tokens.Count == 1 )
@@ -2304,7 +2304,7 @@ namespace RetroDevStudio.Parser
 
                   foreach ( var duplicate in m_ASMFileInfo.MappedVariables[varName] )
                   {
-                    DocumentAndLineFromGlobalLine( duplicate.LineIndex, out string curDoc, out int curLine );
+                    m_ASMFileInfo.FindTrueLineSource( duplicate.LineIndex, out string curDoc, out int curLine );
                     warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
                   }
                 }
@@ -2567,13 +2567,6 @@ namespace RetroDevStudio.Parser
         }
       }
       return result;
-    }
-
-
-
-    public override bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine )
-    {
-      return m_ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
     }
 
 

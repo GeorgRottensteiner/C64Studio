@@ -428,10 +428,6 @@ namespace RetroDevStudio.Parser
 
 
 
-    public abstract bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine );
-
-
-
     public void ClearASMInfo()
     {
       m_ASMFileInfo.Clear();

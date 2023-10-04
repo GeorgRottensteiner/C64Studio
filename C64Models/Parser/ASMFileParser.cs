@@ -1733,29 +1733,15 @@ namespace RetroDevStudio.Parser
         numArgs = fInfo.NumArguments;
       }
 
-      // split arguments
-      List<List<Types.TokenInfo>>   arguments = new List<List<TokenInfo>>();
-      List<Types.TokenInfo>         currentArgument = null;
-
-      for ( int i = 0; i < Count; ++i )
+      // split arguments, eg. "extfunction( ..,.. )"
+      if ( Tokens.Count < 3 )
       {
-        var token = Tokens[StartIndex + i];
-
-        if ( ( token.Type == TokenInfo.TokenType.SEPARATOR )
-        &&   ( token.Content == "," ) )
-        {
-          currentArgument = null;
-        }
-        else
-        {
-          if ( currentArgument == null )
-          {
-            currentArgument = new List<TokenInfo>();
-            arguments.Add( currentArgument );
-          }
-          currentArgument.Add( token );
-        }
+        // this should not be possible
+        AddError( LineIndex, m_LastErrorInfo.Code, "Failed to evaluate " + TokensToExpression( Tokens, StartIndex, Count ) + " for extended function '" + FunctionName + "'" );
+        return null;
       }
+
+      var parseResult = ParseLineInParameters( Tokens, 2, Tokens.Count - 3, LineIndex, false, out List<List<Types.TokenInfo>> arguments );
 
       List<Types.TokenInfo>         functionArguments = new List<TokenInfo>();
       int                           argIndex = 0;
@@ -3045,7 +3031,7 @@ namespace RetroDevStudio.Parser
                 { 
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
-                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, out tokenInfos );
+                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, false, out tokenInfos );
                   if ( result != ParseLineResult.OK )
                   {
                     AddError( lineIndex,
@@ -3114,7 +3100,7 @@ namespace RetroDevStudio.Parser
                 {
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
-                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, out tokenInfos );
+                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, false, out tokenInfos );
                   if ( result != ParseLineResult.OK )
                   {
                     AddError( lineIndex,
@@ -4537,6 +4523,10 @@ namespace RetroDevStudio.Parser
       {
         return 4;
       }
+      if ( Number >= 100000 )
+      {
+        Debug.Log( "CalcNumDigits line number > 99999 encountered!" );
+      }
       return 5;
     }
 
@@ -5044,7 +5034,7 @@ namespace RetroDevStudio.Parser
             {
               AddError( info.LineIndex,
                         Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                        "Value out of bounds for word, needs to be >= −2147483648 and <= 4294967295. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
+                        "Value out of bounds for dword, needs to be >= −2147483648 and <= 4294967295. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
                         lineTokenInfos[firstTokenIndex].StartPos,
                         lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
             }
@@ -5089,8 +5079,8 @@ namespace RetroDevStudio.Parser
     private bool ValidWordValue( int WordValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-      &&   ( ( WordValue < -32768 )
-      ||     ( WordValue > 65535 ) ) )
+      &&   ( ( WordValue < short.MinValue )
+      ||     ( WordValue > ushort.MaxValue ) ) )
       {
         return false;
       }
@@ -5102,8 +5092,8 @@ namespace RetroDevStudio.Parser
     private bool ValidDWordValue( long DWordValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-      &&   ( ( DWordValue < -2147483648 )
-      ||     ( DWordValue > 4294967295 ) ) )
+      &&   ( ( DWordValue < int.MinValue )
+      ||     ( DWordValue > uint.MaxValue ) ) )
       {
         return false;
       }
@@ -5112,65 +5102,6 @@ namespace RetroDevStudio.Parser
     
     
     
-    private ParseLineResult PONoWarning( List<TokenInfo> TokenInfos, ref int lineIndex, ref string[] Lines )
-    {
-      var plResult = ParseLineInParameters( TokenInfos, 1, TokenInfos.Count - 1, lineIndex, out List<List<TokenInfo>> lineParams );
-      if ( plResult != ParseLineResult.OK )
-      {
-        return plResult;
-      }
-      foreach ( var warning in lineParams )
-      {
-        if ( ( warning.Count != 1 )
-        || ( warning[0].Type != TokenInfo.TokenType.LABEL_GLOBAL )
-        || ( warning[0].Length != 5 )
-        || ( ( warning[0].Content[0] != 'W' )
-        && ( warning[0].Content[0] != 'w' ) ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed warning number, expect warning value in line " + ( lineIndex + 1 ) );
-          return ParseLineResult.RETURN_NULL;
-        }
-        string warningText = warning[0].Content.ToUpper();
-
-        var warningEnums = System.Enum.GetNames( typeof( ErrorCode ) );
-        var warningValues = System.Enum.GetValues( typeof( ErrorCode ) );
-        int index = 0;
-        bool foundWarning = false;
-        foreach ( var warningEnum in warningEnums )
-        {
-          if ( warningEnum.Length < 5 )
-          {
-            ++index;
-            continue;
-          }
-          if ( warningText == warningEnum.Substring( 0, 5 ) )
-          {
-            var actualWarning = (ErrorCode)warningValues.GetValue( index );
-
-            if ( ( (int)actualWarning <= (int)ErrorCode.WARNING_START )
-            || ( (int)actualWarning >= (int)ErrorCode.WARNING_LAST_PLUS_ONE ) )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, $"Malformed warning number, {warning[0].Content} is not a known warning code in line " + ( lineIndex + 1 ) );
-              return ParseLineResult.RETURN_NULL;
-            }
-            m_WarningsToIgnore.Add( actualWarning );
-            foundWarning = true;
-            break;
-          }
-          ++index;
-        }
-        if ( !foundWarning )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, $"Malformed warning number, {warning[0].Content} is not a known warning code in line " + ( lineIndex + 1 ) );
-          return ParseLineResult.RETURN_NULL;
-        }
-
-      }
-      return ParseLineResult.CALL_CONTINUE;
-    }
-
-
-
     private string BuildFullPath( string ParentPath, string SubFilename )
     {
       if ( System.IO.Path.IsPathRooted( SubFilename ) )
@@ -5202,164 +5133,6 @@ namespace RetroDevStudio.Parser
 
       }
       return "";
-    }
-
-
-
-    private ParseLineResult POIncludeBinary( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, out int lineSizeInBytes )
-    {
-      lineSizeInBytes = 0;
-
-
-      int             paramPos = 0;
-      List<Types.TokenInfo> paramsFile = new List<Types.TokenInfo>();
-      List<Types.TokenInfo> paramsSize = new List<Types.TokenInfo>();
-      List<Types.TokenInfo> paramsSkip = new List<Types.TokenInfo>();
-
-      if ( !m_AssemblerSettings.IncludeHasOnlyFilename )
-      {
-        for ( int i = 1; i < lineTokenInfos.Count; ++i )
-        {
-          if ( lineTokenInfos[i].Content == "," )
-          {
-            ++paramPos;
-            if ( paramPos > 2 )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>,<Size>,<Skip>" );
-              return ParseLineResult.RETURN_NULL;
-            }
-          }
-          else
-          {
-            switch ( paramPos )
-            {
-              case 0:
-                paramsFile.Add( lineTokenInfos[i] );
-                break;
-              case 1:
-                paramsSize.Add( lineTokenInfos[i] );
-                break;
-              case 2:
-                paramsSkip.Add( lineTokenInfos[i] );
-                break;
-            }
-          }
-        }
-        if ( ( paramPos > 2 )
-        ||   ( paramsFile.Count != 1 ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>,<Size>,<Skip>" );
-          return ParseLineResult.RETURN_NULL;
-        }
-      }
-      else
-      {
-        for ( int i = 1; i < lineTokenInfos.Count; ++i )
-        {
-          paramsFile.Add( lineTokenInfos[i] );
-        }
-      }
-
-      string subFilename = "";
-
-      if ( m_AssemblerSettings.IncludeExpectsStringLiteral )
-      {
-        if ( ( !paramsFile[0].Content.StartsWith( "\"" ) )
-        ||   ( !paramsFile[0].Content.EndsWith( "\"" ) )
-        ||   ( paramsFile[0].Length <= 2 ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Expected proper file name between apostrophes" );
-          return ParseLineResult.RETURN_NULL;
-        }
-        subFilename = paramsFile[0].Content.Substring( 1, paramsFile[0].Length - 2 );
-      }
-      else
-      {
-        subFilename = TokensToExpression( paramsFile );
-      }
-
-      int     fileSize = -1;
-      int     fileSkip = -1;
-      bool    fileSizeValid = EvaluateTokens( lineIndex, paramsSize, info.LineCodeMapping, out SymbolInfo fileSizeSymbol );
-      bool    fileSkipValid = EvaluateTokens( lineIndex, paramsSkip, info.LineCodeMapping, out SymbolInfo fileSkipSymbol );
-
-      if ( ( paramsSize.Count > 0 )
-      &&   ( !fileSizeValid ) )
-      {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Cannot evaluate size argument" );
-        return ParseLineResult.RETURN_NULL;
-      }
-      if ( ( paramsSkip.Count > 0 )
-      &&   ( !fileSkipValid ) )
-      {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Cannot evaluate skip argument" );
-        return ParseLineResult.RETURN_NULL;
-      }
-      if ( fileSizeValid )
-      {
-        fileSize = fileSizeSymbol.ToInt32();
-      }
-      if ( fileSkipValid )
-      {
-        fileSkip = fileSkipSymbol.ToInt32();
-      }
-      // special case, allow 0 length as all bytes
-      if ( ( fileSizeValid )
-      &&   ( fileSize == 0 ) )
-      {
-        fileSizeValid = false;
-      }
-
-      GR.Memory.ByteBuffer    subFile = null;
-      //byte[] subFile = null;
-
-
-
-      try
-      {
-        subFile = GR.IO.File.ReadAllBytes( BuildFullPath( m_DocBasePath, subFilename ) );
-        if ( subFile == null )
-        {
-          AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + GR.Path.Append( m_DocBasePath, subFilename ) );
-          return ParseLineResult.RETURN_NULL;
-        }
-      }
-      catch ( System.IO.IOException )
-      {
-        AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + GR.Path.Append( m_DocBasePath, subFilename ) );
-        return ParseLineResult.RETURN_NULL;
-      }
-      ExternallyIncludedFiles.Add( GR.Path.Append( m_DocBasePath, subFilename ) );
-
-      //StringBuilder   builder = new StringBuilder( subFile.Length * 4 );
-      int             maxBytes = (int)subFile.Length;
-      if ( !fileSkipValid )
-      {
-        fileSkip = 0;
-      }
-      if ( !fileSizeValid )
-      {
-        fileSize = maxBytes - fileSkip;
-      }
-
-      if ( fileSkip + fileSize > maxBytes )
-      {
-        // more bytes requested than the file holds
-        // as ACME fills up with zeroes we follow along
-        uint  bytesToAdd = (uint)( fileSkip + fileSize - maxBytes );
-        subFile.Append( new GR.Memory.ByteBuffer( bytesToAdd ) );
-      }
-      if ( fileSkip > maxBytes )
-      {
-        AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Trying to skip more bytes than the file " + GR.Path.Append( m_DocBasePath, subFilename ) + " holds" );
-        return ParseLineResult.RETURN_NULL;
-      }
-
-      info.LineData = subFile.SubBuffer( fileSkip, fileSize );
-      info.NumBytes = (int)info.LineData.Length;
-      lineSizeInBytes = fileSize;
-
-      return ParseLineResult.OK;
     }
 
 
@@ -6283,7 +6056,7 @@ namespace RetroDevStudio.Parser
               {
                 // this has two seperate expressions
                 List<List<TokenInfo>> tokenInfos;
-                var result = ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, out tokenInfos );
+                var result = ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, false, out tokenInfos );
                 if ( result != ParseLineResult.OK )
                 {
                   AddError( lineIndex,
@@ -6715,14 +6488,14 @@ namespace RetroDevStudio.Parser
                 subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count == 2 )
-              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              && ( lineTokenInfos[1].Content == "<" )
-              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              &&        ( lineTokenInfos[1].Content == "<" )
+              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
@@ -6732,7 +6505,7 @@ namespace RetroDevStudio.Parser
               {
                 AddError( lineIndex,
                           Types.ErrorCode.E1302_MALFORMED_MACRO,
-                          "Expecting file name, either \"filename\" or \"library filename\"",
+                          "Expecting file name, either \"filename\" or <library filename>",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[0].Length );
                 HadFatalError = true;
@@ -6855,10 +6628,7 @@ namespace RetroDevStudio.Parser
                 continue;
               }
 
-              string    docFile;
-              int       docLine;
-
-              DocumentAndLineFromGlobalLine( lineIndex, out docFile, out docLine );
+              m_ASMFileInfo.FindTrueLineSource( lineIndex, out string docFile, out int docLine );
 
               for ( int i = 0; i < replacementLines.Length; ++i )
               {
@@ -6906,7 +6676,7 @@ namespace RetroDevStudio.Parser
                 lineTokenInfos.RemoveAt( 0 );
 
                 if ( ( lineTokenInfos.Count != 3 )
-                || ( lineTokenInfos[1].Content != "," ) )
+                ||   ( lineTokenInfos[1].Content != "," ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -9015,7 +8785,7 @@ namespace RetroDevStudio.Parser
 
       List<List<TokenInfo>>   lineParams;
 
-      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, out lineParams );
+      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams );
       if ( result != ParseLineResult.OK )
       {
         return result;
@@ -9092,7 +8862,7 @@ namespace RetroDevStudio.Parser
 
 
     // TODO - add expression parsing (parenthesis)
-    public ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
+    public ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, bool AllowEmptyParams, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
       int     bracketStackDepth = 0;
@@ -9120,7 +8890,8 @@ namespace RetroDevStudio.Parser
         if ( ( token.Type == TokenInfo.TokenType.SEPARATOR )
         &&   ( token.Content == "," ) )
         {
-          if ( Offset + i == paramStartIndex )
+          if ( ( !AllowEmptyParams )
+          &&   ( Offset + i == paramStartIndex ) )
           {
             // empty?
             AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", token.StartPos, token.Length );
@@ -9132,7 +8903,8 @@ namespace RetroDevStudio.Parser
           continue;
         }
       }
-      if ( paramStartIndex >= Offset + Count )
+      if ( ( !AllowEmptyParams )
+      &&   ( paramStartIndex >= Offset + Count ) )
       {
         // empty?
         AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", lineTokenInfos[lineTokenInfos.Count - 1].StartPos, 1 );
@@ -9398,46 +9170,6 @@ namespace RetroDevStudio.Parser
     private void PORealPC( Types.ASM.LineInfo info )
     {
       info.PseudoPCOffset = -2;
-    }
-
-
-
-    private ParseLineResult POPseudoPC( Types.ASM.LineInfo info, List<Types.ScopeInfo> Scopes, int lineIndex, List<Types.TokenInfo> lineTokenInfos, int TokenStartIndex, int TokenCount )
-    {
-      if ( TokenCount == 0 )
-      {
-        AddError( lineIndex,
-                  Types.ErrorCode.E1000_SYNTAX_ERROR,
-                  "Expression expected",
-                  lineTokenInfos[0].StartPos,
-                  lineTokenInfos[lineTokenInfos.Count - 1].EndPos );
-        return ParseLineResult.RETURN_NULL;
-      }
-      if ( lineTokenInfos[TokenStartIndex + TokenCount - 1].Content == "{" )
-      {
-        // a real PC with bracket
-        var scopeInfo = new Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
-        scopeInfo.StartIndex = lineIndex;
-        scopeInfo.Active = true;
-
-        Scopes.Add( scopeInfo );
-        OnScopeAdded( scopeInfo );
-        --TokenCount;
-      }
-
-      if ( !EvaluateTokens( lineIndex, lineTokenInfos, TokenStartIndex, TokenCount, info.LineCodeMapping, out SymbolInfo pseudoStepPos ) )
-      {
-        string expressionCheck = TokensToExpression( lineTokenInfos, TokenStartIndex, TokenCount );
-
-        AddError( lineIndex,
-                  Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                  "Could not evaluate expression " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
-                  lineTokenInfos[1].StartPos,
-                  lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-        return ParseLineResult.RETURN_NULL;
-      }
-      info.PseudoPCOffset = pseudoStepPos.ToInt32();
-      return ParseLineResult.OK;
     }
 
 
@@ -13052,7 +12784,6 @@ namespace RetroDevStudio.Parser
           else if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, TextCodeMapping, out result ) )
           {
             // treat as empty string (e.g. undefined symbol)
-            //return "";
             result = new SymbolInfo();
           }
           if ( result.IsInteger() )
@@ -13066,20 +12797,6 @@ namespace RetroDevStudio.Parser
         }
       }
       return sb.ToString();
-    }
-
-
-
-    public override bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine )
-    {
-      return m_ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
-    }
-
-
-
-    public bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine, out SourceInfo SrcInfo )
-    {
-      return m_ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine, out SrcInfo );
     }
 
 

@@ -16,7 +16,7 @@ namespace RetroDevStudio.Parser
 
       List<List<TokenInfo>>   lineParams;
 
-      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, out lineParams );
+      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams );
       if ( result != ParseLineResult.OK )
       {
         return result;
@@ -53,7 +53,7 @@ namespace RetroDevStudio.Parser
         {
           List<List<TokenInfo>>   listParams;
 
-          var parseListParams =  ParseLineInParameters( lineParams[1], 1, lineParams[1].Count - 2, lineIndex, out listParams );
+          var parseListParams =  ParseLineInParameters( lineParams[1], 1, lineParams[1].Count - 2, lineIndex, false, out listParams );
           if ( parseListParams != ParseLineResult.OK )
           {
             return parseListParams;
