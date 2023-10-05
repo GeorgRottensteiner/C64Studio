@@ -268,7 +268,7 @@ namespace RetroDevStudio.Documents
       }
 
       var tokens = m_Parser.PureTokenizeLine( leftText );
-      bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) );
+      bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) && t.StartIndex <= CursorPosInLine && CursorPosInLine < t.StartIndex + t.Content.Length );
       if ( isInsideComment )
       {
         if ( m_StringEnterMode )
