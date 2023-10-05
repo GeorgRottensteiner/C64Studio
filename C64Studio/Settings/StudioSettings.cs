@@ -1262,9 +1262,14 @@ namespace RetroDevStudio
                   if ( entry.Value.KeyboardKey == cmdKey )
                   {
                     BASICKeyMap.Keymap[key] = new KeymapEntry() { Key = key, KeyboardKey = cmdKey };
-                    //Debug.Log( "-inserted" );
                     break;
                   }
+                }
+                // add simulated keys manually
+                if ( ( cmdKey == KeyboardKey.KEY_SIM_CURSOR_LEFT )
+                ||   ( cmdKey == KeyboardKey.KEY_SIM_CURSOR_UP ) )
+                {
+                  BASICKeyMap.Keymap[key] = new KeymapEntry() { Key = key, KeyboardKey = cmdKey };
                 }
               }
             }

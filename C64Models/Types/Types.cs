@@ -619,6 +619,8 @@ namespace RetroDevStudio.Types
     KEY_F5,
     KEY_F7,
     KEY_FLASH,
+    KEY_SIM_CURSOR_LEFT,     // fake for C64
+    KEY_SIM_CURSOR_UP,       // fake for C64
 
     LAST_ENTRY
   }

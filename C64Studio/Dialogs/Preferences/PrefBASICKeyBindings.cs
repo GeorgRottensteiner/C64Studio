@@ -117,6 +117,16 @@ namespace RetroDevStudio.Dialogs.Preferences
           item.Text = charInfo.Normal.Desc;
           item.SubItems.Add( charInfo.Normal.PetSCIIValue.ToString( "X02" ) );
         }
+        else if ( realKey == Types.KeyboardKey.KEY_SIM_CURSOR_LEFT )
+        {
+          item.Text = "CURSOR LEFT (simulated)";
+          item.SubItems.Add( "??" );
+        }
+        else if ( realKey == Types.KeyboardKey.KEY_SIM_CURSOR_UP )
+        {
+          item.Text = "CURSOR UP (simulated)";
+          item.SubItems.Add( "??" );
+        }
         else
         {
           item.SubItems.Add( "??" );
@@ -211,7 +221,16 @@ namespace RetroDevStudio.Dialogs.Preferences
         {
           keyMapEntry.Key = m_PressedKeyMapKey;
           Core.Settings.BASICKeyMap.Keymap.Add( m_PressedKeyMapKey, keyMapEntry );
-        }        
+        }
+        else
+        {
+          keyMapEntry = new KeymapEntry()
+          {
+            KeyboardKey = realKey,
+            Key         = m_PressedKeyMapKey
+          };
+          Core.Settings.BASICKeyMap.Keymap.Add( m_PressedKeyMapKey, keyMapEntry );
+        }
 
         listBASICKeyMap.SelectedItems[0].SubItems[2].Text = m_PressedKeyMapKey.ToString();
         btnUnbindBASICKeyMapBinding.Enabled = true;
@@ -237,7 +256,10 @@ namespace RetroDevStudio.Dialogs.Preferences
           goto restart;
         }
       }
-      Core.Settings.BASICKeyMap.AllKeyInfos[realKey].Key = Keys.None;
+      if ( Core.Settings.BASICKeyMap.AllKeyInfos.ContainsKey( realKey ) )
+      {
+        Core.Settings.BASICKeyMap.AllKeyInfos[realKey].Key = Keys.None;
+      }
       listBASICKeyMap.SelectedItems[0].SubItems[2].Text = "--";
       btnUnbindBASICKeyMapBinding.Enabled = false;
     }

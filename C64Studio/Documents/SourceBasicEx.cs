@@ -268,7 +268,9 @@ namespace RetroDevStudio.Documents
       }
 
       var tokens = m_Parser.PureTokenizeLine( leftText );
-      bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) && t.StartIndex <= CursorPosInLine && CursorPosInLine < t.StartIndex + t.Content.Length );
+      bool isInsideComment = tokens.Tokens.Any( t => ( IsTokenComment( t ) )
+                                                  && ( t.StartIndex <= CursorPosInLine )
+                                                  && ( CursorPosInLine < t.StartIndex + t.Content.Length ) );
       if ( isInsideComment )
       {
         if ( m_StringEnterMode )
@@ -1478,12 +1480,15 @@ namespace RetroDevStudio.Documents
       &&   ( !commodorePushed )
       &&   ( !shiftPushed ) )
       {
-        if ( bareKey == System.Windows.Forms.Keys.Left )
+        if ( ( !Core.Settings.BASICKeyMap.KeymapEntryExists( Keys.Left ) )
+        &&   ( bareKey == System.Windows.Forms.Keys.Left ) )
         {
           bareKey = System.Windows.Forms.Keys.Right;
           shiftPushed = true;
         }
-        if ( bareKey == System.Windows.Forms.Keys.Up )
+
+        if ( ( !Core.Settings.BASICKeyMap.KeymapEntryExists( Keys.Up ) )
+        &&   ( bareKey == System.Windows.Forms.Keys.Up ) )
         {
           bareKey = System.Windows.Forms.Keys.Down;
           shiftPushed = true;
@@ -1639,13 +1644,28 @@ namespace RetroDevStudio.Documents
       {
         //Debug.Log( "KeyData " + bareKey );
 
-        var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
+        var           key       = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
+        KeyboardKey   lookupKey = key.KeyboardKey;
 
-        if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
+        if ( !ConstantData.PhysicalKeyInfo.ContainsKey( lookupKey ) )
         {
-          Debug.Log( "No physical key info for " + key.KeyboardKey );
+          // simulated keys
+          if ( lookupKey == KeyboardKey.KEY_SIM_CURSOR_LEFT )
+          {
+            lookupKey = KeyboardKey.KEY_CURSOR_LEFT_RIGHT;
+            shiftPushed = true;
+          }
+          else if ( lookupKey == KeyboardKey.KEY_SIM_CURSOR_UP )
+          {
+            lookupKey = KeyboardKey.KEY_CURSOR_UP_DOWN;
+            shiftPushed = true;
+          }
+          else
+          {
+            Debug.Log( "No physical key info for " + lookupKey );
+          }
         }
-        var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
+        var physKey = ConstantData.PhysicalKeyInfo[lookupKey];
 
         C64Character    c64Key = physKey.Normal;
         if ( shiftPushed )
