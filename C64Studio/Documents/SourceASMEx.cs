@@ -3757,10 +3757,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool FindReferences( int PositionInCode, int LineIndexInCode, out Types.ASM.FileInfo FileInfo, out SymbolInfo FoundSymbol )
+    private bool FindReferences( int PositionInCode, int LineIndexInCode, out Types.ASM.FileInfo FileInfo, out SymbolInfo Symbol, out GR.Collections.Set<int> FoundReferences )
     {
-      FoundSymbol = null;
-      FileInfo    = null;
+      FileInfo        = null;
+      Symbol          = null;
+      FoundReferences = new GR.Collections.Set<int>();
 
 
       int     lineIndex = LineIndexInCode;
@@ -3803,8 +3804,8 @@ namespace RetroDevStudio.Documents
 
       FileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
 
-      FoundSymbol = FileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
-      if ( FoundSymbol == null )
+      FoundReferences = FileInfo.FindAllReferences( wordBelow, zone, cheapLabelParent, out Symbol );
+      if ( FoundReferences.Count == 0 )
       {
         System.Windows.Forms.MessageBox.Show( "Unrecognized symbol, a recompile may be required" );
         return false;
@@ -3820,11 +3821,11 @@ namespace RetroDevStudio.Documents
 
     private void FindAllReferences( int PositionInCode, int LineIndexInCode )
     {
-      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo tokenInfo ) )
+      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo symbol, out GR.Collections.Set<int> allReferences ) )
       {
         return;
       }
-      Core.MainForm.m_FindReferences.UpdateReferences( DocumentInfo.Project, debugFileInfo, tokenInfo );
+      Core.MainForm.m_FindReferences.UpdateReferences( DocumentInfo.Project, debugFileInfo, allReferences );
       Core.MainForm.m_FindReferences.Show();
     }
 
@@ -3832,12 +3833,12 @@ namespace RetroDevStudio.Documents
 
     private void RenameAllReferences( int PositionInCode, int LineIndexInCode )
     {
-      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo tokenInfo ) )
+      if ( !FindReferences( PositionInCode, LineIndexInCode, out Types.ASM.FileInfo debugFileInfo, out SymbolInfo symbol, out GR.Collections.Set<int> allReferences ) )
       {
         return;
       }
 
-      var dlgRename = new FormRenameReference( Core, tokenInfo, debugFileInfo, Parser );
+      var dlgRename = new FormRenameReference( Core, symbol, allReferences, debugFileInfo, Parser );
 
       dlgRename.ShowDialog();
     }

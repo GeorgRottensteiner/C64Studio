@@ -22,15 +22,17 @@ namespace RetroDevStudio.Dialogs
     SymbolInfo                      _Symbol;
     Types.ASM.FileInfo              _ASMInfo;
     ASMFileParser                   _Parser;
+    GR.Collections.Set<int>         _AllReferences = null;
 
 
 
-    public FormRenameReference( StudioCore Core, SymbolInfo Symbol, Types.ASM.FileInfo ASMInfo, ASMFileParser Parser )
+    public FormRenameReference( StudioCore Core, SymbolInfo Symbol, GR.Collections.Set<int> AllReferences, Types.ASM.FileInfo ASMInfo, ASMFileParser Parser )
     {
-      this.Core = Core;
-      _Symbol   = Symbol;
-      _ASMInfo  = ASMInfo;
-      _Parser   = Parser;
+      this.Core       = Core;
+      _Symbol         = Symbol;
+      _ASMInfo        = ASMInfo;
+      _Parser         = Parser;
+      _AllReferences  = AllReferences;
 
       InitializeComponent();
 
@@ -143,7 +145,7 @@ namespace RetroDevStudio.Dialogs
     {
       string    newName = editReferenceName.Text;
 
-      GR.Collections.Set<int>   usedReferences = new GR.Collections.Set<int>( _Symbol.References );
+      GR.Collections.Set<int>   usedReferences = new GR.Collections.Set<int>( _AllReferences );
 
       if ( !_Symbol.References.ContainsValue( _Symbol.LineIndex ) )
       {

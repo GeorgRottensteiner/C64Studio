@@ -633,6 +633,71 @@ namespace RetroDevStudio.Types.ASM
 
 
 
+    public GR.Collections.Set<int> FindAllReferences( string Token, string Zone, string CheapLabelParent, out SymbolInfo Symbol )
+    {
+      var list  = new GR.Collections.Set<int>();
+      Symbol    = null;
+
+      if ( AssemblerSettings != null )
+      {
+        if ( !AssemblerSettings.CaseSensitive )
+        {
+          Token = Token.ToUpper();
+        }
+      }
+      if ( !Labels.ContainsKey( Token ) )
+      {
+        if ( Token.StartsWith( "@" ) )
+        {
+          if ( Labels.ContainsKey( CheapLabelParent + Token ) )
+          {
+            Symbol = Labels[CheapLabelParent + Token];
+            list.AddRange( Symbol.References );
+            list.Add( Symbol.LineIndex );
+          }
+        }
+        if ( Labels.ContainsKey( Zone + Token ) )
+        {
+          Symbol = Labels[Zone + Token];
+          list.AddRange( Symbol.References );
+          list.Add( Symbol.LineIndex );
+          return list;
+        }
+
+        if ( Token.StartsWith( "." ) )
+        {
+          Token = Zone + Token;
+        }
+
+        foreach ( var tempLabel in TempLabelInfo.Where( tl => tl.Name == Token ) )
+        {
+          Symbol = tempLabel.Symbol;
+
+          list.AddRange( Symbol.References );
+          list.Add( Symbol.LineIndex );
+        }
+        if ( list.Count > 0 )
+        {
+          return list;
+        }
+
+        var symbol = Macros.Keys.FirstOrDefault( m => m.first == Token );
+        if ( symbol != null )
+        {
+          Symbol = Macros[symbol].Symbol;
+          list.AddRange( Symbol.References );
+          list.Add( Symbol.LineIndex );
+        }
+        return list;
+      }
+      Symbol = Labels[Token];
+      list.AddRange( Symbol.References );
+      list.Add( Symbol.LineIndex );
+      return list;
+    }
+
+
+
     public SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent, int GlobalLineIndex = -1 )
     {
       if ( AssemblerSettings != null )

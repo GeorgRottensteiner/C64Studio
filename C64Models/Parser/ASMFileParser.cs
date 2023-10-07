@@ -1256,6 +1256,7 @@ namespace RetroDevStudio.Parser
         &&   ( labelInfo.Name == Value ) )
         {
           ResultingSymbol = labelInfo.Symbol;
+          ResultingSymbol.References.Add( LineIndex );
           return true;
         }
         if ( ( labelInfo.Name == Value )
@@ -1271,6 +1272,7 @@ namespace RetroDevStudio.Parser
       {
         // we had a temp label, but accessed it before the first definition, fall back to the first occurrence
         ResultingSymbol = tempLabelInfo.Symbol;
+        ResultingSymbol.References.Add( LineIndex );
         return true;
       }
 

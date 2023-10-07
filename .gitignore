@@ -61,8 +61,6 @@
 /Sample Projects/MacroTest/zones_with_quotes.prg
 /C64StudioRelease/C64Ass/C64Ass.exe
 /.vs
-/C64Studio/BASIC Dialects/BASIC V4.5.txt
-/C64StudioRelease/BASIC Dialects/BASIC V4.5.txt
 /Sample Projects/Atari/sample1.prg
 /Sample Projects/Atari/sample1.bin
 /Sample Projects/Atari/Step 1 - Stable Display/sample1.bin
@@ -80,7 +78,6 @@
 /Sample Projects/Atari/Step 5 - Automate Vertical Delay/collect.bin
 /Sample Projects/Atari/Step 4 - 2 Line Kernel/collect.bin
 /Sample Projects/MacroTest/unusedlabelwarningaftermacro.prg
-/TestProject/BASIC Dialects/BASIC V4.5.txt
 /Sample Projects/Mega65/Text Screen RRB/Text Screen RRB.prg
 /Sample Projects/Mega65/Sprites 64x21/Sprites 64x21.prg
 /Sample Projects/Mega65/Sprites 16x21 NCM/Sprites 16x21 NCM.prg
@@ -336,3 +333,4 @@
 /Sample Projects/MacroTest/po_nested_zone.prg
 /C64Ass/publish
 /C64StudioRelease/net6.0
+/Sample Projects/MacroTest/referencenotlisted.prg

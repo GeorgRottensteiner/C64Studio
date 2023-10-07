@@ -216,16 +216,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    internal void UpdateReferences( Project Project, Types.ASM.FileInfo ASMInfo, SymbolInfo TokenInfo )
+    internal void UpdateReferences( Project Project, Types.ASM.FileInfo ASMInfo, GR.Collections.Set<int> References )
     {
       listResults.Items.Clear();
 
-      // item itself is not in references
-      if ( !TokenInfo.References.ContainsValue( TokenInfo.LineIndex ) )
-      {
-        AddReferenceItem( Project, ASMInfo, TokenInfo.LineIndex );
-      }
-      foreach ( var reference in TokenInfo.References )
+      foreach ( var reference in References )
       {
         AddReferenceItem( Project, ASMInfo, reference );
       }
