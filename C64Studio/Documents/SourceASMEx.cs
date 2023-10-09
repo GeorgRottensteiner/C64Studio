@@ -2145,7 +2145,7 @@ namespace RetroDevStudio.Documents
         editSource.TextSource.ClearIsChanged();
         editSource.Invalidate();
       }
-      catch ( System.IO.IOException ex )
+      catch ( System.Exception ex )
       {
         System.Windows.Forms.MessageBox.Show( "Could not save file " + FullPath + ".\r\n" + ex.ToString(), "Could not save file" );
         EnableFileWatcher();

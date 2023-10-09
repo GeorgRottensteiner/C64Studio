@@ -241,7 +241,7 @@ namespace RetroDevStudio.Parser
         case Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN:
         case Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT:
           {
-            if ( !ValidateAssemblySize( Assembly, 524288, out ByteBuffer resultingAssembly ) )
+            if ( !ValidateAssemblySize( Assembly, 2 * 524288, out ByteBuffer resultingAssembly ) )
             {
               return null;
             }
@@ -382,7 +382,7 @@ namespace RetroDevStudio.Parser
     private bool ValidateAssemblySize( ByteBuffer Assembly, int RequiredSize, out ByteBuffer resultingAssembly )
     {
       resultingAssembly = Assembly;
-      if ( resultingAssembly.Length < 8192 )
+      if ( resultingAssembly.Length < RequiredSize )
       {
         // fill up
         resultingAssembly += new GR.Memory.ByteBuffer( (uint)( RequiredSize - resultingAssembly.Length ) );
