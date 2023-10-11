@@ -5622,8 +5622,11 @@ namespace RetroDevStudio
       }
       else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
       {
-        Document.KnownKeywords  = ASMFileInfo.KnownTokens();
-        Document.KnownTokens    = ASMFileInfo.KnownTokenInfo();
+        if ( ASMFileInfo != null )
+        {
+          Document.KnownKeywords  = ASMFileInfo.KnownTokens();
+          Document.KnownTokens    = ASMFileInfo.KnownTokenInfo();
+        }
       }
 
       if ( OutputMessages )

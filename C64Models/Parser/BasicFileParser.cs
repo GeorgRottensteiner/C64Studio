@@ -1600,6 +1600,8 @@ namespace RetroDevStudio.Parser
           return MetaDataBinaryData( LineIndex, MetaData, metaDataParams );
         case "SPRITEDATA":
           return MetaDataSpriteData( LineIndex, MetaData, metaDataParams );
+        case "CHARDATA":
+          return MetaDataCharData( LineIndex, MetaData, metaDataParams );
       }
       return false;
     }

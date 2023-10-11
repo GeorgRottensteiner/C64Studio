@@ -803,6 +803,7 @@ namespace RetroDevStudio
           }
         }
         if ( ( !setFromMainDoc )
+        &&   ( Core.Compiling.ASMFileInfo != null )
         &&   ( Core.Compiling.ASMFileInfo.ContainsFile( Element.DocumentInfo.FullPath ) ) )
         {
           if ( !Core.Compiling.IsCurrentlyBuilding() )

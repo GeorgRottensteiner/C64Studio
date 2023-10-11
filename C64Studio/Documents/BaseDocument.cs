@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Drawing;
 
 namespace RetroDevStudio.Documents
 {
@@ -750,6 +751,20 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override Size GetPreferredSize( Size proposedSize )
+    {
+      // make sure to have at least 20x20
+      var preferredSize = base.GetPreferredSize( proposedSize );
+      if ( ( preferredSize.Width < 20 )
+      ||   ( preferredSize.Height < 20 ) )
+      {
+        preferredSize = new Size( Math.Min( 20, preferredSize.Width ), Math.Min( 20, preferredSize.Height ) );
+      }
+      return preferredSize;
+    }
+
+
+
     protected override void OnShown( EventArgs e )
     {
       if ( Visible )
@@ -1173,7 +1188,6 @@ namespace RetroDevStudio.Documents
         return Core.Settings.PreferredMachineType;
       }
     }
-
 
 
 
