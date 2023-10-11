@@ -16,10 +16,9 @@ namespace RetroDevStudio.Parser
 
       List<List<TokenInfo>>   lineParams;
 
-      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams );
-      if ( result != ParseLineResult.OK )
+      if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams ) )
       {
-        return result;
+        return ParseLineResult.ERROR_ABORT;
       }
       if ( ( lineParams.Count < 1 )
       ||   ( lineParams.Count > 2 ) )
@@ -53,10 +52,9 @@ namespace RetroDevStudio.Parser
         {
           List<List<TokenInfo>>   listParams;
 
-          var parseListParams =  ParseLineInParameters( lineParams[1], 1, lineParams[1].Count - 2, lineIndex, false, out listParams );
-          if ( parseListParams != ParseLineResult.OK )
+          if ( !ParseLineInParameters( lineParams[1], 1, lineParams[1].Count - 2, lineIndex, false, out listParams ) )
           {
-            return parseListParams;
+            return ParseLineResult.ERROR_ABORT;
           }
 
           // in case of a list the number is the number of repeats

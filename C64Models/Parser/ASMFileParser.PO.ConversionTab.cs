@@ -146,10 +146,9 @@ namespace RetroDevStudio.Parser
     private ParseLineResult POConversionTabTASSEntry( string PO, Map<byte, byte> textCodeMapping, int lineIndex, List<TokenInfo> lineTokenInfos, out Map<byte, byte> ResultingMapping )
     {
       ResultingMapping = textCodeMapping;
-      var parseResult = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> lineParams );
-      if ( parseResult != ParseLineResult.OK )
+      if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> lineParams ) )
       {
-        return parseResult;
+        return ParseLineResult.ERROR_ABORT;
       }
       int   firstIndex = 0;
       while ( firstIndex + 2 <= lineParams.Count )
@@ -270,7 +269,7 @@ namespace RetroDevStudio.Parser
       }*/
 
       ResultingMapping = textCodeMapping;
-      return parseResult;
+      return ParseLineResult.OK;
     }
 
 

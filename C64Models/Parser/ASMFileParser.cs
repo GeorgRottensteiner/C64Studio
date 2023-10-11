@@ -3033,8 +3033,7 @@ namespace RetroDevStudio.Parser
                 { 
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
-                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, false, out tokenInfos );
-                  if ( result != ParseLineResult.OK )
+                  if ( !ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, false, out tokenInfos ) )
                   {
                     AddError( lineIndex,
                               m_LastErrorInfo.Code,
@@ -3102,8 +3101,7 @@ namespace RetroDevStudio.Parser
                 {
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
-                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, false, out tokenInfos );
-                  if ( result != ParseLineResult.OK )
+                  if ( !ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, false, out tokenInfos ) )
                   {
                     AddError( lineIndex,
                               m_LastErrorInfo.Code,
@@ -6058,8 +6056,7 @@ namespace RetroDevStudio.Parser
               {
                 // this has two seperate expressions
                 List<List<TokenInfo>> tokenInfos;
-                var result = ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, false, out tokenInfos );
-                if ( result != ParseLineResult.OK )
+                if ( !ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, false, out tokenInfos ) )
                 {
                   AddError( lineIndex,
                             m_LastErrorInfo.Code,
@@ -8787,10 +8784,9 @@ namespace RetroDevStudio.Parser
 
       List<List<TokenInfo>>   lineParams;
 
-      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams );
-      if ( result != ParseLineResult.OK )
+      if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams ) )
       {
-        return result;
+        return ParseLineResult.ERROR_ABORT;
       }
       if ( lineParams.Count != 1 )
       {
@@ -8864,7 +8860,7 @@ namespace RetroDevStudio.Parser
 
 
     // TODO - add expression parsing (parenthesis)
-    public ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, bool AllowEmptyParams, out List<List<TokenInfo>> lineParams )
+    public bool ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, bool AllowEmptyParams, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
       int     bracketStackDepth = 0;
@@ -8897,7 +8893,7 @@ namespace RetroDevStudio.Parser
           {
             // empty?
             AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", token.StartPos, token.Length );
-            return ParseLineResult.ERROR_ABORT;
+            return false;
           }
           lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + i - paramStartIndex ) );
 
@@ -8910,11 +8906,11 @@ namespace RetroDevStudio.Parser
       {
         // empty?
         AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", lineTokenInfos[lineTokenInfos.Count - 1].StartPos, 1 );
-        return ParseLineResult.ERROR_ABORT;
+        return false;
       }
       lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + Count - paramStartIndex ) );
 
-      return ParseLineResult.OK;
+      return true;
     }
 
 

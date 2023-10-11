@@ -1,6 +1,7 @@
 ﻿using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Types;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
 using System.Security.Policy;
@@ -13,23 +14,9 @@ namespace RetroDevStudio.Parser
     {
       var  parms = PureTokenizeLine( MetaDataParams );
 
-      var cleanedParms = new List<List<string>>();
-      var curList = new List<string>();
-      for ( int i = 0; i < parms.Tokens.Count; ++i )
+      if ( !ParseLineInParameters( parms.Tokens, 0, parms.Tokens.Count, LineIndex, false, out List<List<Token>> cleanedParms ) )
       {
-        if ( parms.Tokens[i].Content == "," )
-        {
-          cleanedParms.Add( curList );
-          curList = new List<string>();
-        }
-        else
-        {
-          curList.Add( parms.Tokens[i].Content );
-        }
-      }
-      if ( curList.Count > 0 )
-      {
-        cleanedParms.Add( curList );
+        return false;
       }
 
       // followed by string literal for file name
@@ -39,14 +26,14 @@ namespace RetroDevStudio.Parser
       ||   ( cleanedParms[2].Count > 1 )
       ||   ( cleanedParms[3].Count != 1 )
       ||   ( cleanedParms[4].Count != 1 )
-      ||   ( !cleanedParms[0][0].StartsWith( "\"" ) )
-      ||   ( !cleanedParms[0][0].EndsWith( "\"" ) ) )
+      ||   ( !cleanedParms[0][0].Content.StartsWith( "\"" ) )
+      ||   ( !cleanedParms[0][0].Content.EndsWith( "\"" ) ) )
       {
         AddError( LineIndex, Types.ErrorCode.E3007_BASIC_MALFORMED_METADATA, "SpriteData expects <Filename>,<Offset>,<Count>,<Start Line No>,<Line Step>" );
         return false;
       }
 
-      var filename = cleanedParms[0][0];
+      var filename = cleanedParms[0][0].Content;
       string    includeFile = filename.Substring( 1, filename.Length - 2 );
       string    subFilenameFull   = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_CompileConfig.InputFile ), includeFile );
       if ( ( string.IsNullOrEmpty( includeFile ) )
@@ -77,10 +64,10 @@ namespace RetroDevStudio.Parser
         return false;
       }
 
-      int offset    = GR.Convert.ToI32( cleanedParms[1][0] );
-      int count     = GR.Convert.ToI32( cleanedParms[2][0] );
-      int startLine = GR.Convert.ToI32( cleanedParms[3][0] );
-      int stepLine  = GR.Convert.ToI32( cleanedParms[4][0] );
+      int offset    = GR.Convert.ToI32( cleanedParms[1][0].Content );
+      int count     = GR.Convert.ToI32( cleanedParms[2][0].Content );
+      int startLine = GR.Convert.ToI32( cleanedParms[3][0].Content );
+      int stepLine  = GR.Convert.ToI32( cleanedParms[4][0].Content );
 
       if ( ( count <= 0 )
       ||   ( offset >= spriteProject.TotalNumberOfSprites )

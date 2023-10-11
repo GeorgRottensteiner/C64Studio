@@ -4039,6 +4039,60 @@ namespace RetroDevStudio.Parser
 
 
 
+    public bool ParseLineInParameters( List<Token> lineTokenInfos, int Offset, int Count, int LineIndex, bool AllowEmptyParams, out List<List<Token>> lineParams )
+    {
+      int     paramStartIndex = Offset;
+      int     bracketStackDepth = 0;
+
+      lineParams = new List<List<Token>>();
+
+      for ( int i = 0; i < Count; ++i )
+      {
+        var token = lineTokenInfos[Offset + i];
+
+        if ( token.Content == "(" )
+        {
+          ++bracketStackDepth;
+          continue;
+        }
+        if ( token.Content == ")" )
+        {
+          --bracketStackDepth;
+          continue;
+        }
+        if ( bracketStackDepth > 0 )
+        {
+          continue;
+        }
+        if ( token.Content == "," )
+        {
+          if ( ( !AllowEmptyParams )
+          &&   ( Offset + i == paramStartIndex ) )
+          {
+            // empty?
+            AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", token.StartIndex, token.Content.Length );
+            return false;
+          }
+          lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + i - paramStartIndex ) );
+
+          paramStartIndex = Offset + i + 1;
+          continue;
+        }
+      }
+      if ( ( !AllowEmptyParams )
+      &&   ( paramStartIndex >= Offset + Count ) )
+      {
+        // empty?
+        AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", lineTokenInfos[lineTokenInfos.Count - 1].StartIndex, 1 );
+        return false;
+      }
+      lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + Count - paramStartIndex ) );
+
+      return true;
+    }
+
+
+
 
   }
 }
