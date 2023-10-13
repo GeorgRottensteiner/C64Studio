@@ -14,7 +14,9 @@
     <br>
     <ul>
       <li><a href="#bindata">#BINDATA</a></li>
+      <li><a href="#chardata">#CHARDATA</a></li>
       <li><a href="#include">#INCLUDE</a></li>
+      <li><a href="#spritedata">#SPRITEDATA</a></li>
     </ul>
     <br>
     <br>
@@ -31,6 +33,22 @@
     Example: Include music data, the full length, but skip the first 2 bytes (load address). Generate DATA starting with line number 1000, increase the line numbers by 1.<br>
     <br>
     <div id="code"><br>       #BINDATA "music.bin",,2,1000,1
+      <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="chardata"></a>
+  <H2>#CHARDATA &lt;filename&gt;,&lt;offset&gt;,&lt;length&gt;,&lt;start line&gt;,&lt;line step&gt;</H2>
+  <div id="mybody">
+    This pseudo op allows to insert character data content as DATA lines.<br>
+    <br>
+    This pseudo op needs a few more parameters to let you control the output. If the length is given empty the full file is used.<br>
+    The length of the line is the maximum possible for proper manual entry (e.g. 80 for C64, not 254)<br>
+    <br>
+    <br>
+    Example: Include character data, 10 characters, but skip the first 2 characters. Generate DATA starting with line number 1000, increase the line numbers by 1.<br>
+    <br>
+    <div id="code"><br>       #CHARDATA "charset.charsetproject",2,10,1000,1
       <br></div>
     <br>
     <br>
@@ -59,6 +77,22 @@
       30 PRINT "THIS IS THE END"
     <br></div><br>
 
+    <br>
+    <br>
+  </div>
+  <a name="spritedata"></a>
+  <H2>#SPRITEDATA &lt;filename&gt;,&lt;offset&gt;,&lt;length&gt;,&lt;start line&gt;,&lt;line step&gt;</H2>
+  <div id="mybody">
+    This pseudo op allows to insert sprite data content as DATA lines.<br>
+    <br>
+    This pseudo op needs a few more parameters to let you control the output. If the length is given empty the full file is used.<br>
+    The length of the line is the maximum possible for proper manual entry (e.g. 80 for C64, not 254)<br>
+    <br>
+    <br>
+    Example: Include sprite data, 10 sprites, but skip the first 2 sprites. Generate DATA starting with line number 1000, increase the line numbers by 1.<br>
+    <br>
+    <div id="code"><br>       #SPRITEDATA "sprites.spriteproject",2,10,1000,1
+      <br></div>
     <br>
     <br>
   </div>

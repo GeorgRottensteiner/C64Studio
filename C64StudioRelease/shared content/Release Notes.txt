@@ -17,6 +17,43 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+13.10.2023 - 7.6:         Add: BASIC #chardata meta op
+                          Adjust easyflash cartridge test files
+                          Fix: easyflash cartridge file was half the actual max. size (1MB)
+                          Fix issue 97, find all references tripping over redefined labels
+                          Add: BASIC separate key mapping for fake cursor up/left (instead of the hard wired one)
+                          Fix: BASIC autotoggle quote mode now works properly in lines with REM
+                          Add: Proper VICE version detection for true drive option (goddamn)
+                          Fix: asm macro check for existing macros sometimes failed (Tuple hash was bad)
+                          Rearrange projects to minimize Windows dependencies (C64Ass now has a Windows-less variant and can run directly on e.g. Linux)
+                          Add: BASIC loading weird bytes are now forced to PETSCII range
+                          Fix: !zone after label inside inactive scope was ignored
+                          Fix: Opcode for zeropage,x and zeropage,y would not evaluate properly
+                          Add: Macro overloading
+                          Add: ACME compatibility, allow == as equality operator
+                          Add: Overloading macro support (ACME and C64Studio only)
+                          Merge pull request #95 from Commodore64128/TASM-help
+                          some additional TASM and 65816 detection code
+                          Add: Proper bookmark support for BASIC
+                          Fix: Only modify preferences display if it actually changes, remove flicker
+                          Add: BASIC editor - set string entry mode on position option
+                          Fix: Do not Auto-replace ? with PRINT inside string literals even with deactivated string entry mode
+                          Fix: Autotruncate Literal Values checkbox not initalized properly in preferences
+                          Add: 65816 support
+                          Add: Assembler - Ctrl-Click jump to file (on !src directives) or symbol
+                          Fix: BASIC renumber with ON GOTO/GOSUB where some values were skipped (e.g. ON GOTO 2,,5)
+                          Add: BASIC SpriteData directive
+                          Fix: Endless loop in sprite editor fill routine
+                          Add: Duplicate display for sprite and charset editor
+                          FiX: Potential OutOfMemoryException when filling outside the actual image
+                          Add: BASIC -> add shortcut keys to context menu
+                          Add: BASIC Editor: Comment/Uncomment selection
+                          Fix: Bookmarks were not properly restored on load
+                          Add: BASIC pseudo op #bindata
+                          Fix: Filename for .prg files in File Manager
+                          Fix: Custom tree node toggle button was only shown if there were more than 1 child node (facepalm)
+                          Fix: value table editor calculation wrong
+
 28.07.2023 - 7.5:         Fix: Export as DATA statements would calculate char wrap wrong (DATA treated as 1 byte)
                           Fix: Assembler now allowed something like cmp ($124 + 4) * 10, previously rejected as "unsupported opcode"
                           Fix another potential crash when exiting the emulator
