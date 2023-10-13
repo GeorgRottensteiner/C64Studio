@@ -3084,8 +3084,7 @@ namespace RetroDevStudio.Parser
 
                       // relative label
                       long delta = relativeValue - lineInfo.AddressStart - 3;
-                      if ( ( delta < -128 )
-                      ||   ( delta > 127 ) )
+                      if ( !Valid8BitRelativeValue( delta ) )
                       {
                         AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                         lineInfo.LineData.AppendU8( 0 );
@@ -3146,8 +3145,7 @@ namespace RetroDevStudio.Parser
                 else if ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
                   long delta = addressValue - lineInfo.AddressStart - 2;
-                  if ( ( delta < -128 )
-                  ||   ( delta > 127 ) )
+                  if ( !Valid8BitRelativeValue( delta ) )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                     lineInfo.LineData.AppendU8( 0 );
@@ -3169,8 +3167,7 @@ namespace RetroDevStudio.Parser
                   {
                     delta = addressValue - lineInfo.AddressStart - 2;
                   }
-                  if ( ( delta < -32768 )
-                  ||   ( delta > 32767 ) )
+                  if ( !Valid16BitRelativeValue( delta ) )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                     lineInfo.LineData.AppendU16( 0 );
@@ -3188,9 +3185,7 @@ namespace RetroDevStudio.Parser
                   ||   ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER )
                   &&     ( lineInfo.Registers16Bit ) ) )
                   {
-                    if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                    &&   ( ( addressValue < 0 )
-                    ||     ( addressValue >= 65536 ) ) )
+                    if ( !ValidWordValue( addressValue ) )
                     {
                       AddError( lineIndex,
                                 Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
@@ -3212,8 +3207,7 @@ namespace RetroDevStudio.Parser
                 }
                 else if ( lineInfo.Opcode.NumOperands == 2 )
                 {
-                  if ( ( addressValue < 0 )
-                  ||   ( addressValue > 0xffff ) )
+                  if ( !Valid16BitAddressValue( addressValue ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
@@ -3225,8 +3219,7 @@ namespace RetroDevStudio.Parser
                 }
                 else if ( lineInfo.Opcode.NumOperands == 3 )
                 {
-                  if ( ( addressValue < 0 )
-                  ||   ( addressValue > 0xffffff ) )
+                  if ( !Valid24BitAddressValue( addressValue ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1013_VALUE_OUT_OF_BOUNDS_24BIT,
@@ -5076,7 +5069,55 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool ValidWordValue( int WordValue )
+    private bool Valid8BitRelativeValue( long Delta )
+    {
+      if ( ( Delta < -128 )
+      ||   ( Delta > 127 ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+    private bool Valid16BitRelativeValue( long Delta )
+    {
+      if ( ( Delta < -32768 )
+      ||   ( Delta > 32767 ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+    private bool Valid16BitAddressValue( long AddressValue )
+    {
+      if ( ( AddressValue < 0 )
+      ||   ( AddressValue > 0xffff ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+    private bool Valid24BitAddressValue( long AddressValue )
+    {
+      if ( ( AddressValue < 0 )
+      ||   ( AddressValue > 0xffffff ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+    private bool ValidWordValue( long WordValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
       &&   ( ( WordValue < short.MinValue )
