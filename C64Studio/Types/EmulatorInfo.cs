@@ -79,8 +79,8 @@ namespace RetroDevStudio.Types
         }
         else
         {
-          Tool.TrueDriveOnArguments   = "-drive8truedrive +virtualdev";
-          Tool.TrueDriveOffArguments  = "+drive8truedrive -virtualdev";
+          Tool.TrueDriveOnArguments   = "-drive8truedrive +virtualdev8";
+          Tool.TrueDriveOffArguments  = "+drive8truedrive -virtualdev8";
         }
       }
       else if ( upperCaseFilename.StartsWith( "CCS64" ) )

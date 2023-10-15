@@ -43,12 +43,91 @@ namespace Tiny64
       ZEROPAGE_INDIRECT_SP,     // (d,s)
       ZEROPAGE_INDIRECT_LONG,   // [d]
       ZEROPAGE_INDIRECT_Y_LONG, // [d],y
-      STACK_RELATIVE            // d,s
+      STACK_RELATIVE,           // d,s
 
-    };
-
+      // Z80
+      REGISTER_TO_REGISTER,       // LD r,r'
+      IMMEDIATE_TO_REGISTER,      // LD,n
+      HL_INDIRECT_TO_REGISTER,    // LD r,(HL)
+      IX_D_INDIRECT_TO_REGISTER,  // LD r,(IX+d)
+      IY_D_INDIRECT_TO_REGISTER,  // LD r,(IY+d)
+      REGISTER_TO_HL_INDIRECT,    // LD (HL),r
+      REGISTER_TO_IX_D_INDIRECT,  // LD (IX+d),r
+      REGISTER_TO_IY_D_INDIRECT,  // LD (IY+d),r
+      IMMEDIATE_TO_HL_INDIRECT,   // LD (HL),n
+      IMMEDIATE_TO_IX_D_INDIRECT, // LD (IX+d),n
+      IMMEDIATE_TO_IY_D_INDIRECT, // LD (IY+d),n
+      BC_INDIRECT_TO_A,           // LD A,(BC)
+      DE_INDIRECT_TO_A,           // LD A,(DE)
+      IMMEDIATE_INDIRECT_TO_A,    // LD A,(nn)
+      A_TO_BC_INDIRECT,           // LD (BC),A
+      A_TO_DE_INDIRECT,           // LD (DE),A
+      A_TO_IMMEDIATE_INDIRECT,    // LD (nn),A
+      I_TO_A,                     // LD A,I
+      R_TO_A,                     // LD A,R
+      A_TO_I,                     // LD I,A
+      A_TO_R,                     // LD R,A
+      IMMEDIATE_TO_REGISTER_DD,   // LD dd,nn
+      IMMEDIATE_TO_IX,            // LD IX,nn
+      IMMEDIATE_TO_IY,            // LD IY,nn
+      IMMEDIATE_INDIRECT_TO_HL,   // LD HL,(nn)
+      IMMEDIATE_INDIRECT_TO_REGISTER_DD,    // LD dd,(nn)
+      IMMEDIATE_INDIRECT_TO_IX,   // LD IX,(nn)
+      IMMEDIATE_INDIRECT_TO_IY,   // LD IY,(nn)
+      HL_TO_IMMEDIATE_INDIRECT,   // LD (nn),HL
+      REGISTER_DD_TO_IMMEDIATE_INDIRECT,    // LD (nn),dd
+      IX_TO_IMMEDIATE_INDIRECT,   // LD (nn),IX
+      IY_TO_IMMEDIATE_INDIRECT,   // LD (nn),IY
+      HL_TO_SP,                   // LD SP,HL
+      IX_TO_SP,                   // LD SP,IX
+      IY_TO_SP,                   // LD SP,IY
+      REGISTER_QQ,                // PUSH qq
+      REGISTER_IX,                // PUSH IX
+      REGISTER_IY,                // PUSH IY
+      REGISTER_HL_TO_DE,          // EX DE,HL
+      REGISTER_AF_TO_AF,          // EX AF,AF'
+      REGISTER_HL_TO_SP_INDIRECT, // EX (SP),HL
+      REGISTER_IX_TO_SP_INDIRECT, // EX (SP),IX
+      REGISTER_IY_TO_SP_INDIRECT, // EX (SP),IY
+      REGISTER_TO_A,              // ADD A,r
+      IMMEDIATE_TO_A,             // ADD A,n
+      HL_INDIRECT_TO_A,           // ADD A,(HL)
+      IX_D_INDIRECT_TO_A,         // ADD A,(IX+d)
+      IY_D_INDIRECT_TO_A,         // ADD A,(IY+d)
+      REGISTER,                   // INC r
+      REGISTER_HL_INDIRECT,       // INC (HL)
+      REGISTER_IX_D_INDIRECT,     // INC (IX+d)
+      REGISTER_IY_D_INDIRECT,     // INC (IY+d)
+      IMMEDIATE_0,                // IM 0
+      IMMEDIATE_1,                // IM 1
+      IMMEDIATE_2,                // IM 2
+      REGISTER_DD_TO_HL,          // ADD HL,ss
+      REGISTER_PP_TO_IX,          // ADD IX,pp
+      REGISTER_PP_TO_IY,          // ADD IY,pp
+      REGISTER_DD,                // INC ss
+      HL_INDIRECT,                // RLC (HL)
+      IX_D_INDIRECT,              // RLC (IX+d) this on is nasty, it has a fixed byte value AFTER the operand
+      IY_D_INDIRECT,              // RLC (IX+d) this on is nasty, it has a fixed byte value AFTER the operand
+      REGISTER_TO_BIT,            // BIT b,r
+      HL_INDIRECT_TO_BIT,         // BIT b,(HL)
+      IX_D_INDIRECT_TO_BIT,       // BIT b,(IX+d) this on is nasty, it has a fixed byte value AFTER the operand
+      IY_D_INDIRECT_TO_BIT,       // BIT b,(IY+d) this on is nasty, it has a fixed byte value AFTER the operand
+      ABSOLUTE_CONDITION,         // JP cc,nn
+      RELATIVE_C,                 // JR C,e
+      RELATIVE_NC,                // JR NC,e
+      RELATIVE_Z,                 // JR Z,e 
+      RELATIVE_NZ,                // JR NZ,e
+      IX_INDIRECT,                // JP (IX)
+      IY_INDIRECT,                // JP (IY)
+      IMPLICIT_CC,                // RET cc
+      IMPLICIT_P,                 // RST p
+      IMMEDIATE_INDIRECT_TO_A_8BIT, // IN A,(n)
+      INDIRECT_C_TO_REGISTER,     // IN r,(C)
+      A_TO_IMMEDIATE_INDIRECT_8BIT, // OUT (n),A
+      REGISTER_TO_C_INDIRECT      // OUT (C),r
+    }
     public string Mnemonic = "";
-    public int ByteValue = -1;
+    public uint ByteValue = uint.MaxValue;
     public int NumOperands = -1;
     public AddressingType Addressing = AddressingType.UNKNOWN;
     public int NumCycles = 0;
@@ -127,7 +206,7 @@ namespace Tiny64
 
 
 
-    public Opcode( string Mnemonic, int ByteValue, AddressingType Addressing )
+    public Opcode( string Mnemonic, uint ByteValue, AddressingType Addressing )
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
@@ -135,7 +214,7 @@ namespace Tiny64
       this.Addressing = Addressing;
     }
 
-    public Opcode( string Mnemonic, int ByteValue, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
+    public Opcode( string Mnemonic, uint ByteValue, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
@@ -146,7 +225,7 @@ namespace Tiny64
       NumPenaltyCycles = PageBoundaryCycles;
     }
 
-    public Opcode( string Mnemonic, int ByteValue, int NumOperands, AddressingType Addressing )
+    public Opcode( string Mnemonic, uint ByteValue, int NumOperands, AddressingType Addressing )
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
@@ -154,7 +233,7 @@ namespace Tiny64
       this.Addressing = Addressing;
     }
 
-    public Opcode( string Mnemonic, int ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
+    public Opcode( string Mnemonic, uint ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
@@ -165,7 +244,7 @@ namespace Tiny64
       NumPenaltyCycles = PageBoundaryCycles;
     }
 
-    public Opcode( string Mnemonic, int ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles, int BranchSamePagePenalty, int BranchOtherPagePenalty )
+    public Opcode( string Mnemonic, uint ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles, int BranchSamePagePenalty, int BranchOtherPagePenalty )
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;

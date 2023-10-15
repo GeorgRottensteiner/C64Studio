@@ -29,6 +29,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\VIC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.Z80.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.M65.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.4502.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.65CE02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.WDC65C02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.R65C02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.65816.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.65C02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.6510.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.6502.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Disassembler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Emulator.cs" />

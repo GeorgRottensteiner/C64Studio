@@ -5381,6 +5381,10 @@ namespace RetroDevStudio.Parser
           }
         }
 
+        if ( lineIndex == 22 )
+        {
+          Debug.Log( "aha" );
+        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, textCodeMapping );
         if ( lineTokenInfos == null )
         {
