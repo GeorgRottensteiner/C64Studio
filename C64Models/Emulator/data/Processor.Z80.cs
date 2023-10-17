@@ -21,9 +21,25 @@ namespace Tiny64
       //  111 A
 
       // dd,ss is any of the register pairs BC, DE, HL, SP
+      //   00 BC
+      //   01 DE
+      //   10 HL
+      //   11 SP
       // qq is any of the register pairs AF, BC, DE, HL
+      //   00 BC
+      //   01 DE
+      //   10 HL
+      //   11 AF
       // pp is any of the register pairs BC, DE, IX, SP 
+      //   00 BC
+      //   01 DE
+      //   10 IX
+      //   11 SP
       // rr is any of the register pairs BC, DE, IY, SP
+      //   00 BC
+      //   01 DE
+      //   10 IY
+      //   11 SP
 
       // b Bit Tested
       //  000 0
@@ -45,11 +61,64 @@ namespace Tiny64
       //   110 P  sign positive
       //   111 M  sign negative
 
+      var r = new List<ValidValue>() { new ValidValue( "b", 0 ),
+                                       new ValidValue( "c", 1 ),
+                                       new ValidValue( "d", 2 ),
+                                       new ValidValue( "e", 3 ),
+                                       new ValidValue( "h", 4 ),
+                                       new ValidValue( "l", 5 ),
+                                       new ValidValue( "a",7 ) };
+      var a = new List<ValidValue>() { new ValidValue( "a" ) };
+      var c = new List<ValidValue>() { new ValidValue( "c" ) };
+      var nc = new List<ValidValue>() { new ValidValue( "nc" ) };
+      var z = new List<ValidValue>() { new ValidValue( "z" ) };
+      var nz = new List<ValidValue>() { new ValidValue( "nz" ) };
+      var ix = new List<ValidValue>() { new ValidValue( "ix" ) };
+      var ixInParenthesis = new List<ValidValue>() { new ValidValue( "(" ),
+                                                     new ValidValue( "ix" ),
+                                                     new ValidValue( "+" ) };
+      var closingParenthesis = new List<ValidValue>() { new ValidValue( ")" ) };
+      var iy = new List<ValidValue>() { new ValidValue( "iy" ) };
+      var cc = new List<ValidValue>() { new ValidValue( "nz", 0 ),
+                                        new ValidValue( "z", 1 ),
+                                        new ValidValue( "nc", 2 ),
+                                        new ValidValue( "c", 3 ),
+                                        new ValidValue( "po", 4 ),
+                                        new ValidValue( "pe", 5 ),
+                                        new ValidValue( "p", 6 ),
+                                        new ValidValue( "m",7 ) };
+      var qq = new List<ValidValue> { new ValidValue( "af", 3 ),
+                                      new ValidValue( "bc", 0 ),
+                                      new ValidValue( "de", 1 ),
+                                      new ValidValue( "hl", 2 ) };
+      var hl = new List<ValidValue>() { new ValidValue( "(" ),
+                                        new ValidValue( "HL" ),
+                                        new ValidValue( ")" ) };
+
       // 8bit group
-      sys.AddOpcode( "ld", 0x40, 0, AddressingType.REGISTER_TO_REGISTER, 4 );           // LD r,r'
-      sys.AddOpcode( "ld", 0x06, 1, AddressingType.IMMEDIATE_TO_REGISTER, 7 );          // LD r,n
-      sys.AddOpcode( "ld", 0x46, 1, AddressingType.HL_INDIRECT_TO_REGISTER, 7 );        // LD r,(HL)
-      sys.AddOpcode( "ld", 0xdd, 2, AddressingType.IX_D_INDIRECT_TO_REGISTER, 19 );     // LD r,(IX+d)
+      sys.AddOpcode( "ld", 0x40, 0, AddressingType.IMPLICIT, 4 )            // LD r,r'
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 0 ) } );
+
+      sys.AddOpcode( "ld", 0x46, 0, AddressingType.IMPLICIT, 7 )         // LD r,(HL)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),
+          new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, hl ) } );
+
+      // opcodes with expressions need to be placed last
+      sys.AddOpcode( "ld", 0x06, 1, AddressingType.IMMEDIATE_8BIT, 7 )                  // LD r,n
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+
+      sys.AddOpcode( "ld", 0xdd, 2, AddressingType.IX_D_INDIRECT_TO_REGISTER, 19 )      // LD r,(IX+d)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),
+          new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, ixInParenthesis ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ),
+          new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, closingParenthesis ) } );
+
       sys.AddOpcode( "ld", 0xfd, 2, AddressingType.IY_D_INDIRECT_TO_REGISTER, 19 );     // LD r,(IY+d)
       sys.AddOpcode( "ld", 0x70, 0, AddressingType.REGISTER_TO_HL_INDIRECT, 7 );        // LD (HL),r
       sys.AddOpcode( "ld", 0xdd, 2, AddressingType.REGISTER_TO_IX_D_INDIRECT, 19 );     // LD (IX+d),r
@@ -84,12 +153,18 @@ namespace Tiny64
       sys.AddOpcode( "ld", 0xddf9, 0, AddressingType.IX_TO_SP, 10 );                    // LD SP,IX
       sys.AddOpcode( "ld", 0xfdf9, 0, AddressingType.IY_TO_SP, 10 );                    // LD SP,IY
 
-      sys.AddOpcode( "push", 0xc5, 0, AddressingType.REGISTER_QQ, 11 );                 // PUSH qq
-      sys.AddOpcode( "push", 0xdde5, 0, AddressingType.REGISTER_IX, 15 );               // PUSH IX
-      sys.AddOpcode( "push", 0xfde5, 0, AddressingType.REGISTER_IY, 15 );               // PUSH IY
-      sys.AddOpcode( "pop", 0xc1, 0, AddressingType.REGISTER_QQ, 10 );                  // POP qq
-      sys.AddOpcode( "pop", 0xdde1, 0, AddressingType.REGISTER_IX, 14 );                // POP IX
-      sys.AddOpcode( "pop", 0xfde1, 0, AddressingType.REGISTER_IY, 14 );                // POP IY
+      sys.AddOpcode( "push", 0xc5, 0, AddressingType.REGISTER_QQ, 11 )                  // PUSH qq
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, qq, 4 ) );
+      sys.AddOpcode( "push", 0xdde5, 0, AddressingType.REGISTER_IX, 15 )                // PUSH IX
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, ix ) );
+      sys.AddOpcode( "push", 0xfde5, 0, AddressingType.REGISTER_IY, 15 )                // PUSH IY
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, iy ) );
+      sys.AddOpcode( "pop", 0xc1, 0, AddressingType.REGISTER_QQ, 10 )                   // POP qq
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, qq, 4 ) );
+      sys.AddOpcode( "pop", 0xdde1, 0, AddressingType.REGISTER_IX, 14 )                 // POP IX
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, ix ) );
+      sys.AddOpcode( "pop", 0xfde1, 0, AddressingType.REGISTER_IY, 14 )                 // POP IY
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, iy ) );
 
       // Exchange, block transfer, search
       sys.AddOpcode( "ex", 0xeb, 0, AddressingType.REGISTER_HL_TO_DE, 4 );              // EX DE,HL
@@ -110,49 +185,58 @@ namespace Tiny64
 
       // 8bit arithmetic and logical
       sys.AddOpcode( "add", 0x80, 0, AddressingType.REGISTER_TO_A, 4 );                 // ADD A,r
-      sys.AddOpcode( "add", 0xc6, 0, AddressingType.IMMEDIATE_TO_A, 7 );                // ADD A,n
+      sys.AddOpcode( "add", 0xc6, 1, AddressingType.IMMEDIATE_TO_A, 7 )                 // ADD A,n
+        .ParserExpressions.AddRange( new List<OpcodeExpression>(){ 
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, a ), 
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
       sys.AddOpcode( "add", 0x86, 0, AddressingType.HL_INDIRECT_TO_A, 7 );              // ADD A,(HL)
       sys.AddOpcode( "add", 0xdd86, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );         // ADD A,(IX+d)
       sys.AddOpcode( "add", 0xfd86, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );         // ADD A,(IY+d)
 
       sys.AddOpcode( "adc", 0x88, 0, AddressingType.REGISTER_TO_A, 4 );                 // ADC A,r
-      sys.AddOpcode( "adc", 0xce, 0, AddressingType.IMMEDIATE_TO_A, 7 );                // ADC A,n
+      sys.AddOpcode( "adc", 0xce, 1, AddressingType.IMMEDIATE_TO_A, 7 )                 // ADC A,n
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) );
       sys.AddOpcode( "adc", 0x8e, 0, AddressingType.HL_INDIRECT_TO_A, 7 );              // ADC A,(HL)
       sys.AddOpcode( "adc", 0xdd8e, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );         // ADC A,(IX+d)
       sys.AddOpcode( "adc", 0xfd8e, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );         // ADC A,(IY+d)
 
       sys.AddOpcode( "sub", 0x90, 0, AddressingType.REGISTER_TO_A, 4 );                 // SUB r
-      sys.AddOpcode( "sub", 0xd6, 0, AddressingType.IMMEDIATE_TO_A, 7 );                // SUB n
+      sys.AddOpcode( "sub", 0xd6, 1, AddressingType.IMMEDIATE_TO_A, 7 )                 // SUB n
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) );
       sys.AddOpcode( "sub", 0x96, 0, AddressingType.HL_INDIRECT_TO_A, 7 );              // SUB (HL)
       sys.AddOpcode( "sub", 0xdd96, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );         // SUB (IX+d)
       sys.AddOpcode( "sub", 0xfd96, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );         // SUB (IY+d)
 
       sys.AddOpcode( "sbc", 0x98, 0, AddressingType.REGISTER_TO_A, 4 );                 // SBC A,r
-      sys.AddOpcode( "sbc", 0xde, 0, AddressingType.IMMEDIATE_TO_A, 7 );                // SBC A,n
+      sys.AddOpcode( "sbc", 0xde, 1, AddressingType.IMMEDIATE_TO_A, 7 );                // SBC A,n
       sys.AddOpcode( "sbc", 0x9e, 0, AddressingType.HL_INDIRECT_TO_A, 7 );              // SBC A,(HL)
       sys.AddOpcode( "sbc", 0xdd9e, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );         // SBC A,(IX+d)
       sys.AddOpcode( "sbc", 0xfd9e, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );         // SBC A,(IY+d)
 
       sys.AddOpcode( "and", 0xa0, 0, AddressingType.REGISTER_TO_A, 4 );                 // AND r
-      sys.AddOpcode( "and", 0xe6, 0, AddressingType.IMMEDIATE_TO_A, 7 );                // AND n
+      sys.AddOpcode( "and", 0xe6, 1, AddressingType.IMMEDIATE_TO_A, 7 )                 // AND n
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) );
       sys.AddOpcode( "and", 0xa6, 0, AddressingType.HL_INDIRECT_TO_A, 7 );              // AND (HL)
       sys.AddOpcode( "and", 0xdda6, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );         // AND (IX+d)
       sys.AddOpcode( "and", 0xfda6, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );         // AND (IY+d)
 
       sys.AddOpcode( "or", 0xb0, 0, AddressingType.REGISTER_TO_A, 4 );                  // OR r
-      sys.AddOpcode( "or", 0xf6, 0, AddressingType.IMMEDIATE_TO_A, 7 );                 // OR n
+      sys.AddOpcode( "or", 0xf6, 1, AddressingType.IMMEDIATE_TO_A, 7 )                  // OR n
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) );
       sys.AddOpcode( "or", 0xb6, 0, AddressingType.HL_INDIRECT_TO_A, 7 );               // OR (HL)
       sys.AddOpcode( "or", 0xddb6, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );          // OR (IX+d)
       sys.AddOpcode( "or", 0xfdb6, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );          // OR (IY+d)
 
       sys.AddOpcode( "xor", 0xa8, 0, AddressingType.REGISTER_TO_A, 4 );                 // XOR r
-      sys.AddOpcode( "xor", 0xee, 0, AddressingType.IMMEDIATE_TO_A, 7 );                // XOR n
+      sys.AddOpcode( "xor", 0xee, 1, AddressingType.IMMEDIATE_TO_A, 7 )                 // XOR n
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) );
       sys.AddOpcode( "xor", 0xae, 0, AddressingType.HL_INDIRECT_TO_A, 7 );              // XOR (HL)
       sys.AddOpcode( "xor", 0xddae, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );         // XOR (IX+d)
       sys.AddOpcode( "xor", 0xfdae, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );         // XOR (IY+d)
 
       sys.AddOpcode( "cp", 0xb8, 0, AddressingType.REGISTER_TO_A, 4 );                  // CP r
-      sys.AddOpcode( "cp", 0xfe, 0, AddressingType.IMMEDIATE_TO_A, 7 );                 // CP n
+      sys.AddOpcode( "cp", 0xfe, 1, AddressingType.IMMEDIATE_TO_A, 7 )                  // CP n
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) );
       sys.AddOpcode( "cp", 0xbe, 0, AddressingType.HL_INDIRECT_TO_A, 7 );               // CP (HL)
       sys.AddOpcode( "cp", 0xddbe, 1, AddressingType.IX_D_INDIRECT_TO_A, 19 );          // CP (IX+d)
       sys.AddOpcode( "cp", 0xfdbe, 1, AddressingType.IY_D_INDIRECT_TO_A, 19 );          // CP (IY+d)
@@ -256,20 +340,33 @@ namespace Tiny64
       sys.AddOpcode( "res", 0xfdcb0086, 0, AddressingType.IY_D_INDIRECT_TO_BIT, 23 );   // RES b,(IY+d)
 
       // jump group
-      sys.AddOpcode( "jp", 0xc3, 2, AddressingType.ABSOLUTE, 10 );                      // JP nn
-      sys.AddOpcode( "jp", 0xc2, 2, AddressingType.ABSOLUTE_CONDITION, 10 );            // JP cc,nn
+      sys.AddOpcode( "jp", 0xc3, 2, AddressingType.ABSOLUTE, 10 )                       // JP nn
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT ) );
+      sys.AddOpcode( "jp", 0xc2, 2, AddressingType.ABSOLUTE_CONDITION, 10 )            // JP cc,nn
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() { new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, cc, 3 ), 
+                                                                    new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT ) }  );
+
       sys.AddOpcode( "jr", 0x18, 1, AddressingType.RELATIVE, 12 );                      // JR e
-      sys.AddOpcode( "jr", 0x38, 1, AddressingType.RELATIVE_C, 7, 5 );                  // JR C,e
-      sys.AddOpcode( "jr", 0x30, 1, AddressingType.RELATIVE_NC, 7, 5 );                 // JR NC,e
-      sys.AddOpcode( "jr", 0x28, 1, AddressingType.RELATIVE_Z, 7, 5 );                  // JR Z,e
-      sys.AddOpcode( "jr", 0x20, 1, AddressingType.RELATIVE_NZ, 7, 5 );                 // JR NZ,e
+      sys.AddOpcode( "jr", 0x38, 1, AddressingType.RELATIVE, 7, 5 )                     // JR C,e
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() { new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, c ),
+                                                                    new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+      sys.AddOpcode( "jr", 0x30, 1, AddressingType.RELATIVE, 7, 5 )                     // JR NC,e
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() { new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, nc ),
+                                                                    new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+      sys.AddOpcode( "jr", 0x28, 1, AddressingType.RELATIVE, 7, 5 )                     // JR Z,e
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() { new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, z ),
+                                                                    new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+      sys.AddOpcode( "jr", 0x20, 1, AddressingType.RELATIVE, 7, 5 )                     // JR NZ,e
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() { new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, nz ),
+                                                                    new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
       sys.AddOpcode( "jp", 0xe9, 0, AddressingType.HL_INDIRECT, 4 );                    // JP (HL)
       sys.AddOpcode( "jp", 0xddc3, 0, AddressingType.IX_INDIRECT, 8 );                  // JP (IX)
       sys.AddOpcode( "jp", 0xfdc3, 0, AddressingType.IY_INDIRECT, 8 );                  // JP (IY)
       sys.AddOpcode( "djnz", 0x10, 1, AddressingType.RELATIVE, 8, 5 );                  // DJNZ e
 
       // call and return group
-      sys.AddOpcode( "call", 0xcd, 2, AddressingType.ABSOLUTE, 17 );                    // CALL nn
+      sys.AddOpcode( "call", 0xcd, 2, AddressingType.ABSOLUTE, 17 )                     // CALL nn
+        .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT ) );
       sys.AddOpcode( "call", 0xc4, 2, AddressingType.ABSOLUTE_CONDITION, 10, 7 );       // CALL cc,nn
       sys.AddOpcode( "ret", 0xc9, 0, AddressingType.IMPLICIT, 10 );                     // RET
       sys.AddOpcode( "ret", 0xc0, 0, AddressingType.IMPLICIT_CC, 5, 6 );                // RET cc

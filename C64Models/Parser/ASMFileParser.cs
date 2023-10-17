@@ -1743,7 +1743,7 @@ namespace RetroDevStudio.Parser
         return null;
       }
 
-      var parseResult = ParseLineInParameters( Tokens, 2, Tokens.Count - 3, LineIndex, false, out List<List<Types.TokenInfo>> arguments );
+      var parseResult = ParseLineInParameters( Tokens, StartIndex, Count, LineIndex, false, out List<List<Types.TokenInfo>> arguments );
 
       List<Types.TokenInfo>         functionArguments = new List<TokenInfo>();
       int                           argIndex = 0;
@@ -5381,10 +5381,6 @@ namespace RetroDevStudio.Parser
           }
         }
 
-        if ( lineIndex == 22 )
-        {
-          Debug.Log( "aha" );
-        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, textCodeMapping );
         if ( lineTokenInfos == null )
         {
@@ -5900,13 +5896,13 @@ namespace RetroDevStudio.Parser
 
           info.Line             = parseLine;
           info.LineCodeMapping  = textCodeMapping;
-          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info );
+          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out uint resultingOpcodePatchValue );
           if ( estimatedOpcode != null )
           {
             //dh.Log( "Found Token " + opcode.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes = estimatedOpcode.first.NumOperands + 1;
-            info.Opcode = estimatedOpcode.first;
-            info.OpcodeUsingLongMode = estimatedOpcode.second;
+            info.NumBytes             = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
+            info.Opcode               = estimatedOpcode.first;
+            info.OpcodeUsingLongMode  = estimatedOpcode.second;
 
             if ( ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
             ||   ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER )
@@ -5947,8 +5943,7 @@ namespace RetroDevStudio.Parser
                 {
                   info.LineData = new GR.Memory.ByteBuffer();
                 }
-                HandleM65OpcodePrefixes( info );
-                info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
+                AppendOpcodeValue( info, resultingOpcodePatchValue );
                 info.NeededParsedExpression = null;
               }
             }
@@ -5958,8 +5953,7 @@ namespace RetroDevStudio.Parser
               {
                 info.LineData = new GR.Memory.ByteBuffer();
               }
-              HandleM65OpcodePrefixes( info );
-              info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
+              AppendOpcodeValue( info, resultingOpcodePatchValue );
               int byteValue = -1;
 
               // strip prefixed #
@@ -5968,7 +5962,8 @@ namespace RetroDevStudio.Parser
               ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_16 )
               ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER ) )
               {
-                if ( lineTokenInfos[1].Content.StartsWith( "#" ) )
+                if ( ( lineTokenInfos.Count > 1 )
+                &&   ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
                 {
                   if ( lineTokenInfos[1].Length == 1 )
                   {
@@ -5987,13 +5982,28 @@ namespace RetroDevStudio.Parser
 
               int     startIndex = 1;
               int     count = lineTokenInfos.Count - 1;
-              startIndex  += info.Opcode.StartingTokenCount;
+
+              if ( info.Opcode.ParserExpressions.Count > 0 )
+              {
+                // we now only have the actual required tokens
+                startIndex  = 0;
+                count       = lineTokenInfos.Count;
+              }
+
+              startIndex += info.Opcode.StartingTokenCount;
               count       -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
 
               if ( EvaluateTokens( lineIndex, lineTokenInfos, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
               {
                 byteValue = byteValueSymbol.ToInt32();
-                if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
+
+                /*
+                if ( info.Opcode.ParserExpressions.Count > 0 )
+                {
+                  // TODO - relative?!
+                  info.LineData.AppendU8( (byte)byteValue );
+                }
+                else*/ if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
                   int delta = byteValue - info.AddressStart - 2;
                   if ( ( delta < -128 )
@@ -6060,7 +6070,7 @@ namespace RetroDevStudio.Parser
               }
               else
               {
-                info.NeededParsedExpression = lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 );
+                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, count );
               }
             }
             else if ( info.Opcode.NumOperands == 2 )
@@ -6069,13 +6079,17 @@ namespace RetroDevStudio.Parser
               {
                 info.LineData = new GR.Memory.ByteBuffer();
               }
-              HandleM65OpcodePrefixes( info );
-
-              info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
+              AppendOpcodeValue( info, resultingOpcodePatchValue );
               int byteValue = -1;
 
               int startIndex = 1;
               int countTokens = lineTokenInfos.Count - 1;
+              if ( info.Opcode.ParserExpressions.Count > 0 )
+              {
+                // we now only have the actual required tokens
+                startIndex  = 0;
+                countTokens = lineTokenInfos.Count;
+              }
               // discard prepended ,x or ,y
               if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_X )
               ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_Y )
@@ -6246,11 +6260,8 @@ namespace RetroDevStudio.Parser
               {
                 info.LineData = new GR.Memory.ByteBuffer();
               }
-              HandleM65OpcodePrefixes( info );
-
-              info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
+              AppendOpcodeValue( info, resultingOpcodePatchValue );
               int byteValue = -1;
-
               int startIndex = 1;
               int countTokens = lineTokenInfos.Count - 1;
 
@@ -8114,7 +8125,6 @@ namespace RetroDevStudio.Parser
         if ( sizeInBytes <= lastBank.SizeInBytesStart + lastBank.SizeInBytes )
         {
           // we need to fill
-
           int delta = lastBank.SizeInBytesStart + lastBank.SizeInBytes - sizeInBytes;
 
           info.NumBytes = delta;
@@ -8136,6 +8146,55 @@ namespace RetroDevStudio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private void AppendOpcodeValue( LineInfo Info, uint ResultingOpcodePatchValue )
+    {
+      HandleM65OpcodePrefixes( Info );
+
+      uint    opcodeValue = Info.Opcode.ByteValue;
+      if ( ResultingOpcodePatchValue != uint.MaxValue )
+      {
+        opcodeValue |= ResultingOpcodePatchValue;
+      }
+      if ( ( opcodeValue & 0xff000000 ) != 0 )
+      {
+        Info.LineData.AppendU32NetworkOrder( opcodeValue );
+        return;
+      }
+      if ( ( opcodeValue & 0x00ff0000 ) != 0 )
+      {
+        Info.LineData.AppendU8( (byte)( opcodeValue >> 16 ) );
+        Info.LineData.AppendU16NetworkOrder( (ushort)opcodeValue );
+        return;
+      }
+      if ( ( opcodeValue & 0x0000ff00 ) != 0 )
+      {
+        Info.LineData.AppendU16NetworkOrder( (ushort)opcodeValue );
+        return;
+      }
+      Info.LineData.AppendU8( (byte)opcodeValue );
+    }
+
+
+
+    private int SizeOfOpcode( uint ByteValue )
+    {
+      if ( ( ByteValue & 0xff000000 ) != 0 )
+      {
+        return 4;
+      }
+      if ( ( ByteValue & 0x00ff0000 ) != 0 )
+      {
+        return 3;
+      }
+      if ( ( ByteValue & 0x0000ff00 ) != 0 )
+      {
+        return 2;
+      }
+      return 1;
     }
 
 
@@ -12121,8 +12180,10 @@ namespace RetroDevStudio.Parser
 
 
 
-    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info )
+    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out uint ResultingOpcodePatchValue )
     {
+      ResultingOpcodePatchValue = 0;
+
       // lineTokens[0] contains the mnemonic
       if ( LineTokens.Count == 0 )
       {
@@ -12141,6 +12202,11 @@ namespace RetroDevStudio.Parser
       {
         // that one is given
         return new GR.Generic.Tupel<Tiny64.Opcode, bool>( PossibleOpcodes[0], false );
+      }
+
+      if ( MatchOpcodeToExpression( LineIndex, PossibleOpcodes, LineTokens, out Opcode matchingOpcode, out ResultingOpcodePatchValue ) )
+      {
+        return new GR.Generic.Tupel<Opcode, bool>( matchingOpcode, false );
       }
 
       bool endsWithCommaX = false;
@@ -12712,6 +12778,174 @@ namespace RetroDevStudio.Parser
           LineTokens[0].Length );
 
       return null;
+    }
+
+
+
+    private bool MatchOpcodeToExpression( int LineIndex, List<Opcode> PossibleOpcodes, List<TokenInfo> LineTokens, out Opcode MatchingOpcode, out uint ShiftedOpcodePatchValue )
+    {
+      MatchingOpcode          = null;
+      ShiftedOpcodePatchValue = 0;
+
+      int expressionTokenStartIndex = - 1;
+      int expressionTokenCount = 0;
+
+      if ( !ParseLineInParameters( LineTokens, 1, LineTokens.Count - 1, LineIndex, false, out List<List<TokenInfo>> lineParams ) )
+      {
+        return false;
+      }
+
+      foreach ( var potentialOpcode in PossibleOpcodes )
+      {
+        if ( potentialOpcode.ParserExpressions.Count > 0 )
+        {
+          ShiftedOpcodePatchValue = 0;
+          bool    isMatch = true;
+
+          int currentExpression = 0;
+          int currentParam = 0;
+
+          while ( ( currentParam < lineParams.Count )
+          &&      ( currentExpression < potentialOpcode.ParserExpressions.Count ) )
+          {
+            var potentialExpression = potentialOpcode.ParserExpressions[currentExpression];
+            var matchParam = lineParams[currentParam];
+
+            switch ( potentialExpression.Type )
+            {
+              case Opcode.OpcodePartialExpression.EXPRESSION_8BIT:
+              case Opcode.OpcodePartialExpression.EXPRESSION_16BIT:
+              case Opcode.OpcodePartialExpression.EXPRESSION_24BIT:
+              case Opcode.OpcodePartialExpression.EXPRESSION_32BIT:
+                // TODO - verify size of param if possible, otherwise choose the highest bit length
+                expressionTokenStartIndex = LineTokens.IndexOf( matchParam[0] );
+                expressionTokenCount      = matchParam.Count;
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.COMMA:
+                ++currentParam;
+                ++currentExpression;
+                if ( currentParam == lineParams.Count )
+                {
+                  isMatch = false;
+                }
+                break;
+              case Opcode.OpcodePartialExpression.PARENTHESIS_OPEN:
+                if ( ( matchParam.Count != 1 )
+                ||   ( matchParam[0].Content != "(" ) )
+                {
+                  isMatch = false;
+                  break;
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.PARENTHESIS_CLOSE:
+                if ( ( matchParam.Count != 1 )
+                ||   ( matchParam[0].Content != ")" ) )
+                {
+                  isMatch = false;
+                  break;
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.TOKEN_LIST:
+                if ( matchParam.Count != potentialExpression.ValidValues.Count )
+                {
+                  isMatch = false;
+                }
+                else
+                {
+                  for ( int i = 0; i < matchParam.Count; ++i )
+                  {
+                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[i].Key, true ) != 0 )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                  }
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.VALUE_FROM_LIST:
+                if ( matchParam.Count != 1 )
+                {
+                  isMatch = false;
+                }
+                else
+                {
+                  var validValue = potentialExpression.ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[0].Content, true ) == 0 );
+                  if ( validValue == null )
+                  {
+                    isMatch = false;
+                  }
+                  else
+                  {
+                    ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                  }
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              default:
+                Debug.Log( $"Not implemented {potentialExpression.Type}!" );
+                return false;
+            }
+          }
+          if ( isMatch )
+          {
+            if ( MatchingOpcode != null )
+            {
+              // more than one match
+              return false;
+            }
+            MatchingOpcode = potentialOpcode;
+
+            if ( expressionTokenCount != 0 )
+            {
+              var newTokens = LineTokens.GetRange( expressionTokenStartIndex, expressionTokenCount );
+
+              LineTokens.Clear();
+              LineTokens.AddRange( newTokens );
+            }
+            else
+            {
+              LineTokens.Clear();
+            }
+            return true;
+          }
+        }
+      }
+      if ( MatchingOpcode == null )
+      {
+        return false;
+      }
+      // cut out expression!
+      if ( expressionTokenCount != 0 )
+      {
+        /*
+        var newTokens = new List<TokenInfo>();
+        if ( expressionTokenStartIndex > 0 )
+        {
+          newTokens.AddRange( LineTokens.GetRange( 0, expressionTokenStartIndex ) );
+        }
+        if ( expressionTokenStartIndex + expressionTokenCount < LineTokens.Count )
+        {
+          newTokens.AddRange( LineTokens.GetRange( expressionTokenStartIndex + expressionTokenCount, LineTokens.Count - expressionTokenStartIndex - expressionTokenCount ) );
+        }*/
+        var newTokens = LineTokens.GetRange( expressionTokenStartIndex, expressionTokenCount );
+
+        LineTokens.Clear();
+        LineTokens.AddRange( newTokens );
+      }
+      else
+      {
+        LineTokens.Clear();
+      }
+      return true;
     }
 
 

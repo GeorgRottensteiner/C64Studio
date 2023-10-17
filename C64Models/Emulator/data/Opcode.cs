@@ -1,11 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Tiny64
 {
   public class Opcode
   {
+    public enum OpcodePartialExpression
+    {
+      UNUSED,
+      EXPRESSION_8BIT,
+      EXPRESSION_16BIT,
+      EXPRESSION_24BIT,
+      EXPRESSION_32BIT,
+      PARENTHESIS_OPEN,
+      PARENTHESIS_CLOSE,
+      COMMA,
+      VALUE_FROM_LIST,          // e.g. lda $f0,x    ld D,B
+      TOKEN_LIST                // e.h. (HL)
+    }
+
+
+
+    public class ValidValue
+    {
+      public string   Key = "";
+      public uint     ReplacementValue = uint.MaxValue;
+
+      public ValidValue( string Key )
+      {
+        this.Key = Key;
+      }
+
+      public ValidValue( string Key, uint ReplacementValue )
+      {
+        this.Key              = Key;
+        this.ReplacementValue = ReplacementValue;
+      }
+
+    }
+
+    public class OpcodeExpression
+    {
+      public OpcodePartialExpression    Type = OpcodePartialExpression.UNUSED;
+      public List<ValidValue>           ValidValues = new List<ValidValue>();
+      public int                        ReplacementValueShift = 0;
+      public int                        ResultingReplacementValue = 0;
+
+      public OpcodeExpression( OpcodePartialExpression Type )
+      {
+        this.Type = Type;
+      }
+
+      public OpcodeExpression( OpcodePartialExpression Type, List<ValidValue> ValidValues ) 
+      {
+        this.Type         = Type;
+        this.ValidValues  = ValidValues;
+      }
+
+      public OpcodeExpression( OpcodePartialExpression Type, List<ValidValue> ValidValues, int ReplacementValueShift )
+      {
+        this.Type                   = Type;
+        this.ValidValues            = ValidValues;
+        this.ReplacementValueShift  = ReplacementValueShift;
+      }
+    }
+
+
+
     public enum AddressingType
     {
       UNKNOWN,
@@ -113,10 +176,6 @@ namespace Tiny64
       IX_D_INDIRECT_TO_BIT,       // BIT b,(IX+d) this on is nasty, it has a fixed byte value AFTER the operand
       IY_D_INDIRECT_TO_BIT,       // BIT b,(IY+d) this on is nasty, it has a fixed byte value AFTER the operand
       ABSOLUTE_CONDITION,         // JP cc,nn
-      RELATIVE_C,                 // JR C,e
-      RELATIVE_NC,                // JR NC,e
-      RELATIVE_Z,                 // JR Z,e 
-      RELATIVE_NZ,                // JR NZ,e
       IX_INDIRECT,                // JP (IX)
       IY_INDIRECT,                // JP (IY)
       IMPLICIT_CC,                // RET cc
@@ -126,16 +185,19 @@ namespace Tiny64
       A_TO_IMMEDIATE_INDIRECT_8BIT, // OUT (n),A
       REGISTER_TO_C_INDIRECT      // OUT (C),r
     }
-    public string Mnemonic = "";
-    public uint ByteValue = uint.MaxValue;
-    public int NumOperands = -1;
-    public AddressingType Addressing = AddressingType.UNKNOWN;
-    public int NumCycles = 0;
-    public int NumPenaltyCycles = 0;
-    public int PageBoundaryCycles = 0;
-    public int BranchSamePagePenalty = 0;
-    public int BranchOtherPagePenalty = 0;
-    public int NumNopsToPrefix = 0;
+
+    public string                         Mnemonic = "";
+    public uint                           ByteValue = uint.MaxValue;
+    public int                            NumOperands = -1;
+    public AddressingType                 Addressing = AddressingType.UNKNOWN;
+    public int                            NumCycles = 0;
+    public int                            NumPenaltyCycles = 0;
+    public int                            PageBoundaryCycles = 0;
+    public int                            BranchSamePagePenalty = 0;
+    public int                            BranchOtherPagePenalty = 0;
+    public int                            NumNopsToPrefix = 0;
+
+    public List<OpcodeExpression>         ParserExpressions = new List<OpcodeExpression>();
 
 
 
