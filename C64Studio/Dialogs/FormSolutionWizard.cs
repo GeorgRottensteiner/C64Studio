@@ -111,22 +111,24 @@ namespace RetroDevStudio.Dialogs
         finalPathProject = System.IO.Path.Combine( finalPath, editProjectName.Text );
       }
       string solutionPath = System.IO.Path.Combine( finalPath, editSolutionName.Text + ".s64" );
-      string projectPath  = System.IO.Path.Combine( finalPathProject, editProjectName.Text + ".c64" );
+      string projectFullFilename  = System.IO.Path.Combine( finalPathProject, editProjectName.Text + ".c64" );
 
       labelSolutionSummary.Text = "The solution file will be created as " + solutionPath + "." + System.Environment.NewLine
-                                + "The project file will be created as " + projectPath + "." + System.Environment.NewLine;
+                                + "The project file will be created as " + projectFullFilename + "." + System.Environment.NewLine;
 
       checkCreateRepository.Enabled             = true;
       checkSeparateRepositoryForProject.Enabled = true;
       if ( checkCreateRepository.Checked )
       {
+        var gitPath1 = System.IO.Path.Combine( finalPath, ".git" );
         if ( checkSeparateRepositoryForProject.Checked )
         {
-          labelSolutionSummary.Text += $"One repository will be created in {finalPath}, a second will be created in {projectPath}.";
+          var gitPath2 = System.IO.Path.Combine( finalPathProject, ".git" );
+          labelSolutionSummary.Text += $"A repository will be created in {gitPath1}, a second will be created in {gitPath2}.";
         }
         else
         {
-          labelSolutionSummary.Text += $"One repository will be created in {finalPath}.";
+          labelSolutionSummary.Text += $"A repository will be created in {gitPath1}.";
         }
       }
       else

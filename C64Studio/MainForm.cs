@@ -6881,9 +6881,19 @@ namespace RetroDevStudio
           StudioCore.Navigating.Solution.Name = solWizard.SolutionName;
           StudioCore.Navigating.Solution.Filename = solWizard.SolutionFilename;
 
+          try
+          {
+            System.IO.Directory.CreateDirectory( System.IO.Path.GetDirectoryName( solWizard.ProjectFilename ) );
+          }
+          catch ( System.Exception ex )
+          {
+            System.Windows.Forms.MessageBox.Show( "Could not create project folder:" + System.Environment.NewLine + ex.Message, "Could not create project folder" );
+            return null;
+          }
+
           Project newProject = new Project();
           newProject.Core = StudioCore;
-          newProject.Settings.Name      = solWizard.SolutionName;
+          newProject.Settings.Name      = System.IO.Path.GetFileNameWithoutExtension( solWizard.ProjectFilename );
           newProject.Settings.Filename  = solWizard.ProjectFilename;
           newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
           newProject.Node = new TreeNode();
