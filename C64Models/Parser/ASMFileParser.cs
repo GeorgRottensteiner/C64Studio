@@ -3033,7 +3033,7 @@ namespace RetroDevStudio.Parser
                 { 
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
-                  if ( !ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, false, out tokenInfos ) )
+                  if ( !ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, true, out tokenInfos ) )
                   {
                     AddError( lineIndex,
                               m_LastErrorInfo.Code,
@@ -3100,7 +3100,7 @@ namespace RetroDevStudio.Parser
                 {
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
-                  if ( !ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, false, out tokenInfos ) )
+                  if ( !ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, true, out tokenInfos ) )
                   {
                     AddError( lineIndex,
                               m_LastErrorInfo.Code,
@@ -5899,7 +5899,7 @@ namespace RetroDevStudio.Parser
           var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out uint resultingOpcodePatchValue );
           if ( estimatedOpcode != null )
           {
-            //dh.Log( "Found Token " + opcode.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
+            //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
             info.NumBytes             = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
             info.Opcode               = estimatedOpcode.first;
             info.OpcodeUsingLongMode  = estimatedOpcode.second;
@@ -6115,7 +6115,7 @@ namespace RetroDevStudio.Parser
               {
                 // this has two seperate expressions
                 List<List<TokenInfo>> tokenInfos;
-                if ( !ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, false, out tokenInfos ) )
+                if ( !ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, true, out tokenInfos ) )
                 {
                   AddError( lineIndex,
                             m_LastErrorInfo.Code,
@@ -9011,6 +9011,10 @@ namespace RetroDevStudio.Parser
         // empty?
         AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", lineTokenInfos[lineTokenInfos.Count - 1].StartPos, 1 );
         return false;
+      }
+      if ( Offset + Count - paramStartIndex < 0 )
+      {
+        Debug.Log( "woss" );
       }
       lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + Count - paramStartIndex ) );
 
@@ -12790,7 +12794,7 @@ namespace RetroDevStudio.Parser
       int expressionTokenStartIndex = - 1;
       int expressionTokenCount = 0;
 
-      if ( !ParseLineInParameters( LineTokens, 1, LineTokens.Count - 1, LineIndex, false, out List<List<TokenInfo>> lineParams ) )
+      if ( !ParseLineInParameters( LineTokens, 1, LineTokens.Count - 1, LineIndex, true, out List<List<TokenInfo>> lineParams ) )
       {
         return false;
       }

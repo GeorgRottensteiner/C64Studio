@@ -249,6 +249,8 @@ namespace Tiny64
       {
         switch ( Addressing )
         {
+          case AddressingType.ZEROPAGE_INDIRECT:
+            return 1;
           case AddressingType.ABSOLUTE_X:
           case AddressingType.ZEROPAGE_X:
           case AddressingType.ABSOLUTE_Y:
@@ -258,9 +260,12 @@ namespace Tiny64
             // use ,<something>
             return 2;
           case AddressingType.ZEROPAGE_INDIRECT_Y_LONG:
+          case AddressingType.ZEROPAGE_INDIRECT_Z:
             return 3;
           case AddressingType.ABSOLUTE_INDIRECT_X:
             return 4;
+          case AddressingType.ZEROPAGE_INDIRECT_SP_Y:
+            return 5;
         }
         return 0;
       }

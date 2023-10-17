@@ -238,7 +238,7 @@ namespace Tiny64
       sys.AddOpcode( "cmp", 0xD1, 1, AddressingType.ZEROPAGE_INDIRECT_Y, 5, 1 );      // CMP ($ll), Y
       sys.AddOpcode( "cmp", 0xd2, 1, AddressingType.ZEROPAGE_INDIRECT, 5 );      // cmp ($12)
       sys.AddOpcode( "cmp", 0xd3, 1, AddressingType.ZEROPAGE_INDIRECT_SP_Y, 7 );      // CMP ($ll,SP),Y
-      sys.AddOpcode( "pei", 0xD4, 1, AddressingType.INDIRECT, 6 );                    // PEI ($ll)
+      sys.AddOpcode( "pei", 0xD4, 1, AddressingType.ZEROPAGE_INDIRECT, 6 );                    // PEI ($ll)
       sys.AddOpcode( "cmp", 0xD5, 1, AddressingType.ZEROPAGE_X, 4 );         // CMP $ll, X
       sys.AddOpcode( "dec", 0xD6, 1, AddressingType.ZEROPAGE_X, 6 );         // DEC $ll, X
       sys.AddOpcode( "cmp", 0xd7, 1, AddressingType.ZEROPAGE_INDIRECT_Y_LONG, 2 );    // CMP [$ll],Y

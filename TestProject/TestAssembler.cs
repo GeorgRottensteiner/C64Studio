@@ -264,9 +264,9 @@ namespace TestProject
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
-        foreach ( var msg in asmFileInfo.Messages.Values )
+        foreach ( var msg in asmFileInfo.Messages )
         {
-          Debug.Log( msg.Message );
+          Debug.Log( msg.Value.Message + " in line " + asmFileInfo.LineInfo[msg.Key].Line );
         }
       }
 
