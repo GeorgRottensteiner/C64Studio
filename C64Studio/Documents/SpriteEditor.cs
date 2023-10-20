@@ -660,6 +660,7 @@ namespace RetroDevStudio.Documents
         &&   ( BytesToSkip < projectFile.Length ) )
         {
           projectFile = projectFile.SubBuffer( BytesToSkip );
+          memIn       = projectFile.MemoryReader();
         }
 
         btnChangeMode.Text = GR.EnumHelper.GetDescription( SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC );

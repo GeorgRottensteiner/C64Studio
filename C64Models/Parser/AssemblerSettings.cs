@@ -156,7 +156,7 @@ namespace RetroDevStudio.Parser
         case Types.AssemblerType.C64_STUDIO:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
-          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#'";
 
           OpenBracketChars = "(" + INTERNAL_OPENING_BRACE + SQUARE_BRACKETS_OPEN;
           CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE + SQUARE_BRACKETS_CLOSE;

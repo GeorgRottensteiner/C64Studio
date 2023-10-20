@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Types;
 
 namespace TestProject
 {
@@ -222,8 +223,7 @@ namespace TestProject
       config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
-      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
-      Assert.IsFalse( parseResult );
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
     }
 
 
@@ -283,6 +283,13 @@ namespace TestProject
 
     private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages )
     {
+      return TestAssembleC64Studio( Source, out Messages, out RetroDevStudio.Types.ASM.FileInfo info );
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo Info )
+    {
       RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
       parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
@@ -305,6 +312,8 @@ namespace TestProject
 
       Assert.IsTrue( parseResult );
       Assert.IsTrue( parser.Assemble( config ) );
+
+      Info = asmFileInfo;
 
       return parser.AssembledOutput.Assembly;
     }
@@ -441,25 +450,13 @@ namespace TestProject
 
                              jmp (JUMP_ADDRESS )";
 
-      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
-      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
 
-      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
-      config.OutputFile = "test.prg";
-      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
-      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
-
-      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
-
-      Assert.IsTrue( parser.Assemble( config ) );
-
-      var assembly = parser.AssembledOutput;
-
-      Assert.AreEqual( 1, parser.Warnings );
+      Assert.AreEqual( 1, Messages.Count );
       Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, asmFileInfo.Messages.Values[0].Type );
       Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0007_POTENTIAL_PROBLEM, asmFileInfo.Messages.Values[0].Code );
 
-      Assert.AreEqual( "00206CFF3F", assembly.Assembly.ToString() );
+      Assert.AreEqual( "00206CFF3F", assembly.ToString() );
     }
 
 

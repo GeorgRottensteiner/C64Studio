@@ -3192,17 +3192,34 @@ namespace RetroDevStudio.Parser
                                 "Value $" + addressValue.ToString( "X" ) + " (" + addressValue + ") is out of bounds",
                                 lineInfo.NeededParsedExpression[0].StartPos,
                                 lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos - lineInfo.NeededParsedExpression[0].StartPos + 1 );
-                      lineInfo.LineData.AppendU16( 0 );
+                      if ( lineInfo.Opcode.ParserExpressions.Count == 0 )
+                      {
+                        lineInfo.LineData.AppendU16( 0 );
+                      }
                     }
                     else
                     {
-                      lineInfo.LineData.AppendU16( (ushort)addressValue );
+                      if ( lineInfo.Opcode.ParserExpressions.Count > 0 )
+                      {
+                        ApplyOpcodePatch( lineInfo, (ushort)addressValue, 0 );
+                      }
+                      else
+                      {
+                        lineInfo.LineData.AppendU16( (ushort)addressValue );
+                      }
                     }
                     ++lineInfo.NumBytes;
                   }
                   else
                   {
-                    lineInfo.LineData.AppendU8( (byte)addressValue );
+                    if ( lineInfo.Opcode.ParserExpressions.Count > 0 )
+                    {
+                      ApplyOpcodePatch( lineInfo, (byte)addressValue, 0 );
+                    }
+                    else
+                    {
+                      lineInfo.LineData.AppendU8( (byte)addressValue );
+                    }
                   }
                 }
                 else if ( lineInfo.Opcode.NumOperands == 2 )
@@ -3215,7 +3232,14 @@ namespace RetroDevStudio.Parser
                               lineInfo.NeededParsedExpression[0].StartPos,
                               lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos - lineInfo.NeededParsedExpression[0].StartPos + 1 );
                   }
-                  lineInfo.LineData.AppendU16( (ushort)addressValue );
+                  if ( lineInfo.Opcode.ParserExpressions.Count > 0 )
+                  {
+                    ApplyOpcodePatch( lineInfo, (ushort)addressValue, 0 );
+                  }
+                  else
+                  {
+                    lineInfo.LineData.AppendU16( (ushort)addressValue );
+                  }
                 }
                 else if ( lineInfo.Opcode.NumOperands == 3 )
                 {
@@ -3227,7 +3251,14 @@ namespace RetroDevStudio.Parser
                               lineInfo.NeededParsedExpression[0].StartPos,
                               lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos - lineInfo.NeededParsedExpression[0].StartPos + 1 );
                   }
-                  lineInfo.LineData.AppendU16( (ushort)addressValue );
+                  if ( lineInfo.Opcode.ParserExpressions.Count > 0 )
+                  {
+                    ApplyOpcodePatch( lineInfo, (int)addressValue, 0 );
+                  }
+                  else
+                  {
+                    lineInfo.LineData.AppendU24( (uint)addressValue );
+                  }
                 }
               }
               lineInfo.NeededParsedExpression = null;
@@ -5896,7 +5927,8 @@ namespace RetroDevStudio.Parser
 
           info.Line             = parseLine;
           info.LineCodeMapping  = textCodeMapping;
-          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out uint resultingOpcodePatchValue );
+
+          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out List<List<TokenInfo>> opcodeExpressions, out uint resultingOpcodePatchValue );
           if ( estimatedOpcode != null )
           {
             //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
@@ -5933,7 +5965,8 @@ namespace RetroDevStudio.Parser
           {
             if ( info.Opcode.NumOperands == 0 )
             {
-              if ( lineTokenInfos.Count > 1 )
+              if ( ( lineTokenInfos.Count > 1 )
+              &&   ( info.Opcode.ParserExpressions.Count == 0 ) )
               {
                 AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Garbage at end of line", lineTokenInfos[1].StartPos, parseLine.Length - lineTokenInfos[1].StartPos );
               }
@@ -5980,97 +6013,163 @@ namespace RetroDevStudio.Parser
                 continue;
               }
 
-              int     startIndex = 1;
-              int     count = lineTokenInfos.Count - 1;
-
-              if ( info.Opcode.ParserExpressions.Count > 0 )
+              int   rounds = 1;
+              bool  hasExpressions = false;
+              if ( ( opcodeExpressions != null )
+              &&   ( opcodeExpressions.Count > 0 ) )
               {
-                // we now only have the actual required tokens
-                startIndex  = 0;
-                count       = lineTokenInfos.Count;
+                rounds = opcodeExpressions.Count;
+                hasExpressions = true;
               }
 
-              startIndex += info.Opcode.StartingTokenCount;
-              count       -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
-
-              if ( EvaluateTokens( lineIndex, lineTokenInfos, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+              for ( int round = 0; round < rounds; ++round )
               {
-                byteValue = byteValueSymbol.ToInt32();
+                int               startIndex = 1;
+                int               count = lineTokenInfos.Count - 1;
+                List<TokenInfo>   tokensToEvaluate = lineTokenInfos;
 
-                /*
-                if ( info.Opcode.ParserExpressions.Count > 0 )
+                if ( hasExpressions )
                 {
-                  // TODO - relative?!
-                  info.LineData.AppendU8( (byte)byteValue );
+                  // we now only have the actual required tokens
+                  startIndex        = 0;
+                  count             = opcodeExpressions[round].Count;
+                  tokensToEvaluate  = opcodeExpressions[round];
                 }
-                else*/ if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
+                else
                 {
-                  int delta = byteValue - info.AddressStart - 2;
-                  if ( ( delta < -128 )
-                  ||   ( delta > 127 ) )
-                  {
-                    AddError( lineIndex,
-                              Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
-                              "Relative jump too far, trying to jump " + delta + " bytes",
-                              lineTokenInfos[1].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-                    info.LineData.AppendU8( 0 );
-                  }
-                  else
-                  {
-                    info.LineData.AppendU8( (byte)delta );
-                  }
+                  startIndex  += info.Opcode.StartingTokenCount;
+                  count       -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
+                  tokensToEvaluate = lineTokenInfos.GetRange( startIndex, count );
+                  startIndex  = 0;
+                  count       = tokensToEvaluate.Count;
                 }
-                else if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
-                ||        ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_8BIT )
-                ||        ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER ) )
+
+                if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
                 {
-                  if ( ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
-                  &&     ( info.Accu16Bit ) )
-                  ||   ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER )
-                  &&     ( info.Registers16Bit ) ) )
+                  byteValue = byteValueSymbol.ToInt32();
+
+                  if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                   {
-                    if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                    &&   ( ( byteValue < 0 )
-                    ||     ( byteValue >= 65536 ) ) )
+                    int delta = byteValue - info.AddressStart - 2;
+                    if ( !Valid8BitRelativeValue( delta ) )
                     {
                       AddError( lineIndex,
-                                Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                                "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
-                                lineTokenInfos[startIndex].StartPos,
+                                Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
+                                "Relative jump too far, trying to jump " + delta + " bytes",
+                                lineTokenInfos[1].StartPos,
                                 lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-                      info.LineData.AppendU16( 0 );
+                      if ( !hasExpressions )
+                      {
+                        info.LineData.AppendU8( 0 );
+                      }
                     }
                     else
                     {
-                      info.LineData.AppendU16( (ushort)byteValue );
+                      if ( hasExpressions )
+                      {
+                        ApplyOpcodePatch( info, (byte)delta, round );
+                      }
+                      else
+                      {
+                        info.LineData.AppendU8( (byte)delta );
+                      }
                     }
-                    ++info.NumBytes;
                   }
-                  else if ( !ValidByteValue( byteValue ) )
+                  // 8 bit only?
+                  else if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_8BIT )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_X )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_Y )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
+                  ||        ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER ) )
                   {
-                    AddError( lineIndex,
-                              Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
-                              "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:" + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
-                              lineTokenInfos[1].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-
-                    info.LineData.AppendU8( 0 );
+                    if ( ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
+                    &&     ( info.Accu16Bit ) )
+                    ||   ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER )
+                    &&     ( info.Registers16Bit ) ) )
+                    {
+                      if ( !ValidWordValue( byteValue ) )
+                      {
+                        AddError( lineIndex,
+                                  Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                                  "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
+                                  lineTokenInfos[startIndex].StartPos,
+                                  lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                        if ( !hasExpressions )
+                        {
+                          info.LineData.AppendU16( 0 );
+                        }
+                      }
+                      else
+                      {
+                        if ( hasExpressions )
+                        {
+                          ApplyOpcodePatch( info, (ushort)byteValue, round );
+                        }
+                        else
+                        {
+                          info.LineData.AppendU16( (ushort)byteValue );
+                        }
+                      }
+                      ++info.NumBytes;
+                    }
+                    else if ( !ValidByteValue( byteValue ) )
+                    {
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                                "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:" + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
+                                lineTokenInfos[1].StartPos,
+                                lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                      if ( !hasExpressions )
+                      {
+                        info.LineData.AppendU8( 0 );
+                      }
+                    }
+                    else
+                    {
+                      if ( hasExpressions )
+                      {
+                        ApplyOpcodePatch( info, (byte)byteValue, round );
+                      }
+                      else
+                      {
+                        info.LineData.AppendU8( (byte)byteValue );
+                      }
+                    }
                   }
                   else
                   {
-                    info.LineData.AppendU8( (byte)byteValue );
+                    if ( hasExpressions )
+                    {
+                      ApplyOpcodePatch( info, (byte)byteValue, round );
+                    }
+                    else
+                    {
+                      info.LineData.AppendU8( (byte)byteValue );
+                    }
+                  }
+                  if ( round == 0 )
+                  {
+                    info.NeededParsedExpression = null;
+                  }
+                  else
+                  {
+                    info.NeededParsedExpression2 = null;
                   }
                 }
                 else
                 {
-                  info.LineData.AppendU8( (byte)byteValue );
+                  if ( round == 0 )
+                  {
+                    info.NeededParsedExpression = tokensToEvaluate;
+                  }
+                  else
+                  {
+                    info.NeededParsedExpression2 = tokensToEvaluate;
+                  }
                 }
-                info.NeededParsedExpression = null;
-              }
-              else
-              {
-                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, count );
               }
             }
             else if ( info.Opcode.NumOperands == 2 )
@@ -6082,176 +6181,232 @@ namespace RetroDevStudio.Parser
               AppendOpcodeValue( info, resultingOpcodePatchValue );
               int byteValue = -1;
 
-              int startIndex = 1;
-              int countTokens = lineTokenInfos.Count - 1;
-              if ( info.Opcode.ParserExpressions.Count > 0 )
+              int   rounds = 1;
+              bool  hasExpressions = false;
+              if ( ( opcodeExpressions != null )
+              &&   ( opcodeExpressions.Count > 0 ) )
               {
-                // we now only have the actual required tokens
-                startIndex  = 0;
-                countTokens = lineTokenInfos.Count;
-              }
-              // discard prepended ,x or ,y
-              if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_X )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_Y )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y ) )
-              {
-                countTokens -= 2;
-              }
-              /*
-              countTokens -= info.Opcode.TrailingTokenCount;
-              startIndex += info.Opcode.StartingTokenCount;*/
-              if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_INDIRECT_X )
-              {
-                // remove ,x)
-                ++startIndex;
-                countTokens -= 4;
+                rounds = opcodeExpressions.Count;
+                hasExpressions = true;
               }
 
-              if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.BLOCK_MOVE_XYC ) )
+              for ( int round = 0; round < rounds; ++round )
               {
-                // this has two seperate expressions
-                List<List<TokenInfo>> tokenInfos;
-                if ( !ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, true, out tokenInfos ) )
+                int               startIndex = 1;
+                int               count = lineTokenInfos.Count - 1;
+                List<TokenInfo>   tokensToEvaluate = lineTokenInfos;
+
+                if ( hasExpressions )
                 {
-                  AddError( lineIndex,
-                            m_LastErrorInfo.Code,
-                            "Failed to parse opcode arguments" );
-                }
-                else if ( tokenInfos.Count != 2 )
-                {
-                  AddError( lineIndex,
-                            ErrorCode.E1000_SYNTAX_ERROR,
-                            "Expected two arguments to zeropage relative addressing opcode." );
+                  // we now only have the actual required tokens
+                  startIndex        = 0;
+                  count             = opcodeExpressions[round].Count;
+                  tokensToEvaluate  = opcodeExpressions[round];
                 }
                 else
                 {
-                  if ( ( !EvaluateTokens( lineIndex, tokenInfos[0], textCodeMapping, out SymbolInfo firstValueSymbol ) )
-                  ||   ( !EvaluateTokens( lineIndex, tokenInfos[1], textCodeMapping, out SymbolInfo secondValueSymbol ) ) )
+                  startIndex  += info.Opcode.StartingTokenCount;
+                  count       -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
+                  tokensToEvaluate = lineTokenInfos.GetRange( startIndex, count );
+                  startIndex  = 0;
+                  count       = tokensToEvaluate.Count;
+                }
+
+                if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
+                ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.BLOCK_MOVE_XYC ) )
+                {
+                  // this has two seperate expressions
+                  List<List<TokenInfo>> tokenInfos;
+                  if ( !ParseLineInParameters( tokensToEvaluate, startIndex, count, lineIndex, true, out tokenInfos ) )
                   {
-                    info.NeededParsedExpression = lineTokenInfos.GetRange( 1, countTokens );
+                    AddError( lineIndex,
+                              m_LastErrorInfo.Code,
+                              "Failed to parse opcode arguments" );
+                  }
+                  else if ( tokenInfos.Count != 2 )
+                  {
+                    AddError( lineIndex,
+                              ErrorCode.E1000_SYNTAX_ERROR,
+                              "Expected two arguments to zeropage relative addressing opcode." );
                   }
                   else
                   {
-                    int firstValue = firstValueSymbol.ToInt32();
-                    int secondValue = secondValueSymbol.ToInt32();
-
-                    if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.BLOCK_MOVE_XYC )
+                    if ( ( !EvaluateTokens( lineIndex, tokenInfos[0], textCodeMapping, out SymbolInfo firstValueSymbol ) )
+                    ||   ( !EvaluateTokens( lineIndex, tokenInfos[1], textCodeMapping, out SymbolInfo secondValueSymbol ) ) )
                     {
-                      // uses different ordering of parameters
-                      int dummy   = firstValue;
-                      firstValue  = secondValue;
-                      secondValue = dummy;
-                    }
-                    // zeropage numerand
-                    if ( !ValidByteValue( firstValue ) )
-                    {
-                      AddError( lineIndex,
-                                Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
-                                "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
-                                  + TokensToExpression( tokenInfos[0] ),
-                                tokenInfos[0][0].StartPos,
-                                tokenInfos[0][tokenInfos[0].Count - 1].EndPos - tokenInfos[0][0].StartPos + 1 );
-                      info.LineData.AppendU8( 0 );
+                      info.NeededParsedExpression = tokensToEvaluate.GetRange( 1, count );
                     }
                     else
                     {
-                      info.LineData.AppendU8( (byte)firstValue );
-                    }
+                      int firstValue = firstValueSymbol.ToInt32();
+                      int secondValue = secondValueSymbol.ToInt32();
 
-                    // relative label
-                    if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
-                    {
-                      int delta = secondValue - info.AddressStart - 3;
-                      if ( ( delta < -128 )
-                      ||   ( delta > 127 ) )
+                      if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.BLOCK_MOVE_XYC )
                       {
-                        AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
-                        info.LineData.AppendU8( 0 );
+                        // uses different ordering of parameters
+                        int dummy   = firstValue;
+                        firstValue  = secondValue;
+                        secondValue = dummy;
+                      }
+                      // zeropage numerand
+                      if ( !ValidByteValue( firstValue ) )
+                      {
+                        AddError( lineIndex,
+                                  Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                                  "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
+                                    + TokensToExpression( tokenInfos[0] ),
+                                  tokenInfos[0][0].StartPos,
+                                  tokenInfos[0][tokenInfos[0].Count - 1].EndPos - tokenInfos[0][0].StartPos + 1 );
+
+                        if ( !hasExpressions )
+                        {
+                          info.LineData.AppendU8( 0 );
+                        }
                       }
                       else
                       {
-                        info.LineData.AppendU8( (byte)delta );
+                        if ( hasExpressions )
+                        {
+                          ApplyOpcodePatch( info, (byte)firstValue, round );
+                        }
+                        else
+                        {
+                          info.LineData.AppendU8( (byte)firstValue );
+                        }
+                      }
+
+                      // relative label
+                      if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
+                      {
+                        int delta = secondValue - info.AddressStart - 3;
+                        if ( ( delta < -128 )
+                        ||   ( delta > 127 ) )
+                        {
+                          AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
+                          if ( !hasExpressions )
+                          {
+                            info.LineData.AppendU8( 0 );
+                          }
+                        }
+                        else
+                        {
+                          if ( hasExpressions )
+                          {
+                            ApplyOpcodePatch( info, (byte)delta, round );
+                          }
+                          else
+                          {
+                            info.LineData.AppendU8( (byte)delta );
+                          }
+                        }
+                      }
+                      else
+                      {
+                        if ( hasExpressions )
+                        {
+                          ApplyOpcodePatch( info, (byte)secondValue, round );
+                        }
+                        else
+                        {
+                          info.LineData.AppendU8( (byte)secondValue );
+                        }
+                      }
+                    }
+                  }
+                }
+                else if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+                {
+                  byteValue = byteValueSymbol.ToInt32();
+                  if ( ( info.Opcode.ByteValue == 0x6C )
+                  &&   ( m_Processor.Name == "6510" )
+                  &&   ( ( byteValue & 0xff ) == 0xff ) )
+                  {
+                    AddWarning( lineIndex,
+                                Types.ErrorCode.W0007_POTENTIAL_PROBLEM,
+                                "A indirect JMP with an address ending on 0xff will not work as expected on NMOS CPUs",
+                                tokensToEvaluate[startIndex].StartPos,
+                                tokensToEvaluate[tokensToEvaluate.Count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
+                  }
+
+                  if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+                  &&   ( ( byteValue < 0 )
+                  ||     ( byteValue >= 65536 ) ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                              "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
+                              tokensToEvaluate[startIndex].StartPos,
+                              tokensToEvaluate[startIndex + count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
+                  }
+
+                  if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
+                  {
+                    // TODO - was -2 (recheck!)
+                    int delta = 0;
+                    if ( m_Processor.Name == "65816" )
+                    {
+                      delta = byteValue - info.AddressStart - 3;
+                    }
+                    else
+                    {
+                      delta = byteValue - info.AddressStart - 2;
+                    }
+                    if ( ( delta < -32768 )
+                    ||   ( delta > 32767 ) )
+                    {
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
+                                "Relative jump too far, trying to jump " + delta + " bytes",
+                                tokensToEvaluate[1].StartPos,
+                                tokensToEvaluate[lineTokenInfos.Count - 1].EndPos + 1 - tokensToEvaluate[1].StartPos );
+                      if ( !hasExpressions )
+                      {
+                        info.LineData.AppendU16( 0 );
                       }
                     }
                     else
                     {
-                      info.LineData.AppendU8( (byte)secondValue );
+                      if ( hasExpressions )
+                      {
+                        ApplyOpcodePatch( info, (ushort)byteValue, round );
+                      }
+                      else
+                      {
+                        info.LineData.AppendU16( (ushort)delta );
+                      }
                     }
                   }
-                }
-              }
-              else if ( EvaluateTokens( lineIndex, lineTokenInfos, startIndex, countTokens, textCodeMapping, out SymbolInfo byteValueSymbol ) )
-              {
-                byteValue = byteValueSymbol.ToInt32();
-                if ( ( info.Opcode.ByteValue == 0x6C )
-                &&   ( m_Processor.Name == "6510" )
-                &&   ( ( byteValue & 0xff ) == 0xff ) )
-                {
-                  AddWarning( lineIndex,
-                              Types.ErrorCode.W0007_POTENTIAL_PROBLEM,
-                              "A indirect JMP with an address ending on 0xff will not work as expected on NMOS CPUs",
-                              lineTokenInfos[startIndex].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[startIndex].StartPos );
-                }
-
-                if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                &&   ( ( byteValue < 0 )
-                ||     ( byteValue >= 65536 ) ) )
-                {
-                  AddError( lineIndex,
-                            Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                            "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
-                            lineTokenInfos[startIndex].StartPos,
-                            lineTokenInfos[startIndex + countTokens - 1].EndPos + 1 - lineTokenInfos[startIndex].StartPos );
-                }
-
-                if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
-                {
-                  // TODO - was -2 (recheck!)
-                  int delta = 0;
-                  if ( m_Processor.Name == "65816" )
+                  else
                   {
-                    delta = byteValue - info.AddressStart - 3;
+                    if ( hasExpressions )
+                    {
+                      ApplyOpcodePatch( info, (ushort)byteValue, round );
+                    }
+                    else
+                    {
+                      info.LineData.AppendU16( (ushort)byteValue );
+                    }
+                  }
+                  if ( round == 0 )
+                  {
+                    info.NeededParsedExpression = null;
                   }
                   else
                   {
-                    delta = byteValue - info.AddressStart - 2;
-                  }
-                  if ( ( delta < -32768 )
-                  ||   ( delta > 32767 ) )
-                  {
-                    AddError( lineIndex,
-                              Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
-                              "Relative jump too far, trying to jump " + delta + " bytes",
-                              lineTokenInfos[1].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-                    info.LineData.AppendU16( 0 );
-                  }
-                  else
-                  {
-                    info.LineData.AppendU16( (ushort)delta );
+                    info.NeededParsedExpression2 = null;
                   }
                 }
                 else
                 {
-                  info.LineData.AppendU16( (ushort)byteValue );
+                  if ( round == 0 )
+                  {
+                    info.NeededParsedExpression = tokensToEvaluate;
+                  }
+                  else
+                  {
+                    info.NeededParsedExpression2 = tokensToEvaluate;
+                  }
                 }
-                info.NeededParsedExpression = null;
-              }
-              else
-              {
-                // TODO - could be better, why save all, check and trunc later??
-                int   addTokenCountToExpression = 0;
-                if ( ( info.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_X )
-                || ( info.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_Y ) )
-                {
-                  addTokenCountToExpression = 2;
-                }
-                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, countTokens + addTokenCountToExpression );
               }
             }
             else if ( info.Opcode.NumOperands == 3 )
@@ -6321,6 +6476,7 @@ namespace RetroDevStudio.Parser
               //Debug.Log( "needed expression for " + info.Line );
               switch ( info.Opcode.Addressing )
               {
+                /*
                 case Tiny64.Opcode.AddressingType.ABSOLUTE_X:
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_X:
                   if ( ( info.NeededParsedExpression.Count < 2 )
@@ -6337,7 +6493,7 @@ namespace RetroDevStudio.Parser
                   {
                     info.NeededParsedExpression.RemoveRange( info.NeededParsedExpression.Count - 2, 2 );
                   }
-                  break;
+                  break;*/
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
                   if ( ( info.NeededParsedExpression.Count < 4 )
                   ||   ( !IsOpeningBraceChar( info.NeededParsedExpression[0].Content )
@@ -6369,6 +6525,7 @@ namespace RetroDevStudio.Parser
                     info.NeededParsedExpression.RemoveAt( 0 );
                   }
                   break;
+                  /*
                 case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
@@ -6387,7 +6544,7 @@ namespace RetroDevStudio.Parser
                   {
                     info.NeededParsedExpression.RemoveRange( info.NeededParsedExpression.Count - 2, 2 );
                   }
-                  break;
+                  break;*/
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z:
                   // in case of case Opcode.AddressingType.INDIRECT_Z the brackets are parsed out already!
                   if ( ( info.NeededParsedExpression.Count < 2 )
@@ -8150,6 +8307,65 @@ namespace RetroDevStudio.Parser
 
 
 
+    private void ApplyOpcodePatch( LineInfo Info, int Value, int ExpressionIndex )
+    {
+      Opcode.OpcodeExpression   currentExpression = null;
+
+      int expIndex = 0;
+      int trueExpindex = 0;
+      while ( expIndex < Info.Opcode.ParserExpressions.Count )
+      {
+        if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT ) )
+        {
+          if ( trueExpindex == ExpressionIndex )
+          {
+            currentExpression = Info.Opcode.ParserExpressions[expIndex];
+
+            // swap bytes
+            if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+            ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT ) )
+            {
+              Value = (ushort)( ( ( Value & 0xff00 ) >> 8 ) | ( ( Value & 0x00ff ) << 8 ) );
+            }
+            break;
+          }
+          ++trueExpindex;
+        }
+        ++expIndex;
+      }
+      if ( currentExpression == null )
+      {
+        return;
+      }
+
+      currentExpression.ResultingReplacementValue = Value << currentExpression.ReplacementValueShift;
+
+      // patch into line data
+      if ( ( currentExpression.ResultingReplacementValue & 0xff000000 ) > 0 )
+      {
+        Info.LineData.SetU32NetworkOrderAt( (int)Info.LineData.Length - 4, (uint)( Info.LineData.UInt32NetworkOrderAt( (int)Info.LineData.Length - 4 ) | (uint)currentExpression.ResultingReplacementValue ) );
+      }
+      else if ( ( currentExpression.ResultingReplacementValue & 0x00ff0000 ) > 0 )
+      {
+        Info.LineData.SetU24NetworkOrderAt( (int)Info.LineData.Length - 3, (uint)( Info.LineData.UInt24NetworkOrderAt( (int)Info.LineData.Length - 3 ) | (uint)currentExpression.ResultingReplacementValue ) );
+      }
+      else if ( ( currentExpression.ResultingReplacementValue & 0x0000ff00 ) > 0 )
+      {
+        Info.LineData.SetU16NetworkOrderAt( (int)Info.LineData.Length - 2, (ushort)( Info.LineData.UInt16NetworkOrderAt( (int)Info.LineData.Length - 2 ) | (ushort)currentExpression.ResultingReplacementValue ) );
+      }
+      else
+      {
+        Info.LineData.SetU8At( (int)Info.LineData.Length - 1 , (byte)( Info.LineData.ByteAt( (int)Info.LineData.Length - 1 ) | (byte)currentExpression.ResultingReplacementValue ) );
+      }
+    }
+
+
+
     private void AppendOpcodeValue( LineInfo Info, uint ResultingOpcodePatchValue )
     {
       HandleM65OpcodePrefixes( Info );
@@ -8973,6 +9189,10 @@ namespace RetroDevStudio.Parser
 
       for ( int i = 0; i < Count; ++i )
       {
+        if ( Offset + i >= lineTokenInfos.Count )
+        {
+          Debug.Log( "aha" );
+        }
         var token = lineTokenInfos[Offset + i];
 
         if ( IsOpeningBraceChar( token.Content ) )
@@ -12184,9 +12404,10 @@ namespace RetroDevStudio.Parser
 
 
 
-    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out uint ResultingOpcodePatchValue )
+    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out List<List<TokenInfo>> OpcodeExpressions, out uint ResultingOpcodePatchValue )
     {
       ResultingOpcodePatchValue = 0;
+      OpcodeExpressions = null;
 
       // lineTokens[0] contains the mnemonic
       if ( LineTokens.Count == 0 )
@@ -12208,7 +12429,7 @@ namespace RetroDevStudio.Parser
         return new GR.Generic.Tupel<Tiny64.Opcode, bool>( PossibleOpcodes[0], false );
       }
 
-      if ( MatchOpcodeToExpression( LineIndex, PossibleOpcodes, LineTokens, out Opcode matchingOpcode, out ResultingOpcodePatchValue ) )
+      if ( MatchOpcodeToExpression( LineIndex, PossibleOpcodes, LineTokens, out Opcode matchingOpcode, out OpcodeExpressions, out ResultingOpcodePatchValue ) )
       {
         return new GR.Generic.Tupel<Opcode, bool>( matchingOpcode, false );
       }
@@ -12786,10 +13007,11 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool MatchOpcodeToExpression( int LineIndex, List<Opcode> PossibleOpcodes, List<TokenInfo> LineTokens, out Opcode MatchingOpcode, out uint ShiftedOpcodePatchValue )
+    private bool MatchOpcodeToExpression( int LineIndex, List<Opcode> PossibleOpcodes, List<TokenInfo> LineTokens, out Opcode MatchingOpcode, out List<List<TokenInfo>> Expressions, out uint ShiftedOpcodePatchValue )
     {
       MatchingOpcode          = null;
       ShiftedOpcodePatchValue = 0;
+      Expressions             = null;
 
       int expressionTokenStartIndex = - 1;
       int expressionTokenCount = 0;
@@ -12798,11 +13020,25 @@ namespace RetroDevStudio.Parser
       {
         return false;
       }
+      // strip off comments
+      foreach ( var parms in lineParams )
+      {
+        var tokenComment = parms.FirstOrDefault( t => t.Type == TokenInfo.TokenType.COMMENT );
+        if ( tokenComment != null )
+        {
+          int   commentIndex = parms.IndexOf( tokenComment );
+          parms.RemoveRange( commentIndex, parms.Count - commentIndex );
+        }
+      }
 
       foreach ( var potentialOpcode in PossibleOpcodes )
       {
         if ( potentialOpcode.ParserExpressions.Count > 0 )
         {
+          if ( Expressions != null )
+          {
+            Expressions.Clear();
+          }
           ShiftedOpcodePatchValue = 0;
           bool    isMatch = true;
 
@@ -12821,11 +13057,21 @@ namespace RetroDevStudio.Parser
               case Opcode.OpcodePartialExpression.EXPRESSION_16BIT:
               case Opcode.OpcodePartialExpression.EXPRESSION_24BIT:
               case Opcode.OpcodePartialExpression.EXPRESSION_32BIT:
-                // TODO - verify size of param if possible, otherwise choose the highest bit length
-                expressionTokenStartIndex = LineTokens.IndexOf( matchParam[0] );
-                expressionTokenCount      = matchParam.Count;
-                ++currentParam;
-                ++currentExpression;
+                {
+                  // TODO - verify size of param if possible, otherwise choose the highest bit length
+                  expressionTokenStartIndex = LineTokens.IndexOf( matchParam[0] );
+                  expressionTokenCount = matchParam.Count;
+
+                  var newTokens = LineTokens.GetRange( expressionTokenStartIndex, expressionTokenCount );
+                  if ( Expressions == null )
+                  {
+                    Expressions = new List<List<TokenInfo>>();
+                  }
+                  Expressions.Add( newTokens );
+
+                  ++currentParam;
+                  ++currentExpression;
+                }
                 break;
               case Opcode.OpcodePartialExpression.COMMA:
                 ++currentParam;
@@ -12841,6 +13087,50 @@ namespace RetroDevStudio.Parser
                 {
                   isMatch = false;
                   break;
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT:
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT:
+                if ( ( matchParam.Count < potentialExpression.ValidValues.Count )
+                ||   ( matchParam.Count < potentialExpression.ValidValues2.Count ) )
+                {
+                  isMatch = false;
+                }
+                else
+                {
+                  for ( int i = 0; i < potentialExpression.ValidValues.Count; ++i )
+                  {
+                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[i].Key, true ) != 0 )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    for ( int i = 0; i < potentialExpression.ValidValues2.Count; ++i )
+                    {
+                      if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues2.Count + i].Content, potentialExpression.ValidValues2[i].Key, true ) != 0 )
+                      {
+                        isMatch = false;
+                        break;
+                      }
+                    }
+                    if ( isMatch )
+                    {
+                      expressionTokenStartIndex = LineTokens.IndexOf( matchParam[potentialExpression.ValidValues.Count] );
+                      expressionTokenCount      = matchParam.Count - potentialExpression.ValidValues.Count - potentialExpression.ValidValues2.Count;
+
+                      var newTokens = LineTokens.GetRange( expressionTokenStartIndex, expressionTokenCount );
+                      if ( Expressions == null )
+                      {
+                        Expressions = new List<List<TokenInfo>>();
+                      }
+                      Expressions.Add( newTokens );
+                    }
+                  }
                 }
                 ++currentParam;
                 ++currentExpression;
@@ -12907,18 +13197,6 @@ namespace RetroDevStudio.Parser
               return false;
             }
             MatchingOpcode = potentialOpcode;
-
-            if ( expressionTokenCount != 0 )
-            {
-              var newTokens = LineTokens.GetRange( expressionTokenStartIndex, expressionTokenCount );
-
-              LineTokens.Clear();
-              LineTokens.AddRange( newTokens );
-            }
-            else
-            {
-              LineTokens.Clear();
-            }
             return true;
           }
         }

@@ -47,6 +47,7 @@ namespace RetroDevStudio.Types.ASM
     public string                 Zone = "";
     public string                 CheapLabelZone = "";
     public List<Types.TokenInfo>  NeededParsedExpression = null;
+    public List<Types.TokenInfo>  NeededParsedExpression2 = null;
     public GR.Collections.Map<byte, byte> LineCodeMapping = null;
     public Tiny64.Opcode          Opcode = null;
     public bool                   OpcodeUsingLongMode = false;

@@ -246,6 +246,25 @@ namespace GR
 
 
 
+      public void AppendU24( UInt32 DWordValue )
+      {
+        AppendU8( (byte)( DWordValue & 0xff ) );
+        AppendU8( (byte)( DWordValue >> 8 ) );
+        AppendU8( (byte)( DWordValue >> 16 ) );
+
+      }
+
+
+
+      public void AppendU24NetworkOrder( UInt32 DWordValue )
+      {
+        AppendU8( (byte)( DWordValue >> 16 ) );
+        AppendU8( (byte)( DWordValue >> 8 ) );
+        AppendU8( (byte)( DWordValue & 0xff ) );
+      }
+
+
+
       public void AppendU32( UInt32 DWordValue )
       {
         AppendU8( (byte)( DWordValue & 0xff ) );
@@ -368,6 +387,34 @@ namespace GR
         m_Data[Index + 1] = (byte)( ( DWordValue >> 16 ) & 0xff );
         m_Data[Index + 2] = (byte)( ( DWordValue >> 8 ) & 0xff );
         m_Data[Index + 3] = (byte)  ( DWordValue & 0xff );
+      }
+
+
+
+      public void SetU24At( int Index, System.UInt32 DWordValue )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 2 >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index]     = (byte)( DWordValue & 0xff );
+        m_Data[Index + 1] = (byte)( ( DWordValue >> 8 ) & 0xff );
+        m_Data[Index + 2] = (byte)( ( DWordValue >> 16 ) & 0xff );
+      }
+
+
+
+      public void SetU24NetworkOrderAt( int Index, System.UInt32 DWordValue )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 2 >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index + 0] = (byte)( ( DWordValue >> 16 ) & 0xff );
+        m_Data[Index + 1] = (byte)( ( DWordValue >> 8 ) & 0xff );
+        m_Data[Index + 2] = (byte)  ( DWordValue & 0xff );
       }
 
 
@@ -741,6 +788,36 @@ namespace GR
         System.UInt16 Value = (System.UInt16)( ( ByteAt( Index ) << 8 )
                                                  + ByteAt( Index + 1 ) );
         return Value;
+      }
+
+
+
+      public System.UInt32 UInt24At( int Index )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 2 >= Length ) )
+        {
+          return 0;
+        }
+        System.UInt32   dwValue = ( (System.UInt32)ByteAt( Index + 2 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 8 )
+                                + ( (System.UInt32)ByteAt( Index ) );
+        return dwValue;
+      }
+
+
+
+      public System.UInt32 UInt24NetworkOrderAt( int Index )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 2 >= Length ) )
+        {
+          return 0;
+        }
+        System.UInt32   dwValue = ( (System.UInt32)ByteAt( Index + 0 ) << 24 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 2 ) << 8 );
+        return dwValue;
       }
 
 

@@ -17,8 +17,10 @@ namespace Tiny64
       PARENTHESIS_OPEN,
       PARENTHESIS_CLOSE,
       COMMA,
-      VALUE_FROM_LIST,          // e.g. lda $f0,x    ld D,B
-      TOKEN_LIST                // e.h. (HL)
+      VALUE_FROM_LIST,                // e.g. lda $f0,x    ld D,B
+      TOKEN_LIST,                     // e.g. (HL)
+      ENCAPSULATED_EXPRESSION_8BIT,   // e.g. LD r,>(IX+d)<
+      ENCAPSULATED_EXPRESSION_16BIT   // e.g. LD A,(>nn<)
     }
 
 
@@ -45,6 +47,7 @@ namespace Tiny64
     {
       public OpcodePartialExpression    Type = OpcodePartialExpression.UNUSED;
       public List<ValidValue>           ValidValues = new List<ValidValue>();
+      public List<ValidValue>           ValidValues2 = new List<ValidValue>();
       public int                        ReplacementValueShift = 0;
       public int                        ResultingReplacementValue = 0;
 
@@ -63,6 +66,21 @@ namespace Tiny64
       {
         this.Type                   = Type;
         this.ValidValues            = ValidValues;
+        this.ReplacementValueShift  = ReplacementValueShift;
+      }
+
+      public OpcodeExpression( OpcodePartialExpression Type, List<ValidValue> ValidValues, List<ValidValue> ValidValues2 )
+      {
+        this.Type         = Type;
+        this.ValidValues  = ValidValues;
+        this.ValidValues2 = ValidValues2;
+      }
+
+      public OpcodeExpression( OpcodePartialExpression Type, List<ValidValue> ValidValues, List<ValidValue> ValidValues2, int ReplacementValueShift )
+      {
+        this.Type                   = Type;
+        this.ValidValues            = ValidValues;
+        this.ValidValues2           = ValidValues2;
         this.ReplacementValueShift  = ReplacementValueShift;
       }
     }
@@ -226,6 +244,7 @@ namespace Tiny64
           case AddressingType.ZEROPAGE_INDIRECT_SP_Y:
           case AddressingType.ZEROPAGE_INDIRECT_Z:
           case AddressingType.ZEROPAGE_INDIRECT_Y_LONG:
+          case AddressingType.ZEROPAGE_INDIRECT_Y:
             // jmp ($1234,x)
             // jsr ($1234)
             // and ($12)
@@ -250,6 +269,7 @@ namespace Tiny64
         switch ( Addressing )
         {
           case AddressingType.ZEROPAGE_INDIRECT:
+          case AddressingType.INDIRECT:
             return 1;
           case AddressingType.ABSOLUTE_X:
           case AddressingType.ZEROPAGE_X:
@@ -260,10 +280,10 @@ namespace Tiny64
             // use ,<something>
             return 2;
           case AddressingType.ZEROPAGE_INDIRECT_Y_LONG:
+          case AddressingType.ZEROPAGE_INDIRECT_Y:
           case AddressingType.ZEROPAGE_INDIRECT_Z:
-            return 3;
           case AddressingType.ABSOLUTE_INDIRECT_X:
-            return 4;
+            return 3;
           case AddressingType.ZEROPAGE_INDIRECT_SP_Y:
             return 5;
         }
