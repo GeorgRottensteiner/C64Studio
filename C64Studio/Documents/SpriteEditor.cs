@@ -2301,6 +2301,7 @@ namespace RetroDevStudio.Documents
 
     private void listLayers_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
+      int   curSelectedSpriteIndex = listLayerSprites.SelectedIndex;
       listLayerSprites.Items.Clear();
       if ( Item == null )
       {
@@ -2332,7 +2333,16 @@ namespace RetroDevStudio.Documents
         item.Tag = sprite;
         listLayerSprites.Items.Add( item );
 
+        if ( spriteIndex == curSelectedSpriteIndex )
+        {
+          listLayerSprites.SelectedIndex = spriteIndex;
+        }
         ++spriteIndex;
+      }
+      if ( ( listLayerSprites.SelectedIndex == -1 )
+      &&   ( listLayerSprites.Items.Count > 0 ) )
+      {
+        listLayerSprites.SelectedIndex = 0;
       }
       RedrawPreviewLayer();
     }
@@ -2899,25 +2909,28 @@ namespace RetroDevStudio.Documents
         foreach ( var entry in layer.Sprites )
         {
           minX = Math.Min( entry.X, minX );
+          
           if ( entry.ExpandX )
           {
-            maxX = Math.Max( entry.X + 2 * m_SpriteWidth, minX );
+            maxX = Math.Max( entry.X + 2 * m_SpriteWidth, maxX );
           }
           else
           {
-            maxX = Math.Max( entry.X + m_SpriteWidth, minX );
+
+            maxX = Math.Max( entry.X + m_SpriteWidth, maxX );
           }
           minY = Math.Min( entry.Y, minY );
           if ( entry.ExpandY )
           {
-            maxY = Math.Max( entry.Y + 2 * m_SpriteHeight, minY );
+            maxY = Math.Max( entry.Y + 2 * m_SpriteHeight, maxY );
           }
           else
           {
-            maxY = Math.Max( entry.Y + m_SpriteHeight, minY );
+            maxY = Math.Max( entry.Y + m_SpriteHeight, maxY );
           }
         }
       }
+      Debug.Log( $"minX {minX}, maxX {maxX}, minY {minY}, maxY {maxY}" );
 
       try
       {
@@ -2946,8 +2959,8 @@ namespace RetroDevStudio.Documents
                                                          m_SpriteProject.Colors.MultiColor2,
                                                          entry.Color,
                                                          layerImage,
-                                                         entry.X,
-                                                         entry.Y,
+                                                         entry.X - minX,
+                                                         entry.Y - minY,
                                                          entry.ExpandX,
                                                          entry.ExpandY,
                                                          true );
@@ -2961,8 +2974,8 @@ namespace RetroDevStudio.Documents
                                                     layer.BackgroundColor,
                                                     entry.Color,
                                                     layerImage,
-                                                    entry.X,
-                                                    entry.Y,
+                                                    entry.X - minX,
+                                                    entry.Y - minY,
                                                     entry.ExpandX,
                                                     entry.ExpandY,
                                                     true );
@@ -2985,7 +2998,7 @@ namespace RetroDevStudio.Documents
             var reducedImage = (MemoryImage)quantizer.Reduce( image );
             var bitmap = reducedImage.GetAsBitmap();
 
-            gif.AddFrame( bitmap, minX, minY, new TimeSpan( 0, 0, 0, 0, ( layer.DelayMS == 0 ) ? 100 : layer.DelayMS ) );
+            gif.AddFrame( bitmap, 0, 0, new TimeSpan( 0, 0, 0, 0, ( layer.DelayMS == 0 ) ? 100 : layer.DelayMS ) );
           }
           gif.Close();
         }

@@ -12,6 +12,7 @@ using GR.Image;
 
 namespace RetroDevStudio.Controls
 {
+  [DefaultEvent( "SelectedIndexChanged" )]
   public partial class ArrangedItemList : UserControl, IDPIHandlerResize
   {
     // Declare the delegate (if using non-generic pattern).
