@@ -20,7 +20,8 @@ namespace Tiny64
       VALUE_FROM_LIST,                // e.g. lda $f0,x    ld D,B
       TOKEN_LIST,                     // e.g. (HL)
       ENCAPSULATED_EXPRESSION_8BIT,   // e.g. LD r,>(IX+d)<
-      ENCAPSULATED_EXPRESSION_16BIT   // e.g. LD A,(>nn<)
+      ENCAPSULATED_EXPRESSION_16BIT,  // e.g. LD A,(>nn<)
+      EMPTY                           // none (RET), to differ from RET cc
     }
 
 

@@ -878,14 +878,688 @@
           add IY,IY     ;FD 29
           add IY,SP     ;FD 39
 
+;INC ss
+          inc BC        ;03
+          inc DE        ;13
+          inc HL        ;23
+          inc SP        ;33
+
+          inc IX        ;DD 23
+          inc IY        ;FD 23
+
+;DEC ss
+          dec BC        ;0B
+          dec DE        ;1B
+          dec HL        ;2B
+          dec SP        ;3B
+
+          dec IX        ;DD 2B
+          dec IY        ;FD 2B
+
+
+          rlca          ;07
+          rla           ;17
+          rrca          ;0F
+          rra           ;1F
+
+;RLC r
+          rlc b         ;CB 00
+          rlc c         ;CB 01
+          rlc d         ;CB 02
+          rlc e         ;CB 03
+          rlc h         ;CB 04
+          rlc l         ;CB 05
+          rlc a         ;CB 07
+
+          rlc (HL)      ;CB 06
+
+;RLC (IX+d)
+          rlc (IX + $00)      ;DD CB 00 06
+          rlc (IX + $01)      ;DD CB 01 06
+          rlc (IX + $fe)      ;DD CB FE 06
+          rlc (IX + $ff)      ;DD CB FF 06
+
+          rlc (IX + LATE_00)  ;DD CB 00 06
+          rlc (IX + LATE_01)  ;DD CB 01 06
+          rlc (IX + LATE_FE)  ;DD CB FE 06
+          rlc (IX + LATE_FF)  ;DD CB FF 06
+
+          rlc (IY + $00)      ;FD CB 00 06
+          rlc (IY + $01)      ;FD CB 01 06
+          rlc (IY + $fe)      ;FD CB FE 06
+          rlc (IY + $ff)      ;FD CB FF 06
+
+          rlc (IY + LATE_00)  ;FD CB 00 06
+          rlc (IY + LATE_01)  ;FD CB 01 06
+          rlc (IY + LATE_FE)  ;FD CB FE 06
+          rlc (IY + LATE_FF)  ;FD CB FF 06
+
+
+;rl r
+          rl b         ;CB 10
+          rl c         ;CB 11
+          rl d         ;CB 12
+          rl e         ;CB 13
+          rl h         ;CB 14
+          rl l         ;CB 15
+          rl a         ;CB 17
+
+          rl (HL)      ;CB 16
+
+;rl (IX+d)
+          rl (IX + $00)      ;DD CB 00 16
+          rl (IX + $01)      ;DD CB 01 16
+          rl (IX + $fe)      ;DD CB FE 16
+          rl (IX + $ff)      ;DD CB FF 16
+
+          rl (IX + LATE_00)  ;DD CB 00 16
+          rl (IX + LATE_01)  ;DD CB 01 16
+          rl (IX + LATE_FE)  ;DD CB FE 16
+          rl (IX + LATE_FF)  ;DD CB FF 16
+
+          rl (IY + $00)      ;FD CB 00 16
+          rl (IY + $01)      ;FD CB 01 16
+          rl (IY + $fe)      ;FD CB FE 16
+          rl (IY + $ff)      ;FD CB FF 16
+
+          rl (IY + LATE_00)  ;FD CB 00 16
+          rl (IY + LATE_01)  ;FD CB 01 16
+          rl (IY + LATE_FE)  ;FD CB FE 16
+          rl (IY + LATE_FF)  ;FD CB FF 16
+
+
+;rrc r
+          rrc b         ;CB 08
+          rrc c         ;CB 09
+          rrc d         ;CB 0A
+          rrc e         ;CB 0B
+          rrc h         ;CB 0C
+          rrc l         ;CB 0D
+          rrc a         ;CB 0F
+
+          rrc (HL)      ;CB 0E
+
+;rrc (IX+d)
+          rrc (IX + $00)      ;DD CB 00 0E
+          rrc (IX + $01)      ;DD CB 01 0E
+          rrc (IX + $fe)      ;DD CB FE 0E
+          rrc (IX + $ff)      ;DD CB FF 0E
+
+          rrc (IX + LATE_00)  ;DD CB 00 0E
+          rrc (IX + LATE_01)  ;DD CB 01 0E
+          rrc (IX + LATE_FE)  ;DD CB FE 0E
+          rrc (IX + LATE_FF)  ;DD CB FF 0E
+
+          rrc (IY + $00)      ;FD CB 00 0E
+          rrc (IY + $01)      ;FD CB 01 0E
+          rrc (IY + $fe)      ;FD CB FE 0E
+          rrc (IY + $ff)      ;FD CB FF 0E
+
+          rrc (IY + LATE_00)  ;FD CB 00 0E
+          rrc (IY + LATE_01)  ;FD CB 01 0E
+          rrc (IY + LATE_FE)  ;FD CB FE 0E
+          rrc (IY + LATE_FF)  ;FD CB FF 0E
+
+;rr r
+          rr b         ;CB 18
+          rr c         ;CB 19
+          rr d         ;CB 1A
+          rr e         ;CB 1B
+          rr h         ;CB 1C
+          rr l         ;CB 1D
+          rr a         ;CB 1F
+
+          rr (HL)      ;CB 1E
+
+;rr (IX+d)
+          rr (IX + $00)      ;DD CB 00 1E
+          rr (IX + $01)      ;DD CB 01 1E
+          rr (IX + $fe)      ;DD CB FE 1E
+          rr (IX + $ff)      ;DD CB FF 1E
+
+          rr (IX + LATE_00)  ;DD CB 00 1E
+          rr (IX + LATE_01)  ;DD CB 01 1E
+          rr (IX + LATE_FE)  ;DD CB FE 1E
+          rr (IX + LATE_FF)  ;DD CB FF 1E
+
+          rr (IY + $00)      ;FD CB 00 1E
+          rr (IY + $01)      ;FD CB 01 1E
+          rr (IY + $fe)      ;FD CB FE 1E
+          rr (IY + $ff)      ;FD CB FF 1E
+
+          rr (IY + LATE_00)  ;FD CB 00 1E
+          rr (IY + LATE_01)  ;FD CB 01 1E
+          rr (IY + LATE_FE)  ;FD CB FE 1E
+          rr (IY + LATE_FF)  ;FD CB FF 1E
+
+
+;sla r
+          sla b         ;CB 20
+          sla c         ;CB 21
+          sla d         ;CB 22
+          sla e         ;CB 23
+          sla h         ;CB 24
+          sla l         ;CB 25
+          sla a         ;CB 27
+
+          sla (HL)      ;CB 26
+
+;sla (IX+d)
+          sla (IX + $00)      ;DD CB 00 26
+          sla (IX + $01)      ;DD CB 01 26
+          sla (IX + $fe)      ;DD CB FE 26
+          sla (IX + $ff)      ;DD CB FF 26
+
+          sla (IX + LATE_00)  ;DD CB 00 26
+          sla (IX + LATE_01)  ;DD CB 01 26
+          sla (IX + LATE_FE)  ;DD CB FE 26
+          sla (IX + LATE_FF)  ;DD CB FF 26
+
+          sla (IY + $00)      ;FD CB 00 26
+          sla (IY + $01)      ;FD CB 01 26
+          sla (IY + $fe)      ;FD CB FE 26
+          sla (IY + $ff)      ;FD CB FF 26
+
+          sla (IY + LATE_00)  ;FD CB 00 26
+          sla (IY + LATE_01)  ;FD CB 01 26
+          sla (IY + LATE_FE)  ;FD CB FE 26
+          sla (IY + LATE_FF)  ;FD CB FF 26
+
+;sra r
+          sra b         ;CB 28
+          sra c         ;CB 29
+          sra d         ;CB 2A
+          sra e         ;CB 2B
+          sra h         ;CB 2C
+          sra l         ;CB 2D
+          sra a         ;CB 2F
+
+          sra (HL)      ;CB 2E
+
+;sra (IX+d)
+          sra (IX + $00)      ;DD CB 00 2E
+          sra (IX + $01)      ;DD CB 01 2E
+          sra (IX + $fe)      ;DD CB FE 2E
+          sra (IX + $ff)      ;DD CB FF 2E
+
+          sra (IX + LATE_00)  ;DD CB 00 2E
+          sra (IX + LATE_01)  ;DD CB 01 2E
+          sra (IX + LATE_FE)  ;DD CB FE 2E
+          sra (IX + LATE_FF)  ;DD CB FF 2E
+
+          sra (IY + $00)      ;FD CB 00 2E
+          sra (IY + $01)      ;FD CB 01 2E
+          sra (IY + $fe)      ;FD CB FE 2E
+          sra (IY + $ff)      ;FD CB FF 2E
+
+          sra (IY + LATE_00)  ;FD CB 00 2E
+          sra (IY + LATE_01)  ;FD CB 01 2E
+          sra (IY + LATE_FE)  ;FD CB FE 2E
+          sra (IY + LATE_FF)  ;FD CB FF 2E
+
+
+;srl r
+          srl b         ;CB 38
+          srl c         ;CB 39
+          srl d         ;CB 3A
+          srl e         ;CB 3B
+          srl h         ;CB 3C
+          srl l         ;CB 3D
+          srl a         ;CB 3F
+
+          srl (HL)      ;CB 3E
+
+;srl (IX+d)
+          srl (IX + $00)      ;DD CB 00 3E
+          srl (IX + $01)      ;DD CB 01 3E
+          srl (IX + $fe)      ;DD CB FE 3E
+          srl (IX + $ff)      ;DD CB FF 3E
+
+          srl (IX + LATE_00)  ;DD CB 00 3E
+          srl (IX + LATE_01)  ;DD CB 01 3E
+          srl (IX + LATE_FE)  ;DD CB FE 3E
+          srl (IX + LATE_FF)  ;DD CB FF 3E
+
+          srl (IY + $00)      ;FD CB 00 3E
+          srl (IY + $01)      ;FD CB 01 3E
+          srl (IY + $fe)      ;FD CB FE 3E
+          srl (IY + $ff)      ;FD CB FF 3E
+
+          srl (IY + LATE_00)  ;FD CB 00 3E
+          srl (IY + LATE_01)  ;FD CB 01 3E
+          srl (IY + LATE_FE)  ;FD CB FE 3E
+          srl (IY + LATE_FF)  ;FD CB FF 3E
+
+
+          rld           ;ED 6F
+          rrd           ;ED 67
+
+;BIT b,r
+          bit $00,b         ;CB 40
+          bit $01,c         ;CB 49
+          bit $02,d         ;CB 52
+          bit $03,e         ;CB 5B
+          bit $04,h         ;CB 64
+          bit $05,l         ;CB 6D
+          bit $06,a         ;CB 77
+          bit $07,a         ;CB 7F
+
+          bit LATE_00,b     ;CB 40
+          bit LATE_01,c     ;CB 49
+          bit LATE_02,d     ;CB 52
+          bit LATE_03,e     ;CB 5B
+          bit LATE_04,h     ;CB 64
+          bit LATE_05,l     ;CB 6D
+          bit LATE_06,a     ;CB 77
+          bit LATE_07,a     ;CB 7F
+
+          bit $00,(HL)      ;CB 46
+          bit $01,(HL)      ;CB 4E
+          bit $02,(HL)      ;CB 56
+          bit $03,(HL)      ;CB 5E
+          bit $04,(HL)      ;CB 66
+          bit $05,(HL)      ;CB 6E
+          bit $06,(HL)      ;CB 76
+          bit $07,(HL)      ;CB 7E
+
+          bit LATE_00,(HL)  ;CB 46
+          bit LATE_01,(HL)  ;CB 4E
+          bit LATE_02,(HL)  ;CB 56
+          bit LATE_03,(HL)  ;CB 5E
+          bit LATE_04,(HL)  ;CB 66
+          bit LATE_05,(HL)  ;CB 6E
+          bit LATE_06,(HL)  ;CB 76
+          bit LATE_07,(HL)  ;CB 7E
+
+;BIT b,(IX+d)
+          bit $00,(IX+$FF)  ;DD CB FF 46
+          bit $01,(IX+$FE)  ;DD CB FE 4E
+          bit $02,(IX+$FD)  ;DD CB FD 56
+          bit $03,(IX+$04)  ;DD CB 04 5E
+          bit $04,(IX+$03)  ;DD CB 03 66
+          bit $05,(IX+$02)  ;DD CB 02 6E
+          bit $06,(IX+$01)  ;DD CB 01 76
+          bit $07,(IX+$00)  ;DD CB 00 7E
+
+          bit LATE_00,(IX+LATE_FF)  ;DD CB FF 46
+          bit LATE_01,(IX+LATE_FE)  ;DD CB FE 4E
+          bit LATE_02,(IX+LATE_FD)  ;DD CB FD 56
+          bit LATE_03,(IX+LATE_04)  ;DD CB 04 5E
+          bit LATE_04,(IX+LATE_03)  ;DD CB 03 66
+          bit LATE_05,(IX+LATE_02)  ;DD CB 02 6E
+          bit LATE_06,(IX+LATE_01)  ;DD CB 01 76
+          bit LATE_07,(IX+LATE_00)  ;DD CB 00 7E
+
+;BIT b,(IY+d)
+          bit $00,(IY+$FF)  ;FD CB FF 46
+          bit $01,(IY+$FE)  ;FD CB FE 4E
+          bit $02,(IY+$FD)  ;FD CB FD 56
+          bit $03,(IY+$04)  ;FD CB 04 5E
+          bit $04,(IY+$03)  ;FD CB 03 66
+          bit $05,(IY+$02)  ;FD CB 02 6E
+          bit $06,(IY+$01)  ;FD CB 01 76
+          bit $07,(IY+$00)  ;FD CB 00 7E
+
+          bit LATE_00,(IY+LATE_FF)  ;FD CB FF 46
+          bit LATE_01,(IY+LATE_FE)  ;FD CB FE 4E
+          bit LATE_02,(IY+LATE_FD)  ;FD CB FD 56
+          bit LATE_03,(IY+LATE_04)  ;FD CB 04 5E
+          bit LATE_04,(IY+LATE_03)  ;FD CB 03 66
+          bit LATE_05,(IY+LATE_02)  ;FD CB 02 6E
+          bit LATE_06,(IY+LATE_01)  ;FD CB 01 76
+          bit LATE_07,(IY+LATE_00)  ;FD CB 00 7E
+
+
+;set b,r
+          set $00,b         ;CB C0
+          set $01,c         ;CB C9
+          set $02,d         ;CB D2
+          set $03,e         ;CB DB
+          set $04,h         ;CB E4
+          set $05,l         ;CB ED
+          set $06,a         ;CB F7
+          set $07,a         ;CB FF
+
+          set LATE_00,b     ;CB C0
+          set LATE_01,c     ;CB C9
+          set LATE_02,d     ;CB D2
+          set LATE_03,e     ;CB DB
+          set LATE_04,h     ;CB E4
+          set LATE_05,l     ;CB ED
+          set LATE_06,a     ;CB F7
+          set LATE_07,a     ;CB FF
+
+          set $00,(HL)      ;CB C6
+          set $01,(HL)      ;CB CE
+          set $02,(HL)      ;CB D6
+          set $03,(HL)      ;CB DE
+          set $04,(HL)      ;CB E6
+          set $05,(HL)      ;CB EE
+          set $06,(HL)      ;CB F6
+          set $07,(HL)      ;CB FE
+
+          set LATE_00,(HL)  ;CB C6
+          set LATE_01,(HL)  ;CB CE
+          set LATE_02,(HL)  ;CB D6
+          set LATE_03,(HL)  ;CB DE
+          set LATE_04,(HL)  ;CB E6
+          set LATE_05,(HL)  ;CB EE
+          set LATE_06,(HL)  ;CB F6
+          set LATE_07,(HL)  ;CB FE
+
+;set b,(IX+d)
+          set $00,(IX+$FF)  ;DD CB FF C6
+          set $01,(IX+$FE)  ;DD CB FE CE
+          set $02,(IX+$FD)  ;DD CB FD D6
+          set $03,(IX+$04)  ;DD CB 04 DE
+          set $04,(IX+$03)  ;DD CB 03 E6
+          set $05,(IX+$02)  ;DD CB 02 EE
+          set $06,(IX+$01)  ;DD CB 01 F6
+          set $07,(IX+$00)  ;DD CB 00 FE
+
+          set LATE_00,(IX+LATE_FF)  ;DD CB FF C6
+          set LATE_01,(IX+LATE_FE)  ;DD CB FE CE
+          set LATE_02,(IX+LATE_FD)  ;DD CB FD D6
+          set LATE_03,(IX+LATE_04)  ;DD CB 04 DE
+          set LATE_04,(IX+LATE_03)  ;DD CB 03 E6
+          set LATE_05,(IX+LATE_02)  ;DD CB 02 EE
+          set LATE_06,(IX+LATE_01)  ;DD CB 01 F6
+          set LATE_07,(IX+LATE_00)  ;DD CB 00 FE
+
+;set b,(IY+d)
+          set $00,(IY+$FF)  ;FD CB FF C6
+          set $01,(IY+$FE)  ;FD CB FE CE
+          set $02,(IY+$FD)  ;FD CB FD D6
+          set $03,(IY+$04)  ;FD CB 04 DE
+          set $04,(IY+$03)  ;FD CB 03 E6
+          set $05,(IY+$02)  ;FD CB 02 EE
+          set $06,(IY+$01)  ;FD CB 01 F6
+          set $07,(IY+$00)  ;FD CB 00 FE
+
+          set LATE_00,(IY+LATE_FF)  ;FD CB FF C6
+          set LATE_01,(IY+LATE_FE)  ;FD CB FE CE
+          set LATE_02,(IY+LATE_FD)  ;FD CB FD D6
+          set LATE_03,(IY+LATE_04)  ;FD CB 04 DE
+          set LATE_04,(IY+LATE_03)  ;FD CB 03 E6
+          set LATE_05,(IY+LATE_02)  ;FD CB 02 EE
+          set LATE_06,(IY+LATE_01)  ;FD CB 01 F6
+          set LATE_07,(IY+LATE_00)  ;FD CB 00 FE
+
+
+;res b,r
+          res $00,b         ;CB 80
+          res $01,c         ;CB 89
+          res $02,d         ;CB 92
+          res $03,e         ;CB 9B
+          res $04,h         ;CB A4
+          res $05,l         ;CB AD
+          res $06,a         ;CB B7
+          res $07,a         ;CB BF
+
+          res LATE_00,b     ;CB 80
+          res LATE_01,c     ;CB 89
+          res LATE_02,d     ;CB 92
+          res LATE_03,e     ;CB 9B
+          res LATE_04,h     ;CB A4
+          res LATE_05,l     ;CB AD
+          res LATE_06,a     ;CB B7
+          res LATE_07,a     ;CB BF
+
+          res $00,(HL)      ;CB 86
+          res $01,(HL)      ;CB 8E
+          res $02,(HL)      ;CB 96
+          res $03,(HL)      ;CB 9E
+          res $04,(HL)      ;CB A6
+          res $05,(HL)      ;CB AE
+          res $06,(HL)      ;CB B6
+          res $07,(HL)      ;CB BE
+
+          res LATE_00,(HL)  ;CB 86
+          res LATE_01,(HL)  ;CB 8E
+          res LATE_02,(HL)  ;CB 96
+          res LATE_03,(HL)  ;CB 9E
+          res LATE_04,(HL)  ;CB A6
+          res LATE_05,(HL)  ;CB AE
+          res LATE_06,(HL)  ;CB B6
+          res LATE_07,(HL)  ;CB BE
+
+;res b,(IX+d)
+          res $00,(IX+$FF)  ;DD CB FF 86
+          res $01,(IX+$FE)  ;DD CB FE 8E
+          res $02,(IX+$FD)  ;DD CB FD 96
+          res $03,(IX+$04)  ;DD CB 04 9E
+          res $04,(IX+$03)  ;DD CB 03 A6
+          res $05,(IX+$02)  ;DD CB 02 AE
+          res $06,(IX+$01)  ;DD CB 01 B6
+          res $07,(IX+$00)  ;DD CB 00 BE
+
+          res LATE_00,(IX+LATE_FF)  ;DD CB FF 86
+          res LATE_01,(IX+LATE_FE)  ;DD CB FE 8E
+          res LATE_02,(IX+LATE_FD)  ;DD CB FD 96
+          res LATE_03,(IX+LATE_04)  ;DD CB 04 9E
+          res LATE_04,(IX+LATE_03)  ;DD CB 03 A6
+          res LATE_05,(IX+LATE_02)  ;DD CB 02 AE
+          res LATE_06,(IX+LATE_01)  ;DD CB 01 B6
+          res LATE_07,(IX+LATE_00)  ;DD CB 00 BE
+
+;res b,(IY+d)
+          res $00,(IY+$FF)  ;FD CB FF 86
+          res $01,(IY+$FE)  ;FD CB FE 8E
+          res $02,(IY+$FD)  ;FD CB FD 96
+          res $03,(IY+$04)  ;FD CB 04 9E
+          res $04,(IY+$03)  ;FD CB 03 A6
+          res $05,(IY+$02)  ;FD CB 02 AE
+          res $06,(IY+$01)  ;FD CB 01 B6
+          res $07,(IY+$00)  ;FD CB 00 BE
+
+          res LATE_00,(IY+LATE_FF)  ;FD CB FF 86
+          res LATE_01,(IY+LATE_FE)  ;FD CB FE 8E
+          res LATE_02,(IY+LATE_FD)  ;FD CB FD 96
+          res LATE_03,(IY+LATE_04)  ;FD CB 04 9E
+          res LATE_04,(IY+LATE_03)  ;FD CB 03 A6
+          res LATE_05,(IY+LATE_02)  ;FD CB 02 AE
+          res LATE_06,(IY+LATE_01)  ;FD CB 01 B6
+          res LATE_07,(IY+LATE_00)  ;FD CB 00 BE
+
+;JP nn
+          jp $0001
+          jp $00FF
+          jp $0100
+          jp $FF00
+
+          jp LATE_0001
+          jp LATE_00FF
+          jp LATE_0100
+          jp LATE_FF00
+
+;JP cc,nn
+          jp NZ,$0001       ;C2 01 00
+          jp z,$00FF        ;CA FF 00
+          jp nc,$0100       ;D2 00 01
+          jp c,$FF00        ;DA 00 FF
+
+          jp po,LATE_0001   ;E2 01 00
+          jp pe,LATE_00FF   ;EA FF 00
+          jp p,LATE_0100    ;F2 00 01
+          jp m,LATE_FF00    ;FA 00 FF
+
+;JR e
+POS
+          jr POS + 2          ;18 00
+          jr POS + 2 - $56    ;18 A8
+          jr POS + 2 + $56    ;18 52
+
+          jr NEXT_POS + 2     ;18 06
+          jr NEXT_POS - $56   ;18 AC
+          jr NEXT_POS + $56   ;18 56
+NEXT_POS
+
+
+;JR C,e
+POS2
+          jr C,POS2 + 2           ;38 00
+          jr C,POS2 + 2 - $56     ;38 A8
+          jr C,POS2 + 2 + $56     ;38 52
+
+          jr C,NEXT_POS2 + 2      ;38 06
+          jr C,NEXT_POS2 - $56    ;38 AC
+          jr C,NEXT_POS2 + $56    ;38 56
+NEXT_POS2
+
+
+;JR NC,e
+POS3
+          jr nc,POS3 + 2           ;30 00
+          jr nc,POS3 + 2 - $56     ;30 A8
+          jr nc,POS3 + 2 + $56     ;30 52
+
+          jr nc,NEXT_POS3 + 2      ;30 06
+          jr nc,NEXT_POS3 - $56    ;30 AC
+          jr nc,NEXT_POS3 + $56    ;30 56
+NEXT_POS3
+
+
+          jp (HL)                   ;E9
+          jp (IX)                   ;DD E9
+          jp (IY)                   ;FD E9
+
+POS4
+          djnz POS4 + 2             ;10 00
+          djnz POS4 + 2 - $56       ;10 A8
+          djnz POS4 + 2 + $56       ;10 52
+
+          djnz NEXT_POS4 + 2    ;10 06
+          djnz NEXT_POS4 - $56  ;10 AC
+          djnz NEXT_POS4 + $56  ;10 56
+NEXT_POS4
+
+
+;CALL nn
+          call $0001          ;CD 01 00
+          call $00FE          ;CD FE 00
+          call $0100          ;CD 00 01
+          call $FF00          ;CD 00 FF
+
+          call LATE_0001      ;CD 01 00
+          call LATE_00FE      ;CD FE 00
+          call LATE_0100      ;CD 00 01
+          call LATE_FF00      ;CD 00 FF
+
+;CALL cc,nn
+          call nz,$0001       ;C4 01 00
+          call z,$00FE        ;CC FE 00
+          call nc,$0100       ;D4 00 01
+          call c,$FF00        ;DC 00 FF
+
+          call po,LATE_0001   ;E4 01 00
+          call pe,LATE_00FE   ;EC FE 00
+          call p,LATE_0100    ;F4 00 01
+          call m,LATE_FF00    ;FC 00 FF
+
+          ret         ;C9
+
+;RET cc
+          ret nz      ;C0
+          ret z       ;C8
+          ret nc      ;D0
+          ret c       ;D8
+          ret po      ;E0
+          ret pe      ;E8
+          ret p       ;F0
+          ret m       ;F8
+
+          reti        ;ED 4D
+          retn        ;ED 45
+
+;RST p
+          rst $00     ;C7
+          rst $08     ;CF
+          rst $10     ;D7
+          rst $18     ;DF
+          rst $20     ;E7
+          rst $28     ;EF
+          rst $30     ;F7
+          rst $38     ;FF
+
+;IN A,(n)
+          in A,($00)      ;DB 00
+          in A,($01)      ;DB 01
+          in A,($FE)      ;DB FE
+          in A,($FF)      ;DB FF
+
+          in A,(LATE_00)  ;DB 00
+          in A,(LATE_01)  ;DB 01
+          in A,(LATE_FE)  ;DB FE
+          in A,(LATE_FF)  ;DB FF
+
+;IN r,(C)
+          in b,(C)     ;ED 40
+          in c,(C)     ;ED 48
+          in d,(C)     ;ED 50
+          in e,(C)     ;ED 58
+          in h,(C)     ;ED 60
+          in l,(C)     ;ED 68
+          in a,(C)     ;ED 78
+
+          ini           ;ED A2
+          inir          ;ED B2
+
+          ind           ;ED AA
+          indr          ;ED BA
+
+;OUT (n),A
+          out ($00),A      ;D3 00
+          out ($01),A      ;D3 01
+          out ($FE),A      ;D3 FE
+          out ($FF),A      ;D3 FF
+
+          out (LATE_00),A  ;D3 00
+          out (LATE_01),A  ;D3 01
+          out (LATE_FE),A  ;D3 FE
+          out (LATE_FF),A  ;D3 FF
+
+;OUT (C),r
+          out (C),b     ;ED 41
+          out (C),c     ;ED 49
+          out (C),d     ;ED 51
+          out (C),e     ;ED 59
+          out (C),h     ;ED 61
+          out (C),l     ;ED 69
+          out (C),a     ;ED 79
+
+          outi          ;ED A3
+          otir          ;ED B3
+          outd          ;ED AB
+          otdr          ;ED BB
+
+
+;undocumented opcodes (there's more, but the doc of undocumented opcodes is bad)
+          sll b         ;CB 30
+          sll c         ;CB 31
+          sll d         ;CB 32
+          sll e         ;CB 33
+          sll h         ;CB 34
+          sll l         ;CB 35
+          sll a         ;CB 37
+
+          sll (HL)      ;CB 36
+
 
 LATE_FF = $ff
 LATE_FE = $fe
 LATE_FD = $fd
+LATE_07 = $07
+LATE_06 = $06
+LATE_05 = $05
+LATE_04 = $04
 LATE_03 = $03
 LATE_02 = $02
 LATE_01 = $01
 LATE_00 = $00
+LATE_0000 = $0000
+LATE_0001 = $0001
+LATE_00FE = $00FE
+LATE_00FF = $00FF
 LATE_0100 = $0100
 LATE_FF00 = $ff00
 LATE_BBCC = $bbcc
