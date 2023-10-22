@@ -8246,7 +8246,19 @@ namespace RetroDevStudio.Parser
               if ( ( !evaluatedContent )
               &&   ( lineTokenInfos.Count >= 1 ) )
               {
-                AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ) );
+                // potentially label which is an opcode?
+                if ( m_Processor.Opcodes.ContainsKey( labelInFront.ToLower() ) )
+                {
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1300_OPCODE_AMBIGIOUS,
+                            "Could not determine correct opcode for " + labelInFront,
+                            tokenInFront.StartPos,
+                            tokenInFront.Length );
+                }
+                else
+                {
+                  AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ) );
+                }
               }
             }
             else
@@ -11559,9 +11571,6 @@ namespace RetroDevStudio.Parser
               }
             }
           }
-          /*
-          if ( ( possibleOperators == 1 )
-          &&   ( completeOperators == 1 ) )*/
           if ( completeOperators == 1 )
           {
             if ( ( charPos + 1 < Start + Length )
@@ -11572,11 +11581,13 @@ namespace RetroDevStudio.Parser
             }
             else
             {
-              Types.TokenInfo token = new Types.TokenInfo();
-              token.Type = Types.TokenInfo.TokenType.OPERATOR;
-              token.OriginatingString = Source;
-              token.StartPos  = tokenStartPos;
-              token.Length    = completeOperatorLength;
+              var token = new Types.TokenInfo()
+              {
+                Type              = Types.TokenInfo.TokenType.OPERATOR,
+                OriginatingString = Source,
+                StartPos          = tokenStartPos,
+                Length            = completeOperatorLength
+              };
               result.Add( token );
 
               currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
@@ -11585,28 +11596,6 @@ namespace RetroDevStudio.Parser
               continue;
             }
           }
-          /*
-          foreach ( string op in m_OperatorPrecedence.Keys )
-          {
-            if ( op.Length >= charPos - tokenStartPos + 1 )
-            {
-              if ( ( op.Length == charPos - tokenStartPos + 1 )
-                string.Compare( op, 0, Source, tokenStartPos, charPos - tokenStartPos + 1 ) == 0 )
-              {
-                TokenInfo token = new TokenInfo();
-                token.Type = currentTokenType;
-                token.OriginatingString = Source;
-                token.StartPos = tokenStartPos;
-                token.Length = charPos - tokenStartPos;
-                result.Add( token );
-
-                currentTokenType = TokenInfo.TokenType.UNKNOWN;
-                tokenStartPos = charPos + 1;
-                ++charPos;
-                continue;
-              }
-            }
-          }*/
           // operator must be one of the shorter ones
           foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
           {
@@ -11618,13 +11607,13 @@ namespace RetroDevStudio.Parser
                 bool    foundPseudoOp = false;
 
                 if ( ( !string.IsNullOrEmpty( m_ASMFileInfo.AssemblerSettings.POPrefix ) )
-                && ( op[0] == m_ASMFileInfo.AssemblerSettings.POPrefix[0] ) )
+                &&   ( op[0] == m_ASMFileInfo.AssemblerSettings.POPrefix[0] ) )
                 {
                   // is there a pseudo op following?
                   foreach ( var pseudoOp in m_ASMFileInfo.AssemblerSettings.PseudoOps )
                   {
                     if ( ( Source.Length - charPos + 1 >= pseudoOp.Key.Length )
-                    && ( string.Compare( Source, charPos - 1, pseudoOp.Key, 0, pseudoOp.Key.Length, true ) == 0 ) )
+                    &&   ( string.Compare( Source, charPos - 1, pseudoOp.Key, 0, pseudoOp.Key.Length, true ) == 0 ) )
                     {
                       foundPseudoOp = true;
                       break;
@@ -11633,11 +11622,13 @@ namespace RetroDevStudio.Parser
                 }
                 if ( !foundPseudoOp )
                 {
-                  Types.TokenInfo token = new Types.TokenInfo();
-                  token.Type = currentTokenType;
-                  token.OriginatingString = Source;
-                  token.StartPos = tokenStartPos;
-                  token.Length = 1;
+                  var token = new Types.TokenInfo()
+                  {
+                    Type              = currentTokenType,
+                    OriginatingString = Source,
+                    StartPos          = tokenStartPos,
+                    Length            = 1
+                  };
                   result.Add( token );
 
                   currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
@@ -11674,11 +11665,13 @@ namespace RetroDevStudio.Parser
             if ( m_AssemblerSettings.AllowedTokenEndChars[currentTokenType].IndexOf( curChar ) != -1 )
             {
               // end char of token found
-              Types.TokenInfo token = new Types.TokenInfo();
-              token.Type = currentTokenType;
-              token.OriginatingString = Source;
-              token.StartPos = tokenStartPos;
-              token.Length = charPos - tokenStartPos + 1;
+              var token = new Types.TokenInfo()
+              {
+                Type              = currentTokenType,
+                OriginatingString = Source,
+                StartPos          = tokenStartPos,
+                Length            = charPos - tokenStartPos + 1
+              };
 
               // special case, labels with :; : is not part of label
               if ( ( currentTokenType == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
@@ -11707,11 +11700,13 @@ namespace RetroDevStudio.Parser
             else
             {
               // end char of token found
-              Types.TokenInfo token = new Types.TokenInfo();
-              token.Type = currentTokenType;
-              token.OriginatingString = Source;
-              token.StartPos = tokenStartPos;
-              token.Length = charPos - tokenStartPos;
+              var token = new Types.TokenInfo()
+              {
+                Type              = currentTokenType,
+                OriginatingString = Source,
+                StartPos          = tokenStartPos,
+                Length            = charPos - tokenStartPos
+              };
               result.Add( token );
 
               currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
@@ -11724,11 +11719,13 @@ namespace RetroDevStudio.Parser
             if ( m_AssemblerSettings.AllowedTokenEndChars[currentTokenType].IndexOf( curChar ) != -1 )
             {
               // end char of token found
-              Types.TokenInfo token = new Types.TokenInfo();
-              token.Type = currentTokenType;
-              token.OriginatingString = Source;
-              token.StartPos = tokenStartPos;
-              token.Length = charPos - tokenStartPos + 1;
+              var token = new Types.TokenInfo()
+              {
+                Type              = currentTokenType,
+                OriginatingString = Source,
+                StartPos          = tokenStartPos,
+                Length            = charPos - tokenStartPos + 1
+              };
               result.Add( token );
 
               currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
@@ -11740,11 +11737,13 @@ namespace RetroDevStudio.Parser
           else// 
           {
             // auto end token
-            Types.TokenInfo token = new Types.TokenInfo();
-            token.Type = currentTokenType;
-            token.OriginatingString = Source;
-            token.StartPos = tokenStartPos;
-            token.Length = charPos - tokenStartPos;
+            var token = new Types.TokenInfo()
+            {
+              Type              = currentTokenType,
+              OriginatingString = Source,
+              StartPos          = tokenStartPos,
+              Length            = charPos - tokenStartPos
+            };
             result.Add( token );
 
             currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
@@ -11762,11 +11761,13 @@ namespace RetroDevStudio.Parser
         {
           if ( m_AssemblerSettings.AllowedSingleTokens.IndexOf( curChar ) != -1 )
           {
-            Types.TokenInfo token = new Types.TokenInfo();
-            token.Type = Types.TokenInfo.TokenType.SEPARATOR;
-            token.OriginatingString = Source;
-            token.StartPos = tokenStartPos;
-            token.Length = 1;
+            var token = new Types.TokenInfo()
+            {
+              Type              = Types.TokenInfo.TokenType.SEPARATOR,
+              OriginatingString = Source,
+              StartPos          = tokenStartPos,
+              Length            = 1
+            };
             result.Add( token );
 
             currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
@@ -11784,55 +11785,53 @@ namespace RetroDevStudio.Parser
             }
             int possibleOperators = 0;
             int completeOperators = 0;
-            //if ( charPos > 0 )
+
+            foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
             {
-              foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
+              if ( curChar == op[0] )
               {
-                if ( curChar == op[0] )
+                currentTokenType = Types.TokenInfo.TokenType.OPERATOR;
+                if ( op.Length == 1 )
                 {
-                  currentTokenType = Types.TokenInfo.TokenType.OPERATOR;
-                  if ( op.Length == 1 )
-                  {
-                    ++completeOperators;
-                  }
-                  ++possibleOperators;
+                  ++completeOperators;
                 }
+                ++possibleOperators;
               }
-              if ( ( possibleOperators == 1 )
-              && ( completeOperators == 1 ) )
+            }
+            if ( ( possibleOperators == 1 )
+            &&   ( completeOperators == 1 ) )
+            {
+              if ( result.Count == 0 )
               {
-                if ( result.Count == 0 )
+                if ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL].IndexOf( curChar ) != -1 )
                 {
-                  if ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL].IndexOf( curChar ) != -1 )
-                  {
-                    // could also be an internal label!
-                    currentTokenType = Types.TokenInfo.TokenType.LABEL_LOCAL;
-                    tokenStartPos = charPos;
-                    ++charPos;
-                    continue;
-                  }
-                }
-
-                if ( ( charPos < Start + Length )
-                && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
-                && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
-                {
-                  // we have a text token which is not separated
-                }
-                else
-                {
-                  Types.TokenInfo token = new Types.TokenInfo();
-                  token.Type = Types.TokenInfo.TokenType.OPERATOR;
-                  token.OriginatingString = Source;
-                  token.StartPos = tokenStartPos;
-                  token.Length = charPos - tokenStartPos + 1;
-                  result.Add( token );
-
-                  currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
-                  tokenStartPos = charPos + 1;
+                  // could also be an internal label!
+                  currentTokenType = Types.TokenInfo.TokenType.LABEL_LOCAL;
+                  tokenStartPos = charPos;
                   ++charPos;
                   continue;
                 }
+              }
+
+              if ( ( charPos < Start + Length )
+              &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
+              &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
+              {
+                // we have a text token which is not separated
+              }
+              else
+              {
+                Types.TokenInfo token = new Types.TokenInfo();
+                token.Type = Types.TokenInfo.TokenType.OPERATOR;
+                token.OriginatingString = Source;
+                token.StartPos = tokenStartPos;
+                token.Length = charPos - tokenStartPos + 1;
+                result.Add( token );
+
+                currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
+                tokenStartPos = charPos + 1;
+                ++charPos;
+                continue;
               }
             }
             if ( possibleOperators == 0 )
