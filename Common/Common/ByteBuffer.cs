@@ -634,14 +634,18 @@ namespace GR
 
 
 
-      public string ToAsciiString()
+      public string ToAsciiString( uint StartIndex = 0, uint NumBytes = uint.MaxValue )
       {
         if ( m_Data == null )
         {
           return "";
         }
+        if ( NumBytes == uint.MaxValue )
+        {
+          NumBytes = m_UsedBytes;
+        }
 
-        return System.Text.ASCIIEncoding.UTF8.GetString( m_Data, 0, (int)m_UsedBytes );
+        return System.Text.ASCIIEncoding.UTF8.GetString( m_Data, (int)StartIndex, (int)NumBytes );
       }
 
 

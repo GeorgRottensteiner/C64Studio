@@ -45,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharpadProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\CPCDSK.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\D71.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportMapInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportSpriteInfo.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetScreenProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\D64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\D81.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\Disk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\CommodoreDisk.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\GraphicScreenProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\MapProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\MediaFormat.cs" />

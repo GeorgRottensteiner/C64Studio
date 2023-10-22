@@ -1,4 +1,6 @@
-﻿using RetroDevStudio;
+﻿using GR.Memory;
+using RetroDevStudio;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,18 +9,59 @@ using System.Text;
 
 namespace RetroDevStudio.Formats
 {
-  public class D64 : CommodoreDisk
+  public class CPCDSK : MediaFormat
   {
-    public D64()
+    protected bool        _Extended = true;
+    protected string      _LastError = "";
+
+    protected DiskInformationBlock    _DiskInfoBlock = new DiskInformationBlock();
+
+
+
+    protected class DiskInformationBlock
     {
-      TRACK_HEADER      = 18;
-      SECTOR_HEADER     = 0;
+      public string         Description = "EXTENDED CPC DSK File\r\nDisk-Info\r\n";
+      public string         Creator = "RetroDevStudio";
+      public byte           NumberOfTracks = 40;
+      public byte           NumberOfSides = 1;
+      public ushort         Unused = 0;
+      public ByteBuffer     TrackSizeTable = new ByteBuffer( 40 * 1 );
+    }
 
-      TRACK_BAM         = 18;
-      SECTOR_BAM        = 0;
 
-      TRACK_DIRECTORY   = 18;
-      SECTOR_DIRECTORY  = 1;
+
+    protected class TrackInformationBlock
+    {
+      public string             Description = "Track-Info\r\n";
+      public ushort             Unused = 0;
+      public byte               TrackNumber = 40;
+      public byte               SideNumber = 1;
+      public ushort             Unused2 = 0;
+      public byte               SectorSize = 0;
+      public byte               NumberOfSectors = 0;
+      public byte               GAP3Length = 0;
+      public byte               Filler = 0;
+      public List<SectorInformationList>    SectorInformation = new List<SectorInformationList>();
+      public List<ByteBuffer>   Sectors = new List<ByteBuffer>();
+    }
+
+
+
+    protected class SectorInformationList
+    {
+      public byte     Track = 0;
+      public byte     Side = 0;
+      public byte     SectorID = 0;
+      public byte     SectorSize = 0;
+      public byte     FDCStatusRegister1 = 0;
+      public byte     FDCStatusRegister2 = 0;
+      public ushort   ActualDataLength = 0;
+    }
+
+
+
+    public CPCDSK()
+    {
     }
 
 
@@ -26,6 +69,7 @@ namespace RetroDevStudio.Formats
     public override void CreateEmptyMedia()
     {
       _LastError = "";
+      /*
       Tracks.Clear();
       for ( int i = 0; i < 17; ++i )
       {
@@ -43,7 +87,7 @@ namespace RetroDevStudio.Formats
       {
         Tracks.Add( new Track( i + 30, 17 ) );
       }
-      CreateBAM();
+      CreateBAM();*/
     }
 
 
@@ -51,6 +95,7 @@ namespace RetroDevStudio.Formats
     public void CreateEmptyMedia40Tracks()
     {
       _LastError = "";
+      /*
       Tracks.Clear();
       for ( int i = 0; i < 17; ++i )
       {
@@ -67,128 +112,7 @@ namespace RetroDevStudio.Formats
       for ( int i = 0; i < 10; ++i )
       {
         Tracks.Add( new Track( i + 30, 17 ) );
-      }
-      CreateBAM();
-    }
-
-
-
-    void SetDiskName( string Diskname )
-    {
-      _LastError = "";
-      if ( Diskname.Length > 16 )
-      {
-        Diskname = Diskname.Substring( 0, 16 );
-      }
-      for ( int i = 0; i < 16; ++i )
-      {
-        if ( i >= Diskname.Length )
-        {
-          Tracks[TRACK_HEADER - 1].Sectors[SECTOR_HEADER].Data.SetU8At( 0x90 + i, 0xa0 );
-        }
-        else
-        {
-          Tracks[TRACK_HEADER - 1].Sectors[SECTOR_HEADER].Data.SetU8At( 0x90 + i, (byte)Diskname[i] );
-        }
-      }
-    }
-
-
-
-    void SetDiskID( string DiskID )
-    {
-      _LastError = "";
-      if ( DiskID.Length > 2 )
-      {
-        DiskID = DiskID.Substring( 0, 2 );
-      }
-
-      for ( int i = 0; i < 2; ++i )
-      {
-        if ( i >= DiskID.Length )
-        {
-          Tracks[TRACK_HEADER - 1].Sectors[SECTOR_HEADER].Data.SetU8At( 0xA2 + i, 0xa0 );
-        }
-        else
-        {
-          Tracks[TRACK_HEADER - 1].Sectors[SECTOR_HEADER].Data.SetU8At( 0xA2 + i, (byte)DiskID[i] );
-        }
-      }
-    }
-
-
-
-    void CreateBAM()
-    {
-      _LastError = "";
-
-      // Track/Sector of first directory sector
-      Track trackHeader = Tracks[TRACK_HEADER - 1];
-      Track trackDirectory = Tracks[TRACK_DIRECTORY - 1];
-      Track trackBAM = Tracks[TRACK_BAM - 1];
-
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0, (byte)TRACK_DIRECTORY );
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 1, (byte)SECTOR_DIRECTORY );
-
-      // DOS Version
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 2, 0x41 );
-
-      trackHeader.Sectors[SECTOR_HEADER].Free = false;
-
-      // mark first directory entry as empty
-      trackDirectory.Sectors[SECTOR_DIRECTORY].Data.SetU8At( 0, 0 );
-      trackDirectory.Sectors[SECTOR_DIRECTORY].Data.SetU8At( 1, 0xff );
-      trackDirectory.Sectors[SECTOR_DIRECTORY].Free = false;
-
-      /*
-         04-8F: BAM entries for each track, in groups  of  four  bytes  per
-                track, starting on track 1 (see below for more details)
-         The BAM entries require a bit (no pun intended) more of a breakdown. Take
-          the first entry at bytes $04-$07 ($12 $FF $F9 $17). The first byte ($12) is
-          the number of free sectors on that track. Since we are looking at the track
-          1 entry, this means it has 18 (decimal) free sectors. The next three  bytes
-          represent the bitmap of which sectors are used/free. Since it is 3 bytes (8
-          bits/byte) we have 24 bits of storage. Remember that at  most,  each  track
-          only has 21 sectors, so there are a few unused bits.
-       */
-      trackHeader.Sectors[SECTOR_HEADER].Free = false;
-      for ( int i = 0; i < Tracks.Count; ++i )
-      {
-        trackBAM.Sectors[SECTOR_BAM].Data.SetU8At( 4 + 4 * i, (byte)Tracks[i].FreeSectors );
-
-        trackBAM.Sectors[SECTOR_BAM].Data.SetU8At( 4 + 4 * i + 1, 0 );
-        trackBAM.Sectors[SECTOR_BAM].Data.SetU8At( 4 + 4 * i + 2, 0 );
-        trackBAM.Sectors[SECTOR_BAM].Data.SetU8At( 4 + 4 * i + 3, 0 );
-
-        for ( int j = 0; j < Tracks[i].Sectors.Count; ++j )
-        {
-          if ( Tracks[i].Sectors[j].Free )
-          {
-            byte oldValue = trackBAM.Sectors[SECTOR_BAM].Data.ByteAt( 4 + 4 * i + 1 + j / 8 );
-            oldValue |= (byte)( 1 << ( j % 8 ) );
-            trackBAM.Sectors[SECTOR_BAM].Data.SetU8At( 4 + 4 * i + 1 + j / 8, oldValue );
-          }
-        }
-      }
-
-      // disk name (padded with 0xa0)
-      SetDiskName( "EMPTY DISK" );
-
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xa0, 0xa0 );
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xa1, 0xa0 );
-
-      SetDiskID( "ID" );
-
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xA4, 0xa0 );
-
-      // DOS type
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xA5, (byte)'2' );
-      trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xA6, (byte)'A' );
-
-      for ( int i = 0; i < 4; ++i )
-      {
-        trackHeader.Sectors[SECTOR_HEADER].Data.SetU8At( 0xA7 + i, 0xA0 );
-      }
+      }*/
     }
 
 
@@ -202,14 +126,68 @@ namespace RetroDevStudio.Formats
         _LastError = "Could not open/read file";
         return false;
       }
+      if ( diskData.Length < 256 )
+      {
+        _LastError = "file is too small to hold disk information block";
+        return false;
+      }
+
+      _DiskInfoBlock.Description    = diskData.ToAsciiString( 0, 34 );
+      _DiskInfoBlock.Creator        = diskData.ToAsciiString( 34, 14 );
+      _DiskInfoBlock.NumberOfTracks = diskData.ByteAt( 48 );
+      _DiskInfoBlock.NumberOfSides  = diskData.ByteAt( 49 );
+      _DiskInfoBlock.TrackSizeTable = new ByteBuffer( (uint)( _DiskInfoBlock.NumberOfTracks * _DiskInfoBlock.NumberOfSides ) );
+
+      _Extended = _DiskInfoBlock.Description.StartsWith( "EXTENDED" );
+
+      // 50 to 51 hold a single track size if not extended - TODO - verify
+
+      int curPos = 256;
+
+      for ( int track = 0; track < _DiskInfoBlock.NumberOfTracks; ++track )
+      {
+        for ( int side = 0; side < _DiskInfoBlock.NumberOfSides; ++side )
+        {
+          var trackInfo = new TrackInformationBlock();
+
+          trackInfo.Description     = diskData.ToAsciiString( (uint)curPos, 13 );
+          trackInfo.TrackNumber     = diskData.ByteAt( curPos + 16 );
+          trackInfo.SideNumber      = diskData.ByteAt( curPos + 17 );
+          trackInfo.SectorSize      = diskData.ByteAt( curPos + 20 );
+          trackInfo.NumberOfSectors = diskData.ByteAt( curPos + 21 );
+          trackInfo.GAP3Length      = diskData.ByteAt( curPos + 22 );
+
+          for ( int sector = 0; sector < trackInfo.NumberOfSectors; ++sector )
+          {
+            var sectorInfo = new SectorInformationList()
+            {
+              Track               = diskData.ByteAt( curPos + 24 + sector * 8 ),
+              Side                = diskData.ByteAt( curPos + 24 + sector * 8 + 1 ),
+              SectorID            = diskData.ByteAt( curPos + 24 + sector * 8 + 2 ),
+              SectorSize          = diskData.ByteAt( curPos + 24 + sector * 8 + 3 ),
+              FDCStatusRegister1  = diskData.ByteAt( curPos + 24 + sector * 8 + 4 ),
+              FDCStatusRegister2  = diskData.ByteAt( curPos + 24 + sector * 8 + 5 ),
+              ActualDataLength    = diskData.UInt16At( curPos + 24 + sector * 8 + 6 )
+            };
+
+            trackInfo.SectorInformation.Add( sectorInfo );
+          }
+
+          // sector data always follows with 256 bytes offset from track info block
+          curPos += 256;
+
+          for ( int sector = 0; sector < trackInfo.NumberOfSectors; ++sector )
+          {
+            ByteBuffer sectorData = diskData.SubBuffer( curPos, trackInfo.SectorInformation[sector].ActualDataLength );
+
+            trackInfo.Sectors.Add( sectorData );
+
+            curPos += trackInfo.SectorInformation[sector].ActualDataLength;
+          }
+        }
+      }
 
       /*
-      35 track, no errors        174848
-      35 track, 683 error bytes  175531
-      40 track, no errors        196608
-      40 track, 768 error bytes  197376
-      */
-
       if ( ( diskData.Length != 174848 )
       &&   ( diskData.Length != 175531 )
       &&   ( diskData.Length != 196608 )
@@ -259,7 +237,7 @@ namespace RetroDevStudio.Formats
             ++dataPos;
           }
         }
-      }
+      }*/
       return true;
     }
 
@@ -273,6 +251,7 @@ namespace RetroDevStudio.Formats
 
 
 
+    /*
     bool LocateFile( GR.Memory.ByteBuffer Filename, out Location FileLocation, out Types.FileInfo FileInfo )
     {
       _LastError = "";
@@ -323,15 +302,18 @@ namespace RetroDevStudio.Formats
       _LastError = "Could not locate directory entry for file";
       return false;
     }
+    */
 
 
 
     public override Types.FileInfo LoadFile( GR.Memory.ByteBuffer Filename )
     {
-      _LastError = "";
+      Types.FileInfo    fileInfo = null;
 
+      _LastError = "";
+      /*
       Location fileLocation;
-      Types.FileInfo    fileInfo;
+      
 
       if ( !LocateFile( Filename, out fileLocation, out fileInfo ) )
       {
@@ -356,170 +338,8 @@ namespace RetroDevStudio.Formats
         result.Append( sec.Data.SubBuffer( 2 ) );
       }
       fileInfo.Data = result;
+      */
       return fileInfo;
-    }
-
-
-
-    private bool IsSectorMarkedAsUsedInBAM( int Track, int Sector )
-    {
-      _LastError = "";
-      if ( ( Track < 1 )
-      ||   ( Track > Tracks.Count ) )
-      {
-        _LastError = "track index out of bounds";
-        return false;
-      }
-      Track track = Tracks[Track - 1];
-
-      if ( ( Sector < 0 )
-      ||   ( Sector >= track.Sectors.Count ) )
-      {
-        _LastError = "sector index out of bounds";
-        return false;
-      }
-      Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
-
-      byte mask = (byte)( 1 << ( Sector & 7 ) );
-
-      if ( ( bam.Data.ByteAt( Track * 4 + Sector / 8 + 1 ) & mask ) == 0 )
-      {
-        return true;
-      }
-      return false;
-    }
-
-
-
-
-    private void AllocSector( int Track, int Sector )
-    {
-      _LastError = "";
-      if ( ( Track < 1 )
-      ||   ( Track > Tracks.Count ) )
-      {
-        _LastError = "track index out of bounds";
-        return;
-      }
-      Track track = Tracks[Track - 1];
-
-      if ( ( Sector < 0 )
-      ||   ( Sector >= track.Sectors.Count ) )
-      {
-        _LastError = "sector index out of bounds";
-        return;
-      }
-      if ( IsSectorAllocated( Track, Sector ) )
-      {
-        return;
-      }
-      Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
-
-      // adjust free sectors
-      bam.Data.SetU8At( Track * 4, (byte)( bam.Data.ByteAt( Track * 4 ) - 1 ) );
-
-      // mask out sector
-      byte mask = (byte)( 1 << ( Sector & 7 ) );
-      bam.Data.SetU8At( Track * 4 + Sector / 8 + 1, (byte)( bam.Data.ByteAt( Track * 4 + Sector / 8 + 1 ) & ~mask ) );
-
-      Tracks[Track - 1].Sectors[Sector].Free = false;
-    }
-
-
-
-    private void FreeSector( int Track, int Sector )
-    {
-      _LastError = "";
-      if ( ( Track < 1 )
-      ||   ( Track > Tracks.Count ) )
-      {
-        _LastError = "track index out of bounds";
-        return;
-      }
-      Track track = Tracks[Track - 1];
-
-      if ( ( Sector < 0 )
-      ||   ( Sector >= track.Sectors.Count ) )
-      {
-        _LastError = "sector index out of bounds";
-        return;
-      }
-      if ( !IsSectorAllocated( Track, Sector ) )
-      {
-        return;
-      }
-      Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
-
-      // adjust free sectors
-      bam.Data.SetU8At( Track * 4, (byte)( bam.Data.ByteAt( Track * 4 ) + 1 ) );
-
-      // mask in sector
-      byte mask = (byte)( 1 << ( Sector & 7 ) );
-      bam.Data.SetU8At( Track * 4 + Sector / 8 + 1, (byte)( bam.Data.ByteAt( Track * 4 + Sector / 8 + 1 ) | mask ) );
-
-      Tracks[Track - 1].Sectors[Sector].Free = true;
-    }
-
-
-
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileType Type )
-    {
-      _LastError = "";
-      Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
-      byte    dirTrackIndex = (byte)TRACK_DIRECTORY;
-
-      int     directoryInterleave = 3;
-
-      int     sector = 1;
-      do
-      {
-        Sector sect = dirTrack.Sectors[sector];
-        for ( int i = 0; i < 8; ++i )
-        {
-          if ( sect.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) == 0 )
-          {
-            // scratched (empty) entry
-            // default set PRG
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)Type );
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
-
-            for ( int j = 0; j < 16; ++j )
-            {
-              sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 5 + j, Filename.ByteAt( j ) );
-            }
-            sect.Data.SetU16At( BYTES_PER_DIR_ENTRY * i + 30, (UInt16)SectorsWritten );
-            return true;
-          }
-        }
-        // do we need to alloc next dir sector?
-        do
-        {
-          sector = ( sector + directoryInterleave ) % dirTrack.Sectors.Count;
-
-          // do NOT write into BAM
-        }
-        while ( sector == SECTOR_BAM );
-
-        if ( sector == 1 )
-        {
-          // arrived at starting sector, disk full!
-          break;
-        }
-        if ( sect.Data.ByteAt( 0 ) == 0 )
-        {
-          // current sector was last dir sector
-          sect.Data.SetU8At( 0, dirTrackIndex );
-          sect.Data.SetU8At( 1, (byte)( sector ) );
-          AllocSector( dirTrackIndex, sector );
-
-          dirTrack.Sectors[sector].Data.SetU8At( 0, 0 );
-          dirTrack.Sectors[sector].Data.SetU8At( 1, 0xff );
-        }
-      }
-      while ( true );
-      _LastError = "disk is full";
-      return false;
     }
 
 
@@ -527,6 +347,7 @@ namespace RetroDevStudio.Formats
     public override bool DeleteFile( GR.Memory.ByteBuffer Filename )
     {
       _LastError = "";
+      /*
       int   curTrack = TRACK_DIRECTORY;
       int   curSector = SECTOR_DIRECTORY;
       while ( true )
@@ -580,7 +401,8 @@ namespace RetroDevStudio.Formats
         }
         curTrack  = sect.Data.ByteAt( 0 );
         curSector = sect.Data.ByteAt( 1 );
-      }
+      }*/
+      return false;
     }
 
 
@@ -588,6 +410,7 @@ namespace RetroDevStudio.Formats
     public override bool RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename )
     {
       _LastError = "";
+      /*
       int curTrack = TRACK_DIRECTORY;
       int curSector = SECTOR_DIRECTORY;
       while ( true )
@@ -629,7 +452,8 @@ namespace RetroDevStudio.Formats
         }
         curTrack = sect.Data.ByteAt( 0 );
         curSector = sect.Data.ByteAt( 1 );
-      }
+      }*/
+      return false;
     }
 
 
@@ -637,6 +461,7 @@ namespace RetroDevStudio.Formats
     public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
     {
       _LastError = "";
+      /*
       GR.Memory.ByteBuffer    dataToWrite = new GR.Memory.ByteBuffer( Content );
       if ( dataToWrite.Length > FreeBytes() )
       {
@@ -725,7 +550,7 @@ namespace RetroDevStudio.Formats
             }
           }
         }
-      }
+      }*/
       _LastError = "disk is full";
       return false;
     }
@@ -736,190 +561,15 @@ namespace RetroDevStudio.Formats
     {
       _LastError = "";
       GR.Memory.ByteBuffer result = new GR.Memory.ByteBuffer();
-
+      /*
       foreach ( Track track in Tracks )
       {
         foreach ( Sector sector in track.Sectors )
         {
           result.Append( sector.Data );
         }
-      }
+      }*/
       return result;
-    }
-
-
-
-    public override int FreeSlots
-    {
-      get
-      {
-        return FreeBlocks;
-      }
-    }
-
-
-
-    public override int Slots
-    {
-      get
-      {
-        return Blocks;
-      }
-    }
-
-
-
-    private void FollowChain( int Track,
-                              int Sector,
-                              GR.Collections.Map<GR.Generic.Tupel<int, int>, GR.Memory.ByteBuffer> UsedSectors,
-                              GR.Memory.ByteBuffer Filename,
-                              List<string> Errors )
-    {
-      int fileTrack = Track;
-      int fileSector = Sector;
-
-      while ( fileTrack != 0 )
-      {
-        GR.Generic.Tupel<int,int>     location = new GR.Generic.Tupel<int,int>( fileTrack, fileSector );
-
-        if ( ( UsedSectors[location].Length > 0 )
-        &&   ( UsedSectors[location] != Filename ) )
-        {
-          Errors.Add( "Sector " + location.first + ", Track " + location.second + " is referenced by more than one file" );
-        }
-
-        int newTrack = Tracks[fileTrack - 1].Sectors[fileSector].Data.ByteAt( 0 );
-        int newSector = Tracks[fileTrack - 1].Sectors[fileSector].Data.ByteAt( 1 );
-
-        if ( newTrack == 0 )
-        {
-          return;
-        }
-
-        if ( ( newTrack < 1 )
-        ||   ( newTrack > Tracks.Count ) )
-        {
-          Errors.Add( "Reference to invalid track " + newTrack + " encountered in track " + fileTrack + ", Sector " + fileSector );
-          return;
-        }
-        fileTrack = newTrack;
-        fileSector = newSector;
-      }
-    }
-
-
-
-    private Sector FindPreviousDirSector( int Track, int Sector )
-    {
-      int   curTrack = Track;
-
-      foreach ( Sector sec in Tracks[curTrack - 1].Sectors )
-      {
-        if ( ( sec.Data.ByteAt( 0 ) == Track )
-        &&   ( sec.Data.ByteAt( 1 ) == Sector ) )
-        {
-          // this sector points at me
-          return sec;
-        }
-      }
-      return null;
-    }
-
-
-
-    private Sector FindNextDirSector( int Track, int Sector )
-    {
-      int nextTrack = Tracks[Track - 1].Sectors[Sector].Data.ByteAt( 0 );
-      if ( nextTrack == 0 )
-      {
-        return null;
-      }
-      int nextSector = Tracks[Track - 1].Sectors[Sector].Data.ByteAt( 1 );
-      return Tracks[nextTrack - 1].Sectors[nextSector];
-    }
-
-
-
-    private DirEntryLocation LocateDirEntry( int Track, int Sector )
-    {
-      Location  curLoc = new Location( TRACK_DIRECTORY, SECTOR_DIRECTORY );
-
-      while ( true )
-      {
-        Sector sec = Tracks[curLoc.Track - 1].Sectors[curLoc.Sector];
-
-        for ( int i = 0; i < 8; ++i )
-        {
-          int fileTrack  = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
-          int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
-          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)RetroDevStudio.Types.FileType.SCRATCHED )
-          {
-            // valid entry?
-            if ( ( fileTrack == Track )
-            &&   ( fileSector == Sector ) )
-            {
-              return new DirEntryLocation( curLoc.Track, curLoc.Sector, i );
-            }
-          }
-        }
-        curLoc = sec.NextLocation;
-        if ( curLoc == null )
-        {
-          // track = 0 marks last directory entry
-          break;
-        }
-      }
-      return null;
-    }
-
-
-
-    private bool FindPreviousDirEntry( DirEntryLocation DirEntry, out DirEntryLocation ResultDirEntry )
-    {
-      ResultDirEntry = null;
-
-      if ( DirEntry.DirEntry > 0 )
-      {
-        ResultDirEntry = new DirEntryLocation( DirEntry.Track, DirEntry.Sector, DirEntry.DirEntry - 1 );
-        return true;
-      }
-      int curTrack = DirEntry.Track;
-      foreach ( Sector sec in Tracks[curTrack - 1].Sectors )
-      {
-        if ( sec.NextLocation == null )
-        {
-          continue;
-        }
-        if ( ( sec.NextLocation.Track == DirEntry.Track )
-        &&   ( sec.NextLocation.Sector == DirEntry.Sector ) )
-        {
-          // this sector points at me
-          ResultDirEntry = new DirEntryLocation( sec.TrackNo, sec.SectorNo, 7 );
-          return true;
-        }
-      }
-      return false;
-    }
-
-
-
-    private bool FindNextDirEntry( DirEntryLocation DirEntry, out DirEntryLocation ResultDirEntry )
-    {
-      ResultDirEntry = null;
-
-      if ( DirEntry.DirEntry < 7 )
-      {
-        ResultDirEntry = new DirEntryLocation( DirEntry.Track, DirEntry.Sector, DirEntry.DirEntry + 1 );
-        return true;
-      }
-      Location    nextSector = Tracks[DirEntry.Track - 1].Sectors[DirEntry.Sector].NextLocation;
-      if ( nextSector == null )
-      {
-        return false;
-      }
-      Sector sec = Tracks[nextSector.Track - 1].Sectors[nextSector.Sector];
-      ResultDirEntry = new DirEntryLocation( sec.TrackNo, sec.SectorNo, 0 );
-      return true;
     }
 
 
@@ -928,7 +578,7 @@ namespace RetroDevStudio.Formats
     {
       get
       {
-        return "Disk Files|*.D64|" + base.FileFilter;
+        return "Disk Files|*.DSK|" + base.FileFilter;
       }
     }
 
@@ -940,10 +590,11 @@ namespace RetroDevStudio.Formats
       {
         GR.Memory.ByteBuffer    title = new GR.Memory.ByteBuffer();
 
+        /*
         title.Append( Util.ToPETSCII( "0 \"" ) );
         title.Append( DiskName );
         title.Append( Util.ToPETSCII( "\" " ) );
-        title.AppendU16NetworkOrder( DiskID );
+        title.AppendU16NetworkOrder( DiskID );*/
         return title;
       }
     }
@@ -962,6 +613,7 @@ namespace RetroDevStudio.Formats
 
     public override void Validate()
     {
+      /*
       var files = Files();
 
       GR.Collections.Set<GR.Generic.Tupel<int,int>>    usedTracksAndSectors = new GR.Collections.Set<GR.Generic.Tupel<int, int>>();
@@ -1018,8 +670,23 @@ namespace RetroDevStudio.Formats
             sector.Free = true;
           }
         }
-      }
+      }*/
     }
+
+
+
+    public override void Clear()
+    {
+      throw new NotImplementedException();
+    }
+
+
+
+    public override List<FileInfo> Files()
+    {
+      throw new NotImplementedException();
+    }
+
 
 
   }

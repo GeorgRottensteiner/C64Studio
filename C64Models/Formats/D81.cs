@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RetroDevStudio.Formats
 {
-  public class D81 : Disk
+  public class D81 : CommodoreDisk
   {
     public D81()
     { 

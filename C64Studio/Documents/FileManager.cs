@@ -105,6 +105,11 @@ namespace RetroDevStudio.Documents
         // disk file
         m_Media = new RetroDevStudio.Formats.D81();
       }
+      else if ( upperName.EndsWith( ".DSK" ) )
+      {
+        // CPC disk file
+        m_Media = new RetroDevStudio.Formats.CPCDSK();
+      }
       else if ( upperName.EndsWith( ".T64" ) )
       {
         // tape file
@@ -1268,7 +1273,7 @@ namespace RetroDevStudio.Documents
       if ( ( m_Media != null )
       &&   ( m_Media.SupportsRenamingTitle ) )
       {
-        var disk = (Disk)m_Media;
+        var disk = (CommodoreDisk)m_Media;
 
         var diskID = new GR.Memory.ByteBuffer();
         diskID.AppendU16NetworkOrder( disk.DiskID );

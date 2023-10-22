@@ -542,7 +542,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly|";
     public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas;*.a;*.b|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";
-    public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81|";
+    public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81;*.dsk|";
     public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|";
     public static string FILEFILTER_TAPE = "Tape Files|*.t64,*.prg|";
     public static string FILEFILTER_DISK = "Disk Files|*.d64;*.d71;*.d81|";

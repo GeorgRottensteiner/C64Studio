@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RetroDevStudio.Formats
 {
-  public class D71 : Disk
+  public class D71 : CommodoreDisk
   {
     private const int       TRACK_BAM_2 = 53;
 

@@ -5978,6 +5978,7 @@ namespace RetroDevStudio
       ||   ( extension == ".D71" )
       ||   ( extension == ".D81" )
       ||   ( extension == ".T64" )
+      ||   ( extension == ".DSK" )
       ||   ( extension == ".PRG" ) )
       {
         document = new FileManager( StudioCore, Filename );

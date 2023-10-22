@@ -8,7 +8,7 @@ using System.Text;
 
 namespace RetroDevStudio.Formats
 {
-  public abstract class Disk : MediaFormat
+  public abstract class CommodoreDisk : MediaFormat
   {
     protected const int BYTES_PER_DIR_ENTRY = 32;
 
@@ -175,7 +175,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    protected Disk()
+    protected CommodoreDisk()
     {
       SupportsRenamingTitle = true;
     }

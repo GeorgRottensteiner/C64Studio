@@ -360,6 +360,11 @@ namespace Tiny64
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, de ),
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, hl ) } );
+      // rotated ex version, seems common
+      sys.AddOpcode( "ex", 0xeb, 0, AddressingType.IMPLICIT, 4 )               // EX HL,DE
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, hl ),
+          new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, de ) } );
 
       sys.AddOpcode( "ex", 0x08, 0, AddressingType.IMPLICIT, 4 )               // EX AF,AF'
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
