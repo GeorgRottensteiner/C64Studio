@@ -5849,90 +5849,20 @@ namespace RetroDevStudio.Parser
         }
         else if ( IsLabelInFront( lineTokenInfos, upToken ) )
         {
-          // not a token, not a macro, must be a label in front
-          labelInFront = lineTokenInfos[0].Content;
-          tokenInFront = lineTokenInfos[0];
-
-          if ( !ScopeInsideMacroDefinition( stackScopes ) )
+          var callResult = HandleLabelInFront( lineIndex, info, lineTokenInfos, ref upToken, stackScopes, textCodeMapping,
+            ref programStepPos, ref trueCompileCurrentAddress, ref labelInFront, ref tokenInFront, ref parseLine );
+          if ( callResult == ParseLineResult.ERROR_ABORT )
           {
-            if ( programStepPos != -1 )
-            {
-              // only add if we know the start address!
-              AddLabel( labelInFront, programStepPos, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-            }
-            else
-            {
-              // label without value, like a define
-
-              if ( ( m_AssemblerSettings.MacroKeywordAfterName )
-              &&   ( lineTokenInfos.Count >= 2 )
-              &&   ( lineTokenInfos[1].Content == MacroByType( MacroInfo.PseudoOpType.MACRO ) ) )
-              {
-                // a PDS style macro definition
-              }
-              else
-              {
-                AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              }
-            }
+            HadFatalError = true;
+            return Lines;
           }
-
-          // cut off label for neededparsedexpression
-          if ( lineTokenInfos.Count > 1 )
+          if ( callResult == ParseLineResult.CALL_CONTINUE )
           {
-            info.Line = parseLine.Substring( lineTokenInfos[1].StartPos );
-            parseLine = info.Line;
-
-            // shift all tokens back
-            //lineTokenInfos = ParseTokenInfo( parseLine, 0, parseLine.Length, textCodeMapping );
-            lineTokenInfos.RemoveAt( 0 );
-            //PrefixZoneToLocalLabels( ref cheapLabelParent, lineTokenInfos, ref upToken );
-            //AdjustLabelCasing( lineTokenInfos );
-            // insert dummy entry to be removed later
-            lineTokenInfos.Insert( 0, new TokenInfo() );
-          }
-          else
-          {
-            parseLine = "";
-            info.Line = "";
-          }
-          lineTokenInfos.RemoveAt( 0 );
-
-          // butt ugly woraround, we could have e.g. "label *=*+2"
-          if ( IsDefine( lineTokenInfos ) )
-          {
-            // a define
-            var callReturn = PODefine( stackScopes, lineTokenInfos, lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
-            if ( callReturn == ParseLineResult.ERROR_ABORT )
-            {
-              HadFatalError = true;
-              return Lines;
-            }
             continue;
           }
-          if ( lineTokenInfos.Count == 0 )
-          {
-            upToken = "";
-          }
-          else
-          {
-            upToken = lineTokenInfos[0].Content.ToUpper();
-
-            // hack - macro call after label
-            if ( ( lineTokenInfos.Count >= 2 )
-            &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
-            &&   ( lineTokenInfos[0].Content == "+" )
-            &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos )
-            &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
-            {
-              lineTokenInfos[0].Type = RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO;
-              lineTokenInfos[0].Content = "+" + lineTokenInfos[1].Content;
-              lineTokenInfos[0].Length += lineTokenInfos[1].Length;
-              lineTokenInfos.RemoveAt( 1 );
-              upToken = lineTokenInfos[0].Content.ToUpper();
-            }
-          }
         }
+
+        HandleRestOfLineAfterLabelThatLooksLikeAnOpcode:;
         if ( ( lineTokenInfos.Count > 0 )
         &&   ( IsOpcode( lineTokenInfos[0].Type ) ) )
         {
@@ -6008,13 +5938,13 @@ namespace RetroDevStudio.Parser
           info.Line             = parseLine;
           info.LineCodeMapping  = textCodeMapping;
 
-          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out List<List<TokenInfo>> opcodeExpressions, out uint resultingOpcodePatchValue );
+          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out List<List<TokenInfo>> opcodeExpressions, out uint resultingOpcodePatchValue, out bool hadError );
           if ( estimatedOpcode != null )
           {
             //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes             = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
-            info.Opcode               = estimatedOpcode.first;
-            info.OpcodeUsingLongMode  = estimatedOpcode.second;
+            info.NumBytes = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
+            info.Opcode = estimatedOpcode.first;
+            info.OpcodeUsingLongMode = estimatedOpcode.second;
             if ( info.Opcode.ParserExpressions.Count > 0 )
             {
               info.NumBytes = SizeOfOpcode( estimatedOpcode.first.ByteValue );
@@ -6027,8 +5957,8 @@ namespace RetroDevStudio.Parser
             {
               // immediate may have the '#' in front of a literal (another ugly hack by yours truly)
               if ( ( lineTokenInfos.Count >= 2 )
-              &&   ( lineTokenInfos[1].Type == TokenInfo.TokenType.LITERAL_NUMBER )
-              &&   ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
+              && ( lineTokenInfos[1].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+              && ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
               {
                 if ( lineTokenInfos[1].Length == 1 )
                 {
@@ -6044,7 +5974,54 @@ namespace RetroDevStudio.Parser
               }
             }
           }
-
+          else if ( !hadError )
+          {
+            // so there's a label with the same name as a opcode?
+            if ( !ScopeInsideMacroDefinition( stackScopes ) )
+            {
+              if ( programStepPos != -1 )
+              {
+                // only add if we know the start address!
+                //AddLabel( upToken, programStepPos, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+                tokenInFront = lineTokenInfos[0];
+                labelInFront = tokenInFront.Content;
+                lineTokenInfos.RemoveAt( 0 );
+                if ( lineTokenInfos.Count > 0 )
+                {
+                  upToken = lineTokenInfos[0].Content.ToUpper();
+                }
+              }
+              else
+              {
+                // label without value, like a define
+                if ( ( m_AssemblerSettings.MacroKeywordAfterName )
+                &&   ( lineTokenInfos.Count >= 2 )
+                &&   ( lineTokenInfos[1].Content == MacroByType( MacroInfo.PseudoOpType.MACRO ) ) )
+                {
+                  // a PDS style macro definition
+                }
+                else
+                {
+                  AddLabel( upToken, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+                }
+              }
+              goto HandleRestOfLineAfterLabelThatLooksLikeAnOpcode;
+            }
+            /*
+            {
+              var callResult = HandleLabelInFront( lineIndex, info, lineTokenInfos, upToken, stackScopes, textCodeMapping,
+                  ref programStepPos, ref trueCompileCurrentAddress, ref labelInFront, ref tokenInFront, ref parseLine );
+              if ( callResult == ParseLineResult.ERROR_ABORT )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              if ( callResult == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }*/
+          }
           if ( info.Opcode != null )
           {
             if ( info.Opcode.NumOperands == 0 )
@@ -8398,6 +8375,93 @@ namespace RetroDevStudio.Parser
 
 
 
+    private ParseLineResult HandleLabelInFront( int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos, ref string upToken,
+          List<ScopeInfo> stackScopes, Map<byte, byte> textCodeMapping, 
+          ref int programStepPos, ref int trueCompileCurrentAddress,
+          ref string labelInFront, ref TokenInfo tokenInFront, ref string parseLine )
+    {
+      // not a token, not a macro, must be a label in front
+      labelInFront = lineTokenInfos[0].Content;
+      tokenInFront = lineTokenInfos[0];
+
+      if ( !ScopeInsideMacroDefinition( stackScopes ) )
+      {
+        if ( programStepPos != -1 )
+        {
+          // only add if we know the start address!
+          AddLabel( labelInFront, programStepPos, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+        }
+        else
+        {
+          // label without value, like a define
+
+          if ( ( m_AssemblerSettings.MacroKeywordAfterName )
+          &&   ( lineTokenInfos.Count >= 2 )
+          &&   ( lineTokenInfos[1].Content == MacroByType( MacroInfo.PseudoOpType.MACRO ) ) )
+          {
+            // a PDS style macro definition
+          }
+          else
+          {
+            AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+        }
+      }
+
+      // cut off label for neededparsedexpression
+      if ( lineTokenInfos.Count > 1 )
+      {
+        info.Line = parseLine.Substring( lineTokenInfos[1].StartPos );
+        parseLine = info.Line;
+
+        // shift all tokens back
+        //lineTokenInfos.RemoveAt( 0 );
+      }
+      else
+      {
+        parseLine = "";
+        info.Line = "";
+      }
+      lineTokenInfos.RemoveAt( 0 );
+
+      // butt ugly woraround, we could have e.g. "label *=*+2"
+      if ( IsDefine( lineTokenInfos ) )
+      {
+        // a define
+        var callReturn = PODefine( stackScopes, lineTokenInfos, lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+        if ( callReturn == ParseLineResult.ERROR_ABORT )
+        {
+          return callReturn;
+        }
+        return ParseLineResult.CALL_CONTINUE;
+      }
+      if ( lineTokenInfos.Count == 0 )
+      {
+        upToken = "";
+      }
+      else
+      {
+        upToken = lineTokenInfos[0].Content.ToUpper();
+
+        // hack - macro call after label
+        if ( ( lineTokenInfos.Count >= 2 )
+        &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
+        &&   ( lineTokenInfos[0].Content == "+" )
+        &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos )
+        &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+        {
+          lineTokenInfos[0].Type = RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO;
+          lineTokenInfos[0].Content = "+" + lineTokenInfos[1].Content;
+          lineTokenInfos[0].Length += lineTokenInfos[1].Length;
+          lineTokenInfos.RemoveAt( 1 );
+          upToken = lineTokenInfos[0].Content.ToUpper();
+        }
+      }
+      return ParseLineResult.OK;
+    }
+
+
+
     private string ListValidValues( List<Opcode.ValidValue> Values )
     {
       var sb = new StringBuilder();
@@ -9338,10 +9402,6 @@ namespace RetroDevStudio.Parser
 
       for ( int i = 0; i < Count; ++i )
       {
-        if ( Offset + i >= lineTokenInfos.Count )
-        {
-          Debug.Log( "aha" );
-        }
         var token = lineTokenInfos[Offset + i];
 
         if ( IsOpeningBraceChar( token.Content ) )
@@ -9380,10 +9440,6 @@ namespace RetroDevStudio.Parser
         // empty?
         AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", lineTokenInfos[lineTokenInfos.Count - 1].StartPos, 1 );
         return false;
-      }
-      if ( Offset + Count - paramStartIndex < 0 )
-      {
-        Debug.Log( "woss" );
       }
       lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + Count - paramStartIndex ) );
 
@@ -12553,10 +12609,11 @@ namespace RetroDevStudio.Parser
 
 
 
-    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out List<List<TokenInfo>> OpcodeExpressions, out uint ResultingOpcodePatchValue )
+    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out List<List<TokenInfo>> OpcodeExpressions, out uint ResultingOpcodePatchValue, out bool HadError )
     {
       ResultingOpcodePatchValue = 0;
-      OpcodeExpressions = null;
+      OpcodeExpressions         = null;
+      HadError                  = false;
 
       // lineTokens[0] contains the mnemonic
       if ( LineTokens.Count == 0 )
@@ -12565,6 +12622,7 @@ namespace RetroDevStudio.Parser
         AddError( LineIndex,
                   Types.ErrorCode.E1300_OPCODE_AMBIGIOUS,
                   "Could not determine correct opcode for empty line", 0, 0 );
+        HadError = true;
         return null;
       }
 
@@ -13003,6 +13061,7 @@ namespace RetroDevStudio.Parser
         {
           // no fallback anymore
           AddError( LineIndex, Types.ErrorCode.E1105_INVALID_OPCODE, "Opcode does not support indirect addressing with ,x outside (remove braces)" );
+          HadError = true;
           return null;
         }
         else if ( endsWithCommaY )
@@ -13135,6 +13194,7 @@ namespace RetroDevStudio.Parser
         // then it was regular braces, just evaluate as non indirect
         //addressing = Opcode.AddressingType.ZEROPAGE;
         AddError( LineIndex, Types.ErrorCode.E1105_INVALID_OPCODE, "Opcode does not support indirect addressing (remove braces)" );
+        HadError = true;
         return null;
       }
       foreach ( Tiny64.Opcode opcode in PossibleOpcodes )
@@ -13145,11 +13205,13 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      // not error if label?
+      /*
       AddError( LineIndex,
           Types.ErrorCode.E1300_OPCODE_AMBIGIOUS,
           "Could not determine correct opcode for " + LineTokens[0].Content,
           LineTokens[0].StartPos,
-          LineTokens[0].Length );
+          LineTokens[0].Length );*/
 
       return null;
     }

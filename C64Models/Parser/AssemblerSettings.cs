@@ -176,7 +176,7 @@ namespace RetroDevStudio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%&";
           AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEFx";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";

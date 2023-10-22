@@ -174,7 +174,7 @@ namespace RetroDevStudio.Documents
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;
-      editSource.WordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@";
+      editSource.WordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@$&äöüÄÖÜß";
 
       // allows auto indent on new lines, indents similar to previous line
       editSource.AutoIndent = true;
@@ -1305,12 +1305,15 @@ namespace RetroDevStudio.Documents
         return;
       }
       var tokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new GR.Collections.Map<byte, byte>() );
-      var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
       int numArgs = -1;
-      if ( currentToken != null )
+      if ( tokens != null )
       {
-        int tokenIndexOfMacro = tokens.IndexOf( currentToken );
-        numArgs = Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+        var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
+        if ( currentToken != null )
+        {
+          int tokenIndexOfMacro = tokens.IndexOf( currentToken );
+          numArgs = Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+        }
       }
       var macroInfo = debugFileInfo.MacroFromName( wordBelow, numArgs );
       if ( macroInfo != null )
