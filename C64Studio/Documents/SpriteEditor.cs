@@ -656,6 +656,8 @@ namespace RetroDevStudio.Documents
       }
       else if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
       {
+        bool allFillBytesZero = true;
+
         if ( ( BytesToSkip > 0 )
         &&   ( BytesToSkip < projectFile.Length ) )
         {
@@ -679,10 +681,27 @@ namespace RetroDevStudio.Documents
             }
 
             tempBuffer.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, 63 );
+
+            if ( tempBuffer.ByteAt( 63 ) != 0 )
+            {
+              allFillBytesZero = false;
+            }
             m_SpriteProject.Sprites[i].Tile.CustomColor = (byte)( tempBuffer.ByteAt( 63 ) & 0xf );
             m_SpriteProject.Sprites[i].Mode = ( ( tempBuffer.ByteAt( 63 ) & 0x80 ) != 0 ) ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
           }
         }
+        if ( allFillBytesZero )
+        {
+          // sanity check, this means we have black on black, 
+          for ( int i = 0; i < numSprites; ++i )
+          {
+            if ( i < m_SpriteProject.Sprites.Count )
+            {
+              m_SpriteProject.Sprites[i].Tile.CustomColor = 1;
+            }
+          }
+        }
+
         ChangeColorSettingsDialog();
         OnPaletteChanged();
 
