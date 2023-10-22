@@ -169,6 +169,12 @@ namespace Tiny64
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, rApo, 0 ) } );
 
+      // same as above, but without apostrophe
+      sys.AddOpcode( "ld", 0x40, 0, AddressingType.IMPLICIT, 4 )          // LD r,r
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 0 ) } );
+
       sys.AddOpcode( "ld", 0x46, 0, AddressingType.IMPLICIT, 7 )         // LD r,(HL)
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r, 3 ),

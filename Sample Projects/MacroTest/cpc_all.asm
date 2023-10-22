@@ -59,6 +59,63 @@
           ld a,l'    ;7d
           ld a,a'    ;7f
 
+;same without apostrophe
+          ld b,b    ;40
+          ld b,c    ;41
+          ld b,d
+          ld b,e
+          ld b,h
+          ld b,l    ;45
+          ld b,a    ;47
+
+          ld c,b    ;48
+          ld c,c
+          ld c,d
+          ld c,e
+          ld c,h
+          ld c,l
+          ld c,a
+
+          ld d,b
+          ld d,c
+          ld d,d
+          ld d,e
+          ld d,h
+          ld d,l
+          ld d,a
+
+          ld e,b
+          ld e,c
+          ld e,d
+          ld e,e
+          ld e,h
+          ld e,l
+          ld e,a
+
+          ld h,b
+          ld h,c
+          ld h,d
+          ld h,e
+          ld h,h
+          ld h,l
+          ld h,a
+
+          ld l,b
+          ld l,c
+          ld l,d
+          ld l,e
+          ld l,h
+          ld l,l
+          ld l,a
+
+          ld a,b
+          ld a,c
+          ld a,d
+          ld a,e
+          ld a,h
+          ld a,l    ;7d
+          ld a,a    ;7f
+
 ;LD r,n
 
           ld b,0    ;06 00
