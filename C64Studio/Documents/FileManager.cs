@@ -614,7 +614,8 @@ namespace RetroDevStudio.Documents
       {
         if ( ( m_Media is Formats.D64 )
         ||   ( m_Media is Formats.D71 )
-        ||   ( m_Media is Formats.D81 ) )
+        ||   ( m_Media is Formats.D81 )
+        ||   ( m_Media is Formats.CPCDSK ) )
         {
           statusFileManager.Text = m_Media.FreeSlots.ToString() + "/" + m_Media.Slots.ToString() + " blocks free"
               + "  " + listFiles.Items.Count + " files";
@@ -1336,6 +1337,19 @@ namespace RetroDevStudio.Documents
         RefreshFileView();
         UpdateStatusInfo();
       }
+    }
+
+
+
+    private void cPCDSKExtendedToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      CloseMedia();
+
+      m_Media = new RetroDevStudio.Formats.CPCDSK();
+      m_Media.CreateEmptyMedia();
+      SetUnmodified();
+      RefreshFileView();
+      UpdateStatusInfo();
     }
 
 

@@ -45,6 +45,7 @@
       this.validateMediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
       this.importFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.importDirArtFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.listFiles = new RetroDevStudio.Controls.MeasurableListView();
@@ -67,7 +68,9 @@
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripSplitButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
-      this.importDirArtFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cPCDSKExtendedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cPCDSKToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -145,7 +148,10 @@
             this.d64ToolStripMenuItem,
             this.d64With40TracksToolStripMenuItem,
             this.d71ToolStripMenuItem,
-            this.d81ToolStripMenuItem});
+            this.d81ToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.cPCDSKToolStripMenuItem,
+            this.cPCDSKExtendedToolStripMenuItem});
       this.newDiskToolStripMenuItem.Name = "newDiskToolStripMenuItem";
       this.newDiskToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.newDiskToolStripMenuItem.Text = "Create empty &Disk";
@@ -153,28 +159,28 @@
       // d64ToolStripMenuItem
       // 
       this.d64ToolStripMenuItem.Name = "d64ToolStripMenuItem";
-      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d64ToolStripMenuItem.Text = "D64";
       this.d64ToolStripMenuItem.Click += new System.EventHandler(this.d64ToolStripMenuItem_Click);
       // 
       // d64With40TracksToolStripMenuItem
       // 
       this.d64With40TracksToolStripMenuItem.Name = "d64With40TracksToolStripMenuItem";
-      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
       this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
       // 
       // d71ToolStripMenuItem
       // 
       this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
-      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d71ToolStripMenuItem.Text = "D71";
       this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
       // 
       // d81ToolStripMenuItem
       // 
       this.d81ToolStripMenuItem.Name = "d81ToolStripMenuItem";
-      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d81ToolStripMenuItem.Text = "D81";
       this.d81ToolStripMenuItem.Click += new System.EventHandler(this.d81ToolStripMenuItem_Click);
       // 
@@ -202,6 +208,13 @@
       this.importFileToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.importFileToolStripMenuItem.Text = "Import File...";
       this.importFileToolStripMenuItem.Click += new System.EventHandler(this.importFileToolStripMenuItem_Click);
+      // 
+      // importDirArtFilesToolStripMenuItem
+      // 
+      this.importDirArtFilesToolStripMenuItem.Name = "importDirArtFilesToolStripMenuItem";
+      this.importDirArtFilesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+      this.importDirArtFilesToolStripMenuItem.Text = "Import Dir Art Files...";
+      this.importDirArtFilesToolStripMenuItem.Click += new System.EventHandler(this.importDirArtFilesToolStripMenuItem_Click);
       // 
       // toolStripSeparator4
       // 
@@ -409,7 +422,7 @@
       this.toolStripBtnOpenBASIC.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnOpenBASIC.Image")));
       this.toolStripBtnOpenBASIC.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnOpenBASIC.Name = "toolStripBtnOpenBASIC";
-      this.toolStripBtnOpenBASIC.Size = new System.Drawing.Size(23, 17);
+      this.toolStripBtnOpenBASIC.Size = new System.Drawing.Size(32, 17);
       this.toolStripBtnOpenBASIC.Text = "toolStripButton1";
       this.toolStripBtnOpenBASIC.ToolTipText = "Open in BASIC editor";
       // 
@@ -422,12 +435,23 @@
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.labelMediaTitle.Click += new System.EventHandler(this.labelMediaTitle_Click);
       // 
-      // importDirArtFilesToolStripMenuItem
+      // cPCDSKExtendedToolStripMenuItem
       // 
-      this.importDirArtFilesToolStripMenuItem.Name = "importDirArtFilesToolStripMenuItem";
-      this.importDirArtFilesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-      this.importDirArtFilesToolStripMenuItem.Text = "Import Dir Art Files...";
-      this.importDirArtFilesToolStripMenuItem.Click += new System.EventHandler(this.importDirArtFilesToolStripMenuItem_Click);
+      this.cPCDSKExtendedToolStripMenuItem.Name = "cPCDSKExtendedToolStripMenuItem";
+      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.cPCDSKExtendedToolStripMenuItem.Text = "CPC DSK extended";
+      this.cPCDSKExtendedToolStripMenuItem.Click += new System.EventHandler(this.cPCDSKExtendedToolStripMenuItem_Click);
+      // 
+      // cPCDSKToolStripMenuItem
+      // 
+      this.cPCDSKToolStripMenuItem.Name = "cPCDSKToolStripMenuItem";
+      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.cPCDSKToolStripMenuItem.Text = "CPC DSK";
+      // 
+      // toolStripSeparator7
+      // 
+      this.toolStripSeparator7.Name = "toolStripSeparator7";
+      this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
       // 
       // FileManager
       // 
@@ -494,5 +518,8 @@
     private System.Windows.Forms.ToolStripButton toolStripBtnSave;
     private System.Windows.Forms.ToolStripButton btnAddNew;
     private System.Windows.Forms.ToolStripMenuItem importDirArtFilesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+    private System.Windows.Forms.ToolStripMenuItem cPCDSKToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem cPCDSKExtendedToolStripMenuItem;
   }
 }

@@ -815,7 +815,7 @@ namespace Tiny64
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, iyInParenthesis, closingParenthesis, 8 ) } );
 
 
-      sys.AddOpcode( "set", 0xcbc0, 0, AddressingType.REGISTER_TO_BIT, 8 )              // SET b,r
+      sys.AddOpcode( "set", 0xcbc0, 1, AddressingType.REGISTER_TO_BIT, 8 )              // SET b,r
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, bits, 3 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, r ) } );

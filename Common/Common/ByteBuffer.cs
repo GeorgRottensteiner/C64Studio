@@ -44,6 +44,15 @@ namespace GR
 
 
 
+      public ByteBuffer( UInt32 InitialSize, byte FillByte )
+      {
+        Resize( InitialSize );
+
+        Fill( 0, m_Data.Length, FillByte );
+      }
+
+
+
       public ByteBuffer( byte[] Data )
       {
         Append( Data );
@@ -1096,6 +1105,47 @@ namespace GR
       public int CompareTo( ByteBuffer OtherBuffer )
       {
         return Compare( OtherBuffer );
+      }
+
+
+
+      public void Fill( int Offset, int Count, byte FillValue )
+      {
+        if ( ( Offset >= m_Data.Length )
+        ||   ( Count <= 0 )
+        ||   ( Offset + Count <= 0 ) )
+        {
+          return;
+        }
+        if ( Offset < 0 )
+        {
+          Count += Offset;
+          Offset = 0;
+        }
+        if ( Offset + Count > m_Data.Length )
+        {
+          Count = (int)( m_Data.Length - Offset );
+        }
+
+        // memset replacement
+        int block = 32;
+        int index = (int)Offset;
+        int length = System.Math.Min( block, Count );
+
+        // Fill the initial array
+        while ( index - Offset < length )
+        {
+          m_Data[index++] = FillValue;
+        }
+
+        length = Count;
+        while ( index - Offset < length )
+        {
+          Buffer.BlockCopy( m_Data, Offset, m_Data, index, System.Math.Min( block, length - index ) );
+          index += block;
+          block *= 2;
+        }
+
       }
 
 

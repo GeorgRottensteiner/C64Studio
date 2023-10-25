@@ -688,7 +688,14 @@ namespace RetroDevStudio.Types
      */
     public FileType Type = FileType.SCRATCHED;
 
+    // flags for CPC DSK format
+    public bool ReadOnly = false;
+    public bool Hidden = false;
+    public int  Size = 0;
+
     public int DirEntryIndex = -1;
+
+    
   }
 
 

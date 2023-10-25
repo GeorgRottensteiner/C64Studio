@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GR.Memory;
+using RetroDevStudio.Formats;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -16,6 +18,17 @@ namespace RetroDevStudio
     [STAThread]
     static void Main( string[] args )
     {
+      CPCDSK  disk = new CPCDSK();
+
+      disk.CreateEmptyMedia();
+
+      ByteBuffer  file = new ByteBuffer( "0D000A00BF2268656C6C6F22000000" );
+
+      disk.WriteFile( new ByteBuffer( "42415349432020204E424153" ), file, Types.FileType.PRG );
+      disk.Save( "diskwithfile.dsk" );
+
+      Debug.Log( disk.LastError );
+
 #if !DEBUG
       try
       {
