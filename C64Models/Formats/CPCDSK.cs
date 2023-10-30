@@ -473,7 +473,7 @@ namespace RetroDevStudio.Formats
       ushort fullLength = (ushort)Content.Length;
       if ( hasHeader )
       {
-        fullLength = (ushort)( Content.Length + 256 );
+        //fullLength = (ushort)( Content.Length + 256 );
       }
 
       if ( fullLength > FreeMemory )
@@ -483,11 +483,12 @@ namespace RetroDevStudio.Formats
       }
 
       ByteBuffer  fullContent;
+      /*
       if ( hasHeader )
       {
         fullContent = CreateFileHeader( 0, Filename, SaveMode.NORMAL, 0x0170, (ushort)Content.Length ) + Content;
       }
-      else
+      else*/
       {
         fullContent = Content;
       }
@@ -497,6 +498,7 @@ namespace RetroDevStudio.Formats
       int   startDataTrack = startTrack;
       int   curDirTrack = startTrack;
       int   curDirSector = _FirstSectorID;
+      byte  curExtent = 0;
       bool  readOnly = false;
       bool  hidden = false;
       while ( writtenSize < fullContent.Length )
@@ -528,12 +530,13 @@ namespace RetroDevStudio.Formats
             {
               currentSector.Data.SetU8At( dirEntryPos + 10, (byte)( currentSector.Data.ByteAt( dirEntryPos + 10 ) | 0x80 ) );
             }
-            currentSector.Data.SetU8At( dirEntryPos + 12, 0 );
+            currentSector.Data.SetU8At( dirEntryPos + 12, curExtent );
             currentSector.Data.SetU8At( dirEntryPos + 13, 0 );
             currentSector.Data.SetU8At( dirEntryPos + 14, 0 );
 
             // length in records (record is 128 bytes)
-            currentSector.Data.SetU8At( dirEntryPos + 15, (byte)( ( nextBatchSize + 127 ) / 128 ) );
+            byte recordLength = (byte)Math.Min( ( fullContent.Length - writtenSize + 127 ) / 128, 128 );
+            currentSector.Data.SetU8At( dirEntryPos + 15, recordLength );
             currentSector.Data.Fill( dirEntryPos + 16, 16, 0 );
 
             for ( int blockIndex = 0; blockIndex < 16; ++blockIndex )
@@ -552,7 +555,7 @@ namespace RetroDevStudio.Formats
 
               fullContent.CopyTo( dataSector.Data, writtenSize, nextBatchSize, 0 );
               // extranous data is nulled (at least in WinAPE)
-              dataSector.Data.Fill( nextBatchSize, dataSector.SectorSize - nextBatchSize, 0 );
+              dataSector.Data.Fill( nextBatchSize, dataSector.SectorSize * 256 - nextBatchSize, 0 );
               writtenSize += nextBatchSize;
 
               // next batch
@@ -562,7 +565,7 @@ namespace RetroDevStudio.Formats
                 return true;
               }
               // ...and write second sector to fill up block
-              int nextSector = dataSector.SectorIndex + 1;
+              int nextSector = dataSector.SectorID + 1;
               int nextTrack = dataSector.Track;
               if ( nextSector - _FirstSectorID >= _Tracks[_CurrentSide][dataSector.Track].NumberOfSectors )
               {
@@ -579,20 +582,28 @@ namespace RetroDevStudio.Formats
               if ( dataSector == null )
               {
                 // TODO - the image now has partially written content!
-                _LastError = "No more free data sector(s) found";
+                _LastError = "No more free data sectors found";
                 return false;
               }
               fullContent.CopyTo( dataSector.Data, writtenSize, nextBatchSize, 0 );
               // extranous data is nulled (at least in WinAPE)
-              dataSector.Data.Fill( nextBatchSize, dataSector.SectorSize - nextBatchSize, 0 );
+              dataSector.Data.Fill( nextBatchSize, dataSector.SectorSize * 256 - nextBatchSize, 0 );
               writtenSize += nextBatchSize;
-              nextBatchSize = (int)Math.Max( fullContent.Length - writtenSize, 512 );
+
+              nextBatchSize = (int)Math.Min( fullContent.Length - writtenSize, 512 );
               if ( nextBatchSize == 0 )
               {
                 return true;
               }
             }
+            ++curExtent;
+            if ( curExtent == 0 )
+            {
+              _LastError = "No more free directory sectors found";
+              return false;
+            }
           }
+          dirEntryPos += 32;
         }
       }
 
@@ -737,6 +748,7 @@ namespace RetroDevStudio.Formats
 
     private bool IsSectorInUse( int Track, int SectorID )
     {
+      Debug.Log( $"Is Sector in Use Track {Track}, Sector {SectorID.ToString( "X2" )}" );
       int curTrack = FirstDirectoryTrack();
       for ( int i = 0; i < 4; ++i )
       {
@@ -752,8 +764,18 @@ namespace RetroDevStudio.Formats
               int blockTrack = ( blockNo * 2 ) / 9;
               int blockSector = ( blockNo * 2 ) % 9;
 
+              // second sector of block was from previous track?
+              if ( ( blockTrack == Track - 1 )
+              &&   ( SectorID == _FirstSectorID )
+              &&   ( blockSector == _Tracks[0][0].NumberOfSectors - 1 ) )
+              {
+                return true;
+              }
+
+              // same t/s, or same t and previous sector
               if ( ( blockTrack == Track )
-              &&   ( blockSector == SectorID - _FirstSectorID ) )
+              &&   ( ( blockSector == SectorID - _FirstSectorID )
+              ||     ( blockSector == SectorID - _FirstSectorID - 1 ) ) )
               {
                 return true;
               }

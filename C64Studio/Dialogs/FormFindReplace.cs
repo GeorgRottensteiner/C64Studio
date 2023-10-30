@@ -1171,7 +1171,10 @@ namespace RetroDevStudio.Dialogs
         {
           elementToSearch = LastFound.FoundInDocument.Element;
           firstElement = elementToSearch;
-          firstProject = elementToSearch.DocumentInfo.Project;
+          if ( elementToSearch != null )
+          {
+            firstProject = elementToSearch.DocumentInfo.Project;
+          }
         }
         if ( elementToSearch == null )
         {

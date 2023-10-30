@@ -18,16 +18,19 @@ namespace RetroDevStudio
     [STAThread]
     static void Main( string[] args )
     {
+      /*
       CPCDSK  disk = new CPCDSK();
 
       disk.CreateEmptyMedia();
 
       ByteBuffer  file = new ByteBuffer( "0D000A00BF2268656C6C6F22000000" );
 
-      disk.WriteFile( new ByteBuffer( "42415349432020204E424153" ), file, Types.FileType.PRG );
-      disk.Save( "diskwithfile.dsk" );
-
+      ByteBuffer  fileToInsert = GR.IO.File.ReadAllBytes( @"C:\Users\Georg\Desktop\CPC\FRUITY.BIN" );
+      //disk.WriteFile( new ByteBuffer( "42415349432020204E424153" ), file, Types.FileType.PRG );
+      disk.WriteFile( new ByteBuffer( "46525549545920204E42494E" ), fileToInsert, Types.FileType.PRG );
       Debug.Log( disk.LastError );
+      disk.Save( @"C:\Users\Georg\Desktop\CPC\diskwithfilefruitybin.dsk" );*/
+      
 
 #if !DEBUG
       try

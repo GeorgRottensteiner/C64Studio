@@ -1141,7 +1141,7 @@ namespace GR
         length = Count;
         while ( index - Offset < length )
         {
-          Buffer.BlockCopy( m_Data, Offset, m_Data, index, System.Math.Min( block, length - index ) );
+          Buffer.BlockCopy( m_Data, Offset, m_Data, index, System.Math.Min( block, length - index + Offset ) );
           index += block;
           block *= 2;
         }
