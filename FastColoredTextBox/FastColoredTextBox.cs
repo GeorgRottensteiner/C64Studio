@@ -6806,7 +6806,7 @@ namespace FastColoredTextBoxNS
         var origStart = Selection.Start;
 
         draggedRange = Selection.Clone();
-        var dragDropEffect = DoDragDrop( SelectedText, DragDropEffects.Copy );
+        var dragDropEffect = DoDragDrop( SelectedText, DragDropEffects.Move | DragDropEffects.Copy );
         draggedRange = null;
 
         if ( dragDropEffect == DragDropEffects.None )
@@ -9320,7 +9320,14 @@ window.status = ""#print"";
     {
       if ( e.Data.GetDataPresent( DataFormats.Text ) && AllowDrop )
       {
-        e.Effect = DragDropEffects.Copy;
+        if ( Control.ModifierKeys == Keys.Control )
+        {
+          e.Effect = DragDropEffects.Copy;
+        }
+        else
+        {
+          e.Effect = DragDropEffects.Move;
+        }
         IsDragDrop = true;
       }
       base.OnDragEnter( e );
@@ -9555,6 +9562,15 @@ window.status = ""#print"";
       if ( e.Data.GetDataPresent( DataFormats.Text ) )
       {
         CaretVisible = false;
+
+        if ( Control.ModifierKeys == Keys.Control )
+        {
+          e.Effect = DragDropEffects.Copy;
+        }
+        else
+        {
+          e.Effect = DragDropEffects.Move;
+        }
 
         Point p = PointToClient( new Point( e.X, e.Y ) );
         Selection.Start = PointToPlace( p );
