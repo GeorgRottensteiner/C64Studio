@@ -44,6 +44,7 @@ namespace RetroDevStudio.Documents
 
     private Color                     ChangedColor = Color.Red;
     private Color                     UnchangedColor = Color.Black;
+    private int m_ByteWidth = 8;
 
 
 
@@ -96,6 +97,7 @@ namespace RetroDevStudio.Documents
       m_MenuItemHexSpriteView.Click += btnBinarySpriteView_Click;
       hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
 
+      SelectByteWidth(8);
       SetMemoryDisplayType();
 
       ViewScrolled += new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
@@ -497,6 +499,8 @@ namespace RetroDevStudio.Documents
       m_MenuItemHexSpriteView.Checked = false;
       btnBinaryCharView.Checked = false;
       m_MenuItemHexCharView.Checked = false;
+
+      SelectByteWidth(m_ByteWidth);
       hexView.Invalidate();
       SetColorSubmenu();
     }
@@ -533,6 +537,7 @@ namespace RetroDevStudio.Documents
 
       ApplyHexViewColors();
 
+      SelectByteWidth(m_ByteWidth);
       hexView.Invalidate();
       SetColorSubmenu();
     }
@@ -568,6 +573,8 @@ namespace RetroDevStudio.Documents
 
       ApplyHexViewColors();
 
+      hexView.BytesPerLine = 8;
+      SelectByteWidth(0);
       hexView.Invalidate();
       SetColorSubmenu();
     }
@@ -669,5 +676,32 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void SelectByteWidth(int w)
+    {
+        if (w == 0)
+        {
+            byteWidthDropDownButton.Enabled = false;
+        }
+        else
+        {
+            foreach (ToolStripMenuItem item in byteWidthDropDownButton.DropDownItems)
+            {
+                item.CheckState = item.Text == w.ToString() ? CheckState.Checked : CheckState.Unchecked;
+            }
+
+            hexView.BytesPerLine = w;
+            byteWidthDropDownButton.Enabled = true;
+        }
+        hexView.Invalidate();
+    }
+
+
+
+    private void byteWidthDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+    {
+        int w = int.Parse(e.ClickedItem.Text);
+        SelectByteWidth(w);
+        m_ByteWidth = w;
+    }
   }
 }

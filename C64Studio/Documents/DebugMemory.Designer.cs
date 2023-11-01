@@ -28,6 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
+      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
+      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugMemory));
       this.hexView = new Be.Windows.Forms.HexBox();
       this.toolDebugMemory = new System.Windows.Forms.ToolStrip();
@@ -40,10 +45,56 @@
       this.toolStripBtnHexCaseSwitch = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnAddView = new System.Windows.Forms.ToolStripButton();
+      this.byteWidthDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+      toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolDebugMemory.SuspendLayout();
       this.SuspendLayout();
       // 
+      // toolStripMenuItem5
+      // 
+      toolStripMenuItem5.AutoSize = false;
+      toolStripMenuItem5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      toolStripMenuItem5.Name = "toolStripMenuItem5";
+      toolStripMenuItem5.Size = new System.Drawing.Size(100, 34);
+      toolStripMenuItem5.Text = "8";
+      // 
+      // toolStripMenuItem6
+      // 
+      toolStripMenuItem6.AutoSize = false;
+      toolStripMenuItem6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      toolStripMenuItem6.Name = "toolStripMenuItem6";
+      toolStripMenuItem6.Size = new System.Drawing.Size(100, 34);
+      toolStripMenuItem6.Text = "16";
+      // 
+      // toolStripMenuItem7
+      // 
+      toolStripMenuItem7.AutoSize = false;
+      toolStripMenuItem7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      toolStripMenuItem7.Name = "toolStripMenuItem7";
+      toolStripMenuItem7.Size = new System.Drawing.Size(100, 34);
+      toolStripMenuItem7.Text = "24";
+      // 
+      // toolStripMenuItem8
+      // 
+      toolStripMenuItem8.AutoSize = false;
+      toolStripMenuItem8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      toolStripMenuItem8.Name = "toolStripMenuItem8";
+      toolStripMenuItem8.Size = new System.Drawing.Size(100, 34);
+      toolStripMenuItem8.Text = "32";
+      // 
+      // toolStripMenuItem9
+      // 
+      toolStripMenuItem9.AutoSize = false;
+      toolStripMenuItem9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      toolStripMenuItem9.Name = "toolStripMenuItem9";
+      toolStripMenuItem9.Size = new System.Drawing.Size(100, 34);
+      toolStripMenuItem9.Text = "40";
+      //
       // hexView
       // 
       this.hexView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -79,6 +130,7 @@
             this.toolStripBtnMemoryFromCPU,
             this.toolStripBtnGoto,
             this.toolStripBtnHexCaseSwitch,
+			this.byteWidthDropDownButton,
             this.toolStripSeparator2,
             this.toolStripBtnAddView});
       this.toolDebugMemory.Location = new System.Drawing.Point(0, 0);
@@ -175,6 +227,16 @@
       this.toolStripBtnAddView.Text = "Add View";
       this.toolStripBtnAddView.Click += new System.EventHandler(this.toolStripBtnAddView_Click);
       // 
+      // byteWidthDropDownButton
+      // 
+      this.byteWidthDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.byteWidthDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem5, toolStripMenuItem6, toolStripMenuItem7, toolStripMenuItem8, toolStripMenuItem9 });
+      this.byteWidthDropDownButton.Image = Properties.Resources.tool_select;
+      this.byteWidthDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.byteWidthDropDownButton.Name = "byteWidthDropDownButton";
+      this.byteWidthDropDownButton.Size = new System.Drawing.Size(42, 28);
+      this.byteWidthDropDownButton.ToolTipText = "Bytes per line";
+      this.byteWidthDropDownButton.DropDownItemClicked += byteWidthDropDownButton_DropDownItemClicked;
       // DebugMemory
       // 
       this.ClientSize = new System.Drawing.Size(431, 485);
@@ -191,18 +253,19 @@
 
     }
 
-    #endregion
+        #endregion
 
-    public Be.Windows.Forms.HexBox hexView;
-    private System.Windows.Forms.ToolStrip toolDebugMemory;
-    private System.Windows.Forms.ToolStripButton btnBinaryStringView;
-    private System.Windows.Forms.ToolStripButton btnBinaryCharView;
-    private System.Windows.Forms.ToolStripButton btnBinarySpriteView;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-    private System.Windows.Forms.ToolStripButton toolStripBtnMemoryFromCPU;
-    private System.Windows.Forms.ToolStripButton toolStripBtnGoto;
-    private System.Windows.Forms.ToolStripButton toolStripBtnHexCaseSwitch;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    private System.Windows.Forms.ToolStripButton toolStripBtnAddView;
-  }
+        public Be.Windows.Forms.HexBox hexView;
+        private System.Windows.Forms.ToolStrip toolDebugMemory;
+        private System.Windows.Forms.ToolStripButton btnBinaryStringView;
+        private System.Windows.Forms.ToolStripButton btnBinaryCharView;
+        private System.Windows.Forms.ToolStripButton btnBinarySpriteView;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripBtnMemoryFromCPU;
+        private System.Windows.Forms.ToolStripButton toolStripBtnGoto;
+        private System.Windows.Forms.ToolStripButton toolStripBtnHexCaseSwitch;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton toolStripBtnAddView;
+        private System.Windows.Forms.ToolStripDropDownButton byteWidthDropDownButton;
+    }
 }
