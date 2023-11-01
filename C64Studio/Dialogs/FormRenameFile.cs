@@ -2,8 +2,7 @@
 using RetroDevStudio;
 using System;
 using System.Windows.Forms;
-
-
+using RetroDevStudio.Formats;
 
 namespace RetroDevStudio.Dialogs
 {
@@ -12,18 +11,20 @@ namespace RetroDevStudio.Dialogs
     public GR.Memory.ByteBuffer             Filename;
     private System.Drawing.Font             _DefaultFont;
     StudioCore                              Core;
+    MediaFilenameType                       _FilenameType;
 
 
 
-    public FormRenameFile( StudioCore Core, GR.Memory.ByteBuffer OrigFilename )
+    public FormRenameFile( StudioCore Core, MediaFilenameType FilenameType, GR.Memory.ByteBuffer OrigFilename )
     {
-      this.Core = Core;
+      this.Core     = Core;
+      _FilenameType = FilenameType;
 
       Filename = new GR.Memory.ByteBuffer( OrigFilename );
 
       InitializeComponent();
 
-      editFilename.Text = Util.FilenameToUnicode( OrigFilename );
+      editFilename.Text = Util.FilenameToUnicode( _FilenameType, OrigFilename );
       editFilename.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
 
       _DefaultFont = listPETSCII.Font;

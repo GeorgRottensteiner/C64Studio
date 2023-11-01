@@ -4,8 +4,7 @@ using System.Text;
 using System.Linq;
 using GR.Memory;
 using RetroDevStudio.Types;
-
-
+using RetroDevStudio.Formats;
 
 namespace RetroDevStudio
 {
@@ -30,31 +29,88 @@ namespace RetroDevStudio
 
 
 
-    public static GR.Memory.ByteBuffer ToFilename( string Name )
+    public static GR.Memory.ByteBuffer ToFilename( MediaFilenameType Type, string Name )
     {
       GR.Memory.ByteBuffer bufName = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < 16; ++i )
+
+      switch ( Type )
       {
-        if ( i < Name.Length )
-        {
-          char     c = Name[i];
-
-          ToggleCase( ref c );
-
-          var potChar = ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == c );
-          if ( potChar != null )
+        case MediaFilenameType.COMMODORE:
+          for ( int i = 0; i < 16; ++i )
           {
-            bufName.AppendU8( potChar.PetSCIIValue );
+            if ( i < Name.Length )
+            {
+              char     c = Name[i];
+
+              ToggleCase( ref c );
+
+              var potChar = ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == c );
+              if ( potChar != null )
+              {
+                bufName.AppendU8( potChar.PetSCIIValue );
+              }
+              else
+              {
+                bufName.AppendU8( (byte)c );
+              }
+            }
+            else
+            {
+              bufName.AppendU8( 0xa0 );
+            }
           }
-          else
+          break;
+        case MediaFilenameType.CPC:
           {
-            bufName.AppendU8( (byte)c );
+            int   dotPos = Name.IndexOf( '.' );
+            if ( dotPos == -1 )
+            {
+              Name += ".bin";
+              dotPos = Name.IndexOf( '.' );
+            }
+            string firstPart = Name.Substring( 0, dotPos ).Replace( " ", "" );
+            string extension = Name.Substring( dotPos + 1 ).Replace( " ", "" );
+            if ( firstPart.Length < 8 )
+            {
+              firstPart = firstPart.PadRight( 8, ' ' );
+            }
+            else if ( firstPart.Length > 8 )
+            {
+              firstPart = firstPart.Substring( 0, 8 );
+            }
+            if ( extension.Length < 3 )
+            {
+              extension = extension.PadRight( 3, ' ' );
+            }
+            else if ( extension.Length > 3 )
+            {
+              extension = extension.Substring( 0, 3 );
+            }
+            Name = firstPart + "." + extension;
+            for ( int i = 0; i < 11; ++i )
+            {
+              if ( i < Name.Length )
+              {
+                char     c = Name[i];
+
+                if ( c == ' ' )
+                {
+                  // space is not a valid char for CPC disks
+                  continue;
+                }
+
+                bufName.AppendU8( (byte)c );
+              }
+              else
+              {
+                // fill with blanks
+                bufName.AppendU8( 32 );
+              }
+            }
           }
-        }
-        else
-        {
-          bufName.AppendU8( 0xa0 );
-        }
+          break;
+        default:
+          throw new Exception( $"Unsupported media filename type {Type}" );
       }
       return bufName;
     }
@@ -109,23 +165,35 @@ namespace RetroDevStudio
 
 
 
-    public static string FilenameToUnicode( GR.Memory.ByteBuffer Filename )
+    public static string FilenameToUnicode( MediaFilenameType FilenameType, GR.Memory.ByteBuffer Filename )
     {
       string filename = "";
 
-      int numShiftSpacesAtEnd = 0;
-      int pos = (int)Filename.Length;
-      while ( ( pos > 0 )
-      &&      ( Filename.ByteAt( pos - 1 ) == 0xa0 ) )
+      switch ( FilenameType )
       {
-        --pos;
-      }
-      numShiftSpacesAtEnd = (int)Filename.Length - pos;
+        case MediaFilenameType.COMMODORE:
+          {
+            int numShiftSpacesAtEnd = 0;
+            int pos = (int)Filename.Length;
+            while ( ( pos > 0 )
+            &&      ( Filename.ByteAt( pos - 1 ) == 0xa0 ) )
+            {
+              --pos;
+            }
+            numShiftSpacesAtEnd = (int)Filename.Length - pos;
 
-      for ( int i = 0; i < Filename.Length - numShiftSpacesAtEnd; ++i )
-      {
-        byte petscii = Filename.ByteAt( i );
-        filename += (char)ConstantData.PETSCIIToUnicode[petscii];
+            for ( int i = 0; i < Filename.Length - numShiftSpacesAtEnd; ++i )
+            {
+              byte petscii = Filename.ByteAt( i );
+              filename += (char)ConstantData.PETSCIIToUnicode[petscii];
+            }
+          }
+          break;
+        case MediaFilenameType.CPC:
+          filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
+          break;
+        default:
+          throw new Exception( $"Unsupported Filenametype {FilenameType}" );
       }
       return filename;
     }
@@ -559,7 +627,9 @@ namespace RetroDevStudio
       return null;
     }
 
-
-
+    internal static ByteBuffer ToFilename( object filenameType, string origFilename )
+    {
+      throw new NotImplementedException();
+    }
   }
 }

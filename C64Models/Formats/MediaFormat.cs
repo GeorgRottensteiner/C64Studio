@@ -41,6 +41,13 @@ namespace RetroDevStudio.Formats
 
 
 
+    public abstract MediaFilenameType FilenameType 
+    { 
+      get; 
+    }
+
+
+
     public virtual int FreeSlots
     {
       get

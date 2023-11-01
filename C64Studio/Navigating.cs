@@ -41,6 +41,10 @@ namespace RetroDevStudio
     public void UpdateFromMessages( Types.ASM.FileInfo ASMInfo,
                                     Project ParsedProject )
     {
+      if ( ASMInfo == null )
+      {
+        return;
+      }
       CompileMessages = ASMInfo.Messages;
       Project         = ParsedProject;
       this.ASMInfo    = ASMInfo;

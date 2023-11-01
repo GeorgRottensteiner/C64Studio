@@ -457,5 +457,18 @@ namespace RetroDevStudio.Formats
       }
     }
 
+
+
+    public override MediaFilenameType FilenameType
+    {
+      get
+      {
+        return MediaFilenameType.COMMODORE;
+      }
+    }
+
+
+
+
   }
 }

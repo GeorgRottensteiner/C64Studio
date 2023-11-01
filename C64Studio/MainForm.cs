@@ -2440,6 +2440,10 @@ namespace RetroDevStudio
 
     public void AddOutputMessages( Types.ASM.FileInfo ASMFileInfo )
     {
+      if ( ASMFileInfo == null )
+      {
+        return;
+      }
       foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in ASMFileInfo.Messages )
       {
         Parser.ParserBase.ParseMessage message = msg.Value;

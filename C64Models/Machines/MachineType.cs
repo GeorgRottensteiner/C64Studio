@@ -25,7 +25,9 @@ namespace RetroDevStudio
     [Description( "Nintendo NES" )]
     NES,
     [Description( "Commander X16" )]
-    COMMANDER_X16
+    COMMANDER_X16,
+    [Description( "Amstrad CPC" )]
+    CPC
   }
 
 

@@ -3008,6 +3008,12 @@ namespace RetroDevStudio.Parser
         &&     ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y ) ) )
         &&     ( !EvaluateTokens( lineIndex, NeededParsedExpression, lineInfo.LineCodeMapping, out value ) ) )
         {
+          /*
+          if ( HasError() )
+          {
+            Debug.Log( $"LineIndex {lineIndex}, could not evaluate " + TokensToExpression( NeededParsedExpression ) + $" from {NeededParsedExpression[0].StartPos} to {NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos}" );
+          }*/
+
           if ( !HasError() )
           {
             Debug.Log( "EvaluateTokens failed without error info!" );
@@ -3059,13 +3065,13 @@ namespace RetroDevStudio.Parser
             }
             // check value size
             if ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_8BIT )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
-            || ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_8BIT )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
+            ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
             {
               if ( !ValidByteValue( addressValue ) )
               {
@@ -6941,61 +6947,11 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.COMPILE_TARGET )
             {
-              // !to targetfilename,outputtype
-              //     outputtype = cbm (default) oder plain
-              if ( !string.IsNullOrEmpty( m_CompileTargetFile ) )
+              var result = POTo( lineTokenInfos, lineIndex );
+              if ( result == ParseLineResult.ERROR_ABORT )
               {
-                AddWarning( lineIndex,
-                            RetroDevStudio.Types.ErrorCode.W0004_TARGET_FILENAME_ALREADY_PROVIDED,
-                            "A target file name was already provided, ignoring this one",
-                            -1,
-                            0 );
-              }
-              else
-              {
-                lineTokenInfos.RemoveAt( 0 );
-
-                if ( ( lineTokenInfos.Count != 3 )
-                || ( lineTokenInfos[1].Content != "," ) )
-                {
-                  AddError( lineIndex,
-                            Types.ErrorCode.E1302_MALFORMED_MACRO,
-                            "Expected !to <Filename>,<Type = " + ListKeys( Lookup.CompileTargetModeToKeyword.Values ) + ">" );
-                  HadFatalError = true;
-                  return Lines;
-                }
-                if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
-                {
-                  AddError( lineIndex,
-                            Types.ErrorCode.E1307_FILENAME_INCOMPLETE,
-                            "String as file name expected",
-                            lineTokenInfos[0].StartPos,
-                            lineTokenInfos[0].Length );
-                  HadFatalError = true;
-                  return Lines;
-                }
-                string    targetType = lineTokenInfos[2].Content.ToUpper();
-                if ( !Lookup.CompileTargetModeToKeyword.ContainsValue( targetType ) )
-                {
-                  AddError( lineIndex,
-                            Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
-                            "Unsupported target type " + lineTokenInfos[2].Content + ", only " + ListKeys( Lookup.CompileTargetModeToKeyword.Values ) + " supported",
-                            lineTokenInfos[2].StartPos,
-                            lineTokenInfos[2].Length );
-                  HadFatalError = true;
-                  return Lines;
-                }
-                filename = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Length - 2 );
-                // do not append to absolute path!
-                if ( System.IO.Path.IsPathRooted( filename ) )
-                {
-                  m_CompileTargetFile = filename;
-                }
-                else
-                {
-                  m_CompileTargetFile = GR.Path.Append( m_DocBasePath, filename );
-                }
-                m_CompileTarget = Lookup.CompileTargetModeToKeyword.Where( c => c.Value == targetType ).Select( c => c.Key ).First();
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ADDRESS )

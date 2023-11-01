@@ -840,6 +840,21 @@ namespace RetroDevStudio.Tasks
             {
               System.Media.SystemSounds.Exclamation.Play();
             }
+
+            if ( asmFileInfo != null )
+            {
+              // spread asm info to all participating files
+              foreach ( var document in Core.MainForm.DocumentInfos )
+              {
+                if ( document != null )
+                {
+                  if ( asmFileInfo.ContainsFile( document.FullPath ) )
+                  {
+                    document.SetASMFileInfo( asmFileInfo );
+                  }
+                }
+              }
+            }
             return false;
           }
 

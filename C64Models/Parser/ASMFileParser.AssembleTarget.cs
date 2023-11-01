@@ -26,7 +26,7 @@ namespace RetroDevStudio.Parser
 
             Formats.T64.FileRecord  record = new RetroDevStudio.Formats.T64.FileRecord();
 
-            record.Filename = Util.ToFilename( OutputPureFilename );
+            record.Filename = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
             record.StartAddress = (ushort)FileStartAddress;
             record.C64FileType = RetroDevStudio.Types.FileType.PRG;
             record.EntryType = 1;
@@ -42,7 +42,7 @@ namespace RetroDevStudio.Parser
           {
             Formats.Tap tap = new RetroDevStudio.Formats.Tap();
 
-            tap.WriteFile( Util.ToFilename( OutputPureFilename ), Assembly, RetroDevStudio.Types.FileType.PRG );
+            tap.WriteFile( Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename ), Assembly, RetroDevStudio.Types.FileType.PRG );
             return tap.Compile();
           }
         case Types.CompileTargetType.D64:
@@ -51,10 +51,21 @@ namespace RetroDevStudio.Parser
 
             d64.CreateEmptyMedia();
 
-            GR.Memory.ByteBuffer    bufName = Util.ToFilename( OutputPureFilename );
+            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
             d64.WriteFile( bufName, Assembly, RetroDevStudio.Types.FileType.PRG );
 
             return d64.Compile();
+          }
+        case Types.CompileTargetType.DSK:
+          {
+            var disk = new RetroDevStudio.Formats.CPCDSK();
+
+            disk.CreateEmptyMedia();
+
+            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.CPC, OutputPureFilename );
+            disk.WriteFile( bufName, Assembly, RetroDevStudio.Types.FileType.PRG );
+
+            return disk.Compile();
           }
         case Types.CompileTargetType.D81:
           {
@@ -62,7 +73,7 @@ namespace RetroDevStudio.Parser
 
             d81.CreateEmptyMedia();
 
-            GR.Memory.ByteBuffer    bufName = Util.ToFilename( OutputPureFilename );
+            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
             d81.WriteFile( bufName, Assembly, RetroDevStudio.Types.FileType.PRG );
 
             return d81.Compile();

@@ -257,7 +257,7 @@ namespace RetroDevStudio.Documents
               Debug.Log( "Unsupported PETSCII value " + singleByte );
             }
           }
-          string filename = Util.FilenameToUnicode( displayFilename );
+          string filename = Util.FilenameToUnicode( m_Media.FilenameType, displayFilename );
 
           ListViewItem item = new ListViewItem( filename );
           item.SubItems.Add( file.Blocks.ToString() );
@@ -632,7 +632,7 @@ namespace RetroDevStudio.Documents
       }
       RetroDevStudio.Types.FileInfo file = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
-      statusFileManager.Text = Util.FilenameToUnicode( file.Filename ) + " " + file.Blocks.ToString() + " blocks";
+      statusFileManager.Text = Util.FilenameToUnicode( m_Media.FilenameType, file.Filename ) + " " + file.Blocks.ToString() + " blocks";
     }
 
 
@@ -894,7 +894,7 @@ namespace RetroDevStudio.Documents
       {
         RetroDevStudio.Types.FileInfo fileToRename = (RetroDevStudio.Types.FileInfo)item.Tag;
 
-        var formRename = new FormRenameFile( Core, fileToRename.Filename );
+        var formRename = new FormRenameFile( Core, m_Media.FilenameType, fileToRename.Filename );
 
         if ( formRename.ShowDialog() == DialogResult.OK )
         {
@@ -1258,7 +1258,7 @@ namespace RetroDevStudio.Documents
       if ( m_Media != null )
       {
         var emptyFile = new ByteBuffer();
-        var fileName = Util.ToFilename( "new file" );
+        var fileName = Util.ToFilename( m_Media.FilenameType, "new file" );
         if ( m_Media.WriteFile( fileName, emptyFile, RetroDevStudio.Types.FileType.PRG ) )
         {
           RefreshFileView();
@@ -1278,7 +1278,7 @@ namespace RetroDevStudio.Documents
 
         var diskID = new GR.Memory.ByteBuffer();
         diskID.AppendU16NetworkOrder( disk.DiskID );
-        var renameDisk = new FormRenameDisk( Core, disk.DiskName, diskID );
+        var renameDisk = new FormRenameDisk( Core, disk.FilenameType, disk.DiskName, diskID );
         if ( renameDisk.ShowDialog() != DialogResult.OK )
         {
           return;

@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportCharsetInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportCharsetScreenInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpritePadProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\MediaFilenameType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ValueTableProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetScreenProject.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.To.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Skip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.PseudoPC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.IncludeBinary.cs" />

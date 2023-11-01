@@ -166,7 +166,7 @@ namespace MediaManager
       }
       else if ( methodToUse == "-EXPORT" )
       {
-        RetroDevStudio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-EXPORT"] ) );
+        RetroDevStudio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( medium.FilenameType, paramMap["-EXPORT"] ) );
         if ( fileInfo != null )
         {
           string outputFilename = paramMap["-EXPORT"];
@@ -187,10 +187,10 @@ namespace MediaManager
       }
       else if ( methodToUse == "-DELETE" )
       {
-        RetroDevStudio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-DELETE"] ) );
+        RetroDevStudio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( medium.FilenameType, paramMap["-DELETE"] ) );
         if ( fileInfo != null )
         {
-          if ( !medium.DeleteFile( Util.ToFilename( paramMap["-DELETE"] ) ) )
+          if ( !medium.DeleteFile( Util.ToFilename( medium.FilenameType, paramMap["-DELETE"] ) ) )
           {
             System.Console.Error.WriteLine( "File could not be deleted: " + medium.LastError );
           }
@@ -265,7 +265,7 @@ namespace MediaManager
         {
           filenameImport = paramMap["-RENAMETO"];
         }
-        if ( !medium.WriteFile( Util.ToFilename( filenameImport ), data, fileType ) )
+        if ( !medium.WriteFile( Util.ToFilename( medium.FilenameType, filenameImport ), data, fileType ) )
         {
           System.Console.Error.WriteLine( "Could not write file to medium: " + medium.LastError );
           return 1;
@@ -284,9 +284,9 @@ namespace MediaManager
           return 1;
         }
         string origFilename = paramMap["-RENAME"];
-        GR.Memory.ByteBuffer    origFilenameBuffer = Util.ToFilename( origFilename );
+        GR.Memory.ByteBuffer    origFilenameBuffer = Util.ToFilename( medium.FilenameType, origFilename );
         string targetFilename = paramMap["-RENAMETO"];
-        GR.Memory.ByteBuffer    targetFilenameBuffer = Util.ToFilename( targetFilename );
+        GR.Memory.ByteBuffer    targetFilenameBuffer = Util.ToFilename( medium.FilenameType, targetFilename );
 
         if ( !medium.RenameFile( origFilenameBuffer, targetFilenameBuffer ) )
         {

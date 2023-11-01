@@ -50,6 +50,10 @@ namespace RetroDevStudio.Documents
 
       m_ListProject = ParsedProject;
       ClearMessages();
+      if ( ASMFileInfo == null )
+      {
+        return;
+      }
 
       listMessages.BeginUpdate();
       SortOrder oldOrder = listMessages.Sorting;

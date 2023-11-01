@@ -748,7 +748,7 @@ namespace RetroDevStudio.Formats
 
     private bool IsSectorInUse( int Track, int SectorID )
     {
-      Debug.Log( $"Is Sector in Use Track {Track}, Sector {SectorID.ToString( "X2" )}" );
+      //Debug.Log( $"Is Sector in Use Track {Track}, Sector {SectorID.ToString( "X2" )}" );
       int curTrack = FirstDirectoryTrack();
       for ( int i = 0; i < 4; ++i )
       {
@@ -1057,6 +1057,16 @@ namespace RetroDevStudio.Formats
           }
         }
         return freeMemory;
+      }
+    }
+
+
+
+    public override MediaFilenameType FilenameType
+    {
+      get
+      {
+        return MediaFilenameType.CPC;
       }
     }
 

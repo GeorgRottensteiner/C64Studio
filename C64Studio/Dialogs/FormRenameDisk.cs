@@ -2,8 +2,7 @@
 using RetroDevStudio;
 using System;
 using System.Windows.Forms;
-
-
+using RetroDevStudio.Formats;
 
 namespace RetroDevStudio.Dialogs
 {
@@ -12,23 +11,25 @@ namespace RetroDevStudio.Dialogs
     public GR.Memory.ByteBuffer             DiskName;
     public GR.Memory.ByteBuffer             DiskID;
     private System.Drawing.Font             _DefaultFont;
+    private MediaFilenameType               _FilenameType;
     StudioCore                              Core;
     bool                                    ActiveDiskName = true;
 
 
 
-    public FormRenameDisk( StudioCore Core, GR.Memory.ByteBuffer OrigDiskName, GR.Memory.ByteBuffer OrigDiskID )
+    public FormRenameDisk( StudioCore Core, MediaFilenameType FilenameType, GR.Memory.ByteBuffer OrigDiskName, GR.Memory.ByteBuffer OrigDiskID )
     {
-      this.Core = Core;
+      this.Core     = Core;
+      _FilenameType = FilenameType;
 
       DiskName = new GR.Memory.ByteBuffer( OrigDiskName );
       DiskID = new GR.Memory.ByteBuffer( OrigDiskID );
 
       InitializeComponent();
 
-      editDiskName.Text = Util.FilenameToUnicode( DiskName );
+      editDiskName.Text = Util.FilenameToUnicode( _FilenameType, DiskName );
       editDiskName.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
-      editDiskID.Text = Util.FilenameToUnicode( DiskID );
+      editDiskID.Text = Util.FilenameToUnicode( _FilenameType, DiskID );
       editDiskID.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
 
       _DefaultFont = listPETSCII.Font;
@@ -91,7 +92,7 @@ namespace RetroDevStudio.Dialogs
 
     private void btnOK_Click( object sender, EventArgs e )
     {
-      DiskName = Util.ToFilename( editDiskName.Text );
+      DiskName = Util.ToFilename( _FilenameType, editDiskName.Text );
 
       while ( ( DiskName.Length > 0 )
       &&      ( DiskName.ByteAt( (int)DiskName.Length - 1 ) == 32 ) )
@@ -103,7 +104,7 @@ namespace RetroDevStudio.Dialogs
         DiskName.AppendU8( 0xa0 );
       }
 
-      DiskID = Util.ToFilename( editDiskID.Text );
+      DiskID = Util.ToFilename( _FilenameType, editDiskID.Text );
 
       while ( ( DiskID.Length > 0 )
       &&      ( DiskID.ByteAt( (int)DiskName.Length - 1 ) == 32 ) )

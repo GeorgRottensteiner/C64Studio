@@ -371,7 +371,9 @@ namespace RetroDevStudio.Types
     [Description( "Magic Desk Cartridge 1M Binary" )]
     CARTRIDGE_MAGICDESK_BIN_1M,
     [Description( "Magic Desk Cartridge 1M CRT" )]
-    CARTRIDGE_MAGICDESK_CRT_1M
+    CARTRIDGE_MAGICDESK_CRT_1M,
+    [Description( "CPC DSK Disk Image" )]
+    DSK
   };
 
 
