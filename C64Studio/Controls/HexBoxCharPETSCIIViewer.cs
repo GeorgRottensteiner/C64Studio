@@ -26,6 +26,7 @@ namespace Be.Windows.Forms
 
         GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, GR.Drawing.PixelFormat.Format32bppRgb );
         PaletteManager.ApplyPalette( charImage );
+        int chars = Box.BytesPerLine;
 
         for ( int i = 0; i < intern_endByte - _startByte; ++i )
         {
@@ -57,8 +58,8 @@ namespace Be.Windows.Forms
           }
 
           charImage.DrawToHDC( graphics.GetHdc(),
-                               new Rectangle( _recHex.Left + (int)Box.CharSize.Width * ( i % 8 ), 
-                                              (int)( _recHex.Top + ( i / 8 ) * (int)Box.CharSize.Height + ( Box.CharSize.Height - Box.CharSize.Width ) / 2 ), 
+                               new Rectangle( _recHex.Left + (int)Box.CharSize.Width * ( i % chars ), 
+                                              (int)( _recHex.Top + ( i / chars ) * (int)Box.CharSize.Height + ( Box.CharSize.Height - Box.CharSize.Width ) / 2 ), 
                                               (int)Box.CharSize.Width, 
                                               (int)Box.CharSize.Width ) );
           graphics.ReleaseHdc();

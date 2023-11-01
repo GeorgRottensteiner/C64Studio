@@ -57,42 +57,47 @@ namespace Be.Windows.Forms
 
     public void PaintHexData( HexBox Box, Graphics graphics, long _startByte, long intern_endByte, Rectangle _recHex )
     {
-      if ( Box.BytesPerLine == 8 )
+      if ( Box.BytesPerLine >= 8 )
       {
         var oldClip = graphics.Clip;
         graphics.SetClip( _recHex );
 
         int     boxSize = (int)Box.CharSize.Height - 2;
-        ByteBuffer    charData = new ByteBuffer( 8 );
-        for ( int j = 0; j < ( intern_endByte - _startByte ) / 8; ++j )
+        int     charsPerLine = (Box.BytesPerLine + 7) >> 3;
+        ByteBuffer    charData = new ByteBuffer(8);
+        using ( GR.Image.FastImage charImage = new GR.Image.FastImage( charsPerLine * 8, 8, GR.Drawing.PixelFormat.Format32bppRgb ) )
         {
-          for ( int i = 0; i < 8; ++i )
-          {
-            charData.SetU8At( i, Box.ByteProvider.ReadByte( _startByte + j * 8 + i ) );
-          }
-          using ( GR.Image.FastImage charImage = new GR.Image.FastImage( 8, 8, GR.Drawing.PixelFormat.Format32bppRgb ) )
-          {
-            PaletteManager.ApplyPalette( charImage );
+          PaletteManager.ApplyPalette( charImage );
 
-            switch ( Mode )
+          for ( int j = 0; j < ( intern_endByte - _startByte ) / charsPerLine / 8; ++j )
+          {
+            for (int c = 0; c < charsPerLine; ++c)
             {
-              case TextMode.COMMODORE_40_X_25_HIRES:
-                CharacterDisplayer.DisplayHiResChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, charImage, 0, 0 );
-                break;
-              case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-                CharacterDisplayer.DisplayMultiColorChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
-                break;
-              case TextMode.COMMODORE_40_X_25_ECM:
-                // TODO - not correct
-                CharacterDisplayer.DisplayHiResChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, charImage, 0, 0 );
-                break;
-              default:
-                Debug.Log( "PaintHexData: Missing mode displayer" );
-                break;
+              for (int i = 0; i < 8; ++i)
+              {
+                charData.SetU8At(i, Box.ByteProvider.ReadByte(_startByte + j * charsPerLine * 8 + c * 8 + i));
+              }
+              int x = 8 * c;
+              switch ( Mode )
+              {
+                case TextMode.COMMODORE_40_X_25_HIRES:
+                  CharacterDisplayer.DisplayHiResChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, charImage, x, 0 );
+                  break;
+                case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+                  CharacterDisplayer.DisplayMultiColorChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, x, 0 );
+                  break;
+                case TextMode.COMMODORE_40_X_25_ECM:
+                  // TODO - not correct
+                  CharacterDisplayer.DisplayHiResChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, charImage, x, 0 );
+                  break;
+                default:
+                  Debug.Log( "PaintHexData: Missing mode displayer" );
+                  break;
+              }
             }
 
             charImage.DrawToHDC( graphics.GetHdc(),
-                                 new Rectangle( _recHex.Left, (int)( _recHex.Top + Box.CharSize.Height * j + ( Box.CharSize.Height - boxSize ) / 2 ), boxSize, boxSize ) );
+                                 new Rectangle( _recHex.Left, (int)( _recHex.Top + Box.CharSize.Height * j + ( Box.CharSize.Height - boxSize ) / 2 ), boxSize * charsPerLine, boxSize ) );
             graphics.ReleaseHdc();
           }
         }
