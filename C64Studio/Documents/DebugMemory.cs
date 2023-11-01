@@ -97,7 +97,7 @@ namespace RetroDevStudio.Documents
       m_MenuItemHexSpriteView.Click += btnBinarySpriteView_Click;
       hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
 
-      SelectByteWidth(8);
+      SelectByteWidth( 8 );
       SetMemoryDisplayType();
 
       ViewScrolled += new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
@@ -574,7 +574,7 @@ namespace RetroDevStudio.Documents
       ApplyHexViewColors();
 
       hexView.BytesPerLine = 8;
-      SelectByteWidth(0);
+      SelectByteWidth( 8 );
       hexView.Invalidate();
       SetColorSubmenu();
     }
@@ -676,32 +676,35 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void SelectByteWidth(int w)
+    private void SelectByteWidth( int Width )
     {
-        if (w == 0)
+      if ( Width == 0 )
+      {
+        byteWidthDropDownButton.Enabled = false;
+      }
+      else
+      {
+        foreach (ToolStripMenuItem item in byteWidthDropDownButton.DropDownItems)
         {
-            byteWidthDropDownButton.Enabled = false;
+          item.CheckState = item.Text == Width.ToString() ? CheckState.Checked : CheckState.Unchecked;
         }
-        else
-        {
-            foreach (ToolStripMenuItem item in byteWidthDropDownButton.DropDownItems)
-            {
-                item.CheckState = item.Text == w.ToString() ? CheckState.Checked : CheckState.Unchecked;
-            }
 
-            hexView.BytesPerLine = w;
-            byteWidthDropDownButton.Enabled = true;
-        }
-        hexView.Invalidate();
+        hexView.BytesPerLine = Width;
+        byteWidthDropDownButton.Enabled = true;
+      }
+      hexView.Invalidate();
     }
 
 
 
-    private void byteWidthDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+    private void byteWidthDropDownButton_DropDownItemClicked( object sender, ToolStripItemClickedEventArgs e )
     {
-        int w = int.Parse(e.ClickedItem.Text);
-        SelectByteWidth(w);
-        m_ByteWidth = w;
+      int width = int.Parse( e.ClickedItem.Text );
+      SelectByteWidth( width );
+      m_ByteWidth = width;
     }
+
+
+
   }
 }

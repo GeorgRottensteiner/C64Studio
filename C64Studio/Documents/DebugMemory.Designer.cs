@@ -28,11 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
-      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
-      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
-      System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugMemory));
       this.hexView = new Be.Windows.Forms.HexBox();
       this.toolDebugMemory = new System.Windows.Forms.ToolStrip();
@@ -43,58 +38,18 @@
       this.toolStripBtnMemoryFromCPU = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnGoto = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnHexCaseSwitch = new System.Windows.Forms.ToolStripButton();
+      this.byteWidthDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnAddView = new System.Windows.Forms.ToolStripButton();
-      this.byteWidthDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-      toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-      toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-      toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-      toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
-      toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolDebugMemory.SuspendLayout();
       this.SuspendLayout();
       // 
-      // toolStripMenuItem5
-      // 
-      toolStripMenuItem5.AutoSize = false;
-      toolStripMenuItem5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      toolStripMenuItem5.Name = "toolStripMenuItem5";
-      toolStripMenuItem5.Size = new System.Drawing.Size(100, 34);
-      toolStripMenuItem5.Text = "8";
-      // 
-      // toolStripMenuItem6
-      // 
-      toolStripMenuItem6.AutoSize = false;
-      toolStripMenuItem6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      toolStripMenuItem6.Name = "toolStripMenuItem6";
-      toolStripMenuItem6.Size = new System.Drawing.Size(100, 34);
-      toolStripMenuItem6.Text = "16";
-      // 
-      // toolStripMenuItem7
-      // 
-      toolStripMenuItem7.AutoSize = false;
-      toolStripMenuItem7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      toolStripMenuItem7.Name = "toolStripMenuItem7";
-      toolStripMenuItem7.Size = new System.Drawing.Size(100, 34);
-      toolStripMenuItem7.Text = "24";
-      // 
-      // toolStripMenuItem8
-      // 
-      toolStripMenuItem8.AutoSize = false;
-      toolStripMenuItem8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      toolStripMenuItem8.Name = "toolStripMenuItem8";
-      toolStripMenuItem8.Size = new System.Drawing.Size(100, 34);
-      toolStripMenuItem8.Text = "32";
-      // 
-      // toolStripMenuItem9
-      // 
-      toolStripMenuItem9.AutoSize = false;
-      toolStripMenuItem9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      toolStripMenuItem9.Name = "toolStripMenuItem9";
-      toolStripMenuItem9.Size = new System.Drawing.Size(100, 34);
-      toolStripMenuItem9.Text = "40";
-      //
       // hexView
       // 
       this.hexView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -103,6 +58,7 @@
       this.hexView.BytesPerLine = 8;
       this.hexView.ColumnInfoVisible = true;
       this.hexView.CustomHexViewer = null;
+      this.hexView.DisplayedAddressOffset = ((long)(0));
       this.hexView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
       this.hexView.LineInfoVisible = true;
@@ -130,7 +86,7 @@
             this.toolStripBtnMemoryFromCPU,
             this.toolStripBtnGoto,
             this.toolStripBtnHexCaseSwitch,
-			this.byteWidthDropDownButton,
+            this.byteWidthDropDownButton,
             this.toolStripSeparator2,
             this.toolStripBtnAddView});
       this.toolDebugMemory.Location = new System.Drawing.Point(0, 0);
@@ -212,6 +168,52 @@
       this.toolStripBtnHexCaseSwitch.Text = "Switch Capital";
       this.toolStripBtnHexCaseSwitch.Click += new System.EventHandler(this.toolStripBtnHexCaseSwitch_Click);
       // 
+      // byteWidthDropDownButton
+      // 
+      this.byteWidthDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.byteWidthDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem10,
+            this.toolStripMenuItem11});
+      this.byteWidthDropDownButton.Image = global::RetroDevStudio.Properties.Resources.tool_select;
+      this.byteWidthDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.byteWidthDropDownButton.Name = "byteWidthDropDownButton";
+      this.byteWidthDropDownButton.Size = new System.Drawing.Size(29, 22);
+      this.byteWidthDropDownButton.ToolTipText = "Bytes per line";
+      this.byteWidthDropDownButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.byteWidthDropDownButton_DropDownItemClicked);
+      // 
+      // toolStripMenuItem2
+      // 
+      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+      this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+      this.toolStripMenuItem2.Text = "8";
+      // 
+      // toolStripMenuItem3
+      // 
+      this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+      this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+      this.toolStripMenuItem3.Text = "16";
+      // 
+      // toolStripMenuItem4
+      // 
+      this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+      this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+      this.toolStripMenuItem4.Text = "24";
+      // 
+      // toolStripMenuItem10
+      // 
+      this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+      this.toolStripMenuItem10.Size = new System.Drawing.Size(180, 22);
+      this.toolStripMenuItem10.Text = "32";
+      // 
+      // toolStripMenuItem11
+      // 
+      this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+      this.toolStripMenuItem11.Size = new System.Drawing.Size(180, 22);
+      this.toolStripMenuItem11.Text = "40";
+      // 
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -227,16 +229,6 @@
       this.toolStripBtnAddView.Text = "Add View";
       this.toolStripBtnAddView.Click += new System.EventHandler(this.toolStripBtnAddView_Click);
       // 
-      // byteWidthDropDownButton
-      // 
-      this.byteWidthDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.byteWidthDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem5, toolStripMenuItem6, toolStripMenuItem7, toolStripMenuItem8, toolStripMenuItem9 });
-      this.byteWidthDropDownButton.Image = Properties.Resources.tool_select;
-      this.byteWidthDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.byteWidthDropDownButton.Name = "byteWidthDropDownButton";
-      this.byteWidthDropDownButton.Size = new System.Drawing.Size(42, 28);
-      this.byteWidthDropDownButton.ToolTipText = "Bytes per line";
-      this.byteWidthDropDownButton.DropDownItemClicked += byteWidthDropDownButton_DropDownItemClicked;
       // DebugMemory
       // 
       this.ClientSize = new System.Drawing.Size(431, 485);
@@ -267,5 +259,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripBtnAddView;
         private System.Windows.Forms.ToolStripDropDownButton byteWidthDropDownButton;
-    }
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
+  }
 }
