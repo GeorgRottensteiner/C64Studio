@@ -253,6 +253,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!AS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_ACCUMULATOR_65816 );
           AddPseudoOp( "!RL", Types.MacroInfo.PseudoOpType.ASSUME_16BIT_REGISTERS_65816 );
           AddPseudoOp( "!RS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_REGISTERS_65816 );
+          AddPseudoOp( "!SKIP", Types.MacroInfo.PseudoOpType.SKIP );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );

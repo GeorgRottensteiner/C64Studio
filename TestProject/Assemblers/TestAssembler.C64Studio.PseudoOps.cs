@@ -484,6 +484,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPseudoOpSkip()
+    {
+      // nested zone end restores global zone
+      string      source = @"* = $1000 
+                             !skip 5
+                          
+                             !byte 1";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "051001", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPseudoOpByteWordDWord()
     {
       string      source = @"!to ""po_byte_word_dword.prg"",cbm

@@ -88,7 +88,8 @@ namespace RetroDevStudio.Types
       ASSUME_16BIT_ACCUMULATOR_65816,
       ASSUME_8BIT_ACCUMULATOR_65816,
       ASSUME_16BIT_REGISTERS_65816,
-      ASSUME_8BIT_REGISTERS_65816
+      ASSUME_8BIT_REGISTERS_65816,
+      SKIP                              // basically a * = * + x
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;

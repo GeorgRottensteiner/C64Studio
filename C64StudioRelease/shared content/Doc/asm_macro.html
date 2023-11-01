@@ -41,6 +41,7 @@
       <li><a href="#realign">!REALIGN</a></li>
       <li><a href="#realpc">!REALPC</a></li>
       <li><a href="#set">!SET</a></li>
+      <li><a href="#skip">!SKIP</a></li>
       <li><a href="#sl">!SL</a></li>
       <li><a href="#source">!SOURCE, !SRC</a></li>
       <li><a href="#text">!TEXT, !TX, !SCR, !PET, !RAW</a></li>
@@ -2588,6 +2589,17 @@
     <br>
     <br>
     <div id="code"><br>      !set SCREEN_CHAR = $0400
+    <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="skip"></a>
+  <H2>!SKIP &lt;expression&gt;</H2>
+  <div id="mybody">
+    This pseudo op skips over a given number of bytes, it works similar to * = * + &lt;expression&gt;<br>
+    <br>
+    <br>
+    <div id="code"><br>      !skip 5 * 20     ;skip 100 bytes forwards
     <br></div>
     <br>
     <br>

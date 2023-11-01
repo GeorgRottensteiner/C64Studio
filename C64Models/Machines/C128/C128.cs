@@ -6,7 +6,7 @@
     {
       Type                              = MachineType.C128,
       BASICDefaultStartAddress          = 0x1C01,
-      InitialBreakpointAddress          = 0x5a9b, // 0xAF7B, //0x4710, //0xA871,
+      InitialBreakpointAddress          = 0x5a9b,   // BASIC perform RUN - to trigger when emulators fudge-run the autostarted image
       InitialBreakpointAddressCartridge = 0x8000,
 
       TextModes = new System.Collections.Generic.List<TextMode> {

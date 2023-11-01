@@ -6768,14 +6768,14 @@ namespace RetroDevStudio.Parser
                 subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count == 2 )
-              &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              &&        ( lineTokenInfos[1].Content == "<" )
-              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              && ( lineTokenInfos[1].Content == "<" )
+              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
@@ -6956,7 +6956,7 @@ namespace RetroDevStudio.Parser
                 lineTokenInfos.RemoveAt( 0 );
 
                 if ( ( lineTokenInfos.Count != 3 )
-                ||   ( lineTokenInfos[1].Content != "," ) )
+                || ( lineTokenInfos[1].Content != "," ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -7054,8 +7054,8 @@ namespace RetroDevStudio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -7136,7 +7136,7 @@ namespace RetroDevStudio.Parser
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
                   m_CurrentZoneName = macroName;
-                  info.Zone         = m_CurrentZoneName;
+                  info.Zone = m_CurrentZoneName;
                 }
               }
             }
@@ -7508,8 +7508,8 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BYTE )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -7610,6 +7610,16 @@ namespace RetroDevStudio.Parser
               // HEX - special macro
               var parseResult = POACMEHex( info, lineTokenInfos, lineIndex, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SKIP )
+            {
+              var parseResult = POSkip( lineTokenInfos, lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+              if ( ( parseResult == ParseLineResult.RETURN_NULL )
+              ||   ( parseResult == ParseLineResult.ERROR_ABORT ) )
               {
                 HadFatalError = true;
                 return Lines;
