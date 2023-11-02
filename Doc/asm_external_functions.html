@@ -22,6 +22,8 @@
       <li><a href="#math.tan">math.tan</a></li>
       <li><a href="#math.floor">math.floor</a></li>
       <li><a href="#math.ceiling">math.ceiling</a></li>
+      <li><a href="#math.random">math.random</a></li>
+      <li><a href="#math.randomseed">math.randomseed</a></li>
     </ul>
     <br>
     <br>
@@ -119,6 +121,41 @@
       <br>
       <br>
       <div id="code"><br>  !fill 256, math.ceiling( i * 2.5 / 128 )
+      <br></div>
+      <br>
+      <br>
+    </div>
+  <a name="math.random"></a>
+    <H2>MATH.RANDOM</H2>
+    <div id="mybody">
+      <b>result = math.random( MaxValue )</b><br><br>
+      math.random returns a pseudo random number from 0 to MaxValue - 1.<br>
+      <br>
+      <br>
+      <b>result = math.random( MinValue, MaxValue )</b><br><br>
+      math.random returns a pseudo random number from MinValue to MaxValue - 1.<br>
+      <br>
+      <br>
+      The random generator is automatically seeded with a varying value on assembling start. To seed the RNG yourself for a predictable series of pseudo random numbers use math.randomseed.<br>
+      <br>
+      <br>
+      <div id="code"><br>  !fill math.random(20)
+  !fill math.random(5,16)
+      <br></div>
+      <br>
+      <br>
+    </div>
+  <a name="math.randomseed"></a>
+    <H2>MATH.RANDOMSEED</H2>
+    <div id="mybody">
+      <b>result = math.randomseed( SeedValue )</b><br><br>
+      math.randomseed initialises the pseudo random generator with the provided seed value. Useful for predictable pseudo random numbers.<br>
+      <br>
+      <br>
+      If the SeedValue -1 is used, the random generator is initialised with a time specific seed.<br>
+      <br>
+      <br>
+      <div id="code"><br>  math.randomseed( 7 )
       <br></div>
       <br>
       <br>

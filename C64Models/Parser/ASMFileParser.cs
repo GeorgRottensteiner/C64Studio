@@ -178,7 +178,7 @@ namespace RetroDevStudio.Parser
       AddExtFunction( "math.ceiling", 1, 1, ExtMathCeiling );
       AddExtFunction( "math.random", 1, 1, ExtMathRandom );
       AddExtFunction( "math.random", 2, 1, ExtMathRandomRange );
-      AddExtFunction( "math.randomseed", 2, 1, ExtMathRandomSeed );
+      AddExtFunction( "math.randomseed", 1, 0, ExtMathRandomSeed );
 
       SetAssemblerType( Types.AssemblerType.C64_STUDIO );
     }
@@ -1433,7 +1433,7 @@ namespace RetroDevStudio.Parser
       foreach ( var entry in m_ExtFunctions )
       {
         if ( ( entry.Key.first == FunctionName )
-        && ( entry.Key.second == arguments.Count ) )
+        &&   ( entry.Key.second == arguments.Count ) )
         {
           fInfo = entry.Value;
           break;
@@ -5373,11 +5373,6 @@ namespace RetroDevStudio.Parser
         string labelInFront = "";
         Types.TokenInfo tokenInFront = null;
 
-        if ( parseLine.Contains( "math.randomseed" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
         if ( upToken == "}" )
         {
           if ( stackScopes.Count == 0 )
@@ -5572,12 +5567,36 @@ namespace RetroDevStudio.Parser
           if ( m_ExtFunctions.Any( ef => ef.Key.first == possibleFunction ) )
           {
             // handle function!
-            List<Types.TokenInfo> results = ProcessExtFunction( lineIndex, possibleFunction, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping );
+            ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, true, out List<List<Types.TokenInfo>> arguments );
+            if ( arguments.Count != 1 )
+            {
+              if ( arguments[1].Count > 0 )
+              {
+                AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Garbage at end of line", arguments[1][0].StartPos, parseLine.Length - arguments[1][0].StartPos );
+              }
+              else
+              {
+                AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Garbage at end of line" );
+              }
+              HadFatalError = true;
+              return Lines;
+            }
+            if ( ( arguments[0].Count < 2 )
+            ||   ( !IsOpeningBraceChar( arguments[0][0].Content ) )
+            ||   ( !IsClosingBraceChar( arguments[0][arguments[0].Count - 1].Content ) ) )
+            {
+              AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Expected parenthesis for function call", arguments[0][0].StartPos, arguments[0][arguments[0].Count - 1].EndPos - arguments[1][0].StartPos );
+              HadFatalError = true;
+              return Lines;
+            }
+
+            List<Types.TokenInfo> results = ProcessExtFunction( lineIndex, possibleFunction, arguments[0], 1, arguments[0].Count - 2, textCodeMapping );
             if ( results == null )
             {
               HadFatalError = true;
               return Lines;
             }
+            continue;
           }
         }
         else if ( IsLabelInFront( lineTokenInfos, upToken ) )
@@ -10484,6 +10503,7 @@ namespace RetroDevStudio.Parser
 
       m_Assume16BitAccu       = false;
       m_Assume16BitRegisters  = false;
+      _Random                 = null;
 
       string[] lines = Content.Replace( "\r\n", "\n" ).Replace( '\r', '\n' ).Replace( '\t', ' ' ).Split( '\n' );
 
