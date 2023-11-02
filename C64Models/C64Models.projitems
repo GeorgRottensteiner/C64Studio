@@ -68,6 +68,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.ExtFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.To.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Skip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.PseudoPC.cs" />

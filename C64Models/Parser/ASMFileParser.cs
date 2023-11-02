@@ -100,8 +100,6 @@ namespace RetroDevStudio.Parser
     public GR.Collections.Map<byte, byte> m_TextCodeMappingPet = new GR.Collections.Map<byte, byte>();
     public GR.Collections.Map<byte, byte> m_TextCodeMappingRaw = new GR.Collections.Map<byte, byte>();
 
-    private GR.Collections.Map<string,ExtFunctionInfo>    m_ExtFunctions = new GR.Collections.Map<string, ExtFunctionInfo>();
-
     private ErrorInfo                   m_LastErrorInfo = new ErrorInfo();
 
     private bool                        DoLogSourceInfo = false;
@@ -178,6 +176,9 @@ namespace RetroDevStudio.Parser
       AddExtFunction( "math.todegrees", 1, 1, ExtMathToDegrees );
       AddExtFunction( "math.floor", 1, 1, ExtMathFloor );
       AddExtFunction( "math.ceiling", 1, 1, ExtMathCeiling );
+      AddExtFunction( "math.random", 1, 1, ExtMathRandom );
+      AddExtFunction( "math.random", 2, 1, ExtMathRandomRange );
+      AddExtFunction( "math.randomseed", 2, 1, ExtMathRandomSeed );
 
       SetAssemblerType( Types.AssemblerType.C64_STUDIO );
     }
@@ -240,314 +241,6 @@ namespace RetroDevStudio.Parser
         }
         return m_AssemblerSettings.DefaultTargetExtension;
       }
-    }
-
-
-
-    public void AddExtFunction( string Name, int NumArguments, int NumResults, ExtFunction Function )
-    {
-      ExtFunctionInfo   fInfo = new ExtFunctionInfo();
-      fInfo.Name = Name;
-      fInfo.NumArguments = NumArguments;
-      fInfo.NumResults = NumResults;
-      fInfo.Function = Function;
-
-      m_ExtFunctions[Name] = fInfo;
-    }
-
-
-
-    private List<Types.TokenInfo> ExtFileSize( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
-
-      long                      fileSize = 0;
-
-      try
-      {
-        string    filenameToUse = Arguments[0].Content;
-        if ( ( filenameToUse.Length >= 2 )
-        &&   ( filenameToUse.StartsWith( "\"" ) )
-        &&   ( filenameToUse.EndsWith( "\"" ) ) )
-        {
-          filenameToUse = filenameToUse.Substring( 1, filenameToUse.Length - 2 );
-        }
-
-        if ( !System.IO.Path.IsPathRooted( filenameToUse ) )
-        {
-          filenameToUse = GR.Path.Append( m_DocBasePath, filenameToUse );
-        }
-        System.IO.FileInfo f = new System.IO.FileInfo( filenameToUse );
-        fileSize = f.Length;
-      }
-      catch ( Exception )
-      {
-      }
-      Types.TokenInfo   fileSizeToken = new Types.TokenInfo();
-      fileSizeToken.Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
-      fileSizeToken.Content = fileSize.ToString();
-      result.Add( fileSizeToken );
-      return result;
-    }
-
-
-
-    private List<Types.TokenInfo> ExtMathMin( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
-
-      if ( !EvaluateTokens( 0, Arguments, 0, 1, TextCodeMapping, out SymbolInfo arg1 ) )
-      {
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, 1, 1, TextCodeMapping, out SymbolInfo arg2 ) )
-      {
-        return result;
-      }
-
-      var resultToken = new Types.TokenInfo();
-
-      if ( ( arg1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      ||   ( arg2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
-      {
-        double     argV1 = arg1.ToNumber();
-        double     argV2 = arg2.ToNumber();
-
-        double    resultValue = Math.Min( argV1, argV2 );
-
-        resultToken.Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER;
-        resultToken.Content = Util.DoubleToString( resultValue );
-      }
-      else
-      {
-        long    argV1 = arg1.ToInteger();
-        long    argV2 = arg2.ToInteger();
-        long    resultValue = Math.Min( argV1, argV2 );
-
-        resultToken.Type = TokenInfo.TokenType.LITERAL_NUMBER;
-        resultToken.Content = resultValue.ToString();
-      }
-      result.Add( resultToken );
-      return result;
-    }
-
-
-
-    private List<Types.TokenInfo> ExtMathMax( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
-
-      if ( !EvaluateTokens( 0, Arguments, 0, 1, TextCodeMapping, out SymbolInfo arg1 ) )
-      {
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, 1, 1, TextCodeMapping, out SymbolInfo arg2 ) )
-      {
-        return result;
-      }
-
-      var resultToken = new Types.TokenInfo();
-
-      if ( ( arg1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      ||   ( arg2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
-      {
-        double     argV1 = arg1.ToNumber();
-        double     argV2 = arg2.ToNumber();
-
-        double    resultValue = Math.Max( argV1, argV2 );
-
-        resultToken.Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER;
-        resultToken.Content = Util.DoubleToString( resultValue );
-      }
-      else
-      {
-        long    argV1 = arg1.ToInteger();
-        long    argV2 = arg2.ToInteger();
-        long    resultValue = Math.Max( argV1, argV2 );
-
-        resultToken.Type = TokenInfo.TokenType.LITERAL_NUMBER;
-        resultToken.Content = resultValue.ToString();
-      }
-      result.Add( resultToken );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathSinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-
-      var resultValue = new TokenInfo()
-      {
-        Type    = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( Math.Sin( argument * Math.PI / 180.0f ) )
-      };
-      result.Add( resultValue );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathCosinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        //SetError( "Invalid argument count" );
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-
-      var resultValue = new TokenInfo()
-      {
-        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( Math.Cos( argument * Math.PI / 180.0f ) )
-      };
-      result.Add( resultValue );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathTangens( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        //SetError( "Invalid argument count" );
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-
-      var resultValue = new TokenInfo()
-      {
-        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( Math.Tan( argument * Math.PI / 180.0 ) )
-      };
-      result.Add( resultValue );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathToRadians( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        //SetError( "Invalid argument count" );
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-      var resultValue = new TokenInfo()
-      {
-        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( argument * Math.PI / 180.0f )
-      };
-      result.Add( resultValue );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathToDegrees( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        //SetError( "Invalid argument count" );
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-
-      var resultValue = new TokenInfo()
-      {
-        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( argument * 180.0f / Math.PI )
-      };
-      result.Add( resultValue );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathFloor( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        //SetError( "Invalid argument count" );
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-      var resultValue = new TokenInfo()
-      {
-        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( Math.Floor( argument ) )
-      };
-      result.Add( resultValue );
-      return result;
-    }
-
-
-
-    private List<TokenInfo> ExtMathCeiling( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
-    {
-      var result = new List<TokenInfo>();
-
-      if ( Arguments.Count != 1 )
-      {
-        //SetError( "Invalid argument count" );
-        return result;
-      }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
-      {
-        return result;
-      }
-      double argument = functionResult.ToNumber();
-      var resultValue = new TokenInfo()
-      {
-        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( Math.Ceiling( argument ) )
-      };
-      result.Add( resultValue );
-      return result;
     }
 
 
@@ -1726,15 +1419,6 @@ namespace RetroDevStudio.Parser
 
     private List<Types.TokenInfo> ProcessExtFunction( int LineIndex, string FunctionName, List<Types.TokenInfo> Tokens, int StartIndex, int Count, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
-      ExtFunctionInfo   fInfo = m_ExtFunctions[FunctionName];
-
-      // truncate not used args
-      int     numArgs = Count;
-      if ( Count > fInfo.NumArguments )
-      {
-        numArgs = fInfo.NumArguments;
-      }
-
       // split arguments, eg. "extfunction( ..,.. )"
       if ( Tokens.Count < 3 )
       {
@@ -1744,6 +1428,30 @@ namespace RetroDevStudio.Parser
       }
 
       var parseResult = ParseLineInParameters( Tokens, StartIndex, Count, LineIndex, false, out List<List<Types.TokenInfo>> arguments );
+
+      ExtFunctionInfo   fInfo = null;
+      foreach ( var entry in m_ExtFunctions )
+      {
+        if ( ( entry.Key.first == FunctionName )
+        && ( entry.Key.second == arguments.Count ) )
+        {
+          fInfo = entry.Value;
+          break;
+        }
+      }
+      if ( fInfo == null )
+      {
+        AddError( LineIndex, m_LastErrorInfo.Code, "Failed to evaluate " + TokensToExpression( Tokens, StartIndex, Count ) + " for extended function '" + FunctionName + "'" );
+        return null;
+      }
+
+      // truncate not used args
+      int     numArgs = Count;
+      if ( Count > fInfo.NumArguments )
+      {
+        numArgs = fInfo.NumArguments;
+      }
+
 
       List<Types.TokenInfo>         functionArguments = new List<TokenInfo>();
       int                           argIndex = 0;
@@ -2081,7 +1789,7 @@ namespace RetroDevStudio.Parser
           if ( bracketStartPos > 0 )
           {
             string    possibleFunction = subTokenRange[bracketStartPos - 1].Content.ToLower();
-            if ( m_ExtFunctions.ContainsKey( possibleFunction ) )
+            if ( m_ExtFunctions.Any( ef => ef.Key.first == possibleFunction ) )
             {
               // handle function!
               List<Types.TokenInfo> results = ProcessExtFunction( LineIndex, possibleFunction, subTokenRange,  bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, TextCodeMapping );
@@ -5665,6 +5373,11 @@ namespace RetroDevStudio.Parser
         string labelInFront = "";
         Types.TokenInfo tokenInFront = null;
 
+        if ( parseLine.Contains( "math.randomseed" ) )
+        {
+          Debug.Log( "aha" );
+        }
+
         if ( upToken == "}" )
         {
           if ( stackScopes.Count == 0 )
@@ -5746,9 +5459,9 @@ namespace RetroDevStudio.Parser
             default:
               // normal scope end
               if ( ( lineTokenInfos.Count == 3 )
-              &&   ( lineTokenInfos[0].Content == "}" )
-              &&   ( lineTokenInfos[2].Content == "{" )
-              &&   ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
+              && ( lineTokenInfos[0].Content == "}" )
+              && ( lineTokenInfos[2].Content == "{" )
+              && ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
               {
                 if ( !ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -5763,10 +5476,10 @@ namespace RetroDevStudio.Parser
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count >= 4 )
-              &&        ( lineTokenInfos[0].Content == "}" )
-              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
-              &&        ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
-              &&        ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
+              && ( lineTokenInfos[0].Content == "}" )
+              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
+              && ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
+              && ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
               {
                 if ( !ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -5790,7 +5503,7 @@ namespace RetroDevStudio.Parser
                     scope.IfChainHadActiveEntry = false;
                   }
                   else if ( ( prevScope.Active )
-                  ||        ( prevScope.IfChainHadActiveEntry ) )
+                  || ( prevScope.IfChainHadActiveEntry ) )
                   {
                     // need no evaluation, can skip over this one, since it is inactive anyway
                     scope.Active = false;
@@ -5852,6 +5565,20 @@ namespace RetroDevStudio.Parser
             return Lines;
           }
           continue;
+        }
+        else if ( m_ExtFunctions.Any( ef => ( string.Compare( ef.Key.first, upToken, StringComparison.InvariantCultureIgnoreCase ) == 0 ) ) )
+        {
+          string    possibleFunction = upToken.ToLower();
+          if ( m_ExtFunctions.Any( ef => ef.Key.first == possibleFunction ) )
+          {
+            // handle function!
+            List<Types.TokenInfo> results = ProcessExtFunction( lineIndex, possibleFunction, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping );
+            if ( results == null )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+          }
         }
         else if ( IsLabelInFront( lineTokenInfos, upToken ) )
         {
