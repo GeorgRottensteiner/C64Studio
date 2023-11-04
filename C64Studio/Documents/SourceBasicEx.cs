@@ -1634,6 +1634,14 @@ namespace RetroDevStudio.Documents
         {
           // swallow invalid keys
           //Debug.Log( "-swallowed" );
+
+          // but not Alt alone, which is used for menu access
+          if ( ( altPushed )
+          &&   ( !shiftPushed )
+          &&   ( !controlPushed ) )
+          {
+            return base.ProcessCmdKey( ref msg, keyData );
+          }
           return true;
         }
         return base.ProcessCmdKey( ref msg, keyData );
