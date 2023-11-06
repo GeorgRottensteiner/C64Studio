@@ -250,8 +250,22 @@ namespace FastColoredTextBoxNS
       // keep caret blinking
       if ( CaretVisible )
       {
-        HideCaret( Handle );
-        ShowCaret( Handle );
+        try
+        {
+          HideCaret( Handle );
+        }
+        catch ( Exception )
+        {
+          // could get ObjectDisposedException
+        }
+        try
+        {
+          ShowCaret( Handle );
+        }
+        catch ( Exception )
+        {
+          // could get ObjectDisposedException
+        }
       }
     }
 
