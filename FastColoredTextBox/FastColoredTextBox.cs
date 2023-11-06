@@ -60,6 +60,7 @@ namespace FastColoredTextBoxNS
     private readonly Timer timer = new Timer();
     private readonly Timer timer2 = new Timer();
     private readonly Timer timer3 = new Timer();
+    private readonly Timer timerCaret = new Timer();
 
     private readonly Timer tripeClickTimer = new Timer();
     private int tripleClickCount = 0;
@@ -214,6 +215,7 @@ namespace FastColoredTextBoxNS
       BookmarkColor = Color.PowderBlue;
       ToolTip = new ToolTip();
       timer3.Interval = 500;
+      timerCaret.Interval = 4800;
       hints = new Hints( this );
       SelectionHighlightingForLineBreaksEnabled = true;
       textAreaBorder = TextAreaBorderType.None;
@@ -233,10 +235,27 @@ namespace FastColoredTextBoxNS
       timer.Tick += timer_Tick;
       timer2.Tick += timer2_Tick;
       timer3.Tick += timer3_Tick;
+      timerCaret.Tick += TimerCaret_Tick;
+      timerCaret.Enabled = true;
+      timerCaret.Start();
       middleClickScrollingTimer.Tick += middleClickScrollingTimer_Tick;
 
       WordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
     }
+
+
+
+    private void TimerCaret_Tick( object sender, EventArgs e )
+    {
+      // keep caret blinking
+      if ( CaretVisible )
+      {
+        HideCaret( Handle );
+        ShowCaret( Handle );
+      }
+    }
+
+
 
     private char[] autoCompleteBracketsList = { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
 
