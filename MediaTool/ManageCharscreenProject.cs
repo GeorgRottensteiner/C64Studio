@@ -71,7 +71,7 @@ namespace MediaTool
         {
           for ( int i = x; i < x + width; ++i )
           {
-            resultingData.AppendU8( (byte)charScreenProject.Chars[i + j * charScreenProject.ScreenWidth] );
+            resultingData.AppendU8( (byte)charScreenProject.CharacterAt( i, j ) );
           }
         }
       }
@@ -82,7 +82,7 @@ namespace MediaTool
         {
           for ( int i = x; i < x + width; ++i )
           {
-            resultingData.AppendU8( (byte)( charScreenProject.Chars[i + j * charScreenProject.ScreenWidth] >> 8 ) );
+            resultingData.AppendU8( (byte)( charScreenProject.ColorAt( i, j ) ) );
           }
         }
       }

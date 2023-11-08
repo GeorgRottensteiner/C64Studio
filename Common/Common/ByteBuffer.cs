@@ -300,6 +300,20 @@ namespace GR
 
 
 
+      public void AppendU64NetworkOrder( UInt64 QWordValue )
+      {
+        AppendU8( (byte)( QWordValue >> 56 ) );
+        AppendU8( (byte)( QWordValue >> 48 ) );
+        AppendU8( (byte)( QWordValue >> 40 ) );
+        AppendU8( (byte)( QWordValue >> 32 ) );
+        AppendU8( (byte)( QWordValue >> 24 ) );
+        AppendU8( (byte)( QWordValue >> 16 ) );
+        AppendU8( (byte)( QWordValue >> 8 ) );
+        AppendU8( (byte)( QWordValue & 0xff ) );
+      }
+
+
+
       public void AppendString( string TextData )
       {
         if ( TextData == null )
@@ -366,6 +380,44 @@ namespace GR
           m_Data = bTemp;
           m_UsedBytes = (UInt32)m_Data.Length;
         }
+      }
+
+
+
+      public void SetU64At( int Index, System.UInt64 QWordValue )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 7 >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index]     = (byte)( QWordValue & 0xff );
+        m_Data[Index + 1] = (byte)( ( QWordValue >> 8 ) & 0xff );
+        m_Data[Index + 2] = (byte)( ( QWordValue >> 16 ) & 0xff );
+        m_Data[Index + 3] = (byte)( ( QWordValue >> 24 ) & 0xff );
+        m_Data[Index + 4] = (byte)( ( QWordValue >> 32 ) & 0xff );
+        m_Data[Index + 5] = (byte)( ( QWordValue >> 40 ) & 0xff );
+        m_Data[Index + 6] = (byte)( ( QWordValue >> 48 ) & 0xff );
+        m_Data[Index + 7] = (byte)( ( QWordValue >> 56 ) & 0xff );
+      }
+
+
+
+      public void SetU64NetworkOrderAt( int Index, System.UInt64 QWordValue )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 7 >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index + 0] = (byte)( ( QWordValue >> 56 ) & 0xff );
+        m_Data[Index + 1] = (byte)( ( QWordValue >> 48 ) & 0xff );
+        m_Data[Index + 2] = (byte)( ( QWordValue >> 40 ) & 0xff );
+        m_Data[Index + 3] = (byte)( ( QWordValue >> 32 ) & 0xff );
+        m_Data[Index + 4] = (byte)( ( QWordValue >> 24 ) & 0xff );
+        m_Data[Index + 5] = (byte)( ( QWordValue >> 16 ) & 0xff );
+        m_Data[Index + 6] = (byte)( ( QWordValue >> 8 ) & 0xff );
+        m_Data[Index + 7] = (byte)  ( QWordValue & 0xff );
       }
 
 
@@ -827,9 +879,9 @@ namespace GR
         {
           return 0;
         }
-        System.UInt32   dwValue = ( (System.UInt32)ByteAt( Index + 0 ) << 24 )
-                                + ( (System.UInt32)ByteAt( Index + 1 ) << 16 )
-                                + ( (System.UInt32)ByteAt( Index + 2 ) << 8 );
+        System.UInt32   dwValue = ( (System.UInt32)ByteAt( Index + 0 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 8 )
+                                + ( (System.UInt32)ByteAt( Index + 2 ) );
         return dwValue;
       }
 
@@ -863,6 +915,46 @@ namespace GR
                                 + ( (System.UInt32)ByteAt( Index + 2 ) << 8 )
                                 + ( (System.UInt32)ByteAt( Index + 3 ) );
         return dwValue;
+      }
+
+
+
+      public System.UInt64 UInt64At( int Index )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 7 >= Length ) )
+        {
+          return 0;
+        }
+        System.UInt64   qwValue = ( (System.UInt32)ByteAt( Index + 7 ) << 56 )
+                                + ( (System.UInt32)ByteAt( Index + 6 ) << 48 )
+                                + ( (System.UInt32)ByteAt( Index + 5 ) << 40 )
+                                + ( (System.UInt32)ByteAt( Index + 4 ) << 32 )
+                                + ( (System.UInt32)ByteAt( Index + 3 ) << 24 )
+                                + ( (System.UInt32)ByteAt( Index + 2 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 8 )
+                                + ( (System.UInt32)ByteAt( Index ) );
+        return qwValue;
+      }
+
+
+
+      public System.UInt64 UInt64NetworkOrderAt( int Index )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 7 >= Length ) )
+        {
+          return 0;
+        }
+        System.UInt64   qwValue = ( (System.UInt32)ByteAt( Index + 0 ) << 56 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 48 )
+                                + ( (System.UInt32)ByteAt( Index + 2 ) << 40 )
+                                + ( (System.UInt32)ByteAt( Index + 3 ) << 32 )
+                                + ( (System.UInt32)ByteAt( Index + 4 ) << 24 )
+                                + ( (System.UInt32)ByteAt( Index + 5 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 6 ) << 8 )
+                                + ( (System.UInt32)ByteAt( Index + 7 ) );
+        return qwValue;
       }
 
 

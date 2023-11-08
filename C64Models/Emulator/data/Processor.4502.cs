@@ -272,7 +272,7 @@ namespace Tiny64
       sys.AddOpcode( "map", 0x5C, 0, AddressingType.IMPLICIT, 2 );       // map
       sys.AddOpcode( "neg", 0x42, 0, AddressingType.IMPLICIT, 2 );       // neg
 
-      sys.AddOpcode( "phw", 0xF4, 2, AddressingType.IMMEDIATE_16, 4 );   // phw #$nnnn
+      sys.AddOpcode( "phw", 0xF4, 2, AddressingType.IMMEDIATE_16BIT, 4 );   // phw #$nnnn
       sys.AddOpcode( "phw", 0xFC, 2, AddressingType.ABSOLUTE, 4 );       // phw $nnnn
 
       sys.AddOpcode( "phz", 0xdb, 0, AddressingType.IMPLICIT, 3 );    // phz

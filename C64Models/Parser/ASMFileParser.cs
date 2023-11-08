@@ -3059,11 +3059,30 @@ namespace RetroDevStudio.Parser
               }
               if ( hasExpressions )
               {
-                ApplyOpcodePatch( lineInfo, (int)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
               }
               else
               {
                 lineInfo.LineData.AppendU24( (uint)addressValue );
+              }
+            }
+            else if ( lineInfo.Opcode.NumOperands == 4 )
+            {
+              if ( !ValidDWordValue( addressValue ) )
+              {
+                AddError( lineIndex,
+                          Types.ErrorCode.E1015_VALUE_OUT_OF_BOUNDS_32BIT,
+                          "Value $" + addressValue.ToString( "X" ) + " (" + value + ") is out of bounds",
+                          NeededParsedExpression[0].StartPos,
+                          NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+              }
+              if ( hasExpressions )
+              {
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+              }
+              else
+              {
+                lineInfo.LineData.AppendU32( (uint)addressValue );
               }
             }
           }
@@ -4027,9 +4046,15 @@ namespace RetroDevStudio.Parser
           {
             // defined away
             // UGH - we need to look for opening/closing braces inside non-active blocks to keep the scope stack correct
+            MacroInfo   macro = null;
+            if ( m_AssemblerSettings.PseudoOps.ContainsKey( lineTokenInfos[0].Content.ToUpper() ) )
+            {
+              macro = m_AssemblerSettings.PseudoOps[lineTokenInfos[0].Content.ToUpper()];
+            }
 
-            //if ( parseLine.ToUpper().StartsWith( "!IF" ) )
-            if ( lineTokenInfos[0].Content.ToUpper().StartsWith( "!IF" ) )
+            if ( ( macro != null )
+            &&   ( ( macro.Type == MacroInfo.PseudoOpType.IFDEF )
+            ||     ( macro.Type == MacroInfo.PseudoOpType.IF ) ) )
             {
               // a new block starts here!
               // false, since it doesn't matter
@@ -4955,6 +4980,19 @@ namespace RetroDevStudio.Parser
 
 
 
+    private bool Valid24BitValue( long Value24 )
+    {
+      if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+      &&   ( ( Value24 < -8388608 )
+      ||     ( Value24 > 0x00ffffff ) ) )
+      {
+        return false;
+      }
+      return true;
+    }
+    
+    
+    
     private bool ValidDWordValue( long DWordValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
@@ -5213,7 +5251,8 @@ namespace RetroDevStudio.Parser
           continue;
         }
 
-      recheck_line:;
+        recheck_line:
+        ;
 
         // split lines by ':'
         int   localIndex = 0;
@@ -5285,7 +5324,7 @@ namespace RetroDevStudio.Parser
         }
 
         if ( ( lineTokenInfos.Count > 0 )
-        &&   ( lineTokenInfos[0].Content != "}" )
+        &&   ( !TokenIsConditionalThatEndsScope( lineTokenInfos[tokenOffset] ) )
         &&   ( !isDASMScopePseudoOP ) )
         {
           if ( !isScopingActive )
@@ -5690,13 +5729,13 @@ namespace RetroDevStudio.Parser
           info.Line             = parseLine;
           info.LineCodeMapping  = textCodeMapping;
 
-          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out List<List<TokenInfo>> opcodeExpressions, out uint resultingOpcodePatchValue, out bool hadError );
+          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out List<List<TokenInfo>> opcodeExpressions, out ulong resultingOpcodePatchValue, out bool hadError );
           if ( estimatedOpcode != null )
           {
             //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
-            info.Opcode = estimatedOpcode.first;
-            info.OpcodeUsingLongMode = estimatedOpcode.second;
+            info.NumBytes             = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
+            info.Opcode               = estimatedOpcode.first;
+            info.OpcodeUsingLongMode  = estimatedOpcode.second;
             if ( info.Opcode.ParserExpressions.Count > 0 )
             {
               info.NumBytes = SizeOfOpcode( estimatedOpcode.first.ByteValue );
@@ -5705,12 +5744,12 @@ namespace RetroDevStudio.Parser
             if ( ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
             ||   ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER )
             ||   ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_8BIT )
-            ||   ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_16 ) )
+            ||   ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_16BIT ) )
             {
               // immediate may have the '#' in front of a literal (another ugly hack by yours truly)
               if ( ( lineTokenInfos.Count >= 2 )
-              && ( lineTokenInfos[1].Type == TokenInfo.TokenType.LITERAL_NUMBER )
-              && ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
+              &&   ( lineTokenInfos[1].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+              &&   ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
               {
                 if ( lineTokenInfos[1].Length == 1 )
                 {
@@ -5759,20 +5798,6 @@ namespace RetroDevStudio.Parser
               }
               goto HandleRestOfLineAfterLabelThatLooksLikeAnOpcode;
             }
-            /*
-            {
-              var callResult = HandleLabelInFront( lineIndex, info, lineTokenInfos, upToken, stackScopes, textCodeMapping,
-                  ref programStepPos, ref trueCompileCurrentAddress, ref labelInFront, ref tokenInFront, ref parseLine );
-              if ( callResult == ParseLineResult.ERROR_ABORT )
-              {
-                HadFatalError = true;
-                return Lines;
-              }
-              if ( callResult == ParseLineResult.CALL_CONTINUE )
-              {
-                continue;
-              }
-            }*/
           }
           if ( info.Opcode != null )
           {
@@ -5805,11 +5830,11 @@ namespace RetroDevStudio.Parser
               // strip prefixed #
               if ( ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
               ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_8BIT )
-              ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_16 )
+              ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_16BIT )
               ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER ) )
               {
                 if ( ( lineTokenInfos.Count > 1 )
-                &&   ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
+                && ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
                 {
                   if ( lineTokenInfos[1].Length == 1 )
                   {
@@ -5827,12 +5852,11 @@ namespace RetroDevStudio.Parser
               }
 
               int   rounds = 1;
-              bool  hasExpressions = false;
+              bool  hasExpressions = info.Opcode.ParserExpressions.Count > 0;
               if ( ( opcodeExpressions != null )
               &&   ( opcodeExpressions.Count > 0 ) )
               {
                 rounds = opcodeExpressions.Count;
-                hasExpressions = true;
               }
 
               for ( int round = 0; round < rounds; ++round )
@@ -5850,23 +5874,23 @@ namespace RetroDevStudio.Parser
                 }
                 else
                 {
-                  startIndex  += info.Opcode.StartingTokenCount;
-                  count       -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
-                  tokensToEvaluate = lineTokenInfos.GetRange( startIndex, count );
-                  startIndex  = 0;
-                  count       = tokensToEvaluate.Count;
+                  startIndex        += info.Opcode.StartingTokenCount;
+                  count             -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
+                  tokensToEvaluate  = lineTokenInfos.GetRange( startIndex, count );
+                  startIndex        = 0;
+                  count             = tokensToEvaluate.Count;
                 }
 
                 if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
                 {
                   byteValue = byteValueSymbol.ToInt32();
-                  if ( !ValidateExpressionValueRange( ref byteValue, info, round ) )
+                  if ( !ValidateExpressionValueRange( ref byteValue, info, round, out int valueRangeListIndex ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1014_VALUE_OUT_OF_BOUNDS_RANGE,
-                              "Value $" + byteValue.ToString( "X" ) + $" ({byteValue}) is not in the range of {ListValidValues( info.Opcode.ParserExpressions[round].ValidValues )}.",
-                              lineTokenInfos[startIndex].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                              "Value $" + byteValue.ToString( "X" ) + $" ({byteValue}) is not in the range of {ListValidValues( info.Opcode.ParserExpressions[round].ValidValues[valueRangeListIndex].ValidValues )}.",
+                              tokensToEvaluate[startIndex].StartPos,
+                              tokensToEvaluate[count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                   }
                   else if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                   {
@@ -5896,14 +5920,14 @@ namespace RetroDevStudio.Parser
                     }
                   }
                   // 8 bit only?
-                  else if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
+                  else if ( ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
                   ||        ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_8BIT )
                   ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_X )
                   ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_Y )
                   ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE )
                   ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
                   ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
-                  ||        ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER ) )
+                  ||        ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER ) )
                   {
                     if ( ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
                     &&     ( info.Accu16Bit ) )
@@ -6025,11 +6049,11 @@ namespace RetroDevStudio.Parser
                 }
                 else
                 {
-                  startIndex  += info.Opcode.StartingTokenCount;
-                  count       -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
-                  tokensToEvaluate = lineTokenInfos.GetRange( startIndex, count );
-                  startIndex  = 0;
-                  count       = tokensToEvaluate.Count;
+                  startIndex        += info.Opcode.StartingTokenCount;
+                  count             -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
+                  tokensToEvaluate  = lineTokenInfos.GetRange( startIndex, count );
+                  startIndex        = 0;
+                  count             = tokensToEvaluate.Count;
                 }
 
                 if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
@@ -6065,7 +6089,7 @@ namespace RetroDevStudio.Parser
                       {
                         // uses different ordering of parameters
                         int dummy   = firstValue;
-                        firstValue  = secondValue;
+                        firstValue = secondValue;
                         secondValue = dummy;
                       }
                       // zeropage numerand
@@ -6100,7 +6124,7 @@ namespace RetroDevStudio.Parser
                       {
                         int delta = secondValue - info.AddressStart - 3;
                         if ( ( delta < -128 )
-                        ||   ( delta > 127 ) )
+                        || ( delta > 127 ) )
                         {
                           AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                           if ( !hasExpressions )
@@ -6148,9 +6172,15 @@ namespace RetroDevStudio.Parser
                                 tokensToEvaluate[tokensToEvaluate.Count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                   }
 
-                  if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                  &&   ( ( byteValue < 0 )
-                  ||     ( byteValue >= 65536 ) ) )
+                  if ( !ValidateExpressionValueRange( ref byteValue, info, round, out int valueRangeListIndex ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1014_VALUE_OUT_OF_BOUNDS_RANGE,
+                              "Value $" + byteValue.ToString( "X" ) + $" ({byteValue}) is not in the range of {ListValidValues( info.Opcode.ParserExpressions[round].ValidValues[valueRangeListIndex].ValidValues )}.",
+                              tokensToEvaluate[startIndex].StartPos,
+                              tokensToEvaluate[count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
+                  }
+                  else if ( !ValidWordValue( byteValue ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
@@ -6236,41 +6266,113 @@ namespace RetroDevStudio.Parser
                 info.LineData = new GR.Memory.ByteBuffer();
               }
               AppendOpcodeValue( info, resultingOpcodePatchValue );
-              int byteValue = -1;
-              int startIndex = 1;
-              int countTokens = lineTokenInfos.Count - 1;
+              int               byteValue = -1;
+              int               startIndex = 1;
+              int               count = lineTokenInfos.Count - 1;
+              List<TokenInfo>   tokensToEvaluate = lineTokenInfos;
 
-              countTokens -= info.Opcode.TrailingTokenCount;
+              bool  hasExpressions = false;
+              if ( ( opcodeExpressions != null )
+              && ( opcodeExpressions.Count > 0 ) )
+              {
+                int rounds = opcodeExpressions.Count;
+                hasExpressions = true;
+              }
 
-              if ( EvaluateTokens( lineIndex, lineTokenInfos, startIndex, countTokens, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+              if ( hasExpressions )
+              {
+                // we now only have the actual required tokens
+                startIndex = 0;
+                count = opcodeExpressions[0].Count;
+                tokensToEvaluate = opcodeExpressions[0];
+              }
+              else
+              {
+                startIndex += info.Opcode.StartingTokenCount;
+                count -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
+                tokensToEvaluate = lineTokenInfos.GetRange( startIndex, count );
+                startIndex = 0;
+                count = tokensToEvaluate.Count;
+              }
+
+              if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
               {
                 byteValue = byteValueSymbol.ToInt32();
-
-                if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                &&   ( ( byteValue < 0 )
-                ||     ( byteValue >= 65536 * 256 ) ) )
+                if ( !Valid24BitValue( byteValue ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1013_VALUE_OUT_OF_BOUNDS_24BIT,
                             "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
-                            lineTokenInfos[startIndex].StartPos,
-                            lineTokenInfos[startIndex + countTokens - 1].EndPos + 1 - lineTokenInfos[startIndex].StartPos );
+                            tokensToEvaluate[startIndex].StartPos,
+                            tokensToEvaluate[count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                 }
 
-                info.LineData.AppendU16( (ushort)byteValue );
-                info.LineData.AppendU8( (byte)( byteValue >> 16 ) );
+                if ( hasExpressions )
+                {
+                  ApplyOpcodePatch( info, (uint)byteValue, 0 );
+                }
+                else
+                {
+                  info.LineData.AppendU16( (ushort)byteValue );
+                  info.LineData.AppendU8( (byte)( byteValue >> 16 ) );
+                }
                 info.NeededParsedExpression = null;
               }
               else
               {
-                // TODO - could be better, why save all, check and trunc later??
-                int   addTokenCountToExpression = 0;
-                if ( ( info.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_X )
-                ||   ( info.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_Y ) )
+                info.NeededParsedExpression = tokensToEvaluate;
+              }
+            }
+            else if ( info.Opcode.NumOperands == 4 )
+            {
+              if ( info.LineData == null )
+              {
+                info.LineData = new GR.Memory.ByteBuffer();
+              }
+              AppendOpcodeValue( info, resultingOpcodePatchValue );
+              uint  byteValue = 0;
+              int   rounds    = opcodeExpressions.Count;
+
+              for ( int round = 0; round < rounds; ++round )
+              {
+                int               startIndex = 0;
+                int               count = opcodeExpressions[round].Count;
+                List<TokenInfo>   tokensToEvaluate = opcodeExpressions[round];
+
+                if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
                 {
-                  addTokenCountToExpression = 2;
+                  byteValue = (uint)byteValueSymbol.ToInteger();
+
+                  if ( !ValidDWordValue( byteValue ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1015_VALUE_OUT_OF_BOUNDS_32BIT,
+                              "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
+                              tokensToEvaluate[startIndex].StartPos,
+                              tokensToEvaluate[count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
+                  }
+
+                  ApplyOpcodePatch( info, byteValue, round );
+                  if ( round == 0 )
+                  {
+                    info.NeededParsedExpression = null;
+                  }
+                  else
+                  {
+                    info.NeededParsedExpression2 = null;
+                  }
                 }
-                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, countTokens + addTokenCountToExpression );
+                else
+                {
+                  if ( round == 0 )
+                  {
+                    info.NeededParsedExpression = tokensToEvaluate;
+                  }
+                  else
+                  {
+                    info.NeededParsedExpression2 = tokensToEvaluate;
+                  }
+                }
               }
             }
             else
@@ -6284,48 +6386,30 @@ namespace RetroDevStudio.Parser
 
             if ( ScopeInsideMacroDefinition( stackScopes ) )
             {
-              info.LineData = null;
-              info.NumBytes = 0;
-              info.Opcode = null;
+              info.LineData               = null;
+              info.NumBytes               = 0;
+              info.Opcode                 = null;
               info.NeededParsedExpression = null;
             }
 
             if ( info.NeededParsedExpression != null )
             {
+              // TODO - get rid of this monstrosity!
               // remove unneeded tokens, depending on opcode
-              //Debug.Log( "needed expression for " + info.Line );
               switch ( info.Opcode.Addressing )
               {
-                /*
-                case Tiny64.Opcode.AddressingType.ABSOLUTE_X:
-                case Tiny64.Opcode.AddressingType.ZEROPAGE_X:
-                  if ( ( info.NeededParsedExpression.Count < 2 )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "X" ) )
-                  {
-                    AddError( lineIndex,
-                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
-                              "Expected trailing ,x",
-                              info.NeededParsedExpression[0].StartPos,
-                              info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
-                  }
-                  else
-                  {
-                    info.NeededParsedExpression.RemoveRange( info.NeededParsedExpression.Count - 2, 2 );
-                  }
-                  break;*/
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
                   if ( ( info.NeededParsedExpression.Count < 4 )
-                  ||   ( !IsOpeningBraceChar( info.NeededParsedExpression[0].Content )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 3].Content != "," )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content.ToUpper() != "X" )
-                  ||   ( !IsClosingBraceChar( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content ) ) ) )
+                  || ( !IsOpeningBraceChar( info.NeededParsedExpression[0].Content )
+                  || ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 3].Content != "," )
+                  || ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content.ToUpper() != "X" )
+                  || ( !IsClosingBraceChar( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content ) ) ) )
                   {
                     if ( ( info.NeededParsedExpression.Count < 4 )
-                    ||   ( !IsOpeningBraceChar( info.NeededParsedExpression[0].Content )
-                    ||   ( !IsClosingBraceChar( info.NeededParsedExpression[info.NeededParsedExpression.Count - 3].Content ) )
-                    ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
-                    ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "X" ) ) )
+                    || ( !IsOpeningBraceChar( info.NeededParsedExpression[0].Content )
+                    || ( !IsClosingBraceChar( info.NeededParsedExpression[info.NeededParsedExpression.Count - 3].Content ) )
+                    || ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
+                    || ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "X" ) ) )
                     {
                       AddError( lineIndex,
                                 Types.ErrorCode.E1306_EXPECTED_BRACKETS_AND_TRAILING_SYMBOL,
@@ -6345,31 +6429,11 @@ namespace RetroDevStudio.Parser
                     info.NeededParsedExpression.RemoveAt( 0 );
                   }
                   break;
-                  /*
-                case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
-                case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
-                case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
-                  // in case of case Opcode.AddressingType.INDIRECT_Y the brackets are parsed out already!
-                  if ( ( info.NeededParsedExpression.Count < 2 )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Y" ) )
-                  {
-                    AddError( lineIndex,
-                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
-                              "Expected trailing ,y",
-                              info.NeededParsedExpression[0].StartPos,
-                              info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
-                  }
-                  else
-                  {
-                    info.NeededParsedExpression.RemoveRange( info.NeededParsedExpression.Count - 2, 2 );
-                  }
-                  break;*/
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z:
                   // in case of case Opcode.AddressingType.INDIRECT_Z the brackets are parsed out already!
                   if ( ( info.NeededParsedExpression.Count < 2 )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Z" ) )
+                  || ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
+                  || ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Z" ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
@@ -6383,6 +6447,7 @@ namespace RetroDevStudio.Parser
                   }
                   break;
               }
+
               if ( ( info.NeededParsedExpression.Count == 1 )
               &&   ( info.NeededParsedExpression[0].Content.StartsWith( "-" ) ) )
               {
@@ -6917,12 +6982,18 @@ namespace RetroDevStudio.Parser
 
               // !ifdef MUSIC_ON {
               int startBracket = parseLine.IndexOf( "{" );
-              if ( startBracket == -1 )
+              int numTokensForIf = lineTokenInfos.Count - 1;
+              if ( ( startBracket == -1 )
+              &&   ( !m_AssemblerSettings.IfWithoutBrackets ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1004_MISSING_OPENING_BRACKET, "Missing opening brace" );
               }
               else
               {
+                if ( !m_AssemblerSettings.IfWithoutBrackets )
+                {
+                  --numTokensForIf;
+                }
                 int     posAfterMacro = labelInFront.Length;
                 if ( labelInFront.Length == 0 )
                 {
@@ -6931,9 +7002,9 @@ namespace RetroDevStudio.Parser
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
 
-                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, numTokensForIf, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
-                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 2 ) );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, numTokensForIf ) );
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
                   HadFatalError = true;
@@ -8207,8 +8278,9 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool ValidateExpressionValueRange( ref int ByteValue, LineInfo Info, int Round )
+    private bool ValidateExpressionValueRange( ref int ByteValue, LineInfo Info, int Round, out int ValueRangeListIndex )
     {
+      ValueRangeListIndex = 0;
       if ( ( Info.Opcode == null )
       ||   ( Info.Opcode.ParserExpressions.Count == 0 ) )
       {
@@ -8219,19 +8291,39 @@ namespace RetroDevStudio.Parser
       if ( ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
       &&   ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
       &&   ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_32BIT )
-      &&   ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_8BIT ) )
+      &&   ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+      &&   ( curExpression.Type != Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
+      &&   ( curExpression.Type != Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+      &&   ( curExpression.Type != Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
+      &&   ( curExpression.Type != Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT ) )
       {
         return true;
       }
-      var values = curExpression.ValidValues;
-      if ( Round == 1 )
+      if ( Round >= curExpression.ValidValues.Count )
       {
-        values = curExpression.ValidValues2;
+        return true;
       }
+
+      if ( ( curExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
+      ||   ( curExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+      ||   ( curExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
+      ||   ( curExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT ) )
+      {
+        // encapsulated expression with two validvalues have no list
+        if ( curExpression.ValidValues.Count == 2 )
+        {
+          return true;
+        }
+        // otherwise it's the list in between those 3
+        Round = 1;
+      }
+
+      var values = curExpression.ValidValues[Round].ValidValues;
       if ( values.Count == 0 )
       {
         return true;
       }
+      ValueRangeListIndex = Round;
       string  stringizedValue = ByteValue.ToString();
       var matchingValue = values.FirstOrDefault( v => v.Key == stringizedValue );
       if ( matchingValue == null )
@@ -8244,7 +8336,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void ApplyOpcodePatch( LineInfo Info, int Value, int ExpressionIndex )
+    private void ApplyOpcodePatch( LineInfo Info, uint Value, int ExpressionIndex )
     {
       Opcode.OpcodeExpression   currentExpression = null;
 
@@ -8254,6 +8346,11 @@ namespace RetroDevStudio.Parser
       {
         if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.COMPLEX )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
@@ -8264,10 +8361,27 @@ namespace RetroDevStudio.Parser
             currentExpression = Info.Opcode.ParserExpressions[expIndex];
 
             // swap bytes
-            if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
-            ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT ) )
+            if ( m_Processor.LittleEndian )
             {
-              Value = (ushort)( ( ( Value & 0xff00 ) >> 8 ) | ( ( Value & 0x00ff ) << 8 ) );
+              if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST )
+              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT ) )
+              {
+                Value = (ushort)( ( ( Value & 0xff00 ) >> 8 ) | ( ( Value & 0x00ff ) << 8 ) );
+              }
+              if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
+              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT ) )
+              {
+                Value = (uint)( ( ( Value & 0xff0000 ) >> 16 ) | ( ( Value & 0x00ff ) << 16 ) | ( Value & 0x00ff00 ) );
+              }
+              if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
+              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT ) )
+              {
+                Value = (uint)( ( ( Value & 0xff000000 ) >> 24 )
+                              | ( ( Value & 0x00ff0000 ) >> 8 )
+                              | ( ( Value & 0x0000ff00 ) << 8 ) 
+                              | ( ( Value & 0x000000ff ) << 24 ) );
+              }
             }
             break;
           }
@@ -8280,9 +8394,50 @@ namespace RetroDevStudio.Parser
         return;
       }
 
-      currentExpression.ResultingReplacementValue = Value << currentExpression.ReplacementValueShift;
+      currentExpression.ResultingReplacementValue = (ulong)Value << currentExpression.ReplacementValueShift;
+
+      switch ( currentExpression.Type )
+      {
+        case Opcode.OpcodePartialExpression.EXPRESSION_8BIT:
+        case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT:
+          Value = Value & 0xff;
+          break;
+        case Opcode.OpcodePartialExpression.EXPRESSION_16BIT:
+        case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT:
+          Value = Value & 0xffff;
+          break;
+        case Opcode.OpcodePartialExpression.EXPRESSION_24BIT:
+        case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT:
+          Value = Value & 0xffffff;
+          break;
+        case Opcode.OpcodePartialExpression.EXPRESSION_32BIT:
+        case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT:
+          Value = Value & 0xffffffff;
+          break;
+      }
 
       // patch into line data
+      if ( ( currentExpression.ResultingReplacementValue & 0xff00000000000000ul ) != 0 )
+      {
+        Info.LineData.SetU64NetworkOrderAt( (int)Info.LineData.Length - 8, Info.LineData.UInt64NetworkOrderAt( (int)Info.LineData.Length - 8 ) | currentExpression.ResultingReplacementValue );
+        return;
+      }
+      if ( ( currentExpression.ResultingReplacementValue & 0xff000000000000ul ) > 0 )
+      {
+        Info.LineData.SetU8At( (int)Info.LineData.Length - 7, (byte)( Info.LineData.ByteAt( (int)Info.LineData.Length - 7 ) | ( ( currentExpression.ResultingReplacementValue >> 48 ) & 0xff ) ) );
+        Info.LineData.SetU16NetworkOrderAt( (int)Info.LineData.Length - 6, (ushort)( Info.LineData.UInt16NetworkOrderAt( (int)Info.LineData.Length - 6 ) | ( ( currentExpression.ResultingReplacementValue >> 32 ) & 0xffff ) ) );
+        Info.LineData.SetU32NetworkOrderAt( (int)Info.LineData.Length - 4, (uint)( Info.LineData.UInt32NetworkOrderAt( (int)Info.LineData.Length - 4 ) | (uint)currentExpression.ResultingReplacementValue ) );
+      }
+      if ( ( currentExpression.ResultingReplacementValue & 0xff0000000000ul ) > 0 )
+      {
+        Info.LineData.SetU16NetworkOrderAt( (int)Info.LineData.Length - 6, (ushort)( Info.LineData.UInt16NetworkOrderAt( (int)Info.LineData.Length - 6 ) | ( ( currentExpression.ResultingReplacementValue >> 32 ) & 0xffff ) ) );
+        Info.LineData.SetU32NetworkOrderAt( (int)Info.LineData.Length - 4, (uint)( Info.LineData.UInt32NetworkOrderAt( (int)Info.LineData.Length - 4 ) | (uint)currentExpression.ResultingReplacementValue ) );
+      }
+      if ( ( currentExpression.ResultingReplacementValue & 0xff00000000 ) > 0 )
+      {
+        Info.LineData.SetU8At( (int)Info.LineData.Length - 5, (byte)( Info.LineData.ByteAt( (int)Info.LineData.Length - 5 ) | ( ( currentExpression.ResultingReplacementValue >> 32 ) & 0xff ) ) );
+        Info.LineData.SetU32NetworkOrderAt( (int)Info.LineData.Length - 4, (uint)( Info.LineData.UInt32NetworkOrderAt( (int)Info.LineData.Length - 4 ) | (uint)currentExpression.ResultingReplacementValue ) );
+      }
       if ( ( currentExpression.ResultingReplacementValue & 0xff000000 ) > 0 )
       {
         Info.LineData.SetU32NetworkOrderAt( (int)Info.LineData.Length - 4, (uint)( Info.LineData.UInt32NetworkOrderAt( (int)Info.LineData.Length - 4 ) | (uint)currentExpression.ResultingReplacementValue ) );
@@ -8303,18 +8458,42 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void AppendOpcodeValue( LineInfo Info, uint ResultingOpcodePatchValue )
+    private void AppendOpcodeValue( LineInfo Info, ulong ResultingOpcodePatchValue )
     {
       HandleM65OpcodePrefixes( Info );
 
-      uint    opcodeValue = Info.Opcode.ByteValue;
-      if ( ResultingOpcodePatchValue != uint.MaxValue )
+      ulong    opcodeValue = Info.Opcode.ByteValue;
+      if ( ResultingOpcodePatchValue != ulong.MaxValue )
       {
         opcodeValue |= ResultingOpcodePatchValue;
       }
+      if ( ( opcodeValue & 0xff00000000000000 ) != 0 )
+      {
+        Info.LineData.AppendU64NetworkOrder( opcodeValue );
+        return;
+      }
+      if ( ( opcodeValue & 0xff000000000000 ) != 0 )
+      {
+        Info.LineData.AppendU8( (byte)( opcodeValue >> 48 ) );
+        Info.LineData.AppendU16NetworkOrder( (ushort)( opcodeValue >> 32 ) );
+        Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        return;
+      }
+      if ( ( opcodeValue & 0xff0000000000 ) != 0 )
+      {
+        Info.LineData.AppendU16NetworkOrder( (ushort)( opcodeValue >> 32 ) );
+        Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        return;
+      }
+      if ( ( opcodeValue & 0xff00000000 ) != 0 )
+      {
+        Info.LineData.AppendU8( (byte)( opcodeValue >> 32 ) );
+        Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        return;
+      }
       if ( ( opcodeValue & 0xff000000 ) != 0 )
       {
-        Info.LineData.AppendU32NetworkOrder( opcodeValue );
+        Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
         return;
       }
       if ( ( opcodeValue & 0x00ff0000 ) != 0 )
@@ -8333,8 +8512,25 @@ namespace RetroDevStudio.Parser
 
 
 
-    private int SizeOfOpcode( uint ByteValue )
+    private int SizeOfOpcode( ulong ByteValue )
     {
+      if ( ( ByteValue & 0xff00000000000000 ) != 0 )
+      {
+        return 8;
+      }
+
+      if ( ( ByteValue & 0xff000000000000 ) != 0 )
+      {
+        return 7;
+      }
+      if ( ( ByteValue & 0xff0000000000 ) != 0 )
+      {
+        return 6;
+      }
+      if ( ( ByteValue & 0xff00000000 ) != 0 )
+      {
+        return 5;
+      }
       if ( ( ByteValue & 0xff000000 ) != 0 )
       {
         return 4;
@@ -9340,6 +9536,25 @@ namespace RetroDevStudio.Parser
       return false;
     }
 
+
+
+    private bool TokenIsConditionalThatEndsScope( TokenInfo Token )
+    {
+      if ( ( Token.Type == TokenInfo.TokenType.PSEUDO_OP )
+      &&   ( ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END_IF ).ToUpper() )
+      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.ELSE ).ToUpper() )
+      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END ).ToUpper() ) ) )
+      {
+        return true;
+      }
+      if ( Token.Content == "}" )
+      {
+        return true;
+      }
+      return false;
+    }
+
+            
 
 
     private bool FindStartOfComment( string parseLine, out int commentPos )
@@ -11643,6 +11858,7 @@ namespace RetroDevStudio.Parser
         result.RemoveAt( result.Count - 1 );
       }
 
+      /*
       // collapse # 
       if ( ( result.Count >= 3 )
       &&   ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
@@ -11654,7 +11870,7 @@ namespace RetroDevStudio.Parser
         --result[2].StartPos;
         ++result[2].Length;
         result.RemoveAt( 1 );
-      }
+      }*/
 
       // collapse # if prefixed to < or >
       /*
@@ -12321,7 +12537,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out List<List<TokenInfo>> OpcodeExpressions, out uint ResultingOpcodePatchValue, out bool HadError )
+    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out List<List<TokenInfo>> OpcodeExpressions, out ulong ResultingOpcodePatchValue, out bool HadError )
     {
       ResultingOpcodePatchValue = 0;
       OpcodeExpressions         = null;
@@ -12352,7 +12568,14 @@ namespace RetroDevStudio.Parser
       {
         return new GR.Generic.Tupel<Opcode, bool>( matchingOpcode, false );
       }
+      if ( m_Processor.Name == "Motorola 68000" )
+      {
+        AddError( LineIndex, Types.ErrorCode.E1105_INVALID_OPCODE, "Cannot determine opcode: " + LineTokens[0].Content, LineTokens[0].StartPos, LineTokens[0].Length );
+        HadError = true;
+        return null;
+      }
 
+      // TODO - get rid of all this crap below!
       bool endsWithCommaX = false;
       bool endsWithCommaY = false;
       bool endsWithCommaZ = false;
@@ -12888,7 +13111,7 @@ namespace RetroDevStudio.Parser
       // psw
       if ( addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
       {
-        addressing = Opcode.AddressingType.IMMEDIATE_16;
+        addressing = Opcode.AddressingType.IMMEDIATE_16BIT;
       }
       // was in braces, could be simple braces around
       if ( addressing == Tiny64.Opcode.AddressingType.INDIRECT )
@@ -12930,7 +13153,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool MatchOpcodeToExpression( int LineIndex, List<Opcode> PossibleOpcodes, List<TokenInfo> LineTokens, out Opcode MatchingOpcode, out List<List<TokenInfo>> Expressions, out uint ShiftedOpcodePatchValue )
+    private bool MatchOpcodeToExpression( int LineIndex, List<Opcode> PossibleOpcodes, List<TokenInfo> LineTokens, out Opcode MatchingOpcode, out List<List<TokenInfo>> Expressions, out ulong ShiftedOpcodePatchValue )
     {
       MatchingOpcode          = null;
       ShiftedOpcodePatchValue = 0;
@@ -13006,36 +13229,17 @@ namespace RetroDevStudio.Parser
                 ++currentParam;
                 ++currentExpression;
                 break;
-              case Opcode.OpcodePartialExpression.COMMA:
-                ++currentParam;
-                ++currentExpression;
-                if ( currentParam == lineParams.Count )
-                {
-                  isMatch = false;
-                }
-                break;
-              case Opcode.OpcodePartialExpression.PARENTHESIS_OPEN:
-                if ( ( matchParam.Count != 1 )
-                ||   ( matchParam[0].Content != "(" ) )
-                {
-                  isMatch = false;
-                  break;
-                }
-                ++currentParam;
-                ++currentExpression;
-                break;
-              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT:
-              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT:
-                if ( ( matchParam.Count < potentialExpression.ValidValues.Count )
-                ||   ( matchParam.Count < potentialExpression.ValidValues2.Count ) )
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST:
+                if ( ( matchParam.Count < potentialExpression.ValidValues[0].ValidValues.Count )
+                ||   ( matchParam.Count < potentialExpression.ValidValues[2].ValidValues.Count ) )
                 {
                   isMatch = false;
                 }
                 else
                 {
-                  for ( int i = 0; i < potentialExpression.ValidValues.Count; ++i )
+                  for ( int i = 0; i < potentialExpression.ValidValues[0].ValidValues.Count; ++i )
                   {
-                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[i].Key, true ) != 0 )
+                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[0].ValidValues[i].Key, true ) != 0 )
                     {
                       isMatch = false;
                       break;
@@ -13043,9 +13247,201 @@ namespace RetroDevStudio.Parser
                   }
                   if ( isMatch )
                   {
-                    for ( int i = 0; i < potentialExpression.ValidValues2.Count; ++i )
+                    for ( int i = 0; i < potentialExpression.ValidValues[2].ValidValues.Count; ++i )
                     {
-                      if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues2.Count + i].Content, potentialExpression.ValidValues2[i].Key, true ) != 0 )
+                      if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count + i].Content, potentialExpression.ValidValues[2].ValidValues[i].Key, true ) != 0 )
+                      {
+                        isMatch = false;
+                        break;
+                      }
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    // everything else must now be the value from list
+                    expressionTokenStartIndex = LineTokens.IndexOf( matchParam[potentialExpression.ValidValues[0].ValidValues.Count] );
+                    expressionTokenCount      = matchParam.Count - potentialExpression.ValidValues[0].ValidValues.Count - potentialExpression.ValidValues[2].ValidValues.Count;
+
+                    if ( expressionTokenCount != 1 )
+                    {
+                      isMatch = false;
+                    }
+                    else
+                    {
+                      var validValue = potentialExpression.ValidValues[1].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, LineTokens[expressionTokenStartIndex].Content, true ) == 0 );
+                      if ( validValue == null )
+                      {
+                        isMatch = false;
+                      }
+                      else
+                      {
+                        ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                      }
+                    }
+                  }
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.COMPLEX:
+                if ( potentialExpression.ValidValues[0].Expression != Opcode.OpcodePartialExpression.UNUSED )
+                {
+                  // match the rest from the back
+                  for ( int i = 0; i < potentialExpression.ValidValues.Count - 1; ++i )
+                  {
+                    int matchIndex = matchParam.Count - 1 - i;
+                    if ( matchIndex < 1 )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                    var matchValues = potentialExpression.ValidValues[potentialExpression.ValidValues.Count - 1 - i];
+
+                    var validValue = matchValues.ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[matchIndex].Content, true ) == 0 );
+                    if ( validValue == null )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                    else if ( validValue.ReplacementValue != ulong.MaxValue )
+                    {
+                      ShiftedOpcodePatchValue |= validValue.ReplacementValue << matchValues.ReplacementValueShift;
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    // the rest is the expression
+                    expressionTokenStartIndex = 0;
+                    expressionTokenCount      = matchParam.Count - potentialExpression.ValidValues.Count + 1;
+
+                    var newTokens = matchParam.GetRange( expressionTokenStartIndex, expressionTokenCount );
+                    if ( Expressions == null )
+                    {
+                      Expressions = new List<List<TokenInfo>>();
+                    }
+                    Expressions.Add( newTokens );
+                  }
+                }
+                else if ( potentialExpression.ValidValues.Last().Expression != Opcode.OpcodePartialExpression.UNUSED )
+                {
+                  // match the rest from the front
+                  Debug.Log( "MatchOpcodeToExpression, Complex with expression at end not yet supported" );
+                }
+                else
+                {
+                  // no expression? match all
+                  if ( matchParam.Count != potentialExpression.ValidValues.Count )
+                  {
+                    isMatch = false;
+                  }
+                  else
+                  {
+                    for ( int i = 0; i < matchParam.Count; ++i )
+                    {
+                      var matchValues = potentialExpression.ValidValues[i];
+
+                      var validValue = matchValues.ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[i].Content, true ) == 0 );
+                      if ( validValue == null )
+                      {
+                        isMatch = false;
+                        break;
+                      }
+                      else if ( validValue.ReplacementValue != ulong.MaxValue )
+                      {
+                        ShiftedOpcodePatchValue |= validValue.ReplacementValue << matchValues.ReplacementValueShift;
+                      }
+                    }
+                  }
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.EXPRESSION_8BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST:
+              case Opcode.OpcodePartialExpression.EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST:
+                if ( matchParam.Count < potentialExpression.ValidValues[0].ValidValues.Count + potentialExpression.ValidValues[2].ValidValues.Count )
+                {
+                  isMatch = false;
+                }
+                else
+                {
+                  for ( int i = 0; i < potentialExpression.ValidValues[2].ValidValues.Count; ++i )
+                  {
+                    if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count + i].Content, potentialExpression.ValidValues[2].ValidValues[i].Key, true ) != 0 )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    // now we must have a value from the list
+                    int listIndex = LineTokens.IndexOf( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count - 1] );
+                    var validValue = potentialExpression.ValidValues[1].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, LineTokens[listIndex].Content, true ) == 0 );
+                    if ( validValue == null )
+                    {
+                      isMatch = false;
+                    }
+                    else
+                    {
+                      ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift2;
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    // left encapsulation list check
+                    for ( int i = 0; i < potentialExpression.ValidValues[0].ValidValues.Count; ++i )
+                    {
+                      if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count - 1 - potentialExpression.ValidValues[0].ValidValues.Count + i].Content, potentialExpression.ValidValues[0].ValidValues[i].Key, true ) != 0 )
+                      {
+                        isMatch = false;
+                        break;
+                      }
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    // everything else must be the expression
+                    expressionTokenStartIndex = 0;
+                    expressionTokenCount = matchParam.Count 
+                        - potentialExpression.ValidValues[0].ValidValues.Count
+                        - potentialExpression.ValidValues[2].ValidValues.Count
+                        - 1;
+
+                    var newTokens = matchParam.GetRange( expressionTokenStartIndex, expressionTokenCount );
+                    if ( Expressions == null )
+                    {
+                      Expressions = new List<List<TokenInfo>>();
+                    }
+                    Expressions.Add( newTokens );
+                  }
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT:
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT:
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT:
+              case Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT:
+                if ( ( matchParam.Count < potentialExpression.ValidValues[0].ValidValues.Count )
+                ||   ( matchParam.Count < potentialExpression.ValidValues.Last().ValidValues.Count ) )
+                {
+                  isMatch = false;
+                }
+                else
+                {
+                  for ( int i = 0; i < potentialExpression.ValidValues[0].ValidValues.Count; ++i )
+                  {
+                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[0].ValidValues[i].Key, true ) != 0 )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                  }
+                  if ( isMatch )
+                  {
+                    for ( int i = 0; i < potentialExpression.ValidValues.Last().ValidValues.Count; ++i )
+                    {
+                      if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues.Last().ValidValues.Count + i].Content, potentialExpression.ValidValues.Last().ValidValues[i].Key, true ) != 0 )
                       {
                         isMatch = false;
                         break;
@@ -13053,8 +13449,8 @@ namespace RetroDevStudio.Parser
                     }
                     if ( isMatch )
                     {
-                      expressionTokenStartIndex = LineTokens.IndexOf( matchParam[potentialExpression.ValidValues.Count] );
-                      expressionTokenCount      = matchParam.Count - potentialExpression.ValidValues.Count - potentialExpression.ValidValues2.Count;
+                      expressionTokenStartIndex = LineTokens.IndexOf( matchParam[potentialExpression.ValidValues[0].ValidValues.Count] );
+                      expressionTokenCount      = matchParam.Count - potentialExpression.ValidValues[0].ValidValues.Count - potentialExpression.ValidValues.Last().ValidValues.Count;
 
                       var newTokens = LineTokens.GetRange( expressionTokenStartIndex, expressionTokenCount );
                       if ( Expressions == null )
@@ -13068,18 +13464,8 @@ namespace RetroDevStudio.Parser
                 ++currentParam;
                 ++currentExpression;
                 break;
-              case Opcode.OpcodePartialExpression.PARENTHESIS_CLOSE:
-                if ( ( matchParam.Count != 1 )
-                ||   ( matchParam[0].Content != ")" ) )
-                {
-                  isMatch = false;
-                  break;
-                }
-                ++currentParam;
-                ++currentExpression;
-                break;
               case Opcode.OpcodePartialExpression.TOKEN_LIST:
-                if ( matchParam.Count != potentialExpression.ValidValues.Count )
+                if ( matchParam.Count != potentialExpression.ValidValues[0].ValidValues.Count )
                 {
                   isMatch = false;
                 }
@@ -13087,7 +13473,7 @@ namespace RetroDevStudio.Parser
                 {
                   for ( int i = 0; i < matchParam.Count; ++i )
                   {
-                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[i].Key, true ) != 0 )
+                    if ( string.Compare( matchParam[i].Content, potentialExpression.ValidValues[0].ValidValues[i].Key, true ) != 0 )
                     {
                       isMatch = false;
                       break;
@@ -13098,20 +13484,23 @@ namespace RetroDevStudio.Parser
                 ++currentExpression;
                 break;
               case Opcode.OpcodePartialExpression.VALUE_FROM_LIST:
-                if ( matchParam.Count != 1 )
+                if ( matchParam.Count != potentialExpression.ValidValues.Count )
                 {
                   isMatch = false;
                 }
                 else
                 {
-                  var validValue = potentialExpression.ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[0].Content, true ) == 0 );
-                  if ( validValue == null )
+                  foreach ( var matchTest in potentialExpression.ValidValues )
                   {
-                    isMatch = false;
-                  }
-                  else
-                  {
-                    ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                    var validValue = matchTest.ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[0].Content, true ) == 0 );
+                    if ( validValue == null )
+                    {
+                      isMatch = false;
+                    }
+                    else
+                    {
+                      ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                    }
                   }
                 }
                 ++currentParam;

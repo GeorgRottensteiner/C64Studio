@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\VIC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.68K.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.Z80.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.M65.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.4502.cs" />

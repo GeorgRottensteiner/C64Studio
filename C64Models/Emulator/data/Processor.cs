@@ -19,6 +19,8 @@ namespace Tiny64
     public ushort         PC = 0;
     public byte           StackPointer = 0xff;
 
+    public bool           LittleEndian = true;
+
 
 
     public Processor( string Name )
@@ -207,21 +209,21 @@ namespace Tiny64
 
 
 
-    public Opcode AddOpcode( string Opcode, uint ByteValue, int NumOperands, AddressingType Addressing, int NumCycles )
+    public Opcode AddOpcode( string Opcode, ulong ByteValue, int NumOperands, AddressingType Addressing, int NumCycles )
     {
       return AddOpcode( Opcode, ByteValue, NumOperands, Addressing, NumCycles, 0, 0, 0 );
     }
 
 
 
-    public Opcode AddOpcode( string Opcode, uint ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
+    public Opcode AddOpcode( string Opcode, ulong ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
     {
       return AddOpcode( Opcode, ByteValue, NumOperands, Addressing, NumCycles, PageBoundaryCycles, 0, 0 );
     }
 
 
 
-    public Opcode AddOpcode( string Opcode, uint ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles, int BranchSamePagePenalty, int BranchOtherPagePenalty )
+    public Opcode AddOpcode( string Opcode, ulong ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles, int BranchSamePagePenalty, int BranchOtherPagePenalty )
     {
       if ( !Opcodes.ContainsKey( Opcode ) )
       {
