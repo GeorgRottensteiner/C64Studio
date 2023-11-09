@@ -46,6 +46,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     MessageAutoIncludesBlanksBetweenParameters = false;
     public bool                                                     AllowsCustomTextMappings = false;
     public bool                                                     IfWithoutBrackets = false;
+    public bool                                                     LocalLabelStacking = false;   // if true, TASM mode: ++ refers to 2nd + below, --- to 3rd - above, etc.
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
 
@@ -540,6 +541,7 @@ namespace RetroDevStudio.Parser
           GreaterOrLessThanAtBeginningAffectFullExpression  = true;
           AllowsCustomTextMappings                          = true;
           IfWithoutBrackets                                 = true;
+          LocalLabelStacking                                = true;
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

@@ -11,4 +11,20 @@ GNA:          lda #$01
 
 GNORK: = * + 1
           sta $d020
+
+
+-
+                              lda #0
+                            -
+                              lda #1
+                              jmp -
+                              jmp --
+
+                              jmp +
+                              jmp ++
+
+                            +
+                              lda #2
+                            +
+                              lda #3
           rts

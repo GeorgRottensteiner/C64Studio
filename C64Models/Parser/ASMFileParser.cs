@@ -1669,26 +1669,6 @@ namespace RetroDevStudio.Parser
         // unary operators
         if ( Tokens[StartIndex].Content == "-" )
         {
-          /*
-          // special case, try parsing as numeric directly to avoid plus/minus off by one edge case
-          if ( Tokens[StartIndex].EndPos + 1 == Tokens[StartIndex + 1].StartPos )
-          {
-            if ( int.TryParse( Tokens[StartIndex].Content + Tokens[StartIndex + 1].Content, out int value ) )
-            {
-              if ( ( value <= 0 )
-              &&   ( value > -254 ) )
-              {
-                NumBytesGiven = 1;
-              }
-              else
-              {
-                NumBytesGiven = 2;
-              }
-              Result = value;
-              return true;
-            }
-          }*/
-
           if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, TextCodeMapping, out ResultingToken, out NumBytesGiven ) )
           {
             if ( ResultingToken.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
@@ -3098,6 +3078,30 @@ namespace RetroDevStudio.Parser
     {
       ClosestLabel = "";
       ClosestLine = 5000000;
+
+      int NumSteps = 1;
+
+      if ( m_AssemblerSettings.LocalLabelStacking )
+      {
+        // look up in forward label list
+        // Content.Lentgh is the number of labels to go forward (+ = the next, ++ the 2nd next, etc.)
+        NumSteps  = Content.Length;
+        Content   = "+";
+
+        int nextLine = LineIndex;
+        while ( NumSteps > 0 )
+        {
+          if ( !_ParseContext.ForwardLabelStacked.TryGetHigherKey( nextLine + 1, out nextLine ) )
+          {
+            return false;
+          }
+          --NumSteps;
+        }
+        ClosestLine   = nextLine;
+        ClosestLabel  = _ParseContext.ForwardLabelStacked[nextLine];
+        return true;
+      }
+
       foreach ( string label in m_ASMFileInfo.Labels.Keys )
       {
         if ( ( LineInfo.NeededParsedExpression != null )
@@ -3123,8 +3127,8 @@ namespace RetroDevStudio.Parser
             if ( ( lineNo > LineIndex )
             &&   ( lineNo < ClosestLine ) )
             {
-              ClosestLine = lineNo;
-              ClosestLabel = label;
+              ClosestLine   = lineNo;
+              ClosestLabel  = label;
             }
           }
         }
@@ -5174,6 +5178,8 @@ namespace RetroDevStudio.Parser
       AddPreprocessorConstant( "ASSEMBLER_RETRODEVSTUDIO", 1, -1 );
 
       Dictionary<string,string> previousMinusLabel = new Dictionary<string, string>();
+      SortedList<int,string>    previousMinusLabelStacked = new SortedList<int, string>();
+      
 
       int   programStepPos = -1;
       int   lineSizeInBytes = 0;
@@ -5384,13 +5390,37 @@ namespace RetroDevStudio.Parser
         bool      evaluatedContent = false;
         if ( lineTokenInfos[0].Content.StartsWith( "-" ) )
         {
-          if ( !previousMinusLabel.ContainsKey( lineTokenInfos[0].Content ) )
+          if ( ( m_AssemblerSettings.LocalLabelStacking )
+          &&   ( lineTokenInfos[0].Content.Length > 1 ) )
           {
-            previousMinusLabel.Add( lineTokenInfos[0].Content, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
+            AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Local labels (+/n) must be single character", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+          else if ( m_AssemblerSettings.LocalLabelStacking )
+          {
+            previousMinusLabelStacked.Add( lineIndex, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
           }
           else
           {
-            previousMinusLabel[lineTokenInfos[0].Content] = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
+            if ( !previousMinusLabel.ContainsKey( lineTokenInfos[0].Content ) )
+            {
+              previousMinusLabel.Add( lineTokenInfos[0].Content, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
+            }
+            else
+            {
+              previousMinusLabel[lineTokenInfos[0].Content] = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
+            }
+          }
+        }
+        if ( ( lineTokenInfos[0].Content.StartsWith( "+" ) )
+        &&   ( m_AssemblerSettings.LocalLabelStacking ) )
+        {
+          if ( lineTokenInfos[0].Content.Length > 1 )
+          {
+            AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Local labels (+/n) must be single character", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+          else
+          {
+            _ParseContext.ForwardLabelStacked.Add( lineIndex, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
           }
         }
 
@@ -6448,12 +6478,35 @@ namespace RetroDevStudio.Parser
                   break;
               }
 
+              // look up - labels
               if ( ( info.NeededParsedExpression.Count == 1 )
               &&   ( info.NeededParsedExpression[0].Content.StartsWith( "-" ) ) )
               {
-                if ( previousMinusLabel.ContainsKey( info.NeededParsedExpression[0].Content ) )
+                if ( m_AssemblerSettings.LocalLabelStacking )
                 {
-                  info.NeededParsedExpression[0].Content = previousMinusLabel[info.NeededParsedExpression[0].Content];
+                  // need to count backwards
+                  int     numSteps = info.NeededParsedExpression[0].Content.Length;
+                  int     curLine = info.LineIndex;
+                  while ( numSteps > 0 )
+                  {
+                    if ( !previousMinusLabelStacked.TryGetLowerKey( curLine - 1, out int nextLine ) )
+                    {
+                      break;
+                    }
+                    curLine = nextLine;
+                    --numSteps;
+                    if ( numSteps == 0 )
+                    {
+                      info.NeededParsedExpression[0].Content = previousMinusLabelStacked[nextLine];
+                    }
+                  }
+                }
+                else
+                {
+                  if ( previousMinusLabel.ContainsKey( info.NeededParsedExpression[0].Content ) )
+                  {
+                    info.NeededParsedExpression[0].Content = previousMinusLabel[info.NeededParsedExpression[0].Content];
+                  }
                 }
               }
             }
@@ -12161,9 +12214,9 @@ namespace RetroDevStudio.Parser
           while ( true )
           {
             if ( ( result[curPos].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
-            && ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
-            && ( ( result[curPos].Content == "-" )
-            || ( result[curPos].Content == "+" ) ) )
+            &&   ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
+            &&   ( ( result[curPos].Content == "-" )
+            ||     ( result[curPos].Content == "+" ) ) )
             {
               // continue
               result[i].Content += result[curPos].Content;
@@ -12171,9 +12224,9 @@ namespace RetroDevStudio.Parser
               ++curPos;
             }
             else if ( ( curPos < result.Count )
-            && ( result[curPos].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            && ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
-            && ( result[curPos].Content.StartsWith( InternalLabelPostfix ) ) )
+            &&        ( result[curPos].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+            &&        ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
+            &&        ( result[curPos].Content.StartsWith( InternalLabelPostfix ) ) )
             {
               // final label
               result[i].Type = RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL;

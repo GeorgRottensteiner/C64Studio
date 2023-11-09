@@ -16,6 +16,16 @@ namespace RetroDevStudio.Parser
     {
       public GR.Collections.Map<string,GR.Collections.Map<byte, byte>>    TextMappings = new GR.Collections.Map<string, GR.Collections.Map<byte, byte>>();
 
+      public SortedList<int,string>    ForwardLabelStacked = new SortedList<int, string>();
+
+
+
+      public void Clear()
+      {
+        ForwardLabelStacked.Clear();
+        TextMappings.Clear();
+      }
+
     }
 
 
