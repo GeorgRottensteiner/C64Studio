@@ -576,71 +576,71 @@ namespace Tiny64
 
       sys.AddOpcode( "bra.s", 0x6000, 1, AddressingType.RELATIVE, 0 )        // bra.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bra.w", 0x60000000, 1, AddressingType.RELATIVE_16, 0 ) // bra.w label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bsr.s", 0x6100, 1, AddressingType.RELATIVE, 0 )        // bsr.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bhi.s", 0x6200, 1, AddressingType.RELATIVE, 0 )        // bhi.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bls.s", 0x6300, 1, AddressingType.RELATIVE, 0 )        // bls.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bcc.s", 0x6400, 1, AddressingType.RELATIVE, 0 )        // bcc.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bcs.s", 0x6500, 1, AddressingType.RELATIVE, 0 )        // bcs.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bne.s", 0x6600, 1, AddressingType.RELATIVE, 0 )        // bne.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "beq.s", 0x6700, 1, AddressingType.RELATIVE, 0 )        // beq.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bvc.s", 0x6800, 1, AddressingType.RELATIVE, 0 )        // bvc.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bvs.s", 0x6900, 1, AddressingType.RELATIVE, 0 )        // bvs.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bpl.s", 0x6A00, 1, AddressingType.RELATIVE, 0 )        // bpl.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bmi.s", 0x6B00, 1, AddressingType.RELATIVE, 0 )        // bmi.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bge.s", 0x6C00, 1, AddressingType.RELATIVE, 0 )        // bge.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "blt.s", 0x6D00, 1, AddressingType.RELATIVE, 0 )        // blt.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "bgt.s", 0x6E00, 1, AddressingType.RELATIVE, 0 )        // bgt.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "ble.s", 0x6F00, 1, AddressingType.RELATIVE, 0 )        // ble.s label
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "btst", 0x083800000000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // btst #0, ($FF00).w
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
@@ -670,6 +670,542 @@ namespace Tiny64
               new ValidValueGroup( closingParenthesis )
             }
           } } );
+
+      sys.AddOpcode( "btst", 0x01380000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // btst d0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "btst", 0x0100, 0, AddressingType.IMPLICIT, 0 )    // btst d0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ) } );
+
+      sys.AddOpcode( "btst", 0x0110, 0, AddressingType.INDIRECT, 0 )    // btst d0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ) } );
+
+      sys.AddOpcode( "btst", 0x01280000, 2, AddressingType.IMMEDIATE_8BIT, 0 )          // btst d0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "bclr", 0x08B800000000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // bclr #0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "bclr", 0x08800000, 2, AddressingType.INDIRECT, 0 )    // bclr #0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
+
+      sys.AddOpcode( "bclr", 0x08900000, 2, AddressingType.IMMEDIATE_8BIT, 0 )    // bclr #0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 16 ) } );
+
+      sys.AddOpcode( "bclr", 0x08A800000000, 2, AddressingType.INDIRECT, 0 )          // bclr #0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 32 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "bclr", 0x01B80000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // bclr d0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "bclr", 0x0180, 0, AddressingType.IMPLICIT, 0 )    // bclr d0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ) } );
+
+      sys.AddOpcode( "bclr", 0x0190, 0, AddressingType.INDIRECT, 0 )    // bclr d0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ) } );
+
+      sys.AddOpcode( "bclr", 0x01A80000, 2, AddressingType.IMMEDIATE_8BIT, 0 )          // bclr d0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+
+      sys.AddOpcode( "bset", 0x08F800000000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // bset #0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "bset", 0x08C00000, 2, AddressingType.INDIRECT, 0 )    // bset #0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
+
+      sys.AddOpcode( "bset", 0x08D00000, 2, AddressingType.IMMEDIATE_8BIT, 0 )    // bset #0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 16 ) } );
+
+      sys.AddOpcode( "bset", 0x08E800000000, 2, AddressingType.INDIRECT, 0 )          // bset #0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 32 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "bset", 0x01F80000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // bset d0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "bset", 0x01C0, 0, AddressingType.IMPLICIT, 0 )    // bset d0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ) } );
+
+      sys.AddOpcode( "bset", 0x01D0, 0, AddressingType.INDIRECT, 0 )    // bset d0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ) } );
+
+      sys.AddOpcode( "bset", 0x01E80000, 2, AddressingType.IMMEDIATE_8BIT, 0 )          // bset d0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "bchg", 0x087800000000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // bchg #0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "bchg", 0x08400000, 2, AddressingType.INDIRECT, 0 )    // bchg #0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
+
+      sys.AddOpcode( "bchg", 0x08500000, 2, AddressingType.IMMEDIATE_8BIT, 0 )    // bchg #0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 16 ) } );
+
+      sys.AddOpcode( "bchg", 0x086800000000, 2, AddressingType.INDIRECT, 0 )          // bchg #0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 32 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "bchg", 0x01780000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // bchg d0, ($FF00).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "bchg", 0x0140, 0, AddressingType.IMPLICIT, 0 )    // bchg d0, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ) } );
+
+      sys.AddOpcode( "bchg", 0x0150, 0, AddressingType.INDIRECT, 0 )    // bchg d0, (a0)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ) } );
+
+      sys.AddOpcode( "bchg", 0x01680000, 2, AddressingType.IMMEDIATE_8BIT, 0 )          // bchg d0, $01(a7)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "clr.w", 0x4240, 0, AddressingType.IMPLICIT, 0 )    // clr.w d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ) } );
+
+      sys.AddOpcode( "clr.l", 0x4280, 0, AddressingType.IMPLICIT, 0 )    // clr.l d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ) } );
+
+      sys.AddOpcode( "clr.w", 0x42780000, 2, AddressingType.INDIRECT, 0 )    // clr.w ($1234).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "clr.b", 0x42280000, 2, AddressingType.INDIRECT, 0 )    // clr.b $01( a7 )
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "clr.w", 0x42680000, 2, AddressingType.INDIRECT, 0 )    // clr.w $01( a7 )
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "clr.l", 0x4290, 0, AddressingType.IMPLICIT, 0 )    // clr.l (a7)   
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ) } );
+
+      sys.AddOpcode( "clr.l", 0x4298, 0, AddressingType.IMPLICIT, 0 )    // clr.l (a7)+ 
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesisPlus, 0 ) } );
+
+      sys.AddOpcode( "clr.l", 0x42A0, 0, AddressingType.IMPLICIT, 0 )    // clr.l -(a7)   
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesisMinus, aRegisters, closingParenthesis, 0 ) } );
+
+      sys.AddOpcode( "clr.l", 0x42A80000, 2, AddressingType.INDIRECT, 0 )    // clr.l $12(a7)   
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "cmpa.w", 0xB0FC0000, 2, AddressingType.IMMEDIATE_16BIT, 0 )     // cmpa.w #$0001,a7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 25 ) } );
+
+      sys.AddOpcode( "cmpa.l", 0xB1FC00000000, 4, AddressingType.IMMEDIATE_32BIT, 0 ) // cmpa.l #$00000001,a7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 41 ) } );
+
+      sys.AddOpcode( "cmpa.l", 0xB1F80000, 2, AddressingType.IMMEDIATE_32BIT, 0 )   // cmpa.l ($0001).w,a7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 25 ) } );
+
+      sys.AddOpcode( "cmpa.w", 0xB0C0, 0, AddressingType.IMPLICIT, 0 )    // cmpa.w d7, a0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 9 ) } );
+
+
+
+      sys.AddOpcode( "cmpa.l", 0xB1C8, 0, AddressingType.IMPLICIT, 0 )    // cmpa.w a7, a0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmpa.l", 0xB1D8, 0, AddressingType.IMPLICIT, 0 )    // cmpa.l (a7), a0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmpa.l", 0xB1E80000, 2, AddressingType.INDIRECT, 0 )    // cmpa.l $01(a7), a0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          },
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 25 ) } );
+
+      sys.AddOpcode( "cmpi.b", 0x0C3800000000, 2, AddressingType.IMMEDIATE_8BIT, 0 )     // cmpi.b #$12, ($1234).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "cmpi.w", 0x0C7800000000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // cmpi.w #$1234, ($1234).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, immediatePrefix, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "cmpi.l", 0x0CB8000000000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )    // cmpi.l #$12345678, ($1234).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, immediatePrefix, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+
+      sys.AddOpcode( "cmpi.w", 0x0C79000000000000, 4, AddressingType.IMMEDIATE_8BIT, 0 )    // cmpi.l #$12, ($12345678).l
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 32 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 0 ) } );
+
+      sys.AddOpcode( "cmpi.b", 0x0C000000, 2, AddressingType.IMMEDIATE_8BIT, 0 )    // cmpi.b #$01, d7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
+
+      sys.AddOpcode( "cmpi.w", 0x0C400000, 2, AddressingType.IMMEDIATE_16BIT, 0 )   // cmpi.w #$1234, d7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
+
+      sys.AddOpcode( "cmpi.l", 0x0C8000000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )   // cmpi.l #$12345678, d7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 32 ) } );
+
+      sys.AddOpcode( "cmpi.b", 0x0C100000, 2, AddressingType.IMMEDIATE_8BIT, 0 )    // cmpi.b #$01, (a7)           ;0C 17 00 01
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 16 ) } );
+
+      sys.AddOpcode( "cmpi.b", 0x0C200000, 2, AddressingType.IMMEDIATE_8BIT, 0 )  // cmpi.b #$01, -(a7)          ;0C 1F 00 01
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesisMinus, aRegisters, closingParenthesis, 16 ) } );
+
+      sys.AddOpcode( "cmpi.b", 0x0C2800000000, 2, AddressingType.INDIRECT, 0 )    // cmpi.b #$01, $FF(a7)           ;0C 2F 00 01 00 FF
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 32 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "cmpi.w", 0x0C6800000000, 2, AddressingType.INDIRECT, 0 )    // cmpi.w #$0001, $FF(a7)         ;0C 6F 00 01 00 FF
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, immediatePrefix, empty, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 32 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "cmpi.b", 0x0C180000, 2, AddressingType.IMMEDIATE_8BIT, 0 )  // cmpi.b #$01, (a7)+          ;0C 1F 00 01
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesisPlus, 16 ) } );
+
+
+      sys.AddOpcode( "cmp.b", 0xB000, 0, AddressingType.IMPLICIT, 0 )    // cmp.b d0, d7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmp.l", 0xB080, 0, AddressingType.IMPLICIT, 0 )    // cmp.l d0, d7
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmp.w", 0xB0780000, 2, AddressingType.INDIRECT, 0 )   // cmp.w ($0001).w, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ) } );
+
+      sys.AddOpcode( "cmp.l", 0xB0B80000, 2, AddressingType.INDIRECT, 0 )   // cmp.l ($0001).w, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ) } );
+
+      sys.AddOpcode( "cmp.w", 0xB050, 0, AddressingType.INDIRECT, 0 )       // cmp.w (a7), d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmp.w", 0xB058, 0, AddressingType.INDIRECT, 0 )       // cmp.w (a7)+, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesisPlus, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmp.b", 0xB020, 0, AddressingType.INDIRECT, 0 )       // cmp.b -(a7), d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesisMinus, aRegisters, closingParenthesis, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
+
+      sys.AddOpcode( "cmp.b", 0xB0280000, 2, AddressingType.IMMEDIATE_8BIT, 0 )   // cmp.b $01(a0),d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          },
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ) } );
+
+      sys.AddOpcode( "cmp.w", 0xB0680000, 2, AddressingType.IMMEDIATE_8BIT, 0 )   // cmp.w $01(a0),d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          },
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ) } );
+
+      sys.AddOpcode( "dbt", 0x50C80000, 2, AddressingType.RELATIVE_16, 0 )    // dbt d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbf", 0x51C80000, 2, AddressingType.RELATIVE_16, 0 )    // dbf d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbhi", 0x52C80000, 2, AddressingType.RELATIVE_16, 0 )    // dbhi d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbls", 0x53C80000, 2, AddressingType.RELATIVE_16, 0 )    // dbls d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbcc", 0x54C80000, 2, AddressingType.RELATIVE_16, 0 )    // dbcc d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbcs", 0x55C80000, 2, AddressingType.RELATIVE_16, 0 )    // dbcs d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbne", 0x56C80000, 2, AddressingType.RELATIVE_16, 0 )   // dbne d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbeq", 0x57C80000, 2, AddressingType.RELATIVE_16, 0 )   // dbeq d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbvc", 0x58C80000, 2, AddressingType.RELATIVE_16, 0 )   // dbvc d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbvs", 0x59C80000, 2, AddressingType.RELATIVE_16, 0 )   // dbvs d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbpl", 0x5AC80000, 2, AddressingType.RELATIVE_16, 0 )   // dbpl d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbmi", 0x5BC80000, 2, AddressingType.RELATIVE_16, 0 )   // dbmi d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbge", 0x5CC80000, 2, AddressingType.RELATIVE_16, 0 )   // dbg d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dblt", 0x5DC80000, 2, AddressingType.RELATIVE_16, 0 )   // dblt d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dbgt", 0x5EC80000, 2, AddressingType.RELATIVE_16, 0 )   // dbgt d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
+      sys.AddOpcode( "dble", 0x5FC80000, 2, AddressingType.RELATIVE_16, 0 )   // dble d0, $1234
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) } );
+
 
       return sys;
     }

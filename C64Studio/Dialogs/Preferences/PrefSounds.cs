@@ -122,5 +122,26 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    private void btnTestSoundBuildFailure_Click( object sender, EventArgs e )
+    {
+      Core.Notification.BuildFailure( true );
+    }
+
+
+
+    private void btnTestSoundBuildSuccess_Click( object sender, EventArgs e )
+    {
+      Core.Notification.BuildSuccess( true );
+    }
+
+
+
+    private void btnTestSoundNotFound_Click( object sender, EventArgs e )
+    {
+      Core.Notification.ItemNotFound( true );
+    }
+
+
+
   }
 }

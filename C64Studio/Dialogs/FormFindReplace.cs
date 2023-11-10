@@ -310,10 +310,7 @@ namespace RetroDevStudio.Dialogs
         {
           Core.SetStatus( "Searched text not found: " + comboSearchText.Text );
         }
-        if ( Core.Settings.PlaySoundOnSearchFoundNoItem )
-        {
-          System.Media.SystemSounds.Asterisk.Play();
-        }
+        Core.Notification.ItemNotFound();
       }
     }
 
@@ -1588,10 +1585,7 @@ namespace RetroDevStudio.Dialogs
         {
           Core.SetStatus( "Searched text not found: " + comboReplaceSearchText.Text );
         }
-        if ( Core.Settings.PlaySoundOnSearchFoundNoItem )
-        {
-          System.Media.SystemSounds.Asterisk.Play();
-        }
+        Core.Notification.ItemNotFound();
       }
     }
 

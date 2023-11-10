@@ -35,6 +35,9 @@
       this.checkPlaySoundCompileFail = new System.Windows.Forms.CheckBox();
       this.label11 = new System.Windows.Forms.Label();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.btnTestSoundBuildFailure = new System.Windows.Forms.Button();
+      this.btnTestSoundBuildSuccess = new System.Windows.Forms.Button();
+      this.btnTestSoundNotFound = new System.Windows.Forms.Button();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -104,6 +107,9 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.btnTestSoundNotFound);
+      this.groupBox1.Controls.Add(this.btnTestSoundBuildSuccess);
+      this.groupBox1.Controls.Add(this.btnTestSoundBuildFailure);
       this.groupBox1.Controls.Add(this.btnExportSettings);
       this.groupBox1.Controls.Add(this.checkPlaySoundSearchTextNotFound);
       this.groupBox1.Controls.Add(this.btnImportSettings);
@@ -117,6 +123,36 @@
       this.groupBox1.TabIndex = 18;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Sounds";
+      // 
+      // btnTestSoundBuildFailure
+      // 
+      this.btnTestSoundBuildFailure.Location = new System.Drawing.Point(272, 28);
+      this.btnTestSoundBuildFailure.Name = "btnTestSoundBuildFailure";
+      this.btnTestSoundBuildFailure.Size = new System.Drawing.Size(75, 23);
+      this.btnTestSoundBuildFailure.TabIndex = 18;
+      this.btnTestSoundBuildFailure.Text = "Test";
+      this.btnTestSoundBuildFailure.UseVisualStyleBackColor = true;
+      this.btnTestSoundBuildFailure.Click += new System.EventHandler(this.btnTestSoundBuildFailure_Click);
+      // 
+      // btnTestSoundBuildSuccess
+      // 
+      this.btnTestSoundBuildSuccess.Location = new System.Drawing.Point(272, 51);
+      this.btnTestSoundBuildSuccess.Name = "btnTestSoundBuildSuccess";
+      this.btnTestSoundBuildSuccess.Size = new System.Drawing.Size(75, 23);
+      this.btnTestSoundBuildSuccess.TabIndex = 18;
+      this.btnTestSoundBuildSuccess.Text = "Test";
+      this.btnTestSoundBuildSuccess.UseVisualStyleBackColor = true;
+      this.btnTestSoundBuildSuccess.Click += new System.EventHandler(this.btnTestSoundBuildSuccess_Click);
+      // 
+      // btnTestSoundNotFound
+      // 
+      this.btnTestSoundNotFound.Location = new System.Drawing.Point(272, 74);
+      this.btnTestSoundNotFound.Name = "btnTestSoundNotFound";
+      this.btnTestSoundNotFound.Size = new System.Drawing.Size(75, 23);
+      this.btnTestSoundNotFound.TabIndex = 18;
+      this.btnTestSoundNotFound.Text = "Test";
+      this.btnTestSoundNotFound.UseVisualStyleBackColor = true;
+      this.btnTestSoundNotFound.Click += new System.EventHandler(this.btnTestSoundNotFound_Click);
       // 
       // PrefSounds
       // 
@@ -140,5 +176,8 @@
         private System.Windows.Forms.CheckBox checkPlaySoundCompileFail;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.GroupBox groupBox1;
-    }
+    private System.Windows.Forms.Button btnTestSoundNotFound;
+    private System.Windows.Forms.Button btnTestSoundBuildSuccess;
+    private System.Windows.Forms.Button btnTestSoundBuildFailure;
+  }
 }

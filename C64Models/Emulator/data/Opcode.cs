@@ -20,11 +20,11 @@ namespace Tiny64
       ENCAPSULATED_EXPRESSION_16BIT,  // e.g. LD A,(>nn<)
       ENCAPSULATED_EXPRESSION_24BIT,  // e.g. adda.w ($fffff100).w,a2
       ENCAPSULATED_EXPRESSION_32BIT,  // e.g. adda.l #$12345678,d0
-      ENCAPSULATED_VALUE_FROM_LIST,   // e.g. 
-      EXPRESSION_8BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST,   // (cry)  adda.w $10(a0), a1
-      EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST,   // (cry)  adda.w $10(a0), a1
-      COMPLEX,                        // mostly value from list, but with expression in front
-      EMPTY                           // none (RET), to differ from RET cc
+      ENCAPSULATED_VALUE_FROM_LIST,   // e.g. adda.b (a0)
+      COMPLEX,                        // mostly value from list, but with expression in front or in the middle
+      EMPTY,                          // none (RET), to differ from RET cc
+      EXPRESSION_8BIT_RELATIVE,
+      EXPRESSION_16BIT_RELATIVE
     }
 
 

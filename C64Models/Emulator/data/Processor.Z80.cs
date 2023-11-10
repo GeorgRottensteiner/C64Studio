@@ -858,19 +858,19 @@ namespace Tiny64
       sys.AddOpcode( "jr", 0x3800, 1, AddressingType.RELATIVE, 7, 5 )                     // JR C,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, c ),
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
       sys.AddOpcode( "jr", 0x3000, 1, AddressingType.RELATIVE, 7, 5 )                     // JR NC,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, nc ),
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
       sys.AddOpcode( "jr", 0x2800, 1, AddressingType.RELATIVE, 7, 5 )                     // JR Z,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, z ),
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
       sys.AddOpcode( "jr", 0x2000, 1, AddressingType.RELATIVE, 7, 5 )                     // JR NZ,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, nz ),
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "jp", 0xe9, 0, AddressingType.IMPLICIT, 4 )                          // JP (HL)
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
@@ -884,11 +884,11 @@ namespace Tiny64
 
       sys.AddOpcode( "djnz", 0x1000, 1, AddressingType.RELATIVE, 8, 5 )                   // DJNZ e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "jr", 0x1800, 1, AddressingType.RELATIVE, 12 )                       // JR e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
-          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT ) } );
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
 
       sys.AddOpcode( "jp", 0xc30000, 2, AddressingType.ABSOLUTE, 10 )                     // JP nn
         .ParserExpressions.Add( new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT ) );

@@ -2752,6 +2752,166 @@ namespace RetroDevStudio.Parser
                           NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos + 1 - NeededParsedExpression[0].StartPos );
             }
             // check value size
+            if ( hasExpressions )
+            {
+              if ( ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT )
+              ||   ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT ) )
+              {
+                if ( !ValidDWordValue( addressValue ) )
+                {
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1015_VALUE_OUT_OF_BOUNDS_32BIT,
+                            "Value $" + addressValue.ToString( "X" ) + " (" + value + ") is out of bounds",
+                            NeededParsedExpression[0].StartPos,
+                            NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+                }
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+
+                NeededParsedExpression = null;
+                return ParseLineResult.OK;
+              }
+              else if ( ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
+              ||        ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT ) )
+              {
+                if ( !Valid24BitValue( addressValue ) )
+                {
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1013_VALUE_OUT_OF_BOUNDS_24BIT,
+                            "Value $" + addressValue.ToString( "X" ) + " (" + value + ") is out of bounds",
+                            NeededParsedExpression[0].StartPos,
+                            NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+                }
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+
+                NeededParsedExpression = null;
+                return ParseLineResult.OK;
+              }
+              else if ( ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
+              ||        ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT ) )
+              {
+                if ( !Valid16BitAddressValue( addressValue ) )
+                {
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                            "Value $" + addressValue.ToString( "X" ) + " (" + value + ") is out of bounds",
+                            NeededParsedExpression[0].StartPos,
+                            NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+                }
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+
+                NeededParsedExpression = null;
+                return ParseLineResult.OK;
+              }
+              else if ( ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+              ||        ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT ) )
+              {
+                if ( !ValidByteValue( addressValue ) )
+                {
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                            "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
+                              + TokensToExpression( NeededParsedExpression ),
+                            NeededParsedExpression[0].StartPos,
+                            NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+                }
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+
+                NeededParsedExpression = null;
+                return ParseLineResult.OK;
+              }
+              else if ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE )
+              {
+                long delta = addressValue - lineInfo.AddressStart - 2;
+                if ( !Valid8BitRelativeValue( delta ) )
+                {
+                  AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
+                }
+                ApplyOpcodePatch( lineInfo, (byte)delta, ExpressionIndex );
+                NeededParsedExpression = null;
+                return ParseLineResult.OK;
+              }
+              else if ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE )
+              {
+                long delta = 0;
+                if ( m_Processor.Name == "65816" )
+                {
+                  delta = addressValue - lineInfo.AddressStart - 3;
+                }
+                else
+                {
+                  delta = addressValue - lineInfo.AddressStart - 2;
+                }
+                if ( !Valid16BitRelativeValue( delta ) )
+                {
+                  AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
+                }
+                ApplyOpcodePatch( lineInfo, (ushort)delta, ExpressionIndex );
+                NeededParsedExpression = null;
+                return ParseLineResult.OK;
+              }
+              else if ( ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.VALUE_FROM_LIST )
+              ||        ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST ) )
+                {
+                if ( !ValidateExpressionValueRange( ref addressValue, lineInfo, ExpressionIndex, out int valueRangeListIndex ) )
+                {
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1014_VALUE_OUT_OF_BOUNDS_RANGE,
+                            "Value $" + addressValue.ToString( "X" ) + $" ({addressValue}) is not in the range of {ListValidValues( lineInfo.Opcode.ParserExpressions[ExpressionIndex].ValidValues[valueRangeListIndex].ValidValues )}.",
+                            NeededParsedExpression[0].StartPos,
+                            NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos + 1 - NeededParsedExpression[0].StartPos );
+                }
+              }
+              else if ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.TOKEN_LIST )
+              {
+                // nothing to do, why is that even here?
+              }
+              else if ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.COMPLEX )
+              {
+                foreach ( var complexValue in lineInfo.Opcode.ParserExpressions[ExpressionIndex].ValidValues )
+                {
+                  if ( complexValue.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+                  {
+                    if ( !ValidByteValue( addressValue ) )
+                    {
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                                "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
+                                  + TokensToExpression( NeededParsedExpression ),
+                                NeededParsedExpression[0].StartPos,
+                                NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+                    }
+                    ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+
+                    NeededParsedExpression = null;
+                    return ParseLineResult.OK;
+                  }
+                  else if ( complexValue.Expression == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
+                  {
+                    if ( !Valid16BitAddressValue( addressValue ) )
+                    {
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                                "Value $" + addressValue.ToString( "X" ) + " (" + value + ") is out of bounds",
+                                NeededParsedExpression[0].StartPos,
+                                NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
+                    }
+                    ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+
+                    NeededParsedExpression = null;
+                    return ParseLineResult.OK;
+                  }
+                  else if ( complexValue.Expression != Opcode.OpcodePartialExpression.UNUSED )
+                  {
+                    Debug.Log( "oha" );
+                  }
+                }
+              }
+              else
+              {
+                Debug.Log( "Missing expression late parsing for " + lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type );
+              }
+            }
+
             if ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
             ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
             ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z )
@@ -5855,7 +6015,7 @@ namespace RetroDevStudio.Parser
                 info.LineData = new GR.Memory.ByteBuffer();
               }
               AppendOpcodeValue( info, resultingOpcodePatchValue );
-              int byteValue = -1;
+              long byteValue = -1;
 
               // strip prefixed #
               if ( ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
@@ -5924,7 +6084,7 @@ namespace RetroDevStudio.Parser
                   }
                   else if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                   {
-                    int delta = byteValue - info.AddressStart - 2;
+                    long delta = byteValue - info.AddressStart - 2;
                     if ( !Valid8BitRelativeValue( delta ) )
                     {
                       AddError( lineIndex,
@@ -6053,7 +6213,7 @@ namespace RetroDevStudio.Parser
                 info.LineData = new GR.Memory.ByteBuffer();
               }
               AppendOpcodeValue( info, resultingOpcodePatchValue );
-              int byteValue = -1;
+              long byteValue = -1;
 
               int   rounds = 1;
               bool  hasExpressions = false;
@@ -6208,7 +6368,7 @@ namespace RetroDevStudio.Parser
                               Types.ErrorCode.E1014_VALUE_OUT_OF_BOUNDS_RANGE,
                               "Value $" + byteValue.ToString( "X" ) + $" ({byteValue}) is not in the range of {ListValidValues( info.Opcode.ParserExpressions[round].ValidValues[valueRangeListIndex].ValidValues )}.",
                               tokensToEvaluate[startIndex].StartPos,
-                              tokensToEvaluate[count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
+                              tokensToEvaluate[startIndex + count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                   }
                   else if ( !ValidWordValue( byteValue ) )
                   {
@@ -6222,7 +6382,7 @@ namespace RetroDevStudio.Parser
                   if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
                   {
                     // TODO - was -2 (recheck!)
-                    int delta = 0;
+                    long delta = 0;
                     if ( m_Processor.Name == "65816" )
                     {
                       delta = byteValue - info.AddressStart - 3;
@@ -6237,8 +6397,8 @@ namespace RetroDevStudio.Parser
                       AddError( lineIndex,
                                 Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
                                 "Relative jump too far, trying to jump " + delta + " bytes",
-                                tokensToEvaluate[1].StartPos,
-                                tokensToEvaluate[lineTokenInfos.Count - 1].EndPos + 1 - tokensToEvaluate[1].StartPos );
+                                tokensToEvaluate[startIndex].StartPos,
+                                tokensToEvaluate[startIndex + count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                       if ( !hasExpressions )
                       {
                         info.LineData.AppendU16( 0 );
@@ -8331,7 +8491,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool ValidateExpressionValueRange( ref int ByteValue, LineInfo Info, int Round, out int ValueRangeListIndex )
+    private bool ValidateExpressionValueRange( ref long ByteValue, LineInfo Info, int Round, out int ValueRangeListIndex )
     {
       ValueRangeListIndex = 0;
       if ( ( Info.Opcode == null )
@@ -8383,7 +8543,7 @@ namespace RetroDevStudio.Parser
       {
         return false;
       }
-      ByteValue = (int)matchingValue.ReplacementValue;
+      ByteValue = (long)matchingValue.ReplacementValue;
       return true;
     }
 
@@ -8402,8 +8562,8 @@ namespace RetroDevStudio.Parser
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.COMPLEX )
-        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST )
-        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE )
+        ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
         ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
@@ -8417,7 +8577,6 @@ namespace RetroDevStudio.Parser
             if ( m_Processor.LittleEndian )
             {
               if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
-              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST )
               ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT ) )
               {
                 Value = (ushort)( ( ( Value & 0xff00 ) >> 8 ) | ( ( Value & 0x00ff ) << 8 ) );
@@ -13262,6 +13421,8 @@ namespace RetroDevStudio.Parser
               case Opcode.OpcodePartialExpression.EXPRESSION_16BIT:
               case Opcode.OpcodePartialExpression.EXPRESSION_24BIT:
               case Opcode.OpcodePartialExpression.EXPRESSION_32BIT:
+              case Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE:
+              case Opcode.OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE:
                 if ( matchParam.Count == 0 )
                 {
                   isMatch = false;
@@ -13404,68 +13565,6 @@ namespace RetroDevStudio.Parser
                         ShiftedOpcodePatchValue |= validValue.ReplacementValue << matchValues.ReplacementValueShift;
                       }
                     }
-                  }
-                }
-                ++currentParam;
-                ++currentExpression;
-                break;
-              case Opcode.OpcodePartialExpression.EXPRESSION_8BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST:
-              case Opcode.OpcodePartialExpression.EXPRESSION_16BIT_FOLLOWED_BY_ENCAPSULATED_VALUE_FROM_LIST:
-                if ( matchParam.Count < potentialExpression.ValidValues[0].ValidValues.Count + potentialExpression.ValidValues[2].ValidValues.Count )
-                {
-                  isMatch = false;
-                }
-                else
-                {
-                  for ( int i = 0; i < potentialExpression.ValidValues[2].ValidValues.Count; ++i )
-                  {
-                    if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count + i].Content, potentialExpression.ValidValues[2].ValidValues[i].Key, true ) != 0 )
-                    {
-                      isMatch = false;
-                      break;
-                    }
-                  }
-                  if ( isMatch )
-                  {
-                    // now we must have a value from the list
-                    int listIndex = LineTokens.IndexOf( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count - 1] );
-                    var validValue = potentialExpression.ValidValues[1].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, LineTokens[listIndex].Content, true ) == 0 );
-                    if ( validValue == null )
-                    {
-                      isMatch = false;
-                    }
-                    else
-                    {
-                      ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift2;
-                    }
-                  }
-                  if ( isMatch )
-                  {
-                    // left encapsulation list check
-                    for ( int i = 0; i < potentialExpression.ValidValues[0].ValidValues.Count; ++i )
-                    {
-                      if ( string.Compare( matchParam[matchParam.Count - potentialExpression.ValidValues[2].ValidValues.Count - 1 - potentialExpression.ValidValues[0].ValidValues.Count + i].Content, potentialExpression.ValidValues[0].ValidValues[i].Key, true ) != 0 )
-                      {
-                        isMatch = false;
-                        break;
-                      }
-                    }
-                  }
-                  if ( isMatch )
-                  {
-                    // everything else must be the expression
-                    expressionTokenStartIndex = 0;
-                    expressionTokenCount = matchParam.Count 
-                        - potentialExpression.ValidValues[0].ValidValues.Count
-                        - potentialExpression.ValidValues[2].ValidValues.Count
-                        - 1;
-
-                    var newTokens = matchParam.GetRange( expressionTokenStartIndex, expressionTokenCount );
-                    if ( Expressions == null )
-                    {
-                      Expressions = new List<List<TokenInfo>>();
-                    }
-                    Expressions.Add( newTokens );
                   }
                 }
                 ++currentParam;

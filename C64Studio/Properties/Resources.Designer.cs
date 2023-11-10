@@ -111,6 +111,24 @@ namespace RetroDevStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream build_failure {
+            get {
+                return ResourceManager.GetStream("build_failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream build_success {
+            get {
+                return ResourceManager.GetStream("build_success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon c64 {
@@ -427,6 +445,15 @@ namespace RetroDevStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("icon_memory_ram", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream item_notfound {
+            get {
+                return ResourceManager.GetStream("item_notfound", resourceCulture);
             }
         }
         

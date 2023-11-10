@@ -19,6 +19,7 @@ namespace RetroDevStudio
     public Searching          Searching;
     public Navigating         Navigating;
     public Executing          Executing;
+    public Notification       Notification;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
     public const string       StudioVersion = Version.VersionBase;
@@ -37,14 +38,15 @@ namespace RetroDevStudio
 
     public StudioCore()
     {
-      Compiling = new Compiling( this );
-      Searching = new Searching( this );
-      Navigating = new Navigating( this );
-      TaskManager = new Tasks.TaskManager( this );
-      Debugging = new Debugging( this );
-      Executing = new Executing( this );
-      Imaging = new Imaging( this );
-      Theming = new StudioTheme( this );
+      Compiling     = new Compiling( this );
+      Searching     = new Searching( this );
+      Navigating    = new Navigating( this );
+      TaskManager   = new Tasks.TaskManager( this );
+      Debugging     = new Debugging( this );
+      Executing     = new Executing( this );
+      Imaging       = new Imaging( this );
+      Theming       = new StudioTheme( this );
+      Notification  = new Notification( this );
 
       StaticCore = this;
     }

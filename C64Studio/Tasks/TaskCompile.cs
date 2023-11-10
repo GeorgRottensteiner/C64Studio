@@ -521,24 +521,20 @@ namespace RetroDevStudio.Tasks
           case StudioState.BUILD:
           case StudioState.BUILD_PRE_PROCESSED_FILE:
           case StudioState.BUILD_RELOCATION_FILE:
-            if ( Core.Settings.PlaySoundOnSuccessfulBuild )
+            Core.Notification.BuildSuccess();
+            if ( Core.MainForm.AppState == StudioState.BUILD_PRE_PROCESSED_FILE )
             {
-              System.Media.SystemSounds.Asterisk.Play();
+              Core.MainForm.AppState = Types.StudioState.NORMAL;
 
-              if ( Core.MainForm.AppState == StudioState.BUILD_PRE_PROCESSED_FILE )
-              {
-                Core.MainForm.AppState = Types.StudioState.NORMAL;
+              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
+              Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
+            }
+            else if ( Core.MainForm.AppState == StudioState.BUILD_RELOCATION_FILE )
+            {
+              Core.MainForm.AppState = Types.StudioState.NORMAL;
 
-                string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
-                Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
-              }
-              else if ( Core.MainForm.AppState == StudioState.BUILD_RELOCATION_FILE )
-              {
-                Core.MainForm.AppState = Types.StudioState.NORMAL;
-
-                string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".loc" );
-                Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
-              }
+              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".loc" );
+              Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
             }
             Core.MainForm.AppState = Types.StudioState.NORMAL;
             break;
@@ -624,20 +620,14 @@ namespace RetroDevStudio.Tasks
             if ( project == null )
             {
               Core.AddToOutput( "Could not find project \"" + dependency.Project + "\" for dependency \"" + dependency.Filename + "\" for \"" + Doc.DocumentFilename + "\"" + System.Environment.NewLine );
-              if ( Core.Settings.PlaySoundOnBuildFailure )
-              {
-                System.Media.SystemSounds.Exclamation.Play();
-              }
+              Core.Notification.BuildFailure();
             }
 
             ProjectElement elementDependency = project.GetElementByFilename( dependency.Filename );
             if ( elementDependency == null )
             {
               Core.AddToOutput( "Could not find dependency \"" + dependency.Filename + "\" in project \"" + dependency.Project + "\" for \"" + Doc.DocumentFilename + "\"" + System.Environment.NewLine );
-              if ( Core.Settings.PlaySoundOnBuildFailure )
-              {
-                System.Media.SystemSounds.Exclamation.Play();
-              }
+              Core.Notification.BuildFailure();
               return false;
             }
 
@@ -836,10 +826,7 @@ namespace RetroDevStudio.Tasks
             Core.ShowDocument( Core.MainForm.m_CompileResult, false );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
-            if ( Core.Settings.PlaySoundOnBuildFailure )
-            {
-              System.Media.SystemSounds.Exclamation.Play();
-            }
+            Core.Notification.BuildFailure();
 
             if ( asmFileInfo != null )
             {
@@ -898,10 +885,7 @@ namespace RetroDevStudio.Tasks
             Core.ShowDocument( Core.MainForm.m_CompileResult, false );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
-            if ( Core.Settings.PlaySoundOnBuildFailure )
-            {
-              System.Media.SystemSounds.Exclamation.Play();
-            }
+            Core.Notification.BuildFailure();
             return false;
           }
           BuildInfo.TargetFile = compileTargetFile;
@@ -925,10 +909,7 @@ namespace RetroDevStudio.Tasks
         {
           Core.AddToOutput( "No target file name specified" + System.Environment.NewLine );
           Core.MainForm.AppState = Types.StudioState.NORMAL;
-          if ( Core.Settings.PlaySoundOnBuildFailure )
-          {
-            System.Media.SystemSounds.Exclamation.Play();
-          }
+          Core.Notification.BuildFailure();
           return false;
         }
         // write output if applicable
@@ -944,10 +925,7 @@ namespace RetroDevStudio.Tasks
             Core.AddToOutput( "Build failed, Could not create output file " + parser.CompileTargetFile + System.Environment.NewLine );
             Core.AddToOutput( ex.ToString() + System.Environment.NewLine );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
-            if ( Core.Settings.PlaySoundOnBuildFailure )
-            {
-              System.Media.SystemSounds.Exclamation.Play();
-            }
+            Core.Notification.BuildFailure();
             return false;
           }
 
