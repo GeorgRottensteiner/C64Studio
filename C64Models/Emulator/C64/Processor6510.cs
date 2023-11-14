@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using static Tiny64.Opcode;
+
+
 
 namespace Tiny64
 {
-  public partial class Processor
+  public class Processor6510 : Processor
   {
-    public string         Name = "";
-    public Dictionary<string, List<Opcode>>           Opcodes = new Dictionary<string, List<Opcode>>();
-    public Dictionary<byte, Opcode>                   OpcodeByValue = new Dictionary<byte, Opcode>();
-
     public byte           Accu = 0;
     public byte           X = 0;
     public byte           Y = 0;
@@ -19,13 +15,18 @@ namespace Tiny64
     public ushort         PC = 0;
     public byte           StackPointer = 0xff;
 
-    public bool           LittleEndian = true;
 
 
-
-    public Processor( string Name )
+    public Processor6510() : base( "6510" )
     {
-      this.Name = Name;
+      Accu          = 0;
+      X             = 0;
+      Y             = 0;
+      Flags         = 0;
+      PC            = 0;
+      StackPointer  = 0xff;
+
+      LittleEndian  = true;
     }
 
 
@@ -205,45 +206,6 @@ namespace Tiny64
     internal void CheckFlagNegativeX()
     {
       FlagNegative = ( ( X & 0x80 ) != 0 );
-    }
-
-
-
-    public Opcode AddOpcode( string Opcode, ulong ByteValue, int NumOperands, AddressingType Addressing, int NumCycles )
-    {
-      return AddOpcode( Opcode, ByteValue, NumOperands, Addressing, NumCycles, 0, 0, 0 );
-    }
-
-
-
-    public Opcode AddOpcode( string Opcode, ulong ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles )
-    {
-      return AddOpcode( Opcode, ByteValue, NumOperands, Addressing, NumCycles, PageBoundaryCycles, 0, 0 );
-    }
-
-
-
-    public Opcode AddOpcode( string Opcode, ulong ByteValue, int NumOperands, AddressingType Addressing, int NumCycles, int PageBoundaryCycles, int BranchSamePagePenalty, int BranchOtherPagePenalty )
-    {
-      if ( !Opcodes.ContainsKey( Opcode ) )
-      {
-        Opcodes.Add( Opcode, new List<Opcode>() );
-      }
-      Opcode opcode = new Opcode( Opcode, ByteValue, NumOperands, Addressing, NumCycles, PageBoundaryCycles, BranchSamePagePenalty, BranchOtherPagePenalty );
-      Opcodes[Opcode].Add( opcode );
-      if ( !OpcodeByValue.ContainsKey( (byte)ByteValue ) )
-      {
-        OpcodeByValue.Add( (byte)ByteValue, opcode );
-      }
-      return opcode;
-    }
-
-
-
-    public void AddOpcodeForDisassembly( string Opcode, uint ByteValue, int NumOperands, AddressingType Addressing )
-    {
-      Opcode opcode = new Opcode( Opcode, ByteValue, NumOperands, Addressing );
-      OpcodeByValue.Add( (byte)ByteValue, opcode );
     }
 
 

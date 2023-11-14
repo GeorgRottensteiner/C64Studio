@@ -9,9 +9,9 @@
 <body>
   <H3>Assembler - Pseudo Operations</H3>
   <div id="mybody">
-    These pseudo ops are supported in ACME/C64Studio mode:<br>
-    <br>
-    <br>
+    These pseudo ops are supported in ACME/C64Studio mode:<br />
+    <br />
+    <br />
     <ul>
       <li><a href="#address">!ADDRESS, !ADDR</a></li>
       <li><a href="#align">!ALIGN</a></li>
@@ -40,6 +40,7 @@
       <li><a href="#pseudopc">!PSEUDOPC</a></li>
       <li><a href="#realign">!REALIGN</a></li>
       <li><a href="#realpc">!REALPC</a></li>
+      <li><a href="#scrxor">!SCRXOR</a></li>
       <li><a href="#set">!SET</a></li>
       <li><a href="#skip">!SKIP</a></li>
       <li><a href="#sl">!SL</a></li>
@@ -51,479 +52,514 @@
       <li><a href="#word">!WORD, !WO, !16, !BE16, !LE16</a></li>
       <li><a href="#zone">!ZONE, !ZN</a></li>
     </ul>
-    <br>
-    <br>
+    <br />
+    <br />
   </div>
   <a name="address"></a>
-    <H2>!ADDRESS, !ADDR {</H2>
-    <div id="mybody">
-      This pseudo is currently a noop added for ACME compatibility. Intention: Any labels declared inside are marked as being addresses and will throw a warning when used in immediate addressing opcodes.<br>
-      <br>
-      <br>
-      <div id="code"><br>      !address {
-        SCREEN_ADDRESS = $0400
+  <H2>!ADDRESS, !ADDR {</H2>
+  <div id="mybody">
+    This pseudo is currently a noop added for ACME compatibility. Intention: Any labels declared inside are marked as being addresses and will throw a warning when used in immediate addressing opcodes.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !address {
+      SCREEN_ADDRESS = $0400
       }
-        <br></div>
-      <br>
-      <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="align"></a>
   <H2>!ALIGN &lt;andvalue&gt;,&lt;equalvalue&gt;[,&lt;fillvalue&gt;]</H2>
   <div id="mybody">
-    This pseudo op fills memory until a matching address is reached. Fill value is output until program counter and [andvalue] equal [equalvalue].<br>
-    If [fillvalue] is omitted 0 is used.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !align 1,0       ;wait for even address
+    This pseudo op fills memory until a matching address is reached. Fill value is output until program counter and [andvalue] equal [equalvalue].<br />
+    If [fillvalue] is omitted 0 is used.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !align 1,0       ;wait for even address
       !align 255,0     ;align code to page border
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="bank"></a>
   <H2>!BANK &lt;bank index&gt;[,&lt;bank size&gt;]</H2>
   <div id="mybody">
-    This pseudo op is for the support of cartridge banks. Any following assembled code is filled to the given bank size when the end of file or another !BANK pseudo op is encountered.<br>
-    <br>
-    If the size argument is not used the size from a previous !BANK statement will be used.<br>
-    <br>
-    <br>
-    Usually !BANK will be used in conjunction with a !PSEUDOPC.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !bank 0,$2000
-    <br></div>
-    <br>
-    <br>
+    This pseudo op is for the support of cartridge banks. Any following assembled code is filled to the given bank size when the end of file or another !BANK pseudo op is encountered.<br />
+    <br />
+    If the size argument is not used the size from a previous !BANK statement will be used.<br />
+    <br />
+    <br />
+    Usually !BANK will be used in conjunction with a !PSEUDOPC.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !bank 0,$2000
+    </div>
+    <br />
+    <br />
   </div>
   <a name="basic"></a>
-  <H2>!BASIC [,&lt;jump address&gt;]<br>!BASIC &lt;line number&gt;,&lt;label&gt;<br>!BASIC &lt;line number&gt;,&lt;special/tokens,&gt;,&lt;label&gt;</H2>
+  <H2>!BASIC [,&lt;jump address&gt;]<br />!BASIC &lt;line number&gt;,&lt;label&gt;<br />!BASIC &lt;line number&gt;,&lt;special/tokens,&gt;,&lt;label&gt;</H2>
   <div id="mybody">
     This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.
-    If the jump address is 5 decimal digits the line will use 13 bytes.<br>
-    <br>
-    Note: If !cpu is set to m65 (Mega65) the !basic directive will add a line before the actual SYS call setting the bank to 0 (10 BANK 0). All other parts will be moved to the second line.<br>
-    <br>
-    If a string comment is used it is appended directly after the SYS number.<br>
-    Note: If no colon is added this will result in a syntax error when returning to BASIC.<br>
-    <br>
-    <br>
-    <b>Example #1 - standard, no parameters</b><br>
-    <br>
-    <div id="code"><br>      *=$0801
+    If the jump address is 5 decimal digits the line will use 13 bytes.<br />
+    <br />
+    Note: If !cpu is set to m65 (Mega65) the !basic directive will add a line before the actual SYS call setting the bank to 0 (10 BANK 0). All other parts will be moved to the second line.<br />
+    <br />
+    If a string comment is used it is appended directly after the SYS number.<br />
+    Note: If no colon is added this will result in a syntax error when returning to BASIC.<br />
+    <br />
+    <br />
+    <b>Example #1 - standard, no parameters</b><br />
+    <br />
+    <div id="code">
+      <br />      *=$0801
       ;12 bytes basic sys call
-    !basic
+      !basic
 
       ;SYS call jumps here
       rts
-    <br></div>
-    <br>
-    BASIC listing looks like:<br>
-    <br>
-    <div id="code"><br>    10 SYS2061
-    <br></div>
-    <br>
-    BASIC listing looks like for !cpu M65:<br>
-    <br>
-    <div id="code"><br>    10 MODE0
-    20 SYS2061
-    <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    BASIC listing looks like:<br />
+    <br />
+    <div id="code">
+      <br />    10 SYS2061
+      <br />
+    </div>
+    <br />
+    BASIC listing looks like for !cpu M65:<br />
+    <br />
+    <div id="code">
+      <br />    10 MODE0
+      20 SYS2061
+    </div>
+    <br />
+    <br />
 
 
-    <b>Example #2 - start address</b><br>
-    <br>
-    <div id="code"><br>      *=$0801
+    <b>Example #2 - start address</b><br />
+    <br />
+    <div id="code">
+      <br />      *=$0801
       ;12 bytes basic sys call
-    !basic init
+      !basic init
 
-    init
+      init
       ;SYS call jumps here
       rts
-    <br></div>
-    <br>
-    BASIC listing looks like:<br>
-    <br>
-    <div id="code"><br>    10 SYS2061
-    <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    BASIC listing looks like:<br />
+    <br />
+    <div id="code">
+      <br />    10 SYS2061
+    </div>
+    <br />
+    <br />
 
-    <b>Example #3 - line number and start address</b><br>
-    <br>
-    <div id="code"><br>      *=$0801
+    <b>Example #3 - line number and start address</b><br />
+    <br />
+    <div id="code">
+      <br />      *=$0801
       ;12 bytes basic sys call
-    !basic 2021, init
+      !basic 2021, init
 
-    init
+      init
       ;SYS call jumps here
       rts
-    <br></div>
-    <br>
-    BASIC listing looks like:<br>
-    <br>
-    <div id="code"><br>    2021 SYS2061
-    <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    BASIC listing looks like:<br />
+    <br />
+    <div id="code">
+      <br />    2021 SYS2061
+    </div>
+    <br />
+    <br />
 
 
-    <b>Example #4 - full monty, line number, tokens/text and start address</b><br>
-    <br>
-    <div id="code"><br>      *=$0801
+    <b>Example #4 - full monty, line number, tokens/text and start address</b><br />
+    <br />
+    <div id="code">
+      <br />      *=$0801
       ;29 bytes basic sys call
       ;sys call is followed by colon, a REM token, 4 backspaces to hide them during LIST, and the actual comment
-    !basic 2021, ":", $8F, $14,$14,$14,$14, " MY COMMENT", init
+      !basic 2021, ":", $8F, $14,$14,$14,$14, " MY COMMENT", init
 
-    init
+      init
       ;SYS call jumps here
       rts
-    <br></div>
-    <br>
-    BASIC listing looks like:<br>
-    <br>
-    <div id="code"><br>    2021 SYS2061 MY COMMENT
-    <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    BASIC listing looks like:<br />
+    <br />
+    <div id="code">
+      <br />    2021 SYS2061 MY COMMENT
+    </div>
+    <br />
+    <br />
   </div>
   <a name="binary"></a><a name="bin"></a><a name="bi"></a>
   <H2>!BINARY, !BIN, !BI &lt;file name&gt;[,&lt;size&gt;,[&lt;skip&gt;]]</H2>
   <div id="mybody">
-    This pseudo op inserts a file as binary data.<br>
-    <br>
-    &lt;size&gt; sets the number of bytes that are read from the file. If it is not set the whole file is included.<br>
-    <br>
-    &lt;skip&gt; sets the number of bytes that are skipped from the start of the file. If it is not set no bytes are skipped.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !bin "soulless20.bin"
+    This pseudo op inserts a file as binary data.<br />
+    <br />
+    &lt;size&gt; sets the number of bytes that are read from the file. If it is not set the whole file is included.<br />
+    <br />
+    &lt;skip&gt; sets the number of bytes that are skipped from the start of the file. If it is not set no bytes are skipped.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !bin "soulless20.bin"
       !binary "music.prg",,2
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="byte"></a><a name="by"></a><a name="8"></a><a name="08"></a>
   <H2>!BYTE, !BY, !8, !08</H2>
   <div id="mybody">
-    This pseudo op allows to insert one ore more bytes at the current location.<br>
-    <br>
-    Allowed are constant values, expressions and labels as content.<br>
-    Constant values can be set as decimal, hexadecimal (with prefixed $), chars (surrounded by ' or ").<br>
-    Labels are treated as 16-bit values. To get the high or low byte prefix the label with &lt; (low byte) or &gt; (high byte)<br>
-    Expressions are evaluated during the final pass. They must evaluate to a valid byte value.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !byte 1,3,6,3,1
+    This pseudo op allows to insert one ore more bytes at the current location.<br />
+    <br />
+    Allowed are constant values, expressions and labels as content.<br />
+    Constant values can be set as decimal, hexadecimal (with prefixed $), chars (surrounded by ' or ").<br />
+    Labels are treated as 16-bit values. To get the high or low byte prefix the label with &lt; (low byte) or &gt; (high byte)<br />
+    Expressions are evaluated during the final pass. They must evaluate to a valid byte value.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !byte 1,3,6,3,1
       !byte &lt;NoBehaviour
       !byte ( SCREEN_CHAR + 0 ) & 0x00ff
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="convtab"></a><a name="ct"></a>
   <H2>!CONVTAB, !CT &lt;raw/scr/pet/mapping list&gt;</H2>
   <div id="mybody">
-    This pseudo op allows sets a conversion table for text in !TEXT entries. You can pass either <b>raw</b>, <b>scr</b> or <b>pet</b> for inbuilt mapping, or provide a manual mapping list.<br>
-    <br>
-    If RAW is set byte values are inserted as is. Any existing mapping list is cleared.<br>
-    <br>
-    If SCR is set any byte values are mapped to screen codes. Any existing mapping list is cleared.<br>
-    <br>
-    PET works like text but reverses character casing. Any existing mapping list is cleared.<br>
-    <br>
-    A byte list is treated as a pair of bytes, first the original character, second the replacement byte. A mapping list can be split over several lines.<br>
-    <br>
-    !text defaults to raw encoding.<br>
-    <br>
-    <div id="code"><br>      !CONVTAB scr
+    This pseudo op allows sets a conversion table for text in !TEXT entries. You can pass either <b>raw</b>, <b>scr</b> or <b>pet</b> for inbuilt mapping, or provide a manual mapping list.<br />
+    <br />
+    If RAW is set byte values are inserted as is. Any existing mapping list is cleared.<br />
+    <br />
+    If SCR is set any byte values are mapped to screen codes. Any existing mapping list is cleared.<br />
+    <br />
+    PET works like text but reverses character casing. Any existing mapping list is cleared.<br />
+    <br />
+    A byte list is treated as a pair of bytes, first the original character, second the replacement byte. A mapping list can be split over several lines.<br />
+    <br />
+    !text defaults to raw encoding.<br />
+    <br />
+    <div id="code">
+      <br />      !CONVTAB scr
       !text "HELLO WORLD"
 
       !CT 'A',17,'B',18,'C',19,'D',20,'E',21,'F',22,'G',23,'H',24,'I',25,'J',26,'K',27,'L',28,'M',29,'N',30,'O',31,'P',32,'Q',33,'R',34,'S',35,'T',36
       !CT 'U',37,'V',38,'W',39,'X',40,'Y',41,'Z',42,'0',5,'1',6,'2',7,'3',8,'4',9,'5',10,'6',11,'7',12,'8',13,'9',14,'*',0,' ',16,'.',113
 
       !text "HELLO WORLD AGAIN"
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="cpu"></a>
   <H2>!CPU &lt;cpu type&gt;</H2>
   <div id="mybody">
-    This pseudo op sets the processor to assemble for. Currently there are four supported processors. Default is 6510.<br>
-    <br>
-    * 6502 - 6502 without illegal opcodes<br>
-    * 6510 - Default 6510 with illegal opcodes (used e.g. in C64)<br>
-    * 65C02 - 6502 with BRA, PHX/Y, PLX/Y, STZ, TRB/TSB<br>
-    * R65C02 - 65C02 with BBRx, BBSx, RMBx, SMBx<br>
-    * W65C02 - WDC 65C02<br>
-    * 65CE02<br>
-    * 4502<br>
-    * M65 - 4502 with long and quad mode using prefixes (used e.g. in Mega65)<br>
-    * 65816 (also known as W65C816S or 65C816)<br>
-    <br>
-    <br>
-    <div id="code"><br>      !cpu 6510
-    <br></div>
-    <br>
-    <br>
+    This pseudo op sets the processor to assemble for. Currently there are four supported processors. Default is 6510.<br />
+    <br />
+    * 6502 - 6502 without illegal opcodes<br />
+    * 6510 - Default 6510 with illegal opcodes (used e.g. in C64)<br />
+    * 65C02 - 6502 with BRA, PHX/Y, PLX/Y, STZ, TRB/TSB<br />
+    * R65C02 - 65C02 with BBRx, BBSx, RMBx, SMBx<br />
+    * W65C02 - WDC 65C02<br />
+    * 65CE02<br />
+    * 4502<br />
+    * M65 - 4502 with long and quad mode using prefixes (used e.g. in Mega65)<br />
+    * 65816 (also known as W65C816S or 65C816)<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !cpu 6510
+    </div>
+    <br />
+    <br />
   </div>
   <a name="dword"></a>
   <H2>!DWORD, !32, !LE32, !BE32</H2>
   <div id="mybody">
-    This pseudo op allows to insert a double word (4 bytes) at the current location.<br>
-    <br>
-    Allowed are constant values, expressions and labels as content.<br>
-    Constant values can be set as decimal, hexadecimal (with prefixed $).<br>
-    Labels are treated as 32-bit values. Default is little endian, unless !BE32 is used.<br>
-    Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !dword 128,270,320
+    This pseudo op allows to insert a double word (4 bytes) at the current location.<br />
+    <br />
+    Allowed are constant values, expressions and labels as content.<br />
+    Constant values can be set as decimal, hexadecimal (with prefixed $).<br />
+    Labels are treated as 32-bit values. Default is little endian, unless !BE32 is used.<br />
+    Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !dword 128,270,320
       !32 NoBehaviour
       !le32 ( SCREEN_CHAR + 40 )
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="end"></a>
   <H2>!END</H2>
   <div id="mybody">
-    This pseudo op specifies the end of a !FOR or !MACRO function.<br>
-    <br>
-    <br>
+    This pseudo op specifies the end of a !FOR or !MACRO function.<br />
+    <br />
+    <br />
   </div>
   <a name="eof"></a><a name="endoffile"></a>
   <H2>!ENDOFFILE, !EOF</H2>
   <div id="mybody">
-    This pseudo op ends the parsing of the file at the current line.<br>
-    <br>
-    <div id="code"><br>      rts
+    This pseudo op ends the parsing of the file at the current line.<br />
+    <br />
+    <div id="code">
+      <br />      rts
 
       !endoffile
 
       This file is a carefully handcrafted demo
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="error"></a>
   <H2>!ERROR, !SERIOUS &lt;message&gt;</H2>
   <div id="mybody">
-    This pseudo op adds an error message to the compile result, essentially breaking the build. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br>
-    <br>
-    This pseudo op can be useful inside conditional pseudo op statements to do safety checking.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !error "File is ", CODE_END - CODE_START, " bytes long, longer than 2048 bytes!"
-    <br></div>
-    <br>
-    <br>
+    This pseudo op adds an error message to the compile result, essentially breaking the build. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br />
+    <br />
+    This pseudo op can be useful inside conditional pseudo op statements to do safety checking.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !error "File is ", CODE_END - CODE_START, " bytes long, longer than 2048 bytes!"
+    </div>
+    <br />
+    <br />
   </div>
   <a name="for"></a>
   <H2>!FOR &lt;Variable&gt; = &lt;Start Value Expression&gt; TO &lt;End Value Expression&gt; [STEP &lt;Step Value Expression&gt;]</H2>
   <div id="mybody">
-    This pseudo op starts a for loop. To end a for loop specify !END<br>
-    <Variable> can be global or local (local starts with a dot)<br>
-    Start value, end value and step value are treated as expressions.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !for ROW = 0 TO 24
-          lda BACK_BUFFER + ROW * 40
-          sta SCREEN_CHAR + ROW * 40
+    This pseudo op starts a for loop. To end a for loop specify !END<br />
+    <Variable>
+      can be global or local (local starts with a dot)<br />
+      Start value, end value and step value are treated as expressions.<br />
+      <br />
+      <br />
+      <div id="code">
+        <br />      !for ROW = 0 TO 24
+        lda BACK_BUFFER + ROW * 40
+        sta SCREEN_CHAR + ROW * 40
         !end
-        <br></div>
-    <br>
-    <br>
+      </div>
+      <br />
+      <br />
+    </Variable>
   </div>
   <a name="fill"></a><a name="fi"></a>
-  <H2>!FILL, !FI &lt;count&gt;[,&lt;value&gt;]<br>
-  !FILL, !FI &lt;count&gt;,[expression (list)]</H2>
+  <H2>
+    !FILL, !FI &lt;count&gt;[,&lt;value&gt;]<br />
+    !FILL, !FI &lt;count&gt;,[expression (list)]
+  </H2>
   <div id="mybody">
-    This pseudo op fills the given value count times at the current location.<br>
+    This pseudo op fills the given value count times at the current location.<br />
     The expression form can be a list, several expressions are separated by comma. !fill uses every element of a list after each other, and restarts at the first element if required.
-    The calculation is evaluated for every byte. The expression inside the brackets uses the label "i" as index, counting the usage of the full list. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
-    <br>
-    <b>Example #1 - simple fill</b><br>
-    <br>
-    <div id="code"><br>      !fill 8
-    <br></div>
-    <br>
-    Fills 8 bytes with value zero.<br>
-    <br>
+    The calculation is evaluated for every byte. The expression inside the brackets uses the label "i" as index, counting the usage of the full list. Any global "i" label is suspended inside the brackets and restored afterwards.<br />
+    <br />
+    <b>Example #1 - simple fill</b><br />
+    <br />
+    <div id="code">
+      <br />      !fill 8
+    </div>
+    <br />
+    Fills 8 bytes with value zero.<br />
+    <br />
 
-    <b>Example #2 - simple fill with value</b><br>
-    <br>
-    <div id="code"><br>      !fill 8,$ff
-    <br></div>
-    <br>
-    Fills 8 bytes with value $ff.<br>
-    <br>
+    <b>Example #2 - simple fill with value</b><br />
+    <br />
+    <div id="code">
+      <br />      !fill 8,$ff
+    </div>
+    <br />
+    Fills 8 bytes with value $ff.<br />
+    <br />
 
-    <b>Example #3 - fill with expression</b><br>
-    <br>
-    <div id="code"><br>      !fill 5, [i * 3]
-    <br></div>
-    <br>
-    Fills 5 bytes, with values 0, 3, 6, 9, 12.<br>
-    <br>
+    <b>Example #3 - fill with expression</b><br />
+    <br />
+    <div id="code">
+      <br />      !fill 5, [i * 3]
+    </div>
+    <br />
+    Fills 5 bytes, with values 0, 3, 6, 9, 12.<br />
+    <br />
 
-    <b>Example #4 - fill with list</b><br>
-        <br>
-        <div id="code"><br>      !fill 4, [0,i]
-        <br></div>
-        <br>
-        Fills 4 * 2 bytes, with values 0, 0, 0, 1, 0, 2 0, 3.<br>
-    <br>
-    <br>
+    <b>Example #4 - fill with list</b><br />
+    <br />
+    <div id="code">
+      <br />      !fill 4, [0,i]
+    </div>
+    <br />
+    Fills 4 * 2 bytes, with values 0, 0, 0, 1, 0, 2 0, 3.<br />
+    <br />
+    <br />
   </div>
   <a name="hex"></a><a name="h"></a>
   <H2>!HEX, !H &lt;hex data&gt;</H2>
   <div id="mybody">
-    This pseudo op interprets the rest of the line as hex data, no commas or prefixes like $ or 0x. Data may be separated by spaces, but pairs need to be intact.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !hex f0 f1 f2 f3
+    This pseudo op interprets the rest of the line as hex data, no commas or prefixes like $ or 0x. Data may be separated by spaces, but pairs need to be intact.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !hex f0 f1 f2 f3
       !h f0f1f2f3
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="ifdef"></a><a name="if"></a>
   <H2>!IF, !IFDEF &lt;expression&gt; {</H2>
   <div id="mybody">
-    This pseudo op starts an conditional block. The conditional block is only evaluated if the expression yields a result not equal to zero. The opening curly brace must be on the same line.<br>
-    <br>
-    !IF checks if the expression is not equal zero, !IFDEF only checks if the expression is defined at all.<br>
-    <br>
-    A conditional block has to end with a closing curly brace. An optional else or else if statement may open an opposite conditional block, however it must be stated on one line.<br>
-    <br>
-    <div id="code"><br>      !ifdef MUSIC_PLAYING{
-          ;initialise music player
-          ldx #0
-          ldy #0
-          lda #MUSIC_TITLE_TUNE
-          jsr MUSIC_PLAYER
-        } else if SFX_PLAYING {
-          ;start sfx engine
-          lda #0
-          jsr SFX_PLAYER
-        } else {
-          lda #7
-          sta VIC_BORDER_COLOR
-        }
-        <br></div>
-    <br>
-    <br>
+    This pseudo op starts an conditional block. The conditional block is only evaluated if the expression yields a result not equal to zero. The opening curly brace must be on the same line.<br />
+    <br />
+    !IF checks if the expression is not equal zero, !IFDEF only checks if the expression is defined at all.<br />
+    <br />
+    A conditional block has to end with a closing curly brace. An optional else or else if statement may open an opposite conditional block, however it must be stated on one line.<br />
+    <br />
+    <div id="code">
+      <br />      !ifdef MUSIC_PLAYING{
+      ;initialise music player
+      ldx #0
+      ldy #0
+      lda #MUSIC_TITLE_TUNE
+      jsr MUSIC_PLAYER
+      } else if SFX_PLAYING {
+      ;start sfx engine
+      lda #0
+      jsr SFX_PLAYER
+      } else {
+      lda #7
+      sta VIC_BORDER_COLOR
+      }
+    </div>
+    <br />
+    <br />
   </div>
   <a name="ifndef"></a>
   <H2>!IFNDEF &lt;expression&gt; {</H2>
   <div id="mybody">
-    This pseudo op starts an conditional block. The conditional block is only evaluated if the expression yields a result of zero. The opening curly brace must be on the same line.<br>
-    <br>
-    A conditional block has to end with a closing curly brace. An optional else or else if statement may open an opposite conditional block, however it must be stated on one line.<br>
-    <br>
-    <div id="code"><br>      !ifndef COMPILE_CRUNCHED {
-        CHARSET
-          !binary "soulless1.chr"
-          !binary "soulless2.chr"
+    This pseudo op starts an conditional block. The conditional block is only evaluated if the expression yields a result of zero. The opening curly brace must be on the same line.<br />
+    <br />
+    A conditional block has to end with a closing curly brace. An optional else or else if statement may open an opposite conditional block, however it must be stated on one line.<br />
+    <br />
+    <div id="code">
+      <br />      !ifndef COMPILE_CRUNCHED {
+      CHARSET
+      !binary "soulless1.chr"
+      !binary "soulless2.chr"
 
-        CHARSET_PANEL
-          !binary "panel.chr"
+      CHARSET_PANEL
+      !binary "panel.chr"
 
-        SPRITES
-          !binary "soulless.spr"
-        } else if COMPILE_FOR_TAPE {
-          lda #1
-          sta AUTO_LOAD
-        } else {
-          lda #0
-          sta AUTO_LOAD
-        }
-        <br></div>
-    <br>
-    <br>
+      SPRITES
+      !binary "soulless.spr"
+      } else if COMPILE_FOR_TAPE {
+      lda #1
+      sta AUTO_LOAD
+      } else {
+      lda #0
+      sta AUTO_LOAD
+      }
+    </div>
+    <br />
+    <br />
   </div>
   <a name="list"></a>
   <H2>!LIST &lt;on/off&gt;</H2>
   <div id="mybody">
-    This pseudo op allows to suppress output in preprocessed files. Use !list on to turn on, and !list off to turn off.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !list off
-    <br></div>
-    <br>
-    <br>
+    This pseudo op allows to suppress output in preprocessed files. Use !list on to turn on, and !list off to turn off.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !list off
+    </div>
+    <br />
+    <br />
   </div>
   <a name="lzone"></a>
   <H2>!LZONE &lt;zone/label name&gt;</H2>
   <div id="mybody">
-    This pseudo op declares a new zone plus a global label with the same name. Any local labels (labels starting with '.') are only accessible inside their containing zone.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !lzone MainZone
+    This pseudo op declares a new zone plus a global label with the same name. Any local labels (labels starting with '.') are only accessible inside their containing zone.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !lzone MainZone
       .locallabel
       ...
       !zone SubZone
       .locallabel
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="macro"></a>
   <H2>!MACRO &lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]</H2>
   <div id="mybody">
-    This pseudo op defines a macro function. To end the body of a function specify !END<br>
-    The number of parameters is variable. Optionally a !macro definition may also be encapsulated by {, } curly braces.<br>
-    <br>
-    To call a macro use +&lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]<br>
-    <br>
-    <br>
-    <div id="code"><br>      !macro fill5bytes v1,v2,v3,v4,v5
-        lda #v1
-        sta 1024
-        lda #v2
-        sta 1025
-        lda #v3
-        sta 1026
-        lda #v4
-        sta 1027
-        lda #v5
-        sta 1028
-        !end
+    This pseudo op defines a macro function. To end the body of a function specify !END<br />
+    The number of parameters is variable. Optionally a !macro definition may also be encapsulated by {, } curly braces.<br />
+    <br />
+    To call a macro use +&lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !macro fill5bytes v1,v2,v3,v4,v5
+      lda #v1
+      sta 1024
+      lda #v2
+      sta 1025
+      lda #v3
+      sta 1026
+      lda #v4
+      sta 1027
+      lda #v5
+      sta 1028
+      !end
 
-        !macro fill3bytes v1,v2,v3 {
-        lda #v1
-        sta 1064
-        lda #v2
-        sta 1065
-        lda #v3
-        sta 1066
-        }
+      !macro fill3bytes v1,v2,v3 {
+      lda #v1
+      sta 1064
+      lda #v2
+      sta 1065
+      lda #v3
+      sta 1066
+      }
 
-        lda #$01
-        sta $d021
+      lda #$01
+      sta $d021
 
-        +fill5bytes 10,20,30,40,50
-        +fill3bytes 17,18,19
+      +fill5bytes 10,20,30,40,50
+      +fill3bytes 17,18,19
 
-        inc $d020
-        <br></div>
-    <br>
-    <br>
+      inc $d020
+    </div>
+    <br />
+    <br />
   </div>
   <a name="media"></a>
   <H2>!MEDIA &lt;File name&gt;,&lt;Method&gt;[,&lt;Method Parameters&gt;...]</H2>
   <div id="mybody">
     This pseudo op allows to directly include relevant portions of different binary or project files. Currently the pseudo op supports character files (*.chr), character project files (*.charsetproject),
     sprite files (*.spr), sprite project files( *.spriteproject), character screen project files (*.charsetscreen), graphic screen project files (*.graphicscreen) and map project files (*.mapproject).
-    <br>
-    Method defines what and in which order to export data. The method depends on the given file.<br>
-    <br>
-    Method Parameters are optional and determine a subset of the export data as applicable.<br>
-    <br>
-    <br>
+    <br />
+    Method defines what and in which order to export data. The method depends on the given file.<br />
+    <br />
+    Method Parameters are optional and determine a subset of the export data as applicable.<br />
+    <br />
+    <br />
     <table>
       <tr>
         <th>
@@ -1199,7 +1235,7 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen char data<br>
+          Exports 40 * 25 bytes of the screen char data<br />
           followed by 40 * 25 bytes of the screen color data
         </td>
       </tr>
@@ -1217,8 +1253,8 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen char data<br>
-          followed by 40 * 25 bytes of the screen color data<br>
+          Exports 40 * 25 bytes of the screen char data<br />
+          followed by 40 * 25 bytes of the screen color data<br />
           Both column major
         </td>
       </tr>
@@ -1236,7 +1272,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen char data<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
           followed by width * height bytes starting at screen coordinates x,y of the screen color data
         </td>
       </tr>
@@ -1254,8 +1290,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen char data<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen color data<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen color data<br />
           Both column major
         </td>
       </tr>
@@ -1273,7 +1309,7 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data<br>
+          Exports 40 * 25 bytes of the screen color data<br />
           followed by 40 * 25 bytes of the screen char data
         </td>
       </tr>
@@ -1291,8 +1327,8 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data<br>
-          followed by 40 * 25 bytes of the screen char data<br>
+          Exports 40 * 25 bytes of the screen color data<br />
+          followed by 40 * 25 bytes of the screen char data<br />
           Both column major
         </td>
       </tr>
@@ -1310,7 +1346,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen color data<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
           followed by width * height bytes starting at screen coordinates x,y of the screen char data
         </td>
       </tr>
@@ -1328,8 +1364,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen color data<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen char data<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen char data<br />
           Both column major
         </td>
       </tr>
@@ -1534,7 +1570,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1569,7 +1605,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data interpreted as hires<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data interpreted as hires<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1604,7 +1640,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen data<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1639,7 +1675,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the color data<br>
+          Exports width * height bytes starting at screen coordinates x,y of the color data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1657,7 +1693,7 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data<br />
           followed by 40 * 25 (1000) bytes of the screen data
         </td>
       </tr>
@@ -1675,7 +1711,7 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data interpreted as hires<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data interpreted as hires<br />
           followed by 40 * 25 (1000) bytes of the screen data
         </td>
       </tr>
@@ -1693,8 +1729,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen data<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1712,8 +1748,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data interpreted as hires<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen data<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data interpreted as hires<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1731,8 +1767,8 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data<br>
-          followed by 40 * 25 (1000) bytes of the screen data<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data<br />
+          followed by 40 * 25 (1000) bytes of the screen data<br />
           followed by 40 * 25 (1000) bytes of the color data
         </td>
       </tr>
@@ -1750,8 +1786,8 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data interpreted as hires<br>
-          followed by 40 * 25 (1000) bytes of the screen data<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data interpreted as hires<br />
+          followed by 40 * 25 (1000) bytes of the screen data<br />
           followed by 40 * 25 (1000) bytes of the color data
         </td>
       </tr>
@@ -1769,9 +1805,9 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen data<br>
-          followed by width * height bytes starting at screen coordinates x,y of the color data<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the color data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1789,9 +1825,9 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data interpreted as hires<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen data<br>
-          followed by width * height bytes starting at screen coordinates x,y of the color data<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data interpreted as hires<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the color data<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -1864,60 +1900,61 @@
         </td>
       </tr>
     </table>
-    <br>
-    <br>
-      <br>
-      <div id="code"><br>        ;character sets
-        !media "panel.chr",char
-        !media "panel.chr",char,10,32
-        !media "panel.charsetproject",char
-        !media "panel.charsetproject",char,10,32
-        !media "stage1.mapproject",char
-        !media "stage1.mapproject",char,0,200
+    <br />
+    <br />
+    <br />
+    <div id="code">
+      <br />        ;character sets
+      !media "panel.chr",char
+      !media "panel.chr",char,10,32
+      !media "panel.charsetproject",char
+      !media "panel.charsetproject",char,10,32
+      !media "stage1.mapproject",char
+      !media "stage1.mapproject",char,0,200
 
-        ;sprites
-        !media "enemies.spr",sprite
-        !media "enemies.spr",sprite,10,96
-        !media "enemies.spriteproject",sprite
-        !media "enemies.spriteproject",sprite,10,96
+      ;sprites
+      !media "enemies.spr",sprite
+      !media "enemies.spr",sprite,10,96
+      !media "enemies.spriteproject",sprite
+      !media "enemies.spriteproject",sprite,10,96
 
-        ;text screen
-        !media "title.charscreen",char
-        !media "title.charscreen",char,10,10,20,5
-        !media "title.charscreen",color
-        !media "title.charscreen",color,10,10,20,5
-        !media "title.charscreen",charcolor
-        !media "title.charscreen",charcolor,10,10,20,5
-        !media "title.charscreen",colorchar
-        !media "title.charscreen",colorchar,10,10,20,5
+      ;text screen
+      !media "title.charscreen",char
+      !media "title.charscreen",char,10,10,20,5
+      !media "title.charscreen",color
+      !media "title.charscreen",color,10,10,20,5
+      !media "title.charscreen",charcolor
+      !media "title.charscreen",charcolor,10,10,20,5
+      !media "title.charscreen",colorchar
+      !media "title.charscreen",colorchar,10,10,20,5
 
-        ;Bitmap
-        !media "intro.graphicscreen",bitmap
-        !media "intro.graphicscreen",bitmap,8,8,304,184
-        !media "intro.graphicscreen",screen
-        !media "intro.graphicscreen",screen,8,8,304,184
-        !media "intro.graphicscreen",color
-        !media "intro.graphicscreen",color,8,8,304,184
-        !media "intro.graphicscreen",bitmapscreen
-        !media "intro.graphicscreen",bitmapscreen,8,8,304,184
-        !media "intro.graphicscreen",bitmapscreencolor
-        !media "intro.graphicscreen",bitmapscreencolor,8,8,304,184
-          <br></div>
-      <br>
-    <br>
+      ;Bitmap
+      !media "intro.graphicscreen",bitmap
+      !media "intro.graphicscreen",bitmap,8,8,304,184
+      !media "intro.graphicscreen",screen
+      !media "intro.graphicscreen",screen,8,8,304,184
+      !media "intro.graphicscreen",color
+      !media "intro.graphicscreen",color,8,8,304,184
+      !media "intro.graphicscreen",bitmapscreen
+      !media "intro.graphicscreen",bitmapscreen,8,8,304,184
+      !media "intro.graphicscreen",bitmapscreencolor
+      !media "intro.graphicscreen",bitmapscreencolor,8,8,304,184
+    </div>
+    <br />
+    <br />
   </div>
   <a name="mediasrc"></a>
   <H2>!MEDIASRC &lt;File name&gt;,&lt;LabelPrefix&gt;,&lt;Method&gt;[,&lt;Method Parameters&gt;...]</H2>
   <div id="mybody">
     This pseudo op allows to include relevant portions of project files as assembly. Currently the pseudo op supports character screen project files (*.charsetscreen), graphic screen project files (*.graphicscreen) and map project files (*.mapproject).
-    <br>
-    LabelPrefix is prefixed to all generated labels. This allows to reference assembled parts directly.<br>
-    <br>
-    Method defines what and in which order to export data. The method depends on the given file.<br>
-    <br>
-    Method Parameters are optional and determine a subset of the export data as applicable.<br>
-    <br>
-    <br>
+    <br />
+    LabelPrefix is prefixed to all generated labels. This allows to reference assembled parts directly.<br />
+    <br />
+    Method defines what and in which order to export data. The method depends on the given file.<br />
+    <br />
+    Method Parameters are optional and determine a subset of the export data as applicable.<br />
+    <br />
+    <br />
     <table>
       <tr>
         <th>
@@ -1950,7 +1987,7 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen character data as assembly directive.<br>
+          Exports 40 * 25 bytes of the screen character data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_CHARS is inserted before the binary data.
         </td>
       </tr>
@@ -1968,7 +2005,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen character data as assembly directive.<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen character data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_CHARS is inserted before the binary data.
         </td>
       </tr>
@@ -1986,7 +2023,7 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data as assembly directive.<br>
+          Exports 40 * 25 bytes of the screen color data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_COLOR is inserted before the binary data.
         </td>
       </tr>
@@ -2004,7 +2041,7 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen color data as assembly directive.<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen color data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_COLOR is inserted before the binary data.
         </td>
       </tr>
@@ -2022,9 +2059,9 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen char data as assembly directive.<br>
-          followed by 40 * 25 bytes of the screen color data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br>
+          Exports 40 * 25 bytes of the screen char data as assembly directive.<br />
+          followed by 40 * 25 bytes of the screen color data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br />
           A label named &lt;LabelPrefix&gt;_COLOR is inserted before the screen color data.
         </td>
       </tr>
@@ -2042,9 +2079,9 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen char data as assembly directive.<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen color data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen char data as assembly directive.<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen color data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br />
           A label named &lt;LabelPrefix&gt;_COLOR is inserted before the screen color data.
         </td>
       </tr>
@@ -2062,9 +2099,9 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data as assembly directive.<br>
-          followed by 40 * 25 bytes of the screen char data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br>
+          Exports 40 * 25 bytes of the screen color data as assembly directive.<br />
+          followed by 40 * 25 bytes of the screen char data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br />
           A label named &lt;LabelPrefix&gt;_COLOR is inserted before the screen color data.
         </td>
       </tr>
@@ -2082,9 +2119,9 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen color data as assembly directive.<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen char data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen color data as assembly directive.<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen char data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_CHARS is inserted before the screen char data.<br />
           A label named &lt;LabelPrefix&gt;_COLOR is inserted before the screen color data.
         </td>
       </tr>
@@ -2102,7 +2139,7 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data as assembly directive.<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.
         </td>
       </tr>
@@ -2120,8 +2157,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -2139,7 +2176,7 @@
           None
         </td>
         <td>
-          Exports 40 * 25 (1000) bytes of the screen data as assembly directive.<br>
+          Exports 40 * 25 (1000) bytes of the screen data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.
         </td>
       </tr>
@@ -2157,8 +2194,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br>
+          Exports width * height bytes starting at screen coordinates x,y of the screen data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -2176,7 +2213,7 @@
           None
         </td>
         <td>
-          Exports 40 * 25 (1000) bytes of the color data as assembly directive.<br>
+          Exports 40 * 25 (1000) bytes of the color data as assembly directive.<br />
           A label named &lt;LabelPrefix&gt;_COLOR_DATA is inserted before the screen data.
         </td>
       </tr>
@@ -2194,8 +2231,8 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the color data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_COLOR_DATA is inserted before the screen data.<br>
+          Exports width * height bytes starting at screen coordinates x,y of the color data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_COLOR_DATA is inserted before the screen data.<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -2213,9 +2250,9 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data as assembly directive.<br>
-          followed by 40 * 25 (1000) bytes of the screen data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data as assembly directive.<br />
+          followed by 40 * 25 (1000) bytes of the screen data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br />
           A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.
         </td>
       </tr>
@@ -2233,10 +2270,10 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data as assembly directive.<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br>
-          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data as assembly directive.<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br />
+          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -2254,11 +2291,11 @@
           None
         </td>
         <td>
-          Exports 8 * 40 * 25 (8000) bytes of the bitmap data as assembly directive.<br>
-          followed by 40 * 25 (1000) bytes of the screen data as assembly directive.<br>
-          followed by 40 * 25 (1000) bytes of the color data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br>
-          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br>
+          Exports 8 * 40 * 25 (8000) bytes of the bitmap data as assembly directive.<br />
+          followed by 40 * 25 (1000) bytes of the screen data as assembly directive.<br />
+          followed by 40 * 25 (1000) bytes of the color data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br />
+          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br />
           A label named &lt;LabelPrefix&gt;_COLOR_DATA is inserted before the screen data.
         </td>
       </tr>
@@ -2276,12 +2313,12 @@
           x,y,width,height
         </td>
         <td>
-          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data as assembly directive.<br>
-          followed by width * height bytes starting at screen coordinates x,y of the screen data as assembly directive.<br>
-          followed by width * height bytes starting at screen coordinates x,y of the color data as assembly directive.<br>
-          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br>
-          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br>
-          A label named &lt;LabelPrefix&gt;_COLOR_DATA is inserted before the screen data.<br>
+          Exports 8 * width * height bytes starting at screen coordinates x,y of the bitmap data as assembly directive.<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen data as assembly directive.<br />
+          followed by width * height bytes starting at screen coordinates x,y of the color data as assembly directive.<br />
+          A label named &lt;LabelPrefix&gt;_BITMAP_DATA is inserted before the bitmap data.<br />
+          A label named &lt;LabelPrefix&gt;_SCREEN_DATA is inserted before the screen data.<br />
+          A label named &lt;LabelPrefix&gt;_COLOR_DATA is inserted before the screen data.<br />
           x,y, width and height must be multiples of 8
         </td>
       </tr>
@@ -2299,16 +2336,16 @@
           None
         </td>
         <td>
-          Exports all tiles as arbitrary sized elements like this:<br>
-          &lt;LabelPrefix&gt;NUM_TILES = (number of tiles)<br>
-          Label &lt;LabelPrefix&gt;TILE_WIDTH (all tile widths)<br>
-          Label &lt;LabelPrefix&gt;TILE_HEIGHT (all tile heights)<br>
-          Label &lt;LabelPrefix&gt;TILE_CHARS_LO (low byte of pointer to tile char list)<br>
-          Label &lt;LabelPrefix&gt;TILE_CHARS_HI (high byte of pointer to tile char list)<br>
-          Label &lt;LabelPrefix&gt;TILE_COLORS_LO (low byte of pointer to tile color list)<br>
-          Label &lt;LabelPrefix&gt;TILE_COLORS_HI (high byte of pointer to tile color list)<br>
-          Label &lt;LabelPrefix&gt;TILE_CHAR_(tile name) (tile chars of tile)<br>
-          Label &lt;LabelPrefix&gt;TILE_COLOR_(tile name) (tile chars of tile)<br>
+          Exports all tiles as arbitrary sized elements like this:<br />
+          &lt;LabelPrefix&gt;NUM_TILES = (number of tiles)<br />
+          Label &lt;LabelPrefix&gt;TILE_WIDTH (all tile widths)<br />
+          Label &lt;LabelPrefix&gt;TILE_HEIGHT (all tile heights)<br />
+          Label &lt;LabelPrefix&gt;TILE_CHARS_LO (low byte of pointer to tile char list)<br />
+          Label &lt;LabelPrefix&gt;TILE_CHARS_HI (high byte of pointer to tile char list)<br />
+          Label &lt;LabelPrefix&gt;TILE_COLORS_LO (low byte of pointer to tile color list)<br />
+          Label &lt;LabelPrefix&gt;TILE_COLORS_HI (high byte of pointer to tile color list)<br />
+          Label &lt;LabelPrefix&gt;TILE_CHAR_(tile name) (tile chars of tile)<br />
+          Label &lt;LabelPrefix&gt;TILE_COLOR_(tile name) (tile chars of tile)<br />
         </td>
       </tr>
       <tr>
@@ -2325,9 +2362,9 @@
           None
         </td>
         <td>
-          Exports all tiles as two byte blocks (char/colors) like this:<br>
-          Label &lt;LabelPrefix&gt;_&lt;TileIndex&gt;_CHARS (characters of tile)<br>
-          Label &lt;LabelPrefix&gt;_&lt;TileIndex&gt;_COLORS (colors of tile)<br>
+          Exports all tiles as two byte blocks (char/colors) like this:<br />
+          Label &lt;LabelPrefix&gt;_&lt;TileIndex&gt;_CHARS (characters of tile)<br />
+          Label &lt;LabelPrefix&gt;_&lt;TileIndex&gt;_COLORS (colors of tile)<br />
         </td>
       </tr>
       <tr>
@@ -2344,10 +2381,10 @@
           None
         </td>
         <td>
-          Exports all tiles as lookup tables like this:<br>
-          &lt;LabelPrefix&gt;NUM_TILES = (number of tiles)<br>
-          Label &lt;LabelPrefix&gt;TILE_CHARS_&lt;0..max width - 1&gt_&lt;0..max height - 1&gt; (all tiles chars at x, y)<br>
-          Label &lt;LabelPrefix&gt;TILE_COLORS_&lt;0..max width - 1&gt_&lt;0..max height - 1&gt; (all tiles colors at x, y)<br>
+          Exports all tiles as lookup tables like this:<br />
+          &lt;LabelPrefix&gt;NUM_TILES = (number of tiles)<br />
+          Label &lt;LabelPrefix&gt;TILE_CHARS_&lt;0..max width - 1&gt_&lt;0..max height - 1&gt; (all tiles chars at x, y)<br />
+          Label &lt;LabelPrefix&gt;TILE_COLORS_&lt;0..max width - 1&gt_&lt;0..max height - 1&gt; (all tiles colors at x, y)<br />
         </td>
       </tr>
       <tr>
@@ -2364,16 +2401,16 @@
           None
         </td>
         <td>
-          Exports all maps as lookup tables like this:<br>
-          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br>
-          &lt;LabelPrefix&gt;MAP_LIST_LO (low bytes of pointer to map data)<br>
-          &lt;LabelPrefix&gt;MAP_LIST_HI (high bytes of pointer to map data)<br>
-          Only if at least one map has valid extra data:<br>
-          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br>
-          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br>
-          For every map:<br>
-          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map)<br>
-          (all extra data bytes of a map)<br>
+          Exports all maps as lookup tables like this:<br />
+          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br />
+          &lt;LabelPrefix&gt;MAP_LIST_LO (low bytes of pointer to map data)<br />
+          &lt;LabelPrefix&gt;MAP_LIST_HI (high bytes of pointer to map data)<br />
+          Only if at least one map has valid extra data:<br />
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br />
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br />
+          For every map:<br />
+          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map)<br />
+          (all extra data bytes of a map)<br />
         </td>
       </tr>
       <tr>
@@ -2390,16 +2427,16 @@
           None
         </td>
         <td>
-          Exports all maps as lookup tables like this:<br>
-          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br>
-          &lt;LabelPrefix&gt;MAP_LIST_LO (low bytes of pointer to map data)<br>
-          &lt;LabelPrefix&gt;MAP_LIST_HI (high bytes of pointer to map data)<br>
-          Only if at least one map has valid extra data:<br>
-          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br>
-          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br>
-          For every map:<br>
-          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br>
-          (all extra data bytes of a map)<br>
+          Exports all maps as lookup tables like this:<br />
+          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br />
+          &lt;LabelPrefix&gt;MAP_LIST_LO (low bytes of pointer to map data)<br />
+          &lt;LabelPrefix&gt;MAP_LIST_HI (high bytes of pointer to map data)<br />
+          Only if at least one map has valid extra data:<br />
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br />
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br />
+          For every map:<br />
+          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br />
+          (all extra data bytes of a map)<br />
         </td>
       </tr>
       <tr>
@@ -2416,14 +2453,14 @@
           None
         </td>
         <td>
-          Exports all map extradata as lookup tables like this:<br>
-          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br>
-          Only if at least one map has valid extra data:<br>
-          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br>
-          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br>
-          For every map:<br>
-          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br>
-          (all extra data bytes of a map)<br>
+          Exports all map extradata as lookup tables like this:<br />
+          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br />
+          Only if at least one map has valid extra data:<br />
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br />
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br />
+          For every map:<br />
+          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br />
+          (all extra data bytes of a map)<br />
         </td>
       </tr>
       <tr>
@@ -2461,280 +2498,309 @@
         </td>
       </tr>
     </table>
-    <br>
-    <br>
-      <br>
-      <div id="code"><br>        ;text screen
-        !mediasrc "title.charscreen",char
-        !mediasrc "title.charscreen",char,10,10,20,5
-        !mediasrc "title.charscreen",color
-        !mediasrc "title.charscreen",color,10,10,20,5
-        !mediasrc "title.charscreen",charcolor
-        !mediasrc "title.charscreen",charcolor,10,10,20,5
-        !mediasrc "title.charscreen",colorchar
-        !mediasrc "title.charscreen",colorchar,10,10,20,5
+    <br />
+    <br />
+    <br />
+    <div id="code">
+      <br />        ;text screen
+      !mediasrc "title.charscreen",char
+      !mediasrc "title.charscreen",char,10,10,20,5
+      !mediasrc "title.charscreen",color
+      !mediasrc "title.charscreen",color,10,10,20,5
+      !mediasrc "title.charscreen",charcolor
+      !mediasrc "title.charscreen",charcolor,10,10,20,5
+      !mediasrc "title.charscreen",colorchar
+      !mediasrc "title.charscreen",colorchar,10,10,20,5
 
-        ;Bitmap
-        !mediasrc "intro.graphicscreen",bitmap
-        !mediasrc "intro.graphicscreen",bitmap,8,8,304,184
-        !mediasrc "intro.graphicscreen",screen
-        !mediasrc "intro.graphicscreen",screen,8,8,304,184
-        !mediasrc "intro.graphicscreen",color
-        !mediasrc "intro.graphicscreen",color,8,8,304,184
-        !mediasrc "intro.graphicscreen",bitmapscreen
-        !mediasrc "intro.graphicscreen",bitmapscreen,8,8,304,184
-        !mediasrc "intro.graphicscreen",bitmapscreencolor
-        !mediasrc "intro.graphicscreen",bitmapscreencolor,8,8,304,184
+      ;Bitmap
+      !mediasrc "intro.graphicscreen",bitmap
+      !mediasrc "intro.graphicscreen",bitmap,8,8,304,184
+      !mediasrc "intro.graphicscreen",screen
+      !mediasrc "intro.graphicscreen",screen,8,8,304,184
+      !mediasrc "intro.graphicscreen",color
+      !mediasrc "intro.graphicscreen",color,8,8,304,184
+      !mediasrc "intro.graphicscreen",bitmapscreen
+      !mediasrc "intro.graphicscreen",bitmapscreen,8,8,304,184
+      !mediasrc "intro.graphicscreen",bitmapscreencolor
+      !mediasrc "intro.graphicscreen",bitmapscreencolor,8,8,304,184
 
-        ;Maps
-        !mediasrc "overworld.map",tileelements
-        !mediasrc "overworld.map",tile
-        !mediasrc "overworld.map",map
-        !mediasrc "overworld.map",tilemap
-          <br></div>
-      <br>
-    <br>
+      ;Maps
+      !mediasrc "overworld.map",tileelements
+      !mediasrc "overworld.map",tile
+      !mediasrc "overworld.map",map
+      !mediasrc "overworld.map",tilemap
+    </div>
+    <br />
+    <br />
   </div>
   <a name="message"></a>
   <H2>!MESSAGE &lt;message&gt;</H2>
   <div id="mybody">
-    This pseudo op adds a message to the output. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br>
-    <br>
-    This pseudo op can be useful to output compile time evaluated values (e.g. size of a code section).<br>
-    <br>
-    <br>
-    <div id="code"><br>      !message "The compiled section is ", CODE_END - CODE_START, " bytes long"
-    <br></div>
-    <br>
-    <br>
+    This pseudo op adds a message to the output. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br />
+    <br />
+    This pseudo op can be useful to output compile time evaluated values (e.g. size of a code section).<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !message "The compiled section is ", CODE_END - CODE_START, " bytes long"
+    </div>
+    <br />
+    <br />
   </div>
   <a name="nowarn"></a>
   <H2>!NOWARN &lt;warning code(s)&gt;</H2>
   <div id="mybody">
-    This pseudo op temporarily adds the given warnings to the ignore warning list.<br>
-    <br>
-    The warning codes are expected in the Wxxxx form. To ignore the overlapping segment warning (W0001) call like shown in the sample below.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !NOWARN w0001
-      <br></div>
-    <br>
-    <br>
+    This pseudo op temporarily adds the given warnings to the ignore warning list.<br />
+    <br />
+    The warning codes are expected in the Wxxxx form. To ignore the overlapping segment warning (W0001) call like shown in the sample below.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !NOWARN w0001
+    </div>
+    <br />
+    <br />
   </div>
   <a name="pseudopc"></a>
   <H2>!PSEUDOPC &lt;address&gt;</H2>
   <div id="mybody">
-    This pseudo op alters the following assembly as if the current memory location was starting with the provided address.<br>
-    <br>
+    This pseudo op alters the following assembly as if the current memory location was starting with the provided address.<br />
+    <br />
     Allowed are constant values, expressions and labels as content. Mainly useful for code that will be copied around or bank switched (cartridge).
-    When setting !REALPC the program counter is set to the proper location address again.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !PSEUDOPC $0400
+    When setting !REALPC the program counter is set to the proper location address again.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !PSEUDOPC $0400
       ...
       !REALPC
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="realign"></a>
   <H2>!REALIGN &lt;alignaddress&gt;[,&lt;fillvalue&gt;]</H2>
   <div id="mybody">
-    This pseudo op fills memory until a full multiple of alignaddress is reached.<br>
-    If [fillvalue] is omitted 0 is used.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !realign $2       ;wait for even address
+    This pseudo op fills memory until a full multiple of alignaddress is reached.<br />
+    If [fillvalue] is omitted 0 is used.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !realign $2       ;wait for even address
       !realign 256      ;align code to page border
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="realpc"></a>
   <H2>!REALPC</H2>
   <div id="mybody">
-    This pseudo op is the counter part for !PSEUDOPC. The following assembly is used the proper memory location.<br>
-    <br>
-    When setting !REALPC the program counter is set to the proper location address again after a !PSEUDOPC.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !PSEUDOPC $0400
+    This pseudo op is the counter part for !PSEUDOPC. The following assembly is used the proper memory location.<br />
+    <br />
+    When setting !REALPC the program counter is set to the proper location address again after a !PSEUDOPC.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !PSEUDOPC $0400
       ...
       !REALPC
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="to"></a>
   <H2>!TO &lt;file name&gt;,&lt;output type&gt;</H2>
   <div id="mybody">
-    This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br>
-    <br>
-    <br>
-    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, MAGICDESK32BIN, MAGICDESK32CRT, MAGICDESK128BIN, MAGICDESK128CRT, MAGICDESK256BIN, MAGICDESK256CRT, MAGICDESK512BIN, MAGICDESK512CRT, MAGICDESK1MBIN, MAGICDESK1MCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br>
-    <br>
-    For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !to "jmain.prg",cbm
+    This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br />
+    <br />
+    <br />
+    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, MAGICDESK32BIN, MAGICDESK32CRT, MAGICDESK128BIN, MAGICDESK128CRT, MAGICDESK256BIN, MAGICDESK256CRT, MAGICDESK512BIN, MAGICDESK512CRT, MAGICDESK1MBIN, MAGICDESK1MCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br />
+    <br />
+    For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !to "jmain.prg",cbm
       !to "cart64banks.crt.bin", magicdeskcrt
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="scrxor"></a>
+  <H2>!SCRXOR &lt;xor value&gt,...</H2>
+  <div id="mybody">
+    This pseudo op works exactly like !scr, but allows to specify an expression which is used to XOR the following bytes.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !scrxor $55, "HELLO WORLD"
+    </div>
+    <br />
+    <br />
   </div>
   <a name="set"></a>
   <H2>!SET &lt;label&gt; = &lt;expression&gt;</H2>
   <div id="mybody">
-    This pseudo op assigns a value or result of an expression to a label. Exactly the same like direct assignment, but an existing label can be reassigned with a different value.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !set SCREEN_CHAR = $0400
-    <br></div>
-    <br>
-    <br>
+    This pseudo op assigns a value or result of an expression to a label. Exactly the same like direct assignment, but an existing label can be reassigned with a different value.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !set SCREEN_CHAR = $0400
+    </div>
+    <br />
+    <br />
   </div>
   <a name="skip"></a>
   <H2>!SKIP &lt;expression&gt;</H2>
   <div id="mybody">
-    This pseudo op skips over a given number of bytes, it works similar to * = * + &lt;expression&gt;<br>
-    <br>
-    <br>
-    <div id="code"><br>      !skip 5 * 20     ;skip 100 bytes forwards
-    <br></div>
-    <br>
-    <br>
+    This pseudo op skips over a given number of bytes, it works similar to * = * + &lt;expression&gt;<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !skip 5 * 20     ;skip 100 bytes forwards
+    </div>
+    <br />
+    <br />
   </div>
   <a name="sl"></a>
   <H2>!SL &lt;file name&gt;</H2>
   <div id="mybody">
-    This pseudo op instructs the assembler to write a text file with all labels to the given filename.<br>
-    The file is a csv formatted text file, with no header and semicolon as separator.<br>
-    There are two columns:<br>
-    [Labelname]=$[Value];[Unused]<br>
-    <br>
-    When the label is not used the content of the second column is set to "unused"<br>
-    <br>
-    <br>
-    <div id="code"><br>      !sl "labels.txt"
-    <br></div>
-    <br>
-    <br>
+    This pseudo op instructs the assembler to write a text file with all labels to the given filename.<br />
+    The file is a csv formatted text file, with no header and semicolon as separator.<br />
+    There are two columns:<br />
+    [Labelname]=$[Value];[Unused]<br />
+    <br />
+    When the label is not used the content of the second column is set to "unused"<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !sl "labels.txt"
+    </div>
+    <br />
+    <br />
   </div>
   <a name="source"></a>
   <H2>!SOURCE &lt;file name&gt;</H2>
   <div id="mybody">
-    This pseudo op includes another source file at the current location. File names are used relative to the file containing the directive.<br>
-    <br>
-    If the file name is given in &lt;,&gt; the file is searched for in the configured library paths.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !source "tiles.asm"
+    This pseudo op includes another source file at the current location. File names are used relative to the file containing the directive.<br />
+    <br />
+    If the file name is given in &lt;,&gt; the file is searched for in the configured library paths.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !source "tiles.asm"
       !source &lt;kernal.asm&gt;
-    <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="text"></a><a name="tx"></a><a name="scr"></a><a name="pet"></a><a name="raw"></a>
   <H2>!TEXT, !TX, !SCR, !PET, !RAW</H2>
   <div id="mybody">
-    This pseudo op allows to insert text, characters, or one ore more bytes at the current location.<br>
-    Text literals allow the inclusion of text symbols in squiggly braces. See <a href="basic_macros.html">here</a> for a list. For any macro the PETSCII value is used always, independent from the current used mapping.<br>
-    <br>
-    Allowed are text literals, character literals, constant values, expressions and labels as content.<br>
-    text literals are surrounded by ", character literals by '<br>
-    Constant values can be set as decimal, hexadecimal (with prefixed $), chars (surrounded by ' or ").<br>
-    Labels are treated as 16-bit values. To get the high or low byte prefix the label with &lt; (low byte) or &gt; (high byte)<br>
-    Expressions are evaluated during the final pass. They must evaluate to a valid byte value.<br>
-    Any values are subject to being mapped to the currently set conversation table.<br>
-    !SCR will insert screen codes, while !PET works like !TEXT, but reverses character casing. !RAW inserts bytes untouched.<br>
-    <br>
-    !text defaults to raw encoding.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !text "HELLO WORLD"
+    This pseudo op allows to insert text, characters, or one ore more bytes at the current location.<br />
+    Text literals allow the inclusion of text symbols in squiggly braces. See <a href="basic_macros.html">here</a> for a list. For any macro the PETSCII value is used always, independent from the current used mapping.<br />
+    <br />
+    Allowed are text literals, character literals, constant values, expressions and labels as content.<br />
+    text literals are surrounded by ", character literals by '<br />
+    Constant values can be set as decimal, hexadecimal (with prefixed $), chars (surrounded by ' or ").<br />
+    Labels are treated as 16-bit values. To get the high or low byte prefix the label with &lt; (low byte) or &gt; (high byte)<br />
+    Expressions are evaluated during the final pass. They must evaluate to a valid byte value.<br />
+    Any values are subject to being mapped to the currently set conversation table.<br />
+    !SCR will insert screen codes, while !PET works like !TEXT, but reverses character casing. !RAW inserts bytes untouched.<br />
+    <br />
+    !text defaults to raw encoding.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !text "HELLO WORLD"
       !text " SCORE",60," 00000000   ",224,224,"         LEVEL",60," 00                    ",225,225,"         LIVES",60," 03 *"
       !text 206,184,191,182,198,196,184,0,203,198,0,202,198,204,191,191,184,202,202,0,0
 
       !text "{clr}HELLO WORLD"
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="to"></a>
   <H2>!TO &lt;file name&gt;,&lt;output type&gt;</H2>
   <div id="mybody">
-    This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br>
-    <br>
-    <br>
-    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br>
-    <br>
-    For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !to "jmain.prg",cbm
+    This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br />
+    <br />
+    <br />
+    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br />
+    <br />
+    For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !to "jmain.prg",cbm
       !to "cart64banks.crt.bin", magicdeskcrt
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="trace"></a>
   <H2>!TRACE &lt;Expression&gt;</H2>
   <div id="mybody">
     This pseudo op allows the tracing of a memory location. The expression is evaluated anew on every pass at this location. The resulting value is treated as address and the byte fetched from the current visible RAM/ROM.
-    The value is written to the output window.<br>
-    <br>
-    This pseudo op will only be processed if the debugger is started, not on normal runs. Note that this pseudo op will cause major slowdowns during debugging.<br>
-    <br>
-    <br>
-      <br>
-      <div id="code"><br>      !trace VIC_RASTER_POS
-          <br></div>
-      <br>
-    <br>
+    The value is written to the output window.<br />
+    <br />
+    This pseudo op will only be processed if the debugger is started, not on normal runs. Note that this pseudo op will cause major slowdowns during debugging.<br />
+    <br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !trace VIC_RASTER_POS
+    </div>
+    <br />
+    <br />
   </div>
   <a name="warn"></a>
   <H2>!WARN &lt;message&gt;</H2>
   <div id="mybody">
-    This pseudo op adds a warning message to the compile result. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !warning "File is ", CODE_END - CODE_START, " bytes long, longer than 2048 bytes!"
-    <br></div>
-    <br>
-    <br>
+    This pseudo op adds a warning message to the compile result. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !warning "File is ", CODE_END - CODE_START, " bytes long, longer than 2048 bytes!"
+    </div>
+    <br />
+    <br />
   </div>
   <a name="word"></a><a name="wo"></a><a name="16"></a>
   <H2>!WORD, !WO, !16, !LE16, !BE16</H2>
   <div id="mybody">
-    This pseudo op allows to insert words (2 bytes) at the current location.<br>
-    <br>
-    Allowed are constant values, expressions and labels as content.<br>
-    Constant values can be set as decimal, hexadecimal (with prefixed $).<br>
-    Labels are treated as 16-bit values. Default is little endian, unless !BE16 is used.<br>
-    Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !word 128,270,320
+    This pseudo op allows to insert words (2 bytes) at the current location.<br />
+    <br />
+    Allowed are constant values, expressions and labels as content.<br />
+    Constant values can be set as decimal, hexadecimal (with prefixed $).<br />
+    Labels are treated as 16-bit values. Default is little endian, unless !BE16 is used.<br />
+    Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !word 128,270,320
       !word NoBehaviour
       !word ( SCREEN_CHAR + 40 )
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
   <a name="zone"></a>
   <H2>!ZONE &lt;zone name&gt;</H2>
   <div id="mybody">
-    This pseudo op declares a new zone. Any local labels (labels starting with '.') are only accessible inside their containing zone.<br>
-    <br>
-    <br>
-    <div id="code"><br>      !zone MainZone
+    This pseudo op declares a new zone. Any local labels (labels starting with '.') are only accessible inside their containing zone.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      !zone MainZone
       .locallabel
       ...
       !zone SubZone
       .locallabel
-      <br></div>
-    <br>
-    <br>
+    </div>
+    <br />
+    <br />
   </div>
 </body>
 </HTML>

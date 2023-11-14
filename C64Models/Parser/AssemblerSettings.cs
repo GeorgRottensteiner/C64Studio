@@ -209,6 +209,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          AddPseudoOp( "!SCRXOR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN_XOR );
           AddPseudoOp( "!PET", Types.MacroInfo.PseudoOpType.TEXT_PET );
           AddPseudoOp( "!RAW", Types.MacroInfo.PseudoOpType.TEXT_RAW );
           AddPseudoOp( "!PSEUDOPC", Types.MacroInfo.PseudoOpType.PSEUDO_PC );

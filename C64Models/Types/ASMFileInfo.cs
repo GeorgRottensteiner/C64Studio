@@ -38,6 +38,18 @@ namespace RetroDevStudio.Types.ASM
 
   public class LineInfo
   {
+    [Flags]
+    public enum LineFlags
+    {
+      // used for 65816 modes
+      Accu16Bit                 = 0x00000001,
+      Registers16Bit            = 0x00000002,
+
+      OpcodeUsingLongMode       = 0x00000004,
+      HasCollapsedContent       = 0x00000008,
+      HideInPreprocessedOutput  = 0x00000010
+    }
+
     public string                 AddressSource = "";
     public int                    AddressStart = -1;
     public int                    PseudoPCOffset = -1;    // -1 = not set, -2 at !REALPC, otherwise !PSEUDOPC pos
@@ -50,16 +62,88 @@ namespace RetroDevStudio.Types.ASM
     public List<Types.TokenInfo>  NeededParsedExpression2 = null;
     public GR.Collections.Map<byte, byte> LineCodeMapping = null;
     public Tiny64.Opcode          Opcode = null;
-    public bool                   OpcodeUsingLongMode = false;
     public GR.Memory.ByteBuffer   LineData = null;
-    public bool                   HasCollapsedContent = false;
-    public bool                   HideInPreprocessedOutput = false;
+    public LineFlags              Flags = 0;
 
-    // used for 65816 modes
-    public bool                   Accu16Bit = false;
-    public bool                   Registers16Bit = false;
-  };
 
+
+    public bool HideInPreprocessedOutput
+    {
+      get
+      {
+        return ( Flags & LineFlags.HideInPreprocessedOutput ) != 0;
+      }
+      set
+      {
+        Flags &= ~LineFlags.HideInPreprocessedOutput;
+        if ( value )
+        {
+          Flags |= LineFlags.HideInPreprocessedOutput;
+        }
+      }
+    }
+
+    public bool Accu16Bit
+    {
+      get
+      {
+        return ( Flags & LineFlags.Accu16Bit ) != 0;
+      }
+      set
+      {
+        Flags &= ~LineFlags.Accu16Bit;
+        if ( value )
+        {
+          Flags |= LineFlags.Accu16Bit;
+        }
+      }
+    }
+    public bool Registers16Bit
+    {
+      get
+      {
+        return ( Flags & LineFlags.Registers16Bit ) != 0;
+      }
+      set
+      {
+        Flags &= ~LineFlags.Registers16Bit;
+        if ( value )
+        {
+          Flags |= LineFlags.Registers16Bit;
+        }
+      }
+    }
+    public bool HasCollapsedContent
+    {
+      get
+      {
+        return ( Flags & LineFlags.HasCollapsedContent ) != 0;
+      }
+      set
+      {
+        Flags &= ~LineFlags.HasCollapsedContent;
+        if ( value )
+        {
+          Flags |= LineFlags.HasCollapsedContent;
+        }
+      }
+    }
+    public bool OpcodeUsingLongMode
+    {
+      get
+      {
+        return ( Flags & LineFlags.OpcodeUsingLongMode ) != 0;
+      }
+      set
+      {
+        Flags &= ~LineFlags.OpcodeUsingLongMode;
+        if ( value )
+        {
+          Flags |= LineFlags.OpcodeUsingLongMode;
+        }
+      }
+    }
+  }
 
 
   public class UnparsedEvalInfo

@@ -19,39 +19,39 @@ namespace Tiny64
 
 
 
-    public Memory     Memory;
-    public Processor  CPU = Processor.Create6510();
-    public VIC        VIC;
-    public CIA1       CIA1;
-    public CIA2       CIA2;
-    public SID        SID = new SID();
+    public Memory         Memory;
+    public Processor6510  CPU = Processor6510.Create6510();
+    public VIC            VIC;
+    public CIA1           CIA1;
+    public CIA2           CIA2;
+    public SID            SID = new SID();
 
-    public IDisplay   Display = null;
+    public IDisplay       Display = null;
 
-    public bool       SkipNextBreakpointCheck = false;
+    public bool           SkipNextBreakpointCheck = false;
 
-    //byte            IODirection = 0x2f;   // RAM 0000
+    //byte                IODirection = 0x2f;   // RAM 0000
 
-    public int        TotalCycles = 0;
+    public int            TotalCycles = 0;
 
-    bool              Game = true;
-    bool              ExRom = true;
-    bool              CharEn = true;  // Bit 2
-    bool              HiRAM = true;   // Bit 1
-    bool              LoRAM = true;   // Bit 0
+    bool                  Game = true;
+    bool                  ExRom = true;
+    bool                  CharEn = true;  // Bit 2
+    bool                  HiRAM = true;   // Bit 1
+    bool                  LoRAM = true;   // Bit 0
 
-    private bool      IRQCIARaised = false;
-    private bool      IRQVICRaised = false;
-    private bool      IRQNMIRaised = false;
-    private bool      IRQResetRaised = false;
+    private bool          IRQCIARaised = false;
+    private bool          IRQVICRaised = false;
+    private bool          IRQNMIRaised = false;
+    private bool          IRQResetRaised = false;
 
-    private bool      FullDebug = false;
-    //private bool      TempDebug = false;
-    private bool      _ReadDebug = false;
+    private bool          FullDebug = false;
+    //private bool          TempDebug = false;
+    private bool          _ReadDebug = false;
 
-    private bool      StartupCompleted = false;
-    public ByteBuffer InjectFileAfterStartup = null;
-    private int       CurrentBreakpointIndex = 1;
+    private bool          StartupCompleted = false;
+    public ByteBuffer     InjectFileAfterStartup = null;
+    private int           CurrentBreakpointIndex = 1;
 
 
 

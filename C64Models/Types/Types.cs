@@ -61,6 +61,7 @@ namespace RetroDevStudio.Types
       MESSAGE,
       HEX,            // ACME: !HEX, !H  f0f1f2 or !hex f0 f1 f2
       TEXT_SCREEN,
+      TEXT_SCREEN_XOR,    // ACME: !SCRXOR xor, ...
       LOW_BYTE,
       HIGH_BYTE,
       LOOP_START,     // PDS: DO, DASM: REPEAT

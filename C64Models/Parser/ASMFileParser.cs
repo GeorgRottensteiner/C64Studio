@@ -2202,6 +2202,29 @@ namespace RetroDevStudio.Parser
       GR.Memory.ByteBuffer  lineData = new GR.Memory.ByteBuffer();
       int                   tokenIndex = 0;
       int                   expressionStartIndex = 0;
+      byte                  xorValue = 0;
+
+      var origTokens = ParseTokenInfo( lineInfo.Line, 0, lineInfo.Line.Length, lineInfo.LineCodeMapping );
+      if ( ( origTokens.Count > 0 )
+      &&   ( origTokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
+      &&   ( m_AssemblerSettings.PseudoOps.ContainsKey( origTokens[0].Content.ToUpper() ) )
+      &&   ( m_AssemblerSettings.PseudoOps[origTokens[0].Content.ToUpper()].Type == MacroInfo.PseudoOpType.TEXT_SCREEN_XOR ) )
+      {
+        if ( !ParseLineInParameters( origTokens, 1, origTokens.Count - 1, lineIndex, true, out List<List<TokenInfo>> lineParams ) )
+        {
+          return ParseLineResult.ERROR_ABORT;
+        }
+        // lineParams[0] is the XOR value
+        if ( !EvaluateTokens( lineIndex, lineParams[0], lineInfo.LineCodeMapping, out SymbolInfo resultingValue ) )
+        {
+          if ( AddErrors )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Failed to evaluate " + TokensToExpression( lineParams[0] ) );
+          }
+          return ParseLineResult.RETURN_FALSE;
+        }
+        xorValue = (byte)resultingValue.ToInt32();
+      }
 
       do
       {
@@ -2228,7 +2251,7 @@ namespace RetroDevStudio.Parser
               foreach ( char aChar in textLiteral )
               {
                 // map to PETSCII!
-                lineData.AppendU8( (byte)aChar );
+                lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
               }
             }
             else
@@ -2242,7 +2265,7 @@ namespace RetroDevStudio.Parser
                 }
                 return ParseLineResult.RETURN_FALSE;
               }
-              lineData.AppendU8( (byte)value.ToInteger() );
+              lineData.AppendU8( (byte)( (byte)value.ToInteger() ^ xorValue ) );
             }
           }
           else
@@ -2256,7 +2279,7 @@ namespace RetroDevStudio.Parser
               }
               return ParseLineResult.RETURN_FALSE;
             }
-            lineData.AppendU8( (byte)value.ToInteger() );
+            lineData.AppendU8( (byte)( (byte)value.ToInteger() ^ xorValue ) );
           }
           expressionStartIndex = tokenIndex + 1;
         }
@@ -2286,7 +2309,7 @@ namespace RetroDevStudio.Parser
                 foreach ( char aChar in textLiteral )
                 {
                   // map to PETSCII!
-                  lineData.AppendU8( (byte)aChar );
+                  lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
                 }
               }
               else
@@ -2300,7 +2323,7 @@ namespace RetroDevStudio.Parser
                   }
                   return ParseLineResult.RETURN_FALSE;
                 }
-                lineData.AppendU8( (byte)value.ToInteger() );
+                lineData.AppendU8( (byte)( (byte)value.ToInteger() ^ xorValue ) );
               }
             }
             else
@@ -2314,7 +2337,7 @@ namespace RetroDevStudio.Parser
                 }
                 return ParseLineResult.RETURN_FALSE;
               }
-              lineData.AppendU8( (byte)value.ToInteger() );
+              lineData.AppendU8( (byte)( (byte)value.ToInteger() ^ xorValue ) );
             }
           }
         }
@@ -2617,6 +2640,7 @@ namespace RetroDevStudio.Parser
             case MacroInfo.PseudoOpType.TEXT_PET:
             case MacroInfo.PseudoOpType.TEXT_RAW:
             case MacroInfo.PseudoOpType.TEXT_SCREEN:
+            case MacroInfo.PseudoOpType.TEXT_SCREEN_XOR:
               {
                 var result = FinalParseData( lineInfo, lineIndex, true );
                 if ( result == ParseLineResult.RETURN_FALSE )
@@ -4362,47 +4386,6 @@ namespace RetroDevStudio.Parser
         }
       }
       return false;
-    }
-
-
-
-    private ParseLineResult POText( List<Types.TokenInfo> lineTokenInfos, Types.ASM.LineInfo info, String parseLine, GR.Collections.Map<byte,byte> TextMapping, out int lineSizeInBytes )
-    {
-      int numBytes = 0;
-      int commaCount = 0;
-      int literalCount = 0;
-
-      bool firstToken = true;
-      foreach ( Types.TokenInfo token in lineTokenInfos )
-      {
-        if ( firstToken )
-        {
-          firstToken = false;
-          continue;
-        }
-        if ( ( token.Content.StartsWith( "\"" ) )
-        &&   ( token.Content.EndsWith( "\"" ) ) )
-        {
-          numBytes += ActualTextTokenLength( token );
-          ++literalCount;
-        }
-        else if ( token.Content == "," )
-        {
-          ++commaCount;
-        }
-      }
-      // !text 128 + 15, LETTER_O, LETTER_F, LETTER_SPACE
-      if ( commaCount + 1 - literalCount > 0 )
-      {
-        numBytes += commaCount + 1 - literalCount;
-      }
-      info.NumBytes               = numBytes;
-      info.Line                   = parseLine;
-      info.NeededParsedExpression = lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 );
-      info.LineCodeMapping        = TextMapping;
-      lineSizeInBytes             = info.NumBytes;
-
-      return ParseLineResult.OK;
     }
 
 
@@ -6246,8 +6229,7 @@ namespace RetroDevStudio.Parser
                   count             = tokensToEvaluate.Count;
                 }
 
-                if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
-                ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.BLOCK_MOVE_XYC ) )
+                if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
                 {
                   // this has two seperate expressions
                   List<List<TokenInfo>> tokenInfos;
@@ -6275,13 +6257,6 @@ namespace RetroDevStudio.Parser
                       int firstValue = firstValueSymbol.ToInt32();
                       int secondValue = secondValueSymbol.ToInt32();
 
-                      if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.BLOCK_MOVE_XYC )
-                      {
-                        // uses different ordering of parameters
-                        int dummy   = firstValue;
-                        firstValue = secondValue;
-                        secondValue = dummy;
-                      }
                       // zeropage numerand
                       if ( !ValidByteValue( firstValue ) )
                       {
@@ -6314,7 +6289,7 @@ namespace RetroDevStudio.Parser
                       {
                         int delta = secondValue - info.AddressStart - 3;
                         if ( ( delta < -128 )
-                        || ( delta > 127 ) )
+                        ||   ( delta > 127 ) )
                         {
                           AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                           if ( !hasExpressions )
@@ -6463,7 +6438,7 @@ namespace RetroDevStudio.Parser
 
               bool  hasExpressions = false;
               if ( ( opcodeExpressions != null )
-              && ( opcodeExpressions.Count > 0 ) )
+              &&   ( opcodeExpressions.Count > 0 ) )
               {
                 int rounds = opcodeExpressions.Count;
                 hasExpressions = true;
@@ -6472,17 +6447,17 @@ namespace RetroDevStudio.Parser
               if ( hasExpressions )
               {
                 // we now only have the actual required tokens
-                startIndex = 0;
-                count = opcodeExpressions[0].Count;
-                tokensToEvaluate = opcodeExpressions[0];
+                startIndex        = 0;
+                count             = opcodeExpressions[0].Count;
+                tokensToEvaluate  = opcodeExpressions[0];
               }
               else
               {
-                startIndex += info.Opcode.StartingTokenCount;
-                count -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
-                tokensToEvaluate = lineTokenInfos.GetRange( startIndex, count );
-                startIndex = 0;
-                count = tokensToEvaluate.Count;
+                startIndex        += info.Opcode.StartingTokenCount;
+                count             -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
+                tokensToEvaluate  = lineTokenInfos.GetRange( startIndex, count );
+                startIndex        = 0;
+                count             = tokensToEvaluate.Count;
               }
 
               if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
@@ -7555,19 +7530,23 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT_SCREEN )
             {
-              POText( lineTokenInfos, info, parseLine, m_TextCodeMappingScr, out lineSizeInBytes );
+              POText( lineIndex, lineTokenInfos, info, parseLine, m_TextCodeMappingScr, out lineSizeInBytes );
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT_SCREEN_XOR )
+            {
+              POTextXor( lineIndex, lineTokenInfos, info, parseLine, m_TextCodeMappingScr, out lineSizeInBytes );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT_PET )
             {
-              POText( lineTokenInfos, info, parseLine, m_TextCodeMappingPet, out lineSizeInBytes );
+              POText( lineIndex, lineTokenInfos, info, parseLine, m_TextCodeMappingPet, out lineSizeInBytes );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT )
             {
-              POText( lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
+              POText( lineIndex, lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT_RAW )
             {
-              POText( lineTokenInfos, info, parseLine, m_TextCodeMappingRaw, out lineSizeInBytes );
+              POText( lineIndex, lineTokenInfos, info, parseLine, m_TextCodeMappingRaw, out lineSizeInBytes );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB )
             {
@@ -7964,7 +7943,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.TEXT )
           {
-            POText( lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
+            POText( lineIndex, lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.MACRO )
           {
@@ -12838,8 +12817,7 @@ namespace RetroDevStudio.Parser
               // potential zp,rel addressing
               foreach ( var potentialOp in PossibleOpcodes )
               {
-                if ( ( potentialOp.Addressing == Opcode.AddressingType.ZEROPAGE_RELATIVE )
-                ||   ( potentialOp.Addressing == Opcode.AddressingType.BLOCK_MOVE_XYC ) )
+                if ( potentialOp.Addressing == Opcode.AddressingType.ZEROPAGE_RELATIVE )
                 {
                   return new GR.Generic.Tupel<Tiny64.Opcode, bool>( potentialOp, longMode );
                 }
@@ -13686,6 +13664,21 @@ namespace RetroDevStudio.Parser
             }
             MatchingOpcode = potentialOpcode;
             return true;
+          }
+        }
+        else
+        {
+          // direct match, but must have no further tokens
+          // Only for expression CPUs?
+          if ( ( m_Processor.Name == "Motorola 68000" )
+          ||   ( m_Processor.Name == "Z80" ) )
+          {
+            if ( ( lineParams.Count == 1 )
+            &&   ( lineParams[0].Count == 0 ) )
+            {
+              MatchingOpcode = potentialOpcode;
+              return true;
+            }
           }
         }
       }

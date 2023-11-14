@@ -7,9 +7,9 @@ namespace Tiny64
 {
   public partial class Processor
   {
-    public static Processor Create6510()
+    public static Processor6510 Create6510()
     {
-      var  sys = new Processor( "6510" );
+      var  sys = new Processor6510();
 
       sys.AddOpcode( "adc", 0x6d, 2, AddressingType.ABSOLUTE, 4 );           // ADC $hhll
       sys.AddOpcode( "adc", 0x7d, 2, AddressingType.ABSOLUTE_X, 4, 1 );      // ADC $hhll, X

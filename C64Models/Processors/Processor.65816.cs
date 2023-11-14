@@ -12,6 +12,8 @@ namespace Tiny64
       // 65C02 plus 65816 specifics
       var  sys = new Processor( "65816" );
 
+      var empty = new List<ValidValue>();
+
       sys.AddOpcode( "brk", 0x00, 0, AddressingType.IMPLICIT, 7 );                // BRK
       sys.AddOpcode( "ora", 0x01, 1, AddressingType.ZEROPAGE_INDIRECT_X, 6 );     // ORA ($ll,X)
       sys.AddOpcode( "cop", 0x02, 1, AddressingType.ZEROPAGE, 7 );                // COP $ll     s (functionally actually IMPLICIT, but has add. byte)
@@ -85,7 +87,11 @@ namespace Tiny64
       sys.AddOpcode( "eor", 0x41, 1, AddressingType.ZEROPAGE_INDIRECT_X, 6 );         // EOR ($ll,X)
       sys.AddOpcode( "wdm", 0x42, 0, AddressingType.IMPLICIT, 2 );                // WDM
       sys.AddOpcode( "eor", 0x43, 1, AddressingType.STACK_RELATIVE, 4 );          // EOR $ll,SP
-      sys.AddOpcode( "mvp", 0x44, 2, AddressingType.BLOCK_MOVE_XYC, 7 );          // MVP $ll, $ll
+      sys.AddOpcode( "mvp", 0x440000, 2, AddressingType.BLOCK_MOVE_XYC, 7 )         // MVP $ll, $ll
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 8 ) } );
+
       sys.AddOpcode( "eor", 0x45, 1, AddressingType.ZEROPAGE, 3 );           // EOR $ll
       sys.AddOpcode( "lsr", 0x46, 1, AddressingType.ZEROPAGE, 5 );           // LSR $ll
       sys.AddOpcode( "eor", 0x47, 1, AddressingType.ZEROPAGE_INDIRECT_LONG, 6 );  // EOR [$ll]
@@ -102,7 +108,11 @@ namespace Tiny64
       sys.AddOpcode( "eor", 0x51, 1, AddressingType.ZEROPAGE_INDIRECT_Y, 5, 1 );      // EOR ($ll), Y
       sys.AddOpcode( "eor", 0x52, 1, AddressingType.ZEROPAGE_INDIRECT, 5 );      // eor ($12)
       sys.AddOpcode( "eor", 0x53, 1, AddressingType.ZEROPAGE_INDIRECT_SP_Y, 7 );      // EOR ($ll,SP),Y
-      sys.AddOpcode( "mvn", 0x54, 2, AddressingType.BLOCK_MOVE_XYC, 7 );              // MVN $ll,$ll
+      sys.AddOpcode( "mvn", 0x540000, 2, AddressingType.BLOCK_MOVE_XYC, 7 )               // MVN $ll,$ll
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 8 ) } );
+
       sys.AddOpcode( "eor", 0x55, 1, AddressingType.ZEROPAGE_X, 4 );         // EOR $ll, X
       sys.AddOpcode( "lsr", 0x56, 1, AddressingType.ZEROPAGE_X, 6 );         // LSR $ll, X
       sys.AddOpcode( "eor", 0x57, 1, AddressingType.ZEROPAGE_INDIRECT_Y_LONG, 6 );    // EOR [$ll],Y

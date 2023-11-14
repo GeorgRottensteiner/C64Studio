@@ -321,6 +321,21 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModeXor()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $4000
+                                      !scrxor 0,""ABCabc123""
+                                      !scrxor $55,""ABCabc123"" ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0040414243010203313233141716545756646766", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModeTextWithTextMacro()
     {
       string      source = @"!to ""text-modes.prg"",cbm
