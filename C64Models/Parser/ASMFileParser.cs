@@ -6353,6 +6353,7 @@ namespace RetroDevStudio.Parser
                               tokensToEvaluate[startIndex].StartPos,
                               tokensToEvaluate[startIndex + count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                   }
+                  Debug.Log( "TODO - match real size of value to expression if applicable!" );
 
                   if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
                   {

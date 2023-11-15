@@ -2,6 +2,9 @@
 
 * = $00
 
+movep.w $0100(a2),d5           ;0B 0A 01 00
+
+
           adda.w #$0001,a0            ;D0 FC 00 01
           adda.w #$00FF,a1            ;D2 FC 00 FF
           adda.w #$0100,a2            ;D4 FC 01 00

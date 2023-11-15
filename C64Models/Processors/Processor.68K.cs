@@ -2260,7 +2260,7 @@ namespace Tiny64
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_16BIT ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( closingParenthesis )
@@ -2274,7 +2274,7 @@ namespace Tiny64
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_16BIT ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( closingParenthesis )
@@ -2289,7 +2289,7 @@ namespace Tiny64
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_16BIT ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( closingParenthesis )
@@ -2303,7 +2303,7 @@ namespace Tiny64
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_16BIT ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( closingParenthesis )
