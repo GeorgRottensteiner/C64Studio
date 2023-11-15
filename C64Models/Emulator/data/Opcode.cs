@@ -72,7 +72,6 @@ namespace Tiny64
       public OpcodePartialExpression    Type = OpcodePartialExpression.UNUSED;
       public List<ValidValueGroup>      ValidValues = new List<ValidValueGroup>();
       public int                        ReplacementValueShift = 0;
-      public int                        ReplacementValueShift2 = 0;
       public ulong                      ResultingReplacementValue = 0;
 
       public OpcodeExpression( OpcodePartialExpression Type )
@@ -115,16 +114,6 @@ namespace Tiny64
         this.ValidValues.Add( new ValidValueGroup( ValidValues2 ) );
         this.ValidValues.Add( new ValidValueGroup( ValidValues3 ) );
         this.ReplacementValueShift = ReplacementValueShift;
-      }
-
-      public OpcodeExpression( OpcodePartialExpression Type, List<ValidValue> ValidValues, List<ValidValue> ValidValues2, List<ValidValue> ValidValues3, int ReplacementValueShift, int ReplacementValueShift2 )
-      {
-        this.Type = Type;
-        this.ValidValues.Add( new ValidValueGroup( ValidValues ) );
-        this.ValidValues.Add( new ValidValueGroup( ValidValues2 ) );
-        this.ValidValues.Add( new ValidValueGroup( ValidValues3 ) );
-        this.ReplacementValueShift  = ReplacementValueShift;
-        this.ReplacementValueShift2 = ReplacementValueShift2;
       }
     }
 

@@ -8534,6 +8534,7 @@ namespace RetroDevStudio.Parser
 
       int expIndex = 0;
       int trueExpindex = 0;
+      int replacementShift = 0;
       while ( expIndex < Info.Opcode.ParserExpressions.Count )
       {
         if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
@@ -8551,22 +8552,33 @@ namespace RetroDevStudio.Parser
           if ( trueExpindex == ExpressionIndex )
           {
             currentExpression = Info.Opcode.ParserExpressions[expIndex];
+            replacementShift = currentExpression.ReplacementValueShift;
+
+            if ( currentExpression.Type == Opcode.OpcodePartialExpression.COMPLEX )
+            {
+              // in case of complex the replacement shift is taken from the expression sub expression
+              var subExpression = currentExpression.ValidValues.FirstOrDefault( vv => vv.Expression != Opcode.OpcodePartialExpression.UNUSED );
+              if ( subExpression != null )
+              {
+                replacementShift = subExpression.ReplacementValueShift;
+              }
+            }
 
             // swap bytes
             if ( m_Processor.LittleEndian )
             {
-              if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
-              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT ) )
+              if ( ( currentExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
+              ||   ( currentExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT ) )
               {
                 Value = (ushort)( ( ( Value & 0xff00 ) >> 8 ) | ( ( Value & 0x00ff ) << 8 ) );
               }
-              if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
-              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT ) )
+              if ( ( currentExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
+              ||   ( currentExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT ) )
               {
                 Value = (uint)( ( ( Value & 0xff0000 ) >> 16 ) | ( ( Value & 0x00ff ) << 16 ) | ( Value & 0x00ff00 ) );
               }
-              if ( ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
-              ||   ( Info.Opcode.ParserExpressions[expIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT ) )
+              if ( ( currentExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
+              ||   ( currentExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT ) )
               {
                 Value = (uint)( ( ( Value & 0xff000000 ) >> 24 )
                               | ( ( Value & 0x00ff0000 ) >> 8 )
@@ -8585,7 +8597,7 @@ namespace RetroDevStudio.Parser
         return;
       }
 
-      currentExpression.ResultingReplacementValue = (ulong)Value << currentExpression.ReplacementValueShift;
+      currentExpression.ResultingReplacementValue = (ulong)Value << replacementShift;
 
       switch ( currentExpression.Type )
       {
