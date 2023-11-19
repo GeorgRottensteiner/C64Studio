@@ -164,7 +164,7 @@ namespace Tiny64
 
     public string                         Mnemonic = "";
     public ulong                          ByteValue = ulong.MaxValue;
-    public int                            NumOperands = -1;
+    public int                            OpcodeSize = -1;
     public AddressingType                 Addressing = AddressingType.UNKNOWN;
     public int                            NumCycles = 0;
     public int                            NumPenaltyCycles = 0;
@@ -255,7 +255,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      NumOperands = 0;
+      OpcodeSize = 0;
       this.Addressing = Addressing;
     }
 
@@ -263,7 +263,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      NumOperands = 0;
+      OpcodeSize = 0;
       this.Addressing = Addressing;
       this.NumCycles = NumCycles;
       this.PageBoundaryCycles = PageBoundaryCycles;
@@ -274,7 +274,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      this.NumOperands = NumOperands;
+      this.OpcodeSize = NumOperands;
       this.Addressing = Addressing;
     }
 
@@ -282,7 +282,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      this.NumOperands = NumOperands;
+      this.OpcodeSize = NumOperands;
       this.Addressing = Addressing;
       this.NumCycles = NumCycles;
       this.PageBoundaryCycles = PageBoundaryCycles;
@@ -293,7 +293,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      this.NumOperands = NumOperands;
+      this.OpcodeSize = NumOperands;
       this.Addressing = Addressing;
       this.NumCycles = NumCycles;
       this.PageBoundaryCycles = PageBoundaryCycles;

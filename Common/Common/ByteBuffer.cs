@@ -1242,6 +1242,36 @@ namespace GR
 
 
 
+      public void Insert( int Index, byte Value, uint NumBytes )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index > Length ) )
+        {
+          return;
+        }
+        if ( m_Data == null )
+        {
+          m_Data      = new byte[NumBytes];
+          m_UsedBytes = NumBytes;
+        }
+        else
+        {
+          byte[] bTemp = new byte[Length + NumBytes];
+
+          if ( Index > 0 )
+          {
+            System.Array.Copy( m_Data, 0, bTemp, 0, Index );
+          }
+          if ( Index + 1 < Length + NumBytes )
+          {
+            System.Array.Copy( m_Data, Index, bTemp, Index + NumBytes, Length - Index );
+          }
+          m_Data = bTemp;
+          m_UsedBytes = (uint)( Length + NumBytes );
+        }
+        
+        Fill( Index, (int)NumBytes, Value );
+      }
     }
   }
 }

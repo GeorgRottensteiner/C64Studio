@@ -185,7 +185,7 @@ namespace Tiny64
 
       if ( IsJSRType( opCode ) )
       {
-        Machine.AddTemporaryBreakpoint( (ushort)( Machine.CPU.PC + opCode.NumOperands + 1 ), false, false, true );
+        Machine.AddTemporaryBreakpoint( (ushort)( Machine.CPU.PC + opCode.OpcodeSize + 1 ), false, false, true );
         Machine.SkipNextBreakpointCheck = true;
         State = EmulatorState.RUNNING;
       }

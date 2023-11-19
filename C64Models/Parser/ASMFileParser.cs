@@ -2508,13 +2508,18 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult HandleNeededParsedExpression( int lineIndex, LineInfo lineInfo, ref List<TokenInfo> NeededParsedExpression, int ExpressionIndex )
+    private ParseLineResult HandleNeededParsedExpression( int lineIndex, LineInfo lineInfo, ref List<TokenInfo> NeededParsedExpression, int Round )
     {
       bool    hasExpressions = false;
       if ( ( lineInfo.Opcode != null )
       &&   ( lineInfo.Opcode.ParserExpressions != null ) )
       {
         hasExpressions = lineInfo.Opcode.ParserExpressions.Count > 0;
+      }
+      int ExpressionIndex = 0;
+      if ( hasExpressions )
+      {
+        ExpressionIndex = MatchRoundToParserExpression( lineInfo.Opcode, Round );
       }
 
       // strip prefixed #
@@ -2778,6 +2783,12 @@ namespace RetroDevStudio.Parser
             // check value size
             if ( hasExpressions )
             {
+              VerifyOperandSize( lineInfo.Opcode, lineInfo.Opcode.ParserExpressions[ExpressionIndex], lineInfo.AddressStart, ref addressValue, lineIndex, NeededParsedExpression );
+              ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
+
+              NeededParsedExpression = null;
+              return ParseLineResult.OK;
+              /*
               if ( ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT )
               ||   ( lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT ) )
               {
@@ -2789,7 +2800,7 @@ namespace RetroDevStudio.Parser
                             NeededParsedExpression[0].StartPos,
                             NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
                 }
-                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
 
                 NeededParsedExpression = null;
                 return ParseLineResult.OK;
@@ -2805,7 +2816,7 @@ namespace RetroDevStudio.Parser
                             NeededParsedExpression[0].StartPos,
                             NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
                 }
-                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
 
                 NeededParsedExpression = null;
                 return ParseLineResult.OK;
@@ -2821,7 +2832,7 @@ namespace RetroDevStudio.Parser
                             NeededParsedExpression[0].StartPos,
                             NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
                 }
-                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
 
                 NeededParsedExpression = null;
                 return ParseLineResult.OK;
@@ -2838,7 +2849,7 @@ namespace RetroDevStudio.Parser
                             NeededParsedExpression[0].StartPos,
                             NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
                 }
-                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
 
                 NeededParsedExpression = null;
                 return ParseLineResult.OK;
@@ -2850,7 +2861,7 @@ namespace RetroDevStudio.Parser
                 {
                   AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                 }
-                ApplyOpcodePatch( lineInfo, (byte)delta, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (byte)delta, Round );
                 NeededParsedExpression = null;
                 return ParseLineResult.OK;
               }
@@ -2869,7 +2880,7 @@ namespace RetroDevStudio.Parser
                 {
                   AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                 }
-                ApplyOpcodePatch( lineInfo, (ushort)delta, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (ushort)delta, Round );
                 NeededParsedExpression = null;
                 return ParseLineResult.OK;
               }
@@ -2904,7 +2915,7 @@ namespace RetroDevStudio.Parser
                                 NeededParsedExpression[0].StartPos,
                                 NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
                     }
-                    ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                    ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
 
                     NeededParsedExpression = null;
                     return ParseLineResult.OK;
@@ -2919,7 +2930,7 @@ namespace RetroDevStudio.Parser
                                 NeededParsedExpression[0].StartPos,
                                 NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos - NeededParsedExpression[0].StartPos + 1 );
                     }
-                    ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                    ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
 
                     NeededParsedExpression = null;
                     return ParseLineResult.OK;
@@ -2933,7 +2944,7 @@ namespace RetroDevStudio.Parser
               else
               {
                 Debug.Log( "Missing expression late parsing for " + lineInfo.Opcode.ParserExpressions[ExpressionIndex].Type );
-              }
+              }*/
             }
 
             if ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
@@ -3009,7 +3020,7 @@ namespace RetroDevStudio.Parser
                   {
                     if ( hasExpressions )
                     {
-                      ApplyOpcodePatch( lineInfo, (byte)zeroPageValue, ExpressionIndex );
+                      ApplyOpcodePatch( lineInfo, (byte)zeroPageValue, Round );
                     }
                     else
                     {
@@ -3031,7 +3042,7 @@ namespace RetroDevStudio.Parser
                   {
                     if ( hasExpressions )
                     {
-                      ApplyOpcodePatch( lineInfo, (byte)delta, ExpressionIndex );
+                      ApplyOpcodePatch( lineInfo, (byte)delta, Round );
                     }
                     else
                     {
@@ -3084,7 +3095,7 @@ namespace RetroDevStudio.Parser
                   {
                     if ( hasExpressions )
                     {
-                      ApplyOpcodePatch( lineInfo, (byte)zeroPageValue, ExpressionIndex );
+                      ApplyOpcodePatch( lineInfo, (byte)zeroPageValue, Round );
                     }
                     else
                     {
@@ -3109,7 +3120,7 @@ namespace RetroDevStudio.Parser
               {
                 if ( hasExpressions )
                 {
-                  ApplyOpcodePatch( lineInfo, (byte)delta, ExpressionIndex );
+                  ApplyOpcodePatch( lineInfo, (byte)delta, Round );
                 }
                 else
                 {
@@ -3140,7 +3151,7 @@ namespace RetroDevStudio.Parser
               {
                 if ( hasExpressions )
                 {
-                  ApplyOpcodePatch( lineInfo, (ushort)delta, ExpressionIndex );
+                  ApplyOpcodePatch( lineInfo, (ushort)delta, Round );
                 }
                 else
                 {
@@ -3148,7 +3159,7 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            else if ( lineInfo.Opcode.NumOperands == 1 )
+            else if ( lineInfo.Opcode.OpcodeSize == 1 )
             {
               if ( ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
               &&     ( lineInfo.Accu16Bit ) )
@@ -3171,7 +3182,7 @@ namespace RetroDevStudio.Parser
                 {
                   if ( hasExpressions )
                   {
-                    ApplyOpcodePatch( lineInfo, (ushort)addressValue, ExpressionIndex );
+                    ApplyOpcodePatch( lineInfo, (ushort)addressValue, Round );
                   }
                   else
                   {
@@ -3184,7 +3195,7 @@ namespace RetroDevStudio.Parser
               {
                 if ( hasExpressions )
                 {
-                  ApplyOpcodePatch( lineInfo, (byte)addressValue, ExpressionIndex );
+                  ApplyOpcodePatch( lineInfo, (byte)addressValue, Round );
                 }
                 else
                 {
@@ -3192,7 +3203,7 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            else if ( lineInfo.Opcode.NumOperands == 2 )
+            else if ( lineInfo.Opcode.OpcodeSize == 2 )
             {
               if ( !Valid16BitAddressValue( addressValue ) )
               {
@@ -3204,14 +3215,14 @@ namespace RetroDevStudio.Parser
               }
               if ( hasExpressions )
               {
-                ApplyOpcodePatch( lineInfo, (ushort)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (ushort)addressValue, Round );
               }
               else
               {
                 lineInfo.LineData.AppendU16( (ushort)addressValue );
               }
             }
-            else if ( lineInfo.Opcode.NumOperands == 3 )
+            else if ( lineInfo.Opcode.OpcodeSize == 3 )
             {
               if ( !Valid24BitAddressValue( addressValue ) )
               {
@@ -3223,14 +3234,14 @@ namespace RetroDevStudio.Parser
               }
               if ( hasExpressions )
               {
-                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
               }
               else
               {
                 lineInfo.LineData.AppendU24( (uint)addressValue );
               }
             }
-            else if ( lineInfo.Opcode.NumOperands == 4 )
+            else if ( lineInfo.Opcode.OpcodeSize == 4 )
             {
               if ( !ValidDWordValue( addressValue ) )
               {
@@ -3242,7 +3253,7 @@ namespace RetroDevStudio.Parser
               }
               if ( hasExpressions )
               {
-                ApplyOpcodePatch( lineInfo, (uint)addressValue, ExpressionIndex );
+                ApplyOpcodePatch( lineInfo, (uint)addressValue, Round );
               }
               else
               {
@@ -5906,12 +5917,18 @@ namespace RetroDevStudio.Parser
           if ( estimatedOpcode != null )
           {
             //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes             = estimatedOpcode.first.NumOperands + SizeOfOpcode( estimatedOpcode.first.ByteValue );
+            info.NumBytes             = estimatedOpcode.first.OpcodeSize + SizeOfOpcode( estimatedOpcode.first.ByteValue );
             info.Opcode               = estimatedOpcode.first;
             info.OpcodeUsingLongMode  = estimatedOpcode.second;
-            if ( info.Opcode.ParserExpressions.Count > 0 )
+            if ( ( info.Opcode.ParserExpressions.Count > 0 )
+            ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMPLICIT ) )
             {
+              if ( SizeOfOpcode( estimatedOpcode.first.ByteValue ) != estimatedOpcode.first.OpcodeSize )
+              {
+                //Debug.Log( $"oha {estimatedOpcode.first.Mnemonic} for {info.Line}" );
+              }
               info.NumBytes = SizeOfOpcode( estimatedOpcode.first.ByteValue );
+              //info.NumBytes = estimatedOpcode.first.OpcodeSize;
             }
 
             if ( ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
@@ -5974,7 +5991,16 @@ namespace RetroDevStudio.Parser
           }
           if ( info.Opcode != null )
           {
-            if ( info.Opcode.NumOperands == 0 )
+            bool  hasExpressions = info.Opcode.ParserExpressions.Count > 0;
+            if ( hasExpressions )
+            {
+              var opcodeHandlingResult = HandleOpcode( info, lineIndex, lineTokenInfos, opcodeExpressions, resultingOpcodePatchValue, stackScopes, textCodeMapping );
+              if ( opcodeHandlingResult == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( info.Opcode.OpcodeSize == 0 )
             {
               if ( ( lineTokenInfos.Count > 1 )
               &&   ( info.Opcode.ParserExpressions.Count == 0 ) )
@@ -5991,7 +6017,7 @@ namespace RetroDevStudio.Parser
                 info.NeededParsedExpression = null;
               }
             }
-            else if ( info.Opcode.NumOperands == 1 )
+            else if ( info.Opcode.OpcodeSize == 1 )
             {
               if ( info.LineData == null )
               {
@@ -6025,7 +6051,6 @@ namespace RetroDevStudio.Parser
               }
 
               int   rounds = 1;
-              bool  hasExpressions = info.Opcode.ParserExpressions.Count > 0;
               if ( ( opcodeExpressions != null )
               &&   ( opcodeExpressions.Count > 0 ) )
               {
@@ -6189,7 +6214,7 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            else if ( info.Opcode.NumOperands == 2 )
+            else if ( info.Opcode.OpcodeSize == 2 )
             {
               if ( info.LineData == null )
               {
@@ -6199,12 +6224,10 @@ namespace RetroDevStudio.Parser
               long byteValue = -1;
 
               int   rounds = 1;
-              bool  hasExpressions = false;
               if ( ( opcodeExpressions != null )
               &&   ( opcodeExpressions.Count > 0 ) )
               {
                 rounds = opcodeExpressions.Count;
-                hasExpressions = true;
               }
 
               for ( int round = 0; round < rounds; ++round )
@@ -6353,7 +6376,7 @@ namespace RetroDevStudio.Parser
                               tokensToEvaluate[startIndex].StartPos,
                               tokensToEvaluate[startIndex + count - 1].EndPos + 1 - tokensToEvaluate[startIndex].StartPos );
                   }
-                  Debug.Log( "TODO - match real size of value to expression if applicable!" );
+                  //Debug.Log( "TODO - match real size of value to expression if applicable!" );
 
                   if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
                   {
@@ -6425,7 +6448,7 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            else if ( info.Opcode.NumOperands == 3 )
+            else if ( info.Opcode.OpcodeSize == 3 )
             {
               if ( info.LineData == null )
               {
@@ -6437,12 +6460,10 @@ namespace RetroDevStudio.Parser
               int               count = lineTokenInfos.Count - 1;
               List<TokenInfo>   tokensToEvaluate = lineTokenInfos;
 
-              bool  hasExpressions = false;
               if ( ( opcodeExpressions != null )
               &&   ( opcodeExpressions.Count > 0 ) )
               {
                 int rounds = opcodeExpressions.Count;
-                hasExpressions = true;
               }
 
               if ( hasExpressions )
@@ -6489,7 +6510,7 @@ namespace RetroDevStudio.Parser
                 info.NeededParsedExpression = tokensToEvaluate;
               }
             }
-            else if ( info.Opcode.NumOperands == 4 )
+            else if ( info.Opcode.OpcodeSize == 4 )
             {
               if ( info.LineData == null )
               {
@@ -8233,7 +8254,8 @@ namespace RetroDevStudio.Parser
                 }
                 else
                 {
-                  AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ) );
+                  AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ),
+                            lineTokenInfos[0].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[0].StartPos + 1 );
                 }
               }
             }
@@ -8247,7 +8269,8 @@ namespace RetroDevStudio.Parser
           else if ( ( !evaluatedContent )
           &&        ( lineTokenInfos.Count > 0 ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ) );
+            AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ),
+                      lineTokenInfos[0].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[0].StartPos + 1 );
           }
           programStepPos += lineSizeInBytes;
           //Debug.Log( "line " + lineIndex + ", address = " + programStepPos.ToString( "X4" ) + ", startaddress = " + info.AddressStart.ToString( "X4" ) );
@@ -8666,6 +8689,12 @@ namespace RetroDevStudio.Parser
     {
       HandleM65OpcodePrefixes( Info );
 
+      /*
+      if ( Info.LineData.Length < Info.Opcode.OpcodeSize )
+      {
+        Info.LineData.Resize( (uint)Info.Opcode.OpcodeSize );
+      }*/
+
       ulong    opcodeValue = Info.Opcode.ByteValue;
       if ( ResultingOpcodePatchValue != ulong.MaxValue )
       {
@@ -8674,6 +8703,12 @@ namespace RetroDevStudio.Parser
       if ( ( opcodeValue & 0xff00000000000000 ) != 0 )
       {
         Info.LineData.AppendU64NetworkOrder( opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       if ( ( opcodeValue & 0xff000000000000 ) != 0 )
@@ -8681,37 +8716,79 @@ namespace RetroDevStudio.Parser
         Info.LineData.AppendU8( (byte)( opcodeValue >> 48 ) );
         Info.LineData.AppendU16NetworkOrder( (ushort)( opcodeValue >> 32 ) );
         Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       if ( ( opcodeValue & 0xff0000000000 ) != 0 )
       {
         Info.LineData.AppendU16NetworkOrder( (ushort)( opcodeValue >> 32 ) );
         Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       if ( ( opcodeValue & 0xff00000000 ) != 0 )
       {
         Info.LineData.AppendU8( (byte)( opcodeValue >> 32 ) );
         Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       if ( ( opcodeValue & 0xff000000 ) != 0 )
       {
         Info.LineData.AppendU32NetworkOrder( (uint)opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       if ( ( opcodeValue & 0x00ff0000 ) != 0 )
       {
         Info.LineData.AppendU8( (byte)( opcodeValue >> 16 ) );
         Info.LineData.AppendU16NetworkOrder( (ushort)opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       if ( ( opcodeValue & 0x0000ff00 ) != 0 )
       {
         Info.LineData.AppendU16NetworkOrder( (ushort)opcodeValue );
+        if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+        &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+        {
+          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.NumBytes = (int)Info.LineData.Length;
+        }
         return;
       }
       Info.LineData.AppendU8( (byte)opcodeValue );
+      if ( ( Info.Opcode.ParserExpressions.Count > 0 )
+      &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
+      {
+        Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+        Info.NumBytes = (int)Info.LineData.Length;
+      }
     }
 
 
