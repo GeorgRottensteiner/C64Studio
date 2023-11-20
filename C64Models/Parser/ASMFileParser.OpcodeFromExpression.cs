@@ -177,6 +177,7 @@ namespace RetroDevStudio.Parser
         ||   ( exp.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
+        ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_7BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
@@ -198,6 +199,7 @@ namespace RetroDevStudio.Parser
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
+            ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_7BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
@@ -227,9 +229,23 @@ namespace RetroDevStudio.Parser
       {
         foreach ( var valueGroup in OpcodeExpression.ValidValues )
         {
-          if ( ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
-          ||   ( valueGroup.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
-          ||   ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) )
+          if ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_7BIT )
+          {
+            if ( !Valid7BitValue( ByteValue ) )
+            {
+              AddError( lineIndex,
+                        Types.ErrorCode.E1016_VALUE_OUT_OF_BOUNDS_7BIT,
+                        "Value out of bounds for 7 bit, needs to be >= -64 and <= 127. Expression:" + TokensToExpression( Tokens ),
+                        Tokens[0].StartPos,
+                        Tokens[Tokens.Count - 1].EndPos + 1 - Tokens[0].StartPos );
+              ByteValue = ( (byte)ByteValue ) & 0x7f;
+              return false;
+            }
+            ByteValue = ( (byte)ByteValue ) & 0x7f;
+          }
+          else if ( ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+          ||        ( valueGroup.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )
+          ||        ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) )
           {
             if ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE )
             {
@@ -300,6 +316,20 @@ namespace RetroDevStudio.Parser
             ByteValue = ByteValue & 0xffffffff;
           }
         }
+      }
+      else if ( OpcodeExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_7BIT )
+      {
+        if ( !Valid7BitValue( ByteValue ) )
+        {
+          AddError( lineIndex,
+                    Types.ErrorCode.E1016_VALUE_OUT_OF_BOUNDS_7BIT,
+                    "Value out of bounds for 7 bit, needs to be >= -64 and <= 127. Expression:" + TokensToExpression( Tokens ),
+                    Tokens[0].StartPos,
+                    Tokens[Tokens.Count - 1].EndPos + 1 - Tokens[0].StartPos );
+          ByteValue = ( (byte)ByteValue ) & 0x7f;
+          return false;
+        }
+        ByteValue = ( (byte)ByteValue ) & 0x7f;
       }
       else if ( ( OpcodeExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
       ||        ( OpcodeExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT )

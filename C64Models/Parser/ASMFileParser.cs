@@ -3583,6 +3583,19 @@ namespace RetroDevStudio.Parser
 
 
 
+    private bool Valid7BitValue( long ByteValue )
+    {
+      if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+      &&   ( ( ByteValue < -64 )
+      ||     ( ByteValue > 127 ) ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
     private bool ValidByteValue( long ByteValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )

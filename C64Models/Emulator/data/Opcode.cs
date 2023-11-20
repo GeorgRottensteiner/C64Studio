@@ -24,7 +24,8 @@ namespace Tiny64
       COMPLEX,                        // mostly value from list, but with expression in front or in the middle
       EMPTY,                          // none (RET), to differ from RET cc
       EXPRESSION_8BIT_RELATIVE,
-      EXPRESSION_16BIT_RELATIVE
+      EXPRESSION_16BIT_RELATIVE,
+      EXPRESSION_7BIT                 // seriously, Motorola?
     }
 
 
