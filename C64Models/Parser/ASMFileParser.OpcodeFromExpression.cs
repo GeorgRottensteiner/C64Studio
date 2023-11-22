@@ -179,6 +179,7 @@ namespace RetroDevStudio.Parser
         ||   ( exp.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_7BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+        ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_15BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
         ||   ( exp.Type == Opcode.OpcodePartialExpression.EXPRESSION_32BIT )
@@ -201,6 +202,7 @@ namespace RetroDevStudio.Parser
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_7BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_8BIT )
+            ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_15BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
             ||   ( entry.Expression == Opcode.OpcodePartialExpression.EXPRESSION_32BIT )
@@ -263,6 +265,20 @@ namespace RetroDevStudio.Parser
               return false;
             }
             ByteValue = (byte)ByteValue;
+          }
+          else if ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_15BIT )
+          {
+            if ( !Valid15BitValue( ByteValue ) )
+            {
+              AddError( lineIndex,
+                        Types.ErrorCode.E1017_VALUE_OUT_OF_BOUNDS_15BIT,
+                        $"Value {ByteValue.ToString( "X" )} ({ByteValue}) is out of bounds for 15bit, needs to be >= -16384 and <= {0x7FFF}. Expression:{TokensToExpression( Tokens )}",
+                        Tokens[0].StartPos,
+                        Tokens[Tokens.Count - 1].EndPos + 1 - Tokens[0].StartPos );
+              ByteValue = ( (ushort)ByteValue ) & 0x7fff;
+              return false;
+            }
+            ByteValue = ( (ushort)ByteValue ) & 0x7fff;
           }
           else if ( ( valueGroup.Expression == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
           ||        ( valueGroup.Expression == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )
@@ -351,6 +367,20 @@ namespace RetroDevStudio.Parser
           return false;
         }
         ByteValue = (byte)ByteValue;
+      }
+      else if ( OpcodeExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_15BIT )
+      {
+        if ( !Valid15BitValue( ByteValue ) )
+        {
+          AddError( lineIndex,
+                    Types.ErrorCode.E1017_VALUE_OUT_OF_BOUNDS_15BIT,
+                    $"Value {ByteValue.ToString( "X" )} ({ByteValue}) is out of bounds for 15bit, needs to be >= -16384 and <= {0x7FFF}. Expression:{TokensToExpression( Tokens )}",
+                    Tokens[0].StartPos,
+                    Tokens[Tokens.Count - 1].EndPos + 1 - Tokens[0].StartPos );
+          ByteValue = ( (ushort)ByteValue ) & 0x7fff;
+          return false;
+        }
+        ByteValue = ( (ushort)ByteValue ) & 0x7fff;
       }
       else if ( ( OpcodeExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
       ||        ( OpcodeExpression.Type == Opcode.OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT )

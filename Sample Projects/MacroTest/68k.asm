@@ -349,6 +349,15 @@
           add.l a6,d1             ;D2 8E
           add.l a7,d0             ;D0 8F
 
+          add.l #1, d7            ;52 87
+          add.l #2, d6            ;54 86
+          add.l #3, d5            ;56 85
+          add.l #4, d4            ;58 84
+          add.l #5, d3            ;5A 83
+          add.l #6, d2            ;5C 82
+          add.l #7, d1            ;5E 81
+          add.l #8, d0            ;50 80
+
           add.w d0, ($0001).w     ;D1 78 00 01
           add.w d1, ($00FF).w     ;D3 78 00 FF
           add.w d2, ($0100).w     ;D5 78 01 00
@@ -772,6 +781,15 @@
           btst d5, LATE_FE(a2)      ;0B 2A 00 FE
           btst d6, LATE_02(a1)      ;0D 29 00 02
           btst d7, LATE_01(a0)      ;0F 28 00 01
+
+          btst #0, $000001          ;08 39 00 00 00 00 00 01
+          btst #1, $0000FF          ;08 39 00 01 00 00 00 FF
+          btst #2, $000100          ;08 39 00 02 00 00 01 00
+          btst #3, $00FF00          ;08 39 00 03 00 00 FF 00
+          btst #4, $010000          ;08 39 00 04 00 01 00 00
+          btst #5, $FF0000          ;08 39 00 05 00 FF 00 00
+          btst #6, $FF00FF          ;08 39 00 06 00 FF 00 FF
+          btst #7, $FFFFFF          ;08 39 00 07 00 FF FF FF
 
 
           bclr #0, ($FF00).w        ;08 B8 00 00 FF 00
@@ -1763,11 +1781,11 @@
           lea $0001(a0), a7         ;4F E8 00 01
           lea $00FF(a1), a6         ;4D E9 00 FF
           lea $0100(a2), a5         ;4B EA 01 00
-          lea $FF00(a3), a4         ;49 EB FF 00
+          lea $7F00(a3), a4         ;49 EB 7F 00
           lea LATE_0001(a4), a3     ;47 EC 00 01
           lea LATE_00FF(a5), a2     ;45 ED 00 FF
           lea LATE_0100(a6), a1     ;43 EE 01 00
-          lea LATE_FF00(a7), a0     ;41 EF FF 00
+          lea LATE_7F00(a7), a0     ;41 EF 7F 00
 
           lea (a0,d7.w), a7         ;4F F0 70 00
           lea (a1,d6.w), a6         ;4D F1 60 00
@@ -1788,13 +1806,13 @@
           lea LATE_7F(a7,d0.w), a0  ;41 F7 00 7F
 
           lea $01(pc,d7.w), a7      ;4F FB 70 01 ? displacement out of range?
-          lea $FF(pc,d6.w), a6      ;4D FB 60 FF ? displacement out of range?
+          lea $7F(pc,d6.w), a6      ;4D FB 60 7F ? displacement out of range?
           lea LATE_01(pc,d5.w), a5  ;4B FB 50 01 ? displacement out of range?
-          lea LATE_FF(pc,d4.w), a4  ;49 FB 40 FF ? displacement out of range?
+          lea LATE_7F(pc,d4.w), a4  ;49 FB 40 7F ? displacement out of range?
           lea $01(pc,d3.w), a3      ;47 FB 30 01 ? displacement out of range?
-          lea $FF(pc,d2.w), a2      ;45 FB 20 FF ? displacement out of range?
+          lea $7F(pc,d2.w), a2      ;45 FB 20 7F ? displacement out of range?
           lea LATE_01(pc,d1.w), a1  ;43 FB 10 01 ? displacement out of range?
-          lea LATE_FF(pc,d0.w), a0  ;41 FB 00 FF ? displacement out of range?
+          lea LATE_7F(pc,d0.w), a0  ;41 FB 00 7F ? displacement out of range?
 
           link a0, #$0001           ;4E 50 00 01
           link a1, #$00FF           ;4E 51 00 FF
@@ -1858,6 +1876,46 @@
           asr LATE_02(a2)       ;E0 EA 00 02
           asr LATE_FE(a1)       ;E0 E9 00 FE
           asr LATE_FF(a0)       ;E0 E8 00 FF
+
+          movem.l d0,-(a7)                 ;48E7 8000
+          movem.l d1,-(a6)                 ;48E6 4000
+          movem.l d2,-(a5)                 ;48E5 2000
+          movem.l d3,-(a4)                 ;48E4 1000
+          movem.l d4,-(a3)                 ;48E3 0800
+          movem.l d5,-(a2)                 ;48E2 0400
+          movem.l d6,-(a1)                 ;48E1 0200
+          movem.l d7,-(a0)                 ;48E0 0100
+          movem.l a0,-(a7)                 ;48E7 0080
+          movem.l a1,-(a6)                 ;48E6 0040
+          movem.l a2,-(a5)                 ;48E5 0020
+          movem.l a3,-(a4)                 ;48E4 0010
+          movem.l a4,-(a3)                 ;48E3 0008
+          movem.l a5,-(a2)                 ;48E2 0004
+          movem.l a6,-(a1)                 ;48E1 0002
+          movem.l a7,-(a0)                 ;48E0 0001
+          movem.l d0-a7,-(a4)              ;48E4 FFFF
+          movem.l d4-a4,-(a5)              ;48E5 0FF8
+          movem.l d0-d2/d1-d3/a2/a7,-(a1)  ;48E1 F021
+
+          movem.l (a7)+,d0                  ;4CDF 0001
+          movem.l (a6)+,d1                  ;4CDE 0002
+          movem.l (a5)+,d2                  ;4CDD 0004
+          movem.l (a4)+,d3                  ;4CDC 0008
+          movem.l (a3)+,d4                  ;4CDB 0010
+          movem.l (a2)+,d5                  ;4CDA 0020
+          movem.l (a1)+,d6                  ;4CD9 0040
+          movem.l (a0)+,d7                  ;4CD8 0080
+          movem.l (a7)+,a0                  ;4CDF 0100
+          movem.l (a6)+,a1                  ;4CDE 0200
+          movem.l (a5)+,a2                  ;4CDD 0400
+          movem.l (a4)+,a3                  ;4CDC 0800
+          movem.l (a3)+,a4                  ;4CDB 1000
+          movem.l (a2)+,a5                  ;4CDA 2000
+          movem.l (a1)+,a6                  ;4CD9 4000
+          movem.l (a0)+,a7                  ;4CD8 8000
+          movem.l (a4)+,d0-a7               ;4CDC FFFF
+          movem.l (a5)+,d4-a4               ;4CDD 1FF0
+          movem.l (a1)+,d0-d2/d1-d3/a2/a7   ;4CD9 840F
 
           move.b #$01, ($0001).w            ;11 FC 00 01 00 01
           move.b #$02, ($00FF).w            ;11 FC 00 02 00 FF
@@ -2038,6 +2096,15 @@
           move.l d5, (LATE_0000FF00).l    ;23 C5 00 00 FF 00
           move.l d6, (LATE_00010000).l    ;23 C6 00 01 00 00
           move.l d7, (LATE_FF000000).l    ;23 C7 FF 00 00 00
+
+          move.l d0, $0001(a7)          ;2F 40 00 01
+          move.l d1, $00FF(a6)          ;2D 41 00 FF
+          move.l d2, $0100(a5)          ;2B 42 01 00
+          move.l d3, $7F00(a4)          ;29 43 7F 00
+          move.l d4, LATE_0001(a3)      ;27 44 00 01
+          move.l d5, LATE_00FF(a2)      ;25 45 00 FF
+          move.l d6, LATE_0100(a1)      ;23 46 01 00
+          move.l d7, LATE_7F00(a0)      ;21 47 7F 00
 
           move.w d0, d7                ;3E 00
           move.w d1, d6                ;3C 01
@@ -3380,11 +3447,11 @@
           suba.w $0001(a0), a7          ;9E E8 00 01
           suba.w $00FF(a1), a6          ;9C E9 00 FF
           suba.w $0100(a2), a5          ;9A EA 01 00
-          suba.w $FF00(a3), a4          ;98 EB FF 00
+          suba.w $7F00(a3), a4          ;98 EB 7F 00
           suba.w LATE_0001(a4), a3      ;96 EC 00 01
           suba.w LATE_00FF(a5), a2      ;94 ED 00 FF
           suba.w LATE_0100(a6), a1      ;92 EE 01 00
-          suba.w LATE_FF00(a7), a0      ;90 EF FF 00
+          suba.w LATE_7F00(a7), a0      ;90 EF 7F 00
 
           suba.w (sp)+, a0              ;90 DF
           suba.w (a7)+, a1              ;92 DF
@@ -3887,6 +3954,7 @@ LATE_FF = $FF
 LATE_0001 = $0001
 LATE_00FF = $00FF
 LATE_0100 = $0100
+LATE_7F00 = $7F00
 LATE_FF00 = $FF00
 LATE_000001 = $000001
 LATE_00FF00 = $00FF00

@@ -5138,6 +5138,19 @@ namespace RetroDevStudio.Parser
 
 
 
+    private bool Valid15BitValue( long WordValue )
+    {
+      if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+      &&   ( ( WordValue < -16384 )
+      ||     ( WordValue > 0x7FFF ) ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
     private bool ValidWordValue( long WordValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
@@ -13733,6 +13746,94 @@ namespace RetroDevStudio.Parser
                     else
                     {
                       ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                    }
+                  }
+                }
+                ++currentParam;
+                ++currentExpression;
+                break;
+              case Opcode.OpcodePartialExpression.COMBINATION:
+                if ( ( matchParam.Count % 2 ) == 0 )
+                {
+                  isMatch = false;
+                }
+                else
+                {
+                  for ( int i = 0; i < matchParam.Count; i += 2 )
+                  {
+                    var match = matchParam[i];
+                    var validValue = potentialExpression.ValidValues[0].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[i].Content, true ) == 0 );
+                    if ( validValue == null )
+                    {
+                      isMatch = false;
+                      break;
+                    }
+                    if ( i + 1 == matchParam.Count )
+                    {
+                      // was the last, a single entry
+                      ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                    }
+                    else
+                    {
+                      // first of a range? or a single entry?
+                      var nextValue = potentialExpression.ValidValues[1].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[i + 1].Content, true ) == 0 );
+                      if ( nextValue != null )
+                      {
+                        // a range
+                        if ( i + 2 > matchParam.Count )
+                        {
+                          // not enough for end of range
+                          isMatch = false;
+                          break;
+                        }
+                        var validValue2 = potentialExpression.ValidValues[0].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[i + 2].Content, true ) == 0 );
+                        if ( validValue2 == null )
+                        {
+                          isMatch = false;
+                          break;
+                        }
+                        if ( i + 3 < matchParam.Count )
+                        {
+                          // verify it's not a d0-d1-a2 range
+                          var nextValue2 = potentialExpression.ValidValues[1].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[i + 3].Content, true ) == 0 );
+                          if ( nextValue2 != null )
+                          {
+                            // it's a d0-d1-a2 range
+                            isMatch = false;
+                            break;
+                          }
+                        }
+                        // handle range!
+                        ulong value1 = validValue.ReplacementValue;
+                        ulong value2 = validValue2.ReplacementValue;
+                        if ( value1 > value2 )
+                        {
+                          ulong temp = value1;
+                          value1 = value2;
+                          value2 = temp;
+                        }
+                        while ( value1 <= value2 )
+                        {
+                          ShiftedOpcodePatchValue |= value1 << potentialExpression.ReplacementValueShift;
+                          value1 <<= 1;
+                        }
+                        i += 2;
+                      }
+                      else
+                      {
+                        nextValue = potentialExpression.ValidValues[2].ValidValues.FirstOrDefault( vv => string.Compare( vv.Key, matchParam[i + 1].Content, true ) == 0 );
+                        if ( nextValue != null )
+                        {
+                          // was separator, so it's a single entry
+                          ShiftedOpcodePatchValue |= validValue.ReplacementValue << potentialExpression.ReplacementValueShift;
+                        }
+                        else
+                        {
+                          // neither range nor separator
+                          isMatch = false;
+                          break;
+                        }
+                      }
                     }
                   }
                 }

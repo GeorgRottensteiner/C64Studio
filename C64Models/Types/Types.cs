@@ -228,6 +228,7 @@ namespace RetroDevStudio.Types
     E1014_VALUE_OUT_OF_BOUNDS_RANGE         = 0x1014,
     E1015_VALUE_OUT_OF_BOUNDS_32BIT         = 0x1015,
     E1016_VALUE_OUT_OF_BOUNDS_7BIT          = 0x1016,
+    E1017_VALUE_OUT_OF_BOUNDS_15BIT         = 0x1017,
 
     E1100_RELATIVE_JUMP_TOO_FAR             = 0x1100,
     E1101_BANK_TOO_BIG                      = 0x1101,

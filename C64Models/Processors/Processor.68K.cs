@@ -31,6 +31,40 @@ namespace Tiny64
                                        new ValidValue( "d5", 5 ),
                                        new ValidValue( "d6", 6 ),
                                        new ValidValue( "d7", 7 ) };
+      var adRegisters = new List<ValidValue>() { new ValidValue( "d0", 0x8000 ),
+                                       new ValidValue( "d1", 0x4000 ),
+                                       new ValidValue( "d2", 0x2000 ),
+                                       new ValidValue( "d3", 0x1000 ),
+                                       new ValidValue( "d4", 0x0800 ),
+                                       new ValidValue( "d5", 0x0400 ),
+                                       new ValidValue( "d6", 0x0200 ),
+                                       new ValidValue( "d7", 0x0100 ),
+                                       new ValidValue( "a0", 0x0080 ),
+                                       new ValidValue( "a1", 0x0040 ),
+                                       new ValidValue( "a2", 0x0020 ),
+                                       new ValidValue( "a3", 0x0010 ),
+                                       new ValidValue( "a4", 0x0008 ),
+                                       new ValidValue( "a5", 0x0004 ),
+                                       new ValidValue( "a6", 0x0002 ),
+                                       new ValidValue( "a7", 0x0001 ),
+                                       new ValidValue( "sp", 0x0001 ) };
+      var adRegistersReverse = new List<ValidValue>() { new ValidValue( "d0", 0x0001 ),
+                                       new ValidValue( "d1", 0x0002 ),
+                                       new ValidValue( "d2", 0x0004 ),
+                                       new ValidValue( "d3", 0x0008 ),
+                                       new ValidValue( "d4", 0x0010 ),
+                                       new ValidValue( "d5", 0x0020 ),
+                                       new ValidValue( "d6", 0x0040 ),
+                                       new ValidValue( "d7", 0x0080 ),
+                                       new ValidValue( "a0", 0x0100 ),
+                                       new ValidValue( "a1", 0x0200 ),
+                                       new ValidValue( "a2", 0x0400 ),
+                                       new ValidValue( "a3", 0x0800 ),
+                                       new ValidValue( "a4", 0x1000 ),
+                                       new ValidValue( "a5", 0x2000 ),
+                                       new ValidValue( "a6", 0x4000 ),
+                                       new ValidValue( "a7", 0x8000 ),
+                                       new ValidValue( "sp", 0x8000 ) };
       var dRegistersDotW = new List<ValidValue>() { new ValidValue( "d0.w", 0 ),
                                        new ValidValue( "d1.w", 1 ),
                                        new ValidValue( "d2.w", 2 ),
@@ -61,6 +95,8 @@ namespace Tiny64
       var sr = new List<ValidValue>() { new ValidValue( "sr" ) };
       var sp = new List<ValidValue>() { new ValidValue( "sp", 7 ) };
       var pc = new List<ValidValue>() { new ValidValue( "pc" ) };
+      var rangeToken = new List<ValidValue>() { new ValidValue( "-" ) };
+      var separatorToken = new List<ValidValue>() { new ValidValue( "/" ) };
 
       var openingParenthesis = new List<ValidValue>() { new ValidValue( "(" ) };
       var openingParenthesisMinus = new List<ValidValue>() { new ValidValue( "-" ), new ValidValue( "(" ) };
@@ -344,6 +380,11 @@ namespace Tiny64
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 0 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
+
+      sys.AddOpcode( "add.l", 0x5080, 0, AddressingType.IMMEDIATE_8BIT, 0 )         // add.l #1, d0
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, immediatePrefix, quickAdd, empty, 9 ),
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters ) } );
 
       sys.AddOpcode( "add.w", 0xD1780000, 2, AddressingType.INDIRECT, 0 )           // add.w d0, ($0001).w
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
@@ -673,6 +714,11 @@ namespace Tiny64
             }
           } } );
 
+      sys.AddOpcode( "btst", 0x0839000000000000, 8, AddressingType.INDIRECT, 0 )          // btst #0, $123456   ;08 39 00 00 00 00 00 01
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, bits, empty, 32 ),
+          new OpcodeExpression( OpcodePartialExpression.EXPRESSION_24BIT ) } );
+      
       sys.AddOpcode( "btst", 0x01380000, 2, AddressingType.IMMEDIATE_16BIT, 0 )    // btst d0, ($FF00).w
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 25 ),
@@ -1391,7 +1437,7 @@ namespace Tiny64
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_16BIT ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_15BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( closingParenthesis )
@@ -1436,7 +1482,7 @@ namespace Tiny64
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT, 0 ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_7BIT, 0 ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( pc, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( comma ),
@@ -1546,6 +1592,20 @@ namespace Tiny64
               new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_8BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 41 ),
+              new ValidValueGroup( closingParenthesis )
+            }
+          } } );
+
+      sys.AddOpcode( "move.l", 0x21400000, 4, AddressingType.INDIRECT, 0 )       // move.l d0, $7FFF(a1)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMPLEX )
+          {
+            ValidValues = new List<ValidValueGroup>()
+            {
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_15BIT ),
+              new ValidValueGroup( openingParenthesis ),
+              new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 25 ),
               new ValidValueGroup( closingParenthesis )
             }
           } } );
@@ -2313,6 +2373,17 @@ namespace Tiny64
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 9 ) } );
 
+
+      sys.AddOpcode( "movem.l", 0x48E00000, 4, AddressingType.INDIRECT, 0 )       //       movem.l d0,-( a7 )
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.COMBINATION, adRegisters, rangeToken, separatorToken, 0 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesisMinus, aRegisters, closingParenthesis, 16 ) } );
+
+      sys.AddOpcode( "movem.l", 0x4CD80000, 4, AddressingType.INDIRECT, 0 )       //       movem.l (ax)+,d0/a1-a2
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesisPlus, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.COMBINATION, adRegistersReverse, rangeToken, separatorToken, 0 ) } );
+
       sys.AddOpcode( "muls.w", 0xC1FC0000, 1, AddressingType.IMMEDIATE_8BIT, 0 )  // muls.w #$01, d7
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
@@ -2796,13 +2867,13 @@ namespace Tiny64
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesisMinus, aRegisters, closingParenthesis, 0 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, aRegisters, 9 ) } );
 
-      sys.AddOpcode( "suba.w", 0x90E80000, 4, AddressingType.INDIRECT, 0 )                      // suba.w $10(a0), a1
+      sys.AddOpcode( "suba.w", 0x90E80000, 4, AddressingType.INDIRECT, 0 )                      // suba.w $1234(a0), a1
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.COMPLEX )
           {
             ValidValues = new List<ValidValueGroup>()
             {
-              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_16BIT ),
+              new ValidValueGroup( empty, OpcodePartialExpression.EXPRESSION_15BIT ),
               new ValidValueGroup( openingParenthesis ),
               new ValidValueGroup( aRegisters, OpcodePartialExpression.TOKEN_LIST, 16 ),
               new ValidValueGroup( closingParenthesis )
