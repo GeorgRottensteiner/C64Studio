@@ -358,6 +358,24 @@
           add.l #7, d1            ;5E 81
           add.l #8, d0            ;50 80
 
+          add.w #1, d7            ;52 47
+          add.w #2, d6            ;54 46
+          add.w #3, d5            ;56 45
+          add.w #4, d4            ;58 44
+          add.w #5, d3            ;5A 43
+          add.w #6, d2            ;5C 42
+          add.w #7, d1            ;5E 41
+          add.w #8, d0            ;50 40
+
+          add.b #1, d7            ;52 07
+          add.b #2, d6            ;54 06
+          add.b #3, d5            ;56 05
+          add.b #4, d4            ;58 04
+          add.b #5, d3            ;5A 03
+          add.b #6, d2            ;5C 02
+          add.b #7, d1            ;5E 01
+          add.b #8, d0            ;50 00
+
           add.w d0, ($0001).w     ;D1 78 00 01
           add.w d1, ($00FF).w     ;D3 78 00 FF
           add.w d2, ($0100).w     ;D5 78 01 00
@@ -1814,6 +1832,15 @@
           lea LATE_01(pc,d1.w), a1  ;43 FB 10 01 ? displacement out of range?
           lea LATE_7F(pc,d0.w), a0  ;41 FB 00 7F ? displacement out of range?
 
+          lea $000001,a7        ;4F F9 00 00 00 01
+          lea $0000FF,a6        ;4D F9 00 00 00 FF
+          lea $000100,a5        ;4B F9 00 00 01 00
+          lea $00FF00,a4        ;49 F9 00 00 FF 00
+          lea $010000,a3        ;47 F9 00 01 00 00
+          lea $FF0000,a2        ;45 F9 00 FF 00 00
+          lea $FF00FF,a1        ;43 F9 00 FF 00 FF
+          lea $123456,a0        ;41 F9 00 12 34 56
+
           link a0, #$0001           ;4E 50 00 01
           link a1, #$00FF           ;4E 51 00 FF
           link a2, #$0100           ;4E 52 01 00
@@ -1934,6 +1961,30 @@
           move.w #LATE_00FF, ($00FF).w      ;31 FC 00 FF 00 FF
           move.w #LATE_0100, (LATE_0100).w  ;31 FC 01 00 01 00
           move.w #LATE_FF00, (LATE_FF00).w  ;31 FC FF 00 FF 00
+
+          move.l d0,$000001         ;23C0 00000001
+          move.l d1,$0000FF         ;23C1 000000FF
+          move.l d2,$00FF00         ;23C2 0000FF00
+          move.l d3,$123456         ;23C3 00123456
+          move.l d4,LATE_000001     ;23C4 00000001
+          move.l d5,LATE_0000FF     ;23C5 000000FF
+          move.l d6,LATE_00FF00     ;23C6 0000FF00
+          move.l d7,LATE_123456     ;23C7 00123456
+
+          move.w d0,$000001         ;33C0 00000001
+          move.w d1,$0000FF         ;33C1 000000FF
+          move.w d2,$00FF00         ;33C2 0000FF00
+          move.w d3,$123456         ;33C3 00123456
+          move.w d4,LATE_000001     ;33C4 00000001
+          move.w d5,LATE_0000FF     ;33C5 000000FF
+          move.w d6,LATE_00FF00     ;33C6 0000FF00
+          move.w d7,LATE_123456     ;33C7 00123456
+
+          move.w d0,$180(a0)        ;3140 0180
+          move.w d0,$180(a7)        ;3F40 0180
+          move.w d7,$180(a0)        ;3147 0180
+          move.w d7,$7F80(a7)       ;3F47 7F80
+
 
           move.l #$00000001, ($FF00).w          ;21 FC 00 00 00 01 FF 00
           move.l #$0000FF00, ($0100).w          ;21 FC 00 00 FF 00 01 00
@@ -3957,6 +4008,7 @@ LATE_0100 = $0100
 LATE_7F00 = $7F00
 LATE_FF00 = $FF00
 LATE_000001 = $000001
+LATE_0000FF = $0000FF
 LATE_00FF00 = $00FF00
 LATE_010000 = $010000
 LATE_FF0000 = $FF0000
