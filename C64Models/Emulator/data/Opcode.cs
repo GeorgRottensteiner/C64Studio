@@ -10,21 +10,24 @@ namespace Tiny64
     public enum OpcodePartialExpression
     {
       UNUSED,
+      EXPRESSION_7BIT,                // seriously, Motorola?
       EXPRESSION_8BIT,
-      EXPRESSION_16BIT,
-      EXPRESSION_24BIT,
-      EXPRESSION_32BIT,
-      VALUE_FROM_LIST,                // e.g. lda $f0,x    ld D,B
-      TOKEN_LIST,                     // e.g. (HL)
+      EXPRESSION_8BIT_RELATIVE,
       ENCAPSULATED_EXPRESSION_8BIT,   // e.g. LD r,>(IX+d)<
+      EXPRESSION_15BIT,               // seriously, Motorola? #2
+      EXPRESSION_16BIT,
+      EXPRESSION_16BIT_RELATIVE,
       ENCAPSULATED_EXPRESSION_16BIT,  // e.g. LD A,(>nn<)
+      EXPRESSION_24BIT,
       ENCAPSULATED_EXPRESSION_24BIT,  // e.g. adda.w ($fffff100).w,a2
+      EXPRESSION_32BIT,
       ENCAPSULATED_EXPRESSION_32BIT,  // e.g. adda.l #$12345678,d0
+      VALUE_FROM_LIST,                // e.g. lda $f0,x    ld D,B
       ENCAPSULATED_VALUE_FROM_LIST,   // e.g. adda.b (a0)
+      TOKEN_LIST,                     // e.g. (HL)
       COMPLEX,                        // mostly value from list, but with expression in front or in the middle
       EMPTY,                          // none (RET), to differ from RET cc
-      EXPRESSION_8BIT_RELATIVE,
-      EXPRESSION_16BIT_RELATIVE
+      COMBINATION                     // seriously, Motorola? #3 - Major WTF (register range mapped to bits)
     }
 
 
@@ -164,7 +167,7 @@ namespace Tiny64
 
     public string                         Mnemonic = "";
     public ulong                          ByteValue = ulong.MaxValue;
-    public int                            NumOperands = -1;
+    public int                            OpcodeSize = -1;
     public AddressingType                 Addressing = AddressingType.UNKNOWN;
     public int                            NumCycles = 0;
     public int                            NumPenaltyCycles = 0;
@@ -255,7 +258,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      NumOperands = 0;
+      OpcodeSize = 0;
       this.Addressing = Addressing;
     }
 
@@ -263,7 +266,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      NumOperands = 0;
+      OpcodeSize = 0;
       this.Addressing = Addressing;
       this.NumCycles = NumCycles;
       this.PageBoundaryCycles = PageBoundaryCycles;
@@ -274,7 +277,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      this.NumOperands = NumOperands;
+      this.OpcodeSize = NumOperands;
       this.Addressing = Addressing;
     }
 
@@ -282,7 +285,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      this.NumOperands = NumOperands;
+      this.OpcodeSize = NumOperands;
       this.Addressing = Addressing;
       this.NumCycles = NumCycles;
       this.PageBoundaryCycles = PageBoundaryCycles;
@@ -293,7 +296,7 @@ namespace Tiny64
     {
       this.Mnemonic = Mnemonic;
       this.ByteValue = ByteValue;
-      this.NumOperands = NumOperands;
+      this.OpcodeSize = NumOperands;
       this.Addressing = Addressing;
       this.NumCycles = NumCycles;
       this.PageBoundaryCycles = PageBoundaryCycles;

@@ -40,7 +40,7 @@ namespace RetroDevStudio.Parser
         return false;
       }
       opcode = m_Processor.OpcodeByValue[instruction];
-      if ( CodeStartAddress + opcode.NumOperands >= DataStartAddress + Data.Length )
+      if ( CodeStartAddress + opcode.OpcodeSize >= DataStartAddress + Data.Length )
       {
         // opcode with operands does not fit
         Debug.Log( "disassembler code operands outside of data" );
@@ -371,7 +371,7 @@ namespace RetroDevStudio.Parser
             break;
           }
 
-          progStepPos += opcode.NumOperands + 1;
+          progStepPos += opcode.OpcodeSize + 1;
         }
       }
 
@@ -475,10 +475,10 @@ namespace RetroDevStudio.Parser
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
-          else if ( instruction.first.NumOperands > 0 )
+          else if ( instruction.first.OpcodeSize > 0 )
           {
             // is there a label jumping in the middle of the next opcode?
-            var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.NumOperands ) );
+            var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.OpcodeSize ) );
             foreach ( var addressInside in addressesInside )
             {
               sb.AppendLine();
@@ -499,7 +499,7 @@ namespace RetroDevStudio.Parser
               }
             }
 
-            var  labelsInside = NamedLabels.Where( l => ( l.Key > trueAddress ) && ( l.Key < trueAddress + instruction.first.NumOperands ) );
+            var  labelsInside = NamedLabels.Where( l => ( l.Key > trueAddress ) && ( l.Key < trueAddress + instruction.first.OpcodeSize ) );
             foreach ( var labelInside in labelsInside )
             {
               sb.AppendLine();
@@ -526,7 +526,7 @@ namespace RetroDevStudio.Parser
             sb.Append( " " );
             sb.Append( instruction.first.ByteValue.ToString( "X2" ) );
 
-            switch ( instruction.first.NumOperands )
+            switch ( instruction.first.OpcodeSize )
             {
               case 0:
                 sb.Append( "      " );
@@ -546,7 +546,7 @@ namespace RetroDevStudio.Parser
           }
           sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
           sb.Append( "\r\n" );
-          trueAddress += instruction.first.NumOperands + 1;
+          trueAddress += instruction.first.OpcodeSize + 1;
         }
         else
         {

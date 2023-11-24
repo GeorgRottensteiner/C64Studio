@@ -87,7 +87,7 @@ namespace Tiny64
       sys.AddOpcode( "eor", 0x41, 1, AddressingType.ZEROPAGE_INDIRECT_X, 6 );         // EOR ($ll,X)
       sys.AddOpcode( "wdm", 0x42, 0, AddressingType.IMPLICIT, 2 );                // WDM
       sys.AddOpcode( "eor", 0x43, 1, AddressingType.STACK_RELATIVE, 4 );          // EOR $ll,SP
-      sys.AddOpcode( "mvp", 0x440000, 2, AddressingType.BLOCK_MOVE_XYC, 7 )         // MVP $ll, $ll
+      sys.AddOpcode( "mvp", 0x440000, 3, AddressingType.BLOCK_MOVE_XYC, 7 )         // MVP $ll, $ll
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 0 ),
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 8 ) } );
@@ -108,7 +108,7 @@ namespace Tiny64
       sys.AddOpcode( "eor", 0x51, 1, AddressingType.ZEROPAGE_INDIRECT_Y, 5, 1 );      // EOR ($ll), Y
       sys.AddOpcode( "eor", 0x52, 1, AddressingType.ZEROPAGE_INDIRECT, 5 );      // eor ($12)
       sys.AddOpcode( "eor", 0x53, 1, AddressingType.ZEROPAGE_INDIRECT_SP_Y, 7 );      // EOR ($ll,SP),Y
-      sys.AddOpcode( "mvn", 0x540000, 2, AddressingType.BLOCK_MOVE_XYC, 7 )               // MVN $ll,$ll
+      sys.AddOpcode( "mvn", 0x540000, 3, AddressingType.BLOCK_MOVE_XYC, 7 )               // MVN $ll,$ll
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 0 ),
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT, empty, 8 ) } );

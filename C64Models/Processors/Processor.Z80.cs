@@ -855,19 +855,19 @@ namespace Tiny64
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, cc, 16 + 3 ), 
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_16BIT ) }  );
 
-      sys.AddOpcode( "jr", 0x3800, 1, AddressingType.RELATIVE, 7, 5 )                     // JR C,e
+      sys.AddOpcode( "jr", 0x3800, 2, AddressingType.RELATIVE, 7, 5 )                     // JR C,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, c ),
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
-      sys.AddOpcode( "jr", 0x3000, 1, AddressingType.RELATIVE, 7, 5 )                     // JR NC,e
+      sys.AddOpcode( "jr", 0x3000, 2, AddressingType.RELATIVE, 7, 5 )                     // JR NC,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, nc ),
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
-      sys.AddOpcode( "jr", 0x2800, 1, AddressingType.RELATIVE, 7, 5 )                     // JR Z,e
+      sys.AddOpcode( "jr", 0x2800, 2, AddressingType.RELATIVE, 7, 5 )                     // JR Z,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, z ),
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );
-      sys.AddOpcode( "jr", 0x2000, 1, AddressingType.RELATIVE, 7, 5 )                     // JR NZ,e
+      sys.AddOpcode( "jr", 0x2000, 2, AddressingType.RELATIVE, 7, 5 )                     // JR NZ,e
         .ParserExpressions.AddRange( new List<OpcodeExpression>() { 
           new OpcodeExpression( OpcodePartialExpression.TOKEN_LIST, nz ),
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE ) } );

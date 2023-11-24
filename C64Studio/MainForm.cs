@@ -451,6 +451,11 @@ namespace RetroDevStudio
           throw new Exception( "Missing font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
         }
       }
+      if ( m_FontC64.Families.Length == 0 )
+      {
+        MessageBox.Show( "C64Studio loaded the true type font file C64_Pro_Mono_v1.0-STYLE.ttf, but it does not properly work.\r\nMake sure it's in the path of RetroDevStudio.exe.\r\n", "Can't load font" );
+        throw new Exception( "Failed to load font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
+      }
 
       /*
       // TASM - decompile from project file
