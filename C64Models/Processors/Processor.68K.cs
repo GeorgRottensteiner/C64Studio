@@ -2468,17 +2468,17 @@ namespace Tiny64
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesisPlus, 0 ) } );
 
-      sys.AddOpcode( "ori.b", 0x00000000, 1, AddressingType.IMMEDIATE_32BIT, 0 )  // ori.b #$01, d7
+      sys.AddOpcode( "ori.b", 0x00000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )  // ori.b #$01, d7
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_8BIT, immediatePrefix, empty, 0 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
 
-      sys.AddOpcode( "ori.w", 0x00400000, 2, AddressingType.IMMEDIATE_32BIT, 0 )  // ori.w #$1234, d7
+      sys.AddOpcode( "ori.w", 0x00400000, 4, AddressingType.IMMEDIATE_32BIT, 0 )  // ori.w #$1234, d7
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, immediatePrefix, empty, 0 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 16 ) } );
 
-      sys.AddOpcode( "ori.l", 0x008000000000, 2, AddressingType.IMMEDIATE_32BIT, 0 )  // ori.l #$123456, d7
+      sys.AddOpcode( "ori.l", 0x008000000000, 6, AddressingType.IMMEDIATE_32BIT, 0 )  // ori.l #$123456, d7
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_24BIT, immediatePrefix, empty, 0 ),
           new OpcodeExpression( OpcodePartialExpression.VALUE_FROM_LIST, dRegisters, 32 ) } );
