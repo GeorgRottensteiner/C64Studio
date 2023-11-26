@@ -147,6 +147,11 @@ namespace RetroDevStudio
 
     public void SetASMFileInfo( Types.ASM.FileInfo FileInfo )
     {
+      if ( ASMFileInfo == FileInfo )
+      {
+        return;
+      }
+
       SourceASMEx   asm = null;
 
       if ( ( BaseDoc != null )

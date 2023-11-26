@@ -847,6 +847,7 @@ namespace RetroDevStudio.Tasks
 
           FileInfo = Doc.ASMFileInfo;
 
+          Debug.Log( "pre addoutput" );
           Core.MainForm.AddOutputMessages( asmFileInfo );
 
           var compileTarget = Core.DetermineTargetType( Doc, parser );
@@ -893,6 +894,7 @@ namespace RetroDevStudio.Tasks
 
           Doc.LastBuildInfo = BuildInfo;
 
+          Debug.Log( "pre updatefrommessages" );
           if ( parser.Warnings > 0 )
           {
             if ( OutputMessages )
@@ -903,6 +905,7 @@ namespace RetroDevStudio.Tasks
             }
             Core.ShowDocument( Core.MainForm.m_CompileResult, false );
           }
+          Debug.Log( "post updatefrommessages" );
         }
 
         if ( string.IsNullOrEmpty( BuildInfo.TargetFile ) )
@@ -940,6 +943,7 @@ namespace RetroDevStudio.Tasks
           Core.AddToOutput( "Compiled to file " + BuildInfo.TargetFile + ", " + parser.AssembledOutput.Assembly.Length + " bytes" + System.Environment.NewLine );
         }
 
+        Debug.Log( "pre post build" );
         if ( ( configSetting != null )
         &&   ( configSetting.PostBuildChain.Active ) )
         {
@@ -977,6 +981,7 @@ namespace RetroDevStudio.Tasks
         BuildInfo.TimeStampOfTargetFile = Core.Compiling.FileLastWriteTime( BuildInfo.TargetFile );
         Doc.HasBeenSuccessfullyBuilt = true;
 
+        Debug.Log( "post post build, pre setasmfileinfo" );
         if ( asmFileInfo != null )
         {
           // spread asm info to all participating files
@@ -999,6 +1004,7 @@ namespace RetroDevStudio.Tasks
 
         Core.Compiling.m_RebuiltFiles.Add( Doc.DocumentFilename );
 
+        Debug.Log( "buildelement done" );
         return true;
       }
       catch ( Exception ex )

@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor6510.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.While.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.OpcodeFromExpression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Text.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Processors\Processor.68K.cs" />

@@ -208,6 +208,9 @@ namespace RetroDevStudio.Types.ASM
 
     public GR.Collections.MultiMap<int, Parser.ParserBase.ParseMessage>   Messages = new GR.Collections.MultiMap<int, Parser.ParserBase.ParseMessage>();
 
+    public List<Types.AutoCompleteItemInfo>       _KnownTokens = new List<AutoCompleteItemInfo>();
+    public GR.Collections.MultiMap<string, SymbolInfo> _KnownTokenInfo = new GR.Collections.MultiMap<string, SymbolInfo>();
+
 
 
     public FileInfo()
@@ -966,14 +969,17 @@ namespace RetroDevStudio.Types.ASM
 
     public MultiMap<string, SymbolInfo> KnownTokenInfo()
     {
-      GR.Collections.MultiMap<string, SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
+      if ( _KnownTokenInfo.Count > 0 )
+      {
+        return _KnownTokenInfo;
+      }
 
       foreach ( var zoneList in Zones )
       {
         foreach ( var zone in zoneList.Value )
         {
           FindTrueLineSource( zone.LineIndex, out zone.DocumentFilename, out zone.LocalLineIndex, out zone.SourceInfo );
-          knownTokens.Add( zoneList.Key, zone );
+          _KnownTokenInfo.Add( zoneList.Key, zone );
         }
       }
       foreach ( KeyValuePair<string, SymbolInfo> label in Labels )
@@ -982,7 +988,7 @@ namespace RetroDevStudio.Types.ASM
         {
           FindTrueLineSource( label.Value.LineIndex, out label.Value.DocumentFilename, out label.Value.LocalLineIndex, out label.Value.SourceInfo );
         }
-        knownTokens.Add( label.Key, label.Value );
+        _KnownTokenInfo.Add( label.Key, label.Value );
       }
       foreach ( KeyValuePair<string, Types.ASM.UnparsedEvalInfo> label in UnparsedLabels )
       {
@@ -990,35 +996,38 @@ namespace RetroDevStudio.Types.ASM
 
         token.Name = label.Key;
         FindTrueLineSource( label.Value.LineIndex, out token.DocumentFilename, out token.LineIndex, out token.SourceInfo );
-        knownTokens.Add( token.Name, token );
+        _KnownTokenInfo.Add( token.Name, token );
       }
       foreach ( var tempLabel in TempLabelInfo )
       {
         FindTrueLineSource( tempLabel.LineIndex, out tempLabel.Symbol.DocumentFilename, out tempLabel.Symbol.LocalLineIndex, out tempLabel.Symbol.SourceInfo );
-        knownTokens.Add( tempLabel.Name, tempLabel.Symbol );
+        _KnownTokenInfo.Add( tempLabel.Name, tempLabel.Symbol );
       }
-      return knownTokens;
+      return _KnownTokenInfo;
     }
 
 
 
     public List<AutoCompleteItemInfo> KnownTokens()
     {
-      List<Types.AutoCompleteItemInfo> knownTokens = new List<Types.AutoCompleteItemInfo>();
+      if ( _KnownTokens.Count > 0 )
+      {
+        return _KnownTokens;
+      }
 
       foreach ( var label in Labels )
       {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Symbol = label.Value, Token = label.Key, ToolTipTitle = label.Key } );
+        _KnownTokens.Add( new Types.AutoCompleteItemInfo() { Symbol = label.Value, Token = label.Key, ToolTipTitle = label.Key } );
       }
       foreach ( var unparsedLabel in UnparsedLabels )
       {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Token = unparsedLabel.Key, ToolTipTitle = unparsedLabel.Key } );
+        _KnownTokens.Add( new Types.AutoCompleteItemInfo() { Token = unparsedLabel.Key, ToolTipTitle = unparsedLabel.Key } );
       }
       foreach ( var opcode in Processor.Opcodes )
       {
-        knownTokens.Add( new Types.AutoCompleteItemInfo() { Token = opcode.Key, ToolTipTitle = opcode.Key } );
+        _KnownTokens.Add( new Types.AutoCompleteItemInfo() { Token = opcode.Key, ToolTipTitle = opcode.Key } );
       }
-      return knownTokens;
+      return _KnownTokens;
     }
 
 

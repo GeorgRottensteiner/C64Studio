@@ -5450,6 +5450,8 @@ namespace RetroDevStudio
 
     public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile, bool CreateRelocationFile, out RetroDevStudio.Types.ASM.FileInfo ASMFileInfo )
     {
+      Debug.Log( "ParseFile" );
+
       ASMFileInfo = null;
 
       RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
@@ -5647,6 +5649,8 @@ namespace RetroDevStudio
       {
         Document.BaseDoc.FileParsed = true;
       }
+
+      Debug.Log( "ParseFile done" );
       return result;
     }
 

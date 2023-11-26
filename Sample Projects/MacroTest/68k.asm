@@ -1,6 +1,16 @@
 !cpu 68000
 
 * = $00
+          ;adda #$x, ax
+          adda #$0001,a0              ;D0 FC 00 01 - 52 48 ??
+          adda #$00FF,a1              ;D2 FC 00 FF
+          adda #$0100,a2              ;D4 FC 01 00
+          adda #$FF00,a3              ;D6 FC FF 00
+          adda #LATE_0001,a4          ;D8 FC 00 01  -52 4C ??
+          adda #LATE_00FF,a5          ;DA FC 00 FF
+          adda #LATE_0100,a6          ;DC FC 01 00
+          adda #LATE_FF00,a7          ;DE FC FF 00
+          adda #$1234,sp              ;DE FC 12 34
 
           adda.w #$0001,a0            ;D0 FC 00 01 - 52 48 ??
           adda.w #$00FF,a1            ;D2 FC 00 FF
@@ -12,6 +22,17 @@
           adda.w #LATE_FF00,a7        ;DE FC FF 00
           adda.w #$1234,sp            ;DE FC 12 34
 
+
+          ;adda ($x), ax
+          adda ($0001).w, a0        ;D0 F8 00 01
+          adda ($00FF).w, a1        ;D2 F8 00 FF
+          adda ($0100).w, a2        ;D4 F8 01 00
+          adda ($FF00).w, a3        ;D6 F8 FF 00
+          adda (LATE_0001).w, a4    ;D8 F8 00 01
+          adda (LATE_00FF).w, a5    ;DA F8 00 FF
+          adda (LATE_0100).w, a6    ;DC F8 01 00
+          adda (LATE_FF00).w, a7    ;DE F8 FF 00
+          adda ($1234).w, sp        ;DE F8 12 34
 
           adda.w ($0001).w, a0        ;D0 F8 00 01
           adda.w ($00FF).w, a1        ;D2 F8 00 FF
@@ -33,6 +54,8 @@
           adda.l (LATE_FF0000).l, a7    ;DF F9 00 FF 00 00
           adda.l ($123456).l, sp        ;DF F9 00 12 34 56
 
+
+          ;adda dx, ax
           adda.w d7, a0                 ;D0 C7
           adda.w d6, a1                 ;D2 C6
           adda.w d5, a2                 ;D4 C5
@@ -43,6 +66,8 @@
           adda.w d0, a7                 ;DE C0
           adda.w d0, sp                 ;DE C0
 
+
+          ;adda (ax), ax
           adda.w (sp), a0               ;D0 D7
           adda.w (a7), a1               ;D2 D7
           adda.w (a6), a2               ;D4 D6
@@ -53,11 +78,15 @@
           adda.w (a1), a7               ;DE D1
           adda.w (a0), sp               ;DE D0
 
+
+          ;adda $x(ax), ax
           adda.w $0001(a0), a7          ;DE E8 00 01
           adda.w $00FF(a1), a6          ;DC E9 00 FF
           adda.w LATE_01(a4), a3        ;D6 EC 00 01
           adda.w LATE_FF(a5), a2        ;D4 ED 00 FF
 
+
+          ;adda (ax)+, ax
           adda.w (sp)+, a0              ;D0 DF
           adda.w (a7)+, a1              ;D2 DF
           adda.w (a6)+, a2              ;D4 DE
@@ -68,6 +97,8 @@
           adda.w (a1)+, a7              ;DE D9
           adda.w (a0)+, sp              ;DE D8
 
+
+          ;adda -(ax), ax
           adda.w -(sp), a0              ;D0 E7
           adda.w -(a7), a1              ;D2 E7
           adda.w -(a6), a2              ;D4 E6
@@ -78,6 +109,8 @@
           adda.w -(a1), a7              ;DE E1
           adda.w -(a0), sp              ;DE E0
 
+
+          ;adda (ax,dx), ax
           adda.w (a0,d7.w), a7          ;DE F0 70 00
           adda.w (a1,d6.w), a6          ;DC F1 60 00
           adda.w (a2,d5.w), a5          ;DA F2 50 00
@@ -87,6 +120,8 @@
           adda.w (a6,d1.w), a1          ;D2 F6 10 00
           adda.w (a7,d0.w), a0          ;D0 F7 00 00
 
+
+          ;adda $x(ax,dx) ax
           adda.w $01(a0,d7.w), a7       ;DE F0 70 01
           adda.w $7F(a1,d6.w), a6       ;DC F1 60 7F
           adda.w LATE_01(a2,d5.w), a5   ;DA F2 50 01
@@ -96,7 +131,8 @@
           adda.w LATE_01(a6,d1.w), a1   ;D2 F6 10 01
           adda.w LATE_7F(a7,d0.w), a0   ;D0 F7 00 7F
 
-          ;addi
+
+          ;addi #$x, dx
           addi.b #$01,d0                ;06 00 00 01    - 5200 ??
           addi.b #$FF,d1                ;06 01 00 FF
           addi.b #$01,d2                ;06 02 00 01    - 5202 ??
@@ -115,6 +151,8 @@
           addi.l #$01000000,d6          ;06 86 01 00 00 00
           addi.l #$FF000000,d7          ;06 87 FF 00 00 00
 
+
+          ;addi #$x, ($x)
           addi.w #$0001, ($FF00).w          ;06 78 00 01 FF 00  - 5278 FF 00 ??
           addi.w #$00FF, ($0100).w          ;06 78 00 FF 01 00
           addi.w #$0100, (LATE_00FF).w      ;06 78 01 00 00 FF
@@ -142,6 +180,8 @@
           addi.l #LATE_00010000, (LATE_00FF).w  ;06 B8 00 01 00 00 00 FF
           addi.l #LATE_FF000000, (LATE_0001).w  ;06 B8 FF 00 00 00 00 01
 
+
+          ;addi #$x, (ax)
           addi.b #$01, (a7)                     ;06 17 00 01  - 5217
           addi.b #$02, (a6)                     ;06 16 00 02  - 5416
           addi.b #$FE, (a5)                     ;06 15 00 FE
@@ -151,6 +191,8 @@
           addi.b #LATE_FE, (a1)                 ;06 11 00 FE
           addi.b #LATE_FF, (a0)                 ;06 10 00 FF
 
+
+          ;addi #$x, $x(ax)
           addi.w #$0001, $FF(a0)          ;06 68 00 01 00 FF  - 5268 00FF
           addi.w #$00FF, $FE(a1)          ;06 69 00 FF 00 FE
           addi.w #$0100, LATE_02(a2)      ;06 6A 01 00 00 02
@@ -169,6 +211,8 @@
           addi.l #LATE_00010000, LATE_FF(a6)  ;06 AE 00 01 00 00 00 FF
           addi.l #LATE_FF000000, LATE_01(a7)  ;06 AF FF 00 00 00 00 01
 
+
+          ;addi #$x, (ax)+
           addi.b #$01, (a0)+              ;06 18 00 01  - 5218
           addi.b #$02, (a1)+              ;06 19 00 02  - 5419
           addi.b #$FE, (a2)+              ;06 1A 00 FE
@@ -178,6 +222,8 @@
           addi.b #LATE_FE, (a6)+          ;06 1E 00 FE
           addi.b #LATE_FF, (a7)+          ;06 1F 00 FF
 
+
+          ;addi #$x, -(ax)
           addi.b #$01, -(a0)              ;06 20 00 01
           addi.b #$02, -(a1)              ;06 21 00 02
           addi.b #$FE, -(a2)              ;06 22 00 FE
@@ -187,6 +233,8 @@
           addi.b #LATE_FE, -(a6)          ;06 26 00 FE
           addi.b #LATE_FF, -(a7)          ;06 27 00 FF
 
+
+          ;addq #$x, ($x)
           addq.b #1, ($0001).w            ;52 38 00 01
           addq.b #2, ($00FF).w            ;54 38 00 FF
           addq.b #3, ($0100).w            ;56 38 01 00
@@ -196,6 +244,8 @@
           addq.b #7, (LATE_0100).w        ;5E 38 01 00
           addq.b #8, (LATE_FF00).w        ;50 38 FF 00
 
+
+          ;addq #$x, dx
           addq.b #1, d7                   ;52 07
           addq.b #2, d6                   ;54 06
           addq.b #3, d5                   ;56 05
@@ -214,6 +264,8 @@
           addq.w #7, d1                   ;5E 41
           addq.w #8, d0                   ;50 40
 
+
+          ;addq #$x, (ax)
           addq.w #1, (a7)                 ;52 57
           addq.w #2, (a6)                 ;54 56
           addq.w #3, (a5)                 ;56 55
@@ -223,6 +275,8 @@
           addq.w #7, (a1)                 ;5E 51
           addq.w #8, (a0)                 ;50 50
 
+
+          ;addq #$x, $x($x)
           addq.b #1, $01(a7)              ;52 2F 00 01
           addq.b #2, $02(a6)              ;54 2E 00 02
           addq.b #3, $FE(a5)              ;56 2D 00 FE
@@ -241,6 +295,8 @@
           addq.w #7, LATE_FE(a1)          ;5E 69 00 FE
           addq.w #8, LATE_FF(a0)          ;50 68 00 FF
 
+
+          ;addq #$x, (ax)+
           addq.w #1, (a7)+                ;52 5F
           addq.w #2, (a6)+                ;54 5E
           addq.w #3, (a5)+                ;56 5D
@@ -250,6 +306,8 @@
           addq.w #7, (a1)+                ;5E 59
           addq.w #8, (a0)+                ;50 58
 
+
+          ;addq #$x, -(ax)
           addq.w #1, -(a7)                ;52 67
           addq.w #2, -(a6)                ;54 66
           addq.w #3, -(a5)                ;56 65
@@ -259,6 +317,8 @@
           addq.w #7, -(a1)                ;5E 61
           addq.w #8, -(a0)                ;50 60
 
+
+          ;addq #$x, ax
           addq.w #1, a7                   ;52 4F
           addq.w #2, a6                   ;54 4E
           addq.w #3, a5                   ;56 4D
@@ -277,6 +337,8 @@
           addq.l #7, a1                   ;5E 89
           addq.l #8, a0                   ;50 88
 
+
+          ;add dx, dx
           add.w d0,d7             ;DE 40
           add.w d1,d6             ;DC 41
           add.w d2,d5             ;DA 42
@@ -286,6 +348,8 @@
           add.w d6,d1             ;D2 46
           add.w d7,d0             ;D0 47
 
+
+          ;add ($x), dx
           add.w ($0001).w, d0     ;D0 78 00 01
           add.w ($00FF).w, d1     ;D2 78 00 FF
           add.w ($0100).w, d2     ;D4 78 01 00
@@ -295,6 +359,8 @@
           add.w (LATE_0100).w, d6 ;DC 78 01 00
           add.w (LATE_FF00).w, d7 ;DE 78 FF 00
 
+
+          ;add (ax), dx
           add.w (a7), d0          ;D0 57
           add.w (a6), d1          ;D2 56
           add.w (a5), d2          ;D4 55
@@ -304,6 +370,8 @@
           add.w (a1), d6          ;DC 51
           add.w (a0), d7          ;DE 50
 
+
+          ;add $x(ax), dx
           add.b $01(a0),d7        ;DE 28 00 01
           add.b $02(a1),d6        ;DC 29 00 02
           add.b $FE(a2),d5        ;DA 2A 00 FE
@@ -322,6 +390,8 @@
           add.w LATE_FE(a6),d1    ;D2 6E 00 FE
           add.w LATE_FF(a7),d0    ;D0 6F 00 FF
 
+
+          ;add (ax)+, dx
           add.w (a0)+,d7          ;DE 58
           add.w (a1)+,d6          ;DC 59
           add.w (a2)+,d5          ;DA 5A
@@ -331,6 +401,8 @@
           add.w (a6)+,d1          ;D2 5E
           add.w (a7)+,d0          ;D0 5F
 
+
+          ;add -(ax), dx
           add.w -(a0),d7          ;DE 60
           add.w -(a1),d6          ;DC 61
           add.w -(a2),d5          ;DA 62
@@ -340,6 +412,8 @@
           add.w -(a6),d1          ;D2 66
           add.w -(a7),d0          ;D0 67
 
+
+          ;add ax, dx
           add.l a0,d7             ;DE 88
           add.l a1,d6             ;DC 89
           add.l a2,d5             ;DA 8A
@@ -349,6 +423,8 @@
           add.l a6,d1             ;D2 8E
           add.l a7,d0             ;D0 8F
 
+
+          ;add #$x, dx
           add.l #1, d7            ;52 87
           add.l #2, d6            ;54 86
           add.l #3, d5            ;56 85
@@ -376,6 +452,8 @@
           add.b #7, d1            ;5E 01
           add.b #8, d0            ;50 00
 
+
+          ;add dx, ($x)
           add.w d0, ($0001).w     ;D1 78 00 01
           add.w d1, ($00FF).w     ;D3 78 00 FF
           add.w d2, ($0100).w     ;D5 78 01 00
@@ -385,6 +463,8 @@
           add.w d6, (LATE_0100).w ;DD 78 01 00
           add.w d7, (LATE_FF00).w ;DF 78 FF 00
 
+
+          ;add dx, (ax)
           add.w d0,(a7)           ;D1 57
           add.w d1,(a6)           ;D3 56
           add.w d2,(a5)           ;D5 55
@@ -394,6 +474,8 @@
           add.w d6,(a1)           ;DD 51
           add.w d7,(a0)           ;DF 50
 
+
+          ;add dx, $x(ax)
           add.w d0, $01(a7)       ;D1 6F 00 01
           add.w d1, $02(a6)       ;D3 6E 00 02
           add.w d2, $FE(a5)       ;D5 6D 00 FE
@@ -412,6 +494,8 @@
           add.l d6, LATE_FE(a1)   ;DD A9 00 FE
           add.l d7, LATE_FF(a0)   ;DF A8 00 FF
 
+
+          ;add dx, (ax)+
           add.l d0,(a7)+          ;D1 9F
           add.l d1,(a6)+          ;D3 9E
           add.l d2,(a5)+          ;D5 9D
@@ -421,6 +505,8 @@
           add.l d6,(a1)+          ;DD 99
           add.l d7,(a0)+          ;DF 98
 
+
+          ;add dx, -(ax)
           add.w d0,-(a7)          ;D1 67
           add.w d1,-(a6)          ;D3 66
           add.w d2,-(a5)          ;D5 65
@@ -431,6 +517,7 @@
           add.w d7,-(a0)          ;DF 60
 
 
+          ;andi #$x, dx
           andi.b #$01, d7         ;02 07 00 01
           andi.b #$02, d6         ;02 06 00 02
           andi.b #$FE, d5         ;02 05 00 FE
@@ -458,6 +545,8 @@
           andi.l #LATE_00010000, d1   ;02 81 00 01 00 00
           andi.l #LATE_FF000000, d0   ;02 80 FF 00 00 00
 
+
+          ;andi #$x, ($x)
           andi.b #$01, ($0001).w          ;02 38 00 01 00 01
           andi.b #$02, ($00FF).w          ;02 38 00 02 00 FF
           andi.b #$FE, (LATE_0100).w      ;02 38 00 FE 01 00
@@ -476,6 +565,8 @@
           andi.w #LATE_0100, (LATE_0100).w  ;02 78 01 00 01 00
           andi.w #LATE_FF00, (LATE_FF00).w  ;02 78 FF 00 FF 00
 
+
+          ;andi #$x, (ax)
           andi.b #$01, (a7)       ;02 17 00 01
           andi.b #$02, (a6)       ;02 16 00 02
           andi.b #$FE, (a5)       ;02 15 00 FE
@@ -485,6 +576,8 @@
           andi.b #LATE_FE, (a1)   ;02 11 00 FE
           andi.b #LATE_FF, (a0)   ;02 10 00 FF
 
+
+          ;andi #$x, $x(ax)
           andi.b #$01, $ff(a7)           ;02 2F 00 01 00 FF
           andi.b #$02, $fe(a6)           ;02 2E 00 02 00 FE
           andi.b #$FE, $02(a5)           ;02 2D 00 FE 00 02
@@ -494,6 +587,8 @@
           andi.b #LATE_FE, LATE_02(a1)   ;02 29 00 FE 00 02
           andi.b #LATE_FF, LATE_01(a0)   ;02 28 00 FF 00 01
 
+
+          ;andi #$x, (ax)+
           andi.b #$01, (a7)+      ;02 1F 00 01
           andi.b #$02, (a6)+      ;02 1E 00 02
           andi.b #$FE, (a5)+      ;02 1D 00 FE
@@ -503,6 +598,8 @@
           andi.b #LATE_FE, (a1)+  ;02 19 00 FE
           andi.b #LATE_FF, (a0)+  ;02 18 00 FF
 
+
+          ;andi #$x, -(ax)
           andi.b #$01, -(a7)      ;02 27 00 01
           andi.b #$02, -(a6)      ;02 26 00 02
           andi.b #$FE, -(a5)      ;02 25 00 FE
@@ -512,6 +609,8 @@
           andi.b #LATE_FE, -(a1)  ;02 21 00 FE
           andi.b #LATE_FF, -(a0)  ;02 20 00 FF
 
+
+          ;andi #$x, $x(ax)
           andi.w #$0001, $ff(a7)           ;02 6F 00 01 00 FF
           andi.w #$00FF, $fe(a6)           ;02 6E 00 FF 00 FE
           andi.w #$0100, $02(a5)           ;02 6D 01 00 00 02
@@ -521,6 +620,8 @@
           andi.w #LATE_0100, LATE_02(a1)   ;02 69 01 00 00 02
           andi.w #LATE_FF00, LATE_01(a0)   ;02 68 FF 00 00 01
 
+
+          ;andi #$x, (ax, dx)
           andi.b #$01,(a0,d7.w)       ;02 30 00 01 70 00
           andi.b #$FF,(a1,d6.w)       ;02 31 00 FF 60 00
           andi.b #LATE_01,(a2,d5.w)   ;02 32 00 01 50 00
@@ -539,6 +640,8 @@
           andi.w #LATE_0100, LATE_7F(a6,d1.w)   ;02 76 01 00 10 7F
           andi.w #LATE_FF00, LATE_01(a7,d0.w)   ;02 77 FF 00 00 01
 
+
+          ;andi #$x, sr
           andi #$0001,sr      ;02 7C 00 01
           andi #$00FF,sr      ;02 7C 00 FF
           andi #$0100,sr      ;02 7C 01 00
@@ -548,6 +651,8 @@
           andi #LATE_0100,sr  ;02 7C 01 00
           andi #LATE_FF00,sr  ;02 7C FF 00
 
+
+          ;and dx, dx
           and.b d0,d7             ;CE 00
           and.b d1,d6             ;CC 01
           and.b d2,d5             ;CA 02
@@ -557,6 +662,8 @@
           and.b d6,d1             ;C2 06
           and.b d7,d0             ;C0 07
 
+
+          ;and ($x), dx
           and.b ($0001).w, d7       ;CE 38 00 01
           and.b ($00FF).w, d6       ;CC 38 00 FF
           and.b ($0100).w, d5       ;CA 38 01 00
@@ -575,6 +682,8 @@
           and.w (LATE_0100).w, d1   ;C2 78 01 00
           and.w (LATE_FF00).w, d0   ;C0 78 FF 00
 
+
+          ;and (ax), dx
           and.w (a7), d0            ;C0 57
           and.w (a6), d1            ;C2 56
           and.w (a5), d2            ;C4 55
@@ -584,6 +693,8 @@
           and.w (a1), d6            ;CC 51
           and.w (a0), d7            ;CE 50
 
+
+          ;and $x(ax), dx
           and.w $01(a7), d0         ;C0 6F 00 01
           and.w $02(a6), d1         ;C2 6E 00 02
           and.w $FE(a5), d2         ;C4 6D 00 FE
@@ -593,6 +704,8 @@
           and.w LATE_FE(a1), d6     ;CC 69 00 FE
           and.w LATE_FF(a0), d7     ;CE 68 00 FF
 
+
+          ;and (ax)+, dx
           and.w (a7)+, d0           ;C0 5F
           and.w (a6)+, d1           ;C2 5E
           and.w (a5)+, d2           ;C4 5D
@@ -602,6 +715,8 @@
           and.w (a1)+, d6           ;CC 59
           and.w (a0)+, d7           ;CE 58
 
+
+          ;and -(ax), dx
           and.w -(a7), d0           ;C0 67
           and.w -(a6), d1           ;C2 66
           and.w -(a5), d2           ;C4 65
@@ -611,6 +726,8 @@
           and.w -(a1), d6           ;CC 61
           and.w -(a0), d7           ;CE 60
 
+
+          ;and dx, ($x)
           and.w d0, ($0001).w       ;C1 78 00 01
           and.w d1, ($00FF).w       ;C3 78 00 FF
           and.w d2, ($0100).w       ;C5 78 01 00
@@ -620,6 +737,8 @@
           and.w d6, (LATE_0100).w   ;CD 78 01 00
           and.w d7, (LATE_FF00).w   ;CF 78 FF 00
 
+
+          ;and dx, (ax)
           and.w d0,(a7)             ;C1 57
           and.w d1,(a6)             ;C3 56
           and.w d2,(a5)             ;C5 55
@@ -629,6 +748,8 @@
           and.w d6,(a1)             ;CD 51
           and.w d7,(a0)             ;CF 50
 
+
+          ;and dx, $x(ax)
           and.w d0, $01(a7)         ;C1 6F 00 01
           and.w d1, $02(a6)         ;C3 6E 00 02
           and.w d2, $FE(a5)         ;C5 6D 00 FE
@@ -638,6 +759,8 @@
           and.w d6, LATE_FE(a1)     ;CD 69 00 FE
           and.w d7, LATE_FF(a0)     ;CF 68 00 FF
 
+
+          ;and dx, (ax)+
           and.w d0,(a7)+            ;C1 5F
           and.w d1,(a6)+            ;C3 5E
           and.w d2,(a5)+            ;C5 5D
@@ -647,6 +770,8 @@
           and.w d6,(a1)+            ;CD 59
           and.w d7,(a0)+            ;CF 58
 
+
+          ;and dx, -(ax)
           and.w d0,-(a7)            ;C1 67
           and.w d1,-(a6)            ;C3 66
           and.w d2,-(a5)            ;C5 65
@@ -655,6 +780,8 @@
           and.w d5,-(a2)            ;CB 62
           and.w d6,-(a1)            ;CD 61
           and.w d7,-(a0)            ;CF 60
+
+
 
 -
           bra.s -                  ;60 FE
