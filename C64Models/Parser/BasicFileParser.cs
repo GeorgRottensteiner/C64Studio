@@ -3526,7 +3526,7 @@ namespace RetroDevStudio.Parser
       {
         char    chartoCheck = BasicText[i];
 
-        if ( chartoCheck > (char)255 )
+        //if ( chartoCheck > (char)255 )
         {
           var c64Key = ConstantData.FindC64KeyByUnicode( chartoCheck );
           if ( c64Key != null )

@@ -2000,6 +2000,11 @@ namespace RetroDevStudio
         result = result.Replace( "$(ConfigName)", Document.Project.Settings.CurrentConfig.Name );
         result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
       }
+      if ( ( StudioCore.Navigating.Solution != null )
+      &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+      {
+        result = result.Replace( "$(SolutionPath)", System.IO.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) );
+      }
       result = result.Replace( "$(MediaManager)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) + "\"" );
       result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
 
@@ -5450,8 +5455,6 @@ namespace RetroDevStudio
 
     public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile, bool CreateRelocationFile, out RetroDevStudio.Types.ASM.FileInfo ASMFileInfo )
     {
-      Debug.Log( "ParseFile" );
-
       ASMFileInfo = null;
 
       RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
@@ -5650,7 +5653,6 @@ namespace RetroDevStudio
         Document.BaseDoc.FileParsed = true;
       }
 
-      Debug.Log( "ParseFile done" );
       return result;
     }
 
