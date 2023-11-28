@@ -5490,6 +5490,8 @@ namespace RetroDevStudio
 
       bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, out ASMFileInfo );
 
+      Document.ASMFileInfo = ASMFileInfo;
+
       if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
       &&   ( Document.Element != null ) )

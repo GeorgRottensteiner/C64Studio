@@ -926,9 +926,12 @@ namespace RetroDevStudio.Documents
         }
 
         // quick compatibility hack with petcat
-        basicText = basicText.Replace( "~", "{SHIFT-ARROW UP}" );
-        basicText = basicText.Replace( "\\", "{POUND}" );
-        basicText = basicText.Replace( "^", "{ARROW UP}" );
+        string arrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out bool hadError );
+        string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out hadError );
+        string pound = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out hadError );
+        basicText = basicText.Replace( "~", shiftArrowUp );
+        basicText = basicText.Replace( "\\", pound );
+        basicText = basicText.Replace( "^", arrowUp );
 
         // ugly hack to fix wrong flash on chars in non Basic 3.5 dialects
         if ( !m_BASICDialectName.Contains( "3.5" ) )
