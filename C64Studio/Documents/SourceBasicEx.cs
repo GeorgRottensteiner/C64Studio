@@ -932,6 +932,14 @@ namespace RetroDevStudio.Documents
         basicText = basicText.Replace( "~", shiftArrowUp );
         basicText = basicText.Replace( "\\", pound );
         basicText = basicText.Replace( "^", arrowUp );
+        if ( basicText.Contains( "{" ) )
+        {
+          // BASIC text has macros set!
+          if ( m_SymbolMode )
+          {
+            basicText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( basicText, out hadError );
+          }
+        }
 
         // ugly hack to fix wrong flash on chars in non Basic 3.5 dialects
         if ( !m_BASICDialectName.Contains( "3.5" ) )
