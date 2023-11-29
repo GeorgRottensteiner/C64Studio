@@ -92,7 +92,7 @@ namespace RetroDevStudio.Dialogs
 
     private void btnOK_Click( object sender, EventArgs e )
     {
-      DiskName = Util.ToFilename( _FilenameType, editDiskName.Text );
+      DiskName = Util.ToPETSCII( editDiskName.Text );
 
       while ( ( DiskName.Length > 0 )
       &&      ( DiskName.ByteAt( (int)DiskName.Length - 1 ) == 32 ) )
@@ -104,7 +104,7 @@ namespace RetroDevStudio.Dialogs
         DiskName.AppendU8( 0xa0 );
       }
 
-      DiskID = Util.ToFilename( _FilenameType, editDiskID.Text );
+      DiskID = Util.ToPETSCII( editDiskID.Text );
 
       while ( ( DiskID.Length > 0 )
       &&      ( DiskID.ByteAt( (int)DiskName.Length - 1 ) == 32 ) )
