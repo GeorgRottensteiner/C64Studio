@@ -72,6 +72,7 @@ namespace RetroDevStudio.Dialogs
       // 
       // listPETSCII
       // 
+      this.listPETSCII.AllowPopup = false;
       this.listPETSCII.AutoScroll = true;
       this.listPETSCII.AutoScrollHorizontalMaximum = 100;
       this.listPETSCII.AutoScrollHorizontalMinimum = 0;
@@ -127,10 +128,10 @@ namespace RetroDevStudio.Dialogs
       this.editDiskID.Font = new System.Drawing.Font("Courier New", 9F);
       this.editDiskID.LetterWidth = 18;
       this.editDiskID.Location = new System.Drawing.Point(422, 9);
-      this.editDiskID.MaxLength = 2;
+      this.editDiskID.MaxLength = 5;
       this.editDiskID.Name = "editDiskID";
       this.editDiskID.Selection = "";
-      this.editDiskID.Size = new System.Drawing.Size(36, 23);
+      this.editDiskID.Size = new System.Drawing.Size(90, 23);
       this.editDiskID.TabIndex = 0;
       this.editDiskID.Text = "ID";
       this.editDiskID.KeyDown += new System.Windows.Forms.KeyEventHandler(this.editDiskID_KeyDown);

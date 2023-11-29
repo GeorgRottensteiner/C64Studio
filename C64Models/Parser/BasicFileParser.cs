@@ -198,7 +198,7 @@ namespace RetroDevStudio.Parser
 
       AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@";
 
-      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#";
+      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#" + (char)0xee1e;
 
       SetBasicDialect( Settings.BASICDialect );
 

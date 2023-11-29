@@ -3,8 +3,7 @@ using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-
+using GR.Memory;
 
 namespace RetroDevStudio.Formats
 {
@@ -235,23 +234,24 @@ namespace RetroDevStudio.Formats
 
 
 
-    public ushort DiskID
+    public ByteBuffer DiskID
     {
       get
       {
         if ( TRACK_HEADER - 1 >= Tracks.Count )
         {
-          return 0;
+          return new ByteBuffer( 5 );
         }
         Track trackHeader = Tracks[TRACK_HEADER - 1];
 
-        return trackHeader.Sectors[SECTOR_HEADER].Data.UInt16NetworkOrderAt( 0xa2 );
+        return trackHeader.Sectors[SECTOR_HEADER].Data.SubBuffer( 0xa2, 5 );
       }
       set
       {
         Track trackHeader = Tracks[TRACK_HEADER - 1];
 
-        trackHeader.Sectors[SECTOR_HEADER].Data.SetU16NetworkOrderAt( 0xa2, value );
+        value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 0, 2, 0xa2 );
+        value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 3, 2, 0xa2 + 3 );
       }
     }
 
@@ -1282,7 +1282,7 @@ namespace RetroDevStudio.Formats
         title.Append( Util.ToPETSCII( "0 \"" ) );
         title.Append( DiskName );
         title.Append( Util.ToPETSCII( "\" " ) );
-        title.AppendU16NetworkOrder( DiskID );
+        title.Append( DiskID );
         return title;
       }
     }

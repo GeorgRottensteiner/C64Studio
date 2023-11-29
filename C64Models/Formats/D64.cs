@@ -934,22 +934,6 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override GR.Memory.ByteBuffer Title
-    {
-      get
-      {
-        GR.Memory.ByteBuffer    title = new GR.Memory.ByteBuffer();
-
-        title.Append( Util.ToPETSCII( "0 \"" ) );
-        title.Append( DiskName );
-        title.Append( Util.ToPETSCII( "\" " ) );
-        title.AppendU16NetworkOrder( DiskID );
-        return title;
-      }
-    }
-
-
-
     public override string LastError
     {
       get 
