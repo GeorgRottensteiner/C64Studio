@@ -9081,6 +9081,7 @@ window.status = ""#print"";
       {
         if ( SyntaxHighlighter != null )
           SyntaxHighlighter.Dispose();
+        timerCaret.Dispose();
         timer.Dispose();
         timer2.Dispose();
         middleClickScrollingTimer.Dispose();
