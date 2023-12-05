@@ -2956,6 +2956,8 @@ namespace RetroDevStudio.Documents
       panelCharacters.ItemWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.ItemHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.Invalidate();
+      UpdatePalette();
+
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       if ( panelCharacters.Items.Count > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
@@ -2973,8 +2975,6 @@ namespace RetroDevStudio.Documents
         panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
       }
       panelCharacters.EndUpdate();
-
-      UpdatePalette();
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {

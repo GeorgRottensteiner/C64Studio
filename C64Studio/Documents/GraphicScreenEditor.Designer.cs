@@ -30,9 +30,9 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage10 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage11 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage12 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +64,7 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnZoomIn = new System.Windows.Forms.Button();
       this.btnClearScreen = new System.Windows.Forms.Button();
       this.btnToolValidate = new System.Windows.Forms.RadioButton();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
@@ -110,6 +111,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnZoomOut = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -436,6 +438,8 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnZoomOut);
+      this.tabEditor.Controls.Add(this.btnZoomIn);
       this.tabEditor.Controls.Add(this.btnClearScreen);
       this.tabEditor.Controls.Add(this.btnToolValidate);
       this.tabEditor.Controls.Add(this.btnToolSelect);
@@ -482,6 +486,17 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // btnZoomIn
+      // 
+      this.btnZoomIn.Image = global::RetroDevStudio.Properties.Resources.zoom_in;
+      this.btnZoomIn.Location = new System.Drawing.Point(171, 438);
+      this.btnZoomIn.Name = "btnZoomIn";
+      this.btnZoomIn.Size = new System.Drawing.Size(26, 26);
+      this.btnZoomIn.TabIndex = 41;
+      this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In");
+      this.btnZoomIn.UseVisualStyleBackColor = true;
+      this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+      // 
       // btnClearScreen
       // 
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
@@ -498,7 +513,7 @@
       this.btnToolValidate.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolValidate.Checked = true;
       this.btnToolValidate.Image = global::RetroDevStudio.Properties.Resources.tool_validate;
-      this.btnToolValidate.Location = new System.Drawing.Point(128, 438);
+      this.btnToolValidate.Location = new System.Drawing.Point(134, 438);
       this.btnToolValidate.Name = "btnToolValidate";
       this.btnToolValidate.Size = new System.Drawing.Size(24, 24);
       this.btnToolValidate.TabIndex = 36;
@@ -735,7 +750,7 @@
       // 
       this.colorSelector.AutoResize = false;
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage4;
+      this.colorSelector.DisplayPage = fastImage10;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -748,7 +763,7 @@
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage5;
+      this.charEditor.DisplayPage = fastImage11;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -883,7 +898,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage12;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -990,6 +1005,18 @@
       this.listColorMappingColors.TabIndex = 0;
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
+      // 
+      // btnZoomOut
+      // 
+      this.btnZoomOut.Enabled = false;
+      this.btnZoomOut.Image = global::RetroDevStudio.Properties.Resources.zoom_out;
+      this.btnZoomOut.Location = new System.Drawing.Point(203, 438);
+      this.btnZoomOut.Name = "btnZoomOut";
+      this.btnZoomOut.Size = new System.Drawing.Size(26, 26);
+      this.btnZoomOut.TabIndex = 41;
+      this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out");
+      this.btnZoomOut.UseVisualStyleBackColor = true;
+      this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
       // 
       // GraphicScreenEditor
       // 
@@ -1099,5 +1126,7 @@
     private System.Windows.Forms.Button btnExportToBASICHexData;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.Button btnClearScreen;
+    private System.Windows.Forms.Button btnZoomIn;
+    private System.Windows.Forms.Button btnZoomOut;
   }
 }
