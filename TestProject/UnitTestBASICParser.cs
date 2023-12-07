@@ -623,7 +623,7 @@ GOTO LABEL10
                       44 -
                       45 *
                       46 /
-                      47 ^
+                      47 {ARROW UP}
                       48 AND
                       49 OR
                       50 >

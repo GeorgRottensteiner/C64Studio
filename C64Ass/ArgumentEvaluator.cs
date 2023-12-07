@@ -32,6 +32,25 @@ namespace C64Ass
       _Args.AddParameter( "-IGNORE", true );
       _Args.AddSwitch( "V", true );
       _Args.AddSwitch( "-VERSION", true );
+
+      _Args.AddSwitch( "A", true );
+      _Args.AddSwitchValue( "A", "C64Studio" );
+      _Args.AddSwitchValue( "A", "ACME" );
+      _Args.AddSwitchValue( "A", "PDS" );
+      _Args.AddSwitchValue( "A", "DASM" );
+      _Args.AddSwitchValue( "A", "C64ASM" );
+      _Args.AddSwitchValue( "A", "CBMPRGSTUDIO" );
+      _Args.AddSwitchValue( "A", "TASM" );
+      _Args.AddSwitchValue( "A", "KICKASSEMBLER" );
+      _Args.AddSwitch( "-ASSEMBLER", true );
+      _Args.AddSwitchValue( "-ASSEMBLER", "C64Studio" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "ACME" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "PDS" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "DASM" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "C64ASM" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "CBMPRGSTUDIO" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "TASM" );
+      _Args.AddSwitchValue( "-ASSEMBLER", "KICKASSEMBLER" );
     }
 
 
@@ -47,13 +66,23 @@ namespace C64Ass
       System.Console.WriteLine( "                                 Multiple paths are separated by comma" );
       System.Console.WriteLine( "-F, --FORMAT [PLAIN/CBM]       - Sets the output file format" );
       System.Console.WriteLine( "                                 PLAIN is a raw binary, CBM a .prg file" );
-      //System.Console.WriteLine( "--SETPC                    - Forces " );
+      System.Console.WriteLine( "--SETPC [Address]              - Overrides the source start address" );
       System.Console.WriteLine( "-AUTOTRUNCATELITERALS          - Clamps literal values to bytes/words without error" );
       System.Console.WriteLine( "-D, --DEFINE [Key=Value]       - Add Predefines" );
       System.Console.WriteLine( "-N, --NOWARNINGS               - Show no warnings" );
       System.Console.WriteLine( "-I, --IGNORE [WarningNo]       - Ignore specific Warnings" );
       System.Console.WriteLine( "                                 Multiple warnings separated by comma" );
       System.Console.WriteLine( "-V, --VERSION                  - Display version" );
+      System.Console.WriteLine( "-A, --ASSEMBLER [Assembler]    - Use [Assembler]'s syntax" );
+      System.Console.WriteLine( "                                 Valid values are" );
+      System.Console.WriteLine( "                                 C64STUDIO (default)" );
+      System.Console.WriteLine( "                                 ACME" );
+      System.Console.WriteLine( "                                 C64ASM" );
+      System.Console.WriteLine( "                                 CBMPRGSTUDIO" );
+      System.Console.WriteLine( "                                 DASM" );
+      System.Console.WriteLine( "                                 KICKASSEMBLER" );
+      System.Console.WriteLine( "                                 PDS" );
+      System.Console.WriteLine( "                                 TASM" );
     }
 
 
@@ -138,6 +167,42 @@ namespace C64Ass
         ParseWarnings( WarningsToIgnore, _Args.Parameter( "-IGNORE" ) );
       }
       config.AutoTruncateLiteralValues = _Args.IsParameterSet( "-AUTOTRUNCATELITERALS" );
+      if ( ( _Args.IsParameterSet( "A" ) )
+      ||   ( _Args.IsParameterSet( "-ASSEMBLER" ) ) )
+      {
+        string  assembler = _Args.Parameter( "A" );
+        if ( string.IsNullOrEmpty( assembler ) )
+        {
+          assembler = _Args.Parameter( "-ASSEMBLER" );
+        }
+        switch ( assembler )
+        {
+          case "C64STUDIO":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+            break;
+          case "ACME":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.ACME;
+            break;
+          case "DASM":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.DASM;
+            break;
+          case "CBMPRGSTUDIO":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.CBMPRGSTUDIO;
+            break;
+          case "C64ASM":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.C64ASM;
+            break;
+          case "KICKASSEMBLER":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.KICKASSEMBLER;
+            break;
+          case "TASM":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.TASM;
+            break;
+          case "PDS":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.PDS;
+            break;
+        }
+      }
 
       for ( int i = 0; i < _Args.UnknownArgumentCount() - 1; ++i )
       {

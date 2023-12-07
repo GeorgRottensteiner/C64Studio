@@ -9219,7 +9219,7 @@ namespace RetroDevStudio.Parser
 
     private bool IsPlainAssignment( string operatorToken )
     {
-      return m_AssemblerSettings.PlainAssignmentOperatos.Contains( operatorToken );
+      return m_AssemblerSettings.PlainAssignmentOperators.Contains( operatorToken );
     }
 
 
@@ -9391,7 +9391,7 @@ namespace RetroDevStudio.Parser
           resultingValue = CreateIntegerSymbol( originalValue.ToInteger() >> newValue.ToInt32() );
           return true;
         default:
-          if ( m_AssemblerSettings.PlainAssignmentOperatos.Contains( operatorToken ) )
+          if ( m_AssemblerSettings.PlainAssignmentOperators.Contains( operatorToken ) )
           {
             resultingValue = newValue;
             return true;
