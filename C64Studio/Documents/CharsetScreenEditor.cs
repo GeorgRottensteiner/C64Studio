@@ -3005,7 +3005,19 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_HIRES:
           numColorsInChooser = 32;
-          numColorsBackground = 32;
+          numColorsBackground = 256;
+          break;
+        case TextMode.MEGA65_40_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_NCM:
+        case TextMode.MEGA65_40_X_25_FCM:
+        case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_80_X_25_NCM:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+          numColorsBackground = 256;
           break;
         case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C128 );
