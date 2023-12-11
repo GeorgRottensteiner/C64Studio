@@ -205,6 +205,8 @@ namespace RetroDevStudio.Documents
       editDisassembly.ConvertTabsToSpaces = Core.Settings.TabConvertToSpaces;
       editDisassembly.TabLength = Core.Settings.TabSize;
 
+      editDisassembly.CaretWidth = Core.Settings.CaretWidth;
+
       //call OnTextChanged for refresh syntax highlighting
       editDisassembly.OnTextChanged();
     }

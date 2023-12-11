@@ -536,7 +536,8 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = "#";
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
-      editSource.TabLength = Core.Settings.TabSize;
+      editSource.TabLength  = Core.Settings.TabSize;
+      editSource.CaretWidth = Core.Settings.CaretWidth;
 
       //call OnTextChanged for refresh syntax highlighting
       editSource.OnTextChanged();
