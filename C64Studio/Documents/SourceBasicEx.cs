@@ -13,6 +13,7 @@ using C64Models.BASIC;
 using GR.Image;
 using RetroDevStudio.Dialogs;
 using FastColoredTextBoxNS;
+using GR.Memory;
 
 namespace RetroDevStudio.Documents
 {
@@ -1344,6 +1345,11 @@ namespace RetroDevStudio.Documents
     public override void Copy()
     {
       editSource.Copy();
+
+      var bytes = Encoding.Default.GetBytes( editSource.SelectedText );
+
+      var bb = new ByteBuffer( bytes );
+      Debug.Log( bb.ToString() );
     }
 
 

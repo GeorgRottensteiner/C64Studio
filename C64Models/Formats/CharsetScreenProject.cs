@@ -272,6 +272,21 @@ namespace RetroDevStudio.Formats
       Info.CharsetData      = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
 
       int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) );
+      int numBytesPerCharImage = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.TextCharModeFromTextMode( Mode ) );
+
+      if ( ( Info.Data == ExportCharsetScreenInfo.ExportData.CHARSET )
+      &&   ( Info.SelectedCharactersInCharset.Count > 0 ) )
+      {
+        // we have a list of characters
+        var newData = new GR.Memory.ByteBuffer( (uint)( numBytesPerCharImage * Info.SelectedCharactersInCharset.Count ) );
+        for ( int i = 0; i < Info.SelectedCharactersInCharset.Count; ++i )
+        {
+          Info.CharsetData.CopyTo( newData, Info.SelectedCharactersInCharset[i] * numBytesPerCharImage, numBytesPerCharImage, i * numBytesPerCharImage );
+        }
+        Info.CharsetData = newData;
+      }
+
+      
 
       // NCM mode, one character covers two "slots"
       if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )

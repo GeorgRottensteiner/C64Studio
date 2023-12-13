@@ -1,4 +1,18 @@
 ﻿C64Studio
+o -> Damit ich im geliebten Studio im C64 Basic Modus lange Variablennamen verwenden kann, also nur während des Editierens, 
+     wünsche ich mir eine Liste, die mir alle meine verwendeten langen Variablennamen anzeigt und automatisch dahinter den sich daraus 
+     ergebenen 2-Zeichen-Variablennamen, der editiert werden kann. Bei Kollisionen gibt es eine Warning. 
+     Im Code jedoch arbeite ich dann mit längeren Variablennamen.
+
+    Bsp.:
+    Code: Table:
+    10 HAUS$="MEIN HAUS" HAUS$ | HA$
+    20 GRENZE1=10: GRENZE2=20 ***PIEP*** GRENZE1 | GR
+    GRENZE2 | GR ** Error: Duplicate **
+    [ Nach Edit: GRENZE1 | G1
+    GRENZE2 | G2 ]
+    usw.
+  So könnte man noch schöneren Code basteln und das Listing auf dem C64 enthält dann halt die in der Tabelle definierten Kurznamen fröhlich.
 o Breakpoints speichern!
 o Das aktuelle Studio übersetzt das {DOWN} nach einem "Toggle symbol/macro" in ein {CTRL-Q} .
   Läuft zwar, ist aber unschön. (BASIC V2, siehe Zeile 11)

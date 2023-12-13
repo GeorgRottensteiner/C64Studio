@@ -3566,8 +3566,15 @@ namespace RetroDevStudio.Documents
         Area        = DetermineExportRectangle(),
         RowByRow    = ( comboExportOrientation.SelectedIndex == 0 ),
         Data        = (ExportCharsetScreenInfo.ExportData)comboExportData.SelectedIndex,
-        Image       = m_Image
+        Image       = m_Image,
       };
+
+      if ( ( exportInfo.Data == ExportCharsetScreenInfo.ExportData.CHARSET )
+      &&   ( comboExportArea.SelectedIndex == 1 ) )
+      {
+        // export selection (use selection from charset control)
+        exportInfo.SelectedCharactersInCharset = charEditor.SelectedIndices;
+      }
 
 
       editDataExport.Text = "";

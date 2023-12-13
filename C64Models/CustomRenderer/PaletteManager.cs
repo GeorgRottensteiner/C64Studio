@@ -13,6 +13,7 @@ namespace RetroDevStudio
           return ConstantData.PaletteCommanderX16();
         case TextCharMode.MEGA65_NCM:
         case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
           return ConstantData.PaletteMega65_256();

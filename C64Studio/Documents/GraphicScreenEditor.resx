@@ -126,16 +126,20 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>407, 17</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>407, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnClearScreen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAFdJREFUOE/NikEOwDAIw/j/p7dLQQbSDu1US5Egjl3D8zOBkpMEtUhyUX3a1CLJ
+        vAAADrwBlbxySQAAAFdJREFUOE/NikEOwDAIw/j/p7dLQQbSDu1US5Egjl3D8zOBkpMEtUhyUX3a1CLJ
         RfVt4+U0DQo1oFO+idPNP3AxjYSSI3bsGxxwyI59wwdf2aLGKtdg9gIShmuVRNGUogAAAABJRU5ErkJg
         gg==
+</value>
+  </data>
+  <data name="btnToolLineDrag.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAgSURBVDhPYxhU4D8Ukw1gBowaggCjhmCCwWfIoAAMDACg
+        LyHfWFUZ5wAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnMirrorY.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

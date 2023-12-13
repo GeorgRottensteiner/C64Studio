@@ -1,5 +1,6 @@
+#RetroDevStudio.MetaData.BASIC:2049,BASIC Lightning,uppercase,10,10
 5P$="FILE"
-10O$="{CTRL-A}"+CHR$(0)+CHR$(255)+P$:FOR I=LEN(P$) TO 131:O$=O$+CHR$(0):NEXT
+10O$=""+CHR$(0)+CHR$(255)+P$:FOR I=LEN(P$) TO 131:O$=O$+CHR$(0):NEXT
 20TI$="000000"
 30CR=0:P=4609
 40FORI=4TO131

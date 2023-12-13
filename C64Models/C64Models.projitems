@@ -102,6 +102,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteDisplayMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicTileMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\SymbolReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextCharMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Lookup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextMode.cs" />

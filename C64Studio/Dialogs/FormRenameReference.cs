@@ -147,7 +147,7 @@ namespace RetroDevStudio.Dialogs
 
       GR.Collections.Set<int>   usedReferences = new GR.Collections.Set<int>( _AllReferences );
 
-      if ( !_Symbol.References.ContainsValue( _Symbol.LineIndex ) )
+      if ( !_Symbol.References.ContainsKey( _Symbol.LineIndex ) )
       {
         usedReferences.Add( _Symbol.LineIndex );
       }

@@ -510,7 +510,12 @@ namespace RetroDevStudio.Parser
               FromDependency    = true, 
               Info              = entry.Value.Info
             };
-            symbol.References.Add( entry.Value.LineIndex );
+            symbol.References.Add( entry.Value.LineIndex, 
+                new SymbolReference()
+                {
+                  GlobalLineIndex = entry.Value.LineIndex,
+                  TokenInfo = new TokenInfo() { StartPos = entry.Value.CharIndex, Length = entry.Value.Length, OriginatingString = entry.Value.String }
+                } );
 
             m_ASMFileInfo.Labels.Add( entry.Key, symbol );
           }
@@ -2333,7 +2338,12 @@ namespace RetroDevStudio.Parser
               m_ASMFileInfo.Labels.Add( varName, symbolInfo );
             }
             var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
-            existingSymbolInfo.References.Add( lineIndex );
+            existingSymbolInfo.References.Add( lineIndex,
+              new SymbolReference()
+              {
+                GlobalLineIndex = lineIndex,
+                TokenInfo = new TokenInfo() { StartPos = variable.StartIndex, Length = variable.Content.Length, OriginatingString = info.Line }
+              } );
             
           }
           ++tokenIndex;

@@ -14,6 +14,7 @@ using RetroDevStudio.Documents;
 using RetroDevStudio.Dialogs;
 using System.Linq;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
+using System.IO;
 
 
 
@@ -72,6 +73,9 @@ namespace RetroDevStudio
     private List<IdleRequest> IdleQueue = new List<IdleRequest>();
 
     internal DocumentInfo         LastSearchableDocumentInfo = null;
+
+    public Cursor                 CursorHand = null;
+    public Cursor                 CursorGrab = null;
 
 
 
@@ -513,6 +517,9 @@ namespace RetroDevStudio
 #endif
 
       statusProgress.Visible = false;
+
+      CursorHand = new Cursor( new MemoryStream( Properties.Resources.grab1 ) );
+      CursorGrab = new Cursor( new MemoryStream( Properties.Resources.grab2 ) );
 
       StudioCore.MainForm = this;
       StudioCore.Settings.PanelMain = panelMain;

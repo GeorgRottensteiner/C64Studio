@@ -494,7 +494,8 @@ namespace RetroDevStudio.Parser
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
         token.Zone              = Zone;
-        token.References.Add( SourceLine );
+
+        token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         m_ASMFileInfo.Labels.Add( Name, token );
       }
@@ -520,8 +521,10 @@ namespace RetroDevStudio.Parser
             Value.DocumentFilename  = filename;
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
-            Value.References.Add( SourceLine );
             Value.Zone              = Zone;
+
+            Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
@@ -562,7 +565,8 @@ namespace RetroDevStudio.Parser
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
         token.Zone              = Zone;
-        token.References.Add( SourceLine );
+
+        token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         m_ASMFileInfo.Labels.Add( Name, token );
       }
@@ -588,8 +592,9 @@ namespace RetroDevStudio.Parser
             Value.DocumentFilename  = filename;
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
-            Value.References.Add( SourceLine );
             Value.Zone              = Zone;
+
+            Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
@@ -627,8 +632,8 @@ namespace RetroDevStudio.Parser
         Value.DocumentFilename  = filename;
         Value.LocalLineIndex    = localIndex;
         Value.SourceInfo        = srcInfo;
-        Value.References.Add( SourceLine );
         Value.Zone              = Zone;
+        Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         m_ASMFileInfo.Labels.Add( Name, Value );
       }
@@ -654,8 +659,9 @@ namespace RetroDevStudio.Parser
             Value.DocumentFilename  = filename;
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
-            Value.References.Add( SourceLine );
             Value.Zone              = Zone;
+
+            Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
@@ -671,11 +677,12 @@ namespace RetroDevStudio.Parser
       if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
-        token.Type = SymbolInfo.Types.PREPROCESSOR_CONSTANT_2;
-        token.AddressOrValue = Value;
-        token.Name = Name;
-        token.LineIndex = SourceLine;
-        token.References.Add( SourceLine );
+        token.Type            = SymbolInfo.Types.PREPROCESSOR_CONSTANT_2;
+        token.AddressOrValue  = Value;
+        token.Name            = Name;
+        token.LineIndex       = SourceLine;
+
+        token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         if ( Value < 256 )
         {
@@ -949,7 +956,8 @@ namespace RetroDevStudio.Parser
         &&   ( labelInfo.Name == Value ) )
         {
           ResultingSymbol = labelInfo.Symbol;
-          ResultingSymbol.References.Add( LineIndex );
+
+          ResultingSymbol.References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
           return true;
         }
         if ( ( labelInfo.Name == Value )
@@ -965,7 +973,7 @@ namespace RetroDevStudio.Parser
       {
         // we had a temp label, but accessed it before the first definition, fall back to the first occurrence
         ResultingSymbol = tempLabelInfo.Symbol;
-        ResultingSymbol.References.Add( LineIndex );
+        ResultingSymbol.References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
         return true;
       }
 
@@ -983,7 +991,7 @@ namespace RetroDevStudio.Parser
           if ( m_ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
           {
             ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[zoneName + Value].AddressOrValue, out NumGivenBytes );
-            m_ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex );
+            m_ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
             return true;
           }
         }
@@ -1007,7 +1015,7 @@ namespace RetroDevStudio.Parser
       {
         ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[Value].AddressOrValue, out NumGivenBytes );
       }
-      m_ASMFileInfo.Labels[Value].References.Add( LineIndex );
+      m_ASMFileInfo.Labels[Value].References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
       return true;
     }
 
@@ -2441,7 +2449,7 @@ namespace RetroDevStudio.Parser
             token.AddressOrValue  = result;
             token.Name            = label;
             token.LineIndex       = m_ASMFileInfo.UnparsedLabels[label].LineIndex;
-            token.References.Add( m_ASMFileInfo.UnparsedLabels[label].LineIndex );
+            token.References.Add( m_ASMFileInfo.UnparsedLabels[label].LineIndex, new SymbolReference() { GlobalLineIndex = m_ASMFileInfo.UnparsedLabels[label].LineIndex } );
             token.Zone            = m_ASMFileInfo.UnparsedLabels[label].Zone;
             m_ASMFileInfo.Labels.Add( label, token );
 
@@ -5403,7 +5411,7 @@ namespace RetroDevStudio.Parser
             symbol.LocalLineIndex = entry.Value.LocalLineIndex;
             symbol.Name = entry.Value.Name;
             symbol.Type = entry.Value.Type;
-            symbol.References.Add( entry.Value.LineIndex );
+            symbol.References.Add( entry.Value.LineIndex, new SymbolReference() { GlobalLineIndex = entry.Value.LineIndex } );
             symbol.Zone = entry.Value.Zone;
             symbol.FromDependency = true;
             symbol.Info           = entry.Value.Info;
@@ -10684,7 +10692,7 @@ namespace RetroDevStudio.Parser
         macroFunction.Symbol.Type             = SymbolInfo.Types.MACRO;
         macroFunction.Symbol.DocumentFilename = OuterFilename;
         macroFunction.Symbol.Zone             = Zone;
-        macroFunction.Symbol.References.Add( lineIndex );
+        macroFunction.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex } );
         macroFunction.Symbol.NumArguments     = -1;
 
 
@@ -10801,7 +10809,7 @@ namespace RetroDevStudio.Parser
             macroFunction.Symbol.DocumentFilename = OuterFilename;
             macroFunction.Symbol.Zone             = Zone;
             macroFunction.Symbol.NumArguments     = param.Count;
-            macroFunction.Symbol.References.Add( lineIndex );
+            macroFunction.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex } );
 
             macroFunctions.Add( new GR.Generic.Tupel<string, int>( macroName, param.Count ), macroFunction );
 
@@ -11392,9 +11400,9 @@ namespace RetroDevStudio.Parser
           {
             foreach ( var reference in info.Value.References )
             {
-              if ( FileInfo.LineInfo.ContainsKey( reference ) )
+              if ( FileInfo.LineInfo.ContainsKey( reference.Key ) )
               {
-                var line = FileInfo.LineInfo[reference];
+                var line = FileInfo.LineInfo[reference.Key];
 
                 // TODO - check if we're inside the code
                 // is absolute opcode?

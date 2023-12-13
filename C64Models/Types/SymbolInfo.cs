@@ -1,4 +1,6 @@
-﻿namespace RetroDevStudio
+﻿using RetroDevStudio.Types;
+
+namespace RetroDevStudio
 {
   public class SymbolInfo
   {
@@ -38,7 +40,7 @@
     public int        Length = 0;
     public RetroDevStudio.Types.ASM.SourceInfo SourceInfo = null;
     public int        NumArguments = 0;
-    public GR.Collections.Set<int>  References = new GR.Collections.Set<int>();
+    public GR.Collections.MultiMap<int,SymbolReference>  References = new GR.Collections.MultiMap<int, SymbolReference>();
 
 
 

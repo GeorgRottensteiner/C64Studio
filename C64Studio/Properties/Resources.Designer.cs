@@ -419,6 +419,26 @@ namespace RetroDevStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] grab1 {
+            get {
+                object obj = ResourceManager.GetObject("grab1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] grab2 {
+            get {
+                object obj = ResourceManager.GetObject("grab2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon graphicscreen {
@@ -573,6 +593,36 @@ namespace RetroDevStudio.Properties {
         internal static System.Drawing.Bitmap tool_fill {
             get {
                 object obj = ResourceManager.GetObject("tool_fill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_freehand_line {
+            get {
+                object obj = ResourceManager.GetObject("tool_freehand_line", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_freehand_pixel {
+            get {
+                object obj = ResourceManager.GetObject("tool_freehand_pixel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_line {
+            get {
+                object obj = ResourceManager.GetObject("tool_line", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

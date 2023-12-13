@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using RetroDevStudio.Types;
 using RetroDevStudio.Controls;
+using RetroDevStudio.Properties;
+using System.Drawing;
 
 
 
@@ -29,6 +31,8 @@ namespace RetroDevStudio.Documents
     private enum PaintTool
     {
       DRAW_PIXEL,
+      DRAW_FREE_LINE,
+      DRAW_LINE,
       DRAW_RECTANGLE,
       DRAW_BOX,
       FLOOD_FILL,
@@ -93,6 +97,11 @@ namespace RetroDevStudio.Documents
     private System.Drawing.Point        m_SelectionFloatingPos = new System.Drawing.Point( 0, 0 );
 
     private int                         m_ZoomFactor = 1;
+    private bool                        m_DragViewModeActive = false;
+    private bool                        m_DragView = false;
+    private System.Drawing.Point        m_DragPoint = new System.Drawing.Point();
+
+    private System.Drawing.Point        m_LastPaintedPixelPos = new System.Drawing.Point();
 
 
 
@@ -183,6 +192,9 @@ namespace RetroDevStudio.Documents
         }
       }
       comboCharScreens.SelectedIndex = 0;
+
+      pictureEditor.KeyUp += PictureEditor_KeyUp;
+      pictureEditor.LostFocus += PictureEditor_LostFocus;
     }
 
 
@@ -257,11 +269,17 @@ namespace RetroDevStudio.Documents
 
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / 40 ) + m_GraphicScreenProject.ScreenOffsetX;
-      int     charY = ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / 25 ) + m_GraphicScreenProject.ScreenOffsetY;
+      int dx = ( pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / 40;
+      int dy = ( pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / 25;
 
-      int     pixelX = ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX;
-      int     pixelY = ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY;
+      int pixelOffsetX = ( m_GraphicScreenProject.ScreenOffsetX % m_ZoomFactor ) * dx / m_ZoomFactor;
+      int pixelOffsetY = ( m_GraphicScreenProject.ScreenOffsetY % m_ZoomFactor ) * dy / m_ZoomFactor;
+
+      int     pixelX = ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX * 8 / m_ZoomFactor;
+      int     pixelY = ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY * 8 / m_ZoomFactor;
+
+      int     charX = ( ( X + pixelOffsetX ) / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / 40 ) + m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor;
+      int     charY = ( ( Y + pixelOffsetY ) / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / 25 ) + m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor;
 
       if ( pixelX < 0 )
       {
@@ -282,6 +300,85 @@ namespace RetroDevStudio.Documents
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
+        if ( m_DragViewModeActive )
+        {
+          if ( !m_DragView )
+          {
+            m_DragView = true;
+            m_DragPoint = pictureEditor.PointToClient( MousePosition );
+            pictureEditor.Cursor = Core.MainForm.CursorGrab;
+          }
+          else
+          {
+            int   deltaX = X - m_DragPoint.X;
+            int   deltaY = Y - m_DragPoint.Y;
+            int   requiredDelta = 16;//m_ZoomFactor;
+
+            if ( ( deltaX != 0 )
+            ||   ( deltaY != 0 ) )
+            {
+              int   actDX = 0;
+              int   actDY = 0;
+              while ( deltaX >= requiredDelta )
+              {
+                deltaX -= requiredDelta;
+                --actDX;
+              }
+              while ( deltaX <= -requiredDelta )
+              {
+                deltaX += requiredDelta;
+                ++actDX;
+              }
+              while ( deltaY >= requiredDelta )
+              {
+                deltaY -= requiredDelta;
+                --actDY;
+              }
+              while ( deltaY <= -requiredDelta )
+              {
+                deltaY += requiredDelta;
+                ++actDY;
+              }
+
+              if ( ( actDX != 0 )
+              ||   ( actDY != 0 ) )
+              {
+                int tempDX = actDX;
+                int tempDY = actDY;
+
+                while ( ( actDX < 0 )
+                &&      ( screenHScroll.Value > 0 ) )
+                {
+                  --screenHScroll.Value;
+                  ++actDX;
+                }
+                while ( ( actDX > 0 )
+                &&      ( screenHScroll.Value < screenHScroll.Maximum ) )
+                {
+                  ++screenHScroll.Value;
+                  --actDX;
+                }
+                while ( ( actDY < 0 )
+                &&      ( screenVScroll.Value > 0 ) )
+                {
+                  --screenVScroll.Value;
+                  ++actDY;
+                }
+                while ( ( actDY > 0 )
+                &&      ( screenVScroll.Value < screenVScroll.Maximum ) )
+                {
+                  ++screenVScroll.Value;
+                  --actDY;
+                }
+                m_DragPoint.Offset( -tempDX * requiredDelta, -tempDY * requiredDelta );
+                screenHScroll_Scroll( screenHScroll, new ScrollEventArgs( ScrollEventType.ThumbPosition, screenHScroll.Value ) );
+                screenVScroll_Scroll( screenVScroll, new ScrollEventArgs( ScrollEventType.ThumbPosition, screenVScroll.Value ) );
+              }
+            }
+          }
+          return;
+        }
+
         switch ( m_PaintTool )
         {
           case PaintTool.DRAW_PIXEL:
@@ -298,6 +395,55 @@ namespace RetroDevStudio.Documents
             Redraw();
             pictureEditor.Invalidate();
             Modified = true;
+            break;
+          case PaintTool.DRAW_FREE_LINE:
+            if ( m_ButtonReleased )
+            {
+              m_ButtonReleased = false;
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+
+              if ( m_GraphicScreenProject.MultiColor )
+              {
+                m_GraphicScreenProject.Image.SetPixel( pixelX ^ 1, pixelY, m_CurrentColor );
+              }
+              m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
+            }
+            else
+            {
+              // TODO - paint according to mode!
+              m_GraphicScreenProject.Image.Line( m_LastPaintedPixelPos.X, m_LastPaintedPixelPos.Y, pixelX, pixelY, m_CurrentColor );
+            }
+            Redraw();
+            pictureEditor.Invalidate();
+            Modified = true;
+            m_LastPaintedPixelPos = new Point( pixelX, pixelY );
+            break;
+          case PaintTool.DRAW_LINE:
+            if ( m_ButtonReleased )
+            {
+              m_ButtonReleased = false;
+              if ( ( m_PaintTool == PaintTool.SELECT )
+              &&   ( m_SelectionFloating ) )
+              {
+                // insert floating selection
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, pixelX, pixelY, m_SelectionFloatingImage.Width, m_SelectionFloatingImage.Height ) );
+
+                m_SelectionFloatingImage.DrawTo( m_GraphicScreenProject.Image, pixelX, pixelY );
+                Redraw();
+                SetModified();
+                pictureEditor.Invalidate();
+
+                m_DragStartPoint.X = -1;
+                m_SelectionFloating = false;
+                m_SelectionFloatingImage.Dispose();
+                m_SelectionFloatingImage = null;
+                return;
+              }
+              m_DragStartPoint = new System.Drawing.Point( pixelX, pixelY );
+            }
+            m_DragCurrentPoint = new System.Drawing.Point( pixelX, pixelY );
+            Redraw();
+            pictureEditor.Invalidate();
             break;
           case PaintTool.DRAW_RECTANGLE:
           case PaintTool.DRAW_BOX:
@@ -405,51 +551,86 @@ namespace RetroDevStudio.Documents
           case PaintTool.DRAW_BOX:
           case PaintTool.DRAW_RECTANGLE:
           case PaintTool.SELECT:
-            int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
-            int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
-            int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
-            int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
-
-            if ( ( m_GraphicScreenProject.MultiColor )
-            &&   ( m_PaintTool != PaintTool.SELECT ) )
             {
-              x1 &= ~1;
-              x2 |= 1;
-            }
+              int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
+              int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
+              int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+              int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
 
-            switch ( m_PaintTool )
-            {
-              case PaintTool.DRAW_BOX:
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
-                m_GraphicScreenProject.Image.Box( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
-                break;
-              case PaintTool.DRAW_RECTANGLE:
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
-                m_GraphicScreenProject.Image.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
-                if ( m_GraphicScreenProject.MultiColor )
-                {
-                  m_GraphicScreenProject.Image.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
-                  m_GraphicScreenProject.Image.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
-                }
-                break;
-              case PaintTool.SELECT:
-                // only make selection if we didn't place a floating selection before
-                if ( m_DragStartPoint.X != -1 )
-                {
-                  m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1, y2 - y1 );
-                }
-                break;
+              if ( ( m_GraphicScreenProject.MultiColor )
+              && ( m_PaintTool != PaintTool.SELECT ) )
+              {
+                x1 &= ~1;
+                x2 |= 1;
+              }
+
+              switch ( m_PaintTool )
+              {
+                case PaintTool.DRAW_BOX:
+                  DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
+                  m_GraphicScreenProject.Image.Box( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+                  break;
+                case PaintTool.DRAW_RECTANGLE:
+                  DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
+                  m_GraphicScreenProject.Image.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+                  if ( m_GraphicScreenProject.MultiColor )
+                  {
+                    m_GraphicScreenProject.Image.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
+                    m_GraphicScreenProject.Image.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
+                  }
+                  break;
+                case PaintTool.SELECT:
+                  // only make selection if we didn't place a floating selection before
+                  if ( m_DragStartPoint.X != -1 )
+                  {
+                    m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1, y2 - y1 );
+                  }
+                  break;
+              }
+              m_DragStartPoint.X = -1;
+              Redraw();
+              pictureEditor.Invalidate();
+              Modified = true;
             }
-            m_DragStartPoint.X = -1;
-            Redraw();
-            pictureEditor.Invalidate();
-            Modified = true;
+            break;
+          case PaintTool.DRAW_LINE:
+            {
+              int     x1 = m_DragStartPoint.X;
+              int     x2 = m_DragCurrentPoint.X;
+              int     y1 = m_DragStartPoint.Y;
+              int     y2 = m_DragCurrentPoint.Y;
+
+              if ( m_GraphicScreenProject.MultiColor )
+              {
+                x1 &= ~1;
+                x2 &= ~1;
+              }
+
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
+              m_GraphicScreenProject.Image.Line( x1, y1, x2, y2, m_CurrentColor );
+              if ( m_GraphicScreenProject.MultiColor )
+              {
+                m_GraphicScreenProject.Image.Line( x1 + 1, y1, x2 + 1, y2, m_CurrentColor );
+              }
+              m_DragStartPoint.X = -1;
+              Redraw();
+              pictureEditor.Invalidate();
+              Modified = true;
+            }
             break;
         }
         m_ButtonReleased = true;
       }
       else
       {
+        if ( ( m_DragViewModeActive )
+        &&   ( m_DragView ) )
+        {
+          m_DragView = false;
+          pictureEditor.Cursor = Core.MainForm.CursorHand;
+        }
+
+
         switch ( m_PaintTool )
         {
           case PaintTool.SELECT:
@@ -468,6 +649,7 @@ namespace RetroDevStudio.Documents
         switch ( m_PaintTool )
         {
           case PaintTool.DRAW_PIXEL:
+          default:
             m_CurrentColor = (byte)m_GraphicScreenProject.Image.GetPixel( pixelX, pixelY );
             break;
         }
@@ -1174,8 +1356,37 @@ namespace RetroDevStudio.Documents
     {
       m_GraphicScreenProject.Image.DrawTo( pictureEditor.DisplayPage, -m_GraphicScreenProject.ScreenOffsetX * 8 / m_ZoomFactor, -m_GraphicScreenProject.ScreenOffsetY * 8 / m_ZoomFactor );
 
+      int   leftX = m_GraphicScreenProject.ScreenOffsetX * ( 8 / m_ZoomFactor );
+      int   leftY = m_GraphicScreenProject.ScreenOffsetY * ( 8 / m_ZoomFactor );
+
       switch ( m_PaintTool )
       {
+        case PaintTool.DRAW_LINE:
+          if ( m_DragStartPoint.X != -1 )
+          {
+            int     x1 = m_DragStartPoint.X;
+            int     x2 = m_DragCurrentPoint.X;
+            int     y1 = m_DragStartPoint.Y;
+            int     y2 = m_DragCurrentPoint.Y;
+
+            if ( m_GraphicScreenProject.MultiColor )
+            {
+              x1 &= ~1;
+              x2 &= ~1;
+            }
+
+            x1 -= leftX;
+            x2 -= leftX;
+            y1 -= leftY;
+            y2 -= leftY;
+
+            pictureEditor.DisplayPage.Line( x1, y1, x2, y2, m_CurrentColor );
+            if ( m_GraphicScreenProject.MultiColor )
+            {
+              pictureEditor.DisplayPage.Line( x1 + 1, y1, x2 + 1, y2, m_CurrentColor );
+            }
+          }
+          break;
         case PaintTool.DRAW_BOX:
         case PaintTool.DRAW_RECTANGLE:
           if ( m_DragStartPoint.X != -1 )
@@ -1191,6 +1402,11 @@ namespace RetroDevStudio.Documents
               x2 |= 1;
             }
 
+            x1 -= leftX;
+            x2 -= leftX;
+            y1 -= leftY;
+            y2 -= leftY;
+
             pictureEditor.DisplayPage.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
             if ( m_GraphicScreenProject.MultiColor )
             {
@@ -1202,7 +1418,7 @@ namespace RetroDevStudio.Documents
         case PaintTool.SELECT:
           if ( m_SelectionFloating )
           {
-            pictureEditor.DisplayPage.DrawImage( m_SelectionFloatingImage, m_SelectionFloatingPos.X, m_SelectionFloatingPos.Y );
+            pictureEditor.DisplayPage.DrawImage( m_SelectionFloatingImage, m_SelectionFloatingPos.X - leftX, m_SelectionFloatingPos.Y - leftY );
           }
           break;
       }
@@ -2639,6 +2855,8 @@ namespace RetroDevStudio.Documents
       if ( m_GraphicScreenProject.ScreenOffsetX != e.NewValue )
       {
         m_GraphicScreenProject.ScreenOffsetX = e.NewValue;
+
+        Debug.Log( $"Scrollx {e.NewValue}" );
         Redraw();
       }
     }
@@ -2650,6 +2868,7 @@ namespace RetroDevStudio.Documents
       if ( m_GraphicScreenProject.ScreenOffsetY != e.NewValue )
       {
         m_GraphicScreenProject.ScreenOffsetY = e.NewValue;
+        Debug.Log( $"Scrolly {e.NewValue}" );
         Redraw();
       }
     }
@@ -3194,6 +3413,22 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void btnToolLine_CheckedChanged( object sender, EventArgs e )
+    {
+      m_PaintTool = PaintTool.DRAW_FREE_LINE;
+      Redraw();
+    }
+
+
+
+    private void btnToolLineDrag_CheckedChanged( object sender, EventArgs e )
+    {
+      m_PaintTool = PaintTool.DRAW_LINE;
+      Redraw();
+    }
+
+
+
     private void btnToolRect_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.DRAW_RECTANGLE;
@@ -3533,6 +3768,14 @@ namespace RetroDevStudio.Documents
     {
       uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
 
+      int charOffsetX = m_SelectedChar.X - m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor;
+      int charOffsetY = m_SelectedChar.Y - m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor;
+      int dx = ( pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / 40;
+      int dy = ( pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / 25;
+
+      int pixelOffsetX = ( m_GraphicScreenProject.ScreenOffsetX % m_ZoomFactor ) * dx / m_ZoomFactor;
+      int pixelOffsetY = ( m_GraphicScreenProject.ScreenOffsetY % m_ZoomFactor ) * dy / m_ZoomFactor;
+
       switch ( m_PaintTool )
       {
         case PaintTool.VALIDATE:
@@ -3542,10 +3785,10 @@ namespace RetroDevStudio.Documents
             {
               if ( m_ErrornousChars[i, j] )
               {
-                int  sx1 = ( ( i - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / 40;
-                int  sx2 = ( ( i + 1 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / 40;
-                int  sy1 = ( ( j - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / 25;
-                int  sy2 = ( ( j + 1 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / 25;
+                int sx1 = ToScreenX( i * 8 );
+                int sx2 = ToScreenX( ( i + 1 ) * 8 );
+                int sy1 = ToScreenY( j * 8 );
+                int sy2 = ToScreenY( ( j + 1 ) * 8 );
 
                 for ( int x = sx1; x <= sx2; ++x )
                 {
@@ -3560,18 +3803,10 @@ namespace RetroDevStudio.Documents
           }
           if ( m_SelectedChar.X != -1 )
           {
-            /*
-            int     charX = ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / 40 ) + m_GraphicScreenProject.ScreenOffsetX;
-            int     charY = ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / 25 ) + m_GraphicScreenProject.ScreenOffsetY;
-
-            int     pixelX = ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX;
-            int     pixelY = ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY;
-            */
-
-            int  sx1 = ( ( m_SelectedChar.X - m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / 40;
-            int  sx2 = ( ( m_SelectedChar.X + 1 - m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / 40;
-            int  sy1 = ( ( m_SelectedChar.Y - m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / 25;
-            int  sy2 = ( ( m_SelectedChar.Y + 1 - m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / 25;
+            int sx1 = ToScreenX( m_SelectedChar.X * 8 );
+            int sx2 = ToScreenX( ( m_SelectedChar.X + 1 ) * 8 );
+            int sy1 = ToScreenY( m_SelectedChar.Y * 8 );
+            int sy2 = ToScreenY( ( m_SelectedChar.Y + 1 ) * 8 );
 
             TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
           }
@@ -3584,19 +3819,19 @@ namespace RetroDevStudio.Documents
             int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
             int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
 
-            int  sx1 = ( ( x1 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
-            int  sx2 = ( ( x2 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
-            int  sy1 = ( ( y1 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
-            int  sy2 = ( ( y2 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
+            int sx1 = ToScreenX( x1 );
+            int sx2 = ToScreenX( x2 );
+            int sy1 = ToScreenY( y1 );
+            int sy2 = ToScreenY( y2 );
 
             TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
           }
           if ( m_Selection.Width > 0 )
           {
-            int  sx1 = ( ( m_Selection.X - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
-            int  sx2 = ( ( m_Selection.X + m_Selection.Width - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
-            int  sy1 = ( ( m_Selection.Y - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
-            int  sy2 = ( ( m_Selection.Y + m_Selection.Height - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
+            int sx1 = ToScreenX( m_Selection.X );
+            int sx2 = ToScreenX( m_Selection.X + m_Selection.Width );
+            int sy1 = ToScreenY( m_Selection.Y );
+            int sy2 = ToScreenY( m_Selection.Y + m_Selection.Height );
 
             TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
           }
@@ -3649,6 +3884,38 @@ namespace RetroDevStudio.Documents
 
 
 
+    private int ToScreenX( int X )
+    {
+      int   leftX = m_GraphicScreenProject.ScreenOffsetX * ( 8 / m_ZoomFactor );
+
+      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / m_GraphicScreenProject.ScreenWidth;
+    }
+
+
+
+    private int ToScreenY( int Y )
+    {
+      int   leftY = m_GraphicScreenProject.ScreenOffsetY * ( 8 / m_ZoomFactor );
+
+      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / m_GraphicScreenProject.ScreenHeight;
+    }
+
+
+
+    private int ToLocalX( int X )
+    {
+      return ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX * 8 / m_ZoomFactor;
+    }
+
+
+
+    private int ToLocalY( int Y )
+    {
+      return ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY * 8 / m_ZoomFactor;
+    }
+
+
+
     private void btnClearScreen_Click( object sender, EventArgs e )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
@@ -3694,14 +3961,36 @@ namespace RetroDevStudio.Documents
     {
       if ( m_ZoomFactor < 8 )
       {
+        int   totalWidth = Math.Min( 320, m_GraphicScreenProject.ScreenWidth );
+        int   totalHeight = Math.Min( 200, m_GraphicScreenProject.ScreenHeight );
+
+        int   centerX = ToLocalX( totalWidth );
+        int   centerY = ToLocalY( totalHeight );
+
+        int   leftX = ToLocalX( 0 );
+        int   leftY = ToLocalY( 0 );
+
         m_ZoomFactor *= 2;
+
+        int   screenX = ToScreenX( centerX );
+        int   screenY = ToScreenY( centerY );
+
         btnZoomIn.Enabled = ( m_ZoomFactor < 8 );
         btnZoomOut.Enabled = true;
 
-        int   totalWidth = Math.Min( 320, m_GraphicScreenProject.ScreenWidth );
-        int   totalHeight = Math.Min( 200, m_GraphicScreenProject.ScreenHeight );
         pictureEditor.SetImageSize( totalWidth / m_ZoomFactor, totalHeight / m_ZoomFactor );
         AdjustScrollbars();
+
+        int   newLeftX = ( centerX - leftX ) / m_ZoomFactor;
+
+        int   oldValueH = newLeftX / m_ZoomFactor;
+        oldValueH = Math.Max( 0, oldValueH );
+        oldValueH = Math.Min( screenHScroll.Maximum, oldValueH );
+        screenHScroll.Value = oldValueH;
+        screenHScroll_Scroll( this, new ScrollEventArgs( ScrollEventType.ThumbPosition, oldValueH ) );
+
+        //screenVScroll.Value += centerY * m_ZoomFactor;
+
         Redraw();
       }
     }
@@ -3720,6 +4009,43 @@ namespace RetroDevStudio.Documents
         pictureEditor.SetImageSize( totalWidth / m_ZoomFactor, totalHeight / m_ZoomFactor );
         AdjustScrollbars();
         Redraw();
+      }
+    }
+
+
+
+    private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyData == Keys.Space )
+      {
+        if ( !m_DragViewModeActive )
+        {
+          m_DragViewModeActive = true;
+          pictureEditor.Cursor = Core.MainForm.CursorHand;
+        }
+      }
+    }
+
+
+
+    private void PictureEditor_KeyUp( object sender, KeyEventArgs e )
+    {
+      if ( ( e.KeyData == Keys.Space )
+      &&   ( m_DragViewModeActive ) )
+      {
+        m_DragViewModeActive = false;
+        pictureEditor.Cursor = Cursors.Default;
+      }
+    }
+
+
+
+    private void PictureEditor_LostFocus( object sender, EventArgs e )
+    {
+      if ( m_DragViewModeActive )
+      {
+        m_DragViewModeActive = false;
+        pictureEditor.Cursor = Cursors.Default;
       }
     }
 

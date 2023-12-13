@@ -408,18 +408,18 @@ namespace RetroDevStudio.Types.ASM
       }
       foreach ( var label in Labels )
       {
-        if ( label.Value.References.Any( r => r >= GlobalLineIndex ) )
+        if ( label.Value.References.Any( r => r.Key >= GlobalLineIndex ) )
         {
-          var newSet = new Set<int>();
+          var newSet = new MultiMap<int, SymbolReference>();
           foreach ( var reference in label.Value.References )
           {
-            if ( reference >= GlobalLineIndex )
+            if ( reference.Key >= GlobalLineIndex )
             {
-              newSet.Add( reference + LineCount );
+              newSet.Add( reference.Key + LineCount, reference.Value );
             }
             else
             {
-              newSet.Add( reference );
+              newSet.Add( reference.Key, reference.Value );
             }
           }
           label.Value.References = newSet;
@@ -740,14 +740,14 @@ namespace RetroDevStudio.Types.ASM
           if ( Labels.ContainsKey( CheapLabelParent + Token ) )
           {
             Symbol = Labels[CheapLabelParent + Token];
-            list.AddRange( Symbol.References );
+            list.AddRange( Symbol.References.Keys );
             list.Add( Symbol.LineIndex );
           }
         }
         if ( Labels.ContainsKey( Zone + Token ) )
         {
           Symbol = Labels[Zone + Token];
-          list.AddRange( Symbol.References );
+          list.AddRange( Symbol.References.Keys );
           list.Add( Symbol.LineIndex );
           return list;
         }
@@ -761,7 +761,7 @@ namespace RetroDevStudio.Types.ASM
         {
           Symbol = tempLabel.Symbol;
 
-          list.AddRange( Symbol.References );
+          list.AddRange( Symbol.References.Keys );
           list.Add( Symbol.LineIndex );
         }
         if ( list.Count > 0 )
@@ -773,13 +773,13 @@ namespace RetroDevStudio.Types.ASM
         if ( symbol != null )
         {
           Symbol = Macros[symbol].Symbol;
-          list.AddRange( Symbol.References );
+          list.AddRange( Symbol.References.Keys );
           list.Add( Symbol.LineIndex );
         }
         return list;
       }
       Symbol = Labels[Token];
-      list.AddRange( Symbol.References );
+      list.AddRange( Symbol.References.Keys );
       list.Add( Symbol.LineIndex );
       return list;
     }
