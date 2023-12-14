@@ -18,7 +18,7 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !al, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
-      m_Assume16BitAccu = true;
+      _ParseContext.Assume16BitAccu = true;
       return ParseLineResult.OK;
     }
 
@@ -31,7 +31,7 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !as, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
-      m_Assume16BitAccu = false;
+      _ParseContext.Assume16BitAccu = false;
       return ParseLineResult.OK;
     }
 
@@ -44,7 +44,7 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !rl, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
-      m_Assume16BitRegisters = true;
+      _ParseContext.Assume16BitRegisters = true;
       return ParseLineResult.OK;
     }
 
@@ -57,7 +57,7 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !rs, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
-      m_Assume16BitRegisters = false;
+      _ParseContext.Assume16BitRegisters = false;
       return ParseLineResult.OK;
     }
 

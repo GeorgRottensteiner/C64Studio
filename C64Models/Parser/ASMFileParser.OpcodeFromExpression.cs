@@ -13,7 +13,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult HandleOpcode( LineInfo info, int lineIndex, List<TokenInfo> lineTokenInfos, List<List<TokenInfo>> opcodeExpressions, ulong resultingOpcodePatchValue, List<RetroDevStudio.Types.ScopeInfo> stackScopes, GR.Collections.Map<byte, byte> textCodeMapping )
+    private ParseLineResult HandleOpcode( LineInfo info, int lineIndex, List<TokenInfo> lineTokenInfos, List<List<TokenInfo>> opcodeExpressions, ulong resultingOpcodePatchValue, GR.Collections.Map<byte, byte> textCodeMapping )
     {
       if ( info.LineData == null )
       {
@@ -41,7 +41,7 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-      if ( ScopeInsideMacroDefinition( stackScopes ) )
+      if ( ScopeInsideMacroDefinition() )
       {
         return ParseLineResult.CALL_CONTINUE;
       }

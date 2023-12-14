@@ -21,7 +21,6 @@ namespace RetroDevStudio.Parser
                                          string labelInFront,
                                          GR.Collections.Map<GR.Generic.Tupel<string, int>, Types.MacroFunctionInfo> macroFunctions,
                                          ref string[] Lines,
-                                         List<Types.ScopeInfo> Scopes,
                                          GR.Collections.Map<byte, byte> TextCodeMapping,
                                          out int lineSizeInBytes )
     {
@@ -63,7 +62,10 @@ namespace RetroDevStudio.Parser
         int           startIndex = 1;
         bool          hadError = false;
 
-        functionInfo.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex, TokenInfo = lineTokenInfos[0] } );
+        if ( !_ParseContext.DoNotAddReferences )
+        {
+          functionInfo.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex, TokenInfo = lineTokenInfos[0] } );
+        }
 
         for ( int i = 1; i < lineTokenInfos.Count; ++i )
         {
@@ -156,7 +158,7 @@ namespace RetroDevStudio.Parser
         else if ( !hadError )
         {
           int lineIndexInMacro = -1;
-          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
+          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
           if ( replacementLines == null )
           {
             AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );

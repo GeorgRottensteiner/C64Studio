@@ -912,5 +912,111 @@ namespace TestProject
 
 
 
+    [TestMethod]
+    public void TestAssemblyBinaryLiterals()
+    {
+      string source = @"* = $2000
+              !BYTE %00000000,%00000001,%00000010,%00000011
+              !BYTE %00000100,%00000101,%00000110,%00000111 
+              !BYTE %00001000,%00001001,%00001010,%00001011
+              !BYTE %00001100,%00001101,%00001110,%00001111 
+              !BYTE %00010000,%00010001,%00010010,%00010011
+              !BYTE %00010100,%00010101,%00010110,%00010111 
+              !BYTE %00011000,%00011001,%00011010,%00011011
+              !BYTE %00011100,%00011101,%00011110,%00011111 
+              !BYTE %00100000,%00100001,%00100010,%00100011
+              !BYTE %00100100,%00100101,%00100110,%00100111 
+              !BYTE %00101000,%00101001,%00101010,%00101011
+              !BYTE %00101100,%00101101,%00101110,%00101111 
+              !BYTE %00110000,%00110001,%00110010,%00110011
+              !BYTE %00110100,%00110101,%00110110,%00110111 
+              !BYTE %00111000,%00111001,%00111010,%00111011
+              !BYTE %00111100,%00111101,%00111110,%00111111 
+              !BYTE %01000000,%01000001,%01000010,%01000011
+              !BYTE %01000100,%01000101,%01000110,%01000111 
+              !BYTE %01001000,%01001001,%01001010,%01001011
+              !BYTE %01001100,%01001101,%01001110,%01001111 
+              !BYTE %01010000,%01010001,%01010010,%01010011
+              !BYTE %01010100,%01010101,%01010110,%01010111 
+              !BYTE %01011000,%01011001,%01011010,%01011011
+              !BYTE %01011100,%01011101,%01011110,%01011111 
+              !BYTE %01100000,%01100001,%01100010,%01100011
+              !BYTE %01100100,%01100101,%01100110,%01100111 
+              !BYTE %01101000,%01101001,%01101010,%01101011
+              !BYTE %01101100,%01101101,%01101110,%01101111 
+              !BYTE %01110000,%01110001,%01110010,%01110011
+              !BYTE %01110100,%01110101,%01110110,%01110111 
+              !BYTE %01111000,%01111001,%01111010,%01111011
+              !BYTE %01111100,%01111101,%01111110,%01111111 
+              !BYTE %10000000,%10000001,%10000010,%10000011
+              !BYTE %10000100,%10000101,%10000110,%10000111 
+              !BYTE %10001000,%10001001,%10001010,%10001011
+              !BYTE %10001100,%10001101,%10001110,%10001111 
+              !BYTE %10010000,%10010001,%10010010,%10010011
+              !BYTE %10010100,%10010101,%10010110,%10010111 
+              !BYTE %10011000,%10011001,%10011010,%10011011
+              !BYTE %10011100,%10011101,%10011110,%10011111 
+              !BYTE %10100000,%10100001,%10100010,%10100011
+              !BYTE %10100100,%10100101,%10100110,%10100111 
+              !BYTE %10101000,%10101001,%10101010,%10101011
+              !BYTE %10101100,%10101101,%10101110,%10101111 
+              !BYTE %10110000,%10110001,%10110010,%10110011
+              !BYTE %10110100,%10110101,%10110110,%10110111 
+              !BYTE %10111000,%10111001,%10111010,%10111011
+              !BYTE %10111100,%10111101,%10111110,%10111111 
+              !BYTE %11000000,%11000001,%11000010,%11000011
+              !BYTE %11000100,%11000101,%11000110,%11000111 
+              !BYTE %11001000,%11001001,%11001010,%11001011
+              !BYTE %11001100,%11001101,%11001110,%11001111 
+              !BYTE %11010000,%11010001,%11010010,%11010011
+              !BYTE %11010100,%11010101,%11010110,%11010111 
+              !BYTE %11011000,%11011001,%11011010,%11011011
+              !BYTE %11011100,%11011101,%11011110,%11011111 
+              !BYTE %11100000,%11100001,%11100010,%11100011
+              !BYTE %11100100,%11100101,%11100110,%11100111 
+              !BYTE %11101000,%11101001,%11101010,%11101011
+              !BYTE %11101100,%11101101,%11101110,%11101111 
+              !BYTE %11110000,%11110001,%11110010,%11110011
+              !BYTE %11110100,%11110101,%11110110,%11110111 
+              !BYTE %11111000,%11111001,%11111010,%11111011
+              !BYTE %11111100,%11111101,%11111110,%11111111";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0020000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyInvalidBinaryLiterals()
+    {
+      string      source = @"* = $2000
+                !byte %1234
+                !byte %111111111";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      Assert.AreEqual( 2, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, asmFileInfo.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, asmFileInfo.Messages.Values[0].Code );
+      Assert.IsTrue( asmFileInfo.Messages.Values[0].Message.Contains( "Cannot evaluate expression" ) );
+
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, asmFileInfo.Messages.Values[1].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, asmFileInfo.Messages.Values[1].Code );
+      Assert.IsTrue( asmFileInfo.Messages.Values[1].Message.Contains( "Value out of bounds" ) );
+    }
+
+
+
+
   }
 }

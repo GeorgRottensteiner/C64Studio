@@ -510,12 +510,13 @@ namespace RetroDevStudio.Parser
               FromDependency    = true, 
               Info              = entry.Value.Info
             };
-            symbol.References.Add( entry.Value.LineIndex, 
-                new SymbolReference()
-                {
-                  GlobalLineIndex = entry.Value.LineIndex,
-                  TokenInfo = new TokenInfo() { StartPos = entry.Value.CharIndex, Length = entry.Value.Length, OriginatingString = entry.Value.String }
-                } );
+
+            symbol.References.Add( entry.Value.LineIndex,
+              new SymbolReference()
+              {
+                GlobalLineIndex = entry.Value.LineIndex,
+                TokenInfo = new TokenInfo() { StartPos = entry.Value.CharIndex, Length = entry.Value.Length, OriginatingString = entry.Value.String }
+              } );
 
             m_ASMFileInfo.Labels.Add( entry.Key, symbol );
           }

@@ -11,11 +11,11 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POWhile( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, ref string[] Lines, List<Types.ScopeInfo> Scopes, out int lineSizeInBytes )
+    private ParseLineResult POWhile( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, ref string[] Lines, out int lineSizeInBytes )
     {
       lineSizeInBytes = 0;
 
-      if ( ScopeInsideMacroDefinition( Scopes ) )
+      if ( ScopeInsideMacroDefinition() )
       {
         return ParseLineResult.CALL_CONTINUE;
       }
@@ -39,7 +39,7 @@ namespace RetroDevStudio.Parser
         scope.StartIndex  = lineIndex;
         scope.While       = new WhileInfo() { LineIndex = lineIndex };
         scope.Active      = ( expressionCheck > 0 );
-        Scopes.Add( scope );
+        _ParseContext.Scopes.Add( scope );
 
         scope.While.EndValueTokens            = lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 2 );
         scope.While.EndValueTokensTextmapping = info.LineCodeMapping;

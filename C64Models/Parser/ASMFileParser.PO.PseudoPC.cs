@@ -9,7 +9,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POPseudoPC( Types.ASM.LineInfo info, List<Types.ScopeInfo> Scopes, int lineIndex, List<Types.TokenInfo> lineTokenInfos, int TokenStartIndex, int TokenCount )
+    private ParseLineResult POPseudoPC( Types.ASM.LineInfo info, int lineIndex, List<Types.TokenInfo> lineTokenInfos, int TokenStartIndex, int TokenCount )
     {
       if ( TokenCount == 0 )
       {
@@ -27,7 +27,7 @@ namespace RetroDevStudio.Parser
         scopeInfo.StartIndex = lineIndex;
         scopeInfo.Active = true;
 
-        Scopes.Add( scopeInfo );
+        _ParseContext.Scopes.Add( scopeInfo );
         OnScopeAdded( scopeInfo );
         --TokenCount;
       }

@@ -14,9 +14,20 @@ namespace RetroDevStudio.Parser
   {
     public class ParseContext
     {
+      // whether ParseValue adds references during evaluation
+      public bool         DoNotAddReferences    = false;
+
+      // used for 65816 assembly
+      public bool         Assume16BitAccu       = false;
+      public bool         Assume16BitRegisters  = false;
+
+
+
       public GR.Collections.Map<string,GR.Collections.Map<byte, byte>>    TextMappings = new GR.Collections.Map<string, GR.Collections.Map<byte, byte>>();
 
-      public SortedList<int,string>    ForwardLabelStacked = new SortedList<int, string>();
+      public SortedList<int,string>     ForwardLabelStacked = new SortedList<int, string>();
+
+      public List<ScopeInfo>            Scopes = new List<ScopeInfo>();
 
 
 
@@ -24,6 +35,7 @@ namespace RetroDevStudio.Parser
       {
         ForwardLabelStacked.Clear();
         TextMappings.Clear();
+        Scopes.Clear();
       }
 
     }
