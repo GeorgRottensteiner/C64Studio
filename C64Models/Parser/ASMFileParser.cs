@@ -494,7 +494,8 @@ namespace RetroDevStudio.Parser
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
         token.Zone              = Zone;
-        token.References.Add( SourceLine );
+
+        token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         m_ASMFileInfo.Labels.Add( Name, token );
       }
@@ -520,8 +521,10 @@ namespace RetroDevStudio.Parser
             Value.DocumentFilename  = filename;
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
-            Value.References.Add( SourceLine );
             Value.Zone              = Zone;
+
+            Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
@@ -562,7 +565,8 @@ namespace RetroDevStudio.Parser
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
         token.Zone              = Zone;
-        token.References.Add( SourceLine );
+
+        token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         m_ASMFileInfo.Labels.Add( Name, token );
       }
@@ -588,8 +592,9 @@ namespace RetroDevStudio.Parser
             Value.DocumentFilename  = filename;
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
-            Value.References.Add( SourceLine );
             Value.Zone              = Zone;
+
+            Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
@@ -627,8 +632,8 @@ namespace RetroDevStudio.Parser
         Value.DocumentFilename  = filename;
         Value.LocalLineIndex    = localIndex;
         Value.SourceInfo        = srcInfo;
-        Value.References.Add( SourceLine );
         Value.Zone              = Zone;
+        Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         m_ASMFileInfo.Labels.Add( Name, Value );
       }
@@ -654,8 +659,9 @@ namespace RetroDevStudio.Parser
             Value.DocumentFilename  = filename;
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
-            Value.References.Add( SourceLine );
             Value.Zone              = Zone;
+
+            Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
@@ -671,11 +677,12 @@ namespace RetroDevStudio.Parser
       if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
         SymbolInfo token = new SymbolInfo();
-        token.Type = SymbolInfo.Types.PREPROCESSOR_CONSTANT_2;
-        token.AddressOrValue = Value;
-        token.Name = Name;
-        token.LineIndex = SourceLine;
-        token.References.Add( SourceLine );
+        token.Type            = SymbolInfo.Types.PREPROCESSOR_CONSTANT_2;
+        token.AddressOrValue  = Value;
+        token.Name            = Name;
+        token.LineIndex       = SourceLine;
+
+        token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
 
         if ( Value < 256 )
         {
@@ -949,7 +956,8 @@ namespace RetroDevStudio.Parser
         &&   ( labelInfo.Name == Value ) )
         {
           ResultingSymbol = labelInfo.Symbol;
-          ResultingSymbol.References.Add( LineIndex );
+
+          ResultingSymbol.References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
           return true;
         }
         if ( ( labelInfo.Name == Value )
@@ -965,7 +973,7 @@ namespace RetroDevStudio.Parser
       {
         // we had a temp label, but accessed it before the first definition, fall back to the first occurrence
         ResultingSymbol = tempLabelInfo.Symbol;
-        ResultingSymbol.References.Add( LineIndex );
+        ResultingSymbol.References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
         return true;
       }
 
@@ -983,7 +991,7 @@ namespace RetroDevStudio.Parser
           if ( m_ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
           {
             ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[zoneName + Value].AddressOrValue, out NumGivenBytes );
-            m_ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex );
+            m_ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
             return true;
           }
         }
@@ -1007,7 +1015,7 @@ namespace RetroDevStudio.Parser
       {
         ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[Value].AddressOrValue, out NumGivenBytes );
       }
-      m_ASMFileInfo.Labels[Value].References.Add( LineIndex );
+      m_ASMFileInfo.Labels[Value].References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
       return true;
     }
 
@@ -2441,7 +2449,7 @@ namespace RetroDevStudio.Parser
             token.AddressOrValue  = result;
             token.Name            = label;
             token.LineIndex       = m_ASMFileInfo.UnparsedLabels[label].LineIndex;
-            token.References.Add( m_ASMFileInfo.UnparsedLabels[label].LineIndex );
+            token.References.Add( m_ASMFileInfo.UnparsedLabels[label].LineIndex, new SymbolReference() { GlobalLineIndex = m_ASMFileInfo.UnparsedLabels[label].LineIndex } );
             token.Zone            = m_ASMFileInfo.UnparsedLabels[label].Zone;
             m_ASMFileInfo.Labels.Add( label, token );
 
@@ -3649,6 +3657,7 @@ namespace RetroDevStudio.Parser
       if ( ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.MACRO_FUNCTION )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.LOOP )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.DO_UNTIL )
+      &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.WHILE )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.PSEUDO_PC ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1007_MISSING_LOOP_START, "Missing loop start" );
@@ -3855,6 +3864,122 @@ namespace RetroDevStudio.Parser
 
           // TEST TEST TEST
           //lineIndex += linesToCopy;
+          return ParseLineResult.CALL_CONTINUE;
+        }
+      }
+      else if ( lastOpenedScope.While != null )
+      {
+        var whileInfo = lastOpenedScope.While;
+
+        // if inside macro definition do not evaluate now!
+        if ( ScopeInsideMacroDefinition( ScopeList ) )
+        {
+          //Debug.Log( "Loop end inside macro, do nothing, close scope" );
+
+          OnScopeRemoved( lineIndex, ScopeList );
+          ScopeList.RemoveAt( ScopeList.Count - 1 );
+          return ParseLineResult.OK;
+        }
+
+        // fetch line data in between
+        SourceInfoLog( "Insert while from " + Lines[whileInfo.LineIndex] );
+
+        bool  endReached = false;
+
+        if ( !EvaluateTokens( lineIndex, whileInfo.EndValueTokens, whileInfo.EndValueTokensTextmapping, out SymbolInfo resultSymbol ) )
+        {
+          AddError( whileInfo.LineIndex + 1, ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate " + TokensToExpression( whileInfo.EndValueTokens ) );
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        long result = resultSymbol.ToInteger();
+
+        ++whileInfo.NumRepeats;
+
+        if ( result <= 0 )
+        {
+          endReached = true;
+        }
+        if ( whileInfo.NumRepeats >= 1000 )
+        {
+          AddError( whileInfo.LineIndex + 1, ErrorCode.E1108_SAFETY_BREAK, "Safety abort: WHILE had more than 999 loops: " + TokensToExpression( whileInfo.EndValueTokens ) );
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        if ( endReached )
+        {
+          // loop is done
+          intermediateLineOffset = 0;
+
+          OnScopeRemoved( lineIndex, ScopeList );
+          ScopeList.RemoveAt( ScopeList.Count - 1 );
+        }
+        else
+        {
+          // copy loop content for next loop
+          int lineLoopEndOffset = 0;
+
+          // end reached now?
+          if ( endReached )
+          {
+            //++linesToCopy;
+            lineLoopEndOffset = 0;
+          }
+
+          if ( whileInfo.LoopLength == -1 )
+          {
+            // also copy scope end
+            whileInfo.LoopLength = lineIndex - whileInfo.LineIndex - 1;
+          }
+          int linesToCopy = whileInfo.LoopLength;
+          string[] newLines = new string[Lines.Length + linesToCopy];
+
+          if ( whileInfo.Content == null )
+          {
+            whileInfo.Content = new string[linesToCopy];
+            System.Array.Copy( Lines, whileInfo.LineIndex + 1, whileInfo.Content, 0, linesToCopy );
+          }
+
+          System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
+          System.Array.Copy( whileInfo.Content, 0, newLines, lineIndex, linesToCopy );
+          System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
+
+          // adjust source infos to make lookup work correctly
+          string outerFilename = "";
+          int outerLineIndex = -1;
+          m_ASMFileInfo.FindTrueLineSource( whileInfo.LineIndex, out outerFilename, out outerLineIndex );
+
+
+          Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+          //sourceInfo.Filename = ParentFilename;
+          sourceInfo.Filename = outerFilename;
+          sourceInfo.FullPath = outerFilename;
+          sourceInfo.GlobalStartLine = lineIndex;
+          sourceInfo.LineCount = linesToCopy;
+          sourceInfo.LocalStartLine = outerLineIndex + 1 + intermediateLineOffset;
+
+          if ( endReached )
+          {
+            intermediateLineOffset -= lineIndex - whileInfo.LineIndex - 1;
+          }
+
+          SourceInfoLog( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
+
+          InsertSourceInfo( sourceInfo, true, false );
+
+          // scheint die Ursache zu sein!!
+          // clone all source infos inside the loop
+          CloneSourceInfos( sourceInfo.LocalStartLine, linesToCopy, lineIndex );
+
+          Lines = newLines;
+
+          DumpSourceInfos( OrigLines, Lines );
+
+          //Debug.Log( "New total " + Lines.Length + " lines" );
+
+          // WTF?
+          m_ASMFileInfo.LineInfo.Remove( lineIndex );
+
           return ParseLineResult.CALL_CONTINUE;
         }
       }
@@ -4312,6 +4437,11 @@ namespace RetroDevStudio.Parser
             continue;
           }
         }
+        else if ( ( lineTokenInfos.Count > 0 )
+        &&        ( lineTokenInfos[0].Content == "}" ) )
+        {
+        }
+
 
 
         if ( lineTokenInfos.Count == 0 )
@@ -5281,7 +5411,7 @@ namespace RetroDevStudio.Parser
             symbol.LocalLineIndex = entry.Value.LocalLineIndex;
             symbol.Name = entry.Value.Name;
             symbol.Type = entry.Value.Type;
-            symbol.References.Add( entry.Value.LineIndex );
+            symbol.References.Add( entry.Value.LineIndex, new SymbolReference() { GlobalLineIndex = entry.Value.LineIndex } );
             symbol.Zone = entry.Value.Zone;
             symbol.FromDependency = true;
             symbol.Info           = entry.Value.Info;
@@ -5659,6 +5789,32 @@ namespace RetroDevStudio.Parser
                 continue;
               }
               break;
+            case Types.ScopeInfo.ScopeType.WHILE:
+              if ( closingScope.While != null )
+              {
+                if ( lineTokenInfos.Count != 1 )
+                {
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                  continue;
+                }
+                var result = HandleScopeEnd( m_ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                if ( result == ParseLineResult.CALL_CONTINUE )
+                {
+                  --lineIndex;
+                  continue;
+                }
+                else if ( result == ParseLineResult.ERROR_ABORT )
+                {
+                  HadFatalError = true;
+                  return Lines;
+                }
+              }
+              else
+              {
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1401_INTERNAL_ERROR, "While scope encountered, but no while info set" );
+                continue;
+              }
+              break;
             case Types.ScopeInfo.ScopeType.LOOP:
               if ( closingScope.Loop != null )
               {
@@ -5703,9 +5859,9 @@ namespace RetroDevStudio.Parser
             default:
               // normal scope end
               if ( ( lineTokenInfos.Count == 3 )
-              && ( lineTokenInfos[0].Content == "}" )
-              && ( lineTokenInfos[2].Content == "{" )
-              && ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
+              &&   ( lineTokenInfos[0].Content == "}" )
+              &&   ( lineTokenInfos[2].Content == "{" )
+              &&   ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
               {
                 if ( !ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -5720,10 +5876,10 @@ namespace RetroDevStudio.Parser
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count >= 4 )
-              && ( lineTokenInfos[0].Content == "}" )
-              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
-              && ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
-              && ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
+              &&        ( lineTokenInfos[0].Content == "}" )
+              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
+              &&        ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
+              &&        ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
               {
                 if ( !ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -5747,7 +5903,7 @@ namespace RetroDevStudio.Parser
                     scope.IfChainHadActiveEntry = false;
                   }
                   else if ( ( prevScope.Active )
-                  || ( prevScope.IfChainHadActiveEntry ) )
+                  ||        ( prevScope.IfChainHadActiveEntry ) )
                   {
                     // need no evaluation, can skip over this one, since it is inactive anyway
                     scope.Active = false;
@@ -7696,6 +7852,19 @@ namespace RetroDevStudio.Parser
                 return Lines;
               }
             }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WHILE )
+            {
+              var result = POWhile( lineTokenInfos, lineIndex, info, ref Lines, stackScopes, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
             else
             {
               AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, $"Macro {pseudoOp.Keyword} currently has no effect!" );
@@ -8530,6 +8699,25 @@ namespace RetroDevStudio.Parser
       }
       var curExpression = Info.Opcode.ParserExpressions[Round];
 
+      if ( ( curExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_8BIT_RELATIVE )
+      ||   ( curExpression.Type == Opcode.OpcodePartialExpression.EXPRESSION_16BIT_RELATIVE ) )
+      {
+        if ( curExpression.ValidValues.Count > 0 )
+        {
+          var forbiddenValues = curExpression.ValidValues[Round].ValidValues;
+          if ( forbiddenValues.Count >= 0 )
+          {
+            // this has a list of invalid values!
+            string  stringizedValue1 = ByteValue.ToString();
+            var matchingValue1 = forbiddenValues.FirstOrDefault( v => v.Key == stringizedValue1 );
+            if ( matchingValue1 != null )
+            {
+              return false;
+            }
+          }
+        }
+      }
+
       if ( ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_24BIT )
       &&   ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_16BIT )
       &&   ( curExpression.Type != Opcode.OpcodePartialExpression.EXPRESSION_32BIT )
@@ -9039,7 +9227,7 @@ namespace RetroDevStudio.Parser
 
     private bool IsPlainAssignment( string operatorToken )
     {
-      return m_AssemblerSettings.PlainAssignmentOperatos.Contains( operatorToken );
+      return m_AssemblerSettings.PlainAssignmentOperators.Contains( operatorToken );
     }
 
 
@@ -9211,7 +9399,7 @@ namespace RetroDevStudio.Parser
           resultingValue = CreateIntegerSymbol( originalValue.ToInteger() >> newValue.ToInt32() );
           return true;
         default:
-          if ( m_AssemblerSettings.PlainAssignmentOperatos.Contains( operatorToken ) )
+          if ( m_AssemblerSettings.PlainAssignmentOperators.Contains( operatorToken ) )
           {
             resultingValue = newValue;
             return true;
@@ -10504,7 +10692,7 @@ namespace RetroDevStudio.Parser
         macroFunction.Symbol.Type             = SymbolInfo.Types.MACRO;
         macroFunction.Symbol.DocumentFilename = OuterFilename;
         macroFunction.Symbol.Zone             = Zone;
-        macroFunction.Symbol.References.Add( lineIndex );
+        macroFunction.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex } );
         macroFunction.Symbol.NumArguments     = -1;
 
 
@@ -10621,7 +10809,7 @@ namespace RetroDevStudio.Parser
             macroFunction.Symbol.DocumentFilename = OuterFilename;
             macroFunction.Symbol.Zone             = Zone;
             macroFunction.Symbol.NumArguments     = param.Count;
-            macroFunction.Symbol.References.Add( lineIndex );
+            macroFunction.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex } );
 
             macroFunctions.Add( new GR.Generic.Tupel<string, int>( macroName, param.Count ), macroFunction );
 
@@ -11212,9 +11400,9 @@ namespace RetroDevStudio.Parser
           {
             foreach ( var reference in info.Value.References )
             {
-              if ( FileInfo.LineInfo.ContainsKey( reference ) )
+              if ( FileInfo.LineInfo.ContainsKey( reference.Key ) )
               {
-                var line = FileInfo.LineInfo[reference];
+                var line = FileInfo.LineInfo[reference.Key];
 
                 // TODO - check if we're inside the code
                 // is absolute opcode?

@@ -42,7 +42,21 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_NodeMouseDoubleClick( object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e )
     {
-      SymbolInfo tokenInfo = (SymbolInfo)e.Node.Tag;
+      SymbolInfo tokenInfo = null;
+      if ( e.Node.Level == 3 )
+      {
+        int lineNo = ( (KeyValuePair<int,SymbolReference>)e.Node.Tag ).Key;
+        tokenInfo = (SymbolInfo)e.Node.Parent.Tag;
+
+        ActiveASMFileInfo.FindTrueLineSource( lineNo, out string filename, out int localLineIndex );
+
+        Core.Navigating.OpenDocumentAndGotoLine( LabelExplorerProject, Core.Navigating.FindDocumentInfoByPath( filename ), localLineIndex );
+        return;
+      }
+      else
+      {
+        tokenInfo = (SymbolInfo)e.Node.Tag;
+      }
       if ( tokenInfo == null )
       {
         if ( e.Node == NodeRoot )
@@ -334,6 +348,36 @@ namespace RetroDevStudio.Documents
           continue;
         }
 
+        // add references
+        foreach ( var reference in token.References )
+        {
+          var subNode = new TreeNode();
+
+          if ( ( reference.Key > -1 )
+          &&   ( ActiveASMFileInfo.FindTrueLineSource( reference.Key, out string filename, out int localLine ) ) )
+          {
+            if ( reference.Value.TokenInfo != null )
+            {
+              subNode.Text = $"{System.IO.Path.GetFileName( filename )}({localLine + 1}), ({reference.Value.TokenInfo.StartPos}:{reference.Value.TokenInfo.StartPos + reference.Value.TokenInfo.Length})";
+            }
+            else
+            {
+              subNode.Text = $"{System.IO.Path.GetFileName( filename )}({localLine + 1}), ({token.CharIndex}:{token.CharIndex + token.Length})";
+            }
+          }
+          else if ( reference.Key == -1 )
+          {
+            subNode.Text = $"Predefined symbol";
+          }
+          else
+          {
+            subNode.Text = $"Line {reference.Key + 1}";
+          }
+          subNode.Tag = reference;
+
+          node.Nodes.Add( subNode );
+        }
+
         if ( !token.Name.StartsWith( curZone + "." ) )
         {
           addToGlobalNode = true;
@@ -480,7 +524,30 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_AfterSelect( object sender, TreeViewEventArgs e )
     {
-      SymbolInfo tokenInfo = (SymbolInfo)e.Node.Tag;
+      SymbolInfo tokenInfo = null;
+      int         startPos = 0;
+      int         length = 0;
+
+      if ( e.Node.Level == 3 )
+      {
+        var reference = (KeyValuePair<int,SymbolReference>)e.Node.Tag;
+
+        if ( reference.Value.TokenInfo != null )
+        {
+          startPos  = reference.Value.TokenInfo.StartPos;
+          length    = reference.Value.TokenInfo.Length;
+        }
+        tokenInfo = (SymbolInfo)e.Node.Parent.Tag;
+      }
+      else
+      {
+        tokenInfo = (SymbolInfo)e.Node.Tag;
+        if ( tokenInfo != null )
+        {
+          startPos  = tokenInfo.CharIndex;
+          length    = tokenInfo.Length;
+        }
+      }
       if ( tokenInfo == null )
       {
         return;
@@ -489,9 +556,8 @@ namespace RetroDevStudio.Documents
       var doc = Core.Navigating.FindDocumentByPath( tokenInfo.DocumentFilename );
       if ( doc != null )
       {
-        doc.HighlightText( tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
+        doc.HighlightText( tokenInfo.LocalLineIndex, startPos, length );
       }
-
     }
 
 

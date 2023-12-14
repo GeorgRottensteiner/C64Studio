@@ -13,6 +13,7 @@ using C64Models.BASIC;
 using GR.Image;
 using RetroDevStudio.Dialogs;
 using FastColoredTextBoxNS;
+using GR.Memory;
 
 namespace RetroDevStudio.Documents
 {
@@ -536,7 +537,8 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = "#";
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
-      editSource.TabLength = Core.Settings.TabSize;
+      editSource.TabLength  = Core.Settings.TabSize;
+      editSource.CaretWidth = Core.Settings.CaretWidth;
 
       //call OnTextChanged for refresh syntax highlighting
       editSource.OnTextChanged();
@@ -926,8 +928,20 @@ namespace RetroDevStudio.Documents
         }
 
         // quick compatibility hack with petcat
-        basicText = basicText.Replace( "~", "{SHIFT-ARROW UP}" );
-        basicText = basicText.Replace( "\\", "{POUND}" );
+        string arrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out bool hadError );
+        string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out hadError );
+        string pound = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out hadError );
+        basicText = basicText.Replace( "~", shiftArrowUp );
+        basicText = basicText.Replace( "\\", pound );
+        basicText = basicText.Replace( "^", arrowUp );
+        if ( basicText.Contains( "{" ) )
+        {
+          // BASIC text has macros set!
+          if ( m_SymbolMode )
+          {
+            basicText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( basicText, out hadError );
+          }
+        }
 
         // ugly hack to fix wrong flash on chars in non Basic 3.5 dialects
         if ( !m_BASICDialectName.Contains( "3.5" ) )
@@ -1331,6 +1345,11 @@ namespace RetroDevStudio.Documents
     public override void Copy()
     {
       editSource.Copy();
+
+      var bytes = Encoding.Default.GetBytes( editSource.SelectedText );
+
+      var bb = new ByteBuffer( bytes );
+      Debug.Log( bb.ToString() );
     }
 
 

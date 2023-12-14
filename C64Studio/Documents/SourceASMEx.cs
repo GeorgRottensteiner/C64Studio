@@ -2285,7 +2285,6 @@ namespace RetroDevStudio.Documents
     {
       get
       {
-        //return editSource.Caret.LineNumber;
         return editSource.Selection.Start.iLine;
       }
     }
@@ -2635,7 +2634,6 @@ namespace RetroDevStudio.Documents
 
     private int CurrentPosition()
     {
-      //return editSource.Caret.Position;
       return editSource.PlaceToPosition( editSource.Selection.Start );
     }
 
@@ -2952,6 +2950,7 @@ namespace RetroDevStudio.Documents
       editSource.TabLength            = Core.Settings.TabSize;
       editSource.ShowLineNumbers      = !Core.Settings.ASMHideLineNumbers;
       editSource.PreferredLineWidth   = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
+      editSource.CaretWidth           = Core.Settings.CaretWidth;
 
       if ( Core.Settings.ASMShowMiniView )
       {

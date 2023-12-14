@@ -10,7 +10,7 @@ namespace Tiny64
     public enum OpcodePartialExpression
     {
       UNUSED,
-      EXPRESSION_7BIT,                // seriously, Motorola?
+      EXPRESSION_7BIT,
       EXPRESSION_8BIT,
       EXPRESSION_8BIT_RELATIVE,
       ENCAPSULATED_EXPRESSION_8BIT,   // e.g. LD r,>(IX+d)<

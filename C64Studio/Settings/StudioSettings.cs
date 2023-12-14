@@ -129,6 +129,7 @@ namespace RetroDevStudio
     public bool                                 LastSolutionWasEmpty = false;
 
     public int                                  TabSize             = 2;
+    public int                                  CaretWidth          = 1;
     public bool                                 TabConvertToSpaces  = true;
     public bool                                 AllowTabs           = true;
     public bool                                 ASMHideLineNumbers  = false;
@@ -596,6 +597,7 @@ namespace RetroDevStudio
       chunkTabs.AppendString( SourceFileEncoding.WebName );
       chunkTabs.AppendI32( BASICShowMaxLineLengthIndicatorLength );
       chunkTabs.AppendI32( ASMShowMaxLineLengthIndicatorLength );
+      chunkTabs.AppendI32( CaretWidth );
       SettingsData.Append( chunkTabs.ToBuffer() );
 
       GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FONT );
@@ -1032,6 +1034,12 @@ namespace RetroDevStudio
               ||   ( ASMShowMaxLineLengthIndicatorLength >= 200 ) )
               {
                 ASMShowMaxLineLengthIndicatorLength = 0;
+              }
+              CaretWidth = binIn.ReadInt32();
+              if ( ( CaretWidth <= 0 )
+              ||   ( CaretWidth >= 200 ) )
+              {
+                CaretWidth = 1;
               }
             }
             break;
@@ -1644,6 +1652,11 @@ namespace RetroDevStudio
       if ( TabSize > 800 )
       {
         TabSize = 800;
+      }
+      if ( ( CaretWidth < 1 )
+      ||   ( CaretWidth >= 200 ) )
+      {
+        CaretWidth = 1;
       }
 
       if ( SourceFontSize <= 0.0f )

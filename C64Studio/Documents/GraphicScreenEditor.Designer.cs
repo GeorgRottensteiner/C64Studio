@@ -30,9 +30,9 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,12 +64,16 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnZoomOut = new System.Windows.Forms.Button();
+      this.btnZoomIn = new System.Windows.Forms.Button();
       this.btnClearScreen = new System.Windows.Forms.Button();
       this.btnToolValidate = new System.Windows.Forms.RadioButton();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
       this.btnToolQuad = new System.Windows.Forms.RadioButton();
       this.btnToolRect = new System.Windows.Forms.RadioButton();
+      this.btnToolLineDrag = new System.Windows.Forms.RadioButton();
+      this.btnToolLine = new System.Windows.Forms.RadioButton();
       this.btnToolPaint = new System.Windows.Forms.RadioButton();
       this.label9 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
@@ -436,12 +440,16 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnZoomOut);
+      this.tabEditor.Controls.Add(this.btnZoomIn);
       this.tabEditor.Controls.Add(this.btnClearScreen);
       this.tabEditor.Controls.Add(this.btnToolValidate);
       this.tabEditor.Controls.Add(this.btnToolSelect);
       this.tabEditor.Controls.Add(this.btnToolFill);
       this.tabEditor.Controls.Add(this.btnToolQuad);
       this.tabEditor.Controls.Add(this.btnToolRect);
+      this.tabEditor.Controls.Add(this.btnToolLineDrag);
+      this.tabEditor.Controls.Add(this.btnToolLine);
       this.tabEditor.Controls.Add(this.btnToolPaint);
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.label8);
@@ -482,6 +490,29 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // btnZoomOut
+      // 
+      this.btnZoomOut.Enabled = false;
+      this.btnZoomOut.Image = global::RetroDevStudio.Properties.Resources.zoom_out;
+      this.btnZoomOut.Location = new System.Drawing.Point(251, 438);
+      this.btnZoomOut.Name = "btnZoomOut";
+      this.btnZoomOut.Size = new System.Drawing.Size(26, 26);
+      this.btnZoomOut.TabIndex = 8;
+      this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out");
+      this.btnZoomOut.UseVisualStyleBackColor = true;
+      this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+      // 
+      // btnZoomIn
+      // 
+      this.btnZoomIn.Image = global::RetroDevStudio.Properties.Resources.zoom_in;
+      this.btnZoomIn.Location = new System.Drawing.Point(219, 438);
+      this.btnZoomIn.Name = "btnZoomIn";
+      this.btnZoomIn.Size = new System.Drawing.Size(26, 26);
+      this.btnZoomIn.TabIndex = 7;
+      this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In");
+      this.btnZoomIn.UseVisualStyleBackColor = true;
+      this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+      // 
       // btnClearScreen
       // 
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
@@ -498,10 +529,10 @@
       this.btnToolValidate.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolValidate.Checked = true;
       this.btnToolValidate.Image = global::RetroDevStudio.Properties.Resources.tool_validate;
-      this.btnToolValidate.Location = new System.Drawing.Point(128, 438);
+      this.btnToolValidate.Location = new System.Drawing.Point(182, 438);
       this.btnToolValidate.Name = "btnToolValidate";
       this.btnToolValidate.Size = new System.Drawing.Size(24, 24);
-      this.btnToolValidate.TabIndex = 36;
+      this.btnToolValidate.TabIndex = 6;
       this.btnToolValidate.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolValidate, "Check Validation");
       this.btnToolValidate.UseVisualStyleBackColor = true;
@@ -511,10 +542,10 @@
       // 
       this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolSelect.Image = global::RetroDevStudio.Properties.Resources.tool_select;
-      this.btnToolSelect.Location = new System.Drawing.Point(104, 438);
+      this.btnToolSelect.Location = new System.Drawing.Point(152, 438);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolSelect.TabIndex = 36;
+      this.btnToolSelect.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
       this.btnToolSelect.UseVisualStyleBackColor = true;
       this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
@@ -523,10 +554,10 @@
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
-      this.btnToolFill.Location = new System.Drawing.Point(80, 438);
+      this.btnToolFill.Location = new System.Drawing.Point(128, 438);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
-      this.btnToolFill.TabIndex = 37;
+      this.btnToolFill.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
       this.btnToolFill.UseVisualStyleBackColor = true;
       this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
@@ -535,10 +566,10 @@
       // 
       this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolQuad.Image = global::RetroDevStudio.Properties.Resources.tool_quad;
-      this.btnToolQuad.Location = new System.Drawing.Point(56, 438);
+      this.btnToolQuad.Location = new System.Drawing.Point(104, 438);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
-      this.btnToolQuad.TabIndex = 38;
+      this.btnToolQuad.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Box");
       this.btnToolQuad.UseVisualStyleBackColor = true;
       this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
@@ -547,22 +578,45 @@
       // 
       this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolRect.Image = global::RetroDevStudio.Properties.Resources.tool_rect;
-      this.btnToolRect.Location = new System.Drawing.Point(32, 438);
+      this.btnToolRect.Location = new System.Drawing.Point(80, 438);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolRect.TabIndex = 39;
+      this.btnToolRect.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
       this.btnToolRect.UseVisualStyleBackColor = true;
       this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
       // 
+      // btnToolLineDrag
+      // 
+      this.btnToolLineDrag.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolLineDrag.Image = ((System.Drawing.Image)(resources.GetObject("btnToolLineDrag.Image")));
+      this.btnToolLineDrag.Location = new System.Drawing.Point(56, 438);
+      this.btnToolLineDrag.Name = "btnToolLineDrag";
+      this.btnToolLineDrag.Size = new System.Drawing.Size(24, 24);
+      this.btnToolLineDrag.TabIndex = 1;
+      this.btnToolLineDrag.UseVisualStyleBackColor = true;
+      this.btnToolLineDrag.CheckedChanged += new System.EventHandler(this.btnToolLineDrag_CheckedChanged);
+      // 
+      // btnToolLine
+      // 
+      this.btnToolLine.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolLine.Image = global::RetroDevStudio.Properties.Resources.tool_freehand_line;
+      this.btnToolLine.Location = new System.Drawing.Point(32, 438);
+      this.btnToolLine.Name = "btnToolLine";
+      this.btnToolLine.Size = new System.Drawing.Size(24, 24);
+      this.btnToolLine.TabIndex = 1;
+      this.toolTip1.SetToolTip(this.btnToolLine, "Line");
+      this.btnToolLine.UseVisualStyleBackColor = true;
+      this.btnToolLine.CheckedChanged += new System.EventHandler(this.btnToolLine_CheckedChanged);
+      // 
       // btnToolPaint
       // 
       this.btnToolPaint.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolPaint.Image = global::RetroDevStudio.Properties.Resources.tool_none;
+      this.btnToolPaint.Image = global::RetroDevStudio.Properties.Resources.tool_freehand_pixel;
       this.btnToolPaint.Location = new System.Drawing.Point(8, 438);
       this.btnToolPaint.Name = "btnToolPaint";
       this.btnToolPaint.Size = new System.Drawing.Size(24, 24);
-      this.btnToolPaint.TabIndex = 40;
+      this.btnToolPaint.TabIndex = 0;
       this.toolTip1.SetToolTip(this.btnToolPaint, "Single Pixel");
       this.btnToolPaint.UseVisualStyleBackColor = true;
       this.btnToolPaint.CheckedChanged += new System.EventHandler(this.btnToolPaint_CheckedChanged);
@@ -735,7 +789,7 @@
       // 
       this.colorSelector.AutoResize = false;
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage4;
+      this.colorSelector.DisplayPage = fastImage1;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -748,7 +802,7 @@
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage5;
+      this.charEditor.DisplayPage = fastImage2;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -883,7 +937,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -895,6 +949,7 @@
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
       this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
       this.pictureEditor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseUp);
+      this.pictureEditor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureEditor_PreviewKeyDown);
       // 
       // tabGraphicScreenEditor
       // 
@@ -1099,5 +1154,9 @@
     private System.Windows.Forms.Button btnExportToBASICHexData;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.Button btnClearScreen;
+    private System.Windows.Forms.Button btnZoomIn;
+    private System.Windows.Forms.Button btnZoomOut;
+    private System.Windows.Forms.RadioButton btnToolLine;
+    private System.Windows.Forms.RadioButton btnToolLineDrag;
   }
 }

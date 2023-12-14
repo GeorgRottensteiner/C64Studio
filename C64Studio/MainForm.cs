@@ -14,6 +14,7 @@ using RetroDevStudio.Documents;
 using RetroDevStudio.Dialogs;
 using System.Linq;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
+using System.IO;
 
 
 
@@ -72,6 +73,9 @@ namespace RetroDevStudio
     private List<IdleRequest> IdleQueue = new List<IdleRequest>();
 
     internal DocumentInfo         LastSearchableDocumentInfo = null;
+
+    public Cursor                 CursorHand = null;
+    public Cursor                 CursorGrab = null;
 
 
 
@@ -513,6 +517,9 @@ namespace RetroDevStudio
 #endif
 
       statusProgress.Visible = false;
+
+      CursorHand = new Cursor( new MemoryStream( Properties.Resources.grab1 ) );
+      CursorGrab = new Cursor( new MemoryStream( Properties.Resources.grab2 ) );
 
       StudioCore.MainForm = this;
       StudioCore.Settings.PanelMain = panelMain;
@@ -1999,6 +2006,11 @@ namespace RetroDevStudio
       {
         result = result.Replace( "$(ConfigName)", Document.Project.Settings.CurrentConfig.Name );
         result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
+      }
+      if ( ( StudioCore.Navigating.Solution != null )
+      &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+      {
+        result = result.Replace( "$(SolutionPath)", System.IO.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) );
       }
       result = result.Replace( "$(MediaManager)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) + "\"" );
       result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
@@ -5485,6 +5497,8 @@ namespace RetroDevStudio
 
       bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, out ASMFileInfo );
 
+      Document.ASMFileInfo = ASMFileInfo;
+
       if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
       &&   ( Document.Element != null ) )
@@ -5647,6 +5661,7 @@ namespace RetroDevStudio
       {
         Document.BaseDoc.FileParsed = true;
       }
+
       return result;
     }
 

@@ -71,6 +71,7 @@ namespace FastColoredTextBoxNS
     private Brush backBrush;
     private BaseBookmarks bookmarks;
     private bool caretVisible;
+    private int _CaretWidth;
     private Color changedLineColor;
     private int charHeight;
     private Color currentLineColor;
@@ -202,6 +203,7 @@ namespace FastColoredTextBoxNS
       AllowTabs = false;
       ConvertTabsToSpaces = false;
       caretVisible = true;
+      _CaretWidth = 1;
       CaretColor = Color.Black;
       WideCaret = false;
       Paddings = new Padding( 0, 0, 0, 0 );
@@ -1014,6 +1016,28 @@ namespace FastColoredTextBoxNS
     {
       get;
       set;
+    }
+
+    /// <summary>
+    /// Caret width (in pixel)
+    /// </summary>
+    [DefaultValue( 1 )]
+    [Description( "Caret width" )]
+    public int CaretWidth
+    {
+      get
+      {
+        return _CaretWidth;
+      }
+      set
+      {
+        if ( ( value < 1 )
+        ||   ( value > CharWidth ) )
+        {
+          return;
+        }
+        _CaretWidth = value;
+      }
     }
 
     /// <summary>
@@ -6067,7 +6091,7 @@ namespace FastColoredTextBoxNS
 
       if ( ( Focused || IsDragDrop ) && car.X >= LeftIndent && CaretVisible )
       {
-        int carWidth = ( IsReplaceMode || WideCaret ) ? CharWidth : 1;
+        int carWidth = ( IsReplaceMode || WideCaret ) ? CharWidth : _CaretWidth;
         if ( WideCaret )
         {
           using ( var brush = new SolidBrush( CaretColor ) )
@@ -6075,7 +6099,12 @@ namespace FastColoredTextBoxNS
         }
         else
           using ( var pen = new Pen( CaretColor ) )
-            e.Graphics.DrawLine( pen, car.X, car.Y, car.X, car.Y + caretHeight - 1 );
+          {
+            for ( int i = 0; i < _CaretWidth; ++i )
+            {
+              e.Graphics.DrawLine( pen, car.X + i, car.Y, car.X + i, car.Y + caretHeight - 1 );
+            }
+          }
 
         var caretRect = new Rectangle( HorizontalScroll.Value + car.X, VerticalScroll.Value + car.Y, carWidth, caretHeight );
 
@@ -9081,6 +9110,7 @@ window.status = ""#print"";
       {
         if ( SyntaxHighlighter != null )
           SyntaxHighlighter.Dispose();
+        timerCaret.Dispose();
         timer.Dispose();
         timer2.Dispose();
         middleClickScrollingTimer.Dispose();

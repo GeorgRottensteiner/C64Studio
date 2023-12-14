@@ -538,6 +538,23 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPOWhile()
+    {
+      string source = @"* = $2000
+                        a = 5
+                        !while a > 0 {
+                                  !byte a
+                                  a = a - 1
+                        }";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( "00200504030201", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPseudoOpMessage()
     {
       string      source = @"* = $2000

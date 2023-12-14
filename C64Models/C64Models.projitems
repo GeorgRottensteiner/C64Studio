@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor6510.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.While.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.OpcodeFromExpression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Text.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Processors\Processor.68K.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteDisplayMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicTileMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\SymbolReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextCharMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Lookup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextMode.cs" />

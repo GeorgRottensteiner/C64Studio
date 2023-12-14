@@ -79,69 +79,6 @@ namespace RetroDevStudio.Parser
               ApplyOpcodePatch( info, (uint)byteValue, round );
             }
           }
-          /*
-          else if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
-          {
-            long delta = byteValue - info.AddressStart - 2;
-            if ( !Valid8BitRelativeValue( delta ) )
-            {
-              AddError( lineIndex,
-                        Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
-                        "Relative jump too far, trying to jump " + delta + " bytes",
-                        lineTokenInfos[1].StartPos,
-                        lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-            }
-            else
-            {
-              ApplyOpcodePatch( info, (byte)delta, round );
-            }
-          }
-          // 8 bit only?
-          else if ( ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_8BIT )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_X )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_Y )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
-          ||        ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER ) )
-          {
-            if ( ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU )
-            &&     ( info.Accu16Bit ) )
-            ||   ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER )
-            &&     ( info.Registers16Bit ) ) )
-            {
-              if ( !ValidWordValue( byteValue ) )
-              {
-                AddError( lineIndex,
-                          Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                          "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
-                          lineTokenInfos[startIndex].StartPos,
-                          lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-              }
-              else
-              {
-                ApplyOpcodePatch( info, (ushort)byteValue, round );
-              }
-              ++info.NumBytes;
-            }
-            else if ( !ValidByteValue( byteValue ) )
-            {
-              AddError( lineIndex,
-                        Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
-                        "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:" + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
-                        lineTokenInfos[1].StartPos,
-                        lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-            }
-            else
-            {
-              ApplyOpcodePatch( info, (byte)byteValue, round );
-            }
-          }
-          else
-          {
-            ApplyOpcodePatch( info, (byte)byteValue, round );
-          }*/
           if ( round == 0 )
           {
             info.NeededParsedExpression = null;

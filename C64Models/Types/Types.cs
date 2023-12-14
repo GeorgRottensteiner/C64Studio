@@ -90,7 +90,8 @@ namespace RetroDevStudio.Types
       ASSUME_8BIT_ACCUMULATOR_65816,
       ASSUME_16BIT_REGISTERS_65816,
       ASSUME_8BIT_REGISTERS_65816,
-      SKIP                              // basically a * = * + x
+      SKIP,                             // basically a * = * + x
+      WHILE                             // ACME: !WHILE
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;
@@ -844,6 +845,19 @@ namespace RetroDevStudio.Types
 
 
 
+  public class WhileInfo
+  {
+    public int                LineIndex = 0;
+    public int                LoopLength = -1;
+    public string[]           Content = null;
+    public int                NumRepeats = 0;
+
+    public Map<byte,byte>     EndValueTokensTextmapping = null;
+    public List<TokenInfo>    EndValueTokens = null;
+  };
+
+
+
   public class ScopeInfo
   {
     public enum ScopeType
@@ -855,8 +869,9 @@ namespace RetroDevStudio.Types
       PSEUDO_PC,
       ZONE,
       ADDRESS,
-      DO_UNTIL,
-      REPEAT
+      DO_UNTIL,       // DO .. UNTIL <Expression>
+      REPEAT,         // REPEAT x times <Expression>
+      WHILE           // while <Expression> { ... }
     };
 
     public int                      StartIndex = 0;
@@ -865,6 +880,7 @@ namespace RetroDevStudio.Types
     public Types.LoopInfo           Loop = null;
     public Types.MacroFunctionInfo  Macro = null;
     public RepeatUntilInfo          RepeatUntil = null;
+    public WhileInfo                While = null;
     public ScopeType                Type = ScopeType.LOOP;
     public string                   Name = "";
 
@@ -1202,8 +1218,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 91 - 64, true, 91, true, '[', true );//(char)0xee1b, true );//'[', true );
       AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.NORMAL, KeyType.NORMAL, 92 - 64, true, 92, true, '£', true ).Replacements.Add( "POUND" );
       AddC64Key( KeyboardKey.KEY_SEMI_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 93 - 64, true, 93, true, ']', true );//(char)0xee1d, true );// ']', true );
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, '^', true, "ARROW UP" ).Replacements.AddRange( new string[] { "ARROW UP", "ARROWUP", "ARROW-UP" } );
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.AddRange( new string[] { "ARROW UP", "ARROWUP", "ARROW-UP" } );
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.AddRange( new string[] { "ARROW UP", "ARROWUP", "ARROW-UP", "^" } );
       AddC64Key( KeyboardKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" ).Replacements.AddRange( new string[] { "ARROW LEFT", "ARROWLEFT", "ARROW-LEFT" } ); // arrow left
       //  96-127 $60-$7F     -32 $E0         64- 95 $40-$5F  
       AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96, true, (char)0xee40, true, "SHIFT *" ).Replacements.Add( "SHIFT-*" );   // Shift *
@@ -1583,22 +1598,22 @@ namespace RetroDevStudio
       foreach ( var c64Key in ConstantData.PhysicalKeyInfo )
       {
         if ( ( c64Key.Value.WithShift != null )
-        && ( c64Key.Value.WithShift.CharValue == UnicodeValue ) )
+        &&   ( c64Key.Value.WithShift.CharValue == UnicodeValue ) )
         {
           return c64Key.Value.WithShift;
         }
         if ( ( c64Key.Value.WithControl != null )
-        && ( c64Key.Value.WithControl.CharValue == UnicodeValue ) )
+        &&   ( c64Key.Value.WithControl.CharValue == UnicodeValue ) )
         {
           return c64Key.Value.WithControl;
         }
         if ( ( c64Key.Value.WithCommodore != null )
-        && ( c64Key.Value.WithCommodore.CharValue == UnicodeValue ) )
+        &&   ( c64Key.Value.WithCommodore.CharValue == UnicodeValue ) )
         {
           return c64Key.Value.WithCommodore;
         }
         if ( ( c64Key.Value.Normal != null )
-        && ( c64Key.Value.Normal.CharValue == UnicodeValue ) )
+        &&   ( c64Key.Value.Normal.CharValue == UnicodeValue ) )
         {
           return c64Key.Value.Normal;
         }

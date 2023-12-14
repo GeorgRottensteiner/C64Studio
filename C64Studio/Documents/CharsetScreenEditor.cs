@@ -2956,6 +2956,8 @@ namespace RetroDevStudio.Documents
       panelCharacters.ItemWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.ItemHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.Invalidate();
+      UpdatePalette();
+
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       if ( panelCharacters.Items.Count > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
@@ -2973,8 +2975,6 @@ namespace RetroDevStudio.Documents
         panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
       }
       panelCharacters.EndUpdate();
-
-      UpdatePalette();
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
@@ -3005,7 +3005,19 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_HIRES:
           numColorsInChooser = 32;
-          numColorsBackground = 32;
+          numColorsBackground = 256;
+          break;
+        case TextMode.MEGA65_40_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_NCM:
+        case TextMode.MEGA65_40_X_25_FCM:
+        case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_80_X_25_NCM:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+          numColorsBackground = 256;
           break;
         case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C128 );
@@ -3554,8 +3566,15 @@ namespace RetroDevStudio.Documents
         Area        = DetermineExportRectangle(),
         RowByRow    = ( comboExportOrientation.SelectedIndex == 0 ),
         Data        = (ExportCharsetScreenInfo.ExportData)comboExportData.SelectedIndex,
-        Image       = m_Image
+        Image       = m_Image,
       };
+
+      if ( ( exportInfo.Data == ExportCharsetScreenInfo.ExportData.CHARSET )
+      &&   ( comboExportArea.SelectedIndex == 1 ) )
+      {
+        // export selection (use selection from charset control)
+        exportInfo.SelectedCharactersInCharset = charEditor.SelectedIndices;
+      }
 
 
       editDataExport.Text = "";

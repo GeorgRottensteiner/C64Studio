@@ -23,13 +23,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefASMEditor( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "asm", "editor", "assembler", "font" } );
+      _Keywords.AddRange( new string[] { "asm", "editor", "assembler", "font", "tab", "caret", "cursor", "cycle", "size", "autocomplete", "address", "encoding" } );
 
       InitializeComponent();
 
       checkConvertTabsToSpaces.Checked  = Core.Settings.TabConvertToSpaces;
       editTabSize.Text                  = Core.Settings.TabSize.ToString();
       checkStripTrailingSpaces.Checked  = Core.Settings.StripTrailingSpaces;
+      editCaretWidth.Text               = Core.Settings.CaretWidth.ToString();  
       labelFontPreview.Font             = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       checkASMShowLineNumbers.Checked   = !Core.Settings.ASMHideLineNumbers;
@@ -74,6 +75,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       var xmlTabs = SettingsRoot.AddChild( "Generic.Tabs" );
       var xmlASMEditor = SettingsRoot.AddChild( "Generic.AssemblerEditor" );
       var xmlFonts = SettingsRoot.AddChild( "Generic.Fonts" );
+      var xmlCaret = SettingsRoot.AddChild( "Generic.Caret" );
 
       xmlTabs.AddAttribute( "TabSize", Core.Settings.TabSize.ToString() );
       xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.TabConvertToSpaces ? "yes" : "no" );
@@ -94,6 +96,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlFont.AddAttribute( "Family", Core.Settings.SourceFontFamily );
       xmlFont.AddAttribute( "Size", Util.DoubleToString( Core.Settings.SourceFontSize ) );
       xmlFont.AddAttribute( "Style", ( (int)Core.Settings.SourceFontStyle ).ToString() );
+
+      xmlCaret.AddAttribute( "CaretWidth", Core.Settings.CaretWidth.ToString() );
     }
 
 
@@ -152,6 +156,12 @@ namespace RetroDevStudio.Dialogs.Preferences
             labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
           }
         }
+      }
+
+      var xmlCaret = SettingsRoot.FindByType( "Generic.Caret" );
+      if ( xmlCaret != null )
+      {
+        editCaretWidth.Text = GR.Convert.ToI32( xmlCaret.Attribute( "CaretWidth" ) ).ToString();
       }
       RefreshDisplayOnDocuments();
     }
@@ -325,6 +335,20 @@ namespace RetroDevStudio.Dialogs.Preferences
       if ( Core.Settings.ASMShowMaxLineLengthIndicatorLength != maxColIndicator )
       {
         Core.Settings.ASMShowMaxLineLengthIndicatorLength = maxColIndicator;
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
+
+    private void editCaretWidth_TextChanged( object sender, EventArgs e )
+    {
+      int     caretWidth = GR.Convert.ToI32( editCaretWidth.Text );
+
+      if ( ( caretWidth >= 1 )
+      &&   ( caretWidth <= 200 ) )
+      {
+        Core.Settings.CaretWidth = caretWidth;
         RefreshDisplayOnDocuments();
       }
     }

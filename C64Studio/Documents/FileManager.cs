@@ -1276,15 +1276,14 @@ namespace RetroDevStudio.Documents
       {
         var disk = (CommodoreDisk)m_Media;
 
-        var diskID = new GR.Memory.ByteBuffer();
-        diskID.AppendU16NetworkOrder( disk.DiskID );
+        var diskID = new GR.Memory.ByteBuffer( disk.DiskID );
         var renameDisk = new FormRenameDisk( Core, disk.FilenameType, disk.DiskName, diskID );
         if ( renameDisk.ShowDialog() != DialogResult.OK )
         {
           return;
         }
         disk.DiskName = renameDisk.DiskName;
-        disk.DiskID   = renameDisk.DiskID.UInt16NetworkOrderAt( 0 );
+        disk.DiskID   = renameDisk.DiskID;
         RefreshFileView();
         SetModified();
       }
