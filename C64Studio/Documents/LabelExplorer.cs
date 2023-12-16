@@ -127,7 +127,11 @@ namespace RetroDevStudio.Documents
         expandedNodesEntry.Clear();
         foreach ( TreeNode node in NodeRoot.Nodes )
         {
-          expandedNodesEntry[node.Text] = node.IsExpanded;
+          if ( ( node != null )
+          &&   ( node.Text != null ) )
+          {
+            expandedNodesEntry[node.Text] = node.IsExpanded;
+          }
         }
       }
     }
