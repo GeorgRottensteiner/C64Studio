@@ -1,0 +1,161 @@
+#C64 Studio BASIC declaration file
+#Comments start with #
+#CSV Format 
+#Token        = actual name of command
+#ByteValues   = one or more byte values (hex)
+#Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#
+#StartAddress=xxxx      > sets the default BASIC start address
+#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+
+StartAddress=2049
+SafeLineLength=80
+
+Token;ByteValues;Abbreviation[;OptionalInfo]
+@;;
+AND;;
+AS;;
+ASM;;
+BACKGROUND;;
+BORDER;;
+BYTE;;
+CALL;;
+CHARAT;;
+CHARSET;;
+CONST;;
+CONTINUE;;
+DATA;;
+DECIMAL;;
+DECLARE;;
+DIM;;
+DO;;
+DOKE;;
+ELSE;;
+END;;
+ERROR;;
+EXIT;;
+FAST;;
+FILTER;;
+FLOAT;;
+FOR;;
+FUNCTION;;
+GET;;
+GET#;;
+GOSUB;;
+GOTO;;
+HSCROLL;;
+IF;;
+INCBIN;;
+INCLUDE;;
+INLINE;;
+INPUT;;
+INPUT#;;
+INT;;
+INTERRUPT;;
+LET;;
+LOAD;;
+LOCATE;;
+LONG;;
+LOOP;;
+MEMCPY;;
+MEMSET;;
+MEMSHIFT;;
+MOD;;
+NOT;;
+NEXT;;
+ON;;
+OPEN;;
+OPTION;;
+OR;;
+ORIGIN;;
+OVERLOAD;;
+POKE;;
+PRINT;;
+PRINT#;;
+PRIVATE;;
+RANDOMIZE;;
+READ#;;
+REM;;
+RETURN;;
+SAVE;;
+SELECT CASE;;
+SCREEN;;
+SHARED;;
+SPRITE;;
+SPRITE CLEAR HIT;;
+SPRITE MULTICOLOR;;
+STATIC;;
+SOUND CLEAR;;
+STEP;;
+STRING;;
+SUB;;
+SWAP;;
+SYS;;
+TEXTAT;;
+THEN;;
+THIS;;
+TO;;
+TYPE;;
+UNTIL;;
+VMODE;;
+VOICE;;
+VOLUME;;
+VSCROLL;;
+WAIT;;
+WHILE;;
+WORD;;
+WRITE#;;
+XOR;;
+ABS;;
+ASC;;
+ATN;;
+CBYTE;;
+CFLOAT;;
+CHR$;;
+CINT;;
+CLONG;;
+COS;;
+CSRLIN;;
+CWORD;;
+DEEK;;
+ERR;;
+EXP;;
+FLOOR;;
+JOY;;
+KEY;;
+LCASE$;;
+LEFT$;;
+LEN;;
+LOG;;
+MID$;;
+PEEK;;
+POS;;
+POW;;
+RIGHT$;;
+RND;;
+RNDB;;
+RNDI;;
+RNDL;;
+RNDW;;
+SCAN;;
+SGN;;
+SHL;;
+SHR;;
+SIN;;
+SPRITEBGHIT;;
+SPRITEHIT;;
+SQR;;
+ST;;
+STR$;;
+TAN;;
+TI;;
+UCASE$;;
+VAL;;
+
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
+#C64 Studio extension
+LABEL;;
+

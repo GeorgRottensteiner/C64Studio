@@ -117,7 +117,8 @@ namespace RetroDevStudio.Documents
 
     private void StoreOpenNodes()
     {
-      if ( ActiveDocumentInfo != null )
+      if ( ( ActiveDocumentInfo != null )
+      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
       {
         if ( !_ExpandedNodesPerProject.ContainsKey( ActiveDocumentInfo.ASMFileInfo ) )
         {

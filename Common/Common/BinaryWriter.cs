@@ -7,14 +7,27 @@ namespace GR
 	  /// <summary>
 	  /// Zusammenfassung für BinaryWriter.
 	  /// </summary>
-	  public class BinaryWriter : IWriter
-	  {
+	  public class BinaryWriter : IWriter, IDisposable
+    {
 
       private System.IO.Stream        m_Stream = null;
+      private bool                    m_IsOwner = false;
 
-		  public BinaryWriter()
+
+
+      public BinaryWriter()
 		  {
 		  }
+
+
+
+      public BinaryWriter( string Filename )
+      {
+        m_Stream = new System.IO.FileStream( Filename, System.IO.FileMode.Create );
+        m_IsOwner = true;
+      }
+
+
 
       public BinaryWriter( System.IO.Stream Stream )
 		  {
@@ -191,7 +204,14 @@ namespace GR
 
       public override void Close()
       {
+        if ( ( m_Stream != null )
+        &&   ( m_IsOwner ) )
+        {
+          m_Stream.Close();
+          m_Stream.Dispose();
+        }
         m_Stream = null;
+        m_IsOwner = false;
       }
 
 
@@ -220,6 +240,13 @@ namespace GR
           }
           return m_Stream.Position;
         }
+      }
+
+
+
+      public void Dispose()
+      {
+        Close();
       }
 
     }

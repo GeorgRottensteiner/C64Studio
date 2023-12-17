@@ -367,6 +367,7 @@ namespace GR
           m_Stream.Dispose();
         }
         m_Stream = null;
+        m_IsOwner = false;
       }
 
 

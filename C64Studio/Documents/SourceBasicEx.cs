@@ -1345,11 +1345,11 @@ namespace RetroDevStudio.Documents
     public override void Copy()
     {
       editSource.Copy();
-
+      /*
       var bytes = Encoding.Default.GetBytes( editSource.SelectedText );
 
       var bb = new ByteBuffer( bytes );
-      Debug.Log( bb.ToString() );
+      Debug.Log( bb.ToString() );*/
     }
 
 
