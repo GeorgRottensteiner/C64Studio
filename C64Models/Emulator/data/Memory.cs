@@ -748,7 +748,7 @@ namespace Tiny64
       &&        ( Address < 0xd800 ) )
       {
         // SID
-        return Machine.SID.ReadByte( (byte)( Address & 0x0ff ) );
+        return Machine.SID.ReadByte( (byte)( Address & 0x01f ) );
       }
       else if ( ( Address >= 0xd800 )
       &&        ( Address < 0xd800 + 1024 ) )

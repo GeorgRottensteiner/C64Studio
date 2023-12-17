@@ -6,21 +6,21 @@ namespace Tiny64
 {
   public class SID
   {
-    byte[]        Registers = new byte[64];
+    byte[]        Registers = new byte[32];
 
 
     public void Init()
     {
-      Registers = new byte[64];
+      Registers = new byte[32];
     }
 
 
 
     public void WriteByte( byte Address, byte Value )
     {
-      if ( Address >= 0x40 )
+      if ( Address >= 0x20 )
       {
-        throw new NotImplementedException( "SID only supports 0x40 registers!" );
+        throw new NotImplementedException( "SID only supports 0x20 registers!" );
       }
       Registers[Address] = Value;
     }
@@ -29,9 +29,9 @@ namespace Tiny64
 
     public byte ReadByte( byte Address )
     {
-      if ( Address >= 0x40 )
+      if ( Address >= 0x20 )
       {
-        throw new NotImplementedException( "SID only supports 0x40 registers!" );
+        throw new NotImplementedException( "SID only supports 0x20 registers!" );
       }
       return Registers[Address];
     }
