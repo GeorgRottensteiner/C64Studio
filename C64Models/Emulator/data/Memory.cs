@@ -772,6 +772,12 @@ namespace Tiny64
         // CIA2
         return Machine.CIA2.ReadByte( (byte)( Address & 0x0f ) );
       }
+      else if ((Address >= 0xde00)
+      && (Address < 0xe000))
+      {
+          // TODO: unmapped area/expansion; return 0 for now instead of crashing
+          return Machine.CIA2.ReadByte((byte)(Address & 0x0f));
+      }
       // TODO
       throw new NotSupportedException( "Unsupported IO address " + Address.ToString( "X4" ) );
     }
