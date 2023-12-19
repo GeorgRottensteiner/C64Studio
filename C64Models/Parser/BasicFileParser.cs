@@ -160,6 +160,12 @@ namespace RetroDevStudio.Parser
     private string                                    _LastLineNumberDocument  = "";
     private int                                       _LastLineNumberDocLineIndex  = -1;
 
+    private Opcode                                    _OpcodeGosub  = null;
+    private Opcode                                    _OpcodeGoto   = null;
+    private Opcode                                    _OpcodeRun    = null;
+    private Opcode                                    _OpcodeRem    = null;
+    private Opcode                                    _OpcodeThen   = null;
+
 
 
     public BasicFileParser( ParserSettings Settings )
@@ -240,6 +246,12 @@ namespace RetroDevStudio.Parser
     {
       Settings.BASICDialect = Dialect;
 
+      var emptyOpcode = new Opcode( "", -1 );
+      _OpcodeGosub = emptyOpcode;
+      _OpcodeGoto  = emptyOpcode;
+      _OpcodeRun   = emptyOpcode;
+      _OpcodeRem   = emptyOpcode;
+
       if ( Dialect != null )
       {
         if ( !string.IsNullOrEmpty( Dialect.HexPrefix ) )
@@ -257,6 +269,12 @@ namespace RetroDevStudio.Parser
             AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.BinPrefix;
           }
         }
+
+        Dialect.Opcodes.TryGetValue( "GOSUB", out _OpcodeGosub );
+        Dialect.Opcodes.TryGetValue( "GOTO", out _OpcodeGoto );
+        Dialect.Opcodes.TryGetValue( "REM", out _OpcodeRem );
+        Dialect.Opcodes.TryGetValue( "RUN", out _OpcodeRun );
+        Dialect.Opcodes.TryGetValue( "THEN", out _OpcodeThen );
       }
 
       ActionTokens.Clear();
@@ -2692,8 +2710,8 @@ namespace RetroDevStudio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeRun.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeThen.InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Value.Tokens.Count )
@@ -2714,8 +2732,8 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeGoto.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeGosub.InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
@@ -2803,7 +2821,7 @@ namespace RetroDevStudio.Parser
 
     public bool IsComment( Token token )
     {
-      if ( token.ByteValue == Settings.BASICDialect.Opcodes["REM"].InsertionValue )
+      if ( token.ByteValue == _OpcodeRem.InsertionValue )
       {
         return true;
       }
@@ -2941,13 +2959,13 @@ namespace RetroDevStudio.Parser
           }*/
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
-          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue )
-          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue )
-          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue ) ) )
+          &&   ( ( token.ByteValue == _OpcodeGoto.InsertionValue )
+          ||     ( token.ByteValue == _OpcodeGosub.InsertionValue )
+          ||     ( token.ByteValue == _OpcodeThen.InsertionValue )
+          ||     ( token.ByteValue == _OpcodeRun.InsertionValue ) ) )
           {
-            bool    isGotoOrGosub = ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue ) 
-                                  | ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue );
+            bool    isGotoOrGosub = ( token.ByteValue == _OpcodeGoto.InsertionValue ) 
+                                  | ( token.ByteValue == _OpcodeGosub.InsertionValue );
             nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, tokenIndex );
             nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
 
@@ -3371,8 +3389,8 @@ namespace RetroDevStudio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeRun.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeThen.InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Tokens.Count )
@@ -3411,8 +3429,8 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeGoto.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeGosub.InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
