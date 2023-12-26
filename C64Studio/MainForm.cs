@@ -768,7 +768,8 @@ namespace RetroDevStudio
 
       SetGUIForWaitOnExternalTool( false );
 
-      projectToolStripMenuItem.Visible = false;
+      projectToolStripMenuItem.Visible      = false;
+      solutionToolStripMenuItemTop.Visible  = false;
 
       panelMain.AllowDrop = true;
       panelMain.DragEnter += new DragEventHandler( MainForm_DragEnter );
@@ -1312,13 +1313,13 @@ namespace RetroDevStudio
           UpdateMenuMRU();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
-          solutionToolStripMenuItem.Enabled = true;
-          solutionAddNewProjectToolStripMenuItem.Enabled = true;
+          solutionToolStripMenuItem.Enabled                   = true;
+          solutionAddNewProjectToolStripMenuItem.Enabled      = true;
           solutionAddExistingProjectToolStripMenuItem.Enabled = true;
-          solutionCloseToolStripMenuItem.Enabled = true;
-          solutionSaveToolStripMenuItem1.Enabled = true;
-          solutionCloneToolStripMenuItem.Enabled = true;
-          solutionRenameToolStripMenuItem.Enabled = !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename );
+          solutionCloseToolStripMenuItem.Enabled              = true;
+          solutionSaveToolStripMenuItem.Enabled               = true;
+          solutionCloneToolStripMenuItem.Enabled              = true;
+          solutionRenameToolStripMenuItem.Enabled             = !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename );
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
@@ -1327,7 +1328,7 @@ namespace RetroDevStudio
           solutionAddNewProjectToolStripMenuItem.Enabled = false;
           solutionAddExistingProjectToolStripMenuItem.Enabled = false;
           solutionCloseToolStripMenuItem.Enabled = false;
-          solutionSaveToolStripMenuItem1.Enabled = false;
+          solutionSaveToolStripMenuItem.Enabled = false;
           solutionCloneToolStripMenuItem.Enabled = false;
           solutionRenameToolStripMenuItem.Enabled = false;
 
@@ -5899,6 +5900,7 @@ namespace RetroDevStudio
           StudioCore.Debugging.Debugger.ClearAllWatchEntries();
           StudioCore.Debugging.Debugger.ClearAllBreakpoints();
         }
+        solutionToolStripMenuItemTop.Visible = false;
         RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_CLOSED ) );
       }
       return true;
@@ -5910,7 +5912,6 @@ namespace RetroDevStudio
     {
       CloseSolution();
 
-      //AddTask( new RetroDevStudio.Tasks.TaskOpenSolution( Filename ) );
       StudioCore.Navigating.Solution = new Solution( this );
 
       GR.Memory.ByteBuffer solutionData = GR.IO.File.ReadAllBytes(Filename);
@@ -5930,8 +5931,9 @@ namespace RetroDevStudio
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, Filename, this );
       StudioCore.Settings.LastSolutionWasEmpty = false;
 
-      StudioCore.Navigating.Solution.Modified = false;
+      StudioCore.Navigating.Solution.Modified   = false;
       StudioCore.Navigating.Solution.DuringLoad = false;
+      solutionToolStripMenuItemTop.Visible      = true;
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
       return true;
@@ -6943,6 +6945,7 @@ namespace RetroDevStudio
 
           SetActiveProject( newProject );
           projectToolStripMenuItem.Visible = true;
+          solutionToolStripMenuItemTop.Visible = true;
 
           SaveSolution();
           if ( SaveProject( newProject ) )
@@ -6968,13 +6971,6 @@ namespace RetroDevStudio
         return null;
       }
       return AddNewProject();
-    }
-
-
-
-    private void solutionSaveToolStripMenuItem1_Click( object sender, EventArgs e )
-    {
-      SaveSolution();
     }
 
 
@@ -7770,6 +7766,13 @@ namespace RetroDevStudio
       var prefDlg = new FormPreferences( StudioCore );
 
       prefDlg.ShowDialog();
+    }
+
+
+
+    private void solutionSaveToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SaveSolution();
     }
 
 
