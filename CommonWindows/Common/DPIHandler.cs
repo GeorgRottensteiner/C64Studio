@@ -72,7 +72,9 @@ namespace GR.Image
       foreach ( Control control in controls )
       {
         if ( control == null )
-        { continue; }
+        { 
+          continue; 
+        }
 
         var button = control as ButtonBase;
         if ( button != null )
@@ -164,8 +166,7 @@ namespace GR.Image
       int     newX      = (int)( Control.Location.X * DPIX / 96.0f + 0.5f );
       int     newY      = (int)( Control.Location.Y * DPIY / 96.0f + 0.5f );
 
-      Control.Location  = new Point( newX, newY );
-      Control.Size      = new Size( newWidth, newHeight );
+      Control.SetBounds( newX, newY, newWidth, newHeight );
 
       if ( Control is ListBox )
       {

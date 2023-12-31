@@ -839,7 +839,7 @@ namespace RetroDevStudio.Documents
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(665, 632);
+      this.editDataExport.Size = new System.Drawing.Size(657, 626);
       this.editDataExport.TabIndex = 33;
       this.editDataExport.WordWrap = false;
       // 
@@ -876,9 +876,9 @@ namespace RetroDevStudio.Documents
       // 
       this.panelExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-      this.panelExport.Location = new System.Drawing.Point(0, 61);
+      this.panelExport.Location = new System.Drawing.Point(6, 61);
       this.panelExport.Name = "panelExport";
-      this.panelExport.Size = new System.Drawing.Size(308, 578);
+      this.panelExport.Size = new System.Drawing.Size(302, 572);
       this.panelExport.TabIndex = 28;
       // 
       // comboExportRange
@@ -933,9 +933,9 @@ namespace RetroDevStudio.Documents
       this.panelImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.panelImport.Location = new System.Drawing.Point(0, 33);
+      this.panelImport.Location = new System.Drawing.Point(6, 33);
       this.panelImport.Name = "panelImport";
-      this.panelImport.Size = new System.Drawing.Size(979, 606);
+      this.panelImport.Size = new System.Drawing.Size(965, 600);
       this.panelImport.TabIndex = 40;
       // 
       // btnImport
