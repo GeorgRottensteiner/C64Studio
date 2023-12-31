@@ -120,9 +120,9 @@ namespace RetroDevStudio
     {
       if ( ( ( Parser != null )
       &&     ( string.IsNullOrEmpty( Parser.CompileTargetFile ) ) )
-      ||   ( Parser == null )
       &&   ( ( Doc.Element == null )
-      ||     ( string.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
+      ||     ( string.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
+      ||   ( Parser == null ) )
       {
         // default to same name.prg and cbm
         string    targetExtension = "";

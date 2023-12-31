@@ -1,3 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,lowercase
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,lowercase,10,10
 100PRINT"IN SUB ROUTINE"
+105X=7
 110RETURN

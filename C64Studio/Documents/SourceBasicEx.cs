@@ -36,6 +36,7 @@ namespace RetroDevStudio.Documents
     private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
     private string                            m_CurrentHighlightText = null;
+    private List<TextLocation>                m_CurrentHighlightLocations = new List<TextLocation>();
 
     private string                            m_StartAddress = "2049";
     private string                            m_BASICDialectName = null;
@@ -435,8 +436,15 @@ namespace RetroDevStudio.Documents
         }
 
         m_CurrentHighlightText = newHighlightText;
-        //ResetStyles( editSource.Range );
-        if ( !string.IsNullOrEmpty( m_CurrentHighlightText ) )
+        if ( m_CurrentHighlightLocations.Any() )
+        {
+          foreach ( var entry in m_CurrentHighlightLocations )
+          {
+            editSource.GetRange( new Place( entry.StartIndex, entry.LineIndex ), new Place( entry.StartIndex + entry.Length, entry.LineIndex ) )
+                      .SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS )] );
+          }
+        }
+        else if ( !string.IsNullOrEmpty( m_CurrentHighlightText ) )
         {
           string    regex = m_CurrentHighlightText.Replace( @"\", @"\\" );
           regex = regex.Replace( @"^", @"\^" );
@@ -2654,6 +2662,15 @@ namespace RetroDevStudio.Documents
 
     public override void HighlightText( int LineIndex, int CharPos, int Length )
     {
+      m_CurrentHighlightLocations.Clear();
+      editSource.Selection = new FastColoredTextBoxNS.Range( editSource, CharPos, LineIndex, CharPos + Length, LineIndex );
+    }
+
+
+
+    public override void HighlightOccurrences( int LineIndex, int CharPos, int Length, List<TextLocation> Locations )
+    {
+      m_CurrentHighlightLocations = Locations;
       editSource.Selection = new FastColoredTextBoxNS.Range( editSource, CharPos, LineIndex, CharPos + Length, LineIndex );
     }
 

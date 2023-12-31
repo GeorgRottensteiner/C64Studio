@@ -435,6 +435,12 @@ namespace RetroDevStudio.Documents
 
 
 
+    public virtual void HighlightOccurrences( int LineIndex, int CharPos, int Length, List<TextLocation> Locations )
+    {
+    }
+
+
+
     public virtual bool LoadDocument()
     {
       return false;

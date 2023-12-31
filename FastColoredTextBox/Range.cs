@@ -229,10 +229,17 @@ namespace FastColoredTextBoxNS
 
         int fromLine = Math.Min( end.iLine, start.iLine );
         int toLine = Math.Max( end.iLine, start.iLine );
+
+        fromLine  = Math.Min( fromLine, tb.LinesCount );
+        toLine    = Math.Min( toLine, tb.LinesCount );
+
         int fromChar = FromX;
         int toChar = ToX;
-        if ( fromLine < 0 )
+        if ( ( fromLine < 0 )
+        ||   ( fromLine >= tb.LinesCount ) )
+        {
           return null;
+        }
         //
         StringBuilder sb = new StringBuilder();
 

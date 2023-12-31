@@ -989,6 +989,27 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssemblyBinaryLiterals2()
+    {
+      string source = @"* = $2000
+              COLLISION_FILL        = %00010000; $01
+              COLLISION_FILLABLE    = %00100000; $02
+              COLLISION_NOTFILLABLE = %00110000; $03
+              COLLISION_DEATH       = %11110000; $0f
+
+              !byte COLLISION_FILL
+              !byte COLLISION_FILLABLE
+              !byte COLLISION_NOTFILLABLE
+              !byte COLLISION_DEATH";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0020102030F0", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyInvalidBinaryLiterals()
     {
       string      source = @"* = $2000

@@ -492,10 +492,12 @@ namespace RetroDevStudio.Parser
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
         token.Zone              = Zone;
+        token.CharIndex         = CharIndex;
+        token.Length            = Length;
 
         if ( !_ParseContext.DoNotAddReferences )
         {
-          token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+          token.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
         }
 
         m_ASMFileInfo.Labels.Add( Name, token );
@@ -523,10 +525,12 @@ namespace RetroDevStudio.Parser
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
             Value.Zone              = Zone;
+            Value.CharIndex         = CharIndex;
+            Value.Length            = Length;
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+              Value.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
             }
 
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
@@ -569,10 +573,12 @@ namespace RetroDevStudio.Parser
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
         token.Zone              = Zone;
+        token.CharIndex         = CharIndex;
+        token.Length            = Length;
 
         if ( !_ParseContext.DoNotAddReferences )
         {
-          token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+          token.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
         }
 
         m_ASMFileInfo.Labels.Add( Name, token );
@@ -600,10 +606,12 @@ namespace RetroDevStudio.Parser
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
             Value.Zone              = Zone;
+            Value.CharIndex         = CharIndex;
+            Value.Length            = Length;
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+              Value.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
             }
 
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
@@ -644,9 +652,11 @@ namespace RetroDevStudio.Parser
         Value.LocalLineIndex    = localIndex;
         Value.SourceInfo        = srcInfo;
         Value.Zone              = Zone;
+        Value.CharIndex         = CharIndex;
+        Value.Length            = Length;
         if ( !_ParseContext.DoNotAddReferences )
         {
-          Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+          Value.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
         }
 
         m_ASMFileInfo.Labels.Add( Name, Value );
@@ -674,10 +684,12 @@ namespace RetroDevStudio.Parser
             Value.LocalLineIndex    = localIndex;
             Value.SourceInfo        = srcInfo;
             Value.Zone              = Zone;
+            Value.CharIndex         = CharIndex;
+            Value.Length            = Length;
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              Value.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+              Value.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
             }
 
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
@@ -702,7 +714,7 @@ namespace RetroDevStudio.Parser
 
         if ( !_ParseContext.DoNotAddReferences )
         {
-          token.References.Add( SourceLine, new SymbolReference() { GlobalLineIndex = SourceLine } );
+          token.AddReference( SourceLine, new TokenInfo() { StartPos = 0, Length = Name.Length } );
         }
 
         if ( Value < 256 )
@@ -918,47 +930,48 @@ namespace RetroDevStudio.Parser
 
 
 
-    public bool ParseValue( int LineIndex, string Value, out SymbolInfo ResultingSymbol )
+    public bool ParseValue( int LineIndex, TokenInfo TokenInfo, out SymbolInfo ResultingSymbol )
     {
       int  numDigits = 0;
       ClearErrorInfo();
-      return ParseValue( LineIndex, Value, out ResultingSymbol, out numDigits );
+      return ParseValue( LineIndex, TokenInfo, out ResultingSymbol, out numDigits );
     }
 
 
 
-    public bool ParseValue( int LineIndex, string Value, out SymbolInfo ResultingSymbol, out int NumGivenBytes )
+    public bool ParseValue( int LineIndex, TokenInfo TokenInfo, out SymbolInfo ResultingSymbol, out int NumGivenBytes )
     {
       ResultingSymbol = null;
       NumGivenBytes = 0;
       ClearErrorInfo();
       bool failed   = false;
+      string tokenValue  = TokenInfo.Content;
 
-      if ( ParseLiteralValue( Value, out failed, out long IntegerValue, out NumGivenBytes ) )
+      if ( ParseLiteralValue( tokenValue, out failed, out long IntegerValue, out NumGivenBytes ) )
       {
         ResultingSymbol = CreateIntegerSymbol( IntegerValue, out NumGivenBytes );
         return true;
       }
       // a good idea? collapse doubles to byte
       double  numericResult = 0;
-      if ( ParseLiteralValueNumeric( Value, out failed, out numericResult ) )
+      if ( ParseLiteralValueNumeric( tokenValue, out failed, out numericResult ) )
       {
         ResultingSymbol = CreateNumberSymbol( numericResult );
         return true;
       }
-      if ( ParseLiteralValueString( Value, out bool failedDummy, out string stringResult ) )
+      if ( ParseLiteralValueString( tokenValue, out bool failedDummy, out string stringResult ) )
       {
         ResultingSymbol = CreateStringSymbol( stringResult );
         return true;
       }
       if ( failed )
       {
-        m_LastErrorInfo.Set( LineIndex, 0, Value.Length, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
+        m_LastErrorInfo.Set( LineIndex, 0, tokenValue.Length, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
         return false;
       }
 
       if ( ( m_TemporaryFillLoopPos != -1 )
-      &&   ( Value == "i" ) )
+      &&   ( tokenValue == "i" ) )
       {
         ResultingSymbol = CreateIntegerSymbol( m_TemporaryFillLoopPos, out NumGivenBytes );
         return true;
@@ -974,17 +987,17 @@ namespace RetroDevStudio.Parser
         if ( ( LineIndex >= labelInfo.LineIndex )
         &&   ( ( LineIndex < labelInfo.LineIndex + labelInfo.LineCount )
         ||     ( labelInfo.LineCount == -1 ) )
-        &&   ( labelInfo.Name == Value ) )
+        &&   ( labelInfo.Name == tokenValue ) )
         {
           ResultingSymbol = labelInfo.Symbol;
 
           if ( !_ParseContext.DoNotAddReferences )
           {
-            ResultingSymbol.References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
+            ResultingSymbol.AddReference( LineIndex, TokenInfo );
           }
           return true;
         }
-        if ( ( labelInfo.Name == Value )
+        if ( ( labelInfo.Name == tokenValue )
         &&   ( labelInfo.LineIndex < firstTempLabelLineIndex ) )
         {
           firstTempLabelLineIndex = labelInfo.LineIndex;
@@ -1000,7 +1013,7 @@ namespace RetroDevStudio.Parser
 
         if ( !_ParseContext.DoNotAddReferences )
         {
-          ResultingSymbol.References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
+          ResultingSymbol.AddReference( LineIndex, TokenInfo );
         }
         return true;
       }
@@ -1008,48 +1021,48 @@ namespace RetroDevStudio.Parser
 
 
       // parse labels
-      if ( !m_ASMFileInfo.Labels.ContainsKey( Value ) )
+      if ( !m_ASMFileInfo.Labels.ContainsKey( tokenValue ) )
       {
-        if ( ( IsLocalLabel( Value ) )
+        if ( ( IsLocalLabel( tokenValue ) )
         &&   ( m_ASMFileInfo.LineInfo.ContainsKey( LineIndex ) )
         &&   ( !string.IsNullOrEmpty( m_ASMFileInfo.LineInfo[LineIndex].Zone ) ) )
         {
           // a local label inside a zone has the actual zone name in front!
           string    zoneName = m_ASMFileInfo.LineInfo[LineIndex].Zone;
-          if ( m_ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
+          if ( m_ASMFileInfo.Labels.ContainsKey( zoneName + tokenValue ) )
           {
-            ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[zoneName + Value].AddressOrValue, out NumGivenBytes );
+            ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[zoneName + tokenValue].AddressOrValue, out NumGivenBytes );
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              m_ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
+              m_ASMFileInfo.Labels[zoneName + tokenValue].AddReference( LineIndex, TokenInfo );
             }
             return true;
           }
         }
-        if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
+        if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( tokenValue ) )
         {
-          m_ASMFileInfo.UnparsedLabels[Value].Used = true;
+          m_ASMFileInfo.UnparsedLabels[tokenValue].Used = true;
         }
-        m_LastErrorInfo = new ErrorInfo( LineIndex, 0, Value.Length, Types.ErrorCode.E1010_UNKNOWN_LABEL );
+        m_LastErrorInfo = new ErrorInfo( LineIndex, 0, tokenValue.Length, Types.ErrorCode.E1010_UNKNOWN_LABEL );
         return false;
       }
 
-      if ( m_ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      if ( m_ASMFileInfo.Labels[tokenValue].Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       {
-        ResultingSymbol = CreateNumberSymbol( m_ASMFileInfo.Labels[Value].RealValue );
+        ResultingSymbol = CreateNumberSymbol( m_ASMFileInfo.Labels[tokenValue].RealValue );
       }
-      else if ( m_ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_STRING )
+      else if ( m_ASMFileInfo.Labels[tokenValue].Type == SymbolInfo.Types.CONSTANT_STRING )
       {
-        ResultingSymbol = CreateStringSymbol( m_ASMFileInfo.Labels[Value].String );
+        ResultingSymbol = CreateStringSymbol( m_ASMFileInfo.Labels[tokenValue].String );
       }
       else
       {
-        ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[Value].AddressOrValue, out NumGivenBytes );
+        ResultingSymbol = CreateIntegerSymbol( m_ASMFileInfo.Labels[tokenValue].AddressOrValue, out NumGivenBytes );
       }
       if ( !_ParseContext.DoNotAddReferences )
       {
-        m_ASMFileInfo.Labels[Value].References.Add( LineIndex, new SymbolReference() { GlobalLineIndex = LineIndex } );
+        m_ASMFileInfo.Labels[tokenValue].AddReference( LineIndex, TokenInfo );
       }
       return true;
     }
@@ -1173,12 +1186,12 @@ namespace RetroDevStudio.Parser
       SymbolInfo token2 = null;
       string    opText = OperatorToken.Content;
 
-      if ( !ParseValue( LineIndex, Token1.Content, out token1 ) )
+      if ( !ParseValue( LineIndex, Token1, out token1 ) )
       {
         m_LastErrorInfo.Pos += Token1.StartPos;
         return false;
       }
-      if ( !ParseValue( LineIndex, Token2.Content, out token2 ) )
+      if ( !ParseValue( LineIndex, Token2, out token2 ) )
       {
         m_LastErrorInfo.Pos += Token2.StartPos;
         return false;
@@ -1697,7 +1710,7 @@ namespace RetroDevStudio.Parser
             return true;
         }
 
-        if ( !ParseValue( LineIndex, Tokens[StartIndex].Content, out ResultingToken, out NumBytesGiven ) )
+        if ( !ParseValue( LineIndex, Tokens[StartIndex], out ResultingToken, out NumBytesGiven ) )
         {
           // adjust start pos
           // adjust length since we could have a replaced token (globalized local label)
@@ -1728,11 +1741,20 @@ namespace RetroDevStudio.Parser
             return false;
           }
         }
+        /*
         else if ( Tokens[StartIndex].Content == "%" )
         {
           // a binary expression
-          return ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out ResultingToken, out NumBytesGiven );
-        }
+          if ( !ParseLiteralValue( TokensToExpression( Tokens, StartIndex, 2 ), out bool failed, out long result, out NumBytesGiven ) )
+          {
+            AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Failed to evaluate binary expression " + TokensToExpression( Tokens, StartIndex, 2 ) );
+            return false;
+          }
+          ResultingToken = CreateIntegerSymbol( result );
+          return true;
+          //return ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out ResultingToken, out NumBytesGiven );
+          //throw new Exception( "This should never happen!" );
+        }*/
         else if ( ( m_AssemblerSettings.HasBinaryNot )
         &&        ( ( Tokens[StartIndex].Content == "!" )
         ||           ( Tokens[StartIndex].Content == "~" ) ) )
@@ -2044,11 +2066,11 @@ namespace RetroDevStudio.Parser
             {
               if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) )
               {
-                if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummy, out numBytesGiven ) )
+                if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1], out dummy, out numBytesGiven ) )
                 {
                   NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
                 }
-                if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out dummy, out numBytesGiven ) )
+                if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1], out dummy, out numBytesGiven ) )
                 {
                   NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
                 }
@@ -2085,7 +2107,7 @@ namespace RetroDevStudio.Parser
 
       if ( Count == 1 )
       {
-        return ParseValue( LineIndex, subTokenRange[0].Content, out ResultingToken, out NumBytesGiven );
+        return ParseValue( LineIndex, subTokenRange[0], out ResultingToken, out NumBytesGiven );
       }
       if ( !HasError() )
       {
@@ -2465,7 +2487,11 @@ namespace RetroDevStudio.Parser
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              token.References.Add( m_ASMFileInfo.UnparsedLabels[label].LineIndex, new SymbolReference() { GlobalLineIndex = m_ASMFileInfo.UnparsedLabels[label].LineIndex } );
+              token.AddReference( m_ASMFileInfo.UnparsedLabels[label].LineIndex, new TokenInfo()
+                {
+                  StartPos = m_ASMFileInfo.UnparsedLabels[label].CharIndex,
+                  Length = m_ASMFileInfo.UnparsedLabels[label].Length
+                } );
             }
 
             token.Zone            = m_ASMFileInfo.UnparsedLabels[label].Zone;
@@ -4637,7 +4663,7 @@ namespace RetroDevStudio.Parser
             break;
           case TokenInfo.TokenType.LITERAL_NUMBER:
             {
-              if ( !ParseValue( LineIndex, token.Content, out SymbolInfo resultSymbol ) )
+              if ( !ParseValue( LineIndex, token, out SymbolInfo resultSymbol ) )
               {
                 return false;
               }
@@ -4649,7 +4675,7 @@ namespace RetroDevStudio.Parser
           case TokenInfo.TokenType.LABEL_INTERNAL:
           case TokenInfo.TokenType.LABEL_LOCAL:
             {
-              if ( !ParseValue( LineIndex, token.Content, out SymbolInfo resultSymbol, out numBytes ) )
+              if ( !ParseValue( LineIndex, token, out SymbolInfo resultSymbol, out numBytes ) )
               {
                 return false;
               }
@@ -5423,15 +5449,20 @@ namespace RetroDevStudio.Parser
               continue;
             }
             var symbol = new SymbolInfo();
-            symbol.AddressOrValue = entry.Value.AddressOrValue;
+            symbol.AddressOrValue   = entry.Value.AddressOrValue;
             symbol.DocumentFilename = entry.Value.DocumentFilename;
-            symbol.LocalLineIndex = entry.Value.LocalLineIndex;
-            symbol.Name = entry.Value.Name;
-            symbol.Type = entry.Value.Type;
+            symbol.LocalLineIndex   = entry.Value.LocalLineIndex;
+            symbol.Name             = entry.Value.Name;
+            symbol.Type             = entry.Value.Type;
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              symbol.References.Add( entry.Value.LineIndex, new SymbolReference() { GlobalLineIndex = entry.Value.LineIndex } );
+              symbol.AddReference( entry.Value.LineIndex, 
+                    new TokenInfo()
+                    {
+                      StartPos = entry.Value.CharIndex,
+                      Length = entry.Value.Length
+                    } );
             }
 
             symbol.Zone = entry.Value.Zone;
@@ -10706,7 +10737,7 @@ namespace RetroDevStudio.Parser
 
         if ( !_ParseContext.DoNotAddReferences )
         {
-          macroFunction.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex } );
+          macroFunction.Symbol.AddReference( lineIndex, lineTokenInfos[0] );
         }
         macroFunction.Symbol.NumArguments     = -1;
 
@@ -10827,7 +10858,7 @@ namespace RetroDevStudio.Parser
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              macroFunction.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex } );
+              macroFunction.Symbol.AddReference( lineIndex, lineTokenInfos[1] );
             }
 
             macroFunctions.Add( new GR.Generic.Tupel<string, int>( macroName, param.Count ), macroFunction );
@@ -12772,7 +12803,7 @@ namespace RetroDevStudio.Parser
     private void CollapseBinaryTokens( List<TokenInfo> Result )
     {
       retry:;
-      for ( int i = 1; i < Result.Count; ++i )
+      for ( int i = 0; i < Result.Count; ++i )
       {
         if ( ( Result[i].Type == TokenInfo.TokenType.OPERATOR )
         &&   ( Result[i].Content == "%" ) )
@@ -12783,7 +12814,7 @@ namespace RetroDevStudio.Parser
           for ( int j = i + 1; j < Result.Count; ++j )
           {
             if ( ( Result[j].StartPos == lastEndPos + 1 )
-            &&   ( !Result[j].Content.Any( c => c != '.' && c != '#' ) ) )
+            &&   ( !Result[j].Content.Any( c => c != '.' && c != '#' && c != '0' && c != '1' ) ) )
             {
               if ( firstCollapseTokenIndex == -1 )
               {
@@ -12799,7 +12830,7 @@ namespace RetroDevStudio.Parser
           }
 
           if ( ( firstCollapseTokenIndex != -1 )
-          &&   ( lastCollapseTokenIndex > firstCollapseTokenIndex ) )
+          &&   ( lastCollapseTokenIndex >= firstCollapseTokenIndex ) )
           {
             for ( int j = firstCollapseTokenIndex; j <= lastCollapseTokenIndex; ++j )
             {

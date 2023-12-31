@@ -1,4 +1,6 @@
 ﻿using RetroDevStudio.Types;
+using System;
+using System.Linq;
 
 namespace RetroDevStudio
 {
@@ -159,6 +161,24 @@ namespace RetroDevStudio
       }
       return (double)AddressOrValue;
     }
+
+
+
+    public void AddReference( int GlobalLineIndex, TokenInfo TokenInfo )
+    {
+      if ( !References.Any( r => ( r.Key == GlobalLineIndex ) && ( r.Value.TokenInfo.StartPos == TokenInfo.StartPos ) && ( r.Value.TokenInfo.Length == TokenInfo.Length ) ) )
+      {
+        References.Add( GlobalLineIndex,
+            new SymbolReference()
+            {
+              GlobalLineIndex = GlobalLineIndex,
+              TokenInfo = TokenInfo
+            }
+            );
+      }
+    }
+
+
 
   }
 

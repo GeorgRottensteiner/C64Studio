@@ -1061,7 +1061,7 @@ namespace RetroDevStudio.Tasks
 
     private void DisplayMemoryMap( Parser.ParserBase parser, int assemblyEndAddress )
     {
-      Core.AddToOutput( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
+      Core.AddToOutputLine( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
                 + " to $" + assemblyEndAddress.ToString( "X4" )
                 + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" );
       Core.AddToOutputLine( "Memory Map:" );
