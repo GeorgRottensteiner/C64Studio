@@ -104,7 +104,8 @@ namespace RetroDevStudio.Documents
 
     private void StoreOpenNodes()
     {
-      if ( ActiveDocumentInfo != null )
+      if ( ( ActiveDocumentInfo != null )
+      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
       {
         if ( !_ExpandedNodesPerProject.ContainsKey( ActiveDocumentInfo.ASMFileInfo ) )
         {
@@ -171,6 +172,11 @@ namespace RetroDevStudio.Documents
     {
       treeProject.BeginUpdate();
       NodeRoot.Nodes.Clear();
+
+      if ( ActiveASMFileInfo == null )
+      {
+        return;
+      }
 
       if ( !_ExpandedNodesPerProject.ContainsKey( ActiveASMFileInfo ) )
       {

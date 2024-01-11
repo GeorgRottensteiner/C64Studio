@@ -118,12 +118,28 @@ namespace RetroDevStudio
 
     public string DetermineTargetFilename( DocumentInfo Doc, Parser.ParserBase Parser )
     {
-      if ( ( String.IsNullOrEmpty( Parser.CompileTargetFile ) )
+      if ( ( ( Parser != null )
+      &&     ( string.IsNullOrEmpty( Parser.CompileTargetFile ) ) )
       &&   ( ( Doc.Element == null )
-      ||     ( String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
+      ||     ( string.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
+      ||   ( Parser == null ) )
       {
         // default to same name.prg and cbm
-        string    targetExtension = Parser.DefaultTargetExtension;
+        string    targetExtension = "";
+        if ( Parser != null )
+        {
+          targetExtension = Parser.DefaultTargetExtension;
+        }
+        else if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+        {
+          // TODO - this is system specific!
+          targetExtension = ".prg";
+        }
+        else if ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          // TODO - this is system specific!
+          targetExtension = ".bas";
+        }
         if ( Doc.Project == null )
         {
           return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Doc.FullPath ), System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + targetExtension;
@@ -131,7 +147,7 @@ namespace RetroDevStudio
         return System.IO.Path.Combine( Doc.Project.Settings.BasePath, System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) + targetExtension );
       }
       if ( ( Doc.Element != null )
-      && ( !String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
+      &&   ( !String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
       {
         return GR.Path.Append( Doc.Project.Settings.BasePath, Doc.Element.TargetFilename );
       }
@@ -209,6 +225,13 @@ namespace RetroDevStudio
           Doc.Pane.ActiveContent = Doc;
         }
       }
+    }
+
+
+
+    public void AddToOutputLine( string Text )
+    {
+      AddToOutput( Text + System.Environment.NewLine );
     }
 
 

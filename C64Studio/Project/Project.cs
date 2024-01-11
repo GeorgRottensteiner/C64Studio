@@ -183,6 +183,8 @@ namespace RetroDevStudio
         chunkElement.AppendI32( lineIndex );
       }
 
+      chunkElement.AppendU32( (uint)( Element.BASICWriteTempFileWithoutMetaData ? 1 : 0 ) );
+
       buffer.Append( chunkElement.ToBuffer() );
 
       if ( Element.Document != null )
@@ -596,6 +598,9 @@ namespace RetroDevStudio
                 int   lineIndex = memChunk.ReadInt32();
                 element.DocumentInfo.Bookmarks.Add( lineIndex );
               }
+
+              flags = memChunk.ReadUInt32();
+              element.BASICWriteTempFileWithoutMetaData = ( flags & 1 ) != 0;
 
               // TODO - load other stuff
               if ( ( element != null )

@@ -66,6 +66,8 @@ namespace RetroDevStudio.Documents
       InitializeComponent();
       SuspendLayout();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       c64HiResMultiColorToolStripMenuItem.Tag = SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC;
       mega65_16x2116ColorsToolStripMenuItem.Tag = SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS;
       mega65_24x214ColorsToolStripMenuItem.Tag = SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC;
@@ -117,8 +119,6 @@ namespace RetroDevStudio.Documents
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from sprite set/binary file", typeof( ImportSpriteFromBinaryFile ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image file", typeof( ImportSpriteFromImageFile ) ) );
       comboImportMethod.SelectedIndex = 0;
-
-      GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
       m_SpriteEditorOrigWidth   = pictureEditor.Width;
       m_SpriteEditorOrigHeight  = pictureEditor.Height;

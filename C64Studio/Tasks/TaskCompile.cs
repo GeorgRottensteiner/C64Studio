@@ -19,6 +19,8 @@ namespace RetroDevStudio.Tasks
     private bool            DisplayOutput = false;
     private bool            AutoFollowupAction = true;
 
+    private string          TemporaryOutputFilename = "";
+
 
 
     public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile, bool DisplayOutput = true, bool AutoFollowupAction = true )
@@ -773,6 +775,16 @@ namespace RetroDevStudio.Tasks
 
         RetroDevStudio.Types.ASM.FileInfo asmFileInfo = null;
 
+        if ( ( Doc.Element != null )
+        &&   ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        &&   ( Doc.Element.BASICWriteTempFileWithoutMetaData ) )
+        {
+          if ( !WriteTemporaryCleanFile( Doc ) )
+          {
+            return false;
+          }
+        }
+
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
         {
@@ -907,10 +919,14 @@ namespace RetroDevStudio.Tasks
 
         if ( string.IsNullOrEmpty( BuildInfo.TargetFile ) )
         {
-          Core.AddToOutput( "No target file name specified" + System.Environment.NewLine );
-          Core.MainForm.AppState = Types.StudioState.NORMAL;
-          Core.Notification.BuildFailure();
-          return false;
+          BuildInfo.TargetFile = Core.DetermineTargetFilename( Doc, parser );
+          if ( string.IsNullOrEmpty( BuildInfo.TargetFile ) )
+          {
+            Core.AddToOutput( "No target file name specified" + System.Environment.NewLine );
+            Core.MainForm.AppState = Types.StudioState.NORMAL;
+            Core.Notification.BuildFailure();
+            return false;
+          }
         }
         // write output if applicable
         if ( ( parser.AssembledOutput != null )
@@ -1009,12 +1025,46 @@ namespace RetroDevStudio.Tasks
 
 
 
+    private bool WriteTemporaryCleanFile( DocumentInfo Doc )
+    {
+      string  outputName = Core.DetermineTargetFilename( Doc, null );
+
+      TemporaryOutputFilename = GR.Path.RenameExtension( outputName, ".bas.temp" );
+
+      try
+      {
+        using ( var reader = new GR.IO.BinaryReader( Doc.FullPath ) )
+        {
+          using ( var writer = new GR.IO.BinaryWriter( TemporaryOutputFilename ) )
+          {
+            while ( reader.ReadLine( out string line ) )
+            {
+              if ( !line.StartsWith( "#" ) )
+              {
+                writer.WriteLine( line );
+              }
+            }
+          }
+        }
+        Core.AddToOutputLine( $"Written temporary meta data free file to {TemporaryOutputFilename}" );
+      }
+      catch ( Exception ex )
+      {
+        Core.AddToOutputLine( "An error occurred during building an element\r\n" + ex.ToString() );
+        return false;
+      }
+
+      return true;
+    }
+
+
+
     private void DisplayMemoryMap( Parser.ParserBase parser, int assemblyEndAddress )
     {
-      Core.AddToOutput( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
+      Core.AddToOutputLine( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
                 + " to $" + assemblyEndAddress.ToString( "X4" )
-                + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" + System.Environment.NewLine );
-      Core.AddToOutput( "Memory Map:" + System.Environment.NewLine );
+                + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" );
+      Core.AddToOutputLine( "Memory Map:" );
       if ( parser.AssembledOutput.MemoryMap != null )
       {
         foreach ( var mapEntry in parser.AssembledOutput.MemoryMap.Entries )
@@ -1026,11 +1076,11 @@ namespace RetroDevStudio.Tasks
           }
           if ( string.IsNullOrEmpty( mapEntry.Description ) )
           {
-            Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
+            Core.AddToOutputLine( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
           }
           else
           {
-            Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
+            Core.AddToOutputLine( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - " + mapEntry.Description );
           }
         }
       }

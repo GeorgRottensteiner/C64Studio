@@ -52,6 +52,7 @@ namespace RetroDevStudio.Dialogs
           AddTab( new PropDebugging( m_Element, m_Core ) );
           break;
         case ProjectElement.ElementType.BASIC_SOURCE:
+          AddTab( new PropBASICCompiler( m_Element, m_Core ) );
           AddTab( new PropCompileTarget( m_Element, m_Core ) );
           AddTab( new PropDebugging( m_Element, m_Core ) );
           break;

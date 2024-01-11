@@ -283,7 +283,8 @@ namespace RetroDevStudio.Parser
         {
           hasMAC = true;
         }
-        if ( upperCaseLine.IndexOf( "INCLUDE " ) != -1 ) 
+        if ( ( upperCaseLine.IndexOf( "INCLUDE " ) != -1 ) 
+        &&   ( !hasSemicolonComments ) )
         {
           hasInclude = true;
         }

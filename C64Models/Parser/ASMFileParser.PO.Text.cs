@@ -34,8 +34,9 @@ namespace RetroDevStudio.Parser
           }
           else
           {
-            // everything else is a single char
+            // everything else is a expression resulting in a single byte
             ++numBytes;
+            break;
           }
         }
       }

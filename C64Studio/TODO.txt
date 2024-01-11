@@ -1,4 +1,9 @@
 ﻿C64Studio
+o Gibt es im Labelmodus eine Art Labelübersicht, in der alle bereits verwendeten Labelnummern angezeigt werden?
+  Schön wäre auch eine Tastenkombination oder "Rechtsklick-Shortcut" mit dem einfach im Quelltext ein Label mit der nächsten freien Nummer eingefügt werden kann.
+  Ich bin großer Fan des Labelmodus, toll wäre auch, wenn man den Labeln eine Beschreibung hinzufügen könnte die dann in der Übersicht mit angezeigt wird. In etwa so: "LABEL1: Eingaberoutine"
+  Wenn man dann mit einem Doppelklick darauf noch zu der entsprechenden Stelle im Quellcode springen könnte, wäre das perfekt! 😅
+
 o -> Damit ich im geliebten Studio im C64 Basic Modus lange Variablennamen verwenden kann, also nur während des Editierens, 
      wünsche ich mir eine Liste, die mir alle meine verwendeten langen Variablennamen anzeigt und automatisch dahinter den sich daraus 
      ergebenen 2-Zeichen-Variablennamen, der editiert werden kann. Bei Kollisionen gibt es eine Warning. 
@@ -13,9 +18,9 @@ o -> Damit ich im geliebten Studio im C64 Basic Modus lange Variablennamen verwe
     GRENZE2 | G2 ]
     usw.
   So könnte man noch schöneren Code basteln und das Listing auf dem C64 enthält dann halt die in der Tabelle definierten Kurznamen fröhlich.
++ BASIC: Lange Variablennamen erkennen und automatisch durch kürzere ersetzen, und dabei auch noch eventuelle Duplikate vermeiden, interessante Idee :)
+
 o Breakpoints speichern!
-o Das aktuelle Studio übersetzt das {DOWN} nach einem "Toggle symbol/macro" in ein {CTRL-Q} .
-  Läuft zwar, ist aber unschön. (BASIC V2, siehe Zeile 11)
 o Hot-Reload in VICE
 o BASIC - Ein #IFDEF ähnliches Konstrukt, um verschiedene BASIC Versionen im selben Code zu verwenden wär super.
 o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
@@ -23,11 +28,8 @@ o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzu
 o Schön wäre es wenn man im "Memory View" Fenster, nachdem man "Goto Address" angeklickt hat ein Label eingeben könnte.
 o BASIC: Die Kommentier & Unkommentierfunktion würde ich mir auch für Basic mit dem Prefix # wünschen.
 o Allow change of the default palettes
-o BASIC: Lange Variablennamen erkennen und automatisch durch kürzere ersetzen, und dabei auch noch eventuelle Duplikate vermeiden, interessante Idee :)
 o Now that you have added the name of the current solution in the title bar of the program, I see that the name of the solution does 
   not match the name of the new folder but the name of the previous solution (match name of solution to filename!)
-o The "Clone Project" command also throws an exception and is unusable. 
-o The "Rename Project" command should also rename the .c64 file. 
 I suggest you to provide real and not virtual folders (as Visual Studio does) so that even at the file level, everything is more organized and 
 easier to manage. 
 The commands "Import Folder" should also exist. There should also be multiple selection for files in the browser. 
@@ -158,7 +160,6 @@ o !zone Sprites
 
   => Letzte Zeile ist "unter" dem horizontalen Scrollbar
 
-o Charscreeneditor: Export charset as binary
 o Sprites: NES 8x8 (3colors 1bg)
 o Debugging disassembly, show debug highlight on first line with actual code
 o Character Scrolling Effect (in one char, shifting with direction)
@@ -169,12 +170,8 @@ o Color setting: Empty space bg, setting custom color, but does not display as "
 o Save inbuilt editors automatically
 o Undo for Category-Exchange
 o Scaling: PETSCII table
-o  I would like to be able to right click on a label and have a list of references to this label. 
-    So that I can then double click on a reference and jump to it. It would be neat if that list of references stayed open 
-    until I closed it, so that I can quickly inspect all references.
 o BASIC _ Search in lowercase mode doesn't work with Uppercase letters
 o Shift-Click in Charset Preview Window, clear char
-o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)
 o Sub-Zones (nested) viable?
 o Display of used bytes is not correct (shows 43, should show 160 at !byte)
   !for i = 3 to 0 step -1
@@ -213,15 +210,11 @@ o Kategorien, Ich denke, Sie sollten mehrere auswählen, z. B. mehrfarbig, und s
 
 o charscreen layout change from Docster!
 o When you are creating a new project/solution with the same name, you are not warned that you are about to overwrite the existing project.
-o Still having problems with creating a new solution/project when another solution/project is loaded.
-	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
 o Theming -> Disabled Controls
 o Abspeichern von .BAS-Dateien mit "richtigem" PETSCII-Wert (falls das nicht mit irgend etwas anderem kollidiert)
 o alternative BASIC-Macro-Darstellung (xxx * Anzahl)
 o Macro Filename ohne Pfad
-o Kontext-Menü im BASIC-Editor
 o ASM - alternatives Output-Verzeichnis
-o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
 o FileManager -> Rename, Start in Emulator directly?
 o Binary Editor -> To BASIC, ASM, Längenbegrenzung!
 o BASIC -> Optimierung beim "Compile", REM entfernen, 0 durch ., usw.

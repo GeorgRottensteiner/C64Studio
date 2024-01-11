@@ -1,6 +1,6 @@
-#RetroDevStudio.MetaData.BASIC:2049,BASIC V2
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
 10PRINT"HALLO"
-
+20X=5
 
 
 50GOSUB100

@@ -486,7 +486,7 @@ namespace GR
 
     public static string RenameExtension( string OrigFilename, string NewExtension )
     {
-      return System.IO.Path.GetFileNameWithoutExtension( OrigFilename ) + NewExtension;
+      return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( OrigFilename ), System.IO.Path.GetFileNameWithoutExtension( OrigFilename ) + NewExtension );
     }
 
 

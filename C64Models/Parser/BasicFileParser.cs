@@ -160,6 +160,12 @@ namespace RetroDevStudio.Parser
     private string                                    _LastLineNumberDocument  = "";
     private int                                       _LastLineNumberDocLineIndex  = -1;
 
+    private Opcode                                    _OpcodeGosub  = null;
+    private Opcode                                    _OpcodeGoto   = null;
+    private Opcode                                    _OpcodeRun    = null;
+    private Opcode                                    _OpcodeRem    = null;
+    private Opcode                                    _OpcodeThen   = null;
+
 
 
     public BasicFileParser( ParserSettings Settings )
@@ -240,6 +246,12 @@ namespace RetroDevStudio.Parser
     {
       Settings.BASICDialect = Dialect;
 
+      var emptyOpcode = new Opcode( "", -1 );
+      _OpcodeGosub = emptyOpcode;
+      _OpcodeGoto  = emptyOpcode;
+      _OpcodeRun   = emptyOpcode;
+      _OpcodeRem   = emptyOpcode;
+
       if ( Dialect != null )
       {
         if ( !string.IsNullOrEmpty( Dialect.HexPrefix ) )
@@ -257,6 +269,12 @@ namespace RetroDevStudio.Parser
             AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.BinPrefix;
           }
         }
+
+        Dialect.Opcodes.TryGetValue( "GOSUB", out _OpcodeGosub );
+        Dialect.Opcodes.TryGetValue( "GOTO", out _OpcodeGoto );
+        Dialect.Opcodes.TryGetValue( "REM", out _OpcodeRem );
+        Dialect.Opcodes.TryGetValue( "RUN", out _OpcodeRun );
+        Dialect.Opcodes.TryGetValue( "THEN", out _OpcodeThen );
       }
 
       ActionTokens.Clear();
@@ -434,6 +452,110 @@ namespace RetroDevStudio.Parser
 
 
 
+    private void CreatePreProcessedFile( string SourceFile, string[] Lines, Types.ASM.FileInfo FileInfo )
+    {
+      try
+      {
+        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".dump" );
+
+        if ( Lines == null )
+        {
+          return;
+        }
+
+        using ( var writer = System.IO.File.CreateText( pathLog ) )
+        {
+          int     numLineDigits = Lines.Length.ToString().Length;
+
+          string  formatString = "D" + numLineDigits.ToString();
+
+          for ( int i = 0; i < Lines.Length; ++i )
+          {
+            if ( FileInfo.LineInfo.ContainsKey( i ) )
+            {
+              var     info = FileInfo.LineInfo[i];
+              if ( info != null )
+              {
+                if ( info.HideInPreprocessedOutput )
+                {
+                  continue;
+                }
+
+                writer.Write( i.ToString( formatString ) );
+                writer.Write( "  " );
+                if ( info.AddressStart < 0 )
+                {
+                  writer.Write( " ----" );
+                }
+                else
+                {
+                  writer.Write( "$" + info.AddressStart.ToString( "X4" ) );
+                }
+
+                writer.Write( "  " );
+                if ( info.LineData != null )
+                {
+                  int     numBytesToPrint = (int)info.LineData.Length;
+                  int     numLettersPrinted = 0;
+
+                  for ( int j = 0; j < numBytesToPrint; ++j )
+                  {
+                    writer.Write( info.LineData.ByteAt( j ).ToString( "X2" ) );
+                    numLettersPrinted += 2;
+                    if ( j + 1 < numBytesToPrint )
+                    {
+                      writer.Write( ' ' );
+                      ++numLettersPrinted;
+                    }
+                  }
+                  for ( int j = numLettersPrinted; j < 10; ++j )
+                  {
+                    writer.Write( ' ' );
+                  }
+                  //writer.Write( info.LineData.ToString() );
+                }
+                else
+                {
+                  writer.Write( "          " );
+                }
+                writer.Write( "  " );
+                writer.WriteLine( Lines[i].TrimStart() );
+              }
+              else
+              {
+                writer.Write( i.ToString( formatString ) );
+                writer.Write( "  " );
+
+                writer.Write( "????              " );
+                writer.WriteLine( Lines[i].TrimStart() );
+              }
+            }
+            else
+            {
+              writer.Write( i.ToString( formatString ) );
+              writer.Write( "  " );
+
+              writer.Write( "????              " );
+              writer.WriteLine( Lines[i].TrimStart() );
+            }
+          }
+          writer.Close();
+        }
+
+        ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Preprocessed file written to " + pathLog );
+        message.AlternativeFile = pathLog;
+        message.AlternativeLineIndex = 0;
+        m_ASMFileInfo.Messages.Add( -1, message );
+        ++m_Messages;
+      }
+      catch ( Exception ex )
+      {
+        AddWarning( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't write preprocessed file:" + ex.Message, 0, 0 );
+      }
+    }
+
+
+
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo )
     {
       m_ASMFileInfo = new Types.ASM.FileInfo();
@@ -471,6 +593,11 @@ namespace RetroDevStudio.Parser
       ProcessLines( lines, LabelMode );
 
       DumpSourceInfos();
+
+      if ( Config.CreatePreProcesseFile )
+      {
+        CreatePreProcessedFile( Config.InputFile, _Lines, m_ASMFileInfo );
+      }
 
       if ( m_ErrorMessages > 0 )
       {
@@ -510,12 +637,13 @@ namespace RetroDevStudio.Parser
               FromDependency    = true, 
               Info              = entry.Value.Info
             };
-            symbol.References.Add( entry.Value.LineIndex, 
-                new SymbolReference()
-                {
-                  GlobalLineIndex = entry.Value.LineIndex,
-                  TokenInfo = new TokenInfo() { StartPos = entry.Value.CharIndex, Length = entry.Value.Length, OriginatingString = entry.Value.String }
-                } );
+
+            symbol.References.Add( entry.Value.LineIndex,
+              new SymbolReference()
+              {
+                GlobalLineIndex = entry.Value.LineIndex,
+                TokenInfo = new TokenInfo() { StartPos = entry.Value.CharIndex, Length = entry.Value.Length, OriginatingString = entry.Value.String }
+              } );
 
             m_ASMFileInfo.Labels.Add( entry.Key, symbol );
           }
@@ -2691,8 +2819,8 @@ namespace RetroDevStudio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeRun.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeThen.InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Value.Tokens.Count )
@@ -2713,8 +2841,8 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeGoto.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeGosub.InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
@@ -2802,7 +2930,7 @@ namespace RetroDevStudio.Parser
 
     public bool IsComment( Token token )
     {
-      if ( token.ByteValue == Settings.BASICDialect.Opcodes["REM"].InsertionValue )
+      if ( token.ByteValue == _OpcodeRem.InsertionValue )
       {
         return true;
       }
@@ -2940,13 +3068,13 @@ namespace RetroDevStudio.Parser
           }*/
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
-          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue )
-          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue )
-          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue ) ) )
+          &&   ( ( token.ByteValue == _OpcodeGoto.InsertionValue )
+          ||     ( token.ByteValue == _OpcodeGosub.InsertionValue )
+          ||     ( token.ByteValue == _OpcodeThen.InsertionValue )
+          ||     ( token.ByteValue == _OpcodeRun.InsertionValue ) ) )
           {
-            bool    isGotoOrGosub = ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue ) 
-                                  | ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue );
+            bool    isGotoOrGosub = ( token.ByteValue == _OpcodeGoto.InsertionValue ) 
+                                  | ( token.ByteValue == _OpcodeGosub.InsertionValue );
             nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, tokenIndex );
             nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
 
@@ -3370,8 +3498,8 @@ namespace RetroDevStudio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeRun.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeThen.InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Tokens.Count )
@@ -3410,8 +3538,8 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
-            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue ) )
+            if ( ( token.ByteValue == _OpcodeGoto.InsertionValue )
+            ||   ( token.ByteValue == _OpcodeGosub.InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number

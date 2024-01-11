@@ -45,12 +45,28 @@ namespace RetroDevStudio.Documents
       SymbolInfo tokenInfo = null;
       if ( e.Node.Level == 3 )
       {
+        var reference = ( (KeyValuePair<int,SymbolReference>)e.Node.Tag ).Value;
         int lineNo = ( (KeyValuePair<int,SymbolReference>)e.Node.Tag ).Key;
         tokenInfo = (SymbolInfo)e.Node.Parent.Tag;
 
         ActiveASMFileInfo.FindTrueLineSource( lineNo, out string filename, out int localLineIndex );
 
-        Core.Navigating.OpenDocumentAndGotoLine( LabelExplorerProject, Core.Navigating.FindDocumentInfoByPath( filename ), localLineIndex );
+        if ( reference.TokenInfo == null )
+        {
+          Core.Navigating.OpenDocumentAndGotoLine( LabelExplorerProject,
+                                                   Core.Navigating.FindDocumentInfoByPath( filename ),
+                                                   localLineIndex,
+                                                   tokenInfo.CharIndex,
+                                                   tokenInfo.Length );
+        }
+        else
+        {
+          Core.Navigating.OpenDocumentAndGotoLine( LabelExplorerProject,
+                                                   Core.Navigating.FindDocumentInfoByPath( filename ),
+                                                   localLineIndex,
+                                                   reference.TokenInfo.StartPos,
+                                                   reference.TokenInfo.Length );
+        }
         return;
       }
       else
@@ -117,7 +133,8 @@ namespace RetroDevStudio.Documents
 
     private void StoreOpenNodes()
     {
-      if ( ActiveDocumentInfo != null )
+      if ( ( ActiveDocumentInfo != null )
+      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
       {
         if ( !_ExpandedNodesPerProject.ContainsKey( ActiveDocumentInfo.ASMFileInfo ) )
         {
@@ -127,7 +144,11 @@ namespace RetroDevStudio.Documents
         expandedNodesEntry.Clear();
         foreach ( TreeNode node in NodeRoot.Nodes )
         {
-          expandedNodesEntry[node.Text] = node.IsExpanded;
+          if ( ( node != null )
+          &&   ( node.Text != null ) )
+          {
+            expandedNodesEntry[node.Text] = node.IsExpanded;
+          }
         }
       }
     }
@@ -527,25 +548,40 @@ namespace RetroDevStudio.Documents
       SymbolInfo tokenInfo = null;
       int         startPos = 0;
       int         length = 0;
+      int         lineNo = 0;
+      string      currentFilename = "";
+
+      var occurrences = new List<TextLocation>();
 
       if ( e.Node.Level == 3 )
       {
         var reference = (KeyValuePair<int,SymbolReference>)e.Node.Tag;
 
+        tokenInfo       = (SymbolInfo)e.Node.Parent.Tag;
+        currentFilename = tokenInfo.DocumentFilename;
+        lineNo          = tokenInfo.LocalLineIndex;
         if ( reference.Value.TokenInfo != null )
         {
           startPos  = reference.Value.TokenInfo.StartPos;
           length    = reference.Value.TokenInfo.Length;
+          lineNo    = reference.Value.GlobalLineIndex;
+
+          if ( ActiveASMFileInfo.FindTrueLineSource( reference.Value.GlobalLineIndex, out string localFilename, out int localIndex ) )
+          {
+            currentFilename = localFilename;
+            lineNo          = localIndex;
+          }
         }
-        tokenInfo = (SymbolInfo)e.Node.Parent.Tag;
       }
       else
       {
         tokenInfo = (SymbolInfo)e.Node.Tag;
         if ( tokenInfo != null )
         {
-          startPos  = tokenInfo.CharIndex;
-          length    = tokenInfo.Length;
+          startPos        = tokenInfo.CharIndex;
+          length          = tokenInfo.Length;
+          lineNo          = tokenInfo.LocalLineIndex;
+          currentFilename = tokenInfo.DocumentFilename;
         }
       }
       if ( tokenInfo == null )
@@ -553,10 +589,34 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      var doc = Core.Navigating.FindDocumentByPath( tokenInfo.DocumentFilename );
+      foreach ( var reference in tokenInfo.References.Values )
+      {
+        if ( ActiveASMFileInfo.FindTrueLineSource( reference.GlobalLineIndex, out string localFilename, out int localIndex ) )
+        {
+          if ( localFilename == currentFilename )
+          {
+            if ( reference.TokenInfo != null )
+            {
+              occurrences.Add( new TextLocation()
+              {
+                LineIndex   = localIndex,
+                StartIndex  = reference.TokenInfo.StartPos,
+                Length      = reference.TokenInfo.Length
+              } );
+            }
+            else
+            {
+              Debug.Log( $"Reference for {tokenInfo.Name} has no tokeninfo for reference in {localFilename}:{localIndex}" );
+            }
+          }
+        }
+      }
+
+      var doc = Core.Navigating.FindDocumentByPath( currentFilename );
       if ( doc != null )
       {
-        doc.HighlightText( tokenInfo.LocalLineIndex, startPos, length );
+        doc.SetCursorToLine( lineNo, startPos, false );
+        doc.HighlightOccurrences( lineNo, startPos, length, occurrences );
       }
     }
 

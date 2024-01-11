@@ -307,6 +307,24 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModeTextVariants()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $2000
+                                byte_value = $1234
+                                      !text ""ABCabc123""
+                                      !text <byte_value,>byte_value,
+                                      !text <byte_value + 1,>byte_value + 1
+                                      !text ( 12 * 34 ) + 1";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00204142436162633132333412351399", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModeText()
     {
       string      source = @"!to ""text-modes.prg"",cbm

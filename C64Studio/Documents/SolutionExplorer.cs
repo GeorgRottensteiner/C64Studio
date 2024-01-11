@@ -156,7 +156,7 @@ namespace RetroDevStudio.Documents
           bool isProject = ( e.Node.Level == 0 );
           var info = (TreeItemInfo)e.Node.Tag;
 
-          Debug.Log( $"{e.Node.Text} = {info.FileState}" );
+          //Debug.Log( $"{e.Node.Text} = {info.FileState}" );
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
           &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )

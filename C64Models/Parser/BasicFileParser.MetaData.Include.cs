@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Parser;
+using System.Linq;
 
 
 
@@ -47,6 +48,15 @@ namespace RetroDevStudio.Parser
       }
 
       CleanLines( subFile );
+
+      // ignore the metadata top line for include files 
+      if ( ( subFile.Length >= 1 )
+      &&   ( ( subFile[0].ToUpper().StartsWith( "#C64STUDIO.METADATA.BASIC" ) )
+      ||     ( subFile[0].ToUpper().StartsWith( "#RETRODEVSTUDIO.METADATA.BASIC" ) ) ) )
+      {
+        subFile = subFile.Skip( 1 ).ToArray();
+      }
+
       if ( subFile.Length == 0 )
       {
         // included empty file messes up source info, skip to adding it

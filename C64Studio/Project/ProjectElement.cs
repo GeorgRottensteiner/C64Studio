@@ -73,7 +73,9 @@ namespace RetroDevStudio
     public bool             IsShown = false;
     public AssemblerType    AssemblerType = RetroDevStudio.Types.AssemblerType.AUTO;
     public List<string>     ProjectHierarchy = new List<string>();
+
     public string           BASICDialect = "BASIC V2";
+    public bool             BASICWriteTempFileWithoutMetaData = false;
 
 
 

@@ -9,11 +9,11 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POLoopStart( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, ref string[] Lines, List<Types.ScopeInfo> Scopes, out int lineSizeInBytes )
+    private ParseLineResult POLoopStart( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, ref string[] Lines, out int lineSizeInBytes )
     {
       lineSizeInBytes = 0;
 
-      if ( ScopeInsideMacroDefinition( Scopes ) )
+      if ( ScopeInsideMacroDefinition() )
       {
         return ParseLineResult.CALL_CONTINUE;
       }
@@ -33,7 +33,7 @@ namespace RetroDevStudio.Parser
           scope.Active = true;
           scope.RepeatUntil = repeatUntil;
           scope.StartIndex = lineIndex;
-          Scopes.Add( scope );
+          _ParseContext.Scopes.Add( scope );
           OnScopeAdded( scope );
         }
         else
@@ -56,8 +56,8 @@ namespace RetroDevStudio.Parser
           }
           if ( !hadError )
           {
-            // TODO - find matching loop end and copy lines now (to avoid auto-inserting macros only in the first iteration)
-            int nextLineIndex = FindLoopEnd( Lines, lineIndex + 1, Scopes, info.LineCodeMapping );
+            // find matching loop end and copy lines now (to avoid auto-inserting macros only in the first iteration)
+            int nextLineIndex = FindLoopEnd( Lines, lineIndex + 1, info.LineCodeMapping );
             if ( nextLineIndex == -1 )
             {
               AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "Missing loop end" );
@@ -73,7 +73,7 @@ namespace RetroDevStudio.Parser
                 System.Array.Copy( Lines, lineIndex + 1, tempContent, i * loopLength, loopLength );
               }
 
-              string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, Scopes, lineIndex, info.LineCodeMapping );
+              string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, lineIndex, info.LineCodeMapping );
 
               string[] newLines = new string[Lines.Length + replacementLines.Length];
 
@@ -88,8 +88,6 @@ namespace RetroDevStudio.Parser
               string outerFilename = "";
               int outerLineIndex = -1;
               m_ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
-
-              //ASMFileInfo.LineInfo.Remove( lineIndex );
 
               for ( int i = 0; i < numLoops - 1; ++i )
               {
@@ -106,7 +104,6 @@ namespace RetroDevStudio.Parser
 
               Lines = newLines;
 
-              //Debug.Log( "New total " + Lines.Length + " lines" );
               return ParseLineResult.CALL_CONTINUE;
             }
           }
