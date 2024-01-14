@@ -1445,7 +1445,7 @@ namespace RetroDevStudio
 
 
 
-    private void SetKeyBindingKey( RetroDevStudio.Types.Function Function, Keys Key )
+    private void SetKeyBindingKey( RetroDevStudio.Types.Function Function, Keys Key, Keys AltKey = Keys.None )
     {
       foreach ( var accPair in Accelerators )
       {
@@ -1458,9 +1458,7 @@ namespace RetroDevStudio
 
       if ( Key != Keys.None )
       {
-        AcceleratorKey key = new AcceleratorKey( Key, Function );
-        key.Key = Key;
-        Accelerators.Add( key.Key, key );
+        Accelerators.Add( Key, new AcceleratorKey(Key, AltKey, Function));
       }
     }
 
@@ -1492,8 +1490,8 @@ namespace RetroDevStudio
       SetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
       SetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
       SetKeyBindingKey( RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      SetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back );
-      SetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back, Keys.Control | Keys.Z);
+      SetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back, Keys.Control | Keys.Shift | Keys.Z);
       SetKeyBindingKey( RetroDevStudio.Types.Function.COPY, Keys.Control | Keys.C );
       SetKeyBindingKey( RetroDevStudio.Types.Function.PASTE, Keys.Control | Keys.V );
       SetKeyBindingKey( RetroDevStudio.Types.Function.CUT, Keys.Control | Keys.X );
@@ -1697,8 +1695,8 @@ namespace RetroDevStudio
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back );
-      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back, Keys.Control | Keys.Z);
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back, Keys.Control | Keys.Shift | Keys.Z);
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.COPY, Keys.Control | Keys.C );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.PASTE, Keys.Control | Keys.V );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.CUT, Keys.Control | Keys.X );
@@ -1712,7 +1710,7 @@ namespace RetroDevStudio
 
 
 
-    private void ValidateOrSetKeyBindingKey( Function Func, Keys KeyBinding )
+    private void ValidateOrSetKeyBindingKey( Function Func, Keys KeyBinding, Keys AltKeyBinding = Keys.None )
     {
       foreach ( var accPair in Accelerators )
       {
@@ -1721,7 +1719,7 @@ namespace RetroDevStudio
           return;
         }
       }
-      SetKeyBindingKey( Func, KeyBinding );
+      SetKeyBindingKey( Func, KeyBinding, AltKeyBinding );
     }
 
   }

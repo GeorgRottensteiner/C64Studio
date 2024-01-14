@@ -3243,9 +3243,9 @@ namespace Tiny64
       var potentialBreakPoints = Breakpoints.GetValues( Address, true );
       foreach ( var bp in potentialBreakPoints )
       {
-        if ( ( bp.OnExecute == Exec )
-        ||   ( bp.OnRead == Read )
-        ||   ( bp.OnWrite == Write ) )
+        if ( ( bp.OnExecute && Exec )
+        ||   ( bp.OnRead && Read )
+        ||   ( bp.OnWrite && Write ) )
         {
           TriggeredBreakpoints.Add( bp );
 
