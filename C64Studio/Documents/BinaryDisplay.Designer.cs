@@ -68,6 +68,8 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnDivide = new System.Windows.Forms.Button();
+      this.editDivideBy = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -137,10 +139,12 @@
       this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox2.Controls.Add(this.editDivideBy);
       this.groupBox2.Controls.Add(this.editDeleteNthByte);
       this.groupBox2.Controls.Add(this.btnExport);
       this.groupBox2.Controls.Add(this.btnImport);
       this.groupBox2.Controls.Add(this.btnSwizzle);
+      this.groupBox2.Controls.Add(this.btnDivide);
       this.groupBox2.Controls.Add(this.btnPackNibble);
       this.groupBox2.Controls.Add(this.btnDeleteNthByte);
       this.groupBox2.Controls.Add(this.btnUpsize);
@@ -157,7 +161,7 @@
       this.editDeleteNthByte.Location = new System.Drawing.Point(87, 108);
       this.editDeleteNthByte.Name = "editDeleteNthByte";
       this.editDeleteNthByte.Size = new System.Drawing.Size(75, 20);
-      this.editDeleteNthByte.TabIndex = 2;
+      this.editDeleteNthByte.TabIndex = 5;
       this.editDeleteNthByte.Text = "2";
       // 
       // btnExport
@@ -175,7 +179,7 @@
       this.btnImport.Location = new System.Drawing.Point(6, 19);
       this.btnImport.Name = "btnImport";
       this.btnImport.Size = new System.Drawing.Size(75, 23);
-      this.btnImport.TabIndex = 1;
+      this.btnImport.TabIndex = 0;
       this.btnImport.Text = "Import";
       this.btnImport.UseVisualStyleBackColor = true;
       this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -185,7 +189,7 @@
       this.btnSwizzle.Location = new System.Drawing.Point(6, 163);
       this.btnSwizzle.Name = "btnSwizzle";
       this.btnSwizzle.Size = new System.Drawing.Size(75, 23);
-      this.btnSwizzle.TabIndex = 0;
+      this.btnSwizzle.TabIndex = 7;
       this.btnSwizzle.Text = "Swizzle";
       this.btnSwizzle.UseVisualStyleBackColor = true;
       this.btnSwizzle.Click += new System.EventHandler(this.btnSwizzle_Click);
@@ -195,7 +199,7 @@
       this.btnPackNibble.Location = new System.Drawing.Point(6, 134);
       this.btnPackNibble.Name = "btnPackNibble";
       this.btnPackNibble.Size = new System.Drawing.Size(75, 23);
-      this.btnPackNibble.TabIndex = 0;
+      this.btnPackNibble.TabIndex = 6;
       this.btnPackNibble.Text = "Pack Nibble";
       this.btnPackNibble.UseVisualStyleBackColor = true;
       this.btnPackNibble.Click += new System.EventHandler(this.btnPackNibbles_Click);
@@ -205,7 +209,7 @@
       this.btnDeleteNthByte.Location = new System.Drawing.Point(6, 106);
       this.btnDeleteNthByte.Name = "btnDeleteNthByte";
       this.btnDeleteNthByte.Size = new System.Drawing.Size(75, 23);
-      this.btnDeleteNthByte.TabIndex = 0;
+      this.btnDeleteNthByte.TabIndex = 4;
       this.btnDeleteNthByte.Text = "Delete nth";
       this.btnDeleteNthByte.UseVisualStyleBackColor = true;
       this.btnDeleteNthByte.Click += new System.EventHandler(this.btnDeleteNthByte_Click);
@@ -215,7 +219,7 @@
       this.btnUpsize.Location = new System.Drawing.Point(6, 77);
       this.btnUpsize.Name = "btnUpsize";
       this.btnUpsize.Size = new System.Drawing.Size(75, 23);
-      this.btnUpsize.TabIndex = 0;
+      this.btnUpsize.TabIndex = 3;
       this.btnUpsize.Text = "Upsize";
       this.btnUpsize.UseVisualStyleBackColor = true;
       this.btnUpsize.Click += new System.EventHandler(this.btnUpsize_Click);
@@ -225,7 +229,7 @@
       this.btnInterleave.Location = new System.Drawing.Point(6, 48);
       this.btnInterleave.Name = "btnInterleave";
       this.btnInterleave.Size = new System.Drawing.Size(75, 23);
-      this.btnInterleave.TabIndex = 0;
+      this.btnInterleave.TabIndex = 2;
       this.btnInterleave.Text = "Interleave...";
       this.btnInterleave.UseVisualStyleBackColor = true;
       this.btnInterleave.Click += new System.EventHandler(this.btnInterleave_Click);
@@ -500,6 +504,24 @@
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
       // 
+      // btnDivide
+      // 
+      this.btnDivide.Location = new System.Drawing.Point(6, 192);
+      this.btnDivide.Name = "btnDivide";
+      this.btnDivide.Size = new System.Drawing.Size(75, 23);
+      this.btnDivide.TabIndex = 8;
+      this.btnDivide.Text = "Divide by";
+      this.btnDivide.UseVisualStyleBackColor = true;
+      this.btnDivide.Click += new System.EventHandler(this.btnDivide_Click);
+      // 
+      // editDivideBy
+      // 
+      this.editDivideBy.Location = new System.Drawing.Point(87, 194);
+      this.editDivideBy.Name = "editDivideBy";
+      this.editDivideBy.Size = new System.Drawing.Size(75, 20);
+      this.editDivideBy.TabIndex = 9;
+      this.editDivideBy.Text = "2";
+      // 
       // BinaryDisplay
       // 
       this.ClientSize = new System.Drawing.Size(733, 538);
@@ -565,5 +587,7 @@
     private System.Windows.Forms.Button btnSwizzle;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox editWrapCharsCount;
-    }
+    private System.Windows.Forms.TextBox editDivideBy;
+    private System.Windows.Forms.Button btnDivide;
+  }
 }

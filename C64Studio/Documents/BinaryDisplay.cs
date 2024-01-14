@@ -540,6 +540,29 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void btnDivide_Click( object sender, EventArgs e )
+    {
+      int   divisor = GR.Convert.ToI32( editDivideBy.Text );
+      if ( divisor <= 0 )
+      {
+        return;
+      }
+
+      var data = DataFromHex();
+
+      GR.Memory.ByteBuffer    newData = new GR.Memory.ByteBuffer( data.Length );
+
+      for ( int i = 0; i < data.Length; ++i )
+      {
+        byte    value = data.ByteAt( i );
+
+        newData.SetU8At( i, (byte)( value / divisor ) );
+      }
+      SetHexData( newData );
+    }
+
+
+
   }
 }
 
