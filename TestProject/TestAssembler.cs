@@ -996,15 +996,19 @@ namespace TestProject
               COLLISION_FILLABLE    = %00100000; $02
               COLLISION_NOTFILLABLE = %00110000; $03
               COLLISION_DEATH       = %11110000; $0f
+              TEST  = 5 % 3
+              TEST2 = 5 % %100
 
               !byte COLLISION_FILL
               !byte COLLISION_FILLABLE
               !byte COLLISION_NOTFILLABLE
-              !byte COLLISION_DEATH";
+              !byte COLLISION_DEATH
+              !byte TEST
+              !byte TEST2";
 
       var assembly = TestAssembleC64Studio( source );
 
-      Assert.AreEqual( "0020102030F0", assembly.ToString() );
+      Assert.AreEqual( "0020102030F00201", assembly.ToString() );
     }
 
 

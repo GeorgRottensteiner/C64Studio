@@ -1,4 +1,28 @@
-﻿C64Studio
+﻿320x200:
+*1
+16 pixel pro zeichen
+Range 0x0    VS 40x25
+
+*2
+32 pixel pro zeichen
+0, 16
+left 0,4,8,12,16,...
+Range 40x25  VS 40x25
+
+
+*4
+64 pixel pro zeichen
+0, 16, 32, 48
+left 0,2,4,6,8,10,12,...
+Rang 120x75  VS 40x25
+
+*8
+128 pixel pro zeichen
+0, 16, 32, 48, ...
+left 0,1,2,3,4,...
+Range 280x175  VS 40x25
+
+C64Studio
 o Gibt es im Labelmodus eine Art Labelübersicht, in der alle bereits verwendeten Labelnummern angezeigt werden?
   Schön wäre auch eine Tastenkombination oder "Rechtsklick-Shortcut" mit dem einfach im Quelltext ein Label mit der nächsten freien Nummer eingefügt werden kann.
   Ich bin großer Fan des Labelmodus, toll wäre auch, wenn man den Labeln eine Beschreibung hinzufügen könnte die dann in der Übersicht mit angezeigt wird. In etwa so: "LABEL1: Eingaberoutine"

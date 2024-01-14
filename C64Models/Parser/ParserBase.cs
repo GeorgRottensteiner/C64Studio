@@ -269,6 +269,9 @@ namespace RetroDevStudio.Parser
         {
           // must be a comment
           hasSemicolonComments = true;
+
+          // skip parsing comments, triggers all kinds of false positives otherwise
+          continue;
         }
         int     orgPos = -1;
         if ( ( orgPos = upperCaseLine.IndexOf( "ORG " ) ) != -1 ) 

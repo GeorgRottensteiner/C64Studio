@@ -4023,7 +4023,13 @@ namespace RetroDevStudio
     {
       if ( InvokeRequired )
       {
-        Invoke( new ParameterLessCallback( StopDebugging ) );
+        try
+        {
+          Invoke( new ParameterLessCallback( StopDebugging ) );
+        }
+        catch ( ObjectDisposedException )
+        {
+        }
       }
       else
       {
