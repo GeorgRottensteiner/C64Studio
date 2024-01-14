@@ -1906,7 +1906,8 @@ namespace RetroDevStudio.Parser
           var foundKey = ConstantData.LowerCaseCharTo64Char[curChar];
           if ( !foundKey.HasPetSCII )
           {
-            AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
+            AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered",
+                      posInLine, 1 );
           }
           else
           {
@@ -1929,7 +1930,7 @@ namespace RetroDevStudio.Parser
       if ( ( !ConstantData.CharToC64Char.ContainsKey( curChar ) )
       ||   ( !ConstantData.CharToC64Char[curChar].HasPetSCII ) )
       {
-        AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
+        AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered", posInLine, 1 );
       }
       else
       {
@@ -2429,20 +2430,7 @@ namespace RetroDevStudio.Parser
                 symbolInfo.LocalLineIndex   = lineIndex;
                 symbolInfo.Type             = symbolType;
                 symbolInfo.String           = origName;
-                //ASMFileInfo.Labels.Add( origName, symbolInfo );
 
-                if ( m_ASMFileInfo.MappedVariables[varName].Any() )
-                {
-                  //Debug.Log( $"Duplicate shortcut variable name ({varName})" );
-                  var warning = AddWarning( lineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {origName} truncated to two characters is ambigious ({varName})",
-                    variable.StartIndex, variable.Content.Length );
-
-                  foreach ( var duplicate in m_ASMFileInfo.MappedVariables[varName] )
-                  {
-                    m_ASMFileInfo.FindTrueLineSource( duplicate.LineIndex, out string curDoc, out int curLine );
-                    warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
-                  }
-                }
                 if ( !m_ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
                 {
                   m_ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
@@ -2484,6 +2472,40 @@ namespace RetroDevStudio.Parser
         else
         {
           m_LineInfos[info.LineIndex] = info;
+        }
+      }
+
+      CheckForAmbigiousVariables();
+    }
+
+
+
+    private void CheckForAmbigiousVariables()
+    {
+      foreach ( var mappedVars in m_ASMFileInfo.MappedVariables )
+      {
+        var distinct = mappedVars.Value.Select( si => si.String ).Distinct();
+        if ( distinct.Count() > 1 )
+        {
+          foreach ( var dist in distinct )
+          {
+            if ( mappedVars.Value.Count( si => si.String == dist ) > 1 )
+            {
+              //Debug.Log( $"Duplicate shortcut variable name ({varName})" );
+              foreach ( var entry in mappedVars.Value )
+              {
+                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to two characters is ambigious ({entry.String})",
+              entry.CharIndex, entry.String.Length );
+
+                /*
+                foreach ( var duplicate in m_ASMFileInfo.MappedVariables[varName] )
+                {
+                  m_ASMFileInfo.FindTrueLineSource( duplicate.LineIndex, out string curDoc, out int curLine );
+                  warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
+                }*/
+              }
+            }
+          }
         }
       }
     }
