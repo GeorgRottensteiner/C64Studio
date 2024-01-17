@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<C64StudioSettings>
+<RetroDevStudioSettings>
   <EditorColors>
     <Color Element="NONE" FGColor="FFE6DB74" BGColor="Auto"/>
     <Color Element="CODE" FGColor="FF76EC00" BGColor="Auto"/>
@@ -17,5 +17,8 @@
     <Color Element="CONTROL_TEXT" FGColor="FFC0C0C0" BGColor="FFFFFFFF"/>
     <Color Element="BACKGROUND_CONTROL" FGColor="FFC0C0C0" BGColor="Auto"/>
     <Color Element="CHANGED_DEBUG_ELEMENT" FGColor="FFFF8080" BGColor="Auto"/>
+    <Color Element="SELECTION_FRAME" FGColor="FF000000" BGColor="FFFFFFFF"/>
+    <Color Element="BACKGROUND_BUTTON" FGColor="FFFFFFFF" BGColor="FF47564B"/>
+    <Color Element="LINE_NUMBERS" FGColor="FF000000" BGColor="Auto"/>    
   </EditorColors>
-</C64StudioSettings>
+</RetroDevStudioSettings>

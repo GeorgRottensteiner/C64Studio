@@ -1,4 +1,4 @@
-!source <c64.asm>
+﻿!source <c64.asm>
 
 !zone WiC64 {
 
@@ -15,8 +15,10 @@
           sty .ZEROPAGE_POINTER_1 + 1
 
           ;length of command
-          ldy #1
+          ldy #2
           lda (.ZEROPAGE_POINTER_1),y
+          clc
+          adc #4
           tax
 
           jsr WiC64.PrepareForWrite
@@ -56,7 +58,7 @@
           rts
 
 .WaitHandshake
-          lda #$40              ; short timeout
+          lda #$68              ; short timeout
           sta .OuterLoopCount   ; looplength for timeout
           lda #$0
           sta .InnerLoopCount

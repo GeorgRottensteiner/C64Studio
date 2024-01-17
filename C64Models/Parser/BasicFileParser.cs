@@ -2482,6 +2482,7 @@ namespace RetroDevStudio.Parser
 
     private void CheckForAmbigiousVariables()
     {
+      GR.Collections.Set<string>   notifiedMappings = new GR.Collections.Set<string>();
       foreach ( var mappedVars in m_ASMFileInfo.MappedVariables )
       {
         var distinct = mappedVars.Value.Select( si => si.String ).Distinct();
@@ -2489,20 +2490,13 @@ namespace RetroDevStudio.Parser
         {
           foreach ( var dist in distinct )
           {
-            if ( mappedVars.Value.Count( si => si.String == dist ) > 1 )
+            foreach ( var entry in mappedVars.Value )
             {
-              //Debug.Log( $"Duplicate shortcut variable name ({varName})" );
-              foreach ( var entry in mappedVars.Value )
+              if ( !notifiedMappings.ContainsValue( entry.Name + "_" + dist ) )
               {
-                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to two characters is ambigious ({entry.String})",
-              entry.CharIndex, entry.String.Length );
-
-                /*
-                foreach ( var duplicate in m_ASMFileInfo.MappedVariables[varName] )
-                {
-                  m_ASMFileInfo.FindTrueLineSource( duplicate.LineIndex, out string curDoc, out int curLine );
-                  warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
-                }*/
+                notifiedMappings.Add( entry.Name + "_" + dist );
+                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to two characters is ambigious ({dist})",
+                                          entry.CharIndex, entry.String.Length );
               }
             }
           }

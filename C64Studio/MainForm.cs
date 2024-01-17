@@ -3405,7 +3405,8 @@ namespace RetroDevStudio
         Invoke( new ParameterLessCallback( UpdateCaption ) );
         return;
       }
-      if ( CurrentProject != null )
+      if ( ( CurrentProject != null )
+      &&   ( StudioCore.Navigating.Solution != null ) )
       {
         Text = "C64Studio - " + StudioCore.Navigating.Solution.Name + " - " + CurrentProject.Settings.Name;
       }
