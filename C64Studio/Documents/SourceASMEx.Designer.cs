@@ -39,12 +39,29 @@
       this.runToCursorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.addToWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readFromMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readFromMemory1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readFromMemory2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readFromMemory4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readFromMemory8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readFromMemory16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+      this.readDirectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readDirect1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readDirect2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readDirect4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readDirect8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readDirect16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.addDataBreakpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.readAndWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.readOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.writeOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.addBreakpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.addBookmarkHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeAllBookmarksOfThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
       this.gotoDeclarationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.findAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.renameAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,10 +87,6 @@
       this.btnCloseAllZones = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.btnShowShortCutLabels = new System.Windows.Forms.Button();
-      this.addBookmarkHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-      this.removeBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.removeAllBookmarksOfThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -156,7 +169,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(250, 530);
+      this.contextSource.Size = new System.Drawing.Size(250, 508);
       // 
       // copyToolStripMenuItem
       // 
@@ -198,10 +211,112 @@
       // 
       // addToWatchToolStripMenuItem
       // 
+      this.addToWatchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readFromMemoryToolStripMenuItem,
+            this.readFromMemory1ToolStripMenuItem,
+            this.readFromMemory2ToolStripMenuItem,
+            this.readFromMemory4ToolStripMenuItem,
+            this.readFromMemory8ToolStripMenuItem,
+            this.readFromMemory16ToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.readDirectToolStripMenuItem,
+            this.readDirect1ToolStripMenuItem,
+            this.readDirect2ToolStripMenuItem,
+            this.readDirect4ToolStripMenuItem,
+            this.readDirect8ToolStripMenuItem,
+            this.readDirect16ToolStripMenuItem});
       this.addToWatchToolStripMenuItem.Name = "addToWatchToolStripMenuItem";
       this.addToWatchToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
       this.addToWatchToolStripMenuItem.Text = "Add to Watch";
-      this.addToWatchToolStripMenuItem.Click += new System.EventHandler(this.addToWatchToolStripMenuItem_Click);
+      // 
+      // readFromMemoryToolStripMenuItem
+      // 
+      this.readFromMemoryToolStripMenuItem.Enabled = false;
+      this.readFromMemoryToolStripMenuItem.Name = "readFromMemoryToolStripMenuItem";
+      this.readFromMemoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readFromMemoryToolStripMenuItem.Text = "Read from Memory";
+      // 
+      // readFromMemory1ToolStripMenuItem
+      // 
+      this.readFromMemory1ToolStripMenuItem.Name = "readFromMemory1ToolStripMenuItem";
+      this.readFromMemory1ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readFromMemory1ToolStripMenuItem.Text = "1 byte";
+      this.readFromMemory1ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchMemory1ToolStripMenuItem_Click);
+      // 
+      // readFromMemory2ToolStripMenuItem
+      // 
+      this.readFromMemory2ToolStripMenuItem.Name = "readFromMemory2ToolStripMenuItem";
+      this.readFromMemory2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readFromMemory2ToolStripMenuItem.Text = "2 bytes";
+      this.readFromMemory2ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchMemory2ToolStripMenuItem_Click);
+      // 
+      // readFromMemory4ToolStripMenuItem
+      // 
+      this.readFromMemory4ToolStripMenuItem.Name = "readFromMemory4ToolStripMenuItem";
+      this.readFromMemory4ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readFromMemory4ToolStripMenuItem.Text = "4 bytes";
+      this.readFromMemory4ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchMemory4ToolStripMenuItem_Click);
+      // 
+      // readFromMemory8ToolStripMenuItem
+      // 
+      this.readFromMemory8ToolStripMenuItem.Name = "readFromMemory8ToolStripMenuItem";
+      this.readFromMemory8ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readFromMemory8ToolStripMenuItem.Text = "8 bytes";
+      this.readFromMemory8ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchMemory8ToolStripMenuItem_Click);
+      // 
+      // readFromMemory16ToolStripMenuItem
+      // 
+      this.readFromMemory16ToolStripMenuItem.Name = "readFromMemory16ToolStripMenuItem";
+      this.readFromMemory16ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readFromMemory16ToolStripMenuItem.Text = "16 bytes";
+      this.readFromMemory16ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchMemory16ToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator6
+      // 
+      this.toolStripSeparator6.Name = "toolStripSeparator6";
+      this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
+      // 
+      // readDirectToolStripMenuItem
+      // 
+      this.readDirectToolStripMenuItem.Enabled = false;
+      this.readDirectToolStripMenuItem.Name = "readDirectToolStripMenuItem";
+      this.readDirectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readDirectToolStripMenuItem.Text = "Read direct";
+      // 
+      // readDirect1ToolStripMenuItem
+      // 
+      this.readDirect1ToolStripMenuItem.Name = "readDirect1ToolStripMenuItem";
+      this.readDirect1ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readDirect1ToolStripMenuItem.Text = "1 byte";
+      this.readDirect1ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchDirect1ToolStripMenuItem_Click);
+      // 
+      // readDirect2ToolStripMenuItem
+      // 
+      this.readDirect2ToolStripMenuItem.Name = "readDirect2ToolStripMenuItem";
+      this.readDirect2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readDirect2ToolStripMenuItem.Text = "2 bytes";
+      this.readDirect2ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchDirect2ToolStripMenuItem_Click);
+      // 
+      // readDirect4ToolStripMenuItem
+      // 
+      this.readDirect4ToolStripMenuItem.Name = "readDirect4ToolStripMenuItem";
+      this.readDirect4ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readDirect4ToolStripMenuItem.Text = "4 bytes";
+      this.readDirect4ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchDirect4ToolStripMenuItem_Click);
+      // 
+      // readDirect8ToolStripMenuItem
+      // 
+      this.readDirect8ToolStripMenuItem.Name = "readDirect8ToolStripMenuItem";
+      this.readDirect8ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readDirect8ToolStripMenuItem.Text = "8 bytes";
+      this.readDirect8ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchDirect8ToolStripMenuItem_Click);
+      // 
+      // readDirect16ToolStripMenuItem
+      // 
+      this.readDirect16ToolStripMenuItem.Name = "readDirect16ToolStripMenuItem";
+      this.readDirect16ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.readDirect16ToolStripMenuItem.Text = "16 bytes";
+      this.readDirect16ToolStripMenuItem.Click += new System.EventHandler(this.addToWatchDirect16ToolStripMenuItem_Click);
       // 
       // addDataBreakpointToolStripMenuItem
       // 
@@ -245,6 +360,32 @@
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
       this.toolStripSeparator2.Size = new System.Drawing.Size(246, 6);
+      // 
+      // addBookmarkHereToolStripMenuItem
+      // 
+      this.addBookmarkHereToolStripMenuItem.Name = "addBookmarkHereToolStripMenuItem";
+      this.addBookmarkHereToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.addBookmarkHereToolStripMenuItem.Text = "Add Bookmark here";
+      this.addBookmarkHereToolStripMenuItem.Click += new System.EventHandler(this.addBookmarkHereToolStripMenuItem_Click);
+      // 
+      // removeBookmarkToolStripMenuItem
+      // 
+      this.removeBookmarkToolStripMenuItem.Name = "removeBookmarkToolStripMenuItem";
+      this.removeBookmarkToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.removeBookmarkToolStripMenuItem.Text = "Remove Bookmark";
+      this.removeBookmarkToolStripMenuItem.Click += new System.EventHandler(this.removeBookmarkToolStripMenuItem_Click);
+      // 
+      // removeAllBookmarksOfThisFileToolStripMenuItem
+      // 
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Name = "removeAllBookmarksOfThisFileToolStripMenuItem";
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Text = "Remove all bookmarks of this file";
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Click += new System.EventHandler(this.removeAllBookmarksOfThisFileToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator5
+      // 
+      this.toolStripSeparator5.Name = "toolStripSeparator5";
+      this.toolStripSeparator5.Size = new System.Drawing.Size(246, 6);
       // 
       // gotoDeclarationToolStripMenuItem
       // 
@@ -436,32 +577,6 @@
       this.btnShowShortCutLabels.UseVisualStyleBackColor = true;
       this.btnShowShortCutLabels.Click += new System.EventHandler(this.btnShowShortCutLabels_Click);
       // 
-      // addBookmarkHereToolStripMenuItem
-      // 
-      this.addBookmarkHereToolStripMenuItem.Name = "addBookmarkHereToolStripMenuItem";
-      this.addBookmarkHereToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.addBookmarkHereToolStripMenuItem.Text = "Add Bookmark here";
-      this.addBookmarkHereToolStripMenuItem.Click += new System.EventHandler(this.addBookmarkHereToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator5
-      // 
-      this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(246, 6);
-      // 
-      // removeBookmarkToolStripMenuItem
-      // 
-      this.removeBookmarkToolStripMenuItem.Name = "removeBookmarkToolStripMenuItem";
-      this.removeBookmarkToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.removeBookmarkToolStripMenuItem.Text = "Remove Bookmark";
-      this.removeBookmarkToolStripMenuItem.Click += new System.EventHandler(this.removeBookmarkToolStripMenuItem_Click);
-      // 
-      // removeAllBookmarksOfThisFileToolStripMenuItem
-      // 
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Name = "removeAllBookmarksOfThisFileToolStripMenuItem";
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Text = "Remove all bookmarks of this file";
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Click += new System.EventHandler(this.removeAllBookmarksOfThisFileToolStripMenuItem_Click);
-      // 
       // SourceASMEx
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -527,5 +642,18 @@
     private System.Windows.Forms.ToolStripMenuItem removeBookmarkToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem removeAllBookmarksOfThisFileToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+    private System.Windows.Forms.ToolStripMenuItem readFromMemoryToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readFromMemory1ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readFromMemory2ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readFromMemory4ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readFromMemory8ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readFromMemory16ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+    private System.Windows.Forms.ToolStripMenuItem readDirectToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readDirect2ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readDirect4ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readDirect8ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readDirect16ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem readDirect1ToolStripMenuItem;
   }
 }

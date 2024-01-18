@@ -228,9 +228,6 @@ namespace RetroDevStudio.Documents
 
       RefreshDisplayOptions();
 
-      //editSource.ContextMenuStrip = null;
-      //editSource.ContextMenu = null;
-
       editSource.AllowDrop = true;
       editSource.MouseEnter += new EventHandler( editSource_MouseEnter );
       editSource.MouseLeave += new EventHandler(editSource_MouseLeave);
@@ -2411,7 +2408,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void addToWatchToolStripMenuItem_Click( object sender, EventArgs e )
+    private void AddWatchEntry( int LengthInBytes, bool DisplayMemory )
     {
       int     lineIndex = m_ContextMenuLineIndex;
       string  wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
@@ -2485,12 +2482,12 @@ namespace RetroDevStudio.Documents
       {
         WatchEntry entry    = new WatchEntry();
         entry.Name          = wordBelow;
-        entry.SizeInBytes   = 1;
+        entry.SizeInBytes   = LengthInBytes;
         entry.Type          = WatchEntry.DisplayType.HEX;
         entry.Address       = (int)result;
         entry.IndexedX      = indexedX;
         entry.IndexedY      = indexedY;
-        entry.DisplayMemory = true;
+        entry.DisplayMemory = DisplayMemory;
         entry.LiteralValue  = true;
 
         Debug.Log( "Address for " + wordBelow + " determined as " + entry.Address );
@@ -2504,12 +2501,12 @@ namespace RetroDevStudio.Documents
       {
         WatchEntry entry = new WatchEntry();
         entry.Name        = wordBelow;
-        entry.SizeInBytes = 1;
+        entry.SizeInBytes = LengthInBytes;
         entry.Type        = WatchEntry.DisplayType.HEX;
         entry.Address     = (int)tokenInfo.AddressOrValue;
         entry.IndexedX    = indexedX;
         entry.IndexedY    = indexedY;
-        entry.DisplayMemory = true;
+        entry.DisplayMemory = DisplayMemory;
 
         Debug.Log( "Address for " + wordBelow + " determined as " + entry.Address );
 
@@ -4163,6 +4160,76 @@ namespace RetroDevStudio.Documents
 
       FindZoneAtCaretPosition( out zone, out cheapLabelParent );
       Core.Navigating.GotoDeclaration( DocumentInfo, CurrentPosition(), CurrentLineIndex, wordBelow, zone, cheapLabelParent );
+    }
+
+
+
+    private void addToWatchMemory1ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 1, true );
+    }
+
+
+
+    private void addToWatchMemory2ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 2, true );
+    }
+
+
+
+    private void addToWatchMemory4ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 4, true );
+    }
+
+
+
+    private void addToWatchMemory8ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 8, true );
+    }
+
+
+
+    private void addToWatchMemory16ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 16, true );
+    }
+
+
+
+    private void addToWatchDirect1ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 1, false );
+    }
+
+
+
+    private void addToWatchDirect2ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 2, false );
+    }
+
+
+
+    private void addToWatchDirect4ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 4, false );
+    }
+
+
+
+    private void addToWatchDirect8ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 8, false );
+    }
+
+
+
+    private void addToWatchDirect16ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddWatchEntry( 16, false );
     }
 
 

@@ -341,8 +341,11 @@ namespace RetroDevStudio
         }
       }
 
-      Element.DocumentInfo.Project.RemoveElement( Element );
-      Element.Node.Remove();
+      if ( Element != null )
+      {
+        Element.DocumentInfo.Project.RemoveElement( Element );
+        Element.Node.Remove();
+      }
       Modified = true;
     }
 

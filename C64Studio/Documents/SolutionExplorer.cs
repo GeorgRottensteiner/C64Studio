@@ -1054,30 +1054,36 @@ namespace RetroDevStudio.Documents
 
     void RemoveAndDeleteElement( ProjectElement Element )
     {
-      foreach ( TreeNode childNode in Element.Node.Nodes )
+      if ( Element != null )
       {
-        ProjectElement childElement = ElementFromNode( childNode );
-        RemoveAndDeleteElement( childElement );
-      }
-      if ( Element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
-      {
-        try
+        foreach ( TreeNode childNode in Element.Node.Nodes )
         {
-          System.IO.File.Delete( GR.Path.Append( Element.DocumentInfo.Project.Settings.BasePath, Element.Filename ) );
+          ProjectElement childElement = ElementFromNode( childNode );
+          RemoveAndDeleteElement( childElement );
         }
-        catch ( System.Exception ex )
+        if ( Element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
         {
-          Core.AddToOutput( "Could not delete file " + GR.Path.Append( Element.DocumentInfo.Project.Settings.BasePath, Element.Filename ) + ", " + ex.Message );
+          try
+          {
+            System.IO.File.Delete( GR.Path.Append( Element.DocumentInfo.Project.Settings.BasePath, Element.Filename ) );
+          }
+          catch ( System.Exception ex )
+          {
+            Core.AddToOutput( "Could not delete file " + GR.Path.Append( Element.DocumentInfo.Project.Settings.BasePath, Element.Filename ) + ", " + ex.Message );
+          }
         }
-      }
-      if ( Element.Document != null )
-      {
-        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
-        Element.Document.Close();
+        if ( Element.Document != null )
+        {
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
+          Element.Document.Close();
+        }
       }
       Core.Navigating.Solution.RemoveElement( Element );
       Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
-      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
+      if ( Element != null )
+      {
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
+      }
     }
 
 
