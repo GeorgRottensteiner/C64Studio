@@ -73,6 +73,7 @@ namespace RetroDevStudio.Parser
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
         case Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
@@ -106,6 +107,9 @@ namespace RetroDevStudio.Parser
         case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
+          break;
+        default:
+          Debug.Log( $"Unsupported addressing {opcode.Addressing}" );
           break;
       }
       string    addressPlacement;
@@ -143,6 +147,7 @@ namespace RetroDevStudio.Parser
           output += " " + addressPlacement + ", y";
           break;
         case Tiny64.Opcode.AddressingType.IMMEDIATE_ACCU:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER:
           output += " #" + addressPlacement;
           break;
         case Tiny64.Opcode.AddressingType.INDIRECT:
@@ -170,6 +175,9 @@ namespace RetroDevStudio.Parser
           break;
         case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
           output += " " + addressPlacement + ", y";
+          break;
+        default:
+          Debug.Log( $"Unsupported addressing {opcode.Addressing}" );
           break;
       }
       return output;
