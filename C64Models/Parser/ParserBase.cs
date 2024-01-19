@@ -411,6 +411,8 @@ namespace RetroDevStudio.Parser
         }
         catch ( System.Exception )
         {
+          m_ASMFileInfo = new FileInfo();
+          ASMFileInfo = m_ASMFileInfo;
           AddError( -1, Types.ErrorCode.E2000_FILE_OPEN_ERROR, "Could not open file " + Filename );
           return false;
         }

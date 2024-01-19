@@ -29,6 +29,7 @@ namespace C64Ass
       // TODO - add defines if given
 
       string fullPath = config.InputFile;
+
       if ( !GR.Path.IsPathRooted( fullPath ) )
       {
         fullPath = System.IO.Path.GetFullPath( config.InputFile );
@@ -118,6 +119,10 @@ namespace C64Ass
 
     private static void DisplayOutput( FileInfo ASMFileInfo, List<string> WarningsToIgnore, bool ShowNoWarnings )
     {
+      if ( ASMFileInfo == null )
+      {
+        return;
+      }
       foreach ( var entry in ASMFileInfo.Messages )
       {
         string    file;
