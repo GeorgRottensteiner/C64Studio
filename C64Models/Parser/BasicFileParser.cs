@@ -2790,6 +2790,14 @@ namespace RetroDevStudio.Parser
         {
           continue;
         }
+        if ( m_ASMFileInfo.FindTrueLineSource( lineInfo.Key, out string dummy, out int dummy2 , out Types.ASM.SourceInfo sourceInfo ) )
+        {
+          if ( sourceInfo.Source == Types.ASM.SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
+          {
+            // skip media includes, they are rebuilt
+            continue;
+          }
+        }
 
         // remember cut off length so we can properly fill up with blanks below
         int   lineStartLength = sb.Length;
@@ -3032,6 +3040,24 @@ namespace RetroDevStudio.Parser
           continue;
         }
 
+        if ( m_ASMFileInfo.FindTrueLineSource( lineInfo.Key, out string dummy, out int dummy2, out Types.ASM.SourceInfo sourceInfo ) )
+        {
+          if ( sourceInfo.Source == Types.ASM.SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
+          {
+            // skip media includes, they are rebuilt, but parse the line number in front
+            if ( lineInfo.Value.Tokens.Count > 0 )
+            {
+              int lineNumberFromMedia = GR.Convert.ToI32( lineInfo.Value.Tokens[0].Content );
+
+              if ( lineNumberFromMedia > lineNumber )
+              {
+                lineNumber = lineNumberFromMedia + lineNumberStep;
+              }
+            }
+            continue;
+          }
+        }
+
         bool    hadREM = false;
 
         // is this a label definition?
@@ -3059,7 +3085,6 @@ namespace RetroDevStudio.Parser
 
         for ( int tokenIndex = 0; tokenIndex < lineInfo.Value.Tokens.Count; ++tokenIndex  )
         {
-
           Token token = lineInfo.Value.Tokens[tokenIndex];
 
           if ( ( token.TokenType == Token.Type.DIRECT_TOKEN )
