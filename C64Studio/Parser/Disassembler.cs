@@ -517,14 +517,17 @@ namespace RetroDevStudio.Parser
                 sb.Append( trueAddress.ToString( "X4" ) + ": " );
               }
 
-              sb.Append( NamedLabels[trueAddress] );
-              sb.Append( " = * + " );
-              sb.Append( labelInside.Key - trueAddress );
-              sb.AppendLine();
-              if ( Settings.AddLineAddresses )
+              if ( NamedLabels.ContainsKey( trueAddress ) )
               {
-                sb.Append( "$" );
-                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+                sb.Append( NamedLabels[trueAddress] );
+                sb.Append( " = * + " );
+                sb.Append( labelInside.Key - trueAddress );
+                sb.AppendLine();
+                if ( Settings.AddLineAddresses )
+                {
+                  sb.Append( "$" );
+                  sb.Append( trueAddress.ToString( "X4" ) + ": " );
+                }
               }
             }
           }

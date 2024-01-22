@@ -1,4 +1,10 @@
-﻿320x200:
+﻿* Disassembler:
+  Wäre es möglich für den Disassembler die Liste der "Named labels" zu ex- und importieren? 
+  Wenn man einen Label setzt, der sich innerhalb des disassemblierten Programms befindet, wäre es praktisch, 
+    wenn an dieser Stelle ein Label erstellt würde. Derzeit werden Bezüge zwar auf dieses Label umgestellt, aber 
+    am Anfang in den Deklarationen ein Label mit festem Speicherbezug erstellt.
+
+320x200:
 *1
 16 pixel pro zeichen
 Range 0x0    VS 40x25

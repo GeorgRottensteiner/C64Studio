@@ -51,7 +51,6 @@
           jsr KERNAL.CHROUT
           inx
           jmp -
-magefap.com
 
 .Done
           rts

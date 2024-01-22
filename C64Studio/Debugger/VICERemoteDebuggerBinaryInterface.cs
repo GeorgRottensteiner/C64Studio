@@ -940,15 +940,27 @@ namespace RetroDevStudio
 
     private void StartNextRequestIfAvailable()
     {
- 	    while ( ( m_RequestQueue.Count != 0 )
-      &&      ( m_ReceivedDataBin.Length == 0 ) )
-      {
-        Log( "------> StartNextRequest:" + m_RequestQueue[0].Type );
-        RequestData nextRequest = m_RequestQueue[0];
-        m_RequestQueue.RemoveAt( 0 );
-        Log( $"   {m_RequestQueue.Count} requests left in queue" );
+      RequestData request = null;
 
-        SendRequest( nextRequest );
+      while ( m_ReceivedDataBin.Length == 0 )
+      {
+        request = null;
+        lock ( m_RequestQueue )
+        {
+          if ( m_RequestQueue.Count != 0 )
+          {
+            request = m_RequestQueue[0];
+            m_RequestQueue.RemoveAt( 0 );
+
+            Log( "------> StartNextRequest:" + request.Type );
+            Log( $"   {m_RequestQueue.Count} requests left in queue" );
+          }
+        }
+        if ( request == null )
+        {
+          break;
+        }
+        SendRequest( request );
       }
     }
 
