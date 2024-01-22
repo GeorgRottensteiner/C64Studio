@@ -58,6 +58,7 @@ namespace RetroDevStudio.Parser
 
       ushort targetAddress = 0;
       bool    twoBytes = true;
+      bool    isImmediate = false;
 
       switch ( opcode.Addressing )
       {
@@ -76,6 +77,7 @@ namespace RetroDevStudio.Parser
         case Tiny64.Opcode.AddressingType.IMMEDIATE_REGISTER:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
+          isImmediate = true;
           break;
         case Tiny64.Opcode.AddressingType.INDIRECT:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
@@ -123,16 +125,18 @@ namespace RetroDevStudio.Parser
         addressPlacement = "$" + targetAddress.ToString( "x2" );
       }
 
-      if ( AccessedAddresses.ContainsValue( targetAddress ) )
+      if ( !isImmediate )
       {
-        addressPlacement = "label_" + targetAddress.ToString( "x4" );
-      }
+        if ( AccessedAddresses.ContainsValue( targetAddress ) )
+        {
+          addressPlacement = "label_" + targetAddress.ToString( "x4" );
+        }
 
-      if ( NamedLabels.ContainsKey( targetAddress ) )
-      {
-        addressPlacement = NamedLabels[targetAddress];
+        if ( NamedLabels.ContainsKey( targetAddress ) )
+        {
+          addressPlacement = NamedLabels[targetAddress];
+        }
       }
-
       switch ( opcode.Addressing )
       {
         case Tiny64.Opcode.AddressingType.IMPLICIT:
@@ -160,12 +164,7 @@ namespace RetroDevStudio.Parser
           output += " ( " + addressPlacement + " ), y";
           break;
         case Tiny64.Opcode.AddressingType.RELATIVE:
-          {
-            // int delta = value - lineInfo.AddressStart - 2;
-
-            output += " " + addressPlacement;
-            //output += " (" + delta.ToString( "X2" ) + ")";
-          }
+          output += " " + addressPlacement;
           break;
         case Tiny64.Opcode.AddressingType.ZEROPAGE:
           output += " " + addressPlacement;
@@ -371,12 +370,13 @@ namespace RetroDevStudio.Parser
 
           disassembly[(ushort)progStepPos] = new GR.Generic.Tupel<Tiny64.Opcode, ushort>( opcode, m_SourceData.UInt16At( progStepPos + 1 ) );
 
-          if ( ( opcode.ByteValue == 0x40 )     // rts
-          ||   ( opcode.ByteValue == 0x60 )     // rti
-          ||   ( opcode.ByteValue == 0x4c ) )   // jmp
+          if ( Settings.StopAtReturns )
           {
-            // end of code here
-            break;
+            if ( IsReturnOpcode( opcode ) )
+            {
+              // end of code here
+              break;
+            }
           }
 
           progStepPos += opcode.OpcodeSize + 1;
@@ -577,6 +577,20 @@ namespace RetroDevStudio.Parser
       Disassembly = sb.ToString();
       return true;
     }
+
+
+
+    private bool IsReturnOpcode( Opcode Opcode )
+    {
+      if ( ( Opcode.ByteValue == 0x40 )     // rts
+      ||   ( Opcode.ByteValue == 0x60 )     // rti
+      ||   ( Opcode.ByteValue == 0x4c ) )   // jmp
+      {
+        return true;
+      }
+      return false;
+    }
+
 
 
   }

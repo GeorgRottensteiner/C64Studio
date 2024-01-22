@@ -1549,12 +1549,14 @@ namespace Tiny64
 
       sys.AddOpcode( "illegal", 0x4AFC, 0, AddressingType.IMPLICIT, 0 );        // illegal
 
-      sys.AddOpcode( "jmp", 0x4ED0, 0, AddressingType.IMPLICIT, 0 )             // jmp (a0)
-        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+      var oc = sys.AddOpcode( "jmp", 0x4ED0, 0, AddressingType.IMPLICIT, 0 );             // jmp (a0)
+      oc.Flags = OpcodeFlag.IS_END_OF_CODE;
+      oc.ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_VALUE_FROM_LIST, openingParenthesis, aRegisters, closingParenthesis, 0 ) } );
 
-      sys.AddOpcode( "jmp", 0x4EE80000, 1, AddressingType.INDIRECT, 0 )         // jmp $12(a0)
-        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+      oc = sys.AddOpcode( "jmp", 0x4EE80000, 1, AddressingType.INDIRECT, 0 );         // jmp $12(a0)
+      oc.Flags = OpcodeFlag.IS_END_OF_CODE;
+      oc.ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.COMPLEX )
           {
             ValidValues = new List<ValidValueGroup>()
@@ -1566,8 +1568,9 @@ namespace Tiny64
             }
           } } );
 
-      sys.AddOpcode( "jmp", 0x4EF900000000, 3, AddressingType.ABSOLUTE_LONG, 0 )  // jmp $123456
-        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+      oc = sys.AddOpcode( "jmp", 0x4EF900000000, 3, AddressingType.ABSOLUTE_LONG, 0 );  // jmp $123456
+      oc.Flags = OpcodeFlag.IS_END_OF_CODE;
+      oc.ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.EXPRESSION_24BIT ) } );
 
       sys.AddOpcode( "jsr", 0x4EB900000000, 3, AddressingType.ABSOLUTE_LONG, 0 )  // jsr $123456
@@ -2958,9 +2961,9 @@ namespace Tiny64
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW ) } );
 
-      sys.AddOpcode( "rte", 0x4E73, 0, AddressingType.IMPLICIT, 0 );  // rte
-      sys.AddOpcode( "rtr", 0x4E77, 0, AddressingType.IMPLICIT, 0 );  // rtr
-      sys.AddOpcode( "rts", 0x4E75, 0, AddressingType.IMPLICIT, 0 );  // rts
+      sys.AddOpcode( "rte", 0x4E73, 0, AddressingType.IMPLICIT, 0 ).Flags = OpcodeFlag.IS_END_OF_CODE;  // rte
+      sys.AddOpcode( "rtr", 0x4E77, 0, AddressingType.IMPLICIT, 0 ).Flags = OpcodeFlag.IS_END_OF_CODE;  // rtr
+      sys.AddOpcode( "rts", 0x4E75, 0, AddressingType.IMPLICIT, 0 ).Flags = OpcodeFlag.IS_END_OF_CODE;  // rts
 
       sys.AddOpcode( "st", 0x50F80000, 4, AddressingType.INDIRECT, 0 )        // st ($0001).w
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
