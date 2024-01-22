@@ -62,9 +62,7 @@
     <Compile Update="Controls\ExportMapForms\ExportMapAsCharscreen.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsCharset.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsCharset.cs" />
     <Compile Update="Controls\ExportMapForms\ExportMapAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>

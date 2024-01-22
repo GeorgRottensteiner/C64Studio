@@ -168,6 +168,7 @@ namespace RetroDevStudio.Documents
       editSource.SelectionChanged += EditSource_SelectionChanged;
       editSource.LineInserted += EditSource_LineInserted;
       editSource.LineRemoved += EditSource_LineRemoved;
+      editSource.Pasting += EditSource_Pasting;
 
       editSource.PreferredLineWidth = Core.Settings.BASICShowMaxLineLengthIndicatorLength;
 
@@ -187,6 +188,13 @@ namespace RetroDevStudio.Documents
       editBASICStartAddress.Text = "2049";
 
       UpdateLabelModeText();
+    }
+
+
+
+    private void EditSource_Pasting( object sender, TextChangingEventArgs e )
+    {
+      e.InsertingText = ReplacePetCatCompatibilityChars( e.InsertingText, out bool hadError );
     }
 
 
@@ -936,12 +944,7 @@ namespace RetroDevStudio.Documents
         }
 
         // quick compatibility hack with petcat
-        string arrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out bool hadError );
-        string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out hadError );
-        string pound = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out hadError );
-        basicText = basicText.Replace( "~", shiftArrowUp );
-        basicText = basicText.Replace( "\\", pound );
-        basicText = basicText.Replace( "^", arrowUp );
+        basicText = ReplacePetCatCompatibilityChars( basicText, out bool hadError );
         if ( basicText.Contains( "{" ) )
         {
           // BASIC text has macros set!
@@ -1044,6 +1047,22 @@ namespace RetroDevStudio.Documents
         EnableFileWatcher();
       }
       return true;
+    }
+
+
+
+    private string ReplacePetCatCompatibilityChars( string BasicText, out bool HadError )
+    {
+      HadError = false;
+      string arrowUp      = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out HadError );
+      string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out HadError );
+      string pound        = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out HadError );
+
+      BasicText = BasicText.Replace( "~", shiftArrowUp );
+      BasicText = BasicText.Replace( "\\", pound );
+      BasicText = BasicText.Replace( "^", arrowUp );
+
+      return BasicText;
     }
 
 
