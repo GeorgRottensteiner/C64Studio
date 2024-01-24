@@ -79,6 +79,7 @@ namespace RetroDevStudio.Controls
 
       int wrapByteCount = GetExportWrapCount();
       bool asHex = checkExportHex.Checked;
+      bool insertSpaces = checkInsertSpaces.Checked;
       int wrapCharCount = GetExportCharCount();
 
       switch ( Info.Data )
@@ -86,41 +87,41 @@ namespace RetroDevStudio.Controls
         case ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           break;
         case ExportCharsetScreenInfo.ExportData.CHAR_ONLY:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_ONLY:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+            sb.Append( Util.ToBASICData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
           }
           break;
         default:

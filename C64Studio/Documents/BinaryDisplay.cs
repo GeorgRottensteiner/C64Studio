@@ -247,6 +247,7 @@ namespace RetroDevStudio.Documents
     private void btnToBASIC_Click( object sender, EventArgs e )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
       if ( lineDelta <= 0 )
@@ -259,7 +260,7 @@ namespace RetroDevStudio.Documents
       {
         curLineNumber = 0;
       }
-      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ) );
+      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ), insertSpaces );
     }
 
 
@@ -428,6 +429,7 @@ namespace RetroDevStudio.Documents
     private void btnToBASICHex_Click( object sender, EventArgs e )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
       if ( lineDelta <= 0 )
@@ -441,7 +443,7 @@ namespace RetroDevStudio.Documents
         curLineNumber = 0;
       }
 
-      textBinaryData.Text = Util.ToBASICHexData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ) );
+      textBinaryData.Text = Util.ToBASICHexData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ), insertSpaces );
     }
 
 

@@ -34,10 +34,12 @@
       this.hexView = new Be.Windows.Forms.HexBox();
       this.tabModify = new System.Windows.Forms.TabPage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.editDivideBy = new System.Windows.Forms.TextBox();
       this.editDeleteNthByte = new System.Windows.Forms.TextBox();
       this.btnExport = new System.Windows.Forms.Button();
       this.btnImport = new System.Windows.Forms.Button();
       this.btnSwizzle = new System.Windows.Forms.Button();
+      this.btnDivide = new System.Windows.Forms.Button();
       this.btnPackNibble = new System.Windows.Forms.Button();
       this.btnDeleteNthByte = new System.Windows.Forms.Button();
       this.btnUpsize = new System.Windows.Forms.Button();
@@ -68,8 +70,7 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnDivide = new System.Windows.Forms.Button();
-      this.editDivideBy = new System.Windows.Forms.TextBox();
+      this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -156,6 +157,14 @@
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Actions";
       // 
+      // editDivideBy
+      // 
+      this.editDivideBy.Location = new System.Drawing.Point(87, 194);
+      this.editDivideBy.Name = "editDivideBy";
+      this.editDivideBy.Size = new System.Drawing.Size(75, 20);
+      this.editDivideBy.TabIndex = 9;
+      this.editDivideBy.Text = "2";
+      // 
       // editDeleteNthByte
       // 
       this.editDeleteNthByte.Location = new System.Drawing.Point(87, 108);
@@ -193,6 +202,16 @@
       this.btnSwizzle.Text = "Swizzle";
       this.btnSwizzle.UseVisualStyleBackColor = true;
       this.btnSwizzle.Click += new System.EventHandler(this.btnSwizzle_Click);
+      // 
+      // btnDivide
+      // 
+      this.btnDivide.Location = new System.Drawing.Point(6, 192);
+      this.btnDivide.Name = "btnDivide";
+      this.btnDivide.Size = new System.Drawing.Size(75, 23);
+      this.btnDivide.TabIndex = 8;
+      this.btnDivide.Text = "Divide by";
+      this.btnDivide.UseVisualStyleBackColor = true;
+      this.btnDivide.Click += new System.EventHandler(this.btnDivide_Click);
       // 
       // btnPackNibble
       // 
@@ -238,6 +257,7 @@
       // 
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupBox1.Controls.Add(this.checkInsertSpaces);
       this.groupBox1.Controls.Add(this.label4);
       this.groupBox1.Controls.Add(this.label3);
       this.groupBox1.Controls.Add(this.label2);
@@ -332,7 +352,7 @@
       // btnFromBASICHex
       // 
       this.btnFromBASICHex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromBASICHex.Location = new System.Drawing.Point(401, 396);
+      this.btnFromBASICHex.Location = new System.Drawing.Point(401, 420);
       this.btnFromBASICHex.Name = "btnFromBASICHex";
       this.btnFromBASICHex.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASICHex.TabIndex = 1;
@@ -343,7 +363,7 @@
       // btnFromBASIC
       // 
       this.btnFromBASIC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromBASIC.Location = new System.Drawing.Point(401, 367);
+      this.btnFromBASIC.Location = new System.Drawing.Point(401, 391);
       this.btnFromBASIC.Name = "btnFromBASIC";
       this.btnFromBASIC.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASIC.TabIndex = 1;
@@ -363,7 +383,7 @@
       // button2
       // 
       this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.button2.Location = new System.Drawing.Point(401, 338);
+      this.button2.Location = new System.Drawing.Point(401, 362);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(109, 23);
       this.button2.TabIndex = 1;
@@ -374,7 +394,7 @@
       // btnFromASM
       // 
       this.btnFromASM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromASM.Location = new System.Drawing.Point(401, 309);
+      this.btnFromASM.Location = new System.Drawing.Point(401, 333);
       this.btnFromASM.Name = "btnFromASM";
       this.btnFromASM.Size = new System.Drawing.Size(109, 23);
       this.btnFromASM.TabIndex = 1;
@@ -504,23 +524,15 @@
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
       // 
-      // btnDivide
+      // checkInsertSpaces
       // 
-      this.btnDivide.Location = new System.Drawing.Point(6, 192);
-      this.btnDivide.Name = "btnDivide";
-      this.btnDivide.Size = new System.Drawing.Size(75, 23);
-      this.btnDivide.TabIndex = 8;
-      this.btnDivide.Text = "Divide by";
-      this.btnDivide.UseVisualStyleBackColor = true;
-      this.btnDivide.Click += new System.EventHandler(this.btnDivide_Click);
-      // 
-      // editDivideBy
-      // 
-      this.editDivideBy.Location = new System.Drawing.Point(87, 194);
-      this.editDivideBy.Name = "editDivideBy";
-      this.editDivideBy.Size = new System.Drawing.Size(75, 20);
-      this.editDivideBy.TabIndex = 9;
-      this.editDivideBy.Text = "2";
+      this.checkInsertSpaces.AutoSize = true;
+      this.checkInsertSpaces.Location = new System.Drawing.Point(401, 296);
+      this.checkInsertSpaces.Name = "checkInsertSpaces";
+      this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
+      this.checkInsertSpaces.TabIndex = 7;
+      this.checkInsertSpaces.Text = "Insert Spaces";
+      this.checkInsertSpaces.UseVisualStyleBackColor = true;
       // 
       // BinaryDisplay
       // 
@@ -589,5 +601,6 @@
         private System.Windows.Forms.TextBox editWrapCharsCount;
     private System.Windows.Forms.TextBox editDivideBy;
     private System.Windows.Forms.Button btnDivide;
+    private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }

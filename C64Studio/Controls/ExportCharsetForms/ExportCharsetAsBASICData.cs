@@ -79,6 +79,7 @@ namespace RetroDevStudio.Controls
 
       int wrapByteCount = GetExportWrapCount();
       bool asHex = checkExportHex.Checked;
+      bool insertSpaces = checkInsertSpaces.Checked;
       int wrapCharCount = GetExportCharCount();
 
       List<int>     exportIndices = Info.ExportIndices;
@@ -91,11 +92,11 @@ namespace RetroDevStudio.Controls
 
       if ( asHex )
       {
-        sb.Append( Util.ToBASICHexData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+        sb.Append( Util.ToBASICHexData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
       }
       else
       {
-        sb.Append( Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount ) );
+        sb.Append( Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
       }
 
       EditOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );

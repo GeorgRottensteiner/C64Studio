@@ -2340,16 +2340,17 @@ namespace RetroDevStudio.Documents
       GR.Memory.ByteBuffer screenChar;
       GR.Memory.ByteBuffer screenColor;
       GR.Memory.ByteBuffer bitmapData;
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -2380,17 +2381,17 @@ namespace RetroDevStudio.Documents
       GR.Memory.ByteBuffer              screenChar;
       GR.Memory.ByteBuffer              screenColor;
       GR.Memory.ByteBuffer              bitmapData;
-      //Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -2480,6 +2481,7 @@ namespace RetroDevStudio.Documents
 
       GR.Memory.ByteBuffer screenCharData   = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
       GR.Memory.ByteBuffer screenColorData  = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       for ( int y = 0; y < BlockHeight; ++y )
       {
@@ -2497,11 +2499,11 @@ namespace RetroDevStudio.Documents
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -2588,6 +2590,7 @@ namespace RetroDevStudio.Documents
       }
       GR.Memory.ByteBuffer screenCharData   = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
       GR.Memory.ByteBuffer screenColorData  = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       for ( int y = 0; y < BlockHeight; ++y )
       {
@@ -2605,11 +2608,11 @@ namespace RetroDevStudio.Documents
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 

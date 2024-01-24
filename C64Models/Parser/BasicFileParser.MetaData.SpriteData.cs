@@ -98,7 +98,7 @@ namespace RetroDevStudio.Parser
                                                             i * spriteSize );
       }
 
-      string basicDatas = Util.ToBASICData( spriteData, startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength );
+      string basicDatas = Util.ToBASICData( spriteData, startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength, false );
 
       string[]  newLines = basicDatas.Split( new string[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries );
 

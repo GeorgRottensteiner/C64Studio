@@ -319,7 +319,7 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount )
+    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces )
     {
       StringBuilder   sb = new StringBuilder();
 
@@ -342,7 +342,15 @@ namespace RetroDevStudio
         int     startLength = sb.Length;
 
         sb.Append( StartLine );
+        if ( InsertSpaces )
+        {
+          sb.Append( ' ' );
+        }
         sb.Append( "DATA" );
+        if ( InsertSpaces )
+        {
+          sb.Append( ' ' );
+        }
 
         bool    firstByte = true;
         int     numBytesInLine = 0;
@@ -403,7 +411,7 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset )
+    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, bool InsertSpaces )
     {
       StringBuilder   sb = new StringBuilder();
 
@@ -421,7 +429,15 @@ namespace RetroDevStudio
       {
         int     startLength = sb.Length;
         sb.Append( StartLine );
+        if ( InsertSpaces )
+        {
+          sb.Append( ' ' );
+        }
         sb.Append( "DATA" );
+        if ( InsertSpaces )
+        {
+          sb.Append( ' ' );
+        }
 
         bool    firstByte = true;
 
@@ -445,12 +461,12 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount )
+    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces )
     {
       if ( ( WrapByteCount < 1 )
       &&   ( WrapCharCount < 1 ) )
       {
-        return ToBASICHexData( Data, StartLine, LineOffset );
+        return ToBASICHexData( Data, StartLine, LineOffset, InsertSpaces );
       }
 
       StringBuilder   sb = new StringBuilder();
@@ -469,7 +485,15 @@ namespace RetroDevStudio
       {
         int     startLength = sb.Length;
         sb.Append( StartLine );
+        if ( InsertSpaces )
+        {
+          sb.Append( ' ' );
+        }
         sb.Append( "DATA" );
+        if ( InsertSpaces )
+        {
+          sb.Append( ' ' );
+        }
 
         bool    firstByte = true;
         int     numBytesInLine = 0;

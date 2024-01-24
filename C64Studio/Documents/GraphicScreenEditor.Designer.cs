@@ -114,6 +114,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -220,6 +221,7 @@
       // 
       this.groupExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupExport.Controls.Add(this.checkInsertSpaces);
       this.groupExport.Controls.Add(this.editExportBASICLineOffset);
       this.groupExport.Controls.Add(this.editExportBASICLineNo);
       this.groupExport.Controls.Add(this.label3);
@@ -1046,6 +1048,16 @@
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
       // 
+      // checkInsertSpaces
+      // 
+      this.checkInsertSpaces.AutoSize = true;
+      this.checkInsertSpaces.Location = new System.Drawing.Point(325, 166);
+      this.checkInsertSpaces.Name = "checkInsertSpaces";
+      this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
+      this.checkInsertSpaces.TabIndex = 30;
+      this.checkInsertSpaces.Text = "Insert Spaces";
+      this.checkInsertSpaces.UseVisualStyleBackColor = true;
+      // 
       // GraphicScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 552);
@@ -1158,5 +1170,6 @@
     private System.Windows.Forms.Button btnZoomOut;
     private System.Windows.Forms.RadioButton btnToolLine;
     private System.Windows.Forms.RadioButton btnToolLineDrag;
+    private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }
