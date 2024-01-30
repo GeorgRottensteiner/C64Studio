@@ -1695,6 +1695,13 @@ namespace RetroDevStudio.Parser
               NumBytesGiven = Tokens[StartIndex].Length;
 
               symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, TextCodeMapping, out bool hadError );
+              if ( hadError )
+              {
+                AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                  $"Failed to evaluate expression: {Tokens[StartIndex].Content}", Tokens[StartIndex].StartPos, Tokens[StartIndex].Length );
+                symbol.String = "";
+                return false;
+              }
               ResultingToken = symbol;
             }
             return true;
