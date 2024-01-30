@@ -2528,7 +2528,7 @@ namespace FastColoredTextBoxNS
     /// Occurs when user paste text from clipboard
     /// </summary>
     [Description( "Occurs when user paste text from clipboard" )]
-    public event EventHandler<TextChangingEventArgs> Pasting;
+    public event EventHandler<TextPastingEventArgs> Pasting;
 
     /// <summary>
     /// TextChanging event.
@@ -3252,6 +3252,11 @@ namespace FastColoredTextBoxNS
       data.SetData( DataFormats.UnicodeText, true, Selection.Text );
       data.SetData( DataFormats.Html, PrepareHtmlForClipboard( html ) );
       data.SetData( DataFormats.Rtf, new ExportToRTF().GetRtf( Selection.Clone() ) );
+      if ( Selection.ColumnSelectionMode )
+      {
+        // adding this format allows several editors to handle this as an Alt-block of text
+        data.SetData( "MSDEVColumnSelect", new byte[] { 1, 0 } );
+      }
     }
 
 
@@ -3344,21 +3349,25 @@ namespace FastColoredTextBoxNS
     public virtual void Paste()
     {
       string text = null;
+      bool isColumnSelectionMode = false;
       var thread = new Thread( () =>
                                   {
                                     if ( Clipboard.ContainsText() )
                                       text = Clipboard.GetText();
+                                    isColumnSelectionMode = Clipboard.ContainsData( "MSDEVColumnSelect" );
                                   } );
       thread.SetApartmentState( ApartmentState.STA );
       thread.Start();
       thread.Join();
 
+
       if ( Pasting != null )
       {
-        var args = new TextChangingEventArgs
+        var args = new TextPastingEventArgs
         {
-          Cancel = false,
-          InsertingText = text
+          Cancel                = false,
+          InsertingText         = text,
+          IsColumnSelectionMode = isColumnSelectionMode
         };
 
         Pasting( this, args );
@@ -3370,7 +3379,7 @@ namespace FastColoredTextBoxNS
       }
 
       if ( !string.IsNullOrEmpty( text ) )
-        InsertText( text );
+        InsertText( text, true, isColumnSelectionMode );
     }
 
     /// <summary>
@@ -3479,14 +3488,14 @@ namespace FastColoredTextBoxNS
     /// </summary>
     public virtual void InsertText( string text )
     {
-      InsertText( text, true );
+      InsertText( text, true, false );
     }
 
     /// <summary>
     /// Insert text into current selected position
     /// </summary>
     /// <param name="text"></param>
-    public virtual void InsertText( string text, bool jumpToCaret )
+    public virtual void InsertText( string text, bool jumpToCaret, bool ColumnSelectionMode = false )
     {
       if ( text == null )
         return;
@@ -3504,7 +3513,7 @@ namespace FastColoredTextBoxNS
           if ( Selection.IsEmpty && Selection.Start.iChar > GetLineLength( Selection.Start.iLine ) && VirtualSpace )
             InsertVirtualSpaces();
 
-        lines.Manager.ExecuteCommand( new InsertTextCommand( TextSource, text ) );
+        lines.Manager.ExecuteCommand( new InsertTextCommand( TextSource, text, ColumnSelectionMode ) );
         if ( updating <= 0 && jumpToCaret )
           DoCaretVisible();
       }
@@ -10132,6 +10141,30 @@ window.status = ""#print"";
 
   public class TextChangingEventArgs : EventArgs
   {
+    public string InsertingText
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Set to true if you want to cancel text inserting
+    /// </summary>
+    public bool Cancel
+    {
+      get;
+      set;
+    }
+  }
+
+  public class TextPastingEventArgs : EventArgs
+  {
+    public bool IsColumnSelectionMode
+    {
+      get;
+      set;
+    } = false;
+
     public string InsertingText
     {
       get;

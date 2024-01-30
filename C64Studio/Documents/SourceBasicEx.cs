@@ -192,7 +192,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void EditSource_Pasting( object sender, TextChangingEventArgs e )
+    private void EditSource_Pasting( object sender, TextPastingEventArgs e )
     {
       e.InsertingText = ReplacePetCatCompatibilityChars( e.InsertingText, out bool hadError );
     }
