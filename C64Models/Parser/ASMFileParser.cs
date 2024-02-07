@@ -6157,17 +6157,17 @@ namespace RetroDevStudio.Parser
           if ( estimatedOpcode != null )
           {
             //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes             = estimatedOpcode.first.OpcodeSize + SizeOfOpcode( estimatedOpcode.first.ByteValue );
+            info.NumBytes             = estimatedOpcode.first.OpcodeSize + SizeOfOpcode( estimatedOpcode.first );
             info.Opcode               = estimatedOpcode.first;
             info.OpcodeUsingLongMode  = estimatedOpcode.second;
             if ( ( info.Opcode.ParserExpressions.Count > 0 )
             ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMPLICIT ) )
             {
-              if ( SizeOfOpcode( estimatedOpcode.first.ByteValue ) != estimatedOpcode.first.OpcodeSize )
+              if ( SizeOfOpcode( estimatedOpcode.first ) != estimatedOpcode.first.OpcodeSize )
               {
                 //Debug.Log( $"oha {estimatedOpcode.first.Mnemonic} for {info.Line}" );
               }
-              info.NumBytes = SizeOfOpcode( estimatedOpcode.first.ByteValue );
+              info.NumBytes = SizeOfOpcode( estimatedOpcode.first );
               //info.NumBytes = estimatedOpcode.first.OpcodeSize;
             }
 
@@ -8965,6 +8965,22 @@ namespace RetroDevStudio.Parser
         Info.LineData.Resize( (uint)Info.Opcode.OpcodeSize );
       }*/
 
+      int   insertPos = 0;
+      if ( Info.Opcode.UpperU64OpcodeValue != 0 )
+      {
+        int     numBytes = RequiredNumberOfBytes( Info.Opcode.UpperU64OpcodeValue );
+        ulong   workValue = Info.Opcode.UpperU64OpcodeValue;
+        insertPos = 8;
+
+        for ( int i = 0; i < numBytes; ++i )
+        {
+          Info.LineData.AppendU8( (byte)( workValue >> ( ( numBytes - 1 - i ) * 8 ) ) );
+        }
+        Info.LineData.AppendU64NetworkOrder( Info.Opcode.ByteValue );
+        Info.NumBytes = (int)Info.LineData.Length;
+        return;
+      }
+
       ulong    opcodeValue = Info.Opcode.ByteValue;
       if ( ResultingOpcodePatchValue != ulong.MaxValue )
       {
@@ -8976,7 +8992,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -8989,7 +9005,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9001,7 +9017,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9013,7 +9029,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9024,7 +9040,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9036,7 +9052,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9047,7 +9063,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9056,14 +9072,25 @@ namespace RetroDevStudio.Parser
       if ( ( Info.Opcode.ParserExpressions.Count > 0 )
       &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
       {
-        Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+        Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
         Info.NumBytes = (int)Info.LineData.Length;
       }
     }
 
 
 
-    private int SizeOfOpcode( ulong ByteValue )
+    private int SizeOfOpcode( Opcode Opcode )
+    {
+      if ( Opcode.UpperU64OpcodeValue == 0 )
+      {
+        return RequiredNumberOfBytes( Opcode.ByteValue );
+      }
+      return RequiredNumberOfBytes( Opcode.UpperU64OpcodeValue ) + 8;
+    }
+
+
+
+    private int RequiredNumberOfBytes( ulong ByteValue )
     {
       if ( ( ByteValue & 0xff00000000000000 ) != 0 )
       {

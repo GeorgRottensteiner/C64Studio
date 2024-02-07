@@ -174,6 +174,7 @@ namespace Tiny64
 
     public string                         Mnemonic = "";
     public ulong                          ByteValue = ulong.MaxValue;
+    public ulong                          UpperU64OpcodeValue = 0;
     public int                            OpcodeSize = -1;
     public AddressingType                 Addressing = AddressingType.UNKNOWN;
     public int                            NumCycles = 0;
@@ -314,5 +315,17 @@ namespace Tiny64
 
       NumPenaltyCycles += Math.Max( BranchOtherPagePenalty, BranchSamePagePenalty );
     }
+
+
+
+    public Opcode SetHighLong( ulong UpperLong )
+    {
+      UpperU64OpcodeValue = UpperLong;
+
+      return this;
+    }
+
+
+
   }
 }

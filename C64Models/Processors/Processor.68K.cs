@@ -2626,11 +2626,32 @@ namespace Tiny64
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesis, 32 ),
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesis, 0 ) } );
+      sys.AddOpcode( "move.w", 0x33F8000000000000, 4, AddressingType.IMMEDIATE_16BIT, 0 )   // move.w ($1234), ($12345678).l
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesis, 32 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 0 ) } );
+      sys.AddOpcode( "move", 0x33F8000000000000, 4, AddressingType.IMMEDIATE_16BIT, 0 )   // move ($1234), ($12345678).l
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesis, 32 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 0 ) } );
 
-      sys.AddOpcode( "move.w", 0x31F900000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )   // move.w ($12345678).l, ($1234).w
+      sys.AddOpcode( "move.w", 0x31F9000000000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )   // move.w ($12345678).l, ($1234).w
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 16 ),
           new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+      sys.AddOpcode( "move", 0x31F9000000000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )   // move ($12345678).l, ($1234).w
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesisDotW, 0 ) } );
+      sys.AddOpcode( "move.w", 0x31F9000000000000, 4, AddressingType.IMMEDIATE_32BIT, 0 )   // move.w ($12345678).l, ($1234)
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 16 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_16BIT, openingParenthesis, closingParenthesis, 0 ) } );
+      sys.AddOpcode( "move", 0x0000000000000000, 10, AddressingType.IMMEDIATE_32BIT, 0 )   // move ($12345678).l, ($12345678)
+        .SetHighLong( 0x33F9 )
+        .ParserExpressions.AddRange( new List<OpcodeExpression>() {
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesisDotL, 32 ),
+          new OpcodeExpression( OpcodePartialExpression.ENCAPSULATED_EXPRESSION_32BIT, openingParenthesis, closingParenthesis, 0 ) } );
 
       sys.AddOpcode( "move.w", 0x30380000, 2, AddressingType.INDIRECT, 0 )   // move.w ($0001).w, d0
         .ParserExpressions.AddRange( new List<OpcodeExpression>() {
