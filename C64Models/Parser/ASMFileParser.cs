@@ -13441,6 +13441,7 @@ namespace RetroDevStudio.Parser
             _ParseContext.DoNotAddReferences = true;
             if ( EvaluateTokens( LineIndex, extraTokens, info.LineCodeMapping, out SymbolInfo expressionResultSymbol ) )
             {
+              /*
               expressionResult = expressionResultSymbol.ToInteger();
               LineTokens.RemoveRange( 2, LineTokens.Count - 2 );
               if ( LineTokens[1].Length > 1 )
@@ -13451,7 +13452,7 @@ namespace RetroDevStudio.Parser
               Types.TokenInfo token = new Types.TokenInfo();
               token.Content = expressionResult.ToString();
               token.Length = token.Content.Length;
-              LineTokens.Add( token );
+              LineTokens.Add( token );*/
             }
             else
             {

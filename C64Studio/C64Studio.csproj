@@ -350,6 +350,7 @@
     <None Remove="BASIC Dialects\BASIC V4.5.txt" />
     <None Remove="BASIC Dialects\BASIC V7.0.txt" />
     <None Remove="BASIC Dialects\Laser BASIC.txt" />
+    <None Remove="BASIC Dialects\S-BASIC 65.txt" />
     <None Remove="BASIC Dialects\Simons' BASIC.txt" />
     <None Remove="BASIC Dialects\Tuned Simons' BASIC.txt" />
     <None Remove="BASIC Dialects\XC=Basic.txt" />
@@ -377,6 +378,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\Laser BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\S-BASIC 65.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\Simons' BASIC.txt">
