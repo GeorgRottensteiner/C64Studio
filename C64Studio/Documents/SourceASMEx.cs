@@ -4141,11 +4141,14 @@ namespace RetroDevStudio.Documents
       int   charPos = editSource.PositionToPlace( SourcePosition ).iChar;
 
       var tokens = Parser.PrepareLineTokens( editSource.Lines[LineIndex], new GR.Collections.Map<byte, byte>() );
-      var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
-      if ( currentToken != null )
+      if ( tokens != null )
       {
-        int tokenIndexOfMacro = tokens.IndexOf( currentToken );
-        return Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+        var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
+        if ( currentToken != null )
+        {
+          int tokenIndexOfMacro = tokens.IndexOf( currentToken );
+          return Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+        }
       }
       return -1;
     }

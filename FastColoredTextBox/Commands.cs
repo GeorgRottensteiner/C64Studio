@@ -526,8 +526,8 @@ namespace FastColoredTextBoxNS
               InsertCharCommand.InsertChar( c, ref cc, ts );
             }
           }
-          ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, lines.Length - 1 ) );
-          endPos = new Place( maxEnd, tb.Selection.Start.iLine - 1 );
+          ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, lines.Length ) );
+          endPos = new Place( maxEnd, tb.Selection.Start.iLine );
           startPos = origStartPos;
           tb.Selection.Start = new Place( maxEnd, endPos.iLine );
         }

@@ -8968,7 +8968,7 @@ namespace RetroDevStudio.Parser
       int   insertPos = 0;
       if ( Info.Opcode.UpperU64OpcodeValue != 0 )
       {
-        int     numBytes = RequiredNumberOfBytes( Info.Opcode.UpperU64OpcodeValue );
+        int     numBytes = Info.Opcode.OpcodeSize - 8;// RequiredNumberOfBytes( Info.Opcode.UpperU64OpcodeValue );
         ulong   workValue = Info.Opcode.UpperU64OpcodeValue;
         insertPos = 8;
 
