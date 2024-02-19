@@ -6163,12 +6163,12 @@ namespace RetroDevStudio.Parser
             if ( ( info.Opcode.ParserExpressions.Count > 0 )
             ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMPLICIT ) )
             {
-              if ( SizeOfOpcode( estimatedOpcode.first ) != estimatedOpcode.first.OpcodeSize )
+              /*
+              if ( estimatedOpcode.first.OpcodeSize == 0 )
               {
-                //Debug.Log( $"oha {estimatedOpcode.first.Mnemonic} for {info.Line}" );
-              }
+                Debug.Log( $"Opcode {estimatedOpcode.first.Mnemonic} has no size" );
+              }*/
               info.NumBytes = SizeOfOpcode( estimatedOpcode.first );
-              //info.NumBytes = estimatedOpcode.first.OpcodeSize;
             }
 
             if ( ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
@@ -8959,16 +8959,10 @@ namespace RetroDevStudio.Parser
     {
       HandleM65OpcodePrefixes( Info );
 
-      /*
-      if ( Info.LineData.Length < Info.Opcode.OpcodeSize )
-      {
-        Info.LineData.Resize( (uint)Info.Opcode.OpcodeSize );
-      }*/
-
       int   insertPos = 0;
       if ( Info.Opcode.UpperU64OpcodeValue != 0 )
       {
-        int     numBytes = Info.Opcode.OpcodeSize - 8;// RequiredNumberOfBytes( Info.Opcode.UpperU64OpcodeValue );
+        int     numBytes = Info.Opcode.OpcodeSize - 8;
         ulong   workValue = Info.Opcode.UpperU64OpcodeValue;
         insertPos = 8;
 
