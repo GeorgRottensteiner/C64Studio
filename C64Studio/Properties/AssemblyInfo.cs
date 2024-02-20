@@ -14,7 +14,7 @@ using System.Runtime.Versioning;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "GR Games" )]
 [assembly: AssemblyProduct( "C64Studio" )]
-[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2023" )]
+[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2024" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

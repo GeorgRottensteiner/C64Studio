@@ -1,3 +1,7 @@
+* = $2000
+lda #("A" + $80)  ; lda #$41 (??)
+
+
 ;test case 19, comparing strings
 ;tested in 7.4.1b11 20230423
 

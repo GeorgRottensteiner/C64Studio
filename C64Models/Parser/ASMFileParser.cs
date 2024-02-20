@@ -1202,11 +1202,20 @@ namespace RetroDevStudio.Parser
       &&   ( opText == "+" ) )
       {
         // allows anything
-        if ( ( token1.String.Length == 3 )    // 3 = " + char + "
+        if ( ( ( ( IsInQuotes( token1.String ) )
+        &&       ( token1.String.Length == 3 ) )
+        ||     ( token1.String.Length == 1 ) )
         &&   ( token2.IsInteger() ) )
         {
           // special case, string of length 1 is treated as char!
-          Symbol = CreateStringSymbol( "" + (char)( token1.String[1] + token2.AddressOrValue ) );
+          if ( token1.String.Length == 3 )
+          {
+            Symbol = CreateStringSymbol( "" + (char)( token1.String[1] + token2.AddressOrValue ) );
+          }
+          else
+          {
+            Symbol = CreateStringSymbol( "" + (char)( token1.String[0] + token2.AddressOrValue ) );
+          }
         }
         else
         {
@@ -1466,6 +1475,23 @@ namespace RetroDevStudio.Parser
       else if ( opText == "<=" )
       {
         Symbol = CreateIntegerSymbol( ( arg1 <= arg2 ) ? 0xff : 0 );
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private bool IsInQuotes( string Text )
+    {
+      if ( ( string.IsNullOrEmpty( Text ) )
+      ||   ( Text.Length < 2 ) )
+      {
+        return false;
+      }
+      if ( ( Text.StartsWith( "\"" ) )
+      &&   ( Text.EndsWith( "\"" ) ) )
+      {
         return true;
       }
       return false;

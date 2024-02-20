@@ -49,6 +49,7 @@
       <li><a href="#to">!TO</a></li>
       <li><a href="#trace">!TRACE</a></li>
       <li><a href="#warn">!WARN</a></li>
+      <li><a href="#while">!WHILE</a></li>
       <li><a href="#word">!WORD, !WO, !16, !BE16, !LE16</a></li>
       <li><a href="#zone">!ZONE, !ZN</a></li>
     </ul>
@@ -279,6 +280,8 @@
     * 4502<br />
     * M65 - 4502 with long and quad mode using prefixes (used e.g. in Mega65)<br />
     * 65816 (also known as W65C816S or 65C816)<br />
+    * Z80<br />
+    * 68000<br />
     <br />
     <br />
     <div id="code">
@@ -2763,6 +2766,23 @@
     <br />
     <div id="code">
       <br />      !warning "File is ", CODE_END - CODE_START, " bytes long, longer than 2048 bytes!"
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="while"></a>
+  <H2>!WHILE&lt;Expression&gt; {</H2>
+  <div id="mybody">
+    This pseudo op starts a while loop. The expression must be true for the loop to continue. C64Studio automatically aborts assembling if the loop is run over 1000 times.<br />
+    <br />
+    <br />
+    <div id="code">
+      a = 5
+      !while a > 0 {
+        lda #a
+        sta SCREEN_CHAR + a
+        a = a - 1
+      }
     </div>
     <br />
     <br />
