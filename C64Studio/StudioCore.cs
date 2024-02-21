@@ -4,6 +4,7 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 namespace RetroDevStudio
@@ -171,9 +172,16 @@ namespace RetroDevStudio
         return;
       }
 
+      var tool = Settings.Tools.FirstOrDefault( t => t.Value.Document == Doc );
+
       if ( Doc.IsHidden )
       {
         Doc.Visible = true;
+        if ( ( tool.Value != null )
+        &&   ( tool.Value.MenuItem != null ) )
+        {
+          tool.Value.MenuItem.Checked = true;
+        }
 
         if ( Doc.DockHandler.DockPanel == null )
         {
@@ -189,15 +197,18 @@ namespace RetroDevStudio
 
         Doc.DockHandler.IsHidden = false;
         Doc.DockHandler.Pane.ActiveContent = Doc.DockHandler.Content;
-        if ( Doc.DockHandler.DockState == WeifenLuo.WinFormsUI.Docking.DockState.Document && Doc.DockHandler.DockPanel.DocumentStyle == WeifenLuo.WinFormsUI.Docking.DocumentStyle.SystemMdi )
+        if ( ( Doc.DockHandler.DockState == WeifenLuo.WinFormsUI.Docking.DockState.Document )
+        &&   ( Doc.DockHandler.DockPanel.DocumentStyle == WeifenLuo.WinFormsUI.Docking.DocumentStyle.SystemMdi ) )
         {
           Doc.DockHandler.Form.Activate();
         }
-        else if ( WeifenLuo.WinFormsUI.Docking.DockHelper.IsDockStateAutoHide( Doc.DockHandler.DockState ) && Doc.DockHandler.DockPanel.ActiveAutoHideContent != Doc.DockHandler.Content )
+        else if ( ( WeifenLuo.WinFormsUI.Docking.DockHelper.IsDockStateAutoHide( Doc.DockHandler.DockState ) )
+        &&        ( Doc.DockHandler.DockPanel.ActiveAutoHideContent != Doc.DockHandler.Content ) )
         {
           Doc.DockHandler.DockPanel.ActiveAutoHideContent = null;
         }
-        else if ( !Doc.DockHandler.Form.ContainsFocus && !WeifenLuo.WinFormsUI.Docking.Win32Helper.IsRunningOnMono )
+        else if ( ( !Doc.DockHandler.Form.ContainsFocus )
+        &&        ( !WeifenLuo.WinFormsUI.Docking.Win32Helper.IsRunningOnMono ) )
         {
           // did this steal the focus if the content was hidden?
           /*
@@ -212,12 +223,6 @@ namespace RetroDevStudio
       {
         Doc.Activate();
       }
-      /*
-      if ( !Doc.Visible )
-      {
-        Debug.Log( "Show for " + Doc.Name );
-        Doc.Show();
-      }*/
       if ( Doc.Pane != null )
       {
         if ( Doc.Pane.ActiveContent != Doc )

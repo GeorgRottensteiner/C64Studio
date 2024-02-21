@@ -1548,20 +1548,7 @@ namespace RetroDevStudio
       tool.Visible[Perspective.DEBUG] = VisibleDebug;
       tool.ToolDescription = GR.EnumHelper.GetDescription( Type );
       tool.Type = Type;
-      /*
-      if ( Visible )
-      {
-        tool.Document.Show( panelMain );
-        tool.MenuItem.Checked = true;
-      }
-      else
-      {
-        //tool.Document.Show( panelMain );
-        tool.Document.DockPanel = panelMain;
-        tool.Document.DockState = DockState.Hidden;
-        tool.MenuItem.Checked = false;
-      }
-       */
+
       LayoutInfo layout = null;
       if ( StudioCore.Settings.ToolLayout.ContainsKey( MenuItem.Text ) )
       {
