@@ -7365,6 +7365,8 @@ namespace RetroDevStudio.Parser
               }
 
               string fileName = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Content.Length - 2 );
+              // use path of source file
+              fileName = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), fileName );
               m_ASMFileInfo.LabelDumpFile = fileName;
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MACRO )

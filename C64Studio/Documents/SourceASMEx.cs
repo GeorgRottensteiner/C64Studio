@@ -3403,15 +3403,25 @@ namespace RetroDevStudio.Documents
               {
                 m_LineInfos.Add( new Types.ASM.LineInfo() );
               }
-              m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+              if ( newInfo != null )
               {
-                AddressStart = newInfo.AddressStart,
-                NumBytes = newInfo.NumBytes,
-                Line = newInfo.Line,
-                LineIndex = localLineIndex,
-                Zone = newInfo.Zone,
-                Opcode = newInfo.Opcode
-              };
+                m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+                {
+                  AddressStart  = newInfo.AddressStart,
+                  NumBytes      = newInfo.NumBytes,
+                  Line          = newInfo.Line,
+                  LineIndex     = localLineIndex,
+                  Zone          = newInfo.Zone,
+                  Opcode        = newInfo.Opcode
+                };
+              }
+              else
+              {
+                m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+                {
+                  LineIndex     = localLineIndex
+                };
+              }
 
               setLines.Add( localLineIndex );
             }

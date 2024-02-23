@@ -5991,6 +5991,15 @@ namespace RetroDevStudio
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         return project.ShowDocument( project.GetElementByFilename( Filename ) );
       }
+      // file already opened?
+      var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
+      if ( ( docInfo != null )
+      &&   ( docInfo.BaseDoc != null ) )
+      {
+        StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
+        docInfo.BaseDoc.Show();
+        return docInfo.BaseDoc;
+      }
 
       bool    openDirectFile = true;
 

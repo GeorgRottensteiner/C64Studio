@@ -1,4 +1,16 @@
-﻿* Disassembler:
+﻿* Map Editor:
+  Wenn ich eine Char-Grafik mit meinen Bildbearbeitungsprogramm erstellt habe, kann ich Grafik nicht importieren für das Charset im Map-Editor.
+  Ich bin statt dessen immer über den Char-Editor gegangen, den dort kann ich ja Grafiken importieren. Und von dort habe ich dann die Chars kopiert 
+  und im Map Editor/Charater Set eingefügt.
+
+  Und was auch cool wäre, wenn man sein Charset hat, und man hat alle Tiles damit erstellt, das man das Chraset nach doppelten Chars 
+  durchsuchen kann die dann entfernt werden.
+
+  Was noch ein Wunsch von mir wäre, wenn ich Grafiken im Char-Editor importiere für den Mega65, wird ja meist die Farbpalette mit übernommen von 
+  der Grafik. 
+  Edit Palette - die Farbreihenfolge in Current Palette, per Maustaste oder Cursortasten  verschieben können.
+
+* Disassembler:
   Wäre es möglich für den Disassembler die Liste der "Named labels" zu ex- und importieren? 
   Wenn man einen Label setzt, der sich innerhalb des disassemblierten Programms befindet, wäre es praktisch, 
     wenn an dieser Stelle ein Label erstellt würde. Derzeit werden Bezüge zwar auf dieses Label umgestellt, aber 

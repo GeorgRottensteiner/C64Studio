@@ -1010,6 +1010,8 @@ namespace RetroDevStudio.Tasks
           if ( !string.IsNullOrEmpty( asmFileInfo.LabelDumpFile ) )
           {
             Core.MainForm.DumpLabelFile( asmFileInfo );
+
+            Core.AddToOutputLine( $"Wrote labels to file '{asmFileInfo.LabelDumpFile}'" );
           }
         }
 
