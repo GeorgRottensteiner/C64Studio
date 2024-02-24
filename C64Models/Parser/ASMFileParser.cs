@@ -3934,7 +3934,7 @@ namespace RetroDevStudio.Parser
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -4049,7 +4049,7 @@ namespace RetroDevStudio.Parser
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -4241,7 +4241,7 @@ namespace RetroDevStudio.Parser
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -5659,7 +5659,7 @@ namespace RetroDevStudio.Parser
         string filename = "";
         if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
         {
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
           AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't determine filename from line" );
 
           HadFatalError = true;
@@ -7089,7 +7089,7 @@ namespace RetroDevStudio.Parser
               filename = "";
               if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
-                DumpSourceInfos( OrigLines, Lines );
+                DumpSourceInfos( OrigLines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
                 HadFatalError = true;
                 return Lines;
@@ -7130,7 +7130,7 @@ namespace RetroDevStudio.Parser
               filename = "";
               if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
-                DumpSourceInfos( OrigLines, Lines );
+                DumpSourceInfos( OrigLines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
                 HadFatalError = true;
                 return Lines;
@@ -8337,7 +8337,7 @@ namespace RetroDevStudio.Parser
             filename = "";
             if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
-              DumpSourceInfos( OrigLines, Lines );
+              DumpSourceInfos( OrigLines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
               HadFatalError = true;
               return Lines;
@@ -8458,7 +8458,7 @@ namespace RetroDevStudio.Parser
             filename = "";
             if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
-              DumpSourceInfos( OrigLines, Lines );
+              DumpSourceInfos( OrigLines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
               HadFatalError = true;
               return Lines;
@@ -8653,10 +8653,15 @@ namespace RetroDevStudio.Parser
       }
 
       /*
-      foreach ( var line in ASMFileInfo.LineInfo )
+      foreach ( var line in m_ASMFileInfo.LineInfo )
       {
-        ASMFileInfo.FindTrueLineSource( line.Key, out string filename, out int localLineIndex );
+        m_ASMFileInfo.FindTrueLineSource( line.Key, out string filename, out int localLineIndex );
         Debug.Log( "Line " + line.Key.ToString( "D3" ) + " ($" + line.Value.AddressStart.ToString( "X4" ) + ": " + line.Value.NumBytes + " bytes: " + line.Value.Line + ", from line " + localLineIndex );
+      }
+
+      foreach ( var si in m_ASMFileInfo.SourceInfo )
+      {
+        Debug.Log( $"Source from {si.Value.GlobalStartLine} = {si.Value.GlobalStartLine}+{si.Value.LineCount} = {si.Value.GlobalStartLine + si.Value.LineCount - 1}  local {si.Value.LocalStartLine}" );
       }*/
 
       m_CompileCurrentAddress = -1;
@@ -9358,7 +9363,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() + newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9376,7 +9381,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() - newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9394,7 +9399,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() * newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9418,7 +9423,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() / newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9447,7 +9452,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() % newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9483,7 +9488,7 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9496,7 +9501,7 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9512,6 +9517,22 @@ namespace RetroDevStudio.Parser
           break;
       }
       AddError( lineIndex, ErrorCode.E1012_IMPLEMENTATION_MISSING, $"Implementation for operator '{operatorToken}' is missing!" );
+      return false;
+    }
+
+
+
+    private bool IsEqualType( SymbolInfo Value1, SymbolInfo Value2 )
+    {
+      if ( Value1.Type == Value2.Type )
+      {
+        return true;
+      }
+      if ( ( Value1.IsInteger() )
+      &&   ( Value2.IsInteger() ) )
+      {
+        return true;
+      }
       return false;
     }
 
@@ -10957,7 +10978,8 @@ namespace RetroDevStudio.Parser
       {
         if ( ( oldInfo.LineCount != -1 )
         &&   ( oldInfo.GlobalStartLine >= SourceIndex )
-        &&   ( oldInfo.GlobalStartLine + oldInfo.LineCount <= SourceIndex + CopyLength ) )
+        //&&   ( oldInfo.GlobalStartLine + oldInfo.LineCount <= SourceIndex + CopyLength ) )
+        &&   ( oldInfo.GlobalStartLine + oldInfo.LineCount < SourceIndex + CopyLength ) )
         {
           // fully inside source scope
           // need to copy!
@@ -11231,7 +11253,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void DumpSourceInfos( Dictionary<string,string[]> OrigLines, string[] Lines )
+    private void DumpSourceInfos( Dictionary<string,string[]> OrigLines )
     {
       if ( !DoLogSourceInfo )
       {
@@ -11303,7 +11325,7 @@ namespace RetroDevStudio.Parser
       bool    hadFatalError = false;
       lines = PreProcess( lines, m_Filename, Configuration, AdditionalPredefines, out hadFatalError );
 
-      DumpSourceInfos( OrigLines, lines );
+      DumpSourceInfos( OrigLines );
 
       if ( !hadFatalError )
       {
