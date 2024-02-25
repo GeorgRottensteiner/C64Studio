@@ -19,6 +19,11 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
+    public static string    ASSEMBLER_ID_C64STUDIO      = "ASSEMBLER_C64STUDIO";
+    public static string    ASSEMBLER_ID_RETRODEVSTUDIO = "ASSEMBLER_RETRODEVSTUDIO";
+
+
+
     private enum PathResolving
     { 
       FROM_FILE,
@@ -5568,8 +5573,8 @@ namespace RetroDevStudio.Parser
       {
         ParseAndAddPreDefines( Configuration.Defines, textCodeMapping );
       }
-      AddPreprocessorConstant( "ASSEMBLER_C64STUDIO", 1, -1 );
-      AddPreprocessorConstant( "ASSEMBLER_RETRODEVSTUDIO", 1, -1 );
+      AddPreprocessorConstant( ASSEMBLER_ID_C64STUDIO, 1, -1 );
+      AddPreprocessorConstant( ASSEMBLER_ID_RETRODEVSTUDIO, 1, -1 );
 
       Dictionary<string,string> previousMinusLabel = new Dictionary<string, string>();
       SortedList<int,string>    previousMinusLabelStacked = new SortedList<int, string>();

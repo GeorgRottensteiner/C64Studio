@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using RetroDevStudio.Documents;
 using GR.Memory;
+using RetroDevStudio.Parser;
 
 namespace RetroDevStudio.Tasks
 {
@@ -1025,7 +1026,7 @@ namespace RetroDevStudio.Tasks
 
           if ( !string.IsNullOrEmpty( asmFileInfo.LabelDumpFile ) )
           {
-            Core.MainForm.DumpLabelFile( asmFileInfo );
+            DumpLabelFile.Dump( asmFileInfo, !Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels );
 
             Core.AddToOutputLine( $"Wrote labels to file '{asmFileInfo.LabelDumpFile}'" );
           }

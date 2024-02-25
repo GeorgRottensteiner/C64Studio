@@ -37,7 +37,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         asmLibraryPathList.Items.Add( libPath );
       }
-      checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
+      checkASMAutoTruncateLiteralValues.Checked   = Core.Settings.ASMAutoTruncateLiteralValues;
+      checkLabelFileSkipAssemblerIDLabels.Checked = Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels;
     }
 
 
@@ -100,6 +101,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       }
 
       SettingsRoot.AddChild( "AutoTruncateLiterals" ).AddAttribute( "Enabled", Core.Settings.ASMAutoTruncateLiteralValues ? "yes" : "no" );
+      SettingsRoot.AddChild( "LabelFileIgnoreAssemblerIDLabels" ).AddAttribute( "Enabled", Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels ? "yes" : "no" );
     }
 
 
@@ -155,6 +157,12 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.ASMAutoTruncateLiteralValues = IsSettingTrue( xmlAutoTruncateLiterals.Attribute( "Enabled" ) );
         checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
+      }
+      var xmlIgnoreAssemblerIDLabels = SettingsRoot.FindByTypeRecursive( "LabelFileIgnoreAssemblerIDLabels" );
+      if ( xmlIgnoreAssemblerIDLabels != null )
+      {
+        Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels = IsSettingTrue( xmlIgnoreAssemblerIDLabels.Attribute( "Enabled" ) );
+        checkLabelFileSkipAssemblerIDLabels.Checked = Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels;
       }
 
       xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "LibraryPaths" );
@@ -337,6 +345,13 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.EnabledC64StudioHacks.Add( item.second );
       }
+    }
+
+
+
+    private void checkLabelFileSkipAssemblerIDLabels_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels = checkLabelFileSkipAssemblerIDLabels.Checked;
     }
 
 

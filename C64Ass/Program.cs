@@ -3,6 +3,7 @@ using RetroDevStudio.Parser;
 using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -78,41 +79,10 @@ namespace C64Ass
       }
       if ( !string.IsNullOrEmpty( config.LabelDumpFile ) )
       {
-        DumpLabelFile( asmFileInfo );
+        DumpLabelFile.Dump( asmFileInfo, true );
       }
 
       return 0;
-    }
-
-
-
-    private static void DumpLabelFile( FileInfo FileInfo )
-    {
-      StringBuilder sb = new StringBuilder();
-
-      foreach ( var labelInfo in FileInfo.Labels )
-      {
-        sb.Append( labelInfo.Value.Name );
-        sb.Append( " =$" );
-        if ( labelInfo.Value.AddressOrValue > 255 )
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X4" ) );
-        }
-        else
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X2" ) );
-        }
-        sb.Append( "; " );
-        if ( labelInfo.Value.References.Count == 0 )
-        {
-          sb.AppendLine( "unused" );
-        }
-        else
-        {
-          sb.AppendLine();
-        }
-      }
-      GR.IO.File.WriteAllText( FileInfo.LabelDumpFile, sb.ToString() );
     }
 
 

@@ -2248,37 +2248,6 @@ namespace RetroDevStudio
 
 
 
-    public void DumpLabelFile( Types.ASM.FileInfo FileInfo )
-    {
-      StringBuilder sb = new StringBuilder();
-
-      foreach ( var labelInfo in FileInfo.Labels )
-      {
-        sb.Append( labelInfo.Value.Name );
-        sb.Append( " =$" );
-        if ( labelInfo.Value.AddressOrValue > 255 )
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X4" ) );
-        }
-        else
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X2" ) );
-        }
-        sb.Append( "; " );
-        if ( labelInfo.Value.References.Count == 0 )
-        {
-          sb.AppendLine( "unused" );
-        }
-        else
-        {
-          sb.AppendLine();
-        }
-      }
-      GR.IO.File.WriteAllText( FileInfo.LabelDumpFile, sb.ToString() );
-    }
-
-
-
     public void MarkAsDirty( DocumentInfo DocInfo )
     {
       if ( DocInfo == null )

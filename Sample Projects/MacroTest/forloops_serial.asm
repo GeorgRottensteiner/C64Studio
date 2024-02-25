@@ -24,3 +24,5 @@ gnu
 ;!for i = -256 to 254
 ;    !byte >((i*i)/4)
 ;!end
+
+!sl "labels.txt"

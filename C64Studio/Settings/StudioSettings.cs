@@ -144,6 +144,7 @@ namespace RetroDevStudio
     public List<string>                         ASMLibraryPaths     = new List<string>();
     public bool                                 ASMShowShortCutLabels = true;
     public int                                  ASMShowMaxLineLengthIndicatorLength = 0;
+    public bool                                 ASMLabelFileIgnoreAssemblerIDLabels = false;
 
     public bool                                 StripTrailingSpaces = false;
 
@@ -760,6 +761,7 @@ namespace RetroDevStudio
       }
       chunkASMEditor.AppendU8( (byte)( !ASMShowAddress ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowShortCutLabels ? 1 : 0 ) );
+      chunkASMEditor.AppendU8( (byte)( ASMLabelFileIgnoreAssemblerIDLabels ? 1 : 0 ) );
       SettingsData.Append( chunkASMEditor.ToBuffer() );
 
       // Outline settings
@@ -1302,6 +1304,7 @@ namespace RetroDevStudio
 
               ASMShowAddress        = ( binIn.ReadUInt8() == 0 );
               ASMShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
+              ASMLabelFileIgnoreAssemblerIDLabels = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_BASIC_PARSER:
