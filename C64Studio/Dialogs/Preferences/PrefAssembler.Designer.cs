@@ -204,7 +204,7 @@
       this.checkASMAutoTruncateLiteralValues.Name = "checkASMAutoTruncateLiteralValues";
       this.checkASMAutoTruncateLiteralValues.Size = new System.Drawing.Size(349, 24);
       this.checkASMAutoTruncateLiteralValues.TabIndex = 3;
-      this.checkASMAutoTruncateLiteralValues.Text = "Truncate literal values";
+      this.checkASMAutoTruncateLiteralValues.Text = "Truncate literal values (no warning on overflow)";
       this.checkASMAutoTruncateLiteralValues.UseVisualStyleBackColor = true;
       this.checkASMAutoTruncateLiteralValues.CheckedChanged += new System.EventHandler(this.checkASMAutoTruncateLiteralValues_CheckedChanged);
       // 

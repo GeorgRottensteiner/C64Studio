@@ -224,7 +224,7 @@ ERRLN;647e;
 ERRN;647e;
 OUT;647f;oU
 MAP;64b1;mA
-x!;64b2;
+X!;64b2;
 CLS;64b3;cL
 @;40;;comment
 

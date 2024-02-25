@@ -2078,7 +2078,6 @@ namespace RetroDevStudio.Documents
         Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );
         Core.ShowDocument( Core.MainForm.m_CompileResult, false );
-        //Core.MainForm.m_CompileResult.Show();
         return false;
       }
       if ( labelMode )

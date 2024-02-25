@@ -127,6 +127,8 @@ namespace RetroDevStudio
     public string                               EmulatorToRun = "";
     public bool                                 AutoOpenLastSolution = false;
     public bool                                 LastSolutionWasEmpty = false;
+    public bool                                 ShowCompilerMessagesAfterBuild = true;
+    public bool                                 ShowOutputDisplayAfterBuild = true;
 
     public int                                  TabSize             = 2;
     public int                                  CaretWidth          = 1;
@@ -580,7 +582,6 @@ namespace RetroDevStudio
 
       GR.IO.FileChunk   chunkSoundSettings = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_SOUND );
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnSuccessfulBuild ? 1 : 0 ) );
-      
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnBuildFailure ? 1 : 0 ) );
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnSearchFoundNoItem ? 1 : 0 ) );
       SettingsData.Append( chunkSoundSettings.ToBuffer() );
@@ -646,13 +647,11 @@ namespace RetroDevStudio
       // dockpanel layout
       GR.IO.FileChunk chunkLayout = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DPS_LAYOUT );
       System.IO.MemoryStream    memOut = new System.IO.MemoryStream();
-      //Debug.Log( "Save with state " + Main.m_DebugRegisters.DockState );
 
       PanelMain.SaveAsXml( memOut, Encoding.UTF8 );
       byte[] layoutData = memOut.ToArray();
       string xmlOutText = System.Text.Encoding.UTF8.GetString( layoutData );
 
-      //Debug.Log( xmlOutText );
       // remove dummy elements (layout of non-tool windows)
       GR.Strings.XMLParser    parser = new GR.Strings.XMLParser();
       if ( !parser.Parse( xmlOutText ) )
@@ -808,6 +807,8 @@ namespace RetroDevStudio
       chunkEnvironment.AppendU8( (byte)LastUpdateCheck.Day );
       chunkEnvironment.AppendU8( (byte)LastUpdateCheck.Month );
       chunkEnvironment.AppendI32( (byte)LastUpdateCheck.Year );
+      chunkEnvironment.AppendU8( (byte)( !ShowCompilerMessagesAfterBuild ? 1 : 0 ) );
+      chunkEnvironment.AppendU8( (byte)( !ShowOutputDisplayAfterBuild ? 1 : 0 ) );
 
       SettingsData.Append( chunkEnvironment.ToBuffer() );
 
@@ -1343,6 +1344,9 @@ namespace RetroDevStudio
               {
                 LastUpdateCheck = DateTime.Now;
               }
+
+              ShowCompilerMessagesAfterBuild  = ( binIn.ReadUInt8() == 0 );
+              ShowOutputDisplayAfterBuild     = ( binIn.ReadUInt8() == 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_PERSPECTIVES:

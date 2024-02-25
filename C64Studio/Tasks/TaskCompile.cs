@@ -384,6 +384,10 @@ namespace RetroDevStudio.Tasks
       {
         Core.SuppressOutput();
       }
+      else if ( Core.Settings.ShowOutputDisplayAfterBuild )
+      {
+        Core.ShowDocument( Core.MainForm.m_Output, false );
+      }
 
       Core.SetStatus( "Building..." );
       Core.ClearOutput();
@@ -835,7 +839,10 @@ namespace RetroDevStudio.Tasks
                                                   Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            if ( Core.Settings.ShowCompilerMessagesAfterBuild )
+            {
+              Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            }
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
             Core.Notification.BuildFailure();
@@ -894,7 +901,10 @@ namespace RetroDevStudio.Tasks
               Core.Navigating.UpdateFromMessages( asmFileInfo, Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            if ( Core.Settings.ShowCompilerMessagesAfterBuild )
+            {
+              Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            }
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
             Core.Notification.BuildFailure();
@@ -913,7 +923,10 @@ namespace RetroDevStudio.Tasks
 
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            if ( Core.Settings.ShowCompilerMessagesAfterBuild )
+            {
+              Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            }
           }
         }
 
@@ -982,7 +995,10 @@ namespace RetroDevStudio.Tasks
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
         {
-          Core.ShowDocument( Core.MainForm.m_Output, false );
+          if ( Core.Settings.ShowOutputDisplayAfterBuild )
+          {
+            Core.ShowDocument( Core.MainForm.m_Output, false );
+          }
           Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );
           if ( !Core.Executing.RunCommand( Doc, "post build", configSetting.PostBuild ) )
           {
