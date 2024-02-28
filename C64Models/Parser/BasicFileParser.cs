@@ -166,6 +166,8 @@ namespace RetroDevStudio.Parser
     private Opcode                                    _OpcodeRem    = null;
     private Opcode                                    _OpcodeThen   = null;
 
+    public Dictionary<int, int>                       LabelLineMapping = new Dictionary<int, int>();
+
 
 
     public BasicFileParser( ParserSettings Settings )
@@ -2436,7 +2438,6 @@ namespace RetroDevStudio.Parser
                   m_ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
                 }
               }
-              //ASMFileInfo.Labels[varName].References.Add( lineIndex );
             }
 
             if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
@@ -2870,7 +2871,6 @@ namespace RetroDevStudio.Parser
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
-              //sb.Append( token.Content + " " );
               sb.Append( token.Content );
 
               int nextIndex = i + 1;
@@ -2927,21 +2927,9 @@ namespace RetroDevStudio.Parser
                 ++nextIndex;
               }
               i = nextIndex;
-              /*
-              // fill up with blanks
-              while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-              {
-                sb.Append( ' ' );
-              }*/
               continue;
             }
           }
-          /*
-          // fill up with blanks
-          while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-          {
-            sb.Append( ' ' );
-          }*/
           // if we got here there was no label inserted
           sb.Append( token.Content );
         }
@@ -3019,7 +3007,6 @@ namespace RetroDevStudio.Parser
             string labelToReplace = "LABEL" + lineInfo.Value.Tokens[1].Content;
 
             labelToNumber[labelToReplace] = lineNumber;
-            //Debug.Log( "Replace label " + labelToReplace + " with line " + lineNumber );
           }
           else
           {
@@ -3027,6 +3014,7 @@ namespace RetroDevStudio.Parser
           }
           continue;
         }
+
         lineNumber += lineNumberStep;
       }
       lineNumber = startLineNumber;
@@ -3100,13 +3088,6 @@ namespace RetroDevStudio.Parser
           {
             hadREM = true;
           }
-
-          /*
-          // fill up with blanks
-          while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-          {
-            sb.Append( ' ' );
-          }*/
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
           &&   ( ( token.ByteValue == _OpcodeGoto.InsertionValue )

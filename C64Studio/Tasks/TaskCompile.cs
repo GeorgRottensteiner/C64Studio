@@ -608,8 +608,8 @@ namespace RetroDevStudio.Tasks
       BuildInfo.TimeStampOfSourceFile = Core.Compiling.FileLastWriteTime( Doc.FullPath );
       BuildInfo.TimeStampOfTargetFile = default( DateTime );
 
-      FileInfo          = null;
-      Doc.LastBuildInfo = null;
+      FileInfo                = null;
+      Doc.LastBuildInfo       = null;
 
       Types.ASM.FileInfo combinedFileInfo = null;
 
@@ -648,7 +648,6 @@ namespace RetroDevStudio.Tasks
               ||   ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
               {
                 dependencyFileInfo = elementDependency.DocumentInfo.ASMFileInfo;
-                //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
               }
             }
             else
@@ -865,7 +864,15 @@ namespace RetroDevStudio.Tasks
             return false;
           }
 
-          FileInfo = Doc.ASMFileInfo;
+          /*
+          Doc.ASMFileInfo.LabelModeReferences = Doc.LabelModeReferences;
+          if ( ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
+          &&   ( Doc.LabelModeReferences.Count > 0 ) )
+          {
+            // TODO - Test, does this work?
+            Doc.ASMFileInfo.Labels = Doc.LabelModeReferences;
+          }*/
+          FileInfo                            = Doc.ASMFileInfo;
 
           Core.MainForm.AddOutputMessages( asmFileInfo );
 

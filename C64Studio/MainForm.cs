@@ -5459,9 +5459,25 @@ namespace RetroDevStudio
         }
       }
 
-      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, out ASMFileInfo );
+      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, 
+                                      Document.LabelModeReferences, out ASMFileInfo );
 
       Document.ASMFileInfo = ASMFileInfo;
+
+      if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      {
+        if ( ASMFileInfo != null )
+        {
+          if ( Document.ASMFileInfoOriginal != null )
+          {
+            ASMFileInfo = Document.ASMFileInfoOriginal;
+
+            Document.ASMFileInfo = Document.ASMFileInfoOriginal;
+            Document.ASMFileInfoOriginal = null;
+          }
+        }
+      }
+
 
       if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
@@ -5472,13 +5488,6 @@ namespace RetroDevStudio
           Document.Element.AssemblerType = config.Assembler;
           Document.BaseDoc.SetModified();
         }
-      }
-
-      if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-      {
-        RetroDevStudio.Parser.ASMFileParser asmParser = (RetroDevStudio.Parser.ASMFileParser)Parser;
-
-        Document.ASMFileInfo = ASMFileInfo;
       }
 
       DependencyBuildState buildState = null;
@@ -5611,14 +5620,20 @@ namespace RetroDevStudio
       {
         if ( ASMFileInfo != null )
         {
-          Document.KnownKeywords  = ASMFileInfo.KnownTokens();
-          Document.KnownTokens    = ASMFileInfo.KnownTokenInfo();
+          if ( Document.ASMFileInfoOriginal != null )
+          {
+            Document.ASMFileInfo          = Document.ASMFileInfoOriginal;
+            Document.ASMFileInfoOriginal  = null;
+          }
+
+          Document.KnownKeywords  = Document.ASMFileInfo.KnownTokens();
+          Document.KnownTokens    = Document.ASMFileInfo.KnownTokenInfo();
         }
       }
 
       if ( OutputMessages )
       {
-        AddTask( new Tasks.TaskUpdateCompileResult( ASMFileInfo, Document ) );
+        AddTask( new Tasks.TaskUpdateCompileResult( Document.ASMFileInfo, Document ) );
       }
       if ( ( result )
       &&   ( Document.BaseDoc != null ) )

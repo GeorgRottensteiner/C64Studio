@@ -43,7 +43,7 @@ namespace C64Ass
         config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       }
 
-      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines, out FileInfo asmFileInfo );
+      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines, null,  out FileInfo asmFileInfo );
       if ( !result )
       {
         System.Console.WriteLine( "Parsing the file failed:" );

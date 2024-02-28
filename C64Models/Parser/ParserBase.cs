@@ -235,7 +235,8 @@ namespace RetroDevStudio.Parser
 
     public abstract void Clear();
     public abstract bool Assemble( CompileConfig Config );
-    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out FileInfo ASMFileInfo );
+    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines,
+                                out FileInfo ASMFileInfo );
 
 
 
@@ -383,7 +384,8 @@ namespace RetroDevStudio.Parser
 
 
 
-    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo  )
+    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines,
+                           Dictionary<string, SymbolInfo> LabelModeReferences, out Types.ASM.FileInfo ASMFileInfo  )
     {
       ASMFileInfo = null;
 
@@ -444,6 +446,13 @@ namespace RetroDevStudio.Parser
     public void InjectASMFileInfo( Types.ASM.FileInfo ASMFileInfo )
     {
       m_ASMFileInfo = ASMFileInfo;
+    }
+
+
+
+    public Types.ASM.FileInfo GetASMFileInfo()
+    {
+      return m_ASMFileInfo;
     }
 
 

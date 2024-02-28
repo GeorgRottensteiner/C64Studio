@@ -1997,6 +1997,7 @@ namespace RetroDevStudio.Documents
       bool labelMode = !m_LabelMode;
 
       Core.MainForm.m_CompileResult.ClearMessages();
+      m_CurrentHighlightLocations.Clear();
 
       string toggledContent;
 
@@ -2007,9 +2008,15 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
+      if ( DocumentInfo.ASMFileInfoOriginal != null )
+      {
+        DocumentInfo.ASMFileInfo = DocumentInfo.ASMFileInfoOriginal;
+      }
       editSource.Text = toggledContent;
       m_LabelMode = labelMode;
       UpdateLabelModeText();
+
+      Core.MainForm.m_LabelExplorer.RefreshFromDocument( this );
       return true;
     }
 
@@ -2049,6 +2056,8 @@ namespace RetroDevStudio.Documents
 
     public bool PerformLabelModeToggle( out string Result )
     {
+      DocumentInfo.ASMFileInfoOriginal = null;
+
       bool labelMode = !m_LabelMode;
 
       var settings = new Parser.BasicFileParser.ParserSettings();
@@ -2087,6 +2096,10 @@ namespace RetroDevStudio.Documents
       else
       {
         Result = parser.DecodeFromLabels( GR.Convert.ToI32( m_LastLabelAutoRenumberStartLine ), GR.Convert.ToI32( m_LastLabelAutoRenumberLineStep ) );
+        DocumentInfo.ASMFileInfoOriginal = parser.GetASMFileInfo();
+
+        // this one must work or we screwed up
+        parser.Parse( Result, null, compilerConfig, null, out DocumentInfo.ASMFileInfo );
       }
 
       if ( parser.Errors > 0 )
@@ -2669,9 +2682,13 @@ namespace RetroDevStudio.Documents
 
     public bool GetCompilableCode( out string Code )
     {
+      DocumentInfo.ASMFileInfoOriginal = null;
+
       if ( m_LabelMode )
       {
-        return PerformLabelModeToggle( out Code );
+        bool result = PerformLabelModeToggle( out Code );
+
+        return result;
       }
       Code = GetContent();
       return true;
