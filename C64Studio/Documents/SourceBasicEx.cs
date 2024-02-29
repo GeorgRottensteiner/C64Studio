@@ -2008,10 +2008,11 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
+      /*
       if ( DocumentInfo.ASMFileInfoOriginal != null )
       {
         DocumentInfo.ASMFileInfo = DocumentInfo.ASMFileInfoOriginal;
-      }
+      }*/
       editSource.Text = toggledContent;
       m_LabelMode = labelMode;
       UpdateLabelModeText();
@@ -2092,6 +2093,10 @@ namespace RetroDevStudio.Documents
       if ( labelMode )
       {
         Result = parser.EncodeToLabels();
+
+        // this one must work or we screwed up
+        parser.LabelMode = true;
+        bool reparseResult = parser.Parse( Result, null, compilerConfig, null, out DocumentInfo.ASMFileInfo );
       }
       else
       {
@@ -2101,6 +2106,9 @@ namespace RetroDevStudio.Documents
         // this one must work or we screwed up
         parser.Parse( Result, null, compilerConfig, null, out DocumentInfo.ASMFileInfo );
       }
+
+      DocumentInfo.KnownKeywords  = DocumentInfo.ASMFileInfo.KnownTokens();
+      DocumentInfo.KnownTokens    = DocumentInfo.ASMFileInfo.KnownTokenInfo();
 
       if ( parser.Errors > 0 )
       {

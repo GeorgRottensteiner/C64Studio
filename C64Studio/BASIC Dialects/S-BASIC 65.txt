@@ -1,4 +1,4 @@
-#C64 Studio BASIC declaration file
+osoft#C64 Studio BASIC declaration file
 #Comments start with #
 #CSV Format 
 #Token              = actual name of command
