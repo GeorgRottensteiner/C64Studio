@@ -263,9 +263,9 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( file.Blocks.ToString() );
           string     fileType = "";
 
-          if ( ( file.Type & Types.FileType.CLOSED ) != 0 )
+          if ( !file.NotClosed )
           {
-            switch ( (Types.FileType)( (byte)file.Type & ( 0x0f | (byte)Types.FileType.CLOSED ) ) )
+            switch ( file.Type )
             {
               case Types.FileType.DEL:
                 fileType = "DEL";
@@ -286,11 +286,11 @@ namespace RetroDevStudio.Documents
           }
 
           
-          if ( ( file.Type & RetroDevStudio.Types.FileType.CLOSED ) == 0 )
+          if ( file.NotClosed )
           {
             fileType += "*";
           }
-          if ( ( file.Type & RetroDevStudio.Types.FileType.LOCKED ) != 0 )
+          if ( file.ReadOnly )
           {
             fileType += "<";
           }

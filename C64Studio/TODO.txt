@@ -1,4 +1,5 @@
-﻿* Map Editor:
+﻿* D64 - einzelne schreibgeschützte Dateien lassen sich nicht öffnen 
+* Map Editor:
   Wenn ich eine Char-Grafik mit meinen Bildbearbeitungsprogramm erstellt habe, kann ich Grafik nicht importieren für das Charset im Map-Editor.
   Ich bin statt dessen immer über den Char-Editor gegangen, den dort kann ich ja Grafiken importieren. Und von dort habe ich dann die Chars kopiert 
   und im Map Editor/Charater Set eingefügt.

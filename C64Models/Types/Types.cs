@@ -547,13 +547,13 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_PROJECT = "C64 Studio Project Files|*.c64|";
     public static string FILEFILTER_SOLUTION = "C64 Studio Solution Files|*.s64|";
     public static string FILEFILTER_SOLUTION_OR_PROJECTS = "C64 Studio Solution or Project Files|*.s64;*.c64|";
-    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly|";
+    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly;*.prg;*.t64;*.d64;*.d71;*.d81;*.dsk|";
     public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas;*.a;*.b|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";
     public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81;*.dsk|";
     public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|";
     public static string FILEFILTER_TAPE = "Tape Files|*.t64,*.prg|";
-    public static string FILEFILTER_DISK = "Disk Files|*.d64;*.d71;*.d81|";
+    public static string FILEFILTER_DISK = "Disk Files|*.d64;*.d71;*.d81;*.dsk|";
     public static string FILEFILTER_VALUE_TABLE_PROJECT = "Value Table Project Files|*.valuetableproject|";
     public static string FILEFILTER_VALUE_TABLE_DATA = "Value Table Data Files|*.dat|";
   }
@@ -656,15 +656,15 @@ namespace RetroDevStudio.Types
     [Description( "SCR" )]
     SCRATCHED = 0x00,
     [Description( "DEL" )]
-    DEL = 0x80,
+    DEL = 0x00,
     [Description( "SEQ" )]
-    SEQ = 0x81,
+    SEQ = 0x01,
     [Description( "PRG" )]
-    PRG = 0x82,
+    PRG = 0x02,
     [Description( "USR" )]
-    USR = 0x83,
+    USR = 0x03,
     [Description( "REL" )]
-    REL = 0x84,
+    REL = 0x04,
 
     LOCKED = 0x40,
     CLOSED = 0x80
@@ -696,8 +696,10 @@ namespace RetroDevStudio.Types
      */
     public FileType Type = FileType.SCRATCHED;
 
+    public bool ReadOnly = false;     // Bit 6 for Commodore DOS, flag for CPC DSK
+    public bool NotClosed = false;    // Bit 7 for Commodore DOS (*, splat)
+
     // flags for CPC DSK format
-    public bool ReadOnly = false;
     public bool Hidden = false;
     public int  Size = 0;
 

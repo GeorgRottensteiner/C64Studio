@@ -419,7 +419,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool LocateFile( GR.Memory.ByteBuffer Filename, out Location FileLocation, out Types.FileInfo FileInfo )
+    protected bool LocateFile( GR.Memory.ByteBuffer Filename, out Location FileLocation, out Types.FileInfo FileInfo )
     {
       _LastError = "";
       FileLocation = null;
@@ -449,10 +449,8 @@ namespace RetroDevStudio.Formats
 
                 FileInfo = new Types.FileInfo();
                 FileInfo.Filename = new GR.Memory.ByteBuffer( filename );
-                FileInfo.StartSector = fileSector;
-                FileInfo.StartTrack = fileTrack;
-                FileInfo.Type = (Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
-                FileInfo.Blocks = 0;
+
+                SetFileInfo( FileInfo, fileTrack, fileSector, sec.Data.ByteAt( 0x20 * i + 2 ), 0 );
                 return true;
               }
             }
@@ -468,6 +466,19 @@ namespace RetroDevStudio.Formats
       }
       _LastError = "Could not locate directory entry for file";
       return false;
+    }
+
+
+
+    private void SetFileInfo( FileInfo FileInfo, int StartTrack, int StartSector, byte FileType, int NumBlocks )
+    {
+      FileInfo.StartTrack   = StartTrack;
+      FileInfo.StartSector  = StartSector;
+      FileInfo.Type         = (Types.FileType)( FileType & 0x07 );
+      FileInfo.Blocks       = 0;
+
+      FileInfo.ReadOnly     = ( FileType & 64 ) != 0;
+      FileInfo.NotClosed    = ( FileType & 128 ) == 0;
     }
 
 
@@ -492,7 +503,7 @@ namespace RetroDevStudio.Formats
       while ( !endFound )
       {
         Sector  sec       = Tracks[fileLocation.Track - 1].Sectors[fileLocation.Sector];
-        fileLocation      = sec.NextLocation;
+        fileLocation = sec.NextLocation;
         if ( fileLocation == null )
         {
           result.Append( sec.Data.SubBuffer( 2, sec.Data.ByteAt( 1 ) - 1 ) );
@@ -653,7 +664,7 @@ namespace RetroDevStudio.Formats
               sect.Data.SetU8At( 0, 0 );
               sect.Data.SetU8At( 1, 0 );
             }
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)Type );
+            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileType.CLOSED ) );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
 
@@ -744,7 +755,7 @@ namespace RetroDevStudio.Formats
           _LastError = "file not found";
           return false;
         }
-        curTrack  = sect.Data.ByteAt( 0 );
+        curTrack = sect.Data.ByteAt( 0 );
         curSector = sect.Data.ByteAt( 1 );
       }
     }
@@ -795,6 +806,69 @@ namespace RetroDevStudio.Formats
         }
         curTrack = sect.Data.ByteAt( 0 );
         curSector = sect.Data.ByteAt( 1 );
+      }
+    }
+
+
+
+    public override void Validate()
+    {
+      var files = Files();
+
+      GR.Collections.Set<GR.Generic.Tupel<int,int>>    usedTracksAndSectors = new GR.Collections.Set<GR.Generic.Tupel<int, int>>();
+
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( TRACK_HEADER, SECTOR_HEADER ) );
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( TRACK_BAM, SECTOR_BAM ) );
+
+      int   curTrack = TRACK_DIRECTORY;
+      int   curSector = SECTOR_DIRECTORY;
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+      while ( true )
+      {
+        Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+        curTrack = sec.Data.ByteAt( 0 );
+        curSector = sec.Data.ByteAt( 1 );
+
+        if ( curTrack == 0 )
+        {
+          // track = 0 marks last directory entry
+          break;
+        }
+        usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+      }
+
+      foreach ( var file in files )
+      {
+        curTrack = file.StartTrack;
+        curSector = file.StartSector;
+
+        while ( true )
+        {
+          Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+          usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+
+          curTrack = sec.Data.ByteAt( 0 );
+          curSector = sec.Data.ByteAt( 1 );
+
+          if ( curTrack == 0 )
+          {
+            // track = 0 marks last directory entry
+            break;
+          }
+        }
+      }
+      foreach ( var track in Tracks )
+      {
+        foreach ( var sector in track.Sectors )
+        {
+          if ( ( !sector.Free )
+          && ( !usedTracksAndSectors.ContainsValue( new GR.Generic.Tupel<int, int>( track.TrackNo, sector.SectorNo ) ) ) )
+          {
+            sector.Free = true;
+          }
+        }
       }
     }
 
@@ -993,7 +1067,7 @@ namespace RetroDevStudio.Formats
         GR.Generic.Tupel<int,int>     location = new GR.Generic.Tupel<int,int>( fileTrack, fileSector );
 
         if ( ( UsedSectors[location].Length > 0 )
-        &&   ( UsedSectors[location] != Filename ) )
+        && ( UsedSectors[location] != Filename ) )
         {
           Errors.Add( "Sector " + location.first + ", Track " + location.second + " is referenced by more than one file" );
         }
@@ -1007,7 +1081,7 @@ namespace RetroDevStudio.Formats
         }
 
         if ( ( newTrack < 1 )
-        ||   ( newTrack > Tracks.Count ) )
+        || ( newTrack > Tracks.Count ) )
         {
           Errors.Add( "Reference to invalid track " + newTrack + " encountered in track " + fileTrack + ", Sector " + fileSector );
           return;
@@ -1015,6 +1089,37 @@ namespace RetroDevStudio.Formats
         fileTrack = newTrack;
         fileSector = newSector;
       }
+    }
+
+
+
+    private Sector FindPreviousDirSector( int Track, int Sector )
+    {
+      int   curTrack = Track;
+
+      foreach ( Sector sec in Tracks[curTrack - 1].Sectors )
+      {
+        if ( ( sec.Data.ByteAt( 0 ) == Track )
+        && ( sec.Data.ByteAt( 1 ) == Sector ) )
+        {
+          // this sector points at me
+          return sec;
+        }
+      }
+      return null;
+    }
+
+
+
+    private Sector FindNextDirSector( int Track, int Sector )
+    {
+      int nextTrack = Tracks[Track - 1].Sectors[Sector].Data.ByteAt( 0 );
+      if ( nextTrack == 0 )
+      {
+        return null;
+      }
+      int nextSector = Tracks[Track - 1].Sectors[Sector].Data.ByteAt( 1 );
+      return Tracks[nextTrack - 1].Sectors[nextSector];
     }
 
 
@@ -1061,37 +1166,6 @@ namespace RetroDevStudio.Formats
 
 
 
-    private Sector FindPreviousDirSector( int Track, int Sector )
-    {
-      int   curTrack = Track;
-
-      foreach ( Sector sec in Tracks[curTrack - 1].Sectors )
-      {
-        if ( ( sec.Data.ByteAt( 0 ) == Track )
-        &&   ( sec.Data.ByteAt( 1 ) == Sector ) )
-        {
-          // this sector points at me
-          return sec;
-        }
-      }
-      return null;
-    }
-
-
-
-    private Sector FindNextDirSector( int Track, int Sector )
-    {
-      int nextTrack = Tracks[Track - 1].Sectors[Sector].Data.ByteAt( 0 );
-      if ( nextTrack == 0 )
-      {
-        return null;
-      }
-      int nextSector = Tracks[Track - 1].Sectors[Sector].Data.ByteAt( 1 );
-      return Tracks[nextTrack - 1].Sectors[nextSector];
-    }
-
-
-
     private DirEntryLocation LocateDirEntry( int Track, int Sector )
     {
       Location  curLoc = new Location( TRACK_DIRECTORY, SECTOR_DIRECTORY );
@@ -1102,9 +1176,9 @@ namespace RetroDevStudio.Formats
 
         for ( int i = 0; i < 8; ++i )
         {
-          int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
-          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
+          int fileTrack  = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
+          int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
+          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)Types.FileType.SCRATCHED )
           {
             // valid entry?
             if ( ( fileTrack == Track )
@@ -1301,7 +1375,7 @@ namespace RetroDevStudio.Formats
 
       Sector secOrig = Tracks[dirEntry.Track - 1].Sectors[dirEntry.Sector];
 
-      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)NewFileType );
+      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)( NewFileType | FileType.CLOSED ) );
     }
 
 
@@ -1345,12 +1419,14 @@ namespace RetroDevStudio.Formats
             // valid entry?
             Types.FileInfo info = new Types.FileInfo();
 
-            info.Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
-            info.StartSector = fileSector;
-            info.StartTrack = fileTrack;
-            info.Type = (Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
-            info.Blocks = sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 );
-            info.DirEntryIndex = dirEntryIndex;
+            info.Filename       = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
+
+            SetFileInfo( info, 
+                         fileTrack, fileSector, 
+                         sec.Data.ByteAt( 0x20 * i + 2 ), 
+                         sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 ) );
+
+            info.DirEntryIndex  = dirEntryIndex;
             ++dirEntryIndex;
             files.Add( info );
           }
