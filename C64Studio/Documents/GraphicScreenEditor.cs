@@ -3891,7 +3891,7 @@ namespace RetroDevStudio.Documents
     {
       int   leftX = m_GraphicScreenProject.ScreenOffsetX * ( 8 / m_ZoomFactor );
 
-      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / m_GraphicScreenProject.ScreenWidth;
+      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
     }
 
 
@@ -3900,7 +3900,7 @@ namespace RetroDevStudio.Documents
     {
       int   leftY = m_GraphicScreenProject.ScreenOffsetY * ( 8 / m_ZoomFactor );
 
-      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / m_GraphicScreenProject.ScreenHeight;
+      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
     }
 
 
@@ -3964,8 +3964,8 @@ namespace RetroDevStudio.Documents
     {
       if ( m_ZoomFactor < 8 )
       {
-        int   totalWidth = Math.Min( 320, m_GraphicScreenProject.ScreenWidth );
-        int   totalHeight = Math.Min( 200, m_GraphicScreenProject.ScreenHeight );
+        int   totalWidth = Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
+        int   totalHeight = Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
 
         int   centerX = ToLocalX( totalWidth );
         int   centerY = ToLocalY( totalHeight );
@@ -4007,8 +4007,8 @@ namespace RetroDevStudio.Documents
         m_ZoomFactor /= 2;
         btnZoomIn.Enabled = true;
         btnZoomOut.Enabled = ( m_ZoomFactor > 1 );
-        int   totalWidth = Math.Min( 320, m_GraphicScreenProject.ScreenWidth );
-        int   totalHeight = Math.Min( 200, m_GraphicScreenProject.ScreenHeight );
+        int   totalWidth = Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
+        int   totalHeight = Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
         pictureEditor.SetImageSize( totalWidth / m_ZoomFactor, totalHeight / m_ZoomFactor );
         AdjustScrollbars();
         Redraw();
