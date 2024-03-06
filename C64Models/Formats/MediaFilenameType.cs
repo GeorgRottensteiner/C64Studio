@@ -8,7 +8,8 @@ namespace RetroDevStudio.Formats
   {
     COMMODORE,      // PETSCII types
     NES,            // no actual type
-    CPC             // CPC format (AMSDOS?)
+    CPC,            // CPC format (AMSDOS?)
+    AMIGA           // Amiga, closer to ASCII
   }
 
 

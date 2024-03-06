@@ -192,6 +192,9 @@ namespace RetroDevStudio
         case MediaFilenameType.CPC:
           filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
           break;
+        case MediaFilenameType.AMIGA:
+          filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
+          break;
         default:
           throw new Exception( $"Unsupported Filenametype {FilenameType}" );
       }

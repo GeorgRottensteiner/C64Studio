@@ -41,6 +41,9 @@
       this.d64With40TracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d71ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d81ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+      this.cPCDSKToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cPCDSKExtendedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.validateMediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -68,9 +71,8 @@
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripSplitButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
-      this.cPCDSKExtendedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.cPCDSKToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+      this.labelFolder = new System.Windows.Forms.Label();
+      this.btnUp = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -159,30 +161,48 @@
       // d64ToolStripMenuItem
       // 
       this.d64ToolStripMenuItem.Name = "d64ToolStripMenuItem";
-      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d64ToolStripMenuItem.Text = "D64";
       this.d64ToolStripMenuItem.Click += new System.EventHandler(this.d64ToolStripMenuItem_Click);
       // 
       // d64With40TracksToolStripMenuItem
       // 
       this.d64With40TracksToolStripMenuItem.Name = "d64With40TracksToolStripMenuItem";
-      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
       this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
       // 
       // d71ToolStripMenuItem
       // 
       this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
-      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d71ToolStripMenuItem.Text = "D71";
       this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
       // 
       // d81ToolStripMenuItem
       // 
       this.d81ToolStripMenuItem.Name = "d81ToolStripMenuItem";
-      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d81ToolStripMenuItem.Text = "D81";
       this.d81ToolStripMenuItem.Click += new System.EventHandler(this.d81ToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator7
+      // 
+      this.toolStripSeparator7.Name = "toolStripSeparator7";
+      this.toolStripSeparator7.Size = new System.Drawing.Size(170, 6);
+      // 
+      // cPCDSKToolStripMenuItem
+      // 
+      this.cPCDSKToolStripMenuItem.Name = "cPCDSKToolStripMenuItem";
+      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.cPCDSKToolStripMenuItem.Text = "CPC DSK";
+      // 
+      // cPCDSKExtendedToolStripMenuItem
+      // 
+      this.cPCDSKExtendedToolStripMenuItem.Name = "cPCDSKExtendedToolStripMenuItem";
+      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.cPCDSKExtendedToolStripMenuItem.Text = "CPC DSK extended";
+      this.cPCDSKExtendedToolStripMenuItem.Click += new System.EventHandler(this.cPCDSKExtendedToolStripMenuItem_Click);
       // 
       // toolStripSeparator2
       // 
@@ -244,9 +264,9 @@
       this.listFiles.FullRowSelect = true;
       this.listFiles.HideSelection = false;
       this.listFiles.ItemHeight = 16;
-      this.listFiles.Location = new System.Drawing.Point(0, 52);
+      this.listFiles.Location = new System.Drawing.Point(0, 76);
       this.listFiles.Name = "listFiles";
-      this.listFiles.Size = new System.Drawing.Size(677, 358);
+      this.listFiles.Size = new System.Drawing.Size(677, 334);
       this.listFiles.TabIndex = 1;
       this.listFiles.UseCompatibleStateImageBehavior = false;
       this.listFiles.View = System.Windows.Forms.View.Details;
@@ -435,28 +455,34 @@
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.labelMediaTitle.Click += new System.EventHandler(this.labelMediaTitle_Click);
       // 
-      // cPCDSKExtendedToolStripMenuItem
+      // labelFolder
       // 
-      this.cPCDSKExtendedToolStripMenuItem.Name = "cPCDSKExtendedToolStripMenuItem";
-      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-      this.cPCDSKExtendedToolStripMenuItem.Text = "CPC DSK extended";
-      this.cPCDSKExtendedToolStripMenuItem.Click += new System.EventHandler(this.cPCDSKExtendedToolStripMenuItem_Click);
+      this.labelFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.labelFolder.Enabled = false;
+      this.labelFolder.Location = new System.Drawing.Point(43, 48);
+      this.labelFolder.Name = "labelFolder";
+      this.labelFolder.Size = new System.Drawing.Size(622, 20);
+      this.labelFolder.TabIndex = 6;
+      this.labelFolder.Text = "/";
+      this.labelFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // cPCDSKToolStripMenuItem
+      // btnUp
       // 
-      this.cPCDSKToolStripMenuItem.Name = "cPCDSKToolStripMenuItem";
-      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-      this.cPCDSKToolStripMenuItem.Text = "CPC DSK";
-      // 
-      // toolStripSeparator7
-      // 
-      this.toolStripSeparator7.Name = "toolStripSeparator7";
-      this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
+      this.btnUp.Enabled = false;
+      this.btnUp.Location = new System.Drawing.Point(0, 47);
+      this.btnUp.Name = "btnUp";
+      this.btnUp.Size = new System.Drawing.Size(37, 23);
+      this.btnUp.TabIndex = 7;
+      this.btnUp.Text = "Up";
+      this.btnUp.UseVisualStyleBackColor = true;
       // 
       // FileManager
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(677, 435);
+      this.Controls.Add(this.btnUp);
+      this.Controls.Add(this.labelFolder);
       this.Controls.Add(this.toolStrip1);
       this.Controls.Add(this.statusMedia);
       this.Controls.Add(this.listFiles);
@@ -521,5 +547,7 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
     private System.Windows.Forms.ToolStripMenuItem cPCDSKToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cPCDSKExtendedToolStripMenuItem;
+    private System.Windows.Forms.Label labelFolder;
+    private System.Windows.Forms.Button btnUp;
   }
 }

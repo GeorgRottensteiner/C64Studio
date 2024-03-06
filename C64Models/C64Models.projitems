@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor6510.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\AmigaDisk.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\DumpLabelFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.While.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.OpcodeFromExpression.cs" />
@@ -51,8 +52,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharpadProject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\CPCDSK.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\D71.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\CPCDSK.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\D71.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportMapInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportSpriteInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportCharsetInfo.cs" />
@@ -62,16 +63,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ValueTableProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetScreenProject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\D64.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\D81.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\CommodoreDisk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\D64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\D81.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\CommodoreDisk.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\GraphicScreenProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\MapProject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\MediaFormat.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\PRG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MediaFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\PRG.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpriteProject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\T64.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\T64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.ExtFunctions.cs" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Emulator\Interfaces\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Formats\Media\" />
     <Folder Include="$(MSBuildThisFileDirectory)Processors\" />
     <Folder Include="$(MSBuildThisFileDirectory)Version\" />
   </ItemGroup>

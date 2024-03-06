@@ -110,6 +110,11 @@ namespace RetroDevStudio.Documents
         // CPC disk file
         m_Media = new RetroDevStudio.Formats.CPCDSK();
       }
+      else if ( upperName.EndsWith( ".ADF" ) )
+      {
+        // Amiga disk file
+        m_Media = new RetroDevStudio.Formats.AmigaDisk();
+      }
       else if ( upperName.EndsWith( ".T64" ) )
       {
         // tape file
@@ -281,6 +286,12 @@ namespace RetroDevStudio.Documents
                 break;
               case Types.FileType.USR:
                 fileType = "USR";
+                break;
+              case Types.FileType.DIR:
+                fileType = "DIR";
+                break;
+              default:
+                fileType = "???";
                 break;
             }
           }
