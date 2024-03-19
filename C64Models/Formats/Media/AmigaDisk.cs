@@ -254,8 +254,73 @@ namespace RetroDevStudio.Formats
             hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 16 ) );
           }
         }
+        if ( !foundDirEntry )
+        {
+          return -1;
+        }
       }
       return curDirectoryBlock;
+    }
+
+
+
+    private int LocateFileBlock( string Filename )
+    {
+      var parts = Filename.Split( '/' );
+      int partPos = 1;
+
+      int curDirectoryBlock = ROOT_BLOCK_INDEX;
+      int blockOffset = BLOCK_SIZE * curDirectoryBlock;
+
+      while ( partPos < parts.Length )
+      {
+        uint hashTableSize = _DiskImage.UInt32NetworkOrderAt( blockOffset + 12 );
+        bool foundDirEntry = false;
+        for ( uint i = 0; i < hashTableSize; ++i )
+        {
+          uint hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( blockOffset + 24 + i * 4 ) );
+          while ( hashEntry != 0 )
+          {
+            uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( blockOffset + BLOCK_SIZE - 4 ) );
+            if ( ( partPos + 1 < parts.Length )
+            &&   ( fileType == 2 ) )
+            {
+              int filenameLength  = _DiskImage.ByteAt( (int)( blockOffset + BLOCK_SIZE - 80 ) );
+              var filename        = _DiskImage.SubBuffer( (int)( blockOffset + BLOCK_SIZE - 79 ), filenameLength );
+
+              if ( filename.ToAsciiString() == parts[partPos] )
+              {
+                curDirectoryBlock = (int)hashEntry;
+                foundDirEntry = true;
+                break;
+              }
+            }
+            if ( ( partPos + 1 == parts.Length )
+            &&   ( fileType != 2 ) )
+            {
+              // the actual file
+              int filenameLength  = _DiskImage.ByteAt( (int)( blockOffset + BLOCK_SIZE - 80 ) );
+              var filename        = _DiskImage.SubBuffer( (int)( blockOffset + BLOCK_SIZE - 79 ), filenameLength );
+
+              if ( filename.ToAsciiString() == parts[partPos] )
+              {
+                return (int)hashEntry;
+              }
+            }
+            if ( foundDirEntry )
+            {
+              break;
+            }
+            // follow hash chain
+            hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 16 ) );
+          }
+        }
+        if ( !foundDirEntry )
+        {
+          return -1;
+        }
+      }
+      return -1;
     }
 
 

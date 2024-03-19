@@ -51,6 +51,24 @@ namespace RetroDevStudio.Formats
 
 
 
+    public string CurrentFolder { get; set; } = "";
+
+
+
+    public virtual bool ChangeDirectory( string Dir )
+    {
+      return false;
+    }
+
+
+
+    public virtual bool ChangeDirectoryUp()
+    {
+      return false;
+    }
+
+
+
     public abstract MediaFilenameType FilenameType 
     { 
       get; 

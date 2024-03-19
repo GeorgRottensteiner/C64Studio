@@ -194,7 +194,54 @@ namespace RetroDevStudio.Documents
 
     private void EditSource_Pasting( object sender, TextPastingEventArgs e )
     {
-      e.InsertingText = ReplacePetCatCompatibilityChars( e.InsertingText, out bool hadError );
+      string    textToPaste = e.InsertingText;
+
+      textToPaste = DetectAndAdaptCaseMode( textToPaste );
+      if ( textToPaste == null )
+      {
+        e.Cancel = true;
+        return;
+      }
+
+      e.InsertingText = ReplacePetCatCompatibilityChars( textToPaste, out bool hadError );
+    }
+
+
+
+    private string DetectAndAdaptCaseMode( string TextToPaste )
+    {
+      bool  hasLowercase = false;
+      bool  hasUppercase = false;
+      foreach ( var c in TextToPaste )
+      {
+        hasLowercase |= char.IsLower( c );
+        hasUppercase |= char.IsUpper( c );
+      }
+
+      if ( m_LowerCaseMode != hasLowercase )
+      {
+        // in both cases potential problems arise, ask for automatic adjust
+        var result = System.Windows.Forms.MessageBox.Show( "The pasted text casing does not seem to match the target casing.\r\nAdapt the text casing before inserting?", "Adjust casing?", MessageBoxButtons.YesNoCancel );
+        if ( result == DialogResult.Cancel )
+        {
+          return null;
+        }
+        if ( result == DialogResult.Yes )
+        {
+          if ( m_LowerCaseMode )
+          {
+            // the pasted text has no lower case letters
+            TextToPaste = MakeLowerCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
+          }
+          else
+          {
+            // the pasted text has lower case letters, but we're in regular mode
+            TextToPaste = MakeUpperCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
+          }
+        }
+      }
+
+      return TextToPaste;
     }
 
 
