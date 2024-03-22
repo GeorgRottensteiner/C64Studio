@@ -276,6 +276,7 @@
       this.listFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listFiles_DragDrop);
       this.listFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles_DragEnter);
       this.listFiles.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listFiles_MouseClick);
+      this.listFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listFiles_MouseDoubleClick);
       this.listFiles.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.listFiles_PreviewKeyDown);
       // 
       // columnHeader1

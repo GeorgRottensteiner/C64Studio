@@ -393,6 +393,20 @@ namespace RetroDevStudio.Formats
 
 
 
+    public override bool ChangeDirectory( ByteBuffer DirName )
+    {
+      return false;
+    }
+
+
+
+    public override bool ChangeDirectoryUp()
+    {
+      return false;
+    }
+
+
+
 
   }
 }

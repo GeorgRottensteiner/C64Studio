@@ -1364,5 +1364,21 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void listFiles_MouseDoubleClick( object sender, MouseEventArgs e )
+    {
+      if ( ( e.Button != MouseButtons.Left )
+      ||   ( listFiles.SelectedItems.Count == 0 ) )
+      {
+        return;
+      }
+      var fileInfo = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+      if ( fileInfo.Type == FileType.DIR )
+      {
+        m_Media.ChangeDirectory( fileInfo.Filename );
+      }
+    }
+
+
+
   }
 }

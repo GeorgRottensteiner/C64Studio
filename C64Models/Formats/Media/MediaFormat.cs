@@ -55,7 +55,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public virtual bool ChangeDirectory( string Dir )
+    public virtual bool ChangeDirectory( GR.Memory.ByteBuffer DirName )
     {
       return false;
     }

@@ -6255,6 +6255,7 @@ namespace RetroDevStudio.Parser
                 else
                 {
                   AddLabel( upToken, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+                  lineTokenInfos.RemoveAt( 0 );
                 }
               }
               goto HandleRestOfLineAfterLabelThatLooksLikeAnOpcode;
