@@ -315,7 +315,10 @@ namespace RetroDevStudio.Documents
 
         foreach ( int entry in origSelections )
         {
-          listFiles.SelectedIndices.Add( entry );
+          if ( entry < listFiles.Items.Count )
+          {
+            listFiles.SelectedIndices.Add( entry );
+          }
         }
       }
       listFiles.EndUpdate();
@@ -323,6 +326,9 @@ namespace RetroDevStudio.Documents
       {
         listFiles.TopItem = listFiles.Items[offset];
       }
+
+      btnUp.Enabled     = m_Media.CurrentFolder != m_Media.RootFolder;
+      labelFolder.Text  = m_Media.CurrentFolder;
     }
 
 
@@ -1374,7 +1380,20 @@ namespace RetroDevStudio.Documents
       var fileInfo = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
       if ( fileInfo.Type == FileType.DIR )
       {
-        m_Media.ChangeDirectory( fileInfo.Filename );
+        if ( m_Media.ChangeDirectory( fileInfo.Filename ) )
+        {
+          RefreshFileView();
+        }
+      }
+    }
+
+
+
+    private void btnUp_Click( object sender, EventArgs e )
+    {
+      if ( m_Media.ChangeDirectoryUp() )
+      {
+        RefreshFileView();
       }
     }
 

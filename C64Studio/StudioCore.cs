@@ -23,7 +23,7 @@ namespace RetroDevStudio
     public Notification       Notification;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
-    public const string       StudioVersion = Version.VersionBase;
+    public const string       StudioVersion = Version.VersionBase + "a";
     public StudioTheme        Theming;
 
     public static StudioCore  StaticCore = null;

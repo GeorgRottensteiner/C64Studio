@@ -477,6 +477,7 @@
       this.btnUp.TabIndex = 7;
       this.btnUp.Text = "Up";
       this.btnUp.UseVisualStyleBackColor = true;
+      this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
       // 
       // FileManager
       // 

@@ -53,6 +53,8 @@ namespace RetroDevStudio.Formats
 
     public string CurrentFolder { get; set; } = "";
 
+    public string RootFolder { get; protected set; } = "";
+
 
 
     public virtual bool ChangeDirectory( GR.Memory.ByteBuffer DirName )

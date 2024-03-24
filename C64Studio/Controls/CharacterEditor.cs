@@ -286,8 +286,8 @@ namespace RetroDevStudio.Controls
             targetTile.Mode = entry.Tile.Mode;
           }
 
-          int copyWidth = Math.Min( 8, entry.Tile.Width );
-          int copyHeight = Math.Min( 8, entry.Tile.Height );
+          int copyWidth = Math.Max( 8, entry.Tile.Width );
+          int copyHeight = Math.Max( 8, entry.Tile.Height );
 
           for ( int x = 0; x < copyWidth; x += Lookup.PixelWidth( targetTile.Mode ) )
           {
@@ -2306,6 +2306,7 @@ namespace RetroDevStudio.Controls
       switch ( m_Project.Mode )
       {
         case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.MEGA65_ECM:
           colorsInSelector = 32;
           break;
         case TextCharMode.COMMODORE_ECM:
@@ -2324,6 +2325,7 @@ namespace RetroDevStudio.Controls
           break;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.MEGA65_NCM:
           m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.MEGA65 );
           break;
         default:

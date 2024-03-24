@@ -19,6 +19,8 @@ namespace RetroDevStudio.Formats
 
     protected ByteBuffer    _DiskImage = new ByteBuffer();
 
+
+
     // Object		      Related logical blocks
     // ------------+----------------------------------------------------------------
     // Volume         Rootblock, Bitmap block
@@ -29,6 +31,7 @@ namespace RetroDevStudio.Formats
 
     public AmigaDisk()
     {
+      RootFolder = "/";
     }
 
 
@@ -134,6 +137,7 @@ namespace RetroDevStudio.Formats
           break;
       }
 
+      _CurrentDirectory           = "/";
       return true;
     }
 
@@ -218,11 +222,21 @@ namespace RetroDevStudio.Formats
 
     private int LocateDirectoryBlock( string DirectoryName )
     {
-      var parts = DirectoryName.Split( '/' );
+      string    dir = DirectoryName;
+      if ( dir.EndsWith( "/" ) )
+      {
+        dir = dir.Substring( 0, dir.Length - 1 );
+      }
+      var parts = dir.Split( '/' );
       int partPos = 1;
 
       int curDirectoryBlock = ROOT_BLOCK_INDEX;
       int blockOffset = BLOCK_SIZE * curDirectoryBlock;
+
+      if ( dir == "" )
+      {
+        return curDirectoryBlock;
+      }
 
       while ( partPos < parts.Length )
       {
@@ -233,16 +247,23 @@ namespace RetroDevStudio.Formats
           uint hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( blockOffset + 24 + i * 4 ) );
           while ( hashEntry != 0 )
           {
-            uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( blockOffset + BLOCK_SIZE - 4 ) );
+            //int filenameLength  = _DiskImage.ByteAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 80 ) );
+            //info.Filename = _DiskImage.SubBuffer( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 79 ), filenameLength );
+            //info.Size = (int)_DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 188 ) );
+
+            uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 4 ) );
+
+            //uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry + BLOCK_SIZE - 4 ) );
             if ( fileType == 2 )
             {
-              int filenameLength  = _DiskImage.ByteAt( (int)( blockOffset + BLOCK_SIZE - 80 ) );
-              var filename        = _DiskImage.SubBuffer( (int)( blockOffset + BLOCK_SIZE - 79 ), filenameLength );
+              int filenameLength  = _DiskImage.ByteAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 80 ) );
+              var filename        = _DiskImage.SubBuffer( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 79 ), filenameLength );
 
               if ( filename.ToAsciiString() == parts[partPos] )
               {
                 curDirectoryBlock = (int)hashEntry;
-                foundDirEntry = true;
+                blockOffset       = BLOCK_SIZE * curDirectoryBlock;
+                foundDirEntry     = true;
                 break;
               }
             }
@@ -253,12 +274,19 @@ namespace RetroDevStudio.Formats
             // follow hash chain
             hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 16 ) );
           }
+          if ( foundDirEntry )
+          {
+            break;
+          }
         }
         if ( !foundDirEntry )
         {
           return -1;
         }
+        ++partPos;
       }
+      Debug.Log( $"Directory {DirectoryName} found at block {curDirectoryBlock}" );
+
       return curDirectoryBlock;
     }
 
@@ -330,10 +358,13 @@ namespace RetroDevStudio.Formats
       _LastError = "";
       var files = new List<FileInfo>();
 
-      uint hashTableSize = _DiskImage.UInt32NetworkOrderAt( BLOCK_SIZE * ROOT_BLOCK_INDEX + 12 );
+      int dirBlockIndex = LocateDirectoryBlock( _CurrentDirectory );
+
+      //uint hashTableSize = _DiskImage.UInt32NetworkOrderAt( BLOCK_SIZE * dirBlockIndex + 12 );
+      uint hashTableSize = (uint)( ( BLOCK_SIZE / 4 ) - 56 );
       for ( uint i = 0; i < hashTableSize; ++i )
       {
-        uint hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( BLOCK_SIZE * ROOT_BLOCK_INDEX + 24 + i * 4 ) );
+        uint hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( BLOCK_SIZE * dirBlockIndex + 24 + i * 4 ) );
         while ( hashEntry != 0 )
         {
           var info = new FileInfo();
@@ -343,6 +374,9 @@ namespace RetroDevStudio.Formats
           info.Size           = (int)_DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 188 ) );
 
           uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 4 ) );
+
+          Debug.Log( $"HashEntry #{i}, hash value {hashEntry}, has entry {info.Filename.ToAsciiString()}, type {fileType}" );
+
           switch ( fileType )
           {
             case 0xfffffffd:
@@ -395,13 +429,39 @@ namespace RetroDevStudio.Formats
 
     public override bool ChangeDirectory( ByteBuffer DirName )
     {
-      return false;
+      string  newDir = _CurrentDirectory + DirName.ToAsciiString() + "/";
+
+      if ( LocateDirectoryBlock( newDir ) == -1 )
+      {
+        return false;
+      }
+      _CurrentDirectory = newDir;
+      CurrentFolder = _CurrentDirectory;
+
+      return true;
     }
 
 
 
     public override bool ChangeDirectoryUp()
     {
+      if ( _CurrentDirectory == RootFolder )
+      {
+        return false;
+      }
+      int   endPos = _CurrentDirectory.LastIndexOf( '/', _CurrentDirectory.Length - 2 );
+      if ( endPos != -1 )
+      {
+        string  newDir = _CurrentDirectory.Substring( 0, endPos + 1 );
+
+        if ( LocateDirectoryBlock( newDir ) == -1 )
+        {
+          return false;
+        }
+        _CurrentDirectory = newDir;
+        CurrentFolder = _CurrentDirectory;
+        return true;
+      }
       return false;
     }
 
