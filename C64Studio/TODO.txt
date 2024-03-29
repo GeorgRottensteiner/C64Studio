@@ -1,4 +1,11 @@
 ﻿C64Studio
+o Memory Map:
+  $0801 - $1FFE - Start
+  $2000 - $2BCD - unnamed section
+  $2C00 - $2D3F - unnamed section
+  $3000 - $AE1D - unnamed section
+  Could we have this so we can pin it to either the left or right panels so we can see it all the time and not have to scroll up 
+  in the output window to see it?
 o Gibt es im Labelmodus eine Art Labelübersicht, in der alle bereits verwendeten Labelnummern angezeigt werden?
   Schön wäre auch eine Tastenkombination oder "Rechtsklick-Shortcut" mit dem einfach im Quelltext ein Label mit der nächsten freien Nummer eingefügt werden kann.
   Ich bin großer Fan des Labelmodus, toll wäre auch, wenn man den Labeln eine Beschreibung hinzufügen könnte die dann in der Übersicht mit angezeigt wird. In etwa so: "LABEL1: Eingaberoutine"
