@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Collections;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using WeifenLuo.WinFormsUI.Docking;
 
 
@@ -142,15 +144,43 @@ namespace RetroDevStudio.Documents
         }
         var expandedNodesEntry = _ExpandedNodesPerProject[ActiveDocumentInfo.ASMFileInfo];
         expandedNodesEntry.Clear();
-        foreach ( TreeNode node in NodeRoot.Nodes )
+
+        StoreNodeRecursively( NodeRoot.Nodes, expandedNodesEntry );
+      }
+    }
+
+
+
+    private void StoreNodeRecursively( TreeNodeCollection Nodes, Map<string, bool> ExpandedNodesEntry )
+    {
+      foreach ( TreeNode node in Nodes )
+      {
+        if ( ( node != null )
+        &&   ( node.Text != null ) )
         {
-          if ( ( node != null )
-          &&   ( node.Text != null ) )
+          string    textKey = GenerateNodeKey( node );
+
+          if ( node.IsExpanded )
           {
-            expandedNodesEntry[node.Text] = node.IsExpanded;
+            ExpandedNodesEntry[textKey] = node.IsExpanded;
           }
         }
+        StoreNodeRecursively( node.Nodes, ExpandedNodesEntry );
       }
+    }
+
+
+
+    private string GenerateNodeKey( TreeNode Node )
+    {
+      string textKey = Node.Text;
+
+      while ( Node.Parent != null )
+      {
+        textKey = Node.Parent.Text + "_<>_" + textKey;
+        Node    = Node.Parent;
+      }
+      return textKey;
     }
 
 
@@ -449,7 +479,8 @@ namespace RetroDevStudio.Documents
             }
             parentZoneNode.Nodes.Add( node );
 
-            if ( ( expandedNodes.ContainsKey( nodeParentText ) )
+            if ( ( ( expandedNodes.ContainsKey( nodeParentText ) )
+            ||     ( expandedNodes.ContainsKey( GenerateNodeKey( parentZoneNode ) ) ) )
             &&   ( expandedNodes[nodeParentText] ) )
             {
               parentZoneNode.Expand();
@@ -461,8 +492,18 @@ namespace RetroDevStudio.Documents
           Debug.Log( ex.Message );
         }
 
+        if ( expandedNodes.ContainsKey( GenerateNodeKey( node ) ) )
+        {
+          node.Expand();
+        }
       }
       NodeRoot.Expand();
+
+      if ( expandedNodes.ContainsKey( GenerateNodeKey( globalZone ) ) )
+      {
+        globalZone.Expand();
+      }
+
       treeProject.EndUpdate();
     }
 

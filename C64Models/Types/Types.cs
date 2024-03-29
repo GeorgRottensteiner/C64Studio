@@ -547,13 +547,13 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_PROJECT = "C64 Studio Project Files|*.c64|";
     public static string FILEFILTER_SOLUTION = "C64 Studio Solution Files|*.s64|";
     public static string FILEFILTER_SOLUTION_OR_PROJECTS = "C64 Studio Solution or Project Files|*.s64;*.c64|";
-    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly|";
+    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.b;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.map;*.disassembly;*.prg;*.t64;*.d64;*.d71;*.d81;*.dsk;*.adf|";
     public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas;*.a;*.b|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";
     public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81;*.dsk|";
     public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|";
     public static string FILEFILTER_TAPE = "Tape Files|*.t64,*.prg|";
-    public static string FILEFILTER_DISK = "Disk Files|*.d64;*.d71;*.d81|";
+    public static string FILEFILTER_DISK = "Disk Files|*.d64;*.d71;*.d81;*.dsk;*.adf|";
     public static string FILEFILTER_VALUE_TABLE_PROJECT = "Value Table Project Files|*.valuetableproject|";
     public static string FILEFILTER_VALUE_TABLE_DATA = "Value Table Data Files|*.dat|";
   }
@@ -656,16 +656,19 @@ namespace RetroDevStudio.Types
     [Description( "SCR" )]
     SCRATCHED = 0x00,
     [Description( "DEL" )]
-    DEL = 0x80,
+    DEL = 0x00,
     [Description( "SEQ" )]
-    SEQ = 0x81,
+    SEQ = 0x01,
     [Description( "PRG" )]
-    PRG = 0x82,
+    PRG = 0x02,
     [Description( "USR" )]
-    USR = 0x83,
+    USR = 0x03,
     [Description( "REL" )]
-    REL = 0x84,
+    REL = 0x04,
+    [Description( "DIR" )]
+    DIR = 0x05,
 
+    // Commodore specific!
     LOCKED = 0x40,
     CLOSED = 0x80
   }
@@ -696,8 +699,10 @@ namespace RetroDevStudio.Types
      */
     public FileType Type = FileType.SCRATCHED;
 
+    public bool ReadOnly = false;     // Bit 6 for Commodore DOS, flag for CPC DSK
+    public bool NotClosed = false;    // Bit 7 for Commodore DOS (*, splat)
+
     // flags for CPC DSK format
-    public bool ReadOnly = false;
     public bool Hidden = false;
     public int  Size = 0;
 
@@ -1277,6 +1282,8 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_F5, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 139 + 64, true, 139, true, (char)0xeecb, true, "F6" ).Replacements.Add( "F6" );   // TODO F6
       AddC64Key( KeyboardKey.KEY_F7, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 140 + 64, true, 140, true, (char)0xeecc, true, "F8" ).Replacements.Add( "F8" );   // TODO F8
       AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 141 + 64, true, 141, true, (char)0xeecd, -1, 0, true, "SHIFT RETURN", "SH RET" ).Replacements.AddRange( new string[] { "SHIFT-RETURN", "SRET" } );   // TODO Shift-Return
+      AddC64Key( KeyboardKey.KEY_N, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 206,      true, 0,   false, (char)0xee4e, true, "SHIFT N" ).Replacements.Add( "SHIFT-N" );   // Shift-N
+
       AddC64Key( KeyboardKey.KEY_N, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 14, true, 142, true, (char)0xee8e, -1, 0, true, "LOWERCASE", "LOWCASE" ).Replacements.AddRange( new string[] { "CTRL-N", "SWLC" } );
 
       AddC64Key( KeyboardKey.KEY_O, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 207, true, 0, false, (char)0xeecf, true, "REVERSE SHIFT O" );

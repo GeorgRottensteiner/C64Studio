@@ -982,6 +982,7 @@ namespace RetroDevStudio.Types.ASM
           _KnownTokenInfo.Add( zoneList.Key, zone );
         }
       }
+
       foreach ( KeyValuePair<string, SymbolInfo> label in Labels )
       {
         if ( !label.Value.FromDependency )

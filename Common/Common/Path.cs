@@ -108,6 +108,11 @@ namespace GR
 
     public static string Normalize( string Path, bool IsDir, string Separators )
     {
+      if ( string.IsNullOrEmpty( Path ) )
+      {
+        return Path;
+      }
+
       string result = "";
 
       int pos = Path.Length - 1;
@@ -451,6 +456,15 @@ namespace GR
 
     public static bool IsPathEqual( string Path1, string Path2, string Separators )
     {
+      if ( ( string.IsNullOrEmpty( Path1 ) )
+      ||   ( string.IsNullOrEmpty( Path2 ) ) )
+      {
+        if ( Path1 == Path2 )
+        {
+          return true;
+        }
+        return false;
+      }
       string commonPrefix = RemoveBackslash( CommonPrefix( Path1, Path2, Separators ) );
       if ( ( commonPrefix.Length == RemoveBackslash( Normalize( Path1, false ) ).Length )
       &&   ( commonPrefix.Length == RemoveBackslash( Normalize( Path2, false ) ).Length ) )

@@ -897,6 +897,31 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssemblyStringLiteralOperators()
+    {
+      // assembles as raw mapping of the first character
+
+      string      source = @"* = $1000
+                            lda #$61
+                            lda #($61 + $80)  ; lda #$e1
+          
+                            lda #$41
+                            lda #($41 + $80)  ; lda #$c1
+          
+                            lda #""a""          ; lda #$61
+                            lda #(""a"" + $80)  ; lda #$61 (??)
+          
+                            lda #""A""          ; lda #$41
+                            lda #(""A"" + $80)  ; lda #$41 (??)";
+
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010A961A9E1A941A9C1A961A9E1A941A9C1", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyCharLiterals()
     {
       // assembles as raw mapping of the first character
@@ -996,15 +1021,19 @@ namespace TestProject
               COLLISION_FILLABLE    = %00100000; $02
               COLLISION_NOTFILLABLE = %00110000; $03
               COLLISION_DEATH       = %11110000; $0f
+              TEST  = 5 % 3
+              TEST2 = 5 % %100
 
               !byte COLLISION_FILL
               !byte COLLISION_FILLABLE
               !byte COLLISION_NOTFILLABLE
-              !byte COLLISION_DEATH";
+              !byte COLLISION_DEATH
+              !byte TEST
+              !byte TEST2";
 
       var assembly = TestAssembleC64Studio( source );
 
-      Assert.AreEqual( "0020102030F0", assembly.ToString() );
+      Assert.AreEqual( "0020102030F00201", assembly.ToString() );
     }
 
 

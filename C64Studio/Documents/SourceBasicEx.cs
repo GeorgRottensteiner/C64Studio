@@ -168,6 +168,7 @@ namespace RetroDevStudio.Documents
       editSource.SelectionChanged += EditSource_SelectionChanged;
       editSource.LineInserted += EditSource_LineInserted;
       editSource.LineRemoved += EditSource_LineRemoved;
+      editSource.Pasting += EditSource_Pasting;
 
       editSource.PreferredLineWidth = Core.Settings.BASICShowMaxLineLengthIndicatorLength;
 
@@ -187,6 +188,60 @@ namespace RetroDevStudio.Documents
       editBASICStartAddress.Text = "2049";
 
       UpdateLabelModeText();
+    }
+
+
+
+    private void EditSource_Pasting( object sender, TextPastingEventArgs e )
+    {
+      string    textToPaste = e.InsertingText;
+
+      textToPaste = DetectAndAdaptCaseMode( textToPaste );
+      if ( textToPaste == null )
+      {
+        e.Cancel = true;
+        return;
+      }
+
+      e.InsertingText = ReplacePetCatCompatibilityChars( textToPaste, out bool hadError );
+    }
+
+
+
+    private string DetectAndAdaptCaseMode( string TextToPaste )
+    {
+      bool  hasLowercase = false;
+      bool  hasUppercase = false;
+      foreach ( var c in TextToPaste )
+      {
+        hasLowercase |= char.IsLower( c );
+        hasUppercase |= char.IsUpper( c );
+      }
+
+      if ( m_LowerCaseMode != hasLowercase )
+      {
+        // in both cases potential problems arise, ask for automatic adjust
+        var result = System.Windows.Forms.MessageBox.Show( "The pasted text casing does not seem to match the target casing.\r\nAdapt the text casing before inserting?", "Adjust casing?", MessageBoxButtons.YesNoCancel );
+        if ( result == DialogResult.Cancel )
+        {
+          return null;
+        }
+        if ( result == DialogResult.Yes )
+        {
+          if ( m_LowerCaseMode )
+          {
+            // the pasted text has no lower case letters
+            TextToPaste = MakeLowerCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
+          }
+          else
+          {
+            // the pasted text has lower case letters, but we're in regular mode
+            TextToPaste = MakeUpperCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
+          }
+        }
+      }
+
+      return TextToPaste;
     }
 
 
@@ -936,12 +991,7 @@ namespace RetroDevStudio.Documents
         }
 
         // quick compatibility hack with petcat
-        string arrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out bool hadError );
-        string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out hadError );
-        string pound = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out hadError );
-        basicText = basicText.Replace( "~", shiftArrowUp );
-        basicText = basicText.Replace( "\\", pound );
-        basicText = basicText.Replace( "^", arrowUp );
+        basicText = ReplacePetCatCompatibilityChars( basicText, out bool hadError );
         if ( basicText.Contains( "{" ) )
         {
           // BASIC text has macros set!
@@ -1044,6 +1094,22 @@ namespace RetroDevStudio.Documents
         EnableFileWatcher();
       }
       return true;
+    }
+
+
+
+    private string ReplacePetCatCompatibilityChars( string BasicText, out bool HadError )
+    {
+      HadError = false;
+      string arrowUp      = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out HadError );
+      string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out HadError );
+      string pound        = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out HadError );
+
+      BasicText = BasicText.Replace( "~", shiftArrowUp );
+      BasicText = BasicText.Replace( "\\", pound );
+      BasicText = BasicText.Replace( "^", arrowUp );
+
+      return BasicText;
     }
 
 
@@ -1978,6 +2044,7 @@ namespace RetroDevStudio.Documents
       bool labelMode = !m_LabelMode;
 
       Core.MainForm.m_CompileResult.ClearMessages();
+      m_CurrentHighlightLocations.Clear();
 
       string toggledContent;
 
@@ -1988,9 +2055,16 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
+      /*
+      if ( DocumentInfo.ASMFileInfoOriginal != null )
+      {
+        DocumentInfo.ASMFileInfo = DocumentInfo.ASMFileInfoOriginal;
+      }*/
       editSource.Text = toggledContent;
       m_LabelMode = labelMode;
       UpdateLabelModeText();
+
+      Core.MainForm.m_LabelExplorer.RefreshFromDocument( this );
       return true;
     }
 
@@ -2030,6 +2104,8 @@ namespace RetroDevStudio.Documents
 
     public bool PerformLabelModeToggle( out string Result )
     {
+      DocumentInfo.ASMFileInfoOriginal = null;
+
       bool labelMode = !m_LabelMode;
 
       var settings = new Parser.BasicFileParser.ParserSettings();
@@ -2058,17 +2134,28 @@ namespace RetroDevStudio.Documents
         Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, DocumentInfo.Project );
         Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );
-        Core.MainForm.m_CompileResult.Show();
+        Core.ShowDocument( Core.MainForm.m_CompileResult, false );
         return false;
       }
       if ( labelMode )
       {
         Result = parser.EncodeToLabels();
+
+        // this one must work or we screwed up
+        parser.LabelMode = true;
+        bool reparseResult = parser.Parse( Result, null, compilerConfig, null, out DocumentInfo.ASMFileInfo );
       }
       else
       {
         Result = parser.DecodeFromLabels( GR.Convert.ToI32( m_LastLabelAutoRenumberStartLine ), GR.Convert.ToI32( m_LastLabelAutoRenumberLineStep ) );
+        DocumentInfo.ASMFileInfoOriginal = parser.GetASMFileInfo();
+
+        // this one must work or we screwed up
+        parser.Parse( Result, null, compilerConfig, null, out DocumentInfo.ASMFileInfo );
       }
+
+      DocumentInfo.KnownKeywords  = DocumentInfo.ASMFileInfo.KnownTokens();
+      DocumentInfo.KnownTokens    = DocumentInfo.ASMFileInfo.KnownTokenInfo();
 
       if ( parser.Errors > 0 )
       {
@@ -2650,9 +2737,13 @@ namespace RetroDevStudio.Documents
 
     public bool GetCompilableCode( out string Code )
     {
+      DocumentInfo.ASMFileInfoOriginal = null;
+
       if ( m_LabelMode )
       {
-        return PerformLabelModeToggle( out Code );
+        bool result = PerformLabelModeToggle( out Code );
+
+        return result;
       }
       Code = GetContent();
       return true;

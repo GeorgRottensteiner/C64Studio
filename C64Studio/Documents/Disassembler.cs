@@ -275,10 +275,14 @@ namespace RetroDevStudio.Documents
     {
       int     topLine = editDisassembly.VisibleRange.Start.iLine;
 
-      string  disassembly;
-      var settings = new DisassemblerSettings() { AddLineAddresses = checkShowLineAddresses.Checked, AddAssembledBytes = checkShowHexData.Checked };
+      var settings = new DisassemblerSettings() 
+      { 
+        AddLineAddresses  = checkShowLineAddresses.Checked, 
+        AddAssembledBytes = checkShowHexData.Checked,
+        StopAtReturns     = checkStopAtReturns.Checked
+      };
 
-      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly, out int dummy ) )
+      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out string disassembly, out int dummy ) )
       {
         editDisassembly.Text = disassembly;
 
@@ -816,6 +820,12 @@ namespace RetroDevStudio.Documents
       return true;
     }
 
+
+
+    private void checkStopAtReturns_CheckedChanged( object sender, EventArgs e )
+    {
+      UpdateDisassembly();
+    }
 
 
 

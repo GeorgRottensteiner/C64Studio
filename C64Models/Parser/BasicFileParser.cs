@@ -166,6 +166,8 @@ namespace RetroDevStudio.Parser
     private Opcode                                    _OpcodeRem    = null;
     private Opcode                                    _OpcodeThen   = null;
 
+    public Dictionary<int, int>                       LabelLineMapping = new Dictionary<int, int>();
+
 
 
     public BasicFileParser( ParserSettings Settings )
@@ -1906,7 +1908,8 @@ namespace RetroDevStudio.Parser
           var foundKey = ConstantData.LowerCaseCharTo64Char[curChar];
           if ( !foundKey.HasPetSCII )
           {
-            AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
+            AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered",
+                      posInLine, 1 );
           }
           else
           {
@@ -1929,7 +1932,7 @@ namespace RetroDevStudio.Parser
       if ( ( !ConstantData.CharToC64Char.ContainsKey( curChar ) )
       ||   ( !ConstantData.CharToC64Char[curChar].HasPetSCII ) )
       {
-        AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
+        AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered", posInLine, 1 );
       }
       else
       {
@@ -2429,26 +2432,12 @@ namespace RetroDevStudio.Parser
                 symbolInfo.LocalLineIndex   = lineIndex;
                 symbolInfo.Type             = symbolType;
                 symbolInfo.String           = origName;
-                //ASMFileInfo.Labels.Add( origName, symbolInfo );
 
-                if ( m_ASMFileInfo.MappedVariables[varName].Any() )
-                {
-                  //Debug.Log( $"Duplicate shortcut variable name ({varName})" );
-                  var warning = AddWarning( lineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {origName} truncated to two characters is ambigious ({varName})",
-                    variable.StartIndex, variable.Content.Length );
-
-                  foreach ( var duplicate in m_ASMFileInfo.MappedVariables[varName] )
-                  {
-                    m_ASMFileInfo.FindTrueLineSource( duplicate.LineIndex, out string curDoc, out int curLine );
-                    warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
-                  }
-                }
                 if ( !m_ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
                 {
                   m_ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
                 }
               }
-              //ASMFileInfo.Labels[varName].References.Add( lineIndex );
             }
 
             if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
@@ -2484,6 +2473,34 @@ namespace RetroDevStudio.Parser
         else
         {
           m_LineInfos[info.LineIndex] = info;
+        }
+      }
+
+      CheckForAmbigiousVariables();
+    }
+
+
+
+    private void CheckForAmbigiousVariables()
+    {
+      GR.Collections.Set<string>   notifiedMappings = new GR.Collections.Set<string>();
+      foreach ( var mappedVars in m_ASMFileInfo.MappedVariables )
+      {
+        var distinct = mappedVars.Value.Select( si => si.String ).Distinct();
+        if ( distinct.Count() > 1 )
+        {
+          foreach ( var dist in distinct )
+          {
+            foreach ( var entry in mappedVars.Value )
+            {
+              if ( !notifiedMappings.ContainsValue( entry.Name + "_" + dist ) )
+              {
+                notifiedMappings.Add( entry.Name + "_" + dist );
+                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to two characters is ambigious ({dist})",
+                                          entry.CharIndex, entry.String.Length );
+              }
+            }
+          }
         }
       }
     }
@@ -2774,6 +2791,14 @@ namespace RetroDevStudio.Parser
         {
           continue;
         }
+        if ( m_ASMFileInfo.FindTrueLineSource( lineInfo.Key, out string dummy, out int dummy2 , out Types.ASM.SourceInfo sourceInfo ) )
+        {
+          if ( sourceInfo.Source == Types.ASM.SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
+          {
+            // skip media includes, they are rebuilt
+            continue;
+          }
+        }
 
         // remember cut off length so we can properly fill up with blanks below
         int   lineStartLength = sb.Length;
@@ -2846,7 +2871,6 @@ namespace RetroDevStudio.Parser
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
-              //sb.Append( token.Content + " " );
               sb.Append( token.Content );
 
               int nextIndex = i + 1;
@@ -2903,21 +2927,9 @@ namespace RetroDevStudio.Parser
                 ++nextIndex;
               }
               i = nextIndex;
-              /*
-              // fill up with blanks
-              while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-              {
-                sb.Append( ' ' );
-              }*/
               continue;
             }
           }
-          /*
-          // fill up with blanks
-          while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-          {
-            sb.Append( ' ' );
-          }*/
           // if we got here there was no label inserted
           sb.Append( token.Content );
         }
@@ -2995,7 +3007,6 @@ namespace RetroDevStudio.Parser
             string labelToReplace = "LABEL" + lineInfo.Value.Tokens[1].Content;
 
             labelToNumber[labelToReplace] = lineNumber;
-            //Debug.Log( "Replace label " + labelToReplace + " with line " + lineNumber );
           }
           else
           {
@@ -3003,6 +3014,7 @@ namespace RetroDevStudio.Parser
           }
           continue;
         }
+
         lineNumber += lineNumberStep;
       }
       lineNumber = startLineNumber;
@@ -3014,6 +3026,24 @@ namespace RetroDevStudio.Parser
           // leave as is
           sb.AppendLine( lineInfo.Value.Tokens[0].Content );
           continue;
+        }
+
+        if ( m_ASMFileInfo.FindTrueLineSource( lineInfo.Key, out string dummy, out int dummy2, out Types.ASM.SourceInfo sourceInfo ) )
+        {
+          if ( sourceInfo.Source == Types.ASM.SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
+          {
+            // skip media includes, they are rebuilt, but parse the line number in front
+            if ( lineInfo.Value.Tokens.Count > 0 )
+            {
+              int lineNumberFromMedia = GR.Convert.ToI32( lineInfo.Value.Tokens[0].Content );
+
+              if ( lineNumberFromMedia > lineNumber )
+              {
+                lineNumber = lineNumberFromMedia + lineNumberStep;
+              }
+            }
+            continue;
+          }
         }
 
         bool    hadREM = false;
@@ -3043,7 +3073,6 @@ namespace RetroDevStudio.Parser
 
         for ( int tokenIndex = 0; tokenIndex < lineInfo.Value.Tokens.Count; ++tokenIndex  )
         {
-
           Token token = lineInfo.Value.Tokens[tokenIndex];
 
           if ( ( token.TokenType == Token.Type.DIRECT_TOKEN )
@@ -3059,13 +3088,6 @@ namespace RetroDevStudio.Parser
           {
             hadREM = true;
           }
-
-          /*
-          // fill up with blanks
-          while ( token.StartIndex > lineLengthOffset + sb.Length - lineStartLength )
-          {
-            sb.Append( ' ' );
-          }*/
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
           &&   ( ( token.ByteValue == _OpcodeGoto.InsertionValue )

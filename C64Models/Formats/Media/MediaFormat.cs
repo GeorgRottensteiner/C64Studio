@@ -41,6 +41,36 @@ namespace RetroDevStudio.Formats
 
 
 
+    public virtual bool SupportsFolders
+    {
+      get
+      {
+        return false;
+      }
+    }
+
+
+
+    public string CurrentFolder { get; set; } = "";
+
+    public string RootFolder { get; protected set; } = "";
+
+
+
+    public virtual bool ChangeDirectory( GR.Memory.ByteBuffer DirName )
+    {
+      return false;
+    }
+
+
+
+    public virtual bool ChangeDirectoryUp()
+    {
+      return false;
+    }
+
+
+
     public abstract MediaFilenameType FilenameType 
     { 
       get; 

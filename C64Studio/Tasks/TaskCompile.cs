@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using RetroDevStudio.Documents;
 using GR.Memory;
+using RetroDevStudio.Parser;
 
 namespace RetroDevStudio.Tasks
 {
@@ -384,6 +385,10 @@ namespace RetroDevStudio.Tasks
       {
         Core.SuppressOutput();
       }
+      else if ( Core.Settings.ShowOutputDisplayAfterBuild )
+      {
+        Core.ShowDocument( Core.MainForm.m_Output, false );
+      }
 
       Core.SetStatus( "Building..." );
       Core.ClearOutput();
@@ -603,8 +608,8 @@ namespace RetroDevStudio.Tasks
       BuildInfo.TimeStampOfSourceFile = Core.Compiling.FileLastWriteTime( Doc.FullPath );
       BuildInfo.TimeStampOfTargetFile = default( DateTime );
 
-      FileInfo          = null;
-      Doc.LastBuildInfo = null;
+      FileInfo                = null;
+      Doc.LastBuildInfo       = null;
 
       Types.ASM.FileInfo combinedFileInfo = null;
 
@@ -643,7 +648,6 @@ namespace RetroDevStudio.Tasks
               ||   ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
               {
                 dependencyFileInfo = elementDependency.DocumentInfo.ASMFileInfo;
-                //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
               }
             }
             else
@@ -835,7 +839,10 @@ namespace RetroDevStudio.Tasks
                                                   Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            if ( Core.Settings.ShowCompilerMessagesAfterBuild )
+            {
+              Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            }
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
             Core.Notification.BuildFailure();
@@ -857,7 +864,15 @@ namespace RetroDevStudio.Tasks
             return false;
           }
 
-          FileInfo = Doc.ASMFileInfo;
+          /*
+          Doc.ASMFileInfo.LabelModeReferences = Doc.LabelModeReferences;
+          if ( ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
+          &&   ( Doc.LabelModeReferences.Count > 0 ) )
+          {
+            // TODO - Test, does this work?
+            Doc.ASMFileInfo.Labels = Doc.LabelModeReferences;
+          }*/
+          FileInfo                            = Doc.ASMFileInfo;
 
           Core.MainForm.AddOutputMessages( asmFileInfo );
 
@@ -894,7 +909,10 @@ namespace RetroDevStudio.Tasks
               Core.Navigating.UpdateFromMessages( asmFileInfo, Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            if ( Core.Settings.ShowCompilerMessagesAfterBuild )
+            {
+              Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            }
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
             Core.Notification.BuildFailure();
@@ -913,7 +931,10 @@ namespace RetroDevStudio.Tasks
 
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            if ( Core.Settings.ShowCompilerMessagesAfterBuild )
+            {
+              Core.ShowDocument( Core.MainForm.m_CompileResult, false );
+            }
           }
         }
 
@@ -982,7 +1003,10 @@ namespace RetroDevStudio.Tasks
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
         {
-          Core.ShowDocument( Core.MainForm.m_Output, false );
+          if ( Core.Settings.ShowOutputDisplayAfterBuild )
+          {
+            Core.ShowDocument( Core.MainForm.m_Output, false );
+          }
           Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );
           if ( !Core.Executing.RunCommand( Doc, "post build", configSetting.PostBuild ) )
           {
@@ -1009,7 +1033,9 @@ namespace RetroDevStudio.Tasks
 
           if ( !string.IsNullOrEmpty( asmFileInfo.LabelDumpFile ) )
           {
-            Core.MainForm.DumpLabelFile( asmFileInfo );
+            DumpLabelFile.Dump( asmFileInfo, !Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels );
+
+            Core.AddToOutputLine( $"Wrote labels to file '{asmFileInfo.LabelDumpFile}'" );
           }
         }
 

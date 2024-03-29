@@ -1,5 +1,6 @@
 ﻿using GR.Memory;
 using RetroDevStudio.Parser;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
 using System.Security.Policy;
@@ -106,7 +107,7 @@ namespace RetroDevStudio.Parser
         length = (int)subFile.Length - offset;
       }
 
-      string basicDatas = Util.ToBASICData( subFile.SubBuffer( offset, length ), startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength );
+      string basicDatas = Util.ToBASICData( subFile.SubBuffer( offset, length ), startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength, false );
 
       string[]  newLines = basicDatas.Split( new string[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries );
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<C64StudioSettings>
+<RetroDevStudioSettings>
   <EditorColors>
     <Color Element="NONE" FGColor="FFE6DB74" BGColor="Auto"/>
     <Color Element="CODE" FGColor="FFF92672" BGColor="Auto"/>
@@ -14,4 +14,4 @@
     <Color Element="HIGHLIGHTED_SEARCH_RESULTS" FGColor="FF49483E" BGColor="Auto"/>
     <Color Element="ERROR_UNDERLINE" FGColor="FFFF0000" BGColor="FFFFFFFF"/>
   </EditorColors>
-</C64StudioSettings>
+</RetroDevStudioSettings>

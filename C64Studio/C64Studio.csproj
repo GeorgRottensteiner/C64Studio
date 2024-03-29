@@ -58,13 +58,14 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsSBASICFCMChardef.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsBinaryFile.cs" />
     <Compile Update="Controls\ExportMapForms\ExportMapAsCharscreen.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsCharset.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapCharsetAsCharset.cs" />
     <Compile Update="Controls\ExportMapForms\ExportMapAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -349,6 +350,7 @@
     <None Remove="BASIC Dialects\BASIC V4.5.txt" />
     <None Remove="BASIC Dialects\BASIC V7.0.txt" />
     <None Remove="BASIC Dialects\Laser BASIC.txt" />
+    <None Remove="BASIC Dialects\S-BASIC 65.txt" />
     <None Remove="BASIC Dialects\Simons' BASIC.txt" />
     <None Remove="BASIC Dialects\Tuned Simons' BASIC.txt" />
     <None Remove="BASIC Dialects\XC=Basic.txt" />
@@ -376,6 +378,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\Laser BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\S-BASIC 65.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\Simons' BASIC.txt">

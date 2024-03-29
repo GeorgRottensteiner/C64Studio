@@ -19,6 +19,11 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
+    public static string    ASSEMBLER_ID_C64STUDIO      = "ASSEMBLER_C64STUDIO";
+    public static string    ASSEMBLER_ID_RETRODEVSTUDIO = "ASSEMBLER_RETRODEVSTUDIO";
+
+
+
     private enum PathResolving
     { 
       FROM_FILE,
@@ -1202,11 +1207,20 @@ namespace RetroDevStudio.Parser
       &&   ( opText == "+" ) )
       {
         // allows anything
-        if ( ( token1.String.Length == 3 )    // 3 = " + char + "
+        if ( ( ( ( IsInQuotes( token1.String ) )
+        &&       ( token1.String.Length == 3 ) )
+        ||     ( token1.String.Length == 1 ) )
         &&   ( token2.IsInteger() ) )
         {
           // special case, string of length 1 is treated as char!
-          Symbol = CreateStringSymbol( "" + (char)( token1.String[1] + token2.AddressOrValue ) );
+          if ( token1.String.Length == 3 )
+          {
+            Symbol = CreateStringSymbol( "" + (char)( token1.String[1] + token2.AddressOrValue ) );
+          }
+          else
+          {
+            Symbol = CreateStringSymbol( "" + (char)( token1.String[0] + token2.AddressOrValue ) );
+          }
         }
         else
         {
@@ -1473,6 +1487,23 @@ namespace RetroDevStudio.Parser
 
 
 
+    private bool IsInQuotes( string Text )
+    {
+      if ( ( string.IsNullOrEmpty( Text ) )
+      ||   ( Text.Length < 2 ) )
+      {
+        return false;
+      }
+      if ( ( Text.StartsWith( "\"" ) )
+      &&   ( Text.EndsWith( "\"" ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private List<Types.TokenInfo> ProcessExtFunction( int LineIndex, string FunctionName, List<Types.TokenInfo> Tokens, int StartIndex, int Count, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       // split arguments, eg. "extfunction( ..,.. )"
@@ -1695,6 +1726,13 @@ namespace RetroDevStudio.Parser
               NumBytesGiven = Tokens[StartIndex].Length;
 
               symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, TextCodeMapping, out bool hadError );
+              if ( hadError )
+              {
+                AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                  $"Failed to evaluate expression: {Tokens[StartIndex].Content}", Tokens[StartIndex].StartPos, Tokens[StartIndex].Length );
+                symbol.String = "";
+                return false;
+              }
               ResultingToken = symbol;
             }
             return true;
@@ -3901,7 +3939,7 @@ namespace RetroDevStudio.Parser
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -4016,7 +4054,7 @@ namespace RetroDevStudio.Parser
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -4208,7 +4246,7 @@ namespace RetroDevStudio.Parser
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -5535,8 +5573,8 @@ namespace RetroDevStudio.Parser
       {
         ParseAndAddPreDefines( Configuration.Defines, textCodeMapping );
       }
-      AddPreprocessorConstant( "ASSEMBLER_C64STUDIO", 1, -1 );
-      AddPreprocessorConstant( "ASSEMBLER_RETRODEVSTUDIO", 1, -1 );
+      AddPreprocessorConstant( ASSEMBLER_ID_C64STUDIO, 1, -1 );
+      AddPreprocessorConstant( ASSEMBLER_ID_RETRODEVSTUDIO, 1, -1 );
 
       Dictionary<string,string> previousMinusLabel = new Dictionary<string, string>();
       SortedList<int,string>    previousMinusLabelStacked = new SortedList<int, string>();
@@ -5626,7 +5664,7 @@ namespace RetroDevStudio.Parser
         string filename = "";
         if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
         {
-          DumpSourceInfos( OrigLines, Lines );
+          DumpSourceInfos( OrigLines );
           AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't determine filename from line" );
 
           HadFatalError = true;
@@ -6150,18 +6188,18 @@ namespace RetroDevStudio.Parser
           if ( estimatedOpcode != null )
           {
             //Debug.Log( "Found Token " + estimatedOpcode.first.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes             = estimatedOpcode.first.OpcodeSize + SizeOfOpcode( estimatedOpcode.first.ByteValue );
+            info.NumBytes             = estimatedOpcode.first.OpcodeSize + SizeOfOpcode( estimatedOpcode.first );
             info.Opcode               = estimatedOpcode.first;
             info.OpcodeUsingLongMode  = estimatedOpcode.second;
             if ( ( info.Opcode.ParserExpressions.Count > 0 )
             ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMPLICIT ) )
             {
-              if ( SizeOfOpcode( estimatedOpcode.first.ByteValue ) != estimatedOpcode.first.OpcodeSize )
+              /*
+              if ( estimatedOpcode.first.OpcodeSize == 0 )
               {
-                //Debug.Log( $"oha {estimatedOpcode.first.Mnemonic} for {info.Line}" );
-              }
-              info.NumBytes = SizeOfOpcode( estimatedOpcode.first.ByteValue );
-              //info.NumBytes = estimatedOpcode.first.OpcodeSize;
+                Debug.Log( $"Opcode {estimatedOpcode.first.Mnemonic} has no size" );
+              }*/
+              info.NumBytes = SizeOfOpcode( estimatedOpcode.first );
             }
 
             if ( ( estimatedOpcode.first.Addressing == Opcode.AddressingType.IMMEDIATE_ACCU )
@@ -6217,6 +6255,7 @@ namespace RetroDevStudio.Parser
                 else
                 {
                   AddLabel( upToken, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+                  lineTokenInfos.RemoveAt( 0 );
                 }
               }
               goto HandleRestOfLineAfterLabelThatLooksLikeAnOpcode;
@@ -7056,7 +7095,7 @@ namespace RetroDevStudio.Parser
               filename = "";
               if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
-                DumpSourceInfos( OrigLines, Lines );
+                DumpSourceInfos( OrigLines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
                 HadFatalError = true;
                 return Lines;
@@ -7097,7 +7136,7 @@ namespace RetroDevStudio.Parser
               filename = "";
               if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
-                DumpSourceInfos( OrigLines, Lines );
+                DumpSourceInfos( OrigLines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
                 HadFatalError = true;
                 return Lines;
@@ -7332,6 +7371,8 @@ namespace RetroDevStudio.Parser
               }
 
               string fileName = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Content.Length - 2 );
+              // use path of source file
+              fileName = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), fileName );
               m_ASMFileInfo.LabelDumpFile = fileName;
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MACRO )
@@ -8302,7 +8343,7 @@ namespace RetroDevStudio.Parser
             filename = "";
             if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
-              DumpSourceInfos( OrigLines, Lines );
+              DumpSourceInfos( OrigLines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
               HadFatalError = true;
               return Lines;
@@ -8423,7 +8464,7 @@ namespace RetroDevStudio.Parser
             filename = "";
             if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
-              DumpSourceInfos( OrigLines, Lines );
+              DumpSourceInfos( OrigLines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
               HadFatalError = true;
               return Lines;
@@ -8618,10 +8659,15 @@ namespace RetroDevStudio.Parser
       }
 
       /*
-      foreach ( var line in ASMFileInfo.LineInfo )
+      foreach ( var line in m_ASMFileInfo.LineInfo )
       {
-        ASMFileInfo.FindTrueLineSource( line.Key, out string filename, out int localLineIndex );
+        m_ASMFileInfo.FindTrueLineSource( line.Key, out string filename, out int localLineIndex );
         Debug.Log( "Line " + line.Key.ToString( "D3" ) + " ($" + line.Value.AddressStart.ToString( "X4" ) + ": " + line.Value.NumBytes + " bytes: " + line.Value.Line + ", from line " + localLineIndex );
+      }
+
+      foreach ( var si in m_ASMFileInfo.SourceInfo )
+      {
+        Debug.Log( $"Source from {si.Value.GlobalStartLine} = {si.Value.GlobalStartLine}+{si.Value.LineCount} = {si.Value.GlobalStartLine + si.Value.LineCount - 1}  local {si.Value.LocalStartLine}" );
       }*/
 
       m_CompileCurrentAddress = -1;
@@ -8952,11 +8998,21 @@ namespace RetroDevStudio.Parser
     {
       HandleM65OpcodePrefixes( Info );
 
-      /*
-      if ( Info.LineData.Length < Info.Opcode.OpcodeSize )
+      int   insertPos = 0;
+      if ( Info.Opcode.UpperU64OpcodeValue != 0 )
       {
-        Info.LineData.Resize( (uint)Info.Opcode.OpcodeSize );
-      }*/
+        int     numBytes = Info.Opcode.OpcodeSize - 8;
+        ulong   workValue = Info.Opcode.UpperU64OpcodeValue;
+        insertPos = 8;
+
+        for ( int i = 0; i < numBytes; ++i )
+        {
+          Info.LineData.AppendU8( (byte)( workValue >> ( ( numBytes - 1 - i ) * 8 ) ) );
+        }
+        Info.LineData.AppendU64NetworkOrder( Info.Opcode.ByteValue );
+        Info.NumBytes = (int)Info.LineData.Length;
+        return;
+      }
 
       ulong    opcodeValue = Info.Opcode.ByteValue;
       if ( ResultingOpcodePatchValue != ulong.MaxValue )
@@ -8969,7 +9025,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -8982,7 +9038,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -8994,7 +9050,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9006,7 +9062,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9017,7 +9073,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9029,7 +9085,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9040,7 +9096,7 @@ namespace RetroDevStudio.Parser
         if ( ( Info.Opcode.ParserExpressions.Count > 0 )
         &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
         {
-          Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+          Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
           Info.NumBytes = (int)Info.LineData.Length;
         }
         return;
@@ -9049,14 +9105,25 @@ namespace RetroDevStudio.Parser
       if ( ( Info.Opcode.ParserExpressions.Count > 0 )
       &&   ( Info.LineData.Length < Info.Opcode.OpcodeSize ) )
       {
-        Info.LineData.Insert( 0, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
+        Info.LineData.Insert( insertPos, 0, (uint)( Info.Opcode.OpcodeSize - Info.LineData.Length ) );
         Info.NumBytes = (int)Info.LineData.Length;
       }
     }
 
 
 
-    private int SizeOfOpcode( ulong ByteValue )
+    private int SizeOfOpcode( Opcode Opcode )
+    {
+      if ( Opcode.UpperU64OpcodeValue == 0 )
+      {
+        return RequiredNumberOfBytes( Opcode.ByteValue );
+      }
+      return RequiredNumberOfBytes( Opcode.UpperU64OpcodeValue ) + 8;
+    }
+
+
+
+    private int RequiredNumberOfBytes( ulong ByteValue )
     {
       if ( ( ByteValue & 0xff00000000000000 ) != 0 )
       {
@@ -9302,7 +9369,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() + newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9320,7 +9387,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() - newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9338,7 +9405,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() * newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9362,7 +9429,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() / newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9391,7 +9458,7 @@ namespace RetroDevStudio.Parser
             resultingValue = CreateNumberSymbol( originalValue.ToNumber() % newValue.ToNumber() );
             return true;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9427,7 +9494,7 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9440,7 +9507,7 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, ErrorCode.E1009_INVALID_VALUE, "Cannot modify not existing variable" );
             return false;
           }
-          if ( originalValue.Type != newValue.Type )
+          if ( !IsEqualType( originalValue, newValue ) )
           {
             AddError( lineIndex, ErrorCode.E1011_TYPE_MISMATCH, "Mismatching types, cannot evaluate" );
             return false;
@@ -9456,6 +9523,22 @@ namespace RetroDevStudio.Parser
           break;
       }
       AddError( lineIndex, ErrorCode.E1012_IMPLEMENTATION_MISSING, $"Implementation for operator '{operatorToken}' is missing!" );
+      return false;
+    }
+
+
+
+    private bool IsEqualType( SymbolInfo Value1, SymbolInfo Value2 )
+    {
+      if ( Value1.Type == Value2.Type )
+      {
+        return true;
+      }
+      if ( ( Value1.IsInteger() )
+      &&   ( Value2.IsInteger() ) )
+      {
+        return true;
+      }
       return false;
     }
 
@@ -10901,7 +10984,8 @@ namespace RetroDevStudio.Parser
       {
         if ( ( oldInfo.LineCount != -1 )
         &&   ( oldInfo.GlobalStartLine >= SourceIndex )
-        &&   ( oldInfo.GlobalStartLine + oldInfo.LineCount <= SourceIndex + CopyLength ) )
+        //&&   ( oldInfo.GlobalStartLine + oldInfo.LineCount <= SourceIndex + CopyLength ) )
+        &&   ( oldInfo.GlobalStartLine + oldInfo.LineCount < SourceIndex + CopyLength ) )
         {
           // fully inside source scope
           // need to copy!
@@ -11175,7 +11259,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void DumpSourceInfos( Dictionary<string,string[]> OrigLines, string[] Lines )
+    private void DumpSourceInfos( Dictionary<string,string[]> OrigLines )
     {
       if ( !DoLogSourceInfo )
       {
@@ -11247,7 +11331,7 @@ namespace RetroDevStudio.Parser
       bool    hadFatalError = false;
       lines = PreProcess( lines, m_Filename, Configuration, AdditionalPredefines, out hadFatalError );
 
-      DumpSourceInfos( OrigLines, lines );
+      DumpSourceInfos( OrigLines );
 
       if ( !hadFatalError )
       {
@@ -13407,6 +13491,7 @@ namespace RetroDevStudio.Parser
             _ParseContext.DoNotAddReferences = true;
             if ( EvaluateTokens( LineIndex, extraTokens, info.LineCodeMapping, out SymbolInfo expressionResultSymbol ) )
             {
+              /*
               expressionResult = expressionResultSymbol.ToInteger();
               LineTokens.RemoveRange( 2, LineTokens.Count - 2 );
               if ( LineTokens[1].Length > 1 )
@@ -13417,7 +13502,7 @@ namespace RetroDevStudio.Parser
               Types.TokenInfo token = new Types.TokenInfo();
               token.Content = expressionResult.ToString();
               token.Length = token.Content.Length;
-              LineTokens.Add( token );
+              LineTokens.Add( token );*/
             }
             else
             {

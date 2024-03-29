@@ -110,6 +110,11 @@ namespace RetroDevStudio.Documents
         // CPC disk file
         m_Media = new RetroDevStudio.Formats.CPCDSK();
       }
+      else if ( upperName.EndsWith( ".ADF" ) )
+      {
+        // Amiga disk file
+        m_Media = new RetroDevStudio.Formats.AmigaDisk();
+      }
       else if ( upperName.EndsWith( ".T64" ) )
       {
         // tape file
@@ -263,9 +268,9 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( file.Blocks.ToString() );
           string     fileType = "";
 
-          if ( ( file.Type & Types.FileType.CLOSED ) != 0 )
+          if ( !file.NotClosed )
           {
-            switch ( (Types.FileType)( (byte)file.Type & ( 0x0f | (byte)Types.FileType.CLOSED ) ) )
+            switch ( file.Type )
             {
               case Types.FileType.DEL:
                 fileType = "DEL";
@@ -282,15 +287,21 @@ namespace RetroDevStudio.Documents
               case Types.FileType.USR:
                 fileType = "USR";
                 break;
+              case Types.FileType.DIR:
+                fileType = "DIR";
+                break;
+              default:
+                fileType = "???";
+                break;
             }
           }
 
           
-          if ( ( file.Type & RetroDevStudio.Types.FileType.CLOSED ) == 0 )
+          if ( file.NotClosed )
           {
             fileType += "*";
           }
-          if ( ( file.Type & RetroDevStudio.Types.FileType.LOCKED ) != 0 )
+          if ( file.ReadOnly )
           {
             fileType += "<";
           }
@@ -304,7 +315,10 @@ namespace RetroDevStudio.Documents
 
         foreach ( int entry in origSelections )
         {
-          listFiles.SelectedIndices.Add( entry );
+          if ( entry < listFiles.Items.Count )
+          {
+            listFiles.SelectedIndices.Add( entry );
+          }
         }
       }
       listFiles.EndUpdate();
@@ -312,6 +326,9 @@ namespace RetroDevStudio.Documents
       {
         listFiles.TopItem = listFiles.Items[offset];
       }
+
+      btnUp.Enabled     = m_Media.CurrentFolder != m_Media.RootFolder;
+      labelFolder.Text  = m_Media.CurrentFolder;
     }
 
 
@@ -1349,6 +1366,35 @@ namespace RetroDevStudio.Documents
       SetUnmodified();
       RefreshFileView();
       UpdateStatusInfo();
+    }
+
+
+
+    private void listFiles_MouseDoubleClick( object sender, MouseEventArgs e )
+    {
+      if ( ( e.Button != MouseButtons.Left )
+      ||   ( listFiles.SelectedItems.Count == 0 ) )
+      {
+        return;
+      }
+      var fileInfo = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+      if ( fileInfo.Type == FileType.DIR )
+      {
+        if ( m_Media.ChangeDirectory( fileInfo.Filename ) )
+        {
+          RefreshFileView();
+        }
+      }
+    }
+
+
+
+    private void btnUp_Click( object sender, EventArgs e )
+    {
+      if ( m_Media.ChangeDirectoryUp() )
+      {
+        RefreshFileView();
+      }
     }
 
 

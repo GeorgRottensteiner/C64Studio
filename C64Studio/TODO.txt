@@ -1,4 +1,49 @@
-﻿C64Studio
+﻿* BASIC - Undo/Redo -> try to get casing/label mode inside
+* Map Editor:
+  Wenn ich eine Char-Grafik mit meinen Bildbearbeitungsprogramm erstellt habe, kann ich Grafik nicht importieren für das Charset im Map-Editor.
+  Ich bin statt dessen immer über den Char-Editor gegangen, den dort kann ich ja Grafiken importieren. Und von dort habe ich dann die Chars kopiert 
+  und im Map Editor/Charater Set eingefügt.
+
+  Und was auch cool wäre, wenn man sein Charset hat, und man hat alle Tiles damit erstellt, das man das Chraset nach doppelten Chars 
+  durchsuchen kann die dann entfernt werden.
+
+  Was noch ein Wunsch von mir wäre, wenn ich Grafiken im Char-Editor importiere für den Mega65, wird ja meist die Farbpalette mit übernommen von 
+  der Grafik. 
+  Edit Palette - die Farbreihenfolge in Current Palette, per Maustaste oder Cursortasten  verschieben können.
+
+* Disassembler:
+  Wäre es möglich für den Disassembler die Liste der "Named labels" zu ex- und importieren? 
+  Wenn man einen Label setzt, der sich innerhalb des disassemblierten Programms befindet, wäre es praktisch, 
+    wenn an dieser Stelle ein Label erstellt würde. Derzeit werden Bezüge zwar auf dieses Label umgestellt, aber 
+    am Anfang in den Deklarationen ein Label mit festem Speicherbezug erstellt.
+* Was mir aber beim Disassembler augefallen war, wenn man bei den Labels zuerst die Adresse und dann den Namen eingibt, 
+  wird der Button "add" nicht aktiv
+
+320x200:
+*1
+16 pixel pro zeichen
+Range 0x0    VS 40x25
+
+*2
+32 pixel pro zeichen
+0, 16
+left 0,4,8,12,16,...
+Range 40x25  VS 40x25
+
+
+*4
+64 pixel pro zeichen
+0, 16, 32, 48
+left 0,2,4,6,8,10,12,...
+Rang 120x75  VS 40x25
+
+*8
+128 pixel pro zeichen
+0, 16, 32, 48, ...
+left 0,1,2,3,4,...
+Range 280x175  VS 40x25
+
+C64Studio
 o Memory Map:
   $0801 - $1FFE - Start
   $2000 - $2BCD - unnamed section

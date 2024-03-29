@@ -33,6 +33,7 @@
       this.editDisassembly = new FastColoredTextBoxNS.FastColoredTextBox();
       this.contextMenuDisassembler = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.addAsLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.panel1 = new System.Windows.Forms.Panel();
       this.btnOpenBinary = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -71,7 +72,7 @@
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.checkShowHexData = new System.Windows.Forms.CheckBox();
       this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
-      this.addAsLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.checkStopAtReturns = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.contextMenuDisassembler.SuspendLayout();
@@ -128,15 +129,22 @@
             this.addJumpAddressToolStripMenuItem,
             this.addAsLabelToolStripMenuItem});
       this.contextMenuDisassembler.Name = "contextMenuDisassembler";
-      this.contextMenuDisassembler.Size = new System.Drawing.Size(181, 70);
+      this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 48);
       this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
       // 
       // addJumpAddressToolStripMenuItem
       // 
       this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
-      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
       this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
+      // 
+      // addAsLabelToolStripMenuItem
+      // 
+      this.addAsLabelToolStripMenuItem.Name = "addAsLabelToolStripMenuItem";
+      this.addAsLabelToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.addAsLabelToolStripMenuItem.Text = "Add as Label";
+      this.addAsLabelToolStripMenuItem.Click += new System.EventHandler(this.addAsLabelToolStripMenuItem_Click);
       // 
       // panel1
       // 
@@ -507,6 +515,7 @@
       // 
       // groupBox5
       // 
+      this.groupBox5.Controls.Add(this.checkStopAtReturns);
       this.groupBox5.Controls.Add(this.checkShowHexData);
       this.groupBox5.Controls.Add(this.checkShowLineAddresses);
       this.groupBox5.Location = new System.Drawing.Point(492, 386);
@@ -542,12 +551,18 @@
       this.checkShowLineAddresses.UseVisualStyleBackColor = true;
       this.checkShowLineAddresses.CheckedChanged += new System.EventHandler(this.checkShowLineAddresses_CheckedChanged);
       // 
-      // addAsLabelToolStripMenuItem
+      // checkStopAtReturns
       // 
-      this.addAsLabelToolStripMenuItem.Name = "addAsLabelToolStripMenuItem";
-      this.addAsLabelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-      this.addAsLabelToolStripMenuItem.Text = "Add as Label";
-      this.addAsLabelToolStripMenuItem.Click += new System.EventHandler(this.addAsLabelToolStripMenuItem_Click);
+      this.checkStopAtReturns.AutoSize = true;
+      this.checkStopAtReturns.Checked = true;
+      this.checkStopAtReturns.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkStopAtReturns.Location = new System.Drawing.Point(10, 65);
+      this.checkStopAtReturns.Name = "checkStopAtReturns";
+      this.checkStopAtReturns.Size = new System.Drawing.Size(253, 17);
+      this.checkStopAtReturns.TabIndex = 0;
+      this.checkStopAtReturns.Text = "Stop Disassembly at End Points (e.g. RTS/JMP)";
+      this.checkStopAtReturns.UseVisualStyleBackColor = true;
+      this.checkStopAtReturns.CheckedChanged += new System.EventHandler(this.checkStopAtReturns_CheckedChanged);
       // 
       // Disassembler
       // 
@@ -630,5 +645,6 @@
     private System.Windows.Forms.CheckBox checkShowLineAddresses;
     private System.Windows.Forms.CheckBox checkShowHexData;
         private System.Windows.Forms.ToolStripMenuItem addAsLabelToolStripMenuItem;
-    }
+    private System.Windows.Forms.CheckBox checkStopAtReturns;
+  }
 }

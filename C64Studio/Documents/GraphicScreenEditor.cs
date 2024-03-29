@@ -2340,16 +2340,17 @@ namespace RetroDevStudio.Documents
       GR.Memory.ByteBuffer screenChar;
       GR.Memory.ByteBuffer screenColor;
       GR.Memory.ByteBuffer bitmapData;
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -2380,17 +2381,17 @@ namespace RetroDevStudio.Documents
       GR.Memory.ByteBuffer              screenChar;
       GR.Memory.ByteBuffer              screenColor;
       GR.Memory.ByteBuffer              bitmapData;
-      //Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -2480,6 +2481,7 @@ namespace RetroDevStudio.Documents
 
       GR.Memory.ByteBuffer screenCharData   = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
       GR.Memory.ByteBuffer screenColorData  = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       for ( int y = 0; y < BlockHeight; ++y )
       {
@@ -2497,11 +2499,11 @@ namespace RetroDevStudio.Documents
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -2588,6 +2590,7 @@ namespace RetroDevStudio.Documents
       }
       GR.Memory.ByteBuffer screenCharData   = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
       GR.Memory.ByteBuffer screenColorData  = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       for ( int y = 0; y < BlockHeight; ++y )
       {
@@ -2605,11 +2608,11 @@ namespace RetroDevStudio.Documents
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
       }
     }
 
@@ -3888,7 +3891,7 @@ namespace RetroDevStudio.Documents
     {
       int   leftX = m_GraphicScreenProject.ScreenOffsetX * ( 8 / m_ZoomFactor );
 
-      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / m_GraphicScreenProject.ScreenWidth;
+      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
     }
 
 
@@ -3897,7 +3900,7 @@ namespace RetroDevStudio.Documents
     {
       int   leftY = m_GraphicScreenProject.ScreenOffsetY * ( 8 / m_ZoomFactor );
 
-      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / m_GraphicScreenProject.ScreenHeight;
+      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
     }
 
 
@@ -3961,8 +3964,8 @@ namespace RetroDevStudio.Documents
     {
       if ( m_ZoomFactor < 8 )
       {
-        int   totalWidth = Math.Min( 320, m_GraphicScreenProject.ScreenWidth );
-        int   totalHeight = Math.Min( 200, m_GraphicScreenProject.ScreenHeight );
+        int   totalWidth = Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
+        int   totalHeight = Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
 
         int   centerX = ToLocalX( totalWidth );
         int   centerY = ToLocalY( totalHeight );
@@ -4004,8 +4007,8 @@ namespace RetroDevStudio.Documents
         m_ZoomFactor /= 2;
         btnZoomIn.Enabled = true;
         btnZoomOut.Enabled = ( m_ZoomFactor > 1 );
-        int   totalWidth = Math.Min( 320, m_GraphicScreenProject.ScreenWidth );
-        int   totalHeight = Math.Min( 200, m_GraphicScreenProject.ScreenHeight );
+        int   totalWidth = Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
+        int   totalHeight = Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
         pictureEditor.SetImageSize( totalWidth / m_ZoomFactor, totalHeight / m_ZoomFactor );
         AdjustScrollbars();
         Redraw();

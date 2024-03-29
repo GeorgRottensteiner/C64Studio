@@ -1380,6 +1380,9 @@ namespace RetroDevStudio.Documents
       comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
 
+      panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
+      panelCharacters.ItemHeight  = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
+
       Modified = false;
       if ( m_CharsetScreen.ExternalCharset.Length != 0 )
       {
@@ -3095,6 +3098,9 @@ namespace RetroDevStudio.Documents
         }
         panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
       }
+
+      panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
+      panelCharacters.ItemHeight  = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {

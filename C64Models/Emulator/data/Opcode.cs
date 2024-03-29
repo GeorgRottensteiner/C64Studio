@@ -165,8 +165,16 @@ namespace Tiny64
       IMMEDIATE_32BIT           // addi.l #$12345678,d0
     }
 
+    [Flags]
+    public enum OpcodeFlag
+    {
+      NONE            = 0x00000000,
+      IS_END_OF_CODE  = 0x00000001     // rts/rti/jmp, any opcode that ends a run of code
+    }
+
     public string                         Mnemonic = "";
     public ulong                          ByteValue = ulong.MaxValue;
+    public ulong                          UpperU64OpcodeValue = 0;
     public int                            OpcodeSize = -1;
     public AddressingType                 Addressing = AddressingType.UNKNOWN;
     public int                            NumCycles = 0;
@@ -175,6 +183,7 @@ namespace Tiny64
     public int                            BranchSamePagePenalty = 0;
     public int                            BranchOtherPagePenalty = 0;
     public int                            NumNopsToPrefix = 0;
+    public OpcodeFlag                     Flags = OpcodeFlag.NONE;
 
     public List<OpcodeExpression>         ParserExpressions = new List<OpcodeExpression>();
 
@@ -306,5 +315,17 @@ namespace Tiny64
 
       NumPenaltyCycles += Math.Max( BranchOtherPagePenalty, BranchSamePagePenalty );
     }
+
+
+
+    public Opcode SetHighLong( ulong UpperLong )
+    {
+      UpperU64OpcodeValue = UpperLong;
+
+      return this;
+    }
+
+
+
   }
 }

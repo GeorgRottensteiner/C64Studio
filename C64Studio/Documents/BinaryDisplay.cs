@@ -247,6 +247,7 @@ namespace RetroDevStudio.Documents
     private void btnToBASIC_Click( object sender, EventArgs e )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
       if ( lineDelta <= 0 )
@@ -259,7 +260,7 @@ namespace RetroDevStudio.Documents
       {
         curLineNumber = 0;
       }
-      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ) );
+      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ), insertSpaces );
     }
 
 
@@ -428,6 +429,7 @@ namespace RetroDevStudio.Documents
     private void btnToBASICHex_Click( object sender, EventArgs e )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
+      bool insertSpaces = checkInsertSpaces.Checked;
 
       int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
       if ( lineDelta <= 0 )
@@ -441,7 +443,7 @@ namespace RetroDevStudio.Documents
         curLineNumber = 0;
       }
 
-      textBinaryData.Text = Util.ToBASICHexData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ) );
+      textBinaryData.Text = Util.ToBASICHexData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ), insertSpaces );
     }
 
 
@@ -536,6 +538,29 @@ namespace RetroDevStudio.Documents
         ++curPos;
       }
       SetHexData( data );
+    }
+
+
+
+    private void btnDivide_Click( object sender, EventArgs e )
+    {
+      int   divisor = GR.Convert.ToI32( editDivideBy.Text );
+      if ( divisor <= 0 )
+      {
+        return;
+      }
+
+      var data = DataFromHex();
+
+      GR.Memory.ByteBuffer    newData = new GR.Memory.ByteBuffer( data.Length );
+
+      for ( int i = 0; i < data.Length; ++i )
+      {
+        byte    value = data.ByteAt( i );
+
+        newData.SetU8At( i, (byte)( value / divisor ) );
+      }
+      SetHexData( newData );
     }
 
 

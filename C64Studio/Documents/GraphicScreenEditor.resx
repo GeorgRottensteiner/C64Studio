@@ -137,9 +137,9 @@
   </data>
   <data name="btnToolLineDrag.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAgSURBVDhPYxhU4D8Ukw1gBowaggCjhmCCwWfIoAAMDACg
-        LyHfWFUZ5wAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAACBJREFUOE9jGFTgPxSTDWAGjBqCAKOGYILBZ8igAAwMAKAvId9YVRnnAAAAAElF
+        TkSuQmCC
 </value>
   </data>
   <data name="btnMirrorY.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

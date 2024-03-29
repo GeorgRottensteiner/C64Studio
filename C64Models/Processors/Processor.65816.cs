@@ -83,7 +83,7 @@ namespace Tiny64
       sys.AddOpcode( "rol", 0x3E, 2, AddressingType.ABSOLUTE_X, 6, 1 );      // ROL $hhll, X
       sys.AddOpcode( "and", 0x3f, 3, AddressingType.ABSOLUTE_LONG_X, 5 );         // AND $hhmmll,X
 
-      sys.AddOpcode( "rti", 0x40, 0, AddressingType.IMPLICIT, 6 );           // RTI
+      sys.AddOpcode( "rti", 0x40, 0, AddressingType.IMPLICIT, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;           // RTI
       sys.AddOpcode( "eor", 0x41, 1, AddressingType.ZEROPAGE_INDIRECT_X, 6 );         // EOR ($ll,X)
       sys.AddOpcode( "wdm", 0x42, 0, AddressingType.IMPLICIT, 2 );                // WDM
       sys.AddOpcode( "eor", 0x43, 1, AddressingType.STACK_RELATIVE, 4 );          // EOR $ll,SP
@@ -99,7 +99,7 @@ namespace Tiny64
       sys.AddOpcode( "eor", 0x49, 1, AddressingType.IMMEDIATE_ACCU, 2 );          // EOR #$nn
       sys.AddOpcode( "lsr", 0x4A, 0, AddressingType.IMPLICIT, 2 );           // LSR
       sys.AddOpcode( "phk", 0x4b, 0, AddressingType.IMPLICIT, 3 );                // PHK
-      sys.AddOpcode( "jmp", 0x4C, 2, AddressingType.ABSOLUTE, 3 );           // JMP $hhll
+      sys.AddOpcode( "jmp", 0x4C, 2, AddressingType.ABSOLUTE, 3 ).Flags = OpcodeFlag.IS_END_OF_CODE;           // JMP $hhll
       sys.AddOpcode( "eor", 0x4D, 2, AddressingType.ABSOLUTE, 4 );           // EOR $hhll
       sys.AddOpcode( "lsr", 0x4E, 2, AddressingType.ABSOLUTE, 6 );           // LSR $hhll
       sys.AddOpcode( "eor", 0x4f, 3, AddressingType.ABSOLUTE_LONG, 5 );           // EOR $hhmmll
@@ -120,12 +120,12 @@ namespace Tiny64
       sys.AddOpcode( "eor", 0x59, 2, AddressingType.ABSOLUTE_Y, 4, 1 );      // EOR $hhll, Y
       sys.AddOpcode( "phy", 0x5A, 0, AddressingType.IMPLICIT, 3 );               // phy
       sys.AddOpcode( "tcd", 0x5b, 0, AddressingType.IMPLICIT, 2 );                    // TCD
-      sys.AddOpcode( "jmp", 0x5C, 3, AddressingType.ABSOLUTE_LONG, 4 );               // JMP $hhmmll
+      sys.AddOpcode( "jmp", 0x5C, 3, AddressingType.ABSOLUTE_LONG, 4 ).Flags = OpcodeFlag.IS_END_OF_CODE;               // JMP $hhmmll
       sys.AddOpcode( "eor", 0x5D, 2, AddressingType.ABSOLUTE_X, 4, 1 );      // EOR $hhll, X
       sys.AddOpcode( "lsr", 0x5E, 2, AddressingType.ABSOLUTE_X, 6, 1 );      // LSR $hhll, X
       sys.AddOpcode( "eor", 0x5f, 3, AddressingType.ABSOLUTE_LONG_X, 5 );             // EOR $hhmmll, X
 
-      sys.AddOpcode( "rts", 0x60, 0, AddressingType.IMPLICIT, 6 );           // RTS
+      sys.AddOpcode( "rts", 0x60, 0, AddressingType.IMPLICIT, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;           // RTS
       sys.AddOpcode( "adc", 0x61, 1, AddressingType.ZEROPAGE_INDIRECT_X, 6, 1 );      // ADC ($ll,X)
       sys.AddOpcode( "per", 0x62, 2, AddressingType.RELATIVE_16, 6 );                 // PER $hhll
       sys.AddOpcode( "adc", 0x63, 1, AddressingType.STACK_RELATIVE, 4 );              // ADC $ll,SP
@@ -136,8 +136,8 @@ namespace Tiny64
       sys.AddOpcode( "pla", 0x68, 0, AddressingType.IMPLICIT, 4 );           // PLA
       sys.AddOpcode( "adc", 0x69, 1, AddressingType.IMMEDIATE_ACCU, 2, 1 );       // ADC #$nn
       sys.AddOpcode( "ror", 0x6A, 0, AddressingType.IMPLICIT, 2 );           // ROR
-      sys.AddOpcode( "rtl", 0x6b, 0, AddressingType.IMPLICIT, 6 );                    // RTL
-      sys.AddOpcode( "jmp", 0x6C, 2, AddressingType.INDIRECT, 6 );           // JMP ($hhll)
+      sys.AddOpcode( "rtl", 0x6b, 0, AddressingType.IMPLICIT, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;    // RTL
+      sys.AddOpcode( "jmp", 0x6C, 2, AddressingType.INDIRECT, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;    // JMP ($hhll)
       sys.AddOpcode( "adc", 0x6d, 2, AddressingType.ABSOLUTE, 4, 1 );        // ADC $hhll
       sys.AddOpcode( "ror", 0x6E, 2, AddressingType.ABSOLUTE, 6 );           // ROR $hhll
       sys.AddOpcode( "adc", 0x6f, 3, AddressingType.ABSOLUTE_LONG, 5 );               // ADC $hhmmll
@@ -154,14 +154,14 @@ namespace Tiny64
       sys.AddOpcode( "adc", 0x79, 2, AddressingType.ABSOLUTE_Y, 4, 1, 1, 0 );// ADC $hhll, Y
       sys.AddOpcode( "ply", 0x7A, 0, AddressingType.IMPLICIT, 4 );               // ply
       sys.AddOpcode( "tdc", 0x7b, 0, AddressingType.IMPLICIT, 2 );                    // TDC
-      sys.AddOpcode( "jmp", 0x7C, 2, AddressingType.ABSOLUTE_INDIRECT_X, 6 );    // jmp ($1234,x)
+      sys.AddOpcode( "jmp", 0x7C, 2, AddressingType.ABSOLUTE_INDIRECT_X, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;    // jmp ($1234,x)
       sys.AddOpcode( "adc", 0x7d, 2, AddressingType.ABSOLUTE_X, 4, 1, 1, 0 );// ADC $hhll, X
       sys.AddOpcode( "ror", 0x7E, 2, AddressingType.ABSOLUTE_X, 6, 1 );      // ROR $hhll, X
       sys.AddOpcode( "adc", 0x7f, 3, AddressingType.ABSOLUTE_LONG_X, 5 );             // ADC $hhmmll,X
 
-      sys.AddOpcode( "bra", 0x80, 1, AddressingType.RELATIVE, 3, 1 );            // bra label
+      sys.AddOpcode( "bra", 0x80, 1, AddressingType.RELATIVE, 3, 1 ).Flags = OpcodeFlag.IS_END_OF_CODE;            // bra label
       sys.AddOpcode( "sta", 0x81, 1, AddressingType.ZEROPAGE_INDIRECT_X, 6 );         // STA ($ll,X)
-      sys.AddOpcode( "brl", 0x82, 2, AddressingType.RELATIVE_16, 4 );                 // BRL $hhll
+      sys.AddOpcode( "brl", 0x82, 2, AddressingType.RELATIVE_16, 4 ).Flags = OpcodeFlag.IS_END_OF_CODE;                 // BRL $hhll
       sys.AddOpcode( "sta", 0x83, 1, AddressingType.STACK_RELATIVE, 4 );              // sta $ll,SP
       sys.AddOpcode( "sty", 0x84, 1, AddressingType.ZEROPAGE, 3 );           // STY $ll
       sys.AddOpcode( "sta", 0x85, 1, AddressingType.ZEROPAGE, 3 );           // STA $ll
@@ -256,8 +256,8 @@ namespace Tiny64
       sys.AddOpcode( "cmp", 0xD9, 2, AddressingType.ABSOLUTE_Y, 4, 1 );      // CMP $hhll, Y
       sys.AddOpcode( "phx", 0xDA, 0, AddressingType.IMPLICIT, 3 );               // phx
       sys.AddOpcode( "stp", 0xDB, 0, AddressingType.IMPLICIT, 3 );                    // STP
-      sys.AddOpcode( "jmp", 0xdc, 2, AddressingType.ABSOLUTE_INDIRECT_LONG, 6 );      // JMP [$hhll]
-      sys.AddOpcode( "jml", 0xdc, 2, AddressingType.ABSOLUTE_INDIRECT_LONG, 6 );      // JML [$hhll]
+      sys.AddOpcode( "jmp", 0xdc, 2, AddressingType.ABSOLUTE_INDIRECT_LONG, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;      // JMP [$hhll]
+      sys.AddOpcode( "jml", 0xdc, 2, AddressingType.ABSOLUTE_INDIRECT_LONG, 6 ).Flags = OpcodeFlag.IS_END_OF_CODE;      // JML [$hhll]
       sys.AddOpcode( "cmp", 0xDD, 2, AddressingType.ABSOLUTE_X, 4, 1 );      // CMP $hhll, X
       sys.AddOpcode( "dec", 0xDE, 2, AddressingType.ABSOLUTE_X, 7 );         // DEC $hhll, X
       sys.AddOpcode( "cmp", 0xdf, 3, AddressingType.ABSOLUTE_LONG_X, 5 );             // CMP $hhmmll,X

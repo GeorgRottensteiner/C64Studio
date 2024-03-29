@@ -96,7 +96,9 @@ namespace RetroDevStudio.Controls
           document.SetDocumentFilename( "New Character Set.charsetproject" );
           document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
         }
-        ( (CharsetEditor)document ).OpenProject( Info.CharsetData );
+        var charset = new CharsetProject();
+        charset.ReadFromBuffer( Info.Charscreen.CharSet.SaveToBuffer() );
+        ( (CharsetEditor)document ).SetCharsetProject( charset );
         document.SetModified();
         document.Save( SaveMethod.SAVE );
       }

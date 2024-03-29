@@ -19,9 +19,15 @@ namespace RetroDevStudio
 
     public Types.ASM.FileInfo             ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
 
+    // set if for example label mode is used (BASIC) - so all references point to the actual label mode code and not the generated code
+    public Types.ASM.FileInfo             ASMFileInfoOriginal = new RetroDevStudio.Types.ASM.FileInfo();
+
     public SingleBuildInfo                LastBuildInfo = null;
 
     public Undo.UndoManager UndoManager { get; set; } = new Undo.UndoManager();
+
+    // temporary storage for BASIC label mode
+    public Dictionary<string, SymbolInfo> LabelModeReferences = new Dictionary<string, SymbolInfo>();
 
 
 

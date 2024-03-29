@@ -1,5 +1,6 @@
 ﻿using RetroDevStudio.Types;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RetroDevStudio
@@ -42,7 +43,7 @@ namespace RetroDevStudio
     public int        Length = 0;
     public RetroDevStudio.Types.ASM.SourceInfo SourceInfo = null;
     public int        NumArguments = 0;
-    public GR.Collections.MultiMap<int,SymbolReference>  References = new GR.Collections.MultiMap<int, SymbolReference>();
+    public GR.Collections.MultiMap<int,SymbolReference>   References = new GR.Collections.MultiMap<int, SymbolReference>();
 
 
 
@@ -54,22 +55,22 @@ namespace RetroDevStudio
 
     public SymbolInfo( SymbolInfo RHS )
     {
-      Type = RHS.Type;
-      Name = RHS.Name;
-      LineIndex = RHS.LineIndex;            // global
-      LineCount = RHS.LineCount;           // global (-1 is for complete file)
-      DocumentFilename = RHS.DocumentFilename;
-      LocalLineIndex = RHS.LocalLineIndex;
-      AddressOrValue = RHS.AddressOrValue;
-      String = RHS.String;
-      RealValue = RHS.RealValue;
-      Zone = RHS.Zone;
-      FromDependency = RHS.FromDependency;
-      Info = RHS.Info;
-      CharIndex = RHS.CharIndex;
-      Length = RHS.Length;
-      SourceInfo = RHS.SourceInfo;
-      References = RHS.References;
+      Type                  = RHS.Type;
+      Name                  = RHS.Name;
+      LineIndex             = RHS.LineIndex;            // global
+      LineCount             = RHS.LineCount;           // global (-1 is for complete file)
+      DocumentFilename      = RHS.DocumentFilename;
+      LocalLineIndex        = RHS.LocalLineIndex;
+      AddressOrValue        = RHS.AddressOrValue;
+      String                = RHS.String;
+      RealValue             = RHS.RealValue;
+      Zone                  = RHS.Zone;
+      FromDependency        = RHS.FromDependency;
+      Info                  = RHS.Info;
+      CharIndex             = RHS.CharIndex;
+      Length                = RHS.Length;
+      SourceInfo            = RHS.SourceInfo;
+      References            = RHS.References;
     }
 
 

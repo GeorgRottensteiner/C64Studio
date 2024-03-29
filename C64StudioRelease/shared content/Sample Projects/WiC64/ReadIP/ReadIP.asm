@@ -57,9 +57,9 @@
 
 
 READ_IP_COMMAND
-          !byte 'W'         ;'W' for WiC64
-          !word $0004       ;total length of command
+          !byte 'R'         ;'R' for WiC64 >=2.x
           !byte $06         ;command for reading IP
+          !word $0000       ;total length of command data
 
 TIMED_OUT_MESSAGE
           !pet "get ip timed out, check wic64 state",0

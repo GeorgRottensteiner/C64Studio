@@ -1548,20 +1548,7 @@ namespace RetroDevStudio
       tool.Visible[Perspective.DEBUG] = VisibleDebug;
       tool.ToolDescription = GR.EnumHelper.GetDescription( Type );
       tool.Type = Type;
-      /*
-      if ( Visible )
-      {
-        tool.Document.Show( panelMain );
-        tool.MenuItem.Checked = true;
-      }
-      else
-      {
-        //tool.Document.Show( panelMain );
-        tool.Document.DockPanel = panelMain;
-        tool.Document.DockState = DockState.Hidden;
-        tool.MenuItem.Checked = false;
-      }
-       */
+
       LayoutInfo layout = null;
       if ( StudioCore.Settings.ToolLayout.ContainsKey( MenuItem.Text ) )
       {
@@ -2257,37 +2244,6 @@ namespace RetroDevStudio
         return true;
       }
       return false;
-    }
-
-
-
-    public void DumpLabelFile( Types.ASM.FileInfo FileInfo )
-    {
-      StringBuilder sb = new StringBuilder();
-
-      foreach ( var labelInfo in FileInfo.Labels )
-      {
-        sb.Append( labelInfo.Value.Name );
-        sb.Append( " =$" );
-        if ( labelInfo.Value.AddressOrValue > 255 )
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X4" ) );
-        }
-        else
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X2" ) );
-        }
-        sb.Append( "; " );
-        if ( labelInfo.Value.References.Count == 0 )
-        {
-          sb.AppendLine( "unused" );
-        }
-        else
-        {
-          sb.AppendLine();
-        }
-      }
-      GR.IO.File.WriteAllText( FileInfo.LabelDumpFile, sb.ToString() );
     }
 
 
@@ -3405,7 +3361,8 @@ namespace RetroDevStudio
         Invoke( new ParameterLessCallback( UpdateCaption ) );
         return;
       }
-      if ( CurrentProject != null )
+      if ( ( CurrentProject != null )
+      &&   ( StudioCore.Navigating.Solution != null ) )
       {
         Text = "C64Studio - " + StudioCore.Navigating.Solution.Name + " - " + CurrentProject.Settings.Name;
       }
@@ -4023,7 +3980,13 @@ namespace RetroDevStudio
     {
       if ( InvokeRequired )
       {
-        Invoke( new ParameterLessCallback( StopDebugging ) );
+        try
+        {
+          Invoke( new ParameterLessCallback( StopDebugging ) );
+        }
+        catch ( ObjectDisposedException )
+        {
+        }
       }
       else
       {
@@ -5496,9 +5459,25 @@ namespace RetroDevStudio
         }
       }
 
-      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, out ASMFileInfo );
+      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, 
+                                      Document.LabelModeReferences, out ASMFileInfo );
 
       Document.ASMFileInfo = ASMFileInfo;
+
+      if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      {
+        if ( ASMFileInfo != null )
+        {
+          if ( Document.ASMFileInfoOriginal != null )
+          {
+            ASMFileInfo = Document.ASMFileInfoOriginal;
+
+            Document.ASMFileInfo = Document.ASMFileInfoOriginal;
+            Document.ASMFileInfoOriginal = null;
+          }
+        }
+      }
+
 
       if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
@@ -5509,13 +5488,6 @@ namespace RetroDevStudio
           Document.Element.AssemblerType = config.Assembler;
           Document.BaseDoc.SetModified();
         }
-      }
-
-      if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-      {
-        RetroDevStudio.Parser.ASMFileParser asmParser = (RetroDevStudio.Parser.ASMFileParser)Parser;
-
-        Document.ASMFileInfo = ASMFileInfo;
       }
 
       DependencyBuildState buildState = null;
@@ -5648,14 +5620,20 @@ namespace RetroDevStudio
       {
         if ( ASMFileInfo != null )
         {
-          Document.KnownKeywords  = ASMFileInfo.KnownTokens();
-          Document.KnownTokens    = ASMFileInfo.KnownTokenInfo();
+          if ( Document.ASMFileInfoOriginal != null )
+          {
+            Document.ASMFileInfo          = Document.ASMFileInfoOriginal;
+            Document.ASMFileInfoOriginal  = null;
+          }
+
+          Document.KnownKeywords  = Document.ASMFileInfo.KnownTokens();
+          Document.KnownTokens    = Document.ASMFileInfo.KnownTokenInfo();
         }
       }
 
       if ( OutputMessages )
       {
-        AddTask( new Tasks.TaskUpdateCompileResult( ASMFileInfo, Document ) );
+        AddTask( new Tasks.TaskUpdateCompileResult( Document.ASMFileInfo, Document ) );
       }
       if ( ( result )
       &&   ( Document.BaseDoc != null ) )
@@ -5997,6 +5975,15 @@ namespace RetroDevStudio
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         return project.ShowDocument( project.GetElementByFilename( Filename ) );
       }
+      // file already opened?
+      var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
+      if ( ( docInfo != null )
+      &&   ( docInfo.BaseDoc != null ) )
+      {
+        StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
+        docInfo.BaseDoc.Show();
+        return docInfo.BaseDoc;
+      }
 
       bool    openDirectFile = true;
 
@@ -6005,6 +5992,7 @@ namespace RetroDevStudio
       ||   ( extension == ".D81" )
       ||   ( extension == ".T64" )
       ||   ( extension == ".DSK" )
+      ||   ( extension == ".ADF" )
       ||   ( extension == ".PRG" ) )
       {
         document = new FileManager( StudioCore, Filename );

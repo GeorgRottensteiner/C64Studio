@@ -36,7 +36,7 @@ namespace RetroDevStudio.Documents
       this.tabValueTableEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.listValues = new ArrangedItemList();
+      this.listValues = new RetroDevStudio.Controls.ArrangedItemList();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editValueEntry = new System.Windows.Forms.TextBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -89,6 +89,7 @@ namespace RetroDevStudio.Documents
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabValueTableEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -415,6 +416,7 @@ namespace RetroDevStudio.Documents
       // 
       // groupExport
       // 
+      this.groupExport.Controls.Add(this.checkInsertSpaces);
       this.groupExport.Controls.Add(this.editExportBASICLineOffset);
       this.groupExport.Controls.Add(this.editExportBASICLineNo);
       this.groupExport.Controls.Add(this.label1);
@@ -646,6 +648,16 @@ namespace RetroDevStudio.Documents
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
       // 
+      // checkInsertSpaces
+      // 
+      this.checkInsertSpaces.AutoSize = true;
+      this.checkInsertSpaces.Location = new System.Drawing.Point(129, 139);
+      this.checkInsertSpaces.Name = "checkInsertSpaces";
+      this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
+      this.checkInsertSpaces.TabIndex = 30;
+      this.checkInsertSpaces.Text = "Insert Spaces";
+      this.checkInsertSpaces.UseVisualStyleBackColor = true;
+      // 
       // ValueTableEditor
       // 
       this.ClientSize = new System.Drawing.Size(994, 527);
@@ -734,5 +746,6 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Button btnImportFromASM;
     private System.Windows.Forms.CheckBox checkGenerateDeltas;
     private System.Windows.Forms.Button btnExportToBASICHex;
+    private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }

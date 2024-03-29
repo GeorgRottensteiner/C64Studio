@@ -810,7 +810,7 @@ namespace RetroDevStudio.Documents
 
       int         lineDelta = GR.Convert.ToI32( editExportBASICLineOffset.Text );
       int         curLineNumber = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      editDataExport.Text = Util.ToBASICData( exportData, curLineNumber, lineDelta, 80, 0 );
+      editDataExport.Text = Util.ToBASICData( exportData, curLineNumber, lineDelta, 80, 0, checkInsertSpaces.Checked );
     }
 
 
@@ -913,7 +913,7 @@ namespace RetroDevStudio.Documents
 
       int         lineDelta = GR.Convert.ToI32( editExportBASICLineOffset.Text );
       int         curLineNumber = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      editDataExport.Text = Util.ToBASICHexData( exportData, curLineNumber, lineDelta );
+      editDataExport.Text = Util.ToBASICHexData( exportData, curLineNumber, lineDelta, checkInsertSpaces.Checked );
     }
 
 

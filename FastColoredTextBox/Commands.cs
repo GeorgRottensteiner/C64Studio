@@ -175,6 +175,11 @@ namespace FastColoredTextBoxNS
     {
       var tb = ts.CurrentTB;
 
+      if ( CharIndex >= ts[LineIndex].Length )
+      {
+        return 1;
+      }
+
       deletedChar = ts[LineIndex][CharIndex].c;
       int     numCharsToDelete = 1;
       int origCharIndex = CharIndex;
@@ -409,13 +414,12 @@ namespace FastColoredTextBoxNS
       }
       else
       {
-        for ( int i=pos; i < ts[iLine].Count; i++ )
+        for ( int i = pos; i < ts[iLine].Count; i++ )
         {
           newLine.Add( ts[iLine][i] );
         }
         ts[iLine].RemoveRange( pos, ts[iLine].Count - pos );
       }
-      //
       ts.InsertLine( iLine + 1, newLine );
     }
 
@@ -431,16 +435,18 @@ namespace FastColoredTextBoxNS
   public class InsertTextCommand : UndoableCommand
   {
     public string InsertedText;
+    public bool ColumnSelectionMode = false;
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="ts">Underlaying textbox</param>
     /// <param name="insertedText">Text for inserting</param>
-    public InsertTextCommand( TextSource ts, string insertedText )
+    public InsertTextCommand( TextSource ts, string insertedText, bool ColumnSelectionMode = false )
       : base( ts )
     {
-      this.InsertedText = insertedText;
+      this.InsertedText         = insertedText;
+      this.ColumnSelectionMode  = ColumnSelectionMode;
     }
 
     /// <summary>
@@ -450,6 +456,7 @@ namespace FastColoredTextBoxNS
     {
       ts.CurrentTB.Selection.Start = sel.Start;
       ts.CurrentTB.Selection.End = lastSel.Start;
+      ts.CurrentTB.Selection.ColumnSelectionMode = ColumnSelectionMode;
       ts.OnTextChanging();
       ClearSelectedCommand.ClearSelected( ts );
       base.Undo();
@@ -461,16 +468,18 @@ namespace FastColoredTextBoxNS
     public override void Execute()
     {
       ts.OnTextChanging( ref InsertedText );
-      InsertText( InsertedText, ts );
+      InsertText( InsertedText, ts, ColumnSelectionMode );
       base.Execute();
     }
 
-    internal static void InsertText( string insertedText, TextSource ts )
+    internal static void InsertText( string insertedText, TextSource ts, bool ColumnSelectionMode = false )
     {
       var tb = ts.CurrentTB;
 
       var startPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
       var endPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
+
+      var origStartPos = new Place( startPos.iChar, startPos.iLine );
       try
       {
         tb.Selection.BeginUpdate();
@@ -481,19 +490,62 @@ namespace FastColoredTextBoxNS
           InsertCharCommand.InsertLine( ts );
           tb.Selection.Start = Place.Empty;
         }
-        tb.ExpandBlock( tb.Selection.Start.iLine );
-        var len = insertedText.Length;
-        for ( int i = 0; i < len; i++ )
-        {
-          var c = insertedText[i];
-          if ( c == '\r' && ( i >= len - 1 || insertedText[i + 1] != '\n' ) )
-            InsertCharCommand.InsertChar( '\n', ref cc, ts );
-          else
-            InsertCharCommand.InsertChar( c, ref cc, ts );
-        }
-        ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, 1 ) );
 
-        endPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
+        if ( ColumnSelectionMode )
+        {
+          string[]  lines = insertedText.Split( '\n' );
+          int maxEnd = origStartPos.iChar;
+          for ( int j = 0; j < lines.Length; ++j )
+          {
+            tb.Selection.Start = new Place( origStartPos.iChar, origStartPos.iLine + j );
+
+            string line = lines[j].Trim();
+
+            maxEnd = Math.Max( origStartPos.iChar + line.Length, maxEnd );
+
+            tb.ExpandBlock( tb.Selection.Start.iLine + j );
+
+
+            // append line at bottom
+            while ( tb.Selection.Start.iLine >= ts.Count )
+            {
+              ts.InsertLine( ts.Count, ts.CreateLine() );
+            }
+
+
+            // fill line if column would be outside the right end
+            while ( ts[tb.Selection.Start.iLine].Length < origStartPos.iChar )
+            {
+              InsertCharCommand.InsertChar( ' ', ref cc, ts );
+            }
+
+            var len = line.Length;
+            for ( int i = 0; i < len; i++ )
+            {
+              var c = line[i];
+              InsertCharCommand.InsertChar( c, ref cc, ts );
+            }
+          }
+          ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, lines.Length ) );
+          endPos = new Place( maxEnd, tb.Selection.Start.iLine );
+          startPos = origStartPos;
+          tb.Selection.Start = new Place( maxEnd, endPos.iLine );
+        }
+        else
+        {
+          tb.ExpandBlock( tb.Selection.Start.iLine );
+          var len = insertedText.Length;
+          for ( int i = 0; i < len; i++ )
+          {
+            var c = insertedText[i];
+            if ( c == '\r' && ( i >= len - 1 || insertedText[i + 1] != '\n' ) )
+              InsertCharCommand.InsertChar( '\n', ref cc, ts );
+            else
+              InsertCharCommand.InsertChar( c, ref cc, ts );
+          }
+          ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, 1 ) );
+          endPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
+        }
       }
       finally
       {
@@ -687,8 +739,6 @@ namespace FastColoredTextBoxNS
 
       if ( tb.AllowTabs )
       {
-        //InsertCharCommand.DumpLine( ts, fromLine );
-
         // remove backwards to properly handle tabs
         for ( int i = toChar - 1; i >= fromChar; )
         {
@@ -718,7 +768,14 @@ namespace FastColoredTextBoxNS
       if ( fromLine < 0 )
         return;
       //
-      if ( fromLine == toLine )
+      if ( tb.Selection.ColumnSelectionMode )
+      {
+        for ( int i = fromLine; i <= toLine; ++i )
+        {
+          RemoveRange( ts, i, fromChar, toChar );
+        }
+      }
+      else if ( fromLine == toLine )
       {
         RemoveRange( ts, fromLine, fromChar, toChar );
       }
@@ -968,10 +1025,10 @@ namespace FastColoredTextBoxNS
       try
       {
         if ( cmd is InsertTextCommand )
-          ExecuteInsertTextCommand( ref iChar, ( cmd as InsertTextCommand ).InsertedText );
+          ExecuteInsertTextCommand( ref iChar, ( cmd as InsertTextCommand ).InsertedText, ( cmd as InsertTextCommand ).ColumnSelectionMode );
         else
           if ( cmd is InsertCharCommand && ( cmd as InsertCharCommand ).c != '\x0' && ( cmd as InsertCharCommand ).c != '\b' )//if not DEL or BACKSPACE
-            ExecuteInsertTextCommand( ref iChar, ( cmd as InsertCharCommand ).c.ToString() );
+            ExecuteInsertTextCommand( ref iChar, ( cmd as InsertCharCommand ).c.ToString(), false );
           else
             ExecuteCommand( ref iChar );
       }
@@ -994,7 +1051,7 @@ namespace FastColoredTextBoxNS
       }
     }
 
-    private void ExecuteInsertTextCommand( ref int iChar, string text )
+    private void ExecuteInsertTextCommand( ref int iChar, string text, bool ColumnSelectionMode )
     {
       var lines = text.Split( '\n' );
       var iLine = 0;

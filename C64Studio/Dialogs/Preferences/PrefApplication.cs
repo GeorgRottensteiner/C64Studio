@@ -23,14 +23,16 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefApplication( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "application", "general", "generic", "mode", "mru" } );
+      _Keywords.AddRange( new string[] { "application", "general", "generic", "mode", "mru", "solution", "compiler", "messages", "environment" } );
 
       InitializeComponent();
 
-      comboAppMode.SelectedIndex        = (int)Core.Settings.StudioAppMode;
-      editDefaultOpenSolutionPath.Text  = Core.Settings.DefaultProjectBasePath;
-      editMaxMRUEntries.Text            = Core.Settings.MRUMaxCount.ToString();
-      checkAutoOpenLastSolution.Checked = Core.Settings.AutoOpenLastSolution;
+      comboAppMode.SelectedIndex                  = (int)Core.Settings.StudioAppMode;
+      editDefaultOpenSolutionPath.Text            = Core.Settings.DefaultProjectBasePath;
+      editMaxMRUEntries.Text                      = Core.Settings.MRUMaxCount.ToString();
+      checkAutoOpenLastSolution.Checked           = Core.Settings.AutoOpenLastSolution;
+      checkShowCompilerMessagesAfterBuild.Checked = Core.Settings.ShowCompilerMessagesAfterBuild;
+      checkShowOutputDisplayAfterBuild.Checked    = Core.Settings.ShowOutputDisplayAfterBuild;
     }
 
 
@@ -64,6 +66,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlEnvironment.AddAttribute( "MaxMRUCount", Core.Settings.MRUMaxCount.ToString() );
       xmlEnvironment.AddAttribute( "DefaultOpenSolutionPath", Core.Settings.DefaultProjectBasePath );
       xmlEnvironment.AddAttribute( "ApplicationMode", ( (int)Core.Settings.StudioAppMode ).ToString() );
+      xmlEnvironment.AddAttribute( "ShowCompilerMessagesAfterBuild", Core.Settings.ShowCompilerMessagesAfterBuild ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "ShowOutputDisplayAfterBuild", Core.Settings.ShowOutputDisplayAfterBuild ? "yes" : "no" );
     }
 
 
@@ -73,10 +77,12 @@ namespace RetroDevStudio.Dialogs.Preferences
       var xmlEnvironment = SettingsRoot.FindByType( "Generic.Environment" );
       if ( xmlEnvironment != null )
       {
-        checkAutoOpenLastSolution.Checked = IsSettingTrue( xmlEnvironment.Attribute( "OpenLastSolutionOnStartup" ) );
-        editMaxMRUEntries.Text            = GR.Convert.ToI32( xmlEnvironment.Attribute( "MaxMRUCount" ) ).ToString();
-        editDefaultOpenSolutionPath.Text  = xmlEnvironment.Attribute( "DefaultOpenSolutionPath" );
-        comboAppMode.SelectedIndex        = GR.Convert.ToI32( xmlEnvironment.Attribute( "ApplicationMode" ) );
+        checkAutoOpenLastSolution.Checked           = IsSettingTrue( xmlEnvironment.Attribute( "OpenLastSolutionOnStartup" ) );
+        editMaxMRUEntries.Text                      = GR.Convert.ToI32( xmlEnvironment.Attribute( "MaxMRUCount" ) ).ToString();
+        editDefaultOpenSolutionPath.Text            = xmlEnvironment.Attribute( "DefaultOpenSolutionPath" );
+        comboAppMode.SelectedIndex                  = GR.Convert.ToI32( xmlEnvironment.Attribute( "ApplicationMode" ) );
+        checkShowCompilerMessagesAfterBuild.Checked = IsSettingTrue( xmlEnvironment.Attribute( "ShowCompilerMessagesAfterBuild" ) );
+        checkShowOutputDisplayAfterBuild.Checked    = IsSettingTrue( xmlEnvironment.Attribute( "ShowOutputDisplayAfterBuild" ) );
       }
     }
     
@@ -124,6 +130,26 @@ namespace RetroDevStudio.Dialogs.Preferences
         mruCount = 4;
       }
       Core.Settings.MRUMaxCount = mruCount;
+    }
+
+
+
+    private void checkShowCompilerMessagesAfterBuild_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.ShowCompilerMessagesAfterBuild != checkShowCompilerMessagesAfterBuild.Checked )
+      {
+        Core.Settings.ShowCompilerMessagesAfterBuild = checkShowCompilerMessagesAfterBuild.Checked;
+      }
+    }
+
+
+
+    private void checkShowOutputDisplayAfterBuild_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.ShowOutputDisplayAfterBuild != checkShowOutputDisplayAfterBuild.Checked )
+      {
+        Core.Settings.ShowOutputDisplayAfterBuild = checkShowOutputDisplayAfterBuild.Checked;
+      }
     }
 
 

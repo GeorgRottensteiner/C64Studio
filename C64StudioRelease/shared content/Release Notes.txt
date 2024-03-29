@@ -17,6 +17,80 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+19.02.2024 - 7.7:         Add: 68k support (no opcode size fallback yet, but feature complete)
+                          Add: Copy to clipboard adds column selection mode flag 
+                          WIP: Paste column selection block from clipboard inserts all lines
+                          Fix: Potential crash if unknown macros are using in text literal
+                          Add: Charset export for S-BASIC fcm chardefs
+                          Add: When exporting to BASIC DATA statements, option to insert spaces
+                          Fix: BASIC: Paste ^ into BASIC editor now properly converts it
+                          Add: Disassembler, option to keep on disassembling even when encountering code end points (like rts/jmp)
+                          Fix: Potential racing condition in VICE binary monitor debugger interface could crash Add: S-BASIC dialect file for Mega65 Fix: Disassembler crash if a non preset label would be placed inside an opcode
+                          Add: BASIC Toggling label mode does not mess up with #include/#media statements anymore
+                          Fix: Disassembler was broken for new addressing mode (e.g. ldy #$xx)
+                          Fix: BASIC ambigious variable listing
+                          Add: CTRL-Z/shift-Z as alias keybindings for undo redo
+                          Fix: mapping of !fi pseudo op
+                          Fix: Don't crash when viewing 0xde00 in memory viewer
+                          Fix: Adjust SID repeat cycle to 32 registers, avoiding crash when accessing $D440
+                          Fix: breakpoint filter logic of Tiny64Debugger
+                          Add: ASM - Context Menu: Add Watches with different sizes directly
+                          Add: Binary Editor -> Divide
+                          Add: BASIC Ambigious warning for shortened variables now only shows up once per affected variable
+                          Add: assembler - binary literals now collapse properly 
+                          Add: Label Explorer all references shown 
+                          Add: Clicking in Label Explorer on reference selects all references in the code file (not only direct text matches)
+                          Fix: Sprite editor,  sizing/scaling issue with DPI > 100%
+                          Add: Second Solution menu back on main menu
+                          Fix: XC-BASIC-dialect file missing some commands, also BASIC renumber bailing out when basic commands are missing
+                          Add: BASIC Option for temporary meta data less files for custom build steps
+                          Add: Assembler autodetect would choose PDS if "include" was inside comments
+                          Fix: potential crash when storing open nodes with new reference labels
+                          Fix: introduced bug in !text that would miscalc the number of bytes used
+                          Add: charscreen editor, charset export now uses selection from character editor 
+                          Wip: Graphic screen editor zoom/scroll
+                          Add: Option for caret width
+                          Add: Charscreen editor in Mega65 mode didn't allow for all 256 bg colors
+                          Add: ACME assembler mode handles >,< unary operator precedence differently 
+                          Add: C64Ass - Set Assembler Type option
+                          Add: Crash in charscreen editor, after changing to Mega65 FCM mode and switching to the character editor tab
+                          Fix: Recurring ObjectDisposedException because of timer still running
+                          Fix: BASIC allow arrow up as single char token, to avoid adding the arrow as variable name part 
+                          Add: Rename Disk ID now using 5 characters (ignoring the middle one though)
+                          Add: Autodetect BASIC files usage of macros on load
+                          Fix: File Manager, renaming disk/ID ended with wrong characters
+                          Fix: BASIC ^ is properly replaced with Up Arrow on symbol toggle 
+                          Add: $(SolutionPath) as macro for build events
+                          Add: !while pseudo op 
+                          Fix: Speedup in assembling aftermath
+                          Add: !scrxor for ACME compatibility
+                          Add: Custom sounds, as the Windows sounds for build success/failure sound the same per default
+                          Fix: TASM now supports properly stacked local labels +/-
+                          Fix: Update for Tasm support, .if, .else and .fi working, also labels with : following WIP: Opcodes for 68k #1
+                          Fix the caret fix, we get ObjectDisposedExceptions a lot
+                          Fix issues/105, caret stops blinking due to stupid system wide setting
+                          Fix: BASIC editor swallowing any alt-shortcuts (menu access)
+                          Add: Assembler, math.random and math.randomseed
+                          WIP: Proper DSK filling when building
+                          Fix: Fixed off scale of menu items (forms scaling is finicky)
+                          Add: Make memory PETSCII/character views have selectable byte width
+                          Add: Assembler !skip pseudo op (for ACME compatibility)
+                          Fix: Source editor now does drag/drop with move/copy depending on control key
+                          Fix: Initial breakpoint for C128 set to $5a9B
+                          WIP: CPC DSK format now able to write file to image (only tested with small for now)
+                          Add: Z80, allow LD r,r without apostrophe as well
+                          Add: Sprite Editor import from binary file, sanity check if all would result in black on black, make it white on black
+                          Fix: If invalid opcode combination is used, and opcode is interpreted as label, and then line errors out, still give error message regarding opcode
+                          WIP: CPC DSK format support
+                          Fix: & as hex prefix properly working now, also for selection
+                          Fix: Sprite Editor GIF export now properly uses min/max extents Fix: Sprite Editor Preview - switching between layers now keeps selected sprite
+                          Add: Z80 Opcodes (!cpu z80)
+                          Fix: Sprite editor import from binary file does not skip given bytes WIP: Z80 #2
+                          Fix totally borked extended Opcodes (non 6510)
+                          Fix: ext functions (e.g. math.sin were broken if acted upon) WIP: Z80
+                          Fix https://github.com/GeorgRottensteiner/C64Studio/issues/102 (new solution with separate project folder was wrong, no project folder was created), node name of project was that of the solution
+                          Fix: Wizard true drive arguments for newer VICE versions is borked
+
 13.10.2023 - 7.6:         Add: BASIC #chardata meta op
                           Adjust easyflash cartridge test files
                           Fix: easyflash cartridge file was half the actual max. size (1MB)

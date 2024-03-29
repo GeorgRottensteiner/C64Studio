@@ -40,6 +40,7 @@ namespace RetroDevStudio.Controls
       this.checkWrapAtMaxChars = new System.Windows.Forms.CheckBox();
       this.editWrapCharCount = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // checkExportHex
@@ -145,6 +146,16 @@ namespace RetroDevStudio.Controls
       this.label1.TabIndex = 29;
       this.label1.Text = "characters";
       // 
+      // checkInsertSpaces
+      // 
+      this.checkInsertSpaces.AutoSize = true;
+      this.checkInsertSpaces.Location = new System.Drawing.Point(3, 130);
+      this.checkInsertSpaces.Name = "checkInsertSpaces";
+      this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
+      this.checkInsertSpaces.TabIndex = 6;
+      this.checkInsertSpaces.Text = "Insert Spaces";
+      this.checkInsertSpaces.UseVisualStyleBackColor = true;
+      // 
       // ExportCharscreenAsBASICData
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -156,6 +167,7 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.editExportBASICLineNo);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label4);
+      this.Controls.Add(this.checkInsertSpaces);
       this.Controls.Add(this.checkExportHex);
       this.Controls.Add(this.checkExportToDataWrap);
       this.Controls.Add(this.editWrapByteCount);
@@ -179,5 +191,6 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.CheckBox checkWrapAtMaxChars;
     private System.Windows.Forms.TextBox editWrapCharCount;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }

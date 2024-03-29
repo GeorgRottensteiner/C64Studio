@@ -47,7 +47,7 @@ namespace RetroDevStudio.Tasks
           sourceCode = ( (SourceASMEx)m_Document.BaseDoc ).editSource.Text;
         }
 
-        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, out Types.ASM.FileInfo asmFileInfo );
+        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, null, out Types.ASM.FileInfo asmFileInfo );
 
         if ( ( compileConfig.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
         &&   ( m_Document.BaseDoc != null )
@@ -89,7 +89,7 @@ namespace RetroDevStudio.Tasks
           sourceCode = ( (SourceBasicEx)m_Document.BaseDoc ).editSource.Text;
         }
 
-        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, out Types.ASM.FileInfo asmFileInfo );
+        parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, null, out Types.ASM.FileInfo asmFileInfo );
       }
 
       var task = new Tasks.TaskUpdateKeywords( m_Document.BaseDoc );

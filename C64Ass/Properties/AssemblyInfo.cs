@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "" )]
 [assembly: AssemblyProduct( "C64Ass" )]
-[assembly: AssemblyCopyright( "Copyright ©  2016 - 2023" )]
+[assembly: AssemblyCopyright( "Copyright ©  2016 - 2024" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

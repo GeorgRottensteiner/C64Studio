@@ -127,6 +127,8 @@ namespace RetroDevStudio
     public string                               EmulatorToRun = "";
     public bool                                 AutoOpenLastSolution = false;
     public bool                                 LastSolutionWasEmpty = false;
+    public bool                                 ShowCompilerMessagesAfterBuild = true;
+    public bool                                 ShowOutputDisplayAfterBuild = true;
 
     public int                                  TabSize             = 2;
     public int                                  CaretWidth          = 1;
@@ -142,6 +144,7 @@ namespace RetroDevStudio
     public List<string>                         ASMLibraryPaths     = new List<string>();
     public bool                                 ASMShowShortCutLabels = true;
     public int                                  ASMShowMaxLineLengthIndicatorLength = 0;
+    public bool                                 ASMLabelFileIgnoreAssemblerIDLabels = false;
 
     public bool                                 StripTrailingSpaces = false;
 
@@ -580,7 +583,6 @@ namespace RetroDevStudio
 
       GR.IO.FileChunk   chunkSoundSettings = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_SOUND );
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnSuccessfulBuild ? 1 : 0 ) );
-      
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnBuildFailure ? 1 : 0 ) );
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnSearchFoundNoItem ? 1 : 0 ) );
       SettingsData.Append( chunkSoundSettings.ToBuffer() );
@@ -646,13 +648,11 @@ namespace RetroDevStudio
       // dockpanel layout
       GR.IO.FileChunk chunkLayout = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DPS_LAYOUT );
       System.IO.MemoryStream    memOut = new System.IO.MemoryStream();
-      //Debug.Log( "Save with state " + Main.m_DebugRegisters.DockState );
 
       PanelMain.SaveAsXml( memOut, Encoding.UTF8 );
       byte[] layoutData = memOut.ToArray();
       string xmlOutText = System.Text.Encoding.UTF8.GetString( layoutData );
 
-      //Debug.Log( xmlOutText );
       // remove dummy elements (layout of non-tool windows)
       GR.Strings.XMLParser    parser = new GR.Strings.XMLParser();
       if ( !parser.Parse( xmlOutText ) )
@@ -761,6 +761,7 @@ namespace RetroDevStudio
       }
       chunkASMEditor.AppendU8( (byte)( !ASMShowAddress ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowShortCutLabels ? 1 : 0 ) );
+      chunkASMEditor.AppendU8( (byte)( ASMLabelFileIgnoreAssemblerIDLabels ? 1 : 0 ) );
       SettingsData.Append( chunkASMEditor.ToBuffer() );
 
       // Outline settings
@@ -808,6 +809,8 @@ namespace RetroDevStudio
       chunkEnvironment.AppendU8( (byte)LastUpdateCheck.Day );
       chunkEnvironment.AppendU8( (byte)LastUpdateCheck.Month );
       chunkEnvironment.AppendI32( (byte)LastUpdateCheck.Year );
+      chunkEnvironment.AppendU8( (byte)( !ShowCompilerMessagesAfterBuild ? 1 : 0 ) );
+      chunkEnvironment.AppendU8( (byte)( !ShowOutputDisplayAfterBuild ? 1 : 0 ) );
 
       SettingsData.Append( chunkEnvironment.ToBuffer() );
 
@@ -1301,6 +1304,7 @@ namespace RetroDevStudio
 
               ASMShowAddress        = ( binIn.ReadUInt8() == 0 );
               ASMShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
+              ASMLabelFileIgnoreAssemblerIDLabels = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_BASIC_PARSER:
@@ -1343,6 +1347,9 @@ namespace RetroDevStudio
               {
                 LastUpdateCheck = DateTime.Now;
               }
+
+              ShowCompilerMessagesAfterBuild  = ( binIn.ReadUInt8() == 0 );
+              ShowOutputDisplayAfterBuild     = ( binIn.ReadUInt8() == 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_PERSPECTIVES:
@@ -1445,7 +1452,7 @@ namespace RetroDevStudio
 
 
 
-    private void SetKeyBindingKey( RetroDevStudio.Types.Function Function, Keys Key )
+    private void SetKeyBindingKey( RetroDevStudio.Types.Function Function, Keys Key, Keys AltKey = Keys.None )
     {
       foreach ( var accPair in Accelerators )
       {
@@ -1458,9 +1465,7 @@ namespace RetroDevStudio
 
       if ( Key != Keys.None )
       {
-        AcceleratorKey key = new AcceleratorKey( Key, Function );
-        key.Key = Key;
-        Accelerators.Add( key.Key, key );
+        Accelerators.Add( Key, new AcceleratorKey(Key, AltKey, Function));
       }
     }
 
@@ -1492,8 +1497,8 @@ namespace RetroDevStudio
       SetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
       SetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
       SetKeyBindingKey( RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      SetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back );
-      SetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back, Keys.Control | Keys.Z);
+      SetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back, Keys.Control | Keys.Shift | Keys.Z);
       SetKeyBindingKey( RetroDevStudio.Types.Function.COPY, Keys.Control | Keys.C );
       SetKeyBindingKey( RetroDevStudio.Types.Function.PASTE, Keys.Control | Keys.V );
       SetKeyBindingKey( RetroDevStudio.Types.Function.CUT, Keys.Control | Keys.X );
@@ -1697,8 +1702,8 @@ namespace RetroDevStudio
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back );
-      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back, Keys.Control | Keys.Z);
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back, Keys.Control | Keys.Shift | Keys.Z);
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.COPY, Keys.Control | Keys.C );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.PASTE, Keys.Control | Keys.V );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.CUT, Keys.Control | Keys.X );
@@ -1712,7 +1717,7 @@ namespace RetroDevStudio
 
 
 
-    private void ValidateOrSetKeyBindingKey( Function Func, Keys KeyBinding )
+    private void ValidateOrSetKeyBindingKey( Function Func, Keys KeyBinding, Keys AltKeyBinding = Keys.None )
     {
       foreach ( var accPair in Accelerators )
       {
@@ -1721,7 +1726,7 @@ namespace RetroDevStudio
           return;
         }
       }
-      SetKeyBindingKey( Func, KeyBinding );
+      SetKeyBindingKey( Func, KeyBinding, AltKeyBinding );
     }
 
   }

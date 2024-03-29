@@ -3,6 +3,7 @@ using RetroDevStudio.Parser;
 using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -29,6 +30,7 @@ namespace C64Ass
       // TODO - add defines if given
 
       string fullPath = config.InputFile;
+
       if ( !GR.Path.IsPathRooted( fullPath ) )
       {
         fullPath = System.IO.Path.GetFullPath( config.InputFile );
@@ -41,7 +43,7 @@ namespace C64Ass
         config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       }
 
-      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines, out FileInfo asmFileInfo );
+      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines, null,  out FileInfo asmFileInfo );
       if ( !result )
       {
         System.Console.WriteLine( "Parsing the file failed:" );
@@ -77,7 +79,7 @@ namespace C64Ass
       }
       if ( !string.IsNullOrEmpty( config.LabelDumpFile ) )
       {
-        DumpLabelFile( asmFileInfo );
+        DumpLabelFile.Dump( asmFileInfo, true );
       }
 
       return 0;
@@ -85,39 +87,12 @@ namespace C64Ass
 
 
 
-    private static void DumpLabelFile( FileInfo FileInfo )
-    {
-      StringBuilder sb = new StringBuilder();
-
-      foreach ( var labelInfo in FileInfo.Labels )
-      {
-        sb.Append( labelInfo.Value.Name );
-        sb.Append( " =$" );
-        if ( labelInfo.Value.AddressOrValue > 255 )
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X4" ) );
-        }
-        else
-        {
-          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X2" ) );
-        }
-        sb.Append( "; " );
-        if ( labelInfo.Value.References.Count == 0 )
-        {
-          sb.AppendLine( "unused" );
-        }
-        else
-        {
-          sb.AppendLine();
-        }
-      }
-      GR.IO.File.WriteAllText( FileInfo.LabelDumpFile, sb.ToString() );
-    }
-
-
-
     private static void DisplayOutput( FileInfo ASMFileInfo, List<string> WarningsToIgnore, bool ShowNoWarnings )
     {
+      if ( ASMFileInfo == null )
+      {
+        return;
+      }
       foreach ( var entry in ASMFileInfo.Messages )
       {
         string    file;

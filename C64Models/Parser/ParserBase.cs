@@ -235,7 +235,8 @@ namespace RetroDevStudio.Parser
 
     public abstract void Clear();
     public abstract bool Assemble( CompileConfig Config );
-    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out FileInfo ASMFileInfo );
+    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines,
+                                out FileInfo ASMFileInfo );
 
 
 
@@ -269,6 +270,9 @@ namespace RetroDevStudio.Parser
         {
           // must be a comment
           hasSemicolonComments = true;
+
+          // skip parsing comments, triggers all kinds of false positives otherwise
+          continue;
         }
         int     orgPos = -1;
         if ( ( orgPos = upperCaseLine.IndexOf( "ORG " ) ) != -1 ) 
@@ -380,7 +384,8 @@ namespace RetroDevStudio.Parser
 
 
 
-    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo  )
+    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines,
+                           Dictionary<string, SymbolInfo> LabelModeReferences, out Types.ASM.FileInfo ASMFileInfo  )
     {
       ASMFileInfo = null;
 
@@ -408,6 +413,8 @@ namespace RetroDevStudio.Parser
         }
         catch ( System.Exception )
         {
+          m_ASMFileInfo = new FileInfo();
+          ASMFileInfo = m_ASMFileInfo;
           AddError( -1, Types.ErrorCode.E2000_FILE_OPEN_ERROR, "Could not open file " + Filename );
           return false;
         }
@@ -439,6 +446,13 @@ namespace RetroDevStudio.Parser
     public void InjectASMFileInfo( Types.ASM.FileInfo ASMFileInfo )
     {
       m_ASMFileInfo = ASMFileInfo;
+    }
+
+
+
+    public Types.ASM.FileInfo GetASMFileInfo()
+    {
+      return m_ASMFileInfo;
     }
 
 
