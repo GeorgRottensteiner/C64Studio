@@ -153,8 +153,61 @@ namespace RetroDevStudio.Formats
 
     public override Types.FileInfo LoadFile( GR.Memory.ByteBuffer Filename )
     {
-      _LastError = "File not found";
-      return null;
+      string  filename = _CurrentDirectory + Filename.ToAsciiString();
+
+      int   fileBlock = LocateFileBlock( filename );
+      if ( fileBlock == -1 )
+      {
+        _LastError = "File not found";
+        return null;
+      }
+      var fileHeader = Block( fileBlock );
+
+      int fileSize = (int)fileHeader.UInt32NetworkOrderAt( BLOCK_SIZE - 188 );
+      int numWrittenBytes = 0;
+
+      var info = new Types.FileInfo()
+      {
+        Data      = new ByteBuffer( (uint)fileSize ),
+        Filename  = Filename,
+        Type      = FileType.PRG
+      };
+
+      while ( true )
+      {
+        int numDataBlocks = ( BLOCK_SIZE / 4 ) - 56;
+        for ( int i = 0; i < numDataBlocks; ++i )
+        {
+          uint  dataBlockIndex = fileHeader.UInt32NetworkOrderAt( 24 + ( numDataBlocks - 1 - i ) * 4 );
+
+          var blockData = Block( (int)dataBlockIndex );
+          // * Data blocks (BSIZE bytes) (first pointer in File header 'first_data' and 'data_blocks[((BSIZE/4)-57)]')
+          // Old File System data block (BSIZE bytes)
+          // -------------------------------------------------------------------------------
+          // 0/0	ulong	1	type		primary type : T_DATA (== 8)
+          // 4/4	ulong	1	header_key	pointer to file header block
+          // 8/8	ulong	1	seq_num		file data block number (first is #1) 
+          // 12/c	ulong	1	data_size	data size <= (BSIZE-24)
+          // 16/10	ulong	1	next_data	next data block ptr (0 for last)
+          // 20/14	ulong	1	chksum		rootblock algorithm
+          // 24/18	UCHAR	*	data[]		file data size <= (BSIZE-24)
+          if ( fileSize >= BLOCK_SIZE - 24 )
+          {
+            blockData.CopyTo( info.Data, 24, BLOCK_SIZE - 24, numWrittenBytes );
+            numWrittenBytes += BLOCK_SIZE - 24;
+            fileSize -= BLOCK_SIZE - 24;
+          }
+          else
+          {
+            blockData.CopyTo( info.Data, 24, fileSize, numWrittenBytes );
+            return info;
+          }
+        }
+        // BSIZE-  8/-0x08	ulong	1	extension	pointer to 1st file extension block
+        int   extensionBlock = (int)fileHeader.UInt32NetworkOrderAt( BLOCK_SIZE - 8 );
+
+        fileHeader = Block( extensionBlock );
+      }
     }
 
 
@@ -307,14 +360,16 @@ namespace RetroDevStudio.Formats
         for ( uint i = 0; i < hashTableSize; ++i )
         {
           uint hashEntry = _DiskImage.UInt32NetworkOrderAt( (int)( blockOffset + 24 + i * 4 ) );
+
           while ( hashEntry != 0 )
           {
-            uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( blockOffset + BLOCK_SIZE - 4 ) );
+            uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 4 ) );
             if ( ( partPos + 1 < parts.Length )
             &&   ( fileType == 2 ) )
             {
-              int filenameLength  = _DiskImage.ByteAt( (int)( blockOffset + BLOCK_SIZE - 80 ) );
-              var filename        = _DiskImage.SubBuffer( (int)( blockOffset + BLOCK_SIZE - 79 ), filenameLength );
+              int filenameLength  = _DiskImage.ByteAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 80 ) );
+              var filename        = _DiskImage.SubBuffer( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 79 ), filenameLength );
+              // info.Size = (int)_DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 188 ) );
 
               if ( filename.ToAsciiString() == parts[partPos] )
               {
@@ -327,8 +382,9 @@ namespace RetroDevStudio.Formats
             &&   ( fileType != 2 ) )
             {
               // the actual file
-              int filenameLength  = _DiskImage.ByteAt( (int)( blockOffset + BLOCK_SIZE - 80 ) );
-              var filename        = _DiskImage.SubBuffer( (int)( blockOffset + BLOCK_SIZE - 79 ), filenameLength );
+              int filenameLength  = _DiskImage.ByteAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 80 ) );
+              var filename        = _DiskImage.SubBuffer( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 79 ), filenameLength );
+              // info.Size = (int)_DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 188 ) );
 
               if ( filename.ToAsciiString() == parts[partPos] )
               {
@@ -380,10 +436,11 @@ namespace RetroDevStudio.Formats
           switch ( fileType )
           {
             case 0xfffffffd:
-              // -3
+              // file header -3
               info.Type = FileType.PRG;
               break;
             case 2:
+              // directory
               info.Type = FileType.DIR;
               break;
             default:

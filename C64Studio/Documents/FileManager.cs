@@ -327,8 +327,16 @@ namespace RetroDevStudio.Documents
         listFiles.TopItem = listFiles.Items[offset];
       }
 
-      btnUp.Enabled     = m_Media.CurrentFolder != m_Media.RootFolder;
-      labelFolder.Text  = m_Media.CurrentFolder;
+      if ( m_Media != null )
+      {
+        btnUp.Enabled     = m_Media.CurrentFolder != m_Media.RootFolder;
+        labelFolder.Text  = m_Media.CurrentFolder;
+      }
+      else
+      {
+        btnUp.Enabled = false;
+        labelFolder.Text = "";
+      }
     }
 
 

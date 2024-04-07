@@ -250,9 +250,11 @@ namespace RetroDevStudio.Formats
         {
           var info = new Types.FileInfo();
 
-          info.Filename = file.Filename;
-          info.Blocks   = ( file.EndAddress - file.StartAddress ) / 254 + 1;
-          info.Type     = file.C64FileType;
+          info.Filename   = file.Filename;
+          info.Blocks     = ( file.EndAddress - file.StartAddress ) / 254 + 1;
+          info.Type       = (Types.FileType)( (int)file.C64FileType & 0x3f );
+          info.ReadOnly   = ( file.C64FileType & Types.FileType.LOCKED ) != 0;
+          info.NotClosed  = ( file.C64FileType & Types.FileType.CLOSED ) == 0;
           info.DirEntryIndex = dirEntryIndex;
           ++dirEntryIndex;
 
