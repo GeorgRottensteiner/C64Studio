@@ -1446,39 +1446,14 @@ namespace RetroDevStudio.Controls
 
         var processedChar = m_Project.Characters[index];
 
-        for ( int y = 0; y < 8; ++y )
+        var tile = m_Project.Characters[index].Tile;
+        for ( int y = 0; y < tile.Height; ++y )
         {
-          if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-          ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+          for ( int x = 0; x < tile.Width / 2; x += Lookup.PixelWidth( tile.Mode ) )
           {
-            for ( int x = 0; x < 4; ++x )
-            {
-              byte temp = processedChar.Tile.Data.ByteAt( y * 8 + x );
-              processedChar.Tile.Data.SetU8At( y * 8 + x, processedChar.Tile.Data.ByteAt( y * 8 + ( 7 - x ) ) );
-              processedChar.Tile.Data.SetU8At( y * 8 + ( 7 - x ), temp );
-            }
-          }
-          else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-          ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
-          &&        ( processedChar.Tile.CustomColor >= 8 ) )
-          {
-            byte result = (byte)( (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0xc0 ) >> 6 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x30 ) >> 2 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x0c ) << 2 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x03 ) << 6 ) );
-            processedChar.Tile.Data.SetU8At( y, result );
-          }
-          else
-          {
-            byte result = (byte)( (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x80 ) >> 7 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x40 ) >> 5 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x20 ) >> 3 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x10 ) >> 1 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x08 ) << 1 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x04 ) << 3 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x02 ) << 5 )
-                                | (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0x01 ) << 7 ) );
-            processedChar.Tile.Data.SetU8At( y, result );
+            var temp = tile.GetPixel( x, y );
+            tile.SetPixel( x, y, tile.GetPixel( tile.Width - 1 - x, y ) );
+            tile.SetPixel( tile.Width - 1 - x, y, temp );
           }
         }
         RebuildCharImage( index );
@@ -1499,28 +1474,14 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        var processedChar = m_Project.Characters[index];
-
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+        var tile = m_Project.Characters[index].Tile;
+        for ( int x = 0; x < tile.Width; x += Lookup.PixelWidth( tile.Mode ) )
         {
-          for ( int x = 0; x < 8; ++x )
+          for ( int y = 0; y < tile.Height / 2; ++y )
           {
-            for ( int y = 0; y < 4; ++y )
-            {
-              byte temp = processedChar.Tile.Data.ByteAt( y * 8 + x );
-              processedChar.Tile.Data.SetU8At( y * 8 + x, processedChar.Tile.Data.ByteAt( ( 7 - y ) * 8 + x ) );
-              processedChar.Tile.Data.SetU8At( ( 7 - y ) * 8 + x, temp );
-            }
-          }
-        }
-        else
-        {
-          for ( int y = 0; y < 4; ++y )
-          {
-            byte oldValue = m_Project.Characters[index].Tile.Data.ByteAt( y );
-            m_Project.Characters[index].Tile.Data.SetU8At( y, m_Project.Characters[index].Tile.Data.ByteAt( 7 - y ) );
-            m_Project.Characters[index].Tile.Data.SetU8At( 7 - y, oldValue );
+            var temp = tile.GetPixel( x, y );
+            tile.SetPixel( x, y, tile.GetPixel( x, tile.Height - 1 - y ) );
+            tile.SetPixel( x, tile.Height - 1 - y, temp );
           }
         }
         RebuildCharImage( index );
@@ -1548,68 +1509,22 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( m_Project.Characters[index].Tile.Data.Length );
+        var tile = m_Project.Characters[index].Tile;
+        var resultTile = new GraphicTile( tile );
 
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+        for ( int i = 0; i < tile.Width; i += Lookup.PixelWidth( tile.Mode ) )
         {
-          for ( int i = 0; i < 8; ++i )
+          for ( int j = 0; j < tile.Height; ++j )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              int sourceX = i;
-              int sourceY = j;
-              int targetX = j;
-              int targetY = 7 - i;
+            int sourceX = i;
+            int sourceY = j;
+            int targetX = j;
+            int targetY = tile.Height - 1 - i;
 
-              resultData.SetU8At( targetY * 8 + targetX, m_Project.Characters[index].Tile.Data.ByteAt( sourceY * 8 + sourceX ) );
-            }
+            resultTile.SetPixel( targetX, targetY, tile.GetPixel( sourceX, sourceY ) );
           }
         }
-        else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
-        &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
-        {
-          for ( int i = 0; i < 8; i += 2 )
-          {
-            for ( int j = 0; j < 8; ++j )
-            {
-              int sourceX = 7 - j;
-              int sourceY = i;
-
-              if ( ( sourceX < 0 )
-              ||   ( sourceX >= 8 )
-              ||   ( sourceY < 0 )
-              ||   ( sourceY >= 8 ) )
-              {
-                continue;
-              }
-              int maskOffset = 6 - ( ( sourceX % 8 ) / 2 ) * 2;
-              byte sourceColor = (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( sourceY ) & ( 3 << maskOffset ) ) >> maskOffset );
-
-              maskOffset = 6 - ( ( i % 8 ) / 2 ) * 2;
-              resultData.SetU8At( j, (byte)( resultData.ByteAt( j ) | ( sourceColor << maskOffset ) ) );
-            }
-          }
-        }
-        else
-        {
-          for ( int i = 0; i < 8; ++i )
-          {
-            for ( int j = 0; j < 8; ++j )
-            {
-              int sourceX = i;
-              int sourceY = j;
-              int targetX = j;
-              int targetY = 7 - i;
-              if ( ( m_Project.Characters[index].Tile.Data.ByteAt( sourceY ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
-              {
-                resultData.SetU8At( targetY, (byte)( resultData.ByteAt( targetY ) | ( 1 << ( 7 - targetX % 8 ) ) ) );
-              }
-            }
-          }
-        }
-        m_Project.Characters[index].Tile.Data = resultData;
+        resultTile.Data.CopyTo( tile.Data );
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
@@ -1635,68 +1550,22 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( m_Project.Characters[index].Tile.Data.Length );
+        var tile = m_Project.Characters[index].Tile;
+        var resultTile = new GraphicTile( tile );
 
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+        for ( int i = 0; i < tile.Width; i += Lookup.PixelWidth( tile.Mode ) )
         {
-          for ( int i = 0; i < 8; ++i )
+          for ( int j = 0; j < tile.Height; ++j )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              int sourceX = i;
-              int sourceY = j;
-              int targetX = 7 - j;
-              int targetY = i;
+            int sourceX = i;
+            int sourceY = j;
+            int targetX = tile.Height - 1 - j;
+            int targetY = i;
 
-              resultData.SetU8At( targetY * 8 + targetX, m_Project.Characters[index].Tile.Data.ByteAt( sourceY * 8 + sourceX ) );
-            }
+            resultTile.SetPixel( targetX, targetY, tile.GetPixel( sourceX, sourceY ) );
           }
         }
-        else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
-        &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
-        {
-          for ( int i = 0; i < 8; i += 2 )
-          {
-            for ( int j = 0; j < 8; ++j )
-            {
-              int sourceX = j;
-              int sourceY = 7 - i;
-
-              if ( ( sourceX < 0 )
-              ||   ( sourceX >= 8 )
-              ||   ( sourceY < 0 )
-              ||   ( sourceY >= 8 ) )
-              {
-                continue;
-              }
-              int maskOffset = 6 - ( ( sourceX % 8 ) / 2 ) * 2;
-              byte sourceColor = (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( sourceY ) & ( 3 << maskOffset ) ) >> maskOffset );
-
-              maskOffset = 6 - ( ( i % 8 ) / 2 ) * 2;
-              resultData.SetU8At( j, (byte)( resultData.ByteAt( j ) | ( sourceColor << maskOffset ) ) );
-            }
-          }
-        }
-        else
-        {
-          for ( int i = 0; i < 8; ++i )
-          {
-            for ( int j = 0; j < 8; ++j )
-            {
-              int sourceX = i;
-              int sourceY = j;
-              int targetX = 7 - j;
-              int targetY = i;
-              if ( ( m_Project.Characters[index].Tile.Data.ByteAt( sourceY ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
-              {
-                resultData.SetU8At( targetY, (byte)( resultData.ByteAt( targetY ) | ( 1 << ( 7 - targetX % 8 ) ) ) );
-              }
-            }
-          }
-        }
-        m_Project.Characters[index].Tile.Data = resultData;
+        resultTile.Data.CopyTo( tile.Data );
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
@@ -1722,27 +1591,15 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+        var tile = m_Project.Characters[index].Tile;
+        for ( int x = 0; x < tile.Width; x += Lookup.PixelWidth( tile.Mode ) )
         {
-          for ( int x = 0; x < 8; ++x )
+          var pixel = tile.GetPixel( x, tile.Height - 1 );
+          for ( int y = 0; y < tile.Height - 1; ++y )
           {
-            byte  temp = m_Project.Characters[index].Tile.Data.ByteAt( 7 * 8 + x );
-            for ( int y = 0; y < 7; ++y )
-            {
-              m_Project.Characters[index].Tile.Data.SetU8At( ( 7 - y ) * 8 + x, m_Project.Characters[index].Tile.Data.ByteAt( ( 7 - y - 1 ) * 8 + x ) );
-            }
-            m_Project.Characters[index].Tile.Data.SetU8At( x, temp );
+            tile.SetPixel( x, tile.Height - 1 - y, tile.GetPixel( x, tile.Height - 1 - y - 1 ) );
           }
-        }
-        else
-        {
-          byte  temp = m_Project.Characters[index].Tile.Data.ByteAt( 7 );
-          for ( int y = 0; y < 7; ++y )
-          {
-            m_Project.Characters[index].Tile.Data.SetU8At( 7 - y, m_Project.Characters[index].Tile.Data.ByteAt( 7 - y - 1 ) );
-          }
-          m_Project.Characters[index].Tile.Data.SetU8At( 0, temp );
+          tile.SetPixel( x, 0, pixel );
         }
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
@@ -1783,27 +1640,15 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+        var tile = m_Project.Characters[index].Tile;
+        for ( int x = 0; x < tile.Width; x += Lookup.PixelWidth( tile.Mode ) )
         {
-          for ( int x = 0; x < 8; ++x )
+          var pixel = tile.GetPixel( x, 0 );
+          for ( int y = 0; y < tile.Height - 1; ++y )
           {
-            byte  temp = m_Project.Characters[index].Tile.Data.ByteAt( x );
-            for ( int y = 0; y < 7; ++y )
-            {
-              m_Project.Characters[index].Tile.Data.SetU8At( y * 8 + x, m_Project.Characters[index].Tile.Data.ByteAt( ( y + 1 ) * 8 + x ) );
-            }
-            m_Project.Characters[index].Tile.Data.SetU8At( x + 7 * 8, temp );
+            tile.SetPixel( x, y, tile.GetPixel( x, y + 1 ) );
           }
-        }
-        else
-        {
-          byte  temp = m_Project.Characters[index].Tile.Data.ByteAt( 0 );
-          for ( int y = 0; y < 7; ++y )
-          {
-            m_Project.Characters[index].Tile.Data.SetU8At( y, m_Project.Characters[index].Tile.Data.ByteAt( y + 1 ) );
-          }
-          m_Project.Characters[index].Tile.Data.SetU8At( 7, temp );
+          tile.SetPixel( x, tile.Height - 1, pixel );
         }
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
@@ -1811,6 +1656,7 @@ namespace RetroDevStudio.Controls
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
     }
+
 
 
     public void ShiftLeft()
@@ -1822,32 +1668,15 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        for ( int y = 0; y < 8; ++y )
+        var tile = m_Project.Characters[index].Tile;
+        for ( int y = 0; y < tile.Height; ++y )
         {
-          if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-          ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+          var temp = tile.GetPixel( 0, y );
+          for ( int x = 0; x < tile.Width - 1; x += Lookup.PixelWidth( tile.Mode ) )
           {
-            byte temp = m_Project.Characters[index].Tile.Data.ByteAt( y * 8 );
-            for ( int x = 0; x < 7; ++x )
-            {
-              m_Project.Characters[index].Tile.Data.SetU8At( y * 8 + x, m_Project.Characters[index].Tile.Data.ByteAt( y * 8 + x + 1 ) );
-            }
-            m_Project.Characters[index].Tile.Data.SetU8At( y * 8 + 7, temp );
+            tile.SetPixel( x, y, tile.GetPixel( x + Lookup.PixelWidth( tile.Mode ), y ) );
           }
-          else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-          ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
-          &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
-          {
-            byte result = (byte)( (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0xc0 ) >> 6 )
-                                | (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0x3f ) << 2 ) );
-            m_Project.Characters[index].Tile.Data.SetU8At( y, result );
-          }
-          else
-          {
-            byte result = (byte)( (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0x80 ) >> 7 )
-                                | (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0x7f ) << 1 ) );
-            m_Project.Characters[index].Tile.Data.SetU8At( y, result );
-          }
+          tile.SetPixel( tile.Width - 1, y, temp );
         }
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
@@ -1867,32 +1696,15 @@ namespace RetroDevStudio.Controls
       {
         UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        for ( int y = 0; y < 8; ++y )
+        var tile = m_Project.Characters[index].Tile;
+        for ( int y = 0; y < tile.Height; ++y )
         {
-          if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
-          ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
+          var temp = tile.GetPixel( tile.Width - 1, y );
+          for ( int x = 0; x < tile.Width - 1; x += Lookup.PixelWidth( tile.Mode ) )
           {
-            byte temp = m_Project.Characters[index].Tile.Data.ByteAt( y * 8 + 7 );
-            for ( int x = 0; x < 7; ++x )
-            {
-              m_Project.Characters[index].Tile.Data.SetU8At( y * 8 + 7 - x, m_Project.Characters[index].Tile.Data.ByteAt( y * 8 + 7 - x - 1 ) );
-            }
-            m_Project.Characters[index].Tile.Data.SetU8At( y * 8, temp );
+            tile.SetPixel( tile.Width - 1 - x, y, tile.GetPixel( tile.Width - 1 - x - Lookup.PixelWidth( tile.Mode ), y ) );
           }
-          else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-          ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
-          &&        ( m_Project.Characters[index].Tile.CustomColor >= 8 ) )
-          {
-            byte result = (byte)( (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0xfc ) >> 2 )
-                                | (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0x03 ) << 6 ) );
-            m_Project.Characters[index].Tile.Data.SetU8At( y, result );
-          }
-          else
-          {
-            byte result = (byte)( (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0x01 ) << 7 )
-                                | (byte)( ( m_Project.Characters[index].Tile.Data.ByteAt( y ) & 0xfe ) >> 1 ) );
-            m_Project.Characters[index].Tile.Data.SetU8At( y, result );
-          }
+          tile.SetPixel( 0, y, temp );
         }
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );

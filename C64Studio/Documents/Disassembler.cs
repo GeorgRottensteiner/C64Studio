@@ -480,7 +480,10 @@ namespace RetroDevStudio.Documents
     {
       string  disassembly;
 
-      var settings = new DisassemblerSettings();
+      var settings = new DisassemblerSettings()
+      {
+        StopAtReturns     = checkStopAtReturns.Checked
+      };
 
       if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly, out int dummy ) )
       {
@@ -491,7 +494,7 @@ namespace RetroDevStudio.Documents
 
       try
       {
-        newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ), System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ) + ".asm";
+        newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ) ?? "", System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ?? "" ) + ".asm";
       }
       catch ( Exception )
       {
@@ -502,7 +505,7 @@ namespace RetroDevStudio.Documents
       {
         while ( Core.Navigating.Solution.FilenameUsed( newFilename ) )
         {
-          newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ), System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ) + "1.asm";
+          newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ) ?? "", System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ?? "" ) + "1.asm";
         }
       }
       SourceASMEx document = new SourceASMEx( Core );

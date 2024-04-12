@@ -7765,5 +7765,19 @@ namespace RetroDevStudio
 
 
 
+    private void dumpSourceInfoToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( ( ActiveDocumentInfo != null )
+      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
+      {
+        foreach ( KeyValuePair<int, Types.ASM.SourceInfo> pair in ActiveDocumentInfo.ASMFileInfo.SourceInfo )
+        {
+          Debug.Log( "From line " + ( pair.Value.GlobalStartLine + 1 ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 + 1 ) + ", local " + ( pair.Value.LocalStartLine + 1 ) + ", " + pair.Value.LineCount + " lines from " + pair.Value.Filename );
+        }
+      }
+    }
+
+
+
   }
 }

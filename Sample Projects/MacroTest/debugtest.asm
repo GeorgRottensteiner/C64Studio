@@ -1,4 +1,4 @@
-;*= $0801
+﻿;*= $0801
 
 ;!basic
 
@@ -28,10 +28,11 @@ lsmf
 bne -
 
 
+
 jmp fgna
 rts
 
 
-
+!realign $100
 
 !source "debugtest2.asm"

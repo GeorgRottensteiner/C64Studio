@@ -1102,7 +1102,7 @@ namespace RetroDevStudio.Tasks
           }
           if ( string.IsNullOrEmpty( mapEntry.Description ) )
           {
-            Core.AddToOutputLine( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
+            Core.AddToOutputLine( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" );
           }
           else
           {

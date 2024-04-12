@@ -545,10 +545,10 @@ namespace RetroDevStudio
 
         if ( !m_ShuttingDown )
         {
-          Core.AddToOutput( "Attempt reconnect" + Environment.NewLine );
+          Core.AddToOutputLine( "Attempt reconnect" );
           if ( !ConnectToEmulator( m_IsCartridge ) )
           {
-            Core.AddToOutput( "Reconnect failed, stopping debug session" + Environment.NewLine );
+            Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
             DebugEvent( new DebugEventData()
             {
               Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED

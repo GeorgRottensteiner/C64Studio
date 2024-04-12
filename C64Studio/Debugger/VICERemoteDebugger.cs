@@ -753,12 +753,12 @@ namespace RetroDevStudio
       }
       catch ( System.ObjectDisposedException od )
       {
-        Core.AddToOutput( "ReceiveData Exception:" + od.ToString() );
+        Core.AddToOutputLine( "ReceiveData Exception:" + od.ToString() );
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        Core.AddToOutput( "ReceiveData Exception:" + se.ToString() );
-        Core.AddToOutput( "Connection to VICE was closed" );
+        Core.AddToOutputLine( "ReceiveData Exception:" + se.ToString() );
+        Core.AddToOutputLine( "Connection to VICE was closed" );
         /*
         DebugEvent( new DebugEventData()
         {
@@ -767,10 +767,10 @@ namespace RetroDevStudio
         m_Request.Type = DebugRequestType.NONE;
         DisconnectFromEmulator();
 
-        Core.AddToOutput( "Attempt reconnect" );
+        Core.AddToOutputLine( "Attempt reconnect" );
         if ( !ConnectToEmulator( m_IsCartridge ) )
         {
-          Core.AddToOutput( "Reconnect failed, stopping debug session" );
+          Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
           DebugEvent( new DebugEventData()
           {
             Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
@@ -778,7 +778,7 @@ namespace RetroDevStudio
         }
         else
         {
-          Core.AddToOutput( "Reconnect successful" );
+          Core.AddToOutputLine( "Reconnect successful" );
         }
       }
     }
