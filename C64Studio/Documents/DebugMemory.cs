@@ -35,7 +35,9 @@ namespace RetroDevStudio.Documents
     public Project                    DebuggedProject = null;
 
     private int                       m_Offset = 0;
+    private int                       m_ByteOffset = 0;
 
+    private ToolStripMenuItem         m_MenuItemSetByteOffset = null;
     private ToolStripMenuItem         m_MenuItemHexStringView = null;
     private ToolStripMenuItem         m_MenuItemHexCharView = null;
     private ToolStripMenuItem         m_MenuItemHexSpriteView = null;
@@ -84,6 +86,20 @@ namespace RetroDevStudio.Documents
       hexView.ViewScrolled += new EventHandler( hexView_ViewScrolled );
       hexView.ContextMenuStrip.Items.Add( "-" );
 
+      m_MenuItemSetByteOffset = new ToolStripMenuItem( "Set byte offset" );
+      for ( int i = 0; i < 8; ++i )
+      {
+        var offsetItem = new ToolStripMenuItem( $"{i} bytes" );
+        offsetItem.Tag = i;
+        offsetItem.Click += OffsetItem_Click;
+        offsetItem.Checked = ( i == 0 );
+        m_MenuItemSetByteOffset.DropDownItems.Add( offsetItem );
+      }
+      hexView.ContextMenuStrip.Items.Add( m_MenuItemSetByteOffset );
+
+
+      hexView.ContextMenuStrip.Items.Add( "-" );
+
       m_MenuItemHexStringView = new ToolStripMenuItem( "Set to String View" );
       m_MenuItemHexStringView.Click += btnBinaryStringView_Click;
       m_MenuItemHexStringView.Checked = true;
@@ -101,6 +117,21 @@ namespace RetroDevStudio.Documents
       SetMemoryDisplayType();
 
       ViewScrolled += new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
+    }
+
+
+
+    private void OffsetItem_Click( object sender, EventArgs e )
+    {
+      m_ByteOffset = (int)( (ToolStripMenuItem)sender ).Tag;
+
+      foreach ( ToolStripMenuItem subItem in m_MenuItemSetByteOffset.DropDownItems )
+      {
+        subItem.Checked = ( (int)subItem.Tag == m_ByteOffset );
+      }
+
+      hexView.DisplayedByteOffset = m_ByteOffset;
+      hexView.Invalidate();
     }
 
 
@@ -302,11 +333,15 @@ namespace RetroDevStudio.Documents
           int.TryParse( frmGoto.editAddress.Text, out address );
         }
 
-        if ( address >= 0 && address <= 65535 )
+        if ( ( address >= 0 )
+        &&   ( address <= 65535 ) )
         {
           int line = address / hexView.BytesPerLine;
-
-          Debug.Log( "DebugMemory::Goto called with " + line );
+          hexView.DisplayedByteOffset = address & 7;
+          foreach ( ToolStripMenuItem subItem in m_MenuItemSetByteOffset.DropDownItems )
+          {
+            subItem.Checked = ( (int)subItem.Tag == m_ByteOffset );
+          }
 
           hexView.PerformScrollToLine( line );
           RefreshViewScroller();

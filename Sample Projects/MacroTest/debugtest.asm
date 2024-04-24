@@ -1,6 +1,7 @@
-﻿;*= $0801
+*= $0801
 
-;!basic
+!basic
+          jmp fgna
 
 
 

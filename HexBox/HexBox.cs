@@ -1139,6 +1139,9 @@ namespace Be.Windows.Forms
 
     int _NumDigitsMemorySize = 8;
 
+    // number of bytes to offset from display (to allow odd starting points)
+    int _DisplayedByteOffset = 0;
+
     /// <summary>
     /// Contains the whole content bounds of all text
     /// </summary>
@@ -2417,26 +2420,26 @@ namespace Be.Windows.Forms
 
 
 			if (_lineInfoVisible)
-				PaintLineInfo(e.Graphics, _startByte, _endByte);
+				PaintLineInfo(e.Graphics, _startByte + _DisplayedByteOffset, _endByte + _DisplayedByteOffset );
 
       if ( _customHexViewer != null )
       {
-        PaintHex( e.Graphics, _startByte, _endByte );
+        PaintHex( e.Graphics, _startByte + _DisplayedByteOffset, _endByte + _DisplayedByteOffset );
 
-        long intern_endByte = Math.Min( _byteProvider.Length - 1, _endByte + _iHexMaxHBytes );
+        long intern_endByte = Math.Min( _byteProvider.Length - 1, _endByte + _DisplayedByteOffset + _iHexMaxHBytes );
 
 				//Point gridPoint = GetGridBytePoint( 0 );
         //PointF byteStringPointF = GetByteStringPointF( gridPoint );
 
-        _customHexViewer.PaintHexData( this, e.Graphics, _startByte, intern_endByte, _recHexDataView );
+        _customHexViewer.PaintHexData( this, e.Graphics, _startByte + _DisplayedByteOffset, intern_endByte, _recHexDataView );
       }
       else if (!_stringViewVisible)
 			{
-				PaintHex(e.Graphics, _startByte, _endByte);
+				PaintHex(e.Graphics, _startByte + _DisplayedByteOffset, _endByte + _DisplayedByteOffset );
 			}
 			else
 			{
-				PaintHexAndStringView(e.Graphics, _startByte, _endByte);
+				PaintHexAndStringView(e.Graphics, _startByte + _DisplayedByteOffset, _endByte + _DisplayedByteOffset );
 				if (_shadowSelectionVisible)
 					PaintCurrentBytesSign(e.Graphics);
 			}
@@ -2462,7 +2465,7 @@ namespace Be.Windows.Forms
 				long firstLineByte = (startByte + (_iHexMaxHBytes) * i) + _lineInfoOffset;
 
 				PointF bytePointF = GetBytePointF(new Point(0, 0 + i));
-				string info = ( firstLineByte + DisplayedAddressOffset ).ToString(_hexStringFormat, System.Threading.Thread.CurrentThread.CurrentCulture);
+				string info = ( firstLineByte + DisplayedAddressOffset ).ToString(_hexStringFormat, System.Threading.Thread.CurrentThread.CurrentCulture );
 
 				int nulls = _NumDigitsMemorySize - info.Length;
 				string formattedInfo;
@@ -2484,7 +2487,7 @@ namespace Be.Windows.Forms
 			Brush brush = new SolidBrush(this.InfoForeColor);
 			for (int col = 0; col < _iHexMaxHBytes; col++)
 			{
-				PaintColumnInfo(g, (byte)col, brush, col);
+				PaintColumnInfo(g, (byte)( ( col + _DisplayedByteOffset ) % _iHexMaxHBytes ), brush, col);
 			}
 		}
 
@@ -3684,6 +3687,21 @@ namespace Be.Windows.Forms
 
 
     public Color MarkedForeColor { get; set; }
+
+
+
+    public int DisplayedByteOffset
+    {
+      get
+      {
+        return _DisplayedByteOffset;
+      }
+      set
+      {
+        _DisplayedByteOffset = value & 0x7;
+        Invalidate();
+      }
+    }
 
 
 
