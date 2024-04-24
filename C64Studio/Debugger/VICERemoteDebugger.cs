@@ -101,7 +101,6 @@ namespace RetroDevStudio
 
     private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
 
-    private int                       m_LastRequestID = 0;
     private bool                      m_ShuttingDown = false;
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
@@ -153,7 +152,6 @@ namespace RetroDevStudio
         m_ResponseLines.Clear();
         m_RequestQueue.Clear();
         m_UnansweredBinaryRequests.Clear();
-        m_LastRequestID = 0;
         if ( client != null )
         {
           client.Disconnect( false );
@@ -852,6 +850,7 @@ namespace RetroDevStudio
 
             // this was removed? It's required to refresh data
             RefreshRegistersAndWatches();
+            RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
           }
           break;
         case DebugRequestType.EXIT:
