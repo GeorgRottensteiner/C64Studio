@@ -97,6 +97,7 @@
     public const ushort    SETTINGS_LABEL_EXPLORER      = 0x201C;
     public const ushort    SETTINGS_SOURCE_CONTROL      = 0x201D;
     public const ushort    SETTINGS_HELP                = 0x201E;
+    public const ushort    SETTINGS_MEMORY_VIEW         = 0x201F;
   }
 
 }

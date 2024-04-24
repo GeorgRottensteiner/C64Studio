@@ -77,6 +77,9 @@ namespace RetroDevStudio.Documents
 
       this.Core = Core;
 
+      m_ByteOffset  = Core.Settings.DebugMemoryByteOffset;
+      m_Offset      = Core.Settings.DebugMemoryOffset;
+
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
       Core.Debugging.MemoryViews.Add( this );
@@ -92,7 +95,7 @@ namespace RetroDevStudio.Documents
         var offsetItem = new ToolStripMenuItem( $"{i} bytes" );
         offsetItem.Tag = i;
         offsetItem.Click += OffsetItem_Click;
-        offsetItem.Checked = ( i == 0 );
+        offsetItem.Checked = ( i == m_ByteOffset );
         m_MenuItemSetByteOffset.DropDownItems.Add( offsetItem );
       }
       hexView.ContextMenuStrip.Items.Add( m_MenuItemSetByteOffset );
@@ -116,6 +119,8 @@ namespace RetroDevStudio.Documents
       SelectByteWidth( 8 );
       SetMemoryDisplayType();
 
+      hexView.PerformScrollToLine( m_Offset );
+
       ViewScrolled += new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
     }
 
@@ -124,6 +129,11 @@ namespace RetroDevStudio.Documents
     private void OffsetItem_Click( object sender, EventArgs e )
     {
       m_ByteOffset = (int)( (ToolStripMenuItem)sender ).Tag;
+
+      if ( Core.Debugging.MemoryViews.IndexOf( this ) == 0 )
+      {
+        Core.Settings.DebugMemoryByteOffset = m_ByteOffset;
+      }
 
       foreach ( ToolStripMenuItem subItem in m_MenuItemSetByteOffset.DropDownItems )
       {
@@ -287,6 +297,10 @@ namespace RetroDevStudio.Documents
       if ( m_Offset != newValue )
       {
         m_Offset = newValue;
+        if ( Core.Debugging.MemoryViews.IndexOf( this ) == 0 )
+        {
+          Core.Settings.DebugMemoryOffset = newValue;
+        }
 
         if ( ViewScrolled != null )
         {
@@ -337,7 +351,15 @@ namespace RetroDevStudio.Documents
         &&   ( address <= 65535 ) )
         {
           int line = address / hexView.BytesPerLine;
-          hexView.DisplayedByteOffset = address & 7;
+          m_ByteOffset  = address & 7;
+          m_Offset      = line;
+          hexView.DisplayedByteOffset = m_ByteOffset;
+          if ( Core.Debugging.MemoryViews.IndexOf( this ) == 0 )
+          {
+            Core.Settings.DebugMemoryByteOffset = m_ByteOffset;
+            Core.Settings.DebugMemoryOffset     = m_Offset;
+          }
+
           foreach ( ToolStripMenuItem subItem in m_MenuItemSetByteOffset.DropDownItems )
           {
             subItem.Checked = ( (int)subItem.Tag == m_ByteOffset );
@@ -737,6 +759,20 @@ namespace RetroDevStudio.Documents
       int width = int.Parse( e.ClickedItem.Text );
       SelectByteWidth( width );
       m_ByteWidth = width;
+    }
+
+
+
+    internal void SetOffsets()
+    {
+      m_ByteOffset  = Core.Settings.DebugMemoryByteOffset;
+      m_Offset      = Core.Settings.DebugMemoryOffset;
+      foreach ( ToolStripMenuItem item in byteWidthDropDownButton.DropDownItems )
+      {
+        item.CheckState = item.Text == Width.ToString() ? CheckState.Checked : CheckState.Unchecked;
+      }
+      hexView.DisplayedByteOffset = m_ByteOffset;
+      hexView.PerformScrollToLine( m_Offset );
     }
 
 

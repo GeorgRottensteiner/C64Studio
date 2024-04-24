@@ -3835,6 +3835,7 @@ namespace RetroDevStudio
 
       m_DebugMemory.SetMemoryDisplayType();
       m_DebugMemory.ApplyHexViewColors();
+      m_DebugMemory.SetOffsets();
 
       StudioCore.Settings.SanitizeSettings();
       return true;

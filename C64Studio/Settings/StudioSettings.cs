@@ -213,6 +213,9 @@ namespace RetroDevStudio
 
     public int                                  HelpZoomFactor = 100;
 
+    public int                                  DebugMemoryOffset = 0;
+    public int                                  DebugMemoryByteOffset = 0;
+
     public bool                                 CheckForUpdates = true;
     public DateTime                             LastUpdateCheck = DateTime.MinValue;
 
@@ -884,6 +887,12 @@ namespace RetroDevStudio
       chunkHelp.AppendI32( HelpZoomFactor );
       SettingsData.Append( chunkHelp.ToBuffer() );
 
+      // Memory View
+      GR.IO.FileChunk chunkMemoryView = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_MEMORY_VIEW );
+      chunkMemoryView.AppendI32( DebugMemoryOffset );
+      chunkMemoryView.AppendI32( DebugMemoryByteOffset );
+      SettingsData.Append( chunkMemoryView.ToBuffer() );
+
       return SettingsData;
     }
 
@@ -1443,6 +1452,14 @@ namespace RetroDevStudio
 
               HelpZoomFactor = Math.Max( 10, HelpZoomFactor );
               HelpZoomFactor = Math.Min( 1000, HelpZoomFactor );
+            }
+            break;
+          case FileChunkConstants.SETTINGS_MEMORY_VIEW:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              DebugMemoryOffset     = binIn.ReadInt32();
+              DebugMemoryByteOffset = binIn.ReadInt32() & 0x07;
             }
             break;
         }
