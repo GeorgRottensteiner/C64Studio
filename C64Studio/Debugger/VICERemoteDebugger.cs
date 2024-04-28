@@ -8,7 +8,7 @@ using RetroDevStudio.Documents;
 
 namespace RetroDevStudio
 {
-  public class VICERemoteDebugger : IDebugger
+  public class VICERemoteDebugger : DebuggerBase, IDebugger
   {
     public enum WinViceVersion
     {
@@ -83,7 +83,6 @@ namespace RetroDevStudio
     private RequestData               m_Request = new RequestData( DebugRequestType.NONE );
     private List<string>              m_ResponseLines = new List<string>();
     private List<RequestData>         m_RequestQueue = new List<RequestData>();
-    private StudioCore                Core = null;
     private List<WatchEntry>          m_WatchEntries = new List<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
@@ -94,9 +93,6 @@ namespace RetroDevStudio
     public bool                       m_BinaryMemDump = true;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
 
-    private int                       m_LastRequestedMemoryStartAddress = 0;
-    private int                       m_LastRequestedMemorySize = 32;
-    private MemorySource              m_LastRequestedMemorySource = MemorySource.AS_CPU;
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
 
     private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
@@ -115,9 +111,8 @@ namespace RetroDevStudio
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
-    public VICERemoteDebugger( StudioCore Core )
+    public VICERemoteDebugger( StudioCore Core ) : base( Core )
     {
-      this.Core = Core;
     }
 
 
@@ -850,7 +845,7 @@ namespace RetroDevStudio
 
             // this was removed? It's required to refresh data
             RefreshRegistersAndWatches();
-            RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+            RefreshMemorySections();
           }
           break;
         case DebugRequestType.EXIT:
@@ -1084,7 +1079,7 @@ namespace RetroDevStudio
           {
             //Debug.Log( "Has non virtual bp" );
             QueueRequest( DebugRequestType.REFRESH_VALUES );
-            RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+            RefreshMemorySections();
           }
         }
       }
@@ -1166,7 +1161,7 @@ namespace RetroDevStudio
       if ( !skipRefresh )
       {
         QueueRequest( DebugRequestType.REFRESH_VALUES );
-        RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+        RefreshMemorySections();
       }
       m_Request = new RequestData( DebugRequestType.NONE );
     }
@@ -1787,12 +1782,7 @@ namespace RetroDevStudio
       QueueRequest( DebugRequestType.NEXT );
 
       RefreshRegistersAndWatches();
-      SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                     Core.MainForm.m_DebugMemory.MemorySize,
-                                     Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
-      RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                              Core.MainForm.m_DebugMemory.MemorySize,
-                              Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+      RefreshMemorySections();
     }
 
 
@@ -1831,7 +1821,7 @@ namespace RetroDevStudio
     {
       StepOver();
       RefreshRegistersAndWatches();
-      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      RefreshMemorySections();
       m_State = DebuggerState.PAUSED;
       /*
       if ( SendCommand( "break" ) )
@@ -2017,11 +2007,12 @@ namespace RetroDevStudio
 
 
 
-    public void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source )
+    public void RefreshMemorySections()
     {
-      m_LastRequestedMemoryStartAddress = StartAddress;
-      m_LastRequestedMemorySize         = Size;
-      m_LastRequestedMemorySource       = Source;
+      foreach ( var section in m_LastRefreshSections )
+      {
+        RefreshMemory( section.StartAddress, section.Size, section.Source );
+      }
     }
 
 

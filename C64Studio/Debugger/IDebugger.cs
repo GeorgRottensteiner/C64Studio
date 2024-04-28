@@ -199,7 +199,8 @@ namespace RetroDevStudio
     void StepOut();
     void RefreshRegistersAndWatches();
     void RefreshMemory( int StartAddress, int Size, MemorySource Source );
-    void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source );
+    void SetAutoRefreshMemory( List<MemoryRefreshSection> Sections );
+    void RefreshMemorySections();
     RequestData RefreshTraceMemory( int StartAddress, int Size, string Info, Types.Breakpoint VirtualBP, Types.Breakpoint TraceBP );
 
     // keep running until breakpoint hit or user pauses

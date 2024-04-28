@@ -670,7 +670,7 @@ namespace RetroDevStudio
       {
         // that means either an error occurred or no settings file has been found (first startup?)
         // no settings file found, ask user which mode is wanted
-        var form = new FormAppMode(StudioCore);
+        var form = new FormAppMode( StudioCore );
         form.ShowDialog();
 
         try
@@ -1077,6 +1077,19 @@ namespace RetroDevStudio
       }
 
       StudioCore.Settings.Perspectives.RestoreActiveContent( m_ActivePerspective );
+
+      // handle additional debug memory views
+      foreach ( var view in StudioCore.Debugging.MemoryViews.Skip( 1 ) )
+      {
+        if ( m_ActivePerspective == Perspective.DEBUG )
+        {
+          view.Show();
+        }
+        else
+        {
+          view.Hide();
+        }
+      }
     }
 
 
@@ -1097,13 +1110,7 @@ namespace RetroDevStudio
 
         if ( request.DebugRequest != null )
         {
-          StudioCore.Debugging.Debugger.SetAutoRefreshMemory( request.DebugRequest.Parameter1,
-                                                       request.DebugRequest.Parameter2,
-                                                       ( request.DebugRequest.Type == DebugRequestType.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
-
-          StudioCore.Debugging.Debugger.RefreshMemory( request.DebugRequest.Parameter1,
-                                                       request.DebugRequest.Parameter2,
-                                                       ( request.DebugRequest.Type == DebugRequestType.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
+          StudioCore.Debugging.RefreshMemorySections();
         }
         else if ( request.OpenLastSolution != null )
         {
@@ -3807,6 +3814,9 @@ namespace RetroDevStudio
 
     private bool LoadSettings()
     {
+      StudioCore.Settings.Core = StudioCore;
+
+
       string SettingFile = SettingsPath();
 
       GR.Memory.ByteBuffer SettingsData = null;
@@ -3833,11 +3843,20 @@ namespace RetroDevStudio
         return false;
       }
 
+      // TODO - additional memory views!
       m_DebugMemory.SetMemoryDisplayType();
       m_DebugMemory.ApplyHexViewColors();
-      m_DebugMemory.SetOffsets();
 
       StudioCore.Settings.SanitizeSettings();
+
+      for ( int i = 0; i < StudioCore.Settings.DebugMemoryViews.Count; ++i )
+      {
+        if ( i < StudioCore.Debugging.MemoryViews.Count )
+        {
+          StudioCore.Debugging.MemoryViews[i].RestoreViewFromSettings( StudioCore.Settings.DebugMemoryViews[i] );
+        }
+      }
+
       return true;
     }
 

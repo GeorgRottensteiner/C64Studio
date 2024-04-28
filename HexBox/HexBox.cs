@@ -1572,7 +1572,17 @@ namespace Be.Windows.Forms
 
 
 
-		void UpdateVScroll()
+    public long VScrollMax
+    {
+      get
+      {
+        return _scrollVmax;
+      }
+    }
+
+
+
+    void UpdateVScroll()
 		{
 			int max = ToScrollMax(_scrollVmax);
 
@@ -3698,7 +3708,7 @@ namespace Be.Windows.Forms
       }
       set
       {
-        _DisplayedByteOffset = value & 0x7;
+        _DisplayedByteOffset = value % _bytesPerLine;
         Invalidate();
       }
     }

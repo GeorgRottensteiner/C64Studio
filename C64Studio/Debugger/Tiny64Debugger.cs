@@ -6,19 +6,15 @@ using System.Threading;
 
 namespace RetroDevStudio
 {
-  public class Tiny64Debugger : IDebugger
+  public class Tiny64Debugger : DebuggerBase, IDebugger
   {
     Tiny64.Emulator                   m_Emulator = new Tiny64.Emulator();
 
     Dictionary<int,LinkedList<string>> m_Labels = new Dictionary<int, LinkedList<string>>();
-    private StudioCore                Core = null;
     private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
     private bool                      m_IsCartridge = false;
     private volatile DebuggerState    m_State = DebuggerState.NOT_CONNECTED;
 
-    private int                       m_LastRequestedMemoryStartAddress = 0;
-    private int                       m_LastRequestedMemorySize = 32;
-    private MemorySource              m_LastRequestedMemorySource = MemorySource.AS_CPU;
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
 
     private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
@@ -38,9 +34,8 @@ namespace RetroDevStudio
 
 
 
-    public Tiny64Debugger( StudioCore Core )
+    public Tiny64Debugger( StudioCore Core ) : base( Core )
     {
-      this.Core = Core;
       m_Emulator.BreakpointHit += OnEmulatorBreakpointHit;
 
       m_EmulatorThread = new Thread( new ThreadStart( EmulatorUpdate ) );
@@ -78,7 +73,17 @@ namespace RetroDevStudio
       }
       //DebugEvent( new DebugEventData() { Type = RetroDevStudio.DebugEvent.UPDATE_BREAKPOINT );
       RefreshRegistersAndWatches();
-      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      RefreshMemorySections();
+    }
+
+
+
+    public void RefreshMemorySections()
+    {
+      foreach ( var section in m_LastRefreshSections )
+      {
+        RefreshMemory( section.StartAddress, section.Size, section.Source );
+      }
     }
 
 
@@ -471,7 +476,7 @@ namespace RetroDevStudio
     {
       m_Emulator.StepInto();
       RefreshRegistersAndWatches();
-      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      RefreshMemorySections();
     }
 
 
@@ -484,7 +489,7 @@ namespace RetroDevStudio
       {
         m_State = DebuggerState.PAUSED;
         RefreshRegistersAndWatches();
-        RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+        RefreshMemorySections();
       }
     }
 
@@ -498,7 +503,7 @@ namespace RetroDevStudio
       {
         m_State = DebuggerState.PAUSED;
         RefreshRegistersAndWatches();
-        RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+        RefreshMemorySections();
       }
     }
 
@@ -571,7 +576,7 @@ namespace RetroDevStudio
     {
       m_Emulator.State = Tiny64.EmulatorState.PAUSED;
       RefreshRegistersAndWatches();
-      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      RefreshMemorySections();
       m_State = DebuggerState.PAUSED;
 
       Debug.Log( "Break at total cycles " + m_Emulator.Machine.TotalCycles );
@@ -684,15 +689,6 @@ namespace RetroDevStudio
     }
 
     
-
-    public void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source )
-    {
-      m_LastRequestedMemoryStartAddress = StartAddress;
-      m_LastRequestedMemorySize         = Size;
-      m_LastRequestedMemorySource       = Source;
-    }
-
-
 
     public void Reset()
     {

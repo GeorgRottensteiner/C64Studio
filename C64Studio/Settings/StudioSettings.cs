@@ -9,6 +9,7 @@ using RetroDevStudio.Types;
 using System.Drawing;
 using RetroDevStudio.Documents;
 using System.Linq;
+using MDIApp;
 
 namespace RetroDevStudio
 {
@@ -106,9 +107,18 @@ namespace RetroDevStudio
     public System.Windows.Forms.Keys Key = System.Windows.Forms.Keys.None;
   };
 
+  public class DebugMemoryViewSettings
+  {
+    public int      DebugMemoryOffset = 0;
+    public int      DebugMemoryByteOffset = 0;
+    public int      DebugMemoryNumBytesPerLine = 8;
+  };
+
 
   public class StudioSettings
   {
+    public StudioCore                           Core = null;
+
     public GR.Collections.MultiMap<Keys, AcceleratorKey> Accelerators = new GR.Collections.MultiMap<Keys, AcceleratorKey>();
 
     public List<ToolInfo>                       ToolInfos = new List<ToolInfo>();
@@ -213,8 +223,7 @@ namespace RetroDevStudio
 
     public int                                  HelpZoomFactor = 100;
 
-    public int                                  DebugMemoryOffset = 0;
-    public int                                  DebugMemoryByteOffset = 0;
+    public List<DebugMemoryViewSettings>        DebugMemoryViews = new List<DebugMemoryViewSettings>();
 
     public bool                                 CheckForUpdates = true;
     public DateTime                             LastUpdateCheck = DateTime.MinValue;
@@ -358,6 +367,19 @@ namespace RetroDevStudio
         {
           return toolEntry.Value.Document;
         }
+      }
+      // manual dynamic view?
+      switch ( persistString )
+      {
+        case "Memory View":
+          {
+            var view = new DebugMemory( Core );
+            // mark as "memory view" (which means additional memory view)
+            view.Text = "Memory View";
+            view.Hide();
+
+            return view;
+          }
       }
       //Debug.Log( "persist doc not found for " + persistString );
       return null;
@@ -667,7 +689,6 @@ namespace RetroDevStudio
         EnumElements( parser );
         xmlOutText = parser.ToText();
       }
-
       chunkLayout.AppendU32( (uint)layoutData.Length );
       chunkLayout.Append( layoutData );
 
@@ -888,10 +909,16 @@ namespace RetroDevStudio
       SettingsData.Append( chunkHelp.ToBuffer() );
 
       // Memory View
-      GR.IO.FileChunk chunkMemoryView = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_MEMORY_VIEW );
-      chunkMemoryView.AppendI32( DebugMemoryOffset );
-      chunkMemoryView.AppendI32( DebugMemoryByteOffset );
-      SettingsData.Append( chunkMemoryView.ToBuffer() );
+      foreach ( var debugView in Core.Debugging.MemoryViews )
+      {
+        GR.IO.FileChunk chunkMemoryView = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_MEMORY_VIEW );
+
+        chunkMemoryView.AppendI32( debugView.Offset );
+        chunkMemoryView.AppendI32( debugView.ByteOffset );
+        chunkMemoryView.AppendI32( debugView.ByteWidth );
+
+        SettingsData.Append( chunkMemoryView.ToBuffer() );
+      }
 
       return SettingsData;
     }
@@ -1458,8 +1485,23 @@ namespace RetroDevStudio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              DebugMemoryOffset     = binIn.ReadInt32();
-              DebugMemoryByteOffset = binIn.ReadInt32() & 0x07;
+              var debugView = new DebugMemoryViewSettings();
+
+              debugView.DebugMemoryOffset           = binIn.ReadInt32();
+              debugView.DebugMemoryByteOffset       = binIn.ReadInt32();
+              debugView.DebugMemoryNumBytesPerLine  = binIn.ReadInt32();
+
+              if ( ( debugView.DebugMemoryNumBytesPerLine != 8 )
+              &&   ( debugView.DebugMemoryNumBytesPerLine != 16 )
+              &&   ( debugView.DebugMemoryNumBytesPerLine != 24 )
+              &&   ( debugView.DebugMemoryNumBytesPerLine != 32 )
+              &&   ( debugView.DebugMemoryNumBytesPerLine != 40 ) )
+              {
+                debugView.DebugMemoryNumBytesPerLine = 8;
+                debugView.DebugMemoryByteOffset %= debugView.DebugMemoryNumBytesPerLine;
+              }
+
+              DebugMemoryViews.Add( debugView );
             }
             break;
         }

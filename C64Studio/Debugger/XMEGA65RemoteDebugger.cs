@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Text;
 using RetroDevStudio.Documents;
 
+
+
 namespace RetroDevStudio
 {
-  public class XMEGA65RemoteDebugger : IDebugger
+  public class XMEGA65RemoteDebugger : DebuggerBase, IDebugger
   {
     private enum IDebugCommand
     {
@@ -102,7 +104,6 @@ namespace RetroDevStudio
     private RequestData               m_Request = new RequestData( DebugRequestType.NONE );
     private LinkedList<string>        m_ResponseLines = new LinkedList<string>();
     private LinkedList<RequestData>   m_RequestQueue = new LinkedList<RequestData>();
-    private StudioCore                Core = null;
     private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
@@ -111,9 +112,6 @@ namespace RetroDevStudio
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
     private BinaryMonitorBankID       m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
 
-    private int                       m_LastRequestedMemoryStartAddress = 0;
-    private int                       m_LastRequestedMemorySize = 32;
-    private MemorySource              m_LastRequestedMemorySource = MemorySource.AS_CPU;
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
 
     private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
@@ -135,9 +133,8 @@ namespace RetroDevStudio
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
-    public XMEGA65RemoteDebugger( StudioCore Core )
+    public XMEGA65RemoteDebugger( StudioCore Core ) : base( Core )
     {
-      this.Core = Core;
     }
 
 
@@ -758,7 +755,7 @@ namespace RetroDevStudio
           {
             Log( "Has non virtual bp" );
             QueueRequest( DebugRequestType.REFRESH_VALUES );
-            RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+            RefreshMemorySections();
           }
         }
       }
@@ -838,7 +835,7 @@ namespace RetroDevStudio
       if ( !skipRefresh )
       {
         QueueRequest( DebugRequestType.REFRESH_VALUES );
-        RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+        RefreshMemorySections();
       }
       m_Request = new RequestData( DebugRequestType.NONE );
     }
@@ -1543,7 +1540,7 @@ namespace RetroDevStudio
     {
       StepOver();
       RefreshRegistersAndWatches();
-      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      RefreshMemorySections();
       m_State = DebuggerState.PAUSED;
       /*
       if ( SendCommand( "break" ) )
@@ -1678,11 +1675,12 @@ namespace RetroDevStudio
 
 
 
-    public void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source )
+    public void RefreshMemorySections()
     {
-      m_LastRequestedMemoryStartAddress = StartAddress;
-      m_LastRequestedMemorySize         = Size;
-      m_LastRequestedMemorySource       = Source;
+      foreach ( var section in m_LastRefreshSections )
+      {
+        RefreshMemory( section.StartAddress, section.Size, section.Source );
+      }
     }
 
 

@@ -88,9 +88,7 @@ namespace RetroDevStudio
         viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
       }
       // default to currently visible memory view
-      Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                     Core.MainForm.m_DebugMemory.MemorySize,
-                                     Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+      Debugger.SetAutoRefreshMemory( MemoryViewSections() );
       // pass on remembered wathes
       foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
       {
@@ -98,6 +96,24 @@ namespace RetroDevStudio
       }
 
       Debugger.DebugEvent += Core.MainForm.Debugger_DebugEvent;
+    }
+
+
+
+    private List<MemoryRefreshSection> MemoryViewSections()
+    {
+      var section = new List<MemoryRefreshSection>();
+
+      foreach ( var view in MemoryViews )
+      {
+        section.Add( new MemoryRefreshSection()
+        {
+          StartAddress = view.MemoryStart,
+          Size = view.MemorySize,
+          Source = view.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM
+        } );
+      }
+      return section;
     }
 
 
@@ -559,12 +575,8 @@ namespace RetroDevStudio
         Core.MainForm.m_DebugMemory.InvalidateAllMemory();
         Debugger.StepInto();
         Debugger.RefreshRegistersAndWatches();
-        Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                       Core.MainForm.m_DebugMemory.MemorySize,
-                                       Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
-        Debugger.RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                Core.MainForm.m_DebugMemory.MemorySize,
-                                Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+        Debugger.SetAutoRefreshMemory( MemoryViewSections() );
+        Debugger.RefreshMemorySections();
 
         Core.Executing.BringStudioToForeground();
 
@@ -747,12 +759,8 @@ namespace RetroDevStudio
         if ( Debugger.State == DebuggerState.PAUSED )
         {
           Debugger.RefreshRegistersAndWatches();
-          Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                         Core.MainForm.m_DebugMemory.MemorySize,
-                                         Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
-          Debugger.RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                  Core.MainForm.m_DebugMemory.MemorySize,
-                                  Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+          Debugger.SetAutoRefreshMemory( MemoryViewSections() );
+          Debugger.RefreshMemorySections();
 
           if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN )
           {
@@ -815,6 +823,39 @@ namespace RetroDevStudio
       }
 
       return sb.ToString();
+    }
+
+
+
+    internal void RefreshMemorySections()
+    {
+      if ( Debugger != null )
+      {
+        Debugger.SetAutoRefreshMemory( MemoryViewSections() );
+        Debugger.RefreshMemorySections();
+      }
+    }
+
+
+
+    internal void RemoveMemoryView( DebugMemory DebugMemoryView )
+    {
+      MemoryViews.Remove( DebugMemoryView );
+      if ( Debugger != null )
+      {
+        Debugger.SetAutoRefreshMemory( MemoryViewSections() );
+      }
+    }
+
+
+
+    internal void AddMemoryView( DebugMemory DebugMemoryView )
+    {
+      MemoryViews.Add( DebugMemoryView );
+      if ( Debugger != null )
+      {
+        Debugger.RefreshMemory( DebugMemoryView.MemoryStart, DebugMemoryView.MemorySize, DebugMemoryView.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+      }
     }
 
 

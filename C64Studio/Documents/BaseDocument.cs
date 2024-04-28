@@ -116,6 +116,8 @@ namespace RetroDevStudio.Documents
       closeToolStripMenuItem.Click += new EventHandler( closeToolStripMenuItem_Click );
       closeAllButThisToolStripMenuItem.Click +=new EventHandler(closeAllButThisToolStripMenuItem_Click);
       closeAllToolStripMenuItem.Click += new EventHandler( closeAllToolStripMenuItem_Click );
+
+      MinimumSize = new Size( 20, 20 );
     }
 
 
