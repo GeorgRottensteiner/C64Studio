@@ -346,6 +346,7 @@ namespace RetroDevStudio.Documents
       hexView.ByteProvider = new Be.Windows.Forms.DynamicByteProvider( Data.Data() );
 
       //Debug.Log( "DebugMemory::SetHexData called with " + oldOffset + ", setting " + Data.Length + " bytes" );
+
       hexView.PerformScrollToLine( oldOffset );
     }
 
@@ -808,6 +809,7 @@ namespace RetroDevStudio.Documents
       UpdateByteOffsetMenuItems();
 
       hexView.DisplayedByteOffset = m_ByteOffset;
+
       hexView.PerformScrollToLine( line );
     }
 

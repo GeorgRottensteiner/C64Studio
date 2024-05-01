@@ -234,7 +234,8 @@ namespace Be.Windows.Forms
 
 			protected bool PreProcessWmKeyDown_Default(ref Message m)
 			{
-				_hexBox.ScrollByteIntoView();
+        // this triggered jump to cursor for any key, wtf?
+				//_hexBox.ScrollByteIntoView();
 				return _hexBox.BasePreProcessMessage(ref m);
 			}
 
@@ -1646,7 +1647,7 @@ namespace Be.Windows.Forms
 			if (pos < _scrollVmin || pos > _scrollVmax || pos == _scrollVpos)
 				return;
 
-			_scrollVpos = pos;
+      _scrollVpos = pos;
 
 			UpdateVScroll();
 			UpdateVisibilityBytes();
@@ -1656,7 +1657,8 @@ namespace Be.Windows.Forms
 
 
 
-		void PerformScrollLines(int lines)
+
+    void PerformScrollLines(int lines)
 		{
 			long pos;
 			if (lines > 0)
@@ -1671,8 +1673,7 @@ namespace Be.Windows.Forms
 			{
 				return;
 			}
-
-			PerformScrollToLine(pos);
+      PerformScrollToLine(pos);
 		}
 
 		void PerformScrollLineDown()
@@ -1702,10 +1703,9 @@ namespace Be.Windows.Forms
 
 			if (ToScrollPos(pos) == ToScrollMax(_scrollVmax) - difference)
 				pos = _scrollVmax;
-			// End Bug fix
+      // End Bug fix
 
-
-			PerformScrollToLine(pos);
+      PerformScrollToLine(pos);
 		}
 
 		/// <summary>

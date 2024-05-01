@@ -10,14 +10,101 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POIncludeSource( PathResolving Resolving, string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
+    private ParseLineResult POIncludeSource( string ParentFilename, List<TokenInfo> lineTokenInfos, ref int lineIndex, ref string[] Lines )
     {
-      if ( m_AssemblerSettings.IncludeSourceIsAlwaysUsingLibraryPathAndFile )
+      string          subFilename = "";
+      PathResolving   resolving = PathResolving.FROM_FILE;
+      bool            singleInclude = false;
+
+      if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> parms ) )
       {
-        Resolving = PathResolving.FROM_FILE_AND_LIBRARIES_PATH;
+        return ParseLineResult.RETURN_NULL;
       }
 
-      SourceInfoLog( "Include file " + subFilename + ", resolving " + Resolving );
+      if ( m_AssemblerSettings.IncludeHasOnlyFilename )
+      {
+        // PDS style
+        if ( parms.Count != 1 )
+        {
+          AddError( lineIndex,
+                  Types.ErrorCode.E1302_MALFORMED_MACRO,
+                  "Expecting valid file name",
+                  lineTokenInfos[0].StartPos,
+                  lineTokenInfos[0].Length );
+          return ParseLineResult.RETURN_NULL;
+        }
+        else
+        {
+          subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+        }
+      }
+      else if ( ( parms.Count >= 1 )
+      &&        ( parms.Count <= 2 )
+      &&        ( parms[0].Count == 1 )
+      &&        ( parms[0][0].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+      {
+        // regular include
+        subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
+        if ( ( parms.Count == 2 )
+        &&   ( ( parms[1].Count != 1 )
+        ||     ( parms[1][0].Type != TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( parms[1][0].Content.ToUpper() != "ONCE" ) ) )
+        {
+          AddError( lineIndex,
+                  Types.ErrorCode.E1302_MALFORMED_MACRO,
+                  "Trailing argument must be 'ONCE'",
+                  parms[1][0].StartPos,
+                  parms[1].Last().EndPos - parms[1][0].StartPos + 1 );
+          return ParseLineResult.RETURN_NULL;
+        }
+        singleInclude = ( parms.Count == 2 );
+      }
+      else if ( ( parms.Count >= 1 )
+      &&        ( parms.Count <= 2 )
+      &&        ( parms[0].Count >= 3 )
+      &&        ( parms[0][0].Content == "<" )
+      &&        ( parms[0].Last().Content == ">" ) )
+      {
+        // library include
+        subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
+        resolving = PathResolving.FROM_LIBRARIES_PATH;
+        if ( ( parms.Count == 2 )
+        &&   ( ( parms[1].Count != 1 )
+        ||     ( parms[1][0].Type != TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( parms[1][0].Content.ToUpper() != "ONCE" ) ) )
+        {
+          AddError( lineIndex,
+                  Types.ErrorCode.E1302_MALFORMED_MACRO,
+                  "Trailing argument must be 'ONCE'",
+                  parms[1][0].StartPos,
+                  parms[1].Last().EndPos - parms[1][0].StartPos + 1 );
+          return ParseLineResult.RETURN_NULL;
+        }
+        singleInclude = ( parms.Count == 2 );
+      }
+      else
+      {
+        AddError( lineIndex,
+                  Types.ErrorCode.E1302_MALFORMED_MACRO,
+                  "Expecting file name, either \"filename\" or <library filename>[,once]",
+                  lineTokenInfos[0].StartPos,
+                  lineTokenInfos.Last().EndPos - lineTokenInfos[0].StartPos + 1 );
+        return ParseLineResult.RETURN_NULL;
+      }
+
+      if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out string filename, out int localIndex ) )
+      {
+        DumpSourceInfos( OrigLines );
+        AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
+        return ParseLineResult.RETURN_NULL;
+      }
+
+      if ( m_AssemblerSettings.IncludeSourceIsAlwaysUsingLibraryPathAndFile )
+      {
+        resolving = PathResolving.FROM_FILE_AND_LIBRARIES_PATH;
+      }
+
+      SourceInfoLog( "Include file " + subFilename + ", resolving " + resolving );
       if ( m_LoadedFiles[ParentFilename] == null )
       {
         m_LoadedFiles[ParentFilename] = new GR.Collections.Set<string>();
@@ -39,6 +126,17 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      if ( ( singleInclude )
+      &&   ( m_AlreadyIncludedSingleIncludeFiles.Contains( subFilename ) ) )
+      {
+        // do not re-include single include files
+        return ParseLineResult.CALL_CONTINUE;
+      }
+      if ( singleInclude )
+      {
+        m_AlreadyIncludedSingleIncludeFiles.Add( subFilename );
+      }
+
       if ( m_LoadedFiles[ParentFilename].Contains( subFilename ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
@@ -50,22 +148,22 @@ namespace RetroDevStudio.Parser
       string    subFilenameFull = subFilename;
       bool      foundAFile = false;
 
-      if ( ( Resolving == PathResolving.FROM_FILE )
-      ||   ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
+      if ( ( resolving == PathResolving.FROM_FILE )
+      ||   ( resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
       {
         subFilenameFull = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
         foundAFile = System.IO.File.Exists( subFilenameFull );
       }
 
       if ( ( !foundAFile )
-      &&   ( ( Resolving == PathResolving.FROM_LIBRARIES_PATH )
-      ||     ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) ) )
+      &&   ( ( resolving == PathResolving.FROM_LIBRARIES_PATH )
+      ||     ( resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) ) )
       {
         subFilenameFull = DetermineFullLibraryFilePath( subFilename );
         if ( string.IsNullOrEmpty( subFilenameFull ) )
         {
-          if ( ( Resolving == PathResolving.FROM_FILE )
-          ||   ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
+          if ( ( resolving == PathResolving.FROM_FILE )
+          ||   ( resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
           {
             var msg = AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching file for '" + subFilename + "' to include in line " + ( lineIndex + 1 ) );
 

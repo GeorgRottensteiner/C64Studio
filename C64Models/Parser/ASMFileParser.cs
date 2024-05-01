@@ -88,6 +88,7 @@ namespace RetroDevStudio.Parser
     public Processor                    m_Processor = Processor.Create6510();
 
     private GR.Collections.Map<string, GR.Collections.Set<string>> m_LoadedFiles = new GR.Collections.Map<string, GR.Collections.Set<string>>();
+    private GR.Collections.Set<string>  m_AlreadyIncludedSingleIncludeFiles = new Set<string>();
 
     private int                         m_CompileCurrentAddress = -1;
 
@@ -7071,50 +7072,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE )
             {
-              string          subFilename = "";
-              PathResolving   resolving = PathResolving.FROM_FILE;
-
-              if ( m_AssemblerSettings.IncludeHasOnlyFilename )
-              {
-                // PDS style
-                subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
-              }
-              else if ( ( lineTokenInfos.Count == 2 )
-              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
-              {
-                // regular include
-                subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
-              }
-              else if ( ( lineTokenInfos.Count > 3 )
-              && ( lineTokenInfos[1].Content == "<" )
-              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
-              {
-                // library include
-                subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
-                resolving = PathResolving.FROM_LIBRARIES_PATH;
-              }
-              else
-              {
-                AddError( lineIndex,
-                          Types.ErrorCode.E1302_MALFORMED_MACRO,
-                          "Expecting file name, either \"filename\" or <library filename>",
-                          lineTokenInfos[0].StartPos,
-                          lineTokenInfos[0].Length );
-                HadFatalError = true;
-                return Lines;
-              }
-
-              localIndex = 0;
-              filename = "";
-              if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
-              {
-                DumpSourceInfos( OrigLines );
-                AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
-                HadFatalError = true;
-                return Lines;
-              }
-
-              ParseLineResult   plResult = POIncludeSource( resolving, subFilename, filename, ref lineIndex, ref Lines );
+              ParseLineResult   plResult = POIncludeSource( filename, lineTokenInfos, ref lineIndex, ref Lines );
               if ( plResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -8319,49 +8277,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE )
           {
-            string          subFilename = "";
-            PathResolving   resolving = PathResolving.FROM_FILE;
-
-            if ( m_AssemblerSettings.IncludeHasOnlyFilename )
-            {
-              // PDS style
-              subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
-            }
-            else if ( ( lineTokenInfos.Count == 2 )
-            && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
-            {
-              // regular include
-              subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
-            }
-            else if ( ( lineTokenInfos.Count > 3 )
-            && ( lineTokenInfos[1].Content == "<" )
-            && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
-            {
-              // library include
-              subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
-              resolving = PathResolving.FROM_LIBRARIES_PATH;
-            }
-            else
-            {
-              AddError( lineIndex,
-                        Types.ErrorCode.E1302_MALFORMED_MACRO,
-                        "Expecting file name, either \"filename\" or \"library filename\"",
-                        lineTokenInfos[0].StartPos,
-                        lineTokenInfos[0].Length );
-              HadFatalError = true;
-              return Lines;
-            }
-
-            localIndex = 0;
-            filename = "";
-            if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
-            {
-              DumpSourceInfos( OrigLines );
-              AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
-              HadFatalError = true;
-              return Lines;
-            }
-            ParseLineResult   plResult = POIncludeSource( resolving, subFilename, ParentFilename, ref lineIndex, ref Lines );
+            ParseLineResult   plResult = POIncludeSource( ParentFilename, lineTokenInfos, ref lineIndex, ref Lines );
             if ( plResult == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -11016,13 +10932,6 @@ namespace RetroDevStudio.Parser
 
       foreach ( var infoToAdd in infosToAdd )
       {
-        Debug.Log( "Adding cloned source info at " + infoToAdd.GlobalStartLine + " to " + ( infoToAdd.GlobalStartLine + infoToAdd.LineCount - 1 ) + " from orig " + ( 1 + infoToAdd.GlobalStartLine - ( TargetIndex - SourceIndex ) ) );
-        if ( ( infoToAdd.GlobalStartLine == 50 )
-        &&   ( infoToAdd.GlobalStartLine + infoToAdd.LineCount - 1 == 50 )
-        &&   ( ( 1 + infoToAdd.GlobalStartLine - ( TargetIndex - SourceIndex ) ) == 35 ) )
-        {
-          Debug.Log( "hier geht's schief" );
-        }
         InsertSourceInfo( infoToAdd, false, false );
       }
     }
@@ -11199,6 +11108,7 @@ namespace RetroDevStudio.Parser
       m_WarningMessages = 0;
       m_ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
       m_LoadedFiles.Clear();
+      m_AlreadyIncludedSingleIncludeFiles.Clear();
       m_Filename = "";
     }
 
