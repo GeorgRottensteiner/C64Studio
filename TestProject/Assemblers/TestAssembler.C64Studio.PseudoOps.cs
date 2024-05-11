@@ -507,17 +507,20 @@ namespace TestProject
                           !byte 1
                           !byte 2,3,4,5,6,7
                           !byte %...##...
+                          !byte ""$"",""$""+128
 
                           !word 1
                           !16 2,3,4,5,6,7
                           !le16 2,3,4,5,6,7
                           !be16 1
                           !be16 2,3,4,5,6,7
+                          !word ""$"",""$""+128
           
                           !dword $01020304
                           !32 $05060708,$090a0b0c,$ffeeddcc
                           !le32 2,3,4,5,6,7
-                          !be32 1";
+                          !be32 1
+                          !dword ""$"",""$""+128";
 
       RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
       parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
@@ -532,7 +535,7 @@ namespace TestProject
 
       var assembly = parser.AssembledOutput;
 
-      Assert.AreEqual( "002001020304050607180100020003000400050006000700020003000400050006000700000100020003000400050006000704030201080706050C0B0A09CCDDEEFF02000000030000000400000005000000060000000700000000000001", assembly.Assembly.ToString() );
+      Assert.AreEqual( "0020010203040506071824A4010002000300040005000600070002000300040005000600070000010002000300040005000600072400A40004030201080706050C0B0A09CCDDEEFF0200000003000000040000000500000006000000070000000000000124000000A4000000", assembly.Assembly.ToString() );
     }
 
 

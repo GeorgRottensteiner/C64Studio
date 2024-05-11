@@ -214,11 +214,11 @@ namespace RetroDevStudio
         }
 
         if ( ( m_ReceivedDataBin.Length > 0 )
-        && ( m_ReceivedDataBin.ByteAt( 0 ) == 0x02 ) )
+        &&   ( m_ReceivedDataBin.ByteAt( 0 ) == 0x02 ) )
         {
           // binary dump
           if ( ( m_ReceivedDataBin.Length > 5 )
-          && ( m_ReceivedDataBin.ByteAt( 0 ) == 0x02 ) )
+          &&   ( m_ReceivedDataBin.ByteAt( 0 ) == 0x02 ) )
           {
             uint answerLength = m_ReceivedDataBin.UInt32At( 1 );
             if ( m_ReceivedDataBin.Length >= 6 + answerLength )
@@ -1450,8 +1450,16 @@ namespace RetroDevStudio
             tmpData.AppendU8( 0x02 );   // STX
             tmpData.AppendU8( 5 );      // length of command
             tmpData.AppendU8( 0x01 );   // MON_CMD_MEMDUMP = 1
-            tmpData.AppendU16( startAddress );
-            tmpData.AppendU16( endAddress );
+            if ( startAddress > endAddress )
+            {
+              tmpData.AppendU16( endAddress );
+              tmpData.AppendU16( startAddress );
+            }
+            else
+            {
+              tmpData.AppendU16( startAddress );
+              tmpData.AppendU16( endAddress );
+            }
             tmpData.AppendU8( 0 );    // mem space
             
             return SendCommand( tmpData );

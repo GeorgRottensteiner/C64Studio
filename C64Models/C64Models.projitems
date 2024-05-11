@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor6510.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\AmigaDisk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.DataByte.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\DumpLabelFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.While.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.OpcodeFromExpression.cs" />

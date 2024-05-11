@@ -43,7 +43,7 @@ namespace RetroDevStudio
     public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<RetroDevStudio.Types.Breakpoint>>();
     public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<RetroDevStudio.Types.Breakpoint>();
 
-    public CompileTargetType DebugType = CompileTargetType.NONE;
+    public CompileTargetType    DebugType = CompileTargetType.NONE;
     internal bool               InitialBreakpointIsTemporary;
 
     public delegate void MarkLineCallback( Project MarkProject, DocumentInfo Document, int Line );
@@ -130,7 +130,7 @@ namespace RetroDevStudio
         int globalLineIndex = -1;
         if ( !ASMFileInfo.FindGlobalLineIndex( virtualBP.LineIndex, virtualBP.DocumentFilename, out globalLineIndex ) )
         {
-          Core.AddToOutput( "Cannot assign breakpoint for line " + virtualBP.LineIndex + ", no address found" + System.Environment.NewLine );
+          Core.AddToOutputLine( "Cannot assign breakpoint for line " + virtualBP.LineIndex + ", no address found" );
           continue;
         }
         int address = ASMFileInfo.FindLineAddress( globalLineIndex );
@@ -155,8 +155,6 @@ namespace RetroDevStudio
               BreakPoints.Add( "RetroDevStudio.DebugBreakpoints", new List<RetroDevStudio.Types.Breakpoint>() );
             }
             BreakPoints["RetroDevStudio.DebugBreakpoints"].Add( bp );
-            //AddBreakpoint( bp );
-            Debug.Log( "Add virtual bp for $" + address.ToString( "X4" ) );
           }
           else
           {
@@ -167,7 +165,7 @@ namespace RetroDevStudio
         }
         else
         {
-          Core.AddToOutput( "Cannot assign breakpoint for line " + virtualBP.LineIndex + ", no address found" + System.Environment.NewLine );
+          Core.AddToOutputLine( "Cannot assign breakpoint for line " + virtualBP.LineIndex + ", no address found" );
         }
       }
     }

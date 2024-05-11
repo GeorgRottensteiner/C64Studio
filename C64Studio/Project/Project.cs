@@ -263,6 +263,35 @@ namespace RetroDevStudio
         bufferProject.Append( watch.Save() );
       }
 
+      /*
+      // break points
+      GR.IO.FileChunk chunkBreakpoints = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BREAKPOINTS );
+      foreach ( var breakpoints in Core.Debugging.BreakPoints )
+      {
+        foreach ( var bp in breakpoints.Value )
+        {
+          GR.IO.FileChunk chunkBreakPoint = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BREAKPOINT );
+
+          chunkBreakPoint.AppendString( bp.DocumentFilename );
+          chunkBreakPoint.AppendI32( bp.Address );
+          chunkBreakPoint.AppendI32( bp.LineIndex );
+          chunkBreakPoint.AppendString( bp.AddressSource );
+          chunkBreakPoint.AppendString( bp.Conditions );
+          chunkBreakPoint.AppendString( bp.Expression );
+          chunkBreakPoint.AppendU32( (uint)( ( bp.IsVirtual ? 1 : 0 )
+                                          | ( bp.TriggerOnExec ? 2 : 0 )
+                                          | ( bp.TriggerOnLoad ? 4 : 0 )
+                                          | ( bp.TriggerOnStore ? 8 : 0 )
+                                          | ( bp.
+            );
+
+          chunkBreakpoints.Append( chunkBreakPoint.ToBuffer() );
+        }
+      }
+      SettingsData.Append( chunkBreakpoints.ToBuffer() );
+      */
+
+
       return bufferProject;
     }
 
