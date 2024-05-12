@@ -505,22 +505,24 @@ namespace TestProject
       string      source = @"!to ""po_byte_word_dword.prg"",cbm
                 * = $2000
                           !byte 1
-                          !byte 2,3,4,5,6,7
+                          !byte 2,3,4,5,6,LATE_EXPRESSION_7
                           !byte %...##...
                           !byte ""$"",""$""+128
 
                           !word 1
-                          !16 2,3,4,5,6,7
-                          !le16 2,3,4,5,6,7
+                          !16 2,3,4,5,6,LATE_EXPRESSION_7
+                          !le16 2,3,4,5,6,LATE_EXPRESSION_7
                           !be16 1
-                          !be16 2,3,4,5,6,7
+                          !be16 2,3,4,5,6,LATE_EXPRESSION_7
                           !word ""$"",""$""+128
           
                           !dword $01020304
                           !32 $05060708,$090a0b0c,$ffeeddcc
-                          !le32 2,3,4,5,6,7
+                          !le32 2,3,4,5,6,LATE_EXPRESSION_7
                           !be32 1
-                          !dword ""$"",""$""+128";
+                          !dword ""$"",""$""+128
+
+      LATE_EXPRESSION_7 = 7";
 
       RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
       parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );

@@ -193,6 +193,7 @@ namespace RetroDevStudio.Documents
           EnableFileWatcher();
           return false;
         }
+        SetDocumentFilename( FullPath );
         SetUnmodified();
       }
 

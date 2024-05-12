@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using GR.Memory;
 
+
+
 namespace RetroDevStudio.Formats
 {
   public abstract class CommodoreDisk : MediaFormat
@@ -701,7 +703,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool DeleteFile( GR.Memory.ByteBuffer Filename )
+    public override bool DeleteFile( GR.Memory.ByteBuffer Filename, bool CompleteDelete )
     {
       _LastError = "";
       int   curTrack = TRACK_DIRECTORY;
@@ -739,10 +741,20 @@ namespace RetroDevStudio.Formats
                 Track fileTrack = Tracks[startTrack - 1];
                 Sector fileSector = fileTrack.Sectors[startSector];
 
+                if ( CompleteDelete )
+                {
+                  Tracks[startTrack - 1].Sectors[startSector].Data.Fill( 0, (int)Tracks[startTrack - 1].Sectors[startSector].Data.Length, 0 );
+                }
+
                 FreeSector( startTrack, startSector );
 
                 startTrack = fileSector.Data.ByteAt( 0 );
                 startSector = fileSector.Data.ByteAt( 1 );
+              }
+              if ( CompleteDelete )
+              {
+                // remove all traces from directory entry
+                sect.Data.Fill( BYTES_PER_DIR_ENTRY * i, BYTES_PER_DIR_ENTRY, 0 );
               }
               return true;
             }
@@ -1341,7 +1353,7 @@ namespace RetroDevStudio.Formats
     {
       get
       {
-        return "Disk Files|*.D64|" + base.FileFilter;
+        return base.FileFilter;
       }
     }
 

@@ -432,7 +432,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool DeleteFile( GR.Memory.ByteBuffer Filename )
+    public override bool DeleteFile( GR.Memory.ByteBuffer Filename, bool CompleteDelete )
     {
       _LastError = "";
       foreach ( FileEntry file in TapFiles )

@@ -2695,7 +2695,7 @@ namespace RetroDevStudio.Parser
             case MacroInfo.PseudoOpType.WORD:
               {
                 int     lineInBytes = 0;
-                var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, out lineInBytes );
+                var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
                 if ( result == ParseLineResult.RETURN_FALSE )
                 {
                   return ParseLineResult.RETURN_FALSE;
@@ -2705,7 +2705,7 @@ namespace RetroDevStudio.Parser
             case MacroInfo.PseudoOpType.WORD_BE:
               {
                 int     lineInBytes = 0;
-                var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, false, out lineInBytes );
+                var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
                 if ( result == ParseLineResult.RETURN_FALSE )
                 {
                   return ParseLineResult.RETURN_FALSE;
@@ -2715,7 +2715,7 @@ namespace RetroDevStudio.Parser
             case MacroInfo.PseudoOpType.DWORD:
               {
                 int     lineInBytes = 0;
-                var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, out lineInBytes );
+                var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
                 if ( result == ParseLineResult.RETURN_FALSE )
                 {
                   return ParseLineResult.RETURN_FALSE;
@@ -2725,7 +2725,7 @@ namespace RetroDevStudio.Parser
             case MacroInfo.PseudoOpType.DWORD_BE:
               {
                 int     lineInBytes = 0;
-                var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, false, out lineInBytes );
+                var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
                 if ( result == ParseLineResult.RETURN_FALSE )
                 {
                   return ParseLineResult.RETURN_FALSE;
@@ -4622,574 +4622,6 @@ namespace RetroDevStudio.Parser
       }
       lineSizeInBytes = info.NumBytes;
 
-      return ParseLineResult.OK;
-    }
-
-
-
-    private ParseLineResult PODataWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
-    {
-      GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
-
-      int commaCount = 0;
-      int firstTokenIndex = StartIndex;
-      int insideOtherBrackets = 0;
-      for ( int tokenIndex = StartIndex; tokenIndex < StartIndex + Count; ++tokenIndex )
-      {
-        string token = lineTokenInfos[tokenIndex].Content;
-
-        if ( IsOpeningBraceChar( token ) )
-        {
-          ++insideOtherBrackets;
-          continue;
-        }
-        if ( IsClosingBraceChar( token ) )
-        {
-          --insideOtherBrackets;
-
-        }
-        if ( insideOtherBrackets > 0 )
-        {
-          continue;
-        }
-
-        if ( ( tokenIndex == StartIndex )
-        &&   ( token == "#" ) )
-        {
-          // direct value?
-          if ( ( lineTokenInfos.Count > 2 )
-          &&   ( lineTokenInfos[2].Content != "#" )
-          &&   ( lineTokenInfos[2].Content != "." ) )
-          {
-            // not a binary value
-            continue;
-          }
-        }
-
-        if ( token == "," )
-        {
-          ++commaCount;
-
-          if ( tokenIndex - firstTokenIndex >= 1 )
-          {
-            int     wordValue = -1;
-            int     numBytesGiven = 0;
-
-            if ( ( tokenIndex - firstTokenIndex == 1 )
-            &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
-            {
-              AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Virtual value only allowed as single value. Expression:"
-                           + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
-                           lineTokenInfos[firstTokenIndex].StartPos,
-                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-            }
-
-            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
-            {
-              if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
-              {
-                if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
-                &&   ( wordValueSymbol.String.Length > 1 )
-                &&   ( wordValueSymbol.String.EndsWith( "\"" ) ) )
-                {
-                  string    textLiteral = wordValueSymbol.String.Substring( 1, wordValueSymbol.String.Length - 2 );
-
-                  textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-                  if ( hadError )
-                  {
-                    AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                    lineSizeInBytes = 0;
-                    return ParseLineResult.ERROR_ABORT;
-                  }
-
-                  // a text
-                  foreach ( char aChar in textLiteral )
-                  {
-                    // map to PETSCII!
-                    if ( LittleEndian )
-                    {
-                      data.AppendU16( (byte)aChar );
-                    }
-                    else
-                    {
-                      data.AppendU16NetworkOrder( (byte)aChar );
-                    }
-                  }
-                }
-                else
-                {
-                  string    textLiteral = wordValueSymbol.String;
-
-                  textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-                  if ( hadError )
-                  {
-                    AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                    lineSizeInBytes = 0;
-                    return ParseLineResult.ERROR_ABORT;
-                  }
-
-                  // a text
-                  foreach ( char aChar in textLiteral )
-                  {
-                    // map to PETSCII!
-                    if ( LittleEndian )
-                    {
-                      data.AppendU16( (byte)aChar );
-                    }
-                    else
-                    {
-                      data.AppendU16NetworkOrder( (byte)aChar );
-                    }
-                  }
-                }
-              }
-              else
-              {
-                wordValue = wordValueSymbol.ToInt32();
-                if ( !ValidWordValue( wordValue ) )
-                {
-                  AddError( info.LineIndex,
-                            Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                            "Value out of bounds for word, needs to be >= -32768 and <= 65535. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
-                            lineTokenInfos[firstTokenIndex].StartPos,
-                            lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-                }
-                if ( LittleEndian )
-                {
-                  data.AppendU16( (ushort)wordValue );
-                }
-                else
-                {
-                  data.AppendU16NetworkOrder( (ushort)wordValue );
-                }
-              }
-            }
-            else if ( AllowNeededExpression )
-            {
-              info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
-            }
-            else
-            {
-              AddError( info.LineIndex,
-                          Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                          "Failed to evaluate expression " + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
-                          lineTokenInfos[firstTokenIndex].StartPos,
-                          lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-            }
-          }
-          firstTokenIndex = tokenIndex + 1;
-        }
-      }
-      if ( ( firstTokenIndex > 0 )
-      &&   ( firstTokenIndex == lineTokenInfos.Count )
-      &&   ( commaCount > 0 ) )
-      {
-        // last parameter has no value!
-        AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Missing value after last separator."
-                          + TokensToExpression( lineTokenInfos, lineTokenInfos.Count - 1, 1 ),
-                          lineTokenInfos[lineTokenInfos.Count - 1].StartPos,
-                          lineTokenInfos[lineTokenInfos.Count - 1].Length );
-      }
-      if ( firstTokenIndex + 1 <= lineTokenInfos.Count )
-      {
-        int wordValue = -1;
-        int numBytesGiven = 0;
-
-        if ( ( lineTokenInfos.Count - firstTokenIndex == 1 )
-        &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
-        {
-          info.NumBytes = 2;
-          lineSizeInBytes = 2;
-          return ParseLineResult.ERROR_ABORT;
-        }
-
-        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
-        {
-          if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
-          {
-            if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
-            &&   ( wordValueSymbol.String.Length > 1 )
-            &&   ( wordValueSymbol.String.EndsWith( "\"" ) ) )
-            {
-              string    textLiteral = wordValueSymbol.String.Substring( 1, wordValueSymbol.String.Length - 2 );
-
-              textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-              if ( hadError )
-              {
-                AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                lineSizeInBytes = 0;
-                return ParseLineResult.ERROR_ABORT;
-              }
-
-              // a text
-              foreach ( char aChar in textLiteral )
-              {
-                // map to PETSCII!
-                if ( LittleEndian )
-                {
-                  data.AppendU16( (byte)aChar );
-                }
-                else
-                {
-                  data.AppendU16NetworkOrder( (byte)aChar );
-                }
-              }
-            }
-            else
-            {
-              string    textLiteral = wordValueSymbol.String;
-
-              textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-              if ( hadError )
-              {
-                AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                lineSizeInBytes = 0;
-                return ParseLineResult.ERROR_ABORT;
-              }
-
-              // a text
-              foreach ( char aChar in textLiteral )
-              {
-                // map to PETSCII!
-                if ( LittleEndian )
-                {
-                  data.AppendU16( (byte)aChar );
-                }
-                else
-                {
-                  data.AppendU16NetworkOrder( (byte)aChar );
-                }
-              }
-            }
-          }
-          else
-          {
-            wordValue = wordValueSymbol.ToInt32();
-            if ( !ValidWordValue( wordValue ) )
-            {
-              AddError( info.LineIndex,
-                        Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                        "Value out of bounds for word, needs to be >= -32768 and <= 65535. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
-                        lineTokenInfos[firstTokenIndex].StartPos,
-                        lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-            }
-            if ( LittleEndian )
-            {
-              data.AppendU16( (ushort)wordValue );
-            }
-            else
-            {
-              data.AppendU16NetworkOrder( (ushort)wordValue );
-            }
-          }
-        }
-        else if ( AllowNeededExpression )
-        {
-          info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
-        }
-        else
-        {
-          AddError( info.LineIndex,
-                      Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                      "Failed to evaluate expression " + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
-                      lineTokenInfos[firstTokenIndex].StartPos,
-                      lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-        }
-      }
-      // TODO - this is a ugly check if there was an error or not
-      if ( ( ( AllowNeededExpression )
-      &&     ( info.NeededParsedExpression == null ) )
-      ||   ( !AllowNeededExpression ) )
-      {
-        info.LineData = data;
-      }
-      info.NumBytes = 2 * ( 1 + commaCount );
-      info.Line = parseLine;
-      lineSizeInBytes = info.NumBytes;
-      return ParseLineResult.OK;
-    }
-
-
-
-    private ParseLineResult PODataDWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
-    {
-      GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
-
-      int commaCount = 0;
-      int firstTokenIndex = StartIndex;
-      int insideOtherBrackets = 0;
-      for ( int tokenIndex = StartIndex; tokenIndex < StartIndex + Count; ++tokenIndex )
-      {
-        string token = lineTokenInfos[tokenIndex].Content;
-
-        if ( IsOpeningBraceChar( token ) )
-        {
-          ++insideOtherBrackets;
-          continue;
-        }
-        if ( IsClosingBraceChar( token ) )
-        {
-          --insideOtherBrackets;
-
-        }
-        if ( insideOtherBrackets > 0 )
-        {
-          continue;
-        }
-
-        if ( ( tokenIndex == StartIndex )
-        &&   ( token == "#" ) )
-        {
-          // direct value?
-          if ( ( lineTokenInfos.Count > 2 )
-          &&   ( lineTokenInfos[2].Content != "#" )
-          &&   ( lineTokenInfos[2].Content != "." ) )
-          {
-            // not a binary value
-            continue;
-          }
-        }
-
-        if ( token == "," )
-        {
-          ++commaCount;
-
-          if ( tokenIndex - firstTokenIndex >= 1 )
-          {
-            int     wordValue = -1;
-            int     numBytesGiven = 0;
-
-            if ( ( tokenIndex - firstTokenIndex == 1 )
-            &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
-            {
-              AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Virtual value only allowed as single value. Expression:"
-                           + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
-                           lineTokenInfos[firstTokenIndex].StartPos,
-                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-            }
-
-            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
-            {
-              if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
-              {
-                if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
-                &&   ( wordValueSymbol.String.Length > 1 )
-                &&   ( wordValueSymbol.String.EndsWith( "\"" ) ) )
-                {
-                  string    textLiteral = wordValueSymbol.String.Substring( 1, wordValueSymbol.String.Length - 2 );
-
-                  textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-                  if ( hadError )
-                  {
-                    AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                    lineSizeInBytes = 0;
-                    return ParseLineResult.ERROR_ABORT;
-                  }
-
-                  // a text
-                  foreach ( char aChar in textLiteral )
-                  {
-                    // map to PETSCII!
-                    if ( LittleEndian )
-                    {
-                      data.AppendU32( (byte)aChar );
-                    }
-                    else
-                    {
-                      data.AppendU32NetworkOrder( (byte)aChar );
-                    }
-                  }
-                }
-                else
-                {
-                  string    textLiteral = wordValueSymbol.String;
-
-                  textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-                  if ( hadError )
-                  {
-                    AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                    lineSizeInBytes = 0;
-                    return ParseLineResult.ERROR_ABORT;
-                  }
-
-                  // a text
-                  foreach ( char aChar in textLiteral )
-                  {
-                    // map to PETSCII!
-                    if ( LittleEndian )
-                    {
-                      data.AppendU32( (byte)aChar );
-                    }
-                    else
-                    {
-                      data.AppendU32NetworkOrder( (byte)aChar );
-                    }
-                  }
-                }
-              }
-              else
-              {
-                wordValue = wordValueSymbol.ToInt32();
-                if ( !ValidDWordValue( wordValue ) )
-                {
-                  AddError( info.LineIndex,
-                            Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                            "Value out of bounds for word, needs to be >= −2147483648 and <= 4294967295. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
-                            lineTokenInfos[firstTokenIndex].StartPos,
-                            lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-                }
-                if ( LittleEndian )
-                {
-                  data.AppendU32( (uint)wordValue );
-                }
-                else
-                {
-                  data.AppendU32NetworkOrder( (uint)wordValue );
-                }
-              }
-            }
-            else if ( AllowNeededExpression )
-            {
-              info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
-            }
-            else
-            {
-              AddError( info.LineIndex,
-                          Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                          "Failed to evaluate expression " + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
-                          lineTokenInfos[firstTokenIndex].StartPos,
-                          lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-            }
-          }
-          firstTokenIndex = tokenIndex + 1;
-        }
-      }
-      if ( ( firstTokenIndex > 0 )
-      &&   ( firstTokenIndex == lineTokenInfos.Count )
-      &&   ( commaCount > 0 ) )
-      {
-        // last parameter has no value!
-        AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Missing value after last separator."
-                          + TokensToExpression( lineTokenInfos, lineTokenInfos.Count - 1, 1 ),
-                          lineTokenInfos[lineTokenInfos.Count - 1].StartPos,
-                          lineTokenInfos[lineTokenInfos.Count - 1].Length );
-      }
-      if ( firstTokenIndex + 1 <= lineTokenInfos.Count )
-      {
-        int wordValue = -1;
-        int numBytesGiven = 0;
-
-        if ( ( lineTokenInfos.Count - firstTokenIndex == 1 )
-        &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
-        {
-          info.NumBytes = 4;
-          lineSizeInBytes = 4;
-          return ParseLineResult.ERROR_ABORT;
-        }
-
-        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
-        {
-          if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
-          {
-            if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
-            &&   ( wordValueSymbol.String.Length > 1 )
-            &&   ( wordValueSymbol.String.EndsWith( "\"" ) ) )
-            {
-              string    textLiteral = wordValueSymbol.String.Substring( 1, wordValueSymbol.String.Length - 2 );
-
-              textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-              if ( hadError )
-              {
-                AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                lineSizeInBytes = 0;
-                return ParseLineResult.ERROR_ABORT;
-              }
-
-              // a text
-              foreach ( char aChar in textLiteral )
-              {
-                // map to PETSCII!
-                if ( LittleEndian )
-                {
-                  data.AppendU32( (byte)aChar );
-                }
-                else
-                {
-                  data.AppendU32NetworkOrder( (byte)aChar );
-                }
-              }
-            }
-            else
-            {
-              string    textLiteral = wordValueSymbol.String;
-
-              textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
-              if ( hadError )
-              {
-                AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
-                lineSizeInBytes = 0;
-                return ParseLineResult.ERROR_ABORT;
-              }
-
-              // a text
-              foreach ( char aChar in textLiteral )
-              {
-                // map to PETSCII!
-                if ( LittleEndian )
-                {
-                  data.AppendU32( (byte)aChar );
-                }
-                else
-                {
-                  data.AppendU32NetworkOrder( (byte)aChar );
-                }
-              }
-            }
-          }
-          else
-          {
-            wordValue = wordValueSymbol.ToInt32();
-            if ( !ValidDWordValue( wordValue ) )
-            {
-              AddError( info.LineIndex,
-                        Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                        "Value out of bounds for dword, needs to be >= −2147483648 and <= 4294967295. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
-                        lineTokenInfos[firstTokenIndex].StartPos,
-                        lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-            }
-            if ( LittleEndian )
-            {
-              data.AppendU32( (uint)wordValue );
-            }
-            else
-            {
-              data.AppendU32NetworkOrder( (uint)wordValue );
-            }
-          }
-        }
-        else if ( AllowNeededExpression )
-        {
-          info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
-        }
-        else
-        {
-          AddError( info.LineIndex,
-                      Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                      "Failed to evaluate expression " + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
-                      lineTokenInfos[firstTokenIndex].StartPos,
-                      lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
-        }
-      }
-      // TODO - this is a ugly check if there was an error or not
-      if ( ( ( AllowNeededExpression )
-      &&     ( info.NeededParsedExpression == null ) )
-      ||   ( !AllowNeededExpression ) )
-      {
-        info.LineData = data;
-      }
-      info.NumBytes = 4 * ( 1 + commaCount );
-      info.Line = parseLine;
-      lineSizeInBytes = info.NumBytes;
       return ParseLineResult.OK;
     }
 
@@ -7626,7 +7058,7 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD )
             {
               info.LineCodeMapping = textCodeMapping;
-              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7640,7 +7072,7 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
             {
               info.LineCodeMapping = textCodeMapping;
-              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
+              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, false, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7654,7 +7086,7 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.DWORD )
             {
               info.LineCodeMapping = textCodeMapping;
-              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7668,7 +7100,7 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.DWORD_BE )
             {
               info.LineCodeMapping = textCodeMapping;
-              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
+              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, false, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -8029,7 +7461,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD )
           {
-            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, true, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -8042,7 +7474,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
           {
-            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
+            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, false, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -8055,7 +7487,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.DWORD )
           {
-            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, true, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -8068,7 +7500,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.DWORD_BE )
           {
-            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
+            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, false, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
