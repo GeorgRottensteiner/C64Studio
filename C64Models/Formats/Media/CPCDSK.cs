@@ -3,6 +3,7 @@ using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,9 @@ using System.Text;
 
 namespace RetroDevStudio.Formats
 {
+  [MediaType( MediaType.DISK )]
+  [MediaFormat( MediaFormatType.DSK )]
+  [Category( "CPC" )]
   public class CPCDSK : MediaFormat
   {
     public enum SaveMode

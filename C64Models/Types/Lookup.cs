@@ -2,6 +2,9 @@
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 
 
 
@@ -9,7 +12,10 @@ namespace RetroDevStudio
 {
   static class Lookup
   {
-    internal static Dictionary<CompileTargetType,string>     CompileTargetModeToKeyword = new Dictionary<CompileTargetType, string>();
+    internal static Dictionary<CompileTargetType,string>  CompileTargetModeToKeyword = new Dictionary<CompileTargetType, string>();
+
+    internal static Dictionary<MediaFormatType,Type>      MediaFormatToType = new Dictionary<MediaFormatType, Type>();
+    internal static Dictionary<MediaFormatType,GR.Generic.Tupel<MediaType, string>>    MediaFormatCategories = new Dictionary<MediaFormatType, GR.Generic.Tupel<MediaType, string>>();
 
 
 
@@ -50,6 +56,50 @@ namespace RetroDevStudio
       CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN] = "ULTIMAX16BIN";
       CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT] = "ULTIMAX16CRT";
       CompileTargetModeToKeyword[CompileTargetType.DSK] = "DSK";
+
+      EnumerateMediaTypes();
+    }
+
+
+
+    private static void EnumerateMediaTypes()
+    {
+      var mediaTypes = Assembly.GetExecutingAssembly().GetTypes()
+              .Where( t => t.IsSubclassOf( typeof( MediaFormat ) ) )
+              .Where( t => String.Equals( t.Namespace, "RetroDevStudio.Formats", StringComparison.Ordinal ) );
+      foreach ( var mediaType in mediaTypes )
+      {
+        var allAttributes = mediaType.GetCustomAttributes( false );
+
+        string categoryOfEnum = "";
+
+        MediaType         mediaTypeAtt = MediaType.UNKNOWN;
+        var mediaFormats = new List<MediaFormatType>();
+
+        foreach ( var attribute in allAttributes )
+        {
+          if ( attribute is MediaFormatAttribute )
+          {
+            var mediaTypeOfType = attribute as MediaFormatAttribute;
+            mediaFormats.Add( mediaTypeOfType.Type );
+            MediaFormatToType.Add( mediaTypeOfType.Type, mediaType );
+          }
+          if ( attribute is MediaTypeAttribute )
+          {
+            var mediaTypeAttribute = attribute as MediaTypeAttribute;
+            mediaTypeAtt = mediaTypeAttribute.Type;
+          }
+          if ( attribute is CategoryAttribute )
+          {
+            var category = attribute as CategoryAttribute;
+            categoryOfEnum = category.Category;
+          }
+        }
+        foreach ( var mediaFormat in mediaFormats )
+        {
+          MediaFormatCategories.Add( mediaFormat, new GR.Generic.Tupel<MediaType, string>( mediaTypeAtt, categoryOfEnum ) );
+        }
+      }
     }
 
 

@@ -2,12 +2,16 @@
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 
 
 namespace RetroDevStudio.Formats
 {
+  [MediaType( MediaType.DISK )]
+  [MediaFormat( MediaFormatType.D71 )]
+  [Category( "Commodore" )]
   public class D71 : CommodoreDisk
   {
     private const int       TRACK_BAM_2 = 53;

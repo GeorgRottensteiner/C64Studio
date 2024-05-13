@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace RetroDevStudio.Formats
 {
+  [MediaType( MediaType.TAPE )]
+  [MediaFormat( MediaFormatType.TAP )]
+  [Category( "Commodore" )]
   public class Tap : MediaFormat
   {
     public class FileEntry

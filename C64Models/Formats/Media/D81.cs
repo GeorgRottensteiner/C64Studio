@@ -2,12 +2,16 @@
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 
 
 namespace RetroDevStudio.Formats
 {
+  [MediaType( MediaType.DISK )]
+  [MediaFormat( MediaFormatType.D81 )]
+  [Category( "Commodore" )]
   public class D81 : CommodoreDisk
   {
     public D81()

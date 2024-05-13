@@ -22,9 +22,9 @@ namespace RetroDevStudio.Controls
 
     protected override void OnPaint( PaintEventArgs e )
     {
-      base.OnPaint( e );
       if ( Enabled )
       {
+        base.OnPaint( e );
         return;
       }
 

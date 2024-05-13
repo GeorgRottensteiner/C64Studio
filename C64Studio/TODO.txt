@@ -14,12 +14,9 @@
   Edit Palette - die Farbreihenfolge in Current Palette, per Maustaste oder Cursortasten  verschieben können.
 
 * Disassembler:
-  Wäre es möglich für den Disassembler die Liste der "Named labels" zu ex- und importieren? 
   Wenn man einen Label setzt, der sich innerhalb des disassemblierten Programms befindet, wäre es praktisch, 
     wenn an dieser Stelle ein Label erstellt würde. Derzeit werden Bezüge zwar auf dieses Label umgestellt, aber 
     am Anfang in den Deklarationen ein Label mit festem Speicherbezug erstellt.
-* Was mir aber beim Disassembler augefallen war, wenn man bei den Labels zuerst die Adresse und dann den Namen eingibt, 
-  wird der Button "add" nicht aktiv
 
 320x200:
 *1

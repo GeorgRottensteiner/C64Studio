@@ -1,10 +1,14 @@
 ﻿using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace RetroDevStudio.Formats
 {
+  [MediaType( MediaType.TAPE )]
+  [MediaFormat( MediaFormatType.PRG )]
+  [Category( "Commodore" )]
   public class PRG : MediaFormat
   {
     ushort                      LoadAddress = 0x0801;

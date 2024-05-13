@@ -9,6 +9,7 @@
     <Import_RootNamespace>C64Models</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorSystem.cs" />
@@ -104,6 +105,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ColorType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaTypeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\MediaType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteDisplayMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicTileMode.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\SymbolReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextCharMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Lookup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\MediaFormatType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\MachineType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Machine.cs" />

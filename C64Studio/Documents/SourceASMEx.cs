@@ -2115,13 +2115,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private string FilterString( string Source )
-    {
-      return Source.Substring( 0, Source.Length - 1 );
-    }
-
-
-
     protected override bool QueryFilename( out string Filename )
     {
       Filename = "";
@@ -2130,7 +2123,7 @@ namespace RetroDevStudio.Documents
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Save ASM File as";
-      saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_ALL );
+      saveDlg.Filter = Core.MainForm.FilterString( Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_ALL );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;

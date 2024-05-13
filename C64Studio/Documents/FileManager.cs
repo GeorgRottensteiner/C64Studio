@@ -7,6 +7,8 @@ using RetroDevStudio.Types;
 using GR.Memory;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Dialogs;
+using System.Reflection;
+using System.Linq;
 
 
 
@@ -1404,6 +1406,46 @@ namespace RetroDevStudio.Documents
       {
         RefreshFileView();
       }
+    }
+
+
+
+    internal void CreateEmptyMedia( MediaFormatType MediaType )
+    {
+      CloseMedia();
+
+      /*
+      Type typeOfMedia = null;
+      var mediaTypes = Assembly.GetExecutingAssembly().GetTypes()
+              .Where( t => t.IsSubclassOf( typeof( MediaFormat ) ) )
+              .Where( t => String.Equals( t.Namespace, "RetroDevStudio.Formats", StringComparison.Ordinal ) );
+      foreach ( var mediaType in mediaTypes )
+      {
+        var allAttributes = mediaType.GetCustomAttributes( false );
+
+        foreach ( var attribute in allAttributes )
+        {
+          if ( attribute is MediaFormatAttribute )
+          {
+            var mediaTypeOfType = attribute as MediaFormatAttribute;
+            if ( mediaTypeOfType.Type == MediaType )
+            {
+              typeOfMedia = mediaType;
+              break;
+            }
+          }
+        }
+        if ( typeOfMedia != null )
+        {
+          break;
+        }
+      }*/
+
+      m_Media = (MediaFormat)Activator.CreateInstance( Lookup.MediaFormatToType[MediaType] );
+      m_Media.CreateEmptyMedia();
+      SetUnmodified();
+      RefreshFileView();
+      UpdateStatusInfo();
     }
 
 

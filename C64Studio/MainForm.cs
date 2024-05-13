@@ -15,6 +15,7 @@ using RetroDevStudio.Dialogs;
 using System.Linq;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
 using System.IO;
+using System.ComponentModel;
 
 
 
@@ -659,6 +660,9 @@ namespace RetroDevStudio
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();
 
+      AddMediaFormatSubMenus( mediaToolStripMenuItem );
+      AddMediaFormatSubMenus( toolbarNewMediaMenuItem );
+
       //DPIHandler.ResizeControlsForDPI( mainTools );
       //DPIHandler.ResizeControlsForDPI( debugTools  );
       debugTools.Left = mainTools.Right;
@@ -808,6 +812,131 @@ namespace RetroDevStudio
       }
 
       IdleQueue.Add( new IdleRequest() { CloseSplashScreen = splash } );
+    }
+
+
+
+    private void AddMediaFormatSubMenus( ToolStripMenuItem MenuItem )
+    {
+      var categories = new Dictionary<MediaType,ToolStripMenuItem>();
+      var machineGroup = new Dictionary<MediaType,GR.Collections.Set<string>>();
+
+      foreach ( var entry in Lookup.MediaFormatCategories.OrderBy( e => e.Value.second ) )
+      {
+        var mediaType = entry.Value.first;
+        string machineCategory = entry.Value.second;
+        string typeCategory = GR.EnumHelper.GetDescription( mediaType );
+        if ( !categories.ContainsKey( mediaType ) )
+        {
+          var menuMediaType = new ToolStripMenuItem( typeCategory );
+          MenuItem.DropDownItems.Add( menuMediaType );
+
+          categories.Add( mediaType, menuMediaType );
+        }
+
+        // machine group
+        if ( !machineGroup.ContainsKey( mediaType ) )
+        {
+          machineGroup.Add( mediaType, new GR.Collections.Set<string>() );
+        }
+        if ( !machineGroup[mediaType].Contains( machineCategory ) )
+        {
+          // add separator
+          if ( categories[mediaType].DropDownItems.Count > 0 )
+          {
+            categories[mediaType].DropDownItems.Add( new ToolStripSeparator() );
+          }
+
+          var categoryItem = new ToolStripMenuItem( machineCategory );
+          categoryItem.Enabled = false;
+          categories[mediaType].DropDownItems.Add( categoryItem );
+
+          machineGroup[mediaType].Add( machineCategory );
+        }
+
+        // the actual menu item
+        var menuItem = new ToolStripMenuItem( GR.EnumHelper.GetDescription( entry.Key ) );
+        menuItem.Tag = entry.Key;
+        menuItem.Click += NewMediaItem_Click;
+        categories[mediaType].DropDownItems.Add( menuItem );
+      }
+
+      /*
+      var categories = new Dictionary<MediaType,ToolStripMenuItem>();
+      var machineGroup = new Dictionary<MediaType,GR.Collections.Set<string>>();
+
+      foreach ( MediaFormatType mediaFormatType in Enum.GetValues( typeof( MediaFormatType ) ) )
+      {
+        if ( mediaFormatType == MediaFormatType.UNKNOWN )
+        {
+          continue;
+        }
+        MediaType mediaTypeOfEnum = MediaType.UNKNOWN;
+        string  categoryOfEnum = "";
+
+        var enumType = mediaFormatType.GetType();
+        var name = Enum.GetName( enumType, mediaFormatType );
+        var allAttributes = enumType.GetField( name ).GetCustomAttributes( false );
+        foreach ( var attribute in allAttributes )
+        {
+          if ( attribute is MediaTypeAttribute )
+          {
+            var mediaType = attribute as MediaTypeAttribute;
+            mediaTypeOfEnum = mediaType.Type;
+            if ( !categories.ContainsKey( mediaType.Type ) )
+            {
+              var menuMediaType = new ToolStripMenuItem( GR.EnumHelper.GetDescription(  mediaType.Type ) );
+              MenuItem.DropDownItems.Add( menuMediaType );
+
+              categories.Add( mediaType.Type, menuMediaType );
+            }
+          }
+          if ( attribute is CategoryAttribute )
+          {
+            var category = attribute as CategoryAttribute;
+
+            categoryOfEnum = category.Category;
+          }
+        }
+
+        if ( !machineGroup.ContainsKey( mediaTypeOfEnum ) )
+        {
+          machineGroup.Add( mediaTypeOfEnum, new GR.Collections.Set<string>() );
+        }
+        if ( !machineGroup[mediaTypeOfEnum].Contains( categoryOfEnum ) )
+        {
+          // add separator
+          if ( categories[mediaTypeOfEnum].DropDownItems.Count > 0 )
+          {
+            categories[mediaTypeOfEnum].DropDownItems.Add( new ToolStripSeparator() );
+          }
+
+          var categoryItem = new ToolStripMenuItem( categoryOfEnum );
+          categoryItem.Enabled = false;
+          categories[mediaTypeOfEnum].DropDownItems.Add( categoryItem );
+
+          machineGroup[mediaTypeOfEnum].Add( categoryOfEnum );
+        }
+
+        // the actual menu item
+        var menuItem = new ToolStripMenuItem( GR.EnumHelper.GetDescription( mediaFormatType ) );
+        menuItem.Tag = mediaFormatType;
+        menuItem.Click += NewMediaItem_Click;
+        categories[mediaTypeOfEnum].DropDownItems.Add( menuItem );
+      }*/
+    }
+
+
+
+    private void NewMediaItem_Click( object sender, EventArgs e )
+    {
+      var mediaTypeToCreate = (MediaFormatType)( ( (ToolStripMenuItem)sender ).Tag );
+
+      FileManager doc = new FileManager( StudioCore, "" );
+      doc.ShowHint  = DockState.Float;
+      doc.Core      = StudioCore;
+      doc.CreateEmptyMedia( mediaTypeToCreate );
+      doc.Show( panelMain );
     }
 
 
@@ -7796,6 +7925,9 @@ namespace RetroDevStudio
         }
       }
     }
+
+
+
 
 
 

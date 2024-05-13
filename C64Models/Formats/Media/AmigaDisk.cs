@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using GR.Memory;
+using System.ComponentModel;
 
 namespace RetroDevStudio.Formats
 {
+  [MediaType( MediaType.DISK )]
+  [MediaFormat( MediaFormatType.ADF )]
+  [Category( "Commodore" )]
   public class AmigaDisk : MediaFormat
   {
     protected string        _LastError = "";
