@@ -404,6 +404,7 @@ namespace RetroDevStudio.Parser
 
       if ( !Settings.AddLineAddresses )
       {
+        // TODO - skip labels that are set inside the disassembly below
         foreach ( var namedLabel in NamedLabels )
         {
           sb.Append( namedLabel.Value );
@@ -483,9 +484,30 @@ namespace RetroDevStudio.Parser
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
-          else if ( instruction.first.OpcodeSize > 0 )
+          if ( instruction.first.OpcodeSize > 0 )
           {
             // is there a label jumping in the middle of the next opcode?
+            var  namedLabelInside = NamedLabels.Where( l => ( l.Key > trueAddress ) && ( l.Key < trueAddress + 1 + instruction.first.OpcodeSize ) );
+            foreach ( var addressInside in namedLabelInside )
+            {
+              sb.AppendLine();
+              if ( Settings.AddLineAddresses )
+              {
+                sb.Append( "$" );
+                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+              }
+
+              sb.Append( addressInside.Value );
+              sb.Append( " = * + " );
+              sb.Append( addressInside.Key - trueAddress );
+              sb.AppendLine();
+              if ( Settings.AddLineAddresses )
+              {
+                sb.Append( "$" );
+                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+              }
+            }
+
             var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.OpcodeSize ) );
             foreach ( var addressInside in addressesInside )
             {
@@ -504,30 +526,6 @@ namespace RetroDevStudio.Parser
               {
                 sb.Append( "$" );
                 sb.Append( trueAddress.ToString( "X4" ) + ": " );
-              }
-            }
-
-            var  labelsInside = NamedLabels.Where( l => ( l.Key > trueAddress ) && ( l.Key < trueAddress + instruction.first.OpcodeSize ) );
-            foreach ( var labelInside in labelsInside )
-            {
-              sb.AppendLine();
-              if ( Settings.AddLineAddresses )
-              {
-                sb.Append( "$" );
-                sb.Append( trueAddress.ToString( "X4" ) + ": " );
-              }
-
-              if ( NamedLabels.ContainsKey( trueAddress ) )
-              {
-                sb.Append( NamedLabels[trueAddress] );
-                sb.Append( " = * + " );
-                sb.Append( labelInside.Key - trueAddress );
-                sb.AppendLine();
-                if ( Settings.AddLineAddresses )
-                {
-                  sb.Append( "$" );
-                  sb.Append( trueAddress.ToString( "X4" ) + ": " );
-                }
               }
             }
           }

@@ -871,6 +871,7 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( "$" + namedLabel.Key.ToString( "X4" ) );
           listNamedLabels.Items.Add( item );
         }
+        UpdateDisassembly();
       }
     }
 
