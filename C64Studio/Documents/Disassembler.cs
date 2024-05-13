@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Parser;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -598,7 +599,7 @@ namespace RetroDevStudio.Documents
     private bool IsValidNamedLabel()
     {
       if ( ( editLabelAddress.Text.Length == 0 )
-      || ( editLabelName.Text.Length == 0 ) )
+      ||   ( editLabelName.Text.Length == 0 ) )
       {
         return false;
       }
@@ -828,6 +829,78 @@ namespace RetroDevStudio.Documents
     private void checkStopAtReturns_CheckedChanged( object sender, EventArgs e )
     {
       UpdateDisassembly();
+    }
+
+
+
+    private void btnNamedLabelsImport_Click( object sender, EventArgs e )
+    {
+      var openDialog = new OpenFileDialog();
+
+      openDialog.Title = "Choose named labels file";
+      openDialog.Filter = Core.MainForm.FilterString( Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_ALL );
+      if ( openDialog.ShowDialog() == DialogResult.OK )
+      {
+        m_DisassemblyProject.NamedLabels.Clear();
+
+        var parser = new ASMFileParser();
+
+        var content = GR.IO.File.ReadAllText( openDialog.FileName );
+
+        if ( !parser.Parse( content, new ProjectConfig(), new CompileConfig() { Assembler = Types.AssemblerType.C64_STUDIO }, "", out Types.ASM.FileInfo fileInfo ) )
+        {
+          MessageBox.Show( "The provided assembly could not be parsed properly!", "Malformed assembly!" );
+          return;
+        }
+
+        foreach ( var label in fileInfo.Labels )
+        {
+          if ( ( label.Value.Name != ASMFileParser.ASSEMBLER_ID_C64STUDIO )
+          &&   ( label.Value.Name != ASMFileParser.ASSEMBLER_ID_RETRODEVSTUDIO ) )
+          {
+            if ( !m_DisassemblyProject.NamedLabels.ContainsKey( (int)label.Value.AddressOrValue ) )
+            {
+              m_DisassemblyProject.NamedLabels.Add( (int)label.Value.AddressOrValue, label.Key );
+            }
+          }
+        }
+
+        foreach ( var namedLabel in m_DisassemblyProject.NamedLabels )
+        {
+          ListViewItem  item = new ListViewItem( namedLabel.Value );
+          item.SubItems.Add( "$" + namedLabel.Key.ToString( "X4" ) );
+          listNamedLabels.Items.Add( item );
+        }
+      }
+    }
+
+
+
+    private void btnExportNamedLabels_Click( object sender, EventArgs e )
+    {
+      var saveDialog = new SaveFileDialog();
+
+      saveDialog.Title = "Choose named labels file name";
+      saveDialog.Filter = Core.MainForm.FilterString( Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_ALL );
+      if ( saveDialog.ShowDialog() == DialogResult.OK )
+      {
+        var sb = new StringBuilder();
+
+        foreach ( var namedLabel in m_DisassemblyProject.NamedLabels )
+        {
+          sb.Append( namedLabel.Value );
+          sb.Append( "=$" );
+          sb.AppendLine( namedLabel.Key.ToString( "X4" ) );
+        }
+        GR.IO.File.WriteAllText( saveDialog.FileName, sb.ToString() );
+      }
+    }
+
+
+
+    private void editLabelName_TextChanged( object sender, EventArgs e )
+    {
+      btnAddNamedLabel.Enabled = IsValidNamedLabel();
     }
 
 

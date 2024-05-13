@@ -1,4 +1,6 @@
-﻿namespace RetroDevStudio.Documents
+﻿using RetroDevStudio.Controls;
+
+namespace RetroDevStudio.Documents
 {
   partial class Disassembler
   {
@@ -61,6 +63,8 @@
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
+      this.btnNamedLabelsImport = new System.Windows.Forms.Button();
+      this.btnExportNamedLabels = new System.Windows.Forms.Button();
       this.btnDeleteNamedLabel = new System.Windows.Forms.Button();
       this.btnAddNamedLabel = new System.Windows.Forms.Button();
       this.editLabelAddress = new System.Windows.Forms.TextBox();
@@ -70,9 +74,9 @@
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.checkStopAtReturns = new System.Windows.Forms.CheckBox();
       this.checkShowHexData = new System.Windows.Forms.CheckBox();
       this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
-      this.checkStopAtReturns = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.contextMenuDisassembler.SuspendLayout();
@@ -161,7 +165,7 @@
       this.btnOpenBinary.Location = new System.Drawing.Point(6, 19);
       this.btnOpenBinary.Name = "btnOpenBinary";
       this.btnOpenBinary.Size = new System.Drawing.Size(122, 23);
-      this.btnOpenBinary.TabIndex = 3;
+      this.btnOpenBinary.TabIndex = 0;
       this.btnOpenBinary.Text = "Open";
       this.btnOpenBinary.UseVisualStyleBackColor = true;
       this.btnOpenBinary.Click += new System.EventHandler(this.btnOpenBinary_Click);
@@ -199,7 +203,7 @@
       this.editStartAddress.Location = new System.Drawing.Point(354, 48);
       this.editStartAddress.Name = "editStartAddress";
       this.editStartAddress.Size = new System.Drawing.Size(100, 20);
-      this.editStartAddress.TabIndex = 6;
+      this.editStartAddress.TabIndex = 4;
       this.editStartAddress.TextChanged += new System.EventHandler(this.editStartAddress_TextChanged);
       // 
       // label1
@@ -216,7 +220,7 @@
       this.btnExportToASM.Location = new System.Drawing.Point(6, 48);
       this.btnExportToASM.Name = "btnExportToASM";
       this.btnExportToASM.Size = new System.Drawing.Size(122, 23);
-      this.btnExportToASM.TabIndex = 3;
+      this.btnExportToASM.TabIndex = 2;
       this.btnExportToASM.Text = "Export to Assembly";
       this.btnExportToASM.UseVisualStyleBackColor = true;
       this.btnExportToASM.Click += new System.EventHandler(this.btnExportAssembly_Click);
@@ -226,7 +230,7 @@
       this.btnReloadFile.Location = new System.Drawing.Point(134, 19);
       this.btnReloadFile.Name = "btnReloadFile";
       this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
-      this.btnReloadFile.TabIndex = 3;
+      this.btnReloadFile.TabIndex = 1;
       this.btnReloadFile.Text = "Reload File";
       this.btnReloadFile.UseVisualStyleBackColor = true;
       this.btnReloadFile.Click += new System.EventHandler(this.btnReloadFile_Click);
@@ -250,7 +254,7 @@
       this.btnDeleteJumpedAtAddress.Location = new System.Drawing.Point(6, 169);
       this.btnDeleteJumpedAtAddress.Name = "btnDeleteJumpedAtAddress";
       this.btnDeleteJumpedAtAddress.Size = new System.Drawing.Size(64, 22);
-      this.btnDeleteJumpedAtAddress.TabIndex = 2;
+      this.btnDeleteJumpedAtAddress.TabIndex = 3;
       this.btnDeleteJumpedAtAddress.Text = "Delete";
       this.btnDeleteJumpedAtAddress.UseVisualStyleBackColor = true;
       this.btnDeleteJumpedAtAddress.Click += new System.EventHandler(this.btnDeleteJumpedAtAddress_Click);
@@ -260,7 +264,7 @@
       this.btnAddJumpAddress.Location = new System.Drawing.Point(112, 19);
       this.btnAddJumpAddress.Name = "btnAddJumpAddress";
       this.btnAddJumpAddress.Size = new System.Drawing.Size(64, 22);
-      this.btnAddJumpAddress.TabIndex = 2;
+      this.btnAddJumpAddress.TabIndex = 1;
       this.btnAddJumpAddress.Text = "add";
       this.btnAddJumpAddress.UseVisualStyleBackColor = true;
       this.btnAddJumpAddress.Click += new System.EventHandler(this.btnAddJumpAddress_Click);
@@ -270,7 +274,7 @@
       this.editJumpAddress.Location = new System.Drawing.Point(6, 19);
       this.editJumpAddress.Name = "editJumpAddress";
       this.editJumpAddress.Size = new System.Drawing.Size(100, 20);
-      this.editJumpAddress.TabIndex = 1;
+      this.editJumpAddress.TabIndex = 0;
       this.toolTip1.SetToolTip(this.editJumpAddress, "Jump Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal");
       // 
       // listJumpedAtAddresses
@@ -282,7 +286,7 @@
       this.listJumpedAtAddresses.Location = new System.Drawing.Point(6, 47);
       this.listJumpedAtAddresses.Name = "listJumpedAtAddresses";
       this.listJumpedAtAddresses.Size = new System.Drawing.Size(170, 117);
-      this.listJumpedAtAddresses.TabIndex = 0;
+      this.listJumpedAtAddresses.TabIndex = 2;
       this.listJumpedAtAddresses.UseCompatibleStateImageBehavior = false;
       this.listJumpedAtAddresses.View = System.Windows.Forms.View.Details;
       this.listJumpedAtAddresses.SelectedIndexChanged += new System.EventHandler(this.listJumpedAtAddresses_SelectedIndexChanged);
@@ -306,7 +310,7 @@
       this.tabContent.Name = "tabContent";
       this.tabContent.SelectedIndex = 0;
       this.tabContent.Size = new System.Drawing.Size(474, 572);
-      this.tabContent.TabIndex = 5;
+      this.tabContent.TabIndex = 0;
       // 
       // tabDisassembly
       // 
@@ -336,6 +340,7 @@
       this.hexView.ColumnInfoVisible = true;
       this.hexView.CustomHexViewer = null;
       this.hexView.DisplayedAddressOffset = ((long)(0));
+      this.hexView.DisplayedByteOffset = 0;
       this.hexView.Dock = System.Windows.Forms.DockStyle.Fill;
       this.hexView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
@@ -373,7 +378,7 @@
       this.btnSaveProject.Location = new System.Drawing.Point(91, 45);
       this.btnSaveProject.Name = "btnSaveProject";
       this.btnSaveProject.Size = new System.Drawing.Size(75, 23);
-      this.btnSaveProject.TabIndex = 7;
+      this.btnSaveProject.TabIndex = 2;
       this.btnSaveProject.Text = "Save";
       this.btnSaveProject.UseVisualStyleBackColor = true;
       this.btnSaveProject.Click += new System.EventHandler(this.btnSaveProject_Click);
@@ -383,7 +388,7 @@
       this.btnOpenProject.Location = new System.Drawing.Point(10, 45);
       this.btnOpenProject.Name = "btnOpenProject";
       this.btnOpenProject.Size = new System.Drawing.Size(75, 23);
-      this.btnOpenProject.TabIndex = 7;
+      this.btnOpenProject.TabIndex = 1;
       this.btnOpenProject.Text = "Open";
       this.btnOpenProject.UseVisualStyleBackColor = true;
       this.btnOpenProject.Click += new System.EventHandler(this.btnOpenProject_Click);
@@ -393,7 +398,7 @@
       this.editDisassemblyProjectName.Location = new System.Drawing.Point(51, 19);
       this.editDisassemblyProjectName.Name = "editDisassemblyProjectName";
       this.editDisassemblyProjectName.Size = new System.Drawing.Size(338, 20);
-      this.editDisassemblyProjectName.TabIndex = 6;
+      this.editDisassemblyProjectName.TabIndex = 0;
       this.editDisassemblyProjectName.TextChanged += new System.EventHandler(this.editDisassemblyProjectName_TextChanged);
       // 
       // label2
@@ -411,6 +416,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox4.Controls.Add(this.label4);
       this.groupBox4.Controls.Add(this.label3);
+      this.groupBox4.Controls.Add(this.btnNamedLabelsImport);
+      this.groupBox4.Controls.Add(this.btnExportNamedLabels);
       this.groupBox4.Controls.Add(this.btnDeleteNamedLabel);
       this.groupBox4.Controls.Add(this.btnAddNamedLabel);
       this.groupBox4.Controls.Add(this.editLabelAddress);
@@ -441,13 +448,35 @@
       this.label3.TabIndex = 3;
       this.label3.Text = "Name:";
       // 
+      // btnNamedLabelsImport
+      // 
+      this.btnNamedLabelsImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnNamedLabelsImport.Location = new System.Drawing.Point(137, 169);
+      this.btnNamedLabelsImport.Name = "btnNamedLabelsImport";
+      this.btnNamedLabelsImport.Size = new System.Drawing.Size(64, 22);
+      this.btnNamedLabelsImport.TabIndex = 5;
+      this.btnNamedLabelsImport.Text = "Import";
+      this.btnNamedLabelsImport.UseVisualStyleBackColor = true;
+      this.btnNamedLabelsImport.Click += new System.EventHandler(this.btnNamedLabelsImport_Click);
+      // 
+      // btnExportNamedLabels
+      // 
+      this.btnExportNamedLabels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnExportNamedLabels.Location = new System.Drawing.Point(206, 169);
+      this.btnExportNamedLabels.Name = "btnExportNamedLabels";
+      this.btnExportNamedLabels.Size = new System.Drawing.Size(64, 22);
+      this.btnExportNamedLabels.TabIndex = 6;
+      this.btnExportNamedLabels.Text = "Export";
+      this.btnExportNamedLabels.UseVisualStyleBackColor = true;
+      this.btnExportNamedLabels.Click += new System.EventHandler(this.btnExportNamedLabels_Click);
+      // 
       // btnDeleteNamedLabel
       // 
       this.btnDeleteNamedLabel.Enabled = false;
       this.btnDeleteNamedLabel.Location = new System.Drawing.Point(6, 169);
       this.btnDeleteNamedLabel.Name = "btnDeleteNamedLabel";
       this.btnDeleteNamedLabel.Size = new System.Drawing.Size(64, 22);
-      this.btnDeleteNamedLabel.TabIndex = 2;
+      this.btnDeleteNamedLabel.TabIndex = 4;
       this.btnDeleteNamedLabel.Text = "Delete";
       this.btnDeleteNamedLabel.UseVisualStyleBackColor = true;
       this.btnDeleteNamedLabel.Click += new System.EventHandler(this.btnDeleteNamedLabel_Click);
@@ -455,6 +484,7 @@
       // btnAddNamedLabel
       // 
       this.btnAddNamedLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
+      this.btnAddNamedLabel.BackColor = System.Drawing.SystemColors.Control;
       this.btnAddNamedLabel.Enabled = false;
       this.btnAddNamedLabel.Location = new System.Drawing.Point(206, 42);
       this.btnAddNamedLabel.Name = "btnAddNamedLabel";
@@ -480,8 +510,9 @@
       this.editLabelName.Location = new System.Drawing.Point(53, 19);
       this.editLabelName.Name = "editLabelName";
       this.editLabelName.Size = new System.Drawing.Size(217, 20);
-      this.editLabelName.TabIndex = 1;
+      this.editLabelName.TabIndex = 0;
       this.toolTip1.SetToolTip(this.editLabelName, "Label Name");
+      this.editLabelName.TextChanged += new System.EventHandler(this.editLabelName_TextChanged);
       // 
       // listNamedLabels
       // 
@@ -490,11 +521,12 @@
       this.listNamedLabels.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3,
             this.columnHeader4});
+      this.listNamedLabels.FullRowSelect = true;
       this.listNamedLabels.HideSelection = false;
       this.listNamedLabels.Location = new System.Drawing.Point(6, 70);
       this.listNamedLabels.Name = "listNamedLabels";
       this.listNamedLabels.Size = new System.Drawing.Size(264, 93);
-      this.listNamedLabels.TabIndex = 0;
+      this.listNamedLabels.TabIndex = 3;
       this.listNamedLabels.UseCompatibleStateImageBehavior = false;
       this.listNamedLabels.View = System.Windows.Forms.View.Details;
       this.listNamedLabels.SelectedIndexChanged += new System.EventHandler(this.listNamedLabels_SelectedIndexChanged);
@@ -525,6 +557,19 @@
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Options";
       // 
+      // checkStopAtReturns
+      // 
+      this.checkStopAtReturns.AutoSize = true;
+      this.checkStopAtReturns.Checked = true;
+      this.checkStopAtReturns.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkStopAtReturns.Location = new System.Drawing.Point(10, 65);
+      this.checkStopAtReturns.Name = "checkStopAtReturns";
+      this.checkStopAtReturns.Size = new System.Drawing.Size(253, 17);
+      this.checkStopAtReturns.TabIndex = 2;
+      this.checkStopAtReturns.Text = "Stop Disassembly at End Points (e.g. RTS/JMP)";
+      this.checkStopAtReturns.UseVisualStyleBackColor = true;
+      this.checkStopAtReturns.CheckedChanged += new System.EventHandler(this.checkStopAtReturns_CheckedChanged);
+      // 
       // checkShowHexData
       // 
       this.checkShowHexData.AutoSize = true;
@@ -533,7 +578,7 @@
       this.checkShowHexData.Location = new System.Drawing.Point(10, 42);
       this.checkShowHexData.Name = "checkShowHexData";
       this.checkShowHexData.Size = new System.Drawing.Size(166, 17);
-      this.checkShowHexData.TabIndex = 0;
+      this.checkShowHexData.TabIndex = 1;
       this.checkShowHexData.Text = "Show Assembled Byte Values";
       this.checkShowHexData.UseVisualStyleBackColor = true;
       this.checkShowHexData.CheckedChanged += new System.EventHandler(this.checkShowHexData_CheckedChanged);
@@ -550,19 +595,6 @@
       this.checkShowLineAddresses.Text = "Show Line Addresses in Disassembly";
       this.checkShowLineAddresses.UseVisualStyleBackColor = true;
       this.checkShowLineAddresses.CheckedChanged += new System.EventHandler(this.checkShowLineAddresses_CheckedChanged);
-      // 
-      // checkStopAtReturns
-      // 
-      this.checkStopAtReturns.AutoSize = true;
-      this.checkStopAtReturns.Checked = true;
-      this.checkStopAtReturns.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkStopAtReturns.Location = new System.Drawing.Point(10, 65);
-      this.checkStopAtReturns.Name = "checkStopAtReturns";
-      this.checkStopAtReturns.Size = new System.Drawing.Size(253, 17);
-      this.checkStopAtReturns.TabIndex = 0;
-      this.checkStopAtReturns.Text = "Stop Disassembly at End Points (e.g. RTS/JMP)";
-      this.checkStopAtReturns.UseVisualStyleBackColor = true;
-      this.checkStopAtReturns.CheckedChanged += new System.EventHandler(this.checkStopAtReturns_CheckedChanged);
       // 
       // Disassembler
       // 
@@ -646,5 +678,7 @@
     private System.Windows.Forms.CheckBox checkShowHexData;
         private System.Windows.Forms.ToolStripMenuItem addAsLabelToolStripMenuItem;
     private System.Windows.Forms.CheckBox checkStopAtReturns;
+    private System.Windows.Forms.Button btnNamedLabelsImport;
+    private System.Windows.Forms.Button btnExportNamedLabels;
   }
 }
