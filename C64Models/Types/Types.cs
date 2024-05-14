@@ -299,6 +299,8 @@ namespace RetroDevStudio.Types
     W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY = 0x9004,
     [Description( "W1002: BASIC variable potentially ambiguous" )]
     W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS = 0x9005,
+    [Description( "W1003: BASIC referenced line number is missing" )]
+    W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND,
 
     WARNING_LAST_PLUS_ONE
   };

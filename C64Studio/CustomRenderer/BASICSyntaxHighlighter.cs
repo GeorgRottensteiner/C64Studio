@@ -39,7 +39,8 @@ namespace RetroDevStudio.CustomRenderer
       if ( _Parser.Settings.BASICDialect == null )
       {
         _Dialect = C64Models.BASIC.Dialect.BASICV2;
-        _Parser.Settings.BASICDialect = _Dialect;
+        // _Parser.Settings.BASICDialect = _Dialect;
+        _Parser.SetBasicDialect( _Dialect );
       }
       // get full lines in covered range
       int     firstLine = ChangedRange.Start.iLine;

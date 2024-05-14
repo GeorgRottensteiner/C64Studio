@@ -253,6 +253,7 @@ namespace RetroDevStudio.Parser
       _OpcodeGoto  = emptyOpcode;
       _OpcodeRun   = emptyOpcode;
       _OpcodeRem   = emptyOpcode;
+      _OpcodeThen  = emptyOpcode;
 
       if ( Dialect != null )
       {
@@ -1654,8 +1655,8 @@ namespace RetroDevStudio.Parser
         Token token = info.Tokens[i];
 
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-        &&   ( ( token.ByteValue == 0x89 )      // GOTO
-        ||     ( token.ByteValue == 0x8d ) ) )  // GOSUB
+        &&   ( ( token.ByteValue == _OpcodeGoto.InsertionValue )      // GOTO
+        ||     ( token.ByteValue == _OpcodeGosub.InsertionValue ) ) )  // GOSUB
         {
           // look up next token, is it a line number? (spaces are ignored)
           int nextTokenIndex = FindNextToken( info.Tokens, i );
@@ -1681,8 +1682,8 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-        &&   ( ( token.ByteValue == 0xa7 )        // THEN
-        ||     ( token.ByteValue == 0x8a ) ) )  // RUN
+        &&   ( ( token.ByteValue == _OpcodeThen.InsertionValue )        // THEN
+        ||     ( token.ByteValue == _OpcodeRun.InsertionValue ) ) )  // RUN
         {
           // only one line number
           // look up next token, is it a line number? (spaces are ignored)
@@ -2477,6 +2478,22 @@ namespace RetroDevStudio.Parser
       }
 
       CheckForAmbigiousVariables();
+      CheckForMissingReferencedLineNumbers();
+    }
+
+
+
+    private void CheckForMissingReferencedLineNumbers()
+    {
+      var  allNumbers = m_LineInfos.Select( l => l.Value.LineNumber );
+      foreach ( var info in m_LineInfos )
+      {
+        var  unmatchedLinenumbers = info.Value.ReferencedLineNumbers.Where( rl => !allNumbers.Contains( rl ) );
+        foreach ( var lineNo in unmatchedLinenumbers )
+        {
+          AddSevereWarning( info.Key, ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referencing missing line number {lineNo}" );
+        }
+      }
     }
 
 
