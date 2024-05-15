@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
-      this.btnOK = new System.Windows.Forms.Button();
+      this.btnOK = new DecentForms.Button();
       this.pictureLogo = new System.Windows.Forms.PictureBox();
       this.labelInfo = new System.Windows.Forms.Label();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -47,8 +47,7 @@
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 0;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // pictureLogo
       // 
@@ -121,7 +120,7 @@
 
     #endregion
 
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnOK;
     private System.Windows.Forms.PictureBox pictureLogo;
     private System.Windows.Forms.Label labelInfo;
     private System.Windows.Forms.PictureBox pictureBox1;

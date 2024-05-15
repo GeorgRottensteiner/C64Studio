@@ -74,27 +74,14 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
-      /*
-      Core.Settings.PlaySoundOnSuccessfulBuild    = checkPlaySoundCompileSuccessful.Checked;
-      Core.Settings.PlaySoundOnBuildFailure       = checkPlaySoundCompileFail.Checked;
-      Core.Settings.PlaySoundOnSearchFoundNoItem = checkPlaySoundSearchTextNotFound.Checked;
-
-      Core.Settings.TabSize                     = GR.Convert.ToI32( editTabSize.Text );
-      if ( ( Core.Settings.TabSize <= 0 )
-      ||   ( Core.Settings.TabSize > 100 ) )
-      {
-        Core.Settings.TabSize = 2;
-      }
-      Core.Settings.TabConvertToSpaces = checkConvertTabsToSpaces.Checked;*/
-
       Close();
     }
 
 
 
-    private void btnExportAllSettings_Click( object sender, EventArgs e )
+    private void btnExportAllSettings_Click( DecentForms.ControlBase Sender )
     {
       var xml     = new GR.Strings.XMLParser();
       var xmlRoot = new GR.Strings.XMLElement( "RetroDevStudioSettings" );
@@ -121,7 +108,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnImportAllSettings_Click( object sender, EventArgs e )
+    private void btnImportAllSettings_Click( DecentForms.ControlBase Sender )
     {
       OpenFileDialog    openDlg = new OpenFileDialog();
 

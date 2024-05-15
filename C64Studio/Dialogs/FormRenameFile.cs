@@ -85,7 +85,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       //Filename = Util.ToFilename( editFilename.Text );
       Filename = Util.ToPETSCII( editFilename.Text );
@@ -123,6 +123,14 @@ namespace RetroDevStudio.Dialogs
     private void listPETSCII_SizeChanged( object sender, EventArgs e )
     {
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

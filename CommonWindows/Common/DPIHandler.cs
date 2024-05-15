@@ -249,6 +249,9 @@ namespace GR.Image
       imageIn.Dispose();
       return newBitmap;
     }
+
+
+
   }
 
 

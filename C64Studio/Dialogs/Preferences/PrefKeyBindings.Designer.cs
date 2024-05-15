@@ -28,13 +28,13 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnSetDefaultsKeyBinding = new System.Windows.Forms.Button();
-      this.btnUnbindKey = new System.Windows.Forms.Button();
-      this.btnBindKeySecondary = new System.Windows.Forms.Button();
-      this.btnBindKey = new System.Windows.Forms.Button();
+      this.btnSetDefaultsKeyBinding = new DecentForms.Button();
+      this.btnUnbindKey = new DecentForms.Button();
+      this.btnBindKeySecondary = new DecentForms.Button();
+      this.btnBindKey = new DecentForms.Button();
       this.editKeyBinding = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
       this.listFunctions = new System.Windows.Forms.ListView();
@@ -53,8 +53,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -64,8 +63,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -93,8 +91,7 @@
       this.btnSetDefaultsKeyBinding.Size = new System.Drawing.Size(124, 23);
       this.btnSetDefaultsKeyBinding.TabIndex = 18;
       this.btnSetDefaultsKeyBinding.Text = "Set Defaults";
-      this.btnSetDefaultsKeyBinding.UseVisualStyleBackColor = true;
-      this.btnSetDefaultsKeyBinding.Click += new System.EventHandler(this.btnSetDefaultsKeyBinding_Click);
+      this.btnSetDefaultsKeyBinding.Click += new DecentForms.EventHandler(this.btnSetDefaultsKeyBinding_Click);
       // 
       // btnUnbindKey
       // 
@@ -104,8 +101,7 @@
       this.btnUnbindKey.Size = new System.Drawing.Size(75, 23);
       this.btnUnbindKey.TabIndex = 19;
       this.btnUnbindKey.Text = "Unbind Key";
-      this.btnUnbindKey.UseVisualStyleBackColor = true;
-      this.btnUnbindKey.Click += new System.EventHandler(this.btnUnbindKey_Click);
+      this.btnUnbindKey.Click += new DecentForms.EventHandler(this.btnUnbindKey_Click);
       // 
       // btnBindKeySecondary
       // 
@@ -114,8 +110,7 @@
       this.btnBindKeySecondary.Size = new System.Drawing.Size(75, 23);
       this.btnBindKeySecondary.TabIndex = 20;
       this.btnBindKeySecondary.Text = "Bind 2nd";
-      this.btnBindKeySecondary.UseVisualStyleBackColor = true;
-      this.btnBindKeySecondary.Click += new System.EventHandler(this.btnBindKeySecondary_Click);
+      this.btnBindKeySecondary.Click += new DecentForms.EventHandler(this.btnBindKeySecondary_Click);
       // 
       // btnBindKey
       // 
@@ -124,8 +119,7 @@
       this.btnBindKey.Size = new System.Drawing.Size(75, 23);
       this.btnBindKey.TabIndex = 21;
       this.btnBindKey.Text = "Bind Key";
-      this.btnBindKey.UseVisualStyleBackColor = true;
-      this.btnBindKey.Click += new System.EventHandler(this.btnBindKey_Click);
+      this.btnBindKey.Click += new DecentForms.EventHandler(this.btnBindKey_Click);
       // 
       // editKeyBinding
       // 
@@ -200,13 +194,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnSetDefaultsKeyBinding;
-        private System.Windows.Forms.Button btnUnbindKey;
-        private System.Windows.Forms.Button btnBindKeySecondary;
-        private System.Windows.Forms.Button btnBindKey;
+        private DecentForms.Button btnSetDefaultsKeyBinding;
+        private DecentForms.Button btnUnbindKey;
+        private DecentForms.Button btnBindKeySecondary;
+        private DecentForms.Button btnBindKey;
         private System.Windows.Forms.TextBox editKeyBinding;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ListView listFunctions;

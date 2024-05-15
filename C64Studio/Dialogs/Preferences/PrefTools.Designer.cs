@@ -28,13 +28,13 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.alistTools = new RetroDevStudio.Controls.ArrangedItemList();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnMacros = new System.Windows.Forms.Button();
+      this.btnMacros = new DecentForms.Button();
       this.editToolCartArguments = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label12 = new System.Windows.Forms.Label();
@@ -48,8 +48,8 @@
       this.comboToolType = new System.Windows.Forms.ComboBox();
       this.editToolName = new System.Windows.Forms.TextBox();
       this.editWorkPath = new System.Windows.Forms.TextBox();
-      this.btnBrowseToolWorkPath = new System.Windows.Forms.Button();
-      this.btnBrowseTool = new System.Windows.Forms.Button();
+      this.btnBrowseToolWorkPath = new DecentForms.Button();
+      this.btnBrowseTool = new DecentForms.Button();
       this.label7 = new System.Windows.Forms.Label();
       this.labelToolPath = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
@@ -64,24 +64,26 @@
       // btnExportSettings
       // 
       this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnExportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnExportSettings.Location = new System.Drawing.Point(819, 376);
       this.btnExportSettings.Name = "btnExportSettings";
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
       this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnImportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnImportSettings.Location = new System.Drawing.Point(738, 376);
       this.btnImportSettings.Name = "btnImportSettings";
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -168,13 +170,14 @@
       // 
       // btnMacros
       // 
+      this.btnMacros.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMacros.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnMacros.Location = new System.Drawing.Point(16, 152);
       this.btnMacros.Name = "btnMacros";
       this.btnMacros.Size = new System.Drawing.Size(75, 23);
       this.btnMacros.TabIndex = 5;
       this.btnMacros.Text = "Macros";
-      this.btnMacros.UseVisualStyleBackColor = true;
-      this.btnMacros.Click += new System.EventHandler(this.btnMacros_Click);
+      this.btnMacros.Click += new DecentForms.EventHandler(this.btnMacros_Click);
       // 
       // editToolCartArguments
       // 
@@ -299,22 +302,25 @@
       // 
       // btnBrowseToolWorkPath
       // 
+      this.btnBrowseToolWorkPath.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnBrowseToolWorkPath.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnBrowseToolWorkPath.Location = new System.Drawing.Point(629, 123);
       this.btnBrowseToolWorkPath.Name = "btnBrowseToolWorkPath";
       this.btnBrowseToolWorkPath.Size = new System.Drawing.Size(24, 23);
       this.btnBrowseToolWorkPath.TabIndex = 20;
       this.btnBrowseToolWorkPath.Text = "...";
-      this.btnBrowseToolWorkPath.UseVisualStyleBackColor = true;
+      this.btnBrowseToolWorkPath.Click += new DecentForms.EventHandler(this.btnBrowseToolWorkPath_Click);
       // 
       // btnBrowseTool
       // 
+      this.btnBrowseTool.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnBrowseTool.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnBrowseTool.Location = new System.Drawing.Point(629, 95);
       this.btnBrowseTool.Name = "btnBrowseTool";
       this.btnBrowseTool.Size = new System.Drawing.Size(24, 23);
       this.btnBrowseTool.TabIndex = 21;
       this.btnBrowseTool.Text = "...";
-      this.btnBrowseTool.UseVisualStyleBackColor = true;
-      this.btnBrowseTool.Click += new System.EventHandler(this.btnBrowseTool_Click);
+      this.btnBrowseTool.Click += new DecentForms.EventHandler(this.btnBrowseTool_Click);
       // 
       // label7
       // 
@@ -396,13 +402,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
         private Controls.ArrangedItemList alistTools;
         private System.Windows.Forms.CheckBox checkPassLabelsToEmulator;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnMacros;
+        private DecentForms.Button btnMacros;
         private System.Windows.Forms.TextBox editToolCartArguments;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label12;
@@ -416,8 +422,8 @@
         private System.Windows.Forms.ComboBox comboToolType;
         private System.Windows.Forms.TextBox editToolName;
         private System.Windows.Forms.TextBox editWorkPath;
-        private System.Windows.Forms.Button btnBrowseToolWorkPath;
-        private System.Windows.Forms.Button btnBrowseTool;
+        private DecentForms.Button btnBrowseToolWorkPath;
+        private DecentForms.Button btnBrowseTool;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label labelToolPath;
         private System.Windows.Forms.Label label6;

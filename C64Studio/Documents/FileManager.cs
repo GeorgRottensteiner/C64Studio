@@ -1400,7 +1400,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnUp_Click( object sender, EventArgs e )
+    private void btnUp_Click( DecentForms.ControlBase Sender )
     {
       if ( m_Media.ChangeDirectoryUp() )
       {

@@ -33,7 +33,7 @@ namespace RetroDevStudio.Controls
       this.comboCharColor = new System.Windows.Forms.ComboBox();
       this.radioBackground = new System.Windows.Forms.RadioButton();
       this.radioCharColor = new System.Windows.Forms.RadioButton();
-      this.btnEditPalette = new System.Windows.Forms.Button();
+      this.btnEditPalette = new DecentForms.Button();
       this.comboActivePalette = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.comboPaletteOffset = new System.Windows.Forms.ComboBox();
@@ -95,8 +95,7 @@ namespace RetroDevStudio.Controls
       this.btnEditPalette.Size = new System.Drawing.Size(161, 26);
       this.btnEditPalette.TabIndex = 56;
       this.btnEditPalette.Text = "Edit Palette";
-      this.btnEditPalette.UseVisualStyleBackColor = true;
-      this.btnEditPalette.Click += new System.EventHandler(this.btnEditPalette_Click);
+      this.btnEditPalette.Click += new DecentForms.EventHandler(this.btnEditPalette_Click);
       // 
       // comboActivePalette
       // 
@@ -161,7 +160,7 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.ComboBox comboCharColor;
     private System.Windows.Forms.RadioButton radioBackground;
     private System.Windows.Forms.RadioButton radioCharColor;
-    private System.Windows.Forms.Button btnEditPalette;
+    private DecentForms.Button btnEditPalette;
     private System.Windows.Forms.ComboBox comboActivePalette;
     private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboPaletteOffset;

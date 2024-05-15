@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.label1 = new System.Windows.Forms.Label();
-      this.btnKeepFiles = new System.Windows.Forms.Button();
-      this.btnReloadAll = new System.Windows.Forms.Button();
-      this.listChangedFiles = new Controls.CSListView();
+      this.btnKeepFiles = new DecentForms.Button();
+      this.btnReloadAll = new DecentForms.Button();
+      this.listChangedFiles = new RetroDevStudio.Controls.CSListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.SuspendLayout();
       // 
@@ -47,33 +47,42 @@
       // btnKeepFiles
       // 
       this.btnKeepFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnKeepFiles.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnKeepFiles.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnKeepFiles.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnKeepFiles.Image = null;
       this.btnKeepFiles.Location = new System.Drawing.Point(321, 334);
       this.btnKeepFiles.Name = "btnKeepFiles";
       this.btnKeepFiles.Size = new System.Drawing.Size(127, 23);
       this.btnKeepFiles.TabIndex = 5;
       this.btnKeepFiles.Text = "Keep Open Files";
-      this.btnKeepFiles.UseVisualStyleBackColor = true;
+      this.btnKeepFiles.Click += new DecentForms.EventHandler(this.btnKeepFiles_Click);
       // 
       // btnReloadAll
       // 
       this.btnReloadAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnReloadAll.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReloadAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnReloadAll.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnReloadAll.Image = null;
       this.btnReloadAll.Location = new System.Drawing.Point(188, 334);
       this.btnReloadAll.Name = "btnReloadAll";
       this.btnReloadAll.Size = new System.Drawing.Size(127, 23);
       this.btnReloadAll.TabIndex = 4;
       this.btnReloadAll.Text = "Reload All Files";
-      this.btnReloadAll.UseVisualStyleBackColor = true;
-      this.btnReloadAll.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnReloadAll.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // listChangedFiles
       // 
       this.listChangedFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
       this.listChangedFiles.FullRowSelect = true;
+      this.listChangedFiles.HideSelection = false;
       this.listChangedFiles.Location = new System.Drawing.Point(12, 74);
       this.listChangedFiles.Name = "listChangedFiles";
+      this.listChangedFiles.OwnerDraw = true;
+      this.listChangedFiles.SelectedTextBGColor = ((uint)(4278190335u));
+      this.listChangedFiles.SelectedTextColor = ((uint)(4294967295u));
       this.listChangedFiles.Size = new System.Drawing.Size(436, 245);
       this.listChangedFiles.TabIndex = 6;
       this.listChangedFiles.UseCompatibleStateImageBehavior = false;
@@ -111,8 +120,8 @@
     #endregion
 
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Button btnKeepFiles;
-    private System.Windows.Forms.Button btnReloadAll;
+    private DecentForms.Button btnKeepFiles;
+    private DecentForms.Button btnReloadAll;
     private Controls.CSListView listChangedFiles;
     private System.Windows.Forms.ColumnHeader columnHeader1;
   }

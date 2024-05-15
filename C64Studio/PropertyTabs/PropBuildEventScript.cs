@@ -45,7 +45,7 @@ namespace RetroDevStudio
 
 
 
-    private void btnMacros_Click( object sender, EventArgs e )
+    private void btnMacros_Click( DecentForms.ControlBase Sender )
     {
       var formMacro = new FormMacros( Core, Element.DocumentInfo, editBuildCommand );
 

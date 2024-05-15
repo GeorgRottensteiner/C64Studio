@@ -31,9 +31,9 @@
       this.label1 = new System.Windows.Forms.Label();
       this.labelBasePath = new System.Windows.Forms.Label();
       this.editBasePath = new System.Windows.Forms.TextBox();
-      this.btnBrowseBasePath = new System.Windows.Forms.Button();
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnOK = new System.Windows.Forms.Button();
+      this.btnBrowseBasePath = new DecentForms.Button();
+      this.btnCancel = new DecentForms.Button();
+      this.btnOK = new DecentForms.Button();
       this.label2 = new System.Windows.Forms.Label();
       this.editSolutionName = new System.Windows.Forms.TextBox();
       this.labelSolutionSummary = new System.Windows.Forms.Label();
@@ -72,35 +72,44 @@
       // 
       // btnBrowseBasePath
       // 
+      this.btnBrowseBasePath.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnBrowseBasePath.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnBrowseBasePath.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnBrowseBasePath.Image = null;
       this.btnBrowseBasePath.Location = new System.Drawing.Point(466, 78);
       this.btnBrowseBasePath.Name = "btnBrowseBasePath";
       this.btnBrowseBasePath.Size = new System.Drawing.Size(67, 23);
       this.btnBrowseBasePath.TabIndex = 2;
       this.btnBrowseBasePath.Text = "...";
-      this.btnBrowseBasePath.UseVisualStyleBackColor = true;
-      this.btnBrowseBasePath.Click += new System.EventHandler(this.btnBrowseBasePath_Click);
+      this.btnBrowseBasePath.Click += new DecentForms.EventHandler(this.btnBrowseBasePath_Click);
       // 
       // btnCancel
       // 
       this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Image = null;
       this.btnCancel.Location = new System.Drawing.Point(458, 398);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 9;
       this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.Click += new DecentForms.EventHandler(this.btnCancel_Click);
       // 
       // btnOK
       // 
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOK.Image = null;
       this.btnOK.Location = new System.Drawing.Point(377, 398);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 8;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // label2
       // 
@@ -231,9 +240,9 @@
 
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label labelBasePath;
-    private System.Windows.Forms.Button btnBrowseBasePath;
-    private System.Windows.Forms.Button btnCancel;
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnBrowseBasePath;
+    private DecentForms.Button btnCancel;
+    private DecentForms.Button btnOK;
     public System.Windows.Forms.TextBox editBasePath;
     private System.Windows.Forms.Label label2;
     public System.Windows.Forms.TextBox editSolutionName;

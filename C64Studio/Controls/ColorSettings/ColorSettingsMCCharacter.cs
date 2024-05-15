@@ -145,7 +145,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnExchangeColors_Click( object sender, EventArgs e )
+    private void btnExchangeColors_Click( DecentForms.ControlBase Sender )
     {
       contextMenuExchangeColors.Show( btnExchangeColors, new Point( 0, btnExchangeColors.Height ) );
     }

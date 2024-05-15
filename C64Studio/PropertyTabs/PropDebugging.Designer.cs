@@ -31,7 +31,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.editDebugCommand = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.btnMacros = new System.Windows.Forms.Button();
+      this.btnMacros = new DecentForms.Button();
       this.comboDebugFileType = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
       this.comboConfig = new System.Windows.Forms.ComboBox();
@@ -71,8 +71,7 @@
       this.btnMacros.Size = new System.Drawing.Size( 75, 23 );
       this.btnMacros.TabIndex = 15;
       this.btnMacros.Text = "Macros";
-      this.btnMacros.UseVisualStyleBackColor = true;
-      this.btnMacros.Click += new System.EventHandler( this.btnMacros_Click );
+      this.btnMacros.Click += new DecentForms.EventHandler( this.btnMacros_Click );
       // 
       // comboDebugFileType
       // 
@@ -138,7 +137,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox editDebugCommand;
     private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Button btnMacros;
+    private DecentForms.Button btnMacros;
     private System.Windows.Forms.ComboBox comboDebugFileType;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.ComboBox comboConfig;

@@ -654,7 +654,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExport_Click(object sender, EventArgs e)
+    private void btnExport_Click( DecentForms.ControlBase Sender )
     {
       List<int> exportIndices = ListOfExportIndices();
 
@@ -699,7 +699,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImport_Click( object sender, EventArgs e )
+    private void btnImport_Click( DecentForms.ControlBase Sender )
     {
       var undo1 = new Undo.UndoCharacterEditorCharChange( characterEditor, m_Charset, 0, m_Charset.TotalNumberOfCharacters );
       var undo2 = new Undo.UndoCharacterEditorValuesChange( characterEditor, m_Charset );

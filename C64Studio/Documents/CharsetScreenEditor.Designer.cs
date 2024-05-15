@@ -38,7 +38,7 @@
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabProject = new System.Windows.Forms.TabPage();
-      this.btnExport = new System.Windows.Forms.Button();
+      this.btnExport = new DecentForms.Button();
       this.label12 = new System.Windows.Forms.Label();
       this.comboExportOrientation = new System.Windows.Forms.ComboBox();
       this.panelExport = new System.Windows.Forms.Panel();
@@ -59,14 +59,14 @@
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.comboCharlistLayout = new System.Windows.Forms.ComboBox();
-      this.btnPaste = new System.Windows.Forms.Button();
-      this.btnCopy = new System.Windows.Forms.Button();
+      this.btnPaste = new DecentForms.Button();
+      this.btnCopy = new DecentForms.Button();
       this.editCharOffset = new System.Windows.Forms.TextBox();
-      this.btnShiftDown = new System.Windows.Forms.Button();
-      this.btnShiftUp = new System.Windows.Forms.Button();
-      this.btnShiftRight = new System.Windows.Forms.Button();
-      this.btnShiftLeft = new System.Windows.Forms.Button();
-      this.btnClearScreen = new System.Windows.Forms.Button();
+      this.btnShiftDown = new DecentForms.Button();
+      this.btnShiftUp = new DecentForms.Button();
+      this.btnShiftRight = new DecentForms.Button();
+      this.btnShiftLeft = new DecentForms.Button();
+      this.btnClearScreen = new DecentForms.Button();
       this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.checkReverse = new System.Windows.Forms.CheckBox();
@@ -83,7 +83,7 @@
       this.btnToolQuad = new System.Windows.Forms.RadioButton();
       this.btnToolRect = new System.Windows.Forms.RadioButton();
       this.btnToolEdit = new System.Windows.Forms.RadioButton();
-      this.btnApplyScreenSize = new System.Windows.Forms.Button();
+      this.btnApplyScreenSize = new DecentForms.Button();
       this.editScreenHeight = new System.Windows.Forms.TextBox();
       this.editScreenWidth = new System.Windows.Forms.TextBox();
       this.screenVScroll = new System.Windows.Forms.VScrollBar();
@@ -106,7 +106,7 @@
       this.charEditor = new RetroDevStudio.Controls.CharacterEditor();
       this.tabImport = new System.Windows.Forms.TabPage();
       this.panelImport = new System.Windows.Forms.Panel();
-      this.btnImport = new System.Windows.Forms.Button();
+      this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -200,8 +200,7 @@
       this.btnExport.Size = new System.Drawing.Size(75, 21);
       this.btnExport.TabIndex = 29;
       this.btnExport.Text = "Export";
-      this.btnExport.UseVisualStyleBackColor = true;
-      this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+      this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
       // label12
       // 
@@ -448,8 +447,7 @@
       this.btnPaste.Size = new System.Drawing.Size(24, 24);
       this.btnPaste.TabIndex = 48;
       this.toolTip1.SetToolTip(this.btnPaste, "Paste Characters");
-      this.btnPaste.UseVisualStyleBackColor = true;
-      this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+      this.btnPaste.Click += new DecentForms.EventHandler(this.btnPaste_Click);
       // 
       // btnCopy
       // 
@@ -460,8 +458,7 @@
       this.btnCopy.Size = new System.Drawing.Size(24, 24);
       this.btnCopy.TabIndex = 47;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy Selected Characters to Clipboard");
-      this.btnCopy.UseVisualStyleBackColor = true;
-      this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+      this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
       // 
       // editCharOffset
       // 
@@ -479,8 +476,7 @@
       this.btnShiftDown.Size = new System.Drawing.Size(24, 23);
       this.btnShiftDown.TabIndex = 14;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
-      this.btnShiftDown.UseVisualStyleBackColor = true;
-      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
+      this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
       // 
       // btnShiftUp
       // 
@@ -490,8 +486,7 @@
       this.btnShiftUp.Size = new System.Drawing.Size(24, 23);
       this.btnShiftUp.TabIndex = 13;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
-      this.btnShiftUp.UseVisualStyleBackColor = true;
-      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
+      this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
       // 
       // btnShiftRight
       // 
@@ -501,8 +496,7 @@
       this.btnShiftRight.Size = new System.Drawing.Size(24, 23);
       this.btnShiftRight.TabIndex = 12;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
-      this.btnShiftRight.UseVisualStyleBackColor = true;
-      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
+      this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
       // 
       // btnShiftLeft
       // 
@@ -512,8 +506,7 @@
       this.btnShiftLeft.Size = new System.Drawing.Size(24, 23);
       this.btnShiftLeft.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
-      this.btnShiftLeft.UseVisualStyleBackColor = true;
-      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
+      this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
       // 
       // btnClearScreen
       // 
@@ -523,8 +516,7 @@
       this.btnClearScreen.Size = new System.Drawing.Size(24, 23);
       this.btnClearScreen.TabIndex = 10;
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
-      this.btnClearScreen.UseVisualStyleBackColor = true;
-      this.btnClearScreen.Click += new System.EventHandler(this.btnClearScreen_Click);
+      this.btnClearScreen.Click += new DecentForms.EventHandler(this.btnClearScreen_Click);
       // 
       // checkOverrideOriginalColorSettings
       // 
@@ -717,8 +709,7 @@
       this.btnApplyScreenSize.Size = new System.Drawing.Size(67, 20);
       this.btnApplyScreenSize.TabIndex = 25;
       this.btnApplyScreenSize.Text = "Apply";
-      this.btnApplyScreenSize.UseVisualStyleBackColor = true;
-      this.btnApplyScreenSize.Click += new System.EventHandler(this.btnApplyScreenSize_Click);
+      this.btnApplyScreenSize.Click += new DecentForms.EventHandler(this.btnApplyScreenSize_Click);
       // 
       // editScreenHeight
       // 
@@ -978,8 +969,7 @@
       this.btnImport.Size = new System.Drawing.Size(75, 21);
       this.btnImport.TabIndex = 32;
       this.btnImport.Text = "Import";
-      this.btnImport.UseVisualStyleBackColor = true;
-      this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
       // comboImportMethod
       // 
@@ -1047,7 +1037,7 @@
     private System.Windows.Forms.ComboBox comboExportData;
     private System.Windows.Forms.VScrollBar screenVScroll;
     private System.Windows.Forms.HScrollBar screenHScroll;
-    private System.Windows.Forms.Button btnApplyScreenSize;
+    private DecentForms.Button btnApplyScreenSize;
     private System.Windows.Forms.TextBox editScreenHeight;
     private System.Windows.Forms.TextBox editScreenWidth;
     private System.Windows.Forms.Label label7;
@@ -1079,23 +1069,23 @@
     private System.Windows.Forms.CheckBox checkAutoCenter;
     private System.Windows.Forms.CheckBox checkReverse;
         private Controls.CharacterEditor charEditor;
-    private System.Windows.Forms.Button btnClearScreen;
-    private System.Windows.Forms.Button btnShiftDown;
-    private System.Windows.Forms.Button btnShiftUp;
-    private System.Windows.Forms.Button btnShiftRight;
-    private System.Windows.Forms.Button btnShiftLeft;
+    private DecentForms.Button btnClearScreen;
+    private DecentForms.Button btnShiftDown;
+    private DecentForms.Button btnShiftUp;
+    private DecentForms.Button btnShiftRight;
+    private DecentForms.Button btnShiftLeft;
     private System.Windows.Forms.TextBox editCharOffset;
     private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.Button btnPaste;
-    private System.Windows.Forms.Button btnCopy;
+    private DecentForms.Button btnPaste;
+    private DecentForms.Button btnCopy;
     private System.Windows.Forms.TabPage tabImport;
     private System.Windows.Forms.Panel panelExport;
     private System.Windows.Forms.ComboBox comboExportMethod;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.ComboBox comboExportOrientation;
-    private System.Windows.Forms.Button btnExport;
-    private System.Windows.Forms.Button btnImport;
+    private DecentForms.Button btnExport;
+    private DecentForms.Button btnImport;
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Panel panelImport;

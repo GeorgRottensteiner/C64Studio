@@ -28,9 +28,9 @@
     private void InitializeComponent()
     {
       this.labelImageInfo = new System.Windows.Forms.Label();
-      this.btnClip = new System.Windows.Forms.Button();
-      this.btnAdjustScreenSize = new System.Windows.Forms.Button();
-      this.btnCancel = new System.Windows.Forms.Button();
+      this.btnClip = new DecentForms.Button();
+      this.btnAdjustScreenSize = new DecentForms.Button();
+      this.btnCancel = new DecentForms.Button();
       this.SuspendLayout();
       // 
       // labelImageInfo
@@ -50,8 +50,7 @@
       this.btnClip.Size = new System.Drawing.Size( 127, 23 );
       this.btnClip.TabIndex = 1;
       this.btnClip.Text = "Clip Image";
-      this.btnClip.UseVisualStyleBackColor = true;
-      this.btnClip.Click += new System.EventHandler( this.btnClip_Click );
+      this.btnClip.Click += new DecentForms.EventHandler( this.btnClip_Click );
       // 
       // btnAdjustScreenSize
       // 
@@ -60,8 +59,7 @@
       this.btnAdjustScreenSize.Size = new System.Drawing.Size( 127, 23 );
       this.btnAdjustScreenSize.TabIndex = 1;
       this.btnAdjustScreenSize.Text = "Adjust Screen Size";
-      this.btnAdjustScreenSize.UseVisualStyleBackColor = true;
-      this.btnAdjustScreenSize.Click += new System.EventHandler( this.btnAdjustScreenSize_Click );
+      this.btnAdjustScreenSize.Click += new DecentForms.EventHandler( this.btnAdjustScreenSize_Click );
       // 
       // btnCancel
       // 
@@ -71,8 +69,7 @@
       this.btnCancel.Size = new System.Drawing.Size( 127, 23 );
       this.btnCancel.TabIndex = 1;
       this.btnCancel.Text = "Cancel Import";
-      this.btnCancel.UseVisualStyleBackColor = true;
-      this.btnCancel.Click += new System.EventHandler( this.btnCancel_Click );
+      this.btnCancel.Click += new DecentForms.EventHandler( this.btnCancel_Click );
       // 
       // DlgImportImage
       // 
@@ -100,9 +97,9 @@
     #endregion
 
     private System.Windows.Forms.Label labelImageInfo;
-    private System.Windows.Forms.Button btnClip;
-    private System.Windows.Forms.Button btnAdjustScreenSize;
-    private System.Windows.Forms.Button btnCancel;
+    private DecentForms.Button btnClip;
+    private DecentForms.Button btnAdjustScreenSize;
+    private DecentForms.Button btnCancel;
 
   }
 }

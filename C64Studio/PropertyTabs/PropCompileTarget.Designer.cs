@@ -30,7 +30,7 @@
     {
       this.comboTargetType = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.btnParseTarget = new System.Windows.Forms.Button();
+      this.btnParseTarget = new DecentForms.Button();
       this.editTargetFilename = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
@@ -41,8 +41,8 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label5 = new System.Windows.Forms.Label();
-      this.btnAddExternalDependency = new System.Windows.Forms.Button();
-      this.btnRemoveExternalDependency = new System.Windows.Forms.Button();
+      this.btnAddExternalDependency = new DecentForms.Button();
+      this.btnRemoveExternalDependency = new DecentForms.Button();
       this.listExternalDependencies = new System.Windows.Forms.ListBox();
       this.SuspendLayout();
       // 
@@ -73,8 +73,7 @@
       this.btnParseTarget.Size = new System.Drawing.Size(102, 23);
       this.btnParseTarget.TabIndex = 10;
       this.btnParseTarget.Text = "Parse for Target";
-      this.btnParseTarget.UseVisualStyleBackColor = true;
-      this.btnParseTarget.Click += new System.EventHandler(this.btnParseTarget_Click);
+      this.btnParseTarget.Click += new DecentForms.EventHandler(this.btnParseTarget_Click);
       // 
       // editTargetFilename
       // 
@@ -167,8 +166,7 @@
       this.btnAddExternalDependency.Name = "btnAddExternalDependency";
       this.btnAddExternalDependency.Size = new System.Drawing.Size(38, 23);
       this.btnAddExternalDependency.TabIndex = 15;
-      this.btnAddExternalDependency.UseVisualStyleBackColor = true;
-      this.btnAddExternalDependency.Click += new System.EventHandler(this.btnAddExternalDependency_Click);
+      this.btnAddExternalDependency.Click += new DecentForms.EventHandler(this.btnAddExternalDependency_Click);
       // 
       // btnRemoveExternalDependency
       // 
@@ -178,8 +176,7 @@
       this.btnRemoveExternalDependency.Name = "btnRemoveExternalDependency";
       this.btnRemoveExternalDependency.Size = new System.Drawing.Size(38, 23);
       this.btnRemoveExternalDependency.TabIndex = 15;
-      this.btnRemoveExternalDependency.UseVisualStyleBackColor = true;
-      this.btnRemoveExternalDependency.Click += new System.EventHandler(this.btnRemoveExternalDependency_Click);
+      this.btnRemoveExternalDependency.Click += new DecentForms.EventHandler(this.btnRemoveExternalDependency_Click);
       // 
       // listExternalDependencies
       // 
@@ -219,7 +216,7 @@
 
     private System.Windows.Forms.ComboBox comboTargetType;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Button btnParseTarget;
+    private DecentForms.Button btnParseTarget;
     private System.Windows.Forms.TextBox editTargetFilename;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label3;
@@ -229,8 +226,8 @@
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.Button btnAddExternalDependency;
-    private System.Windows.Forms.Button btnRemoveExternalDependency;
+    private DecentForms.Button btnAddExternalDependency;
+    private DecentForms.Button btnRemoveExternalDependency;
     private System.Windows.Forms.ListBox listExternalDependencies;
         private System.Windows.Forms.ColumnHeader columnHeader4;
     }

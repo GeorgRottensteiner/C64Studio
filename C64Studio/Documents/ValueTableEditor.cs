@@ -731,14 +731,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnGenerateValues_Click( object sender, EventArgs e )
+    private void btnGenerateValues_Click( DecentForms.ControlBase Sender )
     {
       GenerateValues();
     }
 
 
 
-    private void btnImportFromASM_Click( object sender, EventArgs e )
+    private void btnImportFromASM_Click( DecentForms.ControlBase Sender )
     {
       var output = Util.FromASMData( editDataExport.Text );
       if ( output == null )
@@ -762,7 +762,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToData_Click( object sender, EventArgs e )
+    private void btnExportToData_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer      exportData = GetValueData();
 
@@ -804,7 +804,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToBASICData_Click( object sender, EventArgs e )
+    private void btnExportToBASICData_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer      exportData = GetValueData();
 
@@ -815,7 +815,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToFile_Click( object sender, EventArgs e )
+    private void btnExportToFile_Click( DecentForms.ControlBase Sender )
     {
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -836,7 +836,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImportFromFile_Click( object sender, EventArgs e )
+    private void btnImportFromFile_Click( DecentForms.ControlBase Sender )
     {
       string    filename;
 
@@ -862,7 +862,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImportFromHex_Click( object sender, EventArgs e )
+    private void btnImportFromHex_Click( DecentForms.ControlBase Sender )
     {
       string    binaryText = editDataExport.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
 
@@ -907,7 +907,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToBASICDataHex_Click( object sender, EventArgs e )
+    private void btnExportToBASICDataHex_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer      exportData = GetValueData();
 

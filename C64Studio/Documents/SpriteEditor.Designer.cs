@@ -39,8 +39,8 @@ namespace RetroDevStudio.Documents
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.labelSelectionInfo = new System.Windows.Forms.Label();
-      this.btnHighlightDuplicates = new System.Windows.Forms.Button();
-      this.btnChangeMode = new RetroDevStudio.Controls.MenuButton();
+      this.btnHighlightDuplicates = new DecentForms.Button();
+      this.btnChangeMode = new DecentForms.MenuButton();
       this.panelColorSettings = new System.Windows.Forms.Panel();
       this.btnToolEdit = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
@@ -49,7 +49,7 @@ namespace RetroDevStudio.Documents
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.panelSprites = new GR.Forms.ImageListbox();
       this.tabPage2 = new System.Windows.Forms.TabPage();
-      this.btnSavePreviewToGIF = new System.Windows.Forms.Button();
+      this.btnSavePreviewToGIF = new DecentForms.Button();
       this.checkAutoplayAnim = new System.Windows.Forms.CheckBox();
       this.label9 = new System.Windows.Forms.Label();
       this.checkExpandY = new System.Windows.Forms.CheckBox();
@@ -70,26 +70,26 @@ namespace RetroDevStudio.Documents
       this.comboLayerColor = new System.Windows.Forms.ComboBox();
       this.comboSprite = new System.Windows.Forms.ComboBox();
       this.layerPreview = new GR.Forms.FastPictureBox();
-      this.btnClearSprite = new System.Windows.Forms.Button();
-      this.btnDeleteSprite = new System.Windows.Forms.Button();
-      this.btnInvert = new System.Windows.Forms.Button();
-      this.btnMirrorY = new System.Windows.Forms.Button();
-      this.btnMirrorX = new System.Windows.Forms.Button();
-      this.btnShiftDown = new System.Windows.Forms.Button();
-      this.btnShiftUp = new System.Windows.Forms.Button();
-      this.btnShiftRight = new System.Windows.Forms.Button();
-      this.btnRotateRight = new System.Windows.Forms.Button();
-      this.btnRotateLeft = new System.Windows.Forms.Button();
-      this.btnShiftLeft = new System.Windows.Forms.Button();
-      this.btnCopyToClipboard = new System.Windows.Forms.Button();
-      this.btnPasteFromClipboard = new System.Windows.Forms.Button();
+      this.btnClearSprite = new DecentForms.Button();
+      this.btnDeleteSprite = new DecentForms.Button();
+      this.btnInvert = new DecentForms.Button();
+      this.btnMirrorY = new DecentForms.Button();
+      this.btnMirrorX = new DecentForms.Button();
+      this.btnShiftDown = new DecentForms.Button();
+      this.btnShiftUp = new DecentForms.Button();
+      this.btnShiftRight = new DecentForms.Button();
+      this.btnRotateRight = new DecentForms.Button();
+      this.btnRotateLeft = new DecentForms.Button();
+      this.btnShiftLeft = new DecentForms.Button();
+      this.btnCopyToClipboard = new DecentForms.Button();
+      this.btnPasteFromClipboard = new DecentForms.Button();
       this.labelCharNo = new System.Windows.Forms.Label();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabExport = new System.Windows.Forms.TabPage();
       this.labelCharactersTo = new System.Windows.Forms.Label();
       this.editDataExport = new System.Windows.Forms.TextBox();
-      this.btnExport = new System.Windows.Forms.Button();
+      this.btnExport = new DecentForms.Button();
       this.comboExportMethod = new System.Windows.Forms.ComboBox();
       this.label12 = new System.Windows.Forms.Label();
       this.panelExport = new System.Windows.Forms.Panel();
@@ -99,7 +99,7 @@ namespace RetroDevStudio.Documents
       this.labelCharactersFrom = new System.Windows.Forms.Label();
       this.tabImport = new System.Windows.Forms.TabPage();
       this.panelImport = new System.Windows.Forms.Panel();
-      this.btnImport = new System.Windows.Forms.Button();
+      this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -232,8 +232,7 @@ namespace RetroDevStudio.Documents
       this.btnHighlightDuplicates.Size = new System.Drawing.Size(121, 23);
       this.btnHighlightDuplicates.TabIndex = 61;
       this.btnHighlightDuplicates.Text = "Duplicates";
-      this.btnHighlightDuplicates.UseVisualStyleBackColor = true;
-      this.btnHighlightDuplicates.Click += new System.EventHandler(this.btnHighlightDuplicates_Click);
+      this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
       // 
       // btnChangeMode
       // 
@@ -243,8 +242,7 @@ namespace RetroDevStudio.Documents
       this.btnChangeMode.Size = new System.Drawing.Size(205, 23);
       this.btnChangeMode.TabIndex = 60;
       this.btnChangeMode.Text = "btnChangeMode";
-      this.btnChangeMode.UseVisualStyleBackColor = true;
-      this.btnChangeMode.Click += new System.EventHandler(this.btnChangeMode_Click);
+      this.btnChangeMode.Click += new DecentForms.EventHandler(this.btnChangeMode_Click);
       // 
       // panelColorSettings
       // 
@@ -381,8 +379,7 @@ namespace RetroDevStudio.Documents
       this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
       this.btnSavePreviewToGIF.TabIndex = 13;
       this.btnSavePreviewToGIF.Text = "Save as GIF";
-      this.btnSavePreviewToGIF.UseVisualStyleBackColor = true;
-      this.btnSavePreviewToGIF.Click += new System.EventHandler(this.btnSavePreviewToGIF_Click);
+      this.btnSavePreviewToGIF.Click += new DecentForms.EventHandler(this.btnSavePreviewToGIF_Click);
       // 
       // checkAutoplayAnim
       // 
@@ -635,8 +632,7 @@ namespace RetroDevStudio.Documents
       this.btnClearSprite.Size = new System.Drawing.Size(57, 23);
       this.btnClearSprite.TabIndex = 14;
       this.btnClearSprite.Text = "Clear";
-      this.btnClearSprite.UseVisualStyleBackColor = true;
-      this.btnClearSprite.Click += new System.EventHandler(this.btnClearSprite_Click);
+      this.btnClearSprite.Click += new DecentForms.EventHandler(this.btnClearSprite_Click);
       // 
       // btnDeleteSprite
       // 
@@ -646,8 +642,7 @@ namespace RetroDevStudio.Documents
       this.btnDeleteSprite.Size = new System.Drawing.Size(57, 23);
       this.btnDeleteSprite.TabIndex = 15;
       this.btnDeleteSprite.Text = "Delete";
-      this.btnDeleteSprite.UseVisualStyleBackColor = true;
-      this.btnDeleteSprite.Click += new System.EventHandler(this.btnDeleteSprite_Click);
+      this.btnDeleteSprite.Click += new DecentForms.EventHandler(this.btnDeleteSprite_Click);
       // 
       // btnInvert
       // 
@@ -657,8 +652,7 @@ namespace RetroDevStudio.Documents
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
       this.btnInvert.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnInvert, "Invert selected sprites colors");
-      this.btnInvert.UseVisualStyleBackColor = true;
-      this.btnInvert.Click += new System.EventHandler(this.btnInvert_Click);
+      this.btnInvert.Click += new DecentForms.EventHandler(this.btnInvert_Click);
       // 
       // btnMirrorY
       // 
@@ -668,8 +662,7 @@ namespace RetroDevStudio.Documents
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror selected sprites vertically");
-      this.btnMirrorY.UseVisualStyleBackColor = true;
-      this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
+      this.btnMirrorY.Click += new DecentForms.EventHandler(this.btnMirrorY_Click);
       // 
       // btnMirrorX
       // 
@@ -679,8 +672,7 @@ namespace RetroDevStudio.Documents
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror selected sprites horizontally");
-      this.btnMirrorX.UseVisualStyleBackColor = true;
-      this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
+      this.btnMirrorX.Click += new DecentForms.EventHandler(this.btnMirrorX_Click);
       // 
       // btnShiftDown
       // 
@@ -690,8 +682,7 @@ namespace RetroDevStudio.Documents
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift selected sprites down");
-      this.btnShiftDown.UseVisualStyleBackColor = true;
-      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
+      this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
       // 
       // btnShiftUp
       // 
@@ -701,8 +692,7 @@ namespace RetroDevStudio.Documents
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift selected sprites up");
-      this.btnShiftUp.UseVisualStyleBackColor = true;
-      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
+      this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
       // 
       // btnShiftRight
       // 
@@ -712,8 +702,7 @@ namespace RetroDevStudio.Documents
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift selected sprites right");
-      this.btnShiftRight.UseVisualStyleBackColor = true;
-      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
+      this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
       // 
       // btnRotateRight
       // 
@@ -723,8 +712,7 @@ namespace RetroDevStudio.Documents
       this.btnRotateRight.Size = new System.Drawing.Size(26, 26);
       this.btnRotateRight.TabIndex = 8;
       this.toolTip1.SetToolTip(this.btnRotateRight, "Rotate selected sprites right");
-      this.btnRotateRight.UseVisualStyleBackColor = true;
-      this.btnRotateRight.Click += new System.EventHandler(this.btnRotateRight_Click);
+      this.btnRotateRight.Click += new DecentForms.EventHandler(this.btnRotateRight_Click);
       // 
       // btnRotateLeft
       // 
@@ -734,8 +722,7 @@ namespace RetroDevStudio.Documents
       this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
       this.btnRotateLeft.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnRotateLeft, "Rotate selected sprites left");
-      this.btnRotateLeft.UseVisualStyleBackColor = true;
-      this.btnRotateLeft.Click += new System.EventHandler(this.btnRotateLeft_Click);
+      this.btnRotateLeft.Click += new DecentForms.EventHandler(this.btnRotateLeft_Click);
       // 
       // btnShiftLeft
       // 
@@ -745,8 +732,7 @@ namespace RetroDevStudio.Documents
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 0;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift selected sprites left");
-      this.btnShiftLeft.UseVisualStyleBackColor = true;
-      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
+      this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
       // 
       // btnCopyToClipboard
       // 
@@ -755,8 +741,7 @@ namespace RetroDevStudio.Documents
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnCopyToClipboard.TabIndex = 13;
       this.btnCopyToClipboard.Text = "Copy to Clipboard";
-      this.btnCopyToClipboard.UseVisualStyleBackColor = true;
-      this.btnCopyToClipboard.Click += new System.EventHandler(this.btnCopyToClipboard_Click);
+      this.btnCopyToClipboard.Click += new DecentForms.EventHandler(this.btnCopyToClipboard_Click);
       // 
       // btnPasteFromClipboard
       // 
@@ -765,8 +750,7 @@ namespace RetroDevStudio.Documents
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnPasteFromClipboard.TabIndex = 12;
       this.btnPasteFromClipboard.Text = "Paste from Clipboard";
-      this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
-      this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
+      this.btnPasteFromClipboard.Click += new DecentForms.EventHandler(this.btnPasteFromClipboard_Click);
       // 
       // labelCharNo
       // 
@@ -850,8 +834,7 @@ namespace RetroDevStudio.Documents
       this.btnExport.Size = new System.Drawing.Size(61, 21);
       this.btnExport.TabIndex = 32;
       this.btnExport.Text = "Export";
-      this.btnExport.UseVisualStyleBackColor = true;
-      this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+      this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
       // comboExportMethod
       // 
@@ -945,8 +928,7 @@ namespace RetroDevStudio.Documents
       this.btnImport.Size = new System.Drawing.Size(75, 21);
       this.btnImport.TabIndex = 39;
       this.btnImport.Text = "Import";
-      this.btnImport.UseVisualStyleBackColor = true;
-      this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
       // comboImportMethod
       // 
@@ -1393,19 +1375,19 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem openCharsetProjectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem closeCharsetProjectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem saveSpriteProjectToolStripMenuItem;
-    private System.Windows.Forms.Button btnCopyToClipboard;
-    private System.Windows.Forms.Button btnPasteFromClipboard;
-    private System.Windows.Forms.Button btnShiftLeft;
-    private System.Windows.Forms.Button btnShiftDown;
-    private System.Windows.Forms.Button btnShiftUp;
-    private System.Windows.Forms.Button btnShiftRight;
-    private System.Windows.Forms.Button btnMirrorX;
-    private System.Windows.Forms.Button btnMirrorY;
+    private DecentForms.Button btnCopyToClipboard;
+    private DecentForms.Button btnPasteFromClipboard;
+    private DecentForms.Button btnShiftLeft;
+    private DecentForms.Button btnShiftDown;
+    private DecentForms.Button btnShiftUp;
+    private DecentForms.Button btnShiftRight;
+    private DecentForms.Button btnMirrorX;
+    private DecentForms.Button btnMirrorY;
     private System.Windows.Forms.CheckBox checkShowGrid;
-    private System.Windows.Forms.Button btnInvert;
-    private System.Windows.Forms.Button btnRotateLeft;
-    private System.Windows.Forms.Button btnRotateRight;
-    private System.Windows.Forms.Button btnDeleteSprite;
+    private DecentForms.Button btnInvert;
+    private DecentForms.Button btnRotateLeft;
+    private DecentForms.Button btnRotateRight;
+    private DecentForms.Button btnDeleteSprite;
     private System.Windows.Forms.TabControl tabSpriteDetails;
     private System.Windows.Forms.TabPage tabPage1;
     private System.Windows.Forms.TabPage tabPage2;
@@ -1436,29 +1418,29 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.TextBox editLayerDelay;
     private System.Windows.Forms.CheckBox checkAutoplayAnim;
-    private System.Windows.Forms.Button btnSavePreviewToGIF;
+    private DecentForms.Button btnSavePreviewToGIF;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.RadioButton btnToolFill;
     private System.Windows.Forms.RadioButton btnToolEdit;
     private System.Windows.Forms.Panel panelColorSettings;
-    private System.Windows.Forms.Button btnClearSprite;
+    private DecentForms.Button btnClearSprite;
     private System.Windows.Forms.TabPage tabExport;
     private System.Windows.Forms.ComboBox comboExportRange;
     private System.Windows.Forms.TextBox editSpriteCount;
     private System.Windows.Forms.TextBox editSpriteFrom;
     private System.Windows.Forms.Label labelCharactersFrom;
     private System.Windows.Forms.Panel panelExport;
-    private System.Windows.Forms.Button btnExport;
+    private DecentForms.Button btnExport;
     private System.Windows.Forms.ComboBox comboExportMethod;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.TextBox editDataExport;
     private System.Windows.Forms.Label labelCharactersTo;
     private System.Windows.Forms.TabPage tabImport;
-    private System.Windows.Forms.Button btnImport;
+    private DecentForms.Button btnImport;
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Panel panelImport;
-        private MenuButton btnChangeMode;
+        private DecentForms.MenuButton btnChangeMode;
         private System.Windows.Forms.ContextMenuStrip contextMenuChangeMode;
         private System.Windows.Forms.ToolStripMenuItem c64HiResMultiColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mega65ToolStripMenuItem;
@@ -1500,7 +1482,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem mega65_24x214ColorsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem mega65_64x214ColorsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem mega65_16x2116ColorsToolStripMenuItem;
-    private System.Windows.Forms.Button btnHighlightDuplicates;
+    private DecentForms.Button btnHighlightDuplicates;
     private System.Windows.Forms.Label labelSelectionInfo;
   }
 }

@@ -28,10 +28,10 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btmASMLibraryPathBrowse = new System.Windows.Forms.Button();
+      this.btmASMLibraryPathBrowse = new DecentForms.Button();
       this.editASMLibraryPath = new System.Windows.Forms.TextBox();
       this.label30 = new System.Windows.Forms.Label();
       this.asmLibraryPathList = new RetroDevStudio.Controls.ArrangedItemList();
@@ -54,8 +54,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 9;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -65,8 +64,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 8;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -99,8 +97,7 @@
       this.btmASMLibraryPathBrowse.Size = new System.Drawing.Size(35, 20);
       this.btmASMLibraryPathBrowse.TabIndex = 7;
       this.btmASMLibraryPathBrowse.Text = "...";
-      this.btmASMLibraryPathBrowse.UseVisualStyleBackColor = true;
-      this.btmASMLibraryPathBrowse.Click += new System.EventHandler(this.btmASMLibraryPathBrowse_Click);
+      this.btmASMLibraryPathBrowse.Click += new DecentForms.EventHandler(this.btmASMLibraryPathBrowse_Click);
       // 
       // editASMLibraryPath
       // 
@@ -236,8 +233,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkASMAutoTruncateLiteralValues;
         private System.Windows.Forms.CheckedListBox listHacks;
@@ -246,7 +243,7 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.CheckedListBox listIgnoredWarnings;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Button btmASMLibraryPathBrowse;
+        private DecentForms.Button btmASMLibraryPathBrowse;
         private System.Windows.Forms.TextBox editASMLibraryPath;
         private System.Windows.Forms.Label label30;
         private Controls.ArrangedItemList asmLibraryPathList;

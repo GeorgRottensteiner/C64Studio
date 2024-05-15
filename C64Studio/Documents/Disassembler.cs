@@ -126,7 +126,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnOpenBinary_Click( object sender, EventArgs e )
+    private void btnOpenBinary_Click( DecentForms.ControlBase Sender )
     {
       OpenFileDialog    openDialog = new OpenFileDialog();
 
@@ -344,7 +344,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnAddJumpAddress_Click( object sender, EventArgs e )
+    private void btnAddJumpAddress_Click( DecentForms.ControlBase Sender )
     {
       string    addressT = editJumpAddress.Text;
       int       address = 0;
@@ -386,7 +386,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDeleteJumpedAtAddress_Click( object sender, EventArgs e )
+    private void btnDeleteJumpedAtAddress_Click( DecentForms.ControlBase Sender )
     {
       if ( listJumpedAtAddresses.SelectedItems.Count == 0 )
       {
@@ -409,7 +409,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnOpenProject_Click( object sender, EventArgs e )
+    private void btnOpenProject_Click( DecentForms.ControlBase Sender )
     {
       OpenFileDialog    openDialog = new OpenFileDialog();
 
@@ -456,7 +456,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnSaveProject_Click( object sender, EventArgs e )
+    private void btnSaveProject_Click( DecentForms.ControlBase Sender )
     {
       SaveFileDialog    saveDialog = new SaveFileDialog();
 
@@ -477,7 +477,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportAssembly_Click( object sender, EventArgs e )
+    private void btnExportAssembly_Click( DecentForms.ControlBase Sender )
     {
       string  disassembly;
 
@@ -527,7 +527,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDeleteNamedLabel_Click( object sender, EventArgs e )
+    private void btnDeleteNamedLabel_Click( DecentForms.ControlBase Sender )
     {
       if ( listNamedLabels.SelectedItems.Count == 0 )
       {
@@ -542,7 +542,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnAddNamedLabel_Click( object sender, EventArgs e )
+    private void btnAddNamedLabel_Click( DecentForms.ControlBase Sender )
     {
       string    addressT = editLabelAddress.Text;
 
@@ -608,7 +608,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImportBinary_Click( object sender, EventArgs e )
+    private void btnImportBinary_Click( DecentForms.ControlBase Sender )
     {
       if ( !Clipboard.ContainsText() )
       {
@@ -633,7 +633,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnReloadFile_Click( object sender, EventArgs e )
+    private void btnReloadFile_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( m_OpenedFilename );
       if ( data != null )
@@ -833,7 +833,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnNamedLabelsImport_Click( object sender, EventArgs e )
+    private void btnNamedLabelsImport_Click( DecentForms.ControlBase Sender )
     {
       var openDialog = new OpenFileDialog();
 
@@ -877,7 +877,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportNamedLabels_Click( object sender, EventArgs e )
+    private void btnExportNamedLabels_Click( DecentForms.ControlBase Sender )
     {
       var saveDialog = new SaveFileDialog();
 

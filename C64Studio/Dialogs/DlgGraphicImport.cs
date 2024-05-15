@@ -1276,7 +1276,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult = DialogResult.OK;
 
@@ -1299,7 +1299,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnZoomIn_Click( object sender, EventArgs e )
+    private void btnZoomIn_Click( DecentForms.ControlBase Sender )
     {
       if ( m_Zoom > 1 )
       {
@@ -1313,7 +1313,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnZoomOut_Click( object sender, EventArgs e )
+    private void btnZoomOut_Click( DecentForms.ControlBase Sender )
     {
       if ( m_Zoom < 65536 )
       {
@@ -1367,7 +1367,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnReload_Click( object sender, EventArgs e )
+    private void btnReload_Click( DecentForms.ControlBase Sender )
     {
       ReloadImage();
     }
@@ -1473,6 +1473,15 @@ namespace RetroDevStudio.Dialogs
       picPreview.Invalidate();
       picOriginal.Invalidate();
     }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
+    }
+
 
 
   }

@@ -62,7 +62,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnClose_Click( object sender, EventArgs e )
+    private void btnClose_Click( DecentForms.ControlBase Sender )
     {
       foreach ( TabPage tab in tabElementProperties.TabPages )
       {

@@ -31,9 +31,9 @@
       this.label1 = new System.Windows.Forms.Label();
       this.editPreferencesFilter = new System.Windows.Forms.TextBox();
       this.panelPreferences = new System.Windows.Forms.FlowLayoutPanel();
-      this.btnOK = new System.Windows.Forms.Button();
-      this.btnExportAllSettings = new System.Windows.Forms.Button();
-      this.btnImportAllSettings = new System.Windows.Forms.Button();
+      this.btnOK = new DecentForms.Button();
+      this.btnExportAllSettings = new DecentForms.Button();
+      this.btnImportAllSettings = new DecentForms.Button();
       this.SuspendLayout();
       // 
       // label1
@@ -66,14 +66,12 @@
       // btnOK
       // 
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnOK.Location = new System.Drawing.Point(855, 529);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 3;
       this.btnOK.Text = "Close";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // btnExportAllSettings
       // 
@@ -83,8 +81,7 @@
       this.btnExportAllSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportAllSettings.TabIndex = 10;
       this.btnExportAllSettings.Text = "Export all";
-      this.btnExportAllSettings.UseVisualStyleBackColor = true;
-      this.btnExportAllSettings.Click += new System.EventHandler(this.btnExportAllSettings_Click);
+      this.btnExportAllSettings.Click += new DecentForms.EventHandler(this.btnExportAllSettings_Click);
       // 
       // btnImportAllSettings
       // 
@@ -94,8 +91,7 @@
       this.btnImportAllSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportAllSettings.TabIndex = 11;
       this.btnImportAllSettings.Text = "Import all";
-      this.btnImportAllSettings.UseVisualStyleBackColor = true;
-      this.btnImportAllSettings.Click += new System.EventHandler(this.btnImportAllSettings_Click);
+      this.btnImportAllSettings.Click += new DecentForms.EventHandler(this.btnImportAllSettings_Click);
       // 
       // FormPreferences
       // 
@@ -126,8 +122,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox editPreferencesFilter;
         private System.Windows.Forms.FlowLayoutPanel panelPreferences;
-        private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Button btnExportAllSettings;
-        private System.Windows.Forms.Button btnImportAllSettings;
+        private DecentForms.Button btnOK;
+        private DecentForms.Button btnExportAllSettings;
+        private DecentForms.Button btnImportAllSettings;
     }
 }

@@ -36,14 +36,14 @@
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.editDivideBy = new System.Windows.Forms.TextBox();
       this.editDeleteNthByte = new System.Windows.Forms.TextBox();
-      this.btnExport = new System.Windows.Forms.Button();
-      this.btnImport = new System.Windows.Forms.Button();
-      this.btnSwizzle = new System.Windows.Forms.Button();
-      this.btnDivide = new System.Windows.Forms.Button();
-      this.btnPackNibble = new System.Windows.Forms.Button();
-      this.btnDeleteNthByte = new System.Windows.Forms.Button();
-      this.btnUpsize = new System.Windows.Forms.Button();
-      this.btnInterleave = new System.Windows.Forms.Button();
+      this.btnExport = new DecentForms.Button();
+      this.btnImport = new DecentForms.Button();
+      this.btnSwizzle = new DecentForms.Button();
+      this.btnDivide = new DecentForms.Button();
+      this.btnPackNibble = new DecentForms.Button();
+      this.btnDeleteNthByte = new DecentForms.Button();
+      this.btnUpsize = new DecentForms.Button();
+      this.btnInterleave = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
@@ -52,15 +52,15 @@
       this.editWrapCharsCount = new System.Windows.Forms.TextBox();
       this.editWrapCount = new System.Windows.Forms.TextBox();
       this.editToBASICLineDelta = new System.Windows.Forms.TextBox();
-      this.btnFromBASICHex = new System.Windows.Forms.Button();
-      this.btnFromBASIC = new System.Windows.Forms.Button();
+      this.btnFromBASICHex = new DecentForms.Button();
+      this.btnFromBASIC = new DecentForms.Button();
       this.editToBASICStartLine = new System.Windows.Forms.TextBox();
-      this.button2 = new System.Windows.Forms.Button();
-      this.btnFromASM = new System.Windows.Forms.Button();
-      this.button1 = new System.Windows.Forms.Button();
-      this.btnToBASICHex = new System.Windows.Forms.Button();
-      this.btnToBASIC = new System.Windows.Forms.Button();
-      this.btnToText = new System.Windows.Forms.Button();
+      this.button2 = new DecentForms.Button();
+      this.btnFromASM = new DecentForms.Button();
+      this.button1 = new DecentForms.Button();
+      this.btnToBASICHex = new DecentForms.Button();
+      this.btnToBASIC = new DecentForms.Button();
+      this.btnToText = new DecentForms.Button();
       this.textBinaryData = new System.Windows.Forms.TextBox();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -180,8 +180,7 @@
       this.btnExport.Size = new System.Drawing.Size(75, 23);
       this.btnExport.TabIndex = 1;
       this.btnExport.Text = "Export";
-      this.btnExport.UseVisualStyleBackColor = true;
-      this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+      this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
       // btnImport
       // 
@@ -190,8 +189,7 @@
       this.btnImport.Size = new System.Drawing.Size(75, 23);
       this.btnImport.TabIndex = 0;
       this.btnImport.Text = "Import";
-      this.btnImport.UseVisualStyleBackColor = true;
-      this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
       // btnSwizzle
       // 
@@ -200,8 +198,7 @@
       this.btnSwizzle.Size = new System.Drawing.Size(75, 23);
       this.btnSwizzle.TabIndex = 7;
       this.btnSwizzle.Text = "Swizzle";
-      this.btnSwizzle.UseVisualStyleBackColor = true;
-      this.btnSwizzle.Click += new System.EventHandler(this.btnSwizzle_Click);
+      this.btnSwizzle.Click += new DecentForms.EventHandler(this.btnSwizzle_Click);
       // 
       // btnDivide
       // 
@@ -210,8 +207,7 @@
       this.btnDivide.Size = new System.Drawing.Size(75, 23);
       this.btnDivide.TabIndex = 8;
       this.btnDivide.Text = "Divide by";
-      this.btnDivide.UseVisualStyleBackColor = true;
-      this.btnDivide.Click += new System.EventHandler(this.btnDivide_Click);
+      this.btnDivide.Click += new DecentForms.EventHandler(this.btnDivide_Click);
       // 
       // btnPackNibble
       // 
@@ -220,8 +216,7 @@
       this.btnPackNibble.Size = new System.Drawing.Size(75, 23);
       this.btnPackNibble.TabIndex = 6;
       this.btnPackNibble.Text = "Pack Nibble";
-      this.btnPackNibble.UseVisualStyleBackColor = true;
-      this.btnPackNibble.Click += new System.EventHandler(this.btnPackNibbles_Click);
+      this.btnPackNibble.Click += new DecentForms.EventHandler(this.btnPackNibbles_Click);
       // 
       // btnDeleteNthByte
       // 
@@ -230,8 +225,7 @@
       this.btnDeleteNthByte.Size = new System.Drawing.Size(75, 23);
       this.btnDeleteNthByte.TabIndex = 4;
       this.btnDeleteNthByte.Text = "Delete nth";
-      this.btnDeleteNthByte.UseVisualStyleBackColor = true;
-      this.btnDeleteNthByte.Click += new System.EventHandler(this.btnDeleteNthByte_Click);
+      this.btnDeleteNthByte.Click += new DecentForms.EventHandler(this.btnDeleteNthByte_Click);
       // 
       // btnUpsize
       // 
@@ -240,8 +234,7 @@
       this.btnUpsize.Size = new System.Drawing.Size(75, 23);
       this.btnUpsize.TabIndex = 3;
       this.btnUpsize.Text = "Upsize";
-      this.btnUpsize.UseVisualStyleBackColor = true;
-      this.btnUpsize.Click += new System.EventHandler(this.btnUpsize_Click);
+      this.btnUpsize.Click += new DecentForms.EventHandler(this.btnUpsize_Click);
       // 
       // btnInterleave
       // 
@@ -250,8 +243,7 @@
       this.btnInterleave.Size = new System.Drawing.Size(75, 23);
       this.btnInterleave.TabIndex = 2;
       this.btnInterleave.Text = "Interleave...";
-      this.btnInterleave.UseVisualStyleBackColor = true;
-      this.btnInterleave.Click += new System.EventHandler(this.btnInterleave_Click);
+      this.btnInterleave.Click += new DecentForms.EventHandler(this.btnInterleave_Click);
       // 
       // groupBox1
       // 
@@ -357,8 +349,7 @@
       this.btnFromBASICHex.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASICHex.TabIndex = 1;
       this.btnFromBASICHex.Text = "From BASIC Hex";
-      this.btnFromBASICHex.UseVisualStyleBackColor = true;
-      this.btnFromBASICHex.Click += new System.EventHandler(this.btnFromBASICHex_Click);
+      this.btnFromBASICHex.Click += new DecentForms.EventHandler(this.btnFromBASICHex_Click);
       // 
       // btnFromBASIC
       // 
@@ -368,8 +359,7 @@
       this.btnFromBASIC.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASIC.TabIndex = 1;
       this.btnFromBASIC.Text = "From BASIC";
-      this.btnFromBASIC.UseVisualStyleBackColor = true;
-      this.btnFromBASIC.Click += new System.EventHandler(this.btnFromBASIC_Click);
+      this.btnFromBASIC.Click += new DecentForms.EventHandler(this.btnFromBASIC_Click);
       // 
       // editToBASICStartLine
       // 
@@ -388,8 +378,7 @@
       this.button2.Size = new System.Drawing.Size(109, 23);
       this.button2.TabIndex = 1;
       this.button2.Text = "From Hex";
-      this.button2.UseVisualStyleBackColor = true;
-      this.button2.Click += new System.EventHandler(this.btnFromHex_Click);
+      this.button2.Click += new DecentForms.EventHandler(this.btnFromHex_Click);
       // 
       // btnFromASM
       // 
@@ -399,8 +388,7 @@
       this.btnFromASM.Size = new System.Drawing.Size(109, 23);
       this.btnFromASM.TabIndex = 1;
       this.btnFromASM.Text = "From ASM";
-      this.btnFromASM.UseVisualStyleBackColor = true;
-      this.btnFromASM.Click += new System.EventHandler(this.btnFromASM_Click);
+      this.btnFromASM.Click += new DecentForms.EventHandler(this.btnFromASM_Click);
       // 
       // button1
       // 
@@ -410,8 +398,7 @@
       this.button1.Size = new System.Drawing.Size(109, 23);
       this.button1.TabIndex = 1;
       this.button1.Text = "To Hex";
-      this.button1.UseVisualStyleBackColor = true;
-      this.button1.Click += new System.EventHandler(this.btnToHex_Click);
+      this.button1.Click += new DecentForms.EventHandler(this.btnToHex_Click);
       // 
       // btnToBASICHex
       // 
@@ -421,8 +408,7 @@
       this.btnToBASICHex.Size = new System.Drawing.Size(109, 23);
       this.btnToBASICHex.TabIndex = 1;
       this.btnToBASICHex.Text = "To BASIC Hex";
-      this.btnToBASICHex.UseVisualStyleBackColor = true;
-      this.btnToBASICHex.Click += new System.EventHandler(this.btnToBASICHex_Click);
+      this.btnToBASICHex.Click += new DecentForms.EventHandler(this.btnToBASICHex_Click);
       // 
       // btnToBASIC
       // 
@@ -432,8 +418,7 @@
       this.btnToBASIC.Size = new System.Drawing.Size(109, 23);
       this.btnToBASIC.TabIndex = 1;
       this.btnToBASIC.Text = "To BASIC";
-      this.btnToBASIC.UseVisualStyleBackColor = true;
-      this.btnToBASIC.Click += new System.EventHandler(this.btnToBASIC_Click);
+      this.btnToBASIC.Click += new DecentForms.EventHandler(this.btnToBASIC_Click);
       // 
       // btnToText
       // 
@@ -443,8 +428,7 @@
       this.btnToText.Size = new System.Drawing.Size(109, 23);
       this.btnToText.TabIndex = 1;
       this.btnToText.Text = "To ASM";
-      this.btnToText.UseVisualStyleBackColor = true;
-      this.btnToText.Click += new System.EventHandler(this.btnToText_Click);
+      this.btnToText.Click += new DecentForms.EventHandler(this.btnToText_Click);
       // 
       // textBinaryData
       // 
@@ -571,36 +555,36 @@
     private System.Windows.Forms.ToolStripMenuItem importFromFileToolStripMenuItem;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TextBox textBinaryData;
-    private System.Windows.Forms.Button btnFromBASIC;
-    private System.Windows.Forms.Button btnFromASM;
-    private System.Windows.Forms.Button btnToBASIC;
-    private System.Windows.Forms.Button btnToText;
+    private DecentForms.Button btnFromBASIC;
+    private DecentForms.Button btnFromASM;
+    private DecentForms.Button btnToBASIC;
+    private DecentForms.Button btnToText;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripMenuItem modifyToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem interleaveToolStripMenuItem;
     private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.Button btnInterleave;
-    private System.Windows.Forms.Button btnExport;
-    private System.Windows.Forms.Button btnImport;
-    private System.Windows.Forms.Button button1;
-    private System.Windows.Forms.Button button2;
+    private DecentForms.Button btnInterleave;
+    private DecentForms.Button btnExport;
+    private DecentForms.Button btnImport;
+    private DecentForms.Button button1;
+    private DecentForms.Button button2;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox editToBASICStartLine;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editToBASICLineDelta;
-    private System.Windows.Forms.Button btnToBASICHex;
-    private System.Windows.Forms.Button btnFromBASICHex;
-    private System.Windows.Forms.Button btnUpsize;
+    private DecentForms.Button btnToBASICHex;
+    private DecentForms.Button btnFromBASICHex;
+    private DecentForms.Button btnUpsize;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.TextBox editWrapCount;
     private System.Windows.Forms.TextBox editDeleteNthByte;
-    private System.Windows.Forms.Button btnDeleteNthByte;
-    private System.Windows.Forms.Button btnPackNibble;
-    private System.Windows.Forms.Button btnSwizzle;
+    private DecentForms.Button btnDeleteNthByte;
+    private DecentForms.Button btnPackNibble;
+    private DecentForms.Button btnSwizzle;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox editWrapCharsCount;
     private System.Windows.Forms.TextBox editDivideBy;
-    private System.Windows.Forms.Button btnDivide;
+    private DecentForms.Button btnDivide;
     private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }

@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DlgGraphicImport));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.tabImportSettings = new System.Windows.Forms.TabControl();
       this.tabSettings = new System.Windows.Forms.TabPage();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -55,8 +55,10 @@
       this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
       this.radioBackground = new System.Windows.Forms.Label();
       this.tabPalette = new System.Windows.Forms.TabPage();
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnOK = new System.Windows.Forms.Button();
+      this.groupBox6 = new System.Windows.Forms.GroupBox();
+      this.comboTargetPalette = new System.Windows.Forms.ComboBox();
+      this.btnCancel = new DecentForms.Button();
+      this.btnOK = new DecentForms.Button();
       this.listProblems = new System.Windows.Forms.ListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -64,9 +66,9 @@
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnZoomIn = new System.Windows.Forms.Button();
-      this.btnZoomOut = new System.Windows.Forms.Button();
-      this.btnReload = new System.Windows.Forms.Button();
+      this.btnZoomIn = new DecentForms.Button();
+      this.btnZoomOut = new DecentForms.Button();
+      this.btnReload = new DecentForms.Button();
       this.contextMenuOrigPic = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.forceTargetColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.blackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,8 +90,6 @@
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.picPreview = new GR.Forms.FastPictureBox();
       this.picOriginal = new GR.Forms.FastPictureBox();
-      this.groupBox6 = new System.Windows.Forms.GroupBox();
-      this.comboTargetPalette = new System.Windows.Forms.ComboBox();
       this.tabImportSettings.SuspendLayout();
       this.tabSettings.SuspendLayout();
       this.groupBox5.SuspendLayout();
@@ -98,11 +98,11 @@
       this.groupBox2.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.tabPalette.SuspendLayout();
+      this.groupBox6.SuspendLayout();
       this.menuImport.SuspendLayout();
       this.contextMenuOrigPic.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picOriginal)).BeginInit();
-      this.groupBox6.SuspendLayout();
       this.SuspendLayout();
       // 
       // tabImportSettings
@@ -346,27 +346,53 @@
       this.tabPalette.Text = "Palette";
       this.tabPalette.UseVisualStyleBackColor = true;
       // 
+      // groupBox6
+      // 
+      this.groupBox6.Controls.Add(this.comboTargetPalette);
+      this.groupBox6.Location = new System.Drawing.Point(3, 6);
+      this.groupBox6.Name = "groupBox6";
+      this.groupBox6.Size = new System.Drawing.Size(274, 56);
+      this.groupBox6.TabIndex = 0;
+      this.groupBox6.TabStop = false;
+      this.groupBox6.Text = "Target Palette";
+      // 
+      // comboTargetPalette
+      // 
+      this.comboTargetPalette.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboTargetPalette.FormattingEnabled = true;
+      this.comboTargetPalette.Location = new System.Drawing.Point(6, 19);
+      this.comboTargetPalette.Name = "comboTargetPalette";
+      this.comboTargetPalette.Size = new System.Drawing.Size(262, 21);
+      this.comboTargetPalette.TabIndex = 0;
+      this.comboTargetPalette.SelectedIndexChanged += new System.EventHandler(this.comboTargetPalette_SelectedIndexChanged);
+      // 
       // btnCancel
       // 
       this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Image = null;
       this.btnCancel.Location = new System.Drawing.Point(862, 820);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 3;
       this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.Click += new DecentForms.EventHandler(this.btnCancel_Click);
       // 
       // btnOK
       // 
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOK.Image = null;
       this.btnOK.Location = new System.Drawing.Point(781, 820);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 3;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // listProblems
       // 
@@ -430,38 +456,44 @@
       // btnZoomIn
       // 
       this.btnZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnZoomIn.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnZoomIn.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnZoomIn.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
       this.btnZoomIn.Location = new System.Drawing.Point(650, 819);
       this.btnZoomIn.Name = "btnZoomIn";
       this.btnZoomIn.Size = new System.Drawing.Size(24, 24);
       this.btnZoomIn.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In");
-      this.btnZoomIn.UseVisualStyleBackColor = true;
-      this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+      this.btnZoomIn.Click += new DecentForms.EventHandler(this.btnZoomIn_Click);
       // 
       // btnZoomOut
       // 
       this.btnZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnZoomOut.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnZoomOut.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnZoomOut.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
       this.btnZoomOut.Location = new System.Drawing.Point(680, 819);
       this.btnZoomOut.Name = "btnZoomOut";
       this.btnZoomOut.Size = new System.Drawing.Size(24, 24);
       this.btnZoomOut.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out");
-      this.btnZoomOut.UseVisualStyleBackColor = true;
-      this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+      this.btnZoomOut.Click += new DecentForms.EventHandler(this.btnZoomOut_Click);
       // 
       // btnReload
       // 
       this.btnReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnReload.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReload.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnReload.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnReload.Image = ((System.Drawing.Image)(resources.GetObject("btnReload.Image")));
       this.btnReload.Location = new System.Drawing.Point(710, 819);
       this.btnReload.Name = "btnReload";
       this.btnReload.Size = new System.Drawing.Size(24, 24);
       this.btnReload.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnReload, "Reload from File");
-      this.btnReload.UseVisualStyleBackColor = true;
-      this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
+      this.btnReload.Click += new DecentForms.EventHandler(this.btnReload_Click);
       // 
       // contextMenuOrigPic
       // 
@@ -628,7 +660,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.picPreview.AutoResize = false;
       this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picPreview.DisplayPage = fastImage1;
+      this.picPreview.DisplayPage = fastImage3;
       this.picPreview.Image = null;
       this.picPreview.Location = new System.Drawing.Point(0, 439);
       this.picPreview.Name = "picPreview";
@@ -646,7 +678,7 @@
       this.picOriginal.AutoResize = false;
       this.picOriginal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picOriginal.ContextMenuStrip = this.contextMenuOrigPic;
-      this.picOriginal.DisplayPage = fastImage2;
+      this.picOriginal.DisplayPage = fastImage4;
       this.picOriginal.Image = null;
       this.picOriginal.Location = new System.Drawing.Point(0, 29);
       this.picOriginal.Name = "picOriginal";
@@ -656,26 +688,6 @@
       this.picOriginal.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseDown);
       this.picOriginal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseMove);
       this.picOriginal.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseUp);
-      // 
-      // groupBox6
-      // 
-      this.groupBox6.Controls.Add(this.comboTargetPalette);
-      this.groupBox6.Location = new System.Drawing.Point(3, 6);
-      this.groupBox6.Name = "groupBox6";
-      this.groupBox6.Size = new System.Drawing.Size(274, 56);
-      this.groupBox6.TabIndex = 0;
-      this.groupBox6.TabStop = false;
-      this.groupBox6.Text = "Target Palette";
-      // 
-      // comboTargetPalette
-      // 
-      this.comboTargetPalette.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboTargetPalette.FormattingEnabled = true;
-      this.comboTargetPalette.Location = new System.Drawing.Point(6, 19);
-      this.comboTargetPalette.Name = "comboTargetPalette";
-      this.comboTargetPalette.Size = new System.Drawing.Size(262, 21);
-      this.comboTargetPalette.TabIndex = 0;
-      this.comboTargetPalette.SelectedIndexChanged += new System.EventHandler(this.comboTargetPalette_SelectedIndexChanged);
       // 
       // DlgGraphicImport
       // 
@@ -716,12 +728,12 @@
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.tabPalette.ResumeLayout(false);
+      this.groupBox6.ResumeLayout(false);
       this.menuImport.ResumeLayout(false);
       this.menuImport.PerformLayout();
       this.contextMenuOrigPic.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picOriginal)).EndInit();
-      this.groupBox6.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -734,8 +746,8 @@
     private System.Windows.Forms.TabPage tabSettings;
     private System.Windows.Forms.TabPage tabPalette;
     private GR.Forms.FastPictureBox picPreview;
-    private System.Windows.Forms.Button btnCancel;
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnCancel;
+    private DecentForms.Button btnOK;
     private System.Windows.Forms.ListView listProblems;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
@@ -756,9 +768,9 @@
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.ComboBox comboColorMatching;
     private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Button btnZoomIn;
-    private System.Windows.Forms.Button btnZoomOut;
-    private System.Windows.Forms.Button btnReload;
+    private DecentForms.Button btnZoomIn;
+    private DecentForms.Button btnZoomOut;
+    private DecentForms.Button btnReload;
     private System.Windows.Forms.GroupBox groupBox4;
     private System.Windows.Forms.ListView listDirectReplaceColors;
     private System.Windows.Forms.ContextMenuStrip contextMenuOrigPic;

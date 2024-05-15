@@ -33,7 +33,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       string newName = editSolutionName.Text;
 
@@ -116,6 +116,13 @@ namespace RetroDevStudio.Dialogs
       Core.Navigating.RenameSolution( newSolutionPath );
     }
 
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
+    }
 
 
 

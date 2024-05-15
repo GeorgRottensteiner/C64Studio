@@ -841,7 +841,7 @@ namespace RetroDevStudio.Documents
       comboMulticolor1.SelectedIndex  = NormalizeColor( mcSettings.MultiColor1 );
       comboMulticolor2.SelectedIndex  = NormalizeColor( mcSettings.MultiColor2 );
 
-      btnCheck_Click( null, null );
+      btnCheck_Click( null );
       Redraw();
       Modified = true;
       return true;
@@ -1128,7 +1128,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImportCharset_Click( object sender, EventArgs e )
+    private void btnImportCharset_Click( DecentForms.ControlBase Sender )
     {
       string    filename;
       if ( OpenFile( "Open file", Types.Constants.FILEFILTER_ALL, out filename ) )
@@ -1200,7 +1200,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnPasteFromClipboard_Click( object sender, EventArgs e )
+    private void btnPasteFromClipboard_Click( DecentForms.ControlBase Sender )
     {
       if ( !Clipboard.ContainsImage() )
       {
@@ -1259,7 +1259,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImportCharsetFromFile_Click( object sender, EventArgs e )
+    private void btnImportCharsetFromFile_Click( DecentForms.ControlBase Sender )
     {
       string filename;
 
@@ -1338,14 +1338,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCopy_Click( object sender, EventArgs e )
+    private void btnCopy_Click( DecentForms.ControlBase Sender )
     {
       CopySelectedImageToClipboard();
     }
 
 
 
-    private void btnPaste_Click( object sender, EventArgs e )
+    private void btnPaste_Click( DecentForms.ControlBase Sender )
     {
       PasteClipboardImageToSelectedChar();
     }
@@ -2148,7 +2148,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCheck_Click( object sender, EventArgs e )
+    private void btnCheck_Click( DecentForms.ControlBase Sender )
     {
       foreach ( Formats.CharData aChar in m_Chars )
       {
@@ -2286,7 +2286,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportAsCharset_Click( object sender, EventArgs e )
+    private void btnExportAsCharset_Click( DecentForms.ControlBase Sender )
     {
       switch ( (ExportDataType)comboExportType.SelectedIndex )
       {
@@ -2713,7 +2713,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportAsBinary_Click( object sender, EventArgs e )
+    private void btnExportAsBinary_Click( DecentForms.ControlBase Sender )
     {
       int selExportType = comboExportData.SelectedIndex;
       if ( selExportType == -1 )
@@ -2878,14 +2878,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToCharScreen_Click( object sender, EventArgs e )
+    private void btnExportToCharScreen_Click( DecentForms.ControlBase Sender )
     {
       if ( comboCharScreens.SelectedIndex == -1 )
       {
         return;
       }
       // automatic check
-      btnCheck_Click( sender, null );
+      btnCheck_Click( Sender );
       if ( !btnExportAs.Enabled )
       {
         return;
@@ -2996,7 +2996,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnApplyScreenSize_Click( object sender, EventArgs e )
+    private void btnApplyScreenSize_Click( DecentForms.ControlBase Sender )
     {
       int     newWidth  = GR.Convert.ToI32( editScreenWidth.Text );
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
@@ -3260,7 +3260,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToBASICData_Click( object sender, EventArgs e )
+    private void btnExportToBASICData_Click( DecentForms.ControlBase Sender )
     {
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
       if ( ( startLine < 0 )
@@ -3327,7 +3327,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToImage_Click( object sender, EventArgs e )
+    private void btnExportToImage_Click( DecentForms.ControlBase Sender )
     {
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -3401,7 +3401,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnFullCopyToClipboard_Click( object sender, EventArgs e )
+    private void btnFullCopyToClipboard_Click( DecentForms.ControlBase Sender )
     {
       CopyImageToClipboard();
     }
@@ -3491,7 +3491,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMirrorX_Click( object sender, EventArgs e )
+    private void btnMirrorX_Click( DecentForms.ControlBase Sender )
     {
       MirrorH();
     }
@@ -3523,7 +3523,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMirrorY_Click( object sender, EventArgs e )
+    private void btnMirrorY_Click( DecentForms.ControlBase Sender )
     {
       MirrorV();
     }
@@ -3555,7 +3555,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftUp_Click( object sender, EventArgs e )
+    private void btnShiftUp_Click( DecentForms.ControlBase Sender )
     {
       ShiftUp();
     }
@@ -3588,7 +3588,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftDown_Click( object sender, EventArgs e )
+    private void btnShiftDown_Click( DecentForms.ControlBase Sender )
     {
       ShiftDown();
     }
@@ -3620,7 +3620,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftRight_Click( object sender, EventArgs e )
+    private void btnShiftRight_Click( DecentForms.ControlBase Sender )
     {
       ShiftRight();
     }
@@ -3652,7 +3652,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftLeft_Click( object sender, EventArgs e )
+    private void btnShiftLeft_Click( DecentForms.ControlBase Sender )
     {
       ShiftLeft();
     }
@@ -3723,7 +3723,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToBASICDataHex_Click( object sender, EventArgs e )
+    private void btnExportToBASICDataHex_Click( DecentForms.ControlBase Sender )
     {
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
       if ( ( startLine < 0 )
@@ -3919,7 +3919,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnClearScreen_Click( object sender, EventArgs e )
+    private void btnClearScreen_Click( DecentForms.ControlBase Sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
       m_GraphicScreenProject.Image.Box( 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight, 0 );
@@ -3960,7 +3960,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnZoomIn_Click( object sender, EventArgs e )
+    private void btnZoomIn_Click( DecentForms.ControlBase Sender )
     {
       if ( m_ZoomFactor < 8 )
       {
@@ -4000,7 +4000,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnZoomOut_Click( object sender, EventArgs e )
+    private void btnZoomOut_Click( DecentForms.ControlBase Sender )
     {
       if ( m_ZoomFactor > 1 )
       {

@@ -1035,7 +1035,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnPasteFromClipboard_Click( object sender, EventArgs e )
+    private void btnPasteFromClipboard_Click( DecentForms.ControlBase Sender )
     {
       PasteFromClipboard();
       if ( m_ImportError.Length > 0 )
@@ -1302,7 +1302,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCopyToClipboard_Click( object sender, EventArgs e )
+    private void btnCopyToClipboard_Click( DecentForms.ControlBase Sender )
     {
       CopySpriteToClipboard();
     }
@@ -1553,7 +1553,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftLeft_Click( object sender, EventArgs e )
+    private void btnShiftLeft_Click( DecentForms.ControlBase Sender )
     {
       ShiftLeft();
     }
@@ -1589,7 +1589,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftRight_Click( object sender, EventArgs e )
+    private void btnShiftRight_Click( DecentForms.ControlBase Sender )
     {
       ShiftRight();
     }
@@ -1626,7 +1626,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftUp_Click( object sender, EventArgs e )
+    private void btnShiftUp_Click( DecentForms.ControlBase Sender )
     {
       ShiftUp();
     }
@@ -1663,7 +1663,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftDown_Click( object sender, EventArgs e )
+    private void btnShiftDown_Click( DecentForms.ControlBase Sender )
     {
       ShiftDown();
     }
@@ -1700,14 +1700,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMirrorX_Click( object sender, EventArgs e )
+    private void btnMirrorX_Click( DecentForms.ControlBase Sender )
     {
       MirrorX();
     }
 
 
 
-    private void btnMirrorY_Click( object sender, EventArgs e )
+    private void btnMirrorY_Click( DecentForms.ControlBase Sender )
     {
       MirrorY();
     }
@@ -1765,7 +1765,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnInvert_Click( object sender, EventArgs e )
+    private void btnInvert_Click( DecentForms.ControlBase Sender )
     {
       Invert();
     }
@@ -1797,7 +1797,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnRotateLeft_Click( object sender, EventArgs e )
+    private void btnRotateLeft_Click( DecentForms.ControlBase Sender )
     {
       RotateLeft();
     }
@@ -1862,7 +1862,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnRotateRight_Click( object sender, EventArgs e )
+    private void btnRotateRight_Click( DecentForms.ControlBase Sender )
     {
       RotateRight();
     }
@@ -2155,7 +2155,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDeleteSprite_Click( object sender, EventArgs e )
+    private void btnDeleteSprite_Click( DecentForms.ControlBase Sender )
     {
       if ( panelSprites.SelectedIndex == -1 )
       {
@@ -2196,7 +2196,7 @@ namespace RetroDevStudio.Documents
       {
         panelSprites.SelectedIndex = 0;
       }
-      panelSprites_SelectedIndexChanged( sender, e );
+      panelSprites_SelectedIndexChanged( null, null );
 
       SetModified();
     }
@@ -2903,7 +2903,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnSavePreviewToGIF_Click( object sender, EventArgs e )
+    private void btnSavePreviewToGIF_Click( DecentForms.ControlBase Sender )
     {
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -3445,7 +3445,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnClearSprite_Click( object sender, EventArgs e )
+    private void btnClearSprite_Click( DecentForms.ControlBase Sender )
     {
       List<int>     selectedImages = panelSprites.SelectedIndices;
       if ( selectedImages.Count == 0 )
@@ -3496,7 +3496,7 @@ namespace RetroDevStudio.Documents
     }
 
 
-    private void btnExport_Click( object sender, EventArgs e )
+    private void btnExport_Click( DecentForms.ControlBase Sender )
     {
       List<int> exportIndices = GetExportIndices();
 
@@ -3536,7 +3536,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImport_Click( object sender, EventArgs e )
+    private void btnImport_Click( DecentForms.ControlBase Sender )
     {
       var undos = new List<Undo.UndoTask>();
 
@@ -3559,7 +3559,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnChangeMode_Click( object sender, EventArgs e )
+    private void btnChangeMode_Click( DecentForms.ControlBase Sender )
     {
       contextMenuChangeMode.Show( btnChangeMode, new Point( 0, btnChangeMode.Height ) );
     }
@@ -3641,7 +3641,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnHighlightDuplicates_Click( object sender, EventArgs e )
+    private void btnHighlightDuplicates_Click( DecentForms.ControlBase Sender )
     {
       var duplicateGroups = new Map<ByteBuffer,int>();
       var itemGroup       = new Map<int,int>();

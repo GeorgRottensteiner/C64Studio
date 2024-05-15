@@ -40,23 +40,23 @@
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnImportCharsetFromImage = new System.Windows.Forms.Button();
-      this.btnImportFromFile = new System.Windows.Forms.Button();
+      this.btnImportCharsetFromImage = new DecentForms.Button();
+      this.btnImportFromFile = new DecentForms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
-      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
-      this.btnExportToBASICData = new System.Windows.Forms.Button();
+      this.btnExportToBASICHexData = new DecentForms.Button();
+      this.btnExportToBASICData = new DecentForms.Button();
       this.comboCharScreens = new System.Windows.Forms.ComboBox();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.comboExportType = new System.Windows.Forms.ComboBox();
-      this.btnExportToCharScreen = new System.Windows.Forms.Button();
+      this.btnExportToCharScreen = new DecentForms.Button();
       this.labelCharInfoExport = new System.Windows.Forms.Label();
-      this.btnExportAsBinary = new System.Windows.Forms.Button();
-      this.btnExportToImage = new System.Windows.Forms.Button();
-      this.btnExportAs = new System.Windows.Forms.Button();
+      this.btnExportAsBinary = new DecentForms.Button();
+      this.btnExportToImage = new DecentForms.Button();
+      this.btnExportAs = new DecentForms.Button();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.editWrapByteCount = new System.Windows.Forms.TextBox();
@@ -64,9 +64,9 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
-      this.btnZoomOut = new System.Windows.Forms.Button();
-      this.btnZoomIn = new System.Windows.Forms.Button();
-      this.btnClearScreen = new System.Windows.Forms.Button();
+      this.btnZoomOut = new DecentForms.Button();
+      this.btnZoomIn = new DecentForms.Button();
+      this.btnClearScreen = new DecentForms.Button();
       this.btnToolValidate = new System.Windows.Forms.RadioButton();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
@@ -79,26 +79,26 @@
       this.label8 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
-      this.btnApplyScreenSize = new System.Windows.Forms.Button();
+      this.btnApplyScreenSize = new DecentForms.Button();
       this.editScreenHeight = new System.Windows.Forms.TextBox();
       this.editScreenWidth = new System.Windows.Forms.TextBox();
       this.label7 = new System.Windows.Forms.Label();
       this.screenVScroll = new System.Windows.Forms.VScrollBar();
       this.screenHScroll = new System.Windows.Forms.HScrollBar();
       this.comboCheckType = new System.Windows.Forms.ComboBox();
-      this.btnMirrorY = new System.Windows.Forms.Button();
-      this.btnMirrorX = new System.Windows.Forms.Button();
-      this.btnShiftDown = new System.Windows.Forms.Button();
-      this.btnShiftUp = new System.Windows.Forms.Button();
-      this.btnShiftRight = new System.Windows.Forms.Button();
-      this.btnShiftLeft = new System.Windows.Forms.Button();
+      this.btnMirrorY = new DecentForms.Button();
+      this.btnMirrorX = new DecentForms.Button();
+      this.btnShiftDown = new DecentForms.Button();
+      this.btnShiftUp = new DecentForms.Button();
+      this.btnShiftRight = new DecentForms.Button();
+      this.btnShiftLeft = new DecentForms.Button();
       this.colorSelector = new GR.Forms.FastPictureBox();
       this.charEditor = new GR.Forms.FastPictureBox();
-      this.btnPaste = new System.Windows.Forms.Button();
-      this.btnCopy = new System.Windows.Forms.Button();
-      this.btnCheck = new System.Windows.Forms.Button();
-      this.btnFullCopy = new System.Windows.Forms.Button();
-      this.btnPasteFromClipboard = new System.Windows.Forms.Button();
+      this.btnPaste = new DecentForms.Button();
+      this.btnCopy = new DecentForms.Button();
+      this.btnCheck = new DecentForms.Button();
+      this.btnFullCopy = new DecentForms.Button();
+      this.btnPasteFromClipboard = new DecentForms.Button();
       this.labelCharInfo = new System.Windows.Forms.Label();
       this.checkMulticolor = new System.Windows.Forms.CheckBox();
       this.comboCharColor = new System.Windows.Forms.ComboBox();
@@ -204,8 +204,7 @@
       this.btnImportCharsetFromImage.Size = new System.Drawing.Size(117, 23);
       this.btnImportCharsetFromImage.TabIndex = 2;
       this.btnImportCharsetFromImage.Text = "From Image...";
-      this.btnImportCharsetFromImage.UseVisualStyleBackColor = true;
-      this.btnImportCharsetFromImage.Click += new System.EventHandler(this.btnImportCharsetFromFile_Click);
+      this.btnImportCharsetFromImage.Click += new DecentForms.EventHandler(this.btnImportCharsetFromFile_Click);
       // 
       // btnImportFromFile
       // 
@@ -214,8 +213,7 @@
       this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromFile.TabIndex = 2;
       this.btnImportFromFile.Text = "From File...";
-      this.btnImportFromFile.UseVisualStyleBackColor = true;
-      this.btnImportFromFile.Click += new System.EventHandler(this.btnImportCharset_Click);
+      this.btnImportFromFile.Click += new DecentForms.EventHandler(this.btnImportCharset_Click);
       // 
       // groupExport
       // 
@@ -290,8 +288,7 @@
       this.btnExportToBASICHexData.Size = new System.Drawing.Size(143, 23);
       this.btnExportToBASICHexData.TabIndex = 25;
       this.btnExportToBASICHexData.Text = "Export to BASIC data hex";
-      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
+      this.btnExportToBASICHexData.Click += new DecentForms.EventHandler(this.btnExportToBASICDataHex_Click);
       // 
       // btnExportToBASICData
       // 
@@ -300,8 +297,7 @@
       this.btnExportToBASICData.Size = new System.Drawing.Size(143, 23);
       this.btnExportToBASICData.TabIndex = 25;
       this.btnExportToBASICData.Text = "Export to BASIC data";
-      this.btnExportToBASICData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
+      this.btnExportToBASICData.Click += new DecentForms.EventHandler(this.btnExportToBASICData_Click);
       // 
       // comboCharScreens
       // 
@@ -337,8 +333,7 @@
       this.btnExportToCharScreen.Size = new System.Drawing.Size(120, 23);
       this.btnExportToCharScreen.TabIndex = 8;
       this.btnExportToCharScreen.Text = "Export to Char Screen";
-      this.btnExportToCharScreen.UseVisualStyleBackColor = true;
-      this.btnExportToCharScreen.Click += new System.EventHandler(this.btnExportToCharScreen_Click);
+      this.btnExportToCharScreen.Click += new DecentForms.EventHandler(this.btnExportToCharScreen_Click);
       // 
       // labelCharInfoExport
       // 
@@ -355,8 +350,7 @@
       this.btnExportAsBinary.Size = new System.Drawing.Size(120, 23);
       this.btnExportAsBinary.TabIndex = 8;
       this.btnExportAsBinary.Text = "Export binary";
-      this.btnExportAsBinary.UseVisualStyleBackColor = true;
-      this.btnExportAsBinary.Click += new System.EventHandler(this.btnExportAsBinary_Click);
+      this.btnExportAsBinary.Click += new DecentForms.EventHandler(this.btnExportAsBinary_Click);
       // 
       // btnExportToImage
       // 
@@ -365,8 +359,7 @@
       this.btnExportToImage.Size = new System.Drawing.Size(120, 23);
       this.btnExportToImage.TabIndex = 8;
       this.btnExportToImage.Text = "Export to Image";
-      this.btnExportToImage.UseVisualStyleBackColor = true;
-      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      this.btnExportToImage.Click += new DecentForms.EventHandler(this.btnExportToImage_Click);
       // 
       // btnExportAs
       // 
@@ -375,8 +368,7 @@
       this.btnExportAs.Size = new System.Drawing.Size(120, 23);
       this.btnExportAs.TabIndex = 8;
       this.btnExportAs.Text = "Export image data as";
-      this.btnExportAs.UseVisualStyleBackColor = true;
-      this.btnExportAs.Click += new System.EventHandler(this.btnExportAsCharset_Click);
+      this.btnExportAs.Click += new DecentForms.EventHandler(this.btnExportAsCharset_Click);
       // 
       // editPrefix
       // 
@@ -501,8 +493,7 @@
       this.btnZoomOut.Size = new System.Drawing.Size(26, 26);
       this.btnZoomOut.TabIndex = 8;
       this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out");
-      this.btnZoomOut.UseVisualStyleBackColor = true;
-      this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+      this.btnZoomOut.Click += new DecentForms.EventHandler(this.btnZoomOut_Click);
       // 
       // btnZoomIn
       // 
@@ -512,8 +503,7 @@
       this.btnZoomIn.Size = new System.Drawing.Size(26, 26);
       this.btnZoomIn.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In");
-      this.btnZoomIn.UseVisualStyleBackColor = true;
-      this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+      this.btnZoomIn.Click += new DecentForms.EventHandler(this.btnZoomIn_Click);
       // 
       // btnClearScreen
       // 
@@ -523,8 +513,7 @@
       this.btnClearScreen.Size = new System.Drawing.Size(26, 26);
       this.btnClearScreen.TabIndex = 41;
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
-      this.btnClearScreen.UseVisualStyleBackColor = true;
-      this.btnClearScreen.Click += new System.EventHandler(this.btnClearScreen_Click);
+      this.btnClearScreen.Click += new DecentForms.EventHandler(this.btnClearScreen_Click);
       // 
       // btnToolValidate
       // 
@@ -667,8 +656,7 @@
       this.btnApplyScreenSize.TabIndex = 34;
       this.btnApplyScreenSize.Text = "Apply";
       this.toolTip1.SetToolTip(this.btnApplyScreenSize, "Apply new size");
-      this.btnApplyScreenSize.UseVisualStyleBackColor = true;
-      this.btnApplyScreenSize.Click += new System.EventHandler(this.btnApplyScreenSize_Click);
+      this.btnApplyScreenSize.Click += new DecentForms.EventHandler(this.btnApplyScreenSize_Click);
       // 
       // editScreenHeight
       // 
@@ -729,8 +717,7 @@
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 18;
       this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Vertically");
-      this.btnMirrorY.UseVisualStyleBackColor = true;
-      this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
+      this.btnMirrorY.Click += new DecentForms.EventHandler(this.btnMirrorY_Click);
       // 
       // btnMirrorX
       // 
@@ -740,8 +727,7 @@
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 19;
       this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror Horizontally");
-      this.btnMirrorX.UseVisualStyleBackColor = true;
-      this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
+      this.btnMirrorX.Click += new DecentForms.EventHandler(this.btnMirrorX_Click);
       // 
       // btnShiftDown
       // 
@@ -751,8 +737,7 @@
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 20;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
-      this.btnShiftDown.UseVisualStyleBackColor = true;
-      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
+      this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
       // 
       // btnShiftUp
       // 
@@ -762,8 +747,7 @@
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 15;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift up");
-      this.btnShiftUp.UseVisualStyleBackColor = true;
-      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
+      this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
       // 
       // btnShiftRight
       // 
@@ -773,8 +757,7 @@
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 16;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift right");
-      this.btnShiftRight.UseVisualStyleBackColor = true;
-      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
+      this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
       // 
       // btnShiftLeft
       // 
@@ -784,8 +767,7 @@
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 17;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift left");
-      this.btnShiftLeft.UseVisualStyleBackColor = true;
-      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
+      this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
       // 
       // colorSelector
       // 
@@ -822,8 +804,7 @@
       this.btnPaste.Size = new System.Drawing.Size(26, 26);
       this.btnPaste.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnPaste, "Paste at selected location");
-      this.btnPaste.UseVisualStyleBackColor = true;
-      this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+      this.btnPaste.Click += new DecentForms.EventHandler(this.btnPaste_Click);
       // 
       // btnCopy
       // 
@@ -833,8 +814,7 @@
       this.btnCopy.Size = new System.Drawing.Size(26, 26);
       this.btnCopy.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy selected 8x8 block");
-      this.btnCopy.UseVisualStyleBackColor = true;
-      this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+      this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
       // 
       // btnCheck
       // 
@@ -843,8 +823,7 @@
       this.btnCheck.Size = new System.Drawing.Size(67, 23);
       this.btnCheck.TabIndex = 6;
       this.btnCheck.Text = "Check as";
-      this.btnCheck.UseVisualStyleBackColor = true;
-      this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
+      this.btnCheck.Click += new DecentForms.EventHandler(this.btnCheck_Click);
       // 
       // btnFullCopy
       // 
@@ -854,8 +833,7 @@
       this.btnFullCopy.TabIndex = 6;
       this.btnFullCopy.Text = "Full Copy";
       this.toolTip1.SetToolTip(this.btnFullCopy, "Copy Full Screen");
-      this.btnFullCopy.UseVisualStyleBackColor = true;
-      this.btnFullCopy.Click += new System.EventHandler(this.btnFullCopyToClipboard_Click);
+      this.btnFullCopy.Click += new DecentForms.EventHandler(this.btnFullCopyToClipboard_Click);
       // 
       // btnPasteFromClipboard
       // 
@@ -865,8 +843,7 @@
       this.btnPasteFromClipboard.TabIndex = 6;
       this.btnPasteFromClipboard.Text = "Full Paste";
       this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Full Screen");
-      this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
-      this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
+      this.btnPasteFromClipboard.Click += new DecentForms.EventHandler(this.btnPasteFromClipboard_Click);
       // 
       // labelCharInfo
       // 
@@ -1096,8 +1073,8 @@
     private System.Windows.Forms.ToolStripMenuItem saveCharsetProjectToolStripMenuItem;
     private System.Windows.Forms.TabPage tabProject;
     private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Button btnImportCharsetFromImage;
-    private System.Windows.Forms.Button btnImportFromFile;
+    private DecentForms.Button btnImportCharsetFromImage;
+    private DecentForms.Button btnImportFromFile;
     private System.Windows.Forms.GroupBox groupExport;
     private System.Windows.Forms.TextBox editPrefix;
     private System.Windows.Forms.Label label2;
@@ -1106,9 +1083,9 @@
     private System.Windows.Forms.CheckBox checkExportToDataIncludeRes;
     private System.Windows.Forms.TextBox editDataExport;
     private System.Windows.Forms.TabPage tabEditor;
-    private System.Windows.Forms.Button btnPaste;
-    private System.Windows.Forms.Button btnCopy;
-    private System.Windows.Forms.Button btnPasteFromClipboard;
+    private DecentForms.Button btnPaste;
+    private DecentForms.Button btnCopy;
+    private DecentForms.Button btnPasteFromClipboard;
     private System.Windows.Forms.Label labelCharInfo;
     private System.Windows.Forms.CheckBox checkMulticolor;
     private System.Windows.Forms.ComboBox comboCharColor;
@@ -1117,25 +1094,25 @@
     private System.Windows.Forms.ComboBox comboBackground;
     private GR.Forms.FastPictureBox pictureEditor;
     private System.Windows.Forms.TabControl tabGraphicScreenEditor;
-    private System.Windows.Forms.Button btnMirrorY;
-    private System.Windows.Forms.Button btnMirrorX;
-    private System.Windows.Forms.Button btnShiftDown;
-    private System.Windows.Forms.Button btnShiftUp;
-    private System.Windows.Forms.Button btnShiftRight;
-    private System.Windows.Forms.Button btnShiftLeft;
+    private DecentForms.Button btnMirrorY;
+    private DecentForms.Button btnMirrorX;
+    private DecentForms.Button btnShiftDown;
+    private DecentForms.Button btnShiftUp;
+    private DecentForms.Button btnShiftRight;
+    private DecentForms.Button btnShiftLeft;
     private GR.Forms.FastPictureBox charEditor;
-    private System.Windows.Forms.Button btnExportAs;
-    private System.Windows.Forms.Button btnCheck;
+    private DecentForms.Button btnExportAs;
+    private DecentForms.Button btnCheck;
     private System.Windows.Forms.Label labelCharInfoExport;
     private System.Windows.Forms.ComboBox comboCheckType;
     private System.Windows.Forms.ComboBox comboExportType;
-    private System.Windows.Forms.Button btnExportAsBinary;
+    private DecentForms.Button btnExportAsBinary;
     private System.Windows.Forms.ComboBox comboExportData;
     private System.Windows.Forms.HScrollBar screenHScroll;
     private System.Windows.Forms.VScrollBar screenVScroll;
     private System.Windows.Forms.ComboBox comboCharScreens;
-    private System.Windows.Forms.Button btnExportToCharScreen;
-    private System.Windows.Forms.Button btnApplyScreenSize;
+    private DecentForms.Button btnExportToCharScreen;
+    private DecentForms.Button btnApplyScreenSize;
     private System.Windows.Forms.TextBox editScreenHeight;
     private System.Windows.Forms.TextBox editScreenWidth;
     private System.Windows.Forms.Label label7;
@@ -1149,25 +1126,25 @@
     private System.Windows.Forms.TextBox editExportBASICLineNo;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Button btnExportToBASICData;
+    private DecentForms.Button btnExportToBASICData;
     private GR.Forms.FastPictureBox colorSelector;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.Button btnExportToImage;
-    private System.Windows.Forms.Button btnFullCopy;
+    private DecentForms.Button btnExportToImage;
+    private DecentForms.Button btnFullCopy;
     private System.Windows.Forms.RadioButton btnToolValidate;
     private System.Windows.Forms.RadioButton btnToolSelect;
     private System.Windows.Forms.RadioButton btnToolFill;
     private System.Windows.Forms.RadioButton btnToolQuad;
     private System.Windows.Forms.RadioButton btnToolRect;
     private System.Windows.Forms.RadioButton btnToolPaint;
-    private System.Windows.Forms.Button btnExportToBASICHexData;
+    private DecentForms.Button btnExportToBASICHexData;
     private System.Windows.Forms.ToolTip toolTip1;
-    private System.Windows.Forms.Button btnClearScreen;
-    private System.Windows.Forms.Button btnZoomIn;
-    private System.Windows.Forms.Button btnZoomOut;
+    private DecentForms.Button btnClearScreen;
+    private DecentForms.Button btnZoomIn;
+    private DecentForms.Button btnZoomOut;
     private System.Windows.Forms.RadioButton btnToolLine;
     private System.Windows.Forms.RadioButton btnToolLineDrag;
     private System.Windows.Forms.CheckBox checkInsertSpaces;

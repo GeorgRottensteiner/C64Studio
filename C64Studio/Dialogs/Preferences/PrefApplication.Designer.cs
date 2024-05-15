@@ -28,12 +28,12 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.comboAppMode = new System.Windows.Forms.ComboBox();
       this.label29 = new System.Windows.Forms.Label();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnBrowseDefaultOpenSolutionPath = new System.Windows.Forms.Button();
+      this.btnBrowseDefaultOpenSolutionPath = new DecentForms.Button();
       this.editDefaultOpenSolutionPath = new System.Windows.Forms.TextBox();
       this.editMaxMRUEntries = new System.Windows.Forms.TextBox();
       this.label32 = new System.Windows.Forms.Label();
@@ -52,8 +52,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 7;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -63,8 +62,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 6;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // comboAppMode
       // 
@@ -118,8 +116,7 @@
       this.btnBrowseDefaultOpenSolutionPath.Size = new System.Drawing.Size(23, 20);
       this.btnBrowseDefaultOpenSolutionPath.TabIndex = 4;
       this.btnBrowseDefaultOpenSolutionPath.Text = "...";
-      this.btnBrowseDefaultOpenSolutionPath.UseVisualStyleBackColor = true;
-      this.btnBrowseDefaultOpenSolutionPath.Click += new System.EventHandler(this.btnBrowseDefaultOpenSolutionPath_Click);
+      this.btnBrowseDefaultOpenSolutionPath.Click += new DecentForms.EventHandler(this.btnBrowseDefaultOpenSolutionPath_Click);
       // 
       // editDefaultOpenSolutionPath
       // 
@@ -208,12 +205,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.ComboBox comboAppMode;
         private System.Windows.Forms.Label label29;
     private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Button btnBrowseDefaultOpenSolutionPath;
+    private DecentForms.Button btnBrowseDefaultOpenSolutionPath;
     private System.Windows.Forms.TextBox editDefaultOpenSolutionPath;
     private System.Windows.Forms.TextBox editMaxMRUEntries;
     private System.Windows.Forms.Label label32;

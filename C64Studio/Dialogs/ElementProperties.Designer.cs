@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.tabElementProperties = new System.Windows.Forms.TabControl();
-      this.btnClose = new System.Windows.Forms.Button();
+      this.btnClose = new DecentForms.Button();
       this.SuspendLayout();
       // 
       // tabElementProperties
@@ -51,8 +51,7 @@
       this.btnClose.Size = new System.Drawing.Size(75, 23);
       this.btnClose.TabIndex = 1;
       this.btnClose.Text = "Close";
-      this.btnClose.UseVisualStyleBackColor = true;
-      this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+      this.btnClose.Click += new DecentForms.EventHandler(this.btnClose_Click);
       // 
       // ElementProperties
       // 
@@ -76,6 +75,6 @@
     #endregion
 
     private System.Windows.Forms.TabControl tabElementProperties;
-    private System.Windows.Forms.Button btnClose;
+    private DecentForms.Button btnClose;
   }
 }

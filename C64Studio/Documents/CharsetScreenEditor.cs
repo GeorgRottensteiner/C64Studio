@@ -2205,7 +2205,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnApplyScreenSize_Click( object sender, EventArgs e )
+    private void btnApplyScreenSize_Click( DecentForms.ControlBase Sender )
     {
       int     newWidth = GR.Convert.ToI32( editScreenWidth.Text );
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
@@ -3383,7 +3383,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnClearScreen_Click( object sender, EventArgs e )
+    private void btnClearScreen_Click( DecentForms.ControlBase Sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ), false );
 
@@ -3417,7 +3417,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftLeft_Click( object sender, EventArgs e )
+    private void btnShiftLeft_Click( DecentForms.ControlBase Sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
@@ -3436,7 +3436,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftRight_Click( object sender, EventArgs e )
+    private void btnShiftRight_Click( DecentForms.ControlBase Sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
@@ -3455,7 +3455,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftUp_Click( object sender, EventArgs e )
+    private void btnShiftUp_Click( DecentForms.ControlBase Sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
@@ -3474,7 +3474,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShiftDown_Click( object sender, EventArgs e )
+    private void btnShiftDown_Click( DecentForms.ControlBase Sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
@@ -3526,14 +3526,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCopy_Click( object sender, EventArgs e )
+    private void btnCopy_Click( DecentForms.ControlBase Sender )
     {
       CopyToClipboard();
     }
 
 
 
-    private void btnPaste_Click( object sender, EventArgs e )
+    private void btnPaste_Click( DecentForms.ControlBase Sender )
     {
       PasteFromClipboard();
     }
@@ -3564,7 +3564,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExport_Click( object sender, EventArgs e )
+    private void btnExport_Click( DecentForms.ControlBase Sender )
     {
       var exportInfo        = new ExportCharsetScreenInfo()
       {
@@ -3613,7 +3613,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImport_Click( object sender, EventArgs e )
+    private void btnImport_Click( DecentForms.ControlBase Sender )
     {
       var undo1 = new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
       var undo2 = new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this );

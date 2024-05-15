@@ -35,14 +35,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnImportSettings_Click( object sender, EventArgs e )
+    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
     {
       ImportLocalSettings();
     }
 
 
 
-    private void btnExportSettings_Click( object sender, EventArgs e )
+    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
     {
       SaveLocalSettings();
     }
@@ -174,7 +174,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnBindKey_Click( object sender, EventArgs e )
+    private void btnBindKey_Click( DecentForms.ControlBase Sender )
     {
       if ( listFunctions.SelectedItems.Count == 0 )
       {
@@ -207,7 +207,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnBindKeySecondary_Click( object sender, EventArgs e )
+    private void btnBindKeySecondary_Click( DecentForms.ControlBase Sender )
     {
       if ( listFunctions.SelectedItems.Count == 0 )
       {
@@ -249,7 +249,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnUnbindKey_Click( object sender, EventArgs e )
+    private void btnUnbindKey_Click( DecentForms.ControlBase Sender )
     {
       if ( listFunctions.SelectedItems.Count == 0 )
       {
@@ -274,7 +274,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnSetDefaultsKeyBinding_Click( object sender, EventArgs e )
+    private void btnSetDefaultsKeyBinding_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.SetDefaultKeyBinding();
 

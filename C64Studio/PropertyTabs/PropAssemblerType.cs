@@ -69,7 +69,7 @@ namespace RetroDevStudio
 
 
 
-    private void btnParseAssembler_Click( object sender, EventArgs e )
+    private void btnParseAssembler_Click( DecentForms.ControlBase Sender )
     {
       // fetch text from file
       string  textFromDocument = Core.Searching.GetDocumentInfoText( Element.DocumentInfo );

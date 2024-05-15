@@ -25,7 +25,7 @@ namespace RetroDevStudio.Dialogs
     
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult = DialogResult.OK;
       Close();
@@ -53,6 +53,14 @@ namespace RetroDevStudio.Dialogs
     private void chkHex_CheckedChanged( object sender, EventArgs e )
     {
       InsertAsHex = chkHex.Checked;
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

@@ -110,7 +110,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnInsert_Click( object sender, EventArgs e )
+    private void btnInsert_Click( DecentForms.ControlBase Sender )
     {
       if ( listMacros.SelectedIndices.Count == 0 )
       {
@@ -121,7 +121,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       Close();
     }

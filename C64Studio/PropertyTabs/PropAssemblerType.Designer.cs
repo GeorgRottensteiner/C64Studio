@@ -30,7 +30,7 @@
     {
       this.comboAssemblerType = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.btnParseAssembler = new System.Windows.Forms.Button();
+      this.btnParseAssembler = new DecentForms.Button();
       this.label2 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
@@ -58,8 +58,7 @@
       this.btnParseAssembler.Size = new System.Drawing.Size( 102, 23 );
       this.btnParseAssembler.TabIndex = 10;
       this.btnParseAssembler.Text = "Detect Assembler";
-      this.btnParseAssembler.UseVisualStyleBackColor = true;
-      this.btnParseAssembler.Click += new System.EventHandler( this.btnParseAssembler_Click );
+      this.btnParseAssembler.Click += new DecentForms.EventHandler( this.btnParseAssembler_Click );
       // 
       // label2
       // 
@@ -91,7 +90,7 @@
 
     private System.Windows.Forms.ComboBox comboAssemblerType;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Button btnParseAssembler;
+    private DecentForms.Button btnParseAssembler;
     private System.Windows.Forms.Label label2;
   }
 }

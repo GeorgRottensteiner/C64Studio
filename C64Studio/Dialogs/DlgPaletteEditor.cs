@@ -69,7 +69,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult = DialogResult.OK;
       Close();
@@ -469,7 +469,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnExportToData_Click( object sender, EventArgs e )
+    private void btnExportToData_Click( DecentForms.ControlBase Sender )
     {
       var palData = GatherPaletteData();
 
@@ -521,7 +521,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnExportToFile_Click( object sender, EventArgs e )
+    private void btnExportToFile_Click( DecentForms.ControlBase Sender )
     {
       var palData = GatherPaletteData();
 
@@ -565,7 +565,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnImportFromFile_Click( object sender, EventArgs e )
+    private void btnImportFromFile_Click( DecentForms.ControlBase Sender )
     {
       string filename;
 
@@ -660,7 +660,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnImportFromAssembly_Click( object sender, EventArgs e )
+    private void btnImportFromAssembly_Click( DecentForms.ControlBase Sender )
     {
       Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
 
@@ -675,6 +675,14 @@ namespace RetroDevStudio.Dialogs
       {
         ImportFromData( asmParser.AssembledOutput.Assembly, checkImportSwizzle.Checked, checkImportColorsSorted.Checked );
       }
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

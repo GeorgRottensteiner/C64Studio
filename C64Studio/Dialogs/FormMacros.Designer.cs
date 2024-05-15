@@ -31,8 +31,8 @@
       this.listMacros = new System.Windows.Forms.ListView();
       this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
       this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-      this.btnOK = new System.Windows.Forms.Button();
-      this.btnInsert = new System.Windows.Forms.Button();
+      this.btnOK = new DecentForms.Button();
+      this.btnInsert = new DecentForms.Button();
       this.SuspendLayout();
       // 
       // listMacros
@@ -70,8 +70,7 @@
       this.btnOK.Size = new System.Drawing.Size( 75, 23 );
       this.btnOK.TabIndex = 1;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler( this.btnOK_Click );
+      this.btnOK.Click += new DecentForms.EventHandler( this.btnOK_Click );
       // 
       // btnInsert
       // 
@@ -81,8 +80,7 @@
       this.btnInsert.Size = new System.Drawing.Size( 75, 23 );
       this.btnInsert.TabIndex = 1;
       this.btnInsert.Text = "Insert";
-      this.btnInsert.UseVisualStyleBackColor = true;
-      this.btnInsert.Click += new System.EventHandler( this.btnInsert_Click );
+      this.btnInsert.Click += new DecentForms.EventHandler( this.btnInsert_Click );
       // 
       // FormMacros
       // 
@@ -105,7 +103,7 @@
     private System.Windows.Forms.ListView listMacros;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
-    private System.Windows.Forms.Button btnOK;
-    private System.Windows.Forms.Button btnInsert;
+    private DecentForms.Button btnOK;
+    private DecentForms.Button btnInsert;
   }
 }

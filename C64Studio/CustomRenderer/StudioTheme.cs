@@ -214,10 +214,6 @@ namespace RetroDevStudio.CustomRenderer
             lv.DrawSubItem += Lv_DrawSubItem;
           }
         }
-        if ( control is CSAutoCompleteComboBox )
-        {
-          continue;
-        }
         RecolorControlsRecursive( control.Controls );
       }
     }

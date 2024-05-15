@@ -44,14 +44,14 @@ namespace RetroDevStudio.Documents
       this.labelCharactersTo = new System.Windows.Forms.Label();
       this.labelCharactersFrom = new System.Windows.Forms.Label();
       this.editDataExport = new System.Windows.Forms.TextBox();
-      this.btnExport = new System.Windows.Forms.Button();
+      this.btnExport = new DecentForms.Button();
       this.panelExport = new System.Windows.Forms.Panel();
       this.comboExportMethod = new System.Windows.Forms.ComboBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabImport = new System.Windows.Forms.TabPage();
       this.panelImport = new System.Windows.Forms.Panel();
-      this.btnImport = new System.Windows.Forms.Button();
+      this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.contextMenuDefaultCharsets = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -193,8 +193,7 @@ namespace RetroDevStudio.Documents
       this.btnExport.Size = new System.Drawing.Size(75, 21);
       this.btnExport.TabIndex = 33;
       this.btnExport.Text = "Export";
-      this.btnExport.UseVisualStyleBackColor = true;
-      this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+      this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
       // panelExport
       // 
@@ -264,8 +263,7 @@ namespace RetroDevStudio.Documents
       this.btnImport.Size = new System.Drawing.Size(75, 21);
       this.btnImport.TabIndex = 36;
       this.btnImport.Text = "Import";
-      this.btnImport.UseVisualStyleBackColor = true;
-      this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
       // comboImportMethod
       // 
@@ -409,7 +407,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem viC20UppercaseToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem viC20LowercaseToolStripMenuItem;
     private System.Windows.Forms.TabPage tabExport;
-    private System.Windows.Forms.Button btnExport;
+    private DecentForms.Button btnExport;
     private System.Windows.Forms.Panel panelExport;
     private System.Windows.Forms.ComboBox comboExportMethod;
     private System.Windows.Forms.Label label4;
@@ -422,7 +420,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Label labelCharactersTo;
     private System.Windows.Forms.Label labelCharactersFrom;
     private System.Windows.Forms.Panel panelImport;
-    private System.Windows.Forms.Button btnImport;
+    private DecentForms.Button btnImport;
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
   }

@@ -28,8 +28,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.editCommitterEmail = new System.Windows.Forms.TextBox();
       this.editCommitAuthor = new System.Windows.Forms.TextBox();
@@ -46,8 +46,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -57,8 +56,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -126,8 +124,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TextBox editCommitterEmail;
     private System.Windows.Forms.TextBox editCommitAuthor;

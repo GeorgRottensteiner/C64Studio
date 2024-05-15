@@ -165,7 +165,7 @@ namespace RetroDevStudio.Dialogs
     
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult = DialogResult.OK;
 
@@ -440,6 +440,15 @@ namespace RetroDevStudio.Dialogs
         _Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.SOURCE_CONTROL_STATE_MODIFIED ) );
       }
     }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
+    }
+
 
 
   }

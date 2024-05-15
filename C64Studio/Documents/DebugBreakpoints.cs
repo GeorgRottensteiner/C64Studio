@@ -166,7 +166,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnAddBreakpoint_Click( object sender, EventArgs e )
+    private void btnAddBreakpoint_Click( DecentForms.ControlBase Sender )
     {
       Types.Breakpoint bp = new RetroDevStudio.Types.Breakpoint();
 
@@ -331,7 +331,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDeleteBreakpoint_Click( object sender, EventArgs e )
+    private void btnDeleteBreakpoint_Click( DecentForms.ControlBase Sender )
     {
       if ( listBreakpoints.SelectedIndices.Count == 0 )
       {
@@ -344,7 +344,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnApplyChanges_Click( object sender, EventArgs e )
+    private void btnApplyChanges_Click( DecentForms.ControlBase Sender )
     {
       if ( listBreakpoints.SelectedIndices.Count == 0 )
       {
@@ -375,7 +375,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDeleteAllBreakpoints_Click( object sender, EventArgs e )
+    private void btnDeleteAllBreakpoints_Click( DecentForms.ControlBase Sender )
     {
       List<Types.Breakpoint>    bpsToRemove = new List<Types.Breakpoint>();
       foreach ( ListViewItem item in listBreakpoints.Items )

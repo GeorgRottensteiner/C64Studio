@@ -24,7 +24,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnNormalAppMode_Click( object sender, EventArgs e )
+    private void btnNormalAppMode_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.StudioAppMode = AppMode.GOOD_APP;
 
@@ -34,7 +34,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnPortableMode_Click( object sender, EventArgs e )
+    private void btnPortableMode_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.StudioAppMode = AppMode.PORTABLE_APP;
 
@@ -44,7 +44,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnAskLater_Click( object sender, EventArgs e )
+    private void btnAskLater_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.StudioAppMode = AppMode.UNDECIDED;
 

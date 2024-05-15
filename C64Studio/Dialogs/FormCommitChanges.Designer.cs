@@ -30,8 +30,8 @@ namespace RetroDevStudio.Dialogs
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnOK = new System.Windows.Forms.Button();
+      this.btnCancel = new DecentForms.Button();
+      this.btnOK = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.editCommitMessage = new System.Windows.Forms.TextBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -53,24 +53,30 @@ namespace RetroDevStudio.Dialogs
       // btnCancel
       // 
       this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Image = null;
       this.btnCancel.Location = new System.Drawing.Point(499, 502);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 5;
       this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.Click += new DecentForms.EventHandler(this.btnCancel_Click);
       // 
       // btnOK
       // 
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOK.Image = null;
       this.btnOK.Location = new System.Drawing.Point(418, 502);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 4;
       this.btnOK.Text = "Commit";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // groupBox1
       // 
@@ -228,8 +234,8 @@ namespace RetroDevStudio.Dialogs
     }
 
     #endregion
-    private System.Windows.Forms.Button btnCancel;
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnCancel;
+    private DecentForms.Button btnOK;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TextBox editCommitMessage;
     private System.Windows.Forms.GroupBox groupBox2;

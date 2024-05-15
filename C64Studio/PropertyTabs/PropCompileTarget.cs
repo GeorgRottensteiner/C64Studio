@@ -137,7 +137,7 @@ namespace RetroDevStudio
       }
     }
 
-    private void btnParseTarget_Click( object sender, EventArgs e )
+    private void btnParseTarget_Click( DecentForms.ControlBase Sender )
     {
       Core.MainForm.EnsureFileIsParsed();
 
@@ -288,7 +288,7 @@ namespace RetroDevStudio
 
 
 
-    private void btnAddExternalDependency_Click( object sender, EventArgs e )
+    private void btnAddExternalDependency_Click( DecentForms.ControlBase Sender )
     {
       var dlg = new OpenFileDialog();
 
@@ -316,7 +316,7 @@ namespace RetroDevStudio
 
 
 
-    private void btnRemoveExternalDependency_Click( object sender, EventArgs e )
+    private void btnRemoveExternalDependency_Click( DecentForms.ControlBase Sender )
     {
       if ( listExternalDependencies.SelectedIndex == -1 )
       {

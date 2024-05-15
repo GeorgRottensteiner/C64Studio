@@ -70,7 +70,7 @@ namespace RetroDevStudio.Controls
     {
       if ( e.KeyCode == Keys.Delete )
       {
-        btnDelete_Click( sender, new EventArgs() );
+        btnDelete_Click( null );
       }
     }
 
@@ -271,7 +271,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnAdd_Click( object sender, EventArgs e )
+    private void btnAdd_Click( DecentForms.ControlBase Sender )
     {
       ArrangedItemEntry   newItem = null;
       if ( AddingItem != null )
@@ -320,7 +320,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnDelete_Click( object sender, EventArgs e )
+    private void btnDelete_Click( DecentForms.ControlBase Sender )
     {
       if ( listItems.SelectedIndices.Count == 0 )
       {
@@ -373,7 +373,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnMoveUp_Click( object sender, EventArgs e )
+    private void btnMoveUp_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listItems.SelectedIndices.Count == 0 )
       ||   ( listItems.SelectedIndices[0] == 0 ) )
@@ -406,7 +406,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnMoveDown_Click( object sender, EventArgs e )
+    private void btnMoveDown_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listItems.SelectedIndices.Count == 0 )
       ||   ( listItems.SelectedIndices[0] + 1 == listItems.Items.Count ) )
@@ -448,6 +448,7 @@ namespace RetroDevStudio.Controls
 
     private void RescaleButtons()
     {
+      /*
       // TODO - rearrange buttons
       //186+40-3
       //240 all
@@ -472,7 +473,7 @@ namespace RetroDevStudio.Controls
 
       offset = ( 4 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
       btnMoveDown.Location = new Point( offset, btnDelete.Location.Y );
-      btnMoveDown.Size = new Size( buttonWidth, btnAdd.Height );
+      btnMoveDown.Size = new Size( buttonWidth, btnAdd.Height );*/
     }
 
 
@@ -503,7 +504,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnClone_Click( object sender, EventArgs e )
+    private void btnClone_Click( DecentForms.ControlBase Sender )
     {
       if ( listItems.SelectedIndices.Count == 0 )
       {

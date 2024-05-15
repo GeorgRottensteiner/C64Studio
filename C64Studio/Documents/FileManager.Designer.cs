@@ -72,7 +72,7 @@
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripSplitButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
       this.labelFolder = new System.Windows.Forms.Label();
-      this.btnUp = new System.Windows.Forms.Button();
+      this.btnUp = new DecentForms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -476,8 +476,7 @@
       this.btnUp.Size = new System.Drawing.Size(37, 23);
       this.btnUp.TabIndex = 7;
       this.btnUp.Text = "Up";
-      this.btnUp.UseVisualStyleBackColor = true;
-      this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+      this.btnUp.Click += new DecentForms.EventHandler(this.btnUp_Click);
       // 
       // FileManager
       // 
@@ -550,6 +549,6 @@
     private System.Windows.Forms.ToolStripMenuItem cPCDSKToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cPCDSKExtendedToolStripMenuItem;
     private System.Windows.Forms.Label labelFolder;
-    private System.Windows.Forms.Button btnUp;
+    private DecentForms.Button btnUp;
   }
 }

@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLicense));
-      this.btnOK = new System.Windows.Forms.Button();
+      this.btnOK = new DecentForms.Button();
       this.editLicenses = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
       // 
@@ -41,8 +41,7 @@
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 0;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // editLicenses
       // 
@@ -79,7 +78,7 @@
 
     #endregion
 
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnOK;
     private System.Windows.Forms.TextBox editLicenses;
   }
 }

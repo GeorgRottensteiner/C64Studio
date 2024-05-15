@@ -23,7 +23,7 @@ namespace RetroDevStudio.Dialogs
     
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult = DialogResult.OK;
       Close();
@@ -38,7 +38,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnBrowseVice_Click( object sender, EventArgs e )
+    private void btnBrowseVice_Click( DecentForms.ControlBase Sender )
     {
       OpenFileDialog    dlgBrowse = new OpenFileDialog();
 
@@ -56,6 +56,14 @@ namespace RetroDevStudio.Dialogs
     private void editPathEmulator_TextChanged( object sender, EventArgs e )
     {
       btnOK.Enabled = ( editPathEmulator.Text.Length > 0 ) && ( System.IO.File.Exists( editPathEmulator.Text ) );
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

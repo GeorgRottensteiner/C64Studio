@@ -37,7 +37,7 @@ namespace RetroDevStudio.Controls
       this.radioMultiColor1 = new System.Windows.Forms.RadioButton();
       this.radioMultiColor2 = new System.Windows.Forms.RadioButton();
       this.radioCustomColor = new System.Windows.Forms.RadioButton();
-      this.btnExchangeColors = new RetroDevStudio.Controls.MenuButton();
+      this.btnExchangeColors = new DecentForms.MenuButton();
       this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
       this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -141,8 +141,7 @@ namespace RetroDevStudio.Controls
       this.btnExchangeColors.Size = new System.Drawing.Size(161, 26);
       this.btnExchangeColors.TabIndex = 50;
       this.btnExchangeColors.Text = "Exchange Colors";
-      this.btnExchangeColors.UseVisualStyleBackColor = true;
-      this.btnExchangeColors.Click += new System.EventHandler(this.btnExchangeColors_Click);
+      this.btnExchangeColors.Click += new DecentForms.EventHandler(this.btnExchangeColors_Click);
       // 
       // comboMulticolor2
       // 
@@ -252,7 +251,7 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.RadioButton radioMultiColor1;
     private System.Windows.Forms.RadioButton radioMultiColor2;
     private System.Windows.Forms.RadioButton radioCustomColor;
-    private MenuButton btnExchangeColors;
+    private DecentForms.MenuButton btnExchangeColors;
     private System.Windows.Forms.ComboBox comboMulticolor2;
     private System.Windows.Forms.ContextMenuStrip contextMenuExchangeColors;
     private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;

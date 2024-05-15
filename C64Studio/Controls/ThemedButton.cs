@@ -15,6 +15,8 @@ namespace RetroDevStudio.Controls
 
     public ThemedButton()
     {
+      this.SetStyle( ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true );
+
       DisabledTextColor = SystemColors.GrayText;
     }
 
@@ -22,25 +24,34 @@ namespace RetroDevStudio.Controls
 
     protected override void OnPaint( PaintEventArgs e )
     {
+      /*
       if ( Enabled )
       {
         base.OnPaint( e );
         return;
+      }*/
+      var colorText = ForeColor;
+      var colorBG   = BackColor;
+
+      if ( !Enabled )
+      {
+        colorText = DisabledTextColor;
       }
 
-      SolidBrush drawBrush = null;
+      using ( var sf = new StringFormat() )
+      using ( var brushText = new SolidBrush( colorText ) )
+      using ( var brushBG = new SolidBrush( BackColor ) )
+      using ( var penBorder = new Pen( Color.Black ) )
+      {
+        e.Graphics.DrawRectangle( penBorder, ClientRectangle );
 
-      StringFormat sf = new StringFormat();
+        ClientRectangle.Inflate( -1, -1 );
+        e.Graphics.FillRectangle( brushBG, ClientRectangle );
+        sf.Alignment = StringAlignment.Center;
+        sf.LineAlignment = StringAlignment.Center;
 
-      sf.Alignment      = StringAlignment.Center;
-      sf.LineAlignment  = StringAlignment.Center;
-
-      drawBrush = new SolidBrush( DisabledTextColor );
-      e.Graphics.DrawString( Text, Font, drawBrush, e.ClipRectangle, sf );
-
-      drawBrush.Dispose();
-
-      sf.Dispose();
+        e.Graphics.DrawString( Text, Font, brushText, ClientRectangle, sf );
+      }
     }
   }
 }

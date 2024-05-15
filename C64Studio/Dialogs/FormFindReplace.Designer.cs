@@ -32,9 +32,9 @@ namespace RetroDevStudio.Dialogs
     {
       this.tabFindReplace = new System.Windows.Forms.TabControl();
       this.tabSearch = new System.Windows.Forms.TabPage();
-      this.btnSearchBookmark = new System.Windows.Forms.Button();
-      this.btnFindNext = new System.Windows.Forms.Button();
-      this.btnFindAll = new System.Windows.Forms.Button();
+      this.btnSearchBookmark = new DecentForms.Button();
+      this.btnFindNext = new DecentForms.Button();
+      this.btnFindAll = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.radioSearchDirDown = new System.Windows.Forms.RadioButton();
       this.radioSearchDirUp = new System.Windows.Forms.RadioButton();
@@ -47,9 +47,9 @@ namespace RetroDevStudio.Dialogs
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       this.tabReplace = new System.Windows.Forms.TabPage();
-      this.btnReplaceAll = new System.Windows.Forms.Button();
-      this.btnReplaceFindNext = new System.Windows.Forms.Button();
-      this.btnReplaceNext = new System.Windows.Forms.Button();
+      this.btnReplaceAll = new DecentForms.Button();
+      this.btnReplaceFindNext = new DecentForms.Button();
+      this.btnReplaceNext = new DecentForms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.radioReplaceSearchDown = new System.Windows.Forms.RadioButton();
       this.radioReplaceSearchUp = new System.Windows.Forms.RadioButton();
@@ -104,35 +104,41 @@ namespace RetroDevStudio.Dialogs
       // btnSearchBookmark
       // 
       this.btnSearchBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnSearchBookmark.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSearchBookmark.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSearchBookmark.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnSearchBookmark.Location = new System.Drawing.Point(257, 198);
       this.btnSearchBookmark.Name = "btnSearchBookmark";
       this.btnSearchBookmark.Size = new System.Drawing.Size(75, 23);
-      this.btnSearchBookmark.TabIndex = 3;
+      this.btnSearchBookmark.TabIndex = 4;
       this.btnSearchBookmark.Text = "Bookmark";
-      this.btnSearchBookmark.UseVisualStyleBackColor = true;
-      this.btnSearchBookmark.Click += new System.EventHandler(this.btnSearchBookmark_Click);
+      this.btnSearchBookmark.Click += new DecentForms.EventHandler(this.btnSearchBookmark_Click);
       // 
       // btnFindNext
       // 
       this.btnFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnFindNext.Location = new System.Drawing.Point(95, 198);
       this.btnFindNext.Name = "btnFindNext";
       this.btnFindNext.Size = new System.Drawing.Size(75, 23);
       this.btnFindNext.TabIndex = 2;
       this.btnFindNext.Text = "Find Next";
-      this.btnFindNext.UseVisualStyleBackColor = true;
-      this.btnFindNext.Click += new System.EventHandler(this.btnFindNext_Click);
+      this.btnFindNext.Click += new DecentForms.EventHandler(this.btnFindNext_Click);
       // 
       // btnFindAll
       // 
       this.btnFindAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnFindAll.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnFindAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnFindAll.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnFindAll.Location = new System.Drawing.Point(176, 198);
       this.btnFindAll.Name = "btnFindAll";
       this.btnFindAll.Size = new System.Drawing.Size(75, 23);
-      this.btnFindAll.TabIndex = 2;
+      this.btnFindAll.TabIndex = 3;
       this.btnFindAll.Text = "Find All";
-      this.btnFindAll.UseVisualStyleBackColor = true;
-      this.btnFindAll.Click += new System.EventHandler(this.btnFindAll_Click);
+      this.btnFindAll.Click += new DecentForms.EventHandler(this.btnFindAll_Click);
       // 
       // groupBox1
       // 
@@ -289,35 +295,41 @@ namespace RetroDevStudio.Dialogs
       // btnReplaceAll
       // 
       this.btnReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnReplaceAll.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReplaceAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnReplaceAll.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnReplaceAll.Location = new System.Drawing.Point(257, 238);
       this.btnReplaceAll.Name = "btnReplaceAll";
       this.btnReplaceAll.Size = new System.Drawing.Size(75, 23);
       this.btnReplaceAll.TabIndex = 5;
       this.btnReplaceAll.Text = "Replace All";
-      this.btnReplaceAll.UseVisualStyleBackColor = true;
-      this.btnReplaceAll.Click += new System.EventHandler(this.btnReplaceAll_Click);
+      this.btnReplaceAll.Click += new DecentForms.EventHandler(this.btnReplaceAll_Click);
       // 
       // btnReplaceFindNext
       // 
       this.btnReplaceFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnReplaceFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReplaceFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnReplaceFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnReplaceFindNext.Location = new System.Drawing.Point(93, 238);
       this.btnReplaceFindNext.Name = "btnReplaceFindNext";
       this.btnReplaceFindNext.Size = new System.Drawing.Size(75, 23);
       this.btnReplaceFindNext.TabIndex = 3;
       this.btnReplaceFindNext.Text = "Find Next";
-      this.btnReplaceFindNext.UseVisualStyleBackColor = true;
-      this.btnReplaceFindNext.Click += new System.EventHandler(this.btnReplaceFindNext_Click);
+      this.btnReplaceFindNext.Click += new DecentForms.EventHandler(this.btnReplaceFindNext_Click);
       // 
       // btnReplaceNext
       // 
       this.btnReplaceNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnReplaceNext.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReplaceNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnReplaceNext.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnReplaceNext.Location = new System.Drawing.Point(174, 238);
       this.btnReplaceNext.Name = "btnReplaceNext";
       this.btnReplaceNext.Size = new System.Drawing.Size(75, 23);
       this.btnReplaceNext.TabIndex = 4;
       this.btnReplaceNext.Text = "Replace";
-      this.btnReplaceNext.UseVisualStyleBackColor = true;
-      this.btnReplaceNext.Click += new System.EventHandler(this.btnReplaceNext_Click);
+      this.btnReplaceNext.Click += new DecentForms.EventHandler(this.btnReplaceNext_Click);
       // 
       // groupBox2
       // 
@@ -439,7 +451,6 @@ namespace RetroDevStudio.Dialogs
       // 
       this.comboReplaceSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      //this.comboReplaceSearchText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.comboReplaceSearchText.Location = new System.Drawing.Point(6, 19);
       this.comboReplaceSearchText.Name = "comboReplaceSearchText";
       this.comboReplaceSearchText.Size = new System.Drawing.Size(328, 21);
@@ -514,7 +525,7 @@ namespace RetroDevStudio.Dialogs
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.RadioButton radioSearchDirDown;
-    private System.Windows.Forms.Button btnSearchBookmark;
+    private DecentForms.Button btnSearchBookmark;
     private System.Windows.Forms.CheckBox checkSearchWrap;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.RadioButton radioReplaceSearchDown;
@@ -527,14 +538,13 @@ namespace RetroDevStudio.Dialogs
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Button btnReplaceAll;
-    private System.Windows.Forms.Button btnReplaceFindNext;
-    private System.Windows.Forms.Button btnReplaceNext;
-    public System.Windows.Forms.Button btnFindNext;
+    private DecentForms.Button btnReplaceAll;
+    private DecentForms.Button btnReplaceFindNext;
+    private DecentForms.Button btnReplaceNext;
+    public DecentForms.Button btnFindNext;
     public System.Windows.Forms.ComboBox comboReplaceTarget;
-    public System.Windows.Forms.Button btnFindAll;
+    public DecentForms.Button btnFindAll;
     public System.Windows.Forms.ComboBox comboReplaceSearchText;
-    //public CSAutoCompleteComboBox comboReplaceSearchText;
     public System.Windows.Forms.ComboBox comboSearchText;
   }
 }

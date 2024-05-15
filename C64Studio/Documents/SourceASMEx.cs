@@ -3878,7 +3878,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCloseAllZones_Click( object sender, EventArgs e )
+    private void btnCloseAllZones_Click( DecentForms.ControlBase Sender )
     {
       foreach ( var line in editSource.LineInfos )
       {
@@ -4074,7 +4074,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnShowShortCutLabels_Click( object sender, EventArgs e )
+    private void btnShowShortCutLabels_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.ASMShowShortCutLabels = !Core.Settings.ASMShowShortCutLabels;
 

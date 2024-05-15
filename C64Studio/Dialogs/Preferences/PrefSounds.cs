@@ -33,14 +33,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnImportSettings_Click( object sender, EventArgs e )
+    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
     {
       ImportLocalSettings();
     }
 
 
 
-    private void btnExportSettings_Click( object sender, EventArgs e )
+    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
     {
       SaveLocalSettings();
     }
@@ -122,21 +122,21 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnTestSoundBuildFailure_Click( object sender, EventArgs e )
+    private void btnTestSoundBuildFailure_Click( DecentForms.ControlBase Sender )
     {
       Core.Notification.BuildFailure( true );
     }
 
 
 
-    private void btnTestSoundBuildSuccess_Click( object sender, EventArgs e )
+    private void btnTestSoundBuildSuccess_Click( DecentForms.ControlBase Sender )
     {
       Core.Notification.BuildSuccess( true );
     }
 
 
 
-    private void btnTestSoundNotFound_Click( object sender, EventArgs e )
+    private void btnTestSoundNotFound_Click( DecentForms.ControlBase Sender )
     {
       Core.Notification.ItemNotFound( true );
     }

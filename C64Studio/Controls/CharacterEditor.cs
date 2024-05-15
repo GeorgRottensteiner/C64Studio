@@ -458,14 +458,14 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnCopy_Click( object sender, EventArgs e )
+    private void btnCopy_Click( DecentForms.ControlBase Sender )
     {
       CopyToClipboard();
     }
 
 
 
-    private void btnPaste_Click( object sender, EventArgs e )
+    private void btnPaste_Click( DecentForms.ControlBase Sender )
     {
       PasteClipboardImageToChar();
     }
@@ -1254,7 +1254,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnInvert_Click( object sender, EventArgs e )
+    private void btnInvert_Click( DecentForms.ControlBase Sender )
     {
       Invert();
     }
@@ -1421,14 +1421,14 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnMirrorX_Click( object sender, EventArgs e )
+    private void btnMirrorX_Click( DecentForms.ControlBase Sender )
     {
       MirrorX();
     }
 
 
 
-    private void btnMirrorY_Click( object sender, EventArgs e )
+    private void btnMirrorY_Click( DecentForms.ControlBase Sender )
     {
       MirrorY();
     }
@@ -1493,7 +1493,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnRotateLeft_Click( object sender, EventArgs e )
+    private void btnRotateLeft_Click( DecentForms.ControlBase Sender )
     {
       RotateLeft();
     }
@@ -1534,7 +1534,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnRotateRight_Click( object sender, EventArgs e )
+    private void btnRotateRight_Click( DecentForms.ControlBase Sender )
     {
       RotateRight();
     }
@@ -1575,7 +1575,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnShiftDown_Click( object sender, EventArgs e )
+    private void btnShiftDown_Click( DecentForms.ControlBase Sender )
     {
       ShiftDown();
     }
@@ -1610,21 +1610,21 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnShiftLeft_Click( object sender, EventArgs e )
+    private void btnShiftLeft_Click( DecentForms.ControlBase Sender )
     {
       ShiftLeft();
     }
 
 
 
-    private void btnShiftRight_Click( object sender, EventArgs e )
+    private void btnShiftRight_Click( DecentForms.ControlBase Sender )
     {
       ShiftRight();
     }
 
 
 
-    private void btnShiftUp_Click( object sender, EventArgs e )
+    private void btnShiftUp_Click( DecentForms.ControlBase Sender )
     {
       ShiftUp();
     }
@@ -2157,7 +2157,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnPasteFromClipboard_Click( object sender, EventArgs e )
+    private void btnPasteFromClipboard_Click( DecentForms.ControlBase Sender )
     {
       if ( !Clipboard.ContainsImage() )
       {
@@ -2220,7 +2220,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnClear_Click( object sender, EventArgs e )
+    private void btnClear_Click( DecentForms.ControlBase Sender )
     {
       bool  wasModified = false;
       var   selectedChars = panelCharacters.SelectedIndices;
@@ -2252,7 +2252,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnMoveSelectionToTarget_Click( object sender, EventArgs e )
+    private void btnMoveSelectionToTarget_Click( DecentForms.ControlBase Sender )
     {
       int targetIndex = GR.Convert.ToI32( editMoveTargetIndex.Text );
 
@@ -2434,7 +2434,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnAddCategory_Click( object sender, EventArgs e )
+    private void btnAddCategory_Click( DecentForms.ControlBase Sender )
     {
       string    newCategory = editCategoryName.Text;
 
@@ -2447,7 +2447,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnDelete_Click( object sender, EventArgs e )
+    private void btnDelete_Click( DecentForms.ControlBase Sender )
     {
       if ( listCategories.SelectedItems.Count == 0 )
       {
@@ -2463,7 +2463,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnCollapseCategory_Click( object sender, EventArgs e )
+    private void btnCollapseCategory_Click( DecentForms.ControlBase Sender )
     {
       // collapses similar looking characters
       if ( listCategories.SelectedItems.Count == 0 )
@@ -2524,7 +2524,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnSortCategories_Click( object sender, EventArgs e )
+    private void btnSortCategories_Click( DecentForms.ControlBase Sender )
     {
       UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
 
@@ -2564,7 +2564,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnReseatCategory_Click( object sender, EventArgs e )
+    private void btnReseatCategory_Click( DecentForms.ControlBase Sender )
     {
       if ( listCategories.SelectedItems.Count == 0 )
       {
@@ -2681,7 +2681,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnMoveCategoryUp_Click( object sender, EventArgs e )
+    private void btnMoveCategoryUp_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listCategories.Items.Count > 1 )
       &&   ( listCategories.SelectedIndices.Count > 0 )
@@ -2731,7 +2731,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnMoveCategoryDown_Click( object sender, EventArgs e )
+    private void btnMoveCategoryDown_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listCategories.Items.Count > 1 )
       &&   ( listCategories.SelectedIndices.Count > 0 )
@@ -2831,7 +2831,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnHighlightDuplicates_Click( object sender, EventArgs e )
+    private void btnHighlightDuplicates_Click( DecentForms.ControlBase Sender )
     {
       var duplicateGroups = new Map<ByteBuffer,int>();
       var itemGroup       = new Map<int,int>();

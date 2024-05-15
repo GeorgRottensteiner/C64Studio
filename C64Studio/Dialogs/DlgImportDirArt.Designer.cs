@@ -28,8 +28,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnOK = new System.Windows.Forms.Button();
+      this.btnCancel = new DecentForms.Button();
+      this.btnOK = new DecentForms.Button();
       this.labelASMInfo = new System.Windows.Forms.Label();
       this.editASMDirArt = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
@@ -37,23 +37,29 @@
       // 
       // btnCancel
       // 
+      this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Image = null;
       this.btnCancel.Location = new System.Drawing.Point(519, 366);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 1;
       this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.Click += new DecentForms.EventHandler(this.btnCancel_Click);
       // 
       // btnOK
       // 
+      this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOK.Image = null;
       this.btnOK.Location = new System.Drawing.Point(438, 366);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 1;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // labelASMInfo
       // 
@@ -108,8 +114,8 @@
 
     #endregion
 
-    private System.Windows.Forms.Button btnCancel;
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnCancel;
+    private DecentForms.Button btnOK;
     private System.Windows.Forms.Label labelASMInfo;
     private System.Windows.Forms.TextBox editASMDirArt;
     private System.Windows.Forms.Label label1;

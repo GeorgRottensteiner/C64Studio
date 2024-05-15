@@ -32,8 +32,8 @@ namespace RetroDevStudio.Dialogs
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnOK = new System.Windows.Forms.Button();
+      this.btnCancel = new DecentForms.Button();
+      this.btnOK = new DecentForms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.listPETSCII = new GR.Forms.ImageListbox();
       this.editDiskName = new RetroDevStudio.Controls.EditC64Filename();
@@ -43,23 +43,29 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnCancel
       // 
+      this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Image = null;
       this.btnCancel.Location = new System.Drawing.Point(527, 306);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 1;
       this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.Click += new DecentForms.EventHandler(this.btnCancel_Click);
       // 
       // btnOK
       // 
+      this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOK.Image = null;
       this.btnOK.Location = new System.Drawing.Point(446, 306);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 1;
       this.btnOK.Text = "OK";
-      this.btnOK.UseVisualStyleBackColor = true;
-      this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // label1
       // 
@@ -133,7 +139,7 @@ namespace RetroDevStudio.Dialogs
       this.editDiskID.Selection = "";
       this.editDiskID.Size = new System.Drawing.Size(90, 23);
       this.editDiskID.TabIndex = 0;
-      this.editDiskID.Text = "ID";
+      this.editDiskID.Text = "ID   ";
       this.editDiskID.KeyDown += new System.Windows.Forms.KeyEventHandler(this.editDiskID_KeyDown);
       this.editDiskID.MouseDown += new System.Windows.Forms.MouseEventHandler(this.editDiskID_MouseDown);
       // 
@@ -166,8 +172,8 @@ namespace RetroDevStudio.Dialogs
     #endregion
 
     private EditC64Filename editDiskName;
-    private System.Windows.Forms.Button btnCancel;
-    private System.Windows.Forms.Button btnOK;
+    private DecentForms.Button btnCancel;
+    private DecentForms.Button btnOK;
     private System.Windows.Forms.Label label1;
     private GR.Forms.ImageListbox listPETSCII;
     private System.Windows.Forms.Label label2;

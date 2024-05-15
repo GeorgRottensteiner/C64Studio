@@ -36,7 +36,7 @@ namespace RetroDevStudio.Dialogs
     
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult                    = DialogResult.OK;
       ProjectName                     = editProjectName.Text;
@@ -81,7 +81,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnBrowseBasePath_Click( object sender, EventArgs e )
+    private void btnBrowseBasePath_Click( DecentForms.ControlBase Sender )
     {
       FolderBrowserDialog  dlgFolder = new FolderBrowserDialog();
 
@@ -108,6 +108,14 @@ namespace RetroDevStudio.Dialogs
     private void editBasePath_TextChanged( object sender, EventArgs e )
     {
       UpdateSummary();
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

@@ -42,7 +42,7 @@ namespace RetroDevStudio.Documents
       this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.renumberToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnToggleLabelMode = new RetroDevStudio.Controls.MenuButton();
+      this.btnToggleLabelMode = new DecentForms.MenuButton();
       this.contextMenuLabelButton = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.autoRenumberWithLastValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.autoRenumberWith1010ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -190,8 +190,7 @@ namespace RetroDevStudio.Documents
       this.btnToggleLabelMode.TabIndex = 2;
       this.btnToggleLabelMode.Text = "To Label Mode";
       this.toolTip1.SetToolTip(this.btnToggleLabelMode, "To Label Mode (Line Number Mode is active)");
-      this.btnToggleLabelMode.UseVisualStyleBackColor = true;
-      this.btnToggleLabelMode.CheckedChanged += new System.EventHandler(this.btnToggleLabelMode_CheckedChanged);
+      this.btnToggleLabelMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleLabelMode_CheckedChanged);
       // 
       // contextMenuLabelButton
       // 
@@ -393,7 +392,7 @@ namespace RetroDevStudio.Documents
     public FastColoredTextBoxNS.FastColoredTextBox    editSource;
     private System.Windows.Forms.ContextMenuStrip contextSource;
     //private System.Windows.Forms.CheckBox btnToggleLabelMode;
-    MenuButton btnToggleLabelMode;
+    DecentForms.MenuButton btnToggleLabelMode;
     private System.Windows.Forms.MenuStrip menuBASIC;
     private System.Windows.Forms.ToolStripMenuItem bASICToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;

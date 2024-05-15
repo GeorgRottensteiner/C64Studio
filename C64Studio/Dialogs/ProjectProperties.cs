@@ -47,7 +47,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnClose_Click( object sender, EventArgs e )
+    private void btnClose_Click( DecentForms.ControlBase Sender )
     {
       Close();
     }
@@ -89,7 +89,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnAddConfig_Click( object sender, EventArgs e )
+    private void btnAddConfig_Click( DecentForms.ControlBase Sender )
     {
       string    newConfigName = editConfigName.Text;
 
@@ -159,7 +159,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnDeleteConfig_Click( object sender, EventArgs e )
+    private void btnDeleteConfig_Click( DecentForms.ControlBase Sender )
     {
       string configName = comboConfiguration.SelectedItem.ToString();
 
@@ -194,7 +194,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnApplyChanges_Click( object sender, EventArgs e )
+    private void btnApplyChanges_Click( DecentForms.ControlBase Sender )
     {
       if ( comboConfiguration.SelectedItem == null )
       {

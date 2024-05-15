@@ -70,7 +70,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       int lineStart = GR.Convert.ToI32( editStartLine.Text );
       int lineStep = GR.Convert.ToI32( editLineStep.Text );
@@ -94,6 +94,14 @@ namespace RetroDevStudio.Dialogs
     private void editFirstLineNumber_TextChanged( object sender, EventArgs e )
     {
       CheckRenumbering();
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

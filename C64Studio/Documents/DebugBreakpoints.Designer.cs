@@ -36,9 +36,7 @@
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.btnAddBreakpoint = new RetroDevStudio.Controls.ThemedButton();
-      this.btnDeleteBreakpoint = new RetroDevStudio.Controls.ThemedButton();
-      this.btnApplyChanges = new RetroDevStudio.Controls.ThemedButton();
+      this.btnDeleteBreakpoint = new DecentForms.Button();
       this.groupBreakpointData = new System.Windows.Forms.GroupBox();
       this.comboSymbols = new System.Windows.Forms.ComboBox();
       this.checkTriggerStore = new System.Windows.Forms.CheckBox();
@@ -49,7 +47,9 @@
       this.label2 = new System.Windows.Forms.Label();
       this.editBPAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.btnDeleteAll = new RetroDevStudio.Controls.ThemedButton();
+      this.btnDeleteAll = new DecentForms.Button();
+      this.btnApplyChanges = new DecentForms.Button();
+      this.btnAddBreakpoint = new DecentForms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.groupBreakpointData.SuspendLayout();
       this.SuspendLayout();
@@ -105,40 +105,17 @@
       this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
       this.columnHeader2.Width = 59;
       // 
-      // btnAddBreakpoint
-      // 
-      this.btnAddBreakpoint.DisabledTextColor = System.Drawing.SystemColors.GrayText;
-      this.btnAddBreakpoint.Enabled = false;
-      this.btnAddBreakpoint.Location = new System.Drawing.Point(12, 184);
-      this.btnAddBreakpoint.Name = "btnAddBreakpoint";
-      this.btnAddBreakpoint.Size = new System.Drawing.Size(75, 23);
-      this.btnAddBreakpoint.TabIndex = 1;
-      this.btnAddBreakpoint.Text = "Add";
-      this.btnAddBreakpoint.UseVisualStyleBackColor = true;
-      this.btnAddBreakpoint.Click += new System.EventHandler(this.btnAddBreakpoint_Click);
-      // 
       // btnDeleteBreakpoint
       // 
-      this.btnDeleteBreakpoint.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+      this.btnDeleteBreakpoint.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteBreakpoint.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnDeleteBreakpoint.Enabled = false;
       this.btnDeleteBreakpoint.Location = new System.Drawing.Point(93, 184);
       this.btnDeleteBreakpoint.Name = "btnDeleteBreakpoint";
       this.btnDeleteBreakpoint.Size = new System.Drawing.Size(75, 23);
-      this.btnDeleteBreakpoint.TabIndex = 1;
+      this.btnDeleteBreakpoint.TabIndex = 2;
       this.btnDeleteBreakpoint.Text = "Del";
-      this.btnDeleteBreakpoint.UseVisualStyleBackColor = true;
-      this.btnDeleteBreakpoint.Click += new System.EventHandler(this.btnDeleteBreakpoint_Click);
-      // 
-      // btnApplyChanges
-      // 
-      this.btnApplyChanges.DisabledTextColor = System.Drawing.SystemColors.GrayText;
-      this.btnApplyChanges.Location = new System.Drawing.Point(271, 184);
-      this.btnApplyChanges.Name = "btnApplyChanges";
-      this.btnApplyChanges.Size = new System.Drawing.Size(75, 23);
-      this.btnApplyChanges.TabIndex = 1;
-      this.btnApplyChanges.Text = "Apply";
-      this.btnApplyChanges.UseVisualStyleBackColor = true;
-      this.btnApplyChanges.Click += new System.EventHandler(this.btnApplyChanges_Click);
+      this.btnDeleteBreakpoint.Click += new DecentForms.EventHandler(this.btnDeleteBreakpoint_Click);
       // 
       // groupBreakpointData
       // 
@@ -167,7 +144,7 @@
       this.comboSymbols.Location = new System.Drawing.Point(210, 19);
       this.comboSymbols.Name = "comboSymbols";
       this.comboSymbols.Size = new System.Drawing.Size(145, 21);
-      this.comboSymbols.TabIndex = 3;
+      this.comboSymbols.TabIndex = 1;
       this.comboSymbols.SelectedIndexChanged += new System.EventHandler(this.comboSymbols_SelectedIndexChanged);
       // 
       // checkTriggerStore
@@ -176,7 +153,7 @@
       this.checkTriggerStore.Location = new System.Drawing.Point(210, 71);
       this.checkTriggerStore.Name = "checkTriggerStore";
       this.checkTriggerStore.Size = new System.Drawing.Size(51, 17);
-      this.checkTriggerStore.TabIndex = 2;
+      this.checkTriggerStore.TabIndex = 5;
       this.checkTriggerStore.Text = "Store";
       this.checkTriggerStore.UseVisualStyleBackColor = true;
       this.checkTriggerStore.CheckedChanged += new System.EventHandler(this.checkTriggerStore_CheckedChanged);
@@ -187,7 +164,7 @@
       this.checkTriggerLoad.Location = new System.Drawing.Point(146, 71);
       this.checkTriggerLoad.Name = "checkTriggerLoad";
       this.checkTriggerLoad.Size = new System.Drawing.Size(50, 17);
-      this.checkTriggerLoad.TabIndex = 2;
+      this.checkTriggerLoad.TabIndex = 4;
       this.checkTriggerLoad.Text = "Load";
       this.checkTriggerLoad.UseVisualStyleBackColor = true;
       this.checkTriggerLoad.CheckedChanged += new System.EventHandler(this.checkTriggerLoad_CheckedChanged);
@@ -200,7 +177,7 @@
       this.checkTriggerExec.Location = new System.Drawing.Point(67, 71);
       this.checkTriggerExec.Name = "checkTriggerExec";
       this.checkTriggerExec.Size = new System.Drawing.Size(65, 17);
-      this.checkTriggerExec.TabIndex = 2;
+      this.checkTriggerExec.TabIndex = 3;
       this.checkTriggerExec.Text = "Execute";
       this.checkTriggerExec.UseVisualStyleBackColor = true;
       this.checkTriggerExec.CheckedChanged += new System.EventHandler(this.checkTriggerExec_CheckedChanged);
@@ -210,7 +187,7 @@
       this.editTriggerConditions.Location = new System.Drawing.Point(67, 45);
       this.editTriggerConditions.Name = "editTriggerConditions";
       this.editTriggerConditions.Size = new System.Drawing.Size(288, 20);
-      this.editTriggerConditions.TabIndex = 1;
+      this.editTriggerConditions.TabIndex = 2;
       this.editTriggerConditions.TextChanged += new System.EventHandler(this.editTriggerConditions_TextChanged);
       // 
       // label3
@@ -236,7 +213,7 @@
       this.editBPAddress.Location = new System.Drawing.Point(67, 19);
       this.editBPAddress.Name = "editBPAddress";
       this.editBPAddress.Size = new System.Drawing.Size(129, 20);
-      this.editBPAddress.TabIndex = 1;
+      this.editBPAddress.TabIndex = 0;
       this.editBPAddress.TextChanged += new System.EventHandler(this.editBPAddress_TextChanged);
       // 
       // label1
@@ -250,14 +227,38 @@
       // 
       // btnDeleteAll
       // 
-      this.btnDeleteAll.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+      this.btnDeleteAll.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnDeleteAll.Location = new System.Drawing.Point(174, 184);
       this.btnDeleteAll.Name = "btnDeleteAll";
       this.btnDeleteAll.Size = new System.Drawing.Size(75, 23);
-      this.btnDeleteAll.TabIndex = 1;
+      this.btnDeleteAll.TabIndex = 3;
       this.btnDeleteAll.Text = "Del All";
-      this.btnDeleteAll.UseVisualStyleBackColor = true;
-      this.btnDeleteAll.Click += new System.EventHandler(this.btnDeleteAllBreakpoints_Click);
+      this.btnDeleteAll.Click += new DecentForms.EventHandler(this.btnDeleteAllBreakpoints_Click);
+      // 
+      // btnApplyChanges
+      // 
+      this.btnApplyChanges.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnApplyChanges.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnApplyChanges.Enabled = false;
+      this.btnApplyChanges.Location = new System.Drawing.Point(277, 184);
+      this.btnApplyChanges.Name = "btnApplyChanges";
+      this.btnApplyChanges.Size = new System.Drawing.Size(75, 23);
+      this.btnApplyChanges.TabIndex = 4;
+      this.btnApplyChanges.Text = "Apply";
+      this.btnApplyChanges.Click += new DecentForms.EventHandler(this.btnApplyChanges_Click);
+      // 
+      // btnAddBreakpoint
+      // 
+      this.btnAddBreakpoint.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddBreakpoint.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddBreakpoint.Enabled = false;
+      this.btnAddBreakpoint.Location = new System.Drawing.Point(12, 184);
+      this.btnAddBreakpoint.Name = "btnAddBreakpoint";
+      this.btnAddBreakpoint.Size = new System.Drawing.Size(75, 23);
+      this.btnAddBreakpoint.TabIndex = 1;
+      this.btnAddBreakpoint.Text = "Add";
+      this.btnAddBreakpoint.Click += new DecentForms.EventHandler(this.btnAddBreakpoint_Click);
       // 
       // DebugBreakpoints
       // 
@@ -265,8 +266,8 @@
       this.Controls.Add(this.groupBreakpointData);
       this.Controls.Add(this.btnDeleteAll);
       this.Controls.Add(this.btnDeleteBreakpoint);
-      this.Controls.Add(this.btnApplyChanges);
       this.Controls.Add(this.btnAddBreakpoint);
+      this.Controls.Add(this.btnApplyChanges);
       this.Controls.Add(this.listBreakpoints);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "DebugBreakpoints";
@@ -297,9 +298,9 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.ColumnHeader columnHeader6;
     private System.Windows.Forms.ComboBox comboSymbols;
-        private Controls.ThemedButton btnAddBreakpoint;
-        private Controls.ThemedButton btnDeleteBreakpoint;
-        private Controls.ThemedButton btnApplyChanges;
-        private Controls.ThemedButton btnDeleteAll;
-    }
+    private DecentForms.Button btnDeleteBreakpoint;
+    private DecentForms.Button btnDeleteAll;
+    private DecentForms.Button btnApplyChanges;
+    private DecentForms.Button btnAddBreakpoint;
+  }
 }

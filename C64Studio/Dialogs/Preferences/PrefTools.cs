@@ -38,14 +38,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnImportSettings_Click( object sender, EventArgs e )
+    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
     {
       ImportLocalSettings();
     }
 
 
 
-    private void btnExportSettings_Click( object sender, EventArgs e )
+    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
     {
       SaveLocalSettings();
     }
@@ -213,7 +213,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnBrowseTool_Click( object sender, EventArgs e )
+    private void btnBrowseTool_Click( DecentForms.ControlBase Sender )
     {
       var tool = SelectedTool();
       if ( tool == null )
@@ -454,7 +454,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnMacros_Click( object sender, EventArgs e )
+    private void btnMacros_Click( DecentForms.ControlBase Sender )
     {
       string    macroInfo = "";
       bool      error = false;
@@ -490,6 +490,28 @@ namespace RetroDevStudio.Dialogs.Preferences
         return;
       }
       tool.PassLabelsToEmulator = checkPassLabelsToEmulator.Checked;
+    }
+
+
+
+    private void btnBrowseToolWorkPath_Click( DecentForms.ControlBase Sender )
+    {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
+        return;
+      }
+
+      var   dlgTool = new FolderBrowserDialog();
+
+      if ( labelToolPath.Text.Length != 0 )
+      {
+        dlgTool.SelectedPath = System.IO.Path.GetDirectoryName( editWorkPath.Text );
+      }
+      if ( dlgTool.ShowDialog() == DialogResult.OK )
+      {
+        editWorkPath.Text = dlgTool.SelectedPath;
+      }
     }
 
 

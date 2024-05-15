@@ -29,14 +29,14 @@ namespace RetroDevStudio.Documents
 #endif
         string    fullPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), helpDocPath );
 
-        Core.AddToOutput( "Help Path: " + fullPath );
+        Core.AddToOutputLine( "Help Path: " + fullPath );
         webBrowser.Navigate( fullPath );
         webBrowser.DocumentCompleted += WebBrowser_DocumentCompleted;
       }
       catch ( Exception ex )
       {
         Debug.Log( "Got exception: " + ex.ToString() );
-        Core.AddToOutput( "Help exception: " + ex.ToString() );
+        Core.AddToOutputLine( "Help exception: " + ex.ToString() );
       }
       webBrowser.CanGoBackChanged += new EventHandler( webBrowser_CanGoBackChanged );
       webBrowser.CanGoForwardChanged += new EventHandler( webBrowser_CanGoForwardChanged );

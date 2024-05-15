@@ -28,12 +28,12 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnSetDefaultsColors = new System.Windows.Forms.Button();
-      this.btnChooseBG = new System.Windows.Forms.Button();
-      this.btnChooseFG = new System.Windows.Forms.Button();
+      this.btnSetDefaultsColors = new DecentForms.Button();
+      this.btnChooseBG = new DecentForms.Button();
+      this.btnChooseFG = new DecentForms.Button();
       this.panelElementPreview = new System.Windows.Forms.Panel();
       this.comboElementBG = new System.Windows.Forms.ComboBox();
       this.comboElementFG = new System.Windows.Forms.ComboBox();
@@ -55,8 +55,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -66,8 +65,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -100,8 +98,7 @@
       this.btnSetDefaultsColors.Size = new System.Drawing.Size(124, 23);
       this.btnSetDefaultsColors.TabIndex = 25;
       this.btnSetDefaultsColors.Text = "Set Defaults";
-      this.btnSetDefaultsColors.UseVisualStyleBackColor = true;
-      this.btnSetDefaultsColors.Click += new System.EventHandler(this.btnSetDefaultsColors_Click);
+      this.btnSetDefaultsColors.Click += new DecentForms.EventHandler(this.btnSetDefaultsColors_Click);
       // 
       // btnChooseBG
       // 
@@ -110,8 +107,7 @@
       this.btnChooseBG.Size = new System.Drawing.Size(75, 23);
       this.btnChooseBG.TabIndex = 23;
       this.btnChooseBG.Text = "Choose...";
-      this.btnChooseBG.UseVisualStyleBackColor = true;
-      this.btnChooseBG.Click += new System.EventHandler(this.btnChooseBG_Click);
+      this.btnChooseBG.Click += new DecentForms.EventHandler(this.btnChooseBG_Click);
       // 
       // btnChooseFG
       // 
@@ -120,8 +116,7 @@
       this.btnChooseFG.Size = new System.Drawing.Size(75, 23);
       this.btnChooseFG.TabIndex = 24;
       this.btnChooseFG.Text = "Choose...";
-      this.btnChooseFG.UseVisualStyleBackColor = true;
-      this.btnChooseFG.Click += new System.EventHandler(this.btnChooseFG_Click);
+      this.btnChooseFG.Click += new DecentForms.EventHandler(this.btnChooseFG_Click);
       // 
       // panelElementPreview
       // 
@@ -235,12 +230,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnSetDefaultsColors;
-        private System.Windows.Forms.Button btnChooseBG;
-        private System.Windows.Forms.Button btnChooseFG;
+        private DecentForms.Button btnSetDefaultsColors;
+        private DecentForms.Button btnChooseBG;
+        private DecentForms.Button btnChooseFG;
         private System.Windows.Forms.Panel panelElementPreview;
         private System.Windows.Forms.ComboBox comboElementBG;
         private System.Windows.Forms.ComboBox comboElementFG;

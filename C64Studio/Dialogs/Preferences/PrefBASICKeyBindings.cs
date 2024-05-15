@@ -34,14 +34,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnImportSettings_Click( object sender, EventArgs e )
+    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
     {
       ImportLocalSettings();
     }
 
 
 
-    private void btnExportSettings_Click( object sender, EventArgs e )
+    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
     {
       SaveLocalSettings();
     }
@@ -192,7 +192,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnBindBASICKeyMapBinding_Click( object sender, EventArgs e )
+    private void btnBindBASICKeyMapBinding_Click( DecentForms.ControlBase Sender )
     {
       if ( listBASICKeyMap.SelectedItems.Count == 0 )
       {
@@ -239,7 +239,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnUnbindBASICKeyMapBinding_Click( object sender, EventArgs e )
+    private void btnUnbindBASICKeyMapBinding_Click( DecentForms.ControlBase Sender )
     {
       if ( listBASICKeyMap.SelectedItems.Count == 0 )
       {

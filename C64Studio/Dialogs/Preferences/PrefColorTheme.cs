@@ -46,14 +46,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnImportSettings_Click( object sender, EventArgs e )
+    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
     {
       ImportLocalSettings();
     }
 
 
 
-    private void btnExportSettings_Click( object sender, EventArgs e )
+    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
     {
       SaveLocalSettings();
     }
@@ -321,7 +321,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnChooseFG_Click( object sender, EventArgs e )
+    private void btnChooseFG_Click( DecentForms.ControlBase Sender )
     {
       if ( listColoring.SelectedItems.Count == 0 )
       {
@@ -346,7 +346,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnChooseBG_Click( object sender, EventArgs e )
+    private void btnChooseBG_Click( DecentForms.ControlBase Sender )
     {
       if ( listColoring.SelectedItems.Count == 0 )
       {
@@ -386,10 +386,10 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void btnSetDefaultsColors_Click( object sender, EventArgs e )
+    private void btnSetDefaultsColors_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.SetDefaultColors();
-      listColoring_SelectedIndexChanged( listColoring, e );
+      listColoring_SelectedIndexChanged( listColoring, new EventArgs() );
       RefreshDisplayOnDocuments();
     }
 

@@ -13,5 +13,12 @@
     <Color Element="OPERATOR" FGColor="FF000080" BGColor="Auto"/>
     <Color Element="HIGHLIGHTED_SEARCH_RESULTS" FGColor="FF000000" BGColor="FFFFBC79"/>
     <Color Element="ERROR_UNDERLINE" FGColor="FFFF0000" BGColor="FF008000"/>
+    <Color Element="SELECTED_TEXT" FGColor="FF000080" BGColor="Auto"/>
+    <Color Element="CONTROL_TEXT" FGColor="FF000000" BGColor="FFFFFFFF"/>
+    <Color Element="BACKGROUND_CONTROL" FGColor="FF000000" BGColor="Auto"/>
+    <Color Element="CHANGED_DEBUG_ELEMENT" FGColor="FFFF0000" BGColor="Auto"/>
+    <Color Element="SELECTION_FRAME" FGColor="FF80FF80" BGColor="FFFFFFFF"/>
+    <Color Element="BACKGROUND_BUTTON" FGColor="FF000000" BGColor="FFC0C0C0"/>
+    <Color Element="LINE_NUMBERS" FGColor="FF408080" BGColor="FFFFFFFF"/>
   </EditorColors>
 </RetroDevStudioSettings>

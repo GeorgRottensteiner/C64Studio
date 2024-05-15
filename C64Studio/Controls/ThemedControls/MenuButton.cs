@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace RetroDevStudio.Controls
+namespace DecentForms
 {
   public class MenuButton : Button
   {
@@ -73,7 +73,7 @@ namespace RetroDevStudio.Controls
       {
         if ( CheckedChanged != null )
         {
-          CheckedChanged( this, new EventArgs() );
+          CheckedChanged( this );
         }
         OnClick( new EventArgs() );
       }

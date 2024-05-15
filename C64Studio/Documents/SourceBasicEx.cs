@@ -2026,7 +2026,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToggleLabelMode_CheckedChanged( object sender, EventArgs e )
+    private void btnToggleLabelMode_CheckedChanged( DecentForms.ControlBase Sender )
     {
       if ( m_InsideLoad )
       {

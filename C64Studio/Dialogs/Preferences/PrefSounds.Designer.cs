@@ -28,16 +28,16 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.checkPlaySoundSearchTextNotFound = new System.Windows.Forms.CheckBox();
       this.checkPlaySoundCompileSuccessful = new System.Windows.Forms.CheckBox();
       this.checkPlaySoundCompileFail = new System.Windows.Forms.CheckBox();
       this.label11 = new System.Windows.Forms.Label();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnTestSoundBuildFailure = new System.Windows.Forms.Button();
-      this.btnTestSoundBuildSuccess = new System.Windows.Forms.Button();
-      this.btnTestSoundNotFound = new System.Windows.Forms.Button();
+      this.btnTestSoundBuildFailure = new DecentForms.Button();
+      this.btnTestSoundBuildSuccess = new DecentForms.Button();
+      this.btnTestSoundNotFound = new DecentForms.Button();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -49,8 +49,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -60,8 +59,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // checkPlaySoundSearchTextNotFound
       // 
@@ -131,8 +129,7 @@
       this.btnTestSoundBuildFailure.Size = new System.Drawing.Size(75, 23);
       this.btnTestSoundBuildFailure.TabIndex = 18;
       this.btnTestSoundBuildFailure.Text = "Test";
-      this.btnTestSoundBuildFailure.UseVisualStyleBackColor = true;
-      this.btnTestSoundBuildFailure.Click += new System.EventHandler(this.btnTestSoundBuildFailure_Click);
+      this.btnTestSoundBuildFailure.Click += new DecentForms.EventHandler(this.btnTestSoundBuildFailure_Click);
       // 
       // btnTestSoundBuildSuccess
       // 
@@ -141,8 +138,7 @@
       this.btnTestSoundBuildSuccess.Size = new System.Drawing.Size(75, 23);
       this.btnTestSoundBuildSuccess.TabIndex = 18;
       this.btnTestSoundBuildSuccess.Text = "Test";
-      this.btnTestSoundBuildSuccess.UseVisualStyleBackColor = true;
-      this.btnTestSoundBuildSuccess.Click += new System.EventHandler(this.btnTestSoundBuildSuccess_Click);
+      this.btnTestSoundBuildSuccess.Click += new DecentForms.EventHandler(this.btnTestSoundBuildSuccess_Click);
       // 
       // btnTestSoundNotFound
       // 
@@ -151,8 +147,7 @@
       this.btnTestSoundNotFound.Size = new System.Drawing.Size(75, 23);
       this.btnTestSoundNotFound.TabIndex = 18;
       this.btnTestSoundNotFound.Text = "Test";
-      this.btnTestSoundNotFound.UseVisualStyleBackColor = true;
-      this.btnTestSoundNotFound.Click += new System.EventHandler(this.btnTestSoundNotFound_Click);
+      this.btnTestSoundNotFound.Click += new DecentForms.EventHandler(this.btnTestSoundNotFound_Click);
       // 
       // PrefSounds
       // 
@@ -169,15 +164,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.CheckBox checkPlaySoundSearchTextNotFound;
         private System.Windows.Forms.CheckBox checkPlaySoundCompileSuccessful;
         private System.Windows.Forms.CheckBox checkPlaySoundCompileFail;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Button btnTestSoundNotFound;
-    private System.Windows.Forms.Button btnTestSoundBuildSuccess;
-    private System.Windows.Forms.Button btnTestSoundBuildFailure;
+    private DecentForms.Button btnTestSoundNotFound;
+    private DecentForms.Button btnTestSoundBuildSuccess;
+    private DecentForms.Button btnTestSoundBuildFailure;
   }
 }

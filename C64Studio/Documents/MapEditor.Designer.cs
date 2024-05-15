@@ -41,7 +41,7 @@
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabEditor = new System.Windows.Forms.TabPage();
-      this.btnCopyMapImage = new System.Windows.Forms.Button();
+      this.btnCopyMapImage = new DecentForms.Button();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
       this.btnToolQuad = new System.Windows.Forms.RadioButton();
@@ -61,12 +61,12 @@
       this.comboMapMultiColor2 = new System.Windows.Forms.ComboBox();
       this.comboMapBGColor = new System.Windows.Forms.ComboBox();
       this.comboMapMultiColor1 = new System.Windows.Forms.ComboBox();
-      this.btnCopy = new System.Windows.Forms.Button();
-      this.btnMoveMapDown = new System.Windows.Forms.Button();
-      this.btnMoveMapUp = new System.Windows.Forms.Button();
-      this.btnMapAdd = new System.Windows.Forms.Button();
-      this.btnMapDelete = new System.Windows.Forms.Button();
-      this.btnMapApply = new System.Windows.Forms.Button();
+      this.btnCopy = new DecentForms.Button();
+      this.btnMoveMapDown = new DecentForms.Button();
+      this.btnMoveMapUp = new DecentForms.Button();
+      this.btnMapAdd = new DecentForms.Button();
+      this.btnMapDelete = new DecentForms.Button();
+      this.btnMapApply = new DecentForms.Button();
       this.label14 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       this.label22 = new System.Windows.Forms.Label();
@@ -87,14 +87,14 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabMapEditor = new System.Windows.Forms.TabControl();
       this.tabTiles = new System.Windows.Forms.TabPage();
-      this.btnTileApply = new System.Windows.Forms.Button();
-      this.btnCopyTileCharToNextIncreased = new System.Windows.Forms.Button();
-      this.btnSetNextTileChar = new System.Windows.Forms.Button();
-      this.btnMoveTileDown = new System.Windows.Forms.Button();
-      this.btnMoveTileUp = new System.Windows.Forms.Button();
-      this.btnTileDelete = new System.Windows.Forms.Button();
-      this.btnTileClone = new System.Windows.Forms.Button();
-      this.btnTileAdd = new System.Windows.Forms.Button();
+      this.btnTileApply = new DecentForms.Button();
+      this.btnCopyTileCharToNextIncreased = new DecentForms.Button();
+      this.btnSetNextTileChar = new DecentForms.Button();
+      this.btnMoveTileDown = new DecentForms.Button();
+      this.btnMoveTileUp = new DecentForms.Button();
+      this.btnTileDelete = new DecentForms.Button();
+      this.btnTileClone = new DecentForms.Button();
+      this.btnTileAdd = new DecentForms.Button();
       this.listTileChars = new System.Windows.Forms.ListView();
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -128,14 +128,14 @@
       this.comboExportOrientation = new System.Windows.Forms.ComboBox();
       this.panelExport = new System.Windows.Forms.Panel();
       this.editDataExport = new System.Windows.Forms.TextBox();
-      this.btnExport = new System.Windows.Forms.Button();
+      this.btnExport = new DecentForms.Button();
       this.comboExportMethod = new System.Windows.Forms.ComboBox();
       this.label24 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabImport = new System.Windows.Forms.TabPage();
       this.panelImport = new System.Windows.Forms.Panel();
-      this.btnImport = new System.Windows.Forms.Button();
+      this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -149,25 +149,6 @@
       this.comboBox3 = new System.Windows.Forms.ComboBox();
       this.fastPictureBox1 = new GR.Forms.FastPictureBox();
       this.fastPictureBox2 = new GR.Forms.FastPictureBox();
-      this.tabPage2 = new System.Windows.Forms.TabPage();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.button1 = new System.Windows.Forms.Button();
-      this.button2 = new System.Windows.Forms.Button();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.label10 = new System.Windows.Forms.Label();
-      this.comboBox4 = new System.Windows.Forms.ComboBox();
-      this.label11 = new System.Windows.Forms.Label();
-      this.comboBox5 = new System.Windows.Forms.ComboBox();
-      this.comboBox6 = new System.Windows.Forms.ComboBox();
-      this.textBox1 = new System.Windows.Forms.TextBox();
-      this.label12 = new System.Windows.Forms.Label();
-      this.textBox2 = new System.Windows.Forms.TextBox();
-      this.checkBox2 = new System.Windows.Forms.CheckBox();
-      this.checkBox3 = new System.Windows.Forms.CheckBox();
-      this.textBox3 = new System.Windows.Forms.TextBox();
-      this.button3 = new System.Windows.Forms.Button();
-      this.button4 = new System.Windows.Forms.Button();
-      this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
@@ -185,9 +166,6 @@
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox2)).BeginInit();
-      this.tabPage2.SuspendLayout();
-      this.groupBox2.SuspendLayout();
-      this.groupBox3.SuspendLayout();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -268,8 +246,7 @@
       this.btnCopyMapImage.Size = new System.Drawing.Size(39, 24);
       this.btnCopyMapImage.TabIndex = 38;
       this.toolTip1.SetToolTip(this.btnCopyMapImage, "Copy map to clipboard as image");
-      this.btnCopyMapImage.UseVisualStyleBackColor = true;
-      this.btnCopyMapImage.Click += new System.EventHandler(this.btnCopyImage_Click);
+      this.btnCopyMapImage.Click += new DecentForms.EventHandler(this.btnCopyImage_Click);
       // 
       // btnToolSelect
       // 
@@ -515,8 +492,7 @@
       this.btnCopy.Size = new System.Drawing.Size(35, 23);
       this.btnCopy.TabIndex = 27;
       this.btnCopy.Text = "Cpy";
-      this.btnCopy.UseVisualStyleBackColor = true;
-      this.btnCopy.Click += new System.EventHandler(this.btnMapCopy_Click);
+      this.btnCopy.Click += new DecentForms.EventHandler(this.btnMapCopy_Click);
       // 
       // btnMoveMapDown
       // 
@@ -527,8 +503,7 @@
       this.btnMoveMapDown.TabIndex = 27;
       this.btnMoveMapDown.Text = "▼";
       this.toolTip1.SetToolTip(this.btnMoveMapDown, "Move Map Down");
-      this.btnMoveMapDown.UseVisualStyleBackColor = true;
-      this.btnMoveMapDown.Click += new System.EventHandler(this.btnMoveMapDown_Click);
+      this.btnMoveMapDown.Click += new DecentForms.EventHandler(this.btnMoveMapDown_Click);
       // 
       // btnMoveMapUp
       // 
@@ -539,8 +514,7 @@
       this.btnMoveMapUp.TabIndex = 27;
       this.btnMoveMapUp.Text = "▲";
       this.toolTip1.SetToolTip(this.btnMoveMapUp, "Move Map Up");
-      this.btnMoveMapUp.UseVisualStyleBackColor = true;
-      this.btnMoveMapUp.Click += new System.EventHandler(this.btnMoveMapUp_Click);
+      this.btnMoveMapUp.Click += new DecentForms.EventHandler(this.btnMoveMapUp_Click);
       // 
       // btnMapAdd
       // 
@@ -549,8 +523,7 @@
       this.btnMapAdd.Size = new System.Drawing.Size(35, 23);
       this.btnMapAdd.TabIndex = 27;
       this.btnMapAdd.Text = "Add";
-      this.btnMapAdd.UseVisualStyleBackColor = true;
-      this.btnMapAdd.Click += new System.EventHandler(this.btnMapAdd_Click);
+      this.btnMapAdd.Click += new DecentForms.EventHandler(this.btnMapAdd_Click);
       // 
       // btnMapDelete
       // 
@@ -560,8 +533,7 @@
       this.btnMapDelete.Size = new System.Drawing.Size(56, 23);
       this.btnMapDelete.TabIndex = 27;
       this.btnMapDelete.Text = "Delete";
-      this.btnMapDelete.UseVisualStyleBackColor = true;
-      this.btnMapDelete.Click += new System.EventHandler(this.btnMapDelete_Click);
+      this.btnMapDelete.Click += new DecentForms.EventHandler(this.btnMapDelete_Click);
       // 
       // btnMapApply
       // 
@@ -571,8 +543,7 @@
       this.btnMapApply.Size = new System.Drawing.Size(53, 23);
       this.btnMapApply.TabIndex = 27;
       this.btnMapApply.Text = "Apply";
-      this.btnMapApply.UseVisualStyleBackColor = true;
-      this.btnMapApply.Click += new System.EventHandler(this.btnMapApply_Click);
+      this.btnMapApply.Click += new DecentForms.EventHandler(this.btnMapApply_Click);
       // 
       // label14
       // 
@@ -794,8 +765,7 @@
       this.btnTileApply.Size = new System.Drawing.Size(58, 23);
       this.btnTileApply.TabIndex = 25;
       this.btnTileApply.Text = "Apply";
-      this.btnTileApply.UseVisualStyleBackColor = true;
-      this.btnTileApply.Click += new System.EventHandler(this.btnTileApply_Click);
+      this.btnTileApply.Click += new DecentForms.EventHandler(this.btnTileApply_Click);
       // 
       // btnCopyTileCharToNextIncreased
       // 
@@ -806,8 +776,7 @@
       this.btnCopyTileCharToNextIncreased.TabIndex = 28;
       this.btnCopyTileCharToNextIncreased.Text = "Copy inc\'ed";
       this.toolTip1.SetToolTip(this.btnCopyTileCharToNextIncreased, "Copy char+1/color to next slot");
-      this.btnCopyTileCharToNextIncreased.UseVisualStyleBackColor = true;
-      this.btnCopyTileCharToNextIncreased.Click += new System.EventHandler(this.btnCopyTileCharToNextIncreased_Click);
+      this.btnCopyTileCharToNextIncreased.Click += new DecentForms.EventHandler(this.btnCopyTileCharToNextIncreased_Click);
       // 
       // btnSetNextTileChar
       // 
@@ -818,8 +787,7 @@
       this.btnSetNextTileChar.TabIndex = 28;
       this.btnSetNextTileChar.Text = "Copy to next";
       this.toolTip1.SetToolTip(this.btnSetNextTileChar, "Copy char/color to next slot");
-      this.btnSetNextTileChar.UseVisualStyleBackColor = true;
-      this.btnSetNextTileChar.Click += new System.EventHandler(this.btnSetNextTileChar_Click);
+      this.btnSetNextTileChar.Click += new DecentForms.EventHandler(this.btnSetNextTileChar_Click);
       // 
       // btnMoveTileDown
       // 
@@ -829,8 +797,7 @@
       this.btnMoveTileDown.Size = new System.Drawing.Size(44, 23);
       this.btnMoveTileDown.TabIndex = 26;
       this.btnMoveTileDown.Text = "Down";
-      this.btnMoveTileDown.UseVisualStyleBackColor = true;
-      this.btnMoveTileDown.Click += new System.EventHandler(this.btnMoveTileDown_Click);
+      this.btnMoveTileDown.Click += new DecentForms.EventHandler(this.btnMoveTileDown_Click);
       // 
       // btnMoveTileUp
       // 
@@ -840,8 +807,7 @@
       this.btnMoveTileUp.Size = new System.Drawing.Size(44, 23);
       this.btnMoveTileUp.TabIndex = 26;
       this.btnMoveTileUp.Text = "Up";
-      this.btnMoveTileUp.UseVisualStyleBackColor = true;
-      this.btnMoveTileUp.Click += new System.EventHandler(this.btnMoveTileUp_Click);
+      this.btnMoveTileUp.Click += new DecentForms.EventHandler(this.btnMoveTileUp_Click);
       // 
       // btnTileDelete
       // 
@@ -851,8 +817,7 @@
       this.btnTileDelete.Size = new System.Drawing.Size(58, 23);
       this.btnTileDelete.TabIndex = 25;
       this.btnTileDelete.Text = "Delete";
-      this.btnTileDelete.UseVisualStyleBackColor = true;
-      this.btnTileDelete.Click += new System.EventHandler(this.btnTileDelete_Click);
+      this.btnTileDelete.Click += new DecentForms.EventHandler(this.btnTileDelete_Click);
       // 
       // btnTileClone
       // 
@@ -862,8 +827,7 @@
       this.btnTileClone.Size = new System.Drawing.Size(58, 23);
       this.btnTileClone.TabIndex = 25;
       this.btnTileClone.Text = "Clone";
-      this.btnTileClone.UseVisualStyleBackColor = true;
-      this.btnTileClone.Click += new System.EventHandler(this.btnCloneTile_Click);
+      this.btnTileClone.Click += new DecentForms.EventHandler(this.btnCloneTile_Click);
       // 
       // btnTileAdd
       // 
@@ -872,8 +836,7 @@
       this.btnTileAdd.Size = new System.Drawing.Size(58, 23);
       this.btnTileAdd.TabIndex = 25;
       this.btnTileAdd.Text = "Add";
-      this.btnTileAdd.UseVisualStyleBackColor = true;
-      this.btnTileAdd.Click += new System.EventHandler(this.btnAddTile_Click);
+      this.btnTileAdd.Click += new DecentForms.EventHandler(this.btnAddTile_Click);
       // 
       // listTileChars
       // 
@@ -1218,8 +1181,7 @@
       this.btnExport.Size = new System.Drawing.Size(75, 21);
       this.btnExport.TabIndex = 36;
       this.btnExport.Text = "Export";
-      this.btnExport.UseVisualStyleBackColor = true;
-      this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+      this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
       // comboExportMethod
       // 
@@ -1289,8 +1251,7 @@
       this.btnImport.Size = new System.Drawing.Size(88, 21);
       this.btnImport.TabIndex = 36;
       this.btnImport.Text = "Import";
-      this.btnImport.UseVisualStyleBackColor = true;
-      this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
       // comboImportMethod
       // 
@@ -1448,208 +1409,6 @@
       this.fastPictureBox2.TabIndex = 0;
       this.fastPictureBox2.TabStop = false;
       // 
-      // tabPage2
-      // 
-      this.tabPage2.Controls.Add(this.groupBox2);
-      this.tabPage2.Controls.Add(this.groupBox3);
-      this.tabPage2.Location = new System.Drawing.Point(4, 22);
-      this.tabPage2.Name = "tabPage2";
-      this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(956, 475);
-      this.tabPage2.TabIndex = 1;
-      this.tabPage2.Text = "Project";
-      this.tabPage2.UseVisualStyleBackColor = true;
-      // 
-      // groupBox2
-      // 
-      this.groupBox2.Controls.Add(this.button1);
-      this.groupBox2.Controls.Add(this.button2);
-      this.groupBox2.Location = new System.Drawing.Point(458, 6);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(324, 343);
-      this.groupBox2.TabIndex = 4;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Import";
-      // 
-      // button1
-      // 
-      this.button1.Location = new System.Drawing.Point(6, 48);
-      this.button1.Name = "button1";
-      this.button1.Size = new System.Drawing.Size(117, 23);
-      this.button1.TabIndex = 2;
-      this.button1.Text = "Charset...";
-      this.button1.UseVisualStyleBackColor = true;
-      // 
-      // button2
-      // 
-      this.button2.Location = new System.Drawing.Point(6, 19);
-      this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(117, 23);
-      this.button2.TabIndex = 2;
-      this.button2.Text = "From File...";
-      this.button2.UseVisualStyleBackColor = true;
-      // 
-      // groupBox3
-      // 
-      this.groupBox3.Controls.Add(this.label10);
-      this.groupBox3.Controls.Add(this.comboBox4);
-      this.groupBox3.Controls.Add(this.label11);
-      this.groupBox3.Controls.Add(this.comboBox5);
-      this.groupBox3.Controls.Add(this.comboBox6);
-      this.groupBox3.Controls.Add(this.textBox1);
-      this.groupBox3.Controls.Add(this.label12);
-      this.groupBox3.Controls.Add(this.textBox2);
-      this.groupBox3.Controls.Add(this.checkBox2);
-      this.groupBox3.Controls.Add(this.checkBox3);
-      this.groupBox3.Controls.Add(this.textBox3);
-      this.groupBox3.Controls.Add(this.button3);
-      this.groupBox3.Controls.Add(this.button4);
-      this.groupBox3.Controls.Add(this.button5);
-      this.groupBox3.Location = new System.Drawing.Point(11, 6);
-      this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(441, 343);
-      this.groupBox3.TabIndex = 3;
-      this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Export";
-      // 
-      // label10
-      // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(3, 24);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(66, 13);
-      this.label10.TabIndex = 11;
-      this.label10.Text = "Export Data:";
-      // 
-      // comboBox4
-      // 
-      this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox4.FormattingEnabled = true;
-      this.comboBox4.Items.AddRange(new object[] {
-            "characters, then colors",
-            "characters only",
-            "colors only",
-            "colors, then characters"});
-      this.comboBox4.Location = new System.Drawing.Point(118, 21);
-      this.comboBox4.Name = "comboBox4";
-      this.comboBox4.Size = new System.Drawing.Size(317, 21);
-      this.comboBox4.TabIndex = 10;
-      // 
-      // label11
-      // 
-      this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(129, 111);
-      this.label11.Name = "label11";
-      this.label11.Size = new System.Drawing.Size(61, 13);
-      this.label11.TabIndex = 9;
-      this.label11.Text = "Orientation:";
-      // 
-      // comboBox5
-      // 
-      this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox5.FormattingEnabled = true;
-      this.comboBox5.Items.AddRange(new object[] {
-            "row by row",
-            "column by column"});
-      this.comboBox5.Location = new System.Drawing.Point(217, 106);
-      this.comboBox5.Name = "comboBox5";
-      this.comboBox5.Size = new System.Drawing.Size(131, 21);
-      this.comboBox5.TabIndex = 8;
-      // 
-      // comboBox6
-      // 
-      this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBox6.FormattingEnabled = true;
-      this.comboBox6.Location = new System.Drawing.Point(118, 48);
-      this.comboBox6.Name = "comboBox6";
-      this.comboBox6.Size = new System.Drawing.Size(160, 21);
-      this.comboBox6.TabIndex = 8;
-      // 
-      // textBox1
-      // 
-      this.textBox1.Location = new System.Drawing.Point(214, 77);
-      this.textBox1.Name = "textBox1";
-      this.textBox1.Size = new System.Drawing.Size(43, 20);
-      this.textBox1.TabIndex = 7;
-      this.textBox1.Text = "!byte ";
-      // 
-      // label12
-      // 
-      this.label12.AutoSize = true;
-      this.label12.Location = new System.Drawing.Point(394, 80);
-      this.label12.Name = "label12";
-      this.label12.Size = new System.Drawing.Size(32, 13);
-      this.label12.TabIndex = 6;
-      this.label12.Text = "bytes";
-      // 
-      // textBox2
-      // 
-      this.textBox2.Enabled = false;
-      this.textBox2.Location = new System.Drawing.Point(347, 77);
-      this.textBox2.Name = "textBox2";
-      this.textBox2.Size = new System.Drawing.Size(41, 20);
-      this.textBox2.TabIndex = 5;
-      this.textBox2.Text = "40";
-      // 
-      // checkBox2
-      // 
-      this.checkBox2.AutoSize = true;
-      this.checkBox2.Location = new System.Drawing.Point(264, 79);
-      this.checkBox2.Name = "checkBox2";
-      this.checkBox2.Size = new System.Drawing.Size(64, 17);
-      this.checkBox2.TabIndex = 4;
-      this.checkBox2.Text = "Wrap at";
-      this.checkBox2.UseVisualStyleBackColor = true;
-      // 
-      // checkBox3
-      // 
-      this.checkBox3.AutoSize = true;
-      this.checkBox3.Location = new System.Drawing.Point(118, 79);
-      this.checkBox3.Name = "checkBox3";
-      this.checkBox3.Size = new System.Drawing.Size(74, 17);
-      this.checkBox3.TabIndex = 4;
-      this.checkBox3.Text = "Prefix with";
-      this.checkBox3.UseVisualStyleBackColor = true;
-      // 
-      // textBox3
-      // 
-      this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.textBox3.Location = new System.Drawing.Point(6, 139);
-      this.textBox3.Multiline = true;
-      this.textBox3.Name = "textBox3";
-      this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.textBox3.Size = new System.Drawing.Size(429, 198);
-      this.textBox3.TabIndex = 3;
-      this.textBox3.WordWrap = false;
-      // 
-      // button3
-      // 
-      this.button3.Location = new System.Drawing.Point(6, 48);
-      this.button3.Name = "button3";
-      this.button3.Size = new System.Drawing.Size(106, 23);
-      this.button3.TabIndex = 2;
-      this.button3.Text = "to Basic...";
-      this.button3.UseVisualStyleBackColor = true;
-      // 
-      // button4
-      // 
-      this.button4.Location = new System.Drawing.Point(6, 106);
-      this.button4.Name = "button4";
-      this.button4.Size = new System.Drawing.Size(106, 23);
-      this.button4.TabIndex = 2;
-      this.button4.Text = "as binary file";
-      this.button4.UseVisualStyleBackColor = true;
-      // 
-      // button5
-      // 
-      this.button5.Location = new System.Drawing.Point(6, 77);
-      this.button5.Name = "button5";
-      this.button5.Size = new System.Drawing.Size(106, 23);
-      this.button5.TabIndex = 2;
-      this.button5.Text = "as assembly source";
-      this.button5.UseVisualStyleBackColor = true;
-      // 
       // MapEditor
       // 
       this.ClientSize = new System.Drawing.Size(1064, 525);
@@ -1682,10 +1441,6 @@
       this.tabPage1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox2)).EndInit();
-      this.tabPage2.ResumeLayout(false);
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox3.ResumeLayout(false);
-      this.groupBox3.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1722,29 +1477,10 @@
     private System.Windows.Forms.ComboBox comboBox3;
     private GR.Forms.FastPictureBox fastPictureBox1;
     private GR.Forms.FastPictureBox fastPictureBox2;
-    private System.Windows.Forms.TabPage tabPage2;
-    private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.Button button1;
-    private System.Windows.Forms.Button button2;
-    private System.Windows.Forms.GroupBox groupBox3;
-    private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.ComboBox comboBox4;
-    private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.ComboBox comboBox5;
-    private System.Windows.Forms.ComboBox comboBox6;
-    private System.Windows.Forms.TextBox textBox1;
-    private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.TextBox textBox2;
-    private System.Windows.Forms.CheckBox checkBox2;
-    private System.Windows.Forms.CheckBox checkBox3;
-    private System.Windows.Forms.TextBox textBox3;
-    private System.Windows.Forms.Button button3;
-    private System.Windows.Forms.Button button4;
-    private System.Windows.Forms.Button button5;
     private System.Windows.Forms.VScrollBar mapVScroll;
     private System.Windows.Forms.HScrollBar mapHScroll;
     private System.Windows.Forms.GroupBox groupSize;
-    private System.Windows.Forms.Button btnMapApply;
+    private DecentForms.Button btnMapApply;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox editMapHeight;
     private System.Windows.Forms.Label label3;
@@ -1756,17 +1492,17 @@
     private System.Windows.Forms.Label label17;
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Button btnTileDelete;
-    private System.Windows.Forms.Button btnTileApply;
-    private System.Windows.Forms.Button btnTileAdd;
+    private DecentForms.Button btnTileDelete;
+    private DecentForms.Button btnTileApply;
+    private DecentForms.Button btnTileAdd;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
     private System.Windows.Forms.ColumnHeader columnHeader4;
-    private System.Windows.Forms.Button btnMapAdd;
+    private DecentForms.Button btnMapAdd;
     private System.Windows.Forms.TextBox editMapName;
     private System.Windows.Forms.Label label18;
-    private System.Windows.Forms.Button btnMapDelete;
+    private DecentForms.Button btnMapDelete;
     private System.Windows.Forms.ComboBox comboMaps;
     private System.Windows.Forms.Label label19;
     private System.Windows.Forms.ListView listTileChars;
@@ -1776,8 +1512,8 @@
     private System.Windows.Forms.TextBox editTileSpacingH;
     private System.Windows.Forms.TextBox editTileSpacingW;
     private System.Windows.Forms.ComboBox comboTiles;
-    private System.Windows.Forms.Button btnMoveTileDown;
-    private System.Windows.Forms.Button btnMoveTileUp;
+    private DecentForms.Button btnMoveTileDown;
+    private DecentForms.Button btnMoveTileUp;
     private System.Windows.Forms.GroupBox groupMapExtraData;
     private System.Windows.Forms.TextBox editMapExtraData;
     private System.Windows.Forms.Label label20;
@@ -1787,7 +1523,7 @@
     private System.Windows.Forms.RadioButton btnToolQuad;
     private System.Windows.Forms.RadioButton btnToolRect;
     private System.Windows.Forms.RadioButton btnToolEdit;
-    private System.Windows.Forms.Button btnCopy;
+    private DecentForms.Button btnCopy;
     private System.Windows.Forms.ComboBox comboMapMultiColor2;
     private System.Windows.Forms.ComboBox comboMapMultiColor1;
     private System.Windows.Forms.Label label21;
@@ -1800,23 +1536,23 @@
     private System.Windows.Forms.Label label13;
     private System.Windows.Forms.ComboBox comboMapAlternativeBGColor4;
     private System.Windows.Forms.Label label14;
-    private System.Windows.Forms.Button btnCopyTileCharToNextIncreased;
+    private DecentForms.Button btnCopyTileCharToNextIncreased;
     private System.Windows.Forms.ToolTip toolTip1;
-    private System.Windows.Forms.Button btnSetNextTileChar;
+    private DecentForms.Button btnSetNextTileChar;
     private System.Windows.Forms.CheckBox checkShowGrid;
-    private System.Windows.Forms.Button btnTileClone;
+    private DecentForms.Button btnTileClone;
         private System.Windows.Forms.TabPage tabCharset;
         private Controls.CharacterEditor characterEditor;
-    private System.Windows.Forms.Button btnMoveMapDown;
-    private System.Windows.Forms.Button btnMoveMapUp;
-    private System.Windows.Forms.Button btnCopyMapImage;
+    private DecentForms.Button btnMoveMapDown;
+    private DecentForms.Button btnMoveMapUp;
+    private DecentForms.Button btnCopyMapImage;
         private System.Windows.Forms.ComboBox comboMapProjectMode;
         private System.Windows.Forms.Label label25;
     private System.Windows.Forms.TabPage tabExport;
     private System.Windows.Forms.TabPage tabImport;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.ComboBox comboExportData;
-    private System.Windows.Forms.Button btnExport;
+    private DecentForms.Button btnExport;
     private System.Windows.Forms.ComboBox comboExportMethod;
     private System.Windows.Forms.Label label24;
     private System.Windows.Forms.TextBox editDataExport;
@@ -1824,7 +1560,7 @@
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ComboBox comboExportOrientation;
     private System.Windows.Forms.Panel panelImport;
-    private System.Windows.Forms.Button btnImport;
+    private DecentForms.Button btnImport;
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
   }

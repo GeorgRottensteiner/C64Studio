@@ -40,7 +40,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnClip_Click( object sender, EventArgs e )
+    private void btnClip_Click( DecentForms.ControlBase Sender )
     {
       ChosenResult = ImportBehaviour.CLIP_IMAGE;
       DialogResult = DialogResult.OK;
@@ -49,7 +49,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnAdjustScreenSize_Click( object sender, EventArgs e )
+    private void btnAdjustScreenSize_Click( DecentForms.ControlBase Sender )
     {
       ChosenResult = ImportBehaviour.ADJUST_SCREEN_SIZE;
       DialogResult = DialogResult.OK;
@@ -58,7 +58,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnCancel_Click( object sender, EventArgs e )
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
     {
       ChosenResult = ImportBehaviour.CANCEL;
       DialogResult = DialogResult.Cancel;

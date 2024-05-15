@@ -998,6 +998,20 @@ namespace RetroDevStudio
 
     internal void RefreshDisplayOnAllDocuments()
     {
+      uint colorSelectionBackground = StudioCore.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+      // make transparent
+      if ( ( colorSelectionBackground & 0xff000000 ) == 0xff000000 )
+      {
+        colorSelectionBackground = ( colorSelectionBackground & 0x00ffffff ) | 0x40000000;
+      }
+
+      DecentForms.ControlRenderer.ColorControlText                = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+      DecentForms.ControlRenderer.ColorControlTextMouseOver       = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+      DecentForms.ControlRenderer.ColorControlTextSelected        = StudioCore.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+      DecentForms.ControlRenderer.ColorControlBackground          = StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON );
+      DecentForms.ControlRenderer.ColorControlBackgroundMouseOver = colorSelectionBackground;
+      DecentForms.ControlRenderer.ColorControlBackgroundSelected  = colorSelectionBackground;
+
       var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
       var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
 

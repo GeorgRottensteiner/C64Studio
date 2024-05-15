@@ -181,7 +181,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToText_Click( object sender, EventArgs e )
+    private void btnToText_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
 
@@ -196,7 +196,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnFromASM_Click( object sender, EventArgs e )
+    private void btnFromASM_Click( DecentForms.ControlBase Sender )
     {
       Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
 
@@ -244,7 +244,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToBASIC_Click( object sender, EventArgs e )
+    private void btnToBASIC_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
       bool insertSpaces = checkInsertSpaces.Checked;
@@ -277,7 +277,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnInterleave_Click( object sender, EventArgs e )
+    private void btnInterleave_Click( DecentForms.ControlBase Sender )
     {
       DlgInterleaveData   dlgInterleave = new DlgInterleaveData( Core, DataFromHex() );
       if ( dlgInterleave.ShowDialog() == DialogResult.OK )
@@ -289,21 +289,21 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImport_Click( object sender, EventArgs e )
+    private void btnImport_Click( DecentForms.ControlBase Sender )
     {
       Import();
     }
 
 
 
-    private void btnExport_Click( object sender, EventArgs e )
+    private void btnExport_Click( DecentForms.ControlBase Sender )
     {
       Export();
     }
 
 
 
-    private void btnToHex_Click( object sender, EventArgs e )
+    private void btnToHex_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
 
@@ -312,7 +312,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnFromHex_Click( object sender, EventArgs e )
+    private void btnFromHex_Click( DecentForms.ControlBase Sender )
     {
       string    binaryText = textBinaryData.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
 
@@ -389,7 +389,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnFromBASIC_Click( object sender, EventArgs e )
+    private void btnFromBASIC_Click( DecentForms.ControlBase Sender )
     {
       string[]  lines = textBinaryData.Text.Split( new char[] { '\n' } );
 
@@ -426,7 +426,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToBASICHex_Click( object sender, EventArgs e )
+    private void btnToBASICHex_Click( DecentForms.ControlBase Sender )
     {
       GR.Memory.ByteBuffer data = DataFromHex();
       bool insertSpaces = checkInsertSpaces.Checked;
@@ -448,14 +448,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnFromBASICHex_Click( object sender, EventArgs e )
+    private void btnFromBASICHex_Click( DecentForms.ControlBase Sender )
     {
       SetHexData( Util.FromBASICHex( textBinaryData.Text ) );
     }
 
 
 
-    private void btnUpsize_Click( object sender, EventArgs e )
+    private void btnUpsize_Click( DecentForms.ControlBase Sender )
     {
       var data = DataFromHex();
 
@@ -482,7 +482,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDeleteNthByte_Click( object sender, EventArgs e )
+    private void btnDeleteNthByte_Click( DecentForms.ControlBase Sender )
     {
       int nthByte = GR.Convert.ToI32( editDeleteNthByte.Text );
       if ( nthByte <= 0 )
@@ -503,7 +503,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnPackNibbles_Click( object sender, EventArgs e )
+    private void btnPackNibbles_Click( DecentForms.ControlBase Sender )
     {
       var data = DataFromHex();
       var resultingData = new ByteBuffer( ( data.Length + 1 ) / 2 );
@@ -522,7 +522,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnSwizzle_Click( object sender, EventArgs e )
+    private void btnSwizzle_Click( DecentForms.ControlBase Sender )
     {
       var data = DataFromHex();
 
@@ -542,7 +542,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnDivide_Click( object sender, EventArgs e )
+    private void btnDivide_Click( DecentForms.ControlBase Sender )
     {
       int   divisor = GR.Convert.ToI32( editDivideBy.Text );
       if ( divisor <= 0 )

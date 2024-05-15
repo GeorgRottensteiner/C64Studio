@@ -185,7 +185,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnFindNext_Click( object sender, EventArgs e )
+    private void btnFindNext_Click( DecentForms.ControlBase Sender )
     {
       // continue searching from cursor
       if ( Core.MainForm.ActiveDocumentInfo != null )
@@ -1321,7 +1321,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnSearchBookmark_Click( object sender, EventArgs e )
+    private void btnSearchBookmark_Click( DecentForms.ControlBase Sender )
     {
       while ( true )
       {
@@ -1516,7 +1516,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnReplaceFindNext_Click( object sender, EventArgs e )
+    private void btnReplaceFindNext_Click( DecentForms.ControlBase Sender )
     {
       // continue searching from cursor
       if ( Core.MainForm.ActiveDocumentInfo != null )
@@ -1591,7 +1591,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnReplaceNext_Click( object sender, EventArgs e )
+    private void btnReplaceNext_Click( DecentForms.ControlBase Sender )
     {
       // continue searching from cursor
       if ( Core.MainForm.ActiveDocumentInfo != null )
@@ -1679,7 +1679,7 @@ namespace RetroDevStudio.Dialogs
           edit.Selection.End = newPlace;
 
           // automatically find next
-          btnReplaceFindNext_Click( sender, e );
+          btnReplaceFindNext_Click( btnReplaceFindNext );
         }
         return;
       }
@@ -1687,7 +1687,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnReplaceAll_Click( object sender, EventArgs e )
+    private void btnReplaceAll_Click( DecentForms.ControlBase Sender )
     {
       int occurrences = 0;
       Core.Searching.ClearSearchResults();
@@ -1928,7 +1928,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnFindAll_Click( object sender, EventArgs e )
+    private void btnFindAll_Click( DecentForms.ControlBase Sender )
     {
       int                     occurrences = 0;
       SearchLocation          firstFoundRange = null;

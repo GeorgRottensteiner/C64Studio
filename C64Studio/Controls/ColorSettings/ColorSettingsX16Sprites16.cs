@@ -150,7 +150,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void btnEditPalette_Click( object sender, EventArgs e )
+    private void btnEditPalette_Click( DecentForms.ControlBase Sender )
     {
       var dlgPalette = new DlgPaletteEditor( Core, Colors );
       if ( dlgPalette.ShowDialog() == DialogResult.OK )

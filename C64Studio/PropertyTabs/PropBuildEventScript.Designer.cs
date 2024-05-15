@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnMacros = new System.Windows.Forms.Button();
+      this.btnMacros = new DecentForms.Button();
       this.editBuildCommand = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
       this.SuspendLayout();
@@ -41,8 +41,7 @@
       this.btnMacros.Size = new System.Drawing.Size(75, 23);
       this.btnMacros.TabIndex = 14;
       this.btnMacros.Text = "Macros";
-      this.btnMacros.UseVisualStyleBackColor = true;
-      this.btnMacros.Click += new System.EventHandler(this.btnMacros_Click);
+      this.btnMacros.Click += new DecentForms.EventHandler(this.btnMacros_Click);
       // 
       // editBuildCommand
       // 
@@ -87,7 +86,7 @@
 
     #endregion
 
-    private System.Windows.Forms.Button btnMacros;
+    private DecentForms.Button btnMacros;
     private System.Windows.Forms.TextBox editBuildCommand;
     private System.Windows.Forms.Label label6;
 

@@ -45,7 +45,7 @@ namespace RetroDevStudio.Documents
       this.checkGenerateDeltas = new System.Windows.Forms.CheckBox();
       this.checkAutomatedGeneration = new System.Windows.Forms.CheckBox();
       this.checkClearPreviousValues = new System.Windows.Forms.CheckBox();
-      this.btnGenerateValues = new System.Windows.Forms.Button();
+      this.btnGenerateValues = new DecentForms.Button();
       this.editStepValue = new System.Windows.Forms.TextBox();
       this.editEndValue = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
@@ -56,23 +56,23 @@ namespace RetroDevStudio.Documents
       this.label3 = new System.Windows.Forms.Label();
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnImportFromFile = new System.Windows.Forms.Button();
-      this.btnImportFromASM = new System.Windows.Forms.Button();
-      this.btnImportFromHex = new System.Windows.Forms.Button();
+      this.btnImportFromFile = new DecentForms.Button();
+      this.btnImportFromASM = new DecentForms.Button();
+      this.btnImportFromHex = new DecentForms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
-      this.btnExportToBASICHex = new System.Windows.Forms.Button();
-      this.btnExportToBASICData = new System.Windows.Forms.Button();
+      this.btnExportToBASICHex = new DecentForms.Button();
+      this.btnExportToBASICData = new DecentForms.Button();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.editWrapByteCount = new System.Windows.Forms.TextBox();
       this.checkExportToDataWrap = new System.Windows.Forms.CheckBox();
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
-      this.btnExportToData = new System.Windows.Forms.Button();
-      this.btnExportToFile = new System.Windows.Forms.Button();
+      this.btnExportToData = new DecentForms.Button();
+      this.btnExportToFile = new DecentForms.Button();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.forAllSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -280,8 +280,7 @@ namespace RetroDevStudio.Documents
       this.btnGenerateValues.Size = new System.Drawing.Size(95, 23);
       this.btnGenerateValues.TabIndex = 6;
       this.btnGenerateValues.Text = "Generate Values";
-      this.btnGenerateValues.UseVisualStyleBackColor = true;
-      this.btnGenerateValues.Click += new System.EventHandler(this.btnGenerateValues_Click);
+      this.btnGenerateValues.Click += new DecentForms.EventHandler(this.btnGenerateValues_Click);
       // 
       // editStepValue
       // 
@@ -391,8 +390,7 @@ namespace RetroDevStudio.Documents
       this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromFile.TabIndex = 2;
       this.btnImportFromFile.Text = "From File...";
-      this.btnImportFromFile.UseVisualStyleBackColor = true;
-      this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
+      this.btnImportFromFile.Click += new DecentForms.EventHandler(this.btnImportFromFile_Click);
       // 
       // btnImportFromASM
       // 
@@ -401,8 +399,7 @@ namespace RetroDevStudio.Documents
       this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromASM.TabIndex = 2;
       this.btnImportFromASM.Text = "From ASM";
-      this.btnImportFromASM.UseVisualStyleBackColor = true;
-      this.btnImportFromASM.Click += new System.EventHandler(this.btnImportFromASM_Click);
+      this.btnImportFromASM.Click += new DecentForms.EventHandler(this.btnImportFromASM_Click);
       // 
       // btnImportFromHex
       // 
@@ -411,8 +408,7 @@ namespace RetroDevStudio.Documents
       this.btnImportFromHex.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromHex.TabIndex = 2;
       this.btnImportFromHex.Text = "From Hex";
-      this.btnImportFromHex.UseVisualStyleBackColor = true;
-      this.btnImportFromHex.Click += new System.EventHandler(this.btnImportFromHex_Click);
+      this.btnImportFromHex.Click += new DecentForms.EventHandler(this.btnImportFromHex_Click);
       // 
       // groupExport
       // 
@@ -478,8 +474,7 @@ namespace RetroDevStudio.Documents
       this.btnExportToBASICHex.Size = new System.Drawing.Size(117, 23);
       this.btnExportToBASICHex.TabIndex = 25;
       this.btnExportToBASICHex.Text = "To BASIC data hex";
-      this.btnExportToBASICHex.UseVisualStyleBackColor = true;
-      this.btnExportToBASICHex.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
+      this.btnExportToBASICHex.Click += new DecentForms.EventHandler(this.btnExportToBASICDataHex_Click);
       // 
       // btnExportToBASICData
       // 
@@ -488,8 +483,7 @@ namespace RetroDevStudio.Documents
       this.btnExportToBASICData.Size = new System.Drawing.Size(117, 23);
       this.btnExportToBASICData.TabIndex = 25;
       this.btnExportToBASICData.Text = "To BASIC data";
-      this.btnExportToBASICData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
+      this.btnExportToBASICData.Click += new DecentForms.EventHandler(this.btnExportToBASICData_Click);
       // 
       // editPrefix
       // 
@@ -546,8 +540,7 @@ namespace RetroDevStudio.Documents
       this.btnExportToData.Size = new System.Drawing.Size(117, 23);
       this.btnExportToData.TabIndex = 2;
       this.btnExportToData.Text = "To Data";
-      this.btnExportToData.UseVisualStyleBackColor = true;
-      this.btnExportToData.Click += new System.EventHandler(this.btnExportToData_Click);
+      this.btnExportToData.Click += new DecentForms.EventHandler(this.btnExportToData_Click);
       // 
       // btnExportToFile
       // 
@@ -556,8 +549,7 @@ namespace RetroDevStudio.Documents
       this.btnExportToFile.Size = new System.Drawing.Size(117, 23);
       this.btnExportToFile.TabIndex = 2;
       this.btnExportToFile.Text = "To File...";
-      this.btnExportToFile.UseVisualStyleBackColor = true;
-      this.btnExportToFile.Click += new System.EventHandler(this.btnExportToFile_Click);
+      this.btnExportToFile.Click += new DecentForms.EventHandler(this.btnExportToFile_Click);
       // 
       // editDataExport
       // 
@@ -698,17 +690,17 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem openValueTableProjectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem closeValueTableProjectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem saveValueTableProjectToolStripMenuItem;
-    private System.Windows.Forms.Button btnExportToFile;
+    private DecentForms.Button btnExportToFile;
     private System.Windows.Forms.GroupBox groupExport;
     private System.Windows.Forms.TextBox editDataExport;
-    private System.Windows.Forms.Button btnExportToData;
+    private DecentForms.Button btnExportToData;
     private System.Windows.Forms.CheckBox checkExportToDataIncludeRes;
     private System.Windows.Forms.CheckBox checkExportToDataWrap;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editWrapByteCount;
     private System.Windows.Forms.TextBox editPrefix;
     private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Button btnImportFromFile;
+    private DecentForms.Button btnImportFromFile;
     private System.Windows.Forms.ColumnHeader columnHeader4;
     private System.Windows.Forms.ColumnHeader columnHeader5;
     private System.Windows.Forms.ColumnHeader columnHeader6;
@@ -716,7 +708,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ColumnHeader columnHeader8;
     private System.Windows.Forms.ColumnHeader columnHeader9;
     private System.Windows.Forms.ToolTip toolTip1;
-    private System.Windows.Forms.Button btnImportFromHex;
+    private DecentForms.Button btnImportFromHex;
     private System.Windows.Forms.ContextMenuStrip contextMenuExchangeColors;
     private System.Windows.Forms.ToolStripMenuItem forAllSpritesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem forSelectedSpritesToolStripMenuItem;
@@ -724,7 +716,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.TextBox editExportBASICLineNo;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.Button btnExportToBASICData;
+    private DecentForms.Button btnExportToBASICData;
     private System.Windows.Forms.GroupBox groupBox3;
     private Controls.ArrangedItemList listValues;
     private System.Windows.Forms.GroupBox groupBox2;
@@ -740,12 +732,12 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Label label4;
     private GR.Forms.FastPictureBox pictureGraphPreview;
     private System.Windows.Forms.CheckBox checkClearPreviousValues;
-    private System.Windows.Forms.Button btnGenerateValues;
+    private DecentForms.Button btnGenerateValues;
     private System.Windows.Forms.CheckBox checkAutomatedGeneration;
     private System.Windows.Forms.Label labelGenerationResult;
-    private System.Windows.Forms.Button btnImportFromASM;
+    private DecentForms.Button btnImportFromASM;
     private System.Windows.Forms.CheckBox checkGenerateDeltas;
-    private System.Windows.Forms.Button btnExportToBASICHex;
+    private DecentForms.Button btnExportToBASICHex;
     private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }

@@ -91,9 +91,6 @@
     <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\CSButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="Controls\CSCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -226,7 +223,7 @@
     <Compile Update="Controls\ThemedButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\MenuButton.cs">
+    <Compile Update="Controls\ThemedControls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\MeasurableListView.cs">

@@ -32,12 +32,12 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangedItemList));
       this.listItems = new System.Windows.Forms.ListBox();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.btnMoveDown = new RetroDevStudio.Controls.CSButton();
-      this.btnMoveUp = new RetroDevStudio.Controls.CSButton();
-      this.btnDelete = new RetroDevStudio.Controls.CSButton();
-      this.btnAdd = new RetroDevStudio.Controls.CSButton();
+      this.btnMoveDown = new DecentForms.Button();
+      this.btnMoveUp = new DecentForms.Button();
+      this.btnDelete = new DecentForms.Button();
+      this.btnAdd = new DecentForms.Button();
       this.toolTipArrangedList = new System.Windows.Forms.ToolTip(this.components);
-      this.btnClone = new RetroDevStudio.Controls.CSButton();
+      this.btnClone = new DecentForms.Button();
       this.SuspendLayout();
       // 
       // listItems
@@ -66,8 +66,7 @@
       this.btnMoveDown.Size = new System.Drawing.Size(29, 23);
       this.btnMoveDown.TabIndex = 5;
       this.toolTipArrangedList.SetToolTip(this.btnMoveDown, "Move Entry Down");
-      this.btnMoveDown.UseVisualStyleBackColor = true;
-      this.btnMoveDown.Click += new System.EventHandler(this.btnMoveDown_Click);
+      this.btnMoveDown.Click += new DecentForms.EventHandler(this.btnMoveDown_Click);
       // 
       // btnMoveUp
       // 
@@ -79,8 +78,7 @@
       this.btnMoveUp.Size = new System.Drawing.Size(29, 23);
       this.btnMoveUp.TabIndex = 4;
       this.toolTipArrangedList.SetToolTip(this.btnMoveUp, "Move Entry Up");
-      this.btnMoveUp.UseVisualStyleBackColor = true;
-      this.btnMoveUp.Click += new System.EventHandler(this.btnMoveUp_Click);
+      this.btnMoveUp.Click += new DecentForms.EventHandler(this.btnMoveUp_Click);
       // 
       // btnDelete
       // 
@@ -92,8 +90,7 @@
       this.btnDelete.Size = new System.Drawing.Size(29, 23);
       this.btnDelete.TabIndex = 3;
       this.toolTipArrangedList.SetToolTip(this.btnDelete, "Delete Entry");
-      this.btnDelete.UseVisualStyleBackColor = true;
-      this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+      this.btnDelete.Click += new DecentForms.EventHandler(this.btnDelete_Click);
       // 
       // btnAdd
       // 
@@ -104,8 +101,7 @@
       this.btnAdd.Size = new System.Drawing.Size(29, 23);
       this.btnAdd.TabIndex = 1;
       this.toolTipArrangedList.SetToolTip(this.btnAdd, "Add Entry");
-      this.btnAdd.UseVisualStyleBackColor = true;
-      this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+      this.btnAdd.Click += new DecentForms.EventHandler(this.btnAdd_Click);
       // 
       // btnClone
       // 
@@ -116,8 +112,7 @@
       this.btnClone.Size = new System.Drawing.Size(29, 23);
       this.btnClone.TabIndex = 2;
       this.toolTipArrangedList.SetToolTip(this.btnClone, "Clone Entry");
-      this.btnClone.UseVisualStyleBackColor = true;
-      this.btnClone.Click += new System.EventHandler(this.btnClone_Click);
+      this.btnClone.Click += new DecentForms.EventHandler(this.btnClone_Click);
       // 
       // ArrangedItemList
       // 
@@ -138,12 +133,12 @@
     #endregion
 
     internal System.Windows.Forms.ListBox listItems;
-    private RetroDevStudio.Controls.CSButton btnAdd;
-    private RetroDevStudio.Controls.CSButton btnDelete;
-    private RetroDevStudio.Controls.CSButton btnMoveUp;
-    private RetroDevStudio.Controls.CSButton btnMoveDown;
+    private DecentForms.Button btnAdd;
+    private DecentForms.Button btnDelete;
+    private DecentForms.Button btnMoveUp;
+    private DecentForms.Button btnMoveDown;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ToolTip toolTipArrangedList;
-    private RetroDevStudio.Controls.CSButton btnClone;
+    private DecentForms.Button btnClone;
   }
 }

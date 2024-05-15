@@ -35,7 +35,7 @@ namespace RetroDevStudio.Dialogs
     
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult = DialogResult.OK;
       Close();
@@ -66,7 +66,16 @@ namespace RetroDevStudio.Dialogs
       }
       _DisplayOffset = lineNo;
     }
-    
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
+    }
+
+
 
   }
 }

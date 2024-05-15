@@ -2019,7 +2019,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnAddTile_Click( object sender, EventArgs e )
+    private void btnAddTile_Click( DecentForms.ControlBase Sender )
     {
       int w = GR.Convert.ToI32( editTileWidth.Text );
       int h = GR.Convert.ToI32( editTileHeight.Text );
@@ -2164,7 +2164,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMapAdd_Click( object sender, EventArgs e )
+    private void btnMapAdd_Click( DecentForms.ControlBase Sender )
     {
       int w = GR.Convert.ToI32( editMapWidth.Text );
       int h = GR.Convert.ToI32( editMapHeight.Text );
@@ -2219,7 +2219,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMapApply_Click( object sender, EventArgs e )
+    private void btnMapApply_Click( DecentForms.ControlBase Sender )
     {
       if ( m_CurrentMap == null )
       {
@@ -2410,7 +2410,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnTileApply_Click( object sender, EventArgs e )
+    private void btnTileApply_Click( DecentForms.ControlBase Sender )
     {
       if ( m_CurrentEditedTile == null )
       {
@@ -2451,7 +2451,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnTileDelete_Click( object sender, EventArgs e )
+    private void btnTileDelete_Click( DecentForms.ControlBase Sender )
     {
       if ( listTileInfo.SelectedIndices.Count == 0 )
       {
@@ -2521,7 +2521,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMapDelete_Click( object sender, EventArgs e )
+    private void btnMapDelete_Click( DecentForms.ControlBase Sender )
     {
       if ( m_CurrentMap == null )
       {
@@ -2535,7 +2535,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMoveTileUp_Click( object sender, EventArgs e )
+    private void btnMoveTileUp_Click( DecentForms.ControlBase Sender )
     {
       int index1 = listTileInfo.SelectedIndices[0] - 1;
       int index2 = listTileInfo.SelectedIndices[0];
@@ -2609,7 +2609,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMoveTileDown_Click( object sender, EventArgs e )
+    private void btnMoveTileDown_Click( DecentForms.ControlBase Sender )
     {
       int index1 = listTileInfo.SelectedIndices[0];
       int index2 = listTileInfo.SelectedIndices[0] + 1;
@@ -2867,7 +2867,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMapCopy_Click( object sender, EventArgs e )
+    private void btnMapCopy_Click( DecentForms.ControlBase Sender )
     {
       if ( m_CurrentMap == null )
       {
@@ -3107,7 +3107,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnSetNextTileChar_Click( object sender, EventArgs e )
+    private void btnSetNextTileChar_Click( DecentForms.ControlBase Sender )
     {
       if ( ( m_CurrentEditedTile == null )
       ||   ( m_CurrentTileChar == null )
@@ -3143,11 +3143,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCopyTileCharToNextIncreased_Click( object sender, EventArgs e )
+    private void btnCopyTileCharToNextIncreased_Click( DecentForms.ControlBase Sender )
     {
       if ( ( m_CurrentEditedTile == null )
-      || ( m_CurrentTileChar == null )
-      || ( listTileChars.SelectedIndices.Count == 0 ) )
+      ||   ( m_CurrentTileChar == null )
+      ||   ( listTileChars.SelectedIndices.Count == 0 ) )
       {
         return;
       }
@@ -3286,7 +3286,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCloneTile_Click( object sender, EventArgs e )
+    private void btnCloneTile_Click( DecentForms.ControlBase Sender )
     {
       if ( m_CurrentEditedTile == null )
       {
@@ -3324,7 +3324,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnCopyImage_Click( object sender, EventArgs e )
+    private void btnCopyImage_Click( DecentForms.ControlBase Sender )
     {
       Clipboard.SetImage( m_Image.GetAsBitmap() );
     }
@@ -3363,7 +3363,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnMoveMapDown_Click( object sender, EventArgs e )
+    private void btnMoveMapDown_Click( DecentForms.ControlBase Sender )
     {
       if ( ( comboMaps.SelectedIndex == -1 )
       ||   ( comboMaps.Items.Count < 2 )
@@ -3381,7 +3381,7 @@ namespace RetroDevStudio.Documents
 
     
 
-    private void btnMoveMapUp_Click( object sender, EventArgs e )
+    private void btnMoveMapUp_Click( DecentForms.ControlBase Sender )
     {
       if ( ( comboMaps.SelectedIndex <= 0 )
       ||   ( comboMaps.Items.Count < 2 ) )
@@ -3488,7 +3488,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExport_Click( object sender, EventArgs e )
+    private void btnExport_Click( DecentForms.ControlBase Sender )
     {
       var exportInfo = new ExportMapInfo()
       {
@@ -3528,7 +3528,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnImport_Click( object sender, EventArgs e )
+    private void btnImport_Click( DecentForms.ControlBase Sender )
     {
       // Undo?
       var undo = new Undo.UndoMapCharsetChange( m_MapProject, this );

@@ -37,16 +37,16 @@ namespace RetroDevStudio.Documents
       this.addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.addAsLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.panel1 = new System.Windows.Forms.Panel();
-      this.btnOpenBinary = new System.Windows.Forms.Button();
+      this.btnOpenBinary = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnImportFromBinary = new System.Windows.Forms.Button();
+      this.btnImportFromBinary = new DecentForms.Button();
       this.editStartAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.btnExportToASM = new System.Windows.Forms.Button();
-      this.btnReloadFile = new System.Windows.Forms.Button();
+      this.btnExportToASM = new DecentForms.Button();
+      this.btnReloadFile = new DecentForms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnDeleteJumpedAtAddress = new System.Windows.Forms.Button();
-      this.btnAddJumpAddress = new System.Windows.Forms.Button();
+      this.btnDeleteJumpedAtAddress = new DecentForms.Button();
+      this.btnAddJumpAddress = new DecentForms.Button();
       this.editJumpAddress = new System.Windows.Forms.TextBox();
       this.listJumpedAtAddresses = new System.Windows.Forms.ListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -56,17 +56,17 @@ namespace RetroDevStudio.Documents
       this.tabBinary = new System.Windows.Forms.TabPage();
       this.hexView = new Be.Windows.Forms.HexBox();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.btnSaveProject = new System.Windows.Forms.Button();
-      this.btnOpenProject = new System.Windows.Forms.Button();
+      this.btnSaveProject = new DecentForms.Button();
+      this.btnOpenProject = new DecentForms.Button();
       this.editDisassemblyProjectName = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
-      this.btnNamedLabelsImport = new System.Windows.Forms.Button();
-      this.btnExportNamedLabels = new System.Windows.Forms.Button();
-      this.btnDeleteNamedLabel = new System.Windows.Forms.Button();
-      this.btnAddNamedLabel = new System.Windows.Forms.Button();
+      this.btnNamedLabelsImport = new DecentForms.Button();
+      this.btnExportNamedLabels = new DecentForms.Button();
+      this.btnDeleteNamedLabel = new DecentForms.Button();
+      this.btnAddNamedLabel = new DecentForms.Button();
       this.editLabelAddress = new System.Windows.Forms.TextBox();
       this.editLabelName = new System.Windows.Forms.TextBox();
       this.listNamedLabels = new System.Windows.Forms.ListView();
@@ -167,8 +167,7 @@ namespace RetroDevStudio.Documents
       this.btnOpenBinary.Size = new System.Drawing.Size(122, 23);
       this.btnOpenBinary.TabIndex = 0;
       this.btnOpenBinary.Text = "Open";
-      this.btnOpenBinary.UseVisualStyleBackColor = true;
-      this.btnOpenBinary.Click += new System.EventHandler(this.btnOpenBinary_Click);
+      this.btnOpenBinary.Click += new DecentForms.EventHandler(this.btnOpenBinary_Click);
       // 
       // groupBox1
       // 
@@ -195,8 +194,7 @@ namespace RetroDevStudio.Documents
       this.btnImportFromBinary.TabIndex = 3;
       this.btnImportFromBinary.Text = "Binary from clipboard";
       this.toolTip1.SetToolTip(this.btnImportFromBinary, "Binary from clipboard");
-      this.btnImportFromBinary.UseVisualStyleBackColor = true;
-      this.btnImportFromBinary.Click += new System.EventHandler(this.btnImportBinary_Click);
+      this.btnImportFromBinary.Click += new DecentForms.EventHandler(this.btnImportBinary_Click);
       // 
       // editStartAddress
       // 
@@ -222,8 +220,7 @@ namespace RetroDevStudio.Documents
       this.btnExportToASM.Size = new System.Drawing.Size(122, 23);
       this.btnExportToASM.TabIndex = 2;
       this.btnExportToASM.Text = "Export to Assembly";
-      this.btnExportToASM.UseVisualStyleBackColor = true;
-      this.btnExportToASM.Click += new System.EventHandler(this.btnExportAssembly_Click);
+      this.btnExportToASM.Click += new DecentForms.EventHandler(this.btnExportAssembly_Click);
       // 
       // btnReloadFile
       // 
@@ -232,8 +229,7 @@ namespace RetroDevStudio.Documents
       this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
       this.btnReloadFile.TabIndex = 1;
       this.btnReloadFile.Text = "Reload File";
-      this.btnReloadFile.UseVisualStyleBackColor = true;
-      this.btnReloadFile.Click += new System.EventHandler(this.btnReloadFile_Click);
+      this.btnReloadFile.Click += new DecentForms.EventHandler(this.btnReloadFile_Click);
       // 
       // groupBox2
       // 
@@ -256,8 +252,7 @@ namespace RetroDevStudio.Documents
       this.btnDeleteJumpedAtAddress.Size = new System.Drawing.Size(64, 22);
       this.btnDeleteJumpedAtAddress.TabIndex = 3;
       this.btnDeleteJumpedAtAddress.Text = "Delete";
-      this.btnDeleteJumpedAtAddress.UseVisualStyleBackColor = true;
-      this.btnDeleteJumpedAtAddress.Click += new System.EventHandler(this.btnDeleteJumpedAtAddress_Click);
+      this.btnDeleteJumpedAtAddress.Click += new DecentForms.EventHandler(this.btnDeleteJumpedAtAddress_Click);
       // 
       // btnAddJumpAddress
       // 
@@ -266,8 +261,7 @@ namespace RetroDevStudio.Documents
       this.btnAddJumpAddress.Size = new System.Drawing.Size(64, 22);
       this.btnAddJumpAddress.TabIndex = 1;
       this.btnAddJumpAddress.Text = "add";
-      this.btnAddJumpAddress.UseVisualStyleBackColor = true;
-      this.btnAddJumpAddress.Click += new System.EventHandler(this.btnAddJumpAddress_Click);
+      this.btnAddJumpAddress.Click += new DecentForms.EventHandler(this.btnAddJumpAddress_Click);
       // 
       // editJumpAddress
       // 
@@ -380,8 +374,7 @@ namespace RetroDevStudio.Documents
       this.btnSaveProject.Size = new System.Drawing.Size(75, 23);
       this.btnSaveProject.TabIndex = 2;
       this.btnSaveProject.Text = "Save";
-      this.btnSaveProject.UseVisualStyleBackColor = true;
-      this.btnSaveProject.Click += new System.EventHandler(this.btnSaveProject_Click);
+      this.btnSaveProject.Click += new DecentForms.EventHandler(this.btnSaveProject_Click);
       // 
       // btnOpenProject
       // 
@@ -390,8 +383,7 @@ namespace RetroDevStudio.Documents
       this.btnOpenProject.Size = new System.Drawing.Size(75, 23);
       this.btnOpenProject.TabIndex = 1;
       this.btnOpenProject.Text = "Open";
-      this.btnOpenProject.UseVisualStyleBackColor = true;
-      this.btnOpenProject.Click += new System.EventHandler(this.btnOpenProject_Click);
+      this.btnOpenProject.Click += new DecentForms.EventHandler(this.btnOpenProject_Click);
       // 
       // editDisassemblyProjectName
       // 
@@ -456,8 +448,7 @@ namespace RetroDevStudio.Documents
       this.btnNamedLabelsImport.Size = new System.Drawing.Size(64, 22);
       this.btnNamedLabelsImport.TabIndex = 5;
       this.btnNamedLabelsImport.Text = "Import";
-      this.btnNamedLabelsImport.UseVisualStyleBackColor = true;
-      this.btnNamedLabelsImport.Click += new System.EventHandler(this.btnNamedLabelsImport_Click);
+      this.btnNamedLabelsImport.Click += new DecentForms.EventHandler(this.btnNamedLabelsImport_Click);
       // 
       // btnExportNamedLabels
       // 
@@ -467,8 +458,7 @@ namespace RetroDevStudio.Documents
       this.btnExportNamedLabels.Size = new System.Drawing.Size(64, 22);
       this.btnExportNamedLabels.TabIndex = 6;
       this.btnExportNamedLabels.Text = "Export";
-      this.btnExportNamedLabels.UseVisualStyleBackColor = true;
-      this.btnExportNamedLabels.Click += new System.EventHandler(this.btnExportNamedLabels_Click);
+      this.btnExportNamedLabels.Click += new DecentForms.EventHandler(this.btnExportNamedLabels_Click);
       // 
       // btnDeleteNamedLabel
       // 
@@ -478,8 +468,7 @@ namespace RetroDevStudio.Documents
       this.btnDeleteNamedLabel.Size = new System.Drawing.Size(64, 22);
       this.btnDeleteNamedLabel.TabIndex = 4;
       this.btnDeleteNamedLabel.Text = "Delete";
-      this.btnDeleteNamedLabel.UseVisualStyleBackColor = true;
-      this.btnDeleteNamedLabel.Click += new System.EventHandler(this.btnDeleteNamedLabel_Click);
+      this.btnDeleteNamedLabel.Click += new DecentForms.EventHandler(this.btnDeleteNamedLabel_Click);
       // 
       // btnAddNamedLabel
       // 
@@ -491,8 +480,7 @@ namespace RetroDevStudio.Documents
       this.btnAddNamedLabel.Size = new System.Drawing.Size(64, 22);
       this.btnAddNamedLabel.TabIndex = 2;
       this.btnAddNamedLabel.Text = "add";
-      this.btnAddNamedLabel.UseVisualStyleBackColor = true;
-      this.btnAddNamedLabel.Click += new System.EventHandler(this.btnAddNamedLabel_Click);
+      this.btnAddNamedLabel.Click += new DecentForms.EventHandler(this.btnAddNamedLabel_Click);
       // 
       // editLabelAddress
       // 
@@ -637,10 +625,10 @@ namespace RetroDevStudio.Documents
 
     public FastColoredTextBoxNS.FastColoredTextBox editDisassembly;
     private System.Windows.Forms.Panel panel1;
-    private System.Windows.Forms.Button btnOpenBinary;
+    private DecentForms.Button btnOpenBinary;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.Button btnAddJumpAddress;
+    private DecentForms.Button btnAddJumpAddress;
     private System.Windows.Forms.TextBox editJumpAddress;
     private System.Windows.Forms.ListView listJumpedAtAddresses;
     private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -650,27 +638,27 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.TabPage tabDisassembly;
     private System.Windows.Forms.TabPage tabBinary;
     private Be.Windows.Forms.HexBox hexView;
-    private System.Windows.Forms.Button btnDeleteJumpedAtAddress;
+    private DecentForms.Button btnDeleteJumpedAtAddress;
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.TextBox editDisassemblyProjectName;
     private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Button btnOpenProject;
-    private System.Windows.Forms.Button btnSaveProject;
+    private DecentForms.Button btnOpenProject;
+    private DecentForms.Button btnSaveProject;
     private System.Windows.Forms.ColumnHeader columnHeader2;
-    private System.Windows.Forms.Button btnExportToASM;
+    private DecentForms.Button btnExportToASM;
     private System.Windows.Forms.GroupBox groupBox4;
-    private System.Windows.Forms.Button btnDeleteNamedLabel;
-    private System.Windows.Forms.Button btnAddNamedLabel;
+    private DecentForms.Button btnDeleteNamedLabel;
+    private DecentForms.Button btnAddNamedLabel;
     private System.Windows.Forms.TextBox editLabelAddress;
     private System.Windows.Forms.TextBox editLabelName;
     private System.Windows.Forms.ListView listNamedLabels;
     private System.Windows.Forms.ColumnHeader columnHeader3;
     private System.Windows.Forms.ColumnHeader columnHeader4;
     private System.Windows.Forms.ToolTip toolTip1;
-    private System.Windows.Forms.Button btnImportFromBinary;
+    private DecentForms.Button btnImportFromBinary;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.Button btnReloadFile;
+    private DecentForms.Button btnReloadFile;
     private System.Windows.Forms.ContextMenuStrip contextMenuDisassembler;
     private System.Windows.Forms.ToolStripMenuItem addJumpAddressToolStripMenuItem;
     private System.Windows.Forms.GroupBox groupBox5;
@@ -678,7 +666,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.CheckBox checkShowHexData;
         private System.Windows.Forms.ToolStripMenuItem addAsLabelToolStripMenuItem;
     private System.Windows.Forms.CheckBox checkStopAtReturns;
-    private System.Windows.Forms.Button btnNamedLabelsImport;
-    private System.Windows.Forms.Button btnExportNamedLabels;
+    private DecentForms.Button btnNamedLabelsImport;
+    private DecentForms.Button btnExportNamedLabels;
   }
 }

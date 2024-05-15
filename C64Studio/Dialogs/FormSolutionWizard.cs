@@ -41,7 +41,7 @@ namespace RetroDevStudio.Dialogs
     
 
 
-    private void btnOK_Click( object sender, EventArgs e )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       DialogResult                    = DialogResult.OK;
       SolutionName                    = editSolutionName.Text;
@@ -142,7 +142,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private void btnBrowseBasePath_Click( object sender, EventArgs e )
+    private void btnBrowseBasePath_Click( DecentForms.ControlBase Sender )
     {
       FolderBrowserDialog  dlgFolder = new FolderBrowserDialog();
 
@@ -220,6 +220,14 @@ namespace RetroDevStudio.Dialogs
     {
       CreateNewFolderForSolution = checkCreateSolutionFolder.Checked;
       UpdateSummary();
+    }
+
+
+
+    private void btnCancel_Click( DecentForms.ControlBase Sender )
+    {
+      DialogResult = DialogResult.Cancel;
+      Close();
     }
 
 

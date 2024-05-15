@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.label1 = new System.Windows.Forms.Label();
-      this.btnNormalAppMode = new System.Windows.Forms.Button();
-      this.btnPortableMode = new System.Windows.Forms.Button();
-      this.btnAskLater = new System.Windows.Forms.Button();
+      this.btnNormalAppMode = new DecentForms.Button();
+      this.btnPortableMode = new DecentForms.Button();
+      this.btnAskLater = new DecentForms.Button();
       this.label2 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
@@ -51,8 +51,7 @@
       this.btnNormalAppMode.Size = new System.Drawing.Size(97, 79);
       this.btnNormalAppMode.TabIndex = 1;
       this.btnNormalAppMode.Text = "Normal Mode";
-      this.btnNormalAppMode.UseVisualStyleBackColor = true;
-      this.btnNormalAppMode.Click += new System.EventHandler(this.btnNormalAppMode_Click);
+      this.btnNormalAppMode.Click += new DecentForms.EventHandler(this.btnNormalAppMode_Click);
       // 
       // btnPortableMode
       // 
@@ -61,8 +60,7 @@
       this.btnPortableMode.Size = new System.Drawing.Size(97, 79);
       this.btnPortableMode.TabIndex = 1;
       this.btnPortableMode.Text = "Portable App Mode";
-      this.btnPortableMode.UseVisualStyleBackColor = true;
-      this.btnPortableMode.Click += new System.EventHandler(this.btnPortableMode_Click);
+      this.btnPortableMode.Click += new DecentForms.EventHandler(this.btnPortableMode_Click);
       // 
       // btnAskLater
       // 
@@ -71,8 +69,7 @@
       this.btnAskLater.Size = new System.Drawing.Size(97, 79);
       this.btnAskLater.TabIndex = 1;
       this.btnAskLater.Text = "Ask me later";
-      this.btnAskLater.UseVisualStyleBackColor = true;
-      this.btnAskLater.Click += new System.EventHandler(this.btnAskLater_Click);
+      this.btnAskLater.Click += new DecentForms.EventHandler(this.btnAskLater_Click);
       // 
       // label2
       // 
@@ -109,9 +106,9 @@
     #endregion
 
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Button btnNormalAppMode;
-    private System.Windows.Forms.Button btnPortableMode;
-    private System.Windows.Forms.Button btnAskLater;
+    private DecentForms.Button btnNormalAppMode;
+    private DecentForms.Button btnPortableMode;
+    private DecentForms.Button btnAskLater;
     private System.Windows.Forms.Label label2;
   }
 }

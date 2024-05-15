@@ -33,29 +33,29 @@
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnClearChars = new System.Windows.Forms.Button();
+      this.btnClearChars = new DecentForms.Button();
       this.comboCategories = new System.Windows.Forms.ComboBox();
-      this.btnPasteFromClipboard = new System.Windows.Forms.Button();
+      this.btnPasteFromClipboard = new DecentForms.Button();
       this.label4 = new System.Windows.Forms.Label();
       this.labelCharNo = new System.Windows.Forms.Label();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.checkPasteMultiColor = new System.Windows.Forms.CheckBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnMoveSelectionToTarget = new System.Windows.Forms.Button();
+      this.btnMoveSelectionToTarget = new DecentForms.Button();
       this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnPaste = new System.Windows.Forms.Button();
-      this.btnCopy = new System.Windows.Forms.Button();
-      this.btnInvert = new System.Windows.Forms.Button();
-      this.btnMirrorY = new System.Windows.Forms.Button();
-      this.btnMirrorX = new System.Windows.Forms.Button();
-      this.btnShiftDown = new System.Windows.Forms.Button();
-      this.btnShiftUp = new System.Windows.Forms.Button();
-      this.btnShiftRight = new System.Windows.Forms.Button();
-      this.button3 = new System.Windows.Forms.Button();
-      this.btnRotateLeft = new System.Windows.Forms.Button();
-      this.btnShiftLeft = new System.Windows.Forms.Button();
+      this.btnPaste = new DecentForms.Button();
+      this.btnCopy = new DecentForms.Button();
+      this.btnInvert = new DecentForms.Button();
+      this.btnMirrorY = new DecentForms.Button();
+      this.btnMirrorX = new DecentForms.Button();
+      this.btnShiftDown = new DecentForms.Button();
+      this.btnShiftUp = new DecentForms.Button();
+      this.btnShiftRight = new DecentForms.Button();
+      this.button3 = new DecentForms.Button();
+      this.btnRotateLeft = new DecentForms.Button();
+      this.btnShiftLeft = new DecentForms.Button();
       this.tabCharacterEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.panelColorSettings = new System.Windows.Forms.Panel();
@@ -66,23 +66,23 @@
       this.picturePlayground = new GR.Forms.FastPictureBox();
       this.panelCharacters = new GR.Forms.ImageListbox();
       this.tabCategories = new System.Windows.Forms.TabPage();
-      this.btnMoveCategoryDown = new System.Windows.Forms.Button();
-      this.btnMoveCategoryUp = new System.Windows.Forms.Button();
+      this.btnMoveCategoryDown = new DecentForms.Button();
+      this.btnMoveCategoryUp = new DecentForms.Button();
       this.groupAllCategories = new System.Windows.Forms.GroupBox();
-      this.btnSortCategories = new System.Windows.Forms.Button();
+      this.btnSortCategories = new DecentForms.Button();
       this.groupCategorySpecific = new System.Windows.Forms.GroupBox();
       this.label5 = new System.Windows.Forms.Label();
       this.editCollapseIndex = new System.Windows.Forms.TextBox();
-      this.btnCollapseCategory = new System.Windows.Forms.Button();
-      this.btnReseatCategory = new System.Windows.Forms.Button();
-      this.btnDelete = new System.Windows.Forms.Button();
-      this.btnAddCategory = new System.Windows.Forms.Button();
+      this.btnCollapseCategory = new DecentForms.Button();
+      this.btnReseatCategory = new DecentForms.Button();
+      this.btnDelete = new DecentForms.Button();
+      this.btnAddCategory = new DecentForms.Button();
       this.listCategories = new System.Windows.Forms.ListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.btnHighlightDuplicates = new System.Windows.Forms.Button();
+      this.btnHighlightDuplicates = new DecentForms.Button();
       this.groupBox2.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.tabCharacterEditor.SuspendLayout();
@@ -112,8 +112,7 @@
       this.btnClearChars.Size = new System.Drawing.Size(48, 22);
       this.btnClearChars.TabIndex = 0;
       this.btnClearChars.Text = "Clear";
-      this.btnClearChars.UseVisualStyleBackColor = true;
-      this.btnClearChars.Click += new System.EventHandler(this.btnClear_Click);
+      this.btnClearChars.Click += new DecentForms.EventHandler(this.btnClear_Click);
       // 
       // comboCategories
       // 
@@ -133,8 +132,7 @@
       this.btnPasteFromClipboard.TabIndex = 17;
       this.btnPasteFromClipboard.Text = "Paste Image";
       this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Image");
-      this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
-      this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
+      this.btnPasteFromClipboard.Click += new DecentForms.EventHandler(this.btnPasteFromClipboard_Click);
       // 
       // label4
       // 
@@ -193,8 +191,7 @@
       this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
       this.btnMoveSelectionToTarget.TabIndex = 1;
       this.btnMoveSelectionToTarget.Text = "Move";
-      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
-      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
+      this.btnMoveSelectionToTarget.Click += new DecentForms.EventHandler(this.btnMoveSelectionToTarget_Click);
       // 
       // editMoveTargetIndex
       // 
@@ -220,8 +217,7 @@
       this.btnPaste.Size = new System.Drawing.Size(26, 26);
       this.btnPaste.TabIndex = 16;
       this.toolTip1.SetToolTip(this.btnPaste, "Paste Characters");
-      this.btnPaste.UseVisualStyleBackColor = true;
-      this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+      this.btnPaste.Click += new DecentForms.EventHandler(this.btnPaste_Click);
       // 
       // btnCopy
       // 
@@ -231,8 +227,7 @@
       this.btnCopy.Size = new System.Drawing.Size(26, 26);
       this.btnCopy.TabIndex = 15;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy Characters to Clipboard");
-      this.btnCopy.UseVisualStyleBackColor = true;
-      this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+      this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
       // 
       // btnInvert
       // 
@@ -242,8 +237,7 @@
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
       this.btnInvert.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnInvert, "Invert");
-      this.btnInvert.UseVisualStyleBackColor = true;
-      this.btnInvert.Click += new System.EventHandler(this.btnInvert_Click);
+      this.btnInvert.Click += new DecentForms.EventHandler(this.btnInvert_Click);
       // 
       // btnMirrorY
       // 
@@ -253,8 +247,7 @@
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Y");
-      this.btnMirrorY.UseVisualStyleBackColor = true;
-      this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
+      this.btnMirrorY.Click += new DecentForms.EventHandler(this.btnMirrorY_Click);
       // 
       // btnMirrorX
       // 
@@ -264,8 +257,7 @@
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror X");
-      this.btnMirrorX.UseVisualStyleBackColor = true;
-      this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
+      this.btnMirrorX.Click += new DecentForms.EventHandler(this.btnMirrorX_Click);
       // 
       // btnShiftDown
       // 
@@ -275,8 +267,7 @@
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
-      this.btnShiftDown.UseVisualStyleBackColor = true;
-      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
+      this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
       // 
       // btnShiftUp
       // 
@@ -286,8 +277,7 @@
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
-      this.btnShiftUp.UseVisualStyleBackColor = true;
-      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
+      this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
       // 
       // btnShiftRight
       // 
@@ -297,8 +287,7 @@
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
-      this.btnShiftRight.UseVisualStyleBackColor = true;
-      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
+      this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
       // 
       // button3
       // 
@@ -308,8 +297,7 @@
       this.button3.Size = new System.Drawing.Size(26, 26);
       this.button3.TabIndex = 8;
       this.toolTip1.SetToolTip(this.button3, "Rotate Right");
-      this.button3.UseVisualStyleBackColor = true;
-      this.button3.Click += new System.EventHandler(this.btnRotateRight_Click);
+      this.button3.Click += new DecentForms.EventHandler(this.btnRotateRight_Click);
       // 
       // btnRotateLeft
       // 
@@ -319,8 +307,7 @@
       this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
       this.btnRotateLeft.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnRotateLeft, "Rotate Left");
-      this.btnRotateLeft.UseVisualStyleBackColor = true;
-      this.btnRotateLeft.Click += new System.EventHandler(this.btnRotateLeft_Click);
+      this.btnRotateLeft.Click += new DecentForms.EventHandler(this.btnRotateLeft_Click);
       // 
       // btnShiftLeft
       // 
@@ -330,8 +317,7 @@
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 0;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
-      this.btnShiftLeft.UseVisualStyleBackColor = true;
-      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
+      this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
       // 
       // tabCharacterEditor
       // 
@@ -502,8 +488,7 @@
       this.btnMoveCategoryDown.Size = new System.Drawing.Size(75, 23);
       this.btnMoveCategoryDown.TabIndex = 12;
       this.btnMoveCategoryDown.Text = "Move Down";
-      this.btnMoveCategoryDown.UseVisualStyleBackColor = true;
-      this.btnMoveCategoryDown.Click += new System.EventHandler(this.btnMoveCategoryDown_Click);
+      this.btnMoveCategoryDown.Click += new DecentForms.EventHandler(this.btnMoveCategoryDown_Click);
       // 
       // btnMoveCategoryUp
       // 
@@ -513,8 +498,7 @@
       this.btnMoveCategoryUp.Size = new System.Drawing.Size(75, 23);
       this.btnMoveCategoryUp.TabIndex = 12;
       this.btnMoveCategoryUp.Text = "Move Up";
-      this.btnMoveCategoryUp.UseVisualStyleBackColor = true;
-      this.btnMoveCategoryUp.Click += new System.EventHandler(this.btnMoveCategoryUp_Click);
+      this.btnMoveCategoryUp.Click += new DecentForms.EventHandler(this.btnMoveCategoryUp_Click);
       // 
       // groupAllCategories
       // 
@@ -533,8 +517,7 @@
       this.btnSortCategories.Size = new System.Drawing.Size(105, 23);
       this.btnSortCategories.TabIndex = 3;
       this.btnSortCategories.Text = "Sort by Categories";
-      this.btnSortCategories.UseVisualStyleBackColor = true;
-      this.btnSortCategories.Click += new System.EventHandler(this.btnSortCategories_Click);
+      this.btnSortCategories.Click += new DecentForms.EventHandler(this.btnSortCategories_Click);
       // 
       // groupCategorySpecific
       // 
@@ -573,8 +556,7 @@
       this.btnCollapseCategory.Size = new System.Drawing.Size(140, 23);
       this.btnCollapseCategory.TabIndex = 3;
       this.btnCollapseCategory.Text = "Collapse Unique Chars";
-      this.btnCollapseCategory.UseVisualStyleBackColor = true;
-      this.btnCollapseCategory.Click += new System.EventHandler(this.btnCollapseCategory_Click);
+      this.btnCollapseCategory.Click += new DecentForms.EventHandler(this.btnCollapseCategory_Click);
       // 
       // btnReseatCategory
       // 
@@ -584,8 +566,7 @@
       this.btnReseatCategory.Size = new System.Drawing.Size(105, 23);
       this.btnReseatCategory.TabIndex = 3;
       this.btnReseatCategory.Text = "Reseat Category";
-      this.btnReseatCategory.UseVisualStyleBackColor = true;
-      this.btnReseatCategory.Click += new System.EventHandler(this.btnReseatCategory_Click);
+      this.btnReseatCategory.Click += new DecentForms.EventHandler(this.btnReseatCategory_Click);
       // 
       // btnDelete
       // 
@@ -595,8 +576,7 @@
       this.btnDelete.Size = new System.Drawing.Size(96, 23);
       this.btnDelete.TabIndex = 8;
       this.btnDelete.Text = "Delete Category";
-      this.btnDelete.UseVisualStyleBackColor = true;
-      this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+      this.btnDelete.Click += new DecentForms.EventHandler(this.btnDelete_Click);
       // 
       // btnAddCategory
       // 
@@ -606,8 +586,7 @@
       this.btnAddCategory.Size = new System.Drawing.Size(75, 23);
       this.btnAddCategory.TabIndex = 9;
       this.btnAddCategory.Text = "Add";
-      this.btnAddCategory.UseVisualStyleBackColor = true;
-      this.btnAddCategory.Click += new System.EventHandler(this.btnAddCategory_Click);
+      this.btnAddCategory.Click += new DecentForms.EventHandler(this.btnAddCategory_Click);
       // 
       // listCategories
       // 
@@ -659,8 +638,7 @@
       this.btnHighlightDuplicates.Size = new System.Drawing.Size(93, 26);
       this.btnHighlightDuplicates.TabIndex = 18;
       this.btnHighlightDuplicates.Text = "Duplicates";
-      this.btnHighlightDuplicates.UseVisualStyleBackColor = true;
-      this.btnHighlightDuplicates.Click += new System.EventHandler(this.btnHighlightDuplicates_Click);
+      this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
       // 
       // CharacterEditor
       // 
@@ -691,27 +669,27 @@
         private GR.Forms.FastPictureBox panelCharColors;
         private GR.Forms.FastPictureBox picturePlayground;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnClearChars;
-        private System.Windows.Forms.Button btnPaste;
-        private System.Windows.Forms.Button btnCopy;
-        private System.Windows.Forms.Button btnInvert;
-        private System.Windows.Forms.Button btnMirrorY;
-        private System.Windows.Forms.Button btnMirrorX;
-        private System.Windows.Forms.Button btnShiftDown;
-        private System.Windows.Forms.Button btnShiftUp;
-        private System.Windows.Forms.Button btnShiftRight;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button btnRotateLeft;
-        private System.Windows.Forms.Button btnShiftLeft;
+        private DecentForms.Button btnClearChars;
+        private DecentForms.Button btnPaste;
+        private DecentForms.Button btnCopy;
+        private DecentForms.Button btnInvert;
+        private DecentForms.Button btnMirrorY;
+        private DecentForms.Button btnMirrorX;
+        private DecentForms.Button btnShiftDown;
+        private DecentForms.Button btnShiftUp;
+        private DecentForms.Button btnShiftRight;
+        private DecentForms.Button button3;
+        private DecentForms.Button btnRotateLeft;
+        private DecentForms.Button btnShiftLeft;
         private System.Windows.Forms.ComboBox comboCategories;
-        private System.Windows.Forms.Button btnPasteFromClipboard;
+        private DecentForms.Button btnPasteFromClipboard;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label labelCharNo;
         private GR.Forms.ImageListbox panelCharacters;
         private System.Windows.Forms.CheckBox checkShowGrid;
         private System.Windows.Forms.CheckBox checkPasteMultiColor;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnMoveSelectionToTarget;
+        private DecentForms.Button btnMoveSelectionToTarget;
         private System.Windows.Forms.TextBox editMoveTargetIndex;
         private System.Windows.Forms.Label label10;
     private CustomDrawControl canvasEditor;
@@ -720,24 +698,24 @@
     private System.Windows.Forms.TabPage tabEditor;
     private System.Windows.Forms.TabPage tabCategories;
     private System.Windows.Forms.GroupBox groupAllCategories;
-    private System.Windows.Forms.Button btnSortCategories;
+    private DecentForms.Button btnSortCategories;
     private System.Windows.Forms.GroupBox groupCategorySpecific;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.TextBox editCollapseIndex;
-    private System.Windows.Forms.Button btnCollapseCategory;
-    private System.Windows.Forms.Button btnReseatCategory;
-    private System.Windows.Forms.Button btnDelete;
-    private System.Windows.Forms.Button btnAddCategory;
+    private DecentForms.Button btnCollapseCategory;
+    private DecentForms.Button btnReseatCategory;
+    private DecentForms.Button btnDelete;
+    private DecentForms.Button btnAddCategory;
     private System.Windows.Forms.ListView listCategories;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.TextBox editCategoryName;
     private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.Button btnMoveCategoryDown;
-    private System.Windows.Forms.Button btnMoveCategoryUp;
+    private DecentForms.Button btnMoveCategoryDown;
+    private DecentForms.Button btnMoveCategoryUp;
     private System.Windows.Forms.ComboBox comboCharsetMode;
     private System.Windows.Forms.Label labelCharsetMode;
     private System.Windows.Forms.Panel panelColorSettings;
-    private System.Windows.Forms.Button btnHighlightDuplicates;
+    private DecentForms.Button btnHighlightDuplicates;
   }
 }

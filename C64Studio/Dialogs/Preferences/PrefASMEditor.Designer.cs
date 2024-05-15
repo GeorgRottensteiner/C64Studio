@@ -28,8 +28,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.checkEditorShowMaxLineLengthIndicator = new System.Windows.Forms.CheckBox();
       this.editMaxLineLengthIndicatorColumn = new System.Windows.Forms.TextBox();
@@ -42,8 +42,8 @@
       this.checkASMShowSizes = new System.Windows.Forms.CheckBox();
       this.checkASMShowCycles = new System.Windows.Forms.CheckBox();
       this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
-      this.btnSetDefaultsFont = new System.Windows.Forms.Button();
-      this.btnChooseFont = new System.Windows.Forms.Button();
+      this.btnSetDefaultsFont = new DecentForms.Button();
+      this.btnChooseFont = new DecentForms.Button();
       this.labelFontPreview = new System.Windows.Forms.Label();
       this.editTabSize = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
@@ -63,8 +63,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 16;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -74,8 +73,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 15;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -233,8 +231,7 @@
       this.btnSetDefaultsFont.Size = new System.Drawing.Size(124, 23);
       this.btnSetDefaultsFont.TabIndex = 5;
       this.btnSetDefaultsFont.Text = "Set Default Fonts";
-      this.btnSetDefaultsFont.UseVisualStyleBackColor = true;
-      this.btnSetDefaultsFont.Click += new System.EventHandler(this.btnSetDefaultsFont_Click);
+      this.btnSetDefaultsFont.Click += new DecentForms.EventHandler(this.btnSetDefaultsFont_Click);
       // 
       // btnChooseFont
       // 
@@ -243,8 +240,7 @@
       this.btnChooseFont.Size = new System.Drawing.Size(124, 23);
       this.btnChooseFont.TabIndex = 4;
       this.btnChooseFont.Text = "Change Font";
-      this.btnChooseFont.UseVisualStyleBackColor = true;
-      this.btnChooseFont.Click += new System.EventHandler(this.btnChooseFont_Click);
+      this.btnChooseFont.Click += new DecentForms.EventHandler(this.btnChooseFont_Click);
       // 
       // labelFontPreview
       // 
@@ -336,15 +332,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox editTabSize;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox checkStripTrailingSpaces;
         private System.Windows.Forms.CheckBox checkConvertTabsToSpaces;
-        private System.Windows.Forms.Button btnSetDefaultsFont;
-        private System.Windows.Forms.Button btnChooseFont;
+        private DecentForms.Button btnSetDefaultsFont;
+        private DecentForms.Button btnChooseFont;
         private System.Windows.Forms.Label labelFontPreview;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkASMShowAddress;

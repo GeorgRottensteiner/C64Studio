@@ -31,23 +31,23 @@
       this.tabProjectProperties = new System.Windows.Forms.TabControl();
       this.tabGeneral = new System.Windows.Forms.TabPage();
       this.editProjectName = new System.Windows.Forms.TextBox();
+      this.labelProjectFile = new System.Windows.Forms.Label();
+      this.label6 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.tabConfigurations = new System.Windows.Forms.TabPage();
-      this.btnDeleteConfig = new System.Windows.Forms.Button();
-      this.btnApplyChanges = new System.Windows.Forms.Button();
-      this.btnAddConfig = new System.Windows.Forms.Button();
-      this.editPreDefines = new System.Windows.Forms.TextBox();
-      this.editConfigName = new System.Windows.Forms.TextBox();
-      this.editDebugStartAddress = new System.Windows.Forms.TextBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
+      this.groupConfigSettings = new System.Windows.Forms.GroupBox();
+      this.btnApplyChanges = new DecentForms.Button();
       this.label1 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
+      this.editDebugStartAddress = new System.Windows.Forms.TextBox();
+      this.editPreDefines = new System.Windows.Forms.TextBox();
+      this.btnDeleteConfig = new DecentForms.Button();
+      this.btnAddConfig = new DecentForms.Button();
+      this.editConfigName = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
       this.comboConfiguration = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.btnClose = new System.Windows.Forms.Button();
-      this.groupConfigSettings = new System.Windows.Forms.GroupBox();
-      this.label6 = new System.Windows.Forms.Label();
-      this.labelProjectFile = new System.Windows.Forms.Label();
+      this.btnClose = new DecentForms.Button();
       this.tabProjectProperties.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabConfigurations.SuspendLayout();
@@ -64,7 +64,7 @@
       this.tabProjectProperties.Location = new System.Drawing.Point(12, 12);
       this.tabProjectProperties.Name = "tabProjectProperties";
       this.tabProjectProperties.SelectedIndex = 0;
-      this.tabProjectProperties.Size = new System.Drawing.Size(611, 376);
+      this.tabProjectProperties.Size = new System.Drawing.Size(637, 376);
       this.tabProjectProperties.TabIndex = 0;
       // 
       // tabGeneral
@@ -89,6 +89,23 @@
       this.editProjectName.TabIndex = 1;
       this.editProjectName.TextChanged += new System.EventHandler(this.editProjectName_TextChanged);
       // 
+      // labelProjectFile
+      // 
+      this.labelProjectFile.Location = new System.Drawing.Point(117, 39);
+      this.labelProjectFile.Name = "labelProjectFile";
+      this.labelProjectFile.Size = new System.Drawing.Size(455, 13);
+      this.labelProjectFile.TabIndex = 0;
+      this.labelProjectFile.Text = "Name:";
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(6, 39);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(62, 13);
+      this.label6.TabIndex = 0;
+      this.label6.Text = "Project File:";
+      // 
       // label2
       // 
       this.label2.AutoSize = true;
@@ -110,41 +127,64 @@
       this.tabConfigurations.Location = new System.Drawing.Point(4, 22);
       this.tabConfigurations.Name = "tabConfigurations";
       this.tabConfigurations.Padding = new System.Windows.Forms.Padding(3);
-      this.tabConfigurations.Size = new System.Drawing.Size(603, 350);
+      this.tabConfigurations.Size = new System.Drawing.Size(629, 350);
       this.tabConfigurations.TabIndex = 1;
       this.tabConfigurations.Text = "Configuration";
       this.tabConfigurations.UseVisualStyleBackColor = true;
       // 
-      // btnDeleteConfig
+      // groupConfigSettings
       // 
-      this.btnDeleteConfig.Location = new System.Drawing.Point(516, 7);
-      this.btnDeleteConfig.Name = "btnDeleteConfig";
-      this.btnDeleteConfig.Size = new System.Drawing.Size(75, 23);
-      this.btnDeleteConfig.TabIndex = 7;
-      this.btnDeleteConfig.Text = "Delete";
-      this.btnDeleteConfig.UseVisualStyleBackColor = true;
-      this.btnDeleteConfig.Click += new System.EventHandler(this.btnDeleteConfig_Click);
+      this.groupConfigSettings.Controls.Add(this.btnApplyChanges);
+      this.groupConfigSettings.Controls.Add(this.label1);
+      this.groupConfigSettings.Controls.Add(this.label4);
+      this.groupConfigSettings.Controls.Add(this.editDebugStartAddress);
+      this.groupConfigSettings.Controls.Add(this.editPreDefines);
+      this.groupConfigSettings.Location = new System.Drawing.Point(9, 82);
+      this.groupConfigSettings.Name = "groupConfigSettings";
+      this.groupConfigSettings.Size = new System.Drawing.Size(614, 262);
+      this.groupConfigSettings.TabIndex = 8;
+      this.groupConfigSettings.TabStop = false;
+      this.groupConfigSettings.Text = "Configuration: Default";
       // 
       // btnApplyChanges
       // 
+      this.btnApplyChanges.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnApplyChanges.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnApplyChanges.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnApplyChanges.Enabled = false;
+      this.btnApplyChanges.Image = null;
       this.btnApplyChanges.Location = new System.Drawing.Point(507, 233);
       this.btnApplyChanges.Name = "btnApplyChanges";
-      this.btnApplyChanges.Size = new System.Drawing.Size(72, 23);
+      this.btnApplyChanges.Size = new System.Drawing.Size(101, 23);
       this.btnApplyChanges.TabIndex = 7;
       this.btnApplyChanges.Text = "Apply Changes";
-      this.btnApplyChanges.UseVisualStyleBackColor = true;
-      this.btnApplyChanges.Click += new System.EventHandler(this.btnApplyChanges_Click);
+      this.btnApplyChanges.Click += new DecentForms.EventHandler(this.btnApplyChanges_Click);
       // 
-      // btnAddConfig
+      // label1
       // 
-      this.btnAddConfig.Location = new System.Drawing.Point(516, 36);
-      this.btnAddConfig.Name = "btnAddConfig";
-      this.btnAddConfig.Size = new System.Drawing.Size(75, 23);
-      this.btnAddConfig.TabIndex = 7;
-      this.btnAddConfig.Text = "Add New";
-      this.btnAddConfig.UseVisualStyleBackColor = true;
-      this.btnAddConfig.Click += new System.EventHandler(this.btnAddConfig_Click);
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(6, 25);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(108, 13);
+      this.label1.TabIndex = 4;
+      this.label1.Text = "Debug Start Address:";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(10, 52);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(60, 13);
+      this.label4.TabIndex = 4;
+      this.label4.Text = "Predefines:";
+      // 
+      // editDebugStartAddress
+      // 
+      this.editDebugStartAddress.Location = new System.Drawing.Point(124, 22);
+      this.editDebugStartAddress.Name = "editDebugStartAddress";
+      this.editDebugStartAddress.Size = new System.Drawing.Size(86, 20);
+      this.editDebugStartAddress.TabIndex = 5;
+      this.editDebugStartAddress.TextChanged += new System.EventHandler(this.editDebugStartAddress_TextChanged);
       // 
       // editPreDefines
       // 
@@ -156,20 +196,38 @@
       this.editPreDefines.TabIndex = 6;
       this.editPreDefines.TextChanged += new System.EventHandler(this.editPreDefines_TextChanged);
       // 
+      // btnDeleteConfig
+      // 
+      this.btnDeleteConfig.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteConfig.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteConfig.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnDeleteConfig.Image = null;
+      this.btnDeleteConfig.Location = new System.Drawing.Point(516, 7);
+      this.btnDeleteConfig.Name = "btnDeleteConfig";
+      this.btnDeleteConfig.Size = new System.Drawing.Size(101, 23);
+      this.btnDeleteConfig.TabIndex = 7;
+      this.btnDeleteConfig.Text = "Delete";
+      this.btnDeleteConfig.Click += new DecentForms.EventHandler(this.btnDeleteConfig_Click);
+      // 
+      // btnAddConfig
+      // 
+      this.btnAddConfig.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddConfig.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddConfig.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnAddConfig.Image = null;
+      this.btnAddConfig.Location = new System.Drawing.Point(516, 36);
+      this.btnAddConfig.Name = "btnAddConfig";
+      this.btnAddConfig.Size = new System.Drawing.Size(101, 23);
+      this.btnAddConfig.TabIndex = 7;
+      this.btnAddConfig.Text = "Add New";
+      this.btnAddConfig.Click += new DecentForms.EventHandler(this.btnAddConfig_Click);
+      // 
       // editConfigName
       // 
       this.editConfigName.Location = new System.Drawing.Point(133, 36);
       this.editConfigName.Name = "editConfigName";
       this.editConfigName.Size = new System.Drawing.Size(377, 20);
       this.editConfigName.TabIndex = 5;
-      // 
-      // editDebugStartAddress
-      // 
-      this.editDebugStartAddress.Location = new System.Drawing.Point(124, 22);
-      this.editDebugStartAddress.Name = "editDebugStartAddress";
-      this.editDebugStartAddress.Size = new System.Drawing.Size(86, 20);
-      this.editDebugStartAddress.TabIndex = 5;
-      this.editDebugStartAddress.TextChanged += new System.EventHandler(this.editDebugStartAddress_TextChanged);
       // 
       // label5
       // 
@@ -179,24 +237,6 @@
       this.label5.Size = new System.Drawing.Size(38, 13);
       this.label5.TabIndex = 4;
       this.label5.Text = "Name:";
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(10, 52);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(60, 13);
-      this.label4.TabIndex = 4;
-      this.label4.Text = "Predefines:";
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(6, 25);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(108, 13);
-      this.label1.TabIndex = 4;
-      this.label1.Text = "Debug Start Address:";
       // 
       // comboConfiguration
       // 
@@ -219,51 +259,23 @@
       // 
       // btnClose
       // 
-      this.btnClose.Location = new System.Drawing.Point(548, 394);
+      this.btnClose.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClose.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnClose.Image = null;
+      this.btnClose.Location = new System.Drawing.Point(570, 394);
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(75, 23);
       this.btnClose.TabIndex = 1;
       this.btnClose.Text = "Close";
-      this.btnClose.UseVisualStyleBackColor = true;
-      this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-      // 
-      // groupConfigSettings
-      // 
-      this.groupConfigSettings.Controls.Add(this.btnApplyChanges);
-      this.groupConfigSettings.Controls.Add(this.label1);
-      this.groupConfigSettings.Controls.Add(this.label4);
-      this.groupConfigSettings.Controls.Add(this.editDebugStartAddress);
-      this.groupConfigSettings.Controls.Add(this.editPreDefines);
-      this.groupConfigSettings.Location = new System.Drawing.Point(9, 82);
-      this.groupConfigSettings.Name = "groupConfigSettings";
-      this.groupConfigSettings.Size = new System.Drawing.Size(588, 262);
-      this.groupConfigSettings.TabIndex = 8;
-      this.groupConfigSettings.TabStop = false;
-      this.groupConfigSettings.Text = "Configuration: Default";
-      // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(6, 39);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(62, 13);
-      this.label6.TabIndex = 0;
-      this.label6.Text = "Project File:";
-      // 
-      // labelProjectFile
-      // 
-      this.labelProjectFile.Location = new System.Drawing.Point(117, 39);
-      this.labelProjectFile.Name = "labelProjectFile";
-      this.labelProjectFile.Size = new System.Drawing.Size(455, 13);
-      this.labelProjectFile.TabIndex = 0;
-      this.labelProjectFile.Text = "Name:";
+      this.btnClose.Click += new DecentForms.EventHandler(this.btnClose_Click);
       // 
       // ProjectProperties
       // 
       this.AcceptButton = this.btnClose;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(635, 429);
+      this.ClientSize = new System.Drawing.Size(661, 429);
       this.Controls.Add(this.btnClose);
       this.Controls.Add(this.tabProjectProperties);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -289,7 +301,7 @@
     private System.Windows.Forms.TabControl tabProjectProperties;
     private System.Windows.Forms.TabPage tabGeneral;
     private System.Windows.Forms.TabPage tabConfigurations;
-    private System.Windows.Forms.Button btnClose;
+    private DecentForms.Button btnClose;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editProjectName;
     private System.Windows.Forms.ComboBox comboConfiguration;
@@ -298,9 +310,9 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox editPreDefines;
-    private System.Windows.Forms.Button btnDeleteConfig;
-    private System.Windows.Forms.Button btnApplyChanges;
-    private System.Windows.Forms.Button btnAddConfig;
+    private DecentForms.Button btnDeleteConfig;
+    private DecentForms.Button btnApplyChanges;
+    private DecentForms.Button btnAddConfig;
     private System.Windows.Forms.TextBox editConfigName;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.GroupBox groupConfigSettings;

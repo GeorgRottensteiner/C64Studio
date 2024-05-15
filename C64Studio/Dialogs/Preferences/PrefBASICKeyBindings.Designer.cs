@@ -28,11 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new System.Windows.Forms.Button();
-      this.btnImportSettings = new System.Windows.Forms.Button();
+      this.btnExportSettings = new DecentForms.Button();
+      this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnUnbindBASICKeyMapBinding = new System.Windows.Forms.Button();
-      this.btnBindBASICKeyMapBinding = new System.Windows.Forms.Button();
+      this.btnUnbindBASICKeyMapBinding = new DecentForms.Button();
+      this.btnBindBASICKeyMapBinding = new DecentForms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
       this.listBASICKeyMap = new RetroDevStudio.Controls.MeasurableListView();
@@ -51,8 +51,7 @@
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnExportSettings.TabIndex = 12;
       this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.UseVisualStyleBackColor = true;
-      this.btnExportSettings.Click += new System.EventHandler(this.btnExportSettings_Click);
+      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
       // 
       // btnImportSettings
       // 
@@ -62,8 +61,7 @@
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
       this.btnImportSettings.TabIndex = 13;
       this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.UseVisualStyleBackColor = true;
-      this.btnImportSettings.Click += new System.EventHandler(this.btnImportSettings_Click);
+      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // groupBox1
       // 
@@ -90,8 +88,7 @@
       this.btnUnbindBASICKeyMapBinding.Size = new System.Drawing.Size(72, 23);
       this.btnUnbindBASICKeyMapBinding.TabIndex = 17;
       this.btnUnbindBASICKeyMapBinding.Text = "Unbind Key";
-      this.btnUnbindBASICKeyMapBinding.UseVisualStyleBackColor = true;
-      this.btnUnbindBASICKeyMapBinding.Click += new System.EventHandler(this.btnUnbindBASICKeyMapBinding_Click);
+      this.btnUnbindBASICKeyMapBinding.Click += new DecentForms.EventHandler(this.btnUnbindBASICKeyMapBinding_Click);
       // 
       // btnBindBASICKeyMapBinding
       // 
@@ -100,8 +97,7 @@
       this.btnBindBASICKeyMapBinding.Size = new System.Drawing.Size(72, 23);
       this.btnBindBASICKeyMapBinding.TabIndex = 18;
       this.btnBindBASICKeyMapBinding.Text = "Bind Key";
-      this.btnBindBASICKeyMapBinding.UseVisualStyleBackColor = true;
-      this.btnBindBASICKeyMapBinding.Click += new System.EventHandler(this.btnBindBASICKeyMapBinding_Click);
+      this.btnBindBASICKeyMapBinding.Click += new DecentForms.EventHandler(this.btnBindBASICKeyMapBinding_Click);
       // 
       // editBASICKeyMapBinding
       // 
@@ -178,11 +174,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnExportSettings;
-        private System.Windows.Forms.Button btnImportSettings;
+        private DecentForms.Button btnExportSettings;
+        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnUnbindBASICKeyMapBinding;
-        private System.Windows.Forms.Button btnBindBASICKeyMapBinding;
+        private DecentForms.Button btnUnbindBASICKeyMapBinding;
+        private DecentForms.Button btnBindBASICKeyMapBinding;
         private System.Windows.Forms.TextBox editBASICKeyMapBinding;
         private System.Windows.Forms.Label label25;
         private Controls.MeasurableListView listBASICKeyMap;
