@@ -313,8 +313,15 @@ namespace DecentForms
     {
       Rect.Offset( -_DisplayOffsetX, -_DisplayOffsetY );
 
-      var button = (Button)_Control;
-      System.Drawing.Image   imageToDraw = button.Image;
+      System.Drawing.Image   imageToDraw = null;
+      if ( _Control is Button )
+      {
+        imageToDraw = ( (Button)_Control ).Image;
+      }
+      else if ( _Control is RadioButton )
+      {
+        imageToDraw = ( (RadioButton)_Control ).Image;
+      }
       if ( ( imageToDraw != null ) 
       &&   ( !_Control.Enabled ) )
       {
@@ -338,7 +345,7 @@ namespace DecentForms
             FillSunkenRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackgroundSelected );
             if ( imageToDraw != null )
             {
-              DrawImageCentered( imageToDraw, Rect );
+              DrawImageCentered( imageToDraw, Rect, 0, 1 );
             }
             DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED, 0, 1 );
           }
@@ -383,7 +390,7 @@ namespace DecentForms
             FillRectangle( Rect.Left + 1, Rect.Top + 1, Rect.Width - 2, Rect.Height - 2, ColorControlBackgroundSelected );
             if ( imageToDraw != null )
             {
-              DrawImageCentered( imageToDraw, Rect );
+              DrawImageCentered( imageToDraw, Rect, 0, 1 );
             }
             DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED, 0, 1 );
           }
@@ -451,6 +458,32 @@ namespace DecentForms
       _GrayscaledImageCache.Add( Image, newBitmap );
 
       return newBitmap;
+    }
+
+
+
+    internal void RenderRadioButton( string Text, ContentAlignment Alignment, bool MouseOver, bool Pushed, bool Checked )
+    {
+      var checkBox = (RadioButton)_Control;
+
+      var checkRect = checkBox.GetRadioRect();
+      DrawRadioButton( checkRect, MouseOver, Checked );
+
+      var textRect = checkBox.GetTextRect();
+      _G.SetClip( textRect );
+      DrawText( Text, textRect.Left, textRect.Top, textRect.Width, textRect.Height, TextAlignment.CENTERED, ColorControlText );
+    }
+
+
+
+    private void DrawRadioButton( Rectangle CheckRect, bool MouseOver, bool Checked )
+    {
+      uint    color = ( MouseOver ? ColorControlBackgroundMouseOver: ColorControlBorderFlat );
+      DrawCircle( CheckRect.Left, CheckRect.Top, CheckRect.Width, CheckRect.Height, color );
+      if ( Checked )
+      {
+        FillCircle( CheckRect.Left + 2, CheckRect.Top + 2, CheckRect.Width - 5, CheckRect.Height - 5, color );
+      }
     }
 
 
@@ -590,11 +623,11 @@ namespace DecentForms
 
 
 
-    private void DrawImageCentered( System.Drawing.Image Image, Rectangle ImageRect )
+    private void DrawImageCentered( System.Drawing.Image Image, Rectangle ImageRect, int DX = 0, int DY = 0 )
     {
       _G.DrawImage( Image, 
-                    ImageRect.X + ( ImageRect.Width - Image.Width ) / 2,
-                    ImageRect.Y + ( ImageRect.Height - Image.Height ) / 2,
+                    ImageRect.X + ( ImageRect.Width - Image.Width ) / 2 + DX,
+                    ImageRect.Y + ( ImageRect.Height - Image.Height ) / 2 + DY,
                     Image.Width, Image.Height );
     }
 
@@ -781,6 +814,28 @@ namespace DecentForms
         DrawLine( CheckRect.Left, CheckRect.Bottom - 1, CheckRect.Right - 1, CheckRect.Top, color );
       }
     }
+
+
+
+    public void DrawCircle( int X, int Y, int Width, int Height, uint BaseColor )
+    {
+      var   borderPen       = ColoredPen( BaseColor );
+
+      X -= _DisplayOffsetX;
+      Y -= _DisplayOffsetY;
+
+      _G.DrawArc( borderPen, X, Y, Width - 1, Height - 1, 0, 360 );
+    }
+
+
+
+    public void FillCircle( int X, int Y, int Width, int Height, uint BaseColor )
+    {
+      var   fillBrush = new SolidBrush( Color.FromArgb( (int)BaseColor ) );
+
+      _G.FillPie( fillBrush, X, Y, Width, Height, 0, 360 );
+    }
+
 
 
 

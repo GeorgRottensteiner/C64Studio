@@ -3094,14 +3094,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
+    private void btnToolEdit_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_Mode = ToolMode.SINGLE_PIXEL;
     }
 
 
 
-    private void btnToolFill_CheckedChanged( object sender, EventArgs e )
+    private void btnToolFill_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_Mode = ToolMode.FILL;
     }

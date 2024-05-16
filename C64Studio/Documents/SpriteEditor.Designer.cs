@@ -42,8 +42,8 @@ namespace RetroDevStudio.Documents
       this.btnHighlightDuplicates = new DecentForms.Button();
       this.btnChangeMode = new DecentForms.MenuButton();
       this.panelColorSettings = new System.Windows.Forms.Panel();
-      this.btnToolEdit = new System.Windows.Forms.RadioButton();
-      this.btnToolFill = new System.Windows.Forms.RadioButton();
+      this.btnToolEdit = new DecentForms.RadioButton();
+      this.btnToolFill = new DecentForms.RadioButton();
       this.label11 = new System.Windows.Forms.Label();
       this.tabSpriteDetails = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -262,8 +262,7 @@ namespace RetroDevStudio.Documents
       this.btnToolEdit.TabIndex = 9;
       this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
-      this.btnToolEdit.UseVisualStyleBackColor = true;
-      this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
+      this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
       // btnToolFill
       // 
@@ -274,8 +273,7 @@ namespace RetroDevStudio.Documents
       this.btnToolFill.Size = new System.Drawing.Size(26, 26);
       this.btnToolFill.TabIndex = 10;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
-      this.btnToolFill.UseVisualStyleBackColor = true;
-      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
+      this.btnToolFill.CheckedChanged += new DecentForms.EventHandler(this.btnToolFill_CheckedChanged);
       // 
       // label11
       // 
@@ -1420,8 +1418,8 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.CheckBox checkAutoplayAnim;
     private DecentForms.Button btnSavePreviewToGIF;
     private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.RadioButton btnToolFill;
-    private System.Windows.Forms.RadioButton btnToolEdit;
+    private DecentForms.RadioButton btnToolFill;
+    private DecentForms.RadioButton btnToolEdit;
     private System.Windows.Forms.Panel panelColorSettings;
     private DecentForms.Button btnClearSprite;
     private System.Windows.Forms.TabPage tabExport;
