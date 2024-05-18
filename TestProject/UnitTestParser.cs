@@ -1112,6 +1112,28 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextConstantsWithoutMappingInterference()
+    {
+      string      source = @"* = $2000
+                              mylabel = ""x""
+                              !if ( mylabel == ""x"" ) {
+                              !byte $bc
+                              }
+                              !ct 'b',17
+                              mylabel = ""b""
+                              !if ( mylabel == ""b"" ) {
+                              !byte $ad
+                              }
+";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020BCAD", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestMacroWithIfInside()
     {
       string      source = @"* = $2000

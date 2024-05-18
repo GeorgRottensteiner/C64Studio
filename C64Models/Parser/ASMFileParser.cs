@@ -8510,21 +8510,25 @@ namespace RetroDevStudio.Parser
         defineValue = " " + defineValue;
       }
 
-      List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
+      // removed line text code mapping from here
+      var mapping =  new Map<byte, byte>();   // was textCodeMapping
+
+
+      List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, mapping );
 
       if ( defineName == "*" )
       {
         // set program step
         info.AddressSource = "*";
 
-        List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
+        List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, mapping );
         if ( ( tokens.Count > 0 )
         &&   ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
         {
           info.AddressSource = "*" + tokens[tokens.Count - 1].Content;
           tokens.RemoveAt( tokens.Count - 1 );
         }
-        if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
+        if ( !EvaluateTokens( lineIndex, tokens, mapping, out SymbolInfo newStepPosSymbol ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           return ParseLineResult.ERROR_ABORT;
@@ -8548,7 +8552,8 @@ namespace RetroDevStudio.Parser
         {
           return ParseLineResult.CALL_CONTINUE;
         }
-        if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
+
+        if ( !EvaluateTokens( lineIndex, valueTokens, mapping, out SymbolInfo addressSymbol ) )
         {
           if ( !IsPlainAssignment( operatorToken ) )
           {
@@ -8559,7 +8564,7 @@ namespace RetroDevStudio.Parser
         }
         else
         {
-          EvaluateTokens( lineIndex, lineTokenInfos, 0, 1, textCodeMapping, out SymbolInfo originalValue );
+          EvaluateTokens( lineIndex, lineTokenInfos, 0, 1, mapping, out SymbolInfo originalValue );
           if ( !HandleAssignmentOperator( lineIndex, lineTokenInfos, originalValue, operatorToken, addressSymbol, out SymbolInfo resultingValue ) )
           {
             return ParseLineResult.ERROR_ABORT;
