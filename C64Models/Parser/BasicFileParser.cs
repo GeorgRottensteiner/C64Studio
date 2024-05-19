@@ -1411,7 +1411,8 @@ namespace RetroDevStudio.Parser
           if ( nextByte == 32 )
           {
             // Space, direkt einfügen
-            if ( !Settings.StripSpaces )
+            if ( ( !Settings.StripSpaces )
+            ||   ( insideDataStatement ) )
             {
               AddDirectToken( info, nextByte, bytePos );
             }

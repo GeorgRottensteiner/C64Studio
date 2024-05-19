@@ -524,7 +524,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestBASICStripREMNoStrip()
+    public void TestBASICStripREMNoStripInREM()
     {
       string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
                            20 PRINT""WELT""";
@@ -532,6 +532,19 @@ GOTO LABEL10
       var result = TestCompile( source, "BASIC V2" );
 
       Assert.AreEqual( "01081C080A00992248414C4C4F223A8F205052494E54224855525A220028081400992257454C5422000000", result.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestBASICStripREMNoStripInDATA()
+    {
+      string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
+                           20 DATA LSR X,,RTS,ADC (X,,,,ADC $,ROR$,,PLA,ADC #,ROR,,JMP (,ADC?,ROR?,";
+
+      var result = TestCompile( source, "BASIC V2" );
+
+      Assert.AreEqual( "01081C080A00992248414C4C4F223A8F205052494E54224855525A22006308140083204C535220582C2C5254532C4144432028582C2C2C2C41444320242C524F52242C2C504C412C41444320232C524F522C2C4A4D5020282C4144433F2C524F523F2C000000", result.ToString() );
     }
 
 
