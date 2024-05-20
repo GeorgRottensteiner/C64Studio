@@ -1356,6 +1356,7 @@ namespace RetroDevStudio.Parser
       int       posInLine = endOfDigitPos + 1;
       bool      insideMacro = false;
       bool      insideDataStatement = false;
+      bool      insideDataStatementHadNonSpace = false;
       bool      insideREMStatement = false;
       int       macroStartPos = -1;
       GR.Memory.ByteBuffer tempData = new GR.Memory.ByteBuffer();
@@ -1412,7 +1413,8 @@ namespace RetroDevStudio.Parser
           {
             // Space, direkt einfügen
             if ( ( !Settings.StripSpaces )
-            ||   ( insideDataStatement ) )
+            ||   ( ( insideDataStatement )
+            &&     ( insideDataStatementHadNonSpace ) ) )
             {
               AddDirectToken( info, nextByte, bytePos );
             }
@@ -1473,6 +1475,14 @@ namespace RetroDevStudio.Parser
             if ( nextByte == ':' )
             {
               insideDataStatement = false;
+            }
+            if ( nextByte != ' ' )
+            {
+              insideDataStatementHadNonSpace = true;
+            }
+            if ( nextByte == ',' )
+            {
+              insideDataStatementHadNonSpace = false;
             }
 
             AddDirectToken( info, nextByte, bytePos );
@@ -1582,6 +1592,10 @@ namespace RetroDevStudio.Parser
                   info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
                 }
                 insideDataStatement = ( foundOpcode.Command == "DATA" );
+                if ( insideDataStatement )
+                {
+                  insideDataStatementHadNonSpace = false;
+                }
 
                 if ( insideREMStatement )
                 {
@@ -1627,6 +1641,18 @@ namespace RetroDevStudio.Parser
         {
           ++bytePos;
           continue;
+        }
+      }
+      // DATA - last entry trims spaces at end
+      if ( ( Settings.StripSpaces )
+      &&   ( insideDataStatement ) )
+      {
+        while ( ( info.Tokens.Count > 0 )
+        &&      ( info.Tokens.Last().TokenType == Token.Type.DIRECT_TOKEN )
+        &&      ( info.Tokens.Last().Content == " " ) )
+        {
+          info.Tokens.RemoveAt( info.Tokens.Count - 1 );
+          info.LineData.Resize( info.LineData.Length - 1 );
         }
       }
 

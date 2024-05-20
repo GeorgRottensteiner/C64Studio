@@ -43,7 +43,14 @@ namespace TestProject
 
 
 
-    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, ushort StartAddress, bool StripREM = false )
+    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, bool StripREM, bool StripSpaces )
+    {
+      return TestCompile( Source, BASICDialectName, 2049, StripREM, StripSpaces );
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, ushort StartAddress, bool StripREM = false, bool StripSpaces = false )
     {
       var parser = CreateParser( BASICDialectName );
 
@@ -52,7 +59,8 @@ namespace TestProject
       config.TargetType   = RetroDevStudio.Types.CompileTargetType.PRG;
       config.StartAddress = StartAddress;
 
-      parser.Settings.StripREM = StripREM;
+      parser.Settings.StripREM    = StripREM;
+      parser.Settings.StripSpaces = StripSpaces;
 
       bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
@@ -540,11 +548,23 @@ GOTO LABEL10
     public void TestBASICStripREMNoStripInDATA()
     {
       string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
-                           20 DATA LSR X,,RTS,ADC (X,,,,ADC $,ROR$,,PLA,ADC #,ROR,,JMP (,ADC?,ROR?,";
+                           20 DATA LSR X,, RTS, ADC (X,,,,ADC $,ROR$,,PLA,ADC #,ROR,,JMP (,ADC?,ROR?,";
 
       var result = TestCompile( source, "BASIC V2" );
 
-      Assert.AreEqual( "01081C080A00992248414C4C4F223A8F205052494E54224855525A22006308140083204C535220582C2C5254532C4144432028582C2C2C2C41444320242C524F52242C2C504C412C41444320232C524F522C2C4A4D5020282C4144433F2C524F523F2C000000", result.ToString() );
+      Assert.AreEqual( "01081C080A00992248414C4C4F223A8F205052494E54224855525A22006508140083204C535220582C2C205254532C204144432028582C2C2C2C41444320242C524F52242C2C504C412C41444320232C524F522C2C4A4D5020282C4144433F2C524F523F2C000000", result.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestBASICStripREMNoStripInDATAButOnStartOfDATAEntry()
+    {
+      string    source = @"20 DATA A  B C,  D E  F   ,G H I   ";
+
+      var result = TestCompile( source, "BASIC V2", false, true );
+
+      Assert.AreEqual( "01081D081400834120204220432C4420452020462020202C4720482049000000", result.ToString() );
     }
 
 
