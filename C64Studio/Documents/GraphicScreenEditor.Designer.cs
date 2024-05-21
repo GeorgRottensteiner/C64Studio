@@ -67,14 +67,14 @@
       this.btnZoomOut = new DecentForms.Button();
       this.btnZoomIn = new DecentForms.Button();
       this.btnClearScreen = new DecentForms.Button();
-      this.btnToolValidate = new System.Windows.Forms.RadioButton();
-      this.btnToolSelect = new System.Windows.Forms.RadioButton();
-      this.btnToolFill = new System.Windows.Forms.RadioButton();
-      this.btnToolQuad = new System.Windows.Forms.RadioButton();
-      this.btnToolRect = new System.Windows.Forms.RadioButton();
-      this.btnToolLineDrag = new System.Windows.Forms.RadioButton();
-      this.btnToolLine = new System.Windows.Forms.RadioButton();
-      this.btnToolPaint = new System.Windows.Forms.RadioButton();
+      this.btnToolValidate = new DecentForms.RadioButton();
+      this.btnToolSelect = new DecentForms.RadioButton();
+      this.btnToolFill = new DecentForms.RadioButton();
+      this.btnToolQuad = new DecentForms.RadioButton();
+      this.btnToolRect = new DecentForms.RadioButton();
+      this.btnToolLineDrag = new DecentForms.RadioButton();
+      this.btnToolLine = new DecentForms.RadioButton();
+      this.btnToolPaint = new DecentForms.RadioButton();
       this.label9 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
@@ -526,8 +526,7 @@
       this.btnToolValidate.TabIndex = 6;
       this.btnToolValidate.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolValidate, "Check Validation");
-      this.btnToolValidate.UseVisualStyleBackColor = true;
-      this.btnToolValidate.CheckedChanged += new System.EventHandler(this.btnToolValidate_CheckedChanged);
+      this.btnToolValidate.CheckedChanged += new DecentForms.EventHandler(this.btnToolValidate_CheckedChanged);
       // 
       // btnToolSelect
       // 
@@ -538,8 +537,7 @@
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
       this.btnToolSelect.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
-      this.btnToolSelect.UseVisualStyleBackColor = true;
-      this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
+      this.btnToolSelect.CheckedChanged += new DecentForms.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
       // btnToolFill
       // 
@@ -550,8 +548,7 @@
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
       this.btnToolFill.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
-      this.btnToolFill.UseVisualStyleBackColor = true;
-      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
+      this.btnToolFill.CheckedChanged += new DecentForms.EventHandler(this.btnToolFill_CheckedChanged);
       // 
       // btnToolQuad
       // 
@@ -562,8 +559,7 @@
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
       this.btnToolQuad.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Box");
-      this.btnToolQuad.UseVisualStyleBackColor = true;
-      this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
+      this.btnToolQuad.CheckedChanged += new DecentForms.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
       // btnToolRect
       // 
@@ -574,8 +570,7 @@
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
       this.btnToolRect.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
-      this.btnToolRect.UseVisualStyleBackColor = true;
-      this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
+      this.btnToolRect.CheckedChanged += new DecentForms.EventHandler(this.btnToolRect_CheckedChanged);
       // 
       // btnToolLineDrag
       // 
@@ -585,8 +580,7 @@
       this.btnToolLineDrag.Name = "btnToolLineDrag";
       this.btnToolLineDrag.Size = new System.Drawing.Size(24, 24);
       this.btnToolLineDrag.TabIndex = 1;
-      this.btnToolLineDrag.UseVisualStyleBackColor = true;
-      this.btnToolLineDrag.CheckedChanged += new System.EventHandler(this.btnToolLineDrag_CheckedChanged);
+      this.btnToolLineDrag.CheckedChanged += new DecentForms.EventHandler(this.btnToolLineDrag_CheckedChanged);
       // 
       // btnToolLine
       // 
@@ -597,8 +591,7 @@
       this.btnToolLine.Size = new System.Drawing.Size(24, 24);
       this.btnToolLine.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnToolLine, "Line");
-      this.btnToolLine.UseVisualStyleBackColor = true;
-      this.btnToolLine.CheckedChanged += new System.EventHandler(this.btnToolLine_CheckedChanged);
+      this.btnToolLine.CheckedChanged += new DecentForms.EventHandler(this.btnToolLine_CheckedChanged);
       // 
       // btnToolPaint
       // 
@@ -609,8 +602,7 @@
       this.btnToolPaint.Size = new System.Drawing.Size(24, 24);
       this.btnToolPaint.TabIndex = 0;
       this.toolTip1.SetToolTip(this.btnToolPaint, "Single Pixel");
-      this.btnToolPaint.UseVisualStyleBackColor = true;
-      this.btnToolPaint.CheckedChanged += new System.EventHandler(this.btnToolPaint_CheckedChanged);
+      this.btnToolPaint.CheckedChanged += new DecentForms.EventHandler(this.btnToolPaint_CheckedChanged);
       // 
       // label9
       // 
@@ -1134,19 +1126,19 @@
     private System.Windows.Forms.Label label5;
     private DecentForms.Button btnExportToImage;
     private DecentForms.Button btnFullCopy;
-    private System.Windows.Forms.RadioButton btnToolValidate;
-    private System.Windows.Forms.RadioButton btnToolSelect;
-    private System.Windows.Forms.RadioButton btnToolFill;
-    private System.Windows.Forms.RadioButton btnToolQuad;
-    private System.Windows.Forms.RadioButton btnToolRect;
-    private System.Windows.Forms.RadioButton btnToolPaint;
+    private DecentForms.RadioButton btnToolValidate;
+    private DecentForms.RadioButton btnToolSelect;
+    private DecentForms.RadioButton btnToolFill;
+    private DecentForms.RadioButton btnToolQuad;
+    private DecentForms.RadioButton btnToolRect;
+    private DecentForms.RadioButton btnToolPaint;
     private DecentForms.Button btnExportToBASICHexData;
     private System.Windows.Forms.ToolTip toolTip1;
     private DecentForms.Button btnClearScreen;
     private DecentForms.Button btnZoomIn;
     private DecentForms.Button btnZoomOut;
-    private System.Windows.Forms.RadioButton btnToolLine;
-    private System.Windows.Forms.RadioButton btnToolLineDrag;
+    private DecentForms.RadioButton btnToolLine;
+    private DecentForms.RadioButton btnToolLineDrag;
     private System.Windows.Forms.CheckBox checkInsertSpaces;
   }
 }

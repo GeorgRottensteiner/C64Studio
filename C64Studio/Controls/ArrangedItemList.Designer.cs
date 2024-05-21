@@ -59,6 +59,9 @@
       // btnMoveDown
       // 
       this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnMoveDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveDown.Enabled = false;
       this.btnMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveDown.Image")));
       this.btnMoveDown.Location = new System.Drawing.Point(203, 211);
@@ -71,6 +74,9 @@
       // btnMoveUp
       // 
       this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnMoveUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveUp.Enabled = false;
       this.btnMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveUp.Image")));
       this.btnMoveUp.Location = new System.Drawing.Point(153, 211);
@@ -83,6 +89,9 @@
       // btnDelete
       // 
       this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnDelete.Enabled = false;
       this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
       this.btnDelete.Location = new System.Drawing.Point(103, 211);
@@ -95,6 +104,9 @@
       // btnAdd
       // 
       this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAdd.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
       this.btnAdd.Location = new System.Drawing.Point(3, 211);
       this.btnAdd.Name = "btnAdd";
@@ -106,6 +118,9 @@
       // btnClone
       // 
       this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnClone.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClone.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClone.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnClone.Image = ((System.Drawing.Image)(resources.GetObject("btnClone.Image")));
       this.btnClone.Location = new System.Drawing.Point(54, 211);
       this.btnClone.Name = "btnClone";

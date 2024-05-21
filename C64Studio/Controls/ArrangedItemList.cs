@@ -448,32 +448,44 @@ namespace RetroDevStudio.Controls
 
     private void RescaleButtons()
     {
-      /*
       // TODO - rearrange buttons
       //186+40-3
       //240 all
       //40 buttons
       //10 abstand
       int     buttonWidth = ( ClientSize.Width * 40 ) / 240;
-      int     buttonDistance = 10;
+      int     buttonDistance = 5;
+
+      buttonWidth = (int)( 30 * DPIHandler.DPIX / 96.0f );
+      buttonDistance = (int)( 5 * DPIHandler.DPIX / 96.0f );
+
+      while ( ( 5 * buttonWidth + 4 * buttonDistance > ClientSize.Width )
+      &&      ( buttonWidth > 8 ) )
+      {
+        --buttonWidth;
+        if ( buttonDistance > 2 )
+        {
+          --buttonDistance;
+        }
+      }
 
       btnAdd.Size = new Size( buttonWidth, btnAdd.Height );
 
-      int     offset = ( 1 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
+      int     offset = buttonDistance / 2 + 1 * buttonWidth + 1 * buttonDistance;
       btnClone.Location = new Point( offset, btnClone.Location.Y );
       btnClone.Size = new Size( buttonWidth, btnAdd.Height );
 
-      offset = ( 2 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
+      offset = buttonDistance / 2 + 2 * buttonWidth + 2 * buttonDistance;
       btnDelete.Location = new Point( offset, btnDelete.Location.Y );
       btnDelete.Size = new Size( buttonWidth, btnClone.Height );
 
-      offset = ( 3 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
+      offset = buttonDistance / 2 + 3 * buttonWidth + 3 * buttonDistance;
       btnMoveUp.Location = new Point( offset, btnDelete.Location.Y );
       btnMoveUp.Size = new Size( buttonWidth, btnAdd.Height );
 
-      offset = ( 4 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
+      offset = buttonDistance / 2 + 4 * buttonWidth + 4 * buttonDistance;
       btnMoveDown.Location = new Point( offset, btnDelete.Location.Y );
-      btnMoveDown.Size = new Size( buttonWidth, btnAdd.Height );*/
+      btnMoveDown.Size = new Size( buttonWidth, btnAdd.Height );
     }
 
 

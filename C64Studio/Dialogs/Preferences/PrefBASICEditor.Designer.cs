@@ -46,6 +46,10 @@
       // btnExportSettings
       // 
       this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnExportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExportSettings.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExportSettings.Image = null;
       this.btnExportSettings.Location = new System.Drawing.Point(819, 68);
       this.btnExportSettings.Name = "btnExportSettings";
       this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
@@ -56,6 +60,10 @@
       // btnImportSettings
       // 
       this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnImportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImportSettings.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImportSettings.Image = null;
       this.btnImportSettings.Location = new System.Drawing.Point(738, 68);
       this.btnImportSettings.Name = "btnImportSettings";
       this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
@@ -117,7 +125,6 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Enabled = false;
       this.label2.Location = new System.Drawing.Point(222, 74);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(25, 13);
@@ -137,7 +144,6 @@
       // labelBASICC64FontSize
       // 
       this.labelBASICC64FontSize.AutoSize = true;
-      this.labelBASICC64FontSize.Enabled = false;
       this.labelBASICC64FontSize.Location = new System.Drawing.Point(222, 51);
       this.labelBASICC64FontSize.Name = "labelBASICC64FontSize";
       this.labelBASICC64FontSize.Size = new System.Drawing.Size(30, 13);
@@ -157,7 +163,11 @@
       // 
       // btnChangeBASICFont
       // 
+      this.btnChangeBASICFont.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnChangeBASICFont.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnChangeBASICFont.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnChangeBASICFont.Enabled = false;
+      this.btnChangeBASICFont.Image = null;
       this.btnChangeBASICFont.Location = new System.Drawing.Point(225, 19);
       this.btnChangeBASICFont.Name = "btnChangeBASICFont";
       this.btnChangeBASICFont.Size = new System.Drawing.Size(124, 23);

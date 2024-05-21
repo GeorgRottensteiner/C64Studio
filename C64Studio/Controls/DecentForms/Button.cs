@@ -25,6 +25,7 @@ namespace DecentForms
 
     public Button()
     {
+      AccessibleRole = AccessibleRole.PushButton;
     }
 
 
@@ -42,6 +43,16 @@ namespace DecentForms
       get
       {
         return _Pushed | _PushedByKey;
+      }
+    }
+
+
+
+    public bool IsDefault
+    {
+      get
+      {
+        return _IsDefaultButton;
       }
     }
 
@@ -150,11 +161,9 @@ namespace DecentForms
 
 
 
-    protected override void OnPaint( PaintEventArgs e )
+    protected override void OnPaint( ControlRenderer Renderer )
     {
-      var renderer = new ControlRenderer( e.Graphics, this );
-
-      renderer.RenderButton( MouseOver, Pushed, _IsDefaultButton, ButtonBorder );
+      Renderer.RenderButton( MouseOver, Pushed, _IsDefaultButton, ButtonBorder );
     }
 
 

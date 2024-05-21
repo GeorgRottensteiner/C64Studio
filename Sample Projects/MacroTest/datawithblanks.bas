@@ -1,5 +1,8 @@
 #RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
 5READA$, B$
 6PRINT":"A$":"B$":"
+7READA$, B$
+8PRINT":"A$":"B$":"
 10DATA BKR, HURZ
+15DATA FORUM, LSMF
 420 DATA LSR X,,RTS,ADC (X,,,,ADC $,ROR$,,PLA,ADC #,ROR,,JMP (,ADC?,ROR?,

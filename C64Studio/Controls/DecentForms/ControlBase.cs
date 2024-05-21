@@ -37,6 +37,10 @@ namespace DecentForms
 
 
 
+    public event CustomDrawEventHandler    CustomDraw;
+
+
+
     public int DisplayOffsetX
     {
       get
@@ -221,6 +225,27 @@ namespace DecentForms
 
 
 
+    protected sealed override void OnPaint( PaintEventArgs e )
+    {
+      var renderer = new ControlRenderer( e.Graphics, this );
+      if ( CustomDraw != null )
+      {
+        CustomDraw.Invoke( renderer );
+      }
+      else
+      {
+        OnPaint( renderer );
+      }
+    }
+
+
+
+    protected virtual void OnPaint( ControlRenderer Renderer )
+    {
+    }
+
+
+
     protected override void OnMouseDown( MouseEventArgs e )
     {
       if ( !_MouseDown )
@@ -328,6 +353,14 @@ namespace DecentForms
     {
       RaiseControlEvent( ControlEvent.EventType.FOCUS_LOST );
       base.OnLostFocus( e );
+    }
+
+
+
+    protected override bool IsInputKey( Keys keyData )
+    {
+      return true;
+      //return base.IsInputKey( keyData );
     }
 
 

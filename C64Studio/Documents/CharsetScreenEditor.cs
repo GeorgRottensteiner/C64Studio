@@ -2143,22 +2143,22 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void screenHScroll_Scroll( object sender, ScrollEventArgs e )
+    private void screenHScroll_Scroll( DecentForms.ControlBase Sender )
     {
-      if ( m_CharsetScreen.ScreenOffsetX != e.NewValue )
+      if ( m_CharsetScreen.ScreenOffsetX != screenHScroll.Value )
       {
-        m_CharsetScreen.ScreenOffsetX = e.NewValue;
+        m_CharsetScreen.ScreenOffsetX = screenHScroll.Value;
         Redraw();
       }
     }
 
 
 
-    private void screenVScroll_Scroll( object sender, ScrollEventArgs e )
+    private void screenVScroll_Scroll( DecentForms.ControlBase Sender )
     {
-      if ( m_CharsetScreen.ScreenOffsetY != e.NewValue )
+      if ( m_CharsetScreen.ScreenOffsetY != screenVScroll.Value )
       {
-        m_CharsetScreen.ScreenOffsetY = e.NewValue;
+        m_CharsetScreen.ScreenOffsetY = screenVScroll.Value;
         Redraw();
       }
     }
@@ -2271,7 +2271,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
+    private void btnToolEdit_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       HideTextCursor();
@@ -2291,7 +2291,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolRect_CheckedChanged( object sender, EventArgs e )
+    private void btnToolRect_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       HideTextCursor();
@@ -2301,7 +2301,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolFill_CheckedChanged( object sender, EventArgs e )
+    private void btnToolFill_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       HideTextCursor();
@@ -2320,7 +2320,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
+    private void btnToolSelect_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideTextCursor();
       m_ToolMode = ToolMode.SELECT;
@@ -2329,7 +2329,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
+    private void btnToolQuad_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       HideTextCursor();
@@ -2340,7 +2340,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolText_CheckedChanged( object sender, EventArgs e )
+    private void btnToolText_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       RemoveFloatingSelection();
@@ -2531,36 +2531,39 @@ namespace RetroDevStudio.Documents
           //Debug.Log( "KeyData " + bareKey );
 
           var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
-
+          C64Character    c64Key = null;
           if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
           {
             Debug.Log( "No physical key info for " + key.KeyboardKey );
           }
-          var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
+          else
+          {
+            var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
 
-          C64Character    c64Key = physKey.Normal;
-          if ( shiftPushed )
-          {
-            c64Key = physKey.WithShift;
-            if ( c64Key == null )
+            c64Key = physKey.Normal;
+            if ( shiftPushed )
             {
-              c64Key = physKey.Normal;
+              c64Key = physKey.WithShift;
+              if ( c64Key == null )
+              {
+                c64Key = physKey.Normal;
+              }
             }
-          }
-          if ( controlPushed )
-          {
-            c64Key = physKey.WithControl;
-            if ( c64Key == null )
+            if ( controlPushed )
             {
-              c64Key = physKey.Normal;
+              c64Key = physKey.WithControl;
+              if ( c64Key == null )
+              {
+                c64Key = physKey.Normal;
+              }
             }
-          }
-          if ( commodorePushed )
-          {
-            c64Key = physKey.WithCommodore;
-            if ( c64Key == null )
+            if ( commodorePushed )
             {
-              c64Key = physKey.Normal;
+              c64Key = physKey.WithCommodore;
+              if ( c64Key == null )
+              {
+                c64Key = physKey.Normal;
+              }
             }
           }
 
@@ -3114,7 +3117,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkApplyCharacter_CheckedChanged( object sender, EventArgs e )
+    private void checkApplyCharacter_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_AffectChars = checkApplyCharacter.Checked;
       if ( m_AffectChars )
@@ -3129,7 +3132,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkApplyColors_CheckedChanged( object sender, EventArgs e )
+    private void checkApplyColors_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_AffectColors = checkApplyColors.Checked;
       if ( m_AffectColors )
@@ -3144,7 +3147,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkShowGrid_CheckedChanged( object sender, EventArgs e )
+    private void checkShowGrid_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_ShowGrid = checkShowGrid.Checked;
       pictureEditor.Invalidate();
@@ -3306,7 +3309,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkAutoCenterText_CheckedChanged( object sender, EventArgs e )
+    private void checkAutoCenterText_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_AutoCenterText = checkAutoCenter.Checked;
       if ( m_AutoCenterText )
@@ -3325,7 +3328,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkReverse_CheckedChanged( object sender, EventArgs e )
+    private void checkReverse_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_ReverseChars = checkReverse.Checked;
       if ( m_ReverseChars )

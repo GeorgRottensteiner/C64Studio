@@ -237,17 +237,15 @@ namespace DecentForms
 
 
 
-    protected override void OnPaint( PaintEventArgs e )
+    protected override void OnPaint( ControlRenderer Renderer )
     {
-      var renderer = new ControlRenderer( e.Graphics, this );
-
       if ( Appearance == Appearance.Normal )
       {
-        renderer.RenderRadioButton( Text, CheckAlign, MouseOver, Pushed, Checked );
+        Renderer.RenderRadioButton( Text, CheckAlign, MouseOver, Pushed, Checked );
       }
       else
       {
-        renderer.RenderButton( MouseOver, Checked, false, Button.ButtonStyle.RAISED );
+        Renderer.RenderButton( MouseOver, Checked, false, Button.ButtonStyle.RAISED );
       }
     }
 

@@ -3408,7 +3408,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolPaint_CheckedChanged( object sender, EventArgs e )
+    private void btnToolPaint_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.DRAW_PIXEL;
       Redraw();
@@ -3416,7 +3416,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolLine_CheckedChanged( object sender, EventArgs e )
+    private void btnToolLine_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.DRAW_FREE_LINE;
       Redraw();
@@ -3424,7 +3424,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolLineDrag_CheckedChanged( object sender, EventArgs e )
+    private void btnToolLineDrag_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.DRAW_LINE;
       Redraw();
@@ -3432,7 +3432,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolRect_CheckedChanged( object sender, EventArgs e )
+    private void btnToolRect_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.DRAW_RECTANGLE;
       Redraw();
@@ -3440,7 +3440,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
+    private void btnToolQuad_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.DRAW_BOX;
       Redraw();
@@ -3448,7 +3448,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolFill_CheckedChanged( object sender, EventArgs e )
+    private void btnToolFill_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.FLOOD_FILL;
       Redraw();
@@ -3456,7 +3456,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
+    private void btnToolSelect_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.SELECT;
       Redraw();
@@ -3464,7 +3464,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolValidate_CheckedChanged( object sender, EventArgs e )
+    private void btnToolValidate_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_PaintTool = PaintTool.VALIDATE;
       Redraw();

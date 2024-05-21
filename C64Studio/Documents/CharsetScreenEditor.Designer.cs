@@ -68,26 +68,26 @@
       this.btnShiftLeft = new DecentForms.Button();
       this.btnClearScreen = new DecentForms.Button();
       this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
-      this.checkShowGrid = new System.Windows.Forms.CheckBox();
-      this.checkReverse = new System.Windows.Forms.CheckBox();
-      this.checkAutoCenter = new System.Windows.Forms.CheckBox();
-      this.checkApplyColors = new System.Windows.Forms.CheckBox();
-      this.checkApplyCharacter = new System.Windows.Forms.CheckBox();
+      this.checkShowGrid = new DecentForms.CheckBox();
+      this.checkReverse = new DecentForms.CheckBox();
+      this.checkAutoCenter = new DecentForms.CheckBox();
+      this.checkApplyColors = new DecentForms.CheckBox();
+      this.checkApplyCharacter = new DecentForms.CheckBox();
       this.label10 = new System.Windows.Forms.Label();
       this.label9 = new System.Windows.Forms.Label();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelInfo = new System.Windows.Forms.Label();
-      this.btnToolText = new System.Windows.Forms.RadioButton();
-      this.btnToolSelect = new System.Windows.Forms.RadioButton();
-      this.btnToolFill = new System.Windows.Forms.RadioButton();
-      this.btnToolQuad = new System.Windows.Forms.RadioButton();
-      this.btnToolRect = new System.Windows.Forms.RadioButton();
-      this.btnToolEdit = new System.Windows.Forms.RadioButton();
+      this.btnToolText = new DecentForms.RadioButton();
+      this.btnToolSelect = new DecentForms.RadioButton();
+      this.btnToolFill = new DecentForms.RadioButton();
+      this.btnToolQuad = new DecentForms.RadioButton();
+      this.btnToolRect = new DecentForms.RadioButton();
+      this.btnToolEdit = new DecentForms.RadioButton();
       this.btnApplyScreenSize = new DecentForms.Button();
       this.editScreenHeight = new System.Windows.Forms.TextBox();
       this.editScreenWidth = new System.Windows.Forms.TextBox();
-      this.screenVScroll = new System.Windows.Forms.VScrollBar();
-      this.screenHScroll = new System.Windows.Forms.HScrollBar();
+      this.screenVScroll = new DecentForms.VScrollBar();
+      this.screenHScroll = new DecentForms.HScrollBar();
       this.label7 = new System.Windows.Forms.Label();
       this.labelBGColor4 = new System.Windows.Forms.Label();
       this.labelMColor2 = new System.Windows.Forms.Label();
@@ -537,8 +537,7 @@
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 15;
       this.checkShowGrid.Text = "Show Grid";
-      this.checkShowGrid.UseVisualStyleBackColor = true;
-      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      this.checkShowGrid.CheckedChanged += new DecentForms.EventHandler(this.checkShowGrid_CheckedChanged);
       // 
       // checkReverse
       // 
@@ -549,8 +548,7 @@
       this.checkReverse.Size = new System.Drawing.Size(24, 24);
       this.checkReverse.TabIndex = 8;
       this.toolTip1.SetToolTip(this.checkReverse, "Reverse Characters");
-      this.checkReverse.UseVisualStyleBackColor = true;
-      this.checkReverse.CheckedChanged += new System.EventHandler(this.checkReverse_CheckedChanged);
+      this.checkReverse.CheckedChanged += new DecentForms.EventHandler(this.checkReverse_CheckedChanged);
       // 
       // checkAutoCenter
       // 
@@ -561,36 +559,31 @@
       this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);
       this.checkAutoCenter.TabIndex = 9;
       this.toolTip1.SetToolTip(this.checkAutoCenter, "Automatically center text on entry");
-      this.checkAutoCenter.UseVisualStyleBackColor = true;
-      this.checkAutoCenter.CheckedChanged += new System.EventHandler(this.checkAutoCenterText_CheckedChanged);
+      this.checkAutoCenter.CheckedChanged += new DecentForms.EventHandler(this.checkAutoCenterText_CheckedChanged);
       // 
       // checkApplyColors
       // 
       this.checkApplyColors.Appearance = System.Windows.Forms.Appearance.Button;
       this.checkApplyColors.Checked = true;
-      this.checkApplyColors.CheckState = System.Windows.Forms.CheckState.Checked;
       this.checkApplyColors.Image = global::RetroDevStudio.Properties.Resources.charscreen_colors;
       this.checkApplyColors.Location = new System.Drawing.Point(198, 432);
       this.checkApplyColors.Name = "checkApplyColors";
       this.checkApplyColors.Size = new System.Drawing.Size(24, 24);
       this.checkApplyColors.TabIndex = 7;
       this.toolTip1.SetToolTip(this.checkApplyColors, "Affect Colors");
-      this.checkApplyColors.UseVisualStyleBackColor = true;
-      this.checkApplyColors.CheckedChanged += new System.EventHandler(this.checkApplyColors_CheckedChanged);
+      this.checkApplyColors.CheckedChanged += new DecentForms.EventHandler(this.checkApplyColors_CheckedChanged);
       // 
       // checkApplyCharacter
       // 
       this.checkApplyCharacter.Appearance = System.Windows.Forms.Appearance.Button;
       this.checkApplyCharacter.Checked = true;
-      this.checkApplyCharacter.CheckState = System.Windows.Forms.CheckState.Checked;
       this.checkApplyCharacter.Image = global::RetroDevStudio.Properties.Resources.charscreen_chars;
       this.checkApplyCharacter.Location = new System.Drawing.Point(168, 432);
       this.checkApplyCharacter.Name = "checkApplyCharacter";
       this.checkApplyCharacter.Size = new System.Drawing.Size(24, 24);
       this.checkApplyCharacter.TabIndex = 6;
       this.toolTip1.SetToolTip(this.checkApplyCharacter, "Affect Characters");
-      this.checkApplyCharacter.UseVisualStyleBackColor = true;
-      this.checkApplyCharacter.CheckedChanged += new System.EventHandler(this.checkApplyCharacter_CheckedChanged);
+      this.checkApplyCharacter.CheckedChanged += new DecentForms.EventHandler(this.checkApplyCharacter_CheckedChanged);
       // 
       // label10
       // 
@@ -637,8 +630,7 @@
       this.btnToolText.Size = new System.Drawing.Size(24, 24);
       this.btnToolText.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnToolText, "Direct Text Entry");
-      this.btnToolText.UseVisualStyleBackColor = true;
-      this.btnToolText.CheckedChanged += new System.EventHandler(this.btnToolText_CheckedChanged);
+      this.btnToolText.CheckedChanged += new DecentForms.EventHandler(this.btnToolText_CheckedChanged);
       // 
       // btnToolSelect
       // 
@@ -649,8 +641,7 @@
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
       this.btnToolSelect.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
-      this.btnToolSelect.UseVisualStyleBackColor = true;
-      this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
+      this.btnToolSelect.CheckedChanged += new DecentForms.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
       // btnToolFill
       // 
@@ -661,8 +652,7 @@
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
       this.btnToolFill.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
-      this.btnToolFill.UseVisualStyleBackColor = true;
-      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
+      this.btnToolFill.CheckedChanged += new DecentForms.EventHandler(this.btnToolFill_CheckedChanged);
       // 
       // btnToolQuad
       // 
@@ -673,8 +663,7 @@
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
       this.btnToolQuad.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Rectangle");
-      this.btnToolQuad.UseVisualStyleBackColor = true;
-      this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
+      this.btnToolQuad.CheckedChanged += new DecentForms.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
       // btnToolRect
       // 
@@ -685,8 +674,7 @@
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
       this.btnToolRect.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
-      this.btnToolRect.UseVisualStyleBackColor = true;
-      this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
+      this.btnToolRect.CheckedChanged += new DecentForms.EventHandler(this.btnToolRect_CheckedChanged);
       // 
       // btnToolEdit
       // 
@@ -699,8 +687,7 @@
       this.btnToolEdit.TabIndex = 0;
       this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
-      this.btnToolEdit.UseVisualStyleBackColor = true;
-      this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
+      this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
       // btnApplyScreenSize
       // 
@@ -733,7 +720,7 @@
       this.screenVScroll.Name = "screenVScroll";
       this.screenVScroll.Size = new System.Drawing.Size(16, 404);
       this.screenVScroll.TabIndex = 0;
-      this.screenVScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.screenVScroll_Scroll);
+      this.screenVScroll.Scroll += new DecentForms.EventHandler(this.screenVScroll_Scroll);
       // 
       // screenHScroll
       // 
@@ -741,7 +728,7 @@
       this.screenHScroll.Name = "screenHScroll";
       this.screenHScroll.Size = new System.Drawing.Size(644, 16);
       this.screenHScroll.TabIndex = 1;
-      this.screenHScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.screenHScroll_Scroll);
+      this.screenHScroll.Scroll += new DecentForms.EventHandler(this.screenHScroll_Scroll);
       // 
       // label7
       // 
@@ -1035,17 +1022,17 @@
     private System.Windows.Forms.Label labelBGColor;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.ComboBox comboExportData;
-    private System.Windows.Forms.VScrollBar screenVScroll;
-    private System.Windows.Forms.HScrollBar screenHScroll;
+    private DecentForms.VScrollBar screenVScroll;
+    private DecentForms.HScrollBar screenHScroll;
     private DecentForms.Button btnApplyScreenSize;
     private System.Windows.Forms.TextBox editScreenHeight;
     private System.Windows.Forms.TextBox editScreenWidth;
     private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.RadioButton btnToolEdit;
-    private System.Windows.Forms.RadioButton btnToolRect;
-    private System.Windows.Forms.RadioButton btnToolFill;
-    private System.Windows.Forms.RadioButton btnToolSelect;
-    private System.Windows.Forms.RadioButton btnToolQuad;
+    private DecentForms.RadioButton btnToolEdit;
+    private DecentForms.RadioButton btnToolRect;
+    private DecentForms.RadioButton btnToolFill;
+    private DecentForms.RadioButton btnToolSelect;
+    private DecentForms.RadioButton btnToolQuad;
     private System.Windows.Forms.Label labelInfo;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.Label label8;
@@ -1060,14 +1047,14 @@
     private System.Windows.Forms.Label labelAreaWidth;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.Label labelBGColor4;
-    private System.Windows.Forms.CheckBox checkApplyCharacter;
-    private System.Windows.Forms.CheckBox checkApplyColors;
-    private System.Windows.Forms.RadioButton btnToolText;
-    private System.Windows.Forms.CheckBox checkShowGrid;
+    private DecentForms.CheckBox checkApplyCharacter;
+    private DecentForms.CheckBox checkApplyColors;
+    private DecentForms.RadioButton btnToolText;
+    private DecentForms.CheckBox checkShowGrid;
     private System.Windows.Forms.TabPage tabCharset;
     private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
-    private System.Windows.Forms.CheckBox checkAutoCenter;
-    private System.Windows.Forms.CheckBox checkReverse;
+    private DecentForms.CheckBox checkAutoCenter;
+    private DecentForms.CheckBox checkReverse;
         private Controls.CharacterEditor charEditor;
     private DecentForms.Button btnClearScreen;
     private DecentForms.Button btnShiftDown;

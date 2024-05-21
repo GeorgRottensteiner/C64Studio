@@ -223,7 +223,7 @@
     <Compile Update="Controls\ThemedButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\ThemedControls\MenuButton.cs">
+    <Compile Update="Controls\DecentForms\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\MeasurableListView.cs">

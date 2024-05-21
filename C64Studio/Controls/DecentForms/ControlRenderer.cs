@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -23,6 +24,87 @@ namespace DecentForms
     private int             _DisplayOffsetY = 0;
 
     private static Dictionary<System.Drawing.Image,System.Drawing.Image>    _GrayscaledImageCache = new Dictionary<System.Drawing.Image, System.Drawing.Image>();
+
+    private static string   _BitmapArrowUpData    = "424D760200000000000036000000280000000C0000000C00000001002000000000000000000000000000000000000000000000000000DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00";
+    private static string   _BitmapArrowDownData  = "424D760200000000000036000000280000000C0000000C00000001002000000000000000000000000000000000000000000000000000DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00";
+    private static string   _BitmapArrowLeftData  = "424D760200000000000036000000280000000C0000000C00000001002000000000000000000000000000000000000000000000000000DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00";
+    private static string   _BitmapArrowRightData = "424D760200000000000036000000280000000C0000000C00000001002000000000000000000000000000000000000000000000000000DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FF000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00000000FFDADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00DADADA00";
+
+    private static Bitmap   _BitmapArrowUp;
+    private static Bitmap   _BitmapArrowDown;
+    private static Bitmap   _BitmapArrowLeft;
+    private static Bitmap   _BitmapArrowRight;
+
+
+
+    static ControlRenderer()
+    {
+      _BitmapArrowUp    = ImageFromHex( _BitmapArrowUpData );
+      _BitmapArrowDown  = ImageFromHex( _BitmapArrowDownData );
+      _BitmapArrowLeft  = ImageFromHex( _BitmapArrowLeftData );
+      _BitmapArrowRight = ImageFromHex( _BitmapArrowRightData );
+    }
+
+
+
+    public static Bitmap ImageFromHex( string ImageData )
+    {
+      byte[] imageBytes = StringToByteArray( ImageData );
+      return ByteArrayToBitmap( imageBytes );
+    }
+
+
+
+    public static byte[] StringToByteArray( String HexString )
+    {
+      int numberOfChars = HexString.Length / 2;
+      byte[] byteArray = new byte[numberOfChars];
+      using ( var sr = new System.IO.StringReader( HexString ) )
+      {
+        for ( int i = 0; i < numberOfChars; i++ )
+        {
+          byteArray[i] = Convert.ToByte( new string( new char[2] { (char)sr.Read(), (char)sr.Read() } ), 16 );
+        }
+      }
+      return byteArray;
+    }
+
+
+
+    public static Bitmap ByteArrayToBitmap( byte[] pData )
+    {
+      var mStream = new MemoryStream();
+      mStream.Write( pData, 0, Convert.ToInt32( pData.Length ) );
+      Bitmap bm = new Bitmap( mStream, false );
+      mStream.Dispose();
+
+      // HACK clone bitmap to keep alpha working (Bitmap from stream doesn't set 32bit with alpha format!)
+      var clearBitmap = new Bitmap( bm.Width, bm.Height, PixelFormat.Format32bppArgb );
+
+      // Lock the bitmap's bits.  
+      Rectangle rect = new Rectangle( 0, 0, bm.Width, bm.Height );
+
+      System.Drawing.Imaging.BitmapData bmpDataSource = bm.LockBits( rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bm.PixelFormat );
+      System.Drawing.Imaging.BitmapData bmpDataTarget = clearBitmap.LockBits( rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, clearBitmap.PixelFormat );
+
+      // Get the address of the first line.
+      IntPtr ptrSource = bmpDataSource.Scan0;
+      IntPtr ptrTarget = bmpDataTarget.Scan0;
+      int bytes  = Math.Abs( bmpDataTarget.Stride ) * clearBitmap.Height;
+      byte[] rgbValues = new byte[bytes];
+
+      // Copy the RGB values into the array.
+      System.Runtime.InteropServices.Marshal.Copy( ptrSource, rgbValues, 0, bytes );
+      System.Runtime.InteropServices.Marshal.Copy( rgbValues, 0, ptrTarget, bytes );
+
+      // Unlock the bits.
+      bm.UnlockBits( bmpDataSource );
+      clearBitmap.UnlockBits( bmpDataTarget );
+
+      bm.Dispose();
+
+      return clearBitmap;
+    }
 
 
 
@@ -302,7 +384,18 @@ namespace DecentForms
 
 
 
-    internal void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, Button.ButtonStyle Style )
+    public void RenderButton()
+    {
+      if ( _Control is Button )
+      {
+        var button = (Button)_Control;
+        RenderButton( button.MouseOver, button.Pushed, button.IsDefault, button.ButtonBorder );
+      }
+    }
+
+
+
+    public void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, Button.ButtonStyle Style )
     {
       RenderButton( MouseOver, Pushed, IsDefault, Style, new Rectangle( 0, 0, _Control.Width, _Control.Height ) );
     }
@@ -321,6 +414,10 @@ namespace DecentForms
       else if ( _Control is RadioButton )
       {
         imageToDraw = ( (RadioButton)_Control ).Image;
+      }
+      else if ( _Control is CheckBox )
+      {
+        imageToDraw = ( (CheckBox)_Control ).Image;
       }
       if ( ( imageToDraw != null ) 
       &&   ( !_Control.Enabled ) )
@@ -429,6 +526,27 @@ namespace DecentForms
 
 
 
+    public void RenderCheckBox( string Text, ContentAlignment Alignment, bool MouseOver, bool Pushed, bool Checked )
+    {
+      var checkBox = (CheckBox)_Control;
+
+      if ( checkBox.Appearance == Appearance.Normal )
+      {
+        var checkRect = checkBox.GetCheckRect();
+        DrawCheckBox( checkRect, MouseOver, Checked );
+
+        var textRect = checkBox.GetTextRect();
+        _G.SetClip( textRect );
+        DrawText( Text, textRect.Left, textRect.Top, textRect.Width, textRect.Height, TextAlignment.CENTERED, ColorControlText );
+      }
+      else
+      {
+        RenderButton( MouseOver, Checked, false, Button.ButtonStyle.RAISED );
+      }
+    }
+
+
+
     private System.Drawing.Image GetGrayScaleBitmap( System.Drawing.Image Image )
     {
       if ( _GrayscaledImageCache.TryGetValue( Image, out System.Drawing.Image cachedImage ) )
@@ -436,8 +554,56 @@ namespace DecentForms
         return cachedImage;
       }
 
-      var newBitmap = new Bitmap( Image.Width, Image.Height );
+      var newBitmap = new Bitmap( Image );
 
+      // Lock the bitmap's bits.  
+      Rectangle rect = new Rectangle(0, 0, newBitmap.Width, newBitmap.Height);
+      System.Drawing.Imaging.BitmapData bmpData =
+            newBitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+            newBitmap.PixelFormat);
+
+      // Get the address of the first line.
+      IntPtr ptr = bmpData.Scan0;
+
+      // Declare an array to hold the bytes of the bitmap.
+      int bytes  = Math.Abs( bmpData.Stride ) * newBitmap.Height;
+      byte[] rgbValues = new byte[bytes];
+
+      // Copy the RGB values into the array.
+      System.Runtime.InteropServices.Marshal.Copy( ptr, rgbValues, 0, bytes );
+
+      for ( int counter = 0; counter < rgbValues.Length; counter += 4 )
+      {
+        /*
+        if ( ( rgbValues[counter + 3] == 0xff )
+        &&   ( rgbValues[counter + 0] == 0xda )
+        &&   ( rgbValues[counter + 1] == 0xda )
+        &&   ( rgbValues[counter + 2] == 0xda ) )
+        {
+          // make transparent
+          rgbValues[counter + 3] = 0;
+        } 
+        else*/
+        if ( rgbValues[counter + 3] > 0 ) 
+        {
+          byte  r = rgbValues[counter + 0];
+          byte  g = rgbValues[counter + 1];
+          byte  b = rgbValues[counter + 2];
+
+          byte finalValue = 0xc0;
+
+          rgbValues[counter + 0] = (byte)( ( finalValue * 3 + r ) / 4 );
+          rgbValues[counter + 1] = (byte)( ( finalValue * 3 + g ) / 4 );
+          rgbValues[counter + 2] = (byte)( ( finalValue * 3 + b ) / 4 );
+        }
+      }
+
+      // Copy the RGB values back to the bitmap
+      System.Runtime.InteropServices.Marshal.Copy( rgbValues, 0, ptr, bytes );
+
+      // Unlock the bits.
+      newBitmap.UnlockBits( bmpData );
+      /*
       using ( Graphics g = Graphics.FromImage( newBitmap ) )
       {
         ColorMatrix colorMatrix = new ColorMatrix(new float[][]
@@ -454,7 +620,7 @@ namespace DecentForms
           attributes.SetColorMatrix( colorMatrix );
           g.DrawImage( Image, new Rectangle( 0, 0, Image.Width, Image.Height ), 0, 0, Image.Width, Image.Height, GraphicsUnit.Pixel, attributes );
         }
-      }
+      }*/
       _GrayscaledImageCache.Add( Image, newBitmap );
 
       return newBitmap;
@@ -462,7 +628,7 @@ namespace DecentForms
 
 
 
-    internal void RenderRadioButton( string Text, ContentAlignment Alignment, bool MouseOver, bool Pushed, bool Checked )
+    public void RenderRadioButton( string Text, ContentAlignment Alignment, bool MouseOver, bool Pushed, bool Checked )
     {
       var checkBox = (RadioButton)_Control;
 
@@ -488,7 +654,7 @@ namespace DecentForms
 
 
 
-    internal void RenderSlider( int X, int Y, int Width, int Height, bool MouseOver, bool Pushed )
+    public void RenderSlider( int X, int Y, int Width, int Height, bool MouseOver, bool Pushed )
     {
       X -= _DisplayOffsetX;
       Y -= _DisplayOffsetY;
@@ -836,6 +1002,63 @@ namespace DecentForms
       _G.FillPie( fillBrush, X, Y, Width, Height, 0, 360 );
     }
 
+
+
+    public void DrawDashedLine( int X1, int Y1, int X2, int Y2, uint Color )
+    {
+      /*
+      using ( var separatorPen = new Pen( new Das Color ) )
+      {
+        pevent.Graphics.DrawLine( separatorPen, lineX, lineYFrom, lineX, lineYTo );
+      }*/
+    }
+
+
+
+    public void DrawArrowUp( int X, int Y, int Width, int Height, bool Enabled )
+    {
+      var imageToDraw = GetStateBitmap( _BitmapArrowUp, Enabled );
+
+      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+    }
+
+
+
+    private System.Drawing.Image GetStateBitmap( Bitmap Bitmap, bool Enabled )
+    {
+      if ( Enabled )
+      {
+        return Bitmap;
+      }
+      return GetGrayScaleBitmap( Bitmap );
+    }
+
+
+
+    public void DrawArrowDown( int X, int Y, int Width, int Height, bool Enabled )
+    {
+      var imageToDraw = GetStateBitmap( _BitmapArrowDown, Enabled );
+
+      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+    }
+
+
+
+    public void DrawArrowLeft( int X, int Y, int Width, int Height, bool Enabled )
+    {
+      var imageToDraw = GetStateBitmap( _BitmapArrowLeft, Enabled );
+
+      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+    }
+
+
+
+    public void DrawArrowRight( int X, int Y, int Width, int Height, bool Enabled )
+    {
+      var imageToDraw = GetStateBitmap( _BitmapArrowRight, Enabled );
+
+      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+    }
 
 
 

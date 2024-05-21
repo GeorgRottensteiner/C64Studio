@@ -81,18 +81,16 @@ namespace DecentForms
 
 
 
-    protected override void OnPaint( PaintEventArgs pevent )
+    protected override void OnPaint( ControlRenderer Renderer )
     {
-      base.OnPaint( pevent );
+      base.OnPaint( Renderer );
 
       int arrowX = ClientRectangle.Width - 14;
       int arrowY = ClientRectangle.Height / 2 - 1;
 
       if ( ShowDropDownArrow )
       {
-        Brush brush = Enabled ? SystemBrushes.ControlText : SystemBrushes.ButtonShadow;
-        Point[] arrows = new Point[] { new Point( arrowX, arrowY ), new Point( arrowX + 7, arrowY ), new Point( arrowX + 3, arrowY + 4 ) };
-        pevent.Graphics.FillPolygon( brush, arrows );
+        Renderer.DrawArrowDown( arrowX, arrowY, 8, 4, Enabled );
       }
 
       if ( ShowSplitBar )
@@ -101,10 +99,8 @@ namespace DecentForms
         int lineX = ClientRectangle.Width - 18;
         int lineYFrom = 4;
         int lineYTo = ClientRectangle.Height - 5;
-        using ( var separatorPen = new Pen( Brushes.DarkGray ) )
-        {
-          pevent.Graphics.DrawLine( separatorPen, lineX, lineYFrom, lineX, lineYTo );
-        }
+
+        Renderer.DrawLine( lineX, lineYFrom, lineX, lineYTo, Renderer.DarkenColor( ControlRenderer.ColorControlBackground ) );
       }
     }
 

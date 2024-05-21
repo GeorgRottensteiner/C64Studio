@@ -2797,7 +2797,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
+    private void btnToolEdit_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       RemoveFloatingSelection();
@@ -2823,7 +2823,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolRect_CheckedChanged( object sender, EventArgs e )
+    private void btnToolRect_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       RemoveFloatingSelection();
@@ -2832,7 +2832,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
+    private void btnToolQuad_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       RemoveFloatingSelection();
@@ -2841,7 +2841,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolFill_CheckedChanged( object sender, EventArgs e )
+    private void btnToolFill_CheckedChanged( DecentForms.ControlBase Sender )
     {
       HideSelection();
       RemoveFloatingSelection();
@@ -2850,7 +2850,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
+    private void btnToolSelect_CheckedChanged( DecentForms.ControlBase Sender )
     {
       m_ToolMode = ToolMode.SELECT;
     }

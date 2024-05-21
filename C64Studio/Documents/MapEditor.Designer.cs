@@ -42,11 +42,11 @@
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.btnCopyMapImage = new DecentForms.Button();
-      this.btnToolSelect = new System.Windows.Forms.RadioButton();
-      this.btnToolFill = new System.Windows.Forms.RadioButton();
-      this.btnToolQuad = new System.Windows.Forms.RadioButton();
-      this.btnToolRect = new System.Windows.Forms.RadioButton();
-      this.btnToolEdit = new System.Windows.Forms.RadioButton();
+      this.btnToolSelect = new DecentForms.RadioButton();
+      this.btnToolFill = new DecentForms.RadioButton();
+      this.btnToolQuad = new DecentForms.RadioButton();
+      this.btnToolRect = new DecentForms.RadioButton();
+      this.btnToolEdit = new DecentForms.RadioButton();
       this.labelEditInfo = new System.Windows.Forms.Label();
       this.groupMapExtraData = new System.Windows.Forms.GroupBox();
       this.editMapExtraData = new System.Windows.Forms.TextBox();
@@ -257,8 +257,7 @@
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
       this.btnToolSelect.TabIndex = 36;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
-      this.btnToolSelect.UseVisualStyleBackColor = true;
-      this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
+      this.btnToolSelect.CheckedChanged += new DecentForms.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
       // btnToolFill
       // 
@@ -269,8 +268,7 @@
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
       this.btnToolFill.TabIndex = 37;
       this.toolTip1.SetToolTip(this.btnToolFill, "Flood Fill");
-      this.btnToolFill.UseVisualStyleBackColor = true;
-      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
+      this.btnToolFill.CheckedChanged += new DecentForms.EventHandler(this.btnToolFill_CheckedChanged);
       // 
       // btnToolQuad
       // 
@@ -281,8 +279,7 @@
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
       this.btnToolQuad.TabIndex = 35;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Rectangle");
-      this.btnToolQuad.UseVisualStyleBackColor = true;
-      this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
+      this.btnToolQuad.CheckedChanged += new DecentForms.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
       // btnToolRect
       // 
@@ -293,8 +290,7 @@
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
       this.btnToolRect.TabIndex = 33;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
-      this.btnToolRect.UseVisualStyleBackColor = true;
-      this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
+      this.btnToolRect.CheckedChanged += new DecentForms.EventHandler(this.btnToolRect_CheckedChanged);
       // 
       // btnToolEdit
       // 
@@ -307,8 +303,7 @@
       this.btnToolEdit.TabIndex = 34;
       this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Place/Pick Single Tile");
-      this.btnToolEdit.UseVisualStyleBackColor = true;
-      this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
+      this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
       // labelEditInfo
       // 
@@ -1518,11 +1513,11 @@
     private System.Windows.Forms.TextBox editMapExtraData;
     private System.Windows.Forms.Label label20;
     private System.Windows.Forms.Label labelEditInfo;
-    private System.Windows.Forms.RadioButton btnToolSelect;
-    private System.Windows.Forms.RadioButton btnToolFill;
-    private System.Windows.Forms.RadioButton btnToolQuad;
-    private System.Windows.Forms.RadioButton btnToolRect;
-    private System.Windows.Forms.RadioButton btnToolEdit;
+    private DecentForms.RadioButton btnToolSelect;
+    private DecentForms.RadioButton btnToolFill;
+    private DecentForms.RadioButton btnToolQuad;
+    private DecentForms.RadioButton btnToolRect;
+    private DecentForms.RadioButton btnToolEdit;
     private DecentForms.Button btnCopy;
     private System.Windows.Forms.ComboBox comboMapMultiColor2;
     private System.Windows.Forms.ComboBox comboMapMultiColor1;
