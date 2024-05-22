@@ -1062,6 +1062,71 @@ namespace DecentForms
 
 
 
+    public void RenderTreeView()
+    {
+      var treeView = (TreeView)_Control;
+
+      FillRectangle( 0, 0, _Control.ClientSize.Width, _Control.ClientSize.Height, ColorControlActiveBackground );
+
+      _G.Clip = new Region( new Rectangle( 0, 0, _Control.ActualWorkWidth, _Control.ActualWorkHeight ) );
+
+      var node = treeView.FirstVisibleNode;
+
+      for ( int i = 0; i <= treeView.VisibleItemCount; ++i )
+      {
+        if ( node == null )
+        {
+          break;
+        }
+
+        var rect = node.Bounds;
+
+        // expand toggle
+        if ( node.Nodes.Count > 0 )
+        {
+          var toggleRect = treeView.GetToggleRect( node );
+
+          DrawTreeViewExpansionToggle( node.IsExpanded, toggleRect );
+        }
+        if ( ( treeView.ImageList != null )
+        &&   ( treeView.ImageList.Images.Count > 0 ) )
+        {
+          var imageRect = treeView.GetImageRect( node );
+
+          int imageIndex = node.ImageIndex;
+          if ( ( imageIndex < 0 )
+          ||   ( imageIndex >= treeView.ImageList.Images.Count ) )
+          {
+            imageIndex = 0;
+          }
+          DrawImage( treeView.ImageList.Images[imageIndex], imageRect );
+        }
+
+
+        if ( node == treeView.SelectedNode )
+        {
+          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
+
+          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
+          DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
+        }
+        else if ( node == treeView.MouseOverNode )
+        {
+          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
+          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+        }
+        else
+        {
+          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+        }
+
+        node = TreeView.GetNextVisibleNode( node );
+      }
+    }
+
+
+
+
     /*
     internal void RenderGroupBox( string Text )
     {

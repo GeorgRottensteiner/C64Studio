@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LabelExplorer));
-      this.treeProject = new RetroDevStudio.NoDblClkTreeView();
+      this.treeProject = new DecentForms.TreeView();
       this.m_ImageListOutline = new System.Windows.Forms.ImageList(this.components);
       this.toolStripOutline = new System.Windows.Forms.ToolStrip();
       this.checkShowLocalLabels = new System.Windows.Forms.ToolStripButton();
@@ -49,17 +49,14 @@
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.treeProject.ImageIndex = 0;
       this.treeProject.ImageList = this.m_ImageListOutline;
       this.treeProject.Location = new System.Drawing.Point(0, 28);
       this.treeProject.Name = "treeProject";
-      this.treeProject.SelectedImageIndex = 0;
       this.treeProject.Size = new System.Drawing.Size(534, 364);
       this.treeProject.TabIndex = 0;
       this.treeProject.Text = "NoDblClkTreeView";
-      this.treeProject.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterSelect);
-      this.treeProject.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);
-      this.treeProject.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseDoubleClick);
+      this.treeProject.AfterSelect += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterSelect);
+      this.treeProject.NodeMouseDoubleClick += new DecentForms.TreeView.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseDoubleClick);
       // 
       // m_ImageListOutline
       // 
@@ -165,7 +162,7 @@
 
     #endregion
 
-    public NoDblClkTreeView treeProject;
+    public DecentForms.TreeView treeProject;
     private System.Windows.Forms.ImageList m_ImageListOutline;
     private System.Windows.Forms.ToolStrip toolStripOutline;
     public System.Windows.Forms.ToolStripButton checkShowLocalLabels;

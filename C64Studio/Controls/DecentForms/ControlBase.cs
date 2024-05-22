@@ -124,6 +124,34 @@ namespace DecentForms
 
 
 
+    public int ActualWorkWidth
+    {
+      get
+      {
+        if ( _ActualWorkWidth == 0 )
+        {
+          return ClientSize.Width;
+        }
+        return _ActualWorkWidth;
+      }
+    }
+
+
+
+    public int ActualWorkHeight
+    {
+      get
+      {
+        if ( _ActualWorkHeight == 0 )
+        {
+          return ClientSize.Height;
+        }
+        return _ActualWorkHeight;
+      }
+    }
+
+
+
     public bool IsOutside( int X, int Y )
     {
       if ( ( X < 0 )
@@ -304,7 +332,7 @@ namespace DecentForms
 
     protected override void OnMouseDoubleClick( MouseEventArgs e )
     {
-      RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ) );
+      RaiseControlEvent( ControlEvent.EventType.MOUSE_DOUBLE_CLICK, e.X, e.Y, ToButtonBitMask( e.Button ) );
       base.OnMouseDoubleClick( e );
     }
 

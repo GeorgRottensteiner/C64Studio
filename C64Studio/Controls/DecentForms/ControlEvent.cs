@@ -19,6 +19,7 @@ namespace DecentForms
       MOUSE_WHEEL         = 0x00000004,
       MOUSE_ENTER         = 0x00000005,
       MOUSE_LEAVE         = 0x00000006,
+      MOUSE_DOUBLE_CLICK  = 0x00000007,
 
       KEY_DOWN            = 0x00000010,
       KEY_PRESS           = 0x00000011,
