@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject
 {
-  public partial class TestAssembler
+  [TestClass]
+  public class AssembleDASM
   {
     [TestMethod]
     public void TestDASMSyntax()
@@ -13,7 +14,7 @@ LABEL
                              dc.b  1,2,3,4,5,6,7,8";
 
       RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
-      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.PDS );
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.DASM );
 
       RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";

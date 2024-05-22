@@ -41,14 +41,12 @@ namespace RetroDevStudio.Parser
     public bool                                                     LoopEndHasNoScope = false;
     public bool                                                     IncludeHasOnlyFilename = false;
     public bool                                                     IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
-    public bool                                                     HasBinaryNot = true;
+    public bool                                                     HasBinaryNot = true;          // PDS has IF LEV=2 ! LEV=3 ! LEV=5
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
     public bool                                                     MessageAutoIncludesBlanksBetweenParameters = false;
     public bool                                                     AllowsCustomTextMappings = false;
     public bool                                                     IfWithoutBrackets = false;
     public bool                                                     LocalLabelStacking = false;   // if true, TASM mode: ++ refers to 2nd + below, --- to 3rd - above, etc.
-    public bool                                                     ExclamationMarkIsOr = false;                // PDS has IF LEV=2 ! LEV=3 ! LEV=5
-    public bool                                                     ExclamationMarkMarksOverloadableLabel = false;  // PDS has same name labels with ! in front
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
 
@@ -632,7 +630,6 @@ namespace RetroDevStudio.Parser
 
           OperatorPrecedence.Remove( "!=" );
           OperatorPrecedence["!"] = 4;
-          ExclamationMarkIsOr = true;
 
           LabelPostfix = ":";
           GlobalLabelsAutoZone = true;
@@ -650,7 +647,6 @@ namespace RetroDevStudio.Parser
           HasBinaryNot = false;
           LabelsMustBeAtStartOfLine = true;
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
-          ExclamationMarkMarksOverloadableLabel = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject
 {
-  public partial class TestAssembler
+  [TestClass]
+  public class AssemblePDS
   {
     private GR.Memory.ByteBuffer TestAssemblePDS( string Source )
     {
@@ -76,6 +77,23 @@ lsmf";
       var assembly = TestAssemblePDS( source );
 
       Assert.AreEqual( "00C0A902", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestPDSBinaryOrExclamationMark()
+    {
+      // do not shift the lines, they need to be on the very left
+      string      source = @"  ORG $d000
+LEV=3
+  IF LEV=2 ! LEV=4 
+     lda #2
+  ENDIF";
+
+      var assembly = TestAssemblePDS( source );
+
+      Assert.AreEqual( "00D0", assembly.ToString() );
     }
 
 

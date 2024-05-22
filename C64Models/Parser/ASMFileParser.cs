@@ -11162,6 +11162,8 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      int     potentialLowestStart = 65536;
+
       if ( ( memoryMap.Entries.Count == 0 )
       ||   ( builtSegments.Count > 0 ) )
       {
@@ -11169,6 +11171,10 @@ namespace RetroDevStudio.Parser
         int     newLowestStart = 65536;
         foreach ( var segment in builtSegments )
         {
+          if ( segment.first < potentialLowestStart )
+          {
+            potentialLowestStart = segment.first;
+          }
           if ( segment.second.Length == 0 )
           {
             // ignore virtual segments
@@ -11199,9 +11205,14 @@ namespace RetroDevStudio.Parser
       &&   ( ( memoryMap.Entries.Count != 0 )
       ||     ( builtSegments.Count > 0 ) ) )
       {
-        // no real data here, and no start address either
-        AddError( 0, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Code without start address encountered (missing *=)" );
-        return false;
+        if ( potentialLowestStart == 65536 )
+        {
+          // no real data here, and no start address either
+          AddError( 0, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Code without start address encountered (missing *=)" );
+          return false;
+        }
+        // absolute final fallback, no data, but we do have a start address
+        lowestStart = potentialLowestStart;
       }
 
       // check for overlaps

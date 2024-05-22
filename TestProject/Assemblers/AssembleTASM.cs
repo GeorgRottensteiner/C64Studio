@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject
 {
-  public partial class TestAssembler
+  [TestClass]
+  public class AssembleTASM
   {
     private GR.Memory.ByteBuffer TestAssembleTASM( string Source )
     {
