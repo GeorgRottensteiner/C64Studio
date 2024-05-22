@@ -15,6 +15,18 @@ namespace RetroDevStudio.Parser
 
       if ( ScopeInsideMacroDefinition() )
       {
+        var repeatUntil = new RepeatUntilInfo();
+
+        repeatUntil.LineIndex = lineIndex;
+
+        Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.DO_UNTIL );
+
+        scope.Active = true;
+        scope.RepeatUntil = repeatUntil;
+        scope.StartIndex = lineIndex;
+        _ParseContext.Scopes.Add( scope );
+        OnScopeAdded( scope );
+
         return ParseLineResult.CALL_CONTINUE;
       }
 

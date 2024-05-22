@@ -47,6 +47,8 @@ namespace RetroDevStudio.Parser
     public bool                                                     AllowsCustomTextMappings = false;
     public bool                                                     IfWithoutBrackets = false;
     public bool                                                     LocalLabelStacking = false;   // if true, TASM mode: ++ refers to 2nd + below, --- to 3rd - above, etc.
+    public bool                                                     ExclamationMarkIsOr = false;                // PDS has IF LEV=2 ! LEV=3 ! LEV=5
+    public bool                                                     ExclamationMarkMarksOverloadableLabel = false;  // PDS has same name labels with ! in front
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
 
@@ -551,15 +553,15 @@ namespace RetroDevStudio.Parser
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
 
+          // besides proper local labels we also misuse cheap labels as macro parameters
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "0123456789";
+
           OpenBracketChars = "([" + INTERNAL_OPENING_BRACE;
           CloseBracketChars = ")]" + INTERNAL_CLOSING_BRACE;
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!:";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß!";
-
-          // we misuse cheap labels as macro parameters
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "0123456789";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
@@ -628,7 +630,9 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "END", Types.MacroInfo.PseudoOpType.END_OF_FILE );
           AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.REPEAT );
 
+          OperatorPrecedence.Remove( "!=" );
           OperatorPrecedence["!"] = 4;
+          ExclamationMarkIsOr = true;
 
           LabelPostfix = ":";
           GlobalLabelsAutoZone = true;
@@ -646,6 +650,7 @@ namespace RetroDevStudio.Parser
           HasBinaryNot = false;
           LabelsMustBeAtStartOfLine = true;
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
+          ExclamationMarkMarksOverloadableLabel = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

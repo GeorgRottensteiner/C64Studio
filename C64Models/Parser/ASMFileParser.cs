@@ -2690,7 +2690,9 @@ namespace RetroDevStudio.Parser
               }
               break;
             case MacroInfo.PseudoOpType.BYTE:
-              PODataByte( lineIndex, NeededParsedExpression, 0, NeededParsedExpression.Count, lineInfo, Types.MacroInfo.PseudoOpType.BYTE, lineInfo.LineCodeMapping, false );
+            case MacroInfo.PseudoOpType.LOW_BYTE:
+            case MacroInfo.PseudoOpType.HIGH_BYTE:
+              PODataByte( lineIndex, NeededParsedExpression, 0, NeededParsedExpression.Count, lineInfo, pseudoOp.Type, lineInfo.LineCodeMapping, false );
               break;
             case MacroInfo.PseudoOpType.WORD:
               {
@@ -7048,8 +7050,8 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BYTE )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, textCodeMapping, true );
               info.Line = parseLine;
