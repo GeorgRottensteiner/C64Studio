@@ -996,6 +996,7 @@ namespace RetroDevStudio.Documents
           {
             // copy file to different project, keep base path
             newFilenameTemplate = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( sourceProject.Settings.BasePath ), true, fileName, false );
+            newFilenameTemplate = System.IO.Path.GetFileName( newFilenameTemplate );
             newFilenameTemplate = project.FullPath( newFilenameTemplate );
             newFilename = newFilenameTemplate;
           }
@@ -1006,8 +1007,6 @@ namespace RetroDevStudio.Documents
             newFilename = GR.Path.RenameFilenameWithoutExtension( newFilenameTemplate, System.IO.Path.GetFileNameWithoutExtension( newFilenameTemplate ) + " " + curAttempt );
             ++curAttempt;
           }
-
-          //Debug.Log( "Pasting: " + fileName + " as " + newFilename );
 
           try
           {
