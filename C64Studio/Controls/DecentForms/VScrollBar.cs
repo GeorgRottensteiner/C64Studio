@@ -25,13 +25,49 @@ namespace DecentForms
     private bool      _SliderPushed = false;
     private int       _SliderDragOffset = 0;
     private int       _SliderDragPos = 0;
+    private int       _MouseWheelFactor = 3;
 
     private int       _Value = 0;
+    private int       _Minimum = 0;
+    private int       _Maximum = 100;
 
 
 
-    public int Minimum { get; set; } = 0;
-    public int Maximum { get; set; } = 100;
+    public int Minimum
+    {
+      get
+      {
+        return _Minimum;
+      }
+      set
+      {
+        if ( value < Maximum )
+        {
+          _Minimum = value;
+          Value = _Value;
+          Invalidate();
+        }
+      }
+    }
+
+
+
+    public int Maximum 
+    {
+      get
+      {
+        return _Maximum;
+      }
+      set
+      {
+        if ( value >= Minimum )
+        {
+          _Maximum = value;
+          Value = _Value;
+          Invalidate();
+        }
+      }
+    }
 
 
 
@@ -92,12 +128,6 @@ namespace DecentForms
     private void _TopButton_CustomDraw( ControlRenderer Renderer )
     {
       Renderer.RenderButton();
-
-      /*
-      int arrowWidth = 8;
-      int arrowHeight = 5;
-      int arrowX = ( _TopButton.Width - arrowWidth ) / 2;
-      int arrowY = _TopButton.Height / 2 - 2;*/
 
       var rect = _TopButton.Bounds;
 
@@ -182,7 +212,7 @@ namespace DecentForms
       switch ( Event.Type )
       {
         case ControlEvent.EventType.MOUSE_WHEEL:
-          if ( Value - Event.MouseWheelDelta < Minimum )
+          if ( Value - Event.MouseWheelDelta * _MouseWheelFactor < Minimum )
           {
             if ( Value > Minimum )
             {
@@ -191,7 +221,7 @@ namespace DecentForms
               Scroll?.Invoke( this );
             }
           }
-          else if ( Value - Event.MouseWheelDelta > Maximum )
+          else if ( Value - Event.MouseWheelDelta * _MouseWheelFactor > Maximum )
           {
             if ( Value < Maximum )
             {
@@ -202,7 +232,7 @@ namespace DecentForms
           }
           else
           {
-            Value -= Event.MouseWheelDelta;
+            Value -= Event.MouseWheelDelta * _MouseWheelFactor;
             Invalidate();
             Scroll?.Invoke( this );
           }
@@ -458,6 +488,10 @@ namespace DecentForms
 
     public void SetSliderSize( int SliderSize )
     {
+      if ( SliderSize < 20 )
+      {
+        SliderSize = 20;
+      }
       _SliderHeight = SliderSize;
       Invalidate();
     }

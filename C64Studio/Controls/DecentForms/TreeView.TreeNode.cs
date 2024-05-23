@@ -177,7 +177,7 @@ namespace DecentForms
             return Rectangle.Empty;
           }
           int   level = Level;
-          int   visualIndex = VisualIndex;
+          int   visualIndex = VisualIndex - _Owner._PreviousScrollPosition;
           int   offsetoOfTextLabel = _Owner.ExpandToggleItemSize + _Owner._SubNodeIndent * level;
           if ( _Owner.ImageList != null )
           {
@@ -282,14 +282,18 @@ namespace DecentForms
 
 
 
-      public int GetNodeCount( bool IncludeSubTrees )
+      public int GetNodeCount( bool IncludeSubTrees, bool VisibleOnly )
       {
         int total = Nodes.Count;
         if ( IncludeSubTrees )
         {
           for ( int i = 0; i < Nodes.Count; i++ )
           {
-            total += Nodes[i].GetNodeCount( true );
+            if ( ( !VisibleOnly )
+            ||   ( Nodes[i].IsExpanded ) )
+            {
+               total += Nodes[i].GetNodeCount( true, VisibleOnly );
+            }
           }
         }
 
@@ -338,9 +342,15 @@ namespace DecentForms
         if ( !_Expanded )
         {
           _Expanded = true;
-          _Owner?.Invalidate();
-
-          RecalcVisualIndexStartingWithMyself();
+          if ( Nodes.Count > 0 )
+          {
+            _Owner?.ItemsModified();
+            RecalcVisualIndexStartingWithMyself();
+          }
+          else
+          {
+            _Owner?.ItemModified( this );
+          }
         }
       }
 
@@ -407,17 +417,24 @@ namespace DecentForms
             }
           }
           _Expanded = false;
-          _Owner?.Invalidate();
 
-          if ( !IgnoreChildren )
+          if ( Nodes.Count > 0 )
           {
-            foreach ( var child in Nodes )
+            if ( !IgnoreChildren )
             {
-              child._VisualIndex = -1;
-              child.Collapse( false );
+              foreach ( var child in Nodes )
+              {
+                child._VisualIndex = -1;
+                child.Collapse( false );
+              }
             }
+            _Owner?.ItemsModified();
+            RecalcVisualIndexStartingWithMyself();
           }
-          RecalcVisualIndexStartingWithMyself();
+          else
+          {
+            _Owner?.ItemModified( this );
+          }
         }
       }
 

@@ -19,6 +19,7 @@ namespace DecentForms
     private VScrollBar    _ScrollBar = new VScrollBar();
     private HScrollBar    _ScrollBarH = new HScrollBar();
     private bool          _ScrollAlwaysVisible = false;
+    private int           _PreviousScrollPosition = 0;
 
     // cache max item width (since that's resource heavy, -1 means required to recalc)
     private int           _CachedMaxItemWidth = -1;
@@ -79,7 +80,26 @@ namespace DecentForms
 
     private void _ScrollBar_Scroll( ControlBase Sender )
     {
-      Invalidate();
+      if ( _PreviousScrollPosition != _ScrollBar.Value )
+      {
+        _PreviousScrollPosition = _ScrollBar.Value;
+
+        if ( Nodes.Count > 0 )
+        {
+          var node = Nodes[0];
+
+          for ( int i = 0; i < _PreviousScrollPosition; ++i )
+          {
+            node = GetNextVisibleNode( node );
+            if ( node == null )
+            {
+              break;
+            }
+          }
+          _FirstVisibleNode = node;
+        }
+        Invalidate();
+      }
     }
 
 
@@ -127,8 +147,8 @@ namespace DecentForms
 
 
 
-    [DefaultValue( 18 )]
-    public int ItemHeight { get; set; } = 18;
+    [DefaultValue( 16 )]
+    public int ItemHeight { get; set; } = 16;
     public TreeNodeCollection Nodes { get; private set; }
     public SelectionMode SelectionMode { get; set; }
 
@@ -407,7 +427,7 @@ namespace DecentForms
         {
           if ( node.IsExpanded )
           {
-            totalCount += node.GetNodeCount( true );
+            totalCount += node.GetNodeCount( true, true );
           }
         }
         return totalCount;
@@ -981,7 +1001,7 @@ namespace DecentForms
     internal Rectangle GetToggleRect( TreeNode Node )
     {
       var   rect = Node.Bounds;
-      int   rectSize = rect.Height / 2;
+      int   rectSize = (int)( rect.Height * 9 / 16 );
 
       int   extraOffset = 0;
       if ( ImageList != null )

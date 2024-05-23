@@ -24,6 +24,7 @@ namespace DecentForms
     private bool      _SliderPushed = false;
     private int       _SliderDragOffset = 0;
     private int       _SliderDragPos = 0;
+    private int       _MouseWheelFactor = 3;
 
     private int       _Value = 0;
 
@@ -180,7 +181,7 @@ namespace DecentForms
       switch ( Event.Type )
       {
         case ControlEvent.EventType.MOUSE_WHEEL:
-          if ( Value - Event.MouseWheelDelta < Minimum )
+          if ( Value - Event.MouseWheelDelta * _MouseWheelFactor < Minimum )
           {
             if ( Value > Minimum )
             {
@@ -189,7 +190,7 @@ namespace DecentForms
               Scroll?.Invoke( this );
             }
           }
-          else if ( Value - Event.MouseWheelDelta > Maximum )
+          else if ( Value - Event.MouseWheelDelta *_MouseWheelFactor > Maximum )
           {
             if ( Value < Maximum )
             {
@@ -200,7 +201,7 @@ namespace DecentForms
           }
           else
           {
-            Value -= Event.MouseWheelDelta;
+            Value -= Event.MouseWheelDelta * _MouseWheelFactor;
             Invalidate();
             Scroll?.Invoke( this );
           }
