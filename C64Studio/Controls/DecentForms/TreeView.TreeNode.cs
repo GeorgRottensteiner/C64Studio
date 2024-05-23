@@ -177,7 +177,7 @@ namespace DecentForms
             return Rectangle.Empty;
           }
           int   level = Level;
-          int   visualIndex = VisualIndex;
+          int   visualIndex = VisualIndex - _Owner._PreviousScrollValue;
           int   offsetoOfTextLabel = _Owner.ExpandToggleItemSize + _Owner._SubNodeIndent * level;
           if ( _Owner.ImageList != null )
           {
@@ -282,17 +282,20 @@ namespace DecentForms
 
 
 
-      public int GetNodeCount( bool IncludeSubTrees )
+      public int GetNodeCount( bool IncludeSubTrees, bool OnlyVisible )
       {
         int total = Nodes.Count;
         if ( IncludeSubTrees )
         {
           for ( int i = 0; i < Nodes.Count; i++ )
           {
-            total += Nodes[i].GetNodeCount( true );
+            if ( ( !OnlyVisible )
+            ||   ( Nodes[i].IsExpanded ) )
+            {
+              total += Nodes[i].GetNodeCount( true, OnlyVisible );
+            }
           }
         }
-
         return total;
       }
 
@@ -348,6 +351,13 @@ namespace DecentForms
 
       private void RecalcVisualIndexStartingWithMyself()
       {
+        /*
+        if ( ( _Owner != null )
+        &&   ( _Owner._UpdateLocked ) )
+        {
+          _Owner.Invalidate();
+          return;
+        }*/
         TreeNode node      = this;
         TreeNode prevNode  = null;
         while ( node != null )

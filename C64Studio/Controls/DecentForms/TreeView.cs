@@ -20,6 +20,8 @@ namespace DecentForms
     private HScrollBar    _ScrollBarH = new HScrollBar();
     private bool          _ScrollAlwaysVisible = false;
 
+    private int           _PreviousScrollValue = 0;
+
     // cache max item width (since that's resource heavy, -1 means required to recalc)
     private int           _CachedMaxItemWidth = -1;
 
@@ -79,6 +81,27 @@ namespace DecentForms
 
     private void _ScrollBar_Scroll( ControlBase Sender )
     {
+      if ( _ScrollBar.Value != _PreviousScrollValue )
+      {
+        _PreviousScrollValue = _ScrollBar.Value;
+
+        if ( Nodes.Count > 0 )
+        {
+          var node = Nodes[0];
+          for ( int i = 0; i < _PreviousScrollValue; ++i )
+          {
+            node = GetNextVisibleNode( node );
+            if ( node == null )
+            {
+              break;
+            }
+          }
+          if ( node != null )
+          {
+            _FirstVisibleNode = node;
+          }
+        }
+      }
       Invalidate();
     }
 
@@ -407,7 +430,7 @@ namespace DecentForms
         {
           if ( node.IsExpanded )
           {
-            totalCount += node.GetNodeCount( true );
+            totalCount += node.GetNodeCount( true, true );
           }
         }
         return totalCount;
