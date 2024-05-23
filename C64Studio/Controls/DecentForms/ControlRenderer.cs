@@ -1107,17 +1107,17 @@ namespace DecentForms
         {
           FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
 
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
+          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextSelected );
           DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
         }
         else if ( node == treeView.MouseOverNode )
         {
           FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextMouseOver );
         }
         else
         {
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V );
         }
 
         node = TreeView.GetNextVisibleNode( node );

@@ -358,6 +358,13 @@ namespace DecentForms
 
       private void RecalcVisualIndexStartingWithMyself()
       {
+        /*
+        if ( ( _Owner != null )
+        &&   ( _Owner._UpdateLocked ) )
+        {
+          _Owner.Invalidate();
+          return;
+        }*/
         TreeNode node      = this;
         TreeNode prevNode  = null;
         while ( node != null )
