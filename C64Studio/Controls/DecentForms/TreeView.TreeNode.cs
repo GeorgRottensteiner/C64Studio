@@ -322,16 +322,13 @@ namespace DecentForms
             return;
           }
         }
-        _Expanded = !_Expanded;
-        _Owner?.Invalidate( Bounds );
-        RecalcVisualIndexStartingWithMyself();
         if ( _Expanded )
         {
-          _Owner?.AfterExpand?.Invoke( _Owner, new TreeViewEventArgs( this, TreeViewAction.Expand ) );
+          Collapse( true );
         }
         else
         {
-          _Owner?.AfterCollapse?.Invoke( _Owner, new TreeViewEventArgs( this, TreeViewAction.Collapse ) );
+          Expand();
         }
       }
 
@@ -351,6 +348,7 @@ namespace DecentForms
           {
             _Owner?.ItemModified( this );
           }
+          _Owner?.AfterExpand?.Invoke( _Owner, new TreeViewEventArgs( this, TreeViewAction.Expand ) );
         }
       }
 
@@ -442,6 +440,7 @@ namespace DecentForms
           {
             _Owner?.ItemModified( this );
           }
+          _Owner?.AfterCollapse?.Invoke( _Owner, new TreeViewEventArgs( this, TreeViewAction.Collapse ) );
         }
       }
 

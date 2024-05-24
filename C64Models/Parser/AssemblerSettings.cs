@@ -558,7 +558,7 @@ namespace RetroDevStudio.Parser
           OpenBracketChars = "([" + INTERNAL_OPENING_BRACE;
           CloseBracketChars = ")]" + INTERNAL_CLOSING_BRACE;
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!:";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß!";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
@@ -588,9 +588,20 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DC.V", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DB", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DFB", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DEFB", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "BYTE", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "EQUB", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( ".ASCII", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( ".TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "ASC", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "STR", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DEFM", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DM", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DFM", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DATA", Types.MacroInfo.PseudoOpType.TEXT );
+
           AddPseudoOp( "DH", Types.MacroInfo.PseudoOpType.HIGH_BYTE );
           AddPseudoOp( "DL", Types.MacroInfo.PseudoOpType.LOW_BYTE );
           AddPseudoOp( "DW", Types.MacroInfo.PseudoOpType.WORD );
@@ -601,6 +612,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "ERROR", Types.MacroInfo.PseudoOpType.ERROR );
           AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
           AddPseudoOp( "ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
+          AddPseudoOp( "FI", Types.MacroInfo.PseudoOpType.END_IF );
           AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
           AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "DO", Types.MacroInfo.PseudoOpType.LOOP_START );
@@ -639,7 +651,7 @@ namespace RetroDevStudio.Parser
           CaseSensitive = false;
           IncludeExpectsStringLiteral = false;
           IncludeHasOnlyFilename = true;
-          StatementSeparatorChars.Add( ':' );
+          //StatementSeparatorChars.Add( ':' );
           MacroKeywordAfterName = true;
           DoWithoutParameterIsUntil = true;
           MacrosHaveVariableNumberOfArguments = true;

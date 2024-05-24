@@ -2567,7 +2567,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       var treeInfo = (TreeItemInfo)Node.Tag;
-      var scEntry = SCInfos.FirstOrDefault( sc => sc.Filename == System.IO.Path.GetFileName( element.DocumentInfo.DocumentFilename ) );
+      var scEntry = SCInfos.FirstOrDefault( sc => IsSameFilename( sc.Filename, element.DocumentInfo.DocumentFilename ) );
       if ( scEntry != null )
       {
         treeInfo.FileState = (SourceControl.FileState)(int)scEntry.FileState;
@@ -2576,6 +2576,13 @@ namespace RetroDevStudio.Documents
       {
         treeInfo.FileState = global::SourceControl.FileState.Nonexistent;
       }
+    }
+
+
+
+    private bool IsSameFilename( string FilenameInRepo, string DocumentFilename )
+    {
+      return GR.Path.IsPathEqual( FilenameInRepo, DocumentFilename );
     }
 
 

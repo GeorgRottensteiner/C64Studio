@@ -709,7 +709,7 @@ namespace DecentForms
                 // todo, select last?
                 var newNode = Nodes.Last();
                 while ( ( newNode.IsExpanded )
-                && ( newNode.Nodes.Count > 0 ) )
+                &&      ( newNode.Nodes.Count > 0 ) )
                 {
                   newNode = newNode.Nodes.Last();
                 }

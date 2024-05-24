@@ -3517,6 +3517,7 @@ namespace RetroDevStudio.Parser
       if ( ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.MACRO_FUNCTION )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.LOOP )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.DO_UNTIL )
+      &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.REPEAT )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.WHILE )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.PSEUDO_PC ) )
       {
@@ -5016,7 +5017,11 @@ namespace RetroDevStudio.Parser
         AdjustLabelCasing( lineTokenInfos );
 
         // PDS/DASM macro call?
-        DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos );
+        DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 0 );
+        if ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
+        {
+          DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 1 );
+        }
 
         // do we have a DASM scope operator? (must skip scope check then)
         bool  isDASMScopePseudoOP = false;
@@ -7869,7 +7874,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( scope.Loop == null )
           {
-            AddError( scope.StartIndex, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET, "Missing closing bracket" );
+            AddError( scope.StartIndex, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET, "Missing scope closing (bracket or END(IF) statement)" );
           }
         }
       }
@@ -7934,7 +7939,13 @@ namespace RetroDevStudio.Parser
 
       if ( !ScopeInsideMacroDefinition() )
       {
-        if ( programStepPos != -1 )
+        if ( ( m_AssemblerSettings.MacroKeywordAfterName )
+        &&   ( lineTokenInfos.Count >= 2 )
+        &&   ( lineTokenInfos[1].Content == MacroByType( MacroInfo.PseudoOpType.MACRO ) ) )
+        {
+          // a PDS style macro definition
+        }
+        else if ( programStepPos != -1 )
         {
           // only add if we know the start address!
           AddLabel( labelInFront, programStepPos, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
@@ -7942,17 +7953,7 @@ namespace RetroDevStudio.Parser
         else
         {
           // label without value, like a define
-
-          if ( ( m_AssemblerSettings.MacroKeywordAfterName )
-          &&   ( lineTokenInfos.Count >= 2 )
-          &&   ( lineTokenInfos[1].Content == MacroByType( MacroInfo.PseudoOpType.MACRO ) ) )
-          {
-            // a PDS style macro definition
-          }
-          else
-          {
-            AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-          }
+          AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
         }
       }
 
@@ -8941,6 +8942,7 @@ namespace RetroDevStudio.Parser
       ||     ( ( m_AssemblerSettings.POPrefix.Length > 0 )
       &&       ( !UpToken.StartsWith( m_AssemblerSettings.POPrefix ) ) ) ) ) )
       {
+        //DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 1 );
         return true;
       }
       return false;
@@ -8979,24 +8981,38 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void DetectPDSOrDASMMacroCall( Map<GR.Generic.Tupel<string,int>, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
+    private void DetectPDSOrDASMMacroCall( Map<GR.Generic.Tupel<string,int>, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos, int Offset )
     {
+      if ( Offset >= lineTokenInfos.Count )
+      {
+        return;
+      }
       // PDS?
       if ( ( lineTokenInfos.Count >= 1 )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count == 0 )
-      &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-      &&   ( macroFunctions.Keys.Any( m => m.first == lineTokenInfos[0].Content ) ) )
+      &&   ( lineTokenInfos[Offset].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( macroFunctions.Keys.Any( m => m.first == lineTokenInfos[Offset].Content ) ) )
       {
-        lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
+        lineTokenInfos[Offset].Type = TokenInfo.TokenType.CALL_MACRO;
+      }
+      // PDS e.g. UNTIL
+      if ( ( lineTokenInfos.Count >= 1 )
+      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count == 0 )
+      &&   ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      &&   ( lineTokenInfos[Offset].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( lineTokenInfos[Offset].StartPos > 0 )
+      &&   ( m_AssemblerSettings.PseudoOps.Any( m => ( m.Value.Type == MacroInfo.PseudoOpType.LOOP_END ) && ( m.Key == lineTokenInfos[Offset].Content ) ) ) )
+      {
+        lineTokenInfos[Offset].Type = TokenInfo.TokenType.PSEUDO_OP;
       }
 
       if ( ( lineTokenInfos.Count >= 1 )
-      &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( lineTokenInfos[Offset].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count != 0 )
-      &&   ( lineTokenInfos[0].Content.StartsWith( m_AssemblerSettings.MacroFunctionCallPrefix[0] ) )
-      &&   ( macroFunctions.Keys.Any( m => m.first == lineTokenInfos[0].Content ) ) )
+      &&   ( lineTokenInfos[Offset].Content.StartsWith( m_AssemblerSettings.MacroFunctionCallPrefix[0] ) )
+      &&   ( macroFunctions.Keys.Any( m => m.first == lineTokenInfos[Offset].Content ) ) )
       {
-        lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
+        lineTokenInfos[Offset].Type = TokenInfo.TokenType.CALL_MACRO;
       }
     }
 
@@ -9110,11 +9126,32 @@ namespace RetroDevStudio.Parser
       if ( ScopeInsideMacroDefinition() )
       {
         // Skip if inside macro definition
+
+        // add dummy scope so !ends properly match
+        Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.REPEAT );
+
+        scope.Active = false;
+        scope.RepeatUntil = new RepeatUntilInfo();
+        scope.StartIndex = lineIndex;
+        _ParseContext.Scopes.Add( scope );
+
         return ParseLineResult.CALL_CONTINUE;
       }
 
 
       List<List<TokenInfo>>   lineParams;
+
+      if ( lineTokenInfos.Count == 1 )
+      {
+        // REPEAT with no arguments means loop start
+        Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.REPEAT );
+
+        scope.Active = true;
+        scope.RepeatUntil = new RepeatUntilInfo() { LineIndex = lineIndex };
+        scope.StartIndex = lineIndex;
+        _ParseContext.Scopes.Add( scope );
+        return ParseLineResult.CALL_CONTINUE;
+      }
 
       if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams ) )
       {
@@ -9420,9 +9457,16 @@ namespace RetroDevStudio.Parser
     private bool TokenIsConditionalThatEndsScope( TokenInfo Token )
     {
       if ( ( Token.Type == TokenInfo.TokenType.PSEUDO_OP )
+      &&   ( m_AssemblerSettings.PseudoOps.Any( po => ( ( po.Value.Type == MacroInfo.PseudoOpType.END_IF )
+                                                   ||   ( po.Value.Type == MacroInfo.PseudoOpType.ELSE )
+                                                   ||   ( po.Value.Type == MacroInfo.PseudoOpType.END )
+                                                   ||   ( po.Value.Type == MacroInfo.PseudoOpType.LOOP_END ) )
+                                                   && ( po.Key == Token.Content.ToUpper() ) ) ) )
+        /*
       &&   ( ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END_IF ).ToUpper() )
       ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.ELSE ).ToUpper() )
-      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END ).ToUpper() ) ) )
+      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.LOOP_END ).ToUpper() )
+      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END ).ToUpper() ) ) )*/
       {
         return true;
       }
@@ -12500,6 +12544,7 @@ namespace RetroDevStudio.Parser
           int tokenPos = 2;
           int numBracketCount = 1;
           int numBracketPairs = 0;
+          bool isExpression = false;
           expressionTokenStartIndex = 2;
           expressionTokenCount -= 2;
 
@@ -12518,7 +12563,7 @@ namespace RetroDevStudio.Parser
               ++numBracketCount;
               ++numBracketPairs;
             }
-            if ( LineTokens[tokenPos].Content == "," )
+            else if ( LineTokens[tokenPos].Content == "," )
             {
               twoParamsInBrackets = true;
               expressionTokenCount = tokenPos - expressionTokenStartIndex;
@@ -12532,7 +12577,17 @@ namespace RetroDevStudio.Parser
             }
             ++tokenPos;
           }
-          if ( !twoParamsInBrackets )
+          if ( ( numBracketCount == 1 )
+          &&   ( tokenPos < expressionTokenStartIndex + expressionTokenCount ) )
+          {
+            // non content, non comma, so it's an expression
+            oneParamInBrackets = false;
+            twoParamsInBrackets = false;
+            isExpression = true;
+          }
+
+          if ( ( !twoParamsInBrackets )
+          &&   ( !isExpression ) )
           {
             oneParamInBrackets = true;
 
@@ -12557,6 +12612,7 @@ namespace RetroDevStudio.Parser
             }
             //expressionTokenCount = tokenPos - expressionTokenStartIndex;
           }
+          // these hacks make a bold man cry...
           if ( ( numBracketPairs > 1 )
           &&   ( tokenPos != expressionTokenCount )
           &&   ( !endsWithClosingBrace ) )
@@ -12565,7 +12621,15 @@ namespace RetroDevStudio.Parser
             oneParamInBrackets = false;
             twoParamsInBrackets = false;
           }
-          
+          if ( ( oneParamInBrackets )
+          &&   ( ( endsWithCommaX )
+          ||     ( endsWithCommaY )
+          ||     ( endsWithCommaZ ) )
+          &&   ( !endsWithClosingBrace ) )
+          {
+            // not a real (xx),xyz opcode
+            oneParamInBrackets = false;
+          }
         }
         else
         {
