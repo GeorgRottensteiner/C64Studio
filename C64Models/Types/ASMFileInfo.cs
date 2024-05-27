@@ -298,6 +298,16 @@ namespace RetroDevStudio.Types.ASM
       LocalLineIndex = -1;
       SrcInfo = null;
 
+      /*
+      var entry = SourceInfo.Values.Where( si => ( LineIndex >= si.GlobalStartLine ) && ( LineIndex < si.GlobalStartLine + si.LineCount ) ).FirstOrDefault();
+      if ( entry != null )
+      {
+        Filename        = entry.Filename;
+        LocalLineIndex  = LineIndex + entry.LocalStartLine - entry.GlobalStartLine;
+        SrcInfo         = entry;
+        return true;
+      }*/
+      
       foreach ( Types.ASM.SourceInfo sourceInfo in SourceInfo.Values )
       {
         if ( ( LineIndex >= sourceInfo.GlobalStartLine )

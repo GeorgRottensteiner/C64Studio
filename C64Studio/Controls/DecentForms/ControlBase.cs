@@ -79,23 +79,87 @@ namespace DecentForms
     [DllImport( "user32.dll", SetLastError = true )]
     static extern bool SetWindowPos( IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, UInt32 uFlags );
 
+
+
+    public static IntPtr GetWindowLong( IntPtr hWnd, int nIndex )
+    {
+      if ( IntPtr.Size == 4 )
+      {
+        return GetWindowLong32( hWnd, nIndex );
+      }
+      return GetWindowLongPtr64( hWnd, nIndex );
+    }
+
+
+    [DllImport( "user32.dll", EntryPoint = "GetWindowLong", CharSet = CharSet.Auto )]
+    private static extern IntPtr GetWindowLong32( IntPtr hWnd, int nIndex );
+
+    [DllImport( "user32.dll", EntryPoint = "GetWindowLongPtr", CharSet = CharSet.Auto )]
+    private static extern IntPtr GetWindowLongPtr64( IntPtr hWnd, int nIndex );
+
+    // This static method is required because legacy OSes do not support
+    // SetWindowLongPtr
+    public static IntPtr SetWindowLongPtr( IntPtr hWnd, int nIndex, IntPtr dwNewLong )
+    {
+      if ( IntPtr.Size == 8 )
+        return SetWindowLongPtr64( hWnd, nIndex, dwNewLong );
+      else
+        return new IntPtr( SetWindowLong32( hWnd, nIndex, dwNewLong.ToInt32() ) );
+    }
+
+    [DllImport( "user32.dll", EntryPoint = "SetWindowLong" )]
+    private static extern int SetWindowLong32( IntPtr hWnd, int nIndex, int dwNewLong );
+
+    [DllImport( "user32.dll", EntryPoint = "SetWindowLongPtr" )]
+    private static extern IntPtr SetWindowLongPtr64( IntPtr hWnd, int nIndex, IntPtr dwNewLong );
+
+    enum WindowLongFlags : int
+    {
+      GWL_EXSTYLE = -20,
+      GWLP_HINSTANCE = -6,
+      GWLP_HWNDPARENT = -8,
+      GWL_ID = -12,
+      GWL_STYLE = -16,
+      GWL_USERDATA = -21,
+      GWL_WNDPROC = -4,
+      DWLP_USER = 0x8,
+      DWLP_MSGRESULT = 0x0,
+      DWLP_DLGPROC = 0x4
+    }
+
+    enum WindowStyleFlags : long 
+    {
+      WS_BORDER	    = 0x00800000L,
+      WS_CAPTION    = 0x00C00000L,
+      WS_SYSMENU    = 0x00080000L,
+      WM_CAPTION    = 0x00C00000L,
+      WS_DLGFRAME	  = 0x00400000L
+    }
+
+    enum ExtendedWindowStyleFlags : long
+    {
+      WS_EX_CLIENTEDGE = 0x00000200L
+    }
+
+
+
     public static class SetWindowPosFlags
     {
       public static readonly uint NOSIZE = 0x0001,
-                                 NOMOVE = 0x0002,
-                                 NOZORDER = 0x0004,
-                                 NOREDRAW = 0x0008,
-                                 NOACTIVATE = 0x0010,
-                                 DRAWFRAME = 0x0020,
-                                 FRAMECHANGED = 0x0020,
-                                 SHOWWINDOW = 0x0040,
-                                 HIDEWINDOW = 0x0080,
-                                 NOCOPYBITS = 0x0100,
-                                 NOOWNERZORDER = 0x0200,
-                                 NOREPOSITION = 0x0200,
-                                 NOSENDCHANGING = 0x0400,
-                                 DEFERERASE = 0x2000,
-                                 ASYNCWINDOWPOS = 0x4000;
+                                  NOMOVE = 0x0002,
+                                  NOZORDER = 0x0004,
+                                  NOREDRAW = 0x0008,
+                                  NOACTIVATE = 0x0010,
+                                  DRAWFRAME = 0x0020,
+                                  FRAMECHANGED = 0x0020,
+                                  SHOWWINDOW = 0x0040,
+                                  HIDEWINDOW = 0x0080,
+                                  NOCOPYBITS = 0x0100,
+                                  NOOWNERZORDER = 0x0200,
+                                  NOREPOSITION = 0x0200,
+                                  NOSENDCHANGING = 0x0400,
+                                  DEFERERASE = 0x2000,
+                                  ASYNCWINDOWPOS = 0x4000;
     }
 
     public BorderStyle BorderStyle
@@ -109,6 +173,24 @@ namespace DecentForms
         if ( _BorderStyle != value )
         {
           _BorderStyle = value;
+
+          uint  windowStyles = (uint)GetWindowLong( Handle, (int)WindowLongFlags.GWL_STYLE );
+          uint  windowStylesEx = (uint)GetWindowLong( Handle, (int)WindowLongFlags.GWL_EXSTYLE );
+
+          switch ( _BorderStyle )
+          {
+            case BorderStyle.FLAT:
+              windowStylesEx &= ~(uint)ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE;
+              windowStyles |= (uint)WindowStyleFlags.WS_BORDER;
+              windowStyles &= ~(uint)WindowStyleFlags.WS_DLGFRAME;
+              break;
+            case BorderStyle.NONE:
+              windowStylesEx &= ~(uint)ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE;
+              windowStyles &= ~(uint)( WindowStyleFlags.WS_DLGFRAME | WindowStyleFlags.WS_BORDER );
+              break;
+          }
+          SetWindowLongPtr( Handle, (int)WindowLongFlags.GWL_STYLE, (IntPtr)windowStyles );
+          SetWindowLongPtr( Handle, (int)WindowLongFlags.GWL_EXSTYLE, (IntPtr)windowStylesEx );
 
           // force repaint/recalc client size
           SetWindowPos( Handle, HWND_TOP, 0, 0, 0, 0, SetWindowPosFlags.DRAWFRAME

@@ -26,6 +26,8 @@ namespace RetroDevStudio.Controls
       comboImportFromDefault.Items.Add( "Commander X16 Uppercase" );
       comboImportFromDefault.Items.Add( "Commander X16 Lowercase" );
       comboImportFromDefault.Items.Add( "Commander X16 ISO-8859-15" );
+      comboImportFromDefault.Items.Add( "Mega65 Full Color Mode Uppercase" );
+      comboImportFromDefault.Items.Add( "Mega65 Full Color Mode Lowercase" );
 
       comboImportFromDefault.SelectedIndex = 0;
     }
@@ -39,10 +41,7 @@ namespace RetroDevStudio.Controls
         case 0:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.UpperCaseCharsetC64.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );
@@ -50,10 +49,7 @@ namespace RetroDevStudio.Controls
         case 1:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.LowerCaseCharsetC64.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );
@@ -61,10 +57,7 @@ namespace RetroDevStudio.Controls
         case 2:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetViC20.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.UpperCaseCharsetViC20.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );
@@ -72,10 +65,7 @@ namespace RetroDevStudio.Controls
         case 3:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetViC20.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.LowerCaseCharsetViC20.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );
@@ -83,10 +73,7 @@ namespace RetroDevStudio.Controls
         case 4:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetCommanderX16.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );
@@ -94,10 +81,7 @@ namespace RetroDevStudio.Controls
         case 5:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetCommanderX16.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.UpperCaseCharsetCommanderX16.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );
@@ -105,10 +89,23 @@ namespace RetroDevStudio.Controls
         case 6:
           for ( int i = 0; i < 256; ++i )
           {
-            for ( int j = 0; j < 8; ++j )
-            {
-              Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.ISO8859CommanderX16.ByteAt( i * 8 + j ) );
-            }
+            ConstantData.ISO8859CommanderX16.CopyTo( Charset.Characters[i].Tile.Data, i * 8, 8 );
+            Charset.Characters[i].Tile.CustomColor = 1;
+          }
+          Editor.characterEditor.CharsetUpdated( Charset );
+          return true;
+        case 7:
+          for ( int i = 0; i < 256; ++i )
+          {
+            ConstantData.UpperCaseCharsetMega65FCM.CopyTo( Charset.Characters[i].Tile.Data, i * 64, 64 );
+            Charset.Characters[i].Tile.CustomColor = 1;
+          }
+          Editor.characterEditor.CharsetUpdated( Charset );
+          return true;
+        case 8:
+          for ( int i = 0; i < 256; ++i )
+          {
+            ConstantData.LowerCaseCharsetMega65FCM.CopyTo( Charset.Characters[i].Tile.Data, i * 64, 64 );
             Charset.Characters[i].Tile.CustomColor = 1;
           }
           Editor.characterEditor.CharsetUpdated( Charset );

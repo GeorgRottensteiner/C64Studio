@@ -34,6 +34,7 @@ namespace DecentForms
 
     private bool          _UpdateLocked = false;
     private bool          _RequiresUpdate = false;
+    private bool          _RequiresScrollbarUpdate = false;
 
     private System.Windows.Forms.ImageList     _ImageList = null;
 
@@ -183,6 +184,11 @@ namespace DecentForms
       if ( _UpdateLocked )
       {
         _UpdateLocked = false;
+        if ( _RequiresScrollbarUpdate )
+        {
+          _RequiresScrollbarUpdate = false;
+          UpdateScrollbarState();
+        }
         if ( _RequiresUpdate )
         {
           _RequiresUpdate = false;
@@ -195,6 +201,11 @@ namespace DecentForms
 
     private void UpdateScrollbarState()
     {
+      if ( _UpdateLocked )
+      {
+        _RequiresScrollbarUpdate = true;
+        return;
+      }
       bool    needVerticalScrollbar   = VerticalScrollbarRequired();
       bool    needHorizontalScrollbar = HorizontalScrollbarRequired();
 
@@ -441,6 +452,26 @@ namespace DecentForms
       get
       {
         return _FirstVisibleNode;
+      }
+    }
+
+
+
+    public TreeNode LastVisibleNode
+    {
+      get
+      {
+        var node = _FirstVisibleNode;
+        while ( node != null )
+        {
+          var nextNode = GetNextVisibleNode( node );
+          if ( nextNode == null )
+          {
+            return node;
+          }
+          node = nextNode;
+        }
+        return null;
       }
     }
 
@@ -700,6 +731,69 @@ namespace DecentForms
               // TODO - event
             }
           }
+          else if ( Event.Key == System.Windows.Forms.Keys.PageUp )
+          {
+            /*
+            int numItemsToWalk = ( ClientSize.Height + ItemHeight - 1 ) / ItemHeight;
+            var node = _SelectedNode;
+            while ( ( numItemsToWalk > 0 )
+            &&      ( node != null ) )
+            {
+              var nextNode = GetPreviousVisibleNode( node );
+              --numItemsToWalk;
+              if ( nextNode != null )
+              {
+                node = nextNode;
+              }
+              else
+              {
+                break;
+              }
+            }*/
+            _ScrollBar.ScrollBy( -( ClientSize.Height + ItemHeight - 1 ) / ItemHeight );
+            _SelectedNode = _FirstVisibleNode;
+          }
+          else if ( Event.Key == System.Windows.Forms.Keys.PageDown )
+          {
+            _ScrollBar.ScrollBy( ( ClientSize.Height + ItemHeight - 1 ) / ItemHeight );
+
+            // get last fully visible item
+            var node = _FirstVisibleNode;
+
+            // go down at the end of the screen, but still visible item (-1), also take in account any half displayed item (-1 again)
+            int numItemsToWalk = ( ClientSize.Height + ItemHeight - 1 ) / ItemHeight - 2;
+            while ( ( numItemsToWalk > 0 )
+            &&      ( node != null ) )
+            {
+              var nextNode = GetNextVisibleNode( node );
+              --numItemsToWalk;
+              if ( nextNode != null )
+              {
+                node = nextNode;
+              }
+              else
+              {
+                break;
+              }
+            }
+            _SelectedNode = node;
+          }
+          else if ( Event.Key == System.Windows.Forms.Keys.Home )
+          {
+            _ScrollBar.ScrollTo( 0 );
+            if ( Nodes.Count > 0 )
+            {
+              _SelectedNode = Nodes[0];
+            }
+          }
+          else if ( Event.Key == System.Windows.Forms.Keys.End )
+          {
+            _ScrollBar.ScrollTo( _ScrollBar.Maximum );
+            if ( Nodes.Count > 0 )
+            {
+              _SelectedNode = LastVisibleNode;
+            }
+          }
           else if ( Event.Key == System.Windows.Forms.Keys.Up )
           {
             if ( _SelectedNode == null )
@@ -737,7 +831,8 @@ namespace DecentForms
           {
             if ( _SelectedNode != null )
             {
-              if ( ( _SelectedNode.Nodes.Count == 0 )
+              if ( ( ( _SelectedNode.Nodes.Count == 0 )
+              ||     ( !_SelectedNode.IsExpanded ) )
               &&   ( _SelectedNode.Parent != null ) )
               {
                 Invalidate( _SelectedNode.Bounds );
@@ -770,62 +865,7 @@ namespace DecentForms
               }
             }
           }
-            /*
-            else if ( Event.Key == System.Windows.Forms.Keys.PageUp )
-            {
-              int   newIndex = _SelectedNode;
-              if ( ( _SelectedNode == -1 )
-              &&   ( Nodes.Count > 0 ) )
-              {
-                newIndex = Nodes.Count - 1;
-              }
-              else
-              {
-                newIndex = Math.Max( 0, _SelectedNode - VisibleItemCount + 1 );
-              }
-              if ( newIndex != _SelectedNode )
-              {
-                SelectedIndex = newIndex;
-              }
-            }
-            else if ( Event.Key == System.Windows.Forms.Keys.PageDown )
-            {
-              int   newIndex = _SelectedNode;
-              if ( ( _SelectedNode == -1 )
-              &&   ( Nodes.Count > 0 ) )
-              {
-                newIndex = 0;
-              }
-              else
-              {
-                newIndex = Math.Min( Nodes.Count - 1, _SelectedNode + VisibleItemCount - 1 );
-              }
-              if ( newIndex != _SelectedNode )
-              {
-                SelectedIndex = newIndex;
-              }
-            }
-            else if ( Event.Key == System.Windows.Forms.Keys.Home )
-            {
-              if ( Nodes.Count > 0 )
-              {
-                if ( _SelectedNode != 0 )
-                {
-                  SelectedIndex = 0;
-                }
-              }
-            }
-            else if ( Event.Key == System.Windows.Forms.Keys.End )
-            {
-              if ( Nodes.Count > 0 )
-              {
-                if ( _SelectedNode + 1 != Nodes.Count )
-                {
-                  SelectedIndex = Nodes.Count - 1;
-                }
-              }
-            }*/
-            break;
+          break;
         case ControlEvent.EventType.KEY_UP:
           if ( Focused )
           {
@@ -884,7 +924,7 @@ namespace DecentForms
           {
             loc = TreeViewHitTestLocations.ONITEMLABEL;
           }
-          else if ( GetToggleRect( treeNode ).Contains( X, Y ) )
+          else if ( GetToggleRectForMouse( treeNode ).Contains( X, Y ) )
           {
             loc = TreeViewHitTestLocations.ONITEMBUTTON;
           }
@@ -994,6 +1034,20 @@ namespace DecentForms
       }
       UpdateScrollbarState();
       Invalidate();
+    }
+
+
+
+    // lets mouse register on whole node height +2 extra pixels left and right
+    internal Rectangle GetToggleRectForMouse( TreeNode Node )
+    {
+      var rect = Node.Bounds;
+      var visualRect = GetToggleRect( Node );
+
+      rect.X = visualRect.X - 2;
+      rect.Width = visualRect.Width + 4;
+
+      return rect;
     }
 
 

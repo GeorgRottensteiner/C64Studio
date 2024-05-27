@@ -192,7 +192,6 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      Debug.Log( "Refresh start" );
       if ( _FileInfoPerFileCache.TryGetValue( Doc.DocumentInfo.FullPath, out Types.ASM.FileInfo cachedASMFileInfo ) )
       {
         if ( cachedASMFileInfo != Doc.DocumentInfo.ASMFileInfo )
@@ -203,9 +202,7 @@ namespace RetroDevStudio.Documents
       }
       _FileInfoPerFileCache.Add( Doc.DocumentInfo.FullPath, Doc.DocumentInfo.ASMFileInfo );
 
-      Debug.Log( "pos a" );
       StoreOpenNodes();
-      Debug.Log( "pos b" );
 
       ActiveDocumentInfo    = Doc.DocumentInfo;
       LabelExplorerProject  = Doc.DocumentInfo.Project;
@@ -213,9 +210,7 @@ namespace RetroDevStudio.Documents
       ActiveASMFileInfo     = Doc.DocumentInfo.ASMFileInfo;
       LabelExplorerTokens   = Doc.DocumentInfo.KnownTokens;
 
-      Debug.Log( "pos c" );
       RefreshNodes();
-      Debug.Log( "Refresh done" );
     }
 
 
@@ -240,7 +235,6 @@ namespace RetroDevStudio.Documents
       IList<SymbolInfo>     sortedTokens = null;
 
       // sort by line number
-      Debug.Log( "Pre sort" );
       if ( Core.Settings.LabelExplorerSortByIndex )
       {
         GR.Collections.MultiMap<int, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
@@ -281,8 +275,6 @@ namespace RetroDevStudio.Documents
         sortedTokens = sortedTokensInner.Values;
       }
 
-      Debug.Log( "Post sort" );
-
       string curZone = "";
 
       var parentNode = new DecentForms.TreeView.TreeNode();
@@ -296,7 +288,7 @@ namespace RetroDevStudio.Documents
       zoneNodes.Add( parentNode.Text, globalZone );
 
       // add zone nodes first
-      Debug.Log( "Zone Nodes" );
+      // TODO - slow here
       foreach ( var token in sortedTokens )
       {
         if ( token.Type == SymbolInfo.Types.ZONE )
@@ -320,7 +312,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      Debug.Log( "Child Nodes" );
       // now add child nodes
       parentNode = globalZone;
       foreach ( var token in sortedTokens )
@@ -395,7 +386,6 @@ namespace RetroDevStudio.Documents
         }
 
         // add references
-        //Debug.Log( "ref" );
         foreach ( var reference in token.References )
         {
           var subNode = new DecentForms.TreeView.TreeNode();
@@ -424,7 +414,6 @@ namespace RetroDevStudio.Documents
 
           node.Nodes.Add( subNode );
         }
-        //Debug.Log( "ref done" );
 
         if ( !token.Name.StartsWith( curZone + "." ) )
         {
@@ -440,7 +429,6 @@ namespace RetroDevStudio.Documents
         }
 
         // cut off zone
-        //Debug.Log( "zone cut" );
         try
         {
           // find parent node
@@ -489,15 +477,12 @@ namespace RetroDevStudio.Documents
         {
           Debug.Log( ex.Message );
         }
-        //Debug.Log( "zone cut done" );
-
         if ( expandedNodes.ContainsKey( GenerateNodeKey( node ) ) )
         {
           node.Expand();
         }
       }
 
-      Debug.Log( "post Zone Nodes" );
       NodeRoot.Expand();
 
       if ( expandedNodes.ContainsKey( GenerateNodeKey( globalZone ) ) )
@@ -505,10 +490,7 @@ namespace RetroDevStudio.Documents
         globalZone.Expand();
       }
 
-      Debug.Log( "pre end update" );
-
       treeProject.EndUpdate();
-      Debug.Log( "end update" );
     }
 
 

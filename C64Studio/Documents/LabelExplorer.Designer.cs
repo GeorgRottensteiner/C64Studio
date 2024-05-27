@@ -49,6 +49,7 @@
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.treeProject.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.treeProject.ImageList = this.m_ImageListOutline;
       this.treeProject.Location = new System.Drawing.Point(0, 28);
       this.treeProject.Name = "treeProject";

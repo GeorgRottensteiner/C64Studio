@@ -178,12 +178,12 @@ namespace DecentForms
           }
           int   level = Level;
           int   visualIndex = VisualIndex - _Owner._PreviousScrollPosition;
-          int   offsetoOfTextLabel = _Owner.ExpandToggleItemSize + _Owner._SubNodeIndent * level;
+          int   offsetOfTextLabel = _Owner.ExpandToggleItemSize + _Owner._SubNodeIndent * level;
           if ( _Owner.ImageList != null )
           {
-            offsetoOfTextLabel += _Owner.ItemHeight;
+            offsetOfTextLabel += _Owner.ItemHeight;
           }
-          return new Rectangle( offsetoOfTextLabel, visualIndex *  _Owner.ItemHeight, _TextWidth, _Owner.ItemHeight );
+          return new Rectangle( offsetOfTextLabel, visualIndex *  _Owner.ItemHeight, _TextWidth, _Owner.ItemHeight );
         }
       }
 
