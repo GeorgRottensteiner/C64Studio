@@ -103,6 +103,8 @@ namespace RetroDevStudio.Documents
 
     private System.Drawing.Point        m_LastPaintedPixelPos = new System.Drawing.Point();
 
+    private System.Drawing.Point        m_LastPixelUnderMouse = new Point();
+
 
 
     public GraphicScreenEditor( StudioCore Core )
@@ -195,6 +197,15 @@ namespace RetroDevStudio.Documents
 
       pictureEditor.KeyUp += PictureEditor_KeyUp;
       pictureEditor.LostFocus += PictureEditor_LostFocus;
+
+      UpdateCursorInfo();
+    }
+
+
+
+    private void UpdateCursorInfo()
+    {
+      labelCursorInfo.Text = $"{m_LastPixelUnderMouse.X}, {m_LastPixelUnderMouse.Y} - {m_LastPixelUnderMouse.X / 8}, {m_LastPixelUnderMouse.Y / 8}";
     }
 
 
@@ -269,17 +280,22 @@ namespace RetroDevStudio.Documents
 
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
-      int dx = ( pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / 40;
-      int dy = ( pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / 25;
+      int pixelX = ToLocalX( X );
+      int pixelY = ToLocalY( Y );
+      int charX = pixelX / 8;
+      int charY = pixelY / 8;
+      bool mouseMoved = false;
 
-      int pixelOffsetX = ( m_GraphicScreenProject.ScreenOffsetX % m_ZoomFactor ) * dx / m_ZoomFactor;
-      int pixelOffsetY = ( m_GraphicScreenProject.ScreenOffsetY % m_ZoomFactor ) * dy / m_ZoomFactor;
-
-      int     pixelX = ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX * 8 / m_ZoomFactor;
-      int     pixelY = ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY * 8 / m_ZoomFactor;
-
-      int     charX = ( ( X + pixelOffsetX ) / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / 40 ) + m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor;
-      int     charY = ( ( Y + pixelOffsetY ) / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / 25 ) + m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor;
+      if ( m_LastPixelUnderMouse.X != pixelX )
+      {
+        m_LastPixelUnderMouse.X = pixelX;
+        mouseMoved = true;
+      }
+      if ( m_LastPixelUnderMouse.Y != pixelY )
+      {
+        m_LastPixelUnderMouse.Y = pixelY;
+        mouseMoved = true;
+      }
 
       if ( pixelX < 0 )
       {
@@ -595,10 +611,10 @@ namespace RetroDevStudio.Documents
             break;
           case PaintTool.DRAW_LINE:
             {
-              int     x1 = m_DragStartPoint.X;
-              int     x2 = m_DragCurrentPoint.X;
-              int     y1 = m_DragStartPoint.Y;
-              int     y2 = m_DragCurrentPoint.Y;
+              int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
+              int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
+              int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+              int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
 
               if ( m_GraphicScreenProject.MultiColor )
               {
@@ -607,6 +623,11 @@ namespace RetroDevStudio.Documents
               }
 
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
+
+              x1 = m_DragStartPoint.X;
+              y1 = m_DragStartPoint.Y;
+              x2 = m_DragCurrentPoint.X;
+              y2 = m_DragCurrentPoint.Y;
               m_GraphicScreenProject.Image.Line( x1, y1, x2, y2, m_CurrentColor );
               if ( m_GraphicScreenProject.MultiColor )
               {
@@ -653,6 +674,10 @@ namespace RetroDevStudio.Documents
             m_CurrentColor = (byte)m_GraphicScreenProject.Image.GetPixel( pixelX, pixelY );
             break;
         }
+      }
+      if ( mouseMoved )
+      {
+        UpdateCursorInfo();
       }
     }
 
@@ -1354,10 +1379,10 @@ namespace RetroDevStudio.Documents
 
     private void Redraw()
     {
-      m_GraphicScreenProject.Image.DrawTo( pictureEditor.DisplayPage, -m_GraphicScreenProject.ScreenOffsetX * 8 / m_ZoomFactor, -m_GraphicScreenProject.ScreenOffsetY * 8 / m_ZoomFactor );
+      m_GraphicScreenProject.Image.DrawTo( pictureEditor.DisplayPage, -m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor, -m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor );
 
-      int   leftX = m_GraphicScreenProject.ScreenOffsetX * ( 8 / m_ZoomFactor );
-      int   leftY = m_GraphicScreenProject.ScreenOffsetY * ( 8 / m_ZoomFactor );
+      int   leftX = m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor;
+      int   leftY = m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor;
 
       switch ( m_PaintTool )
       {
@@ -2809,10 +2834,10 @@ namespace RetroDevStudio.Documents
     private void AdjustScrollbars()
     {
       screenHScroll.Minimum = 0;
-      screenHScroll.SmallChange = 1;
-      screenHScroll.LargeChange = 1;
-      screenVScroll.SmallChange = 1;
-      screenVScroll.LargeChange = 1;
+      screenHScroll.SmallChange = m_ZoomFactor;
+      screenHScroll.LargeChange = m_ZoomFactor;
+      screenVScroll.SmallChange = m_ZoomFactor;
+      screenVScroll.LargeChange = m_ZoomFactor;
 
       int   trueWidth = m_GraphicScreenProject.Image.Width * m_ZoomFactor;
       int   trueHeight = m_GraphicScreenProject.Image.Height * m_ZoomFactor;
@@ -2825,12 +2850,12 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        screenHScroll.Maximum = ( trueWidth - 320 + 7 ) / 8;
+        screenHScroll.Maximum = trueWidth - 320;
         screenHScroll.Enabled = true;
-      }
-      if ( m_GraphicScreenProject.ScreenOffsetX > screenHScroll.Maximum )
-      {
-        m_GraphicScreenProject.ScreenOffsetX = screenHScroll.Maximum;
+        if ( m_GraphicScreenProject.ScreenOffsetX > screenHScroll.Maximum )
+        {
+          m_GraphicScreenProject.ScreenOffsetX = screenHScroll.Maximum;
+        }
       }
 
       screenVScroll.Minimum = 0;
@@ -2842,12 +2867,12 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        screenVScroll.Maximum = ( trueHeight - 200 + 7 ) / 8;
+        screenVScroll.Maximum = trueHeight - 200;
         screenVScroll.Enabled = true;
-      }
-      if ( m_GraphicScreenProject.ScreenOffsetY > screenVScroll.Maximum )
-      {
-        m_GraphicScreenProject.ScreenOffsetY = screenVScroll.Maximum;
+        if ( m_GraphicScreenProject.ScreenOffsetY > screenVScroll.Maximum )
+        {
+          m_GraphicScreenProject.ScreenOffsetY = screenVScroll.Maximum;
+        }
       }
     }
 
@@ -3019,7 +3044,7 @@ namespace RetroDevStudio.Documents
 
       btnApplyScreenSize.Enabled = ( ( newWidth > 0 ) 
                                 &&   ( ( newWidth % 8 ) == 0 )
-                                &&   ( newHeight> 0 ) 
+                                &&   ( newHeight > 0 ) 
                                 &&   ( ( newHeight % 8 ) == 0 ) );
     }
 
@@ -3030,8 +3055,10 @@ namespace RetroDevStudio.Documents
       int     newWidth  = GR.Convert.ToI32( editScreenWidth.Text );
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
-      btnApplyScreenSize.Enabled = ( ( newWidth > 0 )
-                                &&   ( newHeight > 0 ) );
+      btnApplyScreenSize.Enabled = ( ( newWidth > 0 ) 
+                                &&   ( ( newWidth % 8 ) == 0 )
+                                &&   ( newHeight > 0 ) 
+                                &&   ( ( newHeight % 8 ) == 0 ) );
     }
 
 
@@ -3847,13 +3874,13 @@ namespace RetroDevStudio.Documents
 
       //if ( m_GraphicScreenProject.Image.Width < pictureEditor.DisplayPage.Width )
 
-      if ( m_GraphicScreenProject.ScreenWidth - m_GraphicScreenProject.ScreenOffsetX < pictureEditor.DisplayPage.Width )
+      if ( m_GraphicScreenProject.ScreenWidth - m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor < pictureEditor.DisplayPage.Width )
       {
-        fillWidth = pictureEditor.DisplayPage.Width - ( m_GraphicScreenProject.ScreenWidth - m_GraphicScreenProject.ScreenOffsetX );
+        fillWidth = pictureEditor.DisplayPage.Width - ( m_GraphicScreenProject.ScreenWidth - m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor );
       }
-      if ( m_GraphicScreenProject.ScreenHeight - m_GraphicScreenProject.ScreenOffsetY < pictureEditor.DisplayPage.Height )
+      if ( m_GraphicScreenProject.ScreenHeight - m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor < pictureEditor.DisplayPage.Height )
       {
-        fillHeight = pictureEditor.DisplayPage.Height - ( m_GraphicScreenProject.ScreenHeight - m_GraphicScreenProject.ScreenOffsetY );
+        fillHeight = pictureEditor.DisplayPage.Height - ( m_GraphicScreenProject.ScreenHeight - m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor );
       }
       if ( ( fillWidth > 0 )
       &&   ( fillHeight > 0 ) )
@@ -3889,32 +3916,32 @@ namespace RetroDevStudio.Documents
 
     private int ToScreenX( int X )
     {
-      int   leftX = m_GraphicScreenProject.ScreenOffsetX * ( 8 / m_ZoomFactor );
+      int   leftX = m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor;
 
-      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
+      return ( ( X - leftX ) * pictureEditor.ClientRectangle.Width * m_ZoomFactor ) / 320;
     }
 
 
 
     private int ToScreenY( int Y )
     {
-      int   leftY = m_GraphicScreenProject.ScreenOffsetY * ( 8 / m_ZoomFactor );
+      int   leftY = m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor;
 
-      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / Math.Max( 200, m_GraphicScreenProject.ScreenHeight );
+      return ( ( Y - leftY ) * pictureEditor.ClientRectangle.Height * m_ZoomFactor ) / 200;
     }
 
 
 
     private int ToLocalX( int X )
     {
-      return ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX * 8 / m_ZoomFactor;
+      return ( ( X / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetX / m_ZoomFactor;
     }
 
 
 
     private int ToLocalY( int Y )
     {
-      return ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY * 8 / m_ZoomFactor;
+      return ( ( Y / m_ZoomFactor ) / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height / m_ZoomFactor ) ) + m_GraphicScreenProject.ScreenOffsetY / m_ZoomFactor;
     }
 
 
