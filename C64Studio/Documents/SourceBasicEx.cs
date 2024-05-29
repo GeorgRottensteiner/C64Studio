@@ -2182,6 +2182,8 @@ namespace RetroDevStudio.Documents
         Text = MakeLowerCase( Text, Core.Settings.BASICUseNonC64Font );
       }
 
+      Text = ReplacePetCatCompatibilityChars( Text, out bool hadError );
+
       int scrollOffset = editSource.VerticalScroll.Value;
       editSource.Navigate( editSource.Selection.Start.iLine );
 
