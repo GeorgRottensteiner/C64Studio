@@ -17,6 +17,46 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+30.05.2024 - 7.8:         Fix: BASIC files opened from FileManager (extracted from image) did not convert PETCAT compatilibity chars.
+                          Fix: Graphic Screen Editor - Zoom was displayed messed up
+                          Add: Default charsets for Mega65 FCM Add/Fix: Label Explorer using DecentForms TreeView
+                          Fix: A few PDS mismatches
+                          WIP: More treeview
+                          Fix scrollbar issues, label explorer attempt of speedup
+                          WIP: More TreeView shenanigans
+                          Fix: Solution explorer, copying mapped file inside a subfolder
+                          WIP: DecentForms TreeView
+                          Fix: BASIC Strip spaces does strip non relevant spaces in DATA literals
+                          Fix: BASIC, do not strip blanks from elements
+                          Fix: Do not evaluate text mapping inside text constants
+                          GUI: Replace buttons with fully custom one for proper theming
+                          Add: BASIC show warning if missing line numbers are referenced
+                          Add/Fix: Disassembler properly display named labels when inside disassembled code
+                          Add: Media type enums used as base for new item menu
+                          Add: Disassembler export/import named labels
+                          Fix: Commodore Disk formats delete now really removes all remnants of file, not only marks as scratched
+                          Fix: !Byte/!word/!dword handling of single char string literals with + omitted byte Fix: flipped memory request in VICE remote debugger is reordered
+                          Fix: HexView would jump to cursor with any pressed key, even when unsensical) Add: !source PO allows "once" argument Upd: Tuned Simon's BASIC dialect file
+                          Add: Additional memory views are restored on startup Fix: All memory views are now refreshed instead of only the last touched one
+                          Add: Save/Restore Debug Memory offset settings
+                          Add: Debug Memory View: Byte offset option Fix: Debug oldVICE interface, step out would not refresh memory/registers
+                          Fix: Char editor - broken mirror/rotate/shift for NCM 16 bit characters Fix: VICE remote debugger output line breaks Fix: Disassembler not following setting when disassembling to external file Fix: assembler -> source info wrong for nested for loops
+                          Fix: T64 export of file types WIP: Export of files from Amiga dsk file
+                          Fix: charset/chars screen editor, pasted cut off Mega65 NCM images (8x8 instead of 16x8 pixel)
+                          Fix: Potential endless loop when interpreting an opcode as label due to !cpu not known WIP: directory traversal in File manager
+                          BASIC: Try to adjust text casing on pasting
+                          WIP: Amiga adf Disk format
+                          Fix: Graphic screen wrong sizes on images < 320x200
+                          Add: Open File dialog now also allows single file binaries (prg, t64...) Fix: File Manager allowing also opening of read only files for BASIC
+                          Fix: Label Explorer toggles properly between BASIC label and regular mode
+                          WIP: label explorer fix for label mode
+                          Fix: label file is now written in order of appearance add: Option to skip writing assembler ID labels to label file
+                          Upd: BASIC Dialect file for TSB Add: Option to show/not show output display and compiler messages on build
+                          Fix: different integer types not compatible with operands Fix: Source info offset off by one (having two !for loops behind each other could lead to wrongly displayed line byte size
+                          Add: !sl - label file is written to path of source file with directive Add: If a label file is created it will be shown in output display Fix: Opening an already opened file without solution will display already open document instead of a second copy
+                          Fix: Compiler Messages menu item not checked if document is auto-shown Upd: Tuned Simons' BASIC dialect file
+                          Fix: String literal operating with + on single character strings (add instead of append)
+
 19.02.2024 - 7.7:         Add: 68k support (no opcode size fallback yet, but feature complete)
                           Add: Copy to clipboard adds column selection mode flag 
                           WIP: Paste column selection block from clipboard inserts all lines
