@@ -99,6 +99,11 @@ namespace RetroDevStudio.Dialogs
         {
           item.ImageIndex = (int)element.DocumentInfo.Type;
         }
+        else
+        {
+          // binary for non project files
+          item.ImageIndex = 12;
+        }
 
         if ( state.Filename == _Element.Filename )
         {

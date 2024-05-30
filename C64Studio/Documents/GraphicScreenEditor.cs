@@ -387,8 +387,8 @@ namespace RetroDevStudio.Documents
                   --actDY;
                 }
                 m_DragPoint.Offset( -tempDX * requiredDelta, -tempDY * requiredDelta );
-                screenHScroll_Scroll( screenHScroll, new ScrollEventArgs( ScrollEventType.ThumbPosition, screenHScroll.Value ) );
-                screenVScroll_Scroll( screenVScroll, new ScrollEventArgs( ScrollEventType.ThumbPosition, screenVScroll.Value ) );
+                screenHScroll_Scroll( screenHScroll );
+                screenVScroll_Scroll( screenVScroll );
               }
             }
           }
@@ -2878,25 +2878,22 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void screenHScroll_Scroll( object sender, ScrollEventArgs e )
+    private void screenHScroll_Scroll( DecentForms.ControlBase Sender )
     {
-      if ( m_GraphicScreenProject.ScreenOffsetX != e.NewValue )
+      if ( m_GraphicScreenProject.ScreenOffsetX != screenHScroll.Value )
       {
-        m_GraphicScreenProject.ScreenOffsetX = e.NewValue;
-
-        Debug.Log( $"Scrollx {e.NewValue}" );
+        m_GraphicScreenProject.ScreenOffsetX = screenHScroll.Value;
         Redraw();
       }
     }
 
 
 
-    private void screenVScroll_Scroll( object sender, ScrollEventArgs e )
+    private void screenVScroll_Scroll( DecentForms.ControlBase Sender )
     {
-      if ( m_GraphicScreenProject.ScreenOffsetY != e.NewValue )
+      if ( m_GraphicScreenProject.ScreenOffsetY != screenVScroll.Value )
       {
-        m_GraphicScreenProject.ScreenOffsetY = e.NewValue;
-        Debug.Log( $"Scrolly {e.NewValue}" );
+        m_GraphicScreenProject.ScreenOffsetY = screenVScroll.Value;
         Redraw();
       }
     }
@@ -4017,7 +4014,7 @@ namespace RetroDevStudio.Documents
         oldValueH = Math.Max( 0, oldValueH );
         oldValueH = Math.Min( screenHScroll.Maximum, oldValueH );
         screenHScroll.Value = oldValueH;
-        screenHScroll_Scroll( this, new ScrollEventArgs( ScrollEventType.ThumbPosition, oldValueH ) );
+        screenHScroll_Scroll( screenHScroll );
 
         //screenVScroll.Value += centerY * m_ZoomFactor;
 

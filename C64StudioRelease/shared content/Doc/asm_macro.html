@@ -2617,7 +2617,7 @@
     This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br />
     <br />
     <br />
-    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, MAGICDESK32BIN, MAGICDESK32CRT, MAGICDESK128BIN, MAGICDESK128CRT, MAGICDESK256BIN, MAGICDESK256CRT, MAGICDESK512BIN, MAGICDESK512CRT, MAGICDESK1MBIN, MAGICDESK1MCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br />
+    Valid output types are CBM, PLAIN, D64, T64, DSK, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, MAGICDESK32BIN, MAGICDESK32CRT, MAGICDESK128BIN, MAGICDESK128CRT, MAGICDESK256BIN, MAGICDESK256CRT, MAGICDESK512BIN, MAGICDESK512CRT, MAGICDESK1MBIN, MAGICDESK1MCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br />
     <br />
     For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br />
     <br />
@@ -2683,16 +2683,21 @@
     <br />
   </div>
   <a name="source"></a>
-  <H2>!SOURCE &lt;file name&gt;</H2>
+  <a name="src"></a>
+  <H2>!SOURCE &lt;file name&gt;[,once]</H2>
   <div id="mybody">
     This pseudo op includes another source file at the current location. File names are used relative to the file containing the directive.<br />
     <br />
     If the file name is given in &lt;,&gt; the file is searched for in the configured library paths.<br />
     <br />
+    If ONCE is given as parameter C64Studio remembers to include the given file only once. Any further include statement (with ONCE) will skip over the file>.<br />
     <br />
     <div id="code">
       <br />      !source "tiles.asm"
       !source &lt;kernal.asm&gt;
+
+      !source "tiles.asm",once
+      !source &lt;kernal.asm&gt;,once
     </div>
     <br />
     <br />

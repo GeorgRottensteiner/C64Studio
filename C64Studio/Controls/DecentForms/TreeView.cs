@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Image;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -60,6 +61,8 @@ namespace DecentForms
       Controls.Add( _ScrollBarH );
       _ScrollBar.Scroll += _ScrollBar_Scroll;
       _ScrollBarH.Scroll += _ScrollBarH_Scroll;
+
+      ItemHeight = (int)( ItemHeight * DPIHandler.DPIY / 96.0f + 0.5f );
       UpdateScrollbarState();
     }
 

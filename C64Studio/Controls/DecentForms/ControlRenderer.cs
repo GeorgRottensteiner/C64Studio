@@ -784,7 +784,7 @@ namespace DecentForms
 
     private void DrawImage( System.Drawing.Image Image, Rectangle ImageRect )
     {
-      _G.DrawImage( Image, ImageRect.X, ImageRect.Y, Image.Width, Image.Height );
+      _G.DrawImage( Image, ImageRect.X - _DisplayOffsetX, ImageRect.Y - _DisplayOffsetY, Image.Width, Image.Height );
     }
 
 
@@ -792,8 +792,8 @@ namespace DecentForms
     private void DrawImageCentered( System.Drawing.Image Image, Rectangle ImageRect, int DX = 0, int DY = 0 )
     {
       _G.DrawImage( Image, 
-                    ImageRect.X + ( ImageRect.Width - Image.Width ) / 2 + DX,
-                    ImageRect.Y + ( ImageRect.Height - Image.Height ) / 2 + DY,
+                    ImageRect.X + ( ImageRect.Width - Image.Width ) / 2 + DX - _DisplayOffsetX,
+                    ImageRect.Y + ( ImageRect.Height - Image.Height ) / 2 + DY - _DisplayOffsetY,
                     Image.Width, Image.Height );
     }
 
@@ -1099,7 +1099,7 @@ namespace DecentForms
           {
             imageIndex = 0;
           }
-          DrawImage( treeView.ImageList.Images[imageIndex], imageRect );
+          DrawImageCentered( treeView.ImageList.Images[imageIndex], imageRect );
         }
 
 

@@ -2,6 +2,6 @@ namespace RetroDevStudio
 {
   public static class Version
   {
-    public const string       VersionBase = "7.7";
+    public const string       VersionBase = "7.8";
   }
 }

@@ -18,30 +18,6 @@
     wenn an dieser Stelle ein Label erstellt würde. Derzeit werden Bezüge zwar auf dieses Label umgestellt, aber 
     am Anfang in den Deklarationen ein Label mit festem Speicherbezug erstellt.
 
-320x200:
-*1
-16 pixel pro zeichen
-Range 0x0    VS 40x25
-
-*2
-32 pixel pro zeichen
-0, 16
-left 0,4,8,12,16,...
-Range 40x25  VS 40x25
-
-
-*4
-64 pixel pro zeichen
-0, 16, 32, 48
-left 0,2,4,6,8,10,12,...
-Rang 120x75  VS 40x25
-
-*8
-128 pixel pro zeichen
-0, 16, 32, 48, ...
-left 0,1,2,3,4,...
-Range 280x175  VS 40x25
-
 C64Studio
 o Memory Map:
   $0801 - $1FFE - Start
@@ -71,13 +47,12 @@ o -> Damit ich im geliebten Studio im C64 Basic Modus lange Variablennamen verwe
   So könnte man noch schöneren Code basteln und das Listing auf dem C64 enthält dann halt die in der Tabelle definierten Kurznamen fröhlich.
 + BASIC: Lange Variablennamen erkennen und automatisch durch kürzere ersetzen, und dabei auch noch eventuelle Duplikate vermeiden, interessante Idee :)
 
-o Breakpoints speichern!
+o Breakpoints speichern! -> im Projekt (plus zusätzlich global bei non-projects)
 o Hot-Reload in VICE
 o BASIC - Ein #IFDEF ähnliches Konstrukt, um verschiedene BASIC Versionen im selben Code zu verwenden wär super.
 o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
   Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 
 o Schön wäre es wenn man im "Memory View" Fenster, nachdem man "Goto Address" angeklickt hat ein Label eingeben könnte.
-o BASIC: Die Kommentier & Unkommentierfunktion würde ich mir auch für Basic mit dem Prefix # wünschen.
 o Allow change of the default palettes
 o Now that you have added the name of the current solution in the title bar of the program, I see that the name of the solution does 
   not match the name of the new folder but the name of the previous solution (match name of solution to filename!)
@@ -89,7 +64,7 @@ Beyond all this, at the moment, what is the most practical and fastest way to cr
 to import the files and without having to recreate the virtual folders every time (also considering that every time I create a virtual folder, I have 
 to drag and drop files one by one)?
 
-o Screen-Editor Shift UDLR, Mirror
+o Screen-Editor Mirror
 o Basic-Dateien im VICE-petcat-Format schreiben lassen? 
 o Would it be possible to see the total number of cycles taken by a macro?
 o suppose that in the sprite editor I have a hundred sprites and that I want to insert one at position 20. How can I do this? I don't see the Move 
@@ -106,7 +81,7 @@ o I used Find/Replace to replace all occurrences of "_Lo" with "_lo". The next d
   all occurrences of "_lo" with "_Lo", but if I wrote "_lo" in the "Search for" combobox, it immediately became "_Lo" (like the 
   first time I entered it). I had to use notepad++ and manually edit the "settings.dat" file to be able to do it.
   The same problem occurs with the "Replace with" combo.
-o The pixels in the sprite editor preview are wider than they are high. But I probably already told you this.
+o The pixels in the sprite editor preview are wider than they are high
 o If you move the cursor inside a pair of brackets, they are highlighted. If you move the cursor outside the brackets, 
   they remain highlighted. Only by moving the cursor once more the highlighting of the brackets is removed.
 o suppose I have the following line:
@@ -245,7 +220,6 @@ o Label with : are warning-marked on the wrong line
 o Charpad format version 6
 o MemViewer: Speicheradresse und nur ein Byte, alles untereinander? 
              Disassembly
-o BASIC - Auto-fix casing on opening a file
 o Charset editor:
     Ctrl-Clicking for single character toggling
     Open standalone charset editor (and other editors), not only or even instead of the built in one
@@ -272,19 +246,6 @@ o BASIC -> Optimierung beim "Compile", REM entfernen, 0 durch ., usw.
 o BASIC -> Run/Debug Configuration
 o BASIC -> Debug?
 o Search Bookmarks-> Functionality
-o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)
-o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 
-  Beim importieren wird aber nichts angezeigt. Auch skuril: Wenn ich beispielsweise die Hintergrundfarbe von Türkis (03) 
-  auf Grün (05) ändere, während der Schieberegler nicht oben ist, dann werden nicht alle 200 Zeilen grün, sondern oben und 
-  unten bleiben Teile türkis.
-  Das Problem scheint erst aufzutreten, wenn ich den x- oder den y-Wert der Screen-Größe hochschraube. Mit den Standard 40x25 
-  hab ich keine Probleme.
-o Still sometimes crashing:
-  im editor -> alles markiert
-  strg+h -> replace A with B
-  button -> replace all
-  löscht den gesamten code, studio stürzt ab und gibt beigefügte meldung aus.
-  Stacktrace in Auflistung wurde geändert in Forms.Application.ExitInternal
 o Custom Build: Show analysis of configured target file/type (load address, size?)
 o Path editor: I have a suggestion for a feature which I think would be great for C64 studio.I think it might make game programmers quite happy. 
   How about something like a tool in which generates path based movement for sprites. Basically, create some basic path trails for sprite movement. 
@@ -292,21 +253,14 @@ o Path editor: I have a suggestion for a feature which I think would be great fo
     X Position start, X Position MSB, X Position end, X Position Speed, X Position Movement Duration 
     Y Position start, Y Position end, Y Position Speed, Y Position Movement Duration
 o SID editor
-o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
-o PDS: lda #< should use lo/hi of the whole expression
-       o re-introduce lda #< to behave like hi/lo is part of the mnemonic for ACME and CBM PRG Studio (Option Assembler)
 o wie kann ich beim laufenden debuggen den Speicher ändern? (die Register sind ja änderbar - der Mem auch?)
-o wie kann ich dem Debugger beibringen, dass er das Mem-Fenster weiterhin mit der gew. Adresse anzeigt?
 o Start without existing settings, code colors blank!! Crash on exit?
 o Basic-Loader (ASM to BASIC-Loader)
 o Zeilenabstand nicht fixiert, einstellbar
 o when creating a new project, shouldn't you clear the breakpoint list ?
 o Char screen editor, move chars, optionally do not move other chars around
-o Version control support, GIT/SVN (how?)
 o Comparison of file (as addon to version control)
-o Intellisense in Kommentaren nicht mehr
 o Bessere Anzeige der optionalen Zyklen
-o Combined line cycle and byte count info (currently only info of first line is shown in border!)
 o TODO - Nested for loops using a local label from outside:
     .LABEL
     !for ROW = 0 to 5
@@ -325,7 +279,6 @@ o Linux:
   WINEPREFIX=~/.winedir wine RetroDevStudio.exe 
 
 o Docs: list illegal opcodes in help
-o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
 o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
 o Automated code formatting
 o Map Editor:
@@ -355,7 +308,6 @@ o Optionale Parameter und eine Assemblervariable, die anzeigt, wieviele Paramete
         .. mache Code für far jump ..
     } 
 o MediaManager: * Dateien mit gleichem Namen unterbinden (bzw. nachfragen!)
-                * Titel und ID ändern bzw. angeben beim neu erstellen
 o BASIC: Snippet-Wizard
 o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
   Memorymap in Basic erstellen, d.h.:
@@ -369,25 +321,6 @@ o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregu
   Einstellen von 1 bis 5 Zeileninterrupts erstmal von mir aus ohne irgendwelche Spezialeffekte, einfach nur dass ich in einer Bildschirmzeile dort andere Farben, Zeichensätze oder solche Einstellungen vornehmen kann. Nix für Rasterbars, Schirm öffnen oder solch Schweinkram, einfach nur: jetzt kannst Du Farben, Zeichensatz usw. wechseln.
 hierbei natürlich nur Bad Lines abfangen, aber keinen Superschweinkram abfangen.
 Man könnte auch optional kleine ASM-Pakete anbieten, z. B. Grafik-Fensterroutine um kleine Grafiken, gerne aus Grafikprogrammen anzuzeigen, und dabei ein ASM-Modul mit SYS, USR oder POKEs anzubieten zur Verwaltung, oder ein ASM-Modul zum Abspielen eines SIDs, ebenso mit SYS, USR oder POKEs und Angabe des Stücks, also einen SID-Player, ich glaube, Du weißt, was ich meine, kann, muss aber nicht angeboten werden :), oder einen Parser (den habe ich bereits in Basic gemacht)
-
-o Replace All in active doc:
-  Replace All (in the active document) sometimes empties the editor/buffer instead.
-  Using undo after that causes C64Studio to crash with this stacktrace:
-
-  System.InvalidOperationException: Collection was modified; enumeration operation may not execute.
-     at System.Collections.ArrayList.ArrayListEnumeratorSimple.MoveNext()
-     at System.Windows.Forms.Application.ExitInternal()
-     at System.Windows.Forms.Application.ThreadContext.OnThreadException(Exception t)
-     at System.Windows.Forms.Application.ThreadContext.PreTranslateMessage(MSG& msg)
-     at System.Windows.Forms.Application.ThreadContext.System.Windows.Forms.UnsafeNativeMethods.IMsoComponent.FPreTranslateMessage(MSG& msg)
-     at System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
-     at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
-     at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
-     at System.Windows.Forms.Application.Run(Form mainForm)
-     at RetroDevStudio.Program.Main(String[] args)
-
-  When C64Studio is started up again the search/replace work fine, so I'm not sure what it reacts to.
-  I've also noticed sometimes the cursor isn't moved to the right line during a search, which may be why the replace fails.
 
 o Timed- Auto-Step im Debug-Modus
 o Im Screeneditor würde ich gerne mit einem klick oder so den Wert um 64 für ECM / 128 für PETSCII erhöhen können
@@ -408,7 +341,6 @@ Samples:
 o Tutorials in Release
 o add an example of a single sprite with x extend handling
 
-o Quelltext ist Ansi, 64Studio erwartet aber UTF-8
 o Doppelpunkte, wenn sich mehrere Befehle nur mit anderen Adressen wiederholen.
 o Nach dem Ersetzen der Doppelpunkte durch einen Zeilenumbruch wollten STA's neu mit Tab eingerückt werden. Nach dem Tab sprang aber die 
   Auto-Vervollständigung an, die mir das Label "start" angeboten hat. 
@@ -419,13 +351,6 @@ o In disassembler, the ability to highlight data and select how it should be dis
 o In the editor, the ability to highlight and reformat data, the same way as the disassembler.
 
 o Text Screen Editor - select and apply colour to whole area (hires/multicolour) 
-
-o Text Screen Project 
-- Import From File : Seems to only import binary (not assembly) and then only characters. This means that the colours are lost. 
-  -> Sizes von aktuellem Screen? Oder bei anderer File-Größe abfragen
-
-o When you Import From File and then import a Charset then the Screen does  not update with the new Charset. You need to Import From 
-  File once again. 
 
 o Pressing the Export To Assembly should create a 
   new tab+running number. 
@@ -438,8 +363,6 @@ o auch multiple Files aus dem Solution-Explorer löschen
 
 Speaking of sprite/character editors... It would be nice to add basic 
 drawing tools like ellipses/lines
-
-
 
 Ideas:
 o Incorporate VICE directly instead of hanging onto remote monitor (would speed up debugging dramatically)

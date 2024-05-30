@@ -84,8 +84,8 @@
       this.editScreenHeight = new System.Windows.Forms.TextBox();
       this.editScreenWidth = new System.Windows.Forms.TextBox();
       this.label7 = new System.Windows.Forms.Label();
-      this.screenVScroll = new System.Windows.Forms.VScrollBar();
-      this.screenHScroll = new System.Windows.Forms.HScrollBar();
+      this.screenVScroll = new DecentForms.VScrollBar();
+      this.screenHScroll = new DecentForms.HScrollBar();
       this.comboCheckType = new System.Windows.Forms.ComboBox();
       this.btnMirrorY = new DecentForms.Button();
       this.btnMirrorX = new DecentForms.Button();
@@ -772,7 +772,7 @@
       this.screenVScroll.Name = "screenVScroll";
       this.screenVScroll.Size = new System.Drawing.Size(16, 404);
       this.screenVScroll.TabIndex = 26;
-      this.screenVScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.screenVScroll_Scroll);
+      this.screenVScroll.Scroll += new DecentForms.EventHandler(this.screenVScroll_Scroll);
       // 
       // screenHScroll
       // 
@@ -780,7 +780,7 @@
       this.screenHScroll.Name = "screenHScroll";
       this.screenHScroll.Size = new System.Drawing.Size(644, 16);
       this.screenHScroll.TabIndex = 25;
-      this.screenHScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.screenHScroll_Scroll);
+      this.screenHScroll.Scroll += new DecentForms.EventHandler(this.screenHScroll_Scroll);
       // 
       // comboCheckType
       // 
@@ -1236,8 +1236,8 @@
     private System.Windows.Forms.ComboBox comboExportType;
     private DecentForms.Button btnExportAsBinary;
     private System.Windows.Forms.ComboBox comboExportData;
-    private System.Windows.Forms.HScrollBar screenHScroll;
-    private System.Windows.Forms.VScrollBar screenVScroll;
+    private DecentForms.HScrollBar screenHScroll;
+    private DecentForms.VScrollBar screenVScroll;
     private System.Windows.Forms.ComboBox comboCharScreens;
     private DecentForms.Button btnExportToCharScreen;
     private DecentForms.Button btnApplyScreenSize;

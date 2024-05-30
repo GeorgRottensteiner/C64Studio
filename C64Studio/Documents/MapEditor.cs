@@ -450,7 +450,7 @@ namespace RetroDevStudio.Documents
         if ( oldValue != newValue )
         {
           mapVScroll.Value = newValue;
-          mapVScroll_Scroll( null, new ScrollEventArgs( ScrollEventType.ThumbPosition, oldValue, newValue ) );
+          mapVScroll_Scroll( mapVScroll );
         }
       }
     }
@@ -2298,11 +2298,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void mapHScroll_Scroll( object sender, ScrollEventArgs e )
+    private void mapHScroll_Scroll( DecentForms.ControlBase Sender )
     {
-      if ( m_CurEditorOffsetX != e.NewValue )
+      if ( m_CurEditorOffsetX != mapHScroll.Value )
       {
-        m_CurEditorOffsetX = e.NewValue;
+        m_CurEditorOffsetX = mapHScroll.Value;
         RedrawMap();
         Redraw();
       }
@@ -2310,11 +2310,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void mapVScroll_Scroll( object sender, ScrollEventArgs e )
+    private void mapVScroll_Scroll( DecentForms.ControlBase Sender )
     {
-      if ( m_CurEditorOffsetY != e.NewValue )
+      if ( m_CurEditorOffsetY != mapVScroll.Value )
       {
-        m_CurEditorOffsetY = e.NewValue;
+        m_CurEditorOffsetY = mapVScroll.Value;
         RedrawMap();
         Redraw();
       }

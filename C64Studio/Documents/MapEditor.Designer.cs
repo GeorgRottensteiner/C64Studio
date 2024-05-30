@@ -80,8 +80,8 @@
       this.editTileSpacingW = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.editMapWidth = new System.Windows.Forms.TextBox();
-      this.mapHScroll = new System.Windows.Forms.HScrollBar();
-      this.mapVScroll = new System.Windows.Forms.VScrollBar();
+      this.mapHScroll = new DecentForms.HScrollBar();
+      this.mapVScroll = new DecentForms.VScrollBar();
       this.label25 = new System.Windows.Forms.Label();
       this.label19 = new System.Windows.Forms.Label();
       this.pictureEditor = new GR.Forms.FastPictureBox();
@@ -657,7 +657,8 @@
       this.mapHScroll.Name = "mapHScroll";
       this.mapHScroll.Size = new System.Drawing.Size(644, 16);
       this.mapHScroll.TabIndex = 24;
-      this.mapHScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapHScroll_Scroll);
+      this.mapHScroll.Scroll += new DecentForms.EventHandler(this.mapHScroll_Scroll);
+      this.mapHScroll.Enabled = false;
       // 
       // mapVScroll
       // 
@@ -665,7 +666,8 @@
       this.mapVScroll.Name = "mapVScroll";
       this.mapVScroll.Size = new System.Drawing.Size(16, 404);
       this.mapVScroll.TabIndex = 23;
-      this.mapVScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mapVScroll_Scroll);
+      this.mapVScroll.Scroll += new DecentForms.EventHandler(this.mapVScroll_Scroll);
+      this.mapVScroll.Enabled = false;
       // 
       // label25
       // 
@@ -1472,8 +1474,8 @@
     private System.Windows.Forms.ComboBox comboBox3;
     private GR.Forms.FastPictureBox fastPictureBox1;
     private GR.Forms.FastPictureBox fastPictureBox2;
-    private System.Windows.Forms.VScrollBar mapVScroll;
-    private System.Windows.Forms.HScrollBar mapHScroll;
+    private DecentForms.VScrollBar mapVScroll;
+    private DecentForms.HScrollBar mapHScroll;
     private System.Windows.Forms.GroupBox groupSize;
     private DecentForms.Button btnMapApply;
     private System.Windows.Forms.Label label1;
