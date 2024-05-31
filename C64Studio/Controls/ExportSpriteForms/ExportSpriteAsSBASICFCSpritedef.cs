@@ -65,7 +65,7 @@ namespace RetroDevStudio.Controls
           sb.Append( "FCSPRDEF " );
           sb.Append( spriteNo );
           sb.Append( "," );
-          sb.Append( frameNo );
+          sb.Append( frameNo + 1 );
           sb.Append( "," );
           sb.Append( y + 1 );
           sb.Append( ",\"" );
@@ -87,7 +87,7 @@ namespace RetroDevStudio.Controls
         }
         if ( exportByFrame )
         {
-          frameNo = ( frameNo + 1 ) % 8;
+          frameNo = ( frameNo + 1 ) % 16;
           if ( frameNo == 0 )
           {
             spriteNo = ( spriteNo + 1 ) % 8;
@@ -98,7 +98,7 @@ namespace RetroDevStudio.Controls
           spriteNo = ( spriteNo + 1 ) % 8;
           if ( spriteNo == 0 )
           {
-            frameNo = ( frameNo + 1 ) % 8;
+            frameNo = ( frameNo + 1 ) % 16;
           }
         }
       }
