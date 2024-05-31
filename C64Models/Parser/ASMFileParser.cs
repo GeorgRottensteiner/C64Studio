@@ -3580,7 +3580,8 @@ namespace RetroDevStudio.Parser
         var repeatUntil = lastOpenedScope.RepeatUntil;
 
         // if inside macro definition do not evaluate now!
-        if ( ScopeInsideMacroDefinition() )
+        if ( ( ScopeInsideMacroDefinition() )
+        ||   ( !_ParseContext.IsScopingActive ) )
         {
           //Debug.Log( "Loop end inside macro, do nothing, close scope" );
 
@@ -3733,7 +3734,8 @@ namespace RetroDevStudio.Parser
         var whileInfo = lastOpenedScope.While;
 
         // if inside macro definition do not evaluate now!
-        if ( ScopeInsideMacroDefinition() )
+        if ( ( ScopeInsideMacroDefinition() )
+        ||   ( !_ParseContext.IsScopingActive ) )
         {
           //Debug.Log( "Loop end inside macro, do nothing, close scope" );
 
@@ -3849,7 +3851,8 @@ namespace RetroDevStudio.Parser
         var    lastLoop = lastOpenedScope.Loop;
 
         // if inside macro definition do not evaluate now!
-        if ( ScopeInsideMacroDefinition() )
+        if ( ( ScopeInsideMacroDefinition() )
+        ||   ( !_ParseContext.IsScopingActive ) )
         {
           //Debug.Log( "Loop end inside macro, do nothing, close scope" );
 
@@ -5046,7 +5049,7 @@ namespace RetroDevStudio.Parser
           }
         }
 
-        bool isScopingActive = true;
+        _ParseContext.IsScopingActive = true;
         bool isOuterScopingActive = true;
         for ( int i = 0; i < _ParseContext.Scopes.Count; ++i )
         {
@@ -5056,7 +5059,7 @@ namespace RetroDevStudio.Parser
             {
               isOuterScopingActive = false;
             }
-            isScopingActive = false;
+            _ParseContext.IsScopingActive = false;
             break;
           }
         }
@@ -5065,7 +5068,7 @@ namespace RetroDevStudio.Parser
         &&   ( !TokenIsConditionalThatEndsScope( lineTokenInfos[tokenOffset] ) )
         &&   ( !isDASMScopePseudoOP ) )
         {
-          if ( !isScopingActive )
+          if ( !_ParseContext.IsScopingActive )
           {
             // defined away
             Types.ScopeInfo.ScopeType   detectedScopeType = ScopeInfo.ScopeType.UNKNOWN;
@@ -5078,6 +5081,18 @@ namespace RetroDevStudio.Parser
               Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
               scope.StartIndex = lineIndex;
               scope.Active = false;
+              _ParseContext.Scopes.Add( scope );
+
+              OnScopeAdded( scope );
+            }
+            else if ( TokenIsFor( lineTokenInfos[tokenOffset] ) )
+            {
+              // a new block starts here!
+              // false, since it doesn't matter
+              Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
+              scope.StartIndex = lineIndex;
+              scope.Active = false;
+              scope.Loop = new LoopInfo() { LineIndex = lineIndex };
               _ParseContext.Scopes.Add( scope );
 
               OnScopeAdded( scope );
@@ -5109,13 +5124,10 @@ namespace RetroDevStudio.Parser
               _ParseContext.Scopes.Add( scope );
               OnScopeAdded( scope );
             }
-
             info.Line = "";
             info.NumBytes = 0;
 
-            //++lineIndex;
             continue;
-            //parseLine = ";" + parseLine;
           }
         }
 
@@ -9446,6 +9458,18 @@ namespace RetroDevStudio.Parser
       &&   ( ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.IF ).ToUpper() )
       ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.IFDEF ).ToUpper() )
       ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.IFNDEF ).ToUpper() ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private bool TokenIsFor( TokenInfo Token )
+    {
+      if ( ( Token.Type == TokenInfo.TokenType.PSEUDO_OP )
+      &&   ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.FOR ).ToUpper() ) )
       {
         return true;
       }

@@ -575,7 +575,28 @@ namespace TestProject
 
 
 
-    
+
+
+
+    [TestMethod]
+    public void TestIfDisabledWithLoopInside()
+    {
+      string      source = @"*=$c000
+                            SPEED = 0
+                            !IF SPEED {
+                                !FOR ROW=0 TO 500 STEP 40
+                                  lda ROW * 40
+                                !END
+                            }";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( "00C0", assembly.ToString() );
+    }
+
+
+
+
 
 
     [TestMethod]

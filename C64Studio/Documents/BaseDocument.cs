@@ -761,8 +761,15 @@ namespace RetroDevStudio.Documents
 
     public override Size GetPreferredSize( Size proposedSize )
     {
-      // make sure to have at least 20x20
+      // make sure to have at least 50x50
+      var currentSize = Size;
+
       var preferredSize = base.GetPreferredSize( proposedSize );
+      if ( ( preferredSize.Width < currentSize.Width )
+      ||   ( preferredSize.Height < currentSize.Height ) )
+      {
+        preferredSize = new Size( Math.Max( preferredSize.Width, currentSize.Width ), Math.Max( preferredSize.Height, currentSize.Height ) );
+      }
       if ( ( preferredSize.Width < 50 )
       ||   ( preferredSize.Height < 50 ) )
       {

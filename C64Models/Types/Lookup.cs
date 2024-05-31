@@ -331,6 +331,55 @@ namespace RetroDevStudio
 
 
 
+    internal static bool HasCustomPalette( SpriteProject.SpriteProjectMode Mode )
+    {
+      switch ( Mode )
+      {
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_16_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_32_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_8_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_16_COLORS:
+        case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+          return true;
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+          return false;
+        default:
+          Debug.Log( "HasCustomPalette unsupported Mode " + Mode );
+          return false;
+      }
+    }
+
+
+
     internal static int NumBytesOfSingleSprite( SpriteProject.SpriteProjectMode Mode )
     {
       switch ( Mode )

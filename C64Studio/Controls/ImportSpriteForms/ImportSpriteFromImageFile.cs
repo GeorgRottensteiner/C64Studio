@@ -64,7 +64,7 @@ namespace RetroDevStudio.Controls
       int   currentSpriteIndex = 0;
       int   curX = 0;
       int   curY = 0;
-      while ( curY + Editor.m_SpriteHeight <= spriteImage.Height )
+      while ( curY < spriteImage.Height )
       {
         Editor.ImportSprite( spriteImage.GetImage( curX, curY, Editor.m_SpriteWidth, Editor.m_SpriteHeight ) as GR.Image.FastImage, currentSpriteIndex );
         Editor.SpriteChanged( currentSpriteIndex );

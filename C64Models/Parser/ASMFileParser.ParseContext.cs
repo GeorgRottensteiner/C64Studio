@@ -21,6 +21,7 @@ namespace RetroDevStudio.Parser
       public bool         Assume16BitAccu       = false;
       public bool         Assume16BitRegisters  = false;
 
+      public bool         IsScopingActive       = true;
 
 
       public GR.Collections.Map<string,GR.Collections.Map<byte, byte>>    TextMappings = new GR.Collections.Map<string, GR.Collections.Map<byte, byte>>();
@@ -28,8 +29,7 @@ namespace RetroDevStudio.Parser
       public SortedList<int,string>     ForwardLabelStacked = new SortedList<int, string>();
 
       public List<ScopeInfo>            Scopes = new List<ScopeInfo>();
-
-
+      
 
       public void Clear()
       {

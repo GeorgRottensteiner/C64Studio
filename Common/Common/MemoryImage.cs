@@ -583,11 +583,7 @@ namespace GR.Image
           case GR.Drawing.PixelFormat.Format8bppIndexed:
             return Width;
           case GR.Drawing.PixelFormat.Format4bppIndexed:
-            if ( ( Width % 4 ) != 0 )
-            {
-              return Width / 4 + 1;
-            }
-            return Width / 4;
+            return ( Width + 1 ) / 2;
           case GR.Drawing.PixelFormat.Format16bppArgb1555:
           case GR.Drawing.PixelFormat.Format16bppGrayScale:
           case GR.Drawing.PixelFormat.Format16bppRgb555:
@@ -648,7 +644,7 @@ namespace GR.Image
         case 4:
           unsafe
           {
-            int   pitch = Width / 2;
+            int   pitch = ( Width + 1 ) / 2;
 
             byte  origValue = m_ImageData.ByteAt( Y * pitch + X / 2 );
             byte  newValue = 0;
@@ -790,7 +786,7 @@ namespace GR.Image
             };
           case GR.Drawing.PixelFormat.Format4bppIndexed:
             {
-              int   pitch = Width / 2;
+              int   pitch = ( Width + 1 ) / 2;
 
               if ( ( X % 2 ) == 0 )
               {
@@ -1035,11 +1031,7 @@ namespace GR.Image
 
               byte    *pData = (byte*)lpbi + lpbi->biSize + PaletteSize( bi );
 
-              int iLO = Width / 2;
-              if ( ( Width & 1 ) != 0 )
-              {
-                iLO++;
-              }
+              int iLO = ( Width + 1 ) / 2;
               if ( ( iLO % 4 ) != 0 )
               {
                 iLO += 4 - ( iLO % 4 );

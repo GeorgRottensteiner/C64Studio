@@ -34,8 +34,8 @@ namespace RetroDevStudio.Documents
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.labelSelectionInfo = new System.Windows.Forms.Label();
@@ -217,16 +217,19 @@ namespace RetroDevStudio.Documents
       // 
       // labelSelectionInfo
       // 
-      this.labelSelectionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.labelSelectionInfo.Location = new System.Drawing.Point(484, 568);
+      this.labelSelectionInfo.Location = new System.Drawing.Point(352, 471);
       this.labelSelectionInfo.Name = "labelSelectionInfo";
-      this.labelSelectionInfo.Size = new System.Drawing.Size(491, 23);
+      this.labelSelectionInfo.Size = new System.Drawing.Size(122, 23);
       this.labelSelectionInfo.TabIndex = 62;
       this.labelSelectionInfo.Text = "label1";
       // 
       // btnHighlightDuplicates
       // 
+      this.btnHighlightDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnHighlightDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnHighlightDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnHighlightDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnHighlightDuplicates.Image = null;
       this.btnHighlightDuplicates.Location = new System.Drawing.Point(269, 552);
       this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
       this.btnHighlightDuplicates.Size = new System.Drawing.Size(121, 23);
@@ -236,6 +239,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnChangeMode
       // 
+      this.btnChangeMode.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnChangeMode.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnChangeMode.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnChangeMode.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnChangeMode.Image = null;
       this.btnChangeMode.Location = new System.Drawing.Point(269, 510);
       this.btnChangeMode.Name = "btnChangeMode";
       this.btnChangeMode.ShowDropDownArrow = false;
@@ -254,20 +262,24 @@ namespace RetroDevStudio.Documents
       // btnToolEdit
       // 
       this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolEdit.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolEdit.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
       this.btnToolEdit.Checked = true;
       this.btnToolEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnToolEdit.Image")));
       this.btnToolEdit.Location = new System.Drawing.Point(8, 285);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(26, 26);
       this.btnToolEdit.TabIndex = 9;
-      this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
       this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
       // btnToolFill
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
+      this.btnToolFill.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolFill.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolFill.Checked = false;
+      this.btnToolFill.Image = ((System.Drawing.Image)(resources.GetObject("btnToolFill.Image")));
       this.btnToolFill.Location = new System.Drawing.Point(8, 316);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(26, 26);
@@ -371,7 +383,12 @@ namespace RetroDevStudio.Documents
       // 
       // btnSavePreviewToGIF
       // 
+      this.btnSavePreviewToGIF.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnSavePreviewToGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnSavePreviewToGIF.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSavePreviewToGIF.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSavePreviewToGIF.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSavePreviewToGIF.Image = null;
       this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 438);
       this.btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
       this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
@@ -383,9 +400,9 @@ namespace RetroDevStudio.Documents
       // 
       this.checkAutoplayAnim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 495);
+      this.checkAutoplayAnim.Location = new System.Drawing.Point(223, 493);
       this.checkAutoplayAnim.Name = "checkAutoplayAnim";
-      this.checkAutoplayAnim.Size = new System.Drawing.Size(132, 24);
+      this.checkAutoplayAnim.Size = new System.Drawing.Size(157, 24);
       this.checkAutoplayAnim.TabIndex = 12;
       this.checkAutoplayAnim.Text = "Auto-Animation";
       this.checkAutoplayAnim.UseVisualStyleBackColor = true;
@@ -509,9 +526,9 @@ namespace RetroDevStudio.Documents
       this.label10.AutoSize = true;
       this.label10.Location = new System.Drawing.Point(224, 470);
       this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(37, 13);
+      this.label10.Size = new System.Drawing.Size(59, 13);
       this.label10.TabIndex = 15;
-      this.label10.Text = "Delay:";
+      this.label10.Text = "Delay (ms):";
       // 
       // label6
       // 
@@ -526,7 +543,7 @@ namespace RetroDevStudio.Documents
       // editLayerDelay
       // 
       this.editLayerDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerDelay.Location = new System.Drawing.Point(268, 465);
+      this.editLayerDelay.Location = new System.Drawing.Point(289, 467);
       this.editLayerDelay.Name = "editLayerDelay";
       this.editLayerDelay.Size = new System.Drawing.Size(91, 20);
       this.editLayerDelay.TabIndex = 11;
@@ -535,7 +552,7 @@ namespace RetroDevStudio.Documents
       // editLayerName
       // 
       this.editLayerName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerName.Location = new System.Drawing.Point(268, 438);
+      this.editLayerName.Location = new System.Drawing.Point(289, 440);
       this.editLayerName.Name = "editLayerName";
       this.editLayerName.Size = new System.Drawing.Size(91, 20);
       this.editLayerName.TabIndex = 10;
@@ -614,17 +631,23 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage1;
+      this.layerPreview.DisplayPage = fastImage5;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
       this.layerPreview.Size = new System.Drawing.Size(277, 429);
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
+      this.layerPreview.SizeChanged += new System.EventHandler(this.layerPreview_SizeChanged);
       // 
       // btnClearSprite
       // 
+      this.btnClearSprite.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnClearSprite.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClearSprite.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClearSprite.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnClearSprite.Enabled = false;
+      this.btnClearSprite.Image = null;
       this.btnClearSprite.Location = new System.Drawing.Point(270, 445);
       this.btnClearSprite.Name = "btnClearSprite";
       this.btnClearSprite.Size = new System.Drawing.Size(57, 23);
@@ -634,7 +657,12 @@ namespace RetroDevStudio.Documents
       // 
       // btnDeleteSprite
       // 
+      this.btnDeleteSprite.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnDeleteSprite.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteSprite.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteSprite.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnDeleteSprite.Enabled = false;
+      this.btnDeleteSprite.Image = null;
       this.btnDeleteSprite.Location = new System.Drawing.Point(333, 445);
       this.btnDeleteSprite.Name = "btnDeleteSprite";
       this.btnDeleteSprite.Size = new System.Drawing.Size(57, 23);
@@ -644,6 +672,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnInvert
       // 
+      this.btnInvert.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnInvert.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnInvert.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnInvert.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnInvert.Image = ((System.Drawing.Image)(resources.GetObject("btnInvert.Image")));
       this.btnInvert.Location = new System.Drawing.Point(8, 192);
       this.btnInvert.Name = "btnInvert";
@@ -654,6 +686,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnMirrorY
       // 
+      this.btnMirrorY.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMirrorY.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMirrorY.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMirrorY.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
       this.btnMirrorY.Location = new System.Drawing.Point(8, 161);
       this.btnMirrorY.Name = "btnMirrorY";
@@ -664,6 +700,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnMirrorX
       // 
+      this.btnMirrorX.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMirrorX.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMirrorX.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMirrorX.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
       this.btnMirrorX.Location = new System.Drawing.Point(8, 130);
       this.btnMirrorX.Name = "btnMirrorX";
@@ -674,6 +714,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnShiftDown
       // 
+      this.btnShiftDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
       this.btnShiftDown.Location = new System.Drawing.Point(8, 99);
       this.btnShiftDown.Name = "btnShiftDown";
@@ -684,6 +728,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnShiftUp
       // 
+      this.btnShiftUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
       this.btnShiftUp.Location = new System.Drawing.Point(8, 68);
       this.btnShiftUp.Name = "btnShiftUp";
@@ -694,6 +742,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnShiftRight
       // 
+      this.btnShiftRight.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftRight.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftRight.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
       this.btnShiftRight.Location = new System.Drawing.Point(8, 37);
       this.btnShiftRight.Name = "btnShiftRight";
@@ -704,6 +756,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnRotateRight
       // 
+      this.btnRotateRight.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnRotateRight.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnRotateRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnRotateRight.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnRotateRight.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateRight.Image")));
       this.btnRotateRight.Location = new System.Drawing.Point(8, 254);
       this.btnRotateRight.Name = "btnRotateRight";
@@ -714,6 +770,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnRotateLeft
       // 
+      this.btnRotateLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnRotateLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnRotateLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnRotateLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnRotateLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateLeft.Image")));
       this.btnRotateLeft.Location = new System.Drawing.Point(8, 223);
       this.btnRotateLeft.Name = "btnRotateLeft";
@@ -724,6 +784,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnShiftLeft
       // 
+      this.btnShiftLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
       this.btnShiftLeft.Location = new System.Drawing.Point(8, 6);
       this.btnShiftLeft.Name = "btnShiftLeft";
@@ -734,6 +798,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnCopyToClipboard
       // 
+      this.btnCopyToClipboard.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCopyToClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCopyToClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCopyToClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnCopyToClipboard.Image = null;
       this.btnCopyToClipboard.Location = new System.Drawing.Point(269, 416);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
@@ -743,6 +812,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnPasteFromClipboard
       // 
+      this.btnPasteFromClipboard.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnPasteFromClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnPasteFromClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnPasteFromClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnPasteFromClipboard.Image = null;
       this.btnPasteFromClipboard.Location = new System.Drawing.Point(269, 387);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
@@ -773,7 +847,7 @@ namespace RetroDevStudio.Documents
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -827,6 +901,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnExport
       // 
+      this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExport.Image = null;
       this.btnExport.Location = new System.Drawing.Point(247, 33);
       this.btnExport.Name = "btnExport";
       this.btnExport.Size = new System.Drawing.Size(61, 21);
@@ -921,6 +1000,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnImport
       // 
+      this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImport.Image = null;
       this.btnImport.Location = new System.Drawing.Point(336, 5);
       this.btnImport.Name = "btnImport";
       this.btnImport.Size = new System.Drawing.Size(75, 21);

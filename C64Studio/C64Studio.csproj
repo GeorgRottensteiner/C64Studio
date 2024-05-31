@@ -25,6 +25,9 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsECMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsMega6516Colors.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsX16Sprites256.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -73,6 +76,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ExportMapForms\ExportMapAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsSBASICFCSpritedef.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromHex.cs">

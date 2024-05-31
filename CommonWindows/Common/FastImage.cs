@@ -372,11 +372,14 @@ namespace GR.Image
             }
             return Width;
           case GR.Drawing.PixelFormat.Format4bppIndexed:
-            if ( ( Width % 4 ) != 0 )
             {
-              return Width / 4 + 1;
+              int pitch = ( Width + 1 ) / 2;
+              while ( ( pitch % 4 ) != 0 )
+              {
+                ++pitch;
+              }
+              return pitch;
             }
-            return Width / 4;
           case GR.Drawing.PixelFormat.Format16bppArgb1555:
           case GR.Drawing.PixelFormat.Format16bppGrayScale:
           case GR.Drawing.PixelFormat.Format16bppRgb555:
@@ -1057,7 +1060,7 @@ namespace GR.Image
         case 4:
           unsafe
           {
-            int   pitch = Width / 2;
+            int   pitch = BytesPerLine;
             byte* pData = (byte*)m_ImageData;
 
             if ( ( X % 2 ) == 0 )
@@ -1143,7 +1146,7 @@ namespace GR.Image
         case 4:
           unsafe
           {
-            int   pitch = Width / 2;
+            int   pitch = BytesPerLine;
             byte* pData = (byte*)m_ImageData;
 
             if ( ( X % 2 ) == 0 )
@@ -1286,7 +1289,8 @@ namespace GR.Image
           case GR.Drawing.PixelFormat.Format4bppIndexed:
             unsafe
             {
-              int   pitch = Width / 2;
+              int   pitch = BytesPerLine;
+
               byte* pData = (byte*)m_ImageData;
 
               if ( ( X % 2 ) == 0 )
@@ -1736,11 +1740,7 @@ namespace GR.Image
 
 
 
-                iLO = infoHeader.biWidth / 2;
-                if ( ( infoHeader.biWidth & 1 ) != 0 )
-                {
-                  iLO++;
-                }
+                iLO = ( infoHeader.biWidth + 1 ) / 2;
                 if ( ( iLO % 4 ) != 0 )
                 {
                   iLO += ( 4 - iLO % 4 );
@@ -2066,11 +2066,7 @@ namespace GR.Image
 
               byte    *pData = (byte*)lpbi + lpbi->biSize + PaletteSize( bi );
 
-              int iLO = Width / 2;
-              if ( ( Width & 1 ) != 0 )
-              {
-                iLO++;
-              }
+              int iLO = ( Width + 1 ) / 2;
               if ( ( iLO % 4 ) != 0 )
               {
                 iLO += 4 - ( iLO % 4 );
@@ -2275,17 +2271,6 @@ namespace GR.Image
               {
                 iLO += 4 - ( iLO % 4 );
               }
-              /*
-              GR::Graphic::ContextDescriptor    cdImage( Image );
-              GR::Graphic::ContextDescriptor    cdTarget;
-
-              cdTarget.Attach( cdImage.Width(), cdImage.Height(), iLO, cdImage.ImageFormat(), pData );
-
-              for ( int j = 0; j < Image.Height(); j++ )
-              {
-                cdTarget.HLine( 0, cdTarget.Width() - 1, j, 1 );
-                cdTarget.HLine( 1, cdTarget.Width() - 2, j, 0 );
-              }*/
             }
             break;
           case 4:
@@ -2306,11 +2291,7 @@ namespace GR.Image
 
               byte    *pData = (byte*)lpbi + lpbi->biSize + PaletteSize( bi );
 
-              int iLO = Width / 2;
-              if ( ( Width & 1 ) != 0 )
-              {
-                iLO++;
-              }
+              int iLO = ( Width + 1 ) / 2;
               if ( ( iLO % 4 ) != 0 )
               {
                 iLO += 4 - ( iLO % 4 );
@@ -2322,17 +2303,6 @@ namespace GR.Image
                   ( (byte*)pData )[i + ( Height - j - 1 ) * iLO] = (byte)GetPixelData( i, j );
                 }
               }
-
-              /*
-              GR::Graphic::ContextDescriptor    cdImage( Image );
-              GR::Graphic::ContextDescriptor    cdTarget;
-
-              cdTarget.Attach( cdImage.Width(), cdImage.Height(), iLO, cdImage.ImageFormat(), pData );
-
-              for ( int j = 0; j < Image.Height(); j++ )
-              {
-                cdImage.CopyLine( 0, j, cdImage.Width(), 0, cdImage.Height() - j - 1, &cdTarget );
-              }*/
             }
             break;
           case 8:

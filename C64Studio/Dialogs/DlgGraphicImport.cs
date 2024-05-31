@@ -288,6 +288,16 @@ namespace RetroDevStudio.Dialogs
       {
         importPalColors = m_ImportPalette.ColorValues.ToList();
       }
+      int   numPalcolorsToConsider = m_CurPalette.NumColors;
+      if ( m_ImportType == GraphicType.SPRITES_16_COLORS )
+      {
+        // palette has 256 colors (for bg), but only the first 16 available for sprites
+        numPalcolorsToConsider = 16;
+      }
+      if ( numPalcolorsToConsider < curPalColors.Count )
+      {
+        curPalColors.RemoveRange( numPalcolorsToConsider, curPalColors.Count - numPalcolorsToConsider );
+      }
 
       for ( int i = 0; i < m_OrigSize.Width; ++i )
       {
@@ -328,6 +338,7 @@ namespace RetroDevStudio.Dialogs
             }
 
             int bestMatch = -1;
+
             if ( comboTargetPalette.SelectedIndex < MultiColorSettings.Palettes.Count )
             {
               bestMatch = ColorMatcher.MatchColor( (ColorMatchType)comboColorMatching.SelectedIndex, red, green, blue, curPalColors );
@@ -930,13 +941,13 @@ namespace RetroDevStudio.Dialogs
               {
                 if ( colorIndex >= 16 )
                 {
-                  AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
+                  AddError( $"Encountered color index >= 16 ({colorIndex}) at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
                 }
                 continue;
               }
               else if ( colorIndex >= 16 )
               {
-                AddError( "Encountered color index >= 16 at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
+                AddError( $"Encountered color index >= 16 at ({colorIndex}) at " + x + "," + y, sx * m_ItemWidth + x, sy * m_ItemHeight + y, 1, 1 );
               }
               else
               {

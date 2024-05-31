@@ -111,6 +111,7 @@ namespace RetroDevStudio.Documents
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportSpriteAsBinaryFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportSpriteAsImageFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportSpriteAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Mega65 S-BASIC Spritedef", typeof( ExportSpriteAsSBASICFCSpritedef ) ) );
       comboExportMethod.SelectedIndex = 0;
 
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportSpriteFromASM ) ) );
@@ -513,7 +514,8 @@ namespace RetroDevStudio.Documents
         DoNotUpdateFromControls = true;
 
         _ColorSettingsDlg.PaletteOffset = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.PaletteOffset;
-        if ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) )
+        if ( ( !Lookup.HasCustomPalette( m_SpriteProject.Mode ) )
+        &&   ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) ) )
         {
           _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
           _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
@@ -1346,7 +1348,7 @@ namespace RetroDevStudio.Documents
             int     colorIndex = (int)Image.GetPixelData( x, y );
             if ( colorIndex >= 16 )
             {
-              m_ImportError = "Encountered color index >= 16 at " + x + "," + y;
+              m_ImportError = $"Encountered color index >= 16 ({colorIndex}) at {x},{y}";
               return false;
             }
             if ( ( x % 2 ) == 0 )
@@ -1522,7 +1524,7 @@ namespace RetroDevStudio.Documents
             byte colorIndex = (byte)Image.GetPixelData( x, y );
             if ( colorIndex >= 16 )
             {
-              m_ImportError = "Encountered color index >= 16 at " + x + "," + y;
+              m_ImportError = $"Encountered color index >= 16 ({colorIndex}) at {x},{y}";
               return false;
             }
             m_SpriteProject.Sprites[SpriteIndex].Tile.SetPixel( x, y, new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, colorIndex ) );
@@ -3127,7 +3129,7 @@ namespace RetroDevStudio.Documents
                                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES );
           break;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
-          _ColorSettingsDlg = new ColorSettingsMega65( Core, m_SpriteProject.Colors, m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor );
+          _ColorSettingsDlg = new ColorSettingsMega6516Colors( Core, m_SpriteProject.Colors, m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor );
           break;
         case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_8_16_COLORS:
         case SpriteProject.SpriteProjectMode.COMMANDER_X16_8_16_16_COLORS:
@@ -3708,6 +3710,14 @@ namespace RetroDevStudio.Documents
       int   numSelectedSprites = panelSprites.SelectedIndices.Count;
 
       labelSelectionInfo.Text = $"Selected {numSelectedSprites} sprites";
+    }
+
+
+
+    private void layerPreview_SizeChanged( object sender, EventArgs e )
+    {
+      layerPreview.DisplayPage.Resize( layerPreview.ClientSize.Width / 2, layerPreview.ClientSize.Height / 2 );
+      RedrawPreviewLayer();
     }
 
 
