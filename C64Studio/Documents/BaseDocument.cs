@@ -763,10 +763,10 @@ namespace RetroDevStudio.Documents
     {
       // make sure to have at least 20x20
       var preferredSize = base.GetPreferredSize( proposedSize );
-      if ( ( preferredSize.Width < 20 )
-      ||   ( preferredSize.Height < 20 ) )
+      if ( ( preferredSize.Width < 50 )
+      ||   ( preferredSize.Height < 50 ) )
       {
-        preferredSize = new Size( Math.Min( 20, preferredSize.Width ), Math.Min( 20, preferredSize.Height ) );
+        preferredSize = new Size( Math.Max( 50, proposedSize.Width ), Math.Max( 50, proposedSize.Height ) );
       }
       return preferredSize;
     }
