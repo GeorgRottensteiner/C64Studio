@@ -15,7 +15,7 @@ namespace RetroDevStudio.Documents
 {
   public partial class Outline : BaseDocument
   {
-    public System.Windows.Forms.TreeNode      NodeRoot = null;
+    public DecentForms.TreeView.TreeNode      NodeRoot = null;
 
     private Project                           OutlineProject = null;
     private GR.Collections.MultiMap<string,SymbolInfo>       OutlineTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
@@ -27,21 +27,25 @@ namespace RetroDevStudio.Documents
 
 
 
-    public Outline()
+    public Outline( StudioCore Core )
     {
+      this.Core = Core;
+
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
-      NodeRoot = new System.Windows.Forms.TreeNode( "Outline" );
+      NodeRoot = new DecentForms.TreeView.TreeNode( "Outline" );
       NodeRoot.ImageIndex = 0;
-      NodeRoot.SelectedImageIndex = 0;
       treeProject.Nodes.Add( NodeRoot );
+
+      checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      checkShowLocalLabels.Image    = Core.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
     }
 
 
 
-    private void treeProject_NodeMouseDoubleClick( object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e )
+    private void treeProject_NodeMouseDoubleClick( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeNodeMouseClickEventArgs e )
     {
       SymbolInfo tokenInfo = (SymbolInfo)e.Node.Tag;
       if ( tokenInfo == null )
@@ -60,9 +64,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_NodeMouseClick( object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e )
+    private void treeProject_NodeMouseClick( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeNodeMouseClickEventArgs e )
     {
-      if ( ( e.Button == System.Windows.Forms.MouseButtons.Right )
+      if ( ( e.Button == 2 )
       &&   ( e.Node != null ) )
       {
         if ( OutlineProject == null )
@@ -113,7 +117,7 @@ namespace RetroDevStudio.Documents
         }
         var expandedNodesEntry = _ExpandedNodesPerProject[ActiveDocumentInfo.ASMFileInfo];
         expandedNodesEntry.Clear();
-        foreach ( TreeNode node in NodeRoot.Nodes )
+        foreach ( var node in NodeRoot.Nodes )
         {
           expandedNodesEntry[node.Text] = node.IsExpanded;
         }
@@ -175,6 +179,7 @@ namespace RetroDevStudio.Documents
 
       if ( ActiveASMFileInfo == null )
       {
+        treeProject.EndUpdate();
         return;
       }
 
@@ -250,14 +255,14 @@ namespace RetroDevStudio.Documents
 
       string curZone = "";
 
-      System.Windows.Forms.TreeNode parentNode = new System.Windows.Forms.TreeNode();
-      parentNode = new System.Windows.Forms.TreeNode();
+      var parentNode = new DecentForms.TreeView.TreeNode();
+      parentNode = new DecentForms.TreeView.TreeNode();
       parentNode.Text = "Global Zone";
-      parentNode.ImageIndex = parentNode.SelectedImageIndex = 0;
+      parentNode.ImageIndex = 0;
       NodeRoot.Nodes.Add( parentNode );
-      System.Windows.Forms.TreeNode globalZone = parentNode;
+      var globalZone = parentNode;
 
-      var zoneNodes = new Dictionary<string, TreeNode>();
+      var zoneNodes = new Dictionary<string, DecentForms.TreeView.TreeNode>();
       zoneNodes.Add( parentNode.Text, globalZone );
 
       // add zone nodes first
@@ -274,9 +279,9 @@ namespace RetroDevStudio.Documents
           node.Text = token.Name;
           node.Tag = token;
 
-          parentNode = new System.Windows.Forms.TreeNode();
+          parentNode = new DecentForms.TreeView.TreeNode();
           parentNode.Text = token.Zone;
-          parentNode.ImageIndex = parentNode.SelectedImageIndex = 0;
+          parentNode.ImageIndex = 0;
           NodeRoot.Nodes.Add( parentNode );
           parentNode.Tag = token;
 
@@ -299,7 +304,7 @@ namespace RetroDevStudio.Documents
           continue;
         }
 
-        var   node = new System.Windows.Forms.TreeNode();
+        var   node = new DecentForms.TreeView.TreeNode();
         bool  addNode = true;
         bool  addToGlobalNode = false;
 
@@ -325,7 +330,7 @@ namespace RetroDevStudio.Documents
             break;
           case SymbolInfo.Types.CONSTANT_1:
           case SymbolInfo.Types.CONSTANT_2:
-            node.ImageIndex = node.SelectedImageIndex = 2;
+            node.ImageIndex = 2;
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
           case SymbolInfo.Types.LABEL:
@@ -339,19 +344,19 @@ namespace RetroDevStudio.Documents
             {
               addNode = false;
             }
-            node.ImageIndex = node.SelectedImageIndex = 1;
+            node.ImageIndex = 1;
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
           case SymbolInfo.Types.PREPROCESSOR_LABEL:
           case SymbolInfo.Types.PREPROCESSOR_CONSTANT_1:
           case SymbolInfo.Types.PREPROCESSOR_CONSTANT_2:
-            node.ImageIndex = node.SelectedImageIndex = 3;
+            node.ImageIndex = 3;
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
           case SymbolInfo.Types.UNKNOWN:
             break;
           case SymbolInfo.Types.MACRO:
-            node.ImageIndex = node.SelectedImageIndex = 4;
+            node.ImageIndex = 4;
             if ( ActiveASMFileInfo.Macros[new GR.Generic.Tupel<string,int>( token.Name, token.NumArguments )].ParameterNames.Count > 0 ) 
             {
               node.Text += " " + string.Join( ", ", ActiveASMFileInfo.Macros[new GR.Generic.Tupel<string, int>( token.Name, token.NumArguments )].ParameterNames.ToArray() );
@@ -364,7 +369,8 @@ namespace RetroDevStudio.Documents
           continue;
         }
 
-        if ( !token.Name.StartsWith( curZone + "." ) )
+        if ( ( !token.Name.StartsWith( curZone + "." ) )
+        &&   ( !token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) ) )
         {
           addToGlobalNode = true;
         }
@@ -415,9 +421,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    private TreeNode FindNodeByText( string Text, TreeNode ParentNode )
+    private DecentForms.TreeView.TreeNode FindNodeByText( string Text, TreeNode ParentNode )
     {
-      foreach ( System.Windows.Forms.TreeNode node in NodeRoot.Nodes )
+      foreach ( var node in NodeRoot.Nodes )
       {
         if ( node.Text == Text )
         {
@@ -490,7 +496,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_AfterSelect( object sender, TreeViewEventArgs e )
+    private void treeProject_AfterSelect( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeViewEventArgs e )
     {
       SymbolInfo tokenInfo = (SymbolInfo)e.Node.Tag;
       if ( tokenInfo == null )

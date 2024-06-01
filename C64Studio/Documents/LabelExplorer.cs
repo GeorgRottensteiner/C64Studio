@@ -28,8 +28,10 @@ namespace RetroDevStudio.Documents
 
 
 
-    public LabelExplorer()
+    public LabelExplorer( StudioCore Core )
     {
+      this.Core = Core;
+
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
@@ -37,6 +39,9 @@ namespace RetroDevStudio.Documents
       NodeRoot = new DecentForms.TreeView.TreeNode( "All Labels" );
       NodeRoot.ImageIndex = 0;
       treeProject.Nodes.Add( NodeRoot );
+
+      checkShowLocalLabels.Image    = Core.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
+      checkShowShortCutLabels.Image = Core.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
     }
 
 
@@ -415,7 +420,8 @@ namespace RetroDevStudio.Documents
           node.Nodes.Add( subNode );
         }
 
-        if ( !token.Name.StartsWith( curZone + "." ) )
+        if ( ( !token.Name.StartsWith( curZone + "." ) )
+        &&   ( !token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) ) )
         {
           addToGlobalNode = true;
         }

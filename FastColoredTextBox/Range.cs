@@ -503,9 +503,9 @@ namespace FastColoredTextBoxNS
       if ( start.iChar > 0 )
       {
         if ( ( tb.AllowTabs )
-        &&   ( start.iChar > 0 )
-        &&   ( start.iChar - 1 < tb[start.iLine].Count )
-        &&   ( tb[start.iLine][start.iChar - 1].c == '\t' ) )
+        && ( start.iChar > 0 )
+        && ( start.iChar - 1 < tb[start.iLine].Count )
+        && ( tb[start.iLine][start.iChar - 1].c == '\t' ) )
         {
           int delta = start.iChar % tb.TabLength;
           if ( delta == 0 )
@@ -529,8 +529,14 @@ namespace FastColoredTextBoxNS
           start.Offset( -1, 0 );
         }
       }
+      else if ( start.iLine == 0 )
+      {
+        start = new Place( 0, 0 );
+      }
       else
+      {
         start = new Place( tb[start.iLine - 1].Count, start.iLine - 1 );
+      }
 
       preferedPos = -1;
       end = start;

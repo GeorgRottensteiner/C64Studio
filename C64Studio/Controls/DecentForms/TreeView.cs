@@ -11,9 +11,9 @@ namespace DecentForms
 {
   public partial class TreeView : ControlBase
   {
-    public delegate void TreeViewCancelEventHandler( object sender, TreeViewCancelEventArgs e );
-    public delegate void TreeViewEventHandler( object sender, TreeViewEventArgs e );
-    public delegate void TreeNodeMouseClickEventHandler( object sender, TreeNodeMouseClickEventArgs e );
+    public delegate void TreeViewCancelEventHandler( DecentForms.ControlBase Sender, TreeViewCancelEventArgs e );
+    public delegate void TreeViewEventHandler( DecentForms.ControlBase Sender, TreeViewEventArgs e );
+    public delegate void TreeNodeMouseClickEventHandler( DecentForms.ControlBase Sender, TreeNodeMouseClickEventArgs e );
 
 
 
@@ -36,6 +36,7 @@ namespace DecentForms
     private bool          _UpdateLocked = false;
     private bool          _RequiresUpdate = false;
     private bool          _RequiresScrollbarUpdate = false;
+    private bool          _RequiresVisualIndexRecalc = false;
 
     private System.Windows.Forms.ImageList     _ImageList = null;
 
@@ -187,6 +188,14 @@ namespace DecentForms
       if ( _UpdateLocked )
       {
         _UpdateLocked = false;
+        if ( _RequiresVisualIndexRecalc )
+        {
+          _RequiresVisualIndexRecalc = false;
+          if ( Nodes.Any() )
+          {
+            Nodes[0].RecalcVisualIndexStartingWithMyself();
+          }
+        }
         if ( _RequiresScrollbarUpdate )
         {
           _RequiresScrollbarUpdate = false;
@@ -1027,6 +1036,10 @@ namespace DecentForms
 
     private void ItemsModified()
     {
+      if ( _UpdateLocked )
+      {
+        _RequiresVisualIndexRecalc = true;
+      }
       _CachedMaxItemWidth = -1;
       if ( _FirstVisibleNode == null )
       {
@@ -1081,7 +1094,7 @@ namespace DecentForms
 
       if ( ImageList != null )
       {
-        rect = new Rectangle( rect.Left - ItemHeight, rect.Top, ExpandToggleItemSize, rect.Height );
+        rect = new Rectangle( rect.Left - ItemHeight - rect.Height * 4 / 16, rect.Top, ExpandToggleItemSize, rect.Height );
       }
       else
       {
@@ -1217,7 +1230,7 @@ namespace DecentForms
         Node = node;
         MouseX = x;
         MouseY = y;
-        MouseButtons = button;
+        Button = button;
         Action = TreeViewAction.Unknown;
       }
 
@@ -1228,7 +1241,7 @@ namespace DecentForms
         Node = node;
         MouseX = x;
         MouseY = y;
-        MouseButtons = button;
+        Button = button;
         Action = action;
       }
 
@@ -1244,7 +1257,7 @@ namespace DecentForms
         get;
       }
 
-      public uint MouseButtons
+      public uint Button
       {
         get;
       }

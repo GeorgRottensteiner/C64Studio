@@ -43,8 +43,8 @@ namespace RetroDevStudio
     public MapEditor              m_MapEditor = null;
     public Calculator             m_Calculator = null;
     public PetSCIITable           m_PetSCIITable = null;
-    public Outline                m_Outline = new Outline();
-    public LabelExplorer          m_LabelExplorer = new LabelExplorer();
+    public Outline                m_Outline = null;
+    public LabelExplorer          m_LabelExplorer = null;
     public ValueTableEditor       m_ValueTableEditor = null;
     public Documents.Help         m_Help = null;
     public FormFindReplace        m_FindReplace = null;
@@ -547,6 +547,8 @@ namespace RetroDevStudio
       m_FindReplace         = new FormFindReplace( StudioCore );
       m_Help                = new Documents.Help( StudioCore );
       m_Bookmarks           = new Bookmarks( StudioCore );
+      m_Outline             = new Outline( StudioCore );
+      m_LabelExplorer       = new LabelExplorer( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();

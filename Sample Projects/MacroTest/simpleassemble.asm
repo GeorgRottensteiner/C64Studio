@@ -5,7 +5,6 @@ jmp $1234 ;5
 
   lda #$ff
 
-
   Zeropage_Routine = $0020
 
 jmp Zeropage_Routine
@@ -13,6 +12,7 @@ jmp Zeropage_Routine
 !byte 50+100
 
 Zeropage_Routine2
+
 
 
 !lzone dummy4
