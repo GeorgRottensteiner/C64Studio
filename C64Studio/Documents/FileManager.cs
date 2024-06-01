@@ -155,13 +155,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override bool QueryFilename( out string Filename )
+    protected override bool QueryFilename( string PreviousFilename, out string Filename )
     {
       Filename = "";
 
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Save media as";
+      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
       if ( m_Media != null )
       {
         saveDlg.Filter = m_Media.FileFilter;

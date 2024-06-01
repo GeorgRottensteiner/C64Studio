@@ -256,13 +256,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override bool QueryFilename( out string Filename )
+    protected override bool QueryFilename( string PreviousFilename, out string Filename )
     {
       Filename = "";
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Save Charset Project as";
       saveDlg.Filter = "Charset Projects|*.charsetproject|All Files|*.*";
+      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;

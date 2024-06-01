@@ -889,7 +889,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override bool QueryFilename( out string Filename )
+    protected override bool QueryFilename( string PreviousFilename, out string Filename )
     {
       Filename = "";
 
@@ -897,6 +897,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save Sprite Project as";
       saveDlg.Filter = "Sprite Projects|*.spriteproject|All Files|*.*";
+      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;

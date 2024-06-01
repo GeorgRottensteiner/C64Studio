@@ -1675,8 +1675,8 @@ namespace RetroDevStudio
             AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc ) );
           }
         }
-        saveToolStripMenuItem.Enabled = baseDoc.Modified;
-        saveAsToolStripMenuItem.Enabled = true;
+        saveToolStripMenuItem.Enabled   = baseDoc.Modified;
+        saveAsToolStripMenuItem.Enabled = baseDoc.IsSaveable;
         mainToolSave.Enabled = baseDoc.Modified;
       }
     }

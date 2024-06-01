@@ -497,7 +497,7 @@ namespace RetroDevStudio.Documents
           oldName = DocumentInfo.FullPath;
         }
 
-        if ( !QueryFilename( out NewFilename ) )
+        if ( !QueryFilename( DocumentInfo.FullPath, out NewFilename ) )
         {
           return false;
         }
@@ -606,7 +606,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected virtual bool QueryFilename( out string Filename )
+    protected virtual bool QueryFilename( string PreviousFilename, out string Filename )
     {
       Filename = "";
       return false;
