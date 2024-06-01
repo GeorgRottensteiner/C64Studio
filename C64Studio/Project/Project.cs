@@ -65,7 +65,7 @@ namespace RetroDevStudio
 
 
 
-    GR.Memory.ByteBuffer ElementToBuffer( ProjectElement Element )
+    public GR.Memory.ByteBuffer ElementToBuffer( ProjectElement Element, bool IncludeChilds = true )
     {
       GR.Memory.ByteBuffer buffer = new GR.Memory.ByteBuffer();
 
@@ -201,11 +201,14 @@ namespace RetroDevStudio
         }
       }
       // child elements
-      foreach ( System.Windows.Forms.TreeNode node in Element.Node.Nodes )
+      if ( IncludeChilds )
       {
-        ProjectElement subElement = ( (SolutionExplorer.TreeItemInfo)node.Tag ).Element;
+        foreach ( System.Windows.Forms.TreeNode node in Element.Node.Nodes )
+        {
+          ProjectElement subElement = ( (SolutionExplorer.TreeItemInfo)node.Tag ).Element;
 
-        buffer.Append( ElementToBuffer( subElement ) );
+          buffer.Append( ElementToBuffer( subElement ) );
+        }
       }
 
       return buffer;

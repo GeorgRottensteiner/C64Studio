@@ -113,6 +113,19 @@ namespace RetroDevStudio.Dialogs
       string solutionPath = System.IO.Path.Combine( finalPath, editSolutionName.Text + ".s64" );
       string projectFullFilename  = System.IO.Path.Combine( finalPathProject, editProjectName.Text + ".c64" );
 
+      if ( System.IO.File.Exists( solutionPath ) )
+      {
+        labelSolutionSummary.Text = $"The target solution file {solutionPath} already exists!";
+        btnOK.Enabled = false;
+        return;
+      }
+      if ( System.IO.File.Exists( projectFullFilename ) )
+      {
+        labelSolutionSummary.Text = $"The target project file {projectFullFilename} already exists!";
+        btnOK.Enabled = false;
+        return;
+      }
+
       labelSolutionSummary.Text = "The solution file will be created as " + solutionPath + "." + System.Environment.NewLine
                                 + "The project file will be created as " + projectFullFilename + "." + System.Environment.NewLine;
 

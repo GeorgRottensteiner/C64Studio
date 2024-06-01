@@ -156,7 +156,6 @@ namespace RetroDevStudio.Documents
           bool isProject = ( e.Node.Level == 0 );
           var info = (TreeItemInfo)e.Node.Tag;
 
-          //Debug.Log( $"{e.Node.Text} = {info.FileState}" );
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
           &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
@@ -256,6 +255,19 @@ namespace RetroDevStudio.Documents
             subItemAddExistingProject.Click += new EventHandler( subItemAddExistingProject_Click );
             item.DropDownItems.Add( subItemAddExistingProject );
 
+            contextMenu.Items.Add( "-" );
+
+            item = AddContextMenuItem( contextMenu.Items, "Paste", treePasteElement_Click, null );
+            IDataObject dataObj = Clipboard.GetDataObject();
+            if ( ( dataObj != null )
+            &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
+            {
+              item.Enabled = true;
+            }
+            else
+            {
+              item.Enabled = false;
+            }
             contextMenu.Items.Add( "-" );
 
             AddContextMenuItem( contextMenu.Items, "Open Explorer here", openFolderClick, null );
@@ -868,10 +880,13 @@ namespace RetroDevStudio.Documents
         projectData.AppendI32( projectFile.Length );
         projectData.Append( projectFile );
 
+        var elementProperties = element.DocumentInfo.Project.ElementToBuffer( element );
+
         DataObject dataObj = new DataObject();
 
         dataObj.SetData( clipboardDataName, false, fileData.MemoryStream() );
         dataObj.SetData( "RetroDevStudio.ProjectFile", false, projectData.MemoryStream() );
+        dataObj.SetData( "RetroDevStudio.ElementProperties", false, elementProperties.MemoryStream() );
 
         Clipboard.SetDataObject( dataObj, true );
       }

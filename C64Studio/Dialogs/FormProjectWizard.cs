@@ -72,9 +72,18 @@ namespace RetroDevStudio.Dialogs
         btnOK.Enabled = false;
         return;
       }
+
       string    finalPath = editBasePath.Text;
       finalPath = System.IO.Path.Combine( finalPath, editProjectName.Text );
       finalPath = System.IO.Path.Combine( finalPath, editProjectName.Text + ".c64" );
+
+      if ( System.IO.File.Exists( finalPath ) )
+      {
+        labelProjectSummary.Text = $"The target project file {finalPath} already exists!";
+        btnOK.Enabled = false;
+        return;
+      }
+
       labelProjectSummary.Text = "The project file will be created as " + finalPath;
       btnOK.Enabled = true;
     }
