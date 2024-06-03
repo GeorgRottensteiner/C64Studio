@@ -450,6 +450,8 @@
       del "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects\*.*" /Q
       copy /Y "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
       if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
+      if exist "$(TargetDir)C64Studio.deps.json" copy "$(TargetDir)C64Studio.deps.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
+      if exist "$(TargetDir)runtimes" xcopy /S /Y /I "$(TargetDir)runtimes" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\runtimes"
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net3.5|AnyCPU'">

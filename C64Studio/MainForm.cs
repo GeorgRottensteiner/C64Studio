@@ -3054,7 +3054,7 @@ namespace RetroDevStudio
 
       if ( projectWizard.CreateRepository )
       {
-        global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ), out SourceControl.Controller controller );
+        bool repoCreated = global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ), out SourceControl.Controller controller );
         if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
         {
           newProject.SourceControl = controller;
@@ -3078,7 +3078,8 @@ namespace RetroDevStudio
 
       if ( SaveProject( newProject ) )
       {
-        if ( projectWizard.CreateRepository )
+        if ( ( projectWizard.CreateRepository )
+        &&   ( newProject.SourceControl != null ) )
         {
           if ( addedSolution )
           {
