@@ -306,22 +306,36 @@ namespace DecentForms
 
 
 
-    public void DrawText( string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, int DX = 0, int DY = 0 )
+    public void DrawText( Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, int DX = 0, int DY = 0 )
     {
       BoundsX -= _DisplayOffsetX;
       BoundsY -= _DisplayOffsetY;
 
-      TextRenderer.DrawText( _G, Text, _Control.Font, new Rectangle( BoundsX + DX, BoundsY + DY, Width, Height ), ToColor( ColorControlText ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
+      TextRenderer.DrawText( _G, Text, Font, new Rectangle( BoundsX + DX, BoundsY + DY, Width, Height ), ToColor( ColorControlText ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
+    }
+
+
+
+    public void DrawText( string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, int DX = 0, int DY = 0 )
+    {
+      DrawText( _Control.Font, Text, BoundsX, BoundsY, Width, Height, Alignment, DX, DY );
+    }
+
+
+
+    public void DrawText( Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, uint Color )
+    {
+      BoundsX -= _DisplayOffsetX;
+      BoundsY -= _DisplayOffsetY;
+
+      TextRenderer.DrawText( _G, Text, Font, new Rectangle( BoundsX, BoundsY, Width, Height ), ToColor( Color ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
     }
 
 
 
     public void DrawText( string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, uint Color )
     {
-      BoundsX -= _DisplayOffsetX;
-      BoundsY -= _DisplayOffsetY;
-
-      TextRenderer.DrawText( _G, Text, _Control.Font, new Rectangle( BoundsX, BoundsY, Width, Height ), ToColor( Color ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
+      DrawText( _Control.Font, Text, BoundsX, BoundsY, Width, Height, Alignment, Color );
     }
 
 
@@ -1146,21 +1160,27 @@ namespace DecentForms
     {
       var treeView = (TreeView)_Control;
 
+      var fontToUse = treeView.Font;
+      if ( Node.NodeFont != null )
+      {
+        fontToUse = Node.NodeFont;
+      }
+
       if ( Node == treeView.SelectedNode )
       {
         FillRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackgroundSelected );
 
-        DrawText( Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextSelected );
+        DrawText( fontToUse, Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextSelected );
         DrawFocusRect( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlText );
       }
       else if ( Node == treeView.MouseOverNode )
       {
         FillRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackgroundMouseOver );
-        DrawText( Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextMouseOver );
+        DrawText( fontToUse, Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextMouseOver );
       }
       else
       {
-        DrawText( Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V );
+        DrawText( fontToUse, Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V );
       }
 
       /*

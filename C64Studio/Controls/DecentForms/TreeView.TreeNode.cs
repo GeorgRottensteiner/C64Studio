@@ -68,7 +68,7 @@ namespace DecentForms
           if ( ( _TextWidth == -1 )
           &&   ( _Owner != null ) )
           {
-            _TextWidth = System.Windows.Forms.TextRenderer.MeasureText( _Text, _Owner.Font ).Width;
+            _TextWidth = System.Windows.Forms.TextRenderer.MeasureText( _Text, _NodeFont ?? _Owner.Font ).Width;
           }
           return _Text;
         }
@@ -79,7 +79,7 @@ namespace DecentForms
             _Text = value;
             if ( _Owner != null )
             {
-              _TextWidth = System.Windows.Forms.TextRenderer.MeasureText( Text, _Owner.Font ).Width;
+              _TextWidth = System.Windows.Forms.TextRenderer.MeasureText( _Text, _NodeFont ?? _Owner.Font ).Width;
               _Owner.ItemModified( this );
             }
           }
@@ -294,8 +294,12 @@ namespace DecentForms
         }
         set
         {
-          _NodeFont = value;
-          _Owner?.ItemModified( this );
+          if ( _NodeFont != value )
+          {
+            _NodeFont = value;
+            _TextWidth = System.Windows.Forms.TextRenderer.MeasureText( _Text, _NodeFont ?? _Owner.Font ).Width;
+            _Owner?.ItemModified( this );
+          }
         }
       }
 
