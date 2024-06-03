@@ -1445,13 +1445,11 @@ namespace DecentForms
         return;
       }
       _EditedNode = _SelectedNode;
-      // TODO - popup edit control!
       if ( _PopupEditControl == null )
       {
         _PopupEditControl = new TextBox();
         _PopupEditControl.LostFocus += _PopupEditControl_LostFocus;
         _PopupEditControl.HandleDestroyed += _PopupEditControl_HandleDestroyed;
-        _PopupEditControl.VisibleChanged += _PopupEditControl_VisibleChanged;
         _PopupEditControl.PreviewKeyDown += _PopupEditControl_PreviewKeyDown;
       }
       var bounds = _SelectedNode.Bounds;
@@ -1487,14 +1485,8 @@ namespace DecentForms
 
 
 
-    private void _PopupEditControl_VisibleChanged( object sender, EventArgs e )
-    {
-      Debug.Log( $"Visibility changed {_PopupEditControl.Visible}" );
-    }
-
     private void _PopupEditControl_HandleDestroyed( object sender, EventArgs e )
     {
-      Debug.Log( "Destroyed" );
       _PopupEditControl = null;
     }
 
@@ -1502,7 +1494,6 @@ namespace DecentForms
 
     private void _PopupEditControl_LostFocus( object sender, EventArgs e )
     {
-      Debug.Log( "lost focus" );
       EndEdit( true );
     }
 

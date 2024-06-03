@@ -1400,6 +1400,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       string    newText = e.Label;
+
       Project project = ProjectFromNode( e.Node );
 
       if ( e.Node.Level == 0 )
@@ -1422,11 +1423,11 @@ namespace RetroDevStudio.Documents
       ProjectElement element = ElementFromNode( e.Node );
       if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       {
-        newText = e.Label + System.IO.Path.GetExtension( e.Node.Text );
+        newText += System.IO.Path.GetExtension( e.Node.Text );
       }
       else
       {
-        newText = e.Label;
+        newText += e.Label;
       }
 
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
@@ -1437,6 +1438,9 @@ namespace RetroDevStudio.Documents
         project.SetModified();
         return;
       }
+
+      // override text with extension
+      e.Label = newText;
 
       string    oldFilename = element.DocumentInfo.FullPath;
       string    newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( oldFilename ), newText );
