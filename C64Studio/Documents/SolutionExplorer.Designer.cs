@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SolutionExplorer));
-      this.treeProject = new RetroDevStudio.NoDblClkTreeView();
+      this.treeProject = new DecentForms.TreeView();
       this.imageListExplorer = new System.Windows.Forms.ImageList(this.components);
       this.timerDragDrop = new System.Windows.Forms.Timer(this.components);
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -57,28 +57,26 @@
       // treeProject
       // 
       this.treeProject.AllowDrop = true;
+      this.treeProject.AllowDrag = true;
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.treeProject.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-      this.treeProject.ImageIndex = 0;
       this.treeProject.ImageList = this.imageListExplorer;
       this.treeProject.LabelEdit = true;
       this.treeProject.Location = new System.Drawing.Point(0, 28);
       this.treeProject.Name = "treeProject";
-      this.treeProject.SelectedImageIndex = 0;
       this.treeProject.Size = new System.Drawing.Size(534, 362);
       this.treeProject.TabIndex = 0;
       this.treeProject.Text = "NoDblClkTreeView";
-      this.treeProject.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeProject_BeforeLabelEdit);
-      this.treeProject.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeProject_AfterLabelEdit);
-      this.treeProject.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterCollapse);
-      this.treeProject.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterExpand);
-      this.treeProject.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeProject_DrawNode);
+      this.treeProject.BeforeLabelEdit += new DecentForms.TreeView.NodeLabelEditEventHandler(this.treeProject_BeforeLabelEdit);
+      this.treeProject.AfterLabelEdit += new DecentForms.TreeView.NodeLabelEditEventHandler(this.treeProject_AfterLabelEdit);
+      this.treeProject.AfterCollapse += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterCollapse);
+      this.treeProject.AfterExpand += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterExpand);
+      this.treeProject.DrawNode += new DecentForms.TreeView.DrawTreeNodeEventHandler(this.treeProject_DrawNode);
       this.treeProject.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeProject_ItemDrag);
-      this.treeProject.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterSelect);
-      this.treeProject.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);
-      this.treeProject.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseDoubleClick);
+      this.treeProject.AfterSelect += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterSelect);
+      this.treeProject.NodeMouseClick += new DecentForms.TreeView.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);
+      this.treeProject.NodeMouseDoubleClick += new DecentForms.TreeView.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseDoubleClick);
       this.treeProject.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeProject_DragDrop);
       this.treeProject.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeProject_DragEnter);
       this.treeProject.DragOver += new System.Windows.Forms.DragEventHandler(this.treeProject_DragOver);
@@ -273,7 +271,7 @@
 
     #endregion
 
-    public NoDblClkTreeView treeProject;
+    public DecentForms.TreeView treeProject;
     private System.Windows.Forms.ImageList imageListExplorer;
     private System.Windows.Forms.Timer timerDragDrop;
     private System.Windows.Forms.ToolStrip toolStrip1;

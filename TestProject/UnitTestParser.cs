@@ -382,6 +382,20 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModePETExpressions()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $3000
+                                      !pet ""abc"",""$""+$80";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0030414243A4", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModePETWithTextMacro()
     {
       string      source = @"!to ""text-modes.prg"",cbm

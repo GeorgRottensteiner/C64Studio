@@ -2825,16 +2825,16 @@ namespace RetroDevStudio
 
 
 
-    public ProjectElement CreateNewElement( ProjectElement.ElementType Type, string StartName, Project Project, TreeNode ParentNode )
+    public ProjectElement CreateNewElement( ProjectElement.ElementType Type, string StartName, Project Project, DecentForms.TreeView.TreeNode ParentNode )
     {
       if ( Project == null )
       {
         return null;
       }
-      Project projectToAdd = m_SolutionExplorer.ProjectFromNode(ParentNode);
-      ProjectElement elementParent = m_SolutionExplorer.ElementFromNode(ParentNode);
+      Project projectToAdd = m_SolutionExplorer.ProjectFromNode( ParentNode );
+      ProjectElement elementParent = m_SolutionExplorer.ElementFromNode( ParentNode );
 
-      ProjectElement element = projectToAdd.CreateElement(Type, ParentNode);
+      ProjectElement element = projectToAdd.CreateElement( Type, ParentNode );
       element.Name = StartName;
       element.Node.Text = StartName;
       element.ProjectHierarchy = m_SolutionExplorer.GetElementHierarchy( element.Node );
@@ -2969,7 +2969,7 @@ namespace RetroDevStudio
 
 
 
-    private void AddNewDocumentOrElement( ProjectElement.ElementType Type, string Description, Project ParentProject, TreeNode ParentNode )
+    private void AddNewDocumentOrElement( ProjectElement.ElementType Type, string Description, Project ParentProject, DecentForms.TreeView.TreeNode ParentNode )
     {
       if ( ParentProject != null )
       {
@@ -3026,7 +3026,7 @@ namespace RetroDevStudio
       newProject.Settings.Name      = projectWizard.ProjectName;
       newProject.Settings.Filename  = projectWizard.ProjectFilename;
       newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
-      newProject.Node               = new TreeNode();
+      newProject.Node               = new DecentForms.TreeView.TreeNode();
       newProject.Node.Tag           = new SolutionExplorer.TreeItemInfo() { Project = newProject };
       newProject.Node.Text          = newProject.Settings.Name;
 
@@ -3097,16 +3097,12 @@ namespace RetroDevStudio
 
     public bool CreateNewProject()
     {
-      if ( !CloseAllProjects() )
-      {
-        return false;
-      }
-      return ( AddNewProject() != null );
+      return ( AddNewProject( false ) != null );
     }
 
 
 
-    public Project AddNewProject()
+    public Project AddNewProject( bool AddToSolution )
     {
       if ( StudioCore.Navigating.Solution == null )
       {
@@ -3119,6 +3115,14 @@ namespace RetroDevStudio
       {
         return null;
       }
+
+      if ( ( !AddToSolution )
+      &&   ( !CloseSolution() ) )
+      {
+        return null;
+      }
+
+
       projectToolStripMenuItem.Visible = true;
       foreach ( var configName in newProject.Settings.GetConfigurationNames() )
       {
@@ -3607,7 +3611,7 @@ namespace RetroDevStudio
 
 
 
-    public bool ImportExistingFiles( TreeNode Node )
+    public bool ImportExistingFiles( DecentForms.TreeView.TreeNode Node )
     {
       Project projectToAddTo = null;
       if ( Node != null )
@@ -3649,7 +3653,7 @@ namespace RetroDevStudio
 
 
 
-    public void AddExistingFilesToProject( Project ProjectToAddTo, TreeNode Node, string[] Filenames, bool CopyToProjectFolderWithoutAsking )
+    public void AddExistingFilesToProject( Project ProjectToAddTo, DecentForms.TreeView.TreeNode Node, string[] Filenames, bool CopyToProjectFolderWithoutAsking )
     {
       foreach ( var fileName in Filenames )
       {
@@ -3659,7 +3663,7 @@ namespace RetroDevStudio
 
 
 
-    public void AddExistingFileToProject( Project ProjectToAddTo, TreeNode Node, string Filename, bool CopyToProjectFolderWithoutAsking )
+    public void AddExistingFileToProject( Project ProjectToAddTo, DecentForms.TreeView.TreeNode Node, string Filename, bool CopyToProjectFolderWithoutAsking )
     {
       string importFile = Filename;
 
@@ -3754,9 +3758,9 @@ namespace RetroDevStudio
         }
       }
 
-      TreeNode parentNodeToInsertTo = Node;
+      DecentForms.TreeView.TreeNode parentNodeToInsertTo = Node;
 
-      ProjectElement element = ProjectToAddTo.CreateElement(type, parentNodeToInsertTo);
+      ProjectElement element = ProjectToAddTo.CreateElement( type, parentNodeToInsertTo );
 
       string relativeFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), true, importFile, false );
       element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
@@ -5072,8 +5076,10 @@ namespace RetroDevStudio
             DocumentInfo docToHandle = DetermineDocumentToCompile( false );
             DocumentInfo docActive = DetermineDocument();
 
-            if ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
-            &&   ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) )
+            if ( ( docToDebug == null )
+            ||   ( docActive == null )
+            ||   ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
+            &&     ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
             {
               break;
             }
@@ -6408,7 +6414,7 @@ namespace RetroDevStudio
 
 
 
-    public void AddNewElement( ProjectElement.ElementType Type, string Description, Project ParentProject, TreeNode ParentNode )
+    public void AddNewElement( ProjectElement.ElementType Type, string Description, Project ParentProject, DecentForms.TreeView.TreeNode ParentNode )
     {
       string newFilename;
       if ( !ChooseFilename( Type, Description, ParentProject, out newFilename ) )
@@ -6946,10 +6952,10 @@ namespace RetroDevStudio
 
 
 
-    private void DumpElementHierarchy( TreeNode Node, string Indent )
+    private void DumpElementHierarchy( DecentForms.TreeView.TreeNode Node, string Indent )
     {
-      Project project = m_SolutionExplorer.ProjectFromNode(Node);
-      ProjectElement element = m_SolutionExplorer.ElementFromNode(Node);
+      Project project = m_SolutionExplorer.ProjectFromNode( Node );
+      ProjectElement element = m_SolutionExplorer.ElementFromNode( Node );
       if ( ( element == null )
       && ( Node.Level > 0 ) )
       {
@@ -6966,7 +6972,7 @@ namespace RetroDevStudio
           string hier = string.Join(">", element.ProjectHierarchy.ToArray());
           Debug.Log( Indent + Node.Text + "(" + hier + ")" );
         }
-        foreach ( TreeNode subNode in Node.Nodes )
+        foreach ( var subNode in Node.Nodes )
         {
           DumpElementHierarchy( subNode, Indent + " " );
         }
@@ -6977,12 +6983,12 @@ namespace RetroDevStudio
 
     private void dumpHierarchyToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( TreeNode node in m_SolutionExplorer.treeProject.Nodes )
+      foreach ( var node in m_SolutionExplorer.treeProject.Nodes )
       {
         DumpElementHierarchy( node, "" );
       }
       Debug.Log( "by project:" );
-      foreach ( TreeNode node in m_SolutionExplorer.treeProject.Nodes )
+      foreach ( var node in m_SolutionExplorer.treeProject.Nodes )
       {
         Project project = m_SolutionExplorer.ProjectFromNode( node );
         Debug.Log( "Project " + project.Settings.Name );
@@ -7076,7 +7082,7 @@ namespace RetroDevStudio
           newProject.Settings.Name      = System.IO.Path.GetFileNameWithoutExtension( solWizard.ProjectFilename );
           newProject.Settings.Filename  = solWizard.ProjectFilename;
           newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
-          newProject.Node = new TreeNode();
+          newProject.Node       = new DecentForms.TreeView.TreeNode();
           newProject.Node.Tag   = new SolutionExplorer.TreeItemInfo() { Project = newProject };
           newProject.Node.Text  = newProject.Settings.Name;
 
@@ -7123,7 +7129,7 @@ namespace RetroDevStudio
         }
         return null;
       }
-      return AddNewProject();
+      return AddNewProject( false );
     }
 
 
@@ -7306,10 +7312,6 @@ namespace RetroDevStudio
 
     private void fileNewSolutionToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      if ( !CloseSolution() )
-      {
-        return;
-      }
       AddNewProjectAndOrSolution();
     }
 

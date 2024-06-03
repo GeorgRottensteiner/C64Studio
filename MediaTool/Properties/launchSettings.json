@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "MediaTool": {
+      "commandName": "Project",
+      "commandLineArgs": "-charscreen screen1.charscreen -type charscolors -export exported.bin",
+      "workingDirectory": "D:\\projekte\\C64Studio\\Sample Projects\\MacroTest"
+    }
+  }
+}

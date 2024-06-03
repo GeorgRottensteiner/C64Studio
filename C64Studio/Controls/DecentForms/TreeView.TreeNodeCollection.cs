@@ -77,7 +77,7 @@ namespace DecentForms
       {
         foreach ( var node in Node.Nodes )
         {
-          node._Owner = _OwnerControl;
+          node._Owner = OwnerControl;
           SetNodeOwner( node, OwnerControl );
         }
       }
@@ -134,6 +134,17 @@ namespace DecentForms
             --Nodes[i]._VisualIndex;
           }
         }
+        var node = Nodes[Index];
+        if ( node.PreviousNode != null )
+        {
+          node.PreviousNode._Next = node.NextNode;
+        }
+        if ( node.NextNode != null )
+        {
+          node.NextNode._Previous = node.PreviousNode;
+        }
+        node._Next      = null;
+        node._Previous  = null;
         _OwnerControl?.DetachNode( Nodes[Index] );
 
         Nodes.RemoveAt( Index );
@@ -215,6 +226,40 @@ namespace DecentForms
       IEnumerator IEnumerable.GetEnumerator()
       {
         return Nodes.GetEnumerator();
+      }
+
+
+
+      public void Insert( int Index, TreeNode treeNode )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index >= Nodes.Count ) )
+        {
+          throw new ArgumentOutOfRangeException( $"Index {Index} is out of bounds!" );
+        }
+        treeNode._Owner   = _OwnerControl;
+        treeNode._Parent  = _Owner;
+        if ( Index > 0 )
+        {
+          Nodes[Index - 1]._Next = treeNode;
+          treeNode._Previous = Nodes[Index - 1];
+        }
+        Nodes.Insert( Index, treeNode );
+        if ( Index + 1 < Nodes.Count )
+        {
+          Nodes[Index + 1]._Previous = treeNode;
+          treeNode._Next = Nodes[Index + 1];
+        }
+        treeNode._Index = Index;
+        for ( int i = Index + 1; i < Nodes.Count; i++ )
+        {
+          ++Nodes[i]._Index;
+          if ( Nodes[i]._VisualIndex != -1 )
+          {
+            ++Nodes[i]._VisualIndex;
+          }
+        }
+        _OwnerControl?.ItemsModified();
       }
 
 

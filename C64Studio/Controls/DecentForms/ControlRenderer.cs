@@ -673,7 +673,7 @@ namespace DecentForms
     }
 
 
-  
+
     /*
     internal void RenderListBox()
     {
@@ -782,7 +782,21 @@ namespace DecentForms
 
 
 
-    private void DrawImage( System.Drawing.Image Image, Rectangle ImageRect )
+    public void DrawImage( System.Drawing.Image Image, int X, int Y )
+    {
+      _G.DrawImage( Image, X - _DisplayOffsetX, Y - _DisplayOffsetY, Image.Width, Image.Height );
+    }
+
+
+
+    public void DrawImage( System.Drawing.Image Image, int X, int Y, int Width, int Height )
+    {
+      _G.DrawImage( Image, X - _DisplayOffsetX, Y - _DisplayOffsetY, Width, Height );
+    }
+
+
+
+    public void DrawImage( System.Drawing.Image Image, Rectangle ImageRect )
     {
       _G.DrawImage( Image, ImageRect.X - _DisplayOffsetX, ImageRect.Y - _DisplayOffsetY, Image.Width, Image.Height );
     }
@@ -799,7 +813,7 @@ namespace DecentForms
 
 
 
-    private void DrawTreeViewExpansionToggle( bool IsExpanded, Rectangle Rect )
+    public void RenderTreeViewExpansionToggle( bool IsExpanded, Rectangle Rect )
     {
       int     rectSize = Rect.Height;
 
@@ -1062,6 +1076,47 @@ namespace DecentForms
 
 
 
+    public void DrawTreeViewNodeImage( TreeView.TreeNode Node )
+    {
+      var treeView = (TreeView)_Control;
+
+      var imageRect = treeView.GetImageRect( Node );
+      int imageIndex = Node.ImageIndex;
+      if ( ( imageIndex < 0 )
+      ||   ( imageIndex >= treeView.ImageList.Images.Count ) )
+      {
+        imageIndex = 0;
+      }
+
+      DrawImageCentered( treeView.ImageList.Images[imageIndex], imageRect );
+    }
+
+
+
+    public void DrawTreeViewNode( TreeView.TreeNode Node )
+    {
+      var treeView = (TreeView)_Control;
+
+      var rect = Node.Bounds;
+
+      // expand toggle
+      if ( Node.Nodes.Count > 0 )
+      {
+        var toggleRect = treeView.GetToggleRect( Node );
+
+        RenderTreeViewExpansionToggle( Node.IsExpanded, toggleRect );
+      }
+      if ( ( treeView.ImageList != null )
+      &&   ( treeView.ImageList.Images.Count > 0 ) )
+      {
+        treeView.RenderNodeImage( this, Node );
+      }
+
+      RenderTreeViewNodeText( Node, rect );
+    }
+
+
+
     public void RenderTreeView()
     {
       var treeView = (TreeView)_Control;
@@ -1079,49 +1134,48 @@ namespace DecentForms
           break;
         }
 
-        var rect = node.Bounds;
-
-        // expand toggle
-        if ( node.Nodes.Count > 0 )
-        {
-          var toggleRect = treeView.GetToggleRect( node );
-
-          DrawTreeViewExpansionToggle( node.IsExpanded, toggleRect );
-        }
-        if ( ( treeView.ImageList != null )
-        &&   ( treeView.ImageList.Images.Count > 0 ) )
-        {
-          var imageRect = treeView.GetImageRect( node );
-
-          int imageIndex = node.ImageIndex;
-          if ( ( imageIndex < 0 )
-          ||   ( imageIndex >= treeView.ImageList.Images.Count ) )
-          {
-            imageIndex = 0;
-          }
-          DrawImageCentered( treeView.ImageList.Images[imageIndex], imageRect );
-        }
-
-
-        if ( node == treeView.SelectedNode )
-        {
-          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
-
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextSelected );
-          DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
-        }
-        else if ( node == treeView.MouseOverNode )
-        {
-          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextMouseOver );
-        }
-        else
-        {
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V );
-        }
+        treeView.RenderNode( this, node );
 
         node = TreeView.GetNextVisibleNode( node );
       }
+    }
+
+
+
+    public void RenderTreeViewNodeText( TreeView.TreeNode Node, Rectangle Rect )
+    {
+      var treeView = (TreeView)_Control;
+
+      if ( Node == treeView.SelectedNode )
+      {
+        FillRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackgroundSelected );
+
+        DrawText( Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextSelected );
+        DrawFocusRect( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlText );
+      }
+      else if ( Node == treeView.MouseOverNode )
+      {
+        FillRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackgroundMouseOver );
+        DrawText( Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V, ColorControlTextMouseOver );
+      }
+      else
+      {
+        DrawText( Node.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.LEFT | TextAlignment.CENTERED_V );
+      }
+
+      /*
+      // If the node has focus, draw the focus rectangle large, making
+      // it large enough to include the text of the node tag, if present.
+      if ( e.State & TreeNodeStates.Focused ) != 0 )
+      {
+        using ( Pen focusPen = new Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) ) )
+        {
+          focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+          bounds.Size = new Size( bgBounds.Width - 1, bgBounds.Height - 1 );
+          bounds.Offset( -3, 0 );
+          e.Graphics.DrawRectangle( focusPen, bounds );
+        }
+      }*/
     }
 
 

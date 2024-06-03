@@ -71,13 +71,13 @@ namespace DecentForms
 
 
 
-    static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-    static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-    static readonly IntPtr HWND_TOP = new IntPtr(0);
-    static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+    public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+    public static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+    public static readonly IntPtr HWND_TOP = new IntPtr(0);
+    public static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
 
     [DllImport( "user32.dll", SetLastError = true )]
-    static extern bool SetWindowPos( IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, UInt32 uFlags );
+    public static extern bool SetWindowPos( IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, UInt32 uFlags );
 
 
 
@@ -113,7 +113,7 @@ namespace DecentForms
     [DllImport( "user32.dll", EntryPoint = "SetWindowLongPtr" )]
     private static extern IntPtr SetWindowLongPtr64( IntPtr hWnd, int nIndex, IntPtr dwNewLong );
 
-    enum WindowLongFlags : int
+    public enum WindowLongFlags : int
     {
       GWL_EXSTYLE = -20,
       GWLP_HINSTANCE = -6,
@@ -127,8 +127,9 @@ namespace DecentForms
       DWLP_DLGPROC = 0x4
     }
 
-    enum WindowStyleFlags : long 
+    public enum WindowStyleFlags : long 
     {
+      WS_VISIBLE	  = 0x10000000L,
       WS_BORDER	    = 0x00800000L,
       WS_CAPTION    = 0x00C00000L,
       WS_SYSMENU    = 0x00080000L,
@@ -136,7 +137,7 @@ namespace DecentForms
       WS_DLGFRAME	  = 0x00400000L
     }
 
-    enum ExtendedWindowStyleFlags : long
+    public enum ExtendedWindowStyleFlags : long
     {
       WS_EX_CLIENTEDGE = 0x00000200L
     }

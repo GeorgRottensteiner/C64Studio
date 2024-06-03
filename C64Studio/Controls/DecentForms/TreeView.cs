@@ -14,7 +14,8 @@ namespace DecentForms
     public delegate void TreeViewCancelEventHandler( DecentForms.ControlBase Sender, TreeViewCancelEventArgs e );
     public delegate void TreeViewEventHandler( DecentForms.ControlBase Sender, TreeViewEventArgs e );
     public delegate void TreeNodeMouseClickEventHandler( DecentForms.ControlBase Sender, TreeNodeMouseClickEventArgs e );
-
+    public delegate void NodeLabelEditEventHandler( DecentForms.ControlBase Sender, NodeLabelEditEventArgs e );
+    public delegate void DrawTreeNodeEventHandler( DecentForms.ControlBase Sender, DrawTreeNodeEventArgs e );
 
 
     private VScrollBar    _ScrollBar = new VScrollBar();
@@ -30,6 +31,9 @@ namespace DecentForms
     private TreeNode      _MouseOverNode = null;
     private TreeNode      _MouseOverToggleButtonNode = null;
 
+    private TreeNode      _EditedNode = null;
+    private TextBox       _PopupEditControl = null;
+
     private int           _SubNodeIndent = 19;
     private int           _ExpandToggleItemSize = 23;
 
@@ -37,6 +41,7 @@ namespace DecentForms
     private bool          _RequiresUpdate = false;
     private bool          _RequiresScrollbarUpdate = false;
     private bool          _RequiresVisualIndexRecalc = false;
+    private Point         _MouseDownPos = new Point();
 
     private System.Windows.Forms.ImageList     _ImageList = null;
 
@@ -50,6 +55,14 @@ namespace DecentForms
     public event TreeViewEventHandler             AfterSelect;
     public event TreeNodeMouseClickEventHandler   NodeMouseClick;
     public event TreeNodeMouseClickEventHandler   NodeMouseDoubleClick;
+
+    public event NodeLabelEditEventHandler        BeforeLabelEdit;
+    public event NodeLabelEditEventHandler        AfterLabelEdit;
+
+    public event DrawTreeNodeEventHandler         DrawNode;
+    public event DrawTreeNodeEventHandler         DrawNodeImage;
+
+    public event System.Windows.Forms.ItemDragEventHandler    ItemDrag;
 
 
 
@@ -65,6 +78,18 @@ namespace DecentForms
 
       ItemHeight = (int)( ItemHeight * DPIHandler.DPIY / 96.0f + 0.5f );
       UpdateScrollbarState();
+    }
+
+
+
+    protected override void OnLostFocus( EventArgs e )
+    {
+      if ( ( _EditedNode != null )
+      &&   ( !_PopupEditControl.Focused ) )
+      {
+        EndEdit( true );
+      }
+      base.OnLostFocus( e );
     }
 
 
@@ -158,6 +183,9 @@ namespace DecentForms
     public SelectionMode SelectionMode { get; set; }
 
 
+
+    public bool LabelEdit { get; set; } = false;
+    public bool AllowDrag { get; set; } = false;
 
     public bool ScrollAlwaysVisible 
     {
@@ -272,7 +300,6 @@ namespace DecentForms
         }
         else
         {
-
           if ( _ScrollBar.Value > newMax )
           {
             _ScrollBar.Value = newMax;
@@ -281,6 +308,8 @@ namespace DecentForms
 
           float factor = usableHeight / ( (float)TotalVisibleNodeCount * ItemHeight );
           _ScrollBar.SetSliderSize( (int)( ( _ScrollBar.Height - 2 * 17 ) * factor ) );
+
+          _ScrollBar.LargeChange = visibleItemCount - 1;
         }
       }
       else
@@ -669,9 +698,13 @@ namespace DecentForms
               }
               if ( ( Event.MouseButtons & 1 ) != 0 )
               {
-                if ( nodeBelow != _SelectedNode )
+                // start dragging?
+                if ( ( AllowDrag )
+                &&   ( _SelectedNode != null )
+                &&   ( ( Math.Abs( _MouseDownPos.X - Event.MouseX ) >= 5 )
+                ||     ( Math.Abs( _MouseDownPos.Y - Event.MouseY ) >= 5 ) ) )
                 {
-                  _SelectedNode = nodeBelow;
+                  OnItemDrag( new ItemDragEventArgs( ToMouseButtons( Event.MouseButtons ), _SelectedNode ) );
                 }
               }
               _MouseOverToggleButtonNode = null;
@@ -701,6 +734,8 @@ namespace DecentForms
           break;
         case ControlEvent.EventType.MOUSE_DOWN:
           Focus();
+          _MouseDownPos.X = Event.MouseX;
+          _MouseDownPos.Y = Event.MouseY;
           if ( _MouseOverToggleButtonNode != null )
           {
             _MouseOverToggleButtonNode.Toggle();
@@ -714,6 +749,15 @@ namespace DecentForms
           break;
         case ControlEvent.EventType.MOUSE_UP:
           Capture = false;
+          if ( _SelectedNode == _MouseOverNode )
+          {
+            var hitAreaDC2 = HitTest( Event.MouseX, Event.MouseY );
+            if ( ( ( hitAreaDC2.Location & TreeViewHitTestLocations.ONITEM ) != 0 )
+            &&   ( hitAreaDC2.Node != null ) )
+            {
+              NodeMouseClick?.Invoke( this, new TreeNodeMouseClickEventArgs( hitAreaDC2.Node, Event.MouseButtons, Event.MouseX, Event.MouseY ) );
+            }
+          }
           Invalidate();
           break;
         case ControlEvent.EventType.KEY_DOWN:
@@ -892,6 +936,38 @@ namespace DecentForms
 
 
 
+    private void OnItemDrag( ItemDragEventArgs e )
+    {
+      if ( ItemDrag != null )
+      {
+        ItemDrag( this, e );
+      }
+    }
+
+
+
+    private MouseButtons ToMouseButtons( uint MouseButtons )
+    {
+      MouseButtons buttons = 0;
+
+      if ( ( MouseButtons & 1 ) != 0 )
+      {
+        buttons |= System.Windows.Forms.MouseButtons.Left;
+      }
+      if ( ( MouseButtons & 2 ) != 0 )
+      {
+        buttons |= System.Windows.Forms.MouseButtons.Right;
+      }
+      if ( ( MouseButtons & 4 ) != 0 )
+      {
+        buttons |= System.Windows.Forms.MouseButtons.Middle;
+      }
+
+      return buttons;
+    }
+
+
+
     private TreeViewHitTestInfo HitTest( int X, int Y )
     {
       TreeNode    node = null;
@@ -952,7 +1028,14 @@ namespace DecentForms
 
 
 
-    private TreeNode GetNodeAt( int X, int Y )
+    public TreeNode GetNodeAt( Point Location )
+    {
+      return GetNodeAt( Location.X, Location.Y );
+    }
+
+
+
+    public TreeNode GetNodeAt( int X, int Y )
     {
       if ( ( X < 0 )
       ||   ( X >= UsableItemWidth )
@@ -1012,7 +1095,14 @@ namespace DecentForms
     {
       Node._Parent    = null;
       Node._Previous  = null;
-      // TODO - adjust index of next nodes
+
+      var node = Node._Next;
+      while ( node != null )
+      {
+        --node._Index;
+        node = node.NextNode;
+      }
+
       Node._Next      = null;
 
       DetachChildNode( Node );
@@ -1022,6 +1112,11 @@ namespace DecentForms
 
     private void DetachChildNode( TreeNode Node )
     {
+      if ( _FirstVisibleNode == Node )
+      {
+        _FirstVisibleNode = null;
+      }
+
       Node._Index       = -1;
       Node._VisualIndex = -1;
       Node._Owner       = null;
@@ -1040,7 +1135,14 @@ namespace DecentForms
       {
         _RequiresVisualIndexRecalc = true;
       }
-      _CachedMaxItemWidth = -1;
+      else
+      {
+        if ( Nodes.Any() )
+        {
+          Nodes[0].RecalcVisualIndexStartingWithMyself();
+        }
+      }
+        _CachedMaxItemWidth = -1;
       if ( _FirstVisibleNode == null )
       {
         if ( Nodes.Count > 0 )
@@ -1247,6 +1349,14 @@ namespace DecentForms
 
 
 
+      public Point Location
+      {
+        get
+        {
+          return new Point( MouseX, MouseY );
+        }
+      }
+
       public int MouseX 
       {
         get;
@@ -1296,7 +1406,213 @@ namespace DecentForms
 
 
 
+    public class NodeLabelEditEventArgs : EventArgs
+    {
+      public NodeLabelEditEventArgs( TreeNode Node, string Label )
+      {
+        this.Node   = Node;
+        this.Label  = Label;
+      }
 
+      public TreeNode Node
+      {
+        get;
+      }
+
+      public string Label
+      {
+        get; set;
+      }
+
+      public bool CancelEdit { get; set; } 
+
+    }
+
+
+
+    public void StartLabelEdit()
+    {
+      if ( ( _EditedNode != null )
+      ||   ( _SelectedNode == null ) )
+      {
+        return;
+      }
+
+      var nodeLabelEditEventArgs = new NodeLabelEditEventArgs( _SelectedNode, _SelectedNode.Text );
+      OnBeforeLabelEdit( nodeLabelEditEventArgs );
+      if ( nodeLabelEditEventArgs.CancelEdit )
+      {
+        return;
+      }
+      _EditedNode = _SelectedNode;
+      // TODO - popup edit control!
+      if ( _PopupEditControl == null )
+      {
+        _PopupEditControl = new TextBox();
+        _PopupEditControl.LostFocus += _PopupEditControl_LostFocus;
+        _PopupEditControl.HandleDestroyed += _PopupEditControl_HandleDestroyed;
+        _PopupEditControl.VisibleChanged += _PopupEditControl_VisibleChanged;
+        _PopupEditControl.PreviewKeyDown += _PopupEditControl_PreviewKeyDown;
+      }
+      var bounds = _SelectedNode.Bounds;
+
+      _PopupEditControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      _PopupEditControl.Text = nodeLabelEditEventArgs.Label;
+      _PopupEditControl.Font = nodeLabelEditEventArgs.Node.NodeFont;
+      _PopupEditControl.ClientSize = bounds.Size;
+      _PopupEditControl.Bounds = bounds;
+      if ( _PopupEditControl.Parent != this )
+      {
+        Controls.Add( _PopupEditControl );
+      }
+
+      _PopupEditControl.Visible = true;
+      _PopupEditControl.Focus();
+      _PopupEditControl.SelectAll();
+    }
+
+
+
+    private void _PopupEditControl_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Escape )
+      {
+        EndEdit( true );
+      }
+      else if ( e.KeyCode == Keys.Enter )
+      {
+        EndEdit( false );
+      }
+    }
+
+
+
+    private void _PopupEditControl_VisibleChanged( object sender, EventArgs e )
+    {
+      Debug.Log( $"Visibility changed {_PopupEditControl.Visible}" );
+    }
+
+    private void _PopupEditControl_HandleDestroyed( object sender, EventArgs e )
+    {
+      Debug.Log( "Destroyed" );
+      _PopupEditControl = null;
+    }
+
+
+
+    private void _PopupEditControl_LostFocus( object sender, EventArgs e )
+    {
+      Debug.Log( "lost focus" );
+      EndEdit( true );
+    }
+
+
+
+    public class DrawTreeNodeEventArgs : EventArgs
+    {
+      private readonly ControlRenderer renderer;
+
+      private readonly TreeNode node;
+
+
+
+      public TreeNode Node => node;
+
+      public ControlRenderer Renderer => renderer;
+
+
+
+      public DrawTreeNodeEventArgs( ControlRenderer Renderer, TreeNode Node )
+      {
+        renderer  = Renderer;
+        node      = Node;
+      }
+    }
+
+
+
+    protected virtual void OnBeforeLabelEdit( NodeLabelEditEventArgs e )
+    {
+      if ( BeforeLabelEdit != null ) 
+      {
+        BeforeLabelEdit( this, e );
+      }
+    }
+
+
+
+    protected virtual void OnAfterLabelEdit( NodeLabelEditEventArgs e )
+    {
+      if ( AfterLabelEdit != null )
+      {
+        AfterLabelEdit( this, e );
+      }
+    }
+
+
+
+    private void EndEdit( bool Cancel )
+    {
+      if ( Cancel )
+      {
+      }
+      else
+      {
+        var nodeLabelEditEventArgs = new NodeLabelEditEventArgs( _EditedNode, _PopupEditControl.Text );
+        OnAfterLabelEdit( nodeLabelEditEventArgs );
+        if ( !nodeLabelEditEventArgs.CancelEdit )
+        {
+          _EditedNode.Text = nodeLabelEditEventArgs.Label;
+        }
+      }
+      _PopupEditControl.Visible = false;
+
+      _EditedNode = null;
+    }
+
+
+
+    internal void RenderNodeImage( ControlRenderer Renderer, TreeNode Node )
+    {
+      if ( DrawNodeImage != null )
+      {
+        DrawNodeImage( this, new TreeView.DrawTreeNodeEventArgs( Renderer, Node ) );
+      }
+      else
+      {
+        Renderer.DrawTreeViewNodeImage( Node );
+      }
+    }
+
+
+
+    internal void RenderNode( ControlRenderer Renderer, TreeNode Node )
+    {
+      if ( DrawNode != null )
+      {
+        DrawNode( this, new TreeView.DrawTreeNodeEventArgs( Renderer, Node ) );
+      }
+      else
+      {
+        Renderer.DrawTreeViewNode( Node );
+      }
+    }
+
+
+
+    public void DumpNodes()
+    {
+      if ( Nodes.Count > 0 )
+      {
+        var node = Nodes[0];
+        while ( node != null )
+        {
+          Debug.Log( $"{node.Level} - {node.Text} - VI {node.VisualIndex} - PV {node.PreviousNode?.Text} - NX {node.NextNode?.Text} - PN {node._Parent?.Text}" );
+
+          node = GetNextNode( node );
+        }
+      }
+    }
 
 
   }

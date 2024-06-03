@@ -59,7 +59,7 @@ namespace RetroDevStudio
     public BuildTypes       BuildType = BuildTypes.NONE;
     private string          m_Name = "";
     public BaseDocument     Document = null;
-    public System.Windows.Forms.TreeNode Node = null;
+    public DecentForms.TreeView.TreeNode Node = null;
     private string          m_Filename = null;
     public string           TargetFilename = null;
     public string           CompileTargetFile = null;

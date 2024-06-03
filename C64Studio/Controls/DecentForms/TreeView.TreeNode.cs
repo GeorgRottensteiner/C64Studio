@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 
 
@@ -8,7 +9,7 @@ namespace DecentForms
   public partial class TreeView
   {
     [DebuggerDisplay( "Text = {_Text}, Level = {Level}" )]
-    public class TreeNode
+    public class TreeNode : ICloneable
     {
       internal TreeView             _Owner = null;
       internal TreeNode             _Parent = null;
@@ -31,6 +32,8 @@ namespace DecentForms
       internal int                  _TextWidth = -1;
 
       public object                 Tag = null;
+
+      private Font                  _NodeFont = null;
 
 
 
@@ -282,6 +285,42 @@ namespace DecentForms
 
 
 
+
+      public Font NodeFont
+      {
+        get
+        {
+          return _NodeFont;
+        }
+        set
+        {
+          _NodeFont = value;
+          _Owner?.ItemModified( this );
+        }
+      }
+
+
+
+      public TreeNode PrevVisibleNode
+      {
+        get
+        {
+          return TreeView.GetPreviousVisibleNode( this );
+        }
+      }
+
+
+
+      public TreeNode NextVisibleNode
+      {
+        get
+        {
+          return TreeView.GetNextVisibleNode( this );
+        }
+      }
+
+
+
       public int GetNodeCount( bool IncludeSubTrees, bool VisibleOnly )
       {
         int total = Nodes.Count;
@@ -446,18 +485,60 @@ namespace DecentForms
 
 
 
+      public void Remove()
+      {
+        if ( _Parent != null )
+        {
+          _Parent.Nodes.Remove( this );
+        }
+      }
+
+
+
+      public void EnsureVisible()
+      {
+        if ( _Owner == null )
+        {
+          return;
+        }
+        if ( _VisualIndex < _Owner.FirstVisibleNode.VisualIndex )
+        {
+          _Owner._ScrollBar.ScrollTo( _VisualIndex );
+        }
+        else if ( _VisualIndex > _Owner.FirstVisibleNode.VisualIndex + _Owner.VisibleItemCount )
+        {
+          _Owner._ScrollBar.ScrollTo( _VisualIndex + _Owner.VisibleItemCount - 1 );
+        }
+      }
+
+
+
+      public object Clone()
+      {
+        Type type = GetType();
+
+        var treeNode = new TreeNode();
+        treeNode.Text         = Text;
+        treeNode.ImageIndex   = _ImageIndex;
+        treeNode._Expanded    = _Expanded;
+        treeNode.Checked      = _Checked;
+        treeNode.NodeFont     = NodeFont;
+        treeNode.Tag          = Tag;
+
+        if ( Nodes.Count > 0 )
+        {
+          treeNode.Nodes = new TreeNodeCollection( null, treeNode );
+          foreach ( var node in Nodes )
+          {
+            treeNode.Nodes.Add( (TreeNode)node.Clone() );
+          }
+        }
+        return treeNode;
+      }
+
     }
 
 
-
-
-
-
   }
-
-
-
-
-
 
 }

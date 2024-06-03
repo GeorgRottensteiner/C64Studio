@@ -14,7 +14,7 @@ namespace RetroDevStudio
     public ProjectSettings    Settings = new ProjectSettings();
     public StudioCore         Core = null;
     private bool              m_Modified = false;
-    public System.Windows.Forms.TreeNode           Node = null;
+    public DecentForms.TreeView.TreeNode           Node = null;
     public MachineType        PreferredMachineType = MachineType.C64;
     public Controller         SourceControl = null;
 
@@ -203,7 +203,7 @@ namespace RetroDevStudio
       // child elements
       if ( IncludeChilds )
       {
-        foreach ( System.Windows.Forms.TreeNode node in Element.Node.Nodes )
+        foreach ( var node in Element.Node.Nodes )
         {
           ProjectElement subElement = ( (SolutionExplorer.TreeItemInfo)node.Tag ).Element;
 
@@ -248,7 +248,7 @@ namespace RetroDevStudio
 
       bufferProject.Append( chunkProject.ToBuffer() );
 
-      foreach ( System.Windows.Forms.TreeNode node in Node.Nodes )
+      foreach ( var node in Node.Nodes )
       {
         ProjectElement element = ( (SolutionExplorer.TreeItemInfo)node.Tag ).Element;
 
@@ -318,14 +318,14 @@ namespace RetroDevStudio
 
 
 
-    private System.Windows.Forms.TreeNode NodeFromHierarchy( List<string> Hierarchy )
+    private DecentForms.TreeView.TreeNode NodeFromHierarchy( List<string> Hierarchy )
     {
-      System.Windows.Forms.TreeNode   curNode = Node;
+      var curNode = Node;
 
       foreach ( string part in Hierarchy )
       {
         bool    partFound = false;
-        foreach ( System.Windows.Forms.TreeNode childNode in curNode.Nodes )
+        foreach ( var childNode in curNode.Nodes )
         {
           if ( childNode.Text == part )
           {
@@ -375,7 +375,7 @@ namespace RetroDevStudio
       string currentConfig = "Default";
       string activeElement = "";
 
-      Node = new System.Windows.Forms.TreeNode();
+      Node = new DecentForms.TreeView.TreeNode();
       Node.Tag = new SolutionExplorer.TreeItemInfo() { Project = this };
       Node.Collapse();
 
@@ -549,7 +549,7 @@ namespace RetroDevStudio
               if ( element.ProjectHierarchy.Count > 0 )
               {
                 // node is sub-node, move accordingly
-                System.Windows.Forms.TreeNode parentNode = NodeFromHierarchy( element.ProjectHierarchy );
+                var parentNode = NodeFromHierarchy( element.ProjectHierarchy );
                 if ( ( parentNode != null )
                 &&   ( parentNode != element.Node.Parent ) )
                 {
@@ -865,7 +865,7 @@ namespace RetroDevStudio
 
 
 
-    public ProjectElement CreateElement( ProjectElement.ElementType Type, System.Windows.Forms.TreeNode ParentNode )
+    public ProjectElement CreateElement( ProjectElement.ElementType Type, DecentForms.TreeView.TreeNode ParentNode )
     {
       ProjectElement    element = new ProjectElement();
       element.DocumentInfo.Type = Type;
@@ -874,10 +874,9 @@ namespace RetroDevStudio
 
       if ( ParentNode != null )
       {
-        element.Node = new System.Windows.Forms.TreeNode();
+        element.Node = new DecentForms.TreeView.TreeNode();
         element.Node.Tag = new SolutionExplorer.TreeItemInfo() { Element = element };
         element.Node.ImageIndex = (int)Type;
-        element.Node.SelectedImageIndex = (int)Type;
 
         ParentNode.Nodes.Add( element.Node );
         element.Node.Parent.Expand();

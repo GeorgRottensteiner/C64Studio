@@ -26,17 +26,25 @@ namespace RetroDevStudio.Parser
 
       foreach ( var paramGroup in lineParams )
       {
-        foreach ( var token in paramGroup )
+        if ( paramGroup.Any( t => t.Type != TokenInfo.TokenType.LITERAL_STRING ) )
         {
-          if ( token.Type == TokenInfo.TokenType.LITERAL_STRING )
+          // everything else is a expression resulting in a single byte
+          ++numBytes;
+        }
+        else
+        {
+          foreach ( var token in paramGroup )
           {
-            numBytes += ActualTextTokenLength( token );
-          }
-          else
-          {
-            // everything else is a expression resulting in a single byte
-            ++numBytes;
-            break;
+            if ( token.Type == TokenInfo.TokenType.LITERAL_STRING )
+            {
+              numBytes += ActualTextTokenLength( token );
+            }
+            else
+            {
+              // everything else is a expression resulting in a single byte
+              ++numBytes;
+              break;
+            }
           }
         }
       }

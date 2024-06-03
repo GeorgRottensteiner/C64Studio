@@ -12,17 +12,19 @@ using static System.Windows.Forms.AxHost;
 using System.Reflection;
 using System.Xml.Linq;
 
+
+
 namespace RetroDevStudio.Documents
 {
   public partial class SolutionExplorer : BaseDocument
   {
-    private System.Windows.Forms.TreeNode     m_ContextMenuNode = null;
+    private DecentForms.TreeView.TreeNode     m_ContextMenuNode = null;
 
     private System.Drawing.Font               m_BoldFont = null;
 
-    private Dictionary<Project,System.Windows.Forms.TreeNode>   m_HighlightedNodes = new Dictionary<Project, TreeNode>();
+    private Dictionary<Project,DecentForms.TreeView.TreeNode>   m_HighlightedNodes = new Dictionary<Project, DecentForms.TreeView.TreeNode>();
 
-    private System.Windows.Forms.TreeNode     m_MouseOverNode = null;
+    private DecentForms.TreeView.TreeNode     m_MouseOverNode = null;
     private int                               m_MouseOverNodeTicks = 0;
 
 
@@ -111,7 +113,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_NodeMouseDoubleClick( object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e )
+    private void treeProject_NodeMouseDoubleClick( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeNodeMouseClickEventArgs e )
     {
       if ( e.Node.Level == 0 )
       {
@@ -136,9 +138,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_NodeMouseClick( object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e )
+    private void treeProject_NodeMouseClick( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeNodeMouseClickEventArgs e )
     {
-      if ( e.Button == System.Windows.Forms.MouseButtons.Right )
+      if ( e.Button == 2 )//System.Windows.Forms.MouseButtons.Right )
       {
         System.Windows.Forms.ContextMenuStrip contextMenu = new System.Windows.Forms.ContextMenuStrip();
         m_ContextMenuNode = e.Node;
@@ -286,7 +288,7 @@ namespace RetroDevStudio.Documents
               bool    onlyCharScreens = true;
 
 
-              foreach ( System.Windows.Forms.TreeNode childNode in e.Node.Nodes )
+              foreach ( var childNode in e.Node.Nodes )
               {
                 ProjectElement childElement = ElementFromNode( childNode );
                 if ( childElement != null )
@@ -690,7 +692,7 @@ namespace RetroDevStudio.Documents
 
     private void subItemNewProject_Click( object sender, EventArgs e )
     {
-      Core.MainForm.AddNewProject();
+      Core.MainForm.AddNewProject( true );
     }
 
 
@@ -714,7 +716,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    void AddNewFolder( TreeNode Node )
+    void AddNewFolder( DecentForms.TreeView.TreeNode Node )
     {
       if ( Node == null )
       {
@@ -739,7 +741,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    void AddNewFile( ProjectElement.ElementType Type, string Description, TreeNode Node )
+    void AddNewFile( ProjectElement.ElementType Type, string Description, DecentForms.TreeView.TreeNode Node )
     {
       Project curProject = ProjectFromNode( Node );
 
@@ -854,7 +856,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    void CopyElement( TreeNode Node )
+    void CopyElement( DecentForms.TreeView.TreeNode Node )
     {
       ProjectElement  element = ElementFromNode( Node );
       if ( element != null )
@@ -901,14 +903,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    void PasteElement( TreeNode Node )
+    void PasteElement( DecentForms.TreeView.TreeNode Node )
     {
       if ( Node == null )
       {
         return;
       }
       Project   project = ProjectFromNode( Node.Parent );
-      TreeNode  parentNodeToInsertTo = Node.Parent;
+      var       parentNodeToInsertTo = Node.Parent;
       if ( project == null )
       {
         // paste onto project directly?
@@ -1070,7 +1072,7 @@ namespace RetroDevStudio.Documents
     {
       if ( Element != null )
       {
-        foreach ( TreeNode childNode in Element.Node.Nodes )
+        foreach ( var childNode in Element.Node.Nodes )
         {
           ProjectElement childElement = ElementFromNode( childNode );
           RemoveAndDeleteElement( childElement );
@@ -1104,7 +1106,7 @@ namespace RetroDevStudio.Documents
 
     void RemoveElement( ProjectElement Element )
     {
-      foreach ( TreeNode childNode in Element.Node.Nodes )
+      foreach ( var childNode in Element.Node.Nodes )
       {
         ProjectElement childElement = ElementFromNode( childNode );
         if ( childElement != null )
@@ -1131,7 +1133,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    void DeleteNode( TreeNode Node )
+    void DeleteNode( DecentForms.TreeView.TreeNode Node )
     {
       if ( Node == null )
       {
@@ -1254,7 +1256,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    void DoProjectProperties( TreeNode Node )
+    void DoProjectProperties( DecentForms.TreeView.TreeNode Node )
     {
       Project project = ProjectFromNode( Node, false );
       if ( project == null )
@@ -1279,7 +1281,7 @@ namespace RetroDevStudio.Documents
 
       string basePath = "";
 
-      foreach ( System.Windows.Forms.TreeNode childNode in m_ContextMenuNode.Nodes )
+      foreach ( var childNode in m_ContextMenuNode.Nodes )
       {
         var element = ElementFromNode( childNode );
         if ( ( element != null )
@@ -1352,7 +1354,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void HighlightNode( System.Windows.Forms.TreeNode Node )
+    public void HighlightNode( DecentForms.TreeView.TreeNode Node )
     {
       var project = ProjectFromNode( Node );
       if ( m_HighlightedNodes.ContainsKey( project ) )
@@ -1372,7 +1374,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_BeforeLabelEdit( object sender, System.Windows.Forms.NodeLabelEditEventArgs e )
+    private void treeProject_BeforeLabelEdit( DecentForms.ControlBase Sender, DecentForms.TreeView.NodeLabelEditEventArgs e )
     {
       if ( e.Node.Level < 1 )
       {
@@ -1383,13 +1385,13 @@ namespace RetroDevStudio.Documents
       if ( ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
       {
-        e.Node.Text = System.IO.Path.GetFileNameWithoutExtension( e.Node.Text );
+        e.Label = System.IO.Path.GetFileNameWithoutExtension( e.Label );
       }
     }
 
 
 
-    private void treeProject_AfterLabelEdit( object sender, System.Windows.Forms.NodeLabelEditEventArgs e )
+    private void treeProject_AfterLabelEdit( DecentForms.ControlBase Sender, DecentForms.TreeView.NodeLabelEditEventArgs e )
     {
       if ( ( e.Node.Level < 0 )
       ||   ( string.IsNullOrEmpty( e.Label ) ) )
@@ -1521,7 +1523,7 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_ItemDrag( object sender, System.Windows.Forms.ItemDragEventArgs e )
     {
-      System.Windows.Forms.TreeNode node = (System.Windows.Forms.TreeNode)e.Item;
+      DecentForms.TreeView.TreeNode node = (DecentForms.TreeView.TreeNode)e.Item;
 
       if ( node.Level == 0 )
       {
@@ -1556,11 +1558,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    public List<string> GetElementHierarchy( TreeNode Node )
+    public List<string> GetElementHierarchy( DecentForms.TreeView.TreeNode Node )
     {
       List<string> list = new List<string>();
 
-      TreeNode curNode = Node;
+      var curNode = Node;
       while ( curNode.Parent != null )
       {
         curNode = curNode.Parent;
@@ -1580,11 +1582,11 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void AdjustElementHierarchy( ProjectElement DraggedElement, TreeNode DraggedNode )
+    private void AdjustElementHierarchy( ProjectElement DraggedElement, DecentForms.TreeView.TreeNode DraggedNode )
     {
       DraggedElement.Node = DraggedNode;
       DraggedElement.ProjectHierarchy = GetElementHierarchy( DraggedNode );
-      foreach ( TreeNode node in DraggedNode.Nodes )
+      foreach ( var node in DraggedNode.Nodes )
       {
         AdjustElementHierarchy( ElementFromNode( node ), node );
       }
@@ -1594,12 +1596,12 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_DragDrop( object sender, System.Windows.Forms.DragEventArgs e )
     {
-      if ( ( e.Data.GetDataPresent( "System.Windows.Forms.TreeNode", false ) )
+      if ( ( e.Data.GetDataPresent( "DecentForms.TreeView+TreeNode", false ) )
       &&   ( !string.IsNullOrEmpty( NodeMap ) ) )
       {
-        TreeNode MovingNode = (TreeNode)e.Data.GetData( "System.Windows.Forms.TreeNode" );
+        DecentForms.TreeView.TreeNode MovingNode = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
         string[] NodeIndexes = this.NodeMap.Split( '|' );
-        TreeNodeCollection InsertCollection = treeProject.Nodes;
+        var InsertCollection = treeProject.Nodes;
         for ( int i = 0; i < NodeIndexes.Length - 1; i++ )
         {
           InsertCollection = InsertCollection[Int32.Parse( NodeIndexes[i] )].Nodes;
@@ -1608,12 +1610,12 @@ namespace RetroDevStudio.Documents
         if ( InsertCollection != null )
         {
           // node will change, reapply new node!
-          InsertCollection.Insert( Int32.Parse( NodeIndexes[NodeIndexes.Length - 1] ), (TreeNode)MovingNode.Clone() );
+          InsertCollection.Insert( Int32.Parse( NodeIndexes[NodeIndexes.Length - 1] ), (DecentForms.TreeView.TreeNode)MovingNode.Clone() );
           treeProject.SelectedNode = InsertCollection[Int32.Parse( NodeIndexes[NodeIndexes.Length - 1] )];
           MovingNode.Remove();
 
           // reset element hierarchy
-          TreeNode draggedNode = treeProject.SelectedNode;
+          var draggedNode = treeProject.SelectedNode;
 
           ProjectElement draggedElement = ElementFromNode( draggedNode );
 
@@ -1648,14 +1650,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    public Project ProjectFromNode( TreeNode Node )
+    public Project ProjectFromNode( DecentForms.TreeView.TreeNode Node )
     {
       return ProjectFromNode( Node, true );
     }
 
 
 
-    public Project ProjectFromNode( TreeNode Node, bool Recursive )
+    public Project ProjectFromNode( DecentForms.TreeView.TreeNode Node, bool Recursive )
     {
       if ( Node == null )
       {
@@ -1678,7 +1680,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public ProjectElement ElementFromNode( TreeNode Node )
+    public ProjectElement ElementFromNode( DecentForms.TreeView.TreeNode Node )
     {
       if ( ( Node == null )
       ||   ( Node.Level == 0 ) )
@@ -1690,7 +1692,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    bool CanNodeBeInProject( TreeNode NodeParent, TreeNode NodeChild )
+    bool CanNodeBeInProject( DecentForms.TreeView.TreeNode NodeParent, DecentForms.TreeView.TreeNode NodeChild )
     {
       Project   origProject = ProjectFromNode( NodeChild );
       Project   newProject = ProjectFromNode( NodeParent );
@@ -1705,7 +1707,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    bool CanNodeBeChildOf( TreeNode NodeParent, TreeNode NodeChild )
+    bool CanNodeBeChildOf( DecentForms.TreeView.TreeNode NodeParent, DecentForms.TreeView.TreeNode NodeChild )
     {
       ProjectElement    element = ElementFromNode( NodeParent );
       if ( ( element == null )
@@ -1725,8 +1727,8 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_DragOver( object sender, System.Windows.Forms.DragEventArgs e )
     {
-      TreeNode NodeOver = treeProject.GetNodeAt( treeProject.PointToClient( Cursor.Position ) );
-      TreeNode NodeMoving = (TreeNode)e.Data.GetData( "System.Windows.Forms.TreeNode" );
+      DecentForms.TreeView.TreeNode NodeOver = treeProject.GetNodeAt( treeProject.PointToClient( Cursor.Position ) );
+      DecentForms.TreeView.TreeNode NodeMoving = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
 
       if ( !CanNodeBeInProject( NodeOver, NodeMoving ) )
       {
@@ -1766,7 +1768,7 @@ namespace RetroDevStudio.Documents
           {
             //this.lblDebug.Text = "top";
 
-            TreeNode tnParadox = NodeOver;
+            DecentForms.TreeView.TreeNode tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
               if ( tnParadox.Parent == NodeMoving )
@@ -1788,7 +1790,7 @@ namespace RetroDevStudio.Documents
           {
             //this.lblDebug.Text = "bottom";
 
-            TreeNode tnParadox = NodeOver;
+            DecentForms.TreeView.TreeNode tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
               if ( tnParadox.Parent == NodeMoving )
@@ -1798,7 +1800,7 @@ namespace RetroDevStudio.Documents
               }
               tnParadox = tnParadox.Parent;
             }
-            TreeNode ParentDragDrop = null;
+            DecentForms.TreeView.TreeNode ParentDragDrop = null;
             // If the node the mouse is over is the last node of the branch we should allow
             // the ability to drop the "nodemoving" node BELOW the parent node
             if ( ( NodeOver.Parent != null )
@@ -1832,9 +1834,7 @@ namespace RetroDevStudio.Documents
         {
           if ( OffsetY < ( NodeOver.Bounds.Height / 3 ) )
           {
-            //this.lblDebug.Text = "folder top";
-
-            TreeNode tnParadox = NodeOver;
+            var tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
               if ( tnParadox.Parent == NodeMoving )
@@ -1859,7 +1859,7 @@ namespace RetroDevStudio.Documents
           {
             //this.lblDebug.Text = "folder bottom";
 
-            TreeNode tnParadox = NodeOver;
+            var tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
               if ( tnParadox.Parent == NodeMoving )
@@ -1894,7 +1894,7 @@ namespace RetroDevStudio.Documents
               {
                 return;
               }
-              TreeNode tnParadox = NodeOver;
+              var tnParadox = NodeOver;
               while ( tnParadox.Parent != null )
               {
                 if ( tnParadox.Parent == NodeMoving )
@@ -1922,7 +1922,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void DrawLeafTopPlaceholders( TreeNode NodeOver )
+    private void DrawLeafTopPlaceholders( DecentForms.TreeView.TreeNode NodeOver )
     {
       Graphics g = treeProject.CreateGraphics();
 
@@ -1953,7 +1953,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void DrawLeafBottomPlaceholders( TreeNode NodeOver, TreeNode ParentDragDrop )
+    private void DrawLeafBottomPlaceholders( DecentForms.TreeView.TreeNode NodeOver, DecentForms.TreeView.TreeNode ParentDragDrop )
     {
       Graphics g = treeProject.CreateGraphics();
 
@@ -1988,7 +1988,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void DrawFolderTopPlaceholders( TreeNode NodeOver )
+    private void DrawFolderTopPlaceholders( DecentForms.TreeView.TreeNode NodeOver )
     {
       Graphics g = treeProject.CreateGraphics();
       int NodeOverImageWidth = 16;
@@ -2024,7 +2024,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void DrawAddToFolderPlaceholder( TreeNode NodeOver )
+    private void DrawAddToFolderPlaceholder( DecentForms.TreeView.TreeNode NodeOver )
     {
       Graphics g = treeProject.CreateGraphics();
       int RightPos = NodeOver.Bounds.Right + 6;
@@ -2041,15 +2041,19 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void SetNewNodeMap( TreeNode tnNode, bool boolBelowNode )
+    private void SetNewNodeMap( DecentForms.TreeView.TreeNode tnNode, bool boolBelowNode )
     {
       NewNodeMap.Length = 0;
 
       if ( boolBelowNode )
+      {
         NewNodeMap.Insert( 0, (int)tnNode.Index + 1 );
+      }
       else
+      {
         NewNodeMap.Insert( 0, (int)tnNode.Index );
-      TreeNode tnCurNode = tnNode;
+      }
+      DecentForms.TreeView.TreeNode tnCurNode = tnNode;
 
       while ( tnCurNode.Parent != null )
       {
@@ -2070,13 +2074,12 @@ namespace RetroDevStudio.Documents
 
     private bool SetMapsEqual()
     {
-      if ( this.NewNodeMap.ToString() == this.NodeMap )
-        return true;
-      else
+      if ( NewNodeMap.ToString() == NodeMap )
       {
-        this.NodeMap = this.NewNodeMap.ToString();
-        return false;
+        return true;
       }
+      NodeMap = NewNodeMap.ToString();
+      return false;
     }
 
 
@@ -2085,7 +2088,7 @@ namespace RetroDevStudio.Documents
     {
       // get node at mouse position
       Point pt = PointToClient( MousePosition );
-      TreeNode node = treeProject.GetNodeAt( pt );
+      DecentForms.TreeView.TreeNode node = treeProject.GetNodeAt( pt );
 
       if ( m_MouseOverNode != node )
       {
@@ -2221,7 +2224,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_AfterSelect( object sender, TreeViewEventArgs e )
+    private void treeProject_AfterSelect( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeViewEventArgs e )
     {
       if ( treeProject.SelectedNode == null )
       {
@@ -2239,12 +2242,12 @@ namespace RetroDevStudio.Documents
 
     private void projectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Core.MainForm.AddNewProject();
+      Core.MainForm.AddNewProject( true );
     }
 
 
 
-    private void treeProject_AfterExpand( object sender, TreeViewEventArgs e )
+    private void treeProject_AfterExpand( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeViewEventArgs e )
     {
       if ( e.Node.Tag != null )
       {
@@ -2264,7 +2267,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_AfterCollapse( object sender, TreeViewEventArgs e )
+    private void treeProject_AfterCollapse( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeViewEventArgs e )
     {
       if ( e.Node.Tag != null )
       {
@@ -2298,7 +2301,7 @@ namespace RetroDevStudio.Documents
 
     // Returns the bounds of the specified node, including the region 
     // occupied by the node label and any node tag displayed.
-    private Rectangle NodeBounds( TreeNode Node )
+    private Rectangle NodeBounds( DecentForms.TreeView.TreeNode Node )
     {
       // Set the return value to the normal node bounds.
       Rectangle bounds = Node.Bounds;
@@ -2329,17 +2332,22 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void treeProject_DrawNode( object sender, DrawTreeNodeEventArgs e )
+    private void treeProject_DrawNode( DecentForms.ControlBase Sender, DecentForms.TreeView.DrawTreeNodeEventArgs e )
     {
       try
       {
-        Rectangle nodeRect = NodeBounds( e.Node );
+        //Rectangle nodeRect = NodeBounds( e.Node );
+        var nodeRect = e.Node.Bounds;
 
         TreeItemInfo info = (TreeItemInfo)e.Node.Tag;
 
         // 1. draw expand/collapse icon
         if ( e.Node.Nodes.Count >= 1 )
         {
+          var toggleRect = treeProject.GetToggleRect( e.Node );
+
+          e.Renderer.RenderTreeViewExpansionToggle( e.Node.IsExpanded, toggleRect );
+          /*
           Point ptExpand = new Point( nodeRect.Location.X - 36, nodeRect.Location.Y + ( nodeRect.Height - 8 ) / 2 );
           if ( e.Node.IsExpanded )
           {
@@ -2351,38 +2359,32 @@ namespace RetroDevStudio.Documents
             e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, ptExpand.X, ptExpand.Y, 8, 8 );
             e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 2, ptExpand.Y + 4, ptExpand.X + 6, ptExpand.Y + 4 );
             e.Graphics.DrawLine( System.Drawing.SystemPens.WindowFrame, ptExpand.X + 4, ptExpand.Y + 2, ptExpand.X + 4, ptExpand.Y + 6 );
-          }
+          }*/
         }
 
         // 2. draw node icon
         if ( treeProject.ImageList != null )
         {
-          if ( treeProject.ImageList.Images.ContainsKey( e.Node.ImageKey ) )
-          {
-            Image nodeImg = treeProject.ImageList.Images[e.Node.ImageKey];
-
-            Point ptNodeIcon = new Point( nodeRect.Location.X - 20, nodeRect.Location.Y + ( nodeRect.Height - nodeImg.Height ) / 2 );
-
-            e.Graphics.DrawImage( nodeImg, ptNodeIcon );
-          }
-          else if ( e.Node.ImageIndex < treeProject.ImageList.Images.Count )
+          if ( e.Node.ImageIndex < treeProject.ImageList.Images.Count )
           {
             // autofallback to first image??
             if ( e.Node.ImageIndex == -1 )
             {
               e.Node.ImageIndex = 0;
             }
-            DrawDocumentIcon( e.Graphics, nodeRect, e.Node.ImageIndex, info.FileState );
+            DrawDocumentIcon( e.Renderer, nodeRect, e.Node.ImageIndex, info.FileState );
           }
         }
         Font nodeFont = e.Node.NodeFont;
         if ( nodeFont == null )
         {
-          nodeFont = ( (TreeView)sender ).Font;
+          nodeFont = ( (DecentForms.TreeView)Sender ).Font;
         }
-        e.DrawDefault = false;
 
         // node text
+        e.Renderer.RenderTreeViewNodeText( e.Node, nodeRect );
+
+        /*
         var bounds = NodeBounds( e.Node );
         var textBounds = Rectangle.Inflate( bounds, 3, 0 );
         var bgBounds = new Rectangle( bounds.Location, bounds.Size );
@@ -2432,7 +2434,7 @@ namespace RetroDevStudio.Documents
             bounds.Offset( -3, 0 );
             e.Graphics.DrawRectangle( focusPen, bounds );
           }
-        }
+        }*/
       }
       catch ( Exception ex )
       {
@@ -2442,12 +2444,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void DrawDocumentIcon( Graphics G, Rectangle NodeRect, int ImageIndex, FileState FileState )
+    public void DrawDocumentIcon( DecentForms.ControlRenderer Renderer, Rectangle NodeRect, int ImageIndex, FileState FileState )
     {
       Image nodeImg = treeProject.ImageList.Images[ImageIndex];
       Point ptNodeIcon = new Point( NodeRect.Location.X - 20, NodeRect.Location.Y + ( NodeRect.Height - nodeImg.Height ) / 2 );
 
-      G.DrawImage( nodeImg, ptNodeIcon );
+      Renderer.DrawImage( nodeImg, ptNodeIcon.X, ptNodeIcon.Y );
 
       var scImageIndex = SourceControlIconFromState( FileState );
 
@@ -2455,7 +2457,7 @@ namespace RetroDevStudio.Documents
       {
         Point ptSCIcon = new Point( ptNodeIcon.X + nodeImg.Width - 8, ptNodeIcon.Y + nodeImg.Height - 8 );
 
-        G.DrawImage( imageListSourceControlOverlay.Images[scImageIndex], ptSCIcon.X, ptSCIcon.Y, 8, 8 );
+        Renderer.DrawImage( imageListSourceControlOverlay.Images[scImageIndex], ptSCIcon.X, ptSCIcon.Y, 8, 8 );
       }
     }
 
@@ -2531,7 +2533,7 @@ namespace RetroDevStudio.Documents
 
       bool  modified = false;
 
-      foreach ( TreeNode projectNode in treeProject.Nodes )
+      foreach ( var projectNode in treeProject.Nodes )
       {
         var itemInfo = (TreeItemInfo)projectNode.Tag;
         if ( itemInfo.FileState != global::SourceControl.FileState.Nonexistent )
@@ -2557,7 +2559,7 @@ namespace RetroDevStudio.Documents
         }
 
         // iterate recursively over all nodes
-        foreach ( TreeNode node in projectNode.Nodes )
+        foreach ( var node in projectNode.Nodes )
         {
           RefreshNodeState( node, project, scInfos );
         }
@@ -2570,12 +2572,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void RefreshNodeState( TreeNode Node, Project Project, List<SourceControl.FileInfo> SCInfos )
+    private void RefreshNodeState( DecentForms.TreeView.TreeNode Node, Project Project, List<SourceControl.FileInfo> SCInfos )
     {
       var element = ElementFromNode( Node );
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
       {
-        foreach ( TreeNode node in Node.Nodes )
+        foreach ( var node in Node.Nodes )
         {
           RefreshNodeState( node, Project, SCInfos );
         }
@@ -2602,7 +2604,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void RefreshSourceControlState( TreeNode Node )
+    private void RefreshSourceControlState( DecentForms.TreeView.TreeNode Node )
     {
       if ( !global::SourceControl.Controller.IsFunctional )
       {
