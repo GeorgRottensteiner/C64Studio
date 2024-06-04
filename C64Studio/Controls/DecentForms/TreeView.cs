@@ -1598,7 +1598,8 @@ namespace DecentForms
         var node = Nodes[0];
         while ( node != null )
         {
-          Debug.Log( $"{node.Level} - {node.Text} - VI {node.VisualIndex} - PV {node.PreviousNode?.Text} - NX {node.NextNode?.Text} - PN {node._Parent?.Text}" );
+          //Debug.Log( $"{node.Level} - {node.Text} - VI {node.VisualIndex} - PV {node.PreviousNode?.Text} - NX {node.NextNode?.Text} - PN {node._Parent?.Text} - OWN {node._Owner} - Nodes { node.Nodes._OwnerControl}" );
+          Debug.Log( $"{node.Level} - {node.Text} - OWN {node._Owner} - Nodes {node.Nodes._OwnerControl}" );
 
           node = GetNextNode( node );
         }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 
 
@@ -11,7 +12,8 @@ namespace DecentForms
   {
     public class TreeNodeCollection : IEnumerable<TreeNode>
     {
-      private TreeView            _OwnerControl;
+      //private TreeView            _OwnerControl;
+      public TreeView            _OwnerControl;
       private TreeNode            _Owner; 
       public List<TreeNode>       Nodes = new List<TreeNode>();
 
@@ -75,9 +77,12 @@ namespace DecentForms
 
       private void SetNodeOwner( TreeNode Node, TreeView OwnerControl )
       {
+        Node._Owner              = OwnerControl;
+        Node.Nodes._OwnerControl = OwnerControl;
         foreach ( var node in Node.Nodes )
         {
-          node._Owner = OwnerControl;
+          node._Owner               = OwnerControl;
+          node.Nodes._OwnerControl  = OwnerControl;
           SetNodeOwner( node, OwnerControl );
         }
       }
@@ -145,6 +150,7 @@ namespace DecentForms
         }
         node._Next      = null;
         node._Previous  = null;
+        SetNodeOwner( node, null );
         _OwnerControl?.DetachNode( Nodes[Index] );
 
         Nodes.RemoveAt( Index );

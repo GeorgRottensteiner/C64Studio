@@ -1492,6 +1492,12 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_KeyDown( object sender, System.Windows.Forms.KeyEventArgs e )
     {
+      if ( e.KeyCode == System.Windows.Forms.Keys.F3 )
+      {
+        treeProject.DumpNodes();
+        e.Handled = true;
+        e.SuppressKeyPress = true;
+      }
       if ( e.KeyCode == System.Windows.Forms.Keys.F2 )
       {
         if ( treeProject.SelectedNode.Level >= 0 )
