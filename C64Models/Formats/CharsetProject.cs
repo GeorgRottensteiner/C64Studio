@@ -48,7 +48,7 @@ namespace RetroDevStudio.Formats
     public string         ExportFilename = "";
 
     public uint           UsedTiles = 0;
-    public int            ExportStartCharacter = 256;
+    public int            ExportStartCharacter = 0;
     public int            ExportNumCharacters = 256;
     public bool           ShowGrid = false;
     public int            TotalNumberOfCharacters = 256;

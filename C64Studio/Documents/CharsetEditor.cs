@@ -443,8 +443,8 @@ namespace RetroDevStudio.Documents
     private void editStartCharacters_TextChanged( object sender, EventArgs e )
     {
       int   startChar = GR.Convert.ToI32( editCharactersFrom.Text );
-      if ( ( startChar <= 0 )
-      ||   ( startChar > m_Charset.TotalNumberOfCharacters ) )
+      if ( ( startChar < 0 )
+      ||   ( startChar >= m_Charset.TotalNumberOfCharacters ) )
       {
         startChar = 0;
         editCharactersFrom.Text = startChar.ToString();
@@ -493,6 +493,12 @@ namespace RetroDevStudio.Documents
       editCharactersFrom.Enabled = ( comboExportRange.SelectedIndex == 2 );
       labelCharactersTo.Enabled = ( comboExportRange.SelectedIndex == 2 );
       editCharactersCount.Enabled = ( comboExportRange.SelectedIndex == 2 );
+
+      if ( comboExportRange.SelectedIndex == 2 )
+      {
+        editStartCharacters_TextChanged( sender, e );
+        editUsedCharacters_TextChanged( sender, e );
+      }
     }
 
 
