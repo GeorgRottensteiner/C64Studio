@@ -3726,11 +3726,20 @@ namespace RetroDevStudio.Parser
 
     public string ReplaceAllSymbolsByMacros( string BasicText, bool LowerCaseMode )
     {
+      bool    insideQuotes = false;
       for ( int i = 0; i < BasicText.Length; ++i )
       {
         char    chartoCheck = BasicText[i];
 
-        //if ( chartoCheck > (char)255 )
+        if ( chartoCheck == '"' )
+        {
+          insideQuotes = !insideQuotes;
+        }
+        else if ( chartoCheck == '\n' )
+        {
+          insideQuotes = false;
+        }
+        else if ( insideQuotes )
         {
           var c64Key = ConstantData.FindC64KeyByUnicode( chartoCheck );
           if ( c64Key != null )
