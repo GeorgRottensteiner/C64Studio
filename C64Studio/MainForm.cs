@@ -1488,6 +1488,17 @@ namespace RetroDevStudio
           m_CompileResult.ClearMessages();
           UpdateCaption();
           break;
+        case Types.ApplicationEvent.Type.PROJECT_CLOSED:
+          if ( ( StudioCore.Navigating.Solution != null )
+          &&   ( StudioCore.Navigating.Solution.Projects.Count > 1 ) )
+          {
+            removeProjectFromSolutionToolStripMenuItem.Enabled = true;
+          }
+          else
+          {
+            removeProjectFromSolutionToolStripMenuItem.Enabled = false;
+          }
+          break;
         case Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
           m_DebugWatch.DebuggedProject = m_CurrentProject;
           m_DebugWatch.ClearAllWatchEntries();
@@ -3178,12 +3189,6 @@ namespace RetroDevStudio
           return false;
         }
       }
-      /*
-      if ( m_Project.Settings.Filename == null )
-      {
-        return false;
-      }
-       */
       bool changes = false;
       foreach ( ProjectElement element in ProjectToClose.Elements )
       {
@@ -3299,7 +3304,14 @@ namespace RetroDevStudio
     {
       if ( m_CurrentProject != null )
       {
+        if ( StudioCore.Navigating.Solution.Projects.Count == 1 )
+        {
+          System.Windows.Forms.MessageBox.Show( "You can't remove the last project from a solution.", "Last Project!", MessageBoxButtons.OK );
+          return;
+        }
         CloseProject( m_CurrentProject );
+        StudioCore.Navigating.Solution.Modified = true;
+        SaveSolution();
       }
     }
 
@@ -6548,7 +6560,8 @@ namespace RetroDevStudio
 
     private void mainToolConfig_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_CurrentProject.Settings.CurrentConfig != m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() ) )
+      if ( ( m_CurrentProject != null )
+      &&   ( m_CurrentProject.Settings.CurrentConfig != m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() ) ) )
       {
         m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
 
@@ -7044,91 +7057,98 @@ namespace RetroDevStudio
 
 
 
+    private Project AddNewSolution()
+    {
+      var solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
+      if ( solWizard.ShowDialog() != DialogResult.OK )
+      {
+        return null;
+      }
+      if ( solWizard.CreateNewFolderForSolution )
+      {
+        try
+        {
+          System.IO.Directory.CreateDirectory( solWizard.SolutionPath );
+        }
+        catch ( System.Exception ex )
+        {
+          System.Windows.Forms.MessageBox.Show( "Could not create solution folder:" + System.Environment.NewLine + ex.Message, "Could not create solution folder" );
+          return null;
+        }
+      }
+
+      StudioCore.Navigating.Solution = new Solution( this );
+      StudioCore.Navigating.Solution.Name = solWizard.SolutionName;
+      StudioCore.Navigating.Solution.Filename = solWizard.SolutionFilename;
+
+      try
+      {
+        System.IO.Directory.CreateDirectory( System.IO.Path.GetDirectoryName( solWizard.ProjectFilename ) );
+      }
+      catch ( System.Exception ex )
+      {
+        System.Windows.Forms.MessageBox.Show( "Could not create project folder:" + System.Environment.NewLine + ex.Message, "Could not create project folder" );
+        return null;
+      }
+
+      Project newProject = new Project();
+      newProject.Core = StudioCore;
+      newProject.Settings.Name = System.IO.Path.GetFileNameWithoutExtension( solWizard.ProjectFilename );
+      newProject.Settings.Filename = solWizard.ProjectFilename;
+      newProject.Settings.BasePath = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
+      newProject.Node = new DecentForms.TreeView.TreeNode();
+      newProject.Node.Tag = new SolutionExplorer.TreeItemInfo() { Project = newProject };
+      newProject.Node.Text = newProject.Settings.Name;
+
+      Text += " - " + newProject.Settings.Name;
+
+      StudioCore.Navigating.Solution.Projects.Add( newProject );
+
+      if ( solWizard.CreateRepository )
+      {
+        global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ), out SourceControl.Controller controller );
+        if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
+        {
+          newProject.SourceControl = controller;
+        }
+      }
+
+      m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
+      newProject.Node.Collapse();
+
+      SetActiveProject( newProject );
+      projectToolStripMenuItem.Visible = true;
+      solutionToolStripMenuItemTop.Visible = true;
+
+      SaveSolution();
+      if ( SaveProject( newProject ) )
+      {
+        if ( solWizard.CreateRepository )
+        {
+          if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
+          {
+            newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( newProject.Settings.Filename ) );
+            newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( StudioCore.Navigating.Solution.Filename ) );
+            newProject.SourceControl.StageAllChanges();
+            newProject.SourceControl.CommitAllChanges( StudioCore.Settings.SourceControlInfo.CommitAuthor, StudioCore.Settings.SourceControlInfo.CommitAuthorEmail, "Initial" );
+          }
+        }
+      }
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, newProject ) );
+
+      UpdateUndoSettings();
+
+      return newProject;
+    }
+
+
+
     private Project AddNewProjectAndOrSolution()
     {
       if ( StudioCore.Navigating.Solution == null )
       {
-        var solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
-        if ( solWizard.ShowDialog() == DialogResult.OK )
-        {
-          if ( solWizard.CreateNewFolderForSolution )
-          {
-            try
-            {
-              System.IO.Directory.CreateDirectory( solWizard.SolutionPath );
-            }
-            catch ( System.Exception ex )
-            {
-              System.Windows.Forms.MessageBox.Show( "Could not create solution folder:" + System.Environment.NewLine + ex.Message, "Could not create solution folder" );
-              return null;
-            }
-          }
-
-          StudioCore.Navigating.Solution = new Solution( this );
-          StudioCore.Navigating.Solution.Name = solWizard.SolutionName;
-          StudioCore.Navigating.Solution.Filename = solWizard.SolutionFilename;
-
-          try
-          {
-            System.IO.Directory.CreateDirectory( System.IO.Path.GetDirectoryName( solWizard.ProjectFilename ) );
-          }
-          catch ( System.Exception ex )
-          {
-            System.Windows.Forms.MessageBox.Show( "Could not create project folder:" + System.Environment.NewLine + ex.Message, "Could not create project folder" );
-            return null;
-          }
-
-          Project newProject = new Project();
-          newProject.Core = StudioCore;
-          newProject.Settings.Name      = System.IO.Path.GetFileNameWithoutExtension( solWizard.ProjectFilename );
-          newProject.Settings.Filename  = solWizard.ProjectFilename;
-          newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
-          newProject.Node       = new DecentForms.TreeView.TreeNode();
-          newProject.Node.Tag   = new SolutionExplorer.TreeItemInfo() { Project = newProject };
-          newProject.Node.Text  = newProject.Settings.Name;
-
-          Text += " - " + newProject.Settings.Name;
-
-          StudioCore.Navigating.Solution.Projects.Add( newProject );
-
-          if ( solWizard.CreateRepository )
-          {
-            global::SourceControl.Controller.CreateRepositoryInFolder( newProject.FullPath( "" ), out SourceControl.Controller controller );
-            if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
-            {
-              newProject.SourceControl = controller;
-            }
-          }
-
-          m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
-          newProject.Node.Collapse();
-
-          SetActiveProject( newProject );
-          projectToolStripMenuItem.Visible = true;
-          solutionToolStripMenuItemTop.Visible = true;
-
-          SaveSolution();
-          if ( SaveProject( newProject ) )
-          {
-            if ( solWizard.CreateRepository )
-            {
-              if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
-              {
-                newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( newProject.Settings.Filename ) );
-                newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( StudioCore.Navigating.Solution.Filename ) );
-                newProject.SourceControl.StageAllChanges();
-                newProject.SourceControl.CommitAllChanges( StudioCore.Settings.SourceControlInfo.CommitAuthor, StudioCore.Settings.SourceControlInfo.CommitAuthorEmail, "Initial" );
-              }
-            }
-          }
-          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
-          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_OPENED, newProject ) );
-
-          UpdateUndoSettings();
-
-          return newProject;
-        }
-        return null;
+        return AddNewSolution();
       }
       return AddNewProject( false );
     }
@@ -7313,7 +7333,7 @@ namespace RetroDevStudio
 
     private void fileNewSolutionToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      AddNewProjectAndOrSolution();
+      AddNewSolution();
     }
 
 

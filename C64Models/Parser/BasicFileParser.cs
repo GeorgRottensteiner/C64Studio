@@ -3762,6 +3762,13 @@ namespace RetroDevStudio.Parser
                 replacement = numCharsToReplace.ToString() + replacement;
               }
 
+              // special case, do not insert {SPACE} for single chars
+              if ( ( chartoCheck == ' ' )
+              &&   ( numCharsToReplace == 1 ) )
+              {
+                continue;
+              }
+
               if ( LowerCaseMode )
               {
                 replacement = replacement.ToLower();

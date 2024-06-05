@@ -2392,7 +2392,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText, false );// m_LowerCaseMode );
+        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText, false );
       }
       if ( hadError )
       {
