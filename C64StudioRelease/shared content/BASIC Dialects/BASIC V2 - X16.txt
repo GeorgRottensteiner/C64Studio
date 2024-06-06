@@ -9,6 +9,8 @@
 #StartAddress=xxxx      > sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
 #HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+#
+#Commander X16 BASIC V2-X16 - as of 6.6.2024
 
 StartAddress=2049
 SafeLineLength=80
@@ -91,40 +93,82 @@ LEFT$;C8;leF
 RIGHT$;C9;rI
 MID$;CA;mI
 
+#C128 tokens
+BANK;fe02;
+
 #X16 tokens
 BIN$;ce9e;
+BINPUT#;ceb5;
 BLOAD;ce95;
 BOOT;ce93;
+BSAVE;ceb0;
 BVERIFY;ce97;
 BVLOAD;ce96;
 CHAR;ce8b;
 CLS;ce90;
 CODEX;ce91;
 COLOR;ce8d;
+#DA$;4441;
 DOS;ce81;
+EDIT;ceba;
+EXEC;ceb8;
+FMCHORD;cea2;
+FMDRUM;ce9b;
+FMFREQ;ce9e;
+FMINIT;ce99;
+FMINST;ce9c;
+FMNOTE;ce9a;
+FMPAN;cea0;
+FMPLAY;cea1;
+FMPOKE;cea3;
+FMVIB;ce9d;
+FMVOL;ce9f;
 FRAME;ce89;
-GEOS;ce83;
+HELP;ceb6;
 HEX$;ce9d;
+I2CPEEK;ced7;
+I2CPOKE;ceae;
 JOY;ce9c;
 KEYMAP;ce94;
 LINE;ce88;
+LINPUT;ceb4;
+LINPUT#;ceb3;
 LOCATE;ce92;
+MENU;ceb1;
 MON;ce80;
 MOUSE;ce8c;
+MOVSPR;cebd;
 MX;ce99;
 MY;ce9a;
 MB;ce9b;
+MWHEEL;cedb;
 OLD;ce82;
+POWEROFF;cead;
 PSET;ce87;
+PSGCHORD;ceab;
+PSGFREQ;cea8;
+PSGINIT;cea4;
+PSGNOTE;cea5;
+PSGPAN;cea9;
+PSGPLAY;ceaa;
+PSGVOL;cea6;
+PSGWAV;cea7;
+REBOOT;ceac;
 RECT;ce8a;
+REN;ceb2;
 RESET;ce8f;
+RPT$;ceda;
 SCREEN;ce86;
-TEST;ce8e;
+SLEEP;ceaf;
+SPRITE;cebb;
+SPRMEM;cebc;
+STRPTR;ced9;
+TATTR;cedd;
+TDATA;cedc;
+TILE;ceb9;
 VPEEK;ce98;
 VPOKE;ce84;
 VLOAD;ce85;
-
-
 
 #from here on it's extended opcodes, required for C64Studio extensions
 ExOpcodes

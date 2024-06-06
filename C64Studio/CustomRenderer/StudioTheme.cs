@@ -333,12 +333,18 @@ namespace RetroDevStudio.CustomRenderer
       }
       else if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
-        e.Graphics.FillRectangle( Pal.ColorBrushes[indexInPalette], itemRect );
+        if ( indexInPalette < Pal.ColorBrushes.Length )
+        {
+          e.Graphics.FillRectangle( Pal.ColorBrushes[indexInPalette], itemRect );
+        }
         e.Graphics.DrawString( Combo.Items[indexToDraw].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
       else
       {
-        e.Graphics.FillRectangle( Pal.ColorBrushes[indexInPalette], itemRect );
+        if ( indexInPalette < Pal.ColorBrushes.Length )
+        {
+          e.Graphics.FillRectangle( Pal.ColorBrushes[indexInPalette], itemRect );
+        }
         e.Graphics.DrawString( Combo.Items[indexToDraw].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
     }
@@ -360,13 +366,22 @@ namespace RetroDevStudio.CustomRenderer
       if ( e.Index >= 8 )
       {
         itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
-        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
+        if ( e.Index < Pal.ColorBrushes.Length )
+        {
+          e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
+        }
         itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset + ( e.Bounds.Width - offset ) / 2, e.Bounds.Top, e.Bounds.Width - ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
-        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index - 8], itemRect );
+        if ( e.Index < Pal.ColorBrushes.Length )
+        {
+          e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index - 8], itemRect );
+        }
       }
       else
       {
-        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
+        if ( e.Index < Pal.ColorBrushes.Length )
+        {
+          e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
+        }
       }
       if ( ( e.State & DrawItemState.Disabled ) != 0 )
       {

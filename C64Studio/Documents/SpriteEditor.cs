@@ -779,7 +779,6 @@ namespace RetroDevStudio.Documents
       {
         return false;
       }
-
       AdjustSpriteSizes();
       panelSprites.Items.Clear();
       comboSprite.Items.Clear();
