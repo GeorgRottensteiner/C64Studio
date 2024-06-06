@@ -23,7 +23,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefApplication( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "application", "general", "generic", "mode", "mru", "solution", "compiler", "messages", "environment" } );
+      _Keywords.AddRange( new string[] { "application", "general", "generic", "mode", "mru", "solution", "compiler", "messages", "environment", "update", "check" } );
 
       InitializeComponent();
 
@@ -33,6 +33,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkAutoOpenLastSolution.Checked           = Core.Settings.AutoOpenLastSolution;
       checkShowCompilerMessagesAfterBuild.Checked = Core.Settings.ShowCompilerMessagesAfterBuild;
       checkShowOutputDisplayAfterBuild.Checked    = Core.Settings.ShowOutputDisplayAfterBuild;
+      checkForUpdate.Checked                      = Core.Settings.CheckForUpdates;
     }
 
 
@@ -68,6 +69,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlEnvironment.AddAttribute( "ApplicationMode", ( (int)Core.Settings.StudioAppMode ).ToString() );
       xmlEnvironment.AddAttribute( "ShowCompilerMessagesAfterBuild", Core.Settings.ShowCompilerMessagesAfterBuild ? "yes" : "no" );
       xmlEnvironment.AddAttribute( "ShowOutputDisplayAfterBuild", Core.Settings.ShowOutputDisplayAfterBuild ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "CheckForUpdatesOnStartup", Core.Settings.CheckForUpdates ? "yes" : "no" );
     }
 
 
@@ -83,6 +85,7 @@ namespace RetroDevStudio.Dialogs.Preferences
         comboAppMode.SelectedIndex                  = GR.Convert.ToI32( xmlEnvironment.Attribute( "ApplicationMode" ) );
         checkShowCompilerMessagesAfterBuild.Checked = IsSettingTrue( xmlEnvironment.Attribute( "ShowCompilerMessagesAfterBuild" ) );
         checkShowOutputDisplayAfterBuild.Checked    = IsSettingTrue( xmlEnvironment.Attribute( "ShowOutputDisplayAfterBuild" ) );
+        checkForUpdate.Checked                      = IsSettingTrue( xmlEnvironment.Attribute( "CheckForUpdatesOnStartup" ) );
       }
     }
     
@@ -149,6 +152,16 @@ namespace RetroDevStudio.Dialogs.Preferences
       if ( Core.Settings.ShowOutputDisplayAfterBuild != checkShowOutputDisplayAfterBuild.Checked )
       {
         Core.Settings.ShowOutputDisplayAfterBuild = checkShowOutputDisplayAfterBuild.Checked;
+      }
+    }
+
+
+
+    private void checkForUpdate_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.CheckForUpdates != checkForUpdate.Checked )
+      {
+        Core.Settings.CheckForUpdates = checkForUpdate.Checked;
       }
     }
 

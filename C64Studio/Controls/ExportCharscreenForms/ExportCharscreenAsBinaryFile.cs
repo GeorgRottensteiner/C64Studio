@@ -91,6 +91,23 @@ namespace RetroDevStudio.Controls
       editPrefixLoadAddress.Enabled = checkPrefixLoadAddress.Checked;
     }
 
+    private void editPrefixLoadAddress_KeyPress( object sender, KeyPressEventArgs e )
+    {
+      if ( ( ( e.KeyChar >= '0' )
+      &&     ( e.KeyChar <= '9' ) )
+      ||   ( ( e.KeyChar >= 'A' )
+      &&     ( e.KeyChar <= 'F' ) )
+      ||   ( ( e.KeyChar >= 'a' )
+      &&     ( e.KeyChar <= 'f' ) )
+      ||   ( char.IsControl( e.KeyChar ) ) )
+      {
+      }
+      else
+      {
+        e.Handled = true;
+      }
+    }
+
 
 
   }

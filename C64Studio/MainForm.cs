@@ -792,7 +792,10 @@ namespace RetroDevStudio
 
       ApplicationEvent += new ApplicationEventHandler( MainForm_ApplicationEvent );
 
-      CheckForUpdate();
+      if ( StudioCore.Settings.CheckForUpdates )
+      {
+        CheckForUpdate();
+      }
 
       if ( args.Length > 0 )
       {
@@ -1082,11 +1085,7 @@ namespace RetroDevStudio
 
     private void CheckForUpdate()
     {
-      // TODO - date check!
-      if ( StudioCore.Settings.CheckForUpdates )
-      {
-        AddTask( new Tasks.TaskCheckForUpdate() );
-      }
+      AddTask( new Tasks.TaskCheckForUpdate() );
     }
 
 
@@ -7873,7 +7872,7 @@ namespace RetroDevStudio
 
     private void checkForUpdateToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      AddTask( new Tasks.TaskCheckForUpdate() );
+      CheckForUpdate();
     }
 
 
