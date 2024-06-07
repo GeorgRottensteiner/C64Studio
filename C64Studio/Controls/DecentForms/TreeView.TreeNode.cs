@@ -509,7 +509,7 @@ namespace DecentForms
         {
           _Owner._ScrollBar.ScrollTo( _VisualIndex );
         }
-        else if ( _VisualIndex > _Owner.FirstVisibleNode.VisualIndex + _Owner.VisibleItemCount )
+        else if ( _VisualIndex > _Owner.FirstVisibleNode.VisualIndex + _Owner.VisibleItemCount - 1 )
         {
           _Owner._ScrollBar.ScrollTo( _VisualIndex + _Owner.VisibleItemCount - 1 );
         }

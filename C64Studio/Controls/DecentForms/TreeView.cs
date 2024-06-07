@@ -297,6 +297,7 @@ namespace DecentForms
         {
           _ScrollBar.Maximum = 0;
           _ScrollBar.SetSliderSize( _ScrollBar.Height - 2 * 17 );
+          _PreviousScrollPosition = 0;
         }
         else
         {
@@ -310,6 +311,10 @@ namespace DecentForms
           _ScrollBar.SetSliderSize( (int)( ( _ScrollBar.Height - 2 * 17 ) * factor ) );
 
           _ScrollBar.LargeChange = visibleItemCount - 1;
+          if ( _PreviousScrollPosition > _ScrollBar.Maximum )
+          {
+            _PreviousScrollPosition = _ScrollBar.Maximum;
+          }
         }
       }
       else
@@ -320,6 +325,7 @@ namespace DecentForms
         }
         _ScrollBar.Value = 0;
         _ScrollBar.Maximum = 0;
+        _PreviousScrollPosition = 0;
       }
 
       _ActualWorkWidth = 0;
@@ -441,6 +447,7 @@ namespace DecentForms
         _SelectedNode = value;
         if ( _SelectedNode != null )
         {
+          _SelectedNode.EnsureVisible();
           Invalidate( _SelectedNode.Bounds );
           AfterSelect?.Invoke( this, new TreeViewEventArgs( _SelectedNode ) );
         }
@@ -767,7 +774,7 @@ namespace DecentForms
             {
               if ( Nodes.Count > 0 )
               {
-                _SelectedNode = Nodes[0];
+                SelectedNode = Nodes[0];
                 Invalidate( _SelectedNode.Bounds );
               }
             }
@@ -779,35 +786,17 @@ namespace DecentForms
                 break;
               }
               Invalidate( _SelectedNode.Bounds );
-              _SelectedNode = newNode;
+              SelectedNode = newNode;
               if ( _SelectedNode != null )
               {
                 Invalidate( _SelectedNode.Bounds );
               }
-              // TODO - event
             }
           }
           else if ( Event.Key == System.Windows.Forms.Keys.PageUp )
           {
-            /*
-            int numItemsToWalk = ( ClientSize.Height + ItemHeight - 1 ) / ItemHeight;
-            var node = _SelectedNode;
-            while ( ( numItemsToWalk > 0 )
-            &&      ( node != null ) )
-            {
-              var nextNode = GetPreviousVisibleNode( node );
-              --numItemsToWalk;
-              if ( nextNode != null )
-              {
-                node = nextNode;
-              }
-              else
-              {
-                break;
-              }
-            }*/
             _ScrollBar.ScrollBy( -( ClientSize.Height + ItemHeight - 1 ) / ItemHeight );
-            _SelectedNode = _FirstVisibleNode;
+            SelectedNode = _FirstVisibleNode;
           }
           else if ( Event.Key == System.Windows.Forms.Keys.PageDown )
           {
@@ -832,14 +821,14 @@ namespace DecentForms
                 break;
               }
             }
-            _SelectedNode = node;
+            SelectedNode = node;
           }
           else if ( Event.Key == System.Windows.Forms.Keys.Home )
           {
             _ScrollBar.ScrollTo( 0 );
             if ( Nodes.Count > 0 )
             {
-              _SelectedNode = Nodes[0];
+              SelectedNode = Nodes[0];
             }
           }
           else if ( Event.Key == System.Windows.Forms.Keys.End )
@@ -847,7 +836,7 @@ namespace DecentForms
             _ScrollBar.ScrollTo( _ScrollBar.Maximum );
             if ( Nodes.Count > 0 )
             {
-              _SelectedNode = LastVisibleNode;
+              SelectedNode = LastVisibleNode;
             }
           }
           else if ( Event.Key == System.Windows.Forms.Keys.Up )
@@ -863,7 +852,7 @@ namespace DecentForms
                 {
                   newNode = newNode.Nodes.Last();
                 }
-                _SelectedNode = newNode;
+                SelectedNode = newNode;
                 Invalidate( _SelectedNode.Bounds );
               }
             }
@@ -875,7 +864,7 @@ namespace DecentForms
                 break;
               }
               Invalidate( _SelectedNode.Bounds );
-              _SelectedNode = newNode;
+              SelectedNode = newNode;
               if ( _SelectedNode != null )
               {
                 Invalidate( _SelectedNode.Bounds );
@@ -892,7 +881,7 @@ namespace DecentForms
               &&   ( _SelectedNode.Parent != null ) )
               {
                 Invalidate( _SelectedNode.Bounds );
-                _SelectedNode = _SelectedNode.Parent;
+                SelectedNode = _SelectedNode.Parent;
                 Invalidate( _SelectedNode.Bounds );
                 break;
               }
@@ -916,17 +905,9 @@ namespace DecentForms
               else
               {
                 Invalidate( _SelectedNode.Bounds );
-                _SelectedNode = _SelectedNode.Nodes[0];
+                SelectedNode = _SelectedNode.Nodes[0];
                 Invalidate( _SelectedNode.Bounds );
               }
-            }
-          }
-          break;
-        case ControlEvent.EventType.KEY_UP:
-          if ( Focused )
-          {
-            if ( Event.Key == System.Windows.Forms.Keys.Space )
-            {
             }
           }
           break;
@@ -1148,6 +1129,7 @@ namespace DecentForms
         if ( Nodes.Count > 0 )
         {
           _FirstVisibleNode = Nodes[0];
+          _FirstVisibleNode.EnsureVisible();
         }
       }
       UpdateScrollbarState();
@@ -1444,6 +1426,7 @@ namespace DecentForms
       {
         return;
       }
+      _SelectedNode.EnsureVisible();
       _EditedNode = _SelectedNode;
       if ( _PopupEditControl == null )
       {

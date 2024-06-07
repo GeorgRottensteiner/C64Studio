@@ -87,8 +87,9 @@ namespace RetroDevStudio.Parser
       }
 
       int spriteSize = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+      int paddingSize = spriteSize - Lookup.NumBytesOfSingleSprite( spriteProject.Mode );
 
-      var spriteData = new GR.Memory.ByteBuffer( (uint)( count * spriteSize - 1 ) );
+      var spriteData = new GR.Memory.ByteBuffer( (uint)( count * spriteSize - paddingSize ) );
 
       for ( int i = 0; i < count; ++i )
       {
