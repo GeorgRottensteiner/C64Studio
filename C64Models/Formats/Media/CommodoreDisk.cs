@@ -192,6 +192,20 @@ namespace RetroDevStudio.Formats
 
 
 
+    protected ByteBuffer PadFilename( ByteBuffer Filename )
+    {
+      if ( Filename.Length < 16 )
+      {
+        var padded = new ByteBuffer( 16, 0xa0 );
+        Filename.CopyTo( padded );
+
+        return padded;
+      }
+      return Filename;
+    }
+
+
+
     void SetDiskName( string Diskname )
     {
       _LastError = "";
@@ -428,6 +442,8 @@ namespace RetroDevStudio.Formats
       FileLocation = null;
       FileInfo = null;
 
+      Filename = PadFilename( Filename );
+
       Location    curLoc = new Location( TRACK_DIRECTORY, SECTOR_DIRECTORY );
 
       bool endFound = false;
@@ -609,6 +625,12 @@ namespace RetroDevStudio.Formats
       }
       Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
 
+      if ( ( Track == TRACK_DIRECTORY )
+      &&   ( Sector == SECTOR_DIRECTORY ) )
+      {
+        Debug.Log( "wos?" );
+      }
+
       // adjust free sectors
       bam.Data.SetU8At( Track * 4, (byte)( bam.Data.ByteAt( Track * 4 ) + 1 ) );
 
@@ -709,6 +731,8 @@ namespace RetroDevStudio.Formats
       _LastError = "";
       int   curTrack = TRACK_DIRECTORY;
       int   curSector = SECTOR_DIRECTORY;
+
+      Filename = PadFilename( Filename );
       while ( true )
       {
         Track dirTrack = Tracks[curTrack - 1];
@@ -741,6 +765,8 @@ namespace RetroDevStudio.Formats
               {
                 Track fileTrack = Tracks[startTrack - 1];
                 Sector fileSector = fileTrack.Sectors[startSector];
+                int nextTrack = fileSector.Data.ByteAt( 0 );
+                int nextSector = fileSector.Data.ByteAt( 1 );
 
                 if ( CompleteDelete )
                 {
@@ -749,13 +775,14 @@ namespace RetroDevStudio.Formats
 
                 FreeSector( startTrack, startSector );
 
-                startTrack = fileSector.Data.ByteAt( 0 );
-                startSector = fileSector.Data.ByteAt( 1 );
+                startTrack = nextTrack;
+                startSector = nextSector;
               }
               if ( CompleteDelete )
               {
                 // remove all traces from directory entry
-                sect.Data.Fill( BYTES_PER_DIR_ENTRY * i, BYTES_PER_DIR_ENTRY, 0 );
+                // keep 2 bytes of T/S link intact
+                sect.Data.Fill( BYTES_PER_DIR_ENTRY * i + 2, BYTES_PER_DIR_ENTRY - 2, 0 );
               }
               return true;
             }
@@ -877,7 +904,7 @@ namespace RetroDevStudio.Formats
         foreach ( var sector in track.Sectors )
         {
           if ( ( !sector.Free )
-          && ( !usedTracksAndSectors.ContainsValue( new GR.Generic.Tupel<int, int>( track.TrackNo, sector.SectorNo ) ) ) )
+          &&   ( !usedTracksAndSectors.ContainsValue( new GR.Generic.Tupel<int, int>( track.TrackNo, sector.SectorNo ) ) ) )
           {
             sector.Free = true;
           }
@@ -896,6 +923,8 @@ namespace RetroDevStudio.Formats
         _LastError = "file too large";
         return false;
       }
+
+      Filename = PadFilename( Filename );
 
       Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
 
@@ -1113,7 +1142,7 @@ namespace RetroDevStudio.Formats
       foreach ( Sector sec in Tracks[curTrack - 1].Sectors )
       {
         if ( ( sec.Data.ByteAt( 0 ) == Track )
-        && ( sec.Data.ByteAt( 1 ) == Sector ) )
+        &&   ( sec.Data.ByteAt( 1 ) == Sector ) )
         {
           // this sector points at me
           return sec;
@@ -1465,6 +1494,20 @@ namespace RetroDevStudio.Formats
       {
         return MediaFilenameType.COMMODORE;
       }
+    }
+
+
+
+    public ByteBuffer ReadSector( int TrackNo, int SectorNo )
+    {
+      if ( ( TrackNo < 1 )
+      ||   ( TrackNo + 1 >= Tracks.Count )
+      ||   ( SectorNo < 0 )
+      ||   ( SectorNo >= Tracks[TrackNo].Sectors.Count ) )
+      {
+        return new ByteBuffer();
+      }
+      return new ByteBuffer( Tracks[TrackNo - 1].Sectors[SectorNo].Data );
     }
 
 

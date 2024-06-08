@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Memory;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -428,104 +429,6 @@ namespace RetroDevStudio.Formats
         }
       }
       while ( true );
-      _LastError = "disk is full";
-      return false;
-    }
-
-
-
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
-    {
-      _LastError = "";
-      GR.Memory.ByteBuffer    dataToWrite = new GR.Memory.ByteBuffer( Content );
-      if ( dataToWrite.Length > FreeBytes() )
-      {
-        _LastError = "file too large";
-        return false;
-      }
-
-      Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
-
-      int trackIndex = 1;
-      int prevSector = 0;
-      int fileInterleave = 10;
-      int bytesToWrite = (int)dataToWrite.Length;
-      int writeOffset = 0;
-      Sector previousSector = null;
-      int searchSector = -1; 
-
-      int startSector = -1;
-      int startTrack = -1;
-      int sectorsWritten = 0;
-
-      write_next_sector:;
-      trackIndex = 1;
-      foreach ( Track track in Tracks )
-      {
-        if ( trackIndex == TRACK_DIRECTORY )
-        {
-          // directory track
-          ++trackIndex;
-          continue;
-        }
-        if ( track.FreeSectors == 0 )
-        {
-          ++trackIndex;
-          continue;
-        }
-
-        int     sectorsPerTrack = track.Sectors.Count;
-        searchSector = ( prevSector + fileInterleave ) % sectorsPerTrack;
-
-        while ( true )
-        {
-          if ( track.Sectors[searchSector].Free )
-          {
-            AllocSector( trackIndex, searchSector );
-            if ( previousSector != null )
-            {
-              previousSector.Data.SetU8At( 0, (byte)trackIndex );
-              previousSector.Data.SetU8At( 1, (byte)searchSector );
-            }
-            else
-            {
-              // first sector, add directory entry
-              startSector = searchSector;
-              startTrack = trackIndex;
-            }
-            previousSector = track.Sectors[searchSector];
-            if ( bytesToWrite > 254 )
-            {
-              dataToWrite.CopyTo( previousSector.Data, writeOffset, 254, 2 );
-              previousSector.Free = false;
-              writeOffset += 254;
-              bytesToWrite -= 254;
-              ++sectorsWritten;
-              prevSector = searchSector;
-              goto write_next_sector;
-            }
-            // last sector
-            previousSector.Free = false;
-            previousSector.Data.SetU8At( 0, 0 );
-            previousSector.Data.SetU8At( 1, (byte)( 1 + bytesToWrite ) );
-            dataToWrite.CopyTo( previousSector.Data, writeOffset, bytesToWrite, 2 );
-            writeOffset += bytesToWrite;
-            bytesToWrite = 0;
-            ++sectorsWritten;
-
-            AddDirectoryEntry( Filename, startTrack, startSector, sectorsWritten, Type );
-            return true;
-          }
-          else
-          {
-            ++searchSector;
-            if ( searchSector >= sectorsPerTrack )
-            {
-              searchSector = 0;
-            }
-          }
-        }
-      }
       _LastError = "disk is full";
       return false;
     }
