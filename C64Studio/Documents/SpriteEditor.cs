@@ -2822,7 +2822,11 @@ namespace RetroDevStudio.Documents
         {
           color |= 0x80;
         }
-        exportData.AppendU8( color );
+
+        if (! Enum.GetName( typeof( SpriteMode ), m_SpriteProject.Sprites[exportIndices[i]].Mode ).StartsWith( "COMMANDER_X16", StringComparison.OrdinalIgnoreCase ) )
+        {
+          exportData.AppendU8( color );
+        }
       }
       return exportData;
     }
