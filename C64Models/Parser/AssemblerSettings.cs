@@ -34,8 +34,6 @@ namespace RetroDevStudio.Parser
     public bool                                                     MacrosUseCheapLabelsAsParameters = false;
     public bool                                                     DoWithoutParameterIsUntil = false;
     public bool                                                     LabelsMustBeAtStartOfLine = false;
-    public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
-    public GR.Collections.Set<string>                               PlainAssignmentOperators = new GR.Collections.Set<string>();
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
     public bool                                                     LoopEndHasNoScope = false;
@@ -47,6 +45,8 @@ namespace RetroDevStudio.Parser
     public bool                                                     AllowsCustomTextMappings = false;
     public bool                                                     IfWithoutBrackets = false;
     public bool                                                     LocalLabelStacking = false;   // if true, TASM mode: ++ refers to 2nd + below, --- to 3rd - above, etc.
+    public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
+    public GR.Collections.Set<string>                               PlainAssignmentOperators = new GR.Collections.Set<string>();
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
 
@@ -81,34 +81,42 @@ namespace RetroDevStudio.Parser
     public void SetAssemblerType( Types.AssemblerType Type )
     {
       // set default settings
-      AllowedSingleTokens = "";
       AllowedTokenChars.Clear();
       AllowedTokenEndChars.Clear();
       AllowedTokenStartChars.Clear();
-      DefineSeparatorKeywords.Clear();
-      PlainAssignmentOperators.Clear();
+      AllowedSingleTokens = "";
+      RestOfLineAsSingleToken.Clear();
+      OpenBracketChars = "";
+      CloseBracketChars = "";
+      LineSeparatorChars = "";
       PseudoOps.Clear();
-      StatementSeparatorChars.Clear();
       POPrefix = "";
       LabelPostfix = "";
       MacroFunctionCallPrefix.Clear();
+      GlobalLabelsAutoZone = false;
       MacroIsZone = false;
       MacrosHaveVariableNumberOfArguments = false;
       MacrosCanBeOverloaded = false;
-      CaseSensitive = true;
-      IncludeExpectsStringLiteral = true;
-      IncludeHasOnlyFilename = false;
-      HasBinaryNot = true;
       MacroKeywordAfterName = false;
       MacrosUseCheapLabelsAsParameters = false;
+      DoWithoutParameterIsUntil = false;
       LabelsMustBeAtStartOfLine = false;
-      GreaterOrLessThanAtBeginningAffectFullExpression = false;
+      CaseSensitive = true;
+      IncludeExpectsStringLiteral = true;
       LoopEndHasNoScope = false;
+      IncludeHasOnlyFilename = false;
+      IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
+      HasBinaryNot = true;
+      GreaterOrLessThanAtBeginningAffectFullExpression = false;
       MessageAutoIncludesBlanksBetweenParameters = false;
+      AllowsCustomTextMappings = false;
+      IfWithoutBrackets = false;
+      LocalLabelStacking = false;
+      DefineSeparatorKeywords.Clear();
+      PlainAssignmentOperators.Clear();
+      StatementSeparatorChars.Clear();
+
       AssemblerType = Type;
-      OpcodeSizeIdentifierSeparator = "+";
-      OpcodeSizeIdentifierOneByteOperands = new List<string>() { "1" };
-      OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "2" };
 
       DefaultTargetType = Types.CompileTargetType.PRG;
       DefaultTargetExtension = ".prg";
@@ -162,6 +170,9 @@ namespace RetroDevStudio.Parser
 
           OpenBracketChars = "(" + INTERNAL_OPENING_BRACE + SQUARE_BRACKETS_OPEN;
           CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE + SQUARE_BRACKETS_CLOSE;
+          OpcodeSizeIdentifierSeparator = "+";
+          OpcodeSizeIdentifierOneByteOperands = new List<string>() { "1" };
+          OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "2" };
 
           LineSeparatorChars = ":";
 
@@ -279,6 +290,10 @@ namespace RetroDevStudio.Parser
 
           OpenBracketChars = "(" + INTERNAL_OPENING_BRACE + SQUARE_BRACKETS_OPEN;
           CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE + SQUARE_BRACKETS_CLOSE;
+
+          OpcodeSizeIdentifierSeparator = "+";
+          OpcodeSizeIdentifierOneByteOperands = new List<string>() { "1" };
+          OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "2" };
 
           LineSeparatorChars = ":";
 

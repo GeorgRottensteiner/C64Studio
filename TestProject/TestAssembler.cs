@@ -575,6 +575,21 @@ namespace TestProject
 
 
 
+    [TestMethod]
+    public void TestIf()
+    {
+      string      source = @"*=$c000
+                            GNU=5
+
+                            !if GNU=5 {
+
+                            !byte GNU
+                            }";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( "00C005", assembly.ToString() );
+    }
 
 
 
