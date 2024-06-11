@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -49,10 +50,23 @@ namespace MediaTool
         return 1;
       }
 
-      GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( count * 64 ) );
+      int bytesOfSingleSprite = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+      int bytesOfPaddedSingleSprite = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+
+      GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( count * bytesOfPaddedSingleSprite ) );
       for ( int i = 0; i < count; ++i )
       {
-        spriteProject.Sprites[firstSprite + i].Tile.Data.CopyTo( spriteData, 0, 63, i * 64 );
+        spriteProject.Sprites[firstSprite + i].Tile.Data.CopyTo( spriteData, 0, bytesOfSingleSprite, i * bytesOfPaddedSingleSprite );
+        if ( bytesOfPaddedSingleSprite > bytesOfSingleSprite )
+        {
+          // pad with color
+          byte color = (byte)spriteProject.Sprites[firstSprite + i].Tile.CustomColor;
+          if ( spriteProject.Sprites[firstSprite + i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+          {
+            color |= 0x80;
+          }
+          spriteData.SetU8At( i * bytesOfPaddedSingleSprite + bytesOfSingleSprite, color );
+        }
       }
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), spriteData ) )

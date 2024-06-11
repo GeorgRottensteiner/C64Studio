@@ -2817,12 +2817,16 @@ namespace RetroDevStudio.Documents
       {
         exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Tile.Data );
 
-        byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Tile.CustomColor;
-        if ( m_SpriteProject.Sprites[exportIndices[i]].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+        // C64 usually has 63 bytes, so 1 byte is padded with the color
+        if ( Lookup.NumPaddedBytesOfSingleSprite( m_SpriteProject.Mode ) > Lookup.NumBytesOfSingleSprite( m_SpriteProject.Mode ) )
         {
-          color |= 0x80;
+          byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Tile.CustomColor;
+          if ( m_SpriteProject.Sprites[exportIndices[i]].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+          {
+            color |= 0x80;
+          }
+          exportData.AppendU8( color );
         }
-        exportData.AppendU8( color );
       }
       return exportData;
     }
