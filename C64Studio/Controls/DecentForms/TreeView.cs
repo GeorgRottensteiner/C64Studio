@@ -128,6 +128,10 @@ namespace DecentForms
           }
           _FirstVisibleNode = node;
         }
+        else
+        {
+          _FirstVisibleNode = null;
+        }
         Invalidate();
       }
     }
@@ -303,7 +307,7 @@ namespace DecentForms
         {
           if ( _ScrollBar.Value > newMax )
           {
-            _ScrollBar.Value = newMax;
+            _ScrollBar.ScrollTo( newMax );
           }
           _ScrollBar.Maximum = newMax;
 
@@ -326,6 +330,14 @@ namespace DecentForms
         _ScrollBar.Value = 0;
         _ScrollBar.Maximum = 0;
         _PreviousScrollPosition = 0;
+        if ( Nodes.Count > 0 )
+        {
+          _FirstVisibleNode = Nodes[0];
+        }
+        else
+        {
+          _FirstVisibleNode = null;
+        }
       }
 
       _ActualWorkWidth = 0;

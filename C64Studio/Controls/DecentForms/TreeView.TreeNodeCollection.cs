@@ -140,6 +140,18 @@ namespace DecentForms
           }
         }
         var node = Nodes[Index];
+
+        if ( ( _OwnerControl != null )
+        &&   ( _OwnerControl.SelectedNode == node ) )
+        {
+          var newNode = GetNextVisibleNode( node );
+          if ( newNode == null )
+          {
+            newNode = GetPreviousVisibleNode( node );
+          }
+          _OwnerControl.SelectedNode = newNode;
+        }
+
         if ( node.PreviousNode != null )
         {
           node.PreviousNode._Next = node.NextNode;

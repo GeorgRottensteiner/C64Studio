@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 
 
 
@@ -494,6 +495,11 @@ namespace DecentForms
         if ( _Parent != null )
         {
           _Parent.Nodes.Remove( this );
+        }
+        else if ( ( _Owner != null )
+        &&        ( _Owner.Nodes.Contains( this ) ) )
+        {
+          _Owner.Nodes.Remove( this );
         }
       }
 

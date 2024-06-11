@@ -3363,6 +3363,12 @@ namespace FastColoredTextBoxNS
 
       if ( Pasting != null )
       {
+        // sometimes clipboard blocks and returns null!
+        if ( string.IsNullOrEmpty( text ) )
+        {
+          return;
+        }
+
         var args = new TextPastingEventArgs
         {
           Cancel                = false,
