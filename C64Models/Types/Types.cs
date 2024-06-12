@@ -852,6 +852,14 @@ namespace RetroDevStudio.Types
 
 
 
+  public class ScopePseudoPC
+  {
+    public int                OriginalStartAddress = -1;
+    public int                PseudoStartAddress = -1;
+  };
+
+
+
   public class WhileInfo
   {
     public int                LineIndex = 0;
@@ -886,6 +894,7 @@ namespace RetroDevStudio.Types
     public bool                     IfChainHadActiveEntry = false;    // used for if/ifelse/else..chains
     public Types.LoopInfo           Loop = null;
     public Types.MacroFunctionInfo  Macro = null;
+    public ScopePseudoPC            PseudoPC = null;
     public RepeatUntilInfo          RepeatUntil = null;
     public WhileInfo                While = null;
     public ScopeType                Type = ScopeType.LOOP;

@@ -20,12 +20,18 @@ namespace RetroDevStudio.Parser
                   lineTokenInfos[lineTokenInfos.Count - 1].EndPos );
         return ParseLineResult.RETURN_NULL;
       }
+
+      ScopePseudoPC scopePseudoPC = null;
+
       if ( lineTokenInfos[TokenStartIndex + TokenCount - 1].Content == "{" )
       {
         // a real PC with bracket
-        var scopeInfo = new Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
-        scopeInfo.StartIndex = lineIndex;
-        scopeInfo.Active = true;
+        scopePseudoPC         = new ScopePseudoPC() { PseudoStartAddress = m_CompileCurrentAddress, OriginalStartAddress = m_CompileCurrentAddress };
+
+        var scopeInfo         = new Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
+        scopeInfo.PseudoPC    = scopePseudoPC;
+        scopeInfo.StartIndex  = lineIndex;
+        scopeInfo.Active      = true;
 
         _ParseContext.Scopes.Add( scopeInfo );
         OnScopeAdded( scopeInfo );
@@ -43,7 +49,12 @@ namespace RetroDevStudio.Parser
                   lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
         return ParseLineResult.RETURN_NULL;
       }
+
       info.PseudoPCOffset = pseudoStepPos.ToInt32();
+      if ( scopePseudoPC != null )
+      {
+        scopePseudoPC.PseudoStartAddress = info.PseudoPCOffset;
+      }
       return ParseLineResult.OK;
     }
 

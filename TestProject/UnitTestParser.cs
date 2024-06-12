@@ -1245,6 +1245,38 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPseudoPCNested()
+    {
+      string      source = @"* = $1000
+                                        lda #$02
+                                        sta $0d02
+                                        rts
+
+                            !pseudopc $2000 {
+                                        lda $2000
+
+                            !pseudopc $3000 {
+                                        lda $3000
+                            }
+                            MY_ADDRESS
+                                        lda $2006
+                            }
+
+
+                                        rts
+
+                            !if MY_ADDRESS != $2006 {
+                            !error ""Das ist nicht richtig!""
+                            }";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0010A9028D020D60AD0020AD0030AD062060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestIfDefPseudoOp()
     {
       string      source = @"* = $2000

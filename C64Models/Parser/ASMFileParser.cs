@@ -4284,8 +4284,10 @@ namespace RetroDevStudio.Parser
             {
               // ACME style pseudo pc with bracket
               Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
-              scope.StartIndex = lineIndex;
-              scope.Active = false;
+              // inserting dummy pseudo address, since it's not active anyway
+              scope.PseudoPC        = new ScopePseudoPC() { PseudoStartAddress = m_CompileCurrentAddress, OriginalStartAddress = m_CompileCurrentAddress };
+              scope.StartIndex      = lineIndex;
+              scope.Active          = false;
               stackDefineBlocks.Add( scope );
               OnScopeAdded( scope );
             }
@@ -5102,8 +5104,10 @@ namespace RetroDevStudio.Parser
             {
               // ACME style pseudo pc with bracket
               Types.ScopeInfo scope = new ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
-              scope.StartIndex = lineIndex;
-              scope.Active = false;
+              // inserting dummy pseudo address, since scope is not active
+              scope.PseudoPC        = new ScopePseudoPC() { PseudoStartAddress = m_CompileCurrentAddress, OriginalStartAddress = m_CompileCurrentAddress };
+              scope.StartIndex      = lineIndex;
+              scope.Active          = false;
               _ParseContext.Scopes.Add( scope );
               OnScopeAdded( scope );
             }
@@ -5283,12 +5287,28 @@ namespace RetroDevStudio.Parser
               DetermineActiveZone();
               break;
             case Types.ScopeInfo.ScopeType.PSEUDO_PC:
-              PORealPC( info );
-              OnScopeRemoved( lineIndex );
-              _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
-              m_CompileCurrentAddress = trueCompileCurrentAddress;
-              info.AddressStart = trueCompileCurrentAddress;
-              programStepPos = m_CompileCurrentAddress;
+              if ( _ParseContext.Scopes.Count( sc => sc.Type == ScopeInfo.ScopeType.PSEUDO_PC ) > 1 )
+              {
+                OnScopeRemoved( lineIndex );
+                _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+
+                var previousPseudoPC = _ParseContext.Scopes.FindLast( sc => sc.Type == ScopeInfo.ScopeType.PSEUDO_PC );
+
+                info.PseudoPCOffset     = closingScope.PseudoPC.OriginalStartAddress + m_CompileCurrentAddress - closingScope.PseudoPC.PseudoStartAddress;
+                m_CompileCurrentAddress = info.PseudoPCOffset;
+                info.AddressStart       = m_CompileCurrentAddress;
+                programStepPos          = m_CompileCurrentAddress;
+              }
+              else
+              {
+                PORealPC( info );
+                m_CompileCurrentAddress = trueCompileCurrentAddress;
+                info.AddressStart       = trueCompileCurrentAddress;
+                programStepPos          = m_CompileCurrentAddress;
+
+                OnScopeRemoved( lineIndex );
+                _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+              }
               break;
             default:
               // normal scope end
@@ -11194,7 +11214,7 @@ namespace RetroDevStudio.Parser
 
       // determine load address
       int lowestStart = 65536;
-      int highestEnd = -1;
+      int highestEnd = -1;                            
       foreach ( var mapSegment in memoryMap.Entries )
       {
         if ( mapSegment.Length == 0 )
