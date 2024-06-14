@@ -1151,6 +1151,13 @@ namespace RetroDevStudio.Documents
             System.Windows.Forms.MessageBox.Show( "You can't remove the last project from a solution.", "Last Project!", MessageBoxButtons.OK );
             return;
           }
+
+          System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show( $"You chose to remove project {projectToRemove.Settings.Name}. Are you sure?", "Remove Project?", System.Windows.Forms.MessageBoxButtons.YesNo );
+          if ( result != System.Windows.Forms.DialogResult.Yes )
+          {
+            return;
+          }
+          
           Core.MainForm.CloseProject( projectToRemove );
           Core.Navigating.Solution.Modified = true;
           Core.MainForm.SaveSolution();

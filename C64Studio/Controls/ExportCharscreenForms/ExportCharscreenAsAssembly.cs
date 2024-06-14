@@ -41,9 +41,13 @@ namespace RetroDevStudio.Controls
 
     public override bool HandleExport( ExportCharsetScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
-      var   sb = new StringBuilder();
+      var             sb = new StringBuilder();
+      StringBuilder   sbPET = null;
 
-      if ( checkExportASMAsPetSCII.Checked )
+      if ( ( checkExportASMAsPetSCII.Checked )
+      &&   ( ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR )
+      ||     ( Info.Data == ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR )
+      ||     ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_ONLY ) ) )
       {
         if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Info.Charscreen.Mode ) ) > 1 )
         {
@@ -55,15 +59,12 @@ namespace RetroDevStudio.Controls
         bool            isReverse = false;
         bool            insideQuotes = false;
 
-        sb.Append( ";size " );
-        sb.Append( Info.Area.Width );
-        sb.Append( "," );
-        sb.Append( Info.Area.Height );
-        sb.AppendLine();
+        sbPET = new StringBuilder();
+
 
         for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
         {
-          sb.Append( "!pet " );
+          sbPET.Append( "!pet " );
           insideQuotes = false;
           for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
           {
@@ -90,10 +91,14 @@ namespace RetroDevStudio.Controls
               {
                 if ( !insideQuotes )
                 {
-                  sb.Append( ", \"" );
+                  sbPET.Append( ", \"" );
                 }
               }
-              sb.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
+              else
+              {
+                sbPET.Append( "\"" );
+              }
+              sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
               insideQuotes = true;
             }
             else
@@ -102,29 +107,27 @@ namespace RetroDevStudio.Controls
               {
                 if ( insideQuotes )
                 {
-                  sb.Append( "\", " );
+                  sbPET.Append( "\", " );
                 }
                 else
                 {
-                  sb.Append( ", " );
+                  sbPET.Append( ", " );
                 }
               }
-              sb.Append( '$' );
-              sb.Append( newChar.ToString( "X2" ) );
+              sbPET.Append( '$' );
+              sbPET.Append( newChar.ToString( "X2" ) );
               insideQuotes = false;
             }
           }
           if ( insideQuotes )
           {
-            sb.AppendLine( "\"" );
+            sbPET.AppendLine( "\"" );
           }
           else
           {
-            sb.AppendLine();
+            sbPET.AppendLine();
           }
         }
-        EditOutput.Text = sb.ToString();
-        return true;
       }
 
       ByteBuffer  interleavedBuffer = null;
@@ -138,7 +141,16 @@ namespace RetroDevStudio.Controls
         }
       }
 
-      string screenData = Util.ToASMData( Info.ScreenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
+      string screenData = "";
+
+      if ( sbPET != null )
+      {
+        screenData = sbPET.ToString();
+      }
+      else
+      {
+        screenData = Util.ToASMData( Info.ScreenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
+      }
       string colorData  = Util.ToASMData( Info.ScreenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
 
       sb.Append( ";size " );

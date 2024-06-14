@@ -1132,6 +1132,7 @@ namespace DecentForms
       {
         if ( Nodes.Any() )
         {
+          Nodes[0]._VisualIndex = 0;
           Nodes[0].RecalcVisualIndexStartingWithMyself();
         }
       }

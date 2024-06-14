@@ -3155,7 +3155,7 @@ namespace RetroDevStudio
 
     private void mainToolNewProject_Click( object sender, EventArgs e )
     {
-      CreateNewProject();
+      AddNewProject( true );
     }
 
 
@@ -5964,7 +5964,7 @@ namespace RetroDevStudio
 
     private void fileNewProjectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      CreateNewProject();
+      AddNewProject( true );
     }
 
 
@@ -7149,7 +7149,7 @@ namespace RetroDevStudio
       {
         return AddNewSolution();
       }
-      return AddNewProject( false );
+      return AddNewProject( true );
     }
 
 

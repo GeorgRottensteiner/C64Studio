@@ -251,7 +251,7 @@ namespace DecentForms
       public void Insert( int Index, TreeNode treeNode )
       {
         if ( ( Index < 0 )
-        ||   ( Index >= Nodes.Count ) )
+        ||   ( Index > Nodes.Count ) )
         {
           throw new ArgumentOutOfRangeException( $"Index {Index} is out of bounds!" );
         }
