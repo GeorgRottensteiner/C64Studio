@@ -45,8 +45,15 @@ namespace RetroDevStudio.Controls
 
       if ( checkExportASMAsPetSCII.Checked )
       {
+        if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Info.Charscreen.Mode ) ) > 1 )
+        {
+          EditOutput.Text = "PETSCII export is only allowed for 8bit character types";
+          return true;
+        }
+
         // pet export only exports chars, no color changes
         bool            isReverse = false;
+        bool            insideQuotes = false;
 
         sb.Append( ";size " );
         sb.Append( Info.Area.Width );
@@ -56,7 +63,8 @@ namespace RetroDevStudio.Controls
 
         for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
         {
-          sb.Append( "!pet \"" );
+          sb.Append( "!pet " );
+          insideQuotes = false;
           for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
           {
             byte newChar = (byte)Info.Charscreen.CharacterAt( x, i );
@@ -78,16 +86,42 @@ namespace RetroDevStudio.Controls
             if ( ( ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
             &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
             {
+              if ( x > Info.Area.Left )
+              {
+                if ( !insideQuotes )
+                {
+                  sb.Append( ", \"" );
+                }
+              }
               sb.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
+              insideQuotes = true;
             }
             else
             {
-              sb.Append( "\", $" );
+              if ( x > Info.Area.Left )
+              {
+                if ( insideQuotes )
+                {
+                  sb.Append( "\", " );
+                }
+                else
+                {
+                  sb.Append( ", " );
+                }
+              }
+              sb.Append( '$' );
               sb.Append( newChar.ToString( "X2" ) );
-              sb.Append( ", \"" );
+              insideQuotes = false;
             }
           }
-          sb.AppendLine( "\"" );
+          if ( insideQuotes )
+          {
+            sb.AppendLine( "\"" );
+          }
+          else
+          {
+            sb.AppendLine();
+          }
         }
         EditOutput.Text = sb.ToString();
         return true;
