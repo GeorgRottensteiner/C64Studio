@@ -255,7 +255,7 @@ namespace DecentForms
         {
           throw new ArgumentOutOfRangeException( $"Index {Index} is out of bounds!" );
         }
-        treeNode._Owner   = _OwnerControl;
+        SetNodeOwner( treeNode, _OwnerControl );
         treeNode._Parent  = _Owner;
         if ( Index > 0 )
         {
