@@ -144,7 +144,7 @@ namespace RetroDevStudio.Tasks
       ||   ( ( receivedVersionInfo.Major == myVersionInfo.Major )
       &&     ( receivedVersionInfo.Minor < myVersionInfo.Minor ) ) )
       {
-        Core.SetStatus( "Newest version looks older than local: " + ReceivedVersion );
+        Core.SetStatus( $"Newest version looks older than local: {ReceivedVersion}" );
         return;
       }
       if ( ( receivedVersionInfo.Major > myVersionInfo.Major )
@@ -163,7 +163,7 @@ namespace RetroDevStudio.Tasks
       }
       else
       {
-        Core.SetStatus( "Up to date: " + ReceivedVersion );
+        Core.SetStatus( $"Up to date: {ReceivedVersion} (Actual {StudioCore.StudioVersion}.{Version.BuildNumber})" );
       }
     }
 

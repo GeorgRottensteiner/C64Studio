@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + ".0" )]
-[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + ".0" )]
+[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + "." + RetroDevStudio.Version.BuildNumber )]
+[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + "." + RetroDevStudio.Version.BuildNumber )]

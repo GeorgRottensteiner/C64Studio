@@ -25,3 +25,5 @@ cd "C64StudioRelease\shared content"
 %winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net6.0-windows ..\..\C64StudioRelease6.0.zip "*.*" 
 cd ..\..
 
+rem increase build number for next release
+powershell .\IncreaseBuildNumber.ps1

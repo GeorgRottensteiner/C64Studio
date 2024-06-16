@@ -17,7 +17,7 @@ namespace RetroDevStudio.Dialogs
     {
       InitializeComponent();
 
-      labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion );
+      labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion + "." + Version.BuildNumber );
 
       pictureBox1.Image = pictureBox1.Image.GetImageStretchedDPI();
       pictureBox2.Image = pictureBox2.Image.GetImageStretchedDPI();

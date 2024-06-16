@@ -27,11 +27,46 @@ namespace DecentForms
     private int       _MouseWheelFactor = 3;
 
     private int       _Value = 0;
+    private int       _Minimum = 0;
+    private int       _Maximum = 100;
 
 
 
-    public int Minimum { get; set; } = 0;
-    public int Maximum { get; set; } = 100;
+    public int Minimum
+    {
+      get
+      {
+        return _Minimum;
+      }
+      set
+      {
+        if ( value < Maximum )
+        {
+          _Minimum = value;
+          Value = _Value;
+          Invalidate();
+        }
+      }
+    }
+
+
+
+    public int Maximum 
+    {
+      get
+      {
+        return _Maximum;
+      }
+      set
+      {
+        if ( value >= Minimum )
+        {
+          _Maximum = value;
+          Value = _Value;
+          Invalidate();
+        }
+      }
+    }
 
 
 
@@ -93,12 +128,9 @@ namespace DecentForms
     {
       Renderer.RenderButton();
 
-      int arrowWidth = 5;
-      int arrowHeight = 8;
-      int arrowX = ( _TopButton.Width - arrowWidth ) / 2;
-      int arrowY = _TopButton.Height / 2 - arrowHeight / 2;
+      var rect = _TopButton.Bounds;
 
-      Renderer.DrawArrowLeft( arrowX, arrowY, arrowWidth, arrowHeight, Enabled );
+      Renderer.DrawArrowUp( rect.X, rect.Y, rect.Width, rect.Height, Enabled );
     }
 
 
@@ -107,12 +139,12 @@ namespace DecentForms
     {
       Renderer.RenderButton();
 
-      int arrowWidth = 5;
-      int arrowHeight = 8;
+      int arrowWidth = 8;
+      int arrowHeight = 4;
       int arrowX = ( _TopButton.Width - arrowWidth ) / 2;
-      int arrowY = _TopButton.Height / 2 - arrowHeight / 2;
+      int arrowY = _TopButton.Height / 2 - 2;
 
-      Renderer.DrawArrowRight( arrowX, arrowY, arrowWidth, arrowHeight, Enabled );
+      Renderer.DrawArrowDown( arrowX, arrowY, arrowWidth, arrowHeight, Enabled );
     }
 
 
@@ -190,7 +222,7 @@ namespace DecentForms
               Scroll?.Invoke( this );
             }
           }
-          else if ( Value - Event.MouseWheelDelta *_MouseWheelFactor > Maximum )
+          else if ( Value - Event.MouseWheelDelta * _MouseWheelFactor > Maximum )
           {
             if ( Value < Maximum )
             {
@@ -270,53 +302,24 @@ namespace DecentForms
                 _SliderPushed = true;
                 Invalidate(); 
               }
-              Focus();
               Capture = true;
             }
             else if ( Event.MouseX < sliderXPos )
             {
               // above slider
-              if ( Value - LargeChange < Minimum )
-              {
-                if ( Value != Minimum )
-                {
-                  Value = Minimum;
-                  Invalidate(); 
-                  Scroll?.Invoke( this );
-                }
-              }
-              else
-              {
-                Value -= LargeChange;
-                Invalidate();
-                Scroll?.Invoke( this );
-              }
+              ScrollBy( -LargeChange );
             }
             else
             {
               // below slider
-              if ( Value + LargeChange > Maximum )
-              {
-                if ( Value != Maximum )
-                {
-                  Value = Maximum;
-                  Invalidate();
-                  Scroll?.Invoke( this );
-                }
-              }
-              else
-              {
-                Value += LargeChange;
-                Invalidate();
-                Scroll?.Invoke( this );
-              }
+              ScrollBy( LargeChange );
             }
           }
           break;
         case ControlEvent.EventType.MOUSE_UP:
-          _ButtonWidth = _TopButton.Width;
           if ( _SliderPushed )
           {
+            _ButtonWidth = _TopButton.Width;
             _SliderPushed = false;
             Capture = false;
             if ( !GetSliderRect().Contains( Event.MouseX, Event.MouseY ) )
@@ -326,51 +329,36 @@ namespace DecentForms
             Invalidate();
           }
           break;
+        case ControlEvent.EventType.KEY_DOWN:
+          if ( Focused )
+          {
+            if ( Event.Key == Keys.Down )
+            {
+              OnScrollDown( null );
+            }
+            else if ( Event.Key == Keys.PageDown )
+            {
+              ScrollBy( LargeChange );
+            }
+            else if ( Event.Key == Keys.Home )
+            {
+              ScrollTo( 0 );
+            }
+            else if ( Event.Key == Keys.Up )
+            {
+              OnScrollUp( null );
+            }
+            else if ( Event.Key == Keys.PageUp )
+            {
+              ScrollBy( -LargeChange );
+            }
+            else if ( Event.Key == Keys.End )
+            {
+              ScrollTo( Maximum );
+            }
+          }
+          break;
           /*
-          case ControlEvent.EventType.FOCUS_LOST:
-            if ( _PushedByKey )
-            {
-              _PushedByKey = false;
-            }
-            Invalidate();
-            break;
-          case ControlEvent.EventType.FOCUSED:
-            Invalidate();
-            break;
-          case ControlEvent.EventType.MOUSE_ENTER:
-            if ( _WasPushed )
-            {
-              _Pushed = true;
-            }
-            Invalidate();
-            break;
-          case ControlEvent.EventType.MOUSE_LEAVE:
-            _Pushed = false;
-            Invalidate();
-            break;
-          case ControlEvent.EventType.MOUSE_DOWN:
-            if ( !_Pushed )
-            {
-              _Pushed     = true;
-              _WasPushed  = true;
-              Focus();
-              Capture = true;
-              Invalidate();
-            }
-            break;
-          case ControlEvent.EventType.MOUSE_UP:
-            if ( _Pushed )
-            {
-              _Pushed = false;
-              _WasPushed = false;
-              Capture = false;
-              Invalidate();
-              if ( MouseOver )
-              {
-                Click?.Invoke( this );
-              }
-            }
-            break;
           case ControlEvent.EventType.KEY_DOWN:
             if ( Focused )
             {
@@ -400,6 +388,47 @@ namespace DecentForms
             break;*/
       }
       base.OnControlEvent( Event );
+    }
+
+
+
+    public void ScrollBy( int Delta )
+    {
+      if ( Value + Delta > Maximum )
+      {
+        if ( Value != Maximum )
+        {
+          Value = Maximum;
+          Invalidate();
+          Scroll?.Invoke( this );
+        }
+      }
+      else
+      {
+        Value += Delta;
+        Invalidate();
+        Scroll?.Invoke( this );
+      }
+    }
+
+
+
+    public void ScrollTo( int TargetValue )
+    {
+      if ( TargetValue < 0 )
+      {
+        TargetValue = 0;
+      }
+      if ( TargetValue > Maximum )
+      {
+        TargetValue = Maximum;
+      }
+      if ( TargetValue != Value )
+      {
+        Value = TargetValue;
+        Invalidate();
+        Scroll?.Invoke( this );
+      }
     }
 
 
@@ -459,6 +488,10 @@ namespace DecentForms
 
     public void SetSliderSize( int SliderSize )
     {
+      if ( SliderSize < 20 )
+      {
+        SliderSize = 20;
+      }
       _SliderWidth = SliderSize;
       Invalidate();
     }

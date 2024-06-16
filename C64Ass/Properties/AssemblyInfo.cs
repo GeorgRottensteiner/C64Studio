@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + ".0" )]
-[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + ".0" )]
+[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + "." + RetroDevStudio.Version.BuildNumber )]
+[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + "." + RetroDevStudio.Version.BuildNumber )]

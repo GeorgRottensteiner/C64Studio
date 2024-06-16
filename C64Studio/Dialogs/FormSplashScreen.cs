@@ -15,7 +15,7 @@ namespace RetroDevStudio.Dialogs
     {
       InitializeComponent();
 
-      labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion );
+      labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion + "." + Version.BuildNumber );
 
       DPIHandler.ResizeControlsForDPI( this );
     }

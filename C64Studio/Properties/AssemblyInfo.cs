@@ -39,5 +39,5 @@ using System.Runtime.Versioning;
 #if NET5_0_OR_GREATER
 [assembly: SupportedOSPlatform( "windows" )]
 #endif
-[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + ".0" )]
-[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + ".0" )]
+[assembly: AssemblyVersion( RetroDevStudio.Version.VersionBase + "." + RetroDevStudio.Version.BuildNumber )]
+[assembly: AssemblyFileVersion( RetroDevStudio.Version.VersionBase + "." + RetroDevStudio.Version.BuildNumber )]
