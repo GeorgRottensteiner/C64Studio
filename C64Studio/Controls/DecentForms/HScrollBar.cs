@@ -130,7 +130,7 @@ namespace DecentForms
 
       var rect = _TopButton.Bounds;
 
-      Renderer.DrawArrowUp( rect.X, rect.Y, rect.Width, rect.Height, Enabled );
+      Renderer.DrawArrowLeft( rect.X, rect.Y, rect.Width, rect.Height, Enabled );
     }
 
 
@@ -144,7 +144,7 @@ namespace DecentForms
       int arrowX = ( _TopButton.Width - arrowWidth ) / 2;
       int arrowY = _TopButton.Height / 2 - 2;
 
-      Renderer.DrawArrowDown( arrowX, arrowY, arrowWidth, arrowHeight, Enabled );
+      Renderer.DrawArrowRight( arrowX, arrowY, arrowWidth, arrowHeight, Enabled );
     }
 
 

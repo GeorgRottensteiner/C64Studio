@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Memory;
+using RetroDevStudio;
 using System.Collections.Generic;
 
 
@@ -174,6 +175,7 @@ namespace RetroDevStudio.Formats
       {
         return false;
       }
+      // "SPD" 
       if ( ( header.ByteAt( 0 ) != 0x53 )
       ||   ( header.ByteAt( 1 ) != 0x50 )
       ||   ( header.ByteAt( 2 ) != 0x44 ) )
@@ -181,42 +183,137 @@ namespace RetroDevStudio.Formats
         // no SPD
         return false;
       }
+      int version = header.ByteAt( 3 );
+      Debug.Log( $"SPD Version {version}" );
 
-      NumSprites  = header.ByteAt( 4 ) + 1;
-      int     numAnims    = header.ByteAt( 5 ) + 1;
-
-      BackgroundColor = header.ByteAt( 6 );
-      MultiColor1     = header.ByteAt( 7 );
-      MultiColor2     = header.ByteAt( 8 );
-
-      Sprites = new List<SpriteData>();
-
-      GR.Memory.ByteBuffer    tempData = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < NumSprites; ++i )
+      if ( version >= 4 )
       {
-        Sprites.Add( new SpriteData() );
-        PaletteManager.ApplyPalette( Sprites[i].Image );
+        NumSprites = header.UInt16At( 5 );
 
-        tempData.Clear();
-        memIn.ReadBlock( tempData, 63 );
-        tempData.CopyTo( Sprites[i].Data, 0, 63 );
+        int     numAnims    = header.UInt16At( 9 ) + 1;
 
-        Sprites[i].Color = memIn.ReadUInt8();
-        Sprites[i].Multicolor = ( ( ( Sprites[i].Color ) & 0x80 ) != 0 );
-        Sprites[i].Color &= 0x0f;
+        uint     additionalBytes = 0x14 - 9;
+        var tempHeaderData = new ByteBuffer();
+        memIn.ReadBlock( tempHeaderData, additionalBytes );
+        header += tempHeaderData;
+
+        BackgroundColor = header.ByteAt( 0xd );
+        MultiColor1     = header.ByteAt( 0xe );
+        MultiColor2     = header.ByteAt( 0xf );
+
+        Sprites = new List<SpriteData>();
+
+        GR.Memory.ByteBuffer    tempData = new GR.Memory.ByteBuffer();
+        for ( int i = 0; i < NumSprites; ++i )
+        {
+          Sprites.Add( new SpriteData() );
+          PaletteManager.ApplyPalette( Sprites[i].Image );
+
+          tempData.Clear();
+          memIn.ReadBlock( tempData, 63 );
+          tempData.CopyTo( Sprites[i].Data, 0, 63 );
+
+          Sprites[i].Color      = memIn.ReadUInt8();
+          Sprites[i].Multicolor = ( ( ( Sprites[i].Color ) & 0x80 ) != 0 );
+          Sprites[i].Color      &= 0x0f;
+        }
+
+        if ( numAnims > 0 )
+        {
+          GR.Memory.ByteBuffer    animFrom = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animTo = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animNumFrames = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animAttributes = new GR.Memory.ByteBuffer();
+
+          memIn.ReadBlock( animFrom, (uint)numAnims );
+          memIn.ReadBlock( animTo, (uint)numAnims );
+          memIn.ReadBlock( animNumFrames, (uint)numAnims );
+          memIn.ReadBlock( animAttributes, (uint)numAnims );
+        }
       }
-
-      if ( numAnims > 0 )
+      else if ( version == 3 )
       {
-        GR.Memory.ByteBuffer    animFrom = new GR.Memory.ByteBuffer();
-        GR.Memory.ByteBuffer    animTo = new GR.Memory.ByteBuffer();
-        GR.Memory.ByteBuffer    animNumFrames = new GR.Memory.ByteBuffer();
-        GR.Memory.ByteBuffer    animAttributes = new GR.Memory.ByteBuffer();
+        NumSprites = header.UInt16At( 5 );
 
-        memIn.ReadBlock( animFrom, (uint)numAnims );
-        memIn.ReadBlock( animTo, (uint)numAnims );
-        memIn.ReadBlock( animNumFrames, (uint)numAnims );
-        memIn.ReadBlock( animAttributes, (uint)numAnims );
+        int     numAnims    = header.UInt16At( 9 ) + 1;
+
+        uint     additionalBytes = 0x10 - 9;
+        var tempHeaderData = new ByteBuffer();
+        memIn.ReadBlock( tempHeaderData, additionalBytes );
+        header += tempHeaderData;
+
+        BackgroundColor = header.ByteAt( 0xd );
+        MultiColor1 = header.ByteAt( 0xe );
+        MultiColor2 = header.ByteAt( 0xf );
+
+        Sprites = new List<SpriteData>();
+
+        GR.Memory.ByteBuffer    tempData = new GR.Memory.ByteBuffer();
+        for ( int i = 0; i < NumSprites; ++i )
+        {
+          Sprites.Add( new SpriteData() );
+          PaletteManager.ApplyPalette( Sprites[i].Image );
+
+          tempData.Clear();
+          memIn.ReadBlock( tempData, 63 );
+          tempData.CopyTo( Sprites[i].Data, 0, 63 );
+
+          Sprites[i].Color = memIn.ReadUInt8();
+          Sprites[i].Multicolor = ( ( ( Sprites[i].Color ) & 0x80 ) != 0 );
+          Sprites[i].Color &= 0x0f;
+        }
+
+        if ( numAnims > 0 )
+        {
+          GR.Memory.ByteBuffer    animFrom = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animTo = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animNumFrames = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animAttributes = new GR.Memory.ByteBuffer();
+
+          memIn.ReadBlock( animFrom, (uint)numAnims );
+          memIn.ReadBlock( animTo, (uint)numAnims );
+          memIn.ReadBlock( animNumFrames, (uint)numAnims );
+          memIn.ReadBlock( animAttributes, (uint)numAnims );
+        }
+      }
+      else if ( version <= 2 )
+      {
+        NumSprites  = header.ByteAt( 4 ) + 1;
+        int     numAnims    = header.ByteAt( 5 ) + 1;
+
+        BackgroundColor = header.ByteAt( 6 );
+        MultiColor1     = header.ByteAt( 7 );
+        MultiColor2     = header.ByteAt( 8 );
+
+        Sprites = new List<SpriteData>();
+
+        GR.Memory.ByteBuffer    tempData = new GR.Memory.ByteBuffer();
+        for ( int i = 0; i < NumSprites; ++i )
+        {
+          Sprites.Add( new SpriteData() );
+          PaletteManager.ApplyPalette( Sprites[i].Image );
+
+          tempData.Clear();
+          memIn.ReadBlock( tempData, 63 );
+          tempData.CopyTo( Sprites[i].Data, 0, 63 );
+
+          Sprites[i].Color = memIn.ReadUInt8();
+          Sprites[i].Multicolor = ( ( ( Sprites[i].Color ) & 0x80 ) != 0 );
+          Sprites[i].Color &= 0x0f;
+        }
+
+        if ( numAnims > 0 )
+        {
+          GR.Memory.ByteBuffer    animFrom = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animTo = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animNumFrames = new GR.Memory.ByteBuffer();
+          GR.Memory.ByteBuffer    animAttributes = new GR.Memory.ByteBuffer();
+
+          memIn.ReadBlock( animFrom, (uint)numAnims );
+          memIn.ReadBlock( animTo, (uint)numAnims );
+          memIn.ReadBlock( animNumFrames, (uint)numAnims );
+          memIn.ReadBlock( animAttributes, (uint)numAnims );
+        }
       }
       UsedSprites = (uint)NumSprites;
       return true;
