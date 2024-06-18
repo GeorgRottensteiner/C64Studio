@@ -56,6 +56,10 @@ namespace RetroDevStudio.Dialogs
     private int                     m_ItemWidth = 8;
     private int                     m_ItemHeight = 8;
 
+    private Point                   m_ImageDisplayOffset = new Point();
+    private Point                   m_ImageDragOffset = new Point();
+    private bool                    m_IsDragging = false;
+
     private GR.Image.MemoryImage    m_OriginalImage = new GR.Image.MemoryImage( 20, 20, GR.Drawing.PixelFormat.Format8bppIndexed );
     private GR.Image.MemoryImage    m_ImportImage = new GR.Image.MemoryImage( 20, 20, GR.Drawing.PixelFormat.Format8bppIndexed );
     private Palette                 m_ImportPalette = null;      
@@ -115,6 +119,9 @@ namespace RetroDevStudio.Dialogs
 
       picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, GR.Drawing.PixelFormat.Format8bppIndexed );
 
+      // autosize preview panels
+      AutoSizePreviewPanels();
+
       PaletteManager.ApplyPalette( picPreview.DisplayPage, m_CurPalette );
 
       switch ( ImportType )
@@ -155,6 +162,21 @@ namespace RetroDevStudio.Dialogs
       comboMulticolor2.SelectedIndex  = MCSettings.MultiColor2 + 1;
 
       Core.Theming.ApplyTheme( this );
+    }
+
+
+
+    private void AutoSizePreviewPanels()
+    {
+      int   fullHeight = ClientSize.Height / 2;
+
+      picOriginal.Size = new Size( picOriginal.Width, fullHeight - 8 );
+
+      picPreview.Top = fullHeight;
+      picPreview.Size = new Size( picPreview.Width, fullHeight - 8 );
+
+      picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
+      picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
     }
 
 
@@ -261,7 +283,7 @@ namespace RetroDevStudio.Dialogs
       picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
       picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
 
-      picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
+      picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
 
       m_OrigSize.Width  = m_OriginalImage.Width;
       m_OrigSize.Height = m_OriginalImage.Height;
@@ -362,7 +384,7 @@ namespace RetroDevStudio.Dialogs
           }
         }
       }
-      picPreview.DisplayPage.DrawImage( m_ImportImage, 0, 0 );
+      picPreview.DisplayPage.DrawImage( m_ImportImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
       picPreview.Invalidate();
       return true;
     }
@@ -1224,7 +1246,17 @@ namespace RetroDevStudio.Dialogs
       if ( ( e.Button & MouseButtons.Left ) != 0 )
       {
         picOriginal.Capture = true;
+        StartDrag( e.X, e.Y );
       }
+    }
+
+
+
+    private void StartDrag( int X, int Y )
+    {
+      m_ImageDragOffset = new Point( X * m_Zoom / 1024 - m_ImageDisplayOffset.X,
+                                     Y * m_Zoom / 1024 - m_ImageDisplayOffset.Y );
+      m_IsDragging = true;
     }
 
 
@@ -1233,7 +1265,88 @@ namespace RetroDevStudio.Dialogs
     {
       if ( ( e.Button & MouseButtons.Left ) != 0 )
       {
-        // TODO drag image
+        if ( m_IsDragging )
+        {
+          HandleDrag( e.X, e.Y );
+        }
+      }
+    }
+
+
+
+    private void HandleDrag( int X, int Y )
+    {
+      int   newX = X * m_Zoom / 1024 - m_ImageDragOffset.X;
+      int   newY = Y * m_Zoom / 1024 - m_ImageDragOffset.Y;
+
+      if ( ( m_ImageDisplayOffset.X != newX )
+      ||   ( m_ImageDisplayOffset.Y != newY ) )
+      {
+        m_ImageDisplayOffset.X = newX;
+        m_ImageDisplayOffset.Y = newY;
+
+        SanitizeImageOffset();
+
+        picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
+        picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
+        picPreview.DisplayPage.Box( 0, 0, picPreview.DisplayPage.Width, picPreview.DisplayPage.Height, 0 );
+        picPreview.DisplayPage.DrawImage( m_ImportImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
+
+        picOriginal.Invalidate();
+        picPreview.Invalidate();
+      }
+    }
+
+
+
+    private void SanitizeImageOffset()
+    {
+      int     rightEnd = ( m_ImageDisplayOffset.X + m_OriginalImage.Width ) * 1024 / m_Zoom;
+      int     bottomEnd = ( m_ImageDisplayOffset.Y + m_OriginalImage.Height ) * 1024 / m_Zoom;
+
+      if ( m_OriginalImage.Width * 1024 / m_Zoom <= picOriginal.ClientSize.Width )
+      {
+        if ( m_ImageDisplayOffset.X < 0 )
+        {
+          m_ImageDisplayOffset.X = 0;
+        }
+        if ( m_ImageDisplayOffset.X > ( ( picOriginal.ClientSize.Width * m_Zoom ) / 1024 - m_OriginalImage.Width ) )
+        {
+          m_ImageDisplayOffset.X = ( ( picOriginal.ClientSize.Width * m_Zoom ) / 1024 - m_OriginalImage.Width );
+        }
+      }
+      else
+      {
+        if ( rightEnd < picOriginal.ClientSize.Width )
+        {
+          m_ImageDisplayOffset.X = ( picOriginal.ClientSize.Width * m_Zoom / 1024 ) - m_OriginalImage.Width;
+        }
+        if ( m_ImageDisplayOffset.X > 0 )
+        {
+          m_ImageDisplayOffset.X = 0;
+        }
+      }
+      if ( m_OriginalImage.Height * 1024 / m_Zoom <= picOriginal.ClientSize.Height )
+      {
+        if ( m_ImageDisplayOffset.Y < 0 )
+        {
+          m_ImageDisplayOffset.Y = 0;
+        }
+        if ( m_ImageDisplayOffset.Y > ( ( picOriginal.ClientSize.Height * m_Zoom ) / 1024 - m_OriginalImage.Height ) )
+        {
+          m_ImageDisplayOffset.Y = ( ( picOriginal.ClientSize.Height * m_Zoom ) / 1024 - m_OriginalImage.Height );
+        }
+      }
+      else
+      {
+        if ( bottomEnd < picOriginal.ClientSize.Height )
+        {
+          m_ImageDisplayOffset.Y = ( picOriginal.ClientSize.Height * m_Zoom / 1024 ) - m_OriginalImage.Height;
+        }
+        if ( m_ImageDisplayOffset.Y > 0 )
+        {
+          m_ImageDisplayOffset.Y = 0;
+        }
       }
     }
 
@@ -1244,8 +1357,8 @@ namespace RetroDevStudio.Dialogs
       if ( ( e.Button & MouseButtons.Left ) != 0 )
       {
         picOriginal.Capture = false;
+        m_IsDragging = false;
       }
-
     }
 
 
@@ -1255,6 +1368,7 @@ namespace RetroDevStudio.Dialogs
       if ( ( e.Button & MouseButtons.Left ) != 0 )
       {
         picPreview.Capture = true;
+        StartDrag( e.X, e.Y );
       }
     }
 
@@ -1264,7 +1378,10 @@ namespace RetroDevStudio.Dialogs
     {
       if ( ( e.Button & MouseButtons.Left ) != 0 )
       {
-        // TODO drag image
+        if ( m_IsDragging )
+        {
+          HandleDrag( e.X, e.Y );
+        }
       }
     }
 
@@ -1315,10 +1432,15 @@ namespace RetroDevStudio.Dialogs
       if ( m_Zoom > 1 )
       {
         m_Zoom /= 2;
+
+        SanitizeImageOffset();
+
         picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
-        picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
+        picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
+        picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
         picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
-        picPreview.DisplayPage.DrawImage( m_ImportImage, 0, 0 );
+        picPreview.DisplayPage.Box( 0, 0, picPreview.DisplayPage.Width, picPreview.DisplayPage.Height, 0 );
+        picPreview.DisplayPage.DrawImage( m_ImportImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
       }
     }
 
@@ -1329,10 +1451,15 @@ namespace RetroDevStudio.Dialogs
       if ( m_Zoom < 65536 )
       {
         m_Zoom *= 2;
+
+        SanitizeImageOffset();
+
         picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
-        picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
+        picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
+        picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
         picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
-        picPreview.DisplayPage.DrawImage( m_ImportImage, 0, 0 );
+        picPreview.DisplayPage.Box( 0, 0, picPreview.DisplayPage.Width, picPreview.DisplayPage.Height, 0 );
+        picPreview.DisplayPage.DrawImage( m_ImportImage,  m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
       }
     }
 
@@ -1444,18 +1571,21 @@ namespace RetroDevStudio.Dialogs
 
     private void DlgGraphicImport_SizeChanged( object sender, EventArgs e )
     {
+      /*
       int     height = ClientSize.Height;
 
       picOriginal.Height = height / 2 - 8;
       picPreview.Location = new Point( picPreview.Location.X, picOriginal.Location.Y + picOriginal.Height + 4 );
-      picPreview.Height = height / 2 - 8;
+      picPreview.Height = height / 2 - 8;*/
+
+      AutoSizePreviewPanels();
     }
 
 
 
     private void DlgGraphicImport_ResizeEnd( object sender, EventArgs e )
     {
-      picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
+      picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
 
       m_OrigSize.Width = m_OriginalImage.Width;
       m_OrigSize.Height = m_OriginalImage.Height;
