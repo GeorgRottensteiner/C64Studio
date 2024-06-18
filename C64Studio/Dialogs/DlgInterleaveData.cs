@@ -48,6 +48,11 @@ namespace RetroDevStudio.Dialogs
     {
       int   interleaveValue = GR.Convert.ToI32( editInterleave.Text );
 
+      if ( OrigData.Length <= 1 )
+      {
+        return;
+      }
+
       int     origPos = 0;
       for ( uint i = 0; i < InterleavedData.Length; ++i )
       {
