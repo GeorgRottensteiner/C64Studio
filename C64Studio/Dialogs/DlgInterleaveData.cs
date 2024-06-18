@@ -50,22 +50,23 @@ namespace RetroDevStudio.Dialogs
 
       if ( OrigData.Length <= 1 )
       {
-        return;
+        InterleavedData = OrigData;
       }
-
-      int     origPos = 0;
-      for ( uint i = 0; i < InterleavedData.Length; ++i )
+      else
       {
-        InterleavedData.SetU8At( (int)i, OrigData.ByteAt( origPos ) );
-        origPos = origPos + interleaveValue;
-
-        while ( origPos >= (int)OrigData.Length )
+        int     origPos = 0;
+        for ( uint i = 0; i < InterleavedData.Length; ++i )
         {
-          origPos -= (int)OrigData.Length;
-          ++origPos;
+          InterleavedData.SetU8At( (int)i, OrigData.ByteAt( origPos ) );
+          origPos = origPos + interleaveValue;
+
+          while ( origPos >= (int)OrigData.Length )
+          {
+            origPos -= (int)OrigData.Length;
+            ++origPos;
+          }
         }
       }
-
       SetHexData( hexPreview, InterleavedData );
     }
 
