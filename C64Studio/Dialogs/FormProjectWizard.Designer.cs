@@ -67,6 +67,7 @@
       // 
       // btnBrowseBasePath
       // 
+      this.btnBrowseBasePath.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnBrowseBasePath.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnBrowseBasePath.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnBrowseBasePath.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -80,6 +81,7 @@
       // 
       // btnCancel
       // 
+      this.btnCancel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -94,6 +96,7 @@
       // 
       // btnOK
       // 
+      this.btnOK.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -141,6 +144,7 @@
       this.checkCreateRepository.TabIndex = 6;
       this.checkCreateRepository.Text = "Create Repository";
       this.checkCreateRepository.UseVisualStyleBackColor = true;
+      this.checkCreateRepository.CheckedChanged += new System.EventHandler(this.checkCreateRepository_CheckedChanged);
       // 
       // FormProjectWizard
       // 

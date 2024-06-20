@@ -1037,6 +1037,17 @@ namespace RetroDevStudio.Documents
 
           ProjectElement element = project.CreateElement( elementToCopy.DocumentInfo.Type, parentNodeToInsertTo );
 
+          var origSettings = sourceProject.ElementToBuffer( elementToCopy );
+          //var copiedElement = new ProjectElement();
+
+          var origSettingsReader = origSettings.MemoryReader();
+          // skip 4 fields
+          origSettingsReader.ReadUInt16();
+          origSettingsReader.ReadUInt32();
+          int elementVersion = (int)origSettingsReader.ReadUInt32();
+          ProjectElement.ElementType type = (ProjectElement.ElementType)origSettingsReader.ReadUInt32();
+          sourceProject.FillElementFromSettingsStream( element, origSettingsReader );
+
           string relativeFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( project.Settings.BasePath ), true, newFilename, false );
           element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
           element.Filename = relativeFilename;
@@ -1383,13 +1394,10 @@ namespace RetroDevStudio.Documents
 
     private void treeProject_BeforeLabelEdit( DecentForms.ControlBase Sender, DecentForms.TreeView.NodeLabelEditEventArgs e )
     {
-      if ( e.Node.Level < 1 )
-      {
-        e.CancelEdit = true;
-        return;
-      }
-      ProjectElement element = ElementFromNode( e.Node );
-      if ( ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      ProjectElement element  = ElementFromNode( e.Node );
+      // file nodes only allow editing of non extension part
+      if ( ( element != null )
+      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
       {
         e.Label = System.IO.Path.GetFileNameWithoutExtension( e.Label );
@@ -2662,5 +2670,8 @@ namespace RetroDevStudio.Documents
       public global::SourceControl.FileState  FileState = global::SourceControl.FileState.Nonexistent;
 
     }
+
+
+
   }
 }

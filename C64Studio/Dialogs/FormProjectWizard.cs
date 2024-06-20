@@ -16,14 +16,22 @@ namespace RetroDevStudio.Dialogs
     public bool             CreateRepository = false;
 
     private StudioSettings  Settings;
+    private StudioCore      Core = null;
 
 
     public FormProjectWizard( string ProjectName, StudioSettings Settings, StudioCore Core )
     {
+      this.Core = Core;
       this.Settings = Settings;
       InitializeComponent();
       editProjectName.Text = ProjectName;
-      editBasePath.Text = Settings.DefaultProjectBasePath;
+
+      string projectPath = Settings.DefaultProjectBasePath;
+      if ( Core.Navigating.Solution != null )
+      {
+        projectPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Core.Navigating.Solution.Filename ), ProjectName );
+      }
+      editBasePath.Text = projectPath;
 
       checkCreateRepository.Visible = global::SourceControl.Controller.IsFunctional;
       checkCreateRepository.Checked = global::SourceControl.Controller.IsFunctional;
@@ -42,7 +50,6 @@ namespace RetroDevStudio.Dialogs
       ProjectName                     = editProjectName.Text;
       ProjectFilename                 = editBasePath.Text;
       Settings.DefaultProjectBasePath = ProjectFilename;
-      ProjectFilename                 = System.IO.Path.Combine( ProjectFilename, ProjectName );
       ProjectPath                     = ProjectFilename;
       ProjectFilename                 = System.IO.Path.Combine( ProjectFilename, ProjectName + ".c64" );
       CreateRepository                = checkCreateRepository.Checked;
@@ -74,7 +81,6 @@ namespace RetroDevStudio.Dialogs
       }
 
       string    finalPath = editBasePath.Text;
-      finalPath = System.IO.Path.Combine( finalPath, editProjectName.Text );
       finalPath = System.IO.Path.Combine( finalPath, editProjectName.Text + ".c64" );
 
       if ( System.IO.File.Exists( finalPath ) )
@@ -84,7 +90,16 @@ namespace RetroDevStudio.Dialogs
         return;
       }
 
-      labelProjectSummary.Text = "The project file will be created as " + finalPath;
+      labelProjectSummary.Text = "The project file will be created as " + finalPath + System.Environment.NewLine;
+      if ( checkCreateRepository.Checked )
+      {
+        var gitPath = System.IO.Path.Combine( finalPath, ".git" );
+        labelProjectSummary.Text += $"A repository will be created in {gitPath}.";
+      }
+      else
+      {
+        labelProjectSummary.Text += "No repository will be created.";
+      }
       btnOK.Enabled = true;
     }
 
@@ -109,6 +124,15 @@ namespace RetroDevStudio.Dialogs
 
     private void editProjectName_TextChanged( object sender, EventArgs e )
     {
+      if ( Core.Navigating.Solution != null )
+      {
+        string projectPath = Settings.DefaultProjectBasePath;
+        if ( Core.Navigating.Solution != null )
+        {
+          projectPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Core.Navigating.Solution.Filename ), editProjectName.Text );
+        }
+        editBasePath.Text = projectPath;
+      }
       UpdateSummary();
     }
 
@@ -125,6 +149,13 @@ namespace RetroDevStudio.Dialogs
     {
       DialogResult = DialogResult.Cancel;
       Close();
+    }
+
+
+
+    private void checkCreateRepository_CheckedChanged( object sender, EventArgs e )
+    {
+      UpdateSummary();
     }
 
 

@@ -6,6 +6,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using static RetroDevStudio.Parser.BasicFileParser;
 using RetroDevStudio.Documents;
 using SourceControl;
+using GR.IO;
 
 namespace RetroDevStudio
 {
@@ -428,9 +429,11 @@ namespace RetroDevStudio
               ProjectElement.ElementType type = (ProjectElement.ElementType)memChunk.ReadUInt32();
 
               ProjectElement element = CreateElement( type, Node );
-              element.Name      = memChunk.ReadString();
-              element.Filename  = memChunk.ReadString();
 
+              if ( !FillElementFromSettingsStream( element, memChunk ) )
+              {
+                return false;
+              }
               if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
               {
                 element.Node.Text = element.Name;
@@ -447,192 +450,6 @@ namespace RetroDevStudio
               {
                 element.Node.Collapse();
               }
-
-              GR.IO.FileChunk           subChunk = new GR.IO.FileChunk();
-
-              if ( !subChunk.ReadFromStream( memChunk ) )
-              {
-                return false;
-              }
-              if ( subChunk.Type != FileChunkConstants.PROJECT_ELEMENT_DATA )
-              {
-                return false;
-              }
-              // Element Data
-              element.DocumentInfo.DocumentFilename = element.Filename;
-              if ( element.Document != null )
-              {
-                if ( !element.Document.ReadFromReader( subChunk.MemoryReader() ) )
-                {
-                  Elements.Remove( element );
-                  element.Document.Dispose();
-                  element = null;
-                }
-                else
-                {
-                  element.Document.SetDocumentFilename( element.Filename );
-                }
-              }
-              element.TargetFilename = memChunk.ReadString();
-              element.TargetType = (Types.CompileTargetType)memChunk.ReadUInt32();
-              int dependencyCount = memChunk.ReadInt32();
-              for ( int i = 0; i < dependencyCount; ++i )
-              {
-                string dependency = memChunk.ReadString();
-                element.ForcedDependency.DependentOnFile.Add( new FileDependency.DependencyInfo( Settings.Name, dependency, true, false ) );
-              }
-              element.StartAddress = memChunk.ReadString();
-              // 2 free strings
-              memChunk.ReadString();
-              memChunk.ReadString();
-
-              int     perConfigSettingCount = memChunk.ReadInt32();
-              for ( int i = 0; i < perConfigSettingCount; ++i )
-              {
-                GR.IO.FileChunk chunkElementPerConfigSetting = new GR.IO.FileChunk();
-                chunkElementPerConfigSetting.ReadFromStream( memChunk );
-                if ( chunkElementPerConfigSetting.Type == FileChunkConstants.PROJECT_ELEMENT_PER_CONFIG_SETTING )
-                {
-                  ProjectElement.PerConfigSettings    perConfigSetting = new ProjectElement.PerConfigSettings();
-                  GR.IO.MemoryReader      memSubChunk = chunkElementPerConfigSetting.MemoryReader();
-                  string    config = memSubChunk.ReadString();
-
-                  perConfigSetting.PreBuild     = memSubChunk.ReadString();
-                  perConfigSetting.CustomBuild  = memSubChunk.ReadString();
-                  perConfigSetting.PostBuild    = memSubChunk.ReadString();
-                  perConfigSetting.DebugFile    = memSubChunk.ReadString();
-                  perConfigSetting.DebugFileType = (RetroDevStudio.Types.CompileTargetType)memSubChunk.ReadInt32();
-
-                  perConfigSetting.PreBuildChain.Active = ( memSubChunk.ReadInt32() == 1 );
-                  int numEntries = memSubChunk.ReadInt32();
-                  for ( int j = 0; j < numEntries; ++j )
-                  {
-                    var entry = new BuildChainEntry();
-
-                    entry.ProjectName       = memSubChunk.ReadString();
-                    entry.Config            = memSubChunk.ReadString();
-                    entry.DocumentFilename  = memSubChunk.ReadString();
-                    entry.PreDefines        = memSubChunk.ReadString();
-
-                    perConfigSetting.PreBuildChain.Entries.Add( entry );
-                  }
-
-                  perConfigSetting.PostBuildChain.Active = ( memSubChunk.ReadInt32() == 1 );
-                  numEntries = memSubChunk.ReadInt32();
-                  for ( int j = 0; j < numEntries; ++j )
-                  {
-                    var entry = new BuildChainEntry();
-
-                    entry.ProjectName = memSubChunk.ReadString();
-                    entry.Config = memSubChunk.ReadString();
-                    entry.DocumentFilename = memSubChunk.ReadString();
-                    entry.PreDefines = memSubChunk.ReadString();
-
-                    perConfigSetting.PostBuildChain.Entries.Add( entry );
-                  }
-                  element.Settings[config] = perConfigSetting;
-                }
-              }
-
-              uint  flags = memChunk.ReadUInt32();
-              element.IsShown     = ( ( flags & 1 ) != 0 );
-              element.AssemblerType = (RetroDevStudio.Types.AssemblerType)memChunk.ReadUInt32();
-
-              int hierarchyPartCount = memChunk.ReadInt32();
-              for ( int i = 0; i < hierarchyPartCount; ++i )
-              {
-                string part = memChunk.ReadString();
-
-                element.ProjectHierarchy.Add( part );
-              }
-
-              if ( element.ProjectHierarchy.Count > 0 )
-              {
-                // node is sub-node, move accordingly
-                var parentNode = NodeFromHierarchy( element.ProjectHierarchy );
-                if ( ( parentNode != null )
-                &&   ( parentNode != element.Node.Parent ) )
-                {
-                  element.Node.Remove();
-                  parentNode.Nodes.Add( element.Node );
-                }
-              }
-
-              // dependency - include symbols
-              dependencyCount = memChunk.ReadInt32();
-              for ( int i = 0; i < dependencyCount; ++i )
-              {
-                element.ForcedDependency.DependentOnFile[i].IncludeSymbols = ( memChunk.ReadInt32() != 0 );
-              }
-
-              // code folding entries
-              int     numFoldingEntries = memChunk.ReadInt32();
-              element.DocumentInfo.CollapsedFoldingBlocks = new GR.Collections.Set<int>();
-              for ( int i = 0; i < numFoldingEntries; ++i )
-              {
-                int   collapsedBlockLine = memChunk.ReadInt32();
-                element.DocumentInfo.CollapsedFoldingBlocks.Add( collapsedBlockLine  );
-              }
-
-              // external dependencies
-              int externalDependencyCount = memChunk.ReadInt32();
-              for ( int i = 0; i < externalDependencyCount; ++i )
-              {
-                string dependency = memChunk.ReadString();
-                element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", dependency, true, false ) );
-              }
-
-              var obsoleteBasicVersion = (BasicVersion)memChunk.ReadUInt32();
-
-              // dependency - project
-              dependencyCount = memChunk.ReadInt32();
-              for ( int i = 0; i < dependencyCount; ++i )
-              {
-                element.ForcedDependency.DependentOnFile[i].Project = memChunk.ReadString();
-              }
-
-              element.BASICDialect = memChunk.ReadString();
-              if ( string.IsNullOrEmpty( element.BASICDialect ) )
-              {
-                // old version, find dialect from obsoleteBasicVersion
-                string  dialectKey = "BASIC V2";
-                switch ( obsoleteBasicVersion )
-                {
-                  case BasicVersion.C64_BASIC_V2:
-                    break;
-                  case BasicVersion.BASIC_LIGHTNING:
-                    dialectKey = "BASIC Lightning";
-                    break;
-                  case BasicVersion.LASER_BASIC:
-                    dialectKey = "Laser BASIC";
-                    break;
-                  case BasicVersion.SIMONS_BASIC:
-                    dialectKey = "Simon's BASIC";
-                    break;
-                  case BasicVersion.V3_5:
-                    dialectKey = "BASIC V3.5";
-                    break;
-                  case BasicVersion.V7_0:
-                    dialectKey = "BASIC V7.0";
-                    break;
-                }
-                if ( Core.Compiling.BASICDialects.ContainsKey( dialectKey ) )
-                {
-                  element.BASICDialect = dialectKey;
-                }
-              }
-
-              // bookmarks
-              int     numBookmarks = memChunk.ReadInt32();
-              element.DocumentInfo.Bookmarks = new GR.Collections.Set<int>();
-              for ( int i = 0; i < numBookmarks; ++i )
-              {
-                int   lineIndex = memChunk.ReadInt32();
-                element.DocumentInfo.Bookmarks.Add( lineIndex );
-              }
-
-              flags = memChunk.ReadUInt32();
-              element.BASICWriteTempFileWithoutMetaData = ( flags & 1 ) != 0;
 
               // TODO - load other stuff
               if ( ( element != null )
@@ -744,6 +561,202 @@ namespace RetroDevStudio
         }
       }
       m_Modified = false;
+      return true;
+    }
+
+
+
+    public bool FillElementFromSettingsStream( ProjectElement element, MemoryReader memChunk )
+    {
+      element.Name      = memChunk.ReadString();
+      element.Filename  = memChunk.ReadString();
+
+      GR.IO.FileChunk           subChunk = new GR.IO.FileChunk();
+
+      if ( !subChunk.ReadFromStream( memChunk ) )
+      {
+        return false;
+      }
+      if ( subChunk.Type != FileChunkConstants.PROJECT_ELEMENT_DATA )
+      {
+        return false;
+      }
+      // Element Data
+      element.DocumentInfo.DocumentFilename = element.Filename;
+      if ( element.Document != null )
+      {
+        if ( !element.Document.ReadFromReader( subChunk.MemoryReader() ) )
+        {
+          Elements.Remove( element );
+          element.Document.Dispose();
+          element = null;
+        }
+        else
+        {
+          element.Document.SetDocumentFilename( element.Filename );
+        }
+      }
+      element.TargetFilename = memChunk.ReadString();
+      element.TargetType = (Types.CompileTargetType)memChunk.ReadUInt32();
+      int dependencyCount = memChunk.ReadInt32();
+      for ( int i = 0; i < dependencyCount; ++i )
+      {
+        string dependency = memChunk.ReadString();
+        element.ForcedDependency.DependentOnFile.Add( new FileDependency.DependencyInfo( Settings.Name, dependency, true, false ) );
+      }
+      element.StartAddress = memChunk.ReadString();
+      // 2 free strings
+      memChunk.ReadString();
+      memChunk.ReadString();
+
+      int     perConfigSettingCount = memChunk.ReadInt32();
+      for ( int i = 0; i < perConfigSettingCount; ++i )
+      {
+        GR.IO.FileChunk chunkElementPerConfigSetting = new GR.IO.FileChunk();
+        chunkElementPerConfigSetting.ReadFromStream( memChunk );
+        if ( chunkElementPerConfigSetting.Type == FileChunkConstants.PROJECT_ELEMENT_PER_CONFIG_SETTING )
+        {
+          ProjectElement.PerConfigSettings    perConfigSetting = new ProjectElement.PerConfigSettings();
+          GR.IO.MemoryReader      memSubChunk = chunkElementPerConfigSetting.MemoryReader();
+          string    config = memSubChunk.ReadString();
+
+          perConfigSetting.PreBuild     = memSubChunk.ReadString();
+          perConfigSetting.CustomBuild  = memSubChunk.ReadString();
+          perConfigSetting.PostBuild    = memSubChunk.ReadString();
+          perConfigSetting.DebugFile    = memSubChunk.ReadString();
+          perConfigSetting.DebugFileType = (RetroDevStudio.Types.CompileTargetType)memSubChunk.ReadInt32();
+
+          perConfigSetting.PreBuildChain.Active = ( memSubChunk.ReadInt32() == 1 );
+          int numEntries = memSubChunk.ReadInt32();
+          for ( int j = 0; j < numEntries; ++j )
+          {
+            var entry = new BuildChainEntry();
+
+            entry.ProjectName       = memSubChunk.ReadString();
+            entry.Config            = memSubChunk.ReadString();
+            entry.DocumentFilename  = memSubChunk.ReadString();
+            entry.PreDefines        = memSubChunk.ReadString();
+
+            perConfigSetting.PreBuildChain.Entries.Add( entry );
+          }
+
+          perConfigSetting.PostBuildChain.Active = ( memSubChunk.ReadInt32() == 1 );
+          numEntries = memSubChunk.ReadInt32();
+          for ( int j = 0; j < numEntries; ++j )
+          {
+            var entry = new BuildChainEntry();
+
+            entry.ProjectName = memSubChunk.ReadString();
+            entry.Config = memSubChunk.ReadString();
+            entry.DocumentFilename = memSubChunk.ReadString();
+            entry.PreDefines = memSubChunk.ReadString();
+
+            perConfigSetting.PostBuildChain.Entries.Add( entry );
+          }
+          element.Settings[config] = perConfigSetting;
+        }
+      }
+
+      uint  flags = memChunk.ReadUInt32();
+      element.IsShown     = ( ( flags & 1 ) != 0 );
+      element.AssemblerType = (RetroDevStudio.Types.AssemblerType)memChunk.ReadUInt32();
+
+      int hierarchyPartCount = memChunk.ReadInt32();
+      for ( int i = 0; i < hierarchyPartCount; ++i )
+      {
+        string part = memChunk.ReadString();
+
+        element.ProjectHierarchy.Add( part );
+      }
+
+      if ( element.ProjectHierarchy.Count > 0 )
+      {
+        // node is sub-node, move accordingly
+        var parentNode = NodeFromHierarchy( element.ProjectHierarchy );
+        if ( ( parentNode != null )
+        &&   ( parentNode != element.Node.Parent ) )
+        {
+          element.Node.Remove();
+          parentNode.Nodes.Add( element.Node );
+        }
+      }
+
+      // dependency - include symbols
+      dependencyCount = memChunk.ReadInt32();
+      for ( int i = 0; i < dependencyCount; ++i )
+      {
+        element.ForcedDependency.DependentOnFile[i].IncludeSymbols = ( memChunk.ReadInt32() != 0 );
+      }
+
+      // code folding entries
+      int     numFoldingEntries = memChunk.ReadInt32();
+      element.DocumentInfo.CollapsedFoldingBlocks = new GR.Collections.Set<int>();
+      for ( int i = 0; i < numFoldingEntries; ++i )
+      {
+        int   collapsedBlockLine = memChunk.ReadInt32();
+        element.DocumentInfo.CollapsedFoldingBlocks.Add( collapsedBlockLine  );
+      }
+
+      // external dependencies
+      int externalDependencyCount = memChunk.ReadInt32();
+      for ( int i = 0; i < externalDependencyCount; ++i )
+      {
+        string dependency = memChunk.ReadString();
+        element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", dependency, true, false ) );
+      }
+
+      var obsoleteBasicVersion = (BasicVersion)memChunk.ReadUInt32();
+
+      // dependency - project
+      dependencyCount = memChunk.ReadInt32();
+      for ( int i = 0; i < dependencyCount; ++i )
+      {
+        element.ForcedDependency.DependentOnFile[i].Project = memChunk.ReadString();
+      }
+
+      element.BASICDialect = memChunk.ReadString();
+      if ( string.IsNullOrEmpty( element.BASICDialect ) )
+      {
+        // old version, find dialect from obsoleteBasicVersion
+        string  dialectKey = "BASIC V2";
+        switch ( obsoleteBasicVersion )
+        {
+          case BasicVersion.C64_BASIC_V2:
+            break;
+          case BasicVersion.BASIC_LIGHTNING:
+            dialectKey = "BASIC Lightning";
+            break;
+          case BasicVersion.LASER_BASIC:
+            dialectKey = "Laser BASIC";
+            break;
+          case BasicVersion.SIMONS_BASIC:
+            dialectKey = "Simon's BASIC";
+            break;
+          case BasicVersion.V3_5:
+            dialectKey = "BASIC V3.5";
+            break;
+          case BasicVersion.V7_0:
+            dialectKey = "BASIC V7.0";
+            break;
+        }
+        if ( Core.Compiling.BASICDialects.ContainsKey( dialectKey ) )
+        {
+          element.BASICDialect = dialectKey;
+        }
+      }
+
+      // bookmarks
+      int     numBookmarks = memChunk.ReadInt32();
+      element.DocumentInfo.Bookmarks = new GR.Collections.Set<int>();
+      for ( int i = 0; i < numBookmarks; ++i )
+      {
+        int   lineIndex = memChunk.ReadInt32();
+        element.DocumentInfo.Bookmarks.Add( lineIndex );
+      }
+
+      flags = memChunk.ReadUInt32();
+      element.BASICWriteTempFileWithoutMetaData = ( flags & 1 ) != 0;
+
       return true;
     }
 

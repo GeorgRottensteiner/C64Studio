@@ -24,7 +24,7 @@ namespace RetroDevStudio
 
     public SingleBuildInfo                LastBuildInfo = null;
 
-    public Undo.UndoManager UndoManager { get; set; } = new Undo.UndoManager();
+    public Undo.UndoManager               UndoManager { get; set; } = new Undo.UndoManager();
 
     // temporary storage for BASIC label mode
     public Dictionary<string, SymbolInfo> LabelModeReferences = new Dictionary<string, SymbolInfo>();

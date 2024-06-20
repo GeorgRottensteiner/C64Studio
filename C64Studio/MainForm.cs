@@ -7063,6 +7063,7 @@ namespace RetroDevStudio
       {
         return null;
       }
+      CloseSolution();
       if ( solWizard.CreateNewFolderForSolution )
       {
         try

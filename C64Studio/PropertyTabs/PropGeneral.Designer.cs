@@ -37,50 +37,53 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point( 6, 17 );
+      this.label2.Location = new System.Drawing.Point(6, 17);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size( 57, 13 );
+      this.label2.Size = new System.Drawing.Size(57, 13);
       this.label2.TabIndex = 8;
       this.label2.Text = "File Name:";
       // 
       // labelFilename
       // 
-      this.labelFilename.Location = new System.Drawing.Point( 100, 17 );
+      this.labelFilename.Location = new System.Drawing.Point(100, 17);
       this.labelFilename.Name = "labelFilename";
-      this.labelFilename.Size = new System.Drawing.Size( 439, 13 );
+      this.labelFilename.Size = new System.Drawing.Size(439, 13);
       this.labelFilename.TabIndex = 8;
       this.labelFilename.Text = "Target File:";
       // 
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point( 6, 41 );
+      this.label1.Location = new System.Drawing.Point(6, 41);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size( 32, 13 );
+      this.label1.Size = new System.Drawing.Size(32, 13);
       this.label1.TabIndex = 8;
       this.label1.Text = "Path:";
       // 
       // labelFilePath
       // 
-      this.labelFilePath.Location = new System.Drawing.Point( 100, 41 );
+      this.labelFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.labelFilePath.AutoEllipsis = true;
+      this.labelFilePath.Location = new System.Drawing.Point(100, 41);
       this.labelFilePath.Name = "labelFilePath";
-      this.labelFilePath.Size = new System.Drawing.Size( 439, 13 );
+      this.labelFilePath.Size = new System.Drawing.Size(439, 13);
       this.labelFilePath.TabIndex = 8;
       this.labelFilePath.Text = "Target File:";
       // 
       // PropGeneral
       // 
-      this.ClientSize = new System.Drawing.Size( 599, 364 );
+      this.ClientSize = new System.Drawing.Size(599, 364);
       this.ControlBox = false;
-      this.Controls.Add( this.labelFilePath );
-      this.Controls.Add( this.label1 );
-      this.Controls.Add( this.labelFilename );
-      this.Controls.Add( this.label2 );
+      this.Controls.Add(this.labelFilePath);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.labelFilename);
+      this.Controls.Add(this.label2);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
       this.Name = "PropGeneral";
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
-      this.ResumeLayout( false );
+      this.ResumeLayout(false);
       this.PerformLayout();
 
     }

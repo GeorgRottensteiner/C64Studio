@@ -56,27 +56,31 @@
       // 
       // treeProject
       // 
-      this.treeProject.AllowDrop = true;
       this.treeProject.AllowDrag = true;
+      this.treeProject.AllowDrop = true;
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.treeProject.BorderStyle = DecentForms.BorderStyle.SUNKEN;
       this.treeProject.ImageList = this.imageListExplorer;
       this.treeProject.LabelEdit = true;
       this.treeProject.Location = new System.Drawing.Point(0, 28);
       this.treeProject.Name = "treeProject";
+      this.treeProject.ScrollAlwaysVisible = false;
+      this.treeProject.SelectedNode = null;
+      this.treeProject.SelectionMode = DecentForms.SelectionMode.NONE;
       this.treeProject.Size = new System.Drawing.Size(534, 362);
       this.treeProject.TabIndex = 0;
       this.treeProject.Text = "NoDblClkTreeView";
-      this.treeProject.BeforeLabelEdit += new DecentForms.TreeView.NodeLabelEditEventHandler(this.treeProject_BeforeLabelEdit);
-      this.treeProject.AfterLabelEdit += new DecentForms.TreeView.NodeLabelEditEventHandler(this.treeProject_AfterLabelEdit);
       this.treeProject.AfterCollapse += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterCollapse);
       this.treeProject.AfterExpand += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterExpand);
-      this.treeProject.DrawNode += new DecentForms.TreeView.DrawTreeNodeEventHandler(this.treeProject_DrawNode);
-      this.treeProject.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeProject_ItemDrag);
       this.treeProject.AfterSelect += new DecentForms.TreeView.TreeViewEventHandler(this.treeProject_AfterSelect);
       this.treeProject.NodeMouseClick += new DecentForms.TreeView.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);
       this.treeProject.NodeMouseDoubleClick += new DecentForms.TreeView.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseDoubleClick);
+      this.treeProject.BeforeLabelEdit += new DecentForms.TreeView.NodeLabelEditEventHandler(this.treeProject_BeforeLabelEdit);
+      this.treeProject.AfterLabelEdit += new DecentForms.TreeView.NodeLabelEditEventHandler(this.treeProject_AfterLabelEdit);
+      this.treeProject.DrawNode += new DecentForms.TreeView.DrawTreeNodeEventHandler(this.treeProject_DrawNode);
+      this.treeProject.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeProject_ItemDrag);
       this.treeProject.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeProject_DragDrop);
       this.treeProject.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeProject_DragEnter);
       this.treeProject.DragOver += new System.Windows.Forms.DragEventHandler(this.treeProject_DragOver);
