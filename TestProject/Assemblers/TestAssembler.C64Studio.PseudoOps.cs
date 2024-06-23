@@ -543,6 +543,88 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPseudoOpJumpList()
+    {
+      string      source = @"* = $2000
+                          Routine1
+                            lda #1
+                            rts
+
+                          Routine2
+                            lda #2
+                            rts
+
+                          JUMP_LIST
+                            !jumplist Routine1
+                            !jumplist Routine2
+
+                          OFFSET_DATA
+                            !byte JUMP_LIST.Routine1
+                            !byte $17
+                            !byte JUMP_LIST.Routine2";
+
+      var assembly = TestAssembleC64Studio( source );
+      Assert.AreEqual( "0020A90160A9026000200320001702", assembly.ToString() );
+  
+    }
+
+
+
+    [TestMethod]
+    public void TestPseudoOpJumpListLateEval()
+    {
+      string      source = @"* = $2000
+                          JUMP_LIST
+                            !jumplist Routine1
+                            !jumplist Routine2
+
+                          OFFSET_DATA
+                            !byte JUMP_LIST.Routine1
+                            !byte $17
+                            !byte JUMP_LIST.Routine2
+
+                          Routine1
+                            lda #1
+                            rts
+
+                          Routine2
+                            lda #2
+                            rts";
+
+      var assembly = TestAssembleC64Studio( source );
+      Assert.AreEqual( "002007200A20001702A90160A90260", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestPseudoOpJumpListLateEval2()
+    {
+      string      source = @"* = $2000
+                          OFFSET_DATA
+                            !byte JUMP_LIST.Routine1
+                            !byte $17
+                            !byte JUMP_LIST.Routine2
+
+                          JUMP_LIST
+                            !jumplist Routine1
+                            !jumplist Routine2
+
+                          Routine1
+                            lda #1
+                            rts
+
+                          Routine2
+                            lda #2
+                            rts";
+
+      var assembly = TestAssembleC64Studio( source );
+      Assert.AreEqual( "002000170207200A20A90160A90260", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPOWhile()
     {
       string source = @"* = $2000

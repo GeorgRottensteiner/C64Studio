@@ -2734,6 +2734,16 @@ namespace RetroDevStudio.Parser
                 }
               }
               break;
+            case MacroInfo.PseudoOpType.JUMP_TABLE:
+              {
+                int     lineInBytes = 0;
+                var result = POJumpTable( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, out lineInBytes );
+                if ( result == ParseLineResult.RETURN_FALSE )
+                {
+                  return ParseLineResult.RETURN_FALSE;
+                }
+              }
+              break;
             case MacroInfo.PseudoOpType.TEXT:
             case MacroInfo.PseudoOpType.TEXT_PET:
             case MacroInfo.PseudoOpType.TEXT_RAW:
@@ -7273,6 +7283,19 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WHILE )
             {
               var result = POWhile( lineTokenInfos, lineIndex, info, ref Lines, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.JUMP_TABLE )
+            {
+              var result = POJumpTable( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;

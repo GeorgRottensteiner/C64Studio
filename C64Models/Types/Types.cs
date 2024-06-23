@@ -91,7 +91,8 @@ namespace RetroDevStudio.Types
       ASSUME_16BIT_REGISTERS_65816,
       ASSUME_8BIT_REGISTERS_65816,
       SKIP,                             // basically a * = * + x
-      WHILE                             // ACME: !WHILE
+      WHILE,                            // ACME: !WHILE
+      JUMP_TABLE                         // !jumplist Label
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;

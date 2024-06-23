@@ -210,6 +210,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!08", Types.MacroInfo.PseudoOpType.BYTE );
           AddPseudoOp( "!WORD", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( "!WO", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!JUMPLIST", Types.MacroInfo.PseudoOpType.JUMP_TABLE );
           AddPseudoOp( "!16", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( "!LE16", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( "!BE16", Types.MacroInfo.PseudoOpType.WORD_BE );
