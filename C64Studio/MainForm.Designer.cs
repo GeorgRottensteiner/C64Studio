@@ -226,6 +226,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
+      this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -269,6 +270,7 @@
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.printToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.saveAllToolStripMenuItem,
@@ -1896,6 +1898,14 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
+      // printToolStripMenuItem
+      // 
+      this.printToolStripMenuItem.Enabled = false;
+      this.printToolStripMenuItem.Name = "printToolStripMenuItem";
+      this.printToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+      this.printToolStripMenuItem.Text = "Print...";
+      this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -2127,6 +2137,7 @@
     private System.Windows.Forms.ToolStripMenuItem solutionCloseToolStripMenuItemTop;
     private System.Windows.Forms.ToolStripMenuItem compileResulttoolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dumpSourceInfoToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
   }
 }
 

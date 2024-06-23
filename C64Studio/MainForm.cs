@@ -1557,9 +1557,11 @@ namespace RetroDevStudio
         saveAsToolStripMenuItem.Enabled = false;
         mainToolSave.Enabled = false;
         fileCloseToolStripMenuItem.Enabled = false;
+        printToolStripMenuItem.Enabled = false;
       }
       else
       {
+        printToolStripMenuItem.Enabled = true;
         saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
         saveAsToolStripMenuItem.Enabled = true;
         mainToolSave.Enabled = ActiveDocument.Modified;
@@ -7961,6 +7963,10 @@ namespace RetroDevStudio
 
 
 
+    private void printToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( RetroDevStudio.Types.Function.PRINT );
+    }
 
 
 

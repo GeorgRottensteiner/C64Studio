@@ -3045,7 +3045,7 @@ namespace RetroDevStudio.Documents
         case Types.Function.PRINT:
           editSource.Print( new FastColoredTextBoxNS.PrintDialogSettings 
                                   {
-                                    ShowPageSetupDialog = true, ShowPrintDialog = true, ShowPrintPreviewDialog = true 
+                                    ShowPageSetupDialog = false, ShowPrintDialog = true, ShowPrintPreviewDialog = false
                                   } );
           return true;
         case Types.Function.COMMENT_SELECTION:

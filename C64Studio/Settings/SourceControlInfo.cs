@@ -11,6 +11,9 @@ namespace RetroDevStudio
   {
     public string           CommitAuthor = "";
     public string           CommitAuthorEmail = "";
+
+    public bool             CreateSolutionRepository = true;
+    public bool             CreateProjectRepository = true;
   }
 
 

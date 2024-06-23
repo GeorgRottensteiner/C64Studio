@@ -34,7 +34,7 @@ namespace RetroDevStudio.Dialogs
       editBasePath.Text = projectPath;
 
       checkCreateRepository.Visible = global::SourceControl.Controller.IsFunctional;
-      checkCreateRepository.Checked = global::SourceControl.Controller.IsFunctional;
+      checkCreateRepository.Checked = ( global::SourceControl.Controller.IsFunctional ) && ( Core.Settings.SourceControlInfo.CreateProjectRepository );
 
       btnOK.Enabled = false;
       UpdateSummary();
@@ -53,6 +53,11 @@ namespace RetroDevStudio.Dialogs
       ProjectPath                     = ProjectFilename;
       ProjectFilename                 = System.IO.Path.Combine( ProjectFilename, ProjectName + ".c64" );
       CreateRepository                = checkCreateRepository.Checked;
+
+      if ( global::SourceControl.Controller.IsFunctional )
+      {
+        Core.Settings.SourceControlInfo.CreateProjectRepository = CreateRepository;
+      }
 
       Close();
     }

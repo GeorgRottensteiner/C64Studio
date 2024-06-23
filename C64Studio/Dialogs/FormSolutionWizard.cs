@@ -33,7 +33,10 @@ namespace RetroDevStudio.Dialogs
       editBasePath.Text       = Settings.DefaultProjectBasePath;
 
       checkCreateRepository.Visible = global::SourceControl.Controller.IsFunctional;
-      checkCreateRepository.Checked = global::SourceControl.Controller.IsFunctional;
+      checkCreateRepository.Checked = ( global::SourceControl.Controller.IsFunctional ) && ( Settings.SourceControlInfo.CreateSolutionRepository );
+
+      checkSeparateRepositoryForProject.Visible = global::SourceControl.Controller.IsFunctional;
+      checkSeparateRepositoryForProject.Checked = ( global::SourceControl.Controller.IsFunctional ) && ( Settings.SourceControlInfo.CreateProjectRepository );
 
       btnOK.Enabled = false;
       UpdateSummary();
@@ -70,8 +73,14 @@ namespace RetroDevStudio.Dialogs
 
       if ( global::SourceControl.Controller.IsFolderUnderSourceControl( finalSolutionPath ) )
       {
+        // there is already a repo at the target folder
         CreateRepository            = false;
         CreateRepositoryForProject  = false;
+      }
+      else if ( global::SourceControl.Controller.IsFunctional )
+      {
+        Settings.SourceControlInfo.CreateSolutionRepository = CreateRepository;
+        Settings.SourceControlInfo.CreateProjectRepository  = CreateRepositoryForProject;
       }
 
       Close();

@@ -21,12 +21,15 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefSourceControl( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "source", "git", "control", "commit", "author", "mail", "email" } );
+      _Keywords.AddRange( new string[] { "source", "git", "control", "commit", "author", "mail", "email", "repository" } );
 
       InitializeComponent();
 
       editCommitterEmail.Text  = Core.Settings.SourceControlInfo.CommitAuthorEmail;
       editCommitAuthor.Text    = Core.Settings.SourceControlInfo.CommitAuthor;
+
+      checkGenerateSolutionRepository.Checked = Core.Settings.SourceControlInfo.CreateSolutionRepository;
+      checkGenerateProjectRepository.Checked  = Core.Settings.SourceControlInfo.CreateProjectRepository;
     }
 
 
@@ -51,6 +54,8 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       xmlSourceControl.AddAttribute( "Author", Core.Settings.SourceControlInfo.CommitAuthor );
       xmlSourceControl.AddAttribute( "Email", Core.Settings.SourceControlInfo.CommitAuthorEmail );
+      xmlSourceControl.AddAttribute( "CreateSolutionRepository", Core.Settings.SourceControlInfo.CreateSolutionRepository ? "yes" : "no" );
+      xmlSourceControl.AddAttribute( "CreateProjectRepository", Core.Settings.SourceControlInfo.CreateProjectRepository ? "yes" : "no" );
     }
 
 
@@ -62,6 +67,9 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         editCommitAuthor.Text    = xmlSourceControl.Attribute( "Author" );
         editCommitterEmail.Text  = xmlSourceControl.Attribute( "Email" );
+
+        checkGenerateSolutionRepository.Checked = IsSettingTrue( xmlSourceControl.Attribute( "CreateSolutionRepository" ) );
+        checkGenerateProjectRepository.Checked  = IsSettingTrue( xmlSourceControl.Attribute( "CreateProjectRepository" ) );
       }
     }
     
@@ -77,6 +85,20 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void editCommitAuthor_TextChanged( object sender, EventArgs e )
     {
       Core.Settings.SourceControlInfo.CommitAuthor = editCommitAuthor.Text;
+    }
+
+
+
+    private void checkGenerateSolutionRepository_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.SourceControlInfo.CreateSolutionRepository = checkGenerateSolutionRepository.Checked;
+    }
+
+
+
+    private void checkGenerateProjectRepository_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.SourceControlInfo.CreateProjectRepository = checkGenerateProjectRepository.Checked;
     }
 
 

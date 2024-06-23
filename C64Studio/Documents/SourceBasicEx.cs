@@ -2252,7 +2252,12 @@ namespace RetroDevStudio.Documents
           ///editSource.FindReplace.ShowReplace();
           break;
         case RetroDevStudio.Types.Function.PRINT:
-          editSource.Print();
+          editSource.Print( new FastColoredTextBoxNS.PrintDialogSettings
+          {
+            ShowPageSetupDialog = false,
+            ShowPrintDialog = true,
+            ShowPrintPreviewDialog = false
+          } );
           return true;
         case Function.JUMP_TO_LINE:
           JumpToLine();

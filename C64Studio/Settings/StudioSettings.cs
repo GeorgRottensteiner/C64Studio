@@ -901,6 +901,8 @@ namespace RetroDevStudio
       GR.IO.FileChunk chunkSC = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_SOURCE_CONTROL );
       chunkSC.AppendString( SourceControlInfo.CommitAuthor );
       chunkSC.AppendString( SourceControlInfo.CommitAuthorEmail );
+      chunkSC.AppendI32( SourceControlInfo.CreateSolutionRepository ? 0 : 1 );
+      chunkSC.AppendI32( SourceControlInfo.CreateProjectRepository ? 0 : 1 );
       SettingsData.Append( chunkSC.ToBuffer() );
 
       // Help
@@ -1467,8 +1469,10 @@ namespace RetroDevStudio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              SourceControlInfo.CommitAuthor      = binIn.ReadString();
-              SourceControlInfo.CommitAuthorEmail = binIn.ReadString();
+              SourceControlInfo.CommitAuthor              = binIn.ReadString();
+              SourceControlInfo.CommitAuthorEmail         = binIn.ReadString();
+              SourceControlInfo.CreateSolutionRepository  = ( binIn.ReadInt32() == 0 );
+              SourceControlInfo.CreateProjectRepository   = ( binIn.ReadInt32() == 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_HELP:
