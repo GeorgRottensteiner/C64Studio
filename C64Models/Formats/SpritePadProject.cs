@@ -184,7 +184,6 @@ namespace RetroDevStudio.Formats
         return false;
       }
       int version = header.ByteAt( 3 );
-      Debug.Log( $"SPD Version {version}" );
 
       if ( version >= 4 )
       {

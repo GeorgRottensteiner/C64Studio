@@ -30,6 +30,7 @@
       <li><a href="#hex">!HEX, !H</a></li>
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
+      <li><a href="#jumplist">!JUMPLIST</a></li>
       <li><a href="#list">!LIST</a></li>
       <li><a href="#lzone">!LZONE</a></li>
       <li><a href="#macro">!MACRO</a></li>
@@ -477,6 +478,43 @@
       lda #0
       sta AUTO_LOAD
       }
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="jumplist"></a>
+  <H2>!JUMPLIST &lt;Label&gt;</H2>
+  <div id="mybody">
+    This pseudo op allows the building of jump lists (direct word entries), and referencing entry offsets by label name.<br />
+    <br />
+    <br />
+    <div id="code">
+      <br />      ;actual routines
+Routine1
+      lda #0
+      rts
+Routine2
+      lda #1
+      rts
+Routine3
+      lda #2
+      rts
+
+      ;jump table (with optional extra data)
+      ;<= this global label starts a new zone, !jumptable references the last global label above)
+RoutinesPtrs
+      !jumptable Routine1       ;lo byte of Routine1, hi byte of Routine1
+      !byte 1,2,3,4
+      !jumptable Routine2
+      !jumptable Routine3
+
+Sequence
+      !byte RoutinesPtrs.Routine1  ;= 0
+      !byte 10,11,12
+      !byte RoutinesPtrs.Routine3  ;= 8
+      !byte 20,21,22
+      !byte RoutinesPtrs.Routine2  ;= 6
+      !byte 30,31,32
     </div>
     <br />
     <br />
