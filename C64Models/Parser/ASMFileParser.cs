@@ -2663,147 +2663,147 @@ namespace RetroDevStudio.Parser
 
       if ( isPseudoOP )
       {
-        string startToken = "";
-        int spacePos = lineToCheck.IndexOf( ' ' );
-        if ( spacePos == -1 )
+        var tokens = ParseTokenInfo( lineToCheck, 0, lineToCheck.Length, lineInfo.LineCodeMapping );
+        if ( tokens == null )
         {
-          startToken = lineToCheck.ToUpper();
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                    "Failed to evaluate expression: " + TokensToExpression( NeededParsedExpression ) );
         }
         else
         {
-          startToken = lineToCheck.Substring( 0, spacePos ).ToUpper();
-        }
-        if ( m_AssemblerSettings.PseudoOps.ContainsKey( startToken ) )
-        {
-          var pseudoOp = m_AssemblerSettings.PseudoOps[startToken];
-
-          switch ( pseudoOp.Type )
+          string startToken = tokens[0].Content.ToUpper();
+          if ( m_AssemblerSettings.PseudoOps.ContainsKey( startToken ) )
           {
-            case RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC:
-              {
-                int lineSize = -1;
-                if ( POBasic( lineInfo.Line, NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, false, lineInfo.HideInPreprocessedOutput, out lineSize ) != ParseLineResult.OK )
-                {
-                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                    "Failed to evaluate expression: " + TokensToExpression( NeededParsedExpression ) );
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.BYTE:
-            case MacroInfo.PseudoOpType.LOW_BYTE:
-            case MacroInfo.PseudoOpType.HIGH_BYTE:
-              PODataByte( lineIndex, NeededParsedExpression, 0, NeededParsedExpression.Count, lineInfo, pseudoOp.Type, lineInfo.LineCodeMapping, false );
-              break;
-            case MacroInfo.PseudoOpType.WORD:
-              {
-                int     lineInBytes = 0;
-                var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
-                if ( result == ParseLineResult.RETURN_FALSE )
-                {
-                  return ParseLineResult.RETURN_FALSE;
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.WORD_BE:
-              {
-                int     lineInBytes = 0;
-                var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
-                if ( result == ParseLineResult.RETURN_FALSE )
-                {
-                  return ParseLineResult.RETURN_FALSE;
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.DWORD:
-              {
-                int     lineInBytes = 0;
-                var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
-                if ( result == ParseLineResult.RETURN_FALSE )
-                {
-                  return ParseLineResult.RETURN_FALSE;
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.DWORD_BE:
-              {
-                int     lineInBytes = 0;
-                var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
-                if ( result == ParseLineResult.RETURN_FALSE )
-                {
-                  return ParseLineResult.RETURN_FALSE;
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.JUMP_TABLE:
-              {
-                int     lineInBytes = 0;
-                var result = POJumpTable( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, out lineInBytes );
-                if ( result == ParseLineResult.RETURN_FALSE )
-                {
-                  return ParseLineResult.RETURN_FALSE;
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.TEXT:
-            case MacroInfo.PseudoOpType.TEXT_PET:
-            case MacroInfo.PseudoOpType.TEXT_RAW:
-            case MacroInfo.PseudoOpType.TEXT_SCREEN:
-            case MacroInfo.PseudoOpType.TEXT_SCREEN_XOR:
-              {
-                var result = FinalParseData( lineInfo, lineIndex, true );
-                if ( result == ParseLineResult.RETURN_FALSE )
-                {
-                  return ParseLineResult.RETURN_FALSE;
-                }
-              }
-              break;
-            case MacroInfo.PseudoOpType.FILL:
-              {
-                int tokenCommaIndex = -1;
+            var pseudoOp = m_AssemblerSettings.PseudoOps[startToken];
 
-                for ( int i = 0; i < NeededParsedExpression.Count; ++i )
+            switch ( pseudoOp.Type )
+            {
+              case RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC:
                 {
-                  if ( NeededParsedExpression[i].Content == "," )
+                  int lineSize = -1;
+                  if ( POBasic( lineInfo.Line, NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, false, lineInfo.HideInPreprocessedOutput, out lineSize ) != ParseLineResult.OK )
                   {
-                    tokenCommaIndex = i;
-                    break;
+                    AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                      "Failed to evaluate expression: " + TokensToExpression( NeededParsedExpression ) );
                   }
                 }
-                if ( tokenCommaIndex == -1 )
+                break;
+              case MacroInfo.PseudoOpType.BYTE:
+              case MacroInfo.PseudoOpType.LOW_BYTE:
+              case MacroInfo.PseudoOpType.HIGH_BYTE:
+                PODataByte( lineIndex, NeededParsedExpression, 0, NeededParsedExpression.Count, lineInfo, pseudoOp.Type, lineInfo.LineCodeMapping, false );
+                break;
+              case MacroInfo.PseudoOpType.WORD:
                 {
-                  AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + startToken + " expression" );
-                  return ParseLineResult.RETURN_FALSE;
+                  int     lineInBytes = 0;
+                  var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
                 }
+                break;
+              case MacroInfo.PseudoOpType.WORD_BE:
+                {
+                  int     lineInBytes = 0;
+                  var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
+                }
+                break;
+              case MacroInfo.PseudoOpType.DWORD:
+                {
+                  int     lineInBytes = 0;
+                  var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
+                }
+                break;
+              case MacroInfo.PseudoOpType.DWORD_BE:
+                {
+                  int     lineInBytes = 0;
+                  var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
+                }
+                break;
+              case MacroInfo.PseudoOpType.JUMP_TABLE:
+                {
+                  int     lineInBytes = 0;
+                  var result = POJumpTable( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, out lineInBytes );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
+                }
+                break;
+              case MacroInfo.PseudoOpType.TEXT:
+              case MacroInfo.PseudoOpType.TEXT_PET:
+              case MacroInfo.PseudoOpType.TEXT_RAW:
+              case MacroInfo.PseudoOpType.TEXT_SCREEN:
+              case MacroInfo.PseudoOpType.TEXT_SCREEN_XOR:
+                {
+                  var result = FinalParseData( lineInfo, lineIndex, true );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
+                }
+                break;
+              case MacroInfo.PseudoOpType.FILL:
+                {
+                  int tokenCommaIndex = -1;
 
-                long    count = -1;
-                long    value = -1;
-                int     dummyBytesGiven;
+                  for ( int i = 0; i < NeededParsedExpression.Count; ++i )
+                  {
+                    if ( NeededParsedExpression[i].Content == "," )
+                    {
+                      tokenCommaIndex = i;
+                      break;
+                    }
+                  }
+                  if ( tokenCommaIndex == -1 )
+                  {
+                    AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + startToken + " expression" );
+                    return ParseLineResult.RETURN_FALSE;
+                  }
 
-                if ( !EvaluateTokens( lineIndex, NeededParsedExpression, 0, tokenCommaIndex, lineInfo.LineCodeMapping, out SymbolInfo symbol, out dummyBytesGiven ) )
-                {
-                  AddError( lineIndex,
-                            Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
-                            "Could not evaluate " + TokensToExpression( NeededParsedExpression, 0, tokenCommaIndex ),
-                            NeededParsedExpression[0].StartPos,
-                            NeededParsedExpression[tokenCommaIndex - 1].EndPos + 1 - NeededParsedExpression[0].StartPos );
+                  long    count = -1;
+                  long    value = -1;
+                  int     dummyBytesGiven;
+
+                  if ( !EvaluateTokens( lineIndex, NeededParsedExpression, 0, tokenCommaIndex, lineInfo.LineCodeMapping, out SymbolInfo symbol, out dummyBytesGiven ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                              "Could not evaluate " + TokensToExpression( NeededParsedExpression, 0, tokenCommaIndex ),
+                              NeededParsedExpression[0].StartPos,
+                              NeededParsedExpression[tokenCommaIndex - 1].EndPos + 1 - NeededParsedExpression[0].StartPos );
+                  }
+                  count = symbol.ToInteger();
+                  if ( !EvaluateTokens( lineIndex, NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1, lineInfo.LineCodeMapping, out symbol ) )
+                  {
+                    AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1 ) );
+                  }
+                  value = symbol.ToInteger();
+                  GR.Memory.ByteBuffer lineData = new GR.Memory.ByteBuffer();
+                  for ( int i = 0; i < count; ++i )
+                  {
+                    lineData.AppendU8( (byte)value );
+                  }
+                  lineInfo.LineData = lineData;
                 }
-                count = symbol.ToInteger();
-                if ( !EvaluateTokens( lineIndex, NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1, lineInfo.LineCodeMapping, out symbol ) )
-                {
-                  AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1 ) );
-                }
-                value = symbol.ToInteger();
-                GR.Memory.ByteBuffer lineData = new GR.Memory.ByteBuffer();
-                for ( int i = 0; i < count; ++i )
-                {
-                  lineData.AppendU8( (byte)value );
-                }
-                lineInfo.LineData = lineData;
-              }
-              break;
-            default:
-              AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unsupported pseudo op " + startToken );
-              return ParseLineResult.RETURN_FALSE;
+                break;
+              default:
+                AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unsupported pseudo op " + startToken );
+                return ParseLineResult.RETURN_FALSE;
+            }
           }
         }
       }

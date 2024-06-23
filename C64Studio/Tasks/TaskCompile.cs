@@ -357,6 +357,7 @@ namespace RetroDevStudio.Tasks
           if ( Core.MainForm.AppState != Types.StudioState.DEBUGGING_RUN )
           {
             Core.AddToOutput( "failed " + numConnectionAttempts + " times, giving up" + System.Environment.NewLine );
+            Core.MainForm.SetGUIForDebugging( false );
             return false;
           }
         }
