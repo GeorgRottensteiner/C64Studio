@@ -1085,7 +1085,7 @@ namespace RetroDevStudio
 
     private void CheckForUpdate()
     {
-      AddTask( new Tasks.TaskCheckForUpdate() );
+      StudioCore.TaskManager.AddTask( new Tasks.TaskCheckForUpdate() );
     }
 
 
@@ -1682,7 +1682,7 @@ namespace RetroDevStudio
           if ( m_ActiveSource != baseDoc )
           {
             m_ActiveSource = baseDoc;
-            AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc ) );
+            StudioCore.TaskManager.AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc ) );
           }
         }
         saveToolStripMenuItem.Enabled   = baseDoc.Modified;
@@ -2459,7 +2459,7 @@ namespace RetroDevStudio
 
     private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
-      AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution, CreatePreProcessedFile, CreateRelocationFile ) );
+      StudioCore.TaskManager.AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution, CreatePreProcessedFile, CreateRelocationFile ) );
       return true;
     }
 
@@ -3407,7 +3407,7 @@ namespace RetroDevStudio
 
         SetActiveProject( newProject );
 
-        AddTask( new Tasks.TaskPreparseFilesInProject( newProject, mainToolConfig.SelectedItem.ToString() ) );
+        StudioCore.TaskManager.AddTask( new Tasks.TaskPreparseFilesInProject( newProject, mainToolConfig.SelectedItem.ToString() ) );
 
         return newProject;
       }
@@ -3472,7 +3472,7 @@ namespace RetroDevStudio
               }
             }
 
-            AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
+            StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
 
             foreach ( var dependencyBuildState in element.DocumentInfo.DeducedDependency.Values )
             {
@@ -3501,7 +3501,7 @@ namespace RetroDevStudio
             ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false, out Types.ASM.FileInfo asmFileInfo );
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
-            AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
+            StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
           }
         }
         //m_CompileResult.ClearMessages();
@@ -5100,7 +5100,7 @@ namespace RetroDevStudio
             EnsureFileIsParsed( docToHandle );
 
             // so this should become one too!
-            AddTask( new Tasks.TaskDebugRunTo( docToHandle, docToDebug, docActive ) );
+            StudioCore.TaskManager.AddTask( new Tasks.TaskDebugRunTo( docToHandle, docToDebug, docActive ) );
           }
           return true;
         case RetroDevStudio.Types.Function.SAVE_ALL:
@@ -5773,7 +5773,7 @@ namespace RetroDevStudio
               elementToUpdate.DocumentInfo.KnownTokens    = knownTokenInfos;
               if ( elementToUpdate.Document != null )
               {
-                AddTask( new Tasks.TaskUpdateKeywords( elementToUpdate.Document ) );
+                StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( elementToUpdate.Document ) );
               }
             }
           }
@@ -5816,7 +5816,7 @@ namespace RetroDevStudio
 
       if ( OutputMessages )
       {
-        AddTask( new Tasks.TaskUpdateCompileResult( Document.ASMFileInfo, Document ) );
+        StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateCompileResult( Document.ASMFileInfo, Document ) );
       }
       if ( ( result )
       &&   ( Document.BaseDoc != null ) )
@@ -6471,15 +6471,6 @@ namespace RetroDevStudio
     public void MainForm_DragEnter( object sender, DragEventArgs e )
     {
       e.Effect = DragDropEffects.All;
-    }
-
-
-
-    public void AddTask( Tasks.Task Task )
-    {
-      //Debug.Log( "Add task " + Task.ToString() );
-      Task.Core = StudioCore;
-      StudioCore.TaskManager.AddTask( Task );
     }
 
 

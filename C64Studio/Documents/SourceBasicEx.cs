@@ -2163,7 +2163,7 @@ namespace RetroDevStudio.Documents
         Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );
 
-        Core.MainForm.AddTask( new Tasks.TaskUpdateCompileResult( asmFileInfo, DocumentInfo ) );
+        Core.TaskManager.AddTask( new Tasks.TaskUpdateCompileResult( asmFileInfo, DocumentInfo ) );
         return false;
       }
 

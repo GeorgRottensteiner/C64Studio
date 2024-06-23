@@ -64,6 +64,10 @@ namespace DecentForms
 
     public event System.Windows.Forms.ItemDragEventHandler    ItemDrag;
 
+    private string        _SelectingByKeyPressPrefix = "";
+    private long          _SelectingByKeyPressPreviousTicks = 0;
+    private bool          _SelectingByKeyPressUsingSingleStartLetterMode = true;
+
 
 
     public TreeView()
@@ -778,6 +782,33 @@ namespace DecentForms
             }
           }
           Invalidate();
+          break;
+        case ControlEvent.EventType.KEY_PRESS:
+          if ( (char)Event.Key >= 32 )
+          {
+            char    pressedKey = (char)Event.Key;
+
+            long curTicks = DateTime.Now.Ticks;
+            // more than a second pause, restart entry
+            if ( curTicks - _SelectingByKeyPressPreviousTicks > 10000 * 1000 )
+            {
+              // reset entry mode
+              _SelectingByKeyPressPrefix                      = "";
+              _SelectingByKeyPressUsingSingleStartLetterMode  = true;
+            }
+            _SelectingByKeyPressPreviousTicks = curTicks;
+
+            if ( ( _SelectingByKeyPressPrefix.Length == 1 )
+            &&   ( _SelectingByKeyPressPrefix[0] == pressedKey ) )
+            {
+              _SelectingByKeyPressUsingSingleStartLetterMode = true;
+            }
+            else
+            {
+              _SelectingByKeyPressPrefix += pressedKey;
+            }
+            // TODO - find next node start
+          }
           break;
         case ControlEvent.EventType.KEY_DOWN:
           if ( Event.Key == System.Windows.Forms.Keys.Down )

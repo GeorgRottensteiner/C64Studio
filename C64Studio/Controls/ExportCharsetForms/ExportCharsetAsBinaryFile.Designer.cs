@@ -35,6 +35,7 @@ namespace RetroDevStudio.Controls
       // 
       // editPrefixLoadAddress
       // 
+      this.editPrefixLoadAddress.Enabled = false;
       this.editPrefixLoadAddress.Location = new System.Drawing.Point(155, 1);
       this.editPrefixLoadAddress.MaxLength = 4;
       this.editPrefixLoadAddress.Name = "editPrefixLoadAddress";

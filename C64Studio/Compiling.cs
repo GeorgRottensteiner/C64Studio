@@ -445,11 +445,11 @@ namespace RetroDevStudio
     {
       if ( Document.DocumentInfo.Project != null )
       {
-        Core.MainForm.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
+        Core.TaskManager.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
       }
       else
       {
-        Core.MainForm.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, null ) );
+        Core.TaskManager.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, null ) );
       }
     }
 

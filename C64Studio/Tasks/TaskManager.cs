@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 
 
 
@@ -9,6 +10,7 @@ namespace RetroDevStudio.Tasks
 {
   public class TaskManager
   {
+    private object                m_TaskQueueLock = new object();            
     private List<Tasks.Task>      m_TaskQueue = new List<Tasks.Task>();
 
     private BackgroundWorker      m_BackgroundWorker = new BackgroundWorker();
@@ -25,15 +27,16 @@ namespace RetroDevStudio.Tasks
 
 
 
-    void m_BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+    void m_BackgroundWorker_DoWork( object sender, DoWorkEventArgs e )
     {
       while ( !Core.ShuttingDown )
       {
         Tasks.Task    newTask = null;
-        lock ( m_TaskQueue )
+        lock ( m_TaskQueueLock )
         {
           if ( m_TaskQueue.Count == 0 )
           {
+            m_BackgroundWorker = null;
             return;
           }
           newTask = m_TaskQueue[0];
@@ -55,7 +58,7 @@ namespace RetroDevStudio.Tasks
     public void AddTask( Tasks.Task Task )
     {
       Task.Core = Core;
-      lock ( m_TaskQueue )
+      lock ( m_TaskQueueLock )
       {
         var tasksToRemove = new List<Task>();
 
@@ -80,10 +83,13 @@ namespace RetroDevStudio.Tasks
         }
 
         m_TaskQueue.Add( Task );
-      }
-      if ( !m_BackgroundWorker.IsBusy )
-      {
-        m_BackgroundWorker.RunWorkerAsync();
+        if ( ( m_BackgroundWorker == null )
+        ||   ( !m_BackgroundWorker.IsBusy ) )
+        {
+          m_BackgroundWorker = new BackgroundWorker();
+          m_BackgroundWorker.DoWork += m_BackgroundWorker_DoWork;
+          m_BackgroundWorker.RunWorkerAsync();
+        }
       }
     }
 

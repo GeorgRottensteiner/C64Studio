@@ -178,7 +178,7 @@ namespace RetroDevStudio
       KnownTokens   = FileInfo.KnownTokenInfo();
       if ( BaseDoc != null )
       {
-        BaseDoc.Core.MainForm.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
+        BaseDoc.Core.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
       }
 
       var compilableDoc = CompilableDocument;
