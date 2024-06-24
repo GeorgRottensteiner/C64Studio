@@ -2254,9 +2254,9 @@ namespace RetroDevStudio.Documents
         case RetroDevStudio.Types.Function.PRINT:
           editSource.Print( new FastColoredTextBoxNS.PrintDialogSettings
           {
-            ShowPageSetupDialog = false,
+            ShowPageSetupDialog = true,
             ShowPrintDialog = true,
-            ShowPrintPreviewDialog = false
+            ShowPrintPreviewDialog = true
           } );
           return true;
         case Function.JUMP_TO_LINE:
