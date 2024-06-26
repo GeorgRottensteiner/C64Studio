@@ -823,7 +823,8 @@ namespace RetroDevStudio.Parser
           Failed = true;
           return false;
         }
-        if ( Value.Length != 3 )
+        // we allow 'abcde', which collapses to 'a' - to be consistent with defines
+        if ( Value.Length < 3 )
         {
           Failed = true;
           return false;

@@ -1356,6 +1356,32 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestIfWithStringComparison()
+    {
+      string    source = @"VARIABLE ='abc'
+                           GREEN = 5
+                           RED = 2
+
+                            *=$0801
+                            !BASIC
+
+                            !IF VARIABLE='def' {
+                              lda #GREEN
+                            } else {
+                              lda #RED
+                            }
+
+                              sta $D021
+                              rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E32303631000000A9028D21D060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestOperatorLessOrEqual()
     {
       string    source = @"RED=2
