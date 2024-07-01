@@ -806,8 +806,13 @@ namespace DecentForms
             else
             {
               _SelectingByKeyPressPrefix += pressedKey;
+              _SelectingByKeyPressUsingSingleStartLetterMode = ( _SelectingByKeyPressPrefix.Length == 1 );
             }
-            // TODO - find next node start
+            var node = FindNextNodeStartingWith( SelectedNode, _SelectingByKeyPressPrefix );
+            if ( node != null )
+            {
+              SelectedNode = node;
+            }
           }
           break;
         case ControlEvent.EventType.KEY_DOWN:
@@ -956,6 +961,79 @@ namespace DecentForms
           break;
       }
       base.OnControlEvent( Event );
+    }
+
+
+
+    private TreeNode FindNextNodeStartingWith( TreeNode CurrentNode, string Prefix )
+    {
+      if ( Nodes.Count == 0 )
+      {
+        return null;
+      }
+      if ( _SelectingByKeyPressUsingSingleStartLetterMode )
+      {
+        if ( CurrentNode == null )
+        {
+          var node = Nodes[0];
+
+          while ( ( node != null )
+          &&      ( !node.Text.StartsWith( Prefix, StringComparison.InvariantCultureIgnoreCase ) ) )
+          {
+            node = GetNextVisibleNode( node );
+          }
+          return node;
+        }
+        var startNode1 = CurrentNode;
+        bool wrappedOver1 = false;
+        CurrentNode = GetNextVisibleNode( CurrentNode );
+        while ( ( CurrentNode != null )
+        &&      ( !CurrentNode.Text.StartsWith( Prefix, StringComparison.InvariantCultureIgnoreCase ) ) )
+        {
+          CurrentNode = GetNextVisibleNode( CurrentNode );
+          if ( CurrentNode == null )
+          {
+            CurrentNode = Nodes[0];
+            wrappedOver1 = true;
+          }
+          if ( ( CurrentNode == startNode1 )
+          &&   ( wrappedOver1 ) )
+          {
+            return CurrentNode;
+          }
+        }
+        return CurrentNode;
+      }
+
+      if ( CurrentNode == null )
+      {
+        var node = Nodes[0];
+
+        while ( ( node != null )
+        &&      ( !node.Text.StartsWith( Prefix, StringComparison.InvariantCultureIgnoreCase ) ) )
+        {
+          node = GetNextVisibleNode( node );
+        }
+        return node;
+      }
+      var   startNode = CurrentNode;
+      bool wrappedOver = false;
+      while ( ( CurrentNode != null )
+      &&      ( !CurrentNode.Text.StartsWith( Prefix, StringComparison.InvariantCultureIgnoreCase ) ) )
+      {
+        CurrentNode = GetNextVisibleNode( CurrentNode );
+        if ( CurrentNode == null )
+        {
+          CurrentNode = Nodes[0];
+          wrappedOver = true;
+        }
+        if ( ( CurrentNode == startNode )
+        &&   ( wrappedOver ) )
+        {
+          return CurrentNode;
+        }
+      }
+      return CurrentNode;
     }
 
 
