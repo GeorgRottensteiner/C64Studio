@@ -1,5 +1,6 @@
 ﻿using RetroDevStudio.Controls;
 using RetroDevStudio.Dialogs;
+using RetroDevStudio.Types;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -19,12 +20,14 @@ namespace RetroDevStudio.Documents
 
 
 
-    public CompileResult()
+    public CompileResult( StudioCore Core ) 
     {
       InitializeComponent();
 
       listMessages.Sorting = SortOrder.Ascending;
       listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessagesSortColumn, listMessages.Sorting );
+
+      this.Core = Core;
     }
 
 
@@ -374,6 +377,21 @@ namespace RetroDevStudio.Documents
       return bufferData;
     }
 
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.SETTINGS_LOADED:
+          Core.Settings.DialogSettings.RestoreListViewColumns( "CompileResult", listMessages );
+          break;
+        case ApplicationEvent.Type.SHUTTING_DOWN:
+          Core.Settings.DialogSettings.StoreListViewColumns( "CompileResult", listMessages );
+          break;
+      }
+    }
 
 
   }

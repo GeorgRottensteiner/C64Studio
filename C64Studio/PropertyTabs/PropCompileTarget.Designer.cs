@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PropCompileTarget));
       this.comboTargetType = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.btnParseTarget = new DecentForms.Button();
@@ -36,10 +37,10 @@
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.listDependencies = new System.Windows.Forms.ListView();
+      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label5 = new System.Windows.Forms.Label();
       this.btnAddExternalDependency = new DecentForms.Button();
       this.btnRemoveExternalDependency = new DecentForms.Button();
@@ -68,6 +69,11 @@
       // 
       // btnParseTarget
       // 
+      this.btnParseTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnParseTarget.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnParseTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnParseTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnParseTarget.Image = null;
       this.btnParseTarget.Location = new System.Drawing.Point(286, 12);
       this.btnParseTarget.Name = "btnParseTarget";
       this.btnParseTarget.Size = new System.Drawing.Size(102, 23);
@@ -132,6 +138,11 @@
       this.listDependencies.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.listDependencies_DrawSubItem);
       this.listDependencies.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listDependencies_MouseDown);
       // 
+      // columnHeader4
+      // 
+      this.columnHeader4.Text = "Project";
+      this.columnHeader4.Width = 100;
+      // 
       // columnHeader1
       // 
       this.columnHeader1.Text = "File";
@@ -145,11 +156,6 @@
       // 
       this.columnHeader3.Text = "Symbols";
       // 
-      // columnHeader4
-      // 
-      this.columnHeader4.Text = "Project";
-      this.columnHeader4.Width = 100;
-      // 
       // label5
       // 
       this.label5.AutoSize = true;
@@ -161,7 +167,11 @@
       // 
       // btnAddExternalDependency
       // 
-      this.btnAddExternalDependency.Image = global::RetroDevStudio.Properties.Resources.add;
+      this.btnAddExternalDependency.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnAddExternalDependency.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddExternalDependency.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddExternalDependency.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnAddExternalDependency.Image = ((System.Drawing.Image)(resources.GetObject("btnAddExternalDependency.Image")));
       this.btnAddExternalDependency.Location = new System.Drawing.Point(100, 326);
       this.btnAddExternalDependency.Name = "btnAddExternalDependency";
       this.btnAddExternalDependency.Size = new System.Drawing.Size(38, 23);
@@ -170,8 +180,12 @@
       // 
       // btnRemoveExternalDependency
       // 
+      this.btnRemoveExternalDependency.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnRemoveExternalDependency.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnRemoveExternalDependency.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnRemoveExternalDependency.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnRemoveExternalDependency.Enabled = false;
-      this.btnRemoveExternalDependency.Image = global::RetroDevStudio.Properties.Resources.delete;
+      this.btnRemoveExternalDependency.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveExternalDependency.Image")));
       this.btnRemoveExternalDependency.Location = new System.Drawing.Point(144, 326);
       this.btnRemoveExternalDependency.Name = "btnRemoveExternalDependency";
       this.btnRemoveExternalDependency.Size = new System.Drawing.Size(38, 23);

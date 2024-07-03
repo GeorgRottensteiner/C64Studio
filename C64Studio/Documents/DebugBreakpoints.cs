@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio;
+using RetroDevStudio.Types;
 
 namespace RetroDevStudio.Documents
 {
@@ -20,8 +21,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    public DebugBreakpoints()
+    public DebugBreakpoints( StudioCore Core )
     {
+      this.Core = Core;
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
@@ -403,6 +405,22 @@ namespace RetroDevStudio.Documents
         {
           Core.Navigating.OpenDocumentAndGotoLine( Core.Navigating.Project, Core.Navigating.FindDocumentInfoByPath( bp.DocumentFilename ), bp.LineIndex );
         }
+      }
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.SETTINGS_LOADED:
+          Core.Settings.DialogSettings.RestoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
+          break;
+        case ApplicationEvent.Type.SHUTTING_DOWN:
+          Core.Settings.DialogSettings.StoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
+          break;
       }
     }
 

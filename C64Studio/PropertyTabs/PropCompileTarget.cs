@@ -80,6 +80,8 @@ namespace RetroDevStudio
       {
         listExternalDependencies.Items.Add( entry.Filename );
       }
+
+      Core.Settings.DialogSettings.RestoreListViewColumns( "CompileTargetDependencies", listDependencies );
     }
 
 
@@ -171,6 +173,7 @@ namespace RetroDevStudio
           Element.ForcedDependency.DependentOnFile.Add( depItem.DependencyInfo );
         }
       }
+      Core.Settings.DialogSettings.StoreListViewColumns( "CompileTargetDependencies", listDependencies );
     }
 
 
@@ -326,6 +329,7 @@ namespace RetroDevStudio
       listExternalDependencies.Items.RemoveAt( listExternalDependencies.SelectedIndex );
       Element.DocumentInfo.Project.SetModified();
     }
+
 
 
   }

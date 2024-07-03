@@ -13,48 +13,15 @@ namespace RetroDevStudio.Dialogs
     private DocumentInfo      m_Doc = null;
     private TextBox           m_Edit = null;
     private StudioCore        Core = null;
+    private string            _AppearanceKey = "";
 
 
 
-    public FormMacros( StudioCore Core, DocumentInfo Doc, TextBox EditToInsert )
+    public FormMacros( StudioCore Core, DocumentInfo Doc, TextBox EditToInsert, bool ShowRunCommands, string AppearanceKey )
     {
       InitializeComponent();
 
-      m_Doc = Doc;
-      m_Edit = EditToInsert;
-      this.Core = Core;
-
-      InsertMacro( "$(Filename)" );
-      InsertMacro( "$(File)" );
-      InsertMacro( "$(FilenameWithoutExtension)" );
-      InsertMacro( "$(FilePath)" );
-      InsertMacro( "$(BuildTargetPath)" );
-      InsertMacro( "$(BuildTargetFilename)" );
-      InsertMacro( "$(BuildTargetFilenameWithoutExtension)" );
-      InsertMacro( "$(BuildTargetFile)" );
-      InsertMacro( "$(BuildTargetFileWithoutExtension)" );
-      InsertMacro( "$(RunPath)" );
-      InsertMacro( "$(RunFilename)" );
-      InsertMacro( "$(RunFile)" );
-      InsertMacro( "$(RunFilenameWithoutExtension)" );
-      InsertMacro( "$(DebugStartAddress)" );
-      InsertMacro( "$(DebugStartAddressHex)" );
-
-      InsertMacro( "$(ConfigName)" );
-      InsertMacro( "$(ProjectPath)" );
-      InsertMacro( "$(SolutionPath)" );
-      InsertMacro( "$(MediaManager)" );
-      InsertMacro( "$(MediaTool)" );
-
-      Core.Theming.ApplyTheme( this );
-    }
-
-
-
-    public FormMacros( StudioCore Core, DocumentInfo Doc, TextBox EditToInsert, bool ShowRunCommands )
-    {
-      InitializeComponent();
-
+      _AppearanceKey = AppearanceKey;
       m_Doc = Doc;
       m_Edit = EditToInsert;
       this.Core = Core;
@@ -83,6 +50,10 @@ namespace RetroDevStudio.Dialogs
       InsertMacro( "$(SolutionPath)" );
       InsertMacro( "$(MediaManager)" );
       InsertMacro( "$(MediaTool)" );
+
+      btnInsert.Visible = ( m_Edit != null );
+
+      Core.Theming.ApplyTheme( this );
     }
 
 
@@ -105,7 +76,17 @@ namespace RetroDevStudio.Dialogs
       {
         return;
       }
+      InsertMacro();
+    }
+
+
+
+    private void InsertMacro()
+    {
+      int     caretPos = m_Edit.SelectionStart;
       m_Edit.Text = m_Edit.Text.Insert( m_Edit.SelectionStart, listMacros.SelectedItems[0].SubItems[0].Text );
+      m_Edit.SelectionStart   = caretPos + listMacros.SelectedItems[0].SubItems[0].Text.Length;
+      m_Edit.SelectionLength  = 0;
     }
 
 
@@ -116,7 +97,7 @@ namespace RetroDevStudio.Dialogs
       {
         return;
       }
-      m_Edit.Text = m_Edit.Text.Insert( m_Edit.SelectionStart, listMacros.SelectedItems[0].SubItems[0].Text );
+      InsertMacro();
     }
 
 
@@ -125,6 +106,23 @@ namespace RetroDevStudio.Dialogs
     {
       Close();
     }
+
+
+
+    private void FormMacros_FormClosing( object sender, FormClosingEventArgs e )
+    {
+      Core.Settings.DialogSettings.StoreAppearance( _AppearanceKey, this );
+      Core.Settings.DialogSettings.StoreListViewColumns( _AppearanceKey, listMacros );
+    }
+
+
+
+    private void FormMacros_Load( object sender, EventArgs e )
+    {
+      Core.Settings.DialogSettings.RestoreAppearance( _AppearanceKey, this );
+      Core.Settings.DialogSettings.RestoreListViewColumns( _AppearanceKey, listMacros );
+    }
+
 
 
   }

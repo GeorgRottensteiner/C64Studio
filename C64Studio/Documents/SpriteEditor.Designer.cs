@@ -34,8 +34,8 @@ namespace RetroDevStudio.Documents
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.labelSelectionInfo = new System.Windows.Forms.Label();
@@ -246,7 +246,6 @@ namespace RetroDevStudio.Documents
       this.btnChangeMode.Image = null;
       this.btnChangeMode.Location = new System.Drawing.Point(269, 510);
       this.btnChangeMode.Name = "btnChangeMode";
-      this.btnChangeMode.ShowDropDownArrow = false;
       this.btnChangeMode.Size = new System.Drawing.Size(205, 23);
       this.btnChangeMode.TabIndex = 60;
       this.btnChangeMode.Text = "btnChangeMode";
@@ -631,7 +630,7 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage5;
+      this.layerPreview.DisplayPage = fastImage4;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
@@ -847,7 +846,7 @@ namespace RetroDevStudio.Documents
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";

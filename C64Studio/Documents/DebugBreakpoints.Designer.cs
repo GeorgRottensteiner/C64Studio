@@ -107,9 +107,12 @@
       // 
       // btnDeleteBreakpoint
       // 
+      this.btnDeleteBreakpoint.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnDeleteBreakpoint.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnDeleteBreakpoint.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteBreakpoint.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnDeleteBreakpoint.Enabled = false;
+      this.btnDeleteBreakpoint.Image = null;
       this.btnDeleteBreakpoint.Location = new System.Drawing.Point(93, 184);
       this.btnDeleteBreakpoint.Name = "btnDeleteBreakpoint";
       this.btnDeleteBreakpoint.Size = new System.Drawing.Size(75, 23);
@@ -227,8 +230,11 @@
       // 
       // btnDeleteAll
       // 
+      this.btnDeleteAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnDeleteAll.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnDeleteAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteAll.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnDeleteAll.Image = null;
       this.btnDeleteAll.Location = new System.Drawing.Point(174, 184);
       this.btnDeleteAll.Name = "btnDeleteAll";
       this.btnDeleteAll.Size = new System.Drawing.Size(75, 23);
@@ -238,9 +244,12 @@
       // 
       // btnApplyChanges
       // 
+      this.btnApplyChanges.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnApplyChanges.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnApplyChanges.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnApplyChanges.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnApplyChanges.Enabled = false;
+      this.btnApplyChanges.Image = null;
       this.btnApplyChanges.Location = new System.Drawing.Point(277, 184);
       this.btnApplyChanges.Name = "btnApplyChanges";
       this.btnApplyChanges.Size = new System.Drawing.Size(75, 23);
@@ -250,9 +259,12 @@
       // 
       // btnAddBreakpoint
       // 
+      this.btnAddBreakpoint.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnAddBreakpoint.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnAddBreakpoint.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddBreakpoint.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnAddBreakpoint.Enabled = false;
+      this.btnAddBreakpoint.Image = null;
       this.btnAddBreakpoint.Location = new System.Drawing.Point(12, 184);
       this.btnAddBreakpoint.Name = "btnAddBreakpoint";
       this.btnAddBreakpoint.Size = new System.Drawing.Size(75, 23);

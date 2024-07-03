@@ -10,6 +10,10 @@ namespace DecentForms
 {
   public class MenuButton : Button
   {
+    private bool _ShowDropDownArrow = true;
+    private bool _ShowSplitBar      = false;
+
+
     [DefaultValue( null )]
     public ContextMenuStrip Menu
     {
@@ -20,10 +24,40 @@ namespace DecentForms
 
 
     [DefaultValue( true )]
-    public bool ShowDropDownArrow { get; set; }
+    public bool ShowDropDownArrow
+    {
+      get
+      {
+        return _ShowDropDownArrow;
+      }
+      set
+      {
+        if ( _ShowDropDownArrow != value )
+        {
+          _ShowDropDownArrow = value;
+          Invalidate();
+        }
+      }
+    }
+
+
 
     [DefaultValue( false )]
-    public bool ShowSplitBar { get; set; }
+    public bool ShowSplitBar
+    {
+      get
+      {
+        return _ShowSplitBar;
+      }
+      set
+      {
+        if ( _ShowSplitBar != value )
+        {
+          _ShowSplitBar = value;
+          Invalidate();
+        }
+      }
+    }
 
     [DefaultValue( false )]
     public bool Checked { get; set; }

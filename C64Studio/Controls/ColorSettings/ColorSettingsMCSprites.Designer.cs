@@ -83,7 +83,7 @@ namespace RetroDevStudio.Controls
       this.comboCustomColor.Name = "comboCustomColor";
       this.comboCustomColor.Size = new System.Drawing.Size(71, 21);
       this.comboCustomColor.TabIndex = 33;
-      this.comboCustomColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem );
+      this.comboCustomColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboCustomColor.SelectedIndexChanged += new System.EventHandler(this.comboColor_SelectedIndexChanged);
       // 
       // radioBackground
@@ -110,11 +110,11 @@ namespace RetroDevStudio.Controls
       this.radioMultiColor1.UseVisualStyleBackColor = true;
       this.radioMultiColor1.CheckedChanged += new System.EventHandler(this.radioMultiColor1_CheckedChanged);
       // 
-      // radioMulticolor2
+      // radioMultiColor2
       // 
       this.radioMultiColor2.AutoSize = true;
       this.radioMultiColor2.Location = new System.Drawing.Point(4, 65);
-      this.radioMultiColor2.Name = "radioMulticolor2";
+      this.radioMultiColor2.Name = "radioMultiColor2";
       this.radioMultiColor2.Size = new System.Drawing.Size(79, 17);
       this.radioMultiColor2.TabIndex = 37;
       this.radioMultiColor2.TabStop = true;
@@ -136,6 +136,11 @@ namespace RetroDevStudio.Controls
       // 
       // btnExchangeColors
       // 
+      this.btnExchangeColors.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExchangeColors.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExchangeColors.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExchangeColors.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExchangeColors.Image = null;
       this.btnExchangeColors.Location = new System.Drawing.Point(3, 156);
       this.btnExchangeColors.Name = "btnExchangeColors";
       this.btnExchangeColors.Size = new System.Drawing.Size(161, 26);

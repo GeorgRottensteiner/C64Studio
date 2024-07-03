@@ -456,28 +456,10 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnMacros_Click( DecentForms.ControlBase Sender )
     {
-      string    macroInfo = "";
-      bool      error = false;
-
       var Document = Core.MainForm.ActiveDocumentInfo;
-      if ( Document == null )
-      {
-        macroInfo = "Sorry, but no document is currently active.";
-        error = true;
-      }
-      else
-      {
-        macroInfo = "$(Filename) = " + Core.MainForm.FillParameters( "$(Filename)", Document, false, out error ) + System.Environment.NewLine;
-        macroInfo += "$(FilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(FilenameWithoutExtension)", Document, false, out error ) + System.Environment.NewLine;
-        macroInfo += "$(FilePath) = " + Core.MainForm.FillParameters( "$(FilePath)", Document, false, out error ) + System.Environment.NewLine;
-        macroInfo += "$(BuildTargetFilename) = " + Core.MainForm.FillParameters( "$(BuildTargetFilename)", Document, false, out error ) + System.Environment.NewLine;
-        macroInfo += "$(BuildTargetFilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(BuildTargetFilenameWithoutExtension)", Document, false, out error ) + System.Environment.NewLine;
-        macroInfo += "$(DebugStartAddress) = " + Core.MainForm.FillParameters( "$(DebugStartAddress)", Document, false, out error ) + System.Environment.NewLine;
-        macroInfo += "$(DebugStartAddressHex) = " + Core.MainForm.FillParameters( "$(DebugStartAddressHex)", Document, false, out error ) + System.Environment.NewLine;
 
-        macroInfo += System.Environment.NewLine + System.Environment.NewLine + "Any other value will be calculated as expression, including symbols of the current build. Prefix with '0x' to output the value hexadecimal.";
-      }
-      System.Windows.Forms.MessageBox.Show( macroInfo, "Macros" );
+      var formMacros = new FormMacros( Core, Document, null, true, "Macros.Tools" );
+      formMacros.ShowDialog();
     }
 
 

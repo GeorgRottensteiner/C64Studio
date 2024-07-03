@@ -34,4 +34,6 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.16.11.0")]
 [assembly: AssemblyFileVersion("2.16.11.0")]
- 
+#if NET6_0_OR_GREATER
+[assembly: System.Runtime.Versioning.SupportedOSPlatform( "windows" )]
+#endif

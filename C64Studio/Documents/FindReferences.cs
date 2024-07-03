@@ -335,5 +335,21 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.SETTINGS_LOADED:
+          Core.Settings.DialogSettings.RestoreListViewColumns( "FindReferences", listResults );
+          break;
+        case ApplicationEvent.Type.SHUTTING_DOWN:
+          Core.Settings.DialogSettings.StoreListViewColumns( "FindReferences", listResults );
+          break;
+      }
+    }
+
+
+
   }
 }

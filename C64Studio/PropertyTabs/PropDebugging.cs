@@ -100,7 +100,7 @@ namespace RetroDevStudio
 
     private void btnMacros_Click( DecentForms.ControlBase Sender )
     {
-      FormMacros    formMacro = new FormMacros( Core, Element.DocumentInfo, editDebugCommand );
+      FormMacros    formMacro = new FormMacros( Core, Element.DocumentInfo, editDebugCommand, true, "Macros.Debugging" );
 
       formMacro.ShowDialog();
     }

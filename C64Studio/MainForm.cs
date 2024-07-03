@@ -33,8 +33,8 @@ namespace RetroDevStudio
     public DebugRegisters         m_DebugRegisters = new DebugRegisters();
     public DebugWatch             m_DebugWatch = new DebugWatch();
     public DebugMemory            m_DebugMemory = null;
-    public DebugBreakpoints       m_DebugBreakpoints = new DebugBreakpoints();
-    public CompileResult          m_CompileResult = new CompileResult();
+    public DebugBreakpoints       m_DebugBreakpoints = null;
+    public CompileResult          m_CompileResult = null;
     public CharsetEditor          m_CharsetEditor = null;
     public Documents.Disassembler m_Disassembler = null;
     public CharsetScreenEditor    m_CharScreenEditor = null;
@@ -535,6 +535,7 @@ namespace RetroDevStudio
       m_SolutionExplorer    = new SolutionExplorer( StudioCore );
       m_BinaryEditor        = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
       m_CharsetEditor       = new CharsetEditor( StudioCore );
+      m_CompileResult       = new CompileResult( StudioCore );
       m_SpriteEditor        = new SpriteEditor( StudioCore );
       m_GraphicScreenEditor = new GraphicScreenEditor( StudioCore );
       m_CharScreenEditor    = new CharsetScreenEditor( StudioCore );
@@ -543,6 +544,7 @@ namespace RetroDevStudio
       m_MapEditor           = new MapEditor( StudioCore );
       m_Disassembler        = new Documents.Disassembler( StudioCore );
       m_DebugMemory         = new DebugMemory( StudioCore );
+      m_DebugBreakpoints    = new DebugBreakpoints( StudioCore );
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
       m_FindReplace         = new FormFindReplace( StudioCore );
       m_Help                = new Documents.Help( StudioCore );
@@ -658,6 +660,11 @@ namespace RetroDevStudio
 
       ApplicationEvent += m_Outline.OnApplicationEvent;
       ApplicationEvent += m_LabelExplorer.OnApplicationEvent;
+      ApplicationEvent += m_DebugBreakpoints.OnApplicationEvent;
+      ApplicationEvent += m_CompileResult.OnApplicationEvent;
+      ApplicationEvent += m_DebugWatch.OnApplicationEvent;
+      ApplicationEvent += m_SearchResults.OnApplicationEvent;
+      ApplicationEvent += m_FindReferences.OnApplicationEvent;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();
@@ -4009,6 +4016,8 @@ namespace RetroDevStudio
         return false;
       }
 
+      RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.SETTINGS_LOADED ) );
+
       // TODO - additional memory views!
       m_DebugMemory.SetMemoryDisplayType();
       m_DebugMemory.ApplyHexViewColors();
@@ -7023,6 +7032,17 @@ namespace RetroDevStudio
         {
           m_CurrentProject.SetModified();
         }
+      }
+    }
+
+
+
+    protected override void OnClosing( CancelEventArgs e )
+    {
+      base.OnClosing( e );
+      if ( !e.Cancel )
+      {
+        RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.SHUTTING_DOWN ) );
       }
     }
 

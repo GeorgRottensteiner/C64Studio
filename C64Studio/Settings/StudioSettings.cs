@@ -252,6 +252,7 @@ namespace RetroDevStudio
     public PerspectiveDetails                   Perspectives = null;
 
     public SourceControlInfo                    SourceControlInfo = new SourceControlInfo();
+    public DialogSettings                       DialogSettings = new DialogSettings();
 
 
 
@@ -922,6 +923,9 @@ namespace RetroDevStudio
         SettingsData.Append( chunkMemoryView.ToBuffer() );
       }
 
+      // dialog appearance info
+      SettingsData.Append( DialogSettings.ToBuffer() );
+
       return SettingsData;
     }
 
@@ -1507,6 +1511,9 @@ namespace RetroDevStudio
 
               DebugMemoryViews.Add( debugView );
             }
+            break;
+          case FileChunkConstants.SETTINGS_DIALOG_APPEARANCE:
+            DialogSettings.ReadFromBuffer( chunkData.MemoryReader() );
             break;
         }
       }

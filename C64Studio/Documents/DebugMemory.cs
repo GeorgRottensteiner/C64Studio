@@ -379,7 +379,11 @@ namespace RetroDevStudio.Documents
           UpdateByteOffsetMenuItems();
 
           hexView.PerformScrollToLine( line );
-          RefreshViewScroller();
+          // force refresh
+          if ( ViewScrolled != null )
+          {
+            ViewScrolled( this, new DebugMemoryEvent( this, m_OffsetInBytes, hexView.BytesPerLine * hexView.VerticalByteCount ) );
+          }
         }
       }
     }

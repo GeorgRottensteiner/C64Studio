@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -802,6 +803,22 @@ namespace RetroDevStudio.Documents
       }
 
       Clipboard.SetText( sb.ToString() );
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.SETTINGS_LOADED:
+          Core.Settings.DialogSettings.RestoreListViewColumns( "DebugWatch", listWatch );
+          break;
+        case ApplicationEvent.Type.SHUTTING_DOWN:
+          Core.Settings.DialogSettings.StoreListViewColumns( "DebugWatch", listWatch );
+          break;
+      }
     }
 
 

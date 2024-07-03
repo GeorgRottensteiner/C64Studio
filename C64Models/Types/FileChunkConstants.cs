@@ -100,6 +100,7 @@
     public const ushort    SETTINGS_MEMORY_VIEW         = 0x201F;
     public const ushort    SETTINGS_BREAKPOINTS         = 0x2020;
     public const ushort    SETTINGS_BREAKPOINT          = 0x2021;
+    public const ushort    SETTINGS_DIALOG_APPEARANCE   = 0x2022;
   }
 
 }
