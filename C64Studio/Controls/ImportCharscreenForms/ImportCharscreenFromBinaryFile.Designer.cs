@@ -47,7 +47,7 @@ namespace RetroDevStudio.Controls
       this.editImportSkipBytes.Location = new System.Drawing.Point(68, 3);
       this.editImportSkipBytes.Name = "editImportSkipBytes";
       this.editImportSkipBytes.Size = new System.Drawing.Size(179, 20);
-      this.editImportSkipBytes.TabIndex = 4;
+      this.editImportSkipBytes.TabIndex = 0;
       this.editImportSkipBytes.Text = "0";
       // 
       // ImportCharscreenFromBinaryFile

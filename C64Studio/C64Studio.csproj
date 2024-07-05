@@ -97,9 +97,6 @@
     <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\CSCheckBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="Controls\CustomDrawControl.cs">
       <SubType>Component</SubType>
     </Compile>

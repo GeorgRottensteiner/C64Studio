@@ -42,7 +42,7 @@ namespace RetroDevStudio.Controls
       this.checkExportHex.Location = new System.Drawing.Point(3, 55);
       this.checkExportHex.Name = "checkExportHex";
       this.checkExportHex.Size = new System.Drawing.Size(141, 17);
-      this.checkExportHex.TabIndex = 6;
+      this.checkExportHex.TabIndex = 2;
       this.checkExportHex.Text = "Export with Hex notation";
       this.checkExportHex.UseVisualStyleBackColor = true;
       // 

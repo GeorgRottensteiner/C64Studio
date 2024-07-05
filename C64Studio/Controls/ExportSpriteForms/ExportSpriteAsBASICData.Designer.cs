@@ -152,7 +152,7 @@ namespace RetroDevStudio.Controls
       this.checkInsertSpaces.Location = new System.Drawing.Point(3, 131);
       this.checkInsertSpaces.Name = "checkInsertSpaces";
       this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
-      this.checkInsertSpaces.TabIndex = 27;
+      this.checkInsertSpaces.TabIndex = 7;
       this.checkInsertSpaces.Text = "Insert Spaces";
       this.checkInsertSpaces.UseVisualStyleBackColor = true;
       // 

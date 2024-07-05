@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="m_FileWatcher.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>161, 17</value>
+    <value>160, 17</value>
   </metadata>
   <metadata name="contextSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>292, 17</value>
@@ -142,36 +142,36 @@
 </value>
   </data>
   <metadata name="contextMenuLabelButton.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>633, 17</value>
+    <value>636, 17</value>
   </metadata>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>536, 17</value>
+    <value>539, 17</value>
   </metadata>
   <metadata name="menuBASIC.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>421, 17</value>
+    <value>422, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnToggleSymbolMode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVDhPpYzBDcAgDMTYf6+uwSoghCqRi3uC8vDDF0Mp
-        T21X4HjCx8hwmwZP7oO4kG8iHLmbCEfuJsKRu4lw5G4iHLlbkDl4ci/DHBluYRzQBy+xW0Shx4PYLPIH
-        HLeprQN/bV9ZtxFoxgAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABKSURBVDhPzYwxCgAwCMT8/7/6rhaHHhaOYDcDmS4aU1nb
+        28IdVhEKaRMU0SYook1QRJugiDZBEW0PNXS2cIfpF+7BtY07TucQcQDSx4f14FSXGwAAAABJRU5ErkJg
+        gg==
 </value>
   </data>
   <data name="btnToggleUpperLowerCase.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABaSURBVDhP5YzRDoAgDAP39/vsmRJqxqyIwTcvqQHMncUm
-        3wfcvZ9GzOxcZrhB5iqPgSyryDSgZI5MA0SJ5M+BLNa1/+3bUQFwJ4OlAFAyWA6AKoPry0s2AxEHwaJM
-        ZtFplpIAAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABSSURBVDhP5YzRCsAgDAP79/3sjWADtTTdo8IOAqLe2X24
+        +xPHCu65HshcXGXmQJZFRAc6mYsvQAeIEMmfA1ms2xEBUMX6vhgCYJbBRwBo+RBmLwQyjvlPaLa0AAAA
+        AElFTkSuQmCC
 </value>
   </data>
   <data name="btnToggleStringEntryMode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAmSURBVDhPY/hPIaCuAWvXroVjdIBLbtQANAPIAaMGjBrw
-        /////wAdHN9anaYqsQAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA1SURBVDhPYxhcYO3atf9hGCoEB/jk4ACfInxycIBPET45
+        OMCnCJ8cHOBThE9uFIwCCgEDAwDdtFq1sD3wHQAAAABJRU5ErkJggg==
 </value>
   </data>
 </root>

@@ -43,7 +43,7 @@ namespace RetroDevStudio.Controls
       this.editInput.Multiline = true;
       this.editInput.Name = "editInput";
       this.editInput.Size = new System.Drawing.Size(317, 282);
-      this.editInput.TabIndex = 0;
+      this.editInput.TabIndex = 1;
       this.editInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editInput_KeyPress);
       // 
       // checkHexData
@@ -52,7 +52,7 @@ namespace RetroDevStudio.Controls
       this.checkHexData.Location = new System.Drawing.Point(3, 3);
       this.checkHexData.Name = "checkHexData";
       this.checkHexData.Size = new System.Drawing.Size(111, 17);
-      this.checkHexData.TabIndex = 1;
+      this.checkHexData.TabIndex = 0;
       this.checkHexData.Text = "Hex DATA values";
       this.checkHexData.UseVisualStyleBackColor = true;
       // 

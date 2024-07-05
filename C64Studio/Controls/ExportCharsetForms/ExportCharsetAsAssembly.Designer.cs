@@ -46,7 +46,7 @@ namespace RetroDevStudio.Controls
       this.checkExportHex.Location = new System.Drawing.Point(3, 49);
       this.checkExportHex.Name = "checkExportHex";
       this.checkExportHex.Size = new System.Drawing.Size(141, 17);
-      this.checkExportHex.TabIndex = 20;
+      this.checkExportHex.TabIndex = 4;
       this.checkExportHex.Text = "Export with Hex notation";
       this.checkExportHex.UseVisualStyleBackColor = true;
       // 
@@ -58,7 +58,7 @@ namespace RetroDevStudio.Controls
       this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(3, 3);
       this.checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
       this.checkExportToDataIncludeRes.Size = new System.Drawing.Size(74, 17);
-      this.checkExportToDataIncludeRes.TabIndex = 16;
+      this.checkExportToDataIncludeRes.TabIndex = 0;
       this.checkExportToDataIncludeRes.Text = "Prefix with";
       this.checkExportToDataIncludeRes.UseVisualStyleBackColor = true;
       this.checkExportToDataIncludeRes.CheckedChanged += new System.EventHandler(this.checkExportToDataIncludeRes_CheckedChanged);
@@ -71,7 +71,7 @@ namespace RetroDevStudio.Controls
       this.checkExportToDataWrap.Location = new System.Drawing.Point(3, 26);
       this.checkExportToDataWrap.Name = "checkExportToDataWrap";
       this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
-      this.checkExportToDataWrap.TabIndex = 17;
+      this.checkExportToDataWrap.TabIndex = 2;
       this.checkExportToDataWrap.Text = "Wrap at";
       this.checkExportToDataWrap.UseVisualStyleBackColor = true;
       this.checkExportToDataWrap.CheckedChanged += new System.EventHandler(this.checkExportToDataWrap_CheckedChanged);
@@ -81,7 +81,7 @@ namespace RetroDevStudio.Controls
       this.editWrapByteCount.Location = new System.Drawing.Point(99, 24);
       this.editWrapByteCount.Name = "editWrapByteCount";
       this.editWrapByteCount.Size = new System.Drawing.Size(64, 20);
-      this.editWrapByteCount.TabIndex = 21;
+      this.editWrapByteCount.TabIndex = 3;
       this.editWrapByteCount.Text = "8";
       // 
       // label2
@@ -98,7 +98,7 @@ namespace RetroDevStudio.Controls
       this.editPrefix.Location = new System.Drawing.Point(99, 1);
       this.editPrefix.Name = "editPrefix";
       this.editPrefix.Size = new System.Drawing.Size(64, 20);
-      this.editPrefix.TabIndex = 18;
+      this.editPrefix.TabIndex = 1;
       this.editPrefix.Text = "!byte ";
       // 
       // checkIncludeColor
@@ -107,7 +107,7 @@ namespace RetroDevStudio.Controls
       this.checkIncludeColor.Location = new System.Drawing.Point(3, 72);
       this.checkIncludeColor.Name = "checkIncludeColor";
       this.checkIncludeColor.Size = new System.Drawing.Size(88, 17);
-      this.checkIncludeColor.TabIndex = 22;
+      this.checkIncludeColor.TabIndex = 5;
       this.checkIncludeColor.Text = "Include Color";
       this.checkIncludeColor.UseVisualStyleBackColor = true;
       // 

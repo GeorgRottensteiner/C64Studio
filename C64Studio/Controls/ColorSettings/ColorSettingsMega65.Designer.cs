@@ -46,7 +46,7 @@ namespace RetroDevStudio.Controls
       this.comboBackground.Location = new System.Drawing.Point(93, 11);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(71, 21);
-      this.comboBackground.TabIndex = 34;
+      this.comboBackground.TabIndex = 1;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
@@ -58,7 +58,7 @@ namespace RetroDevStudio.Controls
       this.comboCharColor.Location = new System.Drawing.Point(93, 38);
       this.comboCharColor.Name = "comboCharColor";
       this.comboCharColor.Size = new System.Drawing.Size(71, 21);
-      this.comboCharColor.TabIndex = 33;
+      this.comboCharColor.TabIndex = 3;
       this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
       this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
       // 
@@ -68,7 +68,7 @@ namespace RetroDevStudio.Controls
       this.radioBackground.Location = new System.Drawing.Point(3, 12);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 35;
+      this.radioBackground.TabIndex = 0;
       this.radioBackground.TabStop = true;
       this.radioBackground.Text = "Background";
       this.radioBackground.UseVisualStyleBackColor = true;
@@ -80,7 +80,7 @@ namespace RetroDevStudio.Controls
       this.radioCharColor.Location = new System.Drawing.Point(3, 39);
       this.radioCharColor.Name = "radioCharColor";
       this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 39;
+      this.radioCharColor.TabIndex = 2;
       this.radioCharColor.TabStop = true;
       this.radioCharColor.Text = "Char Color";
       this.radioCharColor.UseVisualStyleBackColor = true;
@@ -88,10 +88,15 @@ namespace RetroDevStudio.Controls
       // 
       // btnEditPalette
       // 
+      this.btnEditPalette.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnEditPalette.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnEditPalette.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnEditPalette.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnEditPalette.Image = null;
       this.btnEditPalette.Location = new System.Drawing.Point(3, 96);
       this.btnEditPalette.Name = "btnEditPalette";
       this.btnEditPalette.Size = new System.Drawing.Size(161, 26);
-      this.btnEditPalette.TabIndex = 56;
+      this.btnEditPalette.TabIndex = 4;
       this.btnEditPalette.Text = "Edit Palette";
       this.btnEditPalette.Click += new DecentForms.EventHandler(this.btnEditPalette_Click);
       // 
@@ -102,7 +107,7 @@ namespace RetroDevStudio.Controls
       this.comboActivePalette.Location = new System.Drawing.Point(54, 128);
       this.comboActivePalette.Name = "comboActivePalette";
       this.comboActivePalette.Size = new System.Drawing.Size(110, 21);
-      this.comboActivePalette.TabIndex = 57;
+      this.comboActivePalette.TabIndex = 6;
       this.comboActivePalette.SelectedIndexChanged += new System.EventHandler(this.comboActivePalette_SelectedIndexChanged);
       // 
       // label1
@@ -111,7 +116,7 @@ namespace RetroDevStudio.Controls
       this.label1.Location = new System.Drawing.Point(3, 131);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(43, 13);
-      this.label1.TabIndex = 58;
+      this.label1.TabIndex = 5;
       this.label1.Text = "Palette:";
       // 
       // ColorSettingsMega65

@@ -90,7 +90,7 @@ namespace RetroDevStudio.Controls
       this.comboExportOrder.Location = new System.Drawing.Point(90, 57);
       this.comboExportOrder.Name = "comboExportOrder";
       this.comboExportOrder.Size = new System.Drawing.Size(145, 21);
-      this.comboExportOrder.TabIndex = 27;
+      this.comboExportOrder.TabIndex = 2;
       // 
       // ExportSpriteAsSBASICFCSpritedef
       // 

@@ -43,7 +43,7 @@ namespace RetroDevStudio.Controls
       this.comboBackground.Location = new System.Drawing.Point(93, 11);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(71, 21);
-      this.comboBackground.TabIndex = 34;
+      this.comboBackground.TabIndex = 1;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
@@ -55,7 +55,7 @@ namespace RetroDevStudio.Controls
       this.comboCharColor.Location = new System.Drawing.Point(93, 38);
       this.comboCharColor.Name = "comboCharColor";
       this.comboCharColor.Size = new System.Drawing.Size(71, 21);
-      this.comboCharColor.TabIndex = 33;
+      this.comboCharColor.TabIndex = 3;
       this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
       this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
       // 
@@ -65,7 +65,7 @@ namespace RetroDevStudio.Controls
       this.radioBackground.Location = new System.Drawing.Point(3, 12);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 35;
+      this.radioBackground.TabIndex = 0;
       this.radioBackground.TabStop = true;
       this.radioBackground.Text = "Background";
       this.radioBackground.UseVisualStyleBackColor = true;
@@ -77,13 +77,13 @@ namespace RetroDevStudio.Controls
       this.radioCharColor.Location = new System.Drawing.Point(3, 39);
       this.radioCharColor.Name = "radioCharColor";
       this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 39;
+      this.radioCharColor.TabIndex = 2;
       this.radioCharColor.TabStop = true;
       this.radioCharColor.Text = "Char Color";
       this.radioCharColor.UseVisualStyleBackColor = true;
       this.radioCharColor.CheckedChanged += new System.EventHandler(this.radioCharColor_CheckedChanged);
       // 
-      // ColorSettingsHiRes
+      // ColorSettingsHiResMega65
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -91,7 +91,7 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.comboCharColor);
       this.Controls.Add(this.radioBackground);
       this.Controls.Add(this.radioCharColor);
-      this.Name = "ColorSettingsHiRes";
+      this.Name = "ColorSettingsHiResMega65";
       this.ResumeLayout(false);
       this.PerformLayout();
 

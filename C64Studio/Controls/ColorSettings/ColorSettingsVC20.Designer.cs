@@ -54,19 +54,19 @@ namespace RetroDevStudio.Controls
       this.comboBackground.Location = new System.Drawing.Point(93, 11);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(71, 21);
-      this.comboBackground.TabIndex = 34;
+      this.comboBackground.TabIndex = 1;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
-      // comboMulticolor1
+      // comboBorderColor
       // 
       this.comboBorderColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboBorderColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBorderColor.FormattingEnabled = true;
       this.comboBorderColor.Location = new System.Drawing.Point(93, 38);
-      this.comboBorderColor.Name = "comboMulticolor1";
+      this.comboBorderColor.Name = "comboBorderColor";
       this.comboBorderColor.Size = new System.Drawing.Size(71, 21);
-      this.comboBorderColor.TabIndex = 31;
+      this.comboBorderColor.TabIndex = 3;
       this.comboBorderColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBorderColor.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
       // 
@@ -78,7 +78,7 @@ namespace RetroDevStudio.Controls
       this.comboCharColor.Location = new System.Drawing.Point(93, 92);
       this.comboCharColor.Name = "comboCharColor";
       this.comboCharColor.Size = new System.Drawing.Size(71, 21);
-      this.comboCharColor.TabIndex = 33;
+      this.comboCharColor.TabIndex = 7;
       this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
       this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
       // 
@@ -88,29 +88,29 @@ namespace RetroDevStudio.Controls
       this.radioBackground.Location = new System.Drawing.Point(4, 12);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 35;
+      this.radioBackground.TabIndex = 0;
       this.radioBackground.Text = "Background";
       this.radioBackground.UseVisualStyleBackColor = true;
       this.radioBackground.CheckedChanged += new System.EventHandler(this.radioBackground_CheckedChanged);
       // 
-      // radioMultiColor1
+      // radioBorderColor
       // 
       this.radioBorderColor.AutoSize = true;
       this.radioBorderColor.Location = new System.Drawing.Point(4, 39);
-      this.radioBorderColor.Name = "radioMultiColor1";
+      this.radioBorderColor.Name = "radioBorderColor";
       this.radioBorderColor.Size = new System.Drawing.Size(83, 17);
-      this.radioBorderColor.TabIndex = 36;
+      this.radioBorderColor.TabIndex = 2;
       this.radioBorderColor.Text = "Border Color";
       this.radioBorderColor.UseVisualStyleBackColor = true;
       this.radioBorderColor.CheckedChanged += new System.EventHandler(this.radioMultiColor1_CheckedChanged);
       // 
-      // radioMulticolor2
+      // radioAuxColor
       // 
       this.radioAuxColor.AutoSize = true;
       this.radioAuxColor.Location = new System.Drawing.Point(4, 65);
-      this.radioAuxColor.Name = "radioMulticolor2";
+      this.radioAuxColor.Name = "radioAuxColor";
       this.radioAuxColor.Size = new System.Drawing.Size(73, 17);
-      this.radioAuxColor.TabIndex = 37;
+      this.radioAuxColor.TabIndex = 4;
       this.radioAuxColor.Text = "Aux. Color";
       this.radioAuxColor.UseVisualStyleBackColor = true;
       this.radioAuxColor.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
@@ -122,7 +122,7 @@ namespace RetroDevStudio.Controls
       this.radioCharColor.Location = new System.Drawing.Point(4, 92);
       this.radioCharColor.Name = "radioCharColor";
       this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 39;
+      this.radioCharColor.TabIndex = 6;
       this.radioCharColor.TabStop = true;
       this.radioCharColor.Text = "Char Color";
       this.radioCharColor.UseVisualStyleBackColor = true;
@@ -130,22 +130,27 @@ namespace RetroDevStudio.Controls
       // 
       // btnExchangeColors
       // 
+      this.btnExchangeColors.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExchangeColors.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExchangeColors.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExchangeColors.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExchangeColors.Image = null;
       this.btnExchangeColors.Location = new System.Drawing.Point(3, 156);
       this.btnExchangeColors.Name = "btnExchangeColors";
       this.btnExchangeColors.Size = new System.Drawing.Size(161, 26);
-      this.btnExchangeColors.TabIndex = 50;
+      this.btnExchangeColors.TabIndex = 8;
       this.btnExchangeColors.Text = "Exchange Colors";
       this.btnExchangeColors.Click += new DecentForms.EventHandler(this.btnExchangeColors_Click);
       // 
-      // comboMulticolor2
+      // comboAuxColor
       // 
       this.comboAuxColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboAuxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboAuxColor.FormattingEnabled = true;
       this.comboAuxColor.Location = new System.Drawing.Point(93, 65);
-      this.comboAuxColor.Name = "comboMulticolor2";
+      this.comboAuxColor.Name = "comboAuxColor";
       this.comboAuxColor.Size = new System.Drawing.Size(71, 21);
-      this.comboAuxColor.TabIndex = 51;
+      this.comboAuxColor.TabIndex = 5;
       this.comboAuxColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboAuxColor.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
       // 
@@ -157,7 +162,7 @@ namespace RetroDevStudio.Controls
             this.exchangeMultiColor1WithBGColorToolStripMenuItem,
             this.exchangeMultiColor2WithBGColorToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(281, 92);
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(281, 70);
       // 
       // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
       // 

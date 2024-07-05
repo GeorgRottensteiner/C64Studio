@@ -51,13 +51,13 @@ namespace RetroDevStudio.Controls
       this.comboImportFromDefault.Size = new System.Drawing.Size(261, 21);
       this.comboImportFromDefault.TabIndex = 1;
       // 
-      // ImportFromDefault
+      // ImportCharsetFromDefault
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.comboImportFromDefault);
       this.Controls.Add(this.label1);
-      this.Name = "ImportFromDefault";
+      this.Name = "ImportCharsetFromDefault";
       this.Size = new System.Drawing.Size(317, 317);
       this.ResumeLayout(false);
       this.PerformLayout();

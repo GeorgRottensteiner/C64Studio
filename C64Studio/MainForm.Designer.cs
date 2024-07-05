@@ -1594,7 +1594,7 @@
       // 
       this.mainToolCommentSelection.AutoSize = false;
       this.mainToolCommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolCommentSelection.Image = global::RetroDevStudio.Properties.Resources.ToolCommentSelection;
+      this.mainToolCommentSelection.Image = global::RetroDevStudio.Properties.Resources.commentselection.ToBitmap();
       this.mainToolCommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCommentSelection.Name = "mainToolCommentSelection";
       this.mainToolCommentSelection.Size = new System.Drawing.Size(24, 24);
@@ -1605,7 +1605,7 @@
       // 
       this.mainToolUncommentSelection.AutoSize = false;
       this.mainToolUncommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolUncommentSelection.Image = global::RetroDevStudio.Properties.Resources.ToolUncommentSelection;
+      this.mainToolUncommentSelection.Image = global::RetroDevStudio.Properties.Resources.uncommentselection.ToBitmap();
       this.mainToolUncommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUncommentSelection.Name = "mainToolUncommentSelection";
       this.mainToolUncommentSelection.Size = new System.Drawing.Size(24, 24);

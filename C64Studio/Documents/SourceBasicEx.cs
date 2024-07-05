@@ -2372,7 +2372,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToggleSymbolMode_CheckedChanged( object sender, EventArgs e )
+    private void btnToggleSymbolMode_CheckedChanged( DecentForms.ControlBase Sender )
     {
       if ( m_InsideToggleSymbolHandler )
       {
@@ -2478,7 +2478,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToggleUpperLowerCase_CheckedChanged( object sender, EventArgs e )
+    private void btnToggleUpperLowerCase_CheckedChanged( DecentForms.ControlBase Sender )
     {
       ToggleCase();
     }
@@ -2632,9 +2632,10 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToggleStringEntryMode_CheckedChanged( object sender, EventArgs e )
+    private void btnToggleStringEntryMode_CheckedChanged( DecentForms.ControlBase Sender )
     {
-      ToggleStringEntryMode();
+      m_StringEnterMode = btnToggleStringEntryMode.Checked;
+      ApplyStringEntryMode();
     }
 
 
@@ -2642,6 +2643,13 @@ namespace RetroDevStudio.Documents
     private void ToggleStringEntryMode()
     {
       m_StringEnterMode = !m_StringEnterMode;
+      ApplyStringEntryMode();
+    }
+
+
+
+    private void ApplyStringEntryMode()
+    {
       if ( m_StringEnterMode )
       {
         toolTip1.SetToolTip( btnToggleStringEntryMode, "Toggle String Entry Mode (currently active)" );
@@ -2651,6 +2659,7 @@ namespace RetroDevStudio.Documents
         toolTip1.SetToolTip( btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)" );
       }
       btnToggleStringEntryMode.Image = m_StringEnterMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_string_mode_active : global::RetroDevStudio.Properties.Resources.toolbar_basic_string_mode_inactive;
+      btnToggleStringEntryMode.Checked = m_StringEnterMode;
     }
 
 
@@ -2721,7 +2730,7 @@ namespace RetroDevStudio.Documents
       UpdateLabelModeText();
 
       btnToggleSymbolMode.Checked = ( reader.ReadUInt8() == 1 );
-      btnToggleSymbolMode_CheckedChanged( this, new EventArgs() );
+      btnToggleSymbolMode_CheckedChanged( btnToggleSymbolMode );
 
       bool lowerCaseMode = ( reader.ReadUInt8() == 1 );
       if ( lowerCaseMode != m_LowerCaseMode )

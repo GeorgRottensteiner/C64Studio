@@ -37,6 +37,10 @@ namespace RetroDevStudio.Documents
       this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+      this.addBookmarkHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeAllBookmarksOfThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.commentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,18 +55,14 @@ namespace RetroDevStudio.Documents
       this.menuBASIC = new System.Windows.Forms.MenuStrip();
       this.bASICToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnToggleSymbolMode = new RetroDevStudio.Controls.CSCheckBox();
+      this.btnToggleSymbolMode = new DecentForms.CheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnToggleUpperLowerCase = new RetroDevStudio.Controls.CSCheckBox();
-      this.btnToggleStringEntryMode = new RetroDevStudio.Controls.CSCheckBox();
+      this.btnToggleUpperLowerCase = new DecentForms.CheckBox();
+      this.btnToggleStringEntryMode = new DecentForms.CheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
-      this.addBookmarkHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.removeBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.removeAllBookmarksOfThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -125,7 +125,7 @@ namespace RetroDevStudio.Documents
             this.toolStripSeparator1,
             this.renumberToolStripMenuItem1});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(250, 242);
+      this.contextSource.Size = new System.Drawing.Size(250, 220);
       // 
       // copyToolStripMenuItem
       // 
@@ -147,6 +147,32 @@ namespace RetroDevStudio.Documents
       this.pasteToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
       this.pasteToolStripMenuItem.Text = "&Paste";
       this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator5
+      // 
+      this.toolStripSeparator5.Name = "toolStripSeparator5";
+      this.toolStripSeparator5.Size = new System.Drawing.Size(246, 6);
+      // 
+      // addBookmarkHereToolStripMenuItem
+      // 
+      this.addBookmarkHereToolStripMenuItem.Name = "addBookmarkHereToolStripMenuItem";
+      this.addBookmarkHereToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.addBookmarkHereToolStripMenuItem.Text = "Add Bookmark here";
+      this.addBookmarkHereToolStripMenuItem.Click += new System.EventHandler(this.addBookmarkHereToolStripMenuItem_Click);
+      // 
+      // removeBookmarkToolStripMenuItem
+      // 
+      this.removeBookmarkToolStripMenuItem.Name = "removeBookmarkToolStripMenuItem";
+      this.removeBookmarkToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.removeBookmarkToolStripMenuItem.Text = "Remove Bookmark";
+      this.removeBookmarkToolStripMenuItem.Click += new System.EventHandler(this.removeBookmarkToolStripMenuItem_Click);
+      // 
+      // removeAllBookmarksOfThisFileToolStripMenuItem
+      // 
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Name = "removeAllBookmarksOfThisFileToolStripMenuItem";
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Text = "Remove all bookmarks of this file";
+      this.removeAllBookmarksOfThisFileToolStripMenuItem.Click += new System.EventHandler(this.removeAllBookmarksOfThisFileToolStripMenuItem_Click);
       // 
       // toolStripSeparator2
       // 
@@ -181,6 +207,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnToggleLabelMode
       // 
+      this.btnToggleLabelMode.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnToggleLabelMode.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnToggleLabelMode.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnToggleLabelMode.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnToggleLabelMode.Image = null;
       this.btnToggleLabelMode.Location = new System.Drawing.Point(0, 27);
       this.btnToggleLabelMode.Menu = this.contextMenuLabelButton;
       this.btnToggleLabelMode.Name = "btnToggleLabelMode";
@@ -260,41 +291,44 @@ namespace RetroDevStudio.Documents
       // btnToggleSymbolMode
       // 
       this.btnToggleSymbolMode.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToggleSymbolMode.AutoSize = true;
+      this.btnToggleSymbolMode.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToggleSymbolMode.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToggleSymbolMode.Checked = true;
       this.btnToggleSymbolMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSymbolMode.Image")));
       this.btnToggleSymbolMode.Location = new System.Drawing.Point(136, 27);
       this.btnToggleSymbolMode.Name = "btnToggleSymbolMode";
       this.btnToggleSymbolMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleSymbolMode.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToggleSymbolMode, "Toggle Symbol/Macro");
-      this.btnToggleSymbolMode.UseVisualStyleBackColor = true;
-      this.btnToggleSymbolMode.CheckedChanged += new System.EventHandler(this.btnToggleSymbolMode_CheckedChanged);
+      this.btnToggleSymbolMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleSymbolMode_CheckedChanged);
       // 
       // btnToggleUpperLowerCase
       // 
       this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToggleUpperLowerCase.AutoSize = true;
+      this.btnToggleUpperLowerCase.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToggleUpperLowerCase.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToggleUpperLowerCase.Checked = false;
       this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
       this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(164, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
       this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
       this.btnToggleUpperLowerCase.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToggleUpperLowerCase, "Toggle Upper/Lower Case (Currently Upper Case)");
-      this.btnToggleUpperLowerCase.UseVisualStyleBackColor = true;
-      this.btnToggleUpperLowerCase.CheckedChanged += new System.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
+      this.btnToggleUpperLowerCase.CheckedChanged += new DecentForms.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
       // 
       // btnToggleStringEntryMode
       // 
       this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToggleStringEntryMode.AutoSize = true;
+      this.btnToggleStringEntryMode.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToggleStringEntryMode.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToggleStringEntryMode.Checked = false;
       this.btnToggleStringEntryMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleStringEntryMode.Image")));
       this.btnToggleStringEntryMode.Location = new System.Drawing.Point(192, 27);
       this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
       this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleStringEntryMode.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)");
-      this.btnToggleStringEntryMode.UseVisualStyleBackColor = true;
-      this.btnToggleStringEntryMode.CheckedChanged += new System.EventHandler(this.btnToggleStringEntryMode_CheckedChanged);
+      this.btnToggleStringEntryMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleStringEntryMode_CheckedChanged);
       // 
       // editBASICStartAddress
       // 
@@ -334,32 +368,6 @@ namespace RetroDevStudio.Documents
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
-      // addBookmarkHereToolStripMenuItem
-      // 
-      this.addBookmarkHereToolStripMenuItem.Name = "addBookmarkHereToolStripMenuItem";
-      this.addBookmarkHereToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.addBookmarkHereToolStripMenuItem.Text = "Add Bookmark here";
-      this.addBookmarkHereToolStripMenuItem.Click += new System.EventHandler(this.addBookmarkHereToolStripMenuItem_Click);
-      // 
-      // removeBookmarkToolStripMenuItem
-      // 
-      this.removeBookmarkToolStripMenuItem.Name = "removeBookmarkToolStripMenuItem";
-      this.removeBookmarkToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.removeBookmarkToolStripMenuItem.Text = "Remove Bookmark";
-      this.removeBookmarkToolStripMenuItem.Click += new System.EventHandler(this.removeBookmarkToolStripMenuItem_Click);
-      // 
-      // removeAllBookmarksOfThisFileToolStripMenuItem
-      // 
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Name = "removeAllBookmarksOfThisFileToolStripMenuItem";
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Text = "Remove all bookmarks of this file";
-      this.removeAllBookmarksOfThisFileToolStripMenuItem.Click += new System.EventHandler(this.removeAllBookmarksOfThisFileToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator5
-      // 
-      this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(246, 6);
-      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
@@ -396,14 +404,14 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.MenuStrip menuBASIC;
     private System.Windows.Forms.ToolStripMenuItem bASICToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
-    private RetroDevStudio.Controls.CSCheckBox btnToggleSymbolMode;
+    private DecentForms.CheckBox btnToggleSymbolMode;
     private System.Windows.Forms.ToolTip toolTip1;
-    private RetroDevStudio.Controls.CSCheckBox btnToggleUpperLowerCase;
+    private DecentForms.CheckBox btnToggleUpperLowerCase;
     private System.Windows.Forms.TextBox editBASICStartAddress;
     private System.Windows.Forms.Label labelStartAddress;
     private System.Windows.Forms.Label labelBASICVersion;
     private System.Windows.Forms.ComboBox comboBASICVersion;
-    private RetroDevStudio.Controls.CSCheckBox btnToggleStringEntryMode;
+    private DecentForms.CheckBox btnToggleStringEntryMode;
     private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;

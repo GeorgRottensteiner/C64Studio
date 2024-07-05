@@ -40,7 +40,7 @@ namespace RetroDevStudio.Controls
       this.comboCharsetFiles.Location = new System.Drawing.Point(93, 3);
       this.comboCharsetFiles.Name = "comboCharsetFiles";
       this.comboCharsetFiles.Size = new System.Drawing.Size(224, 21);
-      this.comboCharsetFiles.TabIndex = 29;
+      this.comboCharsetFiles.TabIndex = 1;
       // 
       // label1
       // 
@@ -48,16 +48,16 @@ namespace RetroDevStudio.Controls
       this.label1.Location = new System.Drawing.Point(3, 6);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(52, 13);
-      this.label1.TabIndex = 28;
+      this.label1.TabIndex = 0;
       this.label1.Text = "Export to:";
       // 
-      // ExportAsCharset
+      // ExportCharscreenAsCharset
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.comboCharsetFiles);
       this.Controls.Add(this.label1);
-      this.Name = "ExportAsCharset";
+      this.Name = "ExportCharscreenAsCharset";
       this.Size = new System.Drawing.Size(317, 317);
       this.ResumeLayout(false);
       this.PerformLayout();

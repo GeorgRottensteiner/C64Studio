@@ -38,7 +38,7 @@ namespace RetroDevStudio.Controls
       this.editImportSkipBytes.Location = new System.Drawing.Point(68, 3);
       this.editImportSkipBytes.Name = "editImportSkipBytes";
       this.editImportSkipBytes.Size = new System.Drawing.Size(179, 20);
-      this.editImportSkipBytes.TabIndex = 0;
+      this.editImportSkipBytes.TabIndex = 1;
       this.editImportSkipBytes.Text = "0";
       // 
       // label1
@@ -47,7 +47,7 @@ namespace RetroDevStudio.Controls
       this.label1.Location = new System.Drawing.Point(3, 6);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(59, 13);
-      this.label1.TabIndex = 1;
+      this.label1.TabIndex = 0;
       this.label1.Text = "Skip bytes:";
       // 
       // ImportCharsetFromBinaryFile

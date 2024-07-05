@@ -40,7 +40,7 @@ namespace RetroDevStudio.Controls
       this.editPrefixLoadAddress.MaxLength = 4;
       this.editPrefixLoadAddress.Name = "editPrefixLoadAddress";
       this.editPrefixLoadAddress.Size = new System.Drawing.Size(66, 20);
-      this.editPrefixLoadAddress.TabIndex = 5;
+      this.editPrefixLoadAddress.TabIndex = 1;
       this.editPrefixLoadAddress.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editPrefixLoadAddress_KeyPress);
       // 
       // checkPrefixLoadAddress
@@ -49,7 +49,7 @@ namespace RetroDevStudio.Controls
       this.checkPrefixLoadAddress.Location = new System.Drawing.Point(3, 3);
       this.checkPrefixLoadAddress.Name = "checkPrefixLoadAddress";
       this.checkPrefixLoadAddress.Size = new System.Drawing.Size(146, 17);
-      this.checkPrefixLoadAddress.TabIndex = 6;
+      this.checkPrefixLoadAddress.TabIndex = 0;
       this.checkPrefixLoadAddress.Text = "Prefix Load Address (hex)";
       this.checkPrefixLoadAddress.UseVisualStyleBackColor = true;
       this.checkPrefixLoadAddress.CheckedChanged += new System.EventHandler(this.checkPrefixLoadAddress_CheckedChanged);

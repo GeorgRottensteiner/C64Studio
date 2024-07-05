@@ -57,7 +57,7 @@ namespace RetroDevStudio.Controls
       this.comboBackground.Location = new System.Drawing.Point(93, 11);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(71, 21);
-      this.comboBackground.TabIndex = 34;
+      this.comboBackground.TabIndex = 1;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
@@ -69,7 +69,7 @@ namespace RetroDevStudio.Controls
       this.comboMulticolor1.Location = new System.Drawing.Point(93, 38);
       this.comboMulticolor1.Name = "comboMulticolor1";
       this.comboMulticolor1.Size = new System.Drawing.Size(71, 21);
-      this.comboMulticolor1.TabIndex = 31;
+      this.comboMulticolor1.TabIndex = 3;
       this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
       // 
@@ -81,7 +81,7 @@ namespace RetroDevStudio.Controls
       this.comboCharColor.Location = new System.Drawing.Point(93, 92);
       this.comboCharColor.Name = "comboCharColor";
       this.comboCharColor.Size = new System.Drawing.Size(71, 21);
-      this.comboCharColor.TabIndex = 33;
+      this.comboCharColor.TabIndex = 7;
       this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
       this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
       // 
@@ -91,7 +91,7 @@ namespace RetroDevStudio.Controls
       this.radioBackground.Location = new System.Drawing.Point(4, 12);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 35;
+      this.radioBackground.TabIndex = 0;
       this.radioBackground.TabStop = true;
       this.radioBackground.Text = "Background";
       this.radioBackground.UseVisualStyleBackColor = true;
@@ -103,7 +103,7 @@ namespace RetroDevStudio.Controls
       this.radioMultiColor1.Location = new System.Drawing.Point(4, 39);
       this.radioMultiColor1.Name = "radioMultiColor1";
       this.radioMultiColor1.Size = new System.Drawing.Size(79, 17);
-      this.radioMultiColor1.TabIndex = 36;
+      this.radioMultiColor1.TabIndex = 2;
       this.radioMultiColor1.TabStop = true;
       this.radioMultiColor1.Text = "Multicolor 1";
       this.radioMultiColor1.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@ namespace RetroDevStudio.Controls
       this.radioMulticolor2.Location = new System.Drawing.Point(4, 65);
       this.radioMulticolor2.Name = "radioMulticolor2";
       this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
-      this.radioMulticolor2.TabIndex = 37;
+      this.radioMulticolor2.TabIndex = 4;
       this.radioMulticolor2.TabStop = true;
       this.radioMulticolor2.Text = "Multicolor 2";
       this.radioMulticolor2.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@ namespace RetroDevStudio.Controls
       this.radioCharColor.Location = new System.Drawing.Point(4, 92);
       this.radioCharColor.Name = "radioCharColor";
       this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 39;
+      this.radioCharColor.TabIndex = 6;
       this.radioCharColor.TabStop = true;
       this.radioCharColor.Text = "Char Color";
       this.radioCharColor.UseVisualStyleBackColor = true;
@@ -135,10 +135,15 @@ namespace RetroDevStudio.Controls
       // 
       // btnExchangeColors
       // 
+      this.btnExchangeColors.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExchangeColors.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExchangeColors.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExchangeColors.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExchangeColors.Image = null;
       this.btnExchangeColors.Location = new System.Drawing.Point(3, 156);
       this.btnExchangeColors.Name = "btnExchangeColors";
       this.btnExchangeColors.Size = new System.Drawing.Size(161, 26);
-      this.btnExchangeColors.TabIndex = 50;
+      this.btnExchangeColors.TabIndex = 8;
       this.btnExchangeColors.Text = "Exchange Colors";
       this.btnExchangeColors.Click += new DecentForms.EventHandler(this.btnExchangeColors_Click);
       // 
@@ -150,7 +155,7 @@ namespace RetroDevStudio.Controls
       this.comboMulticolor2.Location = new System.Drawing.Point(93, 65);
       this.comboMulticolor2.Name = "comboMulticolor2";
       this.comboMulticolor2.Size = new System.Drawing.Size(71, 21);
-      this.comboMulticolor2.TabIndex = 51;
+      this.comboMulticolor2.TabIndex = 5;
       this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
       // 
@@ -209,7 +214,7 @@ namespace RetroDevStudio.Controls
       this.exchangeCustomColorWithMultiColor2ToolStripMenuItem.Text = "Exchange Custom Color with Multi Color 2";
       this.exchangeCustomColorWithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeCustomColorWithMultiColor2ToolStripMenuItem_Click);
       // 
-      // ColorSettingsMC
+      // ColorSettingsMCCharacter
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -222,7 +227,7 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.radioMultiColor1);
       this.Controls.Add(this.radioMulticolor2);
       this.Controls.Add(this.radioCharColor);
-      this.Name = "ColorSettingsMC";
+      this.Name = "ColorSettingsMCCharacter";
       this.contextMenuExchangeColors.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();

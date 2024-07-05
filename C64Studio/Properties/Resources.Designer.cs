@@ -269,6 +269,16 @@ namespace RetroDevStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon commentselection {
+            get {
+                object obj = ResourceManager.GetObject("commentselection", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap DebugBreak {
@@ -780,16 +790,6 @@ namespace RetroDevStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ToolCommentSelection {
-            get {
-                object obj = ResourceManager.GetObject("ToolCommentSelection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ToolCompile {
             get {
                 object obj = ResourceManager.GetObject("ToolCompile", resourceCulture);
@@ -910,20 +910,20 @@ namespace RetroDevStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ToolUncommentSelection {
+        internal static System.Drawing.Bitmap ToolUndo {
             get {
-                object obj = ResourceManager.GetObject("ToolUncommentSelection", resourceCulture);
+                object obj = ResourceManager.GetObject("ToolUndo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Bitmap ToolUndo {
+        internal static System.Drawing.Icon uncommentselection {
             get {
-                object obj = ResourceManager.GetObject("ToolUndo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("uncommentselection", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

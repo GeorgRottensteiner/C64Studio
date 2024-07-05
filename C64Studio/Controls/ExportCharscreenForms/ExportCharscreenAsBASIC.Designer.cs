@@ -79,7 +79,7 @@ namespace RetroDevStudio.Controls
       this.editExportBASICLineOffset.Location = new System.Drawing.Point(90, 53);
       this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
       this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineOffset.TabIndex = 3;
+      this.editExportBASICLineOffset.TabIndex = 5;
       this.editExportBASICLineOffset.Text = "10";
       // 
       // editExportBASICLineNo
@@ -87,7 +87,7 @@ namespace RetroDevStudio.Controls
       this.editExportBASICLineNo.Location = new System.Drawing.Point(90, 27);
       this.editExportBASICLineNo.Name = "editExportBASICLineNo";
       this.editExportBASICLineNo.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineNo.TabIndex = 2;
+      this.editExportBASICLineNo.TabIndex = 3;
       this.editExportBASICLineNo.Text = "10";
       // 
       // label3
@@ -96,7 +96,7 @@ namespace RetroDevStudio.Controls
       this.label3.Location = new System.Drawing.Point(0, 56);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(55, 13);
-      this.label3.TabIndex = 24;
+      this.label3.TabIndex = 4;
       this.label3.Text = "Line Step:";
       // 
       // label4
@@ -105,7 +105,7 @@ namespace RetroDevStudio.Controls
       this.label4.Location = new System.Drawing.Point(0, 30);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(55, 13);
-      this.label4.TabIndex = 26;
+      this.label4.TabIndex = 2;
       this.label4.Text = "Start Line:";
       // 
       // comboBasicFiles
@@ -115,7 +115,7 @@ namespace RetroDevStudio.Controls
       this.comboBasicFiles.Location = new System.Drawing.Point(90, 79);
       this.comboBasicFiles.Name = "comboBasicFiles";
       this.comboBasicFiles.Size = new System.Drawing.Size(224, 21);
-      this.comboBasicFiles.TabIndex = 4;
+      this.comboBasicFiles.TabIndex = 6;
       // 
       // label1
       // 
@@ -132,7 +132,7 @@ namespace RetroDevStudio.Controls
       this.checkExportToBASICReplaceSpaceWithRight.Location = new System.Drawing.Point(3, 129);
       this.checkExportToBASICReplaceSpaceWithRight.Name = "checkExportToBASICReplaceSpaceWithRight";
       this.checkExportToBASICReplaceSpaceWithRight.Size = new System.Drawing.Size(183, 17);
-      this.checkExportToBASICReplaceSpaceWithRight.TabIndex = 6;
+      this.checkExportToBASICReplaceSpaceWithRight.TabIndex = 8;
       this.checkExportToBASICReplaceSpaceWithRight.Text = "Replace Space with Cursor Right";
       this.checkExportToBASICReplaceSpaceWithRight.UseVisualStyleBackColor = true;
       // 
@@ -142,7 +142,7 @@ namespace RetroDevStudio.Controls
       this.checkExportToBASICAsString.Location = new System.Drawing.Point(3, 175);
       this.checkExportToBASICAsString.Name = "checkExportToBASICAsString";
       this.checkExportToBASICAsString.Size = new System.Drawing.Size(239, 17);
-      this.checkExportToBASICAsString.TabIndex = 8;
+      this.checkExportToBASICAsString.TabIndex = 10;
       this.checkExportToBASICAsString.Text = "As String (use Down/Left instead of new line)";
       this.checkExportToBASICAsString.UseVisualStyleBackColor = true;
       // 
@@ -152,7 +152,7 @@ namespace RetroDevStudio.Controls
       this.checkExportToBASICCollapseColors.Location = new System.Drawing.Point(3, 106);
       this.checkExportToBASICCollapseColors.Name = "checkExportToBASICCollapseColors";
       this.checkExportToBASICCollapseColors.Size = new System.Drawing.Size(118, 17);
-      this.checkExportToBASICCollapseColors.TabIndex = 5;
+      this.checkExportToBASICCollapseColors.TabIndex = 7;
       this.checkExportToBASICCollapseColors.Text = "Strip invisible colors";
       this.checkExportToBASICCollapseColors.UseVisualStyleBackColor = true;
       // 
@@ -162,11 +162,11 @@ namespace RetroDevStudio.Controls
       this.checkExportToBASICReplaceShiftSpaceWithSpace.Location = new System.Drawing.Point(3, 152);
       this.checkExportToBASICReplaceShiftSpaceWithSpace.Name = "checkExportToBASICReplaceShiftSpaceWithSpace";
       this.checkExportToBASICReplaceShiftSpaceWithSpace.Size = new System.Drawing.Size(180, 17);
-      this.checkExportToBASICReplaceShiftSpaceWithSpace.TabIndex = 7;
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.TabIndex = 9;
       this.checkExportToBASICReplaceShiftSpaceWithSpace.Text = "Replace Shift-Space with Space";
       this.checkExportToBASICReplaceShiftSpaceWithSpace.UseVisualStyleBackColor = true;
       // 
-      // ExportAsBASIC
+      // ExportCharsetAsBASIC
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -183,7 +183,7 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.checkExportToDataWrap);
       this.Controls.Add(this.editWrapByteCount);
       this.Controls.Add(this.label2);
-      this.Name = "ExportAsBASIC";
+      this.Name = "ExportCharsetAsBASIC";
       this.Size = new System.Drawing.Size(317, 317);
       this.ResumeLayout(false);
       this.PerformLayout();
