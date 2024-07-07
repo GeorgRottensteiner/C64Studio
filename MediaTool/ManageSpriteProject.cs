@@ -50,7 +50,7 @@ namespace MediaTool
         return 1;
       }
 
-      int bytesOfSingleSprite = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+      int bytesOfSingleSprite = Lookup.NumBytesOfSingleSprite( spriteProject.Mode );
       int bytesOfPaddedSingleSprite = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
 
       GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( count * bytesOfPaddedSingleSprite ) );

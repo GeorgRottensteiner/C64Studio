@@ -108,6 +108,7 @@ namespace DecentForms
         if ( _Checked != value )
         {
           _Checked = value;
+          CheckedChanged?.Invoke( this );
           if ( Appearance == Appearance.Normal )
           {
             Invalidate( GetCheckRect() );
@@ -182,6 +183,7 @@ namespace DecentForms
               if ( !_PushedByKey )
               {
                 _PushedByKey = true;
+                _Checked = !_Checked;
                 Invalidate();
                 CheckedChanged?.Invoke( this );
               }

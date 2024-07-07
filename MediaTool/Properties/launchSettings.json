@@ -2,8 +2,8 @@
   "profiles": {
     "MediaTool": {
       "commandName": "Project",
-      "commandLineArgs": "-charscreen screen1.charscreen -type charscolors -export exported.bin",
-      "workingDirectory": "D:\\projekte\\C64Studio\\Sample Projects\\MacroTest"
+      "commandLineArgs": "-spriteproject BombJackDX.spriteproject -export bombjackdxlo.spr -type SPRITES -offset 96 -count 10",
+      "workingDirectory": "d:\\projekte\\c64\\bombjackdx"
     }
   }
 }

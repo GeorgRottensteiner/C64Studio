@@ -78,6 +78,7 @@ namespace RetroDevStudio
     private byte[]                    m_DataToSend;
     private int                       size = 1024;
     private bool                      connectResultReceived = false;
+    private bool                      m_Disconnecting = false;
     Dictionary<int,List<string>>      m_Labels = new Dictionary<int, List<string>>();
     private GR.Memory.ByteBuffer      m_ReceivedDataBin = new GR.Memory.ByteBuffer();
     private RequestData               m_Request = new RequestData( DebugRequestType.NONE );
@@ -434,28 +435,31 @@ namespace RetroDevStudio
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        Core.AddToOutputLine( "ReceiveData Exception:" + se.ToString() );
-        Core.AddToOutputLine( "Connection to VICE was closed" );
-        /*
-        DebugEvent( new DebugEventData()
+        if ( !m_Disconnecting )
         {
-          Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
-        } );*/
-        m_Request.Type = DebugRequestType.NONE;
-        DisconnectFromEmulator();
-
-        Core.AddToOutputLine( "Attempt reconnect" );
-        if ( !ConnectToEmulator( m_IsCartridge ) )
-        {
-          Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
+          Core.AddToOutputLine( "ReceiveData Exception:" + se.ToString() );
+          Core.AddToOutputLine( "Connection to VICE was closed" );
+          /*
           DebugEvent( new DebugEventData()
           {
             Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
-          } );
-        }
-        else
-        {
-          Core.AddToOutputLine( "Reconnect successful" );
+          } );*/
+          m_Request.Type = DebugRequestType.NONE;
+          DisconnectFromEmulator();
+
+          Core.AddToOutputLine( "Attempt reconnect" );
+          if ( !ConnectToEmulator( m_IsCartridge ) )
+          {
+            Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
+            DebugEvent( new DebugEventData()
+            {
+              Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
+            } );
+          }
+          else
+          {
+            Core.AddToOutputLine( "Reconnect successful" );
+          }
         }
       }
     }
@@ -512,6 +516,7 @@ namespace RetroDevStudio
       {
         try
         {
+          m_Disconnecting = true;
           client.Disconnect( true );
         }
         catch ( System.Net.Sockets.SocketException )

@@ -118,7 +118,8 @@ namespace RetroDevStudio.Documents
       editSource.SyntaxHighlighter = new BASICSyntaxHighlighter( this );
       comboBASICVersion.SelectedIndex = 0;
 
-      btnToggleSymbolMode.Checked = Core.Settings.BASICShowControlCodesAsChars;
+      m_SymbolMode                = Core.Settings.BASICShowControlCodesAsChars;
+      btnToggleSymbolMode.Checked = m_SymbolMode;
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
 
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
@@ -1859,13 +1860,13 @@ namespace RetroDevStudio.Documents
             return base.ProcessCmdKey( ref msg, keyData );
           }
           if ( ( m_SymbolMode )
-          ||   ( c64Key.Replacements.Count == 0 ) )
+          || ( c64Key.Replacements.Count == 0 ) )
           {
             //Debug.Log( "Trying to map unknown token: " + key.ToString() );
             if ( m_LowerCaseMode )
             {
               if ( ( c64Key.LowerCaseDisplayChar >= 0xe041 )
-              &&   ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
+              && ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
               {
                 InsertOrReplaceChar( (char)( ( c64Key.LowerCaseDisplayChar & 0xff ) + 0x20 ) );
               }
@@ -1877,7 +1878,7 @@ namespace RetroDevStudio.Documents
             else
             {
               if ( ( c64Key.CharValue >= 0xe041 )
-              &&   ( c64Key.CharValue <= 0xe05a ) )
+              && ( c64Key.CharValue <= 0xe05a ) )
               {
                 InsertOrReplaceChar( (char)( c64Key.CharValue & 0xff ) );
               }
@@ -1886,6 +1887,11 @@ namespace RetroDevStudio.Documents
                 InsertOrReplaceChar( c64Key.CharValue );
               }
             }
+          }
+          else if ( c64Key.CharValue == ' ' )
+          {
+            // do not replace single space
+            editSource.SelectedText = " ";
           }
           else
           {
