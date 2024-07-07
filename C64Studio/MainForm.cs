@@ -1023,11 +1023,13 @@ namespace RetroDevStudio
       DecentForms.ControlRenderer.ColorControlBackground          = StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON );
       DecentForms.ControlRenderer.ColorControlBackgroundMouseOver = colorSelectionBackground;
       DecentForms.ControlRenderer.ColorControlBackgroundSelected  = colorSelectionBackground;
-      DecentForms.ControlRenderer.ColorControlActiveBackground    = StudioCore.Settings.BGColor( Types.ColorableElement.EMPTY_SPACE );
+      DecentForms.ControlRenderer.ColorControlActiveBackground    = StudioCore.Settings.BGColor( Types.ColorableElement.BACKGROUND_CONTROL );
       DecentForms.ControlRenderer.ColorControlBorderFlat          = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
 
       var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
       var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
+
+      this.BackColor = bgColor;
 
       MainMenuStrip.BackColor = bgColor;
       MainMenuStrip.ForeColor = fgColor;
