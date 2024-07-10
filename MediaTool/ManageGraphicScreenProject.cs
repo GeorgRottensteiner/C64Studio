@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Image;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,27 +7,28 @@ namespace MediaTool
 {
   public partial class Manager
   {
-    internal GR.Image.FastImage LoadImageFromFile( string Filename )
+    internal GR.Image.MemoryImage LoadImageFromFile( string Filename )
     {
       string                extension = System.IO.Path.GetExtension( Filename ).ToUpper();
-      GR.Image.FastImage    newImage;
 
       if ( ( extension == ".KOA" )
       ||   ( extension == ".KLA" ) )
       {
-        var koalaImage = RetroDevStudio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
-        var bitmap = koalaImage.GetAsBitmap();
-
-        newImage = GR.Image.FastImage.FromImage( bitmap );
-
-        bitmap.Dispose();
+        return RetroDevStudio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
       }
-      else
+      // TODO - get rid of System.Drawing.Bitmap
+      System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( Filename );
+      var fastImage = FastImage.FromImage( bmpImage );
+      bmpImage.Dispose();
+
+      var newImage = new MemoryImage( fastImage.Width, fastImage.Height, fastImage.PixelFormat );
+      for ( int i = 0; i < fastImage.PaletteEntryCount; ++i )
       {
-        System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( Filename );
-        newImage = GR.Image.FastImage.FromImage( bmpImage );
-        bmpImage.Dispose();
+        newImage.SetPaletteColor( i, fastImage.PaletteRed( i ), fastImage.PaletteGreen( i ), fastImage.PaletteBlue( i ) );
       }
+
+      fastImage.DrawImage( newImage, 0, 0 );
+      fastImage.Dispose();
 
       return newImage;
     }
@@ -81,6 +83,8 @@ namespace MediaTool
           Console.WriteLine( "Image format invalid!\nNeeds to be 8bit index" );
           return 1;
         }
+        Console.WriteLine( "Image Import is currently not supported\n" );
+        return 1;
       }
 
       // export
