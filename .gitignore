@@ -1,57 +1,28 @@
-/C64Ass/bin/Debug
-/C64Ass/obj/Debug
-/C64Studio/bin/Debug
-/C64Studio/obj/Debug
-/TestProject/bin/Debug
-/FastColoredTextBox/bin/Debug
-/FastColoredTextBox/obj/Debug
-/HexBox/bin/Debug
-/HexBox/obj/Debug
-/MediaManager/bin/Debug
-/MediaManager/obj/Debug
-/MediaTool/bin/Debug
-/MediaTool/obj/Debug
-/TestProject/obj/Debug
-/C64Ass/bin/Release
-/C64Ass/obj/Release
-/C64Studio/bin/Release
-/C64Studio/obj/Release
-/FastColoredTextBox/bin/Release
-/FastColoredTextBox/obj/Release
-/HexBox/bin/Release
-/HexBox/obj/Release
-/MediaManager/bin/Release
-/MediaManager/obj/Release
-/MediaTool/bin/Release
-/MediaTool/obj/Release
-/TestProject/bin/Release
-/TestProject/obj/Release
+/C64Ass/bin
+/C64Ass/obj
+/C64Studio/bin
+/C64Studio/obj
+/TestProject/bin
+/FastColoredTextBox/bin
+/FastColoredTextBox/obj
+/HexBox/bin
+/HexBox/obj
+/MediaManager/bin
+/MediaManager/obj
+/MediaTool/bin
+/MediaTool/obj
+/TestProject/obj
 /packages
 *.suo
-/C64StudioRelease/C64Studio.exe
-/C64StudioRelease/FastColoredTextBox.dll
-/C64StudioRelease/HexBox.dll
-/C64StudioRelease/MediaManager.exe
-/C64StudioRelease/MediaTool.exe
-/Tiny64/bin/Debug
-/Tiny64/obj/Debug
-/Tiny64Emu/bin/Debug
-/Tiny64Emu/obj/Debug
-/Tiny64Cmd/bin/Debug
-/Tiny64Cmd/obj/Debug
-/Tiny64/bin/Release
-/Tiny64/obj/Release
-/Tiny64Cmd/bin/Release
-/Tiny64Cmd/obj/Release
-/Tiny64Emu/bin/Release
-/Tiny64Emu/obj/Release
+/Tiny64/bin
+/Tiny64/obj
+/Tiny64Emu/bin
+/Tiny64Emu/obj
+/Tiny64Cmd/bin
+/Tiny64Cmd/obj
 /Common/bin
 /Common/obj
-/C64StudioRelease/Common.dll
-/C64StudioRelease.zip
 *.user
-/C64StudioRelease/Tiny64.dll
-/C64StudioRelease/Tiny64.dll
 *.psess
 /C64Studio171106.vspx
 /C64Studio.VC.db
@@ -59,7 +30,6 @@
 /OtherAssemblersDoc/64er_sonderheft_21 (1).pdf
 *.dump
 /Sample Projects/MacroTest/zones_with_quotes.prg
-/C64StudioRelease/C64Ass/C64Ass.exe
 /.vs
 /Sample Projects/Atari/sample1.prg
 /Sample Projects/Atari/sample1.bin
@@ -104,14 +74,11 @@
 /Sample Projects/MacroTest/relocationfiletest.loc
 /Sample Projects/BASIC - Include/mainlabel.prg
 /Sample Projects/BASIC - Include/main.prg
-/C64StudioRelease/Sample Projects/Mega65/DalekAttack BASIC/DalekAttack.prg
 /Sample Projects/BASIC and Assembly Combined/basic.prg
 /Sample Projects/BASIC and Assembly Combined/assembly.prg
 /Sample Projects/MacroTest/redefined_label.prg
 /Sample Projects/MacroTest/nestedloopmodifiedlabel.prg
 /Sample Projects/MacroTest/extralongline.prg
-/C64StudioRelease/Sample Projects/Mega65/Text Screen RRB/Text Screen RRB.prg
-/C64StudioRelease/Sample Projects/Mega65/Text Screen RRB Parallax/Text Screen RRB Parallax.prg
 /C64Ass/obj
 /C64Studio/obj
 /FastColoredTextBox/obj
@@ -121,151 +88,10 @@
 /Tiny64Cmd/obj
 /TestProject/obj
 /MediaTool/obj
-/C64StudioRelease/System.Web.Services.Description.dll
-/C64StudioRelease/System.Threading.AccessControl.dll
-/C64StudioRelease/System.Text.Encoding.CodePages.dll
-/C64StudioRelease/System.Speech.dll
-/C64StudioRelease/System.ServiceProcess.ServiceController.dll
-/C64StudioRelease/System.ServiceModel.Syndication.dll
-/C64StudioRelease/System.ServiceModel.Security.dll
-/C64StudioRelease/System.ServiceModel.Primitives.dll
-/C64StudioRelease/System.ServiceModel.NetTcp.dll
-/C64StudioRelease/System.ServiceModel.Http.dll
-/C64StudioRelease/System.ServiceModel.Duplex.dll
-/C64StudioRelease/System.ServiceModel.dll
-/C64StudioRelease/System.Security.Principal.Windows.dll
-/C64StudioRelease/System.Security.Permissions.dll
-/C64StudioRelease/System.Security.Cryptography.Xml.dll
-/C64StudioRelease/System.Security.Cryptography.ProtectedData.dll
-/C64StudioRelease/System.Security.Cryptography.Pkcs.dll
-/C64StudioRelease/System.Security.Cryptography.Cng.dll
-/C64StudioRelease/System.Security.AccessControl.dll
-/C64StudioRelease/System.Runtime.CompilerServices.Unsafe.dll
-/C64StudioRelease/System.Runtime.Caching.dll
-/C64StudioRelease/System.Reflection.Context.dll
-/C64StudioRelease/System.Private.ServiceModel.dll
-/C64StudioRelease/System.Numerics.Vectors.dll
-/C64StudioRelease/System.Memory.dll
-/C64StudioRelease/System.Management.dll
-/C64StudioRelease/System.IO.Ports.dll
-/C64StudioRelease/System.IO.Pipes.AccessControl.dll
-/C64StudioRelease/System.IO.Packaging.dll
-/C64StudioRelease/System.IO.FileSystem.AccessControl.dll
-/C64StudioRelease/System.Drawing.Common.dll
-/C64StudioRelease/System.DirectoryServices.Protocols.dll
-/C64StudioRelease/System.DirectoryServices.AccountManagement.dll
-/C64StudioRelease/System.Diagnostics.PerformanceCounter.dll
-/C64StudioRelease/System.Diagnostics.EventLog.dll
-/C64StudioRelease/System.Data.SqlClient.dll
-/C64StudioRelease/System.Data.OleDb.dll
-/C64StudioRelease/System.Data.Odbc.dll
-/C64StudioRelease/System.Configuration.ConfigurationManager.dll
-/C64StudioRelease/System.ComponentModel.Composition.Registration.dll
-/C64StudioRelease/System.ComponentModel.Composition.dll
-/C64StudioRelease/System.CodeDom.dll
-/C64StudioRelease/System.Buffers.dll
-/C64StudioRelease/Microsoft.Win32.SystemEvents.dll
-/C64StudioRelease/Microsoft.Win32.Registry.dll
-/C64StudioRelease/Microsoft.Win32.Registry.AccessControl.dll
-/C64StudioRelease/Microsoft.Extensions.ObjectPool.dll
-/C64StudioRelease/Microsoft.Bcl.AsyncInterfaces.dll
-/C64StudioRelease/MediaTool.dll
-/C64StudioRelease/MediaManager.dll
-/C64StudioRelease/C64Studio.dll
 /C64StudioRelease6.0.zip
 /C64StudioRelease4.8.zip
 /C64StudioRelease3.5.zip
 /origC64StudioRelease.zip
-/C64StudioRelease/net3.5/C64Ass
-/C64StudioRelease/net3.5/WeifenLuo.WinFormsUI.Docking.ThemeVS2005.dll
-/C64StudioRelease/net3.5/WeifenLuo.WinFormsUI.Docking.dll
-/C64StudioRelease/net3.5/HexBox.dll
-/C64StudioRelease/net3.5/FastColoredTextBox.dll
-/C64StudioRelease/net3.5/C64Studio.exe
-/C64StudioRelease/net4.8/C64Ass
-/C64StudioRelease/net4.8/WeifenLuo.WinFormsUI.Docking.ThemeVS2005.dll
-/C64StudioRelease/net4.8/WeifenLuo.WinFormsUI.Docking.dll
-/C64StudioRelease/net4.8/System.Web.Services.Description.dll
-/C64StudioRelease/net4.8/System.Threading.AccessControl.dll
-/C64StudioRelease/net4.8/System.Text.Encoding.CodePages.dll
-/C64StudioRelease/net4.8/System.ServiceProcess.ServiceController.dll
-/C64StudioRelease/net4.8/System.ServiceModel.Syndication.dll
-/C64StudioRelease/net4.8/System.ServiceModel.Security.dll
-/C64StudioRelease/net4.8/System.ServiceModel.Primitives.dll
-/C64StudioRelease/net4.8/System.ServiceModel.NetTcp.dll
-/C64StudioRelease/net4.8/System.ServiceModel.Http.dll
-/C64StudioRelease/net4.8/System.ServiceModel.Duplex.dll
-/C64StudioRelease/net4.8/System.Security.Principal.Windows.dll
-/C64StudioRelease/net4.8/System.Security.Permissions.dll
-/C64StudioRelease/net4.8/System.Security.Cryptography.Xml.dll
-/C64StudioRelease/net4.8/System.Security.Cryptography.ProtectedData.dll
-/C64StudioRelease/net4.8/System.Security.Cryptography.Pkcs.dll
-/C64StudioRelease/net4.8/System.Security.Cryptography.Cng.dll
-/C64StudioRelease/net4.8/System.Security.AccessControl.dll
-/C64StudioRelease/net4.8/System.Runtime.CompilerServices.Unsafe.dll
-/C64StudioRelease/net4.8/System.Numerics.Vectors.dll
-/C64StudioRelease/net4.8/System.Memory.dll
-/C64StudioRelease/net4.8/System.IO.Ports.dll
-/C64StudioRelease/net4.8/System.IO.Pipes.AccessControl.dll
-/C64StudioRelease/net4.8/System.IO.Packaging.dll
-/C64StudioRelease/net4.8/System.IO.FileSystem.AccessControl.dll
-/C64StudioRelease/net4.8/System.Drawing.Common.dll
-/C64StudioRelease/net4.8/System.Diagnostics.PerformanceCounter.dll
-/C64StudioRelease/net4.8/System.Diagnostics.EventLog.dll
-/C64StudioRelease/net4.8/System.Data.SqlClient.dll
-/C64StudioRelease/net4.8/System.Data.OleDb.dll
-/C64StudioRelease/net4.8/System.Data.Odbc.dll
-/C64StudioRelease/net4.8/System.Configuration.ConfigurationManager.dll
-/C64StudioRelease/net4.8/System.CodeDom.dll
-/C64StudioRelease/net4.8/System.Buffers.dll
-/C64StudioRelease/net4.8/Microsoft.Win32.SystemEvents.dll
-/C64StudioRelease/net4.8/Microsoft.Win32.Registry.dll
-/C64StudioRelease/net4.8/Microsoft.Win32.Registry.AccessControl.dll
-/C64StudioRelease/net4.8/HexBox.dll
-/C64StudioRelease/net4.8/FastColoredTextBox.dll
-/C64StudioRelease/net4.8/C64Studio.exe
-/C64StudioRelease/net6.0-windows/C64Ass
-/C64StudioRelease/net6.0-windows/WeifenLuo.WinFormsUI.Docking.ThemeVS2005.dll
-/C64StudioRelease/net6.0-windows/WeifenLuo.WinFormsUI.Docking.dll
-/C64StudioRelease/net6.0-windows/System.Web.Services.Description.dll
-/C64StudioRelease/net6.0-windows/System.Speech.dll
-/C64StudioRelease/net6.0-windows/System.ServiceProcess.ServiceController.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.Syndication.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.Security.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.Primitives.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.NetTcp.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.Http.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.Duplex.dll
-/C64StudioRelease/net6.0-windows/System.ServiceModel.dll
-/C64StudioRelease/net6.0-windows/System.Runtime.Caching.dll
-/C64StudioRelease/net6.0-windows/System.Reflection.Context.dll
-/C64StudioRelease/net6.0-windows/System.Private.ServiceModel.dll
-/C64StudioRelease/net6.0-windows/System.Management.dll
-/C64StudioRelease/net6.0-windows/System.IO.Ports.dll
-/C64StudioRelease/net6.0-windows/System.DirectoryServices.Protocols.dll
-/C64StudioRelease/net6.0-windows/System.DirectoryServices.AccountManagement.dll
-/C64StudioRelease/net6.0-windows/System.Data.SqlClient.dll
-/C64StudioRelease/net6.0-windows/System.Data.OleDb.dll
-/C64StudioRelease/net6.0-windows/System.Data.Odbc.dll
-/C64StudioRelease/net6.0-windows/System.ComponentModel.Composition.Registration.dll
-/C64StudioRelease/net6.0-windows/System.ComponentModel.Composition.dll
-/C64StudioRelease/net6.0-windows/Microsoft.Extensions.ObjectPool.dll
-/C64StudioRelease/net6.0-windows/Microsoft.Bcl.AsyncInterfaces.dll
-/C64StudioRelease/net6.0-windows/HexBox.dll
-/C64StudioRelease/net6.0-windows/FastColoredTextBox.dll
-/C64StudioRelease/net6.0-windows/C64Studio.runtimeconfig.json
-/C64StudioRelease/net6.0-windows/C64Studio.exe
-/C64StudioRelease/net6.0-windows/C64Studio.dll
-/C64StudioRelease/net6.0-windows/MediaTool.runtimeconfig.json
-/C64StudioRelease/net6.0-windows/MediaTool.exe
-/C64StudioRelease/net6.0-windows/MediaTool.dll
-/C64StudioRelease/net6.0-windows/MediaManager.runtimeconfig.json
-/C64StudioRelease/net6.0-windows/MediaManager.exe
-/C64StudioRelease/net6.0-windows/MediaManager.dll
-/C64StudioRelease/net4.8/MediaTool.exe
-/C64StudioRelease/net4.8/MediaManager.exe
-/C64StudioRelease/net3.5/MediaTool.exe
-/C64StudioRelease/net3.5/MediaManager.exe
 /Sample Projects/MacroTest/text-pound.prg
 /Sample Projects/MacroTest/macro_label_replacement.prg
 /Sample Projects/MacroTest/loops_numbered_local_labels.prg
@@ -300,10 +126,6 @@
 /Sample Projects/MacroTest/c64asm.bin
 /SourceControl/bin
 /SourceControl/obj
-/C64StudioRelease/net6.0-windows/SourceControl.dll
-/C64StudioRelease/net6.0-windows/LibGit2Sharp.dll
-/C64StudioRelease/net4.8/SourceControl.dll
-/C64StudioRelease/net3.5/SourceControl.dll
 /Sample Projects/MacroTest/striprem.prg
 /Sample Projects/MacroTest/globallabelsinoutline.prg
 /Sample Projects/MacroTest/macro_ifndef.prg
@@ -341,14 +163,10 @@
 /Sample Projects/MacroTest/68k.prg
 /Sample Projects/MacroTest/tasm.bin
 /Sample Projects/MacroTest/po_scrxor.prg
-/C64StudioRelease/net3.5/SourceControl.pdb
-/C64StudioRelease/net3.5/HexBox.pdb
-/C64StudioRelease/net3.5/FastColoredTextBox.pdb
-/C64StudioRelease/net3.5/C64Studio.pdb
-/C64StudioRelease/net4.8/SourceControl.pdb
-/C64StudioRelease/net4.8/HexBox.pdb
-/C64StudioRelease/net4.8/FastColoredTextBox.pdb
-/C64StudioRelease/net4.8/C64Studio.pdb
+/C64StudioRelease/net3.5
+/C64StudioRelease/net4.8
+/C64StudioRelease/net6.0
+/C64StudioRelease/net6.0-windows
 /Sample Projects/MacroTest/po_while.prg
 /Sample Projects/MacroTest/shifted-letters-petscii.prg
 /Sample Projects/MacroTest/acme.prg
@@ -390,3 +208,16 @@
 /Sample Projects/MacroTest/include_spritepad.prg
 /Sample Projects/MacroTest/po_jumplist.prg
 /Sample Projects/MacroTest/ifstringcomparison.prg
+/TestProject/bin
+/Tiny64Cmd/bin
+/Tiny64Emu/bin
+/C64Ass/bin/ARM64/Release
+/C64Studio/bin/ARM64/Release
+/FastColoredTextBox/bin/ARM64/Release
+/HexBox/bin/ARM64/Release
+/MediaManager/bin/ARM64/Release
+/MediaTool/bin/ARM64/Release
+/C64StudioRelease3.5ARM.zip
+/C64StudioRelease4.8ARM.zip
+/C64StudioRelease6.0ARM.zip
+/C64StudioReleaseARM.zip

@@ -7,13 +7,25 @@ if exist C64StudioRelease4.8.zip del C64StudioRelease4.8.zip
 if exist C64StudioRelease6.0.zip del C64StudioRelease6.0.zip
 
 rem complete archive
-%winrar% -ibck a -afzip C64StudioRelease.zip C64StudioRelease\net3.5
-%winrar% -ibck a -afzip C64StudioRelease.zip C64StudioRelease\net4.8
-%winrar% -ibck a -afzip C64StudioRelease.zip C64StudioRelease\net6.0-windows
+cd "C64StudioRelease\net3.5\AnyCPU"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease.zip -apC64StudioRelease\net3.5 .
+cd ..\..\..
+cd "C64StudioRelease\net4.8\AnyCPU"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease.zip -apC64StudioRelease\net4.8 .
+cd ..\..\..
+cd "C64StudioRelease\net6.0-windows\AnyCPU"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease.zip -apC64StudioRelease\net6.0-windows .
+cd ..\..\..
 
-%winrar% -ibck a -afzip C64StudioRelease3.5.zip C64StudioRelease\net3.5
-%winrar% -ibck a -afzip C64StudioRelease4.8.zip C64StudioRelease\net4.8
-%winrar% -ibck a -afzip C64StudioRelease6.0.zip C64StudioRelease\net6.0-windows
+cd "C64StudioRelease\net3.5\AnyCPU"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease3.5.zip -apC64StudioRelease\net3.5 .
+cd ..\..\..
+cd "C64StudioRelease\net4.8\AnyCPU"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease4.8.zip -apC64StudioRelease\net4.8 .
+cd ..\..\..
+cd "C64StudioRelease\net6.0-windows\AnyCPU"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease6.0.zip -apC64StudioRelease\net6.0-windows .
+cd ..\..\..
 
 cd "C64StudioRelease\shared content"
 %winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net3.5 ..\..\C64StudioRelease.zip "*.*" 
@@ -26,4 +38,5 @@ cd "C64StudioRelease\shared content"
 cd ..\..
 
 rem increase build number for next release
-powershell .\IncreaseBuildNumber.ps1
+rem powershell .\IncreaseBuildNumber.ps1
+

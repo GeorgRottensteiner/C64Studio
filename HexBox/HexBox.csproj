@@ -7,8 +7,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="BuiltInContextMenu.cs">

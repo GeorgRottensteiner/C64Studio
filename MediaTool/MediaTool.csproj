@@ -6,7 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Platforms>AnyCPU;ARM64</Platforms>
 	<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 	<IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
 	<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
@@ -23,9 +23,19 @@
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" />
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Condition="'$(TargetFramework)'=='net6.0-windows'" Command="copy &quot;$(TargetDir)/$(TargetName).exe&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetName).exe&quot;&#xD;&#xA;copy &quot;$(TargetDir)/$(TargetName).exe&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).exe&quot;" />
-    <Exec Condition="'$(TargetFramework)'=='net6.0-windows'" Command="copy &quot;$(TargetDir)/$(TargetName).runtimeconfig.json&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetName).runtimeconfig.json&quot;&#xD;&#xA;copy &quot;$(TargetDir)/$(TargetName).runtimeconfig.json&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).runtimeconfig.json&quot;" />
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetFileName)&quot;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetFileName)&quot;" />
-  </Target>
+  <PropertyGroup>
+    <PlatformTargets>AnyCPU;ARM64</PlatformTargets>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <PostBuildEvent>
+      echo Building for $(TargetFramework)\$(Platform)...
+      if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      copy /Y "$(TargetDir)MediaTool.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\MediaTool.exe"
+      if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)*.pdb" copy "$(TargetDir)*.pdb" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)MediaTool.deps.json" copy "$(TargetDir)MediaTool.deps.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)runtimes" xcopy /S /Y /I "$(TargetDir)runtimes" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\runtimes"
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

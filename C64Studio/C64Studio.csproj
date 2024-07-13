@@ -7,7 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+	  <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsWindows)'=='true'">
 	<DefineConstants>OS_WINDOWS</DefineConstants>
@@ -435,20 +436,40 @@
       cp "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
     </PostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <ApplicationIcon>c64.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <PostBuildEvent>
-      copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetFileName)"
-      if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
-      if exist "$(TargetDir)*.pdb" copy "$(TargetDir)*.pdb" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
+      echo Building for $(TargetFramework)\$(Platform)...
+      if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\$(TargetFileName)"
+      if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)*.pdb" copy "$(TargetDir)*.pdb" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
       del "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects\*.*" /Q
       copy /Y "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
-      if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
-      if exist "$(TargetDir)C64Studio.deps.json" copy "$(TargetDir)C64Studio.deps.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
-      if exist "$(TargetDir)runtimes" xcopy /S /Y /I "$(TargetDir)runtimes" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\runtimes"
+      if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)C64Studio.deps.json" copy "$(TargetDir)C64Studio.deps.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)runtimes" xcopy /S /Y /I "$(TargetDir)runtimes" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\runtimes"
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'ARM64' ">
+    <ApplicationIcon>c64.ico</ApplicationIcon>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <PostBuildEvent>
+      echo Building for $(TargetFramework)\$(Platform)...
+      if not exist "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)" md "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\$(TargetFileName)"
+      if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)*.pdb" copy "$(TargetDir)*.pdb" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      del "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects\*.*" /Q
+      copy /Y "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
+      if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)C64Studio.deps.json" copy "$(TargetDir)C64Studio.deps.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
+      if exist "$(TargetDir)runtimes" xcopy /S /Y /I "$(TargetDir)runtimes" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\runtimes"
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net3.5|AnyCPU'">
