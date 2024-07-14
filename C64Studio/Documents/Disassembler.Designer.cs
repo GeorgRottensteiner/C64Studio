@@ -162,6 +162,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnOpenBinary
       // 
+      this.btnOpenBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnOpenBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOpenBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOpenBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOpenBinary.Image = null;
       this.btnOpenBinary.Location = new System.Drawing.Point(6, 19);
       this.btnOpenBinary.Name = "btnOpenBinary";
       this.btnOpenBinary.Size = new System.Drawing.Size(122, 23);
@@ -188,6 +193,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnImportFromBinary
       // 
+      this.btnImportFromBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnImportFromBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImportFromBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImportFromBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImportFromBinary.Image = null;
       this.btnImportFromBinary.Location = new System.Drawing.Point(134, 48);
       this.btnImportFromBinary.Name = "btnImportFromBinary";
       this.btnImportFromBinary.Size = new System.Drawing.Size(122, 23);
@@ -215,6 +225,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnExportToASM
       // 
+      this.btnExportToASM.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExportToASM.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExportToASM.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExportToASM.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExportToASM.Image = null;
       this.btnExportToASM.Location = new System.Drawing.Point(6, 48);
       this.btnExportToASM.Name = "btnExportToASM";
       this.btnExportToASM.Size = new System.Drawing.Size(122, 23);
@@ -224,6 +239,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnReloadFile
       // 
+      this.btnReloadFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnReloadFile.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReloadFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnReloadFile.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnReloadFile.Image = null;
       this.btnReloadFile.Location = new System.Drawing.Point(134, 19);
       this.btnReloadFile.Name = "btnReloadFile";
       this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
@@ -246,7 +266,12 @@ namespace RetroDevStudio.Documents
       // 
       // btnDeleteJumpedAtAddress
       // 
+      this.btnDeleteJumpedAtAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnDeleteJumpedAtAddress.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteJumpedAtAddress.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteJumpedAtAddress.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnDeleteJumpedAtAddress.Enabled = false;
+      this.btnDeleteJumpedAtAddress.Image = null;
       this.btnDeleteJumpedAtAddress.Location = new System.Drawing.Point(6, 169);
       this.btnDeleteJumpedAtAddress.Name = "btnDeleteJumpedAtAddress";
       this.btnDeleteJumpedAtAddress.Size = new System.Drawing.Size(64, 22);
@@ -256,6 +281,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnAddJumpAddress
       // 
+      this.btnAddJumpAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnAddJumpAddress.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddJumpAddress.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddJumpAddress.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnAddJumpAddress.Image = null;
       this.btnAddJumpAddress.Location = new System.Drawing.Point(112, 19);
       this.btnAddJumpAddress.Name = "btnAddJumpAddress";
       this.btnAddJumpAddress.Size = new System.Drawing.Size(64, 22);
@@ -284,6 +314,7 @@ namespace RetroDevStudio.Documents
       this.listJumpedAtAddresses.UseCompatibleStateImageBehavior = false;
       this.listJumpedAtAddresses.View = System.Windows.Forms.View.Details;
       this.listJumpedAtAddresses.SelectedIndexChanged += new System.EventHandler(this.listJumpedAtAddresses_SelectedIndexChanged);
+      this.listJumpedAtAddresses.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listJumpedAtAddresses_KeyDown);
       // 
       // columnHeader1
       // 
@@ -369,6 +400,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnSaveProject
       // 
+      this.btnSaveProject.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnSaveProject.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSaveProject.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSaveProject.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSaveProject.Image = null;
       this.btnSaveProject.Location = new System.Drawing.Point(91, 45);
       this.btnSaveProject.Name = "btnSaveProject";
       this.btnSaveProject.Size = new System.Drawing.Size(75, 23);
@@ -378,6 +414,11 @@ namespace RetroDevStudio.Documents
       // 
       // btnOpenProject
       // 
+      this.btnOpenProject.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnOpenProject.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOpenProject.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnOpenProject.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOpenProject.Image = null;
       this.btnOpenProject.Location = new System.Drawing.Point(10, 45);
       this.btnOpenProject.Name = "btnOpenProject";
       this.btnOpenProject.Size = new System.Drawing.Size(75, 23);
@@ -442,7 +483,12 @@ namespace RetroDevStudio.Documents
       // 
       // btnNamedLabelsImport
       // 
+      this.btnNamedLabelsImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnNamedLabelsImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnNamedLabelsImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnNamedLabelsImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnNamedLabelsImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnNamedLabelsImport.Image = null;
       this.btnNamedLabelsImport.Location = new System.Drawing.Point(137, 169);
       this.btnNamedLabelsImport.Name = "btnNamedLabelsImport";
       this.btnNamedLabelsImport.Size = new System.Drawing.Size(64, 22);
@@ -452,7 +498,12 @@ namespace RetroDevStudio.Documents
       // 
       // btnExportNamedLabels
       // 
+      this.btnExportNamedLabels.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnExportNamedLabels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnExportNamedLabels.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExportNamedLabels.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExportNamedLabels.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExportNamedLabels.Image = null;
       this.btnExportNamedLabels.Location = new System.Drawing.Point(206, 169);
       this.btnExportNamedLabels.Name = "btnExportNamedLabels";
       this.btnExportNamedLabels.Size = new System.Drawing.Size(64, 22);
@@ -462,7 +513,12 @@ namespace RetroDevStudio.Documents
       // 
       // btnDeleteNamedLabel
       // 
+      this.btnDeleteNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnDeleteNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnDeleteNamedLabel.Enabled = false;
+      this.btnDeleteNamedLabel.Image = null;
       this.btnDeleteNamedLabel.Location = new System.Drawing.Point(6, 169);
       this.btnDeleteNamedLabel.Name = "btnDeleteNamedLabel";
       this.btnDeleteNamedLabel.Size = new System.Drawing.Size(64, 22);
@@ -472,9 +528,14 @@ namespace RetroDevStudio.Documents
       // 
       // btnAddNamedLabel
       // 
+      this.btnAddNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnAddNamedLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.btnAddNamedLabel.BackColor = System.Drawing.SystemColors.Control;
+      this.btnAddNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnAddNamedLabel.Enabled = false;
+      this.btnAddNamedLabel.Image = null;
       this.btnAddNamedLabel.Location = new System.Drawing.Point(206, 42);
       this.btnAddNamedLabel.Name = "btnAddNamedLabel";
       this.btnAddNamedLabel.Size = new System.Drawing.Size(64, 22);
@@ -518,6 +579,7 @@ namespace RetroDevStudio.Documents
       this.listNamedLabels.UseCompatibleStateImageBehavior = false;
       this.listNamedLabels.View = System.Windows.Forms.View.Details;
       this.listNamedLabels.SelectedIndexChanged += new System.EventHandler(this.listNamedLabels_SelectedIndexChanged);
+      this.listNamedLabels.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listNamedLabels_KeyDown);
       // 
       // columnHeader3
       // 

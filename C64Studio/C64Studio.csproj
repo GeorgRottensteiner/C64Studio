@@ -128,9 +128,7 @@
     <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.cs" />
     <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsBASICData.cs">
       <SubType>UserControl</SubType>
     </Compile>

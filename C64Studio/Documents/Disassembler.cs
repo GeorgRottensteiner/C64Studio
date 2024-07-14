@@ -388,6 +388,13 @@ namespace RetroDevStudio.Documents
 
     private void btnDeleteJumpedAtAddress_Click( DecentForms.ControlBase Sender )
     {
+      DeleteSelectedJumpedAtAddress();
+    }
+
+
+
+    private void DeleteSelectedJumpedAtAddress()
+    {
       if ( listJumpedAtAddresses.SelectedItems.Count == 0 )
       {
         return;
@@ -528,6 +535,13 @@ namespace RetroDevStudio.Documents
 
 
     private void btnDeleteNamedLabel_Click( DecentForms.ControlBase Sender )
+    {
+      DeleteSelectedNamedLabel();
+    }
+
+
+
+    private void DeleteSelectedNamedLabel()
     {
       if ( listNamedLabels.SelectedItems.Count == 0 )
       {
@@ -902,6 +916,26 @@ namespace RetroDevStudio.Documents
     private void editLabelName_TextChanged( object sender, EventArgs e )
     {
       btnAddNamedLabel.Enabled = IsValidNamedLabel();
+    }
+
+
+
+    private void listNamedLabels_KeyDown( object sender, KeyEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Delete )
+      {
+        DeleteSelectedNamedLabel();
+      }
+    }
+
+
+
+    private void listJumpedAtAddresses_KeyDown( object sender, KeyEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Delete )
+      {
+        DeleteSelectedJumpedAtAddress();
+      }
     }
 
 
