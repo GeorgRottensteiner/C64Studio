@@ -62,7 +62,7 @@ namespace RetroDevStudio
         returnVal = -1;
       }
 
-      // prio trumps col content
+      // sub messages always below the parent message
       if ( msg2.ParentMessage == msg1 )
       {
         return -1;
@@ -70,6 +70,13 @@ namespace RetroDevStudio
       else if ( msg1.ParentMessage == msg2 )
       {
         return 1;
+      }
+
+      if ( ( msg1.ParentMessage != null )
+      &&   ( msg2.ParentMessage != null )
+      &&   ( msg1.ParentMessage == msg2.ParentMessage ) )
+      {
+        return msg1.ParentMessage.ChildMessages.IndexOf( msg1 ) - msg2.ParentMessage.ChildMessages.IndexOf( msg2 );
       }
 
       // sort by parent

@@ -15,6 +15,21 @@ namespace RetroDevStudio.Types
 
 
 
+    public int EndAddress
+    {
+      get
+      {
+        int   len = Length;
+        if ( len == 0 )
+        {
+          return StartAddress;
+        }
+        return StartAddress + len - 1;
+      }
+    }
+
+
+
     public int Length
     {
       get

@@ -11294,13 +11294,13 @@ namespace RetroDevStudio.Parser
               var message = AddSevereWarning( builtSegments[i].second.GlobalLineIndex, Types.ErrorCode.W0001_SEGMENT_OVERLAP, "Segment starts inside another one, overwriting it" );
               if ( message != null )
               {
-                message.AddMessage( "  overlapping block starts in " + builtSegments[j].second.Filename + " at line " + ( builtSegments[j].second.LocalLineIndex + 1 ),
+                message.AddMessage( "  overlapping segment starts in " + builtSegments[j].second.Filename + " at line " + ( builtSegments[j].second.LocalLineIndex + 1 ),
                                     builtSegments[j].second.Filename,
                                     builtSegments[j].second.LocalLineIndex );
-                message.AddMessage( "  first block from $" + builtSegments[i].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[i].second.StartAddress + builtSegments[i].second.Length - 1 ).ToString( "X4" ),
+                message.AddMessage( "  first segment from $" + builtSegments[i].second.StartAddress.ToString( "X4" ) + " to $" + builtSegments[i].second.EndAddress.ToString( "X4" ),
                                     builtSegments[i].second.Filename,
                                     builtSegments[i].second.LocalLineIndex );
-                message.AddMessage( "  second block from $" + builtSegments[j].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[j].second.StartAddress + builtSegments[j].second.Length - 1 ).ToString( "X4" ),
+                message.AddMessage( "  second segment from $" + builtSegments[j].second.StartAddress.ToString( "X4" ) + " to $" + builtSegments[j].second.EndAddress.ToString( "X4" ),
                                     builtSegments[j].second.Filename,
                                     builtSegments[j].second.LocalLineIndex );
               }
