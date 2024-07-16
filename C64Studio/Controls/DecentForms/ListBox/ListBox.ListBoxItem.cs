@@ -1,0 +1,93 @@
+﻿namespace DecentForms
+{
+  public partial class ListBox
+  {
+    public class ListBoxItem
+    {
+      internal ListBox      _Owner = null;
+      private string        _Text = "";
+      private bool          _Checked = false;
+      private bool          _Selected = false;
+      internal int          _Index = -1;
+
+
+
+      public ListBoxItem()
+      {
+      }
+
+
+
+      public ListBoxItem( string Text )
+      {
+        _Text = Text;
+      }
+
+
+
+      public string   Text 
+      {
+        get
+        {
+          return _Text;
+        }
+        set
+        {
+          _Text = value;
+          _Owner?.ItemModified( this );
+        }
+      }
+
+
+
+      public bool Checked
+      {
+        get
+        {
+          return _Checked;
+        }
+        set
+        {
+          _Checked = value;
+          _Owner?.ItemModified( this );
+        }
+      }
+
+
+
+      public bool Selected
+      {
+        get
+        {
+          return _Selected;
+        }
+        set
+        {
+          _Owner?.SelectItem( this );
+        }
+      }
+
+
+
+      public int Index
+      {
+        get
+        {
+          return _Index;
+        }
+      }
+
+
+
+      public object Tag { get; set; } = null;
+
+
+
+    }
+
+
+
+  }
+
+
+}

@@ -62,6 +62,9 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxItemIndexCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsSBASICFCMChardef.cs">
       <SubType>UserControl</SubType>
     </Compile>

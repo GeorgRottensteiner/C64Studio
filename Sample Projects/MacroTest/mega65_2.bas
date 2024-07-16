@@ -1,4 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:8193,BASIC 65
+#RetroDevStudio.MetaData.BASIC:8193,BASIC 65,uppercase,10,10
 # IT'S A TEST
 20 SCREENCLR
 

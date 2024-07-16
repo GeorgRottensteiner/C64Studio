@@ -36,11 +36,12 @@ namespace RetroDevStudio.Types
       {
         return false;
       }
+      /*
       if ( ( Length == 0 )
       ||   ( OtherSegment.Length == 0 ) )
       {
         return false;
-      }
+      }*/
       return ( ( StartAddress + Length > OtherSegment.StartAddress )
       &&       ( StartAddress < OtherSegment.StartAddress + OtherSegment.Length ) );
     }

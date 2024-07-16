@@ -688,114 +688,6 @@ namespace DecentForms
 
 
 
-    /*
-    internal void RenderListBox()
-    {
-      var listBox = (ListBox)_Control;
-
-      FillRectangle( 0, 0, _Control.ClientSize.Width, _Control.ClientSize.Height, ColorControlActiveBackground );
-
-      _G.Clip = new Region( new Rectangle( 0, 0, _Control.ActualWorkWidth, _Control.ActualWorkHeight ) );
-
-      int   firstItem = listBox.FirstVisibleItemIndex;
-
-      for ( int i = 0; i <= listBox.VisibleItemCount; ++i )
-      {
-        int   realIndex = firstItem + i;
-        if ( realIndex >= listBox.Items.Count )
-        {
-          break;
-        }
-        var item = listBox.Items[realIndex];
-        var rect = listBox.GetItemRect( realIndex );
-
-        if ( realIndex == listBox.SelectedIndex )
-        {
-          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
-
-          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
-          DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
-        }
-        else if ( realIndex == listBox.MouseOverItem )
-        {
-          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
-          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
-        }
-        else
-        {
-          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
-        }
-
-      }
-    }
-
-
-
-    internal void RenderTreeView()
-    {
-      var treeView = (TreeView)_Control;
-
-      FillRectangle( 0, 0, _Control.ClientSize.Width, _Control.ClientSize.Height, ColorControlActiveBackground );
-
-      _G.Clip = new Region( new Rectangle( 0, 0, _Control.ActualWorkWidth, _Control.ActualWorkHeight ) );
-
-      var node = treeView.FirstVisibleNode;
-
-      for ( int i = 0; i <= treeView.VisibleItemCount; ++i )
-      {
-        if ( node == null )
-        {
-          break;
-        }
-
-        var rect = node.Bounds;
-
-        // expand toggle
-        if ( node.Nodes.Count > 0 )
-        {
-          var toggleRect = treeView.GetToggleRect( node );
-
-          DrawTreeViewExpansionToggle( node.IsExpanded, toggleRect );
-        }
-        if ( ( treeView.ImageList != null )
-        &&   ( treeView.ImageList.Images.Count > 0 ) )
-        {
-          var imageRect = treeView.GetImageRect( node );
-
-          int imageIndex = node.ImageIndex;
-          if ( ( imageIndex < 0 )
-          ||   ( imageIndex >= treeView.ImageList.Images.Count ) )
-          {
-            imageIndex = 0;
-          }
-          DrawImage( treeView.ImageList.Images[imageIndex], imageRect );
-        }
-
-
-        if ( node == treeView.SelectedNode )
-        {
-          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
-
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
-          DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
-        }
-        else if ( node == treeView.MouseOverNode )
-        {
-          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
-        }
-        else
-        {
-          DrawText( node.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
-        }
-
-        node = TreeView.GetNextVisibleNode( node );
-      }
-    }
-    */
-
-
-
     public void DrawImage( System.Drawing.Image Image, int X, int Y )
     {
       _G.DrawImage( Image, X - _DisplayOffsetX, Y - _DisplayOffsetY, Image.Width, Image.Height );
@@ -1198,6 +1090,47 @@ namespace DecentForms
       }*/
     }
 
+
+
+    public void RenderListBox()
+    {
+      var listBox = (ListBox)_Control;
+
+      FillRectangle( 0, 0, _Control.ClientSize.Width, _Control.ClientSize.Height, ColorControlActiveBackground );
+
+      _G.Clip = new Region( new Rectangle( 0, 0, _Control.ActualWorkWidth, _Control.ActualWorkHeight ) );
+
+      int   firstItem = listBox.FirstVisibleItemIndex;
+
+      for ( int i = 0; i <= listBox.VisibleItemCount; ++i )
+      {
+        int   realIndex = firstItem + i;
+        if ( realIndex >= listBox.Items.Count )
+        {
+          break;
+        }
+        var item = listBox.Items[realIndex];
+        var rect = listBox.GetItemRect( realIndex );
+
+        if ( realIndex == listBox.SelectedIndex )
+        {
+          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
+
+          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
+          DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
+        }
+        else if ( realIndex == listBox.MouseOverItem )
+        {
+          FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
+          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+        }
+        else
+        {
+          DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+        }
+
+      }
+    }
 
 
 

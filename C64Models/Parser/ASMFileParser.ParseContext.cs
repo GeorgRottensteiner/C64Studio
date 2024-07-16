@@ -23,6 +23,10 @@ namespace RetroDevStudio.Parser
 
       public bool         IsScopingActive       = true;
 
+      public int          LineIndex             = -1;
+
+      public string       ParentFilename        = "";
+
 
       public GR.Collections.Map<string,GR.Collections.Map<byte, byte>>    TextMappings = new GR.Collections.Map<string, GR.Collections.Map<byte, byte>>();
 
@@ -33,6 +37,8 @@ namespace RetroDevStudio.Parser
 
       public void Clear()
       {
+        LineIndex           = -1;
+
         ForwardLabelStacked.Clear();
         TextMappings.Clear();
         Scopes.Clear();

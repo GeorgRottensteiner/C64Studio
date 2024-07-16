@@ -10,7 +10,7 @@ namespace RetroDevStudio.Parser
 {
   public class DumpLabelFile
   {
-    public static void Dump( FileInfo FileInfo, bool AddAssemblerIDLabels )
+    public static void Dump( FileInfo FileInfo, LabelDumpSettings Settings )
     {
       StringBuilder sb = new StringBuilder();
 
@@ -22,7 +22,7 @@ namespace RetroDevStudio.Parser
         if ( ( labelInfo.Key == ASMFileParser.ASSEMBLER_ID_C64STUDIO )
         ||   ( labelInfo.Key == ASMFileParser.ASSEMBLER_ID_RETRODEVSTUDIO ) )
         {
-          if ( !AddAssemblerIDLabels )
+          if ( !Settings.IncludeAssemblerIDLabels )
           {
             continue;
           }
@@ -46,8 +46,13 @@ namespace RetroDevStudio.Parser
 
       foreach ( var info in resultingInfo.Values )
       {
+        if ( ( Settings.IgnoreUnusedLabels )
+        &&   ( info.References.Count == 0 ) )
+        {
+          continue;
+        }
         sb.Append( info.Name );
-        sb.Append( " =$" );
+        sb.Append( " = $" );
         if ( info.AddressOrValue > 255 )
         {
           sb.Append( info.AddressOrValue.ToString( "X4" ) );

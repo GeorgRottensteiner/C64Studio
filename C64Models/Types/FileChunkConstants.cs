@@ -77,7 +77,7 @@
     public const ushort    SETTINGS_DEFAULTS     = 0x2008;
     public const ushort    SETTINGS_FIND_REPLACE = 0x2009;
     public const ushort    SETTINGS_IGNORED_WARNINGS = 0x200A;
-    public const ushort    SETTINGS_LAYOUT       = 0x200B;   // do not use anymore!
+    //public const ushort    SETTINGS_LAYOUT       = 0x200B;   // do not use anymore!
     public const ushort    SETTINGS_PANEL_DISPLAY_DETAILS = 0x200C;
     public const ushort    SETTINGS_DPS_LAYOUT   = 0x200D;
     public const ushort    SETTINGS_RUN_EMULATOR = 0x200E;

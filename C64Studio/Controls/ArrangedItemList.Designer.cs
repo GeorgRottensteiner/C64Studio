@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangedItemList));
-      this.listItems = new System.Windows.Forms.ListBox();
+      this.listItems = new DecentForms.ListBox();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.btnMoveDown = new DecentForms.Button();
       this.btnMoveUp = new DecentForms.Button();
@@ -45,11 +45,17 @@
       this.listItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.listItems.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.listItems.ItemHeight = 15;
       this.listItems.Location = new System.Drawing.Point(3, 3);
       this.listItems.Name = "listItems";
+      this.listItems.ScrollAlwaysVisible = false;
+      this.listItems.SelectedIndex = -1;
+      this.listItems.SelectedItem = null;
+      this.listItems.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listItems.Size = new System.Drawing.Size(234, 199);
       this.listItems.TabIndex = 0;
-      this.listItems.SelectedIndexChanged += new System.EventHandler(this.listItems_SelectedIndexChanged);
+      this.listItems.SelectedIndexChanged += new DecentForms.EventHandler(this.listItems_SelectedIndexChanged);
       // 
       // columnHeader1
       // 
@@ -58,6 +64,7 @@
       // 
       // btnMoveDown
       // 
+      this.btnMoveDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnMoveDown.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnMoveDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -73,6 +80,7 @@
       // 
       // btnMoveUp
       // 
+      this.btnMoveUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnMoveUp.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnMoveUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -88,6 +96,7 @@
       // 
       // btnDelete
       // 
+      this.btnDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -103,6 +112,7 @@
       // 
       // btnAdd
       // 
+      this.btnAdd.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -117,6 +127,7 @@
       // 
       // btnClone
       // 
+      this.btnClone.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.btnClone.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnClone.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -147,7 +158,7 @@
 
     #endregion
 
-    internal System.Windows.Forms.ListBox listItems;
+    internal DecentForms.ListBox listItems;
     private DecentForms.Button btnAdd;
     private DecentForms.Button btnDelete;
     private DecentForms.Button btnMoveUp;

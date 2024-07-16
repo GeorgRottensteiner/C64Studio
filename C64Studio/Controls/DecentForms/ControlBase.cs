@@ -471,7 +471,6 @@ namespace DecentForms
     protected override bool IsInputKey( Keys keyData )
     {
       return true;
-      //return base.IsInputKey( keyData );
     }
 
 
@@ -490,6 +489,12 @@ namespace DecentForms
         RaiseControlEvent( ControlEvent.EventType.MOUSE_WHEEL, e.X, e.Y, (uint)e.Button, -1 );
         _AccumulatedMouseWheelDelta += SystemInformation.MouseWheelScrollDelta;
       }
+
+      // do not pass wheel event to parent
+      var handledEvent = (HandledMouseEventArgs)e;
+
+      handledEvent.Handled = true;
+
       base.OnMouseWheel( e );
     }
 

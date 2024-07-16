@@ -79,7 +79,7 @@ namespace C64Ass
       }
       if ( !string.IsNullOrEmpty( config.LabelDumpFile ) )
       {
-        DumpLabelFile.Dump( asmFileInfo, true );
+        DumpLabelFile.Dump( asmFileInfo, new LabelDumpSettings() );
       }
 
       return 0;

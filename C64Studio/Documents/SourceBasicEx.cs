@@ -991,6 +991,8 @@ namespace RetroDevStudio.Documents
           }
         }
 
+        DocumentInfo.Element.BASICDialect = m_BASICDialectName;
+
         // quick compatibility hack with petcat
         basicText = ReplacePetCatCompatibilityChars( basicText, out bool hadError );
         if ( basicText.Contains( "{" ) )

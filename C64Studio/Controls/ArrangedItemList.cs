@@ -58,8 +58,8 @@ namespace RetroDevStudio.Controls
         listItems.ItemHeight = (int)( g.MeasureString( "Ay", listItems.Font ).Height + 0.5f );
       }
 
-      listItems.DrawItem += ListItems_DrawItem;
-      listItems.DrawMode = DrawMode.OwnerDrawFixed;
+      //listItems.DrawItem += ListItems_DrawItem;
+      //listItems.DrawMode = DrawMode.OwnerDrawFixed;
       listItems.KeyDown += ListItems_KeyDown;
       UpdateUI();
     }
@@ -251,11 +251,11 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ListBox.SelectedIndexCollection SelectedIndices
+    public ArrangedItemListSelectedIndexCollection SelectedIndices
     {
       get
       {
-        return listItems.SelectedIndices;
+        return new ArrangedItemListSelectedIndexCollection( this );
       }
     }
 
@@ -296,7 +296,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void listItems_SelectedIndexChanged( object sender, EventArgs e )
+    private void listItems_SelectedIndexChanged( DecentForms.ControlBase Control )
     {
       UpdateUI();
 
@@ -565,9 +565,9 @@ namespace RetroDevStudio.Controls
 
 
 
-  public class ArrangedItemEntry
+  public class ArrangedItemEntry : DecentForms.ListBox.ListBoxItem
   {
-    internal ArrangedItemList    _Owner = null;
+    internal new ArrangedItemList    _Owner = null;
 
 
 
@@ -595,70 +595,6 @@ namespace RetroDevStudio.Controls
     }
 
 
-
-    public string Text 
-    {
-      get
-      {
-        return _Text;
-      }
-
-      set
-      {
-        if ( _Text != value )
-        {
-          _Text = value;
-          if ( _Owner != null )
-          {
-            _Owner.InvalidateItem( Index );
-          }
-        }
-      }
-    }
-
-
-
-    public object Tag { get; set; } = null;
-    public int Index { get; set; } = -1;
-
-
-
-    public bool Selected
-    {
-      get
-      {
-        if ( _Owner == null )
-        {
-          return false;
-        }
-        foreach ( var item in _Owner.SelectedItems )
-        {
-          if ( item == this )
-          {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      set
-      {
-        if ( _Owner == null )
-        {
-          return;
-        }
-        if ( value )
-        {
-          _Owner.SelectedItems.Add( this );
-        }
-        else
-        {
-          _Owner.SelectedItems.Remove( this );
-        }
-      }
-    }
-
-    private string    _Text;
 
   };
 
@@ -706,7 +642,7 @@ namespace RetroDevStudio.Controls
 
     public ArrangedItemEntry Add( ArrangedItemEntry Item )
     {
-      Item.Index = _Owner.listItems.Items.Add( Item );
+      Item._Index = _Owner.listItems.Items.Add( Item );
       Item._Owner = _Owner;
       /*
       if ( _Owner.ItemAdded != null )
@@ -724,13 +660,7 @@ namespace RetroDevStudio.Controls
     {
       var entry = new ArrangedItemEntry( _Owner );
       entry.Text = Value;
-
-      entry.Index = _Owner.listItems.Items.Add( entry );
-      /*
-      if ( _Owner.ItemAdded != null )
-      {
-        _Owner.ItemAdded( this, Value );
-      }*/
+      entry._Index = _Owner.listItems.Items.Add( entry );
       _Owner.UpdateUI();
 
       return entry;
@@ -757,13 +687,13 @@ namespace RetroDevStudio.Controls
       get
       {
         var item = (ArrangedItemEntry)_Owner.listItems.Items[Index];
-        item.Index = Index;
+        item._Index = Index;
         return item;
       }
       set
       {
         _Owner.listItems.Items[Index] = (ArrangedItemEntry)value;
-        value.Index = Index;
+        value._Index = Index;
       }
     }
 
@@ -790,7 +720,7 @@ namespace RetroDevStudio.Controls
     {
       for ( int i = 0; i < _Owner.listItems.Items.Count; ++i )
       {
-        ( (ArrangedItemEntry)_Owner.listItems.Items[i] ).Index = i;
+        ( (ArrangedItemEntry)_Owner.listItems.Items[i] )._Index = i;
       }
     }
 
@@ -840,13 +770,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    public void CopyTo( Array array, int index )
-    {
-      _Owner.listItems.SelectedItems.CopyTo( array, index );
-    }
-
-
-
     public ArrangedItemListSelectedItemCollection( ArrangedItemList owner )
     {
       _Owner = owner;
@@ -892,6 +815,106 @@ namespace RetroDevStudio.Controls
     internal void Add( ArrangedItemEntry item )
     {
       _Owner.listItems.SelectedItems.Add( item );
+      _Owner.UpdateUI();
+    }
+
+    public void CopyTo( Array array, int index )
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+
+
+  public class ArrangedItemListSelectedIndexCollection : ICollection
+  {
+    private ArrangedItemList  _Owner = null;
+    private object   _SyncRoot = new object();
+    private bool      _IsSynchronized = false;
+
+
+
+    public int Count
+    {
+      get
+      {
+        return _Owner.listItems.SelectedIndices.Count;
+      }
+    }
+
+    public object SyncRoot
+    {
+      get
+      {
+        return _SyncRoot;
+      }
+    }
+
+    public bool IsSynchronized
+    {
+      get
+      {
+        return _IsSynchronized;
+      }
+    }
+
+
+
+    public void CopyTo( Array array, int index )
+    {
+      _Owner.listItems.SelectedIndices.CopyTo( array, index );
+    }
+
+
+
+    public ArrangedItemListSelectedIndexCollection( ArrangedItemList owner )
+    {
+      _Owner = owner;
+    }
+
+
+    public IEnumerator GetEnumerator()
+    {
+      return _Owner.listItems.SelectedIndices.GetEnumerator();
+    }
+
+
+
+    public int this[int Index]
+    {
+      get
+      {
+        var item = (ArrangedItemEntry)_Owner.listItems.SelectedItems[Index];
+        item._Owner = _Owner;
+        return item.Index;
+      }
+    }
+
+
+
+    internal void Clear()
+    {
+      _Owner.listItems.SelectedItems.Clear();
+      _Owner.UpdateUI();
+    }
+
+
+
+    internal void Remove( int Index )
+    {
+      var item = _Owner.listItems.Items[Index];
+      item.Selected = false;
+      _Owner.listItems.SelectedItems.Remove( item );
+      _Owner.UpdateUI();
+    }
+
+
+
+    internal void Add( int Index )
+    {
+      var item = _Owner.listItems.Items[Index];
+      _Owner.listItems.SelectedItems.Add( item );
+      item.Selected = true;
       _Owner.UpdateUI();
     }
   }

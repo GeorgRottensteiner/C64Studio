@@ -3709,7 +3709,6 @@ namespace RetroDevStudio.Parser
 
 
           Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-          //sourceInfo.Filename = ParentFilename;
           sourceInfo.Filename = outerFilename;
           sourceInfo.FullPath = outerFilename;
           sourceInfo.GlobalStartLine = lineIndex;
@@ -3825,7 +3824,6 @@ namespace RetroDevStudio.Parser
 
 
           Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-          //sourceInfo.Filename = ParentFilename;
           sourceInfo.Filename = outerFilename;
           sourceInfo.FullPath = outerFilename;
           sourceInfo.GlobalStartLine = lineIndex;
@@ -4876,6 +4874,7 @@ namespace RetroDevStudio.Parser
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, string AdditionalPredefines, out bool HadFatalError )
     {
       _ParseContext = new ParseContext();
+      _ParseContext.ParentFilename = ParentFilename;
 
       m_ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
@@ -4942,6 +4941,9 @@ namespace RetroDevStudio.Parser
       for ( int lineIndex = 0; lineIndex < Lines.Length; ++lineIndex )
       {
         string parseLine = "";
+
+        _ParseContext.LineIndex = lineIndex;
+
         if ( Lines[lineIndex] != null )
         {
           parseLine = Lines[lineIndex].TrimEnd();
@@ -6676,37 +6678,12 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.LABEL_FILE )
             {
-              lineTokenInfos.RemoveAt( 0 );
-
-              if ( lineTokenInfos.Count != 1 )
+              var result = POLabelFile( lineTokenInfos );
+              if ( result == ParseLineResult.ERROR_ABORT )
               {
-                AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expected !sl <Filename>" );
                 HadFatalError = true;
                 return Lines;
               }
-              if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
-              {
-                AddError( lineIndex,
-                          Types.ErrorCode.E1307_FILENAME_INCOMPLETE,
-                          "String as file name expected",
-                          lineTokenInfos[0].StartPos,
-                          lineTokenInfos[0].Length );
-                HadFatalError = true;
-                return Lines;
-              }
-              if ( !string.IsNullOrEmpty( m_ASMFileInfo.LabelDumpFile ) )
-              {
-                AddWarning( lineIndex,
-                            RetroDevStudio.Types.ErrorCode.W0006_LABEL_DUMP_FILE_ALREADY_GIVEN,
-                            "Label dump file name has already been provided",
-                            lineTokenInfos[0].StartPos,
-                            lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
-              }
-
-              string fileName = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Content.Length - 2 );
-              // use path of source file
-              fileName = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), fileName );
-              m_ASMFileInfo.LabelDumpFile = fileName;
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MACRO )
             {
@@ -11081,45 +11058,42 @@ namespace RetroDevStudio.Parser
                   //memoryBlockActualDataLength = 0;
                 }
                 // went forward in memory
-                var asmSegment = new Types.ASMSegment();
-                asmSegment.StartAddress     = line.AddressStart;
-                asmSegment.GlobalLineIndex  = line.LineIndex;
-                m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
-                builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
-                currentResultBlock = asmSegment.Data;
+                if ( ( builtSegments.Count > 0 )
+                &&   ( builtSegments.Last().first == line.AddressStart )
+                &&   ( builtSegments.Last().second.StartAddress == line.AddressStart )
+                &&   ( builtSegments.Last().second.GlobalLineIndex == line.LineIndex ) )
+                {
+                  // segment already exists
+                }
+                else
+                {
+                  var asmSegment = new Types.ASMSegment();
+                  asmSegment.StartAddress     = line.AddressStart;
+                  asmSegment.GlobalLineIndex  = line.LineIndex;
+                  m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+                  builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
+                  currentResultBlock = asmSegment.Data;
+                }
               }
               else if ( line.AddressStart < currentAddress )
               {
                 // went backward in memory
-                var asmSegment = new Types.ASMSegment();
-                asmSegment.StartAddress     = line.AddressStart;
-                asmSegment.GlobalLineIndex  = line.LineIndex;
-                m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
-                builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
-                currentResultBlock = asmSegment.Data;
-
-                /*
-                if ( memoryBlockActualDataLength > 0 )
+                if ( ( builtSegments.Count > 0 )
+                &&   ( builtSegments.Last().first == line.AddressStart )
+                &&   ( builtSegments.Last().second.StartAddress == line.AddressStart )
+                &&   ( builtSegments.Last().second.GlobalLineIndex == line.LineIndex ) )
                 {
-                  var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
-                  entry.Description = lastAddressSourceDesc;
-                  memoryMap.InsertEntry( entry );
-                  lastAddressSourceDesc = "";
-                }*/
-                //memoryBlockStartAddress = line.AddressStart;
-                //memoryBlockLength = 0;
-              }
-              else if ( line.AddressSource.StartsWith( "*" ) )
-              {
-                // a new block starts here
-                /*
-                var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
-                entry.Description = lastAddressSourceDesc;
-                memoryMap.InsertEntry( entry );
-                lastAddressSourceDesc = "";
-                */
-                //memoryBlockStartAddress = line.AddressStart;
-                //memoryBlockLength = 0;
+                  // segment already exists
+                }
+                else
+                {
+                  var asmSegment = new Types.ASMSegment();
+                  asmSegment.StartAddress     = line.AddressStart;
+                  asmSegment.GlobalLineIndex  = line.LineIndex;
+                  m_ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+                  builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
+                  currentResultBlock = asmSegment.Data;
+                }
               }
               trueCurrentAddress = line.AddressStart;
             }
@@ -11135,27 +11109,13 @@ namespace RetroDevStudio.Parser
             {
               if ( line.AddressStart > currentAddress )
               {
-                // only add to memory map when it has actual data (e.g. not virtual)
-                /*
-                //if ( memoryBlockActualDataLength > 0 )
-                {
-                  var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
-                  entry.Description = lastAddressSourceDesc;
-                  memoryMap.InsertEntry( entry );
-                  lastAddressSourceDesc = "";
-                }*/
-
                 result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
-
-                //memoryBlockStartAddress = line.AddressStart;
-                //memoryBlockLength = 0;
               }
             }
           }
           if ( setNewAddress )
           {
             currentAddress = line.AddressStart;
-            //memoryBlockLength = currentAddress - memoryBlockStartAddress;
           }
         }
         if ( line.LineData != null )
@@ -11198,7 +11158,6 @@ namespace RetroDevStudio.Parser
         {
           if ( ( memoryMap.Entries.Count > 0 )
           &&   ( memoryMap.Entries[memoryMap.Entries.Count - 1].StartAddress != line.AddressStart ) )
-          // &&   ( memoryBlockActualDataLength > 0 ) )
           {
             // a new memory map entry
             var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, currentMemBlockActualSize );
@@ -11226,14 +11185,10 @@ namespace RetroDevStudio.Parser
       if ( memoryBlockStartAddress > -1 )
       {
         memoryBlockLength = currentAddress - memoryBlockStartAddress;
-        /*
-        if ( ( memoryBlockLength > 0 )
-        &&   ( memoryBlockActualDataLength > 0 ) )*/
-        {
-          var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
-          entry.Description = lastAddressSourceDesc;
-          memoryMap.InsertEntry( entry );
-        }
+
+        var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+        entry.Description = lastAddressSourceDesc;
+        memoryMap.InsertEntry( entry );
       }
 
       // determine load address
@@ -11336,7 +11291,6 @@ namespace RetroDevStudio.Parser
           {
             if ( builtSegments[i].second.Overlaps( builtSegments[j].second ) )
             {
-              //Debug.Log( "block overlap! " + builtSegments[i].first + "," + builtSegments[i].second.Length + " <> " + builtSegments[j].first + "," + builtSegments[j].second.Length );
               var message = AddSevereWarning( builtSegments[i].second.GlobalLineIndex, Types.ErrorCode.W0001_SEGMENT_OVERLAP, "Segment starts inside another one, overwriting it" );
               if ( message != null )
               {

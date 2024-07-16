@@ -1034,7 +1034,12 @@ namespace RetroDevStudio.Tasks
 
           if ( !string.IsNullOrEmpty( asmFileInfo.LabelDumpFile ) )
           {
-            DumpLabelFile.Dump( asmFileInfo, !Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels );
+            DumpLabelFile.Dump( asmFileInfo, new LabelDumpSettings() { IncludeAssemblerIDLabels = !Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels }  );
+
+            var message = new ParserBase.ParseMessage( ParserBase.ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Label dump file written to " + asmFileInfo.LabelDumpFile );
+            message.AlternativeFile       = asmFileInfo.LabelDumpFile;
+            message.AlternativeLineIndex  = 0;
+            asmFileInfo.Messages.Add( -1, message );
 
             Core.AddToOutputLine( $"Wrote labels to file '{asmFileInfo.LabelDumpFile}'" );
           }

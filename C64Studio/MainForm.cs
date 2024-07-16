@@ -708,10 +708,6 @@ namespace RetroDevStudio
       }
       else
       {
-        foreach ( LayoutInfo layout in StudioCore.Settings.ToolLayout.Values )
-        {
-          layout.RestoreLayout();
-        }
         if ( StudioCore.Settings.BASICKeyMap.Keymap.Count == 0 )
         {
           if ( StudioCore.Settings.BASICKeyMap.DefaultKeymaps.ContainsKey( (uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID ) )
@@ -1724,19 +1720,6 @@ namespace RetroDevStudio
       tool.ToolDescription = GR.EnumHelper.GetDescription( Type );
       tool.Type = Type;
 
-      LayoutInfo layout = null;
-      if ( StudioCore.Settings.ToolLayout.ContainsKey( MenuItem.Text ) )
-      {
-        layout = StudioCore.Settings.ToolLayout[MenuItem.Text];
-      }
-      else
-      {
-        layout = new LayoutInfo();
-        StudioCore.Settings.ToolLayout.Add( MenuItem.Text, layout );
-      }
-      layout.Name = MenuItem.Text;
-      layout.Document = Document;
-      layout.StoreLayout();
       StudioCore.Settings.Tools[Type] = tool;
     }
 

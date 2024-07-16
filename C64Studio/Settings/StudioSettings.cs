@@ -230,8 +230,6 @@ namespace RetroDevStudio
 
     public AppMode                              StudioAppMode = AppMode.UNDECIDED;
 
-    public GR.Collections.Map<string, LayoutInfo> ToolLayout = new GR.Collections.Map<string,LayoutInfo>();
-
     public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
     public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
     public GR.Collections.Set<Parser.AssemblerSettings.Hacks>  EnabledC64StudioHacks = new GR.Collections.Set<Parser.AssemblerSettings.Hacks>();
