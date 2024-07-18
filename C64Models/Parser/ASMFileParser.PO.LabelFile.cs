@@ -6,6 +6,7 @@ using RetroDevStudio.Types;
 using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Tiny64;
 
@@ -13,6 +14,19 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
+    [Flags]
+    [DefaultValue( LabelFileMode.DEFAULT )]
+    private enum LabelFileMode
+    {
+      
+      DEFAULT                       = 0,
+      IGNORE_ASSEMBLER_ID_LABELS    = 0x00000001,
+      IGNORE_UNUSED_LABELS          = 0x00000002,
+      IGNORE_INTERNAL_LABELS        = 0x00000004    // any C64STUDIO_INTERNAL... are omitted
+    }
+
+
+
     private ParseLineResult POLabelFile( List<TokenInfo> lineTokenInfos )
     {
       if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, _ParseContext.LineIndex, false, out List<List<TokenInfo>> parms ) )
@@ -23,7 +37,7 @@ namespace RetroDevStudio.Parser
       if ( ( parms.Count > 2 )
       ||   ( parms.Count < 1 ) )
       {
-        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expected !sl <Filename>[, modes]" );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, $"Expected !sl <Filename>[, {ListFlagValues( typeof( LabelFileMode ) )}]" );
 
         return ParseLineResult.ERROR_ABORT;
       }
@@ -33,7 +47,7 @@ namespace RetroDevStudio.Parser
 
       if ( parms[0].Count != 1 )
       {
-        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expected !sl <Filename>[, modes]" );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, $"Expected !sl <Filename>[, {ListFlagValues( typeof( LabelFileMode ) )}]" );
 
         return ParseLineResult.ERROR_ABORT;
       }
@@ -64,9 +78,30 @@ namespace RetroDevStudio.Parser
       if ( parms.Count > 1 )
       {
         // parse mode
+        if ( !ParseEnumFlags( parms[1], out LabelFileMode modeFlags ) )
+        {
+          AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, $"Expected !sl <Filename>[, {ListFlagValues( typeof( LabelFileMode ) )}]" );
+
+          return ParseLineResult.ERROR_ABORT;
+        }
       }
 
       return ParseLineResult.OK;
+    }
+
+
+
+    /// <summary>
+    /// Parse flags from a token list, expect flag[ | flag]*
+    /// </summary>
+    /// <typeparam name="EnumType"></typeparam>
+    /// <param name="Tokens"></param>
+    /// <param name="ModeFlags"></param>
+    /// <returns></returns>
+    private bool ParseEnumFlags<EnumType>( List<TokenInfo> Tokens, out EnumType ModeFlags )
+    {
+      ModeFlags = default( EnumType );
+      return false;
     }
 
 

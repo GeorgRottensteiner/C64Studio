@@ -991,7 +991,10 @@ namespace RetroDevStudio.Documents
           }
         }
 
-        DocumentInfo.Element.BASICDialect = m_BASICDialectName;
+        if ( DocumentInfo.Element != null )
+        {
+          DocumentInfo.Element.BASICDialect = m_BASICDialectName;
+        }
 
         // quick compatibility hack with petcat
         basicText = ReplacePetCatCompatibilityChars( basicText, out bool hadError );

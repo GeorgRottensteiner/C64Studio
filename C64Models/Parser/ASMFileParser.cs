@@ -8846,6 +8846,30 @@ namespace RetroDevStudio.Parser
 
 
 
+    private string ListFlagValues( Type Type )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      var values = System.Enum.GetValues( Type );
+
+      int   numEntries = values.Length;
+      int   index = 0;
+
+      foreach ( var entry in values )
+      {
+        if ( index > 0 )
+        {
+          sb.Append( " | " );
+        }
+        sb.Append( entry );
+        ++index;
+      }
+
+      return sb.ToString();
+    }
+
+
+
     private string ListKeys( IEnumerable<string> LookupList )
     {
       StringBuilder   sb = new StringBuilder();
