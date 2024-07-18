@@ -729,6 +729,8 @@ namespace RetroDevStudio
         GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
       }
 
+      EnsureVisibleToolsAreOnScreenArea();
+
       RefreshDisplayOnAllDocuments();
       ApplyMenuShortCuts();
 
@@ -820,6 +822,23 @@ namespace RetroDevStudio
       }
 
       IdleQueue.Add( new IdleRequest() { CloseSplashScreen = splash } );
+    }
+
+
+
+    private void EnsureVisibleToolsAreOnScreenArea()
+    {
+      foreach ( var tool in StudioCore.Settings.Tools.Values )
+      {
+        if ( ( tool.Document != null )
+        &&   ( tool.Document.Visible )
+        &&   ( !GR.Forms.WindowStateManager.GeometryLocationIsGood( tool.Document.Location, tool.Document.Size ) ) )
+        {
+          // tool is visible, but off screen?? -> move it to top/left
+          Debug.Log( $"Tool {tool.Type} is offscreen, moving to 0,0!" );
+          tool.Document.Location = new Point();
+        }
+      }
     }
 
 
@@ -1241,6 +1260,8 @@ namespace RetroDevStudio
           view.Hide();
         }
       }
+
+      EnsureVisibleToolsAreOnScreenArea();
     }
 
 

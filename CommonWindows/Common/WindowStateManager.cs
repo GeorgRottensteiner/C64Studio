@@ -7,9 +7,9 @@ namespace GR
   {
     public class WindowStateManager
     {
-      private static bool GeometryLocationIsGood( Point loc, Size size )
+      public static bool GeometryLocationIsGood( Point Position, Size Size )
       {
-        Rectangle rect = new Rectangle( loc, size );
+        Rectangle rect = new Rectangle( Position, Size );
 
         return ( Screen.FromRectangle( rect ) == null ) ? false : true;
       }
