@@ -38,5 +38,5 @@ cd "C64StudioRelease\shared content"
 cd ..\..
 
 rem increase build number for next release
-rem powershell .\IncreaseBuildNumber.ps1
+powershell .\IncreaseBuildNumber.ps1
 

@@ -125,9 +125,7 @@
     <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.cs" />
     <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
