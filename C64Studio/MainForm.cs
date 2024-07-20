@@ -1860,12 +1860,16 @@ namespace RetroDevStudio
       {
         ToolStripMenuItem menuItem = new ToolStripMenuItem(entry);
         menuItem.Click += new EventHandler( menuMRUItem_Click );
+        menuItem.ForeColor = fileRecentlyOpenedProjectsToolStripMenuItem.ForeColor;
+        menuItem.BackColor = fileRecentlyOpenedProjectsToolStripMenuItem.BackColor;
         fileRecentlyOpenedProjectsToolStripMenuItem.DropDownItems.Add( menuItem );
       }
       foreach ( string entry in StudioCore.Settings.MRUFiles )
       {
         ToolStripMenuItem menuItem = new ToolStripMenuItem(entry);
         menuItem.Click += new EventHandler( menuMRUItem_Click );
+        menuItem.ForeColor = fileRecentlyOpenedProjectsToolStripMenuItem.ForeColor;
+        menuItem.BackColor = fileRecentlyOpenedProjectsToolStripMenuItem.BackColor;
         fileRecentlyOpenedFilesToolStripMenuItem.DropDownItems.Add( menuItem );
       }
     }

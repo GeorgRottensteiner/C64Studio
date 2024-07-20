@@ -197,7 +197,7 @@ namespace RetroDevStudio.Documents
     {
       string    textToPaste = e.InsertingText;
 
-      textToPaste = DetectAndAdaptCaseMode( textToPaste );
+      textToPaste = DetectAndAdaptCaseMode( textToPaste, false );
       if ( textToPaste == null )
       {
         e.Cancel = true;
@@ -209,7 +209,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private string DetectAndAdaptCaseMode( string TextToPaste )
+    private string DetectAndAdaptCaseMode( string TextToPaste, bool MustChoose )
     {
       bool  hasLowercase = false;
       bool  hasUppercase = false;
@@ -222,7 +222,12 @@ namespace RetroDevStudio.Documents
       if ( m_LowerCaseMode != hasLowercase )
       {
         // in both cases potential problems arise, ask for automatic adjust
-        var result = System.Windows.Forms.MessageBox.Show( "The pasted text casing does not seem to match the target casing.\r\nAdapt the text casing before inserting?", "Adjust casing?", MessageBoxButtons.YesNoCancel );
+        var buttons = MessageBoxButtons.YesNoCancel;
+        if ( MustChoose )
+        {
+          buttons = MessageBoxButtons.YesNo;
+        }
+        var result = System.Windows.Forms.MessageBox.Show( "The pasted text casing does not seem to match the target casing.\r\nAdapt the text casing before inserting?", "Adjust casing?", buttons );
         if ( result == DialogResult.Cancel )
         {
           return null;
@@ -940,6 +945,7 @@ namespace RetroDevStudio.Documents
         string basicText = System.IO.File.ReadAllText( DocumentInfo.FullPath, Core.Settings.SourceFileEncoding );
 
         // meta data on top?
+        bool    hasMetaData = false;
         int     endOfLine = basicText.IndexOf( '\n' );
         string  firstLine;
         if ( endOfLine != -1 )
@@ -948,6 +954,7 @@ namespace RetroDevStudio.Documents
           if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
           ||   ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) ) )
           {
+            hasMetaData = true;
             basicText = basicText.Substring( endOfLine + 1 );
           }
         }
@@ -959,6 +966,7 @@ namespace RetroDevStudio.Documents
         if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
         ||   ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) ) )
         {
+          hasMetaData = true;
           int     cutOffPos = 26;
           if ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) )
           {
@@ -988,6 +996,33 @@ namespace RetroDevStudio.Documents
           if ( metaParams.Length >= 5 )
           {
             m_LastLabelAutoRenumberLineStep = metaParams[4];
+          }
+        }
+        if ( !hasMetaData )
+        {
+          bool  hasLowercase = false;
+          bool  hasUppercase = false;
+          foreach ( var c in basicText )
+          {
+            hasLowercase |= char.IsLower( c );
+            hasUppercase |= char.IsUpper( c );
+          }
+
+          if ( m_LowerCaseMode != hasLowercase )
+          {
+            // case mode does not
+            if ( m_LowerCaseMode )
+            {
+              // the pasted text has no lower case letters
+              basicText = MakeLowerCase( basicText, Core.Settings.BASICUseNonC64Font );
+            }
+            else
+            {
+              // the pasted text has lower case letters, but we're in regular mode
+              basicText = MakeUpperCase( basicText, Core.Settings.BASICUseNonC64Font );
+              m_LowerCaseMode = true;
+              UpdateCaseButtonCaption();
+            }
           }
         }
 
