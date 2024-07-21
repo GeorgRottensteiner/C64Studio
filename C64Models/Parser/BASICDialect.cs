@@ -12,8 +12,10 @@ namespace C64Models.BASIC
     public string         Command = "";
     public int            InsertionValue = -1;
     public string         ShortCut = null;
-    public bool           IsComment = false;
-    public bool           IsPreLabelToken = false;
+    public bool           IsComment = false;                        // e.g. REM
+    public bool           IsPreLabelToken = false;                  // at the start of a statement (no EXEC/PROC)
+    public int            ArgumentIndexOfExpectedLineNumber = -1;   // 0 for THEN, GOTO, GOSUB, RUN, 1 for COLLISION (V7), etc.
+    public bool           AllowsSeveralLineNumbers = false;         // true for (ON xxx) GOTO, GOSUB ..,..,..
 
 
 
@@ -64,11 +66,13 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "DIM", 0x86, "dI" );
       BASICV2.AddOpcode( "READ", 0x87, "rE" );
       BASICV2.AddOpcode( "LET", 0x88, "lE" );
-      BASICV2.AddOpcode( "GOTO", 0x89, "gO" );
-      BASICV2.AddOpcode( "RUN", 0x8A, "rU" );
+      var goTo = BASICV2.AddOpcode( "GOTO", 0x89, "gO" );
+      goTo.AllowsSeveralLineNumbers = true;
+      BASICV2.AddOpcode( "RUN", 0x8A, "rU" ).ArgumentIndexOfExpectedLineNumber = 0;
       BASICV2.AddOpcode( "IF", 0x8B );
       BASICV2.AddOpcode( "RESTORE", 0x8C, "reS" );
-      BASICV2.AddOpcode( "GOSUB", 0x8D, "goS" );
+      var gosub = BASICV2.AddOpcode( "GOSUB", 0x8D, "goS" );
+      gosub.AllowsSeveralLineNumbers = true;
       BASICV2.AddOpcode( "RETURN", 0x8E, "reT" );
       BASICV2.AddOpcode( "REM", 0x8F ).IsComment = true;
       BASICV2.AddOpcode( "STOP", 0x90, "sT" );
@@ -95,14 +99,13 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "TO", 0xA4 );
       BASICV2.AddOpcode( "FN", 0xA5 );
       BASICV2.AddOpcode( "SPC(", 0xA6, "sP" );
-      BASICV2.AddOpcode( "THEN", 0xA7, "tH" );
+      BASICV2.AddOpcode( "THEN", 0xA7, "tH" ).ArgumentIndexOfExpectedLineNumber = 0;
       BASICV2.AddOpcode( "NOT", 0xA8, "nO" );
       BASICV2.AddOpcode( "STEP", 0xA9, "stE" );
       BASICV2.AddOpcode( "+", 0xAA );
       BASICV2.AddOpcode( "-", 0xAB );
       BASICV2.AddOpcode( "*", 0xAC );
       BASICV2.AddOpcode( "/", 0xAD );
-      //BASICV2.AddOpcode( "" + (char)0xee1e, 0xAE );
       BASICV2.AddOpcode( "^", 0xAE );
       BASICV2.AddOpcode( "AND", 0xAF, "aN" );
       BASICV2.AddOpcode( "OR", 0xB0 );
@@ -287,6 +290,15 @@ namespace C64Models.BASIC
                 if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {
                   opCode.IsPreLabelToken = true;
+                }
+                if ( extraInfo[i].ToUpper().StartsWith( "LINENUMBERAT:" ) )
+                {
+                  int   argNo = GR.Convert.ToI32( extraInfo[i].Substring( "LINENUMBERAT:".Length ) );
+                  opCode.ArgumentIndexOfExpectedLineNumber = argNo;
+                }
+                if ( string.Compare( extraInfo[i], "LISTOFLINENUMBERS", true ) == 0 )
+                {
+                  opCode.AllowsSeveralLineNumbers = true;
                 }
               }
             }

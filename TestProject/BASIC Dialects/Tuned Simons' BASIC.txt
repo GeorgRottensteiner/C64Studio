@@ -5,13 +5,21 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
-#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
 #
-#StartAddress=xxxx  = sets the default BASIC start address
-#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#StartAddress=xxxx      = sets the default BASIC start address
+#SafeLineLength=xxxx    = sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
 
 StartAddress=2049
 SafeLineLength=80
+HasTextLabels
+ExtendedTokensRecognizedInsideComment
+HexPrefix=$
+BinPrefix=%
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;
@@ -23,11 +31,11 @@ INPUT;85;
 DIM;86;
 READ;87;reA
 LET;88;
-GOTO;89;gO
-RUN;8A;rU
+GOTO;89;gO;listoflinenumbers
+RUN;8A;rU;linenumberat:0
 IF;8B;
 RESTORE;8C;resT
-GOSUB;8D;goS
+GOSUB;8D;goS;listoflinenumbers
 RETURN;8E;reT
 REM;8F;;comment
 STOP;90;sT
@@ -39,8 +47,8 @@ VERIFY;95;vE
 DEF;96;
 POKE;97;poK
 PRINT#;98;prI
-?;99;
 PRINT;99;
+?;99;
 CONT;9A;coN
 LIST;9B;liS
 CLR;9C;cL
@@ -54,7 +62,7 @@ TAB(;A3;tA
 TO;A4;
 FN;A5;
 SPC(;A6;sP
-THEN;A7;tH
+THEN;A7;tH;prelabeltoken,linenumberat:0
 NOT;A8;
 STEP;A9;stE
 +;AA;
@@ -103,7 +111,6 @@ ROT;6409;rO
 DRAW;640a;dR
 CHAR;640b;cH
 HI COL;640c;hi C
-HICOL;640c;hi C
 INV;640d;iN
 FRAC;640e;fR
 MOVE;640f;mO
@@ -118,17 +125,20 @@ DOWNW;6416;
 RIGHTB;6417;rI
 RIGHTW;6418;
 MULTI;6419;mU
+COLOR;641a;cO
 COLOUR;641a;cO
 MMOB;641b;mM
 BFLASH;641c;bF
 MOB SET;641d;moB
-MOBSET;641d;moB
+OFF;6469;oF
+MOB;6468;
 MUSIC;641e;muS
 FLASH;641f;fL
 
 REPEAT;6420;reP
 PLAY;6421;
-DO;6422;
+DO;6422;;comment
+CENTER;6423;cE
 CENTRE;6423;cE
 ENVELOPE;6424;eN
 CGOTO;6425;cG
@@ -140,9 +150,9 @@ USE;642c;uS
 GLOBAL;642e;gL
 
 RESET;6430;reS
-PROC;6431;pR
-CALL;6432;cA
-EXEC;6433;eX
+PROC;6431;pR;prelabeltoken
+CALL;6432;cA;prelabeltoken
+EXEC;6433;eX;prelabeltoken
 END PROC;6434;enD
 EXIT;6435;exI
 END LOOP;6436;end L
@@ -153,13 +163,13 @@ LOOP;643a;lO
 DELAY;643b;dE
 
 SECURE;6440;sE
-DISAPA;6441;disaP
+MOBCOL;6441;mobC
 CIRCLE;6442;cI
 ON ERROR;6443;on E
 NO ERROR;6444;nO
 LOCAL;6445;loC
-RCOMP;6446;rC
-ELSE;6447;eL
+RCOMP;6446;rC;prelabeltoken
+ELSE;6447;eL;prelabeltoken
 RETRACE;6448;reT
 TRACE;6449;tR
 DIR;644a;
@@ -193,9 +203,6 @@ CMOB;6464;cM
 BCKGNDS;6465;bC
 PAUSE;6466;paU
 NRM;6467;nR
-MOB OFF;6468;mob O
-MOBOFF;6468;mob O
-OFF;6469;oF
 ANGL;646a;aN
 ARC;646b;aR
 COLD;646c;coL
@@ -221,6 +228,10 @@ ERR;647e;eR
 ERRLN;647e;
 ERRN;647e;
 OUT;647f;oU
+MAP;64b1;mA
+X!;64b2;
+CLS;64b3;cL
+@;40;;comment
 
 #from here on it's extended opcodes, required for C64Studio extensions
 ExOpcodes

@@ -177,9 +177,23 @@ namespace RetroDevStudio
                 {
                   opCode.IsComment = true;
                 }
-                if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
+                else if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {
                   opCode.IsPreLabelToken = true;
+                }
+                else if ( extraInfo[i].ToUpper().StartsWith( "LINENUMBERAT:" ) )
+                {
+                  int   argNo = GR.Convert.ToI32( extraInfo[i].Substring( "LINENUMBERAT:".Length ) );
+                  opCode.ArgumentIndexOfExpectedLineNumber = argNo;
+                }
+                else if ( string.Compare( extraInfo[i], "LISTOFLINENUMBERS", true ) == 0 )
+                {
+                  opCode.AllowsSeveralLineNumbers = true;
+                }
+                else
+                {
+                  Core.AddToOutputLine( $"Invalid BASIC format file '{File}', unknown extra info {extraInfo[i]} in line {lineIndex}" );
+                  return null;
                 }
               }
             }

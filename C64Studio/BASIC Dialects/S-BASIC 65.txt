@@ -4,7 +4,10 @@ osoft#C64 Studio BASIC declaration file
 #Token              = actual name of command
 #ByteValues         = one or more byte values (hex)
 #Abbreviation       = short cut of command if it exists (lower case, shifted letters are upper case)
-#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
 #
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
@@ -100,8 +103,8 @@ FWRITE#;FE1E;
 GCOPY;FE32;
 GET;A1;
 GETSCR;FE2C;
-GOSUB;8D;
-GOTO;89;
+GOSUB;8D;;listoflinenumbers
+GOTO;89;;listoflinenumbers
 GRAPHIC;DE;
 HEADER;F1;
 HELP;EA;
@@ -189,7 +192,7 @@ RSPEED;CE0E;
 RSPPOS;CE05;
 RSPRITE;CE06;
 RTEXT;CE12;
-RUN;8A;
+RUN;8A;;linenumberat:0
 RWINDOW;CE09;
 SAVE;94;
 SAVEIFF;FE44;
@@ -222,7 +225,7 @@ TAB(;A3;
 TAN;C0;
 TEMPO;FE05;
 TEXT;FE38;
-THEN;A7;
+THEN;A7;;linenumberat:0
 TO;A4;
 TRAP;D7;
 TROFF;D9;

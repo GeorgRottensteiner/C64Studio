@@ -4,6 +4,15 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
+#
+#StartAddress=xxxx      > sets the default BASIC start address
+#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+
 Token;ByteValues;Abbreviation
 END;80;eN
 FOR;81;fO
@@ -14,11 +23,11 @@ INPUT;85;
 DIM;86;dI
 READ;87;rE
 LET;88;lE
-GOTO;89;gO
-RUN;8A;rU
+GOTO;89;gO;listoflinenumbers
+RUN;8A;rU;linenumberat:0
 IF;8B;
 RESTORE;8C;reS
-GOSUB;8D;goS
+GOSUB;8D;goS;listoflinenumbers
 RETURN;8E;reT
 REM;8F;
 STOP;90;sT
@@ -30,8 +39,8 @@ VERIFY;95;vE
 DEF;96;dE
 POKE;97;pO
 PRINT#;98;pR
-?;99;
 PRINT;99;
+?;99;
 CONT;9A;cO
 LIST;9B;lI
 CLR;9C;cL
@@ -45,7 +54,7 @@ TAB(;A3;tA
 TO;A4;
 FN;A5;
 SPC(;A6;sP
-THEN;A7;tH
+THEN;A7;tH;linenumberat:0
 NOT;A8;nO
 STEP;A9;stE
 +;AA;

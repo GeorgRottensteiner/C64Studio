@@ -98,10 +98,40 @@ namespace RetroDevStudio.Parser
     /// <param name="Tokens"></param>
     /// <param name="ModeFlags"></param>
     /// <returns></returns>
-    private bool ParseEnumFlags<EnumType>( List<TokenInfo> Tokens, out EnumType ModeFlags )
+    private bool ParseEnumFlags<EnumType>( List<TokenInfo> Tokens, out EnumType ModeFlags ) where EnumType : System.Enum, IConvertible
     {
       ModeFlags = default( EnumType );
-      return false;
+
+      if ( ( Tokens.Count % 2 ) == 0 )
+      {
+        return false;
+      }
+      for ( int i = 1; i < Tokens.Count; i += 2 )
+      {
+        if ( Tokens[i].Content != "|" )
+        {
+          return false;
+        }
+      }
+
+      for ( int i = 0; i < Tokens.Count; i += 2 )
+      {
+        bool foundToken = false;
+        foreach ( EnumType enumValue in Enum.GetValues( typeof( EnumType ) ) )
+        {
+          if ( string.Compare( enumValue.ToString(), Tokens[i].Content, StringComparison.OrdinalIgnoreCase ) == 0 )
+          {
+            ModeFlags = (EnumType)(object)( Convert.ToInt32( ModeFlags ) | Convert.ToInt32( enumValue ) );
+            foundToken = true;
+            break;
+          }
+        }
+        if ( !foundToken )
+        {
+          return false;
+        }
+      }
+      return true;
     }
 
 

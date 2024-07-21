@@ -4,7 +4,10 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
-#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
 #
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
@@ -31,15 +34,15 @@ READ;87;
 R.;87;
 LET;88;
 L.;88;
-GOTO;89;
-G.;89;
-RUN;8A;
-RU.;8A;
+GOTO;89;;listoflinenumbers
+G.;89;;listoflinenumbers
+RUN;8A;;linenumberat:0
+RU.;8A;;linenumberat:0
 IF;8B;
 RESTORE;8C;
 RES.;8C;
-GOSUB;8D;
-GOS.;8D;
+GOSUB;8D;;listoflinenumbers
+GOS.;8D;;listoflinenumbers
 RETURN;8E;
 RET.;8E;
 REM;8F;;comment
@@ -86,8 +89,8 @@ TO;A4;
 FN;A5;
 SPC(;A6;
 SP.;A6;
-THEN;A7;
-TH.;A7;
+THEN;A7;;linenumberat:0
+TH.;A7;;linenumberat:0
 NOT;A8;
 NO.;A8;
 STEP;A9;

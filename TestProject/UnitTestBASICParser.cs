@@ -410,6 +410,59 @@ ON X GOTO LABEL10, LABEL15, LABEL20
 
 
     [TestMethod]
+    public void TestEncodeAndDecodeToLabelsWithLabelIn2ndArgument()
+    {
+      string      source = @"10 COLLISION 2, 50
+30 GET#2, A$:REM HURZ
+50 PRINT ""HALLO"":GOTO 10
+";
+      var parser = CreateParser( "BASIC V7.0" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.DoNotExpandStringLiterals = true;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"LABEL10
+COLLISION 2, LABEL50
+GET#2, A$:REM HURZ
+
+LABEL50
+PRINT ""HALLO"":GOTO LABEL10
+", encoded );
+
+      // and reverse...
+      parser.LabelMode = true;
+
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  decoded = parser.DecodeFromLabels( 10, 20 );
+      Assert.AreEqual( source, decoded );
+    }
+
+
+
+    [TestMethod]
     public void TestEncodeToLabelsONGoto()
     {
       string      source = @"10 PRINT ""HALLO""

@@ -4,10 +4,14 @@
 #Token              = actual name of command
 #ByteValues         = one or more byte values (hex)
 #Abbreviation       = short cut of command if it exists (lower case, shifted letters are upper case)
-#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
 #
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
 
 StartAddress=8193
 SafeLineLength=160
@@ -98,8 +102,8 @@ FWRITE#;fe1e;
 GCOPY;fe32;
 GET;A1;
 GETKEY;a1f9;
-GOSUB;8d;
-GOTO;89;
+GOSUB;8d;;listoflinenumbers
+GOTO;89;;listoflinenumbers
 GO;CB;
 GRAPHIC;de;
 HEADER;F1;
@@ -154,8 +158,8 @@ POKE;97;
 POLYGON;fe2f;
 POS;b9;
 POT;ce02;
-?;99;
 PRINT;99;
+?;99;
 PRINT#;98;
 RCOLOR;cd;
 RCURSOR;fe42;
@@ -179,7 +183,7 @@ RSPCOLOR;ce07;
 RSPEED;ce0e;
 RSPPOS;ce05;
 RSPRITE;ce06;
-RUN;8a;
+RUN;8a;;linenumberat:0
 RWINDOW;ce09;
 SAVE;94;
 SAVEIFF;fe44;
@@ -204,7 +208,7 @@ SYS;9e;
 TAB(;a3;
 TAN;c0;
 TEMPO;fe05;
-THEN;a7;
+THEN;a7;;linenumberat:0
 TO;a4;
 TRAP;d7;
 TROFF;d9;
@@ -218,6 +222,7 @@ VAL;c5;
 VERIFY;95;
 VIEWPORT;fe31;
 VOL;db;
+VSYNC;fe54;
 WAIT;92;
 WHILE;fd;
 WINDOW;fe1a;

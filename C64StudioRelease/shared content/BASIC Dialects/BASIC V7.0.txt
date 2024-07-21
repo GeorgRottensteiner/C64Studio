@@ -4,7 +4,10 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
-#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
 #
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
@@ -19,11 +22,11 @@ INPUT#;84;iN
 INPUT;85;
 DIM;86;dI
 LET;88;lE
-GOTO;89;gO
-RUN;8A;rU
+GOTO;89;gO;listoflinenumbers
+RUN;8A;rU;linenumberat:0
 IF;8B;
 RESTORE;8C;reS
-GOSUB;8D;goS
+GOSUB;8D;goS;listoflinenumbers
 RETURN;8E;reT
 REM;8F;;comment
 ON;91;
@@ -45,7 +48,7 @@ NEW;A2;
 TAB(;A3;tA
 TO;A4;
 FN;A5;
-THEN;A7;tH
+THEN;A7;tH;linenumberat:0
 NOT;A8;nO
 STEP;A9;stE
 +;AA;
@@ -173,7 +176,7 @@ CONCAT;fe13;
 DVERIFY;fe14;
 DCLEAR;fe15;
 SPRSAV;fe16;
-COLLISION;fe17;
+COLLISION;fe17;;linenumberat:1
 BEGIN;fe18;
 BEND;fe19;
 WINDOW;fe1a;
