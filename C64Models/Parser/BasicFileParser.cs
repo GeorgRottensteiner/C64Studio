@@ -1718,15 +1718,25 @@ namespace RetroDevStudio.Parser
           while ( ( nextTokenIndex != -1 )
           &&      ( nextTokenIndex < info.Tokens.Count ) )
           {
-            if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+            if ( argIndex == 0 )
             {
-              if ( argIndex == 0 )
+              if ( ( info.Tokens[nextTokenIndex].TokenType == Token.Type.DIRECT_TOKEN )
+              &&   ( info.Tokens[nextTokenIndex].Content == " " ) )
+              {
+                ++nextTokenIndex;
+                continue;
+              }
+              if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
               {
                 int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
 
                 info.ReferencedLineNumbers.Add( referencedLineNumber );
-                break;
               }
+              break;
+            }
+            else if ( info.Tokens[nextTokenIndex].Content == ":" )
+            {
+              break;
             }
             else if ( info.Tokens[nextTokenIndex].Content == "," )
             {
