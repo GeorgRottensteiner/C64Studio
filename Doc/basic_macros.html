@@ -10,10 +10,12 @@
   <H3>Text literal macros</H3>
   <div id="mybody">
     C64Studio allows the inclusion of macros in squiggly braces {, } to insert control key codes (like in old type in listings), symbols or literal values.<br>
-    On encountering a macro C64Studio attempts these three possibilities in this order:<br>
+    On encountering a macro C64Studio attempts these four possibilities in this order:<br>
+    <br>
     1) Control Key Macros<br>
-    2) Included Symbol Value<br>
-    3) Literal Value<br>
+    2) Built In Macros<br>
+    3) Included Symbol Value<br>
+    4) Literal Value<br>
     <br>
     <b>Control Key Macros</b><br>
     For compatiblity with several conversion tools these macros are predefined:<br>
@@ -797,6 +799,41 @@
       </tr>
     </table>
     <br>
+    <br>
+    <b>Built In Macros</b><br>
+    Some macros allow for inserting data as text. Macros allow specifying a format description (some optional). These built in macros are predefined:<br>
+    <table>
+      <tr>
+        <th>
+          Macro Content
+        </th>
+        <th>
+          Inserted Content
+        </th>
+        <th>
+          Format
+        </th>
+        <th>
+          Example
+        </th>
+      </tr>
+      <tr>
+        <td>
+          date
+        </td>
+        <td>
+          Date/Timestamp of current time in .NET convention
+        </td>
+        <td>
+          Default: dd-MM-yyyy<br>
+          E.g. yyyy-MM-dd HH:mm:ss<br>
+          dd.MM.yyyy
+        </td>
+        <td>
+          !text "BUILD DATE {DATE:dd.MM.yyyy HH:mm:ss}"
+        </td>
+      </tr>
+    </table>
     <br>
   </div>
 </body>

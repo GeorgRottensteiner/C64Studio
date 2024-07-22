@@ -1781,20 +1781,6 @@ namespace RetroDevStudio.Parser
             return false;
           }
         }
-        /*
-        else if ( Tokens[StartIndex].Content == "%" )
-        {
-          // a binary expression
-          if ( !ParseLiteralValue( TokensToExpression( Tokens, StartIndex, 2 ), out bool failed, out long result, out NumBytesGiven ) )
-          {
-            AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Failed to evaluate binary expression " + TokensToExpression( Tokens, StartIndex, 2 ) );
-            return false;
-          }
-          ResultingToken = CreateIntegerSymbol( result );
-          return true;
-          //return ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out ResultingToken, out NumBytesGiven );
-          //throw new Exception( "This should never happen!" );
-        }*/
         else if ( ( m_AssemblerSettings.HasBinaryNot )
         &&        ( ( Tokens[StartIndex].Content == "!" )
         ||           ( Tokens[StartIndex].Content == "~" ) ) )
@@ -4468,9 +4454,26 @@ namespace RetroDevStudio.Parser
           string macro = Token.Content.Substring( macroStartPos + 1, curPos - macroStartPos - 1 ).ToUpper();
           int macroCount = 1;
 
-          macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
+          if ( macro.StartsWith( "DATE" ) )
+          {
+            string    details = "yyyy-MM-dd";
+            int       sepPos = macro.IndexOf( ':' );
+            if ( sepPos != -1 )
+            {
+              details = Token.Content.Substring( macroStartPos + 1, curPos - macroStartPos - 1 ).Substring( sepPos + 1 );
+              if ( string.IsNullOrEmpty( details ) )
+              {
+                details = "yyyy-MM-dd";
+              }
+            }
+            actualLength += details.Length;
+          }
+          else
+          {
+            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
-          actualLength += macroCount;
+            actualLength += macroCount;
+          }
         }
         else if ( !insideMacro )
         {

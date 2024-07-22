@@ -2252,36 +2252,6 @@ namespace RetroDevStudio
         }
         result = result.Substring( 0, dollarPos ) + valueToInsert + result.Substring( macroEndPos + 1 );
         macroEndPos = dollarPos + valueToInsert.Length;
-        /*
-        if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-        {
-          string valueToInsert = "";
-          if ( Document.ASMFileInfo.Labels.ContainsKey( macroName ) )
-          {
-            if ( asHex )
-            {
-              valueToInsert = Document.ASMFileInfo.Labels[macroName].AddressOrValue.ToString( "X" );
-            }
-            else
-            {
-              valueToInsert = Document.ASMFileInfo.Labels[macroName].AddressOrValue.ToString();
-            }
-          }
-          else
-          {
-            Error = true;
-            StudioCore.AddToOutput( "Unknown macro " + macroName + " encountered at command " + Mask + System.Environment.NewLine );
-            return "";
-          }
-          result = result.Substring( 0, dollarPos ) + valueToInsert + result.Substring( macroEndPos + 1 );
-          macroEndPos = dollarPos + valueToInsert.Length;
-        }
-        else
-        {
-          Error = true;
-          StudioCore.AddToOutput( "Unknown macro " + macroName + " encountered at command " + Mask + System.Environment.NewLine );
-          return "";
-        }*/
         dollarPos = result.IndexOf( "$(", dollarPos );
       }
       return result;

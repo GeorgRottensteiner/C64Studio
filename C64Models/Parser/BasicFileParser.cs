@@ -1866,6 +1866,32 @@ namespace RetroDevStudio.Parser
             }
             if ( !foundMacro )
             {
+              // a inbuilt expression?
+              if ( macro.StartsWith( "DATE" ) )
+              {
+                string    details = "yyyy-MM-dd";
+                int       sepPos = macro.IndexOf( ':' );
+                if ( sepPos != -1 )
+                {
+                  details = Line.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).Substring( sepPos + 1 );
+                  if ( string.IsNullOrEmpty( details ) )
+                  {
+                    details = "yyyy-MM-dd";
+                  }
+                }
+                DateTime today = DateTime.Now;
+
+                string    result = today.ToString( details );
+                for ( int i = 0; i < result.Length; ++i )
+                {
+                  tempData.AppendU8( (byte)result[i] );
+                }
+
+                foundMacro = true;
+              }
+            }
+            if ( !foundMacro )
+            {
               byte  petsciiValue = 0;
               if ( byte.TryParse( macro, out petsciiValue ) )
               {
@@ -3913,16 +3939,12 @@ namespace RetroDevStudio.Parser
             }
             if ( !foundMacro )
             {
-              //Debug.Log( "Unknown macro " + macro );
               // simply re-append
               sb.Append( '{' );
               sb.Append( BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ) );
               sb.Append( '}' );
               ++posInLine;
               continue;
-              /*
-              HadError = true;
-              return null;*/
             }
           }
           ++posInLine;
@@ -3983,7 +4005,31 @@ namespace RetroDevStudio.Parser
             }
             if ( !foundMacro )
             {
-              //Debug.Log( "Unknown macro " + macro );
+              // a inbuilt expression?
+              if ( macro.StartsWith( "DATE" ) )
+              {
+                string    details = "yyyy-MM-dd";
+                int       sepPos = macro.IndexOf( ':' );
+                if ( sepPos != -1 )
+                {
+                  details = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).Substring( sepPos + 1 );
+                  if ( string.IsNullOrEmpty( details ) )
+                  {
+                    details = "yyyy-MM-dd";
+                  }
+                }
+                DateTime today = DateTime.Now;
+
+                string    result = today.ToString( details );
+                for ( int i = 0; i < result.Length; ++i )
+                {
+                  sb.Append( result[i] );
+                }
+                foundMacro = true;
+              }
+            }
+            if ( !foundMacro )
+            {
               HadError = true;
               return null;
             }
