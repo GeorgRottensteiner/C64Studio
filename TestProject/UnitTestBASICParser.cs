@@ -1264,50 +1264,6 @@ GOTO LABEL10
 
 
 
-    private Dialect ReadDialectFromFile( string File )
-    {
-      var dialect = new Dialect();
-
-      using ( var reader = new GR.IO.BinaryReader( File ) )
-      {
-        string    line;
-        bool      firstLine = true;
-        int       lineIndex = 0;
-
-        while ( reader.ReadLine( out line ) )
-        {
-          ++lineIndex;
-          line = line.Trim();
-          if ( ( string.IsNullOrEmpty( line ) )
-          ||   ( line.StartsWith( "#" ) ) )
-          {
-            continue;
-          }
-          // skip header
-          if ( firstLine )
-          {
-            firstLine = false;
-            continue;
-          }
-
-          string[] parts = line.Split( ';' );
-          if ( parts.Length != 3 )
-          {
-            return null;
-          }
-          /*
-          if ( ( parts[1].Length % 1 ) == 1 )
-          {
-            parts[1] = "0" + parts[1];
-          }*/
-          dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
-        }
-      }
-      dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
-
-      return dialect;
-    }
-
   }
 
 }
