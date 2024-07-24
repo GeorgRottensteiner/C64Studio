@@ -22,6 +22,11 @@ namespace RetroDevStudio.Parser
     public static string    ASSEMBLER_ID_C64STUDIO      = "ASSEMBLER_C64STUDIO";
     public static string    ASSEMBLER_ID_RETRODEVSTUDIO = "ASSEMBLER_RETRODEVSTUDIO";
 
+    public static string    INTERNAL_LABEL_PREFIX       = "C64STUDIOINTERNAL";
+
+    public static string    INTERNAL_LOCAL_LABEL_PREFIX = "c64_local_label";
+    public static string    INTERNAL_LOCAL_LABEL_POSTFIX = "_";
+
 
 
     private enum PathResolving
@@ -81,9 +86,6 @@ namespace RetroDevStudio.Parser
       public int            NumResults = 0;
       public ExtFunction    Function = null;
     };
-
-    internal static string              InternalLabelPrefix = "c64_local_label";
-    internal static string              InternalLabelPostfix = "_";
 
     public Processor                    m_Processor = Processor.Create6510();
 
@@ -3390,10 +3392,10 @@ namespace RetroDevStudio.Parser
       foreach ( string label in m_ASMFileInfo.Labels.Keys )
       {
         if ( ( LineInfo.NeededParsedExpression != null )
-        &&   ( label.StartsWith( InternalLabelPrefix + Content + InternalLabelPostfix ) ) )
+        &&   ( label.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX + Content + INTERNAL_LOCAL_LABEL_POSTFIX ) ) )
         {
           int lineNo = -1;
-          if ( int.TryParse( label.Substring( ( InternalLabelPrefix + Content + InternalLabelPostfix ).Length ), out lineNo ) )
+          if ( int.TryParse( label.Substring( ( INTERNAL_LOCAL_LABEL_PREFIX + Content + INTERNAL_LOCAL_LABEL_POSTFIX ).Length ), out lineNo ) )
           {
             if ( ( lineNo > LineIndex )
             &&   ( lineNo < ClosestLine ) )
@@ -3404,10 +3406,10 @@ namespace RetroDevStudio.Parser
           }
         }
         else if ( ( LineInfo.NeededParsedExpression == null )
-        &&        ( label.StartsWith( InternalLabelPrefix + InternalLabelPostfix ) ) )
+        &&        ( label.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX + INTERNAL_LOCAL_LABEL_POSTFIX ) ) )
         {
           int lineNo = -1;
-          if ( int.TryParse( label.Substring( ( InternalLabelPrefix + InternalLabelPostfix ).Length ), out lineNo ) )
+          if ( int.TryParse( label.Substring( ( INTERNAL_LOCAL_LABEL_PREFIX + INTERNAL_LOCAL_LABEL_POSTFIX ).Length ), out lineNo ) )
           {
             if ( ( lineNo > LineIndex )
             &&   ( lineNo < ClosestLine ) )
@@ -4827,7 +4829,7 @@ namespace RetroDevStudio.Parser
           &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_LABEL ) )
           {
             if ( ( entry.Value.Type == SymbolInfo.Types.LABEL )
-            &&   ( entry.Key.StartsWith( InternalLabelPrefix ) ) )
+            &&   ( entry.Key.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX ) ) )
             {
               // do not pass on internal local labels
               continue;
@@ -4900,6 +4902,7 @@ namespace RetroDevStudio.Parser
       m_ASMFileInfo.Macros    = new Map<GR.Generic.Tupel<string, int>, MacroFunctionInfo>();
 
       m_ASMFileInfo.Messages.Clear();
+      m_ASMFileInfo.LabelDumpSettings = m_CompileConfig.LabelDumpSettings;
 
       m_WarningMessages = 0;
       m_ErrorMessages = 0;
@@ -5161,17 +5164,17 @@ namespace RetroDevStudio.Parser
           }
           else if ( m_AssemblerSettings.LocalLabelStacking )
           {
-            previousMinusLabelStacked.Add( lineIndex, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
+            previousMinusLabelStacked.Add( lineIndex, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
           }
           else
           {
             if ( !previousMinusLabel.ContainsKey( lineTokenInfos[0].Content ) )
             {
-              previousMinusLabel.Add( lineTokenInfos[0].Content, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
+              previousMinusLabel.Add( lineTokenInfos[0].Content, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
             }
             else
             {
-              previousMinusLabel[lineTokenInfos[0].Content] = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
+              previousMinusLabel[lineTokenInfos[0].Content] = INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString();
             }
           }
         }
@@ -5184,7 +5187,7 @@ namespace RetroDevStudio.Parser
           }
           else
           {
-            _ParseContext.ForwardLabelStacked.Add( lineIndex, InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString() );
+            _ParseContext.ForwardLabelStacked.Add( lineIndex, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
           }
         }
 
@@ -9084,7 +9087,7 @@ namespace RetroDevStudio.Parser
       &&   ( ( lineTokenInfos[0].Content.StartsWith( "-" ) )
       ||     ( lineTokenInfos[0].Content.StartsWith( "+" ) ) ) )
       {
-        lineTokenInfos[0].Content = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
+        lineTokenInfos[0].Content = INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString();
         lineTokenInfos[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
       }
     }
@@ -9884,7 +9887,7 @@ namespace RetroDevStudio.Parser
             if ( ( tokens.Count > 1 )
             &&   ( tokens[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
             &&   ( tokens[1].StartPos == tokens[0].StartPos + tokens[0].Length )
-            &&   ( tokens[1].Content.StartsWith( InternalLabelPrefix ) ) )
+            &&   ( tokens[1].Content.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX ) ) )
             {
               tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
             }
@@ -10054,19 +10057,19 @@ namespace RetroDevStudio.Parser
                   if ( token.Content[0] == '-' )
                   {
                     // TODO - take i in account, 
-                    token.Content += InternalLabelPrefix + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID();
+                    token.Content += INTERNAL_LOCAL_LABEL_PREFIX + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID();
                   }
                 }
                 else if ( !ScopeInsideLoop() )
                 {
                   // uniquefy labels
-                  token.Content = "_C64STUDIOINTERNAL_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
+                  token.Content = $"_{INTERNAL_LABEL_PREFIX}_{functionName}_{functionInfo.LineIndex.ToString()}_{lineIndex}_{token.Content}";
                 }
                 else
                 {
                   // need to take loop into account, force new local label!
                   token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
-                                + "_C64STUDIOINTERNAL_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID() + "_" + token.Content;
+                                + $"_{INTERNAL_LABEL_PREFIX}_{functionName}_{functionInfo.LineIndex}_{lineIndex}_{GetLoopGUID()}_{token.Content}";
                 }
                 replacingTokens.Add( token );
               }
@@ -10692,7 +10695,7 @@ namespace RetroDevStudio.Parser
       m_ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
       m_ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
       m_ASMFileInfo.AssemblerSettings = m_AssemblerSettings;
-      m_ASMFileInfo.LabelDumpFile     = Config.LabelDumpFile;
+      m_ASMFileInfo.LabelDumpSettings = m_CompileConfig.LabelDumpSettings;
 
       m_WarningsToIgnore.Clear();
 
@@ -12101,7 +12104,7 @@ namespace RetroDevStudio.Parser
       for ( int i = 0; i < result.Count; ++i )
       {
         if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        && ( result[i].Content == InternalLabelPrefix ) )
+        && ( result[i].Content == INTERNAL_LOCAL_LABEL_PREFIX ) )
         {
           int     curPos = i + 1;
 
@@ -12120,7 +12123,7 @@ namespace RetroDevStudio.Parser
             else if ( ( curPos < result.Count )
             &&        ( result[curPos].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
             &&        ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
-            &&        ( result[curPos].Content.StartsWith( InternalLabelPostfix ) ) )
+            &&        ( result[curPos].Content.StartsWith( INTERNAL_LOCAL_LABEL_POSTFIX ) ) )
             {
               // final label
               result[i].Type = RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL;
@@ -12167,7 +12170,7 @@ namespace RetroDevStudio.Parser
             if ( ( result.Count > 1 )
             &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
             &&   ( result[i + 1].StartPos == result[i].StartPos + result[i].Length )
-            &&   ( result[i + 1].Content.StartsWith( InternalLabelPrefix ) ) )
+            &&   ( result[i + 1].Content.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX ) ) )
             {
               result[i].Type = TokenInfo.TokenType.LABEL_INTERNAL;
               result[i].Content += result[i + 1].Content;
@@ -12202,7 +12205,7 @@ namespace RetroDevStudio.Parser
           if ( ( result.Count > 1 )
           &&   ( result[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
           &&   ( result[1].StartPos == result[0].StartPos + result[0].Length )
-          &&   ( result[1].Content.StartsWith( InternalLabelPrefix ) ) )
+          &&   ( result[1].Content.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX ) ) )
           {
             result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }

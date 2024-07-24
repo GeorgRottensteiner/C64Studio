@@ -367,7 +367,7 @@ namespace RetroDevStudio.Documents
             {
               addNode = false;
             }
-            if ( ( token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
+            if ( ( token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
             &&   ( !Core.Settings.LabelExplorerShowShortCutLabels ) )
             {
               addNode = false;
@@ -421,7 +421,7 @@ namespace RetroDevStudio.Documents
         }
 
         if ( ( !token.Name.StartsWith( curZone + "." ) )
-        &&   ( !token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) ) )
+        &&   ( !token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) ) )
         {
           addToGlobalNode = true;
         }

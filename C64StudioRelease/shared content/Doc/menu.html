@@ -9,8 +9,8 @@
   <div id="mybody">
     <ul id="myUL">
       <li><span class="active"><a href="about.html" target="content">About C64 Studio</a></span>
-      <li><span class="caret">Getting Started</span>
-        <ul class="nested">
+      <li><span class="caret-down">Getting Started</span>
+        <ul class="active">
           <li><a href="gs_terminology.html" target="content">Terminology</a></li>
           <li><a href="gs_setup_emulator.html" target="content">Setting up Emulator</a></li>
           <li><a href="gs_createproject.html" target="content">Creating New Project</a></li>
@@ -20,8 +20,8 @@
         </ul>
       </li>
 
-      <li><span class="caret">Assembler</span>
-        <ul class="nested">
+      <li><span class="caret-down">Assembler</span>
+        <ul class="active">
           <li><a href="asm_general.html" target="content">General Syntax</a></li>
           <li><a href="asm_mnemonics.html" target="content">Mnemonics/CPUs</a></li>
           <li><a href="asm_macro.html" target="content">Pseudo Operations</a></li>
@@ -34,8 +34,8 @@
         </ul>
       </li>
 
-      <li><span class="caret">BASIC</span>
-        <ul class="nested">
+      <li><span class="caret-down">BASIC</span>
+        <ul class="active">
           <li><a href="basic_general.html" target="content">General</a></li>
           <li><a href="basic_macros.html" target="content">Macros</a></li>
           <li><a href="basic_label_mode.html" target="content">Label Mode</a></li>
@@ -45,8 +45,8 @@
         </ul>
       </li>
 
-      <li><span class="caret">IDE</span>
-        <ul class="nested">
+      <li><span class="caret-down">IDE</span>
+        <ul class="active">
           <li><a href="ide_asm_editor.html" target="content">ASM Editor</a></li>
           <li><a href="ide_basic_editor.html" target="content">Basic Editor</a></li>
           <li><a href="ide_sprite_editor.html" target="content">Sprite Editor</a></li>
@@ -68,21 +68,21 @@
         </ul>
       </li>
 
-      <li><span class="caret">Tutorials</span>
-        <ul class="nested">
+      <li><span class="caret-down">Tutorials</span>
+        <ul class="active">
 
         </ul>
       </li>
 
-      <li><span class="caret">Build Setup</span>
-        <ul class="nested">
+      <li><span class="caret-down">Build Setup</span>
+        <ul class="active">
           <li><a href="build_configurations.html" target="content">Configurations</a></li>
           <li><a href="build_steps.html" target="content">Build Steps</a></li>
         </ul>
       </li>
 
-      <li><span class="caret">External Tools</span>
-        <ul class="nested">
+      <li><span class="caret-down">External Tools</span>
+        <ul class="active">
           <li><a href="media_manager.html" target="content">Media Manager</a></li>
           <li><a href="media_tool.html" target="content">Media Tool</a></li>
           <li><a href="C64Ass.html" target="content">C64Ass</a></li>
@@ -94,13 +94,27 @@
     </ul>
 
     <script>
-      var toggler = document.getElementsByClassName("caret");
+      var toggler = document.getElementsByClassName("caret-down");
       var i;
 
       for (i = 0; i < toggler.length; i++) {
-        toggler[i].addEventListener("click", function() {
-          this.parentElement.querySelector(".nested").classList.toggle("active");
+        toggler[i].addEventListener("click", function () {
+          expandedItems = this.parentElement.querySelector(".active");
+          if (expandedItems) {
+            expandedItems.classList.toggle("nested");
+            expandedItems.classList.toggle("active");
+          }
+          else {
+            expandedItems = this.parentElement.querySelector(".nested");
+            if (expandedItems) {
+              expandedItems.classList.toggle("nested");
+              expandedItems.classList.toggle("active");
+            }
+          }
+          //this.parentElement.querySelector(".active").classList.toggle("nested");
+          //this.parentElement.querySelector(".active").classList.toggle("active");
           this.classList.toggle("caret-down");
+          this.classList.toggle("caret");
         });
       }
     </script>

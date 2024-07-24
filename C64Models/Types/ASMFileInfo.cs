@@ -200,7 +200,7 @@ namespace RetroDevStudio.Types.ASM
     public List<TemporaryLabelInfo>               TempLabelInfo = new List<TemporaryLabelInfo>();
     public Parser.AssemblerSettings               AssemblerSettings = new AssemblerSettings();
     public Dictionary<int,Types.Breakpoint>       VirtualBreakpoints = new Dictionary<int,Breakpoint>();
-    public string                                 LabelDumpFile = "";
+    public LabelDumpSettings                      LabelDumpSettings = new LabelDumpSettings();
     public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
     public GR.Collections.Map<Tupel<string,int>, Types.MacroFunctionInfo>    Macros = new Map<Tupel<string, int>, MacroFunctionInfo>();
 
@@ -232,7 +232,7 @@ namespace RetroDevStudio.Types.ASM
       Banks.Clear();
       TempLabelInfo.Clear();
       VirtualBreakpoints.Clear();
-      LabelDumpFile = "";
+      LabelDumpSettings.Clear();
       MappedVariables.Clear();
       OriginalVariables.Clear();
       FixedBreakpoints.Clear();

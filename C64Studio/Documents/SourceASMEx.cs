@@ -1592,7 +1592,7 @@ namespace RetroDevStudio.Documents
             &&   ( symbol.Zone == currentZone ) )
             {
               if ( ( symbol.Type == SymbolInfo.Types.LABEL )
-              &&   ( symbol.Name.StartsWith( ASMFileParser.InternalLabelPrefix ) )
+              &&   ( symbol.Name.StartsWith( ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
               &&   ( !Core.Settings.ASMShowShortCutLabels ) )
               {
                 // skip
@@ -1711,7 +1711,7 @@ namespace RetroDevStudio.Documents
       //List<string>    newList = new List<string>();
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
-        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
         {
           continue;
         }
@@ -1750,7 +1750,7 @@ namespace RetroDevStudio.Documents
       }
       foreach ( var entry in DocumentInfo.KnownTokens )
       {
-        if ( entry.Key.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.Key.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
         {
           continue;
         }
@@ -1863,7 +1863,7 @@ namespace RetroDevStudio.Documents
       }
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
-        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
         {
           // skip internal labels in autocomplete
           continue;
@@ -1873,7 +1873,7 @@ namespace RetroDevStudio.Documents
       GR.Collections.Set<string>    uniqueKeys = DocumentInfo.KnownTokens.GetUniqueKeys();
       foreach ( string entry in uniqueKeys )
       {
-        if ( entry.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
         {
           // skip internal labels in autocomplete
           continue;

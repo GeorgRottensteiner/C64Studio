@@ -27,6 +27,16 @@ namespace RetroDevStudio.Parser
             continue;
           }
         }
+        if ( ( Settings.IgnoreInternalLabels )
+        &&   ( labelInfo.Key.Contains( $"_{ASMFileParser.INTERNAL_LABEL_PREFIX}_" ) ) )
+        {
+          continue;
+        }
+        if ( ( Settings.IgnoreLocalLabels )
+        &&   ( labelInfo.Key.StartsWith( ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) ) )
+        {
+          continue;
+        }
         resultingInfo.Add( labelInfo.Value.LineIndex, labelInfo.Value );
       }
 
@@ -71,7 +81,7 @@ namespace RetroDevStudio.Parser
           sb.AppendLine();
         }
       }
-      GR.IO.File.WriteAllText( FileInfo.LabelDumpFile, sb.ToString() );
+      GR.IO.File.WriteAllText( FileInfo.LabelDumpSettings.Filename, sb.ToString() );
     }
 
   }

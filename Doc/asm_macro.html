@@ -2704,7 +2704,7 @@ Sequence
     <br />
   </div>
   <a name="sl"></a>
-  <H2>!SL &lt;file name&gt;</H2>
+  <H2>!SL &lt;file name&gt;[,Flags]</H2>
   <div id="mybody">
     This pseudo op instructs the assembler to write a text file with all labels to the given filename.<br />
     The file is a csv formatted text file, with no header and semicolon as separator.<br />
@@ -2713,9 +2713,60 @@ Sequence
     <br />
     When the label is not used the content of the second column is set to "unused"<br />
     <br />
+    Flags allow fine control of the content of the label file. Flags can be combined by using the pipe symbol. These flags are defined:<br />
+    <table>
+      <tr>
+        <th>
+          Define
+        </th>
+        <th>
+          Meaning
+        </th>
+      </tr>
+      <tr>
+        <td>
+          IGNORE_ASSEMBLER_ID_LABELS
+        </td>
+        <td>
+          Does not include Assembler ID labels<br />
+          These are as of now ASSEMBLER_C64STUDIO and ASSEMBLER_RETRODEVSTUDIO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          IGNORE_LOCAL_LABELS
+        </td>
+        <td>
+          Does not include local labels<br />
+          These are any labels that are prefixed with + or -
+        </td>
+      </tr>
+      <tr>
+        <td>
+          IGNORE_INTERNAL_LABELS
+        </td>
+        <td>
+          Does not include internal labels<br />
+          These are any labels that are created by prefixing scope values to macro internal labels
+        </td>
+      </tr>
+      <tr>
+        <td>
+          IGNORE_UNUSED_LABELS
+        </td>
+        <td>
+          Does not include unused labels
+        </td>
+      </tr>
+    </table>
+    <br />
     <br />
     <div id="code">
       <br />      !sl "labels.txt"
+
+      !sl "labels.txt", IGNORE_ASSEMBLER_ID_LABELS
+
+      !sl "labels.txt", IGNORE_ASSEMBLER_ID_LABELS | IGNORE_UNUSED_LABELS
     </div>
     <br />
     <br />

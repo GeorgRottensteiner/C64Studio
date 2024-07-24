@@ -136,11 +136,11 @@ namespace C64Ass
       }
       if ( _Args.IsParameterSet( "L" ) )
       {
-        config.LabelDumpFile = _Args.Parameter( "L" );
+        config.LabelDumpSettings.Filename = _Args.Parameter( "L" );
       }
       if ( _Args.IsParameterSet( "-LABELDUMP" ) )
       {
-        config.LabelDumpFile = _Args.Parameter( "LABELDUMP" );
+        config.LabelDumpSettings.Filename = _Args.Parameter( "LABELDUMP" );
       }
       if ( _Args.IsParameterSet( "LIB" ) )
       {

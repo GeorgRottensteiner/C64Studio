@@ -624,7 +624,7 @@ namespace RetroDevStudio.Parser
           &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_LABEL ) )
           {
             if ( ( entry.Value.Type == SymbolInfo.Types.LABEL )
-            &&   ( entry.Key.StartsWith( ASMFileParser.InternalLabelPrefix ) ) )
+            &&   ( entry.Key.StartsWith( ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) ) )
             {
               // do not pass on internal local labels
               continue;

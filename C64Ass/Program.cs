@@ -77,9 +77,9 @@ namespace C64Ass
         System.Console.WriteLine( "Failed to write output file" );
         return 1;
       }
-      if ( !string.IsNullOrEmpty( config.LabelDumpFile ) )
+      if ( !string.IsNullOrEmpty( config.LabelDumpSettings.Filename ) )
       {
-        DumpLabelFile.Dump( asmFileInfo, new LabelDumpSettings() );
+        DumpLabelFile.Dump( asmFileInfo, config.LabelDumpSettings );
       }
 
       return 0;

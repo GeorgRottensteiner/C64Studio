@@ -11,7 +11,7 @@ namespace RetroDevStudio.Parser
   {
     public string                                 InputFile = "";
     public string                                 OutputFile = null;
-    public string                                 LabelDumpFile = null;
+    public LabelDumpSettings                      LabelDumpSettings = new LabelDumpSettings();
     public int                                    StartAddress = -1;
     public RetroDevStudio.Types.CompileTargetType TargetType = RetroDevStudio.Types.CompileTargetType.NONE;
     public Types.AssemblerType                    Assembler = Types.AssemblerType.AUTO;
