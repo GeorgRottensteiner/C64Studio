@@ -18,7 +18,7 @@ namespace RetroDevStudio.Controls
     // Declare the delegate (if using non-generic pattern).
     public delegate ArrangedItemEntry AddingItemEventHandler( object sender );
     public delegate ArrangedItemEntry CloningItemEventHandler( object sender, ArrangedItemEntry Item );
-    public delegate void RemovingItemEventHandler( object sender, ArrangedItemEntry Item );
+    public delegate bool RemovingItemEventHandler( object sender, ArrangedItemEntry Item );
     public delegate void ItemModifiedEventHandler( object sender, ArrangedItemEntry Item );
     public delegate bool ItemExchangingEventHandler( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 );
     public delegate void ItemExchangedEventHandler( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 );
@@ -26,6 +26,10 @@ namespace RetroDevStudio.Controls
 
     public event AddingItemEventHandler AddingItem;
     public event CloningItemEventHandler CloningItem;
+
+    /// <summary>
+    /// Called when trying to remove an item, return false to deny removing
+    /// </summary>
     public event RemovingItemEventHandler RemovingItem;
     public event ItemModifiedEventHandler ItemAdded;
     public event ItemModifiedEventHandler ItemRemoved;
@@ -38,10 +42,17 @@ namespace RetroDevStudio.Controls
     private bool      _HasOwnerDrawColumn = false;
     private bool      _AllowClone = true;
     private bool      _DoNotFireSelectedIndexChanged = false;
+    private bool      _UpdateLocked = false;
+    private bool      _RedrawRequired= false;
 
-    public bool MustHaveOneElement { get; set; }
 
-    
+
+    public bool MustHaveOneElement
+    {
+      get; set;
+    }
+
+
     public Color SelectionBackColor { get; set; } = SystemColors.Highlight;
     public Color SelectionTextColor { get; set; } = SystemColors.HighlightText;
     public Color HighlightColor { get; set; } = SystemColors.HotTrack;
@@ -58,10 +69,22 @@ namespace RetroDevStudio.Controls
         listItems.ItemHeight = (int)( g.MeasureString( "Ay", listItems.Font ).Height + 0.5f );
       }
 
-      //listItems.DrawItem += ListItems_DrawItem;
-      //listItems.DrawMode = DrawMode.OwnerDrawFixed;
       listItems.KeyDown += ListItems_KeyDown;
       UpdateUI();
+    }
+
+
+
+    public new void Invalidate()
+    {
+      if ( _UpdateLocked )
+      {
+        _RedrawRequired = true;
+      }
+      else
+      {
+        base.Invalidate();
+      }
     }
 
 
@@ -235,6 +258,11 @@ namespace RetroDevStudio.Controls
       }
       set
       {
+        if ( ( value < -1 )
+        ||   ( value >= listItems.Items.Count ) )
+        {
+          throw new ArgumentOutOfRangeException( "SelectedIndex", $"Index {value} out of range!" );
+        }
         listItems.SelectedIndex = value;
       }
     }
@@ -331,7 +359,10 @@ namespace RetroDevStudio.Controls
 
       if ( RemovingItem != null )
       {
-        RemovingItem( this, itemToRemove );
+        if ( !RemovingItem( this, itemToRemove ) )
+        {
+          return;
+        }
       }
 
       listItems.Items.Remove( itemToRemove );
@@ -357,8 +388,8 @@ namespace RetroDevStudio.Controls
 
     public void UpdateUI()
     {
-      btnClone.Enabled    = ( listItems.SelectedIndices.Count > 0 ) && ( AllowClone );
-      btnMoveUp.Enabled   = ( ( listItems.SelectedIndices.Count > 0 ) && ( listItems.SelectedIndices[0] > 0 ) );
+      btnClone.Enabled = ( listItems.SelectedIndices.Count > 0 ) && ( AllowClone );
+      btnMoveUp.Enabled = ( ( listItems.SelectedIndices.Count > 0 ) && ( listItems.SelectedIndices[0] > 0 ) );
       btnMoveDown.Enabled = ( ( listItems.SelectedIndices.Count > 0 ) && ( listItems.SelectedIndices[0] + 1 < listItems.Items.Count ) );
 
       if ( MustHaveOneElement )
@@ -409,7 +440,7 @@ namespace RetroDevStudio.Controls
     private void btnMoveDown_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listItems.SelectedIndices.Count == 0 )
-      ||   ( listItems.SelectedIndices[0] + 1 == listItems.Items.Count ) )
+      || ( listItems.SelectedIndices[0] + 1 == listItems.Items.Count ) )
       {
         return;
       }
@@ -460,7 +491,7 @@ namespace RetroDevStudio.Controls
       buttonDistance = (int)( 5 * DPIHandler.DPIX / 96.0f );
 
       while ( ( 5 * buttonWidth + 4 * buttonDistance > ClientSize.Width )
-      &&      ( buttonWidth > 8 ) )
+      && ( buttonWidth > 8 ) )
       {
         --buttonWidth;
         if ( buttonDistance > 2 )
@@ -493,7 +524,7 @@ namespace RetroDevStudio.Controls
     internal void InvalidateItem( int Index )
     {
       if ( ( Index < 0 )
-      ||   ( Index >= listItems.Items.Count ) )
+      || ( Index >= listItems.Items.Count ) )
       {
         return;
       }
@@ -561,7 +592,27 @@ namespace RetroDevStudio.Controls
 
 
 
+    public void BeginUpdate()
+    {
+      _UpdateLocked = true;
+      _RedrawRequired = false;
+    }
+
+
+
+    public void EndUpdate()
+    {
+      if ( _UpdateLocked )
+      {
+        _UpdateLocked = false;
+        if ( _RedrawRequired )
+        {
+          Invalidate();
+        }
+      }
+    }
   }
+
 
 
 
@@ -701,6 +752,10 @@ namespace RetroDevStudio.Controls
 
     internal void Clear()
     {
+      if ( _Owner.SelectedIndex != -1 )
+      {
+        _Owner.SelectedIndex = -1;
+      }
       _Owner.listItems.Items.Clear();
       _Owner.UpdateUI();
     }
@@ -709,6 +764,10 @@ namespace RetroDevStudio.Controls
 
     internal void Remove( ArrangedItemEntry item )
     {
+      if ( _Owner.SelectedIndex == item.Index )
+      {
+        _Owner.SelectedIndex = -1;
+      }
       _Owner.listItems.Items.Remove( item );
       FixItemIndices();
       _Owner.UpdateUI();

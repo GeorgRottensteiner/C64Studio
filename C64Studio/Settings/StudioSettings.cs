@@ -230,6 +230,8 @@ namespace RetroDevStudio
 
     public AppMode                              StudioAppMode = AppMode.UNDECIDED;
 
+    public Dictionary<PaletteType,List<Palette>>  Palettes = new Dictionary<PaletteType, List<Palette>>();
+
     public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
     public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
     public GR.Collections.Set<Parser.AssemblerSettings.Hacks>  EnabledC64StudioHacks = new GR.Collections.Set<Parser.AssemblerSettings.Hacks>();
@@ -1780,6 +1782,16 @@ namespace RetroDevStudio
       if ( ASMLibraryPaths.Count == 0 )
       {
         ASMLibraryPaths.Add( System.IO.Path.Combine( Application.StartupPath, "baselib" ) );
+      }
+
+      // default palettes
+      if ( Palettes.Count == 0 )
+      {
+        foreach ( PaletteType palType in System.Enum.GetValues( typeof( PaletteType ) ) )
+        {
+          Palettes.Add( palType, new List<Palette>() );
+          Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );
+        }
       }
     }
 

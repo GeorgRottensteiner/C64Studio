@@ -17,6 +17,9 @@
     <Compile Update="Controls\ArrangedItemList.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\PaletteEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\CharacterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -254,6 +257,9 @@
     </Compile>
     <Compile Update="Dialogs\FormRenumberBASICLabelMode.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\Preferences\PrefPalettes.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Dialogs\Preferences\PrefSourceControl.cs">
       <SubType>UserControl</SubType>

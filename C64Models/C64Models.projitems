@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteCommanderX16.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65_256.cs" />

@@ -1040,6 +1040,26 @@ namespace RetroDevStudio.Documents
           endLine = editSource.Selection.Start.iLine;
         }
       }
+
+      int   numLines = 0;
+      if ( editSource.Selection.End.iLine != editSource.Selection.Start.iLine )
+      {
+        var selRange = new FastColoredTextBoxNS.Range( editSource, editSource.Selection.Start, editSource.Selection.End );
+        selRange.Normalize();
+
+        numLines = selRange.End.iLine - selRange.Start.iLine + 1;
+        if ( ( selRange.Start.iLine >= 0 )
+        &&   ( selRange.End.iLine < editSource.LinesCount ) )
+        {
+          string    selText = selRange.Text;
+          if ( selText.EndsWith( System.Environment.NewLine ) )
+          {
+            --numLines;
+            --endLine;
+          }
+        }
+      }
+
       for ( int i = startLine; i <= endLine; ++i )
       {
         var lineInfo = FetchLineInfo( i );
@@ -1069,23 +1089,9 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      if ( editSource.Selection.End.iLine != editSource.Selection.Start.iLine )
+      if ( numLines >= 1 )
       {
-        var selRange = new FastColoredTextBoxNS.Range( editSource, editSource.Selection.Start, editSource.Selection.End );
-        selRange.Normalize();
-
-        int   numLines = selRange.End.iLine - selRange.Start.iLine + 1;
-        if ( ( selRange.Start.iLine >= 0 )
-        &&   ( selRange.End.iLine < editSource.LinesCount ) )
-        {
-          string    selText = selRange.Text;
-          if ( selText.EndsWith( System.Environment.NewLine ) )
-          {
-            --numLines;
-          }
-        }
         newInfo += ", " + editSource.SelectionLength.ToString() + " characters, " + numLines.ToString() + " lines selected";
-
       }
       else
       {

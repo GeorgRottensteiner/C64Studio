@@ -1207,6 +1207,33 @@ namespace RetroDevStudio
 
 
 
+
+    internal static PaletteType PaletteTypeFromTextCharMode( TextCharMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextCharMode.X16_HIRES:
+          return PaletteType.COMMANDER_X16;
+        case TextCharMode.MEGA65_NCM:
+        case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.MEGA65_ECM:
+          return PaletteType.MEGA65;
+        case TextCharMode.COMMODORE_ECM:
+        case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.COMMODORE_MULTICOLOR:
+          return PaletteType.C64;
+        case TextCharMode.VIC20:
+          return PaletteType.VIC20;
+        case TextCharMode.COMMODORE_128_VDC_HIRES:
+          return PaletteType.C128_VDC;
+      }
+      return PaletteType.C64;
+    }
+
+
+
   }
 
 }

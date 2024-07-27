@@ -5,6 +5,26 @@ namespace RetroDevStudio
 {
   internal class PaletteManager
   {
+    public static Palette PaletteFromType( PaletteType Type )
+    {
+      switch ( Type )
+      {
+        case PaletteType.COMMANDER_X16:
+          return ConstantData.PaletteCommanderX16();
+        case PaletteType.MEGA65:
+          return ConstantData.PaletteMega65_256();
+        case PaletteType.C64:
+          return ConstantData.PaletteC64();
+        case PaletteType.VIC20:
+          return ConstantData.PaletteVIC20();
+        case PaletteType.C128_VDC:
+          return ConstantData.PaletteC128();
+      }
+      return ConstantData.PaletteC64();
+    }
+
+
+
     public static Palette PaletteFromMode( TextCharMode Mode )
     {
       switch ( Mode )
