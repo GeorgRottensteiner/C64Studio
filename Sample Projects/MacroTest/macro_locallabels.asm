@@ -6,6 +6,11 @@
       bne .m1
 !end
 
+!macro mactest
+    lda #<+
++   rts
+!end
+
 
 
 * = $2000
@@ -13,3 +18,7 @@
 CALL
 +fooMacro 1
           rts
+
++mactest
+
+hurz

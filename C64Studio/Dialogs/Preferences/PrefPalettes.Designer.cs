@@ -88,7 +88,6 @@ namespace RetroDevStudio.Dialogs.Preferences
             | System.Windows.Forms.AnchorStyles.Right)));
       this.paletteEditor.Location = new System.Drawing.Point(6, 19);
       this.paletteEditor.Name = "paletteEditor";
-      this.paletteEditor.Palettes = ((System.Collections.Generic.Dictionary<RetroDevStudio.PaletteType, System.Collections.Generic.List<RetroDevStudio.Palette>>)(resources.GetObject("paletteEditor.Palettes")));
       this.paletteEditor.Size = new System.Drawing.Size(888, 419);
       this.paletteEditor.TabIndex = 14;
       this.paletteEditor.PaletteOrderModified += new RetroDevStudio.Controls.PaletteEditor.PaletteOrderModifiedHandler(this.paletteEditor_PaletteOrderModified);

@@ -1656,7 +1656,8 @@ namespace RetroDevStudio.Parser
             if ( Tokens[StartIndex].Content.StartsWith( "+" ) )
             {
               // special case of forward local label
-              if ( FindForwardLocalLabel( LineIndex, m_ASMFileInfo.LineInfo[LineIndex], Tokens[StartIndex].Content, out string closestLabel, out int closestLine ) )
+              if ( ( m_ASMFileInfo.LineInfo.ContainsKey( LineIndex ) )
+              &&   ( FindForwardLocalLabel( LineIndex, m_ASMFileInfo.LineInfo[LineIndex], Tokens[StartIndex].Content, out string closestLabel, out int closestLine ) ) )
               {
                 Tokens[StartIndex].Content  = closestLabel;
                 Tokens[StartIndex].Type     = TokenInfo.TokenType.LABEL_LOCAL;
