@@ -3025,15 +3025,15 @@ namespace RetroDevStudio.Documents
           numColorsBackground = 256;
           break;
         case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
-          m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C128 );
+          m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C128 );
           break;
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-          m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+          m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C64 );
           break;
         case TextMode.COMMODORE_VIC20_22_X_23:
-          m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+          m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.VIC20 );
           numColorsMulticolor1 = 8;
           break;
       }

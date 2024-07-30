@@ -35,7 +35,8 @@ namespace RetroDevStudio.Types
       PROJECT_CLOSED,
       SOURCE_CONTROL_STATE_MODIFIED,
       SETTINGS_LOADED,
-      SHUTTING_DOWN
+      SHUTTING_DOWN,
+      DEFAULT_PALETTE_CHANGED   // Originalvalue = name of palettetype
     }
 
     public Type             EventType = Type.NONE;

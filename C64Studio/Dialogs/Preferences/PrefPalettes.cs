@@ -93,5 +93,12 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    private void paletteEditor_PaletteOrderModified( PaletteType Type )
+    {
+      Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED ) { OriginalValue = Type.ToString() } );
+    }
+
+
+
   }
 }

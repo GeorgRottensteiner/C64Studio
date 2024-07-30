@@ -3095,10 +3095,10 @@ namespace RetroDevStudio.Documents
           case TextCharMode.COMMODORE_ECM:
           case TextCharMode.COMMODORE_HIRES:
           case TextCharMode.COMMODORE_MULTICOLOR:
-            m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+            m_MapProject.Charset.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C64 );
             break;
           case TextCharMode.VIC20:
-            m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+            m_MapProject.Charset.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.VIC20 );
             break;
         }
         RedrawMap();
@@ -3475,7 +3475,7 @@ namespace RetroDevStudio.Documents
       // TODO - that should change all kind of values inside the charset! (TotalNumberOfCharacters!)
       m_MapProject.Charset.Mode = Lookup.TextCharModeFromTextMode( m_MapProject.Mode );
 
-      m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( Lookup.MachineTypeFromTextMode( m_MapProject.Mode ) );
+      m_MapProject.Charset.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( Lookup.MachineTypeFromTextMode( m_MapProject.Mode ) );
 
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {

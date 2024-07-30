@@ -2,7 +2,7 @@
 {
   public partial class ConstantData
   {
-    public static Palette PaletteC64()
+    public static Palette DefaultPaletteC64()
     {
       var pal = new Palette();
 

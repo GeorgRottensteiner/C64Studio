@@ -75,7 +75,7 @@ namespace RetroDevStudio.Formats
         // white spaces
         PlaygroundChars.Add( 0x10000 | 0x20 );
       }
-      Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+      Colors.Palette = ConstantData.DefaultPaletteC64();
     }
 
 

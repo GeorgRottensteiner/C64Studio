@@ -2,7 +2,7 @@
 {
   public partial class ConstantData
   {
-    public static Palette PaletteCommanderX16()
+    public static Palette DefaultPaletteCommanderX16()
     {
       var pal = new Palette( 256 );
 

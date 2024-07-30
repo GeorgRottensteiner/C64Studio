@@ -344,6 +344,13 @@ namespace RetroDevStudio
       // functions for broken debugger/editing
       RegisterFunction( Function.DEBUG_RUN_TO, "Run to Cursor", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.NORMAL );
       RegisterFunction( Function.TOGGLE_BREAKPOINT, "Toggle Breakpoint", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.NORMAL );
+
+      // start with default palettes
+      Palettes.Add( PaletteType.C64, new List<Palette>() { ConstantData.DefaultPaletteC64() } );
+      Palettes.Add( PaletteType.C128_VDC, new List<Palette>() { ConstantData.DefaultPaletteC128() } );
+      Palettes.Add( PaletteType.VIC20, new List<Palette>() { ConstantData.DefaultPaletteVIC20() } );
+      Palettes.Add( PaletteType.MEGA65, new List<Palette>() { ConstantData.DefaultPaletteMega65_256() } );
+      Palettes.Add( PaletteType.COMMANDER_X16, new List<Palette>() { ConstantData.DefaultPaletteCommanderX16() } );
     }
 
 
@@ -926,6 +933,20 @@ namespace RetroDevStudio
       // dialog appearance info
       SettingsData.Append( DialogSettings.ToBuffer() );
 
+      // Palettes
+      foreach ( var palSystem in Palettes )
+      {
+        foreach ( var palette in palSystem.Value )
+        {
+          GR.IO.FileChunk chunkPalette = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_PALETTE );
+
+          chunkPalette.AppendI32( (int)palSystem.Key );
+          chunkPalette.Append( palette.ToBuffer() );
+
+          SettingsData.Append( chunkPalette.ToBuffer() );
+        }
+      }
+
       return SettingsData;
     }
 
@@ -1425,6 +1446,25 @@ namespace RetroDevStudio
               }
             }
             break;
+          case FileChunkConstants.SETTINGS_PALETTE:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              PaletteType palSystem = (PaletteType)binIn.ReadInt32();
+              if ( !Palettes.ContainsKey( palSystem ) )
+              {
+                Palettes.Add( palSystem, new List<Palette>() );
+              }
+
+              GR.IO.FileChunk chunkPalette = new GR.IO.FileChunk();
+              if ( chunkPalette.ReadFromStream( binIn ) )
+              {
+                var pal = Palette.Read( chunkPalette.MemoryReader() );
+
+                Palettes[palSystem].Add( pal );
+              }
+            }
+            break;
           case FileChunkConstants.SETTINGS_HEX_VIEW:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
@@ -1785,9 +1825,9 @@ namespace RetroDevStudio
       }
 
       // default palettes
-      if ( Palettes.Count == 0 )
+      foreach ( PaletteType palType in System.Enum.GetValues( typeof( PaletteType ) ) )
       {
-        foreach ( PaletteType palType in System.Enum.GetValues( typeof( PaletteType ) ) )
+        if ( !Palettes.ContainsKey( palType ) )
         {
           Palettes.Add( palType, new List<Palette>() );
           Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );

@@ -10,17 +10,17 @@ namespace RetroDevStudio
       switch ( Type )
       {
         case PaletteType.COMMANDER_X16:
-          return ConstantData.PaletteCommanderX16();
+          return ConstantData.DefaultPaletteCommanderX16();
         case PaletteType.MEGA65:
-          return ConstantData.PaletteMega65_256();
+          return ConstantData.DefaultPaletteMega65_256();
         case PaletteType.C64:
-          return ConstantData.PaletteC64();
+          return ConstantData.DefaultPaletteC64();
         case PaletteType.VIC20:
-          return ConstantData.PaletteVIC20();
+          return ConstantData.DefaultPaletteVIC20();
         case PaletteType.C128_VDC:
-          return ConstantData.PaletteC128();
+          return ConstantData.DefaultPaletteC128();
       }
-      return ConstantData.PaletteC64();
+      return ConstantData.DefaultPaletteC64();
     }
 
 
@@ -30,43 +30,23 @@ namespace RetroDevStudio
       switch ( Mode )
       {
         case TextCharMode.X16_HIRES:
-          return ConstantData.PaletteCommanderX16();
+          return ConstantData.DefaultPaletteCommanderX16();
         case TextCharMode.MEGA65_NCM:
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
-          return ConstantData.PaletteMega65_256();
+          return ConstantData.DefaultPaletteMega65_256();
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
-          return ConstantData.PaletteC64();
+          return ConstantData.DefaultPaletteC64();
         case TextCharMode.VIC20:
-          return ConstantData.PaletteVIC20();
+          return ConstantData.DefaultPaletteVIC20();
         case TextCharMode.COMMODORE_128_VDC_HIRES:
-          return ConstantData.PaletteC128();
+          return ConstantData.DefaultPaletteC128();
       }
-      return ConstantData.PaletteC64();
-    }
-
-
-
-    public static Palette PaletteFromMachine( MachineType Machine )
-    {
-      switch ( Machine )
-      {
-        case MachineType.C64:
-        default:
-          return ConstantData.PaletteC64();
-        case MachineType.C128:
-          return ConstantData.PaletteC128();
-        case MachineType.MEGA65:
-          return ConstantData.PaletteMega65_256();
-        case MachineType.VIC20:
-          return ConstantData.PaletteVIC20();
-        case MachineType.COMMANDER_X16:
-          return ConstantData.PaletteCommanderX16();
-      }
+      return ConstantData.DefaultPaletteC64();
     }
 
 
@@ -127,14 +107,14 @@ namespace RetroDevStudio
         case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_16_256_COLORS:
         case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_32_256_COLORS:
         case SpriteProject.SpriteProjectMode.COMMANDER_X16_64_64_256_COLORS:
-          return ConstantData.PaletteCommanderX16();
+          return ConstantData.DefaultPaletteCommanderX16();
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
-          return ConstantData.PaletteMega65_256();
+          return ConstantData.DefaultPaletteMega65_256();
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
-          return ConstantData.PaletteC64();
+          return ConstantData.DefaultPaletteC64();
       }
-      return ConstantData.PaletteC64();
+      return ConstantData.DefaultPaletteC64();
     }
 
 

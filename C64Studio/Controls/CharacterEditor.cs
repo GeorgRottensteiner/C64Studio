@@ -73,6 +73,7 @@ namespace RetroDevStudio.Controls
 
     public CharacterEditor()
     {
+      this.Core = StudioCore.StaticCore;
       Setup();
     }
 
@@ -99,7 +100,7 @@ namespace RetroDevStudio.Controls
       panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
       m_ImagePlayground.Create( 256, 256, GR.Drawing.PixelFormat.Format32bppRgb );
 
-      m_Project.Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+      m_Project.Colors.Palette = Core.Imaging.PaletteFromMachine( MachineType.C64 );
 
       ChangeColorSettingsDialog();
       OnPaletteChanged();
@@ -2124,21 +2125,21 @@ namespace RetroDevStudio.Controls
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
-          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C64 );
           break;
         case TextCharMode.COMMODORE_128_VDC_HIRES:
-          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C128 );
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C128 );
           break;
         case TextCharMode.VIC20:
-          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.VIC20 );
           break;
         case TextCharMode.X16_HIRES:
-          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.COMMANDER_X16 );
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.COMMANDER_X16 );
           break;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
-          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.MEGA65 );
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.MEGA65 );
           break;
         default:
           Debug.Log( "UpdatePalette - unsupported TextCharMode " + m_Project.Mode );

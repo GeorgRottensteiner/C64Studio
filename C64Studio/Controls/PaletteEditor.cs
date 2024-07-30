@@ -21,8 +21,19 @@ namespace RetroDevStudio.Controls
   {
     public StudioCore                           Core = null;
 
+    public delegate void PaletteOrderModifiedHandler( PaletteType Type );
+    public delegate void PaletteModifiedHandler( PaletteType Type, Palette Palette );
+    public delegate void AllPalettesModifiedHandler();
+
+    public event PaletteOrderModifiedHandler        PaletteOrderModified;
+    public event PaletteModifiedHandler             PaletteModified;
+    public event AllPalettesModifiedHandler         AllPalettesModified;
+
+
+
     private Dictionary<PaletteType,List<Palette>>  _Palettes = new Dictionary<PaletteType, List<Palette>>();
 
+    private PaletteType                         _CurrentPaletteType = PaletteType.C64;
     private List<Palette>                       _CurrentSystem = new List<Palette>();
     private Palette                             _CurrentPalette = null;
 
@@ -53,6 +64,7 @@ namespace RetroDevStudio.Controls
       set
       {
         _Palettes = value;
+        AllPalettesModified?.Invoke();
         comboSystem_SelectedIndexChanged( this, null );
       }
     }
@@ -85,7 +97,8 @@ namespace RetroDevStudio.Controls
       }
 
       var palette = (PaletteType)comboSystem.SelectedItem;
-      _CurrentSystem = Palettes[palette];
+      _CurrentPaletteType = palette;
+      _CurrentSystem      = Palettes[palette];
 
       paletteList.BeginUpdate();
       paletteList.Items.Clear();
@@ -477,6 +490,7 @@ namespace RetroDevStudio.Controls
     private void paletteList_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       _CurrentSystem.Remove( (Palette)Item.Tag );
+      PaletteOrderModified?.Invoke( _CurrentPaletteType );
     }
 
 
@@ -489,6 +503,7 @@ namespace RetroDevStudio.Controls
       {
         _CurrentSystem.Add( (Palette)item.Tag );
       }
+      PaletteOrderModified?.Invoke( _CurrentPaletteType );
     }
 
 

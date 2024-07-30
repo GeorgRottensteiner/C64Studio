@@ -70,7 +70,7 @@ namespace RetroDevStudio.Formats
       {
         ColorMapping.Add( i, new List<ColorMappingTarget> { ColorMappingTarget.ANY } );
       }
-      Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+      Colors.Palette = ConstantData.DefaultPaletteC64();
     }
 
 
@@ -256,7 +256,7 @@ namespace RetroDevStudio.Formats
 
       if ( Colors.Palettes.Count == 0 )
       {
-        Colors.Palettes.Add( PaletteManager.PaletteFromMachine( MachineType.C64 ) );
+        Colors.Palettes.Add( ConstantData.DefaultPaletteC64() );
       }
       return true;
     }

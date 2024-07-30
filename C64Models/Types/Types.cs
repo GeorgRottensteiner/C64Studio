@@ -971,7 +971,7 @@ namespace RetroDevStudio
 
     static ConstantData()
     {
-      Palette = RetroDevStudio.ConstantData.PaletteC64();
+      Palette = RetroDevStudio.ConstantData.DefaultPaletteC64();
 
 #if OS_WINDOWS
       for ( int i = 0; i < 256; ++i )

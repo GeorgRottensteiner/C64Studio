@@ -185,5 +185,25 @@ namespace RetroDevStudio
 
 
 
+    public Palette PaletteFromMachine( MachineType Machine )
+    {
+      switch ( Machine )
+      {
+        case MachineType.C64:
+        default:
+          return Core.Settings.Palettes[PaletteType.C64][0];
+        case MachineType.C128:
+          return Core.Settings.Palettes[PaletteType.C128_VDC][0];
+        case MachineType.MEGA65:
+          return Core.Settings.Palettes[PaletteType.MEGA65][0];
+        case MachineType.VIC20:
+          return Core.Settings.Palettes[PaletteType.VIC20][0];
+        case MachineType.COMMANDER_X16:
+          return Core.Settings.Palettes[PaletteType.COMMANDER_X16][0];
+      }
+    }
+
+
+
   }
 }

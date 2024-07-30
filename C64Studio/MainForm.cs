@@ -797,6 +797,8 @@ namespace RetroDevStudio
 
       ApplicationEvent += new ApplicationEventHandler( MainForm_ApplicationEvent );
 
+      RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED ) );
+
       if ( StudioCore.Settings.CheckForUpdates )
       {
         CheckForUpdate();

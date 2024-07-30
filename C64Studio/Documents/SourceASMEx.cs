@@ -387,8 +387,6 @@ namespace RetroDevStudio.Documents
           RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
         }
       }
-      //UpdateFoldingBlocks();
-      //StoreFoldedBlocks();
     }
 
 
@@ -2833,9 +2831,9 @@ namespace RetroDevStudio.Documents
 
     public override void Paste()
     {
-      m_InsertingText = true;
+      //m_InsertingText = true;
       editSource.Paste();
-      m_InsertingText = false;
+      //m_InsertingText = false;
       UpdateFoldingBlocks();
       StoreFoldedBlocks();
     }

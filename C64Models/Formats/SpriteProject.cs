@@ -146,7 +146,7 @@ namespace RetroDevStudio.Formats
 
     public SpriteProject()
     {
-      Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+      Colors.Palette = ConstantData.DefaultPaletteC64();
       for ( int i = 0; i < TotalNumberOfSprites; ++i )
       {
         Sprites.Add( new SpriteData( Colors ) );
