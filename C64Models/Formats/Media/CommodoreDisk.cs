@@ -625,12 +625,6 @@ namespace RetroDevStudio.Formats
       }
       Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
 
-      if ( ( Track == TRACK_DIRECTORY )
-      &&   ( Sector == SECTOR_DIRECTORY ) )
-      {
-        Debug.Log( "wos?" );
-      }
-
       // adjust free sectors
       bam.Data.SetU8At( Track * 4, (byte)( bam.Data.ByteAt( Track * 4 ) + 1 ) );
 

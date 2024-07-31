@@ -168,7 +168,6 @@ namespace RetroDevStudio.Documents
       m_DelayedEventTimer.Tick += m_DelayedEventTimer_Tick;
 
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
-      //AutoComplete.SearchPattern = @"([A-Za-z_.]|(?<=[A-Za-z_.][\w]))";
       AutoComplete.SearchPattern = @"[A-Za-z_.][\w.]*";
       AutoComplete.PrepareOpening += AutoComplete_PrepareOpening;
       AutoComplete.PrepareSorting += AutoComplete_PrepareSorting;
@@ -180,8 +179,6 @@ namespace RetroDevStudio.Documents
       // allows auto indent on new lines, indents similar to previous line
       editSource.AutoIndent = true;
       editSource.ShowLineNumbers = !Core.Settings.ASMHideLineNumbers;
-
-      //editSource.FindEndOfFoldingBlockStrategy = FastColoredTextBoxNS.FindEndOfFoldingBlockStrategy.Strategy2;
 
       Parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
@@ -358,7 +355,6 @@ namespace RetroDevStudio.Documents
       }
       Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
 
-      //Debug.Log( "Lines removed " + e.Index + ", " + e.Count );
       if ( ( firstLine >= 0 )
       &&   ( firstLine + count <= m_LineInfos.Count ) )
       {
@@ -397,7 +393,7 @@ namespace RetroDevStudio.Documents
 
       string[]  filterParts = e.FilterText.Split( '.' );
 
-      foreach ( var item in AutoComplete.Items.AllItems )// e.FilteredItems )
+      foreach ( var item in AutoComplete.Items.AllItems )
       {
         int     bestRelevance = 100000;
 
@@ -442,7 +438,6 @@ namespace RetroDevStudio.Documents
               // containing case mismatch -> TODO - number of chars appended?
               relevance = 6;
             }
-            //Debug.Log( "Item " + item.Text + ", relevance " + relevance );
 
             if ( relevance < bestRelevance )
             {
@@ -641,19 +636,12 @@ namespace RetroDevStudio.Documents
     void editSource_FoldingBlockStateChanged( object sender, EventArgs e )
     {
       StoreFoldedBlocks();
-      //Debug.Log( "Folded block state changed" );
     }
 
 
 
     void editSource_TextChangedDelayed( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
-      //return;
-      //Debug.Log( "editSource_TextChangedDelayed for " + DocumentInfo.FullPath );
-      //ResetAllStyles( e.ChangedRange );
-
-      //ShowAutoComplete();
-
       UpdateFoldingBlocks();
       StoreFoldedBlocks();
 
@@ -942,7 +930,6 @@ namespace RetroDevStudio.Documents
         if ( fileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
         {
           bp.Address = fileInfo.FindLineAddress( globalLineIndex );
-          //Debug.Log( "Found address " + bp.Address.ToString( "x4" ) );
         }
         else
         {
@@ -987,7 +974,6 @@ namespace RetroDevStudio.Documents
 
     void editSource_MouseHover( object sender, EventArgs e )
     {
-      //Debug.Log( "hover" );
       TRACKMOUSEEVENT trackMouseEvent = new TRACKMOUSEEVENT();
       trackMouseEvent.hwndTrack = ( (Control)sender ).Handle;
       trackMouseEvent.dwFlags = TME_HOVER;
@@ -998,7 +984,6 @@ namespace RetroDevStudio.Documents
       if ( !m_ToolTip.Active )
       {
         m_ToolTip.Show( "hurz", editSource );
-        //Console.WriteLine( "Show tooltip" );
       }
     }
 
@@ -1006,7 +991,6 @@ namespace RetroDevStudio.Documents
 
     void editSource_PreviewKeyDown( object sender, System.Windows.Forms.PreviewKeyDownEventArgs e )
     {
-      //UpdateStatusInfo();
     }
 
 
@@ -1231,7 +1215,6 @@ namespace RetroDevStudio.Documents
 
     void editSource_KeyDown( object sender, System.Windows.Forms.KeyEventArgs e )
     {
-      //UpdateStatusInfo();
     }
 
 
@@ -1259,7 +1242,6 @@ namespace RetroDevStudio.Documents
 
     void m_ToolTip_Popup( object sender, System.Windows.Forms.PopupEventArgs e )
     {
-      //UpdateToolTip();
     }
 
 
@@ -1487,8 +1469,6 @@ namespace RetroDevStudio.Documents
         }
         if ( modified )
         {
-          //ResetAllStyles( editSource.Range );
-
           // only update pseudo op style regex
           var fullRange = editSource.Range;
           var styles = new Style[]
@@ -1674,7 +1654,6 @@ namespace RetroDevStudio.Documents
           {
             if ( hadOpcodeFirst )
             {
-              //editSource.AutoComplete.Cancel();
               return;
             }
           }
@@ -1702,17 +1681,10 @@ namespace RetroDevStudio.Documents
       }
 
       FindZoneFromLine( lineIndex, out zone, out cheapLabelParent );
-      /*
-      if ( wordBelow.Length <= 0 )
-      {
-        return;
-      }*/
-
       newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
 
       var uniqueKeys = new GR.Collections.Set<string>();
 
-      //List<string>    newList = new List<string>();
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
         if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
@@ -2197,10 +2169,6 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      //if ( DocumentInfo.FullPath.EndsWith( "fighter.asm" ) )
-      //{
-        //Debug.Log( "StoreFoldedBlocks" );
-      //}
       DocumentInfo.CollapsedFoldingBlocks.Clear();
 
       foreach ( var block in editSource.FoldedBlocks )
@@ -2210,7 +2178,6 @@ namespace RetroDevStudio.Documents
           if ( editSource.TextSource[iLine].UniqueId == block.Key )
           {
             DocumentInfo.CollapsedFoldingBlocks.Add( iLine );
-            //Debug.Log( "Store for " + DocumentInfo.FullPath + ", line " + iLine );
           }
         }
       }
@@ -2831,9 +2798,7 @@ namespace RetroDevStudio.Documents
 
     public override void Paste()
     {
-      //m_InsertingText = true;
       editSource.Paste();
-      //m_InsertingText = false;
       UpdateFoldingBlocks();
       StoreFoldedBlocks();
     }
