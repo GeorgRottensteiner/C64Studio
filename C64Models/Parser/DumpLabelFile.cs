@@ -28,12 +28,12 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( Settings.IgnoreInternalLabels )
-        &&   ( labelInfo.Key.Contains( $"_{ASMFileParser.INTERNAL_LABEL_PREFIX}_" ) ) )
+        &&   ( labelInfo.Value.Name.Contains( $"_{ASMFileParser.INTERNAL_LABEL_PREFIX}_" ) ) )
         {
           continue;
         }
         if ( ( Settings.IgnoreLocalLabels )
-        &&   ( labelInfo.Key.StartsWith( ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) ) )
+        &&   ( labelInfo.Value.Name.StartsWith( ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) ) )
         {
           continue;
         }
@@ -43,6 +43,18 @@ namespace RetroDevStudio.Parser
       var uniqueTempLabels = new GR.Collections.Map<string,TemporaryLabelInfo>();
       foreach ( var tempLabel in FileInfo.TempLabelInfo )
       {
+        
+        if ( ( Settings.IgnoreInternalLabels )
+        &&   ( tempLabel.Symbol.Name.Contains( $"_{ASMFileParser.INTERNAL_LABEL_PREFIX}_" ) ) )
+        {
+          continue;
+        }
+        if ( ( Settings.IgnoreLocalLabels )
+        &&   ( tempLabel.Symbol.Name.StartsWith( ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) ) )
+        {
+          continue;
+        }
+
         // for loop labels have a length set
         if ( tempLabel.Length > 0 )
         {

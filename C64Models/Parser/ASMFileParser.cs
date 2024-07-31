@@ -653,21 +653,22 @@ namespace RetroDevStudio.Parser
 
       if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
       {
-        Value.Name              = Name;
-        Value.LineIndex         = SourceLine;
-        Value.Info              = Info;
-        Value.DocumentFilename  = filename;
-        Value.LocalLineIndex    = localIndex;
-        Value.SourceInfo        = srcInfo;
-        Value.Zone              = Zone;
-        Value.CharIndex         = CharIndex;
-        Value.Length            = Length;
+        var newValue = new SymbolInfo( Value );
+        newValue.Name              = Name;
+        newValue.LineIndex         = SourceLine;
+        newValue.Info              = Info;
+        newValue.DocumentFilename  = filename;
+        newValue.LocalLineIndex    = localIndex;
+        newValue.SourceInfo        = srcInfo;
+        newValue.Zone              = Zone;
+        newValue.CharIndex         = CharIndex;
+        newValue.Length            = Length;
         if ( !_ParseContext.DoNotAddReferences )
         {
-          Value.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
+          newValue.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
         }
 
-        m_ASMFileInfo.Labels.Add( Name, Value );
+        m_ASMFileInfo.Labels.Add( Name, newValue );
       }
       else
       {
@@ -685,22 +686,23 @@ namespace RetroDevStudio.Parser
             AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
 
             // add new label
-            Value.Name              = Name;
-            Value.LineIndex         = SourceLine;
-            Value.Info              = Info;
-            Value.DocumentFilename  = filename;
-            Value.LocalLineIndex    = localIndex;
-            Value.SourceInfo        = srcInfo;
-            Value.Zone              = Zone;
-            Value.CharIndex         = CharIndex;
-            Value.Length            = Length;
+            var newValue = new SymbolInfo( Value );
+            newValue.Name              = Name;
+            newValue.LineIndex         = SourceLine;
+            newValue.Info              = Info;
+            newValue.DocumentFilename  = filename;
+            newValue.LocalLineIndex    = localIndex;
+            newValue.SourceInfo        = srcInfo;
+            newValue.Zone              = Zone;
+            newValue.CharIndex         = CharIndex;
+            newValue.Length            = Length;
 
             if ( !_ParseContext.DoNotAddReferences )
             {
-              Value.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
+              newValue.AddReference( SourceLine, new TokenInfo() { StartPos = CharIndex, Length = Length } );
             }
 
-            AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
+            AddTempLabel( Name, SourceLine, -1, newValue, Info, CharIndex, Length );
             return;
           }
         }
@@ -8608,6 +8610,7 @@ namespace RetroDevStudio.Parser
         else
         {
           EvaluateTokens( lineIndex, lineTokenInfos, 0, 1, mapping, out SymbolInfo originalValue );
+
           if ( !HandleAssignmentOperator( lineIndex, lineTokenInfos, originalValue, operatorToken, addressSymbol, out SymbolInfo resultingValue ) )
           {
             return ParseLineResult.ERROR_ABORT;
@@ -9851,8 +9854,6 @@ namespace RetroDevStudio.Parser
               LineIndexInsideMacro = i;
               return null;
             }
-
-            Debug.Log( "RelabelLocalLabelsForMacro with " + resultingToken.ToString() );
 
             tokens[j].Content = tokens[j].Content.Substring( 0, tokens[j].Content.Length - 1 ) + resultingToken.ToString();
 
