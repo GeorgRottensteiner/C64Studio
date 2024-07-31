@@ -494,7 +494,7 @@ namespace RetroDevStudio.Formats
       FileInfo.StartTrack   = StartTrack;
       FileInfo.StartSector  = StartSector;
       FileInfo.Type         = (Types.FileType)( FileType & 0x07 );
-      FileInfo.Blocks       = 0;
+      FileInfo.Blocks       = NumBlocks;
 
       FileInfo.ReadOnly     = ( FileType & 64 ) != 0;
       FileInfo.NotClosed    = ( FileType & 128 ) == 0;
