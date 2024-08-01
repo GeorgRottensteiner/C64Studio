@@ -365,7 +365,12 @@ namespace RetroDevStudio.Controls
         }
       }
 
-      listItems.Items.Remove( itemToRemove );
+      if ( !listItems.Items.Remove( itemToRemove ) )
+      {
+        Debug.Log( $"-actual remove failed!" );
+        return;
+      }
+
       if ( ItemRemoved != null )
       {
         ItemRemoved( this, itemToRemove );
@@ -428,6 +433,7 @@ namespace RetroDevStudio.Controls
       listItems.Items.RemoveAt( indexToMove );
       listItems.Items.Insert( indexToMove - 1, itemToMove );
       itemToMove.Selected = true;
+      UpdateUI();
 
       if ( ItemMoved != null )
       {
@@ -440,7 +446,7 @@ namespace RetroDevStudio.Controls
     private void btnMoveDown_Click( DecentForms.ControlBase Sender )
     {
       if ( ( listItems.SelectedIndices.Count == 0 )
-      || ( listItems.SelectedIndices[0] + 1 == listItems.Items.Count ) )
+      ||   ( listItems.SelectedIndices[0] + 1 == listItems.Items.Count ) )
       {
         return;
       }
@@ -460,7 +466,9 @@ namespace RetroDevStudio.Controls
 
       listItems.Items.RemoveAt( indexToMove );
       listItems.Items.Insert( indexToMove + 1, itemToMove );
-      itemToMove.Selected = true;
+      listItems.SelectedItems.Clear();
+      listItems.SelectedIndex = itemToMove.Index;
+      UpdateUI();
 
       if ( ItemMoved != null )
       {

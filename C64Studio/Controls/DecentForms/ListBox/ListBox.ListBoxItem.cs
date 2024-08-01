@@ -63,7 +63,20 @@
         }
         set
         {
-          _Owner?.SelectItem( this );
+          if ( _Selected == value )
+          {
+            return;
+          }
+          if ( _Selected )
+          {
+            _Selected = false;
+            _Owner?.UnselectItem( this );
+          }
+          else
+          {
+            _Selected = true;
+            _Owner?.SelectItem( this );
+          }
         }
       }
 

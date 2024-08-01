@@ -3719,5 +3719,37 @@ namespace RetroDevStudio.Documents
       panelCharacters.Invalidate();
     }
 
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
+          {
+            bool prevModified = Modified;
+            if ( !string.IsNullOrEmpty( Event.OriginalValue ) )
+            {
+              Core.Imaging.ApplyPalette( (PaletteType)Enum.Parse( typeof( PaletteType ), Event.OriginalValue, true ),
+                                         Lookup.PaletteTypeFromTextCharMode( m_CharsetScreen.CharSet.Mode ),
+                                         m_CharsetScreen.CharSet.Colors );
+            }
+            else
+            {
+              Core.Imaging.ApplyPalette( Lookup.PaletteTypeFromTextCharMode( m_CharsetScreen.CharSet.Mode ),
+                                         Lookup.PaletteTypeFromTextCharMode( m_CharsetScreen.CharSet.Mode ),
+                                         m_CharsetScreen.CharSet.Colors );
+
+            }
+            charEditor.ColorsChanged();
+            OnCharsetScreenModeChanged();
+            Modified = prevModified;
+          }
+          break;
+      }
+    }
+
+
+
   } 
 }

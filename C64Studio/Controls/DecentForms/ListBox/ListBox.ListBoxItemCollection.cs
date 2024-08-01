@@ -43,8 +43,8 @@ namespace DecentForms
 
       public int Add( ListBoxItem Item )
       {
-        Item._Index   = _Items.Count;
         _Items.Add( Item );
+        Item._Owner = _Owner;
         _Owner.ItemsModified();
 
         return Item._Index;
@@ -64,7 +64,7 @@ namespace DecentForms
         foreach ( var item in Items )
         {
           var newItem = new ListBoxItem( item );
-          newItem._Index = _Items.Count;
+          newItem._Owner = _Owner;
           _Items.Add( newItem );
         }
         _Owner.ItemsModified();
@@ -78,14 +78,25 @@ namespace DecentForms
         {
           return false;
         }
+        if ( Item.Selected )
+        {
+          Item.Selected = false;
+        }
         if ( !_Items.Remove( Item ) )
         {
           return false;
         }
-        for ( int i = Item.Index + 1; i < _Items.Count; i++ )
+        Item._Owner = null;
+        if ( _Owner.SelectedIndex == Item.Index )
         {
-          --_Items[i]._Index;
+          // refresh selection
+          _Owner.SelectedIndex = -1;
+          if ( Item.Index < _Items.Count )
+          {
+            _Owner.SelectedIndex = Item.Index;
+          }
         }
+        _Owner.ItemsModified();
         return true;
       }
 
@@ -98,12 +109,20 @@ namespace DecentForms
         {
           return;
         }
-        for ( int i = _Items[Index].Index + 1; i < _Items.Count; i++ )
-        {
-          --_Items[i]._Index;
-        }
-        _Items[Index]._Index = -1;
+        _Items[Index].Selected = false;
+        _Items[Index]._Owner = null;
         _Items.RemoveAt( Index );
+
+        if ( _Owner.SelectedIndex == Index )
+        {
+          // refresh selection
+          _Owner.SelectedIndex = -1;
+          if ( Index < _Items.Count )
+          {
+            _Owner.SelectedIndex = Index;
+          }
+        }
+
         _Owner.ItemsModified();
       }
 
@@ -125,9 +144,10 @@ namespace DecentForms
         }
         if ( Count > 0 )
         {
-          for ( int i = Index + Count; i < _Items.Count; i++ )
+          for ( int i = 0; i < Count;  ++i )
           {
-            _Items[i]._Index -= Count;
+            _Items[Index + i].Selected = false;
+            _Items[Index + i]._Owner = null;
           }
           _Items.RemoveRange( Index, Count );
           _Owner.ItemsModified();
@@ -182,11 +202,8 @@ namespace DecentForms
         {
           throw new ArgumentOutOfRangeException( $"Trying to insert item at index {InsertAtIndex} of {_Items.Count}" );
         }
+        Item._Owner = _Owner;
         _Items.Insert( InsertAtIndex, Item );
-        for ( int i = InsertAtIndex; i < _Items.Count; ++i )
-        {
-          _Items[i]._Index = i;
-        }
         _Owner.ItemsModified();
       }
 

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using GR.Image;
+using RetroDevStudio.Types;
 using WeifenLuo.WinFormsUI.Docking;
 
 
@@ -200,6 +201,27 @@ namespace RetroDevStudio
           return Core.Settings.Palettes[PaletteType.VIC20][0];
         case MachineType.COMMANDER_X16:
           return Core.Settings.Palettes[PaletteType.COMMANDER_X16][0];
+      }
+    }
+
+
+
+    public void ApplyPalette( PaletteType PalType, PaletteType OriginalType, ColorSettings Colors )
+    {
+      // only modify if applicable
+      if ( ( PalType != OriginalType )
+      ||   ( Lookup.AllowPaletteModification( PalType ) ) )
+      {
+        return;
+      }
+      var updatedPal = Core.Settings.Palettes[PalType][0];
+      foreach ( var pal in Colors.Palettes )
+      {
+        for ( int i = 0; i < pal.NumColors; ++i )
+        {
+          pal.ColorValues[i] = updatedPal.ColorValues[i];
+        }
+        pal.CreateBrushes();
       }
     }
 

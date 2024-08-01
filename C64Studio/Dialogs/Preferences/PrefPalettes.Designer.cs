@@ -91,6 +91,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       this.paletteEditor.Size = new System.Drawing.Size(888, 419);
       this.paletteEditor.TabIndex = 14;
       this.paletteEditor.PaletteOrderModified += new RetroDevStudio.Controls.PaletteEditor.PaletteOrderModifiedHandler(this.paletteEditor_PaletteOrderModified);
+      this.paletteEditor.PaletteModified += new RetroDevStudio.Controls.PaletteEditor.PaletteModifiedHandler(this.paletteEditor_PaletteModified);
       // 
       // PrefPalettes
       // 

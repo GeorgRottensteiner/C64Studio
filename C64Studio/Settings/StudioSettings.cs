@@ -995,6 +995,7 @@ namespace RetroDevStudio
     public bool ReadFromBuffer( GR.Memory.ByteBuffer SettingsData )
     {
       IgnoredWarnings.Clear();
+      Palettes.Clear();
 
       GR.IO.BinaryReader binReader = new GR.IO.BinaryReader( SettingsData.MemoryStream() );
 
@@ -1824,15 +1825,7 @@ namespace RetroDevStudio
         ASMLibraryPaths.Add( System.IO.Path.Combine( Application.StartupPath, "baselib" ) );
       }
 
-      // default palettes
-      foreach ( PaletteType palType in System.Enum.GetValues( typeof( PaletteType ) ) )
-      {
-        if ( !Palettes.ContainsKey( palType ) )
-        {
-          Palettes.Add( palType, new List<Palette>() );
-          Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );
-        }
-      }
+      SanitizePalettes();
     }
 
 
@@ -1848,6 +1841,22 @@ namespace RetroDevStudio
       }
       SetKeyBindingKey( Func, KeyBinding, AltKeyBinding );
     }
+
+
+
+    internal void SanitizePalettes()
+    {
+      foreach ( PaletteType palType in System.Enum.GetValues( typeof( PaletteType ) ) )
+      {
+        if ( !Core.Settings.Palettes.ContainsKey( palType ) )
+        {
+          Core.Settings.Palettes.Add( palType, new List<Palette>() );
+          Core.Settings.Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );
+        }
+      }
+    }
+
+
 
   }
 }

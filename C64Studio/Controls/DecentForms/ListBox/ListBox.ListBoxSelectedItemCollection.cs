@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Controls;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,17 +9,14 @@ namespace DecentForms
 {
   public partial class ListBox
   {
-    public class ListBoxItemIndexCollection : IEnumerable<int>, ICollection
+    public class ListBoxSelectedItemCollection : IEnumerable<ListBoxItem>
     {
-      private ListBox         _Owner;
-      private List<int>       _Items = new List<int>();
-
-      private object          _SyncRoot = new object();
-      private bool            _IsSynchronized = false;
+      private ListBox               _Owner;
+      private List<ListBoxItem>     _Items = new List<ListBoxItem>();
 
 
 
-      internal ListBoxItemIndexCollection( ListBox Owner )
+      internal ListBoxSelectedItemCollection( ListBox Owner )
       {
         _Owner = Owner;
       }
@@ -36,58 +34,56 @@ namespace DecentForms
 
 
 
-      public object SyncRoot
-      {
-        get
-        {
-          return _SyncRoot;
-        }
-      }
-
-
-
-      public bool IsSynchronized
-      {
-        get
-        {
-          return _IsSynchronized;
-        }
-      }
-
-
-
-      public int IndexOf( int Item )
+      public int IndexOf( ListBoxItem Item )
       {
         return _Items.IndexOf( Item );
       }
 
 
 
-      public void Add( int Item )
+      public int Add( ListBoxItem Item )
       {
         _Items.Add( Item );
         _Owner.ItemsModified();
+
+        return Item._Index;
       }
 
 
 
-      public void AddRange( int[] Items )
+      public int Add( string Text )
+      {
+        return Add( new ListBoxItem( Text ) );
+      }
+
+
+
+      public void AddRange( string[] Items )
       {
         foreach ( var item in Items )
         {
-          _Items.Add( item );
+          var newItem = new ListBoxItem( item );
+          _Items.Add( newItem );
         }
         _Owner.ItemsModified();
       }
 
 
 
-      public void Remove( int Index )
+      public bool Remove( ListBoxItem Item )
       {
-        if ( _Items.Remove( Index ) )
+        if ( Item.Index == -1 )
         {
-          _Owner.ItemsModified();
+          return false;
         }
+        _Items.Remove( Item );
+        if ( Item.Selected )
+        {
+          Item.Selected = false;
+        }
+        
+        _Owner.ItemsModified();
+        return true;
       }
 
 
@@ -99,7 +95,8 @@ namespace DecentForms
         {
           return;
         }
-        _Items.RemoveAt( Index );
+        _Items.Remove( _Items[Index] );
+        _Items[Index].Selected = false;
         _Owner.ItemsModified();
       }
 
@@ -121,14 +118,18 @@ namespace DecentForms
         }
         if ( Count > 0 )
         {
-          _Items.RemoveRange( Index, Count );
+          for ( int i = 0; i < Count;  ++i )
+          {
+            _Items.RemoveAt( Index + Count - i - 1 );
+            _Items[Index + Count - i - 1].Selected = false;
+          }
           _Owner.ItemsModified();
         }
       }
 
 
 
-      public int this[int Index]
+      public ListBoxItem this[int Index]
       {
         get
         {
@@ -147,13 +148,13 @@ namespace DecentForms
             throw new ArgumentOutOfRangeException( $"Tried to access item {Index} of {_Items.Count}" );
           }
           _Items[Index] = value;
-          _Owner.ItemModified( _Owner.Items[Index] );
+          _Owner.ItemModified( value );
         }
       }
 
 
 
-      public IEnumerator<int> GetEnumerator()
+      public IEnumerator<ListBoxItem> GetEnumerator()
       {
         return _Items.GetEnumerator();
       }
@@ -167,9 +168,15 @@ namespace DecentForms
 
 
 
-      public void CopyTo( Array array, int index )
+      public void Insert( int InsertAtIndex, ListBoxItem Item )
       {
-        throw new NotImplementedException();
+        if ( ( InsertAtIndex < 0 )
+        ||   ( InsertAtIndex > _Items.Count ) )
+        {
+          throw new ArgumentOutOfRangeException( $"Trying to insert item at index {InsertAtIndex} of {_Items.Count}" );
+        }
+        _Items.Insert( InsertAtIndex, Item );
+        _Owner.ItemsModified();
       }
 
 
@@ -178,11 +185,17 @@ namespace DecentForms
       {
         if ( _Items.Count > 0 )
         {
-          _Items.Clear();
-          _Owner.SelectedItems.Clear();
+          var oldItems = _Items;
+          while ( _Items.Count > 0 )
+          {
+            _Items[0].Selected = false;
+          }
           _Owner.ItemsModified();
         }
       }
+
+
+
     }
 
 

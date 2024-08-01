@@ -195,6 +195,8 @@ namespace RetroDevStudio.Controls
 
       listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
       panelColorPreview.Invalidate();
+
+      PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
     }
 
 
@@ -219,6 +221,8 @@ namespace RetroDevStudio.Controls
       editG.Text = _CurrentPalette.Colors[listPalette.SelectedIndex].G.ToString();
       editGHex.Text = _CurrentPalette.Colors[listPalette.SelectedIndex].G.ToString( "X2" );
       panelColorPreview.Invalidate();
+
+      PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
     }
 
 
@@ -243,6 +247,8 @@ namespace RetroDevStudio.Controls
       editB.Text = _CurrentPalette.Colors[listPalette.SelectedIndex].B.ToString();
       editBHex.Text = _CurrentPalette.Colors[listPalette.SelectedIndex].B.ToString( "X2" );
       panelColorPreview.Invalidate();
+
+      PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
     }
 
 
@@ -268,6 +274,8 @@ namespace RetroDevStudio.Controls
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
+
+        PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
       }
     }
 
@@ -293,6 +301,8 @@ namespace RetroDevStudio.Controls
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
+
+        PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
       }
     }
 
@@ -319,6 +329,8 @@ namespace RetroDevStudio.Controls
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
+
+        PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
       }
     }
 
@@ -344,6 +356,8 @@ namespace RetroDevStudio.Controls
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
+
+        PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
       }
     }
 
@@ -370,6 +384,8 @@ namespace RetroDevStudio.Controls
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
+
+        PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
       }
     }
 
@@ -395,6 +411,8 @@ namespace RetroDevStudio.Controls
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
+
+        PaletteModified?.Invoke( _CurrentPaletteType, _CurrentPalette );
       }
     }
 
@@ -430,11 +448,6 @@ namespace RetroDevStudio.Controls
       {
         editPaletteName.Enabled = false;
         return;
-      }
-
-      if ( Palettes.Count <= 1 )
-      {
-        paletteList.DeleteButtonEnabled = false;
       }
 
       editPaletteName.Enabled = true;

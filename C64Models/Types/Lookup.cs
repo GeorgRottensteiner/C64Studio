@@ -331,6 +331,25 @@ namespace RetroDevStudio
 
 
 
+    internal static bool AllowPaletteModification( PaletteType PalType )
+    {
+      switch ( PalType )
+      {
+        case PaletteType.C64:
+        case PaletteType.VIC20:
+        case PaletteType.C128_VDC:
+          return false;
+        case PaletteType.MEGA65:
+        case PaletteType.COMMANDER_X16:
+          return true;
+        default:
+          Debug.Log( "AllowPaletteModification unsupported type " + PalType );
+          return false;
+      }
+    }
+
+
+
     internal static bool HasCustomPalette( SpriteProject.SpriteProjectMode Mode )
     {
       switch ( Mode )

@@ -27,7 +27,7 @@ namespace DecentForms
     public ListBox()
     {
       SelectedIndices   = new ListBoxItemIndexCollection( this );
-      SelectedItems     = new ListBoxItemCollection( this );
+      SelectedItems     = new ListBoxSelectedItemCollection( this );
       Items             = new ListBoxItemCollection( this );
 
       BorderStyle       = BorderStyle.SUNKEN;
@@ -66,10 +66,10 @@ namespace DecentForms
 
 
     public int ItemHeight { get; set; } = 15;
-    public ListBoxItemCollection      Items { get; private set; }
-    public ListBoxItemIndexCollection SelectedIndices { get; private set; }
-    public ListBoxItemCollection      SelectedItems { get; private set; }
-    public SelectionMode              SelectionMode { get; set; }
+    public ListBoxItemCollection          Items { get; private set; }
+    public ListBoxItemIndexCollection     SelectedIndices { get; private set; }
+    public ListBoxSelectedItemCollection  SelectedItems { get; private set; }
+    public SelectionMode                  SelectionMode { get; set; }
 
 
 
@@ -308,18 +308,14 @@ namespace DecentForms
         // TODO - clear multi selection! 
         if ( _SelectedIndex != value )
         {
-          if ( _SelectedIndex != -1 )
-          {
-            Invalidate( GetItemRect( _SelectedIndex ) );
-            SelectedItems.Remove( Items[_SelectedIndex] );
-            SelectedIndices.Remove( _SelectedIndex );
-          }
+          SelectedItems.Clear();
+
           _SelectedIndex = value;
           if ( _SelectedIndex != -1 )
           {
-            SelectedItems.Add( Items[_SelectedIndex] );
-            SelectedIndices.Add( _SelectedIndex );
+            Items[_SelectedIndex].Selected = true;
           }
+
           SelectedIndexChanged?.Invoke( this );
           if ( _SelectedIndex == -1 )
           {
@@ -420,13 +416,7 @@ namespace DecentForms
                 Invalidate( GetItemRect( _MouseOverItem ) );
               }
             }
-            if ( ( Event.MouseButtons & 1 ) != 0 )
-            {
-              if ( itemBelow != _SelectedIndex )
-              {
-                _SelectedIndex = itemBelow;
-              }
-            }
+            
           }
           break;
         case ControlEvent.EventType.MOUSE_LEAVE:
@@ -597,7 +587,42 @@ namespace DecentForms
 
     private void SelectItem( ListBoxItem Item )
     {
-      throw new System.NotImplementedException();
+      if ( !SelectedItems.Contains( Item ) )
+      {
+        SelectedItems.Add( Item );
+      }
+      if ( !SelectedIndices.Contains( Item.Index ) )
+      {
+        SelectedIndices.Add( Item.Index );
+      }
+      if ( _SelectedIndex == -1 )
+      {
+        _SelectedIndex = Item.Index;
+      }
+      Invalidate( GetItemRect( Item.Index ) );
+    }
+
+
+
+    private void UnselectItem( ListBoxItem Item )
+    {
+      if ( SelectedItems.Contains( Item ) )
+      {
+        SelectedItems.Remove( Item );
+      }
+      else
+      {
+        Debug.Log( "was not inside SelectedItems!" );
+      }
+      if ( SelectedIndices.Contains( Item.Index ) )
+      {
+        SelectedIndices.Remove( Item.Index );
+      }
+      else
+      {
+        Debug.Log( "was not inside SelectedIndices!" );
+      }
+      Invalidate( GetItemRect( Item.Index ) );
     }
 
 
@@ -623,8 +648,21 @@ namespace DecentForms
 
 
 
+    private void FixItemIndices()
+    {
+      int   itemIndex = 0;
+      foreach ( var item in Items )
+      {
+        item._Index = itemIndex;
+        ++itemIndex;
+      }
+    }
+
+
+
     private void ItemsModified()
     {
+      FixItemIndices();
       _CachedMaxItemWidth = -1;
       UpdateScrollbarState();
       Invalidate();

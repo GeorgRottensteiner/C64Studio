@@ -37,6 +37,7 @@ namespace RetroDevStudio.Types
       SETTINGS_LOADED,
       SHUTTING_DOWN,
       DEFAULT_PALETTE_CHANGED   // Originalvalue = name of palettetype
+                                //               = empty > all palettes have changed
     }
 
     public Type             EventType = Type.NONE;
