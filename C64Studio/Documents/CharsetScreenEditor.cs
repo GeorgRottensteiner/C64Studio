@@ -3742,7 +3742,7 @@ namespace RetroDevStudio.Documents
 
             }
             charEditor.ColorsChanged();
-            OnCharsetScreenModeChanged();
+            //OnCharsetScreenModeChanged();
             Modified = prevModified;
           }
           break;

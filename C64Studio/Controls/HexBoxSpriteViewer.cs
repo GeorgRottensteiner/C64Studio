@@ -10,6 +10,10 @@ namespace Be.Windows.Forms
 {
   public class HexBoxSpriteViewer : ICustomHexViewer
   {
+    public Palette    PaletteC64 = ConstantData.Palette;
+
+
+
     public byte BackgroundColor
     {
       get;
@@ -44,8 +48,6 @@ namespace Be.Windows.Forms
 
     public void PaintHexData( HexBox Box, Graphics graphics, long _startByte, long intern_endByte, Rectangle _recHex )
     {
-      //graphics.FillRectangle( new SolidBrush( Color.Beige ), _recHex );
-
       if ( Box.BytesPerLine == 8 )
       {
         int     spriteSize = (int)( Box.CharSize.Height * 8 ) - 2;
@@ -72,15 +74,15 @@ namespace Be.Windows.Forms
           using ( GR.Image.FastImage spriteImage = new GR.Image.FastImage( 24, 21, GR.Drawing.PixelFormat.Format32bppRgb ) )
           {
             spriteImage.Box( 0, 0, 24, 21, 1 );
-            PaletteManager.ApplyPalette( spriteImage );
+            PaletteManager.ApplyPalette( spriteImage, PaletteC64 );
 
             if ( MultiColor )
             {
-              SpriteDisplayer.DisplayMultiColorSprite( spriteData, ConstantData.Palette, 24, 21, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
+              SpriteDisplayer.DisplayMultiColorSprite( spriteData, PaletteC64, 24, 21, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
             }
             else
             {
-              SpriteDisplayer.DisplayHiResSprite( spriteData, ConstantData.Palette, 24, 21, BackgroundColor, CustomColor, spriteImage, 0, 0 );
+              SpriteDisplayer.DisplayHiResSprite( spriteData, PaletteC64, 24, 21, BackgroundColor, CustomColor, spriteImage, 0, 0 );
             }
 
             int     offsetY = (int)( Box.CharSize.Height * ( j - firstSprite ) * 8 + ( Box.CharSize.Height * 8 - spriteSize ) / 2 ) - (int)( Box.CharSize.Height * firstLineOffset );

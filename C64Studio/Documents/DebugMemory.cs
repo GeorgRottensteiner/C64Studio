@@ -686,6 +686,7 @@ namespace RetroDevStudio.Documents
     protected override void OnClosed( EventArgs e )
     {
       ViewScrolled -= new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
+      Core.MainForm.ApplicationEvent -= OnApplicationEvent;
       Core.Debugging.RemoveMemoryView( this );
       base.OnClosed( e );
     }
@@ -746,6 +747,7 @@ namespace RetroDevStudio.Documents
       document.LoadDocument();
       document.RefreshDisplayOptions();
       document.Show( Core.MainForm.panelMain );
+      Core.MainForm.ApplicationEvent += document.OnApplicationEvent;
     }
 
 
@@ -815,6 +817,37 @@ namespace RetroDevStudio.Documents
       hexView.DisplayedByteOffset = m_ByteOffset;
 
       hexView.PerformScrollToLine( line );
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
+          if ( hexView.CustomHexViewer is HexBoxSpriteViewer )
+          {
+            ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).PaletteC64 = Core.Settings.Palettes[PaletteType.C64][0];
+            Core.Settings.MemoryDisplaySpriteMulticolor = ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).MultiColor;
+            hexView.Invalidate();
+          }
+          else if ( hexView.CustomHexViewer is HexBoxPETSCIIViewer )
+          {
+            ( (HexBoxPETSCIIViewer)hexView.CustomHexViewer ).PaletteC64 = Core.Settings.Palettes[PaletteType.C64][0];
+            hexView.Invalidate();
+          }
+          else if ( hexView.CustomHexViewer is HexBoxCharViewer )
+          {
+            ( (HexBoxCharViewer)hexView.CustomHexViewer ).PaletteC64 = Core.Settings.Palettes[PaletteType.C64][0];
+            hexView.Invalidate();
+          }
+          else
+          {
+            return;
+          }
+          break;
+      }
     }
 
 

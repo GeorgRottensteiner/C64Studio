@@ -171,8 +171,8 @@
       this.btnAddExternalDependency.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnAddExternalDependency.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnAddExternalDependency.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnAddExternalDependency.Image = ((System.Drawing.Image)(resources.GetObject("btnAddExternalDependency.Image")));
       this.btnAddExternalDependency.Location = new System.Drawing.Point(100, 326);
+      this.btnAddExternalDependency.Image = global::RetroDevStudio.Properties.Resources.add;
       this.btnAddExternalDependency.Name = "btnAddExternalDependency";
       this.btnAddExternalDependency.Size = new System.Drawing.Size(38, 23);
       this.btnAddExternalDependency.TabIndex = 15;
@@ -185,7 +185,7 @@
       this.btnRemoveExternalDependency.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnRemoveExternalDependency.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnRemoveExternalDependency.Enabled = false;
-      this.btnRemoveExternalDependency.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveExternalDependency.Image")));
+      this.btnRemoveExternalDependency.Image = global::RetroDevStudio.Properties.Resources.delete;
       this.btnRemoveExternalDependency.Location = new System.Drawing.Point(144, 326);
       this.btnRemoveExternalDependency.Name = "btnRemoveExternalDependency";
       this.btnRemoveExternalDependency.Size = new System.Drawing.Size(38, 23);

@@ -16,6 +16,8 @@ namespace Be.Windows.Forms
 
     PETSCIIDisplay      Mode = PETSCIIDisplay.UPPER_CASE;
 
+    public Palette      PaletteC64 = ConstantData.Palette;
+
 
 
     public void PaintHexData( HexBox Box, Graphics graphics, long _startByte, long intern_endByte, Rectangle _recHex )
@@ -25,7 +27,7 @@ namespace Be.Windows.Forms
         graphics.SetClip( _recHex );
 
         GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, GR.Drawing.PixelFormat.Format32bppRgb );
-        PaletteManager.ApplyPalette( charImage );
+        PaletteManager.ApplyPalette( charImage, PaletteC64 );
         int chars = Box.BytesPerLine;
 
         for ( int i = 0; i < intern_endByte - _startByte; ++i )
@@ -45,13 +47,13 @@ namespace Be.Windows.Forms
           {
             case PETSCIIDisplay.UPPER_CASE:
               CharacterDisplayer.DisplayHiResChar( ConstantData.UpperCaseCharsetC64.SubBuffer( character * 8, 8 ),
-                                                   ConstantData.Palette,
+                                                   PaletteC64,
                                                    bgColor, displayColor,
                                                    charImage, 0, 0 );
               break;
             case PETSCIIDisplay.LOWER_CASE:
               CharacterDisplayer.DisplayHiResChar( ConstantData.LowerCaseCharsetC64.SubBuffer( character * 8, 8 ),
-                                                   ConstantData.Palette,
+                                                   PaletteC64,
                                                    bgColor, displayColor,
                                                    charImage, 0, 0 );
               break;
