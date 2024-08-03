@@ -668,6 +668,7 @@ namespace RetroDevStudio
       ApplicationEvent += m_CharsetEditor.OnApplicationEvent;
       ApplicationEvent += m_CharScreenEditor.OnApplicationEvent;
       ApplicationEvent += m_DebugMemory.OnApplicationEvent;
+      ApplicationEvent += m_GraphicScreenEditor.OnApplicationEvent;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();

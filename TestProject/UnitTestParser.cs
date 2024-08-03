@@ -1120,7 +1120,7 @@ namespace TestProject
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "01080B080A009E32303631000000CE20D04C0D08", assembly.ToString() );
+      Assert.AreEqual( "01080B080A009E3230363200000000CE20D04C0E08", assembly.ToString() );
     }
 
 
@@ -1622,6 +1622,28 @@ namespace TestProject
 
       var assembly = TestAssemble( source );
 
+      Assert.AreEqual( "01080B080A009E3230363200000000EE20D04C0E08", assembly.ToString() );
+    }
+
+
+
+    /// <summary>
+    /// !basic tries to use the least possible number of bytes for the line number, that only works if the
+    ///        label value is known beforehand. Otherwise it's always going safe with 5 bytes
+    /// </summary>
+    [TestMethod]
+    public void TestPseudoOpBASICWithKnownLabel()
+    {
+      string      source = @"* = $0801
+                            ;jump to label directly after po
+                            label = $080d
+                            !basic label
+                            -
+                                      inc $d020
+                                      jmp -";
+
+      var assembly = TestAssemble( source );
+
       Assert.AreEqual( "01080B080A009E32303631000000EE20D04C0D08", assembly.ToString() );
     }
 
@@ -1678,7 +1700,7 @@ namespace TestProject
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "01080B08E2079E32303631000000EE20D060", assembly.ToString() );
+      Assert.AreEqual( "01080B08E2079E3230363200000000EE20D060", assembly.ToString() );
     }
 
 
@@ -2033,7 +2055,7 @@ ContrivedTest:
 ";
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "01080B080A009E32303631000000A90F8D20D0094020D2FFA9008D20D0094020D2FFA9038D20D0094020D2FFA9048D20D0094020D2FFA9068D20D0094020D2FFA9078D20D0094020D2FF60", assembly.ToString() );
+      Assert.AreEqual( "01080B080A009E3230363200000000A90F8D20D0094020D2FFA9008D20D0094020D2FFA9038D20D0094020D2FFA9048D20D0094020D2FFA9068D20D0094020D2FFA9078D20D0094020D2FF60", assembly.ToString() );
     }
 
 

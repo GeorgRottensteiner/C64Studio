@@ -100,12 +100,14 @@ namespace RetroDevStudio.Parser
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
+
+          /*
           // can we use 4 digits?
           if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
             --lineSizeInBytes;
             --info.NumBytes;
-          }
+          }*/
           if ( !AllowLaterEvaluation )
           {
             info.NeededParsedExpression = poParams[0];
@@ -130,12 +132,13 @@ namespace RetroDevStudio.Parser
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
+          /*
           // can we use 4 digits?
           if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
             --lineSizeInBytes;
             --info.NumBytes;
-          }
+          }*/
           if ( !AllowLaterEvaluation )
           {
             info.NeededParsedExpression = poParams[0];
@@ -155,12 +158,13 @@ namespace RetroDevStudio.Parser
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
+          /*
           // can we use 4 digits?
           if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
             --lineSizeInBytes;
             --info.NumBytes;
-          }
+          }*/
           if ( !AllowLaterEvaluation )
           {
             info.NeededParsedExpression = poParams[1];
@@ -186,12 +190,13 @@ namespace RetroDevStudio.Parser
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
+          /*
           // can we use 4 digits?
           if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
             --lineSizeInBytes;
             --info.NumBytes;
-          }
+          }*/
           if ( !AllowLaterEvaluation )
           {
             info.NeededParsedExpression = poParams[0];
@@ -247,12 +252,17 @@ namespace RetroDevStudio.Parser
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;// poParams[poParams.Count - 1];
           info.Line = Line;
+
+          lineSizeInBytes = lineSizeInBytes - 1 + lengthOfCommentData;
+          info.NumBytes   = lineSizeInBytes - 1 + lengthOfCommentData;
+
+          /*
           // can we use 4 digits?
           if ( info.AddressStart + lineSizeInBytes - 1 + lengthOfCommentData < 10000 )
           {
             lineSizeInBytes = lineSizeInBytes - 1 + lengthOfCommentData;
             info.NumBytes = lineSizeInBytes - 1 + lengthOfCommentData;
-          }
+          }*/
           if ( !AllowLaterEvaluation )
           {
             info.NeededParsedExpression = poParams[poParams.Count - 1];

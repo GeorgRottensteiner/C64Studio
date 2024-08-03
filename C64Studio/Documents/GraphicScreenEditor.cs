@@ -4079,6 +4079,43 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
+          {
+            bool  prevModified = Modified;
+            var palC64 = Core.Settings.Palettes[PaletteType.C64][0];
+
+            if ( !string.IsNullOrEmpty( Event.OriginalValue ) )
+            {
+              Core.Imaging.ApplyPalette( (PaletteType)Enum.Parse( typeof( PaletteType ), Event.OriginalValue, true ),
+                                         PaletteType.C64,
+                                         m_GraphicScreenProject.Colors );
+            }
+            else
+            {
+              Core.Imaging.ApplyPalette( PaletteType.C64,
+                                         PaletteType.C64,
+                                         m_GraphicScreenProject.Colors );
+
+            }
+
+            PaletteManager.ApplyPalette( m_GraphicScreenProject.Image, palC64 );
+            PaletteManager.ApplyPalette( pictureEditor.DisplayPage, palC64 );
+            PaletteManager.ApplyPalette( charEditor.DisplayPage, palC64 );
+            PaletteManager.ApplyPalette( colorSelector.DisplayPage, palC64 );
+            Redraw();
+
+            Modified = prevModified;
+          }
+          break;
+      }
+    }
+
+
+
   }
 }
 

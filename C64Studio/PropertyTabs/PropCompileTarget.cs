@@ -10,21 +10,6 @@ namespace RetroDevStudio
 {
   public partial class PropCompileTarget : PropertyTabs.PropertyTabBase
   {
-    public class DependencyItem
-    {
-      public FileDependency.DependencyInfo    DependencyInfo = new FileDependency.DependencyInfo( "", "", false, false );
-      public bool                             CanIncludeSymbols = false;
-
-
-      public DependencyItem( FileDependency.DependencyInfo Info, bool CanIncludeSymbols )
-      {
-        DependencyInfo = Info;
-        this.CanIncludeSymbols = CanIncludeSymbols;
-      }
-    }
-
-
-
     ProjectElement        Element;
     StudioCore            Core;
 
@@ -328,6 +313,21 @@ namespace RetroDevStudio
       Element.ExternalDependencies.DependentOnFile.RemoveAt( listExternalDependencies.SelectedIndex );
       listExternalDependencies.Items.RemoveAt( listExternalDependencies.SelectedIndex );
       Element.DocumentInfo.Project.SetModified();
+    }
+
+
+
+    public class DependencyItem
+    {
+      public FileDependency.DependencyInfo    DependencyInfo = new FileDependency.DependencyInfo( "", "", false, false );
+      public bool                             CanIncludeSymbols = false;
+
+
+      public DependencyItem( FileDependency.DependencyInfo Info, bool CanIncludeSymbols )
+      {
+        DependencyInfo = Info;
+        this.CanIncludeSymbols = CanIncludeSymbols;
+      }
     }
 
 
