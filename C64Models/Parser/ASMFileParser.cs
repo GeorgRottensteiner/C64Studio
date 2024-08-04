@@ -3934,23 +3934,9 @@ namespace RetroDevStudio.Parser
           Lines[lastLoop.LineIndex] = ";was for loop start for " + lastLoop.Label;
           Lines[lineIndex] = ";was loop end for " + lastLoop.Label;
 
-          //Debug.Log( "Cloning last loop for " + lastLoop.Label );
           CloneTempLabelsExcept( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength - 1, lastLoop.Label );
 
-          /*
-          Debug.Log( "Pre Clone" );
-          foreach ( KeyValuePair<int, Types.ASM.SourceInfo> pair in m_ASMFileInfo.SourceInfo )
-          {
-            Debug.Log( "From line " + ( pair.Value.GlobalStartLine ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 ) + ", local " + ( pair.Value.LocalStartLine ) + ", " + pair.Value.LineCount + " lines from " + pair.Value.Filename );
-          }*/
-          //Debug.Log( "Last loop for " + lastLoop.Label + " reached" );
           CloneSourceInfos( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength - 1 );
-          /*
-          Debug.Log( "Post Clone" );
-          foreach ( KeyValuePair<int, Types.ASM.SourceInfo> pair in m_ASMFileInfo.SourceInfo )
-          {
-            Debug.Log( "From line " + ( pair.Value.GlobalStartLine ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 ) + ", local " + ( pair.Value.LocalStartLine ) + ", " + pair.Value.LineCount + " lines from " + pair.Value.Filename );
-          }*/
         }
         else
         {
@@ -3960,8 +3946,6 @@ namespace RetroDevStudio.Parser
           var tempLabelSymbol = CreateIntegerSymbol( lastLoop.CurrentValue );
           tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
           tempLabelSymbol.AddressOrValue = lastLoop.CurrentValue;
-
-          //Debug.Log( $"AddTempLabel for {lastLoop.Label}, {lastLoop.IterationCount}th iteration, end value from {TokensToExpression( lastLoop.EndValueTokens )} = {lastLoop.EndValue}" );
 
           AddTempLabel( lastLoop.Label,
                         lineIndex,
@@ -4003,8 +3987,6 @@ namespace RetroDevStudio.Parser
           // fix up internal labels
           lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, lineIndex, TextCodeMapping );
 
-          //DumpLines( newLines, "b" );
-
           // also copy scoped variables if overlapping!!!
           //if ( !endReached )
           {
@@ -4044,10 +4026,6 @@ namespace RetroDevStudio.Parser
 
           DumpSourceInfos( OrigLines );
 
-          //Debug.Log( "New total " + Lines.Length + " lines" );
-
-          // TEST TEST TEST
-          //lineIndex += linesToCopy;
           return ParseLineResult.CALL_CONTINUE;
         }
       }
@@ -10103,6 +10081,21 @@ namespace RetroDevStudio.Parser
       string[] replacementLines = new string[Lines.Length];
       int replacementLineIndex = 0;
 
+      Set<string>   definedLocalLabels = new Set<string>();
+
+      // check for definitions of local labels
+      for ( int i = 0; i < Lines.Length; ++i )
+      {
+        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length, TextCodeMapping );
+
+        if ( ( tokens.Count > 0 )
+        &&   ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL ) )
+        {
+          // a local label is defined here
+          definedLocalLabels.Add( tokens[0].Content );
+        }
+      }
+
       for ( int i = 0; i < Lines.Length; ++i )
       {
         List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length, TextCodeMapping );
@@ -10116,7 +10109,8 @@ namespace RetroDevStudio.Parser
           ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
           {
             // Dasm - Macro local labels start with ., add macro and LINE and loop specific prefix
-            if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            &&   ( definedLocalLabels.Contains( token.Content ) ) )
             {
               // need to take loop into account, force new local label!
               token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
