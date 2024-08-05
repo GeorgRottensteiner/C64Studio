@@ -270,119 +270,12 @@ namespace RetroDevStudio.Documents
 
     private void EditSource_TextInserted( object sender, TextInsertedEventArgs e )
     {
-      int     firstLine = e.InsertedRange.Start.iLine;
-      int     count = e.InsertedRange.End.iLine - e.InsertedRange.Start.iLine;
-      if ( firstLine > e.InsertedRange.End.iLine )
-      {
-        firstLine = e.InsertedRange.End.iLine;
-        count = -count;
-      }
-      if ( count == 0 )
-      {
-        return;
-      }
-
-      // special case, if we insert an empty line, insert "below"
-      int     indexToNotify = firstLine;
-
-      if ( !m_InsertingText )
-      {
-        Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
-      }
-
-      // move related breakpoints!
-      for ( int i = 0; i < count; ++i )
-      {
-        var info = new Types.ASM.LineInfo();
-        if ( ( indexToNotify > 0 )
-        &&   ( indexToNotify - 1 < m_LineInfos.Count ) )
-        {
-          info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
-        }
-        while ( indexToNotify >= m_LineInfos.Count )
-        {
-          m_LineInfos.Add( new Types.ASM.LineInfo() );
-        }
-        m_LineInfos.Insert( indexToNotify, info );
-      }
-
-      if ( !m_InsertingText )
-      {
-        int                         insertedAtLine = firstLine;
-
-        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
-        List<Types.Breakpoint>                     movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
-
-        foreach ( int breakpointLine in origBreakpoints.Keys )
-        {
-          var bp = origBreakpoints[breakpointLine];
-
-          if ( breakpointLine >= insertedAtLine )
-          {
-            bp.LineIndex += count;
-            movedBreakpoints.Add( bp );
-
-            RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bp ) );
-          }
-          else
-          {
-            movedBreakpoints.Add( bp );
-          }
-        }
-        m_BreakPoints.Clear();
-
-        foreach ( var bp in movedBreakpoints )
-        {
-          m_BreakPoints[bp.LineIndex] = bp;
-        }
-      }
     }
 
 
 
     private void EditSource_TextDeleted( object sender, TextDeletedEventArgs e )
     {
-      int     firstLine = e.DeletedRange.Start.iLine;
-      int     count = e.DeletedRange.End.iLine - e.DeletedRange.Start.iLine;
-      if ( firstLine > e.DeletedRange.End.iLine )
-      {
-        firstLine = e.DeletedRange.End.iLine;
-        count = -count;
-      }
-      if ( count == 0 )
-      {
-        return;
-      }
-      Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
-
-      if ( ( firstLine >= 0 )
-      &&   ( firstLine + count <= m_LineInfos.Count ) )
-      {
-        m_LineInfos.RemoveRange( firstLine, count );
-      }
-
-      // move related breakpoints!
-      int deletedAtLine = firstLine;
-
-      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
-
-      foreach ( int breakpointLine in origBreakpoints.Keys )
-      {
-        if ( ( breakpointLine >= firstLine )
-        &&   ( breakpointLine < firstLine + count ) )
-        {
-          // BP was deleted!
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, origBreakpoints[breakpointLine] ) );
-        }
-        else if ( breakpointLine >= deletedAtLine )
-        {
-          Types.Breakpoint bpToMove = m_BreakPoints[breakpointLine];
-          m_BreakPoints.Remove( breakpointLine );
-          m_BreakPoints.Add( breakpointLine - count, bpToMove );
-          bpToMove.LineIndex -= count;
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
-        }
-      }
     }
 
 
@@ -773,12 +666,70 @@ namespace RetroDevStudio.Documents
         return;
       }
 
+      int     firstLine = e.Index - 1;
+      int     count = e.Count;
+      if ( count == 0 )
+      {
+        return;
+      }
+
+      // special case, if we insert an empty line, insert "below"
+      int     indexToNotify = firstLine;
+
+      if ( !m_InsertingText )
+      {
+        Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
+      }
+
+      for ( int i = 0; i < count; ++i )
+      {
+        var info = new Types.ASM.LineInfo();
+        if ( ( indexToNotify > 0 )
+        && ( indexToNotify - 1 < m_LineInfos.Count ) )
+        {
+          info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
+        }
+        while ( indexToNotify >= m_LineInfos.Count )
+        {
+          m_LineInfos.Add( new Types.ASM.LineInfo() );
+        }
+        m_LineInfos.Insert( indexToNotify, info );
+      }
+
       DocumentInfo.Bookmarks.Clear();
       foreach ( var bm in editSource.Bookmarks )
       {
         DocumentInfo.Bookmarks.Add( bm.LineIndex );
       }
       RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
+
+      int insertedAtLine = e.Index - 1;
+
+      GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
+      List<Types.Breakpoint>                     movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
+
+      foreach ( int breakpointLine in origBreakpoints.Keys )
+      {
+        var bp = origBreakpoints[breakpointLine];
+
+        if ( breakpointLine >= insertedAtLine )
+        {
+          bp.LineIndex += count;
+          movedBreakpoints.Add( bp );
+
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bp ) );
+        }
+        else
+        {
+          movedBreakpoints.Add( bp );
+        }
+      }
+      m_BreakPoints.Clear();
+
+      foreach ( var bp in movedBreakpoints )
+      {
+        m_BreakPoints[bp.LineIndex] = bp;
+      }
     }
 
 
@@ -791,6 +742,42 @@ namespace RetroDevStudio.Documents
         DocumentInfo.Bookmarks.Add( bm.LineIndex );
       }
       RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
+
+      int     firstLine = e.Index - 1;
+      int     count = e.Count;
+      if ( count == 0 )
+      {
+        return;
+      }
+      Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
+
+      if ( ( firstLine >= 0 )
+      && ( firstLine + count <= m_LineInfos.Count ) )
+      {
+        m_LineInfos.RemoveRange( firstLine, count );
+      }
+
+      int deletedAtLine = e.Index - 1;
+
+      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
+
+      foreach ( int breakpointLine in origBreakpoints.Keys )
+      {
+        if ( ( breakpointLine >= deletedAtLine )
+        &&   ( breakpointLine < deletedAtLine + count ) )
+        {
+          // BP was deleted!
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, origBreakpoints[breakpointLine] ) );
+        }
+        else if ( breakpointLine >= deletedAtLine )
+        {
+          Types.Breakpoint bpToMove = m_BreakPoints[breakpointLine];
+          m_BreakPoints.Remove( breakpointLine );
+          m_BreakPoints.Add( breakpointLine - count, bpToMove );
+          bpToMove.LineIndex -= count;
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
+        }
+      }
     }
 
 
