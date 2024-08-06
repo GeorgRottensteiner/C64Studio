@@ -10676,7 +10676,14 @@ namespace RetroDevStudio.Parser
       m_AssemblerSettings.SetAssemblerType( Config.Assembler );
       m_AssemblerSettings.EnabledHacks = Config.EnabledHacks;
 
-      _Random                 = null;
+      if ( ( m_AssemblerSettings.EnabledHacks.ContainsValue( AssemblerSettings.Hacks.GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION ) )
+      &&   ( m_AssemblerSettings.AssemblerType == AssemblerType.C64_STUDIO ) )
+      {
+        m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression = true;
+      }
+
+
+        _Random = null;
 
       string[] lines = Content.Replace( "\r\n", "\n" ).Replace( '\r', '\n' ).Replace( '\t', ' ' ).Split( '\n' );
 

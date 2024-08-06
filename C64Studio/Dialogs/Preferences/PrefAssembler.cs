@@ -25,7 +25,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefAssembler( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "asm", "assembler", "warnings" } );
+      _Keywords.AddRange( new string[] { "asm", "assembler", "warnings", "hack" } );
 
       InitializeComponent();
 
