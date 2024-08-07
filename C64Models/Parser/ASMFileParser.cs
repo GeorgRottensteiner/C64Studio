@@ -5022,10 +5022,28 @@ namespace RetroDevStudio.Parser
         AdjustLabelCasing( lineTokenInfos );
 
         // PDS/DASM macro call?
+        int   labelOffset = 0;
         DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 0 );
         if ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
         {
           DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 1 );
+          labelOffset = 1;
+        }
+        // a dot in front of a global label is potentially a pseudo op for PDS
+        if ( m_AssemblerSettings.AssemblerType == AssemblerType.PDS )
+        {
+          if ( ( lineTokenInfos.Count >= 2 + labelOffset )
+          &&   ( lineTokenInfos[labelOffset].Content == "." )
+          &&   ( lineTokenInfos[labelOffset].EndPos + 1 == lineTokenInfos[labelOffset + 1].StartPos )
+          &&   ( lineTokenInfos[labelOffset + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( m_AssemblerSettings.PseudoOps.TryGetValue( "." + lineTokenInfos[labelOffset + 1].Content, out MacroInfo po ) ) )
+          {
+            lineTokenInfos.RemoveAt( labelOffset );
+            lineTokenInfos[labelOffset].Content = "." + lineTokenInfos[labelOffset].Content;
+            --lineTokenInfos[labelOffset].StartPos;
+            ++lineTokenInfos[labelOffset].Length;
+            lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.PSEUDO_OP;
+          }
         }
 
         // do we have a DASM scope operator? (must skip scope check then)
@@ -8977,6 +8995,11 @@ namespace RetroDevStudio.Parser
 
     private bool IsLabelInFront( List<TokenInfo> lineTokenInfos, string UpToken )
     {
+      if ( ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      &&   ( lineTokenInfos[0].StartPos > 0 ) )
+      {
+        return false;
+      }
       if ( ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO )
       &&   ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.PSEUDO_OP )
       &&   ( ( !m_Processor.Opcodes.ContainsKey( UpToken.ToLower() ) )

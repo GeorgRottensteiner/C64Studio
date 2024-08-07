@@ -609,20 +609,25 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "DFB", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DEFB", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "BYTE", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( ".BLOCK", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "EQUB", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( ".ASCII", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( ".TEXT", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "ASC", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "STR", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "STRING", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DEFM", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DM", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DFM", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DATA", Types.MacroInfo.PseudoOpType.TEXT );
 
           AddPseudoOp( "DH", Types.MacroInfo.PseudoOpType.HIGH_BYTE );
+          AddPseudoOp( "DHIGH", Types.MacroInfo.PseudoOpType.HIGH_BYTE );
           AddPseudoOp( "DL", Types.MacroInfo.PseudoOpType.LOW_BYTE );
+          AddPseudoOp( "DLOW", Types.MacroInfo.PseudoOpType.LOW_BYTE );
           AddPseudoOp( "DW", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( "HEX", Types.MacroInfo.PseudoOpType.HEX );
           AddPseudoOp( "CBM", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
           AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
@@ -669,7 +674,6 @@ namespace RetroDevStudio.Parser
           CaseSensitive = false;
           IncludeExpectsStringLiteral = false;
           IncludeHasOnlyFilename = true;
-          //StatementSeparatorChars.Add( ':' );
           MacroKeywordAfterName = true;
           DoWithoutParameterIsUntil = true;
           MacrosHaveVariableNumberOfArguments = true;
