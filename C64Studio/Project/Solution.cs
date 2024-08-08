@@ -20,6 +20,7 @@ namespace RetroDevStudio
 
 
 
+
     public Solution( MainForm Main )
     {
       MainForm = Main;

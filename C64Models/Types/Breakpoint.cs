@@ -56,5 +56,47 @@ namespace RetroDevStudio.Types
       }
       return false;
     }
+
+
+
+    public GR.Memory.ByteBuffer Save()
+    {
+      GR.IO.FileChunk chunkBreakPoint = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BREAKPOINT );
+
+      chunkBreakPoint.AppendString( DocumentFilename );
+      chunkBreakPoint.AppendI32( Address );
+      chunkBreakPoint.AppendI32( LineIndex );
+      chunkBreakPoint.AppendString( AddressSource );
+      chunkBreakPoint.AppendString( Conditions );
+      chunkBreakPoint.AppendString( Expression );
+      chunkBreakPoint.AppendU32( (uint)( ( IsVirtual ? 1 : 0 )
+                                       | ( TriggerOnExec ? 2 : 0 )
+                                       | ( TriggerOnLoad ? 4 : 0 )
+                                       | ( TriggerOnStore ? 8 : 0 ) ) );
+
+      return chunkBreakPoint.ToBuffer();
+    }
+
+
+
+    public void Load( GR.IO.MemoryReader MemIn )
+    {
+      DocumentFilename  = MemIn.ReadString();
+      Address           = MemIn.ReadInt32();
+      LineIndex         = MemIn.ReadInt32();
+      AddressSource     = MemIn.ReadString();
+      Conditions        = MemIn.ReadString();
+      Expression        = MemIn.ReadString();
+
+      uint flags = MemIn.ReadUInt32();
+
+      IsVirtual       = ( flags & 1 ) != 0;
+      TriggerOnExec   = ( flags & 2 ) != 0;
+      TriggerOnLoad   = ( flags & 4 ) != 0;
+      TriggerOnStore  = ( flags & 8 ) != 0;
+    }
+
+
+
   }
 }
