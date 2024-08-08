@@ -19,7 +19,6 @@ namespace RetroDevStudio
     public MachineType        PreferredMachineType = MachineType.C64;
     public Controller         SourceControl = null;
 
-
     public List<ProjectElement>   Elements = new List<ProjectElement>();
 
 
@@ -267,34 +266,19 @@ namespace RetroDevStudio
         bufferProject.Append( watch.Save() );
       }
 
-      /*
       // break points
-      GR.IO.FileChunk chunkBreakpoints = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BREAKPOINTS );
-      foreach ( var breakpoints in Core.Debugging.BreakPoints )
+      foreach ( var breakpoints in Settings.BreakPoints )
       {
+        GR.IO.FileChunk chunkBreakPoints = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BREAKPOINTS );
+        chunkBreakPoints.AppendString( breakpoints.Key );
+
         foreach ( var bp in breakpoints.Value )
         {
-          GR.IO.FileChunk chunkBreakPoint = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BREAKPOINT );
-
-          chunkBreakPoint.AppendString( bp.DocumentFilename );
-          chunkBreakPoint.AppendI32( bp.Address );
-          chunkBreakPoint.AppendI32( bp.LineIndex );
-          chunkBreakPoint.AppendString( bp.AddressSource );
-          chunkBreakPoint.AppendString( bp.Conditions );
-          chunkBreakPoint.AppendString( bp.Expression );
-          chunkBreakPoint.AppendU32( (uint)( ( bp.IsVirtual ? 1 : 0 )
-                                          | ( bp.TriggerOnExec ? 2 : 0 )
-                                          | ( bp.TriggerOnLoad ? 4 : 0 )
-                                          | ( bp.TriggerOnStore ? 8 : 0 )
-                                          | ( bp.
-            );
-
-          chunkBreakpoints.Append( chunkBreakPoint.ToBuffer() );
+          chunkBreakPoints.Append( bp.Save() );
         }
-      }
-      SettingsData.Append( chunkBreakpoints.ToBuffer() );
-      */
 
+        bufferProject.Append( chunkBreakPoints.ToBuffer() );
+      }
 
       return bufferProject;
     }
@@ -506,6 +490,25 @@ namespace RetroDevStudio
 
               watch.Load( memChunk );
               Settings.WatchEntries.Add( watch );
+            }
+            break;
+          case FileChunkConstants.SETTINGS_BREAKPOINTS:
+            {
+              string  bpKey = memChunk.ReadString();
+
+              var subChunk = new FileChunk();
+
+              while ( subChunk.ReadFromStream( memChunk ) )
+              {
+                var bp = new Breakpoint();
+                bp.Load( subChunk.MemoryReader() );
+
+                if ( !Settings.BreakPoints.ContainsKey( bpKey ) )
+                {
+                  Settings.BreakPoints.Add( bpKey, new List<Breakpoint>() );
+                }
+                Settings.BreakPoints[bpKey].Add( bp );
+              }
             }
             break;
         }

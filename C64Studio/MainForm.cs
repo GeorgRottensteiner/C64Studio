@@ -1535,12 +1535,15 @@ namespace RetroDevStudio
         case Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
           m_DebugWatch.DebuggedProject = m_CurrentProject;
           m_DebugWatch.ClearAllWatchEntries();
+          m_DebugBreakpoints.ClearAllBreakpointEntries();
           if ( m_CurrentProject != null )
           {
             foreach ( var watch in m_CurrentProject.Settings.WatchEntries )
             {
               m_DebugWatch.AddWatchEntry( watch );
             }
+            m_DebugBreakpoints.RefillBreakpointList( m_CurrentProject.Settings.BreakPoints );
+            StudioCore.Debugging.BreakPoints = m_CurrentProject.Settings.BreakPoints;
           }
           else if ( StudioCore.Debugging.Debugger != null )
           {
@@ -1549,6 +1552,7 @@ namespace RetroDevStudio
             {
               m_DebugWatch.AddWatchEntry( watch );
             }
+            m_DebugBreakpoints.RefillBreakpointList( StudioCore.Debugging.BreakPoints );
           }
           m_DebugRegisters.DebuggedProject    = m_CurrentProject;
           m_DebugMemory.DebuggedProject       = m_CurrentProject;
@@ -3331,6 +3335,10 @@ namespace RetroDevStudio
       }
       if ( m_CurrentProject != NewProject )
       {
+        if ( m_CurrentProject != null )
+        {
+          m_CurrentProject.Settings.BreakPoints = StudioCore.Debugging.BreakPoints;
+        }
         m_CurrentProject = NewProject;
         RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject ) );
         if ( mainToolConfig.ComboBox != null )
@@ -3906,6 +3914,11 @@ namespace RetroDevStudio
       StudioCore.Settings.MainWindowPlacement = GR.Forms.WindowStateManager.GeometryToString( this );
 
       m_FindReplace.ToSettings( StudioCore.Settings );
+
+      if ( m_CurrentProject != null )
+      {
+        m_CurrentProject.Settings.BreakPoints = StudioCore.Debugging.BreakPoints;
+      }
 
       GR.Memory.ByteBuffer SettingsData = StudioCore.Settings.ToBuffer( StudioCore );
 

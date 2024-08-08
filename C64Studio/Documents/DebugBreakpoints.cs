@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio;
 using RetroDevStudio.Types;
+using GR.Collections;
 
 namespace RetroDevStudio.Documents
 {
@@ -421,6 +422,35 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.SHUTTING_DOWN:
           Core.Settings.DialogSettings.StoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
           break;
+      }
+    }
+
+
+
+    public void ClearAllBreakpointEntries()
+    {
+      listBreakpoints.Items.Clear();
+    }
+
+
+
+    public void RefillBreakpointList( Map<string, List<Breakpoint>> BreakPoints )
+    {
+      foreach ( var bpList in BreakPoints.Values )
+      {
+        foreach ( var bp in bpList )
+        {
+          ListViewItem item = new ListViewItem();
+
+          for ( int i = 0; i < 5; ++i )
+          {
+            item.SubItems.Add( "" );
+          }
+          AdjustItemText( item, bp );
+          item.Tag = bp;
+
+          listBreakpoints.Items.Add( item );
+        }
       }
     }
 

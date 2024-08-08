@@ -1,6 +1,14 @@
   ORG &2000
 
-SPTR_Y:  .BYTE $98,$98
+  BYTE  ((╚SPRT_XW╝*$10)&$F0) ! ((╚BAD_STNG╝*$02)&$0E) ! (0&$01)
+
+YCENT EQU STND_YA-$05
+
+STND_YA EQU $08
+
+
+
+
 
 FX1 EQU $500
 
@@ -17,7 +25,11 @@ FXBASEVECT  .WORD FX1+$000,FX1+$040,FX1+$080,FX1+$0C0
 
 MTABETAB  MACRO   ; exit table address
   .WORD @1
+
+  BYTE  ((@1*$10)&$F0) ! ((@2*$02)&$0E) ! (@3&$01)
   ENDM
+
+  MTABETAB SPRT_XW, BAD_STNG, 0
 
 SPRT_XW .BLOCK $0C,$00
 

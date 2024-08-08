@@ -39,7 +39,6 @@ namespace RetroDevStudio
 
     public List<DebugMemory>    MemoryViews = new List<DebugMemory>();
 
-
     public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<RetroDevStudio.Types.Breakpoint>>();
     public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<RetroDevStudio.Types.Breakpoint>();
 
