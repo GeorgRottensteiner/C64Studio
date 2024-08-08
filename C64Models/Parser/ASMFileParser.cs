@@ -1935,6 +1935,31 @@ namespace RetroDevStudio.Parser
         }
         if ( Count >= 2 )
         {
+          if ( ( Count >= 3 )
+          &&   ( ( subTokenRange[0].Content == "<" )
+          ||     ( subTokenRange[0].Content == ">" ) )
+          &&   ( m_AssemblerSettings.EnabledHacks.Contains( AssemblerSettings.Hacks.GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION ) ) )
+          {
+            SymbolInfo value;
+            if ( EvaluateTokens( LineIndex, subTokenRange, 1, subTokenRange.Count - 1, TextCodeMapping, out value, out numBytesGiven ) )
+            {
+              NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
+
+              long resultValue = ( value.ToInteger() & 0x00ff );
+
+              subTokenRange.RemoveRange( 1, subTokenRange.Count - 1 );
+
+              Types.TokenInfo tokenResult = new Types.TokenInfo();
+              tokenResult.Content = resultValue.ToString();
+              tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+              subTokenRange.Insert( 1, tokenResult );
+              evaluatedPart = true;
+              Count = 2;
+              continue;
+            }
+            return false;
+          }
+
           int highestPrecedence = -1;
           int highestPrecedenceTokenIndex = -1;
           int numHighestPrecedenceEntries = 0;
@@ -12482,13 +12507,13 @@ namespace RetroDevStudio.Parser
       {
         for ( int i = 0; i < result.Count - 1; ++i )
         {
-          if ( ( result[i].Content == "!" )
+          if ( ( result[i].Content.StartsWith( "!" ) )
           &&   ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
           ||     ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER ) )
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
             // collapse
-            result[i].Content = "!" + result[i + 1].Content;
+            result[i].Content += result[i + 1].Content;
             result[i].Length = result[i].Content.Length;
             result[i].Type = Types.TokenInfo.TokenType.LABEL_LOCAL;
             result.RemoveAt( i + 1 );
@@ -12510,7 +12535,6 @@ namespace RetroDevStudio.Parser
       }
       return false;
     }
-
 
 
     private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info, out List<List<TokenInfo>> OpcodeExpressions, out ulong ResultingOpcodePatchValue, out bool HadError )
