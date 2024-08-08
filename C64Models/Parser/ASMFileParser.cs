@@ -10732,7 +10732,9 @@ namespace RetroDevStudio.Parser
 
       if ( !hadFatalError )
       {
+        _ParseContext.DuringExpressionEvaluation = true;
         DetermineUnparsedLabels();
+        _ParseContext.DuringExpressionEvaluation = false;
         m_ASMFileInfo.PopulateAddressToLine();
         foreach ( SymbolInfo token in m_ASMFileInfo.Labels.Values )
         {
@@ -11870,7 +11872,8 @@ namespace RetroDevStudio.Parser
       CollapsePDSLocalLabels( result );
 
       // labels must be left?
-      if ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      if ( ( !_ParseContext.DuringExpressionEvaluation )
+      &&   ( m_AssemblerSettings.LabelsMustBeAtStartOfLine ) )
       {
         if ( ( result.Count > 0 )
         &&   ( result[0].StartPos > 0 )
@@ -11892,7 +11895,8 @@ namespace RetroDevStudio.Parser
           if ( ( result[i].Content == "&" )
           &&   ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
           ||     ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          &&   ( char.IsDigit( result[i + 1].Content[0] ) ) )
           {
             // collapse
             result[i].Content = "&" + result[i + 1].Content;

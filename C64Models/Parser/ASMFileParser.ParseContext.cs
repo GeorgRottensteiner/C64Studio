@@ -27,6 +27,9 @@ namespace RetroDevStudio.Parser
 
       public string       ParentFilename        = "";
 
+      // only set to true during DetermineUnparsedLabels
+      public bool         DuringExpressionEvaluation = false;
+
 
       public GR.Collections.Map<string,GR.Collections.Map<byte, byte>>    TextMappings = new GR.Collections.Map<string, GR.Collections.Map<byte, byte>>();
 
