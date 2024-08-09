@@ -151,6 +151,25 @@ namespace RetroDevStudio
 
 
 
+    public string RelativePath
+    {
+      get
+      {
+        if ( ( Element == null )
+        ||   ( Project == null ) )
+        {
+          return DocumentFilename;
+        }
+        if ( System.IO.Path.IsPathRooted( DocumentFilename ) )
+        {
+          return DocumentFilename;
+        }
+        return GR.Path.Normalize( GR.Path.RelativePathTo( FullPath, false, Project.Settings.BasePath, true ), false );
+      }
+    }
+
+
+
     public void SetASMFileInfo( Types.ASM.FileInfo FileInfo )
     {
       /*

@@ -11923,13 +11923,21 @@ namespace RetroDevStudio.Parser
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
           &&   ( char.IsDigit( result[i + 1].Content[0] ) ) )
           {
-            // collapse
-            result[i].Content = "&" + result[i + 1].Content;
-            result[i].Length = result[i].Content.Length;
-            result[i].Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
-            result.RemoveAt( i + 1 );
-            --i;
-            continue;
+            // could be a & hex prefix, but also and operator!
+            if ( ( i >= 1 )
+            &&   ( ( result[i - 1].Type == TokenInfo.TokenType.OPERATOR )
+            ||     ( IsTokenLabel( result[i - 1].Type ) )
+            ||     ( IsOpeningBraceChar( result[i - 1].Content ) )
+            ||     ( IsClosingBraceChar( result[i - 1].Content ) ) ) )
+            {
+              // collapse
+              result[i].Content = "&" + result[i + 1].Content;
+              result[i].Length = result[i].Content.Length;
+              result[i].Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+              result.RemoveAt( i + 1 );
+              --i;
+              continue;
+            }
           }
         }
       }
@@ -12507,7 +12515,7 @@ namespace RetroDevStudio.Parser
     {
       // collapse PDS local label (! is interpreted as operator)
       if ( ( m_AssemblerSettings.AllowedTokenStartChars[TokenInfo.TokenType.LABEL_LOCAL].Contains( "!" ) )
-      && ( result.Count >= 2 ) )
+      &&   ( result.Count >= 2 ) )
       {
         for ( int i = 0; i < result.Count - 1; ++i )
         {

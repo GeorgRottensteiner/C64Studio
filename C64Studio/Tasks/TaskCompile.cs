@@ -77,7 +77,7 @@ namespace RetroDevStudio.Tasks
       Core.MainForm.m_DebugWatch.ReseatWatches( DocumentToDebug.ASMFileInfo );
       Core.Debugging.Debugger.ClearCaches();
       Core.Debugging.MemoryViews.ForEach( mv => mv.MarkAllMemoryAsUnknown() );
-      Core.Debugging.ReseatBreakpoints( DocumentToDebug.ASMFileInfo );
+      Core.Debugging.ReseatBreakpoints( DocumentToDebug.Project, DocumentToDebug.ASMFileInfo );
       Core.Debugging.AddVirtualBreakpoints( DocumentToDebug.ASMFileInfo );
       Core.Debugging.Debugger.ClearAllBreakpoints();
       Core.Debugging.MarkedDocument = null;
@@ -222,8 +222,8 @@ namespace RetroDevStudio.Tasks
         }
         if ( debugStartAddress != 0 )
         {
-          Core.Debugging.InitialBreakpointIsTemporary = false;
-          Core.Debugging.OverrideDebugStart = debugStartAddress;
+          Core.Debugging.InitialBreakpointIsTemporary     = true; //false;
+          Core.Debugging.OverrideDebugStart               = debugStartAddress;
           Core.Debugging.LateBreakpointOverrideDebugStart = debugStartAddress;
         }
       }
@@ -259,6 +259,8 @@ namespace RetroDevStudio.Tasks
         {
           return false;
         }
+        // this sets up the initial breakpoint!
+        Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart, RemoteIndex = 1 } );
       }
       else
       {

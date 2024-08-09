@@ -206,7 +206,7 @@ namespace RetroDevStudio
 
 
 
-    public void ReseatBreakpoints( Types.ASM.FileInfo ASMFileInfo )
+    public void ReseatBreakpoints( Project Project, Types.ASM.FileInfo ASMFileInfo )
     {
       foreach ( var key in BreakPoints.Keys )
       {
@@ -221,7 +221,13 @@ namespace RetroDevStudio
           {
             breakPoint.Address = -1;
             int globalLineIndex = 0;
-            if ( ASMFileInfo.FindGlobalLineIndex( breakPoint.LineIndex, breakPoint.DocumentFilename, out globalLineIndex ) )
+
+            string  pathToFile = breakPoint.DocumentFilename;
+            if ( Project != null )
+            {
+              pathToFile = Project.FullPath( breakPoint.DocumentFilename );
+            }
+            if ( ASMFileInfo.FindGlobalLineIndex( breakPoint.LineIndex, pathToFile, out globalLineIndex ) )
             {
               int address = ASMFileInfo.FindLineAddress( globalLineIndex );
               if ( breakPoint.Address != address )

@@ -906,7 +906,7 @@ namespace RetroDevStudio.Documents
 
       var bp = new RetroDevStudio.Types.Breakpoint();
 
-      bp.DocumentFilename = DocumentInfo.FullPath;
+      bp.DocumentFilename = DocumentInfo.RelativePath;
       bp.LineIndex = LineIndex;
 
       Types.ASM.FileInfo fileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
@@ -1425,6 +1425,31 @@ namespace RetroDevStudio.Documents
           {
             btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
             RefreshLocalSymbols();
+          }
+          break;
+        case ApplicationEvent.Type.DOCUMENT_INFO_CREATED:
+          // apply breakpoints
+          if ( DocumentInfo.Project != null )
+          {
+            if ( DocumentInfo.Project.Settings.BreakPoints.TryGetValue( DocumentInfo.RelativePath, out List<Breakpoint> bps ) )
+            {
+              foreach ( var bp in bps )
+              {
+                m_BreakPoints.Add( bp.LineIndex, bp );
+                InvalidateMarkerAreaAtLine( bp.LineIndex );
+              }
+            }
+          }
+          else
+          {
+            if ( Core.Debugging.BreakPoints.TryGetValue( DocumentInfo.RelativePath, out List<Breakpoint> bps ) )
+            {
+              foreach ( var bp in bps )
+              {
+                m_BreakPoints.Add( bp.LineIndex, bp );
+                InvalidateMarkerAreaAtLine( bp.LineIndex );
+              }
+            }
           }
           break;
       }

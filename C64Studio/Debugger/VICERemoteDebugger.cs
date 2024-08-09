@@ -1145,9 +1145,7 @@ namespace RetroDevStudio
           m_InitialBreakpointRemoved = true;
 
           // DEBUGHACK
-          //QueueRequest( Request.MEM_DUMP, 0, 0xffff );
-          //Debug.Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
-          QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
+          //QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
           skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress );
         }

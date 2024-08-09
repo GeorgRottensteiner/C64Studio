@@ -59,9 +59,7 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorSettings\ColorSettingsHiRes.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsHiRes.cs" />
     <Compile Update="Controls\ColorSettings\ColorSettingsECM.cs">
       <SubType>UserControl</SubType>
     </Compile>
