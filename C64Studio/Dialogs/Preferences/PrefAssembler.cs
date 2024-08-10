@@ -345,6 +345,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.EnabledC64StudioHacks.Add( item.second );
       }
+      Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.MARK_ALL_ASSEMBLIES_AS_DIRTY ) );
     }
 
 

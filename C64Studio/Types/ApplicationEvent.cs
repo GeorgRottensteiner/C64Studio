@@ -36,8 +36,9 @@ namespace RetroDevStudio.Types
       SOURCE_CONTROL_STATE_MODIFIED,
       SETTINGS_LOADED,
       SHUTTING_DOWN,
-      DEFAULT_PALETTE_CHANGED   // Originalvalue = name of palettetype
+      DEFAULT_PALETTE_CHANGED,  // Originalvalue = name of palettetype
                                 //               = empty > all palettes have changed
+      MARK_ALL_ASSEMBLIES_AS_DIRTY    // raised e.g. when hack preferences are modified
     }
 
     public Type             EventType = Type.NONE;

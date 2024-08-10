@@ -1446,6 +1446,25 @@ namespace RetroDevStudio
     {
       switch ( Event.EventType )
       {
+        case Types.ApplicationEvent.Type.MARK_ALL_ASSEMBLIES_AS_DIRTY:
+          if ( StudioCore.Navigating.Solution != null )
+          {
+            foreach ( var project in StudioCore.Navigating.Solution.Projects )
+            {
+              foreach ( var doc in project.Elements )
+              {
+                MarkAsDirty( doc.DocumentInfo );
+              }
+            }
+          }
+          else
+          {
+            foreach ( BaseDocument doc in StudioCore.MainForm.panelMain.Documents )
+            {
+              MarkAsDirty( doc.DocumentInfo );
+            }
+          }
+          break;
         case Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED:
           ApplyMenuShortCuts();
           break;
