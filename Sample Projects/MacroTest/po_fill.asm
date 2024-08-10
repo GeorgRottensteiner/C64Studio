@@ -21,10 +21,12 @@ PI = 3.14159265359
 !fill 256,math.sin(( i * PI * 2)*360/(2*PI)/256) * 127+127
 ;!fill 256, math.sin( i * 360 / 256 )*4
 
+HURZ = math.sqrt( 144 )
 
 
-      ;lda PLAYER.y
-      ;+PrintValue 0, 22, 3
 
-      ;lda Teleport.Y
-      ;+PrintValue 4, 22, 3
+		;lda PLAYER.y
+		;+PrintValue 0, 22, 3
+
+    ;lda Teleport.Y
+		;+PrintValue 4, 22, 3

@@ -185,6 +185,7 @@ namespace RetroDevStudio.Parser
       AddExtFunction( "math.random", 1, 1, ExtMathRandom );
       AddExtFunction( "math.random", 2, 1, ExtMathRandomRange );
       AddExtFunction( "math.randomseed", 1, 0, ExtMathRandomSeed );
+      AddExtFunction( "math.sqrt", 1, 1, ExtMathSquareRoot );
 
       SetAssemblerType( Types.AssemblerType.C64_STUDIO );
     }

@@ -224,6 +224,31 @@ namespace RetroDevStudio.Parser
 
 
 
+    private List<TokenInfo> ExtMathSquareRoot( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        return result;
+      }
+      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      {
+        return result;
+      }
+      double argument = functionResult.ToNumber();
+
+      var resultValue = new TokenInfo()
+      {
+        Type    = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
+        Content = Util.DoubleToString( Math.Sqrt( argument ) )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
     private List<TokenInfo> ExtMathToRadians( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       var result = new List<TokenInfo>();

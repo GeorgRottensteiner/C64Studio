@@ -8579,8 +8579,21 @@ namespace FastColoredTextBoxNS
         // prefix may not always be in front, but have blanks before
         if ( Selection.Text.TrimStart().StartsWith( prefix ) )
         {
+          // get actual offset even with tabs
           int   prefixOffset = Selection.Text.IndexOf( prefix );
-          Selection.Start = new Place( prefixOffset, Selection.Start.iLine );
+          int   actualOffset = 0;
+          for ( int x = 0; x < prefixOffset; ++x )
+          {
+            if ( Selection.Text[x] == '\t' )
+            {
+              actualOffset += TabLength;
+            }
+            else
+            {
+              ++actualOffset;
+            }
+          }
+          Selection.Start = new Place( actualOffset, Selection.Start.iLine );
           Selection.End = new Place( Selection.Start.iChar + 1, i );
           ClearSelected();
 
