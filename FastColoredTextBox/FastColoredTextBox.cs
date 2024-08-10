@@ -8576,8 +8576,11 @@ namespace FastColoredTextBoxNS
           Selection.Start = new Place( spaces, i );
           Selection.End = oldEnd;
         }
-        if ( Selection.Text.StartsWith( prefix ) )
+        // prefix may not always be in front, but have blanks before
+        if ( Selection.Text.TrimStart().StartsWith( prefix ) )
         {
+          int   prefixOffset = Selection.Text.IndexOf( prefix );
+          Selection.Start = new Place( prefixOffset, Selection.Start.iLine );
           Selection.End = new Place( Selection.Start.iChar + 1, i );
           ClearSelected();
 

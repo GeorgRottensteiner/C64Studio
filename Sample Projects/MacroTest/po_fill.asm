@@ -23,3 +23,8 @@ PI = 3.14159265359
 
 
 
+      ;lda PLAYER.y
+      ;+PrintValue 0, 22, 3
+
+      ;lda Teleport.Y
+      ;+PrintValue 4, 22, 3
