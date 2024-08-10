@@ -98,6 +98,25 @@ LEV=3
 
 
 
+    [TestMethod]
+    public void TestPDSAndPrefix()
+    {
+      // & can be used as hex prefix
+      string      source = @"  ORG $d000
+JIFFY
+TOGGLETAB EQU 5
+            ADC #TOGGLETAB+1&255
+!2SYNCH LDA JIFFY
+  GNU EQU (&BF00-&0C00)+5
+            ";
+
+      var assembly = TestAssemblePDS( source );
+
+      Assert.AreEqual( "00D06906AD00D0", assembly.ToString() );
+    }
+
+
+
 
   }
 }

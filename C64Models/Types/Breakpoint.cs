@@ -94,6 +94,11 @@ namespace RetroDevStudio.Types
       TriggerOnExec   = ( flags & 2 ) != 0;
       TriggerOnLoad   = ( flags & 4 ) != 0;
       TriggerOnStore  = ( flags & 8 ) != 0;
+
+      if ( LineIndex != -1 )
+      {
+        Address = -1;
+      }
     }
 
 

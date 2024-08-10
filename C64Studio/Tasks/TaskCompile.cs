@@ -753,7 +753,15 @@ namespace RetroDevStudio.Tasks
         {
           currentBuildState = new GR.Collections.Map<string, SingleBuildInfo>();
           Core.AddToOutput( "Running build on " + Doc.DocumentFilename + System.Environment.NewLine );
-        } 
+        }
+
+        if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+        {
+          foreach ( var hack in Core.Settings.EnabledC64StudioHacks )
+          {
+            Core.AddToOutputLine( $"Enabled Hack: {hack}" );
+          }
+        }
 
         // include previous symbols
         string    additionalPredefines = null;

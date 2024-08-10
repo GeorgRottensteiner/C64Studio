@@ -11910,6 +11910,16 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      // detect PDS pseudo ops (must happen before & collapsing)
+      if ( ( result.Count >= 1 )
+      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count == 0 )
+      &&   ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      &&   ( result[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( result[0].StartPos > 0 )
+      &&   ( m_AssemblerSettings.PseudoOps.Any( m => m.Key == result[0].Content ) ) )
+      {
+        result[0].Type = TokenInfo.TokenType.PSEUDO_OP;
+      }
 
       // collapse & if prefixed to literal number
       if ( ( m_AssemblerSettings.AllowedTokenStartChars[TokenInfo.TokenType.LITERAL_NUMBER].Contains( "&" ) )
@@ -11921,14 +11931,19 @@ namespace RetroDevStudio.Parser
           &&   ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
           ||     ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          &&   ( char.IsDigit( result[i + 1].Content[0] ) ) )
+          &&   ( IsHexChar( result[i + 1].Content[0] ) ) )
           {
             // could be a & hex prefix, but also and operator!
-            if ( ( i >= 1 )
-            &&   ( ( result[i - 1].Type == TokenInfo.TokenType.OPERATOR )
-            ||     ( IsTokenLabel( result[i - 1].Type ) )
-            ||     ( IsOpeningBraceChar( result[i - 1].Content ) )
-            ||     ( IsClosingBraceChar( result[i - 1].Content ) ) ) )
+            if ( ( i == 0 )
+            ||   ( ( i >= 1 )
+            &&     ( ( result[i - 1].Type == TokenInfo.TokenType.OPERATOR )
+            ||       ( result[i - 1].Type == TokenInfo.TokenType.PSEUDO_OP )
+            ||       ( result[i - 1].Type == TokenInfo.TokenType.OPCODE )
+            ||       ( ( result[i - 1].Type == TokenInfo.TokenType.SEPARATOR )
+            &&         ( !IsClosingBraceChar( result[i - 1].Content ) ) )
+            ||       ( m_Processor.Opcodes.ContainsKey( result[i - 1].Content.ToLower() ) )
+            ||       ( m_AssemblerSettings.PseudoOps.ContainsKey( result[i - 1].Content ) )
+            ||       ( m_AssemblerSettings.PlainAssignmentOperators.Contains( result[i - 1].Content ) ) ) ) )
             {
               // collapse
               result[i].Content = "&" + result[i + 1].Content;
@@ -12302,6 +12317,21 @@ namespace RetroDevStudio.Parser
         }
       }
       return result;
+    }
+
+
+
+    private bool IsHexChar( char C )
+    {
+      if ( ( char.IsDigit( C ) )
+      ||   ( ( C >= 'A' )
+      &&     ( C <= 'F' ) )
+      ||   ( ( C >= 'a' )
+      &&     ( C <= 'f' ) ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -12945,7 +12975,7 @@ namespace RetroDevStudio.Parser
               token.Length = token.Content.Length;
               LineTokens.Add( token );*/
             }
-            else
+          else
             {
               info.NeededParsedExpression = extraTokens;
             }

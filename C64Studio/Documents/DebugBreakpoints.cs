@@ -182,7 +182,8 @@ namespace RetroDevStudio.Documents
       bp.DocumentFilename = "RetroDevStudio.DebugBreakpoints";
 
       // set marker in associated file
-      if ( DebuggedProject != null )
+      if ( ( DebuggedProject != null )
+      &&   ( DebuggedProject == Core.MainForm.CurrentProject ) )
       {
         var element = DebuggedProject.GetElementByFilename( DebuggedProject.Settings.MainDocument );
         if ( element != null )

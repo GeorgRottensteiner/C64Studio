@@ -1,13 +1,13 @@
-﻿* = $0801
+* = $0801
 
 !fill 1000
 
+.Data
+!fill 20 * 11
 
 .DataRows_Lo
 !fill 11, [<.Data + i * 20]
 
-.Data
-!fill 20 * 11
 
 
 

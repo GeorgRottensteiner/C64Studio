@@ -1804,7 +1804,8 @@ namespace RetroDevStudio.Documents
         if ( newList.Count == 1 )
         {
           if ( ( String.Compare( newList[0].Text, wordBelow, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-          ||   ( String.Compare( newList[0].Text, zone + "." + wordBelow.Substring( 1 ), StringComparison.CurrentCultureIgnoreCase ) == 0 ) )
+          ||   ( ( wordBelow.Length >= 1 )
+          &&     ( String.Compare( newList[0].Text, zone + "." + wordBelow.Substring( 1 ), StringComparison.CurrentCultureIgnoreCase ) == 0 ) ) )
           {
             // only have the correct entry
             return;
