@@ -3578,6 +3578,40 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
+          {
+            bool  prevModified = Modified;
+
+            if ( !string.IsNullOrEmpty( Event.OriginalValue ) )
+            {
+              Core.Imaging.ApplyPalette( (PaletteType)Enum.Parse( typeof( PaletteType ), Event.OriginalValue, true ),
+                                         Lookup.PaletteTypeFromTextCharMode( m_MapProject.Charset.Mode ),
+                                         m_MapProject.Charset.Colors );
+            }
+            else
+            {
+              Core.Imaging.ApplyPalette( Lookup.PaletteTypeFromTextCharMode( m_MapProject.Charset.Mode ),
+                                         Lookup.PaletteTypeFromTextCharMode( m_MapProject.Charset.Mode ),
+                                         m_MapProject.Charset.Colors );
+
+            }
+            characterEditor.ColorsChanged();
+            RedrawMap();
+            RedrawColorChooser();
+            RedrawTile();
+
+            Modified = prevModified;
+          }
+          break;
+      }
+    }
+
+
+
   }
 }
 

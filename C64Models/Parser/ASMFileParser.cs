@@ -2192,6 +2192,51 @@ namespace RetroDevStudio.Parser
       {
         return ParseValue( LineIndex, subTokenRange[0], out ResultingToken, out NumBytesGiven );
       }
+      else if ( Count == 2 )
+      {
+        // unary operators
+        if ( subTokenRange[0].Content == "-" )
+        {
+          if ( EvaluateTokens( LineIndex, subTokenRange, 1, Count - 1, TextCodeMapping, out ResultingToken, out NumBytesGiven ) )
+          {
+            if ( ResultingToken.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+            {
+              ResultingToken.RealValue = -ResultingToken.RealValue;
+              return true;
+            }
+            else if ( ResultingToken.IsInteger() )
+            {
+              ResultingToken.AddressOrValue = -ResultingToken.AddressOrValue;
+              return true;
+            }
+            AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot negate symbol type " + ResultingToken.Type );
+            return false;
+          }
+        }
+        else if ( ( m_AssemblerSettings.HasBinaryNot )
+        &&        ( ( subTokenRange[0].Content == "!" )
+        ||           ( subTokenRange[0].Content == "~" ) ) )
+        {
+          // binary not
+          SymbolInfo     value;
+
+          if ( EvaluateTokens( LineIndex, subTokenRange, 1, Count - 1, TextCodeMapping, out value, out NumBytesGiven ) )
+          {
+            if ( value.IsInteger() )
+            {
+              ResultingToken = CreateIntegerSymbol( value.ToInteger() );
+              if ( NumBytesGiven == 2 )
+              {
+                ResultingToken.AddressOrValue = 0xffff ^ ResultingToken.AddressOrValue;
+                return true;
+              }
+              ResultingToken.AddressOrValue = 0xff ^ ResultingToken.AddressOrValue;
+              return true;
+            }
+          }
+          return false;
+        }
+      }
       if ( !HasError() )
       {
         m_LastErrorInfo.Set( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos + 1, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );

@@ -260,6 +260,19 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestExpressionNegative()
+    {
+      string      source = @"  * = $1000
+                               !byte -( 8 + 4 )";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010F4", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestExpressionAdd()
     {
       // 100.35 is truncated to 100
