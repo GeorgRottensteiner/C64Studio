@@ -7,7 +7,7 @@
       internal ListBox      _Owner = null;
       private string        _Text = "";
       private bool          _Checked = false;
-      private bool          _Selected = false;
+      internal bool         _Selected = false;
       internal int          _Index = -1;
 
 

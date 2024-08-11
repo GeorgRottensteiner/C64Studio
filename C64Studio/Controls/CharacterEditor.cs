@@ -74,6 +74,10 @@ namespace RetroDevStudio.Controls
     public CharacterEditor()
     {
       this.Core = StudioCore.StaticCore;
+      if ( Core == null )
+      {
+        Core = new StudioCore();
+      }
       Setup();
     }
 
@@ -100,8 +104,10 @@ namespace RetroDevStudio.Controls
       panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
       m_ImagePlayground.Create( 256, 256, GR.Drawing.PixelFormat.Format32bppRgb );
 
-      m_Project.Colors.Palette = Core.Imaging.PaletteFromMachine( MachineType.C64 );
-
+      if ( Core != null )
+      {
+        m_Project.Colors.Palette = Core.Imaging.PaletteFromMachine( MachineType.C64 );
+      }
       ChangeColorSettingsDialog();
       OnPaletteChanged();
 

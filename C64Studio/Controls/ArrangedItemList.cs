@@ -417,6 +417,10 @@ namespace RetroDevStudio.Controls
         return;
       }
       int indexToMove = listItems.SelectedIndices[0];
+      if ( indexToMove <= 0 )
+      {
+        return;
+      }
       ArrangedItemEntry  itemToMove = (ArrangedItemEntry)listItems.SelectedItems[0];
       ArrangedItemEntry  otherItem = (ArrangedItemEntry)listItems.Items[indexToMove - 1];
 
@@ -432,7 +436,8 @@ namespace RetroDevStudio.Controls
 
       listItems.Items.RemoveAt( indexToMove );
       listItems.Items.Insert( indexToMove - 1, itemToMove );
-      itemToMove.Selected = true;
+      listItems.SelectedIndex = indexToMove - 1;
+
       UpdateUI();
 
       if ( ItemMoved != null )
@@ -451,6 +456,10 @@ namespace RetroDevStudio.Controls
         return;
       }
       int indexToMove = listItems.SelectedIndices[0];
+      if ( indexToMove + 1 >= listItems.Items.Count )
+      {
+        return;
+      }
       ArrangedItemEntry  itemToMove = (ArrangedItemEntry)listItems.SelectedItems[0];
       ArrangedItemEntry  otherItem = (ArrangedItemEntry)listItems.Items[indexToMove + 1];
 
@@ -468,6 +477,7 @@ namespace RetroDevStudio.Controls
       listItems.Items.Insert( indexToMove + 1, itemToMove );
       listItems.SelectedItems.Clear();
       listItems.SelectedIndex = itemToMove.Index;
+
       UpdateUI();
 
       if ( ItemMoved != null )

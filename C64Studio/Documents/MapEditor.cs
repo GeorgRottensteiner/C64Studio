@@ -3229,6 +3229,7 @@ namespace RetroDevStudio.Documents
         listTileChars.Items[currentTileCharIndex].SubItems[2].Text = curChar.Color.ToString();
 
         RedrawTile();
+        RedrawMap();
         pictureTileDisplay.Invalidate();
       }
     }

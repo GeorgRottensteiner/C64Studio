@@ -933,6 +933,10 @@ namespace RetroDevStudio.Documents
         if ( dataObj.GetDataPresent( "RetroDevStudio.ProjectFile" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.ProjectFile" );
+          if ( ms == null )
+          {
+            return;
+          }
 
           GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -952,6 +956,10 @@ namespace RetroDevStudio.Documents
         if ( dataObj.GetDataPresent( "RetroDevStudio.Folder" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.Folder" );
+          if ( ms == null )
+          {
+            return;
+          }
 
           GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -989,6 +997,10 @@ namespace RetroDevStudio.Documents
         if ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.SolutionFile" );
+          if ( ms == null )
+          {
+            return;
+          }
 
           GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 

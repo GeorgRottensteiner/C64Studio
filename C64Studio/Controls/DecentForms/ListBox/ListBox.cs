@@ -309,11 +309,14 @@ namespace DecentForms
         if ( _SelectedIndex != value )
         {
           SelectedItems.Clear();
+          SelectedIndices.Clear();
 
           _SelectedIndex = value;
           if ( _SelectedIndex != -1 )
           {
-            Items[_SelectedIndex].Selected = true;
+            Items[_SelectedIndex]._Selected = true;
+            SelectedItems.Add( Items[_SelectedIndex] );
+            SelectedIndices.Add( _SelectedIndex );
           }
 
           SelectedIndexChanged?.Invoke( this );
@@ -610,17 +613,9 @@ namespace DecentForms
       {
         SelectedItems.Remove( Item );
       }
-      else
-      {
-        Debug.Log( "was not inside SelectedItems!" );
-      }
       if ( SelectedIndices.Contains( Item.Index ) )
       {
         SelectedIndices.Remove( Item.Index );
-      }
-      else
-      {
-        Debug.Log( "was not inside SelectedIndices!" );
       }
       Invalidate( GetItemRect( Item.Index ) );
     }
