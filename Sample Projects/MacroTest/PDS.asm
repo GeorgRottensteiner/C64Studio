@@ -1,3 +1,4 @@
+HURZ EQU $0f ~ -$fe
 BL_SPR  EQU (&B780-&8000)/64  ; blank sprite after pannel
 SHOULD_BE_1 = 2 + 7 & 3
 SHOULD_BE_5 = 7 & 3 + 2

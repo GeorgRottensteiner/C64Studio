@@ -779,6 +779,12 @@ namespace RetroDevStudio.Parser
       NumGivenBytes = 0;
       Failed = false;
 
+      bool isNegative = Value.StartsWith( "-" );
+      if ( isNegative )
+      {
+        Value = Value.Substring( 1 );
+      }
+
       // hex
       if ( ( Value.StartsWith( "$" ) )
       ||   ( Value.StartsWith( "&" ) ) )
@@ -786,6 +792,10 @@ namespace RetroDevStudio.Parser
         if ( long.TryParse( Value.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
           NumGivenBytes = ( Value.Length - 1 + 1 ) / 2;
+          if ( isNegative )
+          {
+            Result = -Result;
+          }
           return true;
         }
         Failed = true;
@@ -796,6 +806,10 @@ namespace RetroDevStudio.Parser
         if ( long.TryParse( Value.Substring( 2 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
           NumGivenBytes = ( Value.Length - 2 + 1 ) / 2;
+          if ( isNegative )
+          {
+            Result = -Result;
+          }
           return true;
         }
         Failed = true;
@@ -809,6 +823,10 @@ namespace RetroDevStudio.Parser
         {
           Result = GR.Convert.ToI32( convertValue, 2 );
           NumGivenBytes = ( Value.Length - 1 + 7 ) / 8;
+          if ( isNegative )
+          {
+            Result = -Result;
+          }
           return true;
         }
         convertValue = convertValue.Replace( '#', '1' ).Replace( '.', '0' );
@@ -816,6 +834,10 @@ namespace RetroDevStudio.Parser
         {
           Result = GR.Convert.ToI32( convertValue, 2 );
           NumGivenBytes = ( Value.Length - 1 + 7 ) / 8;
+          if ( isNegative )
+          {
+            Result = -Result;
+          }
           return true;
         }
         Failed = true;
@@ -867,6 +889,10 @@ namespace RetroDevStudio.Parser
         else
         {
           NumGivenBytes = 1;
+        }
+        if ( isNegative )
+        {
+          Result = -Result;
         }
         return true;
       }
