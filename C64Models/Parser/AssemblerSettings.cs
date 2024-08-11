@@ -610,7 +610,6 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "DFB", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DEFB", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "BYTE", Types.MacroInfo.PseudoOpType.TEXT );
-          AddPseudoOp( ".BLOCK", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "EQUB", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( ".ASCII", Types.MacroInfo.PseudoOpType.TEXT );
@@ -639,6 +638,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "FI", Types.MacroInfo.PseudoOpType.END_IF );
           AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
           AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( ".BLOCK", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "DO", Types.MacroInfo.PseudoOpType.LOOP_START );
           AddPseudoOp( "LOOP", Types.MacroInfo.PseudoOpType.LOOP_END );
           AddPseudoOp( "UNTIL", Types.MacroInfo.PseudoOpType.LOOP_END );
@@ -664,8 +664,24 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "END", Types.MacroInfo.PseudoOpType.END_OF_FILE );
           AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.REPEAT );
 
-          OperatorPrecedence.Remove( "!=" );
+          OperatorPrecedence.Clear();
+          OperatorPrecedence["-"] = 1;
+          OperatorPrecedence["+"] = 1;
+          OperatorPrecedence["/"] = 2;
+          OperatorPrecedence["*"] = 2;
+          OperatorPrecedence["%"] = 2;
+          OperatorPrecedence["|"] = 0;
+          OperatorPrecedence["&"] = 0;
+
+          OperatorPrecedence["<>"] = 7;
+          OperatorPrecedence[">="] = 7;
+          OperatorPrecedence["<="] = 7;
+          OperatorPrecedence["="] = 7;
+          OperatorPrecedence["=="] = 7;
+          OperatorPrecedence[">"] = 8;
+          OperatorPrecedence["<"] = 8;
           OperatorPrecedence["!"] = 4;
+          OperatorPrecedence["~"] = 0;
 
           LabelPostfix = ":";
           GlobalLabelsAutoZone = true;

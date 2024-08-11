@@ -1,6 +1,11 @@
 BL_SPR  EQU (&B780-&8000)/64  ; blank sprite after pannel
+SHOULD_BE_1 = 2 + 7 & 3
+SHOULD_BE_5 = 7 & 3 + 2
 GNU EQU &2000
   ORG GNU
+
+	.BLOCK 1,2
+	DS 1,2
   ADC #(TOGGLETAB+1)&255
 
   ADC #TOGGLETAB&255
