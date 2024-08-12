@@ -1039,8 +1039,11 @@ namespace RetroDevStudio.Controls
       {
         try
         {
-          int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;
-          e.Graphics.DrawString( "" + ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, offset + 10, 0 );
+          if ( Core.MainForm != null )
+          {
+            int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;
+            e.Graphics.DrawString( "" + ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, offset + 10, 0 );
+          }
         }
         catch ( Exception ex )
         {

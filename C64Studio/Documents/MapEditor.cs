@@ -897,7 +897,11 @@ namespace RetroDevStudio.Documents
             {
               if ( m_CurrentMap.Tiles[trueX + offsetX, trueY + offsetY] != m_CurrentEditorTile.Index )
               {
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTilesChange( this, m_CurrentMap, trueX + offsetX, trueY + offsetY, 1, 1 ) );
+                if ( m_MouseButtonReleased )
+                {
+                  m_MouseButtonReleased = false;
+                  DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTilesChange( this, m_CurrentMap, 0, 0, m_CurrentMap.Tiles.Width, m_CurrentMap.Tiles.Height ) );
+                }
                 m_CurrentMap.Tiles[trueX + offsetX, trueY + offsetY] = m_CurrentEditorTile.Index;
                 SetModified();
 
@@ -3474,7 +3478,8 @@ namespace RetroDevStudio.Documents
       m_MapProject.Mode = (TextMode)comboMapProjectMode.SelectedIndex;
 
       // TODO - that should change all kind of values inside the charset! (TotalNumberOfCharacters!)
-      m_MapProject.Charset.Mode = Lookup.TextCharModeFromTextMode( m_MapProject.Mode );
+      m_MapProject.Charset.Mode         = Lookup.TextCharModeFromTextMode( m_MapProject.Mode );
+      characterEditor.CharsetUpdated( m_MapProject.Charset );
 
       m_MapProject.Charset.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( Lookup.MachineTypeFromTextMode( m_MapProject.Mode ) );
 
