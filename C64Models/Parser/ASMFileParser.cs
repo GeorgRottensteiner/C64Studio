@@ -12388,7 +12388,108 @@ namespace RetroDevStudio.Parser
           }
         }
       }
+
       return result;
+    }
+
+
+
+    public string ReplaceAllMacros( string SourceText, out bool HadError )
+    {
+      StringBuilder     sb = new StringBuilder();
+
+      int               posInLine = 0;
+      int               macroStartPos = 0;
+      bool              insideMacro = false;
+
+      HadError = false;
+
+      if ( SourceText.IndexOf( '{' ) == -1 )
+      {
+        return SourceText;
+      }
+
+      while ( posInLine < SourceText.Length )
+      {
+        char    curChar = SourceText[posInLine];
+        if ( insideMacro )
+        {
+          if ( curChar == '}' )
+          {
+            insideMacro = false;
+
+            string macro = SourceText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+            bool foundMacro = false;
+
+            // a inbuilt expression?
+            if ( macro.StartsWith( "DATE" ) )
+            {
+              string    details = "yyyy-MM-dd";
+              int       sepPos = macro.IndexOf( ':' );
+              if ( sepPos != -1 )
+              {
+                details = SourceText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).Substring( sepPos + 1 );
+                if ( string.IsNullOrEmpty( details ) )
+                {
+                  details = "yyyy-MM-dd";
+                }
+              }
+              DateTime today = DateTime.Now;
+
+              string    result = today.ToString( details );
+              for ( int i = 0; i < result.Length; ++i )
+              {
+                sb.Append( result[i] );
+              }
+              foundMacro = true;
+            }
+            if ( !foundMacro )
+            {
+              HadError = true;
+              m_LastErrorInfo.Set( _ParseContext.LineIndex, macroStartPos + 1, posInLine - macroStartPos - 1, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO );
+              return null;
+            }
+          }
+          ++posInLine;
+          continue;
+        }
+        if ( curChar == '{' )
+        {
+          insideMacro = true;
+          macroStartPos = posInLine;
+          ++posInLine;
+          continue;
+        }
+        sb.Append( curChar );
+        ++posInLine;
+      }
+      if ( insideMacro )
+      {
+        HadError = true;
+        m_LastErrorInfo.Set( _ParseContext.LineIndex, macroStartPos + 1, posInLine - macroStartPos - 1, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO );
+        return null;
+      }
+      return sb.ToString();
+    }
+
+
+
+    private bool InsertLiteralTextMacros( List<TokenInfo> Tokens )
+    {
+      foreach ( var token in Tokens )
+      {
+        if ( token.Type == TokenInfo.TokenType.LITERAL_STRING )
+        {
+          token.Content = ReplaceAllMacros( token.Content, out bool hadError );
+          token.Length  = token.Content.Length;
+
+          if ( hadError )
+          {
+            return false;
+          }
+        }
+      }
+      return true;
     }
 
 

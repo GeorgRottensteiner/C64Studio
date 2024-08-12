@@ -1575,7 +1575,6 @@ namespace RetroDevStudio
           }
           m_DebugRegisters.DebuggedProject    = m_CurrentProject;
           m_DebugMemory.DebuggedProject       = m_CurrentProject;
-          m_DebugBreakpoints.DebuggedProject  = m_CurrentProject;
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.DOCUMENT_CLOSED:
@@ -2905,7 +2904,11 @@ namespace RetroDevStudio
           StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<RetroDevStudio.Types.Breakpoint>();
         }
         StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
-        StudioCore.Debugging.Debugger.AddBreakpoint( Breakpoint );
+
+        if ( StudioCore.Debugging.IsDebuggerConnectedToActiveProject() )
+        {
+          StudioCore.Debugging.Debugger.AddBreakpoint( Breakpoint );
+        }
       }
       else
       {
@@ -2929,13 +2932,16 @@ namespace RetroDevStudio
             {
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
               m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
-              if ( AppState == Types.StudioState.NORMAL )
+              if ( StudioCore.Debugging.IsDebuggerConnectedToActiveProject() )
               {
-                StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
-              }
-              else
-              {
-                StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex, breakPoint );
+                if ( AppState == Types.StudioState.NORMAL )
+                {
+                  StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
+                }
+                else
+                {
+                  StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex, breakPoint );
+                }
               }
               break;
             }

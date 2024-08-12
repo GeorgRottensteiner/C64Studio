@@ -75,7 +75,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private GR.Collections.Map<int,Types.Breakpoint>    m_BreakPoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>();
+    private GR.Collections.Map<int,List<Types.Breakpoint>>    m_BreakPoints = new GR.Collections.Map<int, List<Breakpoint>>();
 
     public bool                               DoNotFollowZoneSelectors = false;
 
@@ -705,30 +705,37 @@ namespace RetroDevStudio.Documents
 
       int insertedAtLine = e.Index - 1;
 
-      GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
-      List<Types.Breakpoint>                     movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
+      var origBreakpoints = new GR.Collections.Map<int,List<RetroDevStudio.Types.Breakpoint>>( m_BreakPoints );
+      List<Types.Breakpoint> movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
 
       foreach ( int breakpointLine in origBreakpoints.Keys )
       {
-        var bp = origBreakpoints[breakpointLine];
+        var bps = origBreakpoints[breakpointLine];
 
-        if ( breakpointLine >= insertedAtLine )
+        foreach ( var bp in bps )
         {
-          bp.LineIndex += count;
-          movedBreakpoints.Add( bp );
+          if ( breakpointLine >= insertedAtLine )
+          {
+            bp.LineIndex += count;
+            movedBreakpoints.Add( bp );
 
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bp ) );
-        }
-        else
-        {
-          movedBreakpoints.Add( bp );
+            RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bp ) );
+          }
+          else
+          {
+            movedBreakpoints.Add( bp );
+          }
         }
       }
       m_BreakPoints.Clear();
 
       foreach ( var bp in movedBreakpoints )
       {
-        m_BreakPoints[bp.LineIndex] = bp;
+        if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+        {
+          m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+        }
+        m_BreakPoints[bp.LineIndex].Add( bp );
       }
     }
 
@@ -759,7 +766,7 @@ namespace RetroDevStudio.Documents
 
       int deletedAtLine = e.Index - 1;
 
-      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
+      var origBreakpoints = new GR.Collections.Map<int, List<RetroDevStudio.Types.Breakpoint>>( m_BreakPoints );
 
       foreach ( int breakpointLine in origBreakpoints.Keys )
       {
@@ -767,15 +774,26 @@ namespace RetroDevStudio.Documents
         &&   ( breakpointLine < deletedAtLine + count ) )
         {
           // BP was deleted!
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, origBreakpoints[breakpointLine] ) );
+          foreach ( var bp in origBreakpoints[breakpointLine] )
+          {
+            RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+          }
         }
         else if ( breakpointLine >= deletedAtLine )
         {
-          Types.Breakpoint bpToMove = m_BreakPoints[breakpointLine];
-          m_BreakPoints.Remove( breakpointLine );
-          m_BreakPoints.Add( breakpointLine - count, bpToMove );
-          bpToMove.LineIndex -= count;
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
+          var bpsToMove = m_BreakPoints[breakpointLine];
+
+          foreach ( var bpToMove in bpsToMove )
+          {
+            m_BreakPoints[breakpointLine].Remove( bpToMove );
+            if ( m_BreakPoints[breakpointLine].Count == 0 )
+            {
+              m_BreakPoints.Remove( breakpointLine );
+            }
+            m_BreakPoints[breakpointLine - count].Add( bpToMove );
+            bpToMove.LineIndex -= count;
+            RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
+          }
         }
       }
     }
@@ -893,7 +911,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        RemoveBreakpoint( LineIndex );
+        RemoveBreakpoint( LineIndex, m_BreakPoints[LineIndex][0] );
       }
     }
 
@@ -939,20 +957,29 @@ namespace RetroDevStudio.Documents
 
     public void AddBreakpoint( Breakpoint BP )
     {
-      m_BreakPoints.Add( BP.LineIndex, BP );
+      if ( !m_BreakPoints.ContainsKey( BP.LineIndex ) )
+      {
+        m_BreakPoints.Add( BP.LineIndex, new List<Breakpoint>() );
+      }
+      m_BreakPoints[BP.LineIndex].Add( BP );
       InvalidateMarkerAreaAtLine( BP.LineIndex );
     }
 
 
 
-    public void RemoveBreakpoint( int LineIndex )
+    public void RemoveBreakpoint( int LineIndex, Breakpoint BP )
     {
       if ( m_BreakPoints.ContainsKey( LineIndex ) )
       {
-        Types.Breakpoint bp = m_BreakPoints[LineIndex];
-        m_BreakPoints.Remove( LineIndex );
-        RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
-
+        if ( m_BreakPoints[LineIndex].Remove( BP ) )
+        {
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, BP ) );
+        }
+        if ( ( m_BreakPoints.ContainsKey( LineIndex ) )
+        &&   ( m_BreakPoints[LineIndex].Count == 0 ) )
+        {
+          m_BreakPoints.Remove( LineIndex );
+        }
         InvalidateMarkerAreaAtLine( LineIndex );
       }
     }
@@ -1435,7 +1462,11 @@ namespace RetroDevStudio.Documents
             {
               foreach ( var bp in bps )
               {
-                m_BreakPoints.Add( bp.LineIndex, bp );
+                if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+                {
+                  m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+                }
+                m_BreakPoints[bp.LineIndex].Add( bp );
                 InvalidateMarkerAreaAtLine( bp.LineIndex );
               }
             }
@@ -1446,7 +1477,11 @@ namespace RetroDevStudio.Documents
             {
               foreach ( var bp in bps )
               {
-                m_BreakPoints.Add( bp.LineIndex, bp );
+                if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+                {
+                  m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+                }
+                m_BreakPoints[bp.LineIndex].Add( bp );
                 InvalidateMarkerAreaAtLine( bp.LineIndex );
               }
             }

@@ -14,8 +14,6 @@ namespace RetroDevStudio.Documents
 {
   public partial class DebugBreakpoints : BaseDocument
   {
-    public Project                    DebuggedProject = null;
-
     private GR.Collections.MultiMap<string, SymbolInfo>       m_TokenInfos = null;
 
     private delegate void SetTokensCallback( GR.Collections.MultiMap<string, SymbolInfo> TokenInfo );
@@ -182,32 +180,57 @@ namespace RetroDevStudio.Documents
       bp.DocumentFilename = "RetroDevStudio.DebugBreakpoints";
 
       // set marker in associated file
-      if ( ( DebuggedProject != null )
-      &&   ( DebuggedProject == Core.MainForm.CurrentProject ) )
+      var docInfo = DetermineAffectedDocument( bp.Address, out bp.DocumentFilename, out bp.LineIndex );
+      if ( docInfo != null )
       {
-        var element = DebuggedProject.GetElementByFilename( DebuggedProject.Settings.MainDocument );
-        if ( element != null )
+        var sourceFile = docInfo.BaseDoc as SourceASMEx;
+        if ( sourceFile != null )
         {
-          var asmFileInfo = Core.Navigating.DetermineASMFileInfo( element.DocumentInfo );
+          sourceFile.AddBreakpoint( bp );
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
+        }
+      }
+    }
 
-          if ( asmFileInfo.DocumentAndLineFromAddress( bp.Address, out string DocumentFilename, out int lineIndex ) )
+
+
+    private DocumentInfo DetermineAffectedDocument( int BreakpointAddress, out string DocumentFilename, out int LineIndex )
+    {
+      DocumentFilename  = null;
+      LineIndex         = -1;
+      if ( Core.MainForm.CurrentProject != null )
+      {
+        if ( !string.IsNullOrEmpty( Core.MainForm.CurrentProject.Settings.MainDocument ) )
+        {
+          var element = Core.MainForm.CurrentProject.GetElementByFilename( Core.MainForm.CurrentProject.Settings.MainDocument );
+          if ( ( element != null )
+          &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
           {
-            element = DebuggedProject.GetElementByFilename( DocumentFilename );
-            if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+            var asmFileInfo2 = Core.Navigating.DetermineASMFileInfo( element.DocumentInfo );
+            if ( ( asmFileInfo2 != null )
+            &&   ( asmFileInfo2.DocumentAndLineFromAddress( BreakpointAddress, out DocumentFilename, out LineIndex ) ) )
             {
-              var sourceFile = element.Document as SourceASMEx;
-              bp.LineIndex = lineIndex;
-              bp.DocumentFilename = DocumentFilename;
-              if ( sourceFile != null )
-              {
-                sourceFile.AddBreakpoint( bp );
-              }
+              DocumentFilename = element.DocumentInfo.RelativePath;
+              return element.DocumentInfo;
             }
           }
         }
       }
-
-      RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
+      var asmFileInfo = Core.Navigating.DetermineASMFileInfo( Core.Navigating.LastActiveCodeDocument );
+      if ( ( asmFileInfo != null )
+      &&   ( asmFileInfo.DocumentAndLineFromAddress( BreakpointAddress, out DocumentFilename, out LineIndex ) ) )
+      {
+        if ( Core.Navigating.LastActiveCodeDocument.Type == ProjectElement.ElementType.ASM_SOURCE )
+        {
+          var docInfo = Core.Navigating.FindDocumentByFilename( DocumentFilename );
+          if ( docInfo != null )
+          {
+            DocumentFilename = docInfo.RelativePath;
+          }
+          return Core.Navigating.LastActiveCodeDocument;
+        }
+      }
+      return null;
     }
 
 

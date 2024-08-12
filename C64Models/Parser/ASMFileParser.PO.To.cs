@@ -45,6 +45,13 @@ namespace RetroDevStudio.Parser
                     lineTokenInfos[0].Length );
           return ParseLineResult.ERROR_ABORT;
         }
+
+        if ( !InsertLiteralTextMacros( lineTokenInfos ) )
+        {
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+
         string    targetType = lineTokenInfos[2].Content.ToUpper();
         if ( !Lookup.CompileTargetModeToKeyword.ContainsValue( targetType ) )
         {

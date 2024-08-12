@@ -863,5 +863,20 @@ namespace RetroDevStudio
 
 
 
+    internal bool IsDebuggerConnectedToActiveProject()
+    {
+      if ( Debugger == null )
+      {
+        return false;
+      }
+      if ( Core.MainForm.CurrentProject == null )
+      {
+        return true;
+      }
+      return Core.MainForm.CurrentProject == DebuggedProject;
+    }
+
+
+
   }
 }
