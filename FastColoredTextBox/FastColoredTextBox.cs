@@ -8562,7 +8562,7 @@ namespace FastColoredTextBoxNS
       lines.Manager.BeginAutoUndoCommands();
       lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
 
-      int spaces = GetMinStartSpacesCount( from, to );
+      int spaces = 0;//GetMinStartSpacesCount( from, to );
       for ( int i = from; i <= to; i++ )
       {
         if ( ( i == from )

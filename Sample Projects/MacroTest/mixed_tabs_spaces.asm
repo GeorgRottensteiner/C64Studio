@@ -1,7 +1,8 @@
-
-	  	lsmf		;tab space tab
-
-  	  hurz    ;space tab space´ hur
-			
-			
-			this  ls
+.gnu
+			!byte 1,2,3
+			!byte 1,2,3
+			!byte 1,2,3
+			!byte 1,2,3
+			!byte 1,2,3
+			!byte 1,2,3
+.lsmf
