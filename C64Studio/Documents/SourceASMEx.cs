@@ -759,7 +759,7 @@ namespace RetroDevStudio.Documents
       Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
 
       if ( ( firstLine >= 0 )
-      && ( firstLine + count <= m_LineInfos.Count ) )
+      &&   ( firstLine + count <= m_LineInfos.Count ) )
       {
         m_LineInfos.RemoveRange( firstLine, count );
       }
@@ -781,18 +781,25 @@ namespace RetroDevStudio.Documents
         }
         else if ( breakpointLine >= deletedAtLine )
         {
-          var bpsToMove = m_BreakPoints[breakpointLine];
-
-          foreach ( var bpToMove in bpsToMove )
+          if ( m_BreakPoints.ContainsKey( breakpointLine ) )
           {
-            m_BreakPoints[breakpointLine].Remove( bpToMove );
-            if ( m_BreakPoints[breakpointLine].Count == 0 )
+            var bpsToMove = new List<Breakpoint>( m_BreakPoints[breakpointLine] );
+
+            foreach ( var bpToMove in bpsToMove )
             {
-              m_BreakPoints.Remove( breakpointLine );
+              m_BreakPoints[breakpointLine].Remove( bpToMove );
+              if ( m_BreakPoints[breakpointLine].Count == 0 )
+              {
+                m_BreakPoints.Remove( breakpointLine );
+              }
+              if ( !m_BreakPoints.ContainsKey( breakpointLine - count ) )
+              {
+                m_BreakPoints.Add( breakpointLine - count, new List<Breakpoint>() );
+              }
+              m_BreakPoints[breakpointLine - count].Add( bpToMove );
+              bpToMove.LineIndex -= count;
+              RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
             }
-            m_BreakPoints[breakpointLine - count].Add( bpToMove );
-            bpToMove.LineIndex -= count;
-            RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
           }
         }
       }

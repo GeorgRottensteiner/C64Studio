@@ -8588,7 +8588,14 @@ namespace FastColoredTextBoxNS
           {
             if ( Selection.Text[x] == '\t' )
             {
-              actualOffset += TabLength;
+              if ( ( ( actualOffset + startOffset ) % TabLength ) != 0 )
+              {
+                actualOffset += TabLength - ( ( actualOffset + startOffset ) % TabLength );
+              }
+              else
+              {
+                actualOffset += TabLength;
+              }
             }
             else
             {

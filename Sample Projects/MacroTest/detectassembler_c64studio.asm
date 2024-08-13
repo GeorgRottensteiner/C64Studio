@@ -1,7 +1,7 @@
 ; **** C64HLA 0.1 (c)2021 PureTom - High Level Assembly Preprocessor ****
 ; Pass 1 start 22:50:38 2021/04/05
 ; Compiling: Asm tests\t0.txt ... ok
-*=49152 
+*=49152
 ; Pass 1 end 22:50:38 2021/04/05
 ;*******************************************************************************
 ; Constants
