@@ -30,6 +30,7 @@ namespace DecentForms
 
     public ControlBase()
     {
+      TabStop         = true;
       DoubleBuffered  = true;
       AutoSize        = false;
       this.SetStyle( ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true );
@@ -439,7 +440,7 @@ namespace DecentForms
     protected override void OnKeyUp( KeyEventArgs e )
     {
       RaiseControlEvent( ControlEvent.EventType.KEY_UP, (Keys)e.KeyValue );
-      base.OnKeyDown( e );
+      base.OnKeyUp( e );
     }
 
 
@@ -470,6 +471,11 @@ namespace DecentForms
 
     protected override bool IsInputKey( Keys keyData )
     {
+      if ( ( keyData == Keys.Tab )
+      ||   ( keyData == ( Keys.Shift | Keys.Tab ) ) )
+      {
+        return false;
+      }
       return true;
     }
 

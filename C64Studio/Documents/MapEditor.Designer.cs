@@ -29,12 +29,12 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -240,68 +240,85 @@
       // 
       // btnCopyMapImage
       // 
-      this.btnCopyMapImage.Image = global::RetroDevStudio.Properties.Resources.edit_copy;
+      this.btnCopyMapImage.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCopyMapImage.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCopyMapImage.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCopyMapImage.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnCopyMapImage.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyMapImage.Image")));
       this.btnCopyMapImage.Location = new System.Drawing.Point(357, 432);
       this.btnCopyMapImage.Name = "btnCopyMapImage";
       this.btnCopyMapImage.Size = new System.Drawing.Size(39, 24);
-      this.btnCopyMapImage.TabIndex = 38;
+      this.btnCopyMapImage.TabIndex = 8;
       this.toolTip1.SetToolTip(this.btnCopyMapImage, "Copy map to clipboard as image");
       this.btnCopyMapImage.Click += new DecentForms.EventHandler(this.btnCopyImage_Click);
       // 
       // btnToolSelect
       // 
       this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolSelect.Image = global::RetroDevStudio.Properties.Resources.tool_select;
+      this.btnToolSelect.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolSelect.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolSelect.Checked = false;
+      this.btnToolSelect.Image = ((System.Drawing.Image)(resources.GetObject("btnToolSelect.Image")));
       this.btnToolSelect.Location = new System.Drawing.Point(103, 432);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolSelect.TabIndex = 36;
+      this.btnToolSelect.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
       this.btnToolSelect.CheckedChanged += new DecentForms.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
       // btnToolFill
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
+      this.btnToolFill.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolFill.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolFill.Checked = false;
+      this.btnToolFill.Image = ((System.Drawing.Image)(resources.GetObject("btnToolFill.Image")));
       this.btnToolFill.Location = new System.Drawing.Point(79, 432);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
-      this.btnToolFill.TabIndex = 37;
+      this.btnToolFill.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnToolFill, "Flood Fill");
       this.btnToolFill.CheckedChanged += new DecentForms.EventHandler(this.btnToolFill_CheckedChanged);
       // 
       // btnToolQuad
       // 
       this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolQuad.Image = global::RetroDevStudio.Properties.Resources.tool_quad;
+      this.btnToolQuad.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolQuad.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolQuad.Checked = false;
+      this.btnToolQuad.Image = ((System.Drawing.Image)(resources.GetObject("btnToolQuad.Image")));
       this.btnToolQuad.Location = new System.Drawing.Point(55, 432);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
-      this.btnToolQuad.TabIndex = 35;
+      this.btnToolQuad.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Rectangle");
       this.btnToolQuad.CheckedChanged += new DecentForms.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
       // btnToolRect
       // 
       this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolRect.Image = global::RetroDevStudio.Properties.Resources.tool_rect;
+      this.btnToolRect.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolRect.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolRect.Checked = false;
+      this.btnToolRect.Image = ((System.Drawing.Image)(resources.GetObject("btnToolRect.Image")));
       this.btnToolRect.Location = new System.Drawing.Point(31, 432);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolRect.TabIndex = 33;
+      this.btnToolRect.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
       this.btnToolRect.CheckedChanged += new DecentForms.EventHandler(this.btnToolRect_CheckedChanged);
       // 
       // btnToolEdit
       // 
       this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolEdit.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolEdit.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
       this.btnToolEdit.Checked = true;
-      this.btnToolEdit.Image = global::RetroDevStudio.Properties.Resources.tool_none;
+      this.btnToolEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnToolEdit.Image")));
       this.btnToolEdit.Location = new System.Drawing.Point(7, 432);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
-      this.btnToolEdit.TabIndex = 34;
-      this.btnToolEdit.TabStop = true;
+      this.btnToolEdit.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Place/Pick Single Tile");
       this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
@@ -310,7 +327,7 @@
       this.labelEditInfo.Location = new System.Drawing.Point(406, 433);
       this.labelEditInfo.Name = "labelEditInfo";
       this.labelEditInfo.Size = new System.Drawing.Size(265, 23);
-      this.labelEditInfo.TabIndex = 32;
+      this.labelEditInfo.TabIndex = 9;
       this.labelEditInfo.Text = "Tile Info";
       // 
       // groupMapExtraData
@@ -331,7 +348,7 @@
       this.editMapExtraData.Name = "editMapExtraData";
       this.editMapExtraData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
       this.editMapExtraData.Size = new System.Drawing.Size(258, 119);
-      this.editMapExtraData.TabIndex = 1;
+      this.editMapExtraData.TabIndex = 0;
       this.editMapExtraData.TextChanged += new System.EventHandler(this.editMapExtraData_TextChanged);
       this.editMapExtraData.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editMapExtraData_KeyPress);
       // 
@@ -352,7 +369,7 @@
       this.comboTiles.Location = new System.Drawing.Point(684, 414);
       this.comboTiles.Name = "comboTiles";
       this.comboTiles.Size = new System.Drawing.Size(264, 21);
-      this.comboTiles.TabIndex = 30;
+      this.comboTiles.TabIndex = 2;
       this.comboTiles.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboTiles_DrawItem);
       this.comboTiles.SelectedIndexChanged += new System.EventHandler(this.comboTiles_SelectedIndexChanged);
       // 
@@ -363,7 +380,7 @@
       this.comboMapProjectMode.Location = new System.Drawing.Point(752, 33);
       this.comboMapProjectMode.Name = "comboMapProjectMode";
       this.comboMapProjectMode.Size = new System.Drawing.Size(254, 21);
-      this.comboMapProjectMode.TabIndex = 29;
+      this.comboMapProjectMode.TabIndex = 1;
       this.comboMapProjectMode.SelectedIndexChanged += new System.EventHandler(this.comboMapProjectMode_SelectedIndexChanged);
       // 
       // comboMaps
@@ -374,7 +391,7 @@
       this.comboMaps.Location = new System.Drawing.Point(752, 6);
       this.comboMaps.Name = "comboMaps";
       this.comboMaps.Size = new System.Drawing.Size(254, 21);
-      this.comboMaps.TabIndex = 29;
+      this.comboMaps.TabIndex = 0;
       this.comboMaps.SelectedIndexChanged += new System.EventHandler(this.comboMaps_SelectedIndexChanged);
       // 
       // groupSize
@@ -417,7 +434,7 @@
       this.checkShowGrid.Location = new System.Drawing.Point(191, 99);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(45, 17);
-      this.checkShowGrid.TabIndex = 30;
+      this.checkShowGrid.TabIndex = 12;
       this.checkShowGrid.Text = "Grid";
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
@@ -429,7 +446,7 @@
       this.comboMapAlternativeMode.Location = new System.Drawing.Point(63, 97);
       this.comboMapAlternativeMode.Name = "comboMapAlternativeMode";
       this.comboMapAlternativeMode.Size = new System.Drawing.Size(121, 21);
-      this.comboMapAlternativeMode.TabIndex = 29;
+      this.comboMapAlternativeMode.TabIndex = 11;
       this.comboMapAlternativeMode.SelectedIndexChanged += new System.EventHandler(this.comboMapAlternativeMode_SelectedIndexChanged);
       // 
       // comboMapAlternativeBGColor4
@@ -440,7 +457,7 @@
       this.comboMapAlternativeBGColor4.Location = new System.Drawing.Point(182, 151);
       this.comboMapAlternativeBGColor4.Name = "comboMapAlternativeBGColor4";
       this.comboMapAlternativeBGColor4.Size = new System.Drawing.Size(82, 21);
-      this.comboMapAlternativeBGColor4.TabIndex = 28;
+      this.comboMapAlternativeBGColor4.TabIndex = 16;
       this.comboMapAlternativeBGColor4.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboAlternativeColor_DrawItem);
       this.comboMapAlternativeBGColor4.SelectedIndexChanged += new System.EventHandler(this.comboMapBGColor4_SelectedIndexChanged);
       // 
@@ -452,7 +469,7 @@
       this.comboMapMultiColor2.Location = new System.Drawing.Point(182, 124);
       this.comboMapMultiColor2.Name = "comboMapMultiColor2";
       this.comboMapMultiColor2.Size = new System.Drawing.Size(82, 21);
-      this.comboMapMultiColor2.TabIndex = 28;
+      this.comboMapMultiColor2.TabIndex = 14;
       this.comboMapMultiColor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboAlternativeColor_DrawItem);
       this.comboMapMultiColor2.SelectedIndexChanged += new System.EventHandler(this.comboMapMultiColor2_SelectedIndexChanged);
       // 
@@ -464,7 +481,7 @@
       this.comboMapBGColor.Location = new System.Drawing.Point(63, 151);
       this.comboMapBGColor.Name = "comboMapBGColor";
       this.comboMapBGColor.Size = new System.Drawing.Size(82, 21);
-      this.comboMapBGColor.TabIndex = 28;
+      this.comboMapBGColor.TabIndex = 15;
       this.comboMapBGColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboAlternativeColor_DrawItem);
       this.comboMapBGColor.SelectedIndexChanged += new System.EventHandler(this.comboMapBGColor_SelectedIndexChanged);
       // 
@@ -476,67 +493,97 @@
       this.comboMapMultiColor1.Location = new System.Drawing.Point(63, 124);
       this.comboMapMultiColor1.Name = "comboMapMultiColor1";
       this.comboMapMultiColor1.Size = new System.Drawing.Size(82, 21);
-      this.comboMapMultiColor1.TabIndex = 28;
+      this.comboMapMultiColor1.TabIndex = 13;
       this.comboMapMultiColor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboAlternativeColor_DrawItem);
       this.comboMapMultiColor1.SelectedIndexChanged += new System.EventHandler(this.comboMapMultiColor1_SelectedIndexChanged);
       // 
       // btnCopy
       // 
+      this.btnCopy.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCopy.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnCopy.Image = null;
       this.btnCopy.Location = new System.Drawing.Point(231, 17);
       this.btnCopy.Name = "btnCopy";
       this.btnCopy.Size = new System.Drawing.Size(35, 23);
-      this.btnCopy.TabIndex = 27;
+      this.btnCopy.TabIndex = 5;
       this.btnCopy.Text = "Cpy";
       this.btnCopy.Click += new DecentForms.EventHandler(this.btnMapCopy_Click);
       // 
       // btnMoveMapDown
       // 
+      this.btnMoveMapDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveMapDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveMapDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveMapDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveMapDown.Enabled = false;
+      this.btnMoveMapDown.Image = null;
       this.btnMoveMapDown.Location = new System.Drawing.Point(231, 43);
       this.btnMoveMapDown.Name = "btnMoveMapDown";
       this.btnMoveMapDown.Size = new System.Drawing.Size(35, 23);
-      this.btnMoveMapDown.TabIndex = 27;
+      this.btnMoveMapDown.TabIndex = 7;
       this.btnMoveMapDown.Text = "▼";
       this.toolTip1.SetToolTip(this.btnMoveMapDown, "Move Map Down");
       this.btnMoveMapDown.Click += new DecentForms.EventHandler(this.btnMoveMapDown_Click);
       // 
       // btnMoveMapUp
       // 
+      this.btnMoveMapUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveMapUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveMapUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveMapUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveMapUp.Enabled = false;
+      this.btnMoveMapUp.Image = null;
       this.btnMoveMapUp.Location = new System.Drawing.Point(192, 43);
       this.btnMoveMapUp.Name = "btnMoveMapUp";
       this.btnMoveMapUp.Size = new System.Drawing.Size(35, 23);
-      this.btnMoveMapUp.TabIndex = 27;
+      this.btnMoveMapUp.TabIndex = 6;
       this.btnMoveMapUp.Text = "▲";
       this.toolTip1.SetToolTip(this.btnMoveMapUp, "Move Map Up");
       this.btnMoveMapUp.Click += new DecentForms.EventHandler(this.btnMoveMapUp_Click);
       // 
       // btnMapAdd
       // 
+      this.btnMapAdd.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMapAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMapAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMapAdd.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMapAdd.Image = null;
       this.btnMapAdd.Location = new System.Drawing.Point(191, 17);
       this.btnMapAdd.Name = "btnMapAdd";
       this.btnMapAdd.Size = new System.Drawing.Size(35, 23);
-      this.btnMapAdd.TabIndex = 27;
+      this.btnMapAdd.TabIndex = 4;
       this.btnMapAdd.Text = "Add";
       this.btnMapAdd.Click += new DecentForms.EventHandler(this.btnMapAdd_Click);
       // 
       // btnMapDelete
       // 
+      this.btnMapDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMapDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMapDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMapDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMapDelete.Enabled = false;
+      this.btnMapDelete.Image = null;
       this.btnMapDelete.Location = new System.Drawing.Point(251, 69);
       this.btnMapDelete.Name = "btnMapDelete";
       this.btnMapDelete.Size = new System.Drawing.Size(56, 23);
-      this.btnMapDelete.TabIndex = 27;
+      this.btnMapDelete.TabIndex = 10;
       this.btnMapDelete.Text = "Delete";
       this.btnMapDelete.Click += new DecentForms.EventHandler(this.btnMapDelete_Click);
       // 
       // btnMapApply
       // 
+      this.btnMapApply.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMapApply.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMapApply.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMapApply.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMapApply.Enabled = false;
+      this.btnMapApply.Image = null;
       this.btnMapApply.Location = new System.Drawing.Point(192, 69);
       this.btnMapApply.Name = "btnMapApply";
       this.btnMapApply.Size = new System.Drawing.Size(53, 23);
-      this.btnMapApply.TabIndex = 27;
+      this.btnMapApply.TabIndex = 9;
       this.btnMapApply.Text = "Apply";
       this.btnMapApply.Click += new DecentForms.EventHandler(this.btnMapApply_Click);
       // 
@@ -581,7 +628,7 @@
       this.editMapName.Location = new System.Drawing.Point(63, 71);
       this.editMapName.Name = "editMapName";
       this.editMapName.Size = new System.Drawing.Size(122, 20);
-      this.editMapName.TabIndex = 26;
+      this.editMapName.TabIndex = 8;
       // 
       // label13
       // 
@@ -615,7 +662,7 @@
       this.editTileSpacingH.Location = new System.Drawing.Point(128, 45);
       this.editTileSpacingH.Name = "editTileSpacingH";
       this.editTileSpacingH.Size = new System.Drawing.Size(56, 20);
-      this.editTileSpacingH.TabIndex = 26;
+      this.editTileSpacingH.TabIndex = 3;
       this.editTileSpacingH.Text = "2";
       // 
       // editMapHeight
@@ -623,7 +670,7 @@
       this.editMapHeight.Location = new System.Drawing.Point(128, 19);
       this.editMapHeight.Name = "editMapHeight";
       this.editMapHeight.Size = new System.Drawing.Size(56, 20);
-      this.editMapHeight.TabIndex = 26;
+      this.editMapHeight.TabIndex = 1;
       this.editMapHeight.Text = "12";
       // 
       // editTileSpacingW
@@ -631,7 +678,7 @@
       this.editTileSpacingW.Location = new System.Drawing.Point(63, 45);
       this.editTileSpacingW.Name = "editTileSpacingW";
       this.editTileSpacingW.Size = new System.Drawing.Size(60, 20);
-      this.editTileSpacingW.TabIndex = 26;
+      this.editTileSpacingW.TabIndex = 2;
       this.editTileSpacingW.Text = "2";
       // 
       // label3
@@ -648,26 +695,42 @@
       this.editMapWidth.Location = new System.Drawing.Point(63, 19);
       this.editMapWidth.Name = "editMapWidth";
       this.editMapWidth.Size = new System.Drawing.Size(60, 20);
-      this.editMapWidth.TabIndex = 26;
+      this.editMapWidth.TabIndex = 0;
       this.editMapWidth.Text = "20";
       // 
       // mapHScroll
       // 
+      this.mapHScroll.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.mapHScroll.DisplayType = DecentForms.HScrollBar.SBDisplayType.RAISED;
+      this.mapHScroll.Enabled = false;
+      this.mapHScroll.LargeChange = 10;
       this.mapHScroll.Location = new System.Drawing.Point(8, 413);
+      this.mapHScroll.Maximum = 100;
+      this.mapHScroll.Minimum = 0;
       this.mapHScroll.Name = "mapHScroll";
       this.mapHScroll.Size = new System.Drawing.Size(644, 16);
+      this.mapHScroll.SmallChange = 1;
       this.mapHScroll.TabIndex = 24;
+      this.mapHScroll.Value = 0;
       this.mapHScroll.Scroll += new DecentForms.EventHandler(this.mapHScroll_Scroll);
-      this.mapHScroll.Enabled = false;
+      this.mapHScroll.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.mapHScroll_PreviewKeyDown);
       // 
       // mapVScroll
       // 
+      this.mapVScroll.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.mapVScroll.DisplayType = DecentForms.VScrollBar.SBDisplayType.RAISED;
+      this.mapVScroll.Enabled = false;
+      this.mapVScroll.LargeChange = 10;
       this.mapVScroll.Location = new System.Drawing.Point(655, 6);
+      this.mapVScroll.Maximum = 100;
+      this.mapVScroll.Minimum = 0;
       this.mapVScroll.Name = "mapVScroll";
       this.mapVScroll.Size = new System.Drawing.Size(16, 404);
+      this.mapVScroll.SmallChange = 1;
       this.mapVScroll.TabIndex = 23;
+      this.mapVScroll.Value = 0;
       this.mapVScroll.Scroll += new DecentForms.EventHandler(this.mapVScroll_Scroll);
-      this.mapVScroll.Enabled = false;
+      this.mapVScroll.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.mapVScroll_PreviewKeyDown);
       // 
       // label25
       // 
@@ -756,7 +819,12 @@
       // 
       // btnTileApply
       // 
+      this.btnTileApply.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnTileApply.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnTileApply.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnTileApply.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnTileApply.Enabled = false;
+      this.btnTileApply.Image = null;
       this.btnTileApply.Location = new System.Drawing.Point(504, 90);
       this.btnTileApply.Name = "btnTileApply";
       this.btnTileApply.Size = new System.Drawing.Size(58, 23);
@@ -766,7 +834,12 @@
       // 
       // btnCopyTileCharToNextIncreased
       // 
+      this.btnCopyTileCharToNextIncreased.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCopyTileCharToNextIncreased.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCopyTileCharToNextIncreased.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCopyTileCharToNextIncreased.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnCopyTileCharToNextIncreased.Enabled = false;
+      this.btnCopyTileCharToNextIncreased.Image = null;
       this.btnCopyTileCharToNextIncreased.Location = new System.Drawing.Point(273, 247);
       this.btnCopyTileCharToNextIncreased.Name = "btnCopyTileCharToNextIncreased";
       this.btnCopyTileCharToNextIncreased.Size = new System.Drawing.Size(75, 23);
@@ -777,7 +850,12 @@
       // 
       // btnSetNextTileChar
       // 
+      this.btnSetNextTileChar.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnSetNextTileChar.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSetNextTileChar.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSetNextTileChar.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnSetNextTileChar.Enabled = false;
+      this.btnSetNextTileChar.Image = null;
       this.btnSetNextTileChar.Location = new System.Drawing.Point(192, 247);
       this.btnSetNextTileChar.Name = "btnSetNextTileChar";
       this.btnSetNextTileChar.Size = new System.Drawing.Size(75, 23);
@@ -788,7 +866,12 @@
       // 
       // btnMoveTileDown
       // 
+      this.btnMoveTileDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveTileDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveTileDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveTileDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveTileDown.Enabled = false;
+      this.btnMoveTileDown.Image = null;
       this.btnMoveTileDown.Location = new System.Drawing.Point(53, 217);
       this.btnMoveTileDown.Name = "btnMoveTileDown";
       this.btnMoveTileDown.Size = new System.Drawing.Size(44, 23);
@@ -798,7 +881,12 @@
       // 
       // btnMoveTileUp
       // 
+      this.btnMoveTileUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveTileUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveTileUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveTileUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveTileUp.Enabled = false;
+      this.btnMoveTileUp.Image = null;
       this.btnMoveTileUp.Location = new System.Drawing.Point(3, 217);
       this.btnMoveTileUp.Name = "btnMoveTileUp";
       this.btnMoveTileUp.Size = new System.Drawing.Size(44, 23);
@@ -808,7 +896,12 @@
       // 
       // btnTileDelete
       // 
+      this.btnTileDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnTileDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnTileDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnTileDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnTileDelete.Enabled = false;
+      this.btnTileDelete.Image = null;
       this.btnTileDelete.Location = new System.Drawing.Point(572, 90);
       this.btnTileDelete.Name = "btnTileDelete";
       this.btnTileDelete.Size = new System.Drawing.Size(58, 23);
@@ -818,7 +911,12 @@
       // 
       // btnTileClone
       // 
+      this.btnTileClone.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnTileClone.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnTileClone.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnTileClone.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnTileClone.Enabled = false;
+      this.btnTileClone.Image = null;
       this.btnTileClone.Location = new System.Drawing.Point(436, 90);
       this.btnTileClone.Name = "btnTileClone";
       this.btnTileClone.Size = new System.Drawing.Size(58, 23);
@@ -828,6 +926,11 @@
       // 
       // btnTileAdd
       // 
+      this.btnTileAdd.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnTileAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnTileAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnTileAdd.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnTileAdd.Image = null;
       this.btnTileAdd.Location = new System.Drawing.Point(368, 90);
       this.btnTileAdd.Name = "btnTileAdd";
       this.btnTileAdd.Size = new System.Drawing.Size(58, 23);
@@ -1173,6 +1276,11 @@
       // 
       // btnExport
       // 
+      this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExport.Image = null;
       this.btnExport.Location = new System.Drawing.Point(363, 56);
       this.btnExport.Name = "btnExport";
       this.btnExport.Size = new System.Drawing.Size(75, 21);
@@ -1243,6 +1351,11 @@
       // 
       // btnImport
       // 
+      this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImport.Image = null;
       this.btnImport.Location = new System.Drawing.Point(355, 5);
       this.btnImport.Name = "btnImport";
       this.btnImport.Size = new System.Drawing.Size(88, 21);

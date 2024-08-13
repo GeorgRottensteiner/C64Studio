@@ -274,7 +274,9 @@ namespace RetroDevStudio.Documents
             return true;
         }
       }
-      else if ( pictureEditor.Focused )
+      else if ( ( pictureEditor.Focused )
+      ||        ( mapHScroll.Focused )
+      ||        ( mapVScroll.Focused ) )
       {
         switch ( Function )
         {
@@ -301,7 +303,9 @@ namespace RetroDevStudio.Documents
       {
         return ( ( characterEditor.EditorFocused )
         ||       ( ( m_ToolMode == ToolMode.SELECT )
-          &&       ( pictureEditor.Focused ) ) );
+        &&         ( ( pictureEditor.Focused )
+        ||           ( mapHScroll.Focused )
+        ||           ( mapVScroll.Focused ) ) ) );
       }
     }
 
@@ -312,7 +316,9 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( characterEditor.EditorFocused )
-        ||       ( pictureEditor.Focused ) );
+        ||       ( pictureEditor.Focused )
+        ||       ( mapHScroll.Focused )
+        ||       ( mapVScroll.Focused ) );
       }
     }
 
@@ -3613,6 +3619,26 @@ namespace RetroDevStudio.Documents
             Modified = prevModified;
           }
           break;
+      }
+    }
+
+
+
+    private void mapVScroll_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Escape )
+      {
+        RemoveFloatingSelection();
+      }
+    }
+
+
+
+    private void mapHScroll_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Escape )
+      {
+        RemoveFloatingSelection();
       }
     }
 
