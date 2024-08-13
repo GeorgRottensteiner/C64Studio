@@ -8562,7 +8562,8 @@ namespace FastColoredTextBoxNS
       lines.Manager.BeginAutoUndoCommands();
       lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
 
-      int spaces = 0;//GetMinStartSpacesCount( from, to );
+      // first line selection may not start at left border!
+      int spaces = 0; // oldStart.iChar;
       for ( int i = from; i <= to; i++ )
       {
         if ( ( i == from )
@@ -8576,6 +8577,7 @@ namespace FastColoredTextBoxNS
           Selection.Start = new Place( spaces, i );
           Selection.End = oldEnd;
         }
+
         // prefix may not always be in front, but have blanks before
         if ( Selection.Text.TrimStart().StartsWith( prefix ) )
         {
@@ -8593,12 +8595,13 @@ namespace FastColoredTextBoxNS
               ++actualOffset;
             }
           }
-          Selection.Start = new Place( actualOffset, Selection.Start.iLine );
+          Selection.Start = new Place( startOffset + actualOffset, Selection.Start.iLine );
           Selection.End = new Place( Selection.Start.iChar + 1, i );
           ClearSelected();
 
           Selection.End = old.End;
         }
+        startOffset = 0;
       }
       Selection.Start = new Place( oldStart.iChar, from );
       Selection.End = new Place( lines[to].Count, to );
