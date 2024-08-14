@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RetroDevStudio.Parser;
 
@@ -9,13 +10,28 @@ namespace TestProject
   {
     private GR.Memory.ByteBuffer TestAssemble( string Source, out RetroDevStudio.Types.ASM.FileInfo Info )
     {
+      return TestAssemble( Source, new GR.Collections.Set<AssemblerSettings.Hacks>(), out Info );
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestAssemble( string Source, GR.Collections.Set<AssemblerSettings.Hacks> Hacks )
+    {
+      return TestAssemble( Source, Hacks, out RetroDevStudio.Types.ASM.FileInfo info );
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestAssemble( string Source, GR.Collections.Set<AssemblerSettings.Hacks> Hacks, out RetroDevStudio.Types.ASM.FileInfo Info )
+    {
       RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
       parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
       RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
-      config.OutputFile = "test.prg";
-      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
-      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.OutputFile   = "test.prg";
+      config.TargetType   = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler    = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.EnabledHacks = Hacks;
 
       bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       if ( !parseResult )
@@ -302,6 +318,40 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "00207F8183878A8E909297999D9FA2A6A8ACAEB0B4B6BABCBEC2C4C7C9CBCED0D3D5D8DADBDEE0E3E4E5E8E9EBECEEF0F1F3F3F4F6F7F8F9F9FAFBFCFCFCFDFDFDFDFEFDFDFDFDFDFCFCFBFBFAF9F9F7F7F5F4F3F2F1EFEEECEAE9E7E5E4E1E0DDDBD8D7D5D2D0CDCBC9C6C4C0BEBCB8B6B2B0AEAAA8A4A29F9B999592908C8A85837F7C7A76736F6D6B6664605E5B5755514F4D494743413F3B393634322F2D2A282523221F1D1A1918151412110F0D0C0A0A09070605040403020101010000000000000000000001010202030404060608090A0B0C0E0F1113141618191C1D20222526282B2D30323437393D3F4145474B4D4F5355595B5E6264686B6D7173787A", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestFillWithLoHiOperator()
+    {
+      string      source = @"* = $2000
+                           DATA
+                           !fill 16, [>DATA + i * 12]
+                           !fill 16, [>( DATA + i * 12 )]
+                           !fill 16, [<DATA + i * 12]
+                           !fill 16, [<( DATA + i * 12 )]";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020202C3844505C6874808C98A4B0BCC8D420202020202020202020202020202020000C1824303C4854606C7884909CA8B4000C1824303C4854606C7884909CA8B4", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestFillWithLoHiOperatorWithEnabledHack()
+    {
+      string      source = @"* = $2000
+                           DATA
+                           !fill 16, [>DATA + i * 12]
+                           !fill 16, [>( DATA + i * 12 )]
+                           !fill 16, [<DATA + i * 12]
+                           !fill 16, [<( DATA + i * 12 )]";
+
+      var assembly = TestAssemble( source, new GR.Collections.Set<AssemblerSettings.Hacks>() { AssemblerSettings.Hacks.GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION } );
+
+      Assert.AreEqual( "00202020202020202020202020202020202020202020202020202020202020202020000C1824303C4854606C7884909CA8B4000C1824303C4854606C7884909CA8B4", assembly.ToString() );
     }
 
 

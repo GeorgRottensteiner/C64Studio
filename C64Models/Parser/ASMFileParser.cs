@@ -1972,7 +1972,7 @@ namespace RetroDevStudio.Parser
             {
               NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
-              long resultValue = ( value.ToInteger() & 0x00ff );
+              long resultValue = value.ToInteger();
 
               subTokenRange.RemoveRange( 1, subTokenRange.Count - 1 );
 
