@@ -3016,6 +3016,7 @@ namespace RetroDevStudio.Documents
                                                               ( Y - m_CurEditorOffsetY ) * m_CurrentMap.TileSpacingY * 8,
                                                               Width * m_CurrentMap.TileSpacingY * 8,
                                                               Height * m_CurrentMap.TileSpacingY * 8 ) );
+      RedrawMap();
     }
 
 
