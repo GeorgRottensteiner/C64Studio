@@ -668,13 +668,6 @@ namespace RetroDevStudio.Documents
           DrawTile( point.X, point.Y, m_CurrentEditorTile.Index );
           m_CurrentMap.Tiles[point.X, point.Y] = m_CurrentEditorTile.Index;
 
-          pictureEditor.DisplayPage.DrawTo( m_Image,
-                          ( point.X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
-                          ( point.Y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
-                          ( point.X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
-                          ( point.Y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
-                          8 * m_CurrentMap.TileSpacingX, 8 * m_CurrentMap.TileSpacingY );
-
           if ( ( point.X > 0 )
           &&   ( m_CurrentMap.Tiles[point.X - 1, point.Y] == tileToFill ) )
           {
@@ -698,6 +691,7 @@ namespace RetroDevStudio.Documents
         }
       }
       Modified = true;
+      RedrawMap();
       Redraw();
     }
 
