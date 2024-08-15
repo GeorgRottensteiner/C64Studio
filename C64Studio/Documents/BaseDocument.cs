@@ -1077,23 +1077,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    /*
-    protected override void OnMouseWheel( MouseEventArgs e )
-    {
-      Debug.Log( "wheeled!" );
-      if ( Core.MainForm.panelMain.ActiveDocumentPane.TabStripControl != null )
-      {
-        Debug.Log( "wheeled, tab control exists!" );
-        if ( Core.MainForm.panelMain.ActiveDocumentPane.TabStripControl.Bounds.Contains( e.Location ) )
-        {
-          Debug.Log( "wheeled inside tabs!" );
-        }
-      }
-      base.OnMouseWheel( e );
-    }*/
-
-
-
     protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
     {
       if ( Core.MainForm.HandleCmdKey( ref msg, keyData ) )

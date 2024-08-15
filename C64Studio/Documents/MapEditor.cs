@@ -11,6 +11,8 @@ using RetroDevStudio.Formats;
 using RetroDevStudio.Controls;
 using System.Runtime.InteropServices;
 
+
+
 namespace RetroDevStudio.Documents
 {
   public partial class MapEditor : BaseDocument
@@ -274,22 +276,27 @@ namespace RetroDevStudio.Documents
             return true;
         }
       }
-      else if ( ( pictureEditor.Focused )
-      ||        ( mapHScroll.Focused )
-      ||        ( mapVScroll.Focused ) )
+      else 
       {
         switch ( Function )
         {
           case Function.COPY:
             if ( m_ToolMode == ToolMode.SELECT )
             {
-              CopyToClipboard();
-              return true;
+              if ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) )
+              {
+                CopyToClipboard();
+                return true;
+              }
             }
             break;
           case Function.PASTE:
-            PasteFromClipboard();
-            return true;
+            if ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) )
+            {
+              PasteFromClipboard();
+              return true;
+            }
+            break;
         }
       }
       return base.ApplyFunction( Function );
@@ -303,9 +310,7 @@ namespace RetroDevStudio.Documents
       {
         return ( ( characterEditor.EditorFocused )
         ||       ( ( m_ToolMode == ToolMode.SELECT )
-        &&         ( ( pictureEditor.Focused )
-        ||           ( mapHScroll.Focused )
-        ||           ( mapVScroll.Focused ) ) ) );
+        &&         ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) ) ) );
       }
     }
 
@@ -316,10 +321,57 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( characterEditor.EditorFocused )
-        ||       ( pictureEditor.Focused )
-        ||       ( mapHScroll.Focused )
-        ||       ( mapVScroll.Focused ) );
+        ||       ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) ) );
       }
+    }
+
+
+
+    [DllImport( "user32.dll" )]
+    static extern IntPtr GetFocus();
+
+    public static Control GetFocusedControl()
+    {
+      IntPtr  wndHandle = GetFocus();
+      return FromChildHandle( wndHandle );
+    }
+
+
+    public enum FocusControlReason
+    {
+      COPY_PASTE,
+      ESCAPE
+    }
+    /// <summary>
+    /// looks whether the focused control is a child of this, and is not a control that uses copy/paste (currently only TextBox?)
+    /// </summary>
+    /// <param name="Control"></param>
+    /// <returns>true if control is child and capable of handling copy/paste</returns>
+    private bool IsFocusOnCopyPasteControl( Control Control, FocusControlReason Reason )
+    {
+      var focusedControl = GetFocusedControl();
+      bool isTextBox = ( focusedControl is TextBox );
+      bool isComboBox = ( focusedControl is ComboBox );
+
+      while ( focusedControl != null )
+      {
+        if ( focusedControl == Control )
+        {
+          switch ( Reason )
+          {
+            case FocusControlReason.COPY_PASTE:
+              // text box does copy/paste
+              return isTextBox;
+            case FocusControlReason.ESCAPE:
+              // combo box does escape (close popup)
+              return isComboBox;
+          }
+          return isTextBox;
+        }
+        focusedControl = focusedControl.Parent;
+      }
+      // not a child of our check container
+      return true;
     }
 
 
@@ -2862,16 +2914,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      if ( e.KeyCode == Keys.Escape )
-      {
-        RemoveFloatingSelection();
-      }
-    }
-
-
-
     private void btnMapCopy_Click( DecentForms.ControlBase Sender )
     {
       if ( m_CurrentMap == null )
@@ -3619,24 +3661,18 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void mapVScroll_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
     {
-      if ( e.KeyCode == Keys.Escape )
+      if ( keyData == Keys.Escape )
       {
-        RemoveFloatingSelection();
+        if ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.ESCAPE ) )
+        {
+          RemoveFloatingSelection();
+          return true;
+        }
       }
+      return base.ProcessCmdKey( ref msg, keyData );
     }
-
-
-
-    private void mapHScroll_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      if ( e.KeyCode == Keys.Escape )
-      {
-        RemoveFloatingSelection();
-      }
-    }
-
 
 
   }

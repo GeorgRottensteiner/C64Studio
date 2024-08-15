@@ -713,7 +713,6 @@
       this.mapHScroll.TabIndex = 24;
       this.mapHScroll.Value = 0;
       this.mapHScroll.Scroll += new DecentForms.EventHandler(this.mapHScroll_Scroll);
-      this.mapHScroll.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.mapHScroll_PreviewKeyDown);
       // 
       // mapVScroll
       // 
@@ -730,7 +729,6 @@
       this.mapVScroll.TabIndex = 23;
       this.mapVScroll.Value = 0;
       this.mapVScroll.Scroll += new DecentForms.EventHandler(this.mapVScroll_Scroll);
-      this.mapVScroll.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.mapVScroll_PreviewKeyDown);
       // 
       // label25
       // 
@@ -764,7 +762,6 @@
       this.pictureEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureEditor_Paint);
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
       this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
-      this.pictureEditor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureEditor_PreviewKeyDown);
       // 
       // tabMapEditor
       // 
