@@ -12994,9 +12994,9 @@ namespace RetroDevStudio.Parser
             // since it's hi/lo it's always 1
             numBytesFirstParam = 1;
             // still call evaluate tokens since it will collapse the result
-            _ParseContext.DoNotAddReferences = true;
+            //_ParseContext.DoNotAddReferences = true;
             bool couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex + 2, expressionTokenCount - 2, info.LineCodeMapping, out SymbolInfo valueSymbol, out numGivenBytes );
-            _ParseContext.DoNotAddReferences = false;
+            //_ParseContext.DoNotAddReferences = false;
             if ( couldEvaluate )
             {
               value = valueSymbol.ToInteger();
@@ -13102,7 +13102,7 @@ namespace RetroDevStudio.Parser
             &&   ( ( extraTokens[0].Content == "<" )
             ||     ( extraTokens[0].Content == ">" ) ) )
             {
-              _ParseContext.DoNotAddReferences = true;
+              //_ParseContext.DoNotAddReferences = true;
               if ( EvaluateTokens( LineIndex, extraTokens, 1, extraTokens.Count - 1, info.LineCodeMapping, out SymbolInfo expressionResultSymbol2 ) )
               {
                 expressionResult = expressionResultSymbol2.ToInteger();
@@ -13130,7 +13130,7 @@ namespace RetroDevStudio.Parser
               {
                 info.NeededParsedExpression = extraTokens;
               }
-              _ParseContext.DoNotAddReferences = false;
+              //_ParseContext.DoNotAddReferences = false;
             }
             _ParseContext.DoNotAddReferences = true;
             if ( EvaluateTokens( LineIndex, extraTokens, info.LineCodeMapping, out SymbolInfo expressionResultSymbol ) )
