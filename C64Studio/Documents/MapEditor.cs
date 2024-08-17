@@ -3375,7 +3375,57 @@ namespace RetroDevStudio.Documents
 
     private void btnCopyImage_Click( DecentForms.ControlBase Sender )
     {
-      Clipboard.SetImage( m_Image.GetAsBitmap() );
+      if ( m_CurrentMap == null )
+      {
+        return;
+      }
+
+      // create a full image of the complete map
+      var fullImage = new GR.Image.MemoryImage( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width * 8,
+                                                m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height * 8,
+                                                GR.Drawing.PixelFormat.Format32bppRgb );
+
+      uint    bgColor = (uint)m_MapProject.BackgroundColor;
+      if ( ( m_CurrentMap != null )
+      &&   ( m_CurrentMap.AlternativeBackgroundColor != -1 ) )
+      {
+        bgColor = (uint)m_CurrentMap.AlternativeBackgroundColor;
+      }
+      fullImage.Box( 0, 0, fullImage.Width, fullImage.Height, m_MapProject.Charset.Colors.Palette.ColorValues[bgColor] );
+
+      for ( int y = 0; y < m_CurrentMap.Tiles.Height; ++y )
+      {
+        for ( int x = 0; x < m_CurrentMap.Tiles.Width; ++x )
+        {
+          var tileIndex = m_CurrentMap.Tiles[x,y];
+          if ( ( tileIndex < 0 )
+          ||   ( tileIndex >= m_MapProject.Tiles.Count ) )
+          {
+            continue;
+          }
+          var tile = m_MapProject.Tiles[tileIndex];
+          for ( int j = 0; j < tile.Chars.Height; ++j )
+          {
+            for ( int i = 0; i < tile.Chars.Width; ++i )
+            {
+              Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset,
+                                                        m_MapProject.Charset.Colors.Palette,
+                                                        tile.Chars[i, j].Character,
+                                                        fullImage,
+                                                        ( x * m_CurrentMap.TileSpacingX + i ) * 8,
+                                                        ( y * m_CurrentMap.TileSpacingY + j ) * 8,
+                                                        tile.Chars[i, j].Color,
+                                                        ( m_CurrentMap.AlternativeBackgroundColor != -1 ) ? m_CurrentMap.AlternativeBackgroundColor : m_MapProject.BackgroundColor,
+                                                        ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
+                                                        ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
+                                                        ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
+                                                        ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.TextCharModeFromTextMode( m_MapProject.Mode ) );
+            }
+          }
+        }
+      }
+
+      Clipboard.SetImage( fullImage.GetAsBitmap() );
     }
 
 
