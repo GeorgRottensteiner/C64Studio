@@ -12,6 +12,7 @@ using RetroDevStudio.Formats;
 using Tiny64;
 using RetroDevStudio.Converter;
 using System.Security.Policy;
+using GR.Generic;
 
 
 
@@ -89,7 +90,7 @@ namespace RetroDevStudio.Parser
 
     public Processor                    m_Processor = Processor.Create6510();
 
-    private GR.Collections.Map<string, GR.Collections.Set<string>> m_LoadedFiles = new GR.Collections.Map<string, GR.Collections.Set<string>>();
+    private GR.Collections.Map<string, GR.Collections.Set<Tupel<string,int>>> m_LoadedFiles = new Map<string, Set<Tupel<string, int>>>();
     private GR.Collections.Set<string>  m_AlreadyIncludedSingleIncludeFiles = new Set<string>();
 
     private int                         m_CompileCurrentAddress = -1;

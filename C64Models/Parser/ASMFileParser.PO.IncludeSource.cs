@@ -107,12 +107,12 @@ namespace RetroDevStudio.Parser
       SourceInfoLog( "Include file " + subFilename + ", resolving " + resolving );
       if ( m_LoadedFiles[ParentFilename] == null )
       {
-        m_LoadedFiles[ParentFilename] = new GR.Collections.Set<string>();
+        m_LoadedFiles[ParentFilename] = new GR.Collections.Set<GR.Generic.Tupel<string, int>>();
       }
 
       if ( GR.Path.IsPathEqual( ParentFilename, subFilename ) )
       {
-        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
+        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilename}, trying to include itself" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -137,12 +137,12 @@ namespace RetroDevStudio.Parser
         m_AlreadyIncludedSingleIncludeFiles.Add( subFilename );
       }
 
-      if ( m_LoadedFiles[ParentFilename].Contains( subFilename ) )
+      if ( m_LoadedFiles[ParentFilename].Any( lf => ( lf.first == subFilename ) ) )
       {
-        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
+        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilename}, was already included by {ParentFilename}" );
         return ParseLineResult.RETURN_NULL;
       }
-      m_LoadedFiles[ParentFilename].Add( subFilename );
+      m_LoadedFiles[ParentFilename].Add( new GR.Generic.Tupel<string,int>( subFilename, lineIndex ) );
 
       string[]  subFile = null;
       string    subFilenameFull = subFilename;
@@ -181,7 +181,7 @@ namespace RetroDevStudio.Parser
 
       if ( GR.Path.IsPathEqual( ParentFilename, subFilenameFull ) )
       {
-        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
+        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilenameFull}, trying to include itself" );
         return ParseLineResult.RETURN_NULL;
       }
 

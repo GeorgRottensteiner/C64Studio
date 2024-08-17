@@ -1056,6 +1056,7 @@ namespace RetroDevStudio.Documents
                                                                       p1.Y * m_CurrentMap.TileSpacingY,
                                                                       ( p2.X - p1.X + 1 ) * m_CurrentMap.TileSpacingX, 
                                                                       ( p2.Y - p1.Y + 1 ) * m_CurrentMap.TileSpacingY ) );
+              
             }
             break;
           case ToolMode.SELECT:
@@ -1091,6 +1092,28 @@ namespace RetroDevStudio.Documents
 
               pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
               Redraw();
+
+              // autoscroll at end of screen
+              if ( ( trueX == 0 )
+              &&   ( mapHScroll.Value > 0 ) )
+              {
+                mapHScroll.ScrollBy( -1 );
+              }
+              if ( ( trueX == ( pictureEditor.DisplayPage.Width / ( 8 * m_CurrentMap.TileSpacingX ) ) - 1 )
+              &&   ( mapHScroll.Value < mapHScroll.Maximum ) )
+              {
+                mapHScroll.ScrollBy( 1 );
+              }
+              if ( ( trueY == 0 )
+              &&   ( mapVScroll.Value > 0 ) )
+              {
+                mapVScroll.ScrollBy( -1 );
+              }
+              if ( ( trueY == ( pictureEditor.DisplayPage.Height / ( 8 * m_CurrentMap.TileSpacingY ) ) - 1 )
+              &&   ( mapVScroll.Value < mapVScroll.Maximum ) )
+              {
+                mapVScroll.ScrollBy( 1 );
+              }
             }
             break;
         }
@@ -2121,6 +2144,10 @@ namespace RetroDevStudio.Documents
       {
         listTileInfo.Items[i].Text = i.ToString();
       }
+      // auto-select tile
+      listTileInfo.SelectedIndices.Clear();
+      listTileInfo.SelectedIndices.Add( TileIndex );
+      listTileInfo.EnsureVisible( TileIndex );
       RedrawMap();
       RedrawTile();
       SetModified();
@@ -2603,6 +2630,7 @@ namespace RetroDevStudio.Documents
 
       listTileInfo.SelectedIndices.Clear();
       listTileInfo.SelectedIndices.Add( index1 );
+      listTileInfo.EnsureVisible( index1 );
     }
 
 
@@ -2677,6 +2705,7 @@ namespace RetroDevStudio.Documents
 
       listTileInfo.SelectedIndices.Clear();
       listTileInfo.SelectedIndices.Add( index2 );
+      listTileInfo.EnsureVisible( index2 );
     }
 
 
