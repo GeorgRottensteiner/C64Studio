@@ -1521,15 +1521,16 @@ namespace RetroDevStudio.Controls
 
         var tile = m_Project.Characters[index].Tile;
         var resultTile = new GraphicTile( tile );
+        int   sideSize = Math.Max( tile.Width, tile.Height );
 
-        for ( int i = 0; i < tile.Width; i += Lookup.PixelWidth( tile.Mode ) )
+        for ( int i = 0; i < sideSize; ++i )
         {
-          for ( int j = 0; j < tile.Height; ++j )
+          for ( int j = 0; j < sideSize; ++j )
           {
             int sourceX = i;
             int sourceY = j;
             int targetX = j;
-            int targetY = tile.Height - 1 - i;
+            int targetY = sideSize - 1 - i;
 
             resultTile.SetPixel( targetX, targetY, tile.GetPixel( sourceX, sourceY ) );
           }
@@ -1563,13 +1564,15 @@ namespace RetroDevStudio.Controls
         var tile = m_Project.Characters[index].Tile;
         var resultTile = new GraphicTile( tile );
 
-        for ( int i = 0; i < tile.Width; i += Lookup.PixelWidth( tile.Mode ) )
+        int   sideSize = Math.Max( tile.Width, tile.Height );
+
+        for ( int i = 0; i < sideSize; ++i )
         {
-          for ( int j = 0; j < tile.Height; ++j )
+          for ( int j = 0; j < sideSize; ++j )
           {
             int sourceX = i;
             int sourceY = j;
-            int targetX = tile.Height - 1 - j;
+            int targetX = sideSize - 1 - j;
             int targetY = i;
 
             resultTile.SetPixel( targetX, targetY, tile.GetPixel( sourceX, sourceY ) );
