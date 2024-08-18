@@ -6,99 +6,13 @@ using System.Windows.Forms;
 
 namespace DecentForms
 {
-  public class HScrollBar : ControlBase
+  public class HScrollBar : ScrollBar
   {
-    public enum SBDisplayType
-    {
-      RAISED,
-      FLAT
-    }
-
     private Button    _TopButton = new Button();
     private Button    _BottomButton = new Button();
 
     private int       _ButtonWidth = 16;
     private int       _SliderWidth = 40;
-
-    private bool      _MouseOverSlider = false;
-    private bool      _SliderPushed = false;
-    private int       _SliderDragOffset = 0;
-    private int       _SliderDragPos = 0;
-    private int       _MouseWheelFactor = 3;
-
-    private int       _Value = 0;
-    private int       _Minimum = 0;
-    private int       _Maximum = 100;
-
-
-
-    public int Minimum
-    {
-      get
-      {
-        return _Minimum;
-      }
-      set
-      {
-        if ( value < Maximum )
-        {
-          _Minimum = value;
-          Value = _Value;
-          Invalidate();
-        }
-      }
-    }
-
-
-
-    public int Maximum 
-    {
-      get
-      {
-        return _Maximum;
-      }
-      set
-      {
-        if ( value >= Minimum )
-        {
-          _Maximum = value;
-          Value = _Value;
-          Invalidate();
-        }
-      }
-    }
-
-
-
-    public int Value 
-    {
-      get
-      {
-        return _Value;
-      }
-      set
-      {
-        int     newValue = value;
-        if ( newValue < Minimum )
-        {
-          newValue = Minimum;
-        }
-        if ( newValue > Maximum )
-        {
-          newValue = Maximum;
-        }
-        if ( newValue != _Value )
-        {
-          _Value = newValue;
-          Invalidate();
-        }
-      }
-    }
-
-
-
-    public int SmallChange { get; set; } = 1;
-    public int LargeChange { get; set; } = 10;
 
 
 
@@ -120,6 +34,32 @@ namespace DecentForms
 
       Controls.Add( _TopButton );
       Controls.Add( _BottomButton );
+    }
+
+
+
+    private void OnScrollUp( ControlBase Sender )
+    {
+      if ( Value > Minimum )
+      {
+        --Value;
+        Invalidate();
+
+        OnScroll();
+      }
+    }
+
+
+
+    private void OnScrollDown( ControlBase Sender )
+    {
+      if ( Value < Maximum )
+      {
+        ++Value;
+        Invalidate();
+
+        OnScroll();
+      }
     }
 
 
@@ -146,40 +86,6 @@ namespace DecentForms
 
       Renderer.DrawArrowRight( arrowX, arrowY, arrowWidth, arrowHeight, Enabled );
     }
-
-
-
-    private void OnScrollUp( ControlBase Sender )
-    {
-      if ( Value > Minimum )
-      {
-        --Value;
-        Invalidate();
-
-        Scroll?.Invoke( this );
-      }
-    }
-
-
-
-    private void OnScrollDown( ControlBase Sender )
-    {
-      if ( Value < Maximum )
-      {
-        ++Value;
-        Invalidate();
-
-        Scroll?.Invoke( this );
-      }
-    }
-
-
-
-    public event EventHandler Scroll;
-
-
-
-    public SBDisplayType DisplayType { get; set; }
 
 
 
@@ -212,40 +118,6 @@ namespace DecentForms
     {
       switch ( Event.Type )
       {
-        case ControlEvent.EventType.MOUSE_WHEEL:
-          if ( Value - Event.MouseWheelDelta * _MouseWheelFactor < Minimum )
-          {
-            if ( Value > Minimum )
-            {
-              Value = Minimum;
-              Invalidate(); 
-              Scroll?.Invoke( this );
-            }
-          }
-          else if ( Value - Event.MouseWheelDelta * _MouseWheelFactor > Maximum )
-          {
-            if ( Value < Maximum )
-            {
-              Value = Maximum;
-              Invalidate();
-              Scroll?.Invoke( this );
-            }
-          }
-          else
-          {
-            Value -= Event.MouseWheelDelta * _MouseWheelFactor;
-            Invalidate();
-            Scroll?.Invoke( this );
-          }
-          UpdateMouseOverSlider( Event.MouseX, Event.MouseY );
-          break;
-        case ControlEvent.EventType.MOUSE_LEAVE:
-          if ( _MouseOverSlider )
-          {
-            _MouseOverSlider = false;
-            Invalidate();
-          }
-          break;
         case ControlEvent.EventType.MOUSE_UPDATE:
           _ButtonWidth = _TopButton.Width;
           if ( _SliderPushed )
@@ -278,7 +150,7 @@ namespace DecentForms
               if ( Value != newScrollPos )
               {
                 Value = newScrollPos;
-                Scroll?.Invoke( this );
+                OnScroll();
               }
             }
             break;
@@ -332,9 +204,9 @@ namespace DecentForms
         case ControlEvent.EventType.KEY_DOWN:
           if ( Focused )
           {
-            if ( Event.Key == Keys.Down )
+            if ( Event.Key == Keys.Right )
             {
-              OnScrollDown( null );
+              ScrollBy( 1 );
             }
             else if ( Event.Key == Keys.PageDown )
             {
@@ -344,9 +216,9 @@ namespace DecentForms
             {
               ScrollTo( 0 );
             }
-            else if ( Event.Key == Keys.Up )
+            else if ( Event.Key == Keys.Left )
             {
-              OnScrollUp( null );
+              ScrollBy( -1 );
             }
             else if ( Event.Key == Keys.PageUp )
             {
@@ -392,70 +264,7 @@ namespace DecentForms
 
 
 
-    public void ScrollBy( int Delta )
-    {
-      if ( Value + Delta > Maximum )
-      {
-        if ( Value != Maximum )
-        {
-          Value = Maximum;
-          Invalidate();
-          Scroll?.Invoke( this );
-        }
-      }
-      else
-      {
-        Value += Delta;
-        Invalidate();
-        Scroll?.Invoke( this );
-      }
-    }
-
-
-
-    public void ScrollTo( int TargetValue )
-    {
-      if ( TargetValue < 0 )
-      {
-        TargetValue = 0;
-      }
-      if ( TargetValue > Maximum )
-      {
-        TargetValue = Maximum;
-      }
-      if ( TargetValue != Value )
-      {
-        Value = TargetValue;
-        Invalidate();
-        Scroll?.Invoke( this );
-      }
-    }
-
-
-
-    private void UpdateMouseOverSlider( int X, int Y )
-    {
-      if ( GetSliderRect().Contains( X, Y ) )
-      {
-        if ( !_MouseOverSlider )
-        {
-          _MouseOverSlider = true;
-          Invalidate();
-        }
-      }
-      else
-      {
-        if ( _MouseOverSlider )
-        {
-          _MouseOverSlider = false;
-          Invalidate();
-        }
-      }
-    }
-
-
-
-    protected Rectangle GetSliderRect()
+    protected override Rectangle GetSliderRect()
     {
       int     sliderXPos = 0;
       if ( _SliderPushed )
@@ -469,19 +278,6 @@ namespace DecentForms
       }
 
       return new Rectangle( _ButtonWidth + sliderXPos, 0, _SliderWidth, ClientSize.Height );
-    }
-
-
-
-    protected override void OnPaint( ControlRenderer Renderer )
-    {
-      if ( !Enabled )
-      {
-        return;
-      }
-
-      var sliderRect = GetSliderRect();
-      Renderer.RenderSlider( sliderRect.Left, sliderRect.Top, sliderRect.Width, sliderRect.Height, _MouseOverSlider, _SliderPushed );
     }
 
 

@@ -493,22 +493,34 @@ namespace RetroDevStudio.Documents
     {
       int numberOfLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
 
-      if ( mapVScroll.Enabled )
+      DecentForms.ScrollBar scrollbarToUse = mapVScroll;
+      if ( Control.ModifierKeys == Keys.Shift )
       {
-        int     oldValue = mapVScroll.Value;
+        scrollbarToUse = mapHScroll;
+      }
+      if ( scrollbarToUse.Enabled )
+      {
+        int     oldValue = scrollbarToUse.Value;
         int     newValue = oldValue - numberOfLinesToMove;
         if ( newValue < 0 )
         {
           newValue = 0;
         }
-        if ( newValue > mapVScroll.Maximum )
+        if ( newValue > scrollbarToUse.Maximum )
         {
-          newValue = mapVScroll.Maximum;
+          newValue = scrollbarToUse.Maximum;
         }
         if ( oldValue != newValue )
         {
-          mapVScroll.Value = newValue;
-          mapVScroll_Scroll( mapVScroll );
+          scrollbarToUse.Value = newValue;
+          if ( scrollbarToUse == mapVScroll )
+          {
+            mapVScroll_Scroll( scrollbarToUse );
+          }
+          else
+          {
+            mapHScroll_Scroll( scrollbarToUse );
+          }
         }
       }
     }

@@ -20,6 +20,9 @@
     <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxSelectedItemCollection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\PaletteEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
