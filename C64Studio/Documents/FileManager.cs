@@ -38,6 +38,10 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       DocumentInfo.Type = ProjectElement.ElementType.MEDIA_MANAGER;
 
+#if !DEBUG
+      debugToolStripMenuItem.Visible = false;
+#endif
+
       InitializeComponent();
 
       oldFont = listFiles.Font;
@@ -1447,6 +1451,16 @@ namespace RetroDevStudio.Documents
       SetUnmodified();
       RefreshFileView();
       UpdateStatusInfo();
+    }
+
+
+
+    private void dumpBAMToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_Media is CommodoreDisk )
+      {
+        ( (CommodoreDisk)m_Media ).DumpBAM();
+      }
     }
 
 

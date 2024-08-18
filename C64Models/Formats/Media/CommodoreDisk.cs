@@ -417,6 +417,27 @@ namespace RetroDevStudio.Formats
 
 
 
+    public void DumpBAM()
+    {
+      var bamData = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM].Data.SubBuffer( 0x04, Tracks.Count * 4 );
+
+      Debug.Log( "BAM" );
+      for ( int i = 0; i < bamData.Length; i += 4 )
+      {
+        int trackNo = i / 4 + 1;
+        Debug.Log( $"  Track {trackNo}: Free Sectors {bamData.ByteAt( i )}" );
+        for ( int j = 0; j < Tracks[trackNo - 1].Sectors.Count; ++j )
+        {
+          if ( IsSectorAllocated( trackNo, j ) )
+          {
+            Debug.Log( $"    Sector {j} allocated" );
+          }
+        }
+      }
+    }
+
+
+
     public void DumpTrack( int Track )
     {
       Debug.Log( "Track " + Track.ToString() );
@@ -708,6 +729,9 @@ namespace RetroDevStudio.Formats
           sect.Data.SetU8At( 0, dirTrackIndex );
           sect.Data.SetU8At( 1, (byte)( sector ) );
           AllocSector( dirTrackIndex, sector );
+
+          // new sector was alloced for directory, clean out any existing entries!
+          dirTrack.Sectors[sector].Data.Fill( 0, (int)dirTrack.Sectors[sector].Data.Length, 0 );
 
           dirTrack.Sectors[sector].Data.SetU8At( 0, 0 );
           dirTrack.Sectors[sector].Data.SetU8At( 1, 0xff );

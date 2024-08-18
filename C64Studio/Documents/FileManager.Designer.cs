@@ -73,6 +73,8 @@
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
       this.labelFolder = new System.Windows.Forms.Label();
       this.btnUp = new DecentForms.Button();
+      this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.dumpBAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -83,7 +85,8 @@
       // 
       this.menuFileManager.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.menuFileManager.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.debugToolStripMenuItem});
       this.menuFileManager.Location = new System.Drawing.Point(0, 0);
       this.menuFileManager.Name = "menuFileManager";
       this.menuFileManager.Size = new System.Drawing.Size(677, 24);
@@ -161,46 +164,46 @@
       // d64ToolStripMenuItem
       // 
       this.d64ToolStripMenuItem.Name = "d64ToolStripMenuItem";
-      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d64ToolStripMenuItem.Text = "D64";
       this.d64ToolStripMenuItem.Click += new System.EventHandler(this.d64ToolStripMenuItem_Click);
       // 
       // d64With40TracksToolStripMenuItem
       // 
       this.d64With40TracksToolStripMenuItem.Name = "d64With40TracksToolStripMenuItem";
-      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
       this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
       // 
       // d71ToolStripMenuItem
       // 
       this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
-      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d71ToolStripMenuItem.Text = "D71";
       this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
       // 
       // d81ToolStripMenuItem
       // 
       this.d81ToolStripMenuItem.Name = "d81ToolStripMenuItem";
-      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.d81ToolStripMenuItem.Text = "D81";
       this.d81ToolStripMenuItem.Click += new System.EventHandler(this.d81ToolStripMenuItem_Click);
       // 
       // toolStripSeparator7
       // 
       this.toolStripSeparator7.Name = "toolStripSeparator7";
-      this.toolStripSeparator7.Size = new System.Drawing.Size(170, 6);
+      this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
       // 
       // cPCDSKToolStripMenuItem
       // 
       this.cPCDSKToolStripMenuItem.Name = "cPCDSKToolStripMenuItem";
-      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.cPCDSKToolStripMenuItem.Text = "CPC DSK";
       // 
       // cPCDSKExtendedToolStripMenuItem
       // 
       this.cPCDSKExtendedToolStripMenuItem.Name = "cPCDSKExtendedToolStripMenuItem";
-      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.cPCDSKExtendedToolStripMenuItem.Text = "CPC DSK extended";
       this.cPCDSKExtendedToolStripMenuItem.Click += new System.EventHandler(this.cPCDSKExtendedToolStripMenuItem_Click);
       // 
@@ -470,13 +473,33 @@
       // 
       // btnUp
       // 
+      this.btnUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnUp.Enabled = false;
+      this.btnUp.Image = null;
       this.btnUp.Location = new System.Drawing.Point(0, 47);
       this.btnUp.Name = "btnUp";
       this.btnUp.Size = new System.Drawing.Size(37, 23);
       this.btnUp.TabIndex = 7;
       this.btnUp.Text = "Up";
       this.btnUp.Click += new DecentForms.EventHandler(this.btnUp_Click);
+      // 
+      // debugToolStripMenuItem
+      // 
+      this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dumpBAMToolStripMenuItem});
+      this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+      this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+      this.debugToolStripMenuItem.Text = "Debug";
+      // 
+      // dumpBAMToolStripMenuItem
+      // 
+      this.dumpBAMToolStripMenuItem.Name = "dumpBAMToolStripMenuItem";
+      this.dumpBAMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.dumpBAMToolStripMenuItem.Text = "Dump BAM";
+      this.dumpBAMToolStripMenuItem.Click += new System.EventHandler(this.dumpBAMToolStripMenuItem_Click);
       // 
       // FileManager
       // 
@@ -550,5 +573,7 @@
     private System.Windows.Forms.ToolStripMenuItem cPCDSKExtendedToolStripMenuItem;
     private System.Windows.Forms.Label labelFolder;
     private DecentForms.Button btnUp;
+    private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem dumpBAMToolStripMenuItem;
   }
 }
