@@ -171,6 +171,7 @@ namespace RetroDevStudio.Documents
       AutoComplete.SearchPattern = @"[A-Za-z_.][\w.]*";
       AutoComplete.PrepareOpening += AutoComplete_PrepareOpening;
       AutoComplete.PrepareSorting += AutoComplete_PrepareSorting;
+      AutoComplete.Selecting += AutoComplete_Selecting;
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;
@@ -240,6 +241,21 @@ namespace RetroDevStudio.Documents
       contextSource.Opened += new EventHandler( contextSource_Opened );
 
       ResumeLayout();
+    }
+
+
+
+    private void AutoComplete_Selecting( object sender, SelectingEventArgs e )
+    {
+      // called when intellisense option is to be inserted
+      if ( e.Item.Text.StartsWith( "+" ) )
+      {
+        // cut off prefixed +
+        if ( e.FragmentRange.CharBeforeStart == '+' )
+        {
+          e.InsertionText = e.Item.Text.Substring( 1 );
+        }
+      }
     }
 
 
@@ -1324,34 +1340,39 @@ namespace RetroDevStudio.Documents
         {
           toolTipText += tokenInfo.ToString();
         }
-        
-        if ( m_LastTooltipText != toolTipText )
+        if ( tokenInfo.Type == SymbolInfo.Types.MACRO )
         {
-          m_LastTooltipText = toolTipText;
-          m_ToolTip.SetToolTip( editSource, toolTipText );
-        }
-        return;
-      }
-      var tokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new GR.Collections.Map<byte, byte>() );
-      int numArgs = -1;
-      if ( tokens != null )
-      {
-        var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
-        if ( currentToken != null )
-        {
-          int tokenIndexOfMacro = tokens.IndexOf( currentToken );
-          numArgs = Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
-        }
-      }
-      var macroInfo = debugFileInfo.MacroFromName( wordBelow, numArgs );
-      if ( macroInfo != null )
-      {
-        string toolTipText = macroInfo.Name;
+          var tokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new GR.Collections.Map<byte, byte>() );
+          int numArgs = -1;
+          if ( tokens != null )
+          {
+            var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
+            if ( currentToken != null )
+            {
+              int tokenIndexOfMacro = tokens.IndexOf( currentToken );
+              numArgs = Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
+            }
+          }
 
-        foreach ( var parameter in macroInfo.ParameterNames )
-        {
-          toolTipText += " " + parameter;
+          var macroInfo = debugFileInfo.MacroFromName( wordBelow, numArgs );
+          if ( macroInfo != null )
+          {
+            if ( debugFileInfo.AssemblerSettings.MacroFunctionCallPrefix.Any() )
+            {
+              toolTipText = debugFileInfo.AssemblerSettings.MacroFunctionCallPrefix[0] + macroInfo.Name;
+            }
+            else
+            {
+              toolTipText = macroInfo.Name;
+            }
+
+            foreach ( var parameter in macroInfo.ParameterNames )
+            {
+              toolTipText += " " + parameter;
+            }
+          }
         }
+        
         if ( m_LastTooltipText != toolTipText )
         {
           m_LastTooltipText = toolTipText;
@@ -2420,6 +2441,26 @@ namespace RetroDevStudio.Documents
         &&   ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( potentialPseudoOp.ToUpper() ) ) )
         {
           wordBelow = potentialPseudoOp;
+        }
+      }
+      if ( ( left >= 0 )
+      &&   ( DocumentInfo.Element != null )
+      &&   ( DocumentInfo.Element.AssemblerType == Types.AssemblerType.C64_STUDIO )
+      &&   ( currentLine[left] == '+' ) )
+      {
+        // a macro call?
+        string    potentialPseudoOp = '+' + wordBelow;
+
+        if ( DocumentInfo.ASMFileInfo.Macros != null )
+        {
+          foreach ( var macro in DocumentInfo.ASMFileInfo.Macros )
+          {
+            if ( macro.Key.first.StartsWith( potentialPseudoOp.ToUpper() ) )
+            {
+              wordBelow = potentialPseudoOp;
+              break;
+            }
+          }
         }
       }
       return wordBelow;

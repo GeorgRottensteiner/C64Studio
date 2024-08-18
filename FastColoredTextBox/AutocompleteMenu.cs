@@ -757,7 +757,9 @@ namespace FastColoredTextBoxNS
         SelectingEventArgs args = new SelectingEventArgs()
         {
           Item = item,
-          SelectedIndex = FocussedItemIndex
+          InsertionText = item.GetTextForReplace(),
+          SelectedIndex = FocussedItemIndex,
+          FragmentRange = new Range( Menu.Fragment.tb, Menu.Fragment.Start, Menu.Fragment.End )
         };
 
         Menu.OnSelecting( args );
@@ -772,7 +774,7 @@ namespace FastColoredTextBoxNS
         if ( !args.Handled )
         {
           var fragment = Menu.Fragment;
-          DoAutocomplete( item, fragment );
+          DoAutocomplete( args.InsertionText, fragment );
         }
 
         Menu.Close();
@@ -791,10 +793,8 @@ namespace FastColoredTextBoxNS
       }
     }
 
-    private void DoAutocomplete( AutocompleteItem item, Range fragment )
+    private void DoAutocomplete( string InsertionText, Range fragment )
     {
-      string newText = item.GetTextForReplace();
-
       //replace text of fragment
       var tb = fragment.tb;
 
@@ -814,7 +814,7 @@ namespace FastColoredTextBoxNS
         tb.Selection.Start = fragment.Start;
         tb.Selection.End = fragment.End;
       }
-      tb.InsertText( newText );
+      tb.InsertText( InsertionText );
       tb.TextSource.Manager.ExecuteCommand( new SelectCommand( tb.TextSource ) );
       tb.EndAutoUndo();
       tb.Focus();
@@ -996,6 +996,11 @@ namespace FastColoredTextBoxNS
       get;
       internal set;
     }
+    public string InsertionText
+    {
+      get;
+      set;
+    }
     public bool Cancel
     {
       get;
@@ -1007,6 +1012,11 @@ namespace FastColoredTextBoxNS
       set;
     }
     public bool Handled
+    {
+      get;
+      set;
+    }
+    public Range FragmentRange
     {
       get;
       set;
