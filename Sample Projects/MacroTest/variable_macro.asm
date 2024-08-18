@@ -1,7 +1,7 @@
 * = $2000
 
 !macro memcpy .source_hi, .source_lo, .target_hi, .target_lo, .length_hi, .length_lo
-  
+
   lda .source_hi
   sta $400
   lda .source_lo

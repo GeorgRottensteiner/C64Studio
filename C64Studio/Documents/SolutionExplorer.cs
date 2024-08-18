@@ -27,6 +27,8 @@ namespace RetroDevStudio.Documents
     private DecentForms.TreeView.TreeNode     m_MouseOverNode = null;
     private int                               m_MouseOverNodeTicks = 0;
 
+    private bool                              m_PasteKeyDown = false;
+
 
 
     public SolutionExplorer( StudioCore Core )
@@ -1550,9 +1552,13 @@ namespace RetroDevStudio.Documents
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.V )
       &&        ( e.Control ) )
       {
-        PasteElement( treeProject.SelectedNode );
-        e.Handled = true;
-        e.SuppressKeyPress = true;
+        if ( !m_PasteKeyDown )
+        {
+          m_PasteKeyDown = true;
+          PasteElement( treeProject.SelectedNode );
+          e.Handled = true;
+          e.SuppressKeyPress = true;
+        }
       }
     }
 
@@ -2681,6 +2687,19 @@ namespace RetroDevStudio.Documents
       public ProjectElement                   Element = null;
       public global::SourceControl.FileState  FileState = global::SourceControl.FileState.Nonexistent;
 
+    }
+
+
+
+    private void treeProject_KeyUp( object sender, KeyEventArgs e )
+    {
+      if ( e.KeyCode == System.Windows.Forms.Keys.V )
+      {
+        if ( m_PasteKeyDown )
+        {
+          m_PasteKeyDown = false;
+        }
+      }
     }
 
 

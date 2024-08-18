@@ -7000,7 +7000,7 @@ namespace RetroDevStudio.Parser
                 }
               }
               if ( ( paramPos == 0 )
-              || ( paramPos > 1 ) )
+              ||   ( paramPos > 1 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !bank <Number>[,<Size>]" );
               }
