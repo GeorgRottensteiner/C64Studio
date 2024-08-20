@@ -236,6 +236,12 @@ namespace RetroDevStudio.Documents
 
       if ( ASMInfo.FindTrueLineSource( GlobalLineIndex, out string filename, out int localLineIndex, out Types.ASM.SourceInfo SourceInfo ) )
       {
+        /*
+        // do not list references inside macros - TODO would need to differ between real references, and inserted references
+        if ( SourceInfo.Source == Types.ASM.SourceInfo.SourceInfoSource.MACRO )
+        {
+          return;
+        }*/
         item.SubItems[0].Text = ( localLineIndex + 1 ).ToString();
         item.SubItems[1].Text = filename;
 

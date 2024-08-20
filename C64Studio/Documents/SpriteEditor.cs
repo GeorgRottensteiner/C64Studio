@@ -3726,5 +3726,36 @@ namespace RetroDevStudio.Documents
 
 
 
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
+          {
+            bool  prevModified = Modified;
+
+            if ( !string.IsNullOrEmpty( Event.OriginalValue ) )
+            {
+              Core.Imaging.ApplyPalette( (PaletteType)Enum.Parse( typeof( PaletteType ), Event.OriginalValue, true ),
+                                         Lookup.PaletteTypeFromSpriteMode( m_SpriteProject.Mode ),
+                                         m_SpriteProject.Colors );
+            }
+            else
+            {
+              Core.Imaging.ApplyPalette( Lookup.PaletteTypeFromSpriteMode( m_SpriteProject.Mode ),
+                                         Lookup.PaletteTypeFromSpriteMode( m_SpriteProject.Mode ),
+                                         m_SpriteProject.Colors );
+
+            }
+            ColorsChanged();
+
+            Modified = prevModified;
+          }
+          break;
+      }
+    }
+
+
+
   }
 }

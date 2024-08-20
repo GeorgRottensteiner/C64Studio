@@ -10,6 +10,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Controls;
 using System.Runtime.InteropServices;
+using Be.Windows.Forms;
 
 
 
@@ -283,7 +284,7 @@ namespace RetroDevStudio.Documents
           case Function.COPY:
             if ( m_ToolMode == ToolMode.SELECT )
             {
-              if ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) )
+              if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) )
               {
                 CopyToClipboard();
                 return true;
@@ -291,7 +292,7 @@ namespace RetroDevStudio.Documents
             }
             break;
           case Function.PASTE:
-            if ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) )
+            if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) )
             {
               PasteFromClipboard();
               return true;
@@ -310,7 +311,7 @@ namespace RetroDevStudio.Documents
       {
         return ( ( characterEditor.EditorFocused )
         ||       ( ( m_ToolMode == ToolMode.SELECT )
-        &&         ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) ) ) );
+        &&         ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) ) ) );
       }
     }
 
@@ -321,57 +322,8 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( characterEditor.EditorFocused )
-        ||       ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.COPY_PASTE ) ) );
+        ||       ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) ) );
       }
-    }
-
-
-
-    [DllImport( "user32.dll" )]
-    static extern IntPtr GetFocus();
-
-    public static Control GetFocusedControl()
-    {
-      IntPtr  wndHandle = GetFocus();
-      return FromChildHandle( wndHandle );
-    }
-
-
-    public enum FocusControlReason
-    {
-      COPY_PASTE,
-      ESCAPE
-    }
-    /// <summary>
-    /// looks whether the focused control is a child of this, and is not a control that uses copy/paste (currently only TextBox?)
-    /// </summary>
-    /// <param name="Control"></param>
-    /// <returns>true if control is child and capable of handling copy/paste</returns>
-    private bool IsFocusOnCopyPasteControl( Control Control, FocusControlReason Reason )
-    {
-      var focusedControl = GetFocusedControl();
-      bool isTextBox = ( focusedControl is TextBox );
-      bool isComboBox = ( focusedControl is ComboBox );
-
-      while ( focusedControl != null )
-      {
-        if ( focusedControl == Control )
-        {
-          switch ( Reason )
-          {
-            case FocusControlReason.COPY_PASTE:
-              // text box does copy/paste
-              return isTextBox;
-            case FocusControlReason.ESCAPE:
-              // combo box does escape (close popup)
-              return isComboBox;
-          }
-          return isTextBox;
-        }
-        focusedControl = focusedControl.Parent;
-      }
-      // not a child of our check container
-      return true;
     }
 
 
@@ -403,13 +355,26 @@ namespace RetroDevStudio.Documents
           y2 = TargetBuffer.Height / ( m_CurrentMap.TileSpacingY * 16 ) + offsetY;
         }
 
+        for ( int x = x1; x <= x2; ++x )
+        {
+          TargetBuffer.Line( ( x - offsetX ) * m_CurrentMap.TileSpacingX * 16, 0,
+                             ( x - offsetX ) * m_CurrentMap.TileSpacingX * 16, TargetBuffer.Height,
+                             0xffffffff );
+        }
+        for ( int y = y1; y <= y2; ++y )
+        {
+          TargetBuffer.Line( 0, ( y - offsetY ) * m_CurrentMap.TileSpacingY * 16, 
+                             TargetBuffer.Width, ( y - offsetY ) * m_CurrentMap.TileSpacingY * 16, 
+                             0xffffffff );
+        }
+        /*
         for ( int y = y1; y <= y2; ++y )
         {
           for ( int x = x1; x <= x2; ++x )
           {
             TargetBuffer.Rectangle( ( x - offsetX ) * m_CurrentMap.TileSpacingX * 16, ( y - offsetY ) * m_CurrentMap.TileSpacingY * 16, m_CurrentMap.TileSpacingX * 16, m_CurrentMap.TileSpacingY * 16, 0xffffffff );
           }
-        }
+        }*/
       }
 
       if ( ( m_CurrentMap == null )
@@ -2125,9 +2090,17 @@ namespace RetroDevStudio.Documents
       tile.Chars.Resize( w, h );
       tile.Name = editTileName.Text;
 
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileAdd( this, m_MapProject, m_MapProject.Tiles.Count ) );
+      int indexToInsertAt = m_MapProject.Tiles.Count;
+      if ( listTileInfo.SelectedIndices.Count > 0 )
+      {
+        indexToInsertAt = listTileInfo.SelectedIndices[0] + 1;
+      }
 
-      AddTile( m_MapProject.Tiles.Count, tile );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileAdd( this, m_MapProject, indexToInsertAt ) );
+
+      AddTile( indexToInsertAt, tile );
+      listTileInfo.SelectedIndices.Clear();
+      listTileInfo.SelectedIndices.Add( indexToInsertAt );
     }
 
 
@@ -2156,6 +2129,21 @@ namespace RetroDevStudio.Documents
       {
         listTileInfo.Items[i].Text = i.ToString();
       }
+
+      foreach ( var map in m_MapProject.Maps )
+      {
+        for ( int i = 0; i < map.Tiles.Width; ++i )
+        {
+          for ( int j = 0; j < map.Tiles.Height; ++j )
+          {
+            if ( map.Tiles[i, j] >= TileIndex )
+            {
+              ++map.Tiles[i, j];
+            }
+          }
+        }
+      }
+
       // auto-select tile
       listTileInfo.SelectedIndices.Clear();
       listTileInfo.SelectedIndices.Add( TileIndex );
@@ -2585,12 +2573,10 @@ namespace RetroDevStudio.Documents
             int tile = map.Tiles[i, j];
             if ( tile > TileIndex )
             {
-              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoMapTilesChange( this, map, i, j, 1, 1 ) );
               map.Tiles[i, j] = tile - 1;
             }
             else if ( tile == TileIndex )
             {
-              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoMapTilesChange( this, map, i, j, 1, 1 ) );
               map.Tiles[i, j] = 0;
             }
           }
@@ -3136,6 +3122,10 @@ namespace RetroDevStudio.Documents
       // force refresh
       listTileInfo_SelectedIndexChanged( null, null );
       listTileChars_SelectedIndexChanged( null, null );
+      if ( comboTiles.SelectedIndex == TileIndex )
+      {
+        comboTiles.Invalidate();
+      }
     }
 
 
@@ -3397,9 +3387,14 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileAdd( this, m_MapProject, m_MapProject.Tiles.Count ) );
+      int indexToInsertAt = m_MapProject.Tiles.Count;
+      if ( listTileInfo.SelectedIndices.Count > 0 )
+      {
+        indexToInsertAt = listTileInfo.SelectedIndices[0] + 1;
+      }
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileAdd( this, m_MapProject, indexToInsertAt ) );
 
-      AddTile( m_MapProject.Tiles.Count, clonedTile );
+      AddTile( indexToInsertAt, clonedTile );
     }
 
 
@@ -3756,7 +3751,7 @@ namespace RetroDevStudio.Documents
     {
       if ( keyData == Keys.Escape )
       {
-        if ( !IsFocusOnCopyPasteControl( tabEditor, FocusControlReason.ESCAPE ) )
+        if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.ESCAPE ) )
         {
           RemoveFloatingSelection();
           return true;

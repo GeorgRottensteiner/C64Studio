@@ -554,7 +554,7 @@ namespace RetroDevStudio.Documents
         m_FloatingSelection = null;
         return;
       }
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, undoX, undoY, undoWidth, undoHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CharsetScreen.ScreenOffsetX + undoX, m_CharsetScreen.ScreenOffsetY + undoY, undoWidth, undoHeight ) );
 
       for ( int j = 0; j < undoHeight; ++j )
       {
@@ -2487,22 +2487,6 @@ namespace RetroDevStudio.Documents
 
     private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
-      if ( e.KeyCode == Keys.Escape )
-      {
-        if ( m_FloatingSelection != null )
-        {
-          RemoveFloatingSelection();
-
-          if ( m_LastDragEndPos.X != -1 )
-          {
-            m_LastDragEndPos.X = -1;
-            m_IsDragging = false;
-            Redraw();
-            return;
-          }
-        }
-      }
-
       if ( m_ToolMode == ToolMode.TEXT )
       {
         System.Windows.Forms.Keys bareKey = e.KeyData & ~( Keys.Control | Keys.Shift | Keys.ShiftKey | Keys.Alt );
@@ -2691,19 +2675,6 @@ namespace RetroDevStudio.Documents
             }
             Redraw();
             Modified = true;
-          }
-        }
-      }
-
-      if ( ( m_ToolMode == ToolMode.RECTANGLE )
-      ||   ( m_ToolMode == ToolMode.FILLED_RECTANGLE ) )
-      {
-        if ( e.KeyCode == Keys.Escape )
-        {
-          if ( m_IsDragging )
-          {
-            m_IsDragging = false;
-            Redraw();
           }
         }
       }
@@ -3232,12 +3203,20 @@ namespace RetroDevStudio.Documents
           case Function.COPY:
             if ( m_ToolMode == ToolMode.SELECT )
             {
-              CopyToClipboard();
+              if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) )
+              {
+                CopyToClipboard();
+                return true;
+              }
             }
-            return true;
+            break;
           case Function.PASTE:
-            PasteFromClipboard();
-            return true;
+            if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) )
+            {
+              PasteFromClipboard();
+              return true;
+            }
+            break;
         }
       }
       return base.ApplyFunction( Function );
@@ -3641,7 +3620,8 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( charEditor.EditorFocused )
-          ||     ( pictureEditor.Focused ) );
+        ||       ( ( m_ToolMode == ToolMode.SELECT )
+        &&         ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) ) ) );
       }
     }
 
@@ -3652,7 +3632,7 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( charEditor.EditorFocused )
-          ||     ( pictureEditor.Focused ) );
+        ||       ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) ) );
       }
     }
 
@@ -3747,6 +3727,41 @@ namespace RetroDevStudio.Documents
           }
           break;
       }
+    }
+
+
+
+    protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
+    {
+      if ( keyData == Keys.Escape )
+      {
+        if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.ESCAPE ) )
+        {
+          if ( ( m_ToolMode == ToolMode.RECTANGLE )
+          ||   ( m_ToolMode == ToolMode.FILLED_RECTANGLE ) )
+          {
+            if ( m_IsDragging )
+            {
+              m_IsDragging = false;
+              Redraw();
+            }
+          }
+
+          if ( m_FloatingSelection != null )
+          {
+            RemoveFloatingSelection();
+
+            if ( m_LastDragEndPos.X != -1 )
+            {
+              m_LastDragEndPos.X = -1;
+              m_IsDragging = false;
+              Redraw();
+            }
+          }
+          return true;
+        }
+      }
+      return base.ProcessCmdKey( ref msg, keyData );
     }
 
 

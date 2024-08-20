@@ -237,3 +237,5 @@
 /Sample Projects/MacroTest/valuetabletest.prg
 /Sample Projects/MacroTest/detectassembler_c64studio.prg
 /Sample Projects/MacroTest/unusedlabel_error.prg
+/Sample Projects/MacroTest/testmap.prg
+/Sample Projects/MacroTest/macro_set_start_inside.prg
