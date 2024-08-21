@@ -6904,8 +6904,6 @@ namespace FastColoredTextBoxNS
         else
           place = PointToPlace( e.Location );
 
-        //if ( ( AllowTabs )
-        //&&   ( place.iChar != Selection.Start.iChar )
         if ( ( place.iChar != Selection.Start.iChar )
         && ( ( place.iChar % TabLength ) != 0 ) )
         {
@@ -6950,6 +6948,7 @@ namespace FastColoredTextBoxNS
           }
 
           Selection.End = oldEnd;
+
           Selection.EndUpdate();
           DoCaretVisible();
           Invalidate();
@@ -9680,6 +9679,15 @@ window.status = ""#print"";
         Selection.Start = PointToPlace( p );
         if ( p.Y < 6 && VerticalScroll.Visible && VerticalScroll.Value > 0 )
           VerticalScroll.Value = Math.Max( 0, VerticalScroll.Value - charHeight );
+
+        // are we in the middle of a tab?
+        var lineText = selection.tb.ReTabifyLine( Selection.tb.Lines[Selection.Start.iLine], Selection.tb.TabLength );
+        if ( ( ( Selection.Start.iChar % TabLength ) != 0 )
+        &&   ( Selection.Start.iChar < lineText.Length )
+        &&   ( lineText[Selection.Start.iChar] == '\t' ) )
+        {
+          Selection.Start = new Place( AdjustXPosForTabs( Selection.Start.iLine, Selection.Start.iChar ), Selection.Start.iLine );
+        }
 
         CaretVisible = true;
         DoCaretVisible();

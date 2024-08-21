@@ -18,3 +18,13 @@
 ;				!byte 5,6,7,8
 
 
+
+.
+			!byte 1,2,3
+			!byte 1,2,3
+			!byte 1,2,3
+		gnu	!byte 1,2,3
+			!byte 1,2,3
+			!byte 1,2,3
+.lsmf
+
