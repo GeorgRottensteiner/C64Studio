@@ -6654,9 +6654,10 @@ namespace RetroDevStudio.Parser
                 incSourceInfo.FullPath = docFile;
 
                 incSourceInfo.GlobalStartLine = lineIndex + i;
-                incSourceInfo.LocalStartLine = docLine;
-                incSourceInfo.LineCount = 1;
-                incSourceInfo.FilenameParent = ParentFilename;
+                incSourceInfo.LocalStartLine  = docLine;
+                incSourceInfo.LineCount       = 1;
+                incSourceInfo.FilenameParent  = ParentFilename;
+                incSourceInfo.Source          = SourceInfo.SourceInfoSource.MEDIA_INCLUDE;
 
                 InsertSourceInfo( incSourceInfo );
               }

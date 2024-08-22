@@ -701,7 +701,7 @@ namespace RetroDevStudio.Documents
       {
         var info = new Types.ASM.LineInfo();
         if ( ( indexToNotify > 0 )
-        && ( indexToNotify - 1 < m_LineInfos.Count ) )
+        &&   ( indexToNotify - 1 < m_LineInfos.Count ) )
         {
           info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
         }

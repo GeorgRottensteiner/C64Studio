@@ -3048,11 +3048,28 @@ namespace FastColoredTextBoxNS
     {
       RecalcScrollByOneLine( Selection.Start.iLine );
       //highlight brackets
+      bool  hadHighlightedBrackets = ( leftBracketPosition != null )
+        || ( rightBracketPosition != null )
+        || ( leftBracketPosition2 != null )
+        || ( rightBracketPosition2 != null );
       ClearBracketsPositions();
       if ( LeftBracket != '\x0' && RightBracket != '\x0' )
         HighlightBrackets( LeftBracket, RightBracket, ref leftBracketPosition, ref rightBracketPosition );
       if ( LeftBracket2 != '\x0' && RightBracket2 != '\x0' )
         HighlightBrackets( LeftBracket2, RightBracket2, ref leftBracketPosition2, ref rightBracketPosition2 );
+
+      bool  hasHighlightedBracketsNow = ( leftBracketPosition != null )
+        || ( rightBracketPosition != null )
+        || ( leftBracketPosition2 != null )
+        || ( rightBracketPosition2 != null );
+
+      // this is not covered in other flows, brackets were highlighted, but are not anymore, force redraw
+      if ( ( hadHighlightedBrackets )
+      &&   ( !hasHighlightedBracketsNow ) )
+      {
+        Invalidate();
+      }
+
       //remember last visit time
       if ( Selection.IsEmpty )
       {

@@ -38,11 +38,11 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       DocumentInfo.Type = ProjectElement.ElementType.MEDIA_MANAGER;
 
+      InitializeComponent();
+
 #if !DEBUG
       debugToolStripMenuItem.Visible = false;
 #endif
-
-      InitializeComponent();
 
       oldFont = listFiles.Font;
 

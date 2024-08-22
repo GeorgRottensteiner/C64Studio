@@ -100,6 +100,7 @@
       this.btnCheck = new DecentForms.Button();
       this.btnFullCopy = new DecentForms.Button();
       this.btnPasteFromClipboard = new DecentForms.Button();
+      this.labelCursorInfo = new System.Windows.Forms.Label();
       this.labelCharInfo = new System.Windows.Forms.Label();
       this.checkMulticolor = new System.Windows.Forms.CheckBox();
       this.comboCharColor = new System.Windows.Forms.ComboBox();
@@ -115,7 +116,6 @@
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.labelCursorInfo = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -768,18 +768,32 @@
       // 
       // screenVScroll
       // 
+      this.screenVScroll.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.screenVScroll.DisplayType = DecentForms.ScrollBar.SBDisplayType.RAISED;
+      this.screenVScroll.LargeChange = 10;
       this.screenVScroll.Location = new System.Drawing.Point(655, 6);
+      this.screenVScroll.Maximum = 100;
+      this.screenVScroll.Minimum = 0;
       this.screenVScroll.Name = "screenVScroll";
       this.screenVScroll.Size = new System.Drawing.Size(16, 404);
+      this.screenVScroll.SmallChange = 1;
       this.screenVScroll.TabIndex = 26;
+      this.screenVScroll.Value = 0;
       this.screenVScroll.Scroll += new DecentForms.EventHandler(this.screenVScroll_Scroll);
       // 
       // screenHScroll
       // 
+      this.screenHScroll.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.screenHScroll.DisplayType = DecentForms.ScrollBar.SBDisplayType.RAISED;
+      this.screenHScroll.LargeChange = 10;
       this.screenHScroll.Location = new System.Drawing.Point(8, 413);
+      this.screenHScroll.Maximum = 100;
+      this.screenHScroll.Minimum = 0;
       this.screenHScroll.Name = "screenHScroll";
       this.screenHScroll.Size = new System.Drawing.Size(644, 16);
+      this.screenHScroll.SmallChange = 1;
       this.screenHScroll.TabIndex = 25;
+      this.screenHScroll.Value = 0;
       this.screenHScroll.Scroll += new DecentForms.EventHandler(this.screenHScroll_Scroll);
       // 
       // comboCheckType
@@ -887,6 +901,7 @@
       this.colorSelector.Size = new System.Drawing.Size(260, 19);
       this.colorSelector.TabIndex = 14;
       this.colorSelector.TabStop = false;
+      this.colorSelector.SizeChanged += new System.EventHandler(this.colorSelector_SizeChanged);
       this.colorSelector.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSelector_MouseDown);
       // 
       // charEditor
@@ -974,6 +989,14 @@
       this.btnPasteFromClipboard.Text = "Full Paste";
       this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Full Screen");
       this.btnPasteFromClipboard.Click += new DecentForms.EventHandler(this.btnPasteFromClipboard_Click);
+      // 
+      // labelCursorInfo
+      // 
+      this.labelCursorInfo.Location = new System.Drawing.Point(483, 446);
+      this.labelCursorInfo.Name = "labelCursorInfo";
+      this.labelCursorInfo.Size = new System.Drawing.Size(191, 18);
+      this.labelCursorInfo.TabIndex = 5;
+      this.labelCursorInfo.Text = "No selected block";
       // 
       // labelCharInfo
       // 
@@ -1154,14 +1177,6 @@
       this.listColorMappingColors.TabIndex = 0;
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
-      // 
-      // labelCursorInfo
-      // 
-      this.labelCursorInfo.Location = new System.Drawing.Point(483, 446);
-      this.labelCursorInfo.Name = "labelCursorInfo";
-      this.labelCursorInfo.Size = new System.Drawing.Size(191, 18);
-      this.labelCursorInfo.TabIndex = 5;
-      this.labelCursorInfo.Text = "No selected block";
       // 
       // GraphicScreenEditor
       // 

@@ -120,12 +120,11 @@ namespace RetroDevStudio.Documents
       pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format8bppIndexed );
       charEditor.DisplayPage.Create( 8, 8, GR.Drawing.PixelFormat.Format8bppIndexed );
       m_GraphicScreenProject.Image.Create( 320, 200, GR.Drawing.PixelFormat.Format8bppIndexed );
-      colorSelector.DisplayPage.Create( 16 * 8, 8, GR.Drawing.PixelFormat.Format8bppIndexed );
+      colorSelector.DisplayPage.Create( colorSelector.ClientSize.Width, colorSelector.ClientSize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
       PaletteManager.ApplyPalette( charEditor.DisplayPage );
       PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
-      PaletteManager.ApplyPalette( colorSelector.DisplayPage );
 
       foreach ( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
@@ -140,10 +139,10 @@ namespace RetroDevStudio.Documents
         comboCharColor.Items.Add( i.ToString( "d2" ) );
 
         listColorMappingColors.Items.Add( i.ToString( "d2" ) );
-
-        colorSelector.DisplayPage.Box( i * 8, 0, 8, 8, (uint)i );
       }
-      colorSelector.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, 16 );
+
+      RedrawColorSelector();
+
       comboBackground.SelectedIndex = 0;
       comboMulticolor1.SelectedIndex = 0;
       comboMulticolor2.SelectedIndex = 0;
@@ -3342,11 +3341,26 @@ namespace RetroDevStudio.Documents
 
     private void colorSelector_MouseDown( object sender, MouseEventArgs e )
     {
-      int     colorIndex = ( e.X * 16 * 8 / colorSelector.ClientSize.Width ) / 8;
-      colorSelector.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, (uint)m_CurrentColor );
+      int     colorIndex = ( e.X * 16 / colorSelector.ClientSize.Width ) / 8;
+      for ( int i = 0; i < 16; ++i )
+      {
+        if ( ( e.X >= ( i * colorSelector.DisplayPage.Width / 16 ) )
+        &&   ( e.X <= ( ( i + 1 ) * colorSelector.DisplayPage.Width / 16 ) - 1 ) )
+        {
+          colorIndex = i;
+          break;
+        }
+      }
+
+      int x1 = ( m_CurrentColor * colorSelector.DisplayPage.Width / 16 );
+      int x2 = ( ( m_CurrentColor + 1 ) * colorSelector.DisplayPage.Width / 16 ) - 1;
+      colorSelector.DisplayPage.Box( x1, 0, x2 - x1 + 1, colorSelector.DisplayPage.Height, ConstantData.Palette.ColorValues[m_CurrentColor] );
 
       m_CurrentColor = (byte)colorIndex;
-      colorSelector.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, 16 );
+
+      x1 = ( m_CurrentColor * colorSelector.DisplayPage.Width / 16 );
+      x2 = ( ( m_CurrentColor + 1 ) * colorSelector.DisplayPage.Width / 16 ) - 1;
+      colorSelector.DisplayPage.Rectangle( x1, 0, x2 - x1 + 1, colorSelector.DisplayPage.Height, Core.Settings.FGColor( ColorableElement.SELECTION_FRAME ) );
       colorSelector.Invalidate();
     }
 
@@ -4105,13 +4119,39 @@ namespace RetroDevStudio.Documents
             PaletteManager.ApplyPalette( m_GraphicScreenProject.Image, palC64 );
             PaletteManager.ApplyPalette( pictureEditor.DisplayPage, palC64 );
             PaletteManager.ApplyPalette( charEditor.DisplayPage, palC64 );
-            PaletteManager.ApplyPalette( colorSelector.DisplayPage, palC64 );
+
+            RedrawColorSelector();
+
             Redraw();
 
             Modified = prevModified;
           }
           break;
       }
+    }
+
+
+
+    private void RedrawColorSelector()
+    {
+      for ( int i = 0; i < 16; ++i )
+      {
+        int x1 = ( i * colorSelector.DisplayPage.Width / 16 );
+        int x2 = ( ( i + 1 ) * colorSelector.DisplayPage.Width / 16 ) - 1;
+
+        colorSelector.DisplayPage.Box( x1, 0, x2 - x1 + 1, colorSelector.DisplayPage.Height, ConstantData.Palette.ColorValues[i] );
+      }
+      int x1a = ( m_CurrentColor * colorSelector.DisplayPage.Width / 16 );
+      int x2a = ( ( m_CurrentColor + 1 ) * colorSelector.DisplayPage.Width / 16 ) - 1;
+      colorSelector.DisplayPage.Rectangle( x1a, 0, x2a - x1a + 1, colorSelector.DisplayPage.Height, Core.Settings.FGColor( ColorableElement.SELECTION_FRAME ) );
+      colorSelector.Invalidate();
+    }
+
+
+
+    private void colorSelector_SizeChanged( object sender, EventArgs e )
+    {
+      RedrawColorSelector();
     }
 
 
