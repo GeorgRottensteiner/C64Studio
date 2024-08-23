@@ -689,9 +689,8 @@ namespace RetroDevStudio.Documents
         return;
       }
 
+      
       // special case, if we insert an empty line, insert "below"
-      int     indexToNotify = firstLine;
-
       if ( !m_InsertingText )
       {
         Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
@@ -700,16 +699,16 @@ namespace RetroDevStudio.Documents
       for ( int i = 0; i < count; ++i )
       {
         var info = new Types.ASM.LineInfo();
-        if ( ( indexToNotify > 0 )
-        &&   ( indexToNotify - 1 < m_LineInfos.Count ) )
+        if ( ( firstLine > 0 )
+        &&   ( firstLine - 1 < m_LineInfos.Count ) )
         {
-          info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
+          info.AddressStart = m_LineInfos[firstLine - 1].AddressStart;
         }
-        while ( indexToNotify >= m_LineInfos.Count )
+        while ( firstLine >= m_LineInfos.Count )
         {
           m_LineInfos.Add( new Types.ASM.LineInfo() );
         }
-        m_LineInfos.Insert( indexToNotify, info );
+        m_LineInfos.Insert( firstLine, info );
       }
 
       DocumentInfo.Bookmarks.Clear();
@@ -732,6 +731,17 @@ namespace RetroDevStudio.Documents
         {
           if ( breakpointLine >= insertedAtLine )
           {
+            if ( bp.LineIndex == firstLine )
+            {
+              int   startPos = DetermineSelectionStartCharPos();
+              if ( startPos > 0 )
+              {
+                // cursor not at start of line, do not move breakpoint
+                movedBreakpoints.Add( bp );
+                continue;
+              }
+            }
+
             bp.LineIndex += count;
             movedBreakpoints.Add( bp );
 
@@ -753,6 +763,21 @@ namespace RetroDevStudio.Documents
         }
         m_BreakPoints[bp.LineIndex].Add( bp );
       }
+    }
+
+
+
+    private int DetermineSelectionStartCharPos()
+    {
+      if ( editSource.Selection.Start.iLine < editSource.Selection.End.iLine )
+      {
+        return editSource.Selection.Start.iChar;
+      }
+      else if ( editSource.Selection.Start.iLine == editSource.Selection.End.iLine )
+      {
+        return Math.Min( editSource.Selection.Start.iChar, editSource.Selection.End.iChar );
+      }
+      return editSource.Selection.End.iChar;
     }
 
 
@@ -786,7 +811,8 @@ namespace RetroDevStudio.Documents
 
       foreach ( int breakpointLine in origBreakpoints.Keys )
       {
-        if ( ( breakpointLine >= deletedAtLine )
+        //if ( ( breakpointLine >= deletedAtLine )
+        if ( ( breakpointLine > deletedAtLine )
         &&   ( breakpointLine < deletedAtLine + count ) )
         {
           // BP was deleted!
@@ -795,7 +821,8 @@ namespace RetroDevStudio.Documents
             RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
           }
         }
-        else if ( breakpointLine >= deletedAtLine )
+        //else if ( breakpointLine >= deletedAtLine )
+        else if ( breakpointLine > deletedAtLine )
         {
           if ( m_BreakPoints.ContainsKey( breakpointLine ) )
           {
@@ -1484,33 +1511,36 @@ namespace RetroDevStudio.Documents
           break;
         case ApplicationEvent.Type.DOCUMENT_INFO_CREATED:
           // apply breakpoints
-          if ( DocumentInfo.Project != null )
+          if ( Event.Doc == DocumentInfo )
           {
-            if ( DocumentInfo.Project.Settings.BreakPoints.TryGetValue( DocumentInfo.RelativePath, out List<Breakpoint> bps ) )
+            if ( DocumentInfo.Project != null )
             {
-              foreach ( var bp in bps )
+              if ( DocumentInfo.Project.Settings.BreakPoints.TryGetValue( DocumentInfo.RelativePath, out List<Breakpoint> bps ) )
               {
-                if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+                foreach ( var bp in bps )
                 {
-                  m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+                  if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+                  {
+                    m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+                  }
+                  m_BreakPoints[bp.LineIndex].Add( bp );
+                  InvalidateMarkerAreaAtLine( bp.LineIndex );
                 }
-                m_BreakPoints[bp.LineIndex].Add( bp );
-                InvalidateMarkerAreaAtLine( bp.LineIndex );
               }
             }
-          }
-          else
-          {
-            if ( Core.Debugging.BreakPoints.TryGetValue( DocumentInfo.RelativePath, out List<Breakpoint> bps ) )
+            else
             {
-              foreach ( var bp in bps )
+              if ( Core.Debugging.BreakPoints.TryGetValue( DocumentInfo.RelativePath, out List<Breakpoint> bps ) )
               {
-                if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+                foreach ( var bp in bps )
                 {
-                  m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+                  if ( !m_BreakPoints.ContainsKey( bp.LineIndex ) )
+                  {
+                    m_BreakPoints.Add( bp.LineIndex, new List<Breakpoint>() );
+                  }
+                  m_BreakPoints[bp.LineIndex].Add( bp );
+                  InvalidateMarkerAreaAtLine( bp.LineIndex );
                 }
-                m_BreakPoints[bp.LineIndex].Add( bp );
-                InvalidateMarkerAreaAtLine( bp.LineIndex );
               }
             }
           }

@@ -150,6 +150,9 @@ namespace RetroDevStudio.Documents
         SetupWatcher();
         EnableFileWatcher();
       }
+      TabText = System.IO.Path.GetFileName( m_Filename );
+      Text    = System.IO.Path.GetFileName( m_Filename );
+
       RefreshFileView();
       UpdateStatusInfo();
       validateMediumToolStripMenuItem.Enabled = true;

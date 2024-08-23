@@ -6138,6 +6138,12 @@ namespace RetroDevStudio
       solutionToolStripMenuItemTop.Visible      = true;
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+
+      if ( ( StudioCore.Navigating.Project == null )
+      &&   ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
+      {
+        StudioCore.Navigating.Project = StudioCore.Navigating.Solution.Projects[0];
+      }
       return true;
     }
 
@@ -8013,6 +8019,20 @@ namespace RetroDevStudio
     private void printToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( RetroDevStudio.Types.Function.PRINT );
+    }
+
+
+
+    private void dumpBreakpointsToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      foreach ( var bps in StudioCore.Debugging.BreakPoints )
+      {
+        Debug.Log( $"Breakpoints in file {bps.Key}" );
+        foreach ( var bp in bps.Value )
+        {
+          Debug.Log( $"  Line {bp.LineIndex}/{bp.Address}" );
+        }
+      }
     }
 
 
