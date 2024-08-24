@@ -10842,11 +10842,15 @@ namespace RetroDevStudio.Parser
           &&   ( !token.Name.Contains( AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX ) )
           &&   ( token.Type != SymbolInfo.Types.PREPROCESSOR_LABEL ) )
           {
-            AddWarning( token.LineIndex, 
-                        Types.ErrorCode.W1000_UNUSED_LABEL, 
-                        "Unused label " + token.Name,
-                        token.CharIndex,
-                        token.Length );
+            // generated labels are auto-self-referencing -> do not show up as unused
+            if ( token.SourceInfo.Source != SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
+            {
+              AddWarning( token.LineIndex,
+                          Types.ErrorCode.W1000_UNUSED_LABEL,
+                          "Unused label " + token.Name,
+                          token.CharIndex,
+                          token.Length );
+            }
           }
         }
       }
