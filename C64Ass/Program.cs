@@ -79,7 +79,11 @@ namespace C64Ass
       }
       if ( !string.IsNullOrEmpty( config.LabelDumpSettings.Filename ) )
       {
-        DumpLabelFile.Dump( asmFileInfo, config.LabelDumpSettings );
+        if ( !DumpLabelFile.Dump( asmFileInfo, config.LabelDumpSettings ) )
+        {
+          System.Console.WriteLine( "Failed to write label file" );
+          return 1;
+        }
       }
 
       return 0;

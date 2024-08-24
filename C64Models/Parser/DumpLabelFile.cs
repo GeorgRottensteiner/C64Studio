@@ -10,7 +10,7 @@ namespace RetroDevStudio.Parser
 {
   public class DumpLabelFile
   {
-    public static void Dump( FileInfo FileInfo, LabelDumpSettings Settings )
+    public static bool Dump( FileInfo FileInfo, LabelDumpSettings Settings )
     {
       StringBuilder sb = new StringBuilder();
 
@@ -93,7 +93,7 @@ namespace RetroDevStudio.Parser
           sb.AppendLine();
         }
       }
-      GR.IO.File.WriteAllText( FileInfo.LabelDumpSettings.Filename, sb.ToString() );
+      return GR.IO.File.WriteAllText( FileInfo.LabelDumpSettings.Filename, sb.ToString() );
     }
 
   }

@@ -213,6 +213,8 @@ namespace RetroDevStudio.Types
     E0001_NO_OUTPUT_FILENAME                = 0x0001,
     E0002_CODE_WITHOUT_START_ADDRESS        = 0x0002,
 
+    E0100_FAILED_TO_WRITE_TO_FILE           = 0x0100,
+
     E1000_SYNTAX_ERROR                      = 0x1000,
     E1001_FAILED_TO_EVALUATE_EXPRESSION     = 0x1001,
     E1002_VALUE_OUT_OF_BOUNDS_BYTE          = 0x1002,

@@ -1044,14 +1044,24 @@ namespace RetroDevStudio.Tasks
 
           if ( !string.IsNullOrEmpty( asmFileInfo.LabelDumpSettings.Filename ) )
           {
-            DumpLabelFile.Dump( asmFileInfo, asmFileInfo.LabelDumpSettings );
+            if ( !DumpLabelFile.Dump( asmFileInfo, asmFileInfo.LabelDumpSettings ) )
+            {
+              var message = new ParserBase.ParseMessage( ParserBase.ParseMessage.LineType.ERROR, Types.ErrorCode.E0100_FAILED_TO_WRITE_TO_FILE, $"Failed to write label dump file to '{asmFileInfo.LabelDumpSettings.Filename}'" );
+              message.AlternativeFile = asmFileInfo.LabelDumpSettings.Filename;
+              message.AlternativeLineIndex = 0;
+              asmFileInfo.Messages.Add( -1, message );
 
-            var message = new ParserBase.ParseMessage( ParserBase.ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Label dump file written to " + asmFileInfo.LabelDumpSettings.Filename );
-            message.AlternativeFile       = asmFileInfo.LabelDumpSettings.Filename;
-            message.AlternativeLineIndex  = 0;
-            asmFileInfo.Messages.Add( -1, message );
+              Core.AddToOutputLine( $"Failed to write label file to '{asmFileInfo.LabelDumpSettings.Filename}'" );
+            }
+            else
+            {
+              var message = new ParserBase.ParseMessage( ParserBase.ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Label dump file written to " + asmFileInfo.LabelDumpSettings.Filename );
+              message.AlternativeFile = asmFileInfo.LabelDumpSettings.Filename;
+              message.AlternativeLineIndex = 0;
+              asmFileInfo.Messages.Add( -1, message );
 
-            Core.AddToOutputLine( $"Wrote labels to file '{asmFileInfo.LabelDumpSettings.Filename}'" );
+              Core.AddToOutputLine( $"Wrote labels to file '{asmFileInfo.LabelDumpSettings.Filename}'" );
+            }
           }
         }
 
