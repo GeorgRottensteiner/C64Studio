@@ -670,7 +670,18 @@ namespace RetroDevStudio.Controls
 
           if ( currentTargetChar == m_CurrentChar )
           {
-            _ColorSettingsDlg.CustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+            byte  newCustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+            if ( ( m_Project.Characters[m_CurrentChar].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
+            &&   ( newCustomColor >= 8 ) )
+            {
+              newCustomColor %= 8;
+            }
+            if ( ( m_Project.Characters[m_CurrentChar].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS )
+            &&   ( newCustomColor < 8 ) )
+            {
+              newCustomColor += 8;
+            }
+            _ColorSettingsDlg.CustomColor = newCustomColor;
           }
           if ( !pasteAsBlock )
           {
