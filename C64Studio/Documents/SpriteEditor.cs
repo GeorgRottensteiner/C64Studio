@@ -3042,15 +3042,29 @@ namespace RetroDevStudio.Documents
       m_SpriteHeight = Lookup.SpriteHeight( m_SpriteProject.Mode );
 
       // adjust aspect ratio of the editor
-      int   biggerSize = Math.Max( m_SpriteWidth, m_SpriteHeight );
+      AdjustSpriteEditorSizeRatio();
 
-      pictureEditor.Size = new System.Drawing.Size( m_SpriteWidth * m_SpriteEditorOrigWidth / biggerSize,
-                                                    m_SpriteHeight * m_SpriteEditorOrigHeight / biggerSize );
-
-      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
       panelSprites.ItemWidth = m_SpriteWidth;
       panelSprites.ItemHeight = m_SpriteHeight;
       panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
+    }
+
+
+
+    private void AdjustSpriteEditorSizeRatio()
+    {
+      int   biggerSize = Math.Max( m_SpriteWidth, m_SpriteHeight );
+
+      int   gridCellWidth   = m_SpriteEditorOrigWidth / biggerSize;
+      int   gridCellHeight  = m_SpriteEditorOrigHeight / biggerSize;
+
+      int   gridCellSize = Math.Min( gridCellWidth, gridCellHeight );
+
+      pictureEditor.Size = new System.Drawing.Size( m_SpriteWidth * gridCellSize,
+                                                    m_SpriteHeight * gridCellSize );
+
+      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
+
     }
 
 
