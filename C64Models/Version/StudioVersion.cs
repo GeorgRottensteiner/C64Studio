@@ -3,6 +3,6 @@ namespace RetroDevStudio
   public static class Version
   {
     public const string       VersionBase = "7.8";
-    public const string       BuildNumber = "67";
+    public const string       BuildNumber = "69";
   }
 }

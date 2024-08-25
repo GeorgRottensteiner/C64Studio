@@ -15,6 +15,8 @@ foreach ( $line in $content )
     ++$buildNumber;
     
     $content[$index] = "    public const string       BuildNumber = `"" + $buildNumber + "`";";
+
+    echo ( "Set build number to " + $buildNumber );
   }
   ++$index;
 }
