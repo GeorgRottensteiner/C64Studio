@@ -43,6 +43,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
     public bool                                                     HasBinaryNot = true;          // PDS has IF LEV=2 ! LEV=3 ! LEV=5
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
+    public bool                                                     GreaterOrLessBehaviourReversed = false;
     public bool                                                     MessageAutoIncludesBlanksBetweenParameters = false;
     public bool                                                     AllowsCustomTextMappings = false;
     public bool                                                     IfWithoutBrackets = false;
@@ -110,6 +111,7 @@ namespace RetroDevStudio.Parser
       IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
       HasBinaryNot = true;
       GreaterOrLessThanAtBeginningAffectFullExpression = false;
+      GreaterOrLessBehaviourReversed = false;
       MessageAutoIncludesBlanksBetweenParameters = false;
       AllowsCustomTextMappings = false;
       IfWithoutBrackets = false;
@@ -698,6 +700,7 @@ namespace RetroDevStudio.Parser
           HasBinaryNot = false;
           LabelsMustBeAtStartOfLine = true;
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
+          GreaterOrLessBehaviourReversed = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

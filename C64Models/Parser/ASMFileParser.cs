@@ -2038,7 +2038,10 @@ namespace RetroDevStudio.Parser
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
                 // eval hi/lo byte, only locally for next token!!
-                if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
+                if ( ( ( !m_AssemblerSettings.GreaterOrLessBehaviourReversed )
+                &&     ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" ) )
+                ||   ( ( m_AssemblerSettings.GreaterOrLessBehaviourReversed )
+                &&     ( subTokenRange[highestPrecedenceTokenIndex].Content == ">" ) ) )
                 {
                   SymbolInfo value;
                   if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, TextCodeMapping, out value, out numBytesGiven ) )
@@ -2059,7 +2062,10 @@ namespace RetroDevStudio.Parser
                   }
                   return false;
                 }
-                else if ( subTokenRange[highestPrecedenceTokenIndex].Content == ">" )
+                else if ( ( ( !m_AssemblerSettings.GreaterOrLessBehaviourReversed )
+                &&          ( subTokenRange[highestPrecedenceTokenIndex].Content == ">" ) )
+                ||        ( ( m_AssemblerSettings.GreaterOrLessBehaviourReversed )
+                &&          ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" ) ) )
                 {
                   SymbolInfo value;
                   if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, TextCodeMapping, out value, out numBytesGiven ) )
@@ -11939,39 +11945,6 @@ namespace RetroDevStudio.Parser
         result.RemoveAt( result.Count - 1 );
       }
 
-      /*
-      // collapse # 
-      if ( ( result.Count >= 3 )
-      &&   ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
-      &&   ( result[1].Length == 1 )
-      &&   ( Source[result[1].StartPos] == '#' )
-      &&   ( result[2].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-      &&   ( result[2].StartPos == result[1].StartPos + 1 ) )
-      {
-        --result[2].StartPos;
-        ++result[2].Length;
-        result.RemoveAt( 1 );
-      }*/
-
-      // collapse # if prefixed to < or >
-      /*
-      if ( result.Count >= 3 )
-      {
-        for ( int i = 2; i < result.Count - 1; ++i )
-        {
-          if ( ( result[i].Content == "#" )
-          &&   ( ( result[i + 1].Content == "<" )
-          ||     ( result[i + 1].Content == ">" ) )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
-          {
-            // collapse
-            result.RemoveAt( i );
-            --i;
-            continue;
-          }
-        }
-      }*/
-
       CollapsePDSLocalLabels( result );
 
       // labels must be left?
@@ -13006,7 +12979,10 @@ namespace RetroDevStudio.Parser
             if ( couldEvaluate )
             {
               value = valueSymbol.ToInteger();
-              if ( LineTokens[2].Content == ">" )
+              if ( ( ( LineTokens[2].Content == ">" )
+              &&     ( !m_AssemblerSettings.GreaterOrLessBehaviourReversed ) )
+              ||   ( ( LineTokens[2].Content == "<" )
+              &&     ( m_AssemblerSettings.GreaterOrLessBehaviourReversed ) ) )
               {
                 LineTokens.RemoveRange( expressionTokenStartIndex + 2, expressionTokenCount - 2 );
                 LineTokens[2].Content = ( ( value >> 8 ) & 0xff ).ToString();
@@ -13112,7 +13088,10 @@ namespace RetroDevStudio.Parser
               if ( EvaluateTokens( LineIndex, extraTokens, 1, extraTokens.Count - 1, info.LineCodeMapping, out SymbolInfo expressionResultSymbol2 ) )
               {
                 expressionResult = expressionResultSymbol2.ToInteger();
-                if ( extraTokens[0].Content == "<" )
+                if ( ( ( extraTokens[0].Content == "<" )
+                &&     ( !m_AssemblerSettings.GreaterOrLessBehaviourReversed ) )
+                ||   ( ( extraTokens[0].Content == ">" )
+                &&     ( m_AssemblerSettings.GreaterOrLessBehaviourReversed ) ) )
                 {
                   expressionResult &= 0xff;
                 }

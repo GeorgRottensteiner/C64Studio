@@ -38,13 +38,14 @@ namespace TestProject
     [TestMethod]
     public void TestLoByteWithExpressionSettings1PDS()
     {
+      // PDS has >,< reversed!
       string      source = @"  ORG $c000
                              P_SCREEN = $b400
                           lda #<P_SCREEN + ( 40 * 10 )";
 
       var assembly = TestAssemblePDS( source );
 
-      Assert.AreEqual( "00C0A990", assembly.ToString() );
+      Assert.AreEqual( "00C0A9B5", assembly.ToString() );
     }
 
 
@@ -52,13 +53,14 @@ namespace TestProject
     [TestMethod]
     public void TestHiByteWithExpressionSettings1PDS()
     {
+      // PDS has >,< reversed!
       string      source = @"  ORG $c000
                              P_SCREEN = $b400
                           lda #>P_SCREEN + ( 40 * 10 )";
 
       var assembly = TestAssemblePDS( source );
 
-      Assert.AreEqual( "00C0A9B5", assembly.ToString() );
+      Assert.AreEqual( "00C0A990", assembly.ToString() );
     }
 
     
