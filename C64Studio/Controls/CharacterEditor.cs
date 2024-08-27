@@ -578,7 +578,7 @@ namespace RetroDevStudio.Controls
       {
         importType = Types.GraphicType.CHARACTERS_FCM;
       }
-      if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, m_CharacterWidth, m_CharacterHeight, out mappedImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, m_CharacterWidth, m_CharacterHeight, out mappedImage, out mcSettings, out pasteAsBlock, out Types.GraphicType importAsType ) )
       {
         Image.Dispose();
         return;
@@ -671,12 +671,12 @@ namespace RetroDevStudio.Controls
           if ( currentTargetChar == m_CurrentChar )
           {
             byte  newCustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
-            if ( ( m_Project.Characters[m_CurrentChar].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
+            if ( ( importAsType == GraphicType.CHARACTERS_HIRES )
             &&   ( newCustomColor >= 8 ) )
             {
               newCustomColor %= 8;
             }
-            if ( ( m_Project.Characters[m_CurrentChar].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS )
+            if ( ( importAsType == GraphicType.CHARACTERS_MULTICOLOR )
             &&   ( newCustomColor < 8 ) )
             {
               newCustomColor += 8;

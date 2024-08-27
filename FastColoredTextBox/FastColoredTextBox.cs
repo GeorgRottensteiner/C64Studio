@@ -5314,6 +5314,7 @@ namespace FastColoredTextBoxNS
       bool  currentLineIsAtLeftEdge = ( this[Selection.Start.iLine].StartSpacesCount == 0 );
 
       //insert char
+      lines.Manager.BeginAutoUndoCommands();
       if ( !Selection.ReadOnly )
       {
         if ( !DoAutocompleteBrackets( c ) )
@@ -5332,6 +5333,7 @@ namespace FastColoredTextBoxNS
       if ( AutoIndentChars )
         DoAutoIndentChars( Selection.Start.iLine );
 
+      lines.Manager.EndAutoUndoCommands();
       DoCaretVisible();
       Invalidate();
 
@@ -5639,7 +5641,7 @@ namespace FastColoredTextBoxNS
       //
       int needSpaces = CalcAutoIndent( iLine );
       //
-      int spaces = lines[iLine].StartSpacesCount;
+      int spaces = 0;//lines[iLine].StartSpacesCount;
       int needToInsert = needSpaces - spaces;
       if ( needToInsert < 0 )
         needToInsert = -Math.Min( -needToInsert, spaces );

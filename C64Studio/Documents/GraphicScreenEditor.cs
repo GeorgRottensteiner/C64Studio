@@ -799,7 +799,7 @@ namespace RetroDevStudio.Documents
         importType = GraphicType.CHARACTERS_FCM;
       }
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
-                                       8, 8, out mappedImage, out mcSettings, out pasteAsBlock ) )
+                                       8, 8, out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         return false;
       }

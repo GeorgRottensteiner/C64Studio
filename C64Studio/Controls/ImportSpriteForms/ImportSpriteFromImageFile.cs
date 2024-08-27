@@ -45,7 +45,7 @@ namespace RetroDevStudio.Controls
       bool pasteAsBlock = false;
       if ( !Core.MainForm.ImportImage( filename, null, importType, mcSettings, 
                                        Lookup.SpriteWidth( Project.Mode ), Lookup.SpriteHeight( Project.Mode ),
-                                       out spriteImage, out mcSettings, out pasteAsBlock ) )
+                                       out spriteImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         return false;
       }

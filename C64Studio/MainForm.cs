@@ -7204,9 +7204,14 @@ namespace RetroDevStudio
 
 
 
-    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, out GR.Image.FastImage MappedImage, out ColorSettings NewMCSettings, out bool PasteAsBlock )
+    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, 
+                             out GR.Image.FastImage MappedImage, 
+                             out ColorSettings NewMCSettings, 
+                             out bool PasteAsBlock, 
+                             out Types.GraphicType SelectedImportAsType )
     {
-      PasteAsBlock = false;
+      PasteAsBlock          = false;
+      SelectedImportAsType  = ImportType;
 
       // shortcut possible? (check if palette matches ours)
       if ( IncomingImage == null )
@@ -7244,11 +7249,12 @@ namespace RetroDevStudio
         NewMCSettings = MCSettings;
         return false;
       }
-      PasteAsBlock = importGFX.PasteAsBlock;
+      PasteAsBlock          = importGFX.PasteAsBlock;
+      SelectedImportAsType  = importGFX.SelectedImportAsType;
+      MappedImage           = importGFX.ConvertedImage;
+      NewMCSettings         = importGFX.MultiColorSettings;
 
       IncomingImage.Dispose();
-      MappedImage = importGFX.ConvertedImage;
-      NewMCSettings = importGFX.MultiColorSettings;
       return true;
     }
 

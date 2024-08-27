@@ -70,6 +70,7 @@ namespace RetroDevStudio.Dialogs
 
     public ColorSettings            MultiColorSettings = new ColorSettings();
     public bool                     PasteAsBlock = false;
+    public Types.GraphicType        SelectedImportAsType = GraphicType.SPRITES;
 
     private Types.GraphicType       m_ImportType;
 
@@ -154,6 +155,8 @@ namespace RetroDevStudio.Dialogs
       {
         btnReload.Visible = false;
       }
+
+      SelectedImportAsType = m_ImportType;
 
       OpenImage( IncomingImage );
 
@@ -1467,6 +1470,7 @@ namespace RetroDevStudio.Dialogs
 
     private void comboImportType_SelectedIndexChanged( object sender, EventArgs e )
     {
+      SelectedImportAsType = ( (GR.Generic.Tupel<string, Types.GraphicType>)comboImportType.SelectedItem ).second;
       RecalcImport();
     }
 

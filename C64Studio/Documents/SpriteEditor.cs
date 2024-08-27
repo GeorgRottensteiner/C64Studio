@@ -121,8 +121,8 @@ namespace RetroDevStudio.Documents
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image file", typeof( ImportSpriteFromImageFile ) ) );
       comboImportMethod.SelectedIndex = 0;
 
-      m_SpriteEditorOrigWidth   = pictureEditor.Width;
-      m_SpriteEditorOrigHeight  = pictureEditor.Height;
+      m_SpriteEditorOrigWidth   = pictureEditor.ClientSize.Width;
+      m_SpriteEditorOrigHeight  = pictureEditor.ClientSize.Height;
 
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
@@ -1158,7 +1158,7 @@ namespace RetroDevStudio.Documents
 
       if ( !Core.MainForm.ImportImage( "", imgClip, importType, mcSettings, 
                                        Lookup.SpriteWidth( m_SpriteProject.Mode ), Lookup.SpriteHeight( m_SpriteProject.Mode ),
-                                       out mappedImage, out mcSettings, out pasteAsBlock ) )
+                                       out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         imgClip.Dispose();
         m_ImportError = "";
@@ -3060,11 +3060,10 @@ namespace RetroDevStudio.Documents
 
       int   gridCellSize = Math.Min( gridCellWidth, gridCellHeight );
 
-      pictureEditor.Size = new System.Drawing.Size( m_SpriteWidth * gridCellSize,
-                                                    m_SpriteHeight * gridCellSize );
+      pictureEditor.ClientSize = new System.Drawing.Size( m_SpriteWidth * gridCellSize,
+                                                          m_SpriteHeight * gridCellSize );
 
       pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
-
     }
 
 
