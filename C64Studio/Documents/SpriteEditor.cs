@@ -1165,9 +1165,18 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
-      m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
-      m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
+      if ( mcSettings.BackgroundColor != -1 )
+      {
+        m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
+      }
+      if ( mcSettings.MultiColor1 != -1 )
+      {
+        m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
+      }
+      if ( mcSettings.MultiColor2 != -1 )
+      {
+        m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
+      }
 
       bool firstUndoStep = true;
 

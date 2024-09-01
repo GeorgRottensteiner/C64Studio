@@ -117,8 +117,10 @@ namespace RetroDevStudio.Dialogs
       comboTargetPalette.SelectedIndex = 0;
 
       picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
+      picOriginal.MouseWheel += Preview_MouseWheel;
 
       picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, GR.Drawing.PixelFormat.Format8bppIndexed );
+      picPreview.MouseWheel += Preview_MouseWheel;
 
       // autosize preview panels
       AutoSizePreviewPanels();
@@ -165,6 +167,20 @@ namespace RetroDevStudio.Dialogs
       comboMulticolor2.SelectedIndex  = MCSettings.MultiColor2 + 1;
 
       Core.Theming.ApplyTheme( this );
+    }
+
+
+
+    private void Preview_MouseWheel( object sender, MouseEventArgs e )
+    {
+      if ( e.Delta > 0 )
+      {
+        btnZoomIn_Click( new DecentForms.ControlBase() );
+      }
+      else
+      {
+        btnZoomOut_Click( new DecentForms.ControlBase() );
+      }
     }
 
 

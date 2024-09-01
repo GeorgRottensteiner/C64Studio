@@ -19,7 +19,7 @@ namespace RetroDevStudio.Parser
 
       ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<Types.TokenInfo>> paramTokens );
 
-      if ( ( paramTokens.Count >= 7 )
+      if ( ( paramTokens.Count > 7 )
       ||   ( paramTokens.Count < 2 ) )
       {
         if ( Binary )
