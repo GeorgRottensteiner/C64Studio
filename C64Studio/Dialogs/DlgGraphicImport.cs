@@ -1450,6 +1450,14 @@ namespace RetroDevStudio.Dialogs
     {
       if ( m_Zoom > 1 )
       {
+        if ( ( ( picOriginal.ClientSize.Width * m_Zoom / 2048 ) <= 0 ) 
+        ||   ( ( picOriginal.ClientSize.Height * m_Zoom / 2048 ) <= 0 )
+        ||   ( ( picPreview.ClientSize.Width * m_Zoom / 2048 ) <= 0 ) 
+        ||   ( ( picPreview.ClientSize.Height * m_Zoom / 2048 ) <= 0 ) )
+        {
+          btnZoomIn.Enabled = false;
+          return;
+        }
         m_Zoom /= 2;
 
         SanitizeImageOffset();
@@ -1460,15 +1468,27 @@ namespace RetroDevStudio.Dialogs
         picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
         picPreview.DisplayPage.Box( 0, 0, picPreview.DisplayPage.Width, picPreview.DisplayPage.Height, 0 );
         picPreview.DisplayPage.DrawImage( m_ImportImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
+
+        btnZoomIn.Enabled = m_Zoom > 1;
       }
+      btnZoomOut.Enabled = m_Zoom < 12288;
     }
 
 
 
     private void btnZoomOut_Click( DecentForms.ControlBase Sender )
     {
-      if ( m_Zoom < 65536 )
+      if ( m_Zoom < 12288 )
       {
+        if ( ( ( picOriginal.ClientSize.Width * m_Zoom / 512 ) >= 32700 ) 
+        ||   ( ( picOriginal.ClientSize.Height * m_Zoom / 512 ) >= 32700 )
+        ||   ( ( picPreview.ClientSize.Width * m_Zoom / 512 ) >= 32700 ) 
+        ||   ( ( picPreview.ClientSize.Height * m_Zoom / 512 ) >= 32700 ) )
+        {
+          btnZoomOut.Enabled = false;
+          return;
+        }
+
         m_Zoom *= 2;
 
         SanitizeImageOffset();
@@ -1479,7 +1499,10 @@ namespace RetroDevStudio.Dialogs
         picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
         picPreview.DisplayPage.Box( 0, 0, picPreview.DisplayPage.Width, picPreview.DisplayPage.Height, 0 );
         picPreview.DisplayPage.DrawImage( m_ImportImage,  m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
+
+        btnZoomOut.Enabled = m_Zoom < 12288;
       }
+      btnZoomIn.Enabled = m_Zoom > 1;
     }
 
 

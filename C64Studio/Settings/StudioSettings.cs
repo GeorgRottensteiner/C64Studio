@@ -10,6 +10,7 @@ using System.Drawing;
 using RetroDevStudio.Documents;
 using System.Linq;
 using MDIApp;
+using System.Management;
 
 namespace RetroDevStudio
 {
@@ -975,6 +976,9 @@ namespace RetroDevStudio
       }
 
       System.IO.MemoryStream    memIn = new System.IO.MemoryStream( Data.Data(), false );
+
+      //var layout = System.Text.Encoding.UTF8.GetString( Data.Data() );
+      //Debug.Log( "Layout from" + layout );
 
       try
       {

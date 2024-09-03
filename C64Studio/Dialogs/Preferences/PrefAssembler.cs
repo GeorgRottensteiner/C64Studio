@@ -152,6 +152,28 @@ namespace RetroDevStudio.Dialogs.Preferences
         RefillWarningsAsErrorList();
       }
 
+      xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "AssemblerHacks" );
+      if ( xmlSettingRoot != null )
+      {
+        Core.Settings.EnabledC64StudioHacks.Clear();
+        foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+        {
+          if ( xmlKey.Type == "Hack" )
+          {
+            try
+            {
+              var hack = (AssemblerSettings.Hacks)Enum.Parse( typeof( AssemblerSettings.Hacks ), xmlKey.Attribute( "Type" ) );
+              Core.Settings.EnabledC64StudioHacks.Add( hack );
+            }
+            catch ( Exception ex )
+            {
+              Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+            }
+          }
+        }
+        RefillC64StudioHackList();
+      }
+
       var xmlAutoTruncateLiterals = SettingsRoot.FindByTypeRecursive( "AutoTruncateLiterals" );
       if ( xmlAutoTruncateLiterals != null )
       {
