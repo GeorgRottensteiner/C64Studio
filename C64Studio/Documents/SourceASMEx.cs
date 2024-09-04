@@ -15,6 +15,7 @@ using System.Globalization;
 using GR.Image;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Dialogs;
+using GR.Collections;
 
 
 
@@ -72,8 +73,6 @@ namespace RetroDevStudio.Documents
     private AssemblerType                     m_SyntaxColoringCurrentKnownAssembler = AssemblerType.AUTO;
 
     private delegate void delSimpleEventHandler();
-
-
 
     private GR.Collections.Map<int,List<Types.Breakpoint>>    m_BreakPoints = new GR.Collections.Map<int, List<Breakpoint>>();
 
@@ -4331,6 +4330,21 @@ namespace RetroDevStudio.Documents
     private void addToWatchDirect16ToolStripMenuItem_Click( object sender, EventArgs e )
     {
       AddWatchEntry( 16, false );
+    }
+
+
+
+    public Map<string, List<Breakpoint>> MapBreakpoints()
+    {
+      var result = new Map<string,List<Breakpoint>>();
+
+      var allBPs = new List<Breakpoint>();
+      foreach ( var entries in m_BreakPoints.Values )
+      {
+        allBPs.AddRange( entries );
+      }
+      result.Add( DocumentInfo.RelativePath, allBPs );
+      return result;
     }
 
 

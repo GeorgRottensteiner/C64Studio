@@ -1479,6 +1479,34 @@ namespace RetroDevStudio
           }
           else
           {
+            m_DebugBreakpoints.ClearAllBreakpointEntries();
+            var project = Event.Doc.Project;
+            if ( project != null )
+            {
+              foreach ( var watch in project.Settings.WatchEntries )
+              {
+                m_DebugWatch.AddWatchEntry( watch );
+              }
+              m_DebugBreakpoints.RefillBreakpointList( project.Settings.BreakPoints );
+              StudioCore.Debugging.BreakPoints = project.Settings.BreakPoints;
+            }
+            else if ( StudioCore.Debugging.Debugger != null )
+            {
+              // projectless debugging, use watches from debugger
+              foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
+              {
+                m_DebugWatch.AddWatchEntry( watch );
+              }
+              m_DebugBreakpoints.RefillBreakpointList( StudioCore.Debugging.BreakPoints );
+            }
+            else if ( Event.Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+            {
+              // assembler without project
+              var mappedBreakpoints = ( (SourceASMEx)Event.Doc.BaseDoc ).MapBreakpoints();
+              m_DebugBreakpoints.RefillBreakpointList( mappedBreakpoints );
+              StudioCore.Debugging.BreakPoints = mappedBreakpoints;
+            }
+
             mainToolPrint.Enabled = Event.Doc.ContainsCode;
             if ( IsCodeDocument( Event.Doc ) )
             {
@@ -1555,15 +1583,12 @@ namespace RetroDevStudio
         case Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
           m_DebugWatch.DebuggedProject = m_CurrentProject;
           m_DebugWatch.ClearAllWatchEntries();
-          m_DebugBreakpoints.ClearAllBreakpointEntries();
           if ( m_CurrentProject != null )
           {
             foreach ( var watch in m_CurrentProject.Settings.WatchEntries )
             {
               m_DebugWatch.AddWatchEntry( watch );
             }
-            m_DebugBreakpoints.RefillBreakpointList( m_CurrentProject.Settings.BreakPoints );
-            StudioCore.Debugging.BreakPoints = m_CurrentProject.Settings.BreakPoints;
           }
           else if ( StudioCore.Debugging.Debugger != null )
           {
@@ -1572,7 +1597,6 @@ namespace RetroDevStudio
             {
               m_DebugWatch.AddWatchEntry( watch );
             }
-            m_DebugBreakpoints.RefillBreakpointList( StudioCore.Debugging.BreakPoints );
           }
           m_DebugRegisters.DebuggedProject    = m_CurrentProject;
           m_DebugMemory.DebuggedProject       = m_CurrentProject;
@@ -6138,6 +6162,9 @@ namespace RetroDevStudio
       solutionToolStripMenuItemTop.Visible      = true;
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+      // resend doc activate event, since only now all settings are known (breakpoints)
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED, ActiveDocumentInfo ) );
+
 
       if ( ( StudioCore.Navigating.Project == null )
       &&   ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
