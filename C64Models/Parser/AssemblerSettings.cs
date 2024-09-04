@@ -688,8 +688,9 @@ namespace RetroDevStudio.Parser
           LabelPostfix = ":";
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( "EQU" );
+          DefineSeparatorKeywords.Add( ".EQU" );
           DefineSeparatorKeywords.Add( "=" );
-          PlainAssignmentOperators.AddRange( new string[] { "EQU", "=" } );
+          PlainAssignmentOperators.AddRange( new string[] { "EQU", "=", ".EQU" } );
           CaseSensitive = false;
           IncludeExpectsStringLiteral = false;
           IncludeHasOnlyFilename = true;

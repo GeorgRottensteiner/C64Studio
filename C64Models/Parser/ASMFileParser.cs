@@ -5148,6 +5148,18 @@ namespace RetroDevStudio.Parser
             ++lineTokenInfos[labelOffset].Length;
             lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.PSEUDO_OP;
           }
+          if ( ( lineTokenInfos.Count >= 2 + labelOffset )
+          &&   ( lineTokenInfos[labelOffset].Content == "." )
+          &&   ( lineTokenInfos[labelOffset].EndPos + 1 == lineTokenInfos[labelOffset + 1].StartPos )
+          &&   ( lineTokenInfos[labelOffset + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( m_AssemblerSettings.PlainAssignmentOperators.ContainsValue( "." + lineTokenInfos[labelOffset + 1].Content ) ) )
+          {
+            lineTokenInfos.RemoveAt( labelOffset );
+            lineTokenInfos[labelOffset].Content = "." + lineTokenInfos[labelOffset].Content;
+            --lineTokenInfos[labelOffset].StartPos;
+            ++lineTokenInfos[labelOffset].Length;
+            lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.OPERATOR;
+          }
         }
 
         // do we have a DASM scope operator? (must skip scope check then)
