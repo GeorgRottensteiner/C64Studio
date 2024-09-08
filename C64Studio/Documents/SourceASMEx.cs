@@ -370,12 +370,15 @@ namespace RetroDevStudio.Documents
       }
       // check the 
       int     sourceLineIndex = e.StartPos.iLine;
+      int     sourceCharIndex = e.StartPos.iChar;
       if ( m_LastChangePos.iLine != -1 )
       {
         // typed char was in different line, bail out
-        if ( sourceLineIndex != m_LastChangePos.iLine )
+        if ( ( sourceLineIndex != m_LastChangePos.iLine )
+        ||   ( sourceCharIndex != m_LastChangePos.iChar ) )
         {
           m_LastChangePos.iLine = -1;
+          m_LastChangePos.iChar = -1;
           e.Cancel = true;
           return;
         }
@@ -384,6 +387,7 @@ namespace RetroDevStudio.Documents
       ||   ( sourceLineIndex >= editSource.LinesCount ) )
       {
         m_LastChangePos.iLine = -1;
+        m_LastChangePos.iChar = -1;
         e.Cancel = true;
         return;
       }
