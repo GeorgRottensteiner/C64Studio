@@ -63,6 +63,7 @@ namespace RetroDevStudio.Documents
     bool                                      m_InsertingText = false;
 
     DateTime                                  m_LastChange = DateTime.Now;
+    Place                                     m_LastChangePos = new Place();
 
     Timer                                     m_DelayedEventTimer = new Timer();
 
@@ -369,6 +370,14 @@ namespace RetroDevStudio.Documents
       }
       // check the 
       int     sourceLineIndex = e.StartPos.iLine;
+      if ( m_LastChangePos.iLine != -1 )
+      {
+        // typed char was in different line, bail out
+        if ( sourceLineIndex != m_LastChangePos.iLine )
+        {
+          return;
+        }
+      }
       if ( ( sourceLineIndex < 0 )
       ||   ( sourceLineIndex >= editSource.LinesCount ) )
       {
@@ -852,6 +861,7 @@ namespace RetroDevStudio.Documents
     void editSource_TextChanged( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
       m_LastChange = DateTime.Now;
+      m_LastChangePos = e.ChangedRange.Start;
 
       // only reset style in active line to keep speed up
       if ( e.ChangedRange.Start.iLine == e.ChangedRange.End.iLine )

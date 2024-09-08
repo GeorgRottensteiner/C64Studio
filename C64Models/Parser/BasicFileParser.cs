@@ -137,7 +137,7 @@ namespace RetroDevStudio.Parser
     internal class LineInfo
     {
       public int                      LineIndex = 0;
-      public int                      LineNumber = 0;
+      public int                      LineNumber = -1;
       public GR.Memory.ByteBuffer     LineData = new GR.Memory.ByteBuffer();
       public GR.Collections.Set<int>  ReferencedLineNumbers = new GR.Collections.Set<int>();
       public string                   Line = "";
@@ -2557,7 +2557,7 @@ namespace RetroDevStudio.Parser
 
     private void CheckForMissingReferencedLineNumbers()
     {
-      var  allNumbers = m_LineInfos.Select( l => l.Value.LineNumber );
+      var  allNumbers = m_LineInfos.Select( l => l.Value.LineNumber ).Where( l => l != -1 );
       foreach ( var info in m_LineInfos )
       {
         var  unmatchedLinenumbers = info.Value.ReferencedLineNumbers.Where( rl => !allNumbers.Contains( rl ) );
