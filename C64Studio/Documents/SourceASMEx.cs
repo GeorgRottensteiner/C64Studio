@@ -375,12 +375,16 @@ namespace RetroDevStudio.Documents
         // typed char was in different line, bail out
         if ( sourceLineIndex != m_LastChangePos.iLine )
         {
+          m_LastChangePos.iLine = -1;
+          e.Cancel = true;
           return;
         }
       }
       if ( ( sourceLineIndex < 0 )
       ||   ( sourceLineIndex >= editSource.LinesCount ) )
       {
+        m_LastChangePos.iLine = -1;
+        e.Cancel = true;
         return;
       }
 
