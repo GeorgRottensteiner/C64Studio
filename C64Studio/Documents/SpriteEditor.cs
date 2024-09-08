@@ -2681,20 +2681,19 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      int   spriteSizeGuess = 63;
-      if ( ( SpriteData.Length % 64 ) == 0 )
-      {
-        spriteSizeGuess = 64;
-      }
-      int numSprites = (int)SpriteData.Length / spriteSizeGuess;
+      int numBytesPerSprite = Lookup.NumBytesOfSingleSprite( m_SpriteProject.Mode );
+      int numBytesPerSpritePadded = Lookup.NumPaddedBytesOfSingleSprite( m_SpriteProject.Mode );
+
+      int numSprites = (int)SpriteData.Length / numBytesPerSprite;
+      numSprites = Math.Min( numSprites, m_SpriteProject.TotalNumberOfSprites );
       for ( int i = 0; i < numSprites; ++i )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ), i == 0 );
 
-        SpriteData.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, i * spriteSizeGuess, 63 );
-        if ( spriteSizeGuess == 64 )
+        SpriteData.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, i * numBytesPerSpritePadded, numBytesPerSprite );
+        if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
         {
-          m_SpriteProject.Sprites[i].Tile.CustomColor = (byte)( SpriteData.ByteAt( i * 64 + 63 ) & 0xf );
+          m_SpriteProject.Sprites[i].Tile.CustomColor = (byte)( SpriteData.ByteAt( i * numBytesPerSpritePadded + numBytesPerSprite ) & 0xf );
         }
         else
         {
@@ -2827,7 +2826,7 @@ namespace RetroDevStudio.Documents
         exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Tile.Data );
 
         // C64 usually has 63 bytes, so 1 byte is padded with the color
-        if ( Lookup.NumPaddedBytesOfSingleSprite( m_SpriteProject.Mode ) > Lookup.NumBytesOfSingleSprite( m_SpriteProject.Mode ) )
+        if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
         {
           byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Tile.CustomColor;
           if ( m_SpriteProject.Sprites[exportIndices[i]].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
