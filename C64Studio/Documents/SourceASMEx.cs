@@ -63,7 +63,8 @@ namespace RetroDevStudio.Documents
     bool                                      m_InsertingText = false;
 
     DateTime                                  m_LastChange = DateTime.Now;
-    Place                                     m_LastChangePos = new Place();
+    Place                                     m_LastChangePosStart = new Place();
+    Place                                     m_LastChangePosEnd = new Place();
 
     Timer                                     m_DelayedEventTimer = new Timer();
 
@@ -371,14 +372,19 @@ namespace RetroDevStudio.Documents
       // check the 
       int     sourceLineIndex = e.StartPos.iLine;
       int     sourceCharIndex = e.StartPos.iChar;
-      if ( m_LastChangePos.iLine != -1 )
+      if ( m_LastChangePosStart.iLine != -1 )
       {
         // typed char was in different line, bail out
-        if ( ( sourceLineIndex != m_LastChangePos.iLine )
-        ||   ( sourceCharIndex != m_LastChangePos.iChar ) )
+        if ( ( ( sourceLineIndex == m_LastChangePosStart.iLine )
+        &&     ( sourceCharIndex == m_LastChangePosStart.iChar ) )
+        ||   ( ( sourceLineIndex == m_LastChangePosEnd.iLine )
+        &&     ( sourceCharIndex + e.Text.Length == m_LastChangePosEnd.iChar ) ) )
         {
-          m_LastChangePos.iLine = -1;
-          m_LastChangePos.iChar = -1;
+        }
+        else
+        {
+          m_LastChangePosStart.iLine = -1;
+          m_LastChangePosStart.iChar = -1;
           e.Cancel = true;
           return;
         }
@@ -386,8 +392,8 @@ namespace RetroDevStudio.Documents
       if ( ( sourceLineIndex < 0 )
       ||   ( sourceLineIndex >= editSource.LinesCount ) )
       {
-        m_LastChangePos.iLine = -1;
-        m_LastChangePos.iChar = -1;
+        m_LastChangePosStart.iLine = -1;
+        m_LastChangePosStart.iChar = -1;
         e.Cancel = true;
         return;
       }
@@ -869,7 +875,8 @@ namespace RetroDevStudio.Documents
     void editSource_TextChanged( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
       m_LastChange = DateTime.Now;
-      m_LastChangePos = e.ChangedRange.Start;
+      m_LastChangePosStart = editSource.Selection.Start; // e.ChangedRange.Start;
+      m_LastChangePosEnd = editSource.Selection.End; // e.ChangedRange.End;
 
       // only reset style in active line to keep speed up
       if ( e.ChangedRange.Start.iLine == e.ChangedRange.End.iLine )
