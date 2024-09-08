@@ -187,9 +187,9 @@ namespace RetroDevStudio.Documents
         if ( sourceFile != null )
         {
           sourceFile.AddBreakpoint( bp );
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
         }
       }
+      RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
     }
 
 
