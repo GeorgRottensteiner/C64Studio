@@ -36,9 +36,9 @@ namespace RetroDevStudio.Controls
     {
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
-      saveDlg.FileName = Info.Project.ExportFilename;
-      saveDlg.Title = "Export Sprites to";
-      saveDlg.Filter = "Sprites|*.spr|All Files|*.*";
+      saveDlg.FileName  = Info.Project.ExportFilename;
+      saveDlg.Title     = "Export Sprites to";
+      saveDlg.Filter    = "Sprites|*.spr|All Files|*.*";
       if ( DocInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocInfo.Project.Settings.BasePath;
@@ -48,6 +48,26 @@ namespace RetroDevStudio.Controls
         return false;
       }
       GR.Memory.ByteBuffer exportData = Info.ExportData;
+
+      if ( checkExportAddPadding.Checked )
+      {
+        int     numBytesWithoutPadding  = Lookup.NumBytesOfSingleSprite( Info.Project.Mode );
+        int     numBytesWithPadding     = Lookup.NumPaddedBytesOfSingleSprite( Info.Project.Mode );
+
+        if ( ( numBytesWithPadding != numBytesWithoutPadding )
+        &&   ( Info.Project.Mode != SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC ) )
+        {
+          exportData.Clear();
+          for ( int i = 0; i < Info.ExportIndices.Count; ++i )
+          {
+            exportData.Append( Info.Project.Sprites[Info.ExportIndices[i]].Tile.Data );
+            if ( i + 1 < Info.ExportIndices.Count )
+            {
+              exportData.Append( new ByteBuffer( (uint)( numBytesWithPadding - numBytesWithoutPadding ), 0 ) );
+            }
+          }
+        }
+      }
 
       if ( checkPrefixLoadAddress.Checked )
       {

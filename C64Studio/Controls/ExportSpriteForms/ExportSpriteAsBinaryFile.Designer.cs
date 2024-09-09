@@ -31,6 +31,7 @@ namespace RetroDevStudio.Controls
     {
       this.editPrefixLoadAddress = new System.Windows.Forms.TextBox();
       this.checkPrefixLoadAddress = new System.Windows.Forms.CheckBox();
+      this.checkExportAddPadding = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // editPrefixLoadAddress
@@ -52,10 +53,21 @@ namespace RetroDevStudio.Controls
       this.checkPrefixLoadAddress.UseVisualStyleBackColor = true;
       this.checkPrefixLoadAddress.CheckedChanged += new System.EventHandler(this.checkPrefixLoadAddress_CheckedChanged);
       // 
+      // checkExportAddPadding
+      // 
+      this.checkExportAddPadding.AutoSize = true;
+      this.checkExportAddPadding.Location = new System.Drawing.Point(3, 26);
+      this.checkExportAddPadding.Name = "checkExportAddPadding";
+      this.checkExportAddPadding.Size = new System.Drawing.Size(114, 17);
+      this.checkExportAddPadding.TabIndex = 5;
+      this.checkExportAddPadding.Text = "Add padding bytes";
+      this.checkExportAddPadding.UseVisualStyleBackColor = true;
+      // 
       // ExportSpriteAsBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkExportAddPadding);
       this.Controls.Add(this.editPrefixLoadAddress);
       this.Controls.Add(this.checkPrefixLoadAddress);
       this.Name = "ExportSpriteAsBinaryFile";
@@ -69,5 +81,6 @@ namespace RetroDevStudio.Controls
 
     private System.Windows.Forms.TextBox editPrefixLoadAddress;
     private System.Windows.Forms.CheckBox checkPrefixLoadAddress;
+    private System.Windows.Forms.CheckBox checkExportAddPadding;
   }
 }

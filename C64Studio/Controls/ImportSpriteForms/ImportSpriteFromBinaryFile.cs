@@ -35,7 +35,7 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
-      return Editor.ImportSprites( filename, true, true, bytesToSkip );
+      return Editor.ImportSprites( filename, true, true, bytesToSkip, checkImportExpectPadding.Checked );
     }
 
 

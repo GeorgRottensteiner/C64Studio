@@ -594,10 +594,8 @@ namespace RetroDevStudio.Documents
 
 
 
-    public bool ImportSprites( string Filename, bool OnlyImportFromProject, bool AddUndo, int BytesToSkip = 0 )
+    public bool ImportSprites( string Filename, bool OnlyImportFromProject, bool AddUndo, int BytesToSkip = 0, bool ExpectPadding = false )
     {
-      Clear();
-
       GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( Filename );
       if ( projectFile == null )
       {
@@ -667,14 +665,29 @@ namespace RetroDevStudio.Documents
           memIn       = projectFile.MemoryReader();
         }
 
-        btnChangeMode.Text = GR.EnumHelper.GetDescription( SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC );
-
-        int numSprites = (int)projectFile.Length / 64;
+        int numBytesPerSprite = Lookup.NumBytesOfSingleSprite( m_SpriteProject.Mode );
+        int numBytesPerSpritePadded = Lookup.NumPaddedBytesOfSingleSprite( m_SpriteProject.Mode );
+        int numSprites = 0;
+        if ( ExpectPadding )
+        {
+          numSprites = (int)( projectFile.Length - numBytesPerSprite ) / numBytesPerSpritePadded + 1;
+        }
+        else
+        {
+          numSprites = (int)( projectFile.Length ) / numBytesPerSprite;
+        }
         for ( int i = 0; i < numSprites; ++i )
         {
           GR.Memory.ByteBuffer tempBuffer = new GR.Memory.ByteBuffer();
 
-          memIn.ReadBlock( tempBuffer, 64 );
+          if ( ExpectPadding )
+          {
+            memIn.ReadBlock( tempBuffer, (uint)numBytesPerSpritePadded );
+          }
+          else
+          {
+            memIn.ReadBlock( tempBuffer, (uint)numBytesPerSprite );
+          }
           if ( i < m_SpriteProject.Sprites.Count )
           {
             if ( AddUndo )
@@ -682,14 +695,17 @@ namespace RetroDevStudio.Documents
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ), i == 0 );
             }
 
-            tempBuffer.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, 63 );
+            tempBuffer.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, numBytesPerSprite );
 
-            if ( tempBuffer.ByteAt( 63 ) != 0 )
+            if ( tempBuffer.ByteAt( numBytesPerSprite ) != 0 )
             {
               allFillBytesZero = false;
             }
-            m_SpriteProject.Sprites[i].Tile.CustomColor = (byte)( tempBuffer.ByteAt( 63 ) & 0xf );
-            m_SpriteProject.Sprites[i].Mode = ( ( tempBuffer.ByteAt( 63 ) & 0x80 ) != 0 ) ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
+            if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+            {
+              m_SpriteProject.Sprites[i].Tile.CustomColor = (byte)( tempBuffer.ByteAt( numBytesPerSprite ) & 0xf );
+              m_SpriteProject.Sprites[i].Mode = ( ( tempBuffer.ByteAt( numBytesPerSprite ) & 0x80 ) != 0 ) ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
+            }
           }
         }
         if ( allFillBytesZero )
