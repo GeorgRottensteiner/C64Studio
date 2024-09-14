@@ -609,6 +609,23 @@ namespace RetroDevStudio.Dialogs
     {
       int numColorsInOnePalette = Colors.Palette.NumColors;
       int numColorsInImport = (int)( Data.Length / 3 );
+      int numPalettesInImport = numColorsInImport / numColorsInOnePalette;
+
+      // if we want to import more palettes than exist, create new entries
+      int importedPalIndex = 1;
+      while ( Colors.Palettes.Count < numPalettesInImport )
+      {
+        var pal = new Palette( Colors.Palettes[0] ) { Name = $"Imported Pal #{importedPalIndex}" };
+
+        Colors.Palettes.Add( pal );
+        paletteList.Items.Add( new ArrangedItemEntry() { Text = pal.Name, Tag = pal } );
+
+        OriginalOrder.Add( pal );
+        PaletteMapping.Add( Colors.Palettes.Count - 1 );
+
+        ++importedPalIndex;
+      }
+
       for ( int i = 0; i < numColorsInImport; ++i )
       {
         if ( i < Colors.Palettes.Count * numColorsInOnePalette )
