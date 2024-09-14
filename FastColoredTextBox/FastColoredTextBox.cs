@@ -5746,7 +5746,7 @@ namespace FastColoredTextBoxNS
     }
 
 
-    protected int GetMinStartSpacesCount( int fromLine, int toLine )
+    protected int GetMinStartSpacesCount( int fromLine, int toLine, bool InsertOnEmptyLinesAsWell )
     {
       if ( fromLine > toLine )
         return 0;
@@ -5754,6 +5754,12 @@ namespace FastColoredTextBoxNS
       int result = int.MaxValue;
       for ( int i = fromLine; i <= toLine; i++ )
       {
+        // skip empty lines?
+        if ( ( !InsertOnEmptyLinesAsWell )
+        &&   ( lines[i].Text.Trim().Length == 0 ) )
+        {
+          continue;
+        }
         int count = lines[i].StartSpacesCount;
         if ( count < result )
           result = count;
@@ -8522,7 +8528,7 @@ namespace FastColoredTextBoxNS
       Selection.BeginUpdate();
       lines.Manager.BeginAutoUndoCommands();
       lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
-      int spaces = GetMinStartSpacesCount( from, to );
+      int spaces = GetMinStartSpacesCount( from, to, InsertOnEmptyLinesAsWell );
       for ( int i = from; i <= to; i++ )
       {
         // only insert prefix on non empty lines
