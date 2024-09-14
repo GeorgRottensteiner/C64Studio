@@ -8489,7 +8489,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Insert prefix into front of selected lines
     /// </summary>
-    public virtual void InsertLinePrefix( string prefix )
+    public virtual void InsertLinePrefix( string prefix, bool InsertOnEmptyLinesAsWell = true )
     {
       Range old = Selection.Clone();
       int from = Math.Min( Selection.Start.iLine, Selection.End.iLine );
@@ -8525,6 +8525,12 @@ namespace FastColoredTextBoxNS
       int spaces = GetMinStartSpacesCount( from, to );
       for ( int i = from; i <= to; i++ )
       {
+        // only insert prefix on non empty lines
+        if ( ( !InsertOnEmptyLinesAsWell )
+        &&   ( TextSource[i].Text.Trim().Length == 0 ) )
+        {
+          continue;
+        }
         if ( ( i == from )
         &&   ( spaces < startOffset ) )
         {

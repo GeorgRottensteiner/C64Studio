@@ -3294,7 +3294,7 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      editSource.InsertLinePrefix( ";" );
+      editSource.InsertLinePrefix( ";", false );
       SetModified();
     }
 
