@@ -11955,6 +11955,29 @@ namespace RetroDevStudio.Parser
         result.RemoveAt( result.Count - 1 );
       }
 
+      // expand two numbers after each other when the second is negative (which points to a minus operator instead)
+      for ( int i = 0; i < result.Count - 1; ++i )
+      {
+        if ( ( result[i + 1].Content.StartsWith( "-" ) )
+        &&   ( ( result[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+        ||     ( result[i].Type == TokenInfo.TokenType.LITERAL_REAL_NUMBER ) )
+        &&   ( ( result[i + 1].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+        ||     ( result[i + 1].Type == TokenInfo.TokenType.LITERAL_REAL_NUMBER ) ) )
+        {
+          var token = new Types.TokenInfo()
+          {
+            Type              = TokenInfo.TokenType.OPERATOR,
+            OriginatingString = Source,
+            StartPos          = result[i + 1].StartPos,
+            Length            = 1
+          };
+          ++result[i + 1].StartPos;
+          --result[i + 1].Length;
+          result.Insert( i + 1, token );
+        }
+        // two literal numbers, the latter being negative
+      }
+
       CollapsePDSLocalLabels( result );
 
       // labels must be left?
@@ -12631,12 +12654,19 @@ namespace RetroDevStudio.Parser
         if ( ( minusToken.Content == "-" )
         &&   ( Tokens[IndexOfMinusToken + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
         &&   ( Tokens[IndexOfMinusToken].StartPos + Tokens[IndexOfMinusToken].Length == Tokens[IndexOfMinusToken + 1].StartPos )
+        /*
         &&   ( ( prevToken.EndPos + 1 < Tokens[IndexOfMinusToken].StartPos )
         ||     ( ( prevToken.EndPos + 1 == Tokens[IndexOfMinusToken].StartPos )
         &&       ( prevToken.Type != TokenInfo.TokenType.LITERAL_NUMBER )
         &&       ( prevToken.Type != TokenInfo.TokenType.LITERAL_STRING )
         &&       ( prevToken.Type != TokenInfo.TokenType.LITERAL_REAL_NUMBER )
         &&       ( prevToken.Type != TokenInfo.TokenType.LITERAL_CHAR ) ) )
+        */
+        &&   ( prevToken.EndPos + 1 <= Tokens[IndexOfMinusToken].StartPos )
+        &&   ( prevToken.Type != TokenInfo.TokenType.LITERAL_NUMBER )
+        &&   ( prevToken.Type != TokenInfo.TokenType.LITERAL_STRING )
+        &&   ( prevToken.Type != TokenInfo.TokenType.LITERAL_REAL_NUMBER )
+        &&   ( prevToken.Type != TokenInfo.TokenType.LITERAL_CHAR )
         &&   ( !IsTokenLabel( Tokens[IndexOfMinusToken - 1].Type ) )
         &&   ( ( prevToken.Type != TokenInfo.TokenType.SEPARATOR )
         ||     ( ( Tokens[IndexOfMinusToken - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )

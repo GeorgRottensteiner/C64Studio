@@ -272,6 +272,25 @@ namespace TestProject
 
 
 
+    /// <summary>
+    /// makes sure all these variants get evaluated and do not collapse to number, negative-number
+    /// </summary>
+    [TestMethod]
+    public void TestExpressionNonNegativeCollapse()
+    {
+      string      source = @"* = $2000
+			                        !byte 32 -4
+			                        !byte 32-4
+			                        !byte 32- 4
+			                        !byte 32 - 4";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "00201C1C1C1C", assembly.ToString() );
+    }
+
+
+
     [TestMethod]
     public void TestExpressionAdd()
     {
