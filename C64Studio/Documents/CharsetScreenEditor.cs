@@ -1478,7 +1478,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save Charset Screen Project as";
       saveDlg.Filter = "Charset Screen Projects|*.charscreen|All Files|*.*";
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
@@ -1546,7 +1546,7 @@ namespace RetroDevStudio.Documents
 
     private bool ImportCharset( string Filename )
     {
-      string extension = System.IO.Path.GetExtension( Filename ).ToUpper();
+      string extension = GR.Path.GetExtension( Filename ).ToUpper();
 
       if ( extension == ".CHARSETPROJECT" )
       {

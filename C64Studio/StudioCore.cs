@@ -143,9 +143,9 @@ namespace RetroDevStudio
         }
         if ( Doc.Project == null )
         {
-          return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Doc.FullPath ), System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + targetExtension;
+          return GR.Path.Append( GR.Path.GetDirectoryName( Doc.FullPath ), GR.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + targetExtension;
         }
-        return System.IO.Path.Combine( Doc.Project.Settings.BasePath, System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) + targetExtension );
+        return GR.Path.Append( Doc.Project.Settings.BasePath, GR.Path.GetFileNameWithoutExtension( Doc.FullPath ) + targetExtension );
       }
       if ( ( Doc.Element != null )
       &&   ( !String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )

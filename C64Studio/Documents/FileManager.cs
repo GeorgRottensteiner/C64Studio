@@ -150,8 +150,8 @@ namespace RetroDevStudio.Documents
         SetupWatcher();
         EnableFileWatcher();
       }
-      TabText = System.IO.Path.GetFileName( m_Filename );
-      Text    = System.IO.Path.GetFileName( m_Filename );
+      TabText = GR.Path.GetFileName( m_Filename );
+      Text    = GR.Path.GetFileName( m_Filename );
 
       RefreshFileView();
       UpdateStatusInfo();
@@ -169,7 +169,7 @@ namespace RetroDevStudio.Documents
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Save media as";
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( m_Media != null )
       {
         saveDlg.Filter = m_Media.FileFilter;
@@ -207,8 +207,8 @@ namespace RetroDevStudio.Documents
         SetUnmodified();
       }
 
-      TabText = System.IO.Path.GetFileName( FullPath );
-      Text = System.IO.Path.GetFileName( FullPath );
+      TabText = GR.Path.GetFileName( FullPath );
+      Text = GR.Path.GetFileName( FullPath );
 
       EnableFileWatcher();
       return true;
@@ -592,7 +592,7 @@ namespace RetroDevStudio.Documents
       &&   ( fileData.Length >= 0 ) )
       {
         GR.Memory.ByteBuffer fileName = new GR.Memory.ByteBuffer( 16 );
-        string shortName = System.IO.Path.GetFileNameWithoutExtension( file ).ToUpper();
+        string shortName = GR.Path.GetFileNameWithoutExtension( file ).ToUpper();
         int nameLength = shortName.Length;
         if ( nameLength > 16 )
         {

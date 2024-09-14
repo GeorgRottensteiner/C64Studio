@@ -199,7 +199,7 @@ namespace RetroDevStudio.Documents
 
     private bool IsBinaryFile()
     {
-      string extension = System.IO.Path.GetExtension( DocumentInfo.FullPath.ToString() ).ToUpper();
+      string extension = GR.Path.GetExtension( DocumentInfo.FullPath.ToString() ).ToUpper();
 
       return ( extension == ".CHR" );
     }
@@ -263,7 +263,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save Charset Project as";
       saveDlg.Filter = "Charset Projects|*.charsetproject|All Files|*.*";
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;

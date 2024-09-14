@@ -54,16 +54,16 @@ namespace RetroDevStudio.Dialogs
       string    finalSolutionPath = editBasePath.Text;
       if ( CreateNewFolderForSolution )
       {
-        finalSolutionPath = System.IO.Path.Combine( finalSolutionPath, editSolutionName.Text );
+        finalSolutionPath = GR.Path.Append( finalSolutionPath, editSolutionName.Text );
       }
       string finalPathProject = finalSolutionPath;
 
       if ( checkCreateProjectInSeparateFolder.Checked )
       {
-        finalPathProject = System.IO.Path.Combine( finalSolutionPath, editProjectName.Text );
+        finalPathProject = GR.Path.Append( finalSolutionPath, editProjectName.Text );
       }
-      string solutionPath = System.IO.Path.Combine( finalSolutionPath, editSolutionName.Text + ".s64" );
-      string projectPath  = System.IO.Path.Combine( finalPathProject, editProjectName.Text + ".c64" );
+      string solutionPath = GR.Path.Append( finalSolutionPath, editSolutionName.Text + ".s64" );
+      string projectPath  = GR.Path.Append( finalPathProject, editProjectName.Text + ".c64" );
 
       SolutionPath                    = finalSolutionPath;
       SolutionFilename                = solutionPath;
@@ -112,15 +112,15 @@ namespace RetroDevStudio.Dialogs
       string    finalPath = editBasePath.Text;
       if ( CreateNewFolderForSolution )
       {
-        finalPath = System.IO.Path.Combine( finalPath, editSolutionName.Text );
+        finalPath = GR.Path.Append( finalPath, editSolutionName.Text );
       }
       string finalPathProject = finalPath;
       if ( checkCreateProjectInSeparateFolder.Checked )
       {
-        finalPathProject = System.IO.Path.Combine( finalPath, editProjectName.Text );
+        finalPathProject = GR.Path.Append( finalPath, editProjectName.Text );
       }
-      string solutionPath = System.IO.Path.Combine( finalPath, editSolutionName.Text + ".s64" );
-      string projectFullFilename  = System.IO.Path.Combine( finalPathProject, editProjectName.Text + ".c64" );
+      string solutionPath = GR.Path.Append( finalPath, editSolutionName.Text + ".s64" );
+      string projectFullFilename  = GR.Path.Append( finalPathProject, editProjectName.Text + ".c64" );
 
       if ( System.IO.File.Exists( solutionPath ) )
       {
@@ -142,10 +142,10 @@ namespace RetroDevStudio.Dialogs
       checkSeparateRepositoryForProject.Enabled = true;
       if ( checkCreateRepository.Checked )
       {
-        var gitPath1 = System.IO.Path.Combine( finalPath, ".git" );
+        var gitPath1 = GR.Path.Append( finalPath, ".git" );
         if ( checkSeparateRepositoryForProject.Checked )
         {
-          var gitPath2 = System.IO.Path.Combine( finalPathProject, ".git" );
+          var gitPath2 = GR.Path.Append( finalPathProject, ".git" );
           labelSolutionSummary.Text += $"A repository will be created in {gitPath1}, a second will be created in {gitPath2}.";
         }
         else

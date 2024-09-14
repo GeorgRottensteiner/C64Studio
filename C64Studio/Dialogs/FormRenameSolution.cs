@@ -63,8 +63,8 @@ namespace RetroDevStudio.Dialogs
     {
       string    newFilename     = editSolutionName.Text;
       string    newSolutionPath = GR.Path.RenameFilenameWithoutExtension( _OriginalSolutionFilename, editSolutionName.Text );
-      string    solutionFullDir = System.IO.Path.GetDirectoryName( _OriginalSolutionFilename );
-      string    solutionParentDir = solutionFullDir.Substring( System.IO.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
+      string    solutionFullDir = GR.Path.GetDirectoryName( _OriginalSolutionFilename );
+      string    solutionParentDir = solutionFullDir.Substring( GR.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
 
       if ( GR.Path.IsPathEqual( newFilename, _OriginalSolutionName ) )
       {

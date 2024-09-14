@@ -371,7 +371,7 @@ namespace RetroDevStudio.Parser
       header.AppendU8( 0 );
 
       // cartridge name
-      string name = System.IO.Path.GetFileNameWithoutExtension( CompileTargetFile ).ToUpper();
+      string name = GR.Path.GetFileNameWithoutExtension( CompileTargetFile ).ToUpper();
 
       if ( name.Length > 32 )
       {

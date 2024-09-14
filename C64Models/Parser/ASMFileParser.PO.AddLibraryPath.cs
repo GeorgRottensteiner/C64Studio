@@ -15,7 +15,7 @@ namespace RetroDevStudio.Parser
     {
       try
       {
-        string fullPath = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), FolderPath );
+        string fullPath = GR.Path.Append( GR.Path.GetDirectoryName( ParentFilename ), FolderPath );
         fullPath = GR.Path.Normalize( fullPath, true );
 
         // don't add duplicates

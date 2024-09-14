@@ -64,7 +64,7 @@ namespace RetroDevStudio.Parser
         }
         string filename = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Length - 2 );
         // do not append to absolute path!
-        if ( System.IO.Path.IsPathRooted( filename ) )
+        if ( GR.Path.IsPathRooted( filename ) )
         {
           m_CompileTargetFile = filename;
         }

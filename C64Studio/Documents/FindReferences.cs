@@ -199,7 +199,7 @@ namespace RetroDevStudio.Documents
       else
       {
         if ( ( m_ListProject != null )
-        &&   ( !System.IO.Path.IsPathRooted( fileName ) ) )
+        &&   ( !GR.Path.IsPathRooted( fileName ) ) )
         {
           fileName = GR.Path.Normalize( GR.Path.Append( m_ListProject.Settings.BasePath, fileName ), false );
         }

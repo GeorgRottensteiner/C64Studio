@@ -31,11 +31,11 @@ namespace RetroDevStudio.Controls
     {
       this.SuspendLayout();
       // 
-      // ImportFromBinaryFile
+      // ImportMapFromBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Name = "ImportFromBinaryFile";
+      this.Name = "ImportMapFromBinaryFile";
       this.Size = new System.Drawing.Size(317, 317);
       this.ResumeLayout(false);
 

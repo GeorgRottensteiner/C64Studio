@@ -523,9 +523,9 @@ namespace RetroDevStudio.Documents
       var project = ProjectFromNode( m_ContextMenuNode );
       if ( info.Project != null )
       {
-        if ( project.SourceControl.Ignore( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        if ( project.SourceControl.Ignore( GR.Path.GetFileName( info.Project.Settings.Filename ) ) )
         {
-          info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
+          info.FileState = project.SourceControl.GetFileState( GR.Path.GetFileName( info.Project.Settings.Filename ) );
           treeProject.Invalidate();
         }
       }
@@ -548,9 +548,9 @@ namespace RetroDevStudio.Documents
       var project = ProjectFromNode( m_ContextMenuNode );
       if ( info.Project != null )
       {
-        if ( project.SourceControl.RemoveFileFromIndex( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        if ( project.SourceControl.RemoveFileFromIndex( GR.Path.GetFileName( info.Project.Settings.Filename ) ) )
         {
-          info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
+          info.FileState = project.SourceControl.GetFileState( GR.Path.GetFileName( info.Project.Settings.Filename ) );
           treeProject.Invalidate();
         }
       }
@@ -573,9 +573,9 @@ namespace RetroDevStudio.Documents
       var project = ProjectFromNode( m_ContextMenuNode );
       if ( info.Project != null )
       {
-        if ( project.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( info.Project.Settings.Filename ) ) )
+        if ( project.SourceControl.AddFileToRepository( GR.Path.GetFileName( info.Project.Settings.Filename ) ) )
         {
-          info.FileState = project.SourceControl.GetFileState( System.IO.Path.GetFileName( info.Project.Settings.Filename ) );
+          info.FileState = project.SourceControl.GetFileState( GR.Path.GetFileName( info.Project.Settings.Filename ) );
           treeProject.Invalidate();
         }
       }
@@ -1020,14 +1020,14 @@ namespace RetroDevStudio.Documents
 
           ProjectElement  elementToCopy = sourceProject.GetElementByFilename( fileName );
 
-          string  newFilenameTemplate = GR.Path.RenameFilenameWithoutExtension( fileName, System.IO.Path.GetFileNameWithoutExtension( fileName ) + " Copy" );
+          string  newFilenameTemplate = GR.Path.RenameFilenameWithoutExtension( fileName, GR.Path.GetFileNameWithoutExtension( fileName ) + " Copy" );
           string  newFilename = newFilenameTemplate;
 
           if ( sourceProject != project )
           {
             // copy file to different project, keep base path
             newFilenameTemplate = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( sourceProject.Settings.BasePath ), true, fileName, false );
-            newFilenameTemplate = System.IO.Path.GetFileName( newFilenameTemplate );
+            newFilenameTemplate = GR.Path.GetFileName( newFilenameTemplate );
             newFilenameTemplate = project.FullPath( newFilenameTemplate );
             newFilename = newFilenameTemplate;
           }
@@ -1035,7 +1035,7 @@ namespace RetroDevStudio.Documents
           int     curAttempt = 2;
           while ( project.IsFilenameInUse( newFilename ) )
           {
-            newFilename = GR.Path.RenameFilenameWithoutExtension( newFilenameTemplate, System.IO.Path.GetFileNameWithoutExtension( newFilenameTemplate ) + " " + curAttempt );
+            newFilename = GR.Path.RenameFilenameWithoutExtension( newFilenameTemplate, GR.Path.GetFileNameWithoutExtension( newFilenameTemplate ) + " " + curAttempt );
             ++curAttempt;
           }
 
@@ -1063,7 +1063,7 @@ namespace RetroDevStudio.Documents
           sourceProject.FillElementFromSettingsStream( element, origSettingsReader );
 
           string relativeFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( project.Settings.BasePath ), true, newFilename, false );
-          element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
+          element.Name = GR.Path.GetFileNameWithoutExtension( relativeFilename );
           element.Filename = relativeFilename;
 
           while ( parentNodeToInsertTo.Level >= 1 )
@@ -1322,7 +1322,7 @@ namespace RetroDevStudio.Documents
           Debug.Log( "Add project " + element.DocumentInfo.FullPath );
           if ( string.IsNullOrEmpty( basePath ) )
           {
-            basePath = GR.Path.RemoveFileSpec( element.DocumentInfo.FullPath );
+            basePath = GR.Path.GetDirectoryName( element.DocumentInfo.FullPath );
           }
           projects.Add( element.DocumentInfo.FullPath );
         }
@@ -1369,15 +1369,15 @@ namespace RetroDevStudio.Documents
         if ( element.Document == null )
         {
           openFolderPath = element.Filename;
-          if ( !System.IO.Path.IsPathRooted( openFolderPath ) )
+          if ( !GR.Path.IsPathRooted( openFolderPath ) )
           {
             openFolderPath = GR.Path.Normalize( GR.Path.Append( element.DocumentInfo.Project.Settings.BasePath, openFolderPath ), false );
           }
-          openFolderPath = GR.Path.RemoveFileSpec( openFolderPath );
+          openFolderPath = GR.Path.GetDirectoryName( openFolderPath );
         }
         else
         {
-          openFolderPath = GR.Path.RemoveFileSpec( element.DocumentInfo.FullPath );
+          openFolderPath = GR.Path.GetDirectoryName( element.DocumentInfo.FullPath );
         }
       }
 
@@ -1414,7 +1414,7 @@ namespace RetroDevStudio.Documents
       &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
       {
-        e.Label = System.IO.Path.GetFileNameWithoutExtension( e.Label );
+        e.Label = GR.Path.GetFileNameWithoutExtension( e.Label );
       }
     }
 
@@ -1452,7 +1452,7 @@ namespace RetroDevStudio.Documents
       ProjectElement element = ElementFromNode( e.Node );
       if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
       {
-        newText += System.IO.Path.GetExtension( e.Node.Text );
+        newText += GR.Path.GetExtension( e.Node.Text );
       }
       else
       {
@@ -1472,9 +1472,9 @@ namespace RetroDevStudio.Documents
       e.Label = newText;
 
       string    oldFilename = element.DocumentInfo.FullPath;
-      string    newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( oldFilename ), newText );
+      string    newFilename = GR.Path.RenameFile( oldFilename, newText );
 
-      if ( System.IO.Path.GetExtension( newFilename ).ToUpper() != System.IO.Path.GetExtension( oldFilename ).ToUpper() )
+      if ( GR.Path.GetExtension( newFilename ).ToUpper() != GR.Path.GetExtension( oldFilename ).ToUpper() )
       {
         e.CancelEdit = true;
         System.Windows.Forms.MessageBox.Show( "You can't change the extension of an included file!", "Renaming extension forbidden", MessageBoxButtons.OK );
@@ -2590,7 +2590,7 @@ namespace RetroDevStudio.Documents
         if ( project.SourceControl != null )
         {
           scInfos = project.SourceControl.GetCurrentRepositoryState();
-          var scEntry = scInfos.FirstOrDefault( sc => sc.Filename == System.IO.Path.GetFileName( project.Settings.Filename ) );
+          var scEntry = scInfos.FirstOrDefault( sc => sc.Filename == GR.Path.GetFileName( project.Settings.Filename ) );
           if ( scEntry != null )
           {
             itemInfo.FileState = (SourceControl.FileState)(int)scEntry.FileState;

@@ -91,7 +91,7 @@ namespace RetroDevStudio.Dialogs
         var item = new ListViewItem( "" );
         item.SubItems.Add( state.FileState.ToString() );
         item.SubItems.Add( state.Filename );
-        item.SubItems.Add( System.IO.Path.GetExtension( state.Filename ) );
+        item.SubItems.Add( GR.Path.GetExtension( state.Filename ) );
         item.Tag = state.FileState;
 
         var element = _Project.GetElementByFilename( state.Filename );
@@ -140,7 +140,7 @@ namespace RetroDevStudio.Dialogs
         var item = new ListViewItem( "" );
         item.SubItems.Add( state.FileState.ToString() );
         item.SubItems.Add( state.Filename );
-        item.SubItems.Add( System.IO.Path.GetExtension( state.Filename ) );
+        item.SubItems.Add( GR.Path.GetExtension( state.Filename ) );
         item.Tag = state.FileState;
 
         var element = _Project.GetElementByFilename( state.Filename );
@@ -148,8 +148,8 @@ namespace RetroDevStudio.Dialogs
         {
           item.ImageIndex = (int)element.DocumentInfo.Type;
         }
-        else if ( ( System.IO.Path.GetExtension( state.Filename ).ToUpper() == ".C64" )
-        ||        ( System.IO.Path.GetExtension( state.Filename ).ToUpper() == ".S64" ) )
+        else if ( ( GR.Path.GetExtension( state.Filename ).ToUpper() == ".C64" )
+        ||        ( GR.Path.GetExtension( state.Filename ).ToUpper() == ".S64" ) )
         {
           // a project/solution
           item.ImageIndex = 0;

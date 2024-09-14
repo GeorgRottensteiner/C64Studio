@@ -192,13 +192,13 @@ namespace RetroDevStudio
     public void RenameSolution( string NewSolutionPath )
     {
       string    originalSolutionFilename  = Solution.Filename;
-      string    newSolutionName           = System.IO.Path.GetFileNameWithoutExtension( NewSolutionPath );
-      string    solutionFullDir           = System.IO.Path.GetDirectoryName( originalSolutionFilename );
-      string    solutionParentDir         = solutionFullDir.Substring( System.IO.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
+      string    newSolutionName           = GR.Path.GetFileNameWithoutExtension( NewSolutionPath );
+      string    solutionFullDir           = GR.Path.GetDirectoryName( originalSolutionFilename );
+      string    solutionParentDir         = solutionFullDir.Substring( GR.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
       bool      solutionFolderIsRenamed   = ( solutionParentDir == Solution.Name );
-      string    newSolutionFullDir        = System.IO.Path.GetDirectoryName( NewSolutionPath );
-      string    renamedSolutionFullDir    = System.IO.Path.Combine( GR.Path.ParentDirectory( newSolutionFullDir ), newSolutionName );
-      string    renamedSolutionFullPath = System.IO.Path.Combine( renamedSolutionFullDir, System.IO.Path.GetFileName( NewSolutionPath ) );
+      string    newSolutionFullDir        = GR.Path.GetDirectoryName( NewSolutionPath );
+      string    renamedSolutionFullDir    = GR.Path.Append( GR.Path.ParentDirectory( newSolutionFullDir ), newSolutionName );
+      string    renamedSolutionFullPath   = GR.Path.Append( renamedSolutionFullDir,GR.Path.GetFileName( NewSolutionPath ) );
 
       try
       {
@@ -210,7 +210,7 @@ namespace RetroDevStudio
         return;
       }
 
-      Solution.Name     = System.IO.Path.GetFileNameWithoutExtension( NewSolutionPath );
+      Solution.Name     = GR.Path.GetFileNameWithoutExtension( NewSolutionPath );
       Solution.Filename = NewSolutionPath;
 
       if ( solutionFolderIsRenamed )

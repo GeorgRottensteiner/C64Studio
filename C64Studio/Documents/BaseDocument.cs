@@ -339,7 +339,7 @@ namespace RetroDevStudio.Documents
         {
           if ( DocumentFilename != null )
           {
-            TabText = System.IO.Path.GetFileName( DocumentFilename );
+            TabText = GR.Path.GetFileName( DocumentFilename );
           }
           else
           {
@@ -407,8 +407,8 @@ namespace RetroDevStudio.Documents
     public void SetDocumentFilename( string DocumentFilename )
     {
       DocumentInfo.DocumentFilename = DocumentFilename;
-      Text = System.IO.Path.GetFileName( DocumentFilename );
-      TabText = System.IO.Path.GetFileName( DocumentFilename );
+      Text = GR.Path.GetFileName( DocumentFilename );
+      TabText = GR.Path.GetFileName( DocumentFilename );
       if ( FloatPane != null )
       {
         FloatPane.Text = TabText;
@@ -513,8 +513,8 @@ namespace RetroDevStudio.Documents
             DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, NewFilename, false );
             if ( DocumentInfo.Element != null )
             {
-              DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-              DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+              DocumentInfo.Element.Name = GR.Path.GetFileName( DocumentInfo.DocumentFilename );
+              DocumentInfo.Element.Node.Text = GR.Path.GetFileName( DocumentInfo.DocumentFilename );
               DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
               if ( DocumentInfo.Element.Settings.Count == 0 )
               {
@@ -522,8 +522,8 @@ namespace RetroDevStudio.Documents
               }
             }
           }
-          Text    = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
-          TabText = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+          Text    = GR.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
+          TabText = GR.Path.GetFileName( DocumentInfo.DocumentFilename );
           SetupWatcher();
 
           if ( !PerformSave( NewFilename ) )
@@ -546,8 +546,8 @@ namespace RetroDevStudio.Documents
           if ( DocumentInfo.Project != null )
           {
             DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, NewFilename, false );
-            DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+            DocumentInfo.Element.Name = GR.Path.GetFileName( DocumentInfo.DocumentFilename );
+            DocumentInfo.Element.Node.Text = GR.Path.GetFileName( DocumentInfo.DocumentFilename );
             DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
             if ( DocumentInfo.Element.Settings.Count == 0 )
             {
@@ -558,8 +558,8 @@ namespace RetroDevStudio.Documents
           {
             DocumentInfo.DocumentFilename = NewFilename;
           }
-          Text    = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
-          TabText = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+          Text    = GR.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
+          TabText = GR.Path.GetFileName( DocumentInfo.DocumentFilename );
 
           // need to rename file in project (dependencies, etc.)
           string  newName = DocumentInfo.FullPath;
@@ -638,7 +638,7 @@ namespace RetroDevStudio.Documents
     public virtual bool ReadFromReader( GR.IO.IReader Reader )
     {
       DocumentInfo.DocumentFilename = Reader.ReadString();
-      Text = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
+      Text = GR.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
       return true;
     }
 
@@ -649,12 +649,12 @@ namespace RetroDevStudio.Documents
       string    fullPath = DocumentInfo.FullPath;
       try
       {
-        m_FileWatcher.Path = GR.Path.RemoveFileSpec( fullPath );
+        m_FileWatcher.Path = GR.Path.GetDirectoryName( fullPath );
       }
       catch ( System.ArgumentException )
       {
       }
-      m_FileWatcher.Filter = System.IO.Path.GetFileName( fullPath );
+      m_FileWatcher.Filter = GR.Path.GetFileName( fullPath );
       m_FileWatcher.NotifyFilter = System.IO.NotifyFilters.LastWrite;
       m_FileWatcher.Changed += new System.IO.FileSystemEventHandler( m_FileWatcher_Changed );
     }

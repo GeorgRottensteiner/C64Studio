@@ -437,7 +437,7 @@ namespace RetroDevStudio
         {
           basePath = basePath.Substring( 7 );
         }
-        string fontPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( basePath ), @"C64_Pro_Mono_v1.0-STYLE.ttf" );
+        string fontPath = GR.Path.Append( GR.Path.GetDirectoryName( basePath ), @"C64_Pro_Mono_v1.0-STYLE.ttf" );
 
         m_FontC64.AddFontFile( fontPath );
       }
@@ -996,8 +996,8 @@ namespace RetroDevStudio
       }
 
       newProject.Settings.Filename  = saveDlg.FileName;
-      newProject.Settings.Name      = System.IO.Path.GetFileNameWithoutExtension( saveDlg.FileName );
-      newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( saveDlg.FileName );
+      newProject.Settings.Name      = GR.Path.GetFileNameWithoutExtension( saveDlg.FileName );
+      newProject.Settings.BasePath  = GR.Path.GetDirectoryName( saveDlg.FileName );
 
       if ( !newProject.Save( saveDlg.FileName ) )
       {
@@ -1932,7 +1932,7 @@ namespace RetroDevStudio
     bool CloseAllProjects()
     {
       if ( ( StudioCore.Navigating.Solution == null )
-      ||   ( !System.IO.Directory.Exists( System.IO.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) ) )
+      ||   ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) ) )
       {
         // we have no solution, or the solution was deleted externally
         return true;
@@ -1967,7 +1967,7 @@ namespace RetroDevStudio
 
     void menuMRUItem_Click( object sender, EventArgs e )
     {
-      string extension = System.IO.Path.GetExtension(sender.ToString()).ToUpper();
+      string extension = GR.Path.GetExtension(sender.ToString()).ToUpper();
 
       if ( extension == ".C64" )
       {
@@ -2140,9 +2140,9 @@ namespace RetroDevStudio
         return Mask;
       }
       string result = Mask.Replace( "$(Filename)", fullDocPath );
-      result = result.Replace( "$(File)", System.IO.Path.GetFileName( fullDocPath ) );
-      result = result.Replace( "$(FilenameWithoutExtension)", System.IO.Path.GetFileNameWithoutExtension( fullDocPath ) );
-      result = result.Replace( "$(FilePath)", GR.Path.RemoveFileSpec( fullDocPath ) );
+      result = result.Replace( "$(File)", GR.Path.GetFileName( fullDocPath ) );
+      result = result.Replace( "$(FilenameWithoutExtension)", GR.Path.GetFileNameWithoutExtension( fullDocPath ) );
+      result = result.Replace( "$(FilePath)", GR.Path.GetDirectoryName( fullDocPath ) );
 
       string targetFilename = "";
 
@@ -2169,22 +2169,22 @@ namespace RetroDevStudio
       string targetPath = "";
       if ( !string.IsNullOrEmpty( targetFilename ) )
       {
-        targetPath = System.IO.Path.GetDirectoryName( targetFilename );
+        targetPath = GR.Path.GetDirectoryName( targetFilename );
       }
       if ( string.IsNullOrEmpty( targetPath ) )
       {
         targetPath = Document.Project.Settings.BasePath;
       }
-      targetFilename = System.IO.Path.GetFileName( targetFilename );
-      string targetFilenameWithoutPath = System.IO.Path.GetFileName( targetFilename );
-      string targetFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension( targetFilename );
+      targetFilename = GR.Path.GetFileName( targetFilename );
+      string targetFilenameWithoutPath = GR.Path.GetFileName( targetFilename );
+      string targetFilenameWithoutExtension = GR.Path.GetFileNameWithoutExtension( targetFilename );
       string fullTargetFilename = GR.Path.Append( targetPath, targetFilename );
-      string fullTargetFilenameWithoutPath = System.IO.Path.GetFileName( fullTargetFilename );
-      string fullTargetFilenameWithoutExtension = System.IO.Path.Combine( targetPath, System.IO.Path.GetFileNameWithoutExtension( fullTargetFilename ) );
+      string fullTargetFilenameWithoutPath = GR.Path.GetFileName( fullTargetFilename );
+      string fullTargetFilenameWithoutExtension = GR.Path.Append( targetPath, GR.Path.GetFileNameWithoutExtension( fullTargetFilename ) );
 
-      string runFilename = System.IO.Path.GetFileName( fullTargetFilename );
+      string runFilename = GR.Path.GetFileName( fullTargetFilename );
       string fullRunFilename = fullTargetFilename;
-      string runPath = System.IO.Path.GetDirectoryName( fullRunFilename );
+      string runPath = GR.Path.GetDirectoryName( fullRunFilename );
 
       // alternative run file name
       if ( ( FillForRunning )
@@ -2204,18 +2204,18 @@ namespace RetroDevStudio
           {
             return "";
           }
-          if ( !System.IO.Path.IsPathRooted( fullRunFilename ) )
+          if ( !GR.Path.IsPathRooted( fullRunFilename ) )
           {
             // prepend build target path to filename
-            fullRunFilename = System.IO.Path.Combine( targetPath, fullRunFilename );
+            fullRunFilename = GR.Path.Append( targetPath, fullRunFilename );
           }
-          runPath = System.IO.Path.GetDirectoryName( fullRunFilename );
-          runFilename = System.IO.Path.GetFileName( fullRunFilename );
+          runPath = GR.Path.GetDirectoryName( fullRunFilename );
+          runFilename = GR.Path.GetFileName( fullRunFilename );
         }
       }
-      string runFilenameWithoutExtension      = System.IO.Path.GetFileNameWithoutExtension(runFilename);
-      string runFilenameWithoutPath           = System.IO.Path.GetFileName(runFilename);
-      string fullRunFilenameWithoutExtension  = System.IO.Path.GetFileNameWithoutExtension(fullRunFilename);
+      string runFilenameWithoutExtension      = GR.Path.GetFileNameWithoutExtension(runFilename);
+      string runFilenameWithoutPath           = GR.Path.GetFileName(runFilename);
+      string fullRunFilenameWithoutExtension  = GR.Path.GetFileNameWithoutExtension(fullRunFilename);
 
 
 
@@ -2237,10 +2237,10 @@ namespace RetroDevStudio
       if ( ( StudioCore.Navigating.Solution != null )
       &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
       {
-        result = result.Replace( "$(SolutionPath)", System.IO.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) );
+        result = result.Replace( "$(SolutionPath)", GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) );
       }
-      result = result.Replace( "$(MediaManager)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) + "\"" );
-      result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
+      result = result.Replace( "$(MediaManager)", "\"" + GR.Path.Append( Application.StartupPath, "mediamanager.exe" ) + "\"" );
+      result = result.Replace( "$(MediaTool)", "\"" + GR.Path.Append( Application.StartupPath, "mediatool.exe" ) + "\"" );
 
       int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
       {
@@ -2336,8 +2336,8 @@ namespace RetroDevStudio
         return false;
       }
 
-      var solutionDir = System.IO.Path.GetDirectoryName( SourceSolution.Filename );
-      var newSolutionDir = System.IO.Path.GetDirectoryName( newSolutionFilename );
+      var solutionDir = GR.Path.GetDirectoryName( SourceSolution.Filename );
+      var newSolutionDir = GR.Path.GetDirectoryName( newSolutionFilename );
 
       // clone all contained projects
       foreach ( var project in SourceSolution.Projects )
@@ -2354,10 +2354,10 @@ namespace RetroDevStudio
         if ( GR.Path.IsSubPath( solutionDir, project.Settings.BasePath ) )
         {
           var relativeProjectFilePath = GR.Path.RelativePathTo( solutionDir, true, project.Settings.BasePath, true );
-          var relativeProjectPath = GR.Path.RelativePathTo( solutionDir, true, System.IO.Path.GetDirectoryName( project.Settings.Filename ), true );
+          var relativeProjectPath = GR.Path.RelativePathTo( solutionDir, true, GR.Path.GetDirectoryName( project.Settings.Filename ), true );
 
           clonedProject.Settings.BasePath = GR.Path.Append( newSolutionDir, relativeProjectFilePath );
-          clonedProject.Settings.Filename = GR.Path.Append( GR.Path.Append( newSolutionDir, relativeProjectPath ), System.IO.Path.GetFileName( clonedProject.Settings.Filename ) );
+          clonedProject.Settings.Filename = GR.Path.Append( GR.Path.Append( newSolutionDir, relativeProjectPath ), GR.Path.GetFileName( clonedProject.Settings.Filename ) );
 
           if ( !System.IO.Directory.Exists( clonedProject.Settings.BasePath ) )
           {
@@ -2380,7 +2380,7 @@ namespace RetroDevStudio
               if ( !System.IO.File.Exists( targetElement.DocumentInfo.FullPath ) )
               {
                 // need subfolder?
-                string    targetSubfolder = System.IO.Path.GetDirectoryName( targetElement.DocumentInfo.FullPath );
+                string    targetSubfolder = GR.Path.GetDirectoryName( targetElement.DocumentInfo.FullPath );
                 if ( !System.IO.Directory.Exists( targetSubfolder ) )
                 {
                   System.IO.Directory.CreateDirectory( targetSubfolder );
@@ -3089,7 +3089,7 @@ namespace RetroDevStudio
       newProject.Core               = StudioCore;
       newProject.Settings.Name      = projectWizard.ProjectName;
       newProject.Settings.Filename  = projectWizard.ProjectFilename;
-      newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
+      newProject.Settings.BasePath  = GR.Path.GetDirectoryName( newProject.Settings.Filename );
       newProject.Node               = new DecentForms.TreeView.TreeNode();
       newProject.Node.Tag           = new SolutionExplorer.TreeItemInfo() { Project = newProject };
       newProject.Node.Text          = newProject.Settings.Name;
@@ -3341,7 +3341,7 @@ namespace RetroDevStudio
           return false;
         }
         ProjectToSave.Settings.Filename = saveDlg.FileName;
-        ProjectToSave.Settings.BasePath = System.IO.Path.GetDirectoryName( saveDlg.FileName );
+        ProjectToSave.Settings.BasePath = GR.Path.GetDirectoryName( saveDlg.FileName );
       }
       if ( !ProjectToSave.Save( ProjectToSave.Settings.Filename ) )
       {
@@ -3612,7 +3612,7 @@ namespace RetroDevStudio
       {
         return;
       }
-      string extension = System.IO.Path.GetExtension(openDlg.FileName).ToUpper();
+      string extension = GR.Path.GetExtension(openDlg.FileName).ToUpper();
       if ( extension == ".S64" )
       {
         OpenSolution( openDlg.FileName );
@@ -3745,7 +3745,7 @@ namespace RetroDevStudio
 
       // determine type by extension
       ProjectElement.ElementType type = ProjectElement.ElementType.ASM_SOURCE;
-      string newFileExtension = System.IO.Path.GetExtension( GR.Path.RelativePathTo( importFile, false, System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), true ).ToUpper() );
+      string newFileExtension = GR.Path.GetExtension( GR.Path.RelativePathTo( importFile, false, System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), true ).ToUpper() );
 
       if ( newFileExtension == ".C64" )
       {
@@ -3808,12 +3808,12 @@ namespace RetroDevStudio
         if ( doCopy == DialogResult.Yes )
         {
           // create a copy
-          string pureFileName = System.IO.Path.GetFileName( importFile );
-          string newFileName = System.IO.Path.Combine( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), pureFileName);
+          string pureFileName = GR.Path.GetFileName( importFile );
+          string newFileName = GR.Path.Append( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), pureFileName);
 
           while ( System.IO.File.Exists( newFileName ) )
           {
-            newFileName = System.IO.Path.Combine( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), System.IO.Path.GetFileNameWithoutExtension( newFileName ) + "_" + System.IO.Path.GetExtension( newFileName ) );
+            newFileName = GR.Path.Append( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), GR.Path.GetFileNameWithoutExtension( newFileName ) + "_" + System.IO.Path.GetExtension( newFileName ) );
           }
           try
           {
@@ -3833,7 +3833,7 @@ namespace RetroDevStudio
       ProjectElement element = ProjectToAddTo.CreateElement( type, parentNodeToInsertTo );
 
       string relativeFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), true, importFile, false );
-      element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
+      element.Name = GR.Path.GetFileNameWithoutExtension( relativeFilename );
       element.Filename = relativeFilename;
 
       while ( parentNodeToInsertTo.Level >= 1 )
@@ -3990,11 +3990,11 @@ namespace RetroDevStudio
       if ( StudioCore.Settings.StudioAppMode == AppMode.UNDECIDED )
       {
         // decide by checking for existance of settings file
-        var settingsPath = System.IO.Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "GR Games" );
-        settingsPath = System.IO.Path.Combine( settingsPath, "C64Studio" );
-        settingsPath = System.IO.Path.Combine( settingsPath, "1.0.0.0" );
-        settingsPath = System.IO.Path.Combine( settingsPath, "settings.dat" );
-        if ( System.IO.File.Exists( System.IO.Path.Combine( Application.StartupPath, "settings.dat" ) ) )
+        var settingsPath = GR.Path.Append( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "GR Games" );
+        settingsPath = GR.Path.Append( settingsPath, "C64Studio" );
+        settingsPath = GR.Path.Append( settingsPath, "1.0.0.0" );
+        settingsPath = GR.Path.Append( settingsPath, "settings.dat" );
+        if ( System.IO.File.Exists( GR.Path.Append( Application.StartupPath, "settings.dat" ) ) )
         {
           StudioCore.Settings.StudioAppMode = AppMode.PORTABLE_APP;
         }
@@ -4013,24 +4013,24 @@ namespace RetroDevStudio
       // we do NOT use Application.UserAppDataPath as that creates a folder with the real version number which is not what we want
       // for backwards compatiblity reasons we're stuck with 1.0.0.0 here
       string    userAppDataPath = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
-      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "GR Games" );
-      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "C64Studio" );
-      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "1.0.0.0" );
+      userAppDataPath = GR.Path.Append( userAppDataPath, "GR Games" );
+      userAppDataPath = GR.Path.Append( userAppDataPath, "C64Studio" );
+      userAppDataPath = GR.Path.Append( userAppDataPath, "1.0.0.0" );
 
       try
       {
         if ( StudioCore.Settings.StudioAppMode == AppMode.PORTABLE_APP )
         {
           // return local path
-          return System.IO.Path.Combine( Application.StartupPath, "settings.dat" );
+          return GR.Path.Append( Application.StartupPath, "settings.dat" );
         }
         // return clean user app data path
-        return System.IO.Path.Combine( userAppDataPath, "settings.dat" );
+        return GR.Path.Append( userAppDataPath, "settings.dat" );
       }
       catch ( Exception )
       {
         // fallback to clean path
-        return System.IO.Path.Combine( userAppDataPath, "settings.dat" );
+        return GR.Path.Append( userAppDataPath, "settings.dat" );
       }
     }
 
@@ -5805,7 +5805,7 @@ namespace RetroDevStudio
 
         if ( ( Document.Project != null )
         &&   ( !string.IsNullOrEmpty( Document.Project.Settings.MainDocument ) )
-        &&   ( System.IO.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
+        &&   ( GR.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
         {
           // give all other files the same keywords!
           // from source info
@@ -6212,7 +6212,7 @@ namespace RetroDevStudio
     {
       BaseDocument document = null;
 
-      string extension = System.IO.Path.GetExtension( Filename ).ToUpper();
+      string extension = GR.Path.GetExtension( Filename ).ToUpper();
       if ( extension == ".C64" )
       {
         OpenProject( Filename );
@@ -6327,7 +6327,7 @@ namespace RetroDevStudio
       if ( openDirectFile )
       {
         document.SetDocumentFilename( Filename );
-        document.Text = System.IO.Path.GetFileName( Filename );
+        document.Text = GR.Path.GetFileName( Filename );
         if ( !document.LoadDocument() )
         {
           document.ToolTipText = "";
@@ -6530,11 +6530,11 @@ namespace RetroDevStudio
 
       if ( ParentProject != null )
       {
-        string localizedFilename = GR.Path.RelativePathTo(System.IO.Path.GetFullPath(ParentProject.Settings.BasePath), true, newFilename, false);
+        string localizedFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath(ParentProject.Settings.BasePath), true, newFilename, false);
 
         ProjectElement el = CreateNewElement(Type, Description, ParentProject, ParentNode);
         el.Filename = localizedFilename;
-        el.Node.Text = System.IO.Path.GetFileName( localizedFilename );
+        el.Node.Text = GR.Path.GetFileName( localizedFilename );
         el.Document.SetDocumentFilename( localizedFilename );
         el.Document.Save( BaseDocument.SaveMethod.SAVE );
       }
@@ -7159,7 +7159,7 @@ namespace RetroDevStudio
 
       try
       {
-        System.IO.Directory.CreateDirectory( System.IO.Path.GetDirectoryName( solWizard.ProjectFilename ) );
+        System.IO.Directory.CreateDirectory( GR.Path.GetDirectoryName( solWizard.ProjectFilename ) );
       }
       catch ( System.Exception ex )
       {
@@ -7169,9 +7169,9 @@ namespace RetroDevStudio
 
       Project newProject = new Project();
       newProject.Core = StudioCore;
-      newProject.Settings.Name = System.IO.Path.GetFileNameWithoutExtension( solWizard.ProjectFilename );
+      newProject.Settings.Name = GR.Path.GetFileNameWithoutExtension( solWizard.ProjectFilename );
       newProject.Settings.Filename = solWizard.ProjectFilename;
-      newProject.Settings.BasePath = System.IO.Path.GetDirectoryName( newProject.Settings.Filename );
+      newProject.Settings.BasePath = GR.Path.GetDirectoryName( newProject.Settings.Filename );
       newProject.Node = new DecentForms.TreeView.TreeNode();
       newProject.Node.Tag = new SolutionExplorer.TreeItemInfo() { Project = newProject };
       newProject.Node.Text = newProject.Settings.Name;
@@ -7203,8 +7203,8 @@ namespace RetroDevStudio
         {
           if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
           {
-            newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( newProject.Settings.Filename ) );
-            newProject.SourceControl.AddFileToRepository( System.IO.Path.GetFileName( StudioCore.Navigating.Solution.Filename ) );
+            newProject.SourceControl.AddFileToRepository( GR.Path.GetFileName( newProject.Settings.Filename ) );
+            newProject.SourceControl.AddFileToRepository( GR.Path.GetFileName( StudioCore.Navigating.Solution.Filename ) );
             newProject.SourceControl.StageAllChanges();
             newProject.SourceControl.CommitAllChanges( StudioCore.Settings.SourceControlInfo.CommitAuthor, StudioCore.Settings.SourceControlInfo.CommitAuthorEmail, "Initial" );
           }

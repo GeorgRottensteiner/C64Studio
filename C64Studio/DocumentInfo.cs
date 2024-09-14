@@ -141,7 +141,7 @@ namespace RetroDevStudio
         {
           return DocumentFilename;
         }
-        if ( System.IO.Path.IsPathRooted( DocumentFilename ) )
+        if ( GR.Path.IsPathRooted( DocumentFilename ) )
         {
           return DocumentFilename;
         }
@@ -160,7 +160,7 @@ namespace RetroDevStudio
         {
           return DocumentFilename;
         }
-        if ( System.IO.Path.IsPathRooted( DocumentFilename ) )
+        if ( GR.Path.IsPathRooted( DocumentFilename ) )
         {
           return DocumentFilename;
         }

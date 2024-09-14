@@ -229,9 +229,9 @@ namespace RetroDevStudio.Formats
       // version
       projectFile.AppendU32( 1 );
       // Name
-      projectFile.AppendString( System.IO.Path.GetFileNameWithoutExtension( Name ) );
+      projectFile.AppendString( GR.Path.GetFileNameWithoutExtension( Name ) );
       // charset Filename
-      projectFile.AppendString( System.IO.Path.GetFileNameWithoutExtension( Name ) );
+      projectFile.AppendString( GR.Path.GetFileNameWithoutExtension( Name ) );
 
       for ( int i = 0; i < 256; ++i )
       {

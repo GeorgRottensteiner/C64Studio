@@ -118,7 +118,7 @@ namespace RetroDevStudio.Parser
 
       if ( DoLogSourceInfo )
       {
-        string subFilenameFull2 = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+        string subFilenameFull2 = GR.Path.Append( GR.Path.GetDirectoryName( ParentFilename ), subFilename );
         if ( !OrigLines.ContainsKey( subFilenameFull2 ) )
         {
           OrigLines.Add( subFilenameFull2, new string[Lines.Length] );
@@ -151,7 +151,7 @@ namespace RetroDevStudio.Parser
       if ( ( resolving == PathResolving.FROM_FILE )
       ||   ( resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
       {
-        subFilenameFull = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+        subFilenameFull = BuildFullPath( GR.Path.GetDirectoryName( ParentFilename ), subFilename );
         foundAFile = System.IO.File.Exists( subFilenameFull );
       }
 

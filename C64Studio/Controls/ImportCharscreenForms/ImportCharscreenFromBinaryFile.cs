@@ -36,7 +36,7 @@ namespace RetroDevStudio.Controls
 
       if ( Editor.OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSCREEN_SUPPORTED_FILES + Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
       {
-        if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
+        if ( GR.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
           // a charpad project file
           GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
@@ -151,7 +151,7 @@ namespace RetroDevStudio.Controls
                           map.TileSpacingY * map.Tiles.Height,
                           charData, colorData, CharScreen.CharSet );
         }
-        else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".C" )
+        else if ( GR.Path.GetExtension( filename ).ToUpper() == ".C" )
         {
           string cData = GR.IO.File.ReadAllText( filename );
           if ( !string.IsNullOrEmpty( cData ) )
@@ -243,6 +243,11 @@ namespace RetroDevStudio.Controls
         else
         {
           GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
+
+          if ( GR.Path.GetExtension( filename ).ToUpper() == ".PRG" )
+          {
+            bytesToSkip += 2;
+          }
 
           if ( ( bytesToSkip > 0 )
           &&   ( bytesToSkip < data.Length ) )

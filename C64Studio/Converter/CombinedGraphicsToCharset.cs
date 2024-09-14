@@ -387,7 +387,7 @@ namespace RetroDevStudio.Converter
             charSet.Append( charInfo.Tile.Data );
           }
         }
-        GR.IO.File.WriteAllBytes( System.IO.Path.Combine( BasePath, "combined.chr" ), charSet );
+        GR.IO.File.WriteAllBytes( GR.Path.Append( BasePath, "combined.chr" ), charSet );
 
         // screens
         int   charIndexOffset = 0;
@@ -430,9 +430,9 @@ namespace RetroDevStudio.Converter
             screen.CharSet.Characters[(int)c].Tile.CustomColor = 9;
           }
 
-          string    origFile = System.IO.Path.GetFileNameWithoutExtension( ProjectFiles[projectIndex] );
+          string    origFile = GR.Path.GetFileNameWithoutExtension( ProjectFiles[projectIndex] );
 
-          GR.IO.File.WriteAllBytes( System.IO.Path.Combine( BasePath, origFile + ".charscreen" ), screen.SaveToBuffer() );
+          GR.IO.File.WriteAllBytes( GR.Path.Append( BasePath, origFile + ".charscreen" ), screen.SaveToBuffer() );
 
           ++projectIndex;
           charIndexOffset += blockWidth * blockHeight;

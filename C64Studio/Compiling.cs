@@ -58,7 +58,7 @@ namespace RetroDevStudio
         {
           basePath = basePath.Substring( 8 );
         }
-        string dialectFilePath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( basePath ), "BASIC Dialects" );
+        string dialectFilePath = GR.Path.Append( GR.Path.GetDirectoryName( basePath ), "BASIC Dialects" );
 
         var files = System.IO.Directory.GetFiles( dialectFilePath, "*.txt" );
 
@@ -200,7 +200,7 @@ namespace RetroDevStudio
           }
         }
       }
-      dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
+      dialect.Name = GR.Path.GetFileNameWithoutExtension( File );
       BASICDialects.Add( dialect.Name, dialect );
 
       return dialect;
@@ -210,7 +210,7 @@ namespace RetroDevStudio
 
     private string BuildFullPath( string ParentPath, string SubFilename )
     {
-      if ( System.IO.Path.IsPathRooted( SubFilename ) )
+      if ( GR.Path.IsPathRooted( SubFilename ) )
       {
         return SubFilename;
       }

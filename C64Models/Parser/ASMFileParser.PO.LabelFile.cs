@@ -75,7 +75,7 @@ namespace RetroDevStudio.Parser
       // use path of source file
       if ( !GR.Path.IsPathRooted( fileName ) ) 
       {
-        fileName = GR.Path.Append( System.IO.Path.GetDirectoryName( _ParseContext.ParentFilename ), fileName );
+        fileName = GR.Path.Append( GR.Path.GetDirectoryName( _ParseContext.ParentFilename ), fileName );
       }
       m_ASMFileInfo.LabelDumpSettings.Filename = fileName;
 

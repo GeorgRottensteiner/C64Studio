@@ -4,32 +4,18 @@ namespace GR
 {
   public static class Path
   {
-    public static string PotentialPathSeparators = "\\/";
+    public const string PotentialPathSeparators = "\\/";
 
 
 
-    public static bool IsSeparator( char Char )
-    {
-      return IsSeparator( Char, PotentialPathSeparators );
-    }
-
-
-
-    public static bool IsSeparator( char Char, string Separator )
+    public static bool IsSeparator( char Char, string Separator = PotentialPathSeparators )
     {
       return ( Separator.IndexOf( Char ) != -1 );
     }
 
 
 
-    public static string AddBackslash( string Path )
-    {
-      return AddBackslash( Path, PotentialPathSeparators );
-    }
-
-
-
-    public static string AddBackslash( string Path, string Separators )
+    public static string AddSeparator( string Path, string Separators = PotentialPathSeparators )
     {
       if ( String.IsNullOrEmpty( Path ) )
       {
@@ -45,14 +31,7 @@ namespace GR
 
 
 
-    public static string RemoveBackslash( string Path )
-    {
-      return RemoveBackslash( Path, PotentialPathSeparators );
-    }
-
-
-
-    public static string RemoveBackslash( string Path, string Separators )
+    public static string RemoveSeparator( string Path, string Separators = PotentialPathSeparators )
     {
       if ( String.IsNullOrEmpty( Path ) )
       {
@@ -68,14 +47,7 @@ namespace GR
 
 
 
-    public static string Append( string Path, string SecondPath )
-    {
-      return Append( Path, SecondPath, PotentialPathSeparators );
-    }
-
-
-
-    public static string Append( string Path, string SecondPath, string Separators )
+    public static string Append( string Path, string SecondPath, string Separators = PotentialPathSeparators )
     {
       string       result = Path;
 
@@ -99,20 +71,8 @@ namespace GR
 
 
 
-    public static string Normalize( string Path, bool IsDir )
+    public static string Normalize( string Path, bool IsDir, string Separators = PotentialPathSeparators )
     {
-      return Normalize( Path, IsDir, PotentialPathSeparators );
-    }
-
-
-
-    public static string Normalize( string Path, bool IsDir, string Separators )
-    {
-      if ( string.IsNullOrEmpty( Path ) )
-      {
-        return Path;
-      }
-
       string result = "";
 
       int pos = Path.Length - 1;
@@ -214,14 +174,7 @@ namespace GR
 
 
 
-    public static int FindNextSeparator( string Path, int Offset )
-    {
-      return FindNextSeparator( Path, Offset, PotentialPathSeparators );
-    }
-
-
-
-    public static int FindNextSeparator( string Path, int Offset, string Separator )
+    public static int FindNextSeparator( string Path, int Offset, string Separator = PotentialPathSeparators )
     {
       while ( Offset < Path.Length )
       {
@@ -236,14 +189,21 @@ namespace GR
 
 
 
-    public static string RemoveFileSpec( string Path )
+    public static string ParentDirectory( string OrigPath, string Separators = PotentialPathSeparators )
     {
-      return RemoveFileSpec( Path, PotentialPathSeparators );
+      string    cleanEnd = RemoveSeparator( OrigPath, Separators );
+
+      int     prevPos = cleanEnd.LastIndexOfAny( Separators.ToCharArray() );
+      if ( prevPos == -1 )
+      {
+        return "";
+      }
+      return cleanEnd.Substring( 0, prevPos );
     }
 
 
 
-    public static string RemoveFileSpec( string Path, string Separators )
+    public static string GetDirectoryName( string Path, string Separators = PotentialPathSeparators )
     {
       string            result = Path;
 
@@ -262,70 +222,62 @@ namespace GR
 
 
 
-    public static string CommonPrefix( string Path1, string Path2 )
-    {
-      return CommonPrefix( Path1, Path2, PotentialPathSeparators );
-    }
-
-
-
-    public static string CommonPrefix( string PathArg1, string PathArg2, string Separator )
+    public static string CommonPrefix( string PathArg1, string PathArg2, string Separators = PotentialPathSeparators )
     {
       if ( ( String.IsNullOrEmpty( PathArg1 ) )
       ||   ( String.IsNullOrEmpty( PathArg2 ) ) )
       {
         return "";
       }
+      string    path1 = Normalize( PathArg1, false );
+      string    path2 = Normalize( PathArg2, false );
 
-      string Path1 = Normalize( PathArg1, false );
-      string Path2 = Normalize( PathArg2, false );
-
-      if ( Path1.ToUpper() == Path2.ToUpper() )
+      if ( path1.ToUpper() == path2.ToUpper() )
       {
-        return Path1;
+        return RemoveSeparator( path1, Separators );
       }
 
-      string     strResult = "";
+      string     result = "";
 
-      int   iLength = Path1.Length;
-      if ( Path2.Length > iLength )
+      int   length = path1.Length;
+      if ( path2.Length > length )
       {
-        iLength = Path2.Length;
+        length = path2.Length;
       }
 
-      int    BackslashPos1 = 0;
-      int    BackslashPos2 = 0;
+      int    backslashPos1 = 0;
+      int    backslashPos2 = 0;
       while ( true )
       {
-        if ( ( BackslashPos1 >= Path1.Length )
-        &&   ( BackslashPos2 >= Path2.Length ) )
+        if ( ( backslashPos1 >= path1.Length )
+        &&   ( backslashPos2 >= path2.Length ) )
         {
           break;
         }
-        int NewBackslashPos1 = FindNextSeparator( Path1, BackslashPos1, Separator );
-        int NewBackslashPos2 = FindNextSeparator( Path2, BackslashPos2, Separator );
+        int newBackslashPos1 = FindNextSeparator( path1, backslashPos1, Separators );
+        int newBackslashPos2 = FindNextSeparator( path2, backslashPos2, Separators );
 
-        if ( NewBackslashPos1 == -1 )
+        if ( newBackslashPos1 == -1 )
         {
-          NewBackslashPos1 = Path1.Length;
+          newBackslashPos1 = path1.Length;
         }
-        if ( NewBackslashPos2 == -1 )
+        if ( newBackslashPos2 == -1 )
         {
-          NewBackslashPos2 = Path2.Length;
+          newBackslashPos2 = path2.Length;
         }
-        if ( NewBackslashPos1 != NewBackslashPos2 )
+        if ( newBackslashPos1 != newBackslashPos2 )
         {
           // ab hier gibt es Unterschiede
           break;
         }
         bool            DifferenceFound = false;
         string          SubResult = "";
-        for ( int i = BackslashPos1; i < NewBackslashPos1; ++i )
+        for ( int i = backslashPos1; i < newBackslashPos1; ++i )
         {
-          if ( Char.ToUpper( Path1[i] ) != Char.ToUpper( Path2[i] ) )
+          if ( Char.ToUpper( path1[i] ) != Char.ToUpper( path2[i] ) )
           {
-            if ( ( IsSeparator( Path1[i], Separator ) )
-            &&   ( IsSeparator( Path2[i], Separator ) ) )
+            if ( ( IsSeparator( path1[i], Separators ) )
+            &&   ( IsSeparator( path2[i], Separators ) ) )
             {
             }
             else
@@ -334,35 +286,28 @@ namespace GR
               break;
             }
           }
-          SubResult += Path1[i];
+          SubResult += path1[i];
         }
         if ( !DifferenceFound )
         {
-          strResult += SubResult;
-          strResult += Separator[0];
+          result += SubResult;
+          result += Separators[0];
         }
-        BackslashPos1 = NewBackslashPos1 + 1;
-        BackslashPos2 = NewBackslashPos2 + 1;
+        backslashPos1 = newBackslashPos1 + 1;
+        backslashPos2 = newBackslashPos2 + 1;
       }
 
-      if ( strResult.Length > 3 )
+      if ( result.Length > 3 )
       {
         // bei mehr als nur Root soll kein Backslash dran sein
-        strResult = RemoveBackslash( strResult, Separator );
+        result = RemoveSeparator( result, Separators );
       }
-      return strResult;
+      return result;
     }
 
 
 
-    public static string RelativePathTo( string From, bool FromIsDir, string To, bool ToIsDir )
-    {
-      return RelativePathTo( From, FromIsDir, To, ToIsDir, PotentialPathSeparators );
-    }
-
-
-
-    public static string RelativePathTo( string From, bool FromIsDir, string To, bool ToIsDir, string Separators )
+    public static string RelativePathTo( string From, bool FromIsDir, string To, bool ToIsDir, string Separators = PotentialPathSeparators )
     {
       string     tempFrom = From;
       string     tempTo   = To;
@@ -375,15 +320,15 @@ namespace GR
 
       if ( !FromIsDir )
       {
-        tempFrom = RemoveFileSpec( tempFrom, Separators );
+        tempFrom = GetDirectoryName( tempFrom, Separators );
       }
       if ( !ToIsDir )
       {
-        tempTo = RemoveFileSpec( tempTo, Separators );
+        tempTo = GetDirectoryName( tempTo, Separators );
       }
 
-      tempFrom = AddBackslash( tempFrom );
-      tempTo = AddBackslash( tempTo );
+      tempFrom = AddSeparator( tempFrom );
+      tempTo = AddSeparator( tempTo );
 
 
       if ( Char.ToUpper( From[0] ) != Char.ToUpper( To[0] ) )
@@ -405,7 +350,7 @@ namespace GR
 
       while ( pos < tempFrom.Length )
       {
-        if ( Separators.IndexOf( tempFrom[pos] ) == -1 )
+        if ( !IsSeparator( tempFrom[pos], Separators ) )
         {
           int iPos2 = FindNextSeparator( tempFrom, pos + 1, Separators );
           if ( iPos2 != -1 )
@@ -426,48 +371,32 @@ namespace GR
 
       if ( common.Length < To.Length )
       {
-        result = Append( result, To.Substring( common.Length ) );
+        result = Append( result, To.Substring( common.Length ), Separators );
       }
 
       if ( ( result.Length > 0 )
-      &&   ( Separators.IndexOf( result[0] ) != -1 ) )
+      &&   ( IsSeparator( result[0], Separators ) ) )
       {
         result = result.Substring( 1 );
       }
-      result = RemoveBackslash( result, Separators );
+      result = RemoveSeparator( result, Separators );
 
       if ( ( ToIsDir )
       &&   ( !FromIsDir ) )
       {
         // re-append filename
-        result = Append( result, System.IO.Path.GetFileName( From ) );
+        result = Append( result, GetFileName( From, Separators ), Separators );
       }
       return result;
     }
 
 
 
-    public static bool IsPathEqual( string Path1, string Path2 )
+    public static bool IsPathEqual( string Path1, string Path2, string Separators = PotentialPathSeparators )
     {
-      return IsPathEqual( Path1, Path2, PotentialPathSeparators );
-    }
-
-
-
-    public static bool IsPathEqual( string Path1, string Path2, string Separators )
-    {
-      if ( ( string.IsNullOrEmpty( Path1 ) )
-      ||   ( string.IsNullOrEmpty( Path2 ) ) )
-      {
-        if ( Path1 == Path2 )
-        {
-          return true;
-        }
-        return false;
-      }
-      string commonPrefix = RemoveBackslash( CommonPrefix( Path1, Path2, Separators ) );
-      if ( ( commonPrefix.Length == RemoveBackslash( Normalize( Path1, false ) ).Length )
-      &&   ( commonPrefix.Length == RemoveBackslash( Normalize( Path2, false ) ).Length ) )
+      string commonPrefix = CommonPrefix( Path1, Path2, Separators );
+      if ( ( commonPrefix.Length == RemoveSeparator( Normalize( Path1, false, Separators ), Separators).Length )
+      &&   ( commonPrefix.Length == RemoveSeparator( Normalize( Path2, false, Separators ), Separators ).Length ) )
       {
         return true;
       }
@@ -476,31 +405,31 @@ namespace GR
 
 
 
-    public static bool IsSubPath( string ParentPath, string PathToCheck )
-    {
-      return IsSubPath( ParentPath, PathToCheck, PotentialPathSeparators );
-    }
-
-
-
-    public static bool IsSubPath( string ParentPath, string PathToCheck, string Separators )
+    public static bool IsSubPath( string ParentPath, string PathToCheck, string Separators = PotentialPathSeparators )
     {
       // if parent is longer no check is necessary
       if ( ParentPath.Length > PathToCheck.Length )
       {
         return false;
       }
-      string    normalizedParentPath = Normalize( ParentPath, false );
-      string    normalizedCheckPath = Normalize( PathToCheck,false );
+      string    normalizedParentPath = Normalize( ParentPath, false, Separators );
+      string    normalizedCheckPath = Normalize( PathToCheck, false, Separators );
 
-      return IsPathEqual( normalizedCheckPath.Substring( 0, normalizedParentPath.Length ), normalizedParentPath );
+      return IsPathEqual( normalizedCheckPath.Substring( 0, normalizedParentPath.Length ), normalizedParentPath, Separators );
     }
 
 
 
-    public static string RenameExtension( string OrigFilename, string NewExtension )
+    /// <summary>
+    /// renames the extension of a file while keeping directories and filename intact
+    /// </summary>
+    /// <param name="OrigFilename"></param>
+    /// <param name="NewExtension">new extensions, must start with a '.'</param>
+    /// <param name="Separators"></param>
+    /// <returns></returns>
+    public static string RenameExtension( string OrigFilename, string NewExtension, string Separators = PotentialPathSeparators )
     {
-      return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( OrigFilename ), System.IO.Path.GetFileNameWithoutExtension( OrigFilename ) + NewExtension );
+      return GetFileNameWithoutExtension( OrigFilename, Separators ) + NewExtension;
     }
 
 
@@ -511,49 +440,66 @@ namespace GR
     /// <param name="FullPath"></param>
     /// <param name="NewFilename"></param>
     /// <returns>full path with renamed file</returns>
-    public static string RenameFilenameWithoutExtension( string FullPath, string NewFilename )
+    public static string RenameFilenameWithoutExtension( string FullPath, string NewFilename, string Separators = PotentialPathSeparators )
     {
-      return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( FullPath ), NewFilename + System.IO.Path.GetExtension( FullPath ) );
+      return Append( GetDirectoryName( FullPath, Separators ), NewFilename + GetExtension( FullPath, Separators ), Separators );
     }
 
 
 
-    public static string RenameFile( string OriginalFullPath, string NewFileName )
+    public static string RenameFile( string OriginalFullPath, string NewFileName, string Separators = PotentialPathSeparators )
     {
-      return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( OriginalFullPath ), NewFileName );
+      return Append( GetDirectoryName( OriginalFullPath, Separators ), NewFileName, Separators );
     }
 
 
 
-    public static string ParentDirectory( string OrigPath )
+    public static string GetFileName( string Filename, string Separators = PotentialPathSeparators )
     {
-      return ParentDirectory( OrigPath, PotentialPathSeparators );
+      int               pos = Filename.Length;
+
+      while ( pos > 0 )
+      {
+        --pos;
+        if ( IsSeparator( Filename[pos], Separators ) )
+        {
+          return Filename.Substring( pos + 1 );
+        }
+      }
+      return Filename;
     }
 
 
 
-    public static string ParentDirectory( string OrigPath, string Separators )
+    public static string GetFileNameWithoutExtension( string Filename, string Separators = PotentialPathSeparators )
     {
-      string    cleanEnd = RemoveBackslash( OrigPath, Separators );
+      string    filenameWithExtension = GetFileName( Filename, Separators );
 
-      int     prevPos = cleanEnd.LastIndexOfAny( Separators.ToCharArray() );
-      if ( prevPos == -1 )
+      int   dotPos = filenameWithExtension.LastIndexOf( '.' );
+      if ( dotPos == -1 )
+      {
+        return filenameWithExtension;
+      }
+      return filenameWithExtension.Substring( 0, dotPos );
+    }
+
+
+
+    public static string GetExtension( string Filename, string Separators = PotentialPathSeparators )
+    {
+      string    filenameWithExtension = GetFileName( Filename, Separators );
+
+      int   dotPos = filenameWithExtension.LastIndexOf( '.' );
+      if ( dotPos == -1 )
       {
         return "";
       }
-      return cleanEnd.Substring( 0, prevPos );
+      return filenameWithExtension.Substring( dotPos );
     }
 
 
 
-    public static bool IsPathRooted( string Path )
-    {
-      return IsPathRooted( Path, PotentialPathSeparators );
-    }
-
-
-
-    public static bool IsPathRooted( string Path, string Separators )
+    public static bool IsPathRooted( string Path, string Separators = PotentialPathSeparators )
     {
       if ( string.IsNullOrEmpty( Path ) )
       {

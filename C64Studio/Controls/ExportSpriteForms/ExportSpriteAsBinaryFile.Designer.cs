@@ -32,6 +32,7 @@ namespace RetroDevStudio.Controls
       this.editPrefixLoadAddress = new System.Windows.Forms.TextBox();
       this.checkPrefixLoadAddress = new System.Windows.Forms.CheckBox();
       this.checkExportAddPadding = new System.Windows.Forms.CheckBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // editPrefixLoadAddress
@@ -63,10 +64,21 @@ namespace RetroDevStudio.Controls
       this.checkExportAddPadding.Text = "Add padding bytes";
       this.checkExportAddPadding.UseVisualStyleBackColor = true;
       // 
+      // label2
+      // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.Location = new System.Drawing.Point(3, 56);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(291, 45);
+      this.label2.TabIndex = 6;
+      this.label2.Text = "The prefix address is truncated to 16 bit";
+      // 
       // ExportSpriteAsBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.label2);
       this.Controls.Add(this.checkExportAddPadding);
       this.Controls.Add(this.editPrefixLoadAddress);
       this.Controls.Add(this.checkPrefixLoadAddress);
@@ -82,5 +94,6 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.TextBox editPrefixLoadAddress;
     private System.Windows.Forms.CheckBox checkPrefixLoadAddress;
     private System.Windows.Forms.CheckBox checkExportAddPadding;
+    private System.Windows.Forms.Label label2;
   }
 }

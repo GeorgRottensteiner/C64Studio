@@ -1826,7 +1826,7 @@ namespace RetroDevStudio
       // auto-add baselib path
       if ( ASMLibraryPaths.Count == 0 )
       {
-        ASMLibraryPaths.Add( System.IO.Path.Combine( Application.StartupPath, "baselib" ) );
+        ASMLibraryPaths.Add( GR.Path.Append( Application.StartupPath, "baselib" ) );
       }
 
       SanitizePalettes();

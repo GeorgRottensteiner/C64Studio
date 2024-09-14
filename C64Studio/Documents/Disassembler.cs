@@ -140,7 +140,7 @@ namespace RetroDevStudio.Documents
         {
           ushort    loadAddress = 0x801;
 
-          if ( System.IO.Path.GetExtension( openDialog.FileName ).ToUpper() == ".PRG" )
+          if ( GR.Path.GetExtension( openDialog.FileName ).ToUpper() == ".PRG" )
           {
             // treat first two bytes as load address
             loadAddress = data.UInt16At( 0 );
@@ -502,7 +502,7 @@ namespace RetroDevStudio.Documents
 
       try
       {
-        newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ) ?? "", System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ?? "" ) + ".asm";
+        newFilename = GR.Path.Append( GR.Path.GetDirectoryName( m_OpenedFilename ) ?? "", GR.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ?? "" ) + ".asm";
       }
       catch ( Exception )
       {
@@ -513,14 +513,14 @@ namespace RetroDevStudio.Documents
       {
         while ( Core.Navigating.Solution.FilenameUsed( newFilename ) )
         {
-          newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ) ?? "", System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ?? "" ) + "1.asm";
+          newFilename = GR.Path.Append( GR.Path.GetDirectoryName( m_OpenedFilename ) ?? "", GR.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ?? "" ) + "1.asm";
         }
       }
       SourceASMEx document = new SourceASMEx( Core );
 
       document.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
       document.Core = Core;
-      document.Text = System.IO.Path.GetFileName( newFilename );
+      document.Text = GR.Path.GetFileName( newFilename );
       document.FillContent( disassembly, false, false );
       document.Show( Core.MainForm.panelMain );
     }
@@ -654,7 +654,7 @@ namespace RetroDevStudio.Documents
       {
         ushort    loadAddress = 0x801;
 
-        if ( System.IO.Path.GetExtension( m_OpenedFilename ).ToUpper() == ".PRG" )
+        if ( GR.Path.GetExtension( m_OpenedFilename ).ToUpper() == ".PRG" )
         {
           // treat first two bytes as load address
           loadAddress = data.UInt16At( 0 );

@@ -63,7 +63,7 @@ namespace RetroDevStudio.Controls
             while ( ( DocInfo.Project != null )
             &&      ( DocInfo.Project.IsFilenameInUse( newFilename ) ) )
             {
-              newFilename = GR.Path.RenameFilenameWithoutExtension( newFilenameTemplate, System.IO.Path.GetFileNameWithoutExtension( newFilename ) + " " + curAttempt );
+              newFilename = GR.Path.RenameFilenameWithoutExtension( newFilenameTemplate, GR.Path.GetFileNameWithoutExtension( newFilename ) + " " + curAttempt );
               ++curAttempt;
             }
           }

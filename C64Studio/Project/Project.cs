@@ -342,14 +342,14 @@ namespace RetroDevStudio
       }
 
       Settings.Filename = Filename;
-      Settings.BasePath = System.IO.Path.GetDirectoryName( Settings.Filename );
+      Settings.BasePath = GR.Path.GetDirectoryName( Settings.Filename );
 
       if ( !Load( projectData, true ) )
       {
         return false;
       }
       Settings.Filename = Filename;
-      Settings.BasePath = System.IO.Path.GetDirectoryName( Settings.Filename );
+      Settings.BasePath = GR.Path.GetDirectoryName( Settings.Filename );
       return true;
     }
 
@@ -424,7 +424,7 @@ namespace RetroDevStudio
               }
               else
               {
-                element.Node.Text = System.IO.Path.GetFileName( element.Filename );
+                element.Node.Text = GR.Path.GetFileName( element.Filename );
               }
               if ( Core.Navigating.Solution.IsNodeExpanded( element ) )
               {
@@ -978,7 +978,7 @@ namespace RetroDevStudio
 
     public string FullPath( string ItemPath )
     {
-      if ( System.IO.Path.IsPathRooted( ItemPath ) )
+      if ( GR.Path.IsPathRooted( ItemPath ) )
       {
         return ItemPath;
       }

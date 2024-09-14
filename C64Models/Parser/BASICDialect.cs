@@ -305,7 +305,7 @@ namespace C64Models.BASIC
           }
         }
       }
-      dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
+      dialect.Name = GR.Path.GetFileNameWithoutExtension( File );
 
       return dialect;
     }

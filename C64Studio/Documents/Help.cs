@@ -27,7 +27,7 @@ namespace RetroDevStudio.Documents
 #else
         string    helpDocPath = @"Doc\main.html";
 #endif
-        string    fullPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), helpDocPath );
+        string    fullPath = GR.Path.Append( GR.Path.GetDirectoryName( Application.ExecutablePath ), helpDocPath );
 
         Core.AddToOutputLine( "Help Path: " + fullPath );
         webBrowser.Navigate( fullPath );
@@ -79,9 +79,9 @@ namespace RetroDevStudio.Documents
     {
       webBrowser.Zoom( Core.Settings.HelpZoomFactor );
 #if DEBUG
-      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/main.html" ) );
+      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/main.html" ) );
 #else
-      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/main.html" ) );
+      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/main.html" ) );
 #endif
     }
 
@@ -91,9 +91,9 @@ namespace RetroDevStudio.Documents
     {
       webBrowser.Zoom( Core.Settings.HelpZoomFactor );
 #if DEBUG
-      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/" + URL ) );
+      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/" + URL ) );
 #else
-      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/" + URL ) );
+      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/" + URL ) );
 #endif
     }
 

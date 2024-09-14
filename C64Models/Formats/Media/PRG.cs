@@ -82,7 +82,7 @@ namespace RetroDevStudio.Formats
       }
       LoadAddress = data.UInt16At( 0 );
       Data        = new GR.Memory.ByteBuffer( data );
-      this.Filename = Util.ToPETSCII( System.IO.Path.GetFileNameWithoutExtension( Filename ).ToUpper() );
+      this.Filename = Util.ToPETSCII( GR.Path.GetFileNameWithoutExtension( Filename ).ToUpper() );
       return true;
     }
 

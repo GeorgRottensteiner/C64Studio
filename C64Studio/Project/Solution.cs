@@ -65,7 +65,7 @@ namespace RetroDevStudio
       GR.IO.FileChunk   chunkSolutionInfo = new GR.IO.FileChunk( FileChunkConstants.SOLUTION_INFO );
       if ( string.IsNullOrEmpty( Name ) )
       {
-        Name = System.IO.Path.GetFileNameWithoutExtension( Filename );
+        Name = GR.Path.GetFileNameWithoutExtension( Filename );
       }
       chunkSolutionInfo.AppendString( Name );
       chunkSolutionInfo.AppendString( this.Filename );
@@ -121,13 +121,13 @@ namespace RetroDevStudio
               ActiveProject = memSubChunk.ReadString();
 
               Filename = FromFile;
-              Name = System.IO.Path.GetFileNameWithoutExtension( FromFile );
+              Name = GR.Path.GetFileNameWithoutExtension( FromFile );
               break;
             case FileChunkConstants.SOLUTION_PROJECT:
               {
                 string filename = memSubChunk.ReadString();
 
-                filename = GR.Path.Normalize( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Filename ), filename ), false );
+                filename = GR.Path.Normalize( GR.Path.Append( GR.Path.GetDirectoryName( Filename ), filename ), false );
 
                 Project project = MainForm.OpenProject( filename );
               }
@@ -367,7 +367,7 @@ namespace RetroDevStudio
               string  fullPath = depProject.FullPath( dependency.Filename );
               if ( GR.Path.IsPathEqual( fullPath, OldFilename ) )
               {
-                dependency.Filename = System.IO.Path.GetFileName( NewFilename );
+                dependency.Filename = GR.Path.GetFileName( NewFilename );
               }
             }
             foreach ( var perConfigSettings in element.Settings.Values )
@@ -376,18 +376,18 @@ namespace RetroDevStudio
               {
                 if ( ( Element != null )
                 &&   ( buildChainEntry.ProjectName == Element.DocumentInfo.Project.Settings.Name )
-                &&   ( System.IO.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == System.IO.Path.GetFileName( OldFilename ).ToUpper() ) )
+                &&   ( GR.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == GR.Path.GetFileName( OldFilename ).ToUpper() ) )
                 {
-                  buildChainEntry.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+                  buildChainEntry.DocumentFilename = GR.Path.GetFileName( NewFilename );
                 }
               }
               foreach ( var buildChainEntry in perConfigSettings.PostBuildChain.Entries )
               {
                 if ( ( Element != null )
                 &&   ( buildChainEntry.ProjectName == Element.DocumentInfo.Project.Settings.Name )
-                &&   ( System.IO.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == System.IO.Path.GetFileName( OldFilename ).ToUpper() ) )
+                &&   ( GR.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == GR.Path.GetFileName( OldFilename ).ToUpper() ) )
                 {
-                  buildChainEntry.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+                  buildChainEntry.DocumentFilename = GR.Path.GetFileName( NewFilename );
                 }
               }
             }
@@ -395,9 +395,9 @@ namespace RetroDevStudio
         }
 
         // set new values
-        Element.Name = System.IO.Path.GetFileNameWithoutExtension( NewFilename );
+        Element.Name = GR.Path.GetFileNameWithoutExtension( NewFilename );
 
-        string    newPath = GR.Path.RenameFile( Element.DocumentInfo.DocumentFilename, System.IO.Path.GetFileName( NewFilename ) );
+        string    newPath = GR.Path.RenameFile( Element.DocumentInfo.DocumentFilename, GR.Path.GetFileName( NewFilename ) );
 
         Element.DocumentInfo.DocumentFilename = newPath;
         if ( Element.Document != null )
@@ -408,7 +408,7 @@ namespace RetroDevStudio
         }
         else
         {
-          Element.Filename = System.IO.Path.GetFileName( NewFilename );
+          Element.Filename = GR.Path.GetFileName( NewFilename );
         }
       }
     }

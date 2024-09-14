@@ -46,7 +46,7 @@ namespace RetroDevStudio.Parser
           filenameToUse = filenameToUse.Substring( 1, filenameToUse.Length - 2 );
         }
 
-        if ( !System.IO.Path.IsPathRooted( filenameToUse ) )
+        if ( !GR.Path.IsPathRooted( filenameToUse ) )
         {
           filenameToUse = GR.Path.Append( m_DocBasePath, filenameToUse );
         }

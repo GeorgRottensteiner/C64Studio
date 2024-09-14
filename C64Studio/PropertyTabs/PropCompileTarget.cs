@@ -267,7 +267,7 @@ namespace RetroDevStudio
 
     private string BuildFullPath( string ParentPath, string SubFilename )
     {
-      if ( System.IO.Path.IsPathRooted( SubFilename ) )
+      if ( GR.Path.IsPathRooted( SubFilename ) )
       {
         return SubFilename;
       }

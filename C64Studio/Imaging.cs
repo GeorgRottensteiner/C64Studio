@@ -25,7 +25,7 @@ namespace RetroDevStudio
 
     internal GR.Image.FastImage LoadImageFromFile( string Filename )
     {
-      string                extension = System.IO.Path.GetExtension( Filename ).ToUpper();
+      string                extension = GR.Path.GetExtension( Filename ).ToUpper();
       GR.Image.FastImage    newImage;
 
       if ( ( extension == ".KOA" )

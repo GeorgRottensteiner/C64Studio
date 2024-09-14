@@ -67,7 +67,7 @@ namespace RetroDevStudio.Documents
         int       lineNumber = GR.Convert.ToI32( matchSearch.Groups[2].Value );
 
         if ( ( Core.MainForm.CurrentProject != null )
-        &&   ( !System.IO.Path.IsPathRooted( fileName ) ) )
+        &&   ( !GR.Path.IsPathRooted( fileName ) ) )
         {
           fileName = GR.Path.Normalize( GR.Path.Append( Core.MainForm.CurrentProject.Settings.BasePath, fileName ), false );
         }

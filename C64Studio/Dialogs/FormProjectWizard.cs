@@ -29,7 +29,7 @@ namespace RetroDevStudio.Dialogs
       string projectPath = Settings.DefaultProjectBasePath;
       if ( Core.Navigating.Solution != null )
       {
-        projectPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Core.Navigating.Solution.Filename ), ProjectName );
+        projectPath = GR.Path.RenameFile( Core.Navigating.Solution.Filename, ProjectName );
       }
       editBasePath.Text = projectPath;
 
@@ -51,7 +51,7 @@ namespace RetroDevStudio.Dialogs
       ProjectFilename                 = editBasePath.Text;
       Settings.DefaultProjectBasePath = ProjectFilename;
       ProjectPath                     = ProjectFilename;
-      ProjectFilename                 = System.IO.Path.Combine( ProjectFilename, ProjectName + ".c64" );
+      ProjectFilename                 = GR.Path.Append( ProjectFilename, ProjectName + ".c64" );
       CreateRepository                = checkCreateRepository.Checked;
 
       if ( global::SourceControl.Controller.IsFunctional )
@@ -86,7 +86,7 @@ namespace RetroDevStudio.Dialogs
       }
 
       string    finalPath = editBasePath.Text;
-      finalPath = System.IO.Path.Combine( finalPath, editProjectName.Text + ".c64" );
+      finalPath = GR.Path.Append( finalPath, editProjectName.Text + ".c64" );
 
       if ( System.IO.File.Exists( finalPath ) )
       {
@@ -98,7 +98,7 @@ namespace RetroDevStudio.Dialogs
       labelProjectSummary.Text = "The project file will be created as " + finalPath + System.Environment.NewLine;
       if ( checkCreateRepository.Checked )
       {
-        var gitPath = System.IO.Path.Combine( finalPath, ".git" );
+        var gitPath = GR.Path.Append( finalPath, ".git" );
         labelProjectSummary.Text += $"A repository will be created in {gitPath}.";
       }
       else
@@ -134,7 +134,7 @@ namespace RetroDevStudio.Dialogs
         string projectPath = Settings.DefaultProjectBasePath;
         if ( Core.Navigating.Solution != null )
         {
-          projectPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Core.Navigating.Solution.Filename ), editProjectName.Text );
+          projectPath = GR.Path.RenameFile( Core.Navigating.Solution.Filename, editProjectName.Text );
         }
         editBasePath.Text = projectPath;
       }

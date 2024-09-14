@@ -35,7 +35,7 @@ namespace RetroDevStudio.Parser
 
       var filename = cleanedParms[0][0].Content;
       string    includeFile = filename.Substring( 1, filename.Length - 2 );
-      string    subFilenameFull   = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_CompileConfig.InputFile ), includeFile );
+      string    subFilenameFull   = GR.Path.RenameFile( m_CompileConfig.InputFile, includeFile );
       if ( ( string.IsNullOrEmpty( includeFile ) )
       ||   ( !System.IO.File.Exists( subFilenameFull ) ) )
       {

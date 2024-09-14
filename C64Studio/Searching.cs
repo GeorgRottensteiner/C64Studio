@@ -47,7 +47,7 @@ namespace RetroDevStudio
     internal string GetDocumentInfoText( DocumentInfo DocInfo )
     {
       string elementPath = "";
-      if ( System.IO.Path.IsPathRooted( DocInfo.FullPath ) )
+      if ( GR.Path.IsPathRooted( DocInfo.FullPath ) )
       {
         elementPath = DocInfo.FullPath;
       }

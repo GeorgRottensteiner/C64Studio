@@ -35,7 +35,7 @@ namespace RetroDevStudio.Controls
 
       if ( Editor.OpenFile( "Open charset", RetroDevStudio.Types.Constants.FILEFILTER_CHARSET + RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
-        if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
+        if ( GR.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
         {
           // a project
           GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
@@ -60,7 +60,7 @@ namespace RetroDevStudio.Controls
           Editor.SetModified();
           return true;
         }
-        else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
+        else if ( GR.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
           // a charpad project file
           GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
@@ -93,6 +93,11 @@ namespace RetroDevStudio.Controls
 
         // treat as binary .chr file
         GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( filename );
+
+        if ( GR.Path.GetExtension( filename ).ToUpper() == ".PRG" )
+        {
+          bytesToSkip += 2;
+        }
 
         if ( ( bytesToSkip > 0 )
         &&   ( bytesToSkip < charData.Length ) )

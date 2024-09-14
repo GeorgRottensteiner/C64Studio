@@ -2128,7 +2128,7 @@ namespace RetroDevStudio.Documents
       foreach ( var libFile in Core.Settings.ASMLibraryPaths )
       {
         string    fullBasePath = libFile;
-        if ( !System.IO.Path.IsPathRooted( libFile ) )
+        if ( !GR.Path.IsPathRooted( libFile ) )
         {
 #if DEBUG
           fullBasePath = System.IO.Path.GetFullPath( "../../" + libFile );
@@ -2136,9 +2136,9 @@ namespace RetroDevStudio.Documents
           fullBasePath = System.IO.Path.GetFullPath( libFile );
 #endif
         }
-        if ( System.IO.File.Exists( System.IO.Path.Combine( fullBasePath, SubFilename ) ) )
+        if ( System.IO.File.Exists( GR.Path.Append( fullBasePath, SubFilename ) ) )
         {
-          return System.IO.Path.Combine( fullBasePath, SubFilename );
+          return GR.Path.Append( fullBasePath, SubFilename );
         }
       }
       return "";
@@ -2229,7 +2229,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save ASM File as";
       saveDlg.Filter = Core.MainForm.FilterString( Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_ALL );
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
@@ -2808,7 +2808,7 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      string docBasePath = GR.Path.RemoveFileSpec( DocumentInfo.FullPath );
+      string docBasePath = GR.Path.GetDirectoryName( DocumentInfo.FullPath );
       if ( ( string.IsNullOrEmpty( docBasePath ) )
       &&   ( DocumentInfo.Project != null ) )
       {
@@ -2816,7 +2816,7 @@ namespace RetroDevStudio.Documents
       }
       string            fullPath = Filename;
 
-      if ( !System.IO.Path.IsPathRooted( fullPath ) )
+      if ( !GR.Path.IsPathRooted( fullPath ) )
       {
         fullPath = GR.Path.Append( docBasePath, fullPath );
       }

@@ -208,7 +208,7 @@ namespace RetroDevStudio.Documents
           docToOpen = (DocumentInfo)listResults.Items[index].Tag;
         }
         else if ( ( m_ListProject != null )
-        &&        ( !System.IO.Path.IsPathRooted( fileName ) ) )
+        &&        ( !GR.Path.IsPathRooted( fileName ) ) )
         {
           fileName = GR.Path.Normalize( GR.Path.Append( m_ListProject.Settings.BasePath, fileName ), false );
           docToOpen = Core.Navigating.FindDocumentInfoByPath( fileName );

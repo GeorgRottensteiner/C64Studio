@@ -9,7 +9,7 @@ namespace MediaTool
   {
     internal GR.Image.MemoryImage LoadImageFromFile( string Filename )
     {
-      string                extension = System.IO.Path.GetExtension( Filename ).ToUpper();
+      string                extension = GR.Path.GetExtension( Filename ).ToUpper();
 
       if ( ( extension == ".KOA" )
       ||   ( extension == ".KLA" ) )

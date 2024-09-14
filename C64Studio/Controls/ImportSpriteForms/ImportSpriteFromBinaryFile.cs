@@ -35,6 +35,10 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
+      if ( GR.Path.GetExtension( filename ).ToUpper() == ".PRG" )
+      {
+        bytesToSkip += 2;
+      }
       return Editor.ImportSprites( filename, true, true, bytesToSkip, checkImportExpectPadding.Checked );
     }
 

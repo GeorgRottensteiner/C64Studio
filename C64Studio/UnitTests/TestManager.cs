@@ -35,7 +35,7 @@ namespace RetroDevStudio.UnitTests
     {
       Main.CloseSolution();
 
-      string[]  files = System.IO.Directory.GetFiles( System.IO.Path.Combine( System.Windows.Forms.Application.StartupPath, "../../../" + Solution ), "*.s64" );
+      string[]  files = System.IO.Directory.GetFiles( GR.Path.Append( System.Windows.Forms.Application.StartupPath, "../../../" + Solution ), "*.s64" );
       if ( files.Length < 1 )
       {
         return;

@@ -10,7 +10,7 @@ namespace RetroDevStudio.Types
   {
     public static bool IsMega65Family( ToolInfo Tool )
     {
-      string    uppercaseFilename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
 
       return uppercaseFilename.StartsWith( "XMEGA65" );
     }
@@ -19,7 +19,7 @@ namespace RetroDevStudio.Types
 
     public static bool IsVICEFamily( ToolInfo Tool )
     {
-      string    uppercaseFilename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
 
       return ( ( uppercaseFilename.StartsWith( "X64" ) )
             || ( uppercaseFilename.StartsWith( "XSCPU64" ) )
@@ -61,7 +61,7 @@ namespace RetroDevStudio.Types
       Tool.TrueDriveOffArguments  = "";
       Tool.PassLabelsToEmulator   = false;
 
-      string upperCaseFilename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string upperCaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
 
       if ( IsVICEFamily( Tool ) )
       {
@@ -164,7 +164,7 @@ namespace RetroDevStudio.Types
 
     public static LabelFileFormat LabelFormat( ToolInfo Tool )
     {
-      string upperCaseFilename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string upperCaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
 
       if ( upperCaseFilename.StartsWith( "C64DEBUGGER" ) )
       {
@@ -177,7 +177,7 @@ namespace RetroDevStudio.Types
 
     public static MachineType DetectMachineType( ToolInfo Tool )
     {
-      string    filename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string    filename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
 
       if ( ( filename.StartsWith( "X64" ) )
       ||   ( filename.StartsWith( "XSCPU64" ) )

@@ -115,7 +115,7 @@ namespace RetroDevStudio
         m_Filename = value;
         if ( Node != null )
         {
-          Node.Text = System.IO.Path.GetFileName( value );
+          Node.Text = GR.Path.GetFileName( value );
         }
       }
     }
@@ -143,7 +143,7 @@ namespace RetroDevStudio
       {
         foreach ( var dependency in localCopy2 )
         {
-          if ( string.Compare( dependency.Filename, System.IO.Path.GetFileName( OtherDocumentFile ), true ) == 0 )
+          if ( string.Compare( dependency.Filename, GR.Path.GetFileName( OtherDocumentFile ), true ) == 0 )
           {
             return true;
           }

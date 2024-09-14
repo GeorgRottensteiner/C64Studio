@@ -1208,7 +1208,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save Basic File as";
       saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_ALL );
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {
         return false;
@@ -1380,7 +1380,7 @@ namespace RetroDevStudio.Documents
 
     private void openFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      string docBasePath = GR.Path.RemoveFileSpec( DocumentFilename );
+      string docBasePath = GR.Path.GetDirectoryName( DocumentFilename );
       if ( DocumentInfo.Element != null )
       {
         docBasePath = DocumentInfo.Project.Settings.BasePath;

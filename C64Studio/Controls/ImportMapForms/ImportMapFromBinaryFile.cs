@@ -28,7 +28,7 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
-      if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
+      if ( GR.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
       {
         Editor.OpenExternalCharset( filename );
         if ( ( Editor.DocumentInfo.Project == null )
@@ -43,7 +43,7 @@ namespace RetroDevStudio.Controls
         Editor.SetModified();
         return true;
       }
-      else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
+      else if ( GR.Path.GetExtension( filename ).ToUpper() == ".CTM" )
       {
         // a charpad project file
         return Editor.OpenCharpadFile( filename );

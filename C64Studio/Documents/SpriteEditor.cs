@@ -604,7 +604,7 @@ namespace RetroDevStudio.Documents
 
       GR.IO.MemoryReader memIn = projectFile.MemoryReader();
 
-      if ( System.IO.Path.GetExtension( Filename ).ToUpper() == ".SPD" )
+      if ( GR.Path.GetExtension( Filename ).ToUpper() == ".SPD" )
       {
         var spritePad = new SpritePadProject();
 
@@ -654,7 +654,7 @@ namespace RetroDevStudio.Documents
         EnableFileWatcher();
         return true;
       }
-      else if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
+      else if ( GR.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
       {
         bool allFillBytesZero = true;
 
@@ -912,7 +912,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save Sprite Project as";
       saveDlg.Filter = "Sprite Projects|*.spriteproject|All Files|*.*";
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;

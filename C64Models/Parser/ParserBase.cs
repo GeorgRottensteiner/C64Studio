@@ -397,7 +397,7 @@ namespace RetroDevStudio.Parser
       }
 
       m_Filename = Filename;
-      m_DocBasePath = GR.Path.RemoveFileSpec( Filename );
+      m_DocBasePath = GR.Path.GetDirectoryName( Filename );
       if ( Filename.Length == 0 )
       {
         return false;

@@ -536,14 +536,14 @@ namespace RetroDevStudio.Tasks
             {
               Core.MainForm.AppState = Types.StudioState.NORMAL;
 
-              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
+              string pathLog = GR.Path.RenameExtension( m_DocumentToBuild.FullPath, ".dump" );
               Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
             }
             else if ( Core.MainForm.AppState == StudioState.BUILD_RELOCATION_FILE )
             {
               Core.MainForm.AppState = Types.StudioState.NORMAL;
 
-              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".loc" );
+              string pathLog = GR.Path.RenameExtension( m_DocumentToBuild.FullPath, ".loc" );
               Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
             }
             Core.MainForm.AppState = Types.StudioState.NORMAL;

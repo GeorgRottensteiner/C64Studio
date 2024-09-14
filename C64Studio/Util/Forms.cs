@@ -44,7 +44,7 @@ namespace RetroDevStudio
             }
           }
 
-          string    nameToUse = System.IO.Path.GetFileName( Event.Doc.DocumentFilename ) ?? "New File";
+          string    nameToUse = GR.Path.GetFileName( Event.Doc.DocumentFilename ) ?? "New File";
           ComboFiles.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
         }
       }

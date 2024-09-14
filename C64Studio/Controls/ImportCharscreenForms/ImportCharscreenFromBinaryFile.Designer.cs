@@ -31,6 +31,7 @@ namespace RetroDevStudio.Controls
     {
       this.label1 = new System.Windows.Forms.Label();
       this.editImportSkipBytes = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // label1
@@ -50,10 +51,22 @@ namespace RetroDevStudio.Controls
       this.editImportSkipBytes.TabIndex = 0;
       this.editImportSkipBytes.Text = "0";
       // 
+      // label2
+      // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.Location = new System.Drawing.Point(3, 26);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(291, 45);
+      this.label2.TabIndex = 6;
+      this.label2.Text = "If a file extension is \".prg\", 2 bytes are automatically skipped from the beginni" +
+    "ng";
+      // 
       // ImportCharscreenFromBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.editImportSkipBytes);
       this.Name = "ImportCharscreenFromBinaryFile";
@@ -67,5 +80,6 @@ namespace RetroDevStudio.Controls
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox editImportSkipBytes;
-    }
+    private System.Windows.Forms.Label label2;
+  }
 }

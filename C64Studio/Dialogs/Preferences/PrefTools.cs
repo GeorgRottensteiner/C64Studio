@@ -226,7 +226,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       dlgTool.Filter = FilterString( Types.Constants.FILEFILTER_EXECUTABLE + Types.Constants.FILEFILTER_ALL );
       if ( labelToolPath.Text.Length != 0 )
       {
-        dlgTool.InitialDirectory = System.IO.Path.GetDirectoryName( labelToolPath.Text );
+        dlgTool.InitialDirectory = GR.Path.GetDirectoryName( labelToolPath.Text );
       }
       if ( dlgTool.ShowDialog() == DialogResult.OK )
       {
@@ -488,7 +488,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       if ( labelToolPath.Text.Length != 0 )
       {
-        dlgTool.SelectedPath = System.IO.Path.GetDirectoryName( editWorkPath.Text );
+        dlgTool.SelectedPath = GR.Path.GetDirectoryName( editWorkPath.Text );
       }
       if ( dlgTool.ShowDialog() == DialogResult.OK )
       {

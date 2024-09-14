@@ -51,7 +51,7 @@ namespace RetroDevStudio.Parser
       int       includeMethodParamIndex = 1;
       string    labelPrefix = "";
 
-      subFilename = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+      subFilename = BuildFullPath( GR.Path.GetDirectoryName( ParentFilename ), subFilename );
 
       if ( !Binary )
       {
@@ -73,7 +73,7 @@ namespace RetroDevStudio.Parser
         paramTokens.RemoveAt( 1 );
       }
 
-      string    extension = System.IO.Path.GetExtension( subFilename ).ToUpper();
+      string    extension = GR.Path.GetExtension( subFilename ).ToUpper();
       if ( ( paramTokens[includeMethodParamIndex].Count != 1 )
       ||   ( paramTokens[includeMethodParamIndex][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
       {

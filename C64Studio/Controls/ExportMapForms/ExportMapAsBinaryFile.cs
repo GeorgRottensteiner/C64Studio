@@ -38,7 +38,7 @@ namespace RetroDevStudio.Controls
 
       saveDlg.Title = "Save data as";
       saveDlg.Filter = "Map Data|*.map|Binary Data|*.bin|All Files|*.*";
-      //saveDlg.InitialDirectory = System.IO.Path.GetDirectoryName( Info.Map.File
+      //saveDlg.InitialDirectory = GR.Path.GetDirectoryName( Info.Map.File
 
       if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {

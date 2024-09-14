@@ -1013,7 +1013,7 @@ namespace RetroDevStudio.Documents
 
       saveDlg.Title = "Save Graphic Screen Project as";
       saveDlg.Filter = "Graphic Screen Projects|*.graphicscreen|All Files|*.*";
-      saveDlg.FileName = System.IO.Path.GetFileName( PreviousFilename );
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
       if ( DocumentInfo.Project != null )
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
@@ -3377,7 +3377,7 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      string    extension = System.IO.Path.GetExtension( saveDlg.FileName ).ToUpper();
+      string    extension = GR.Path.GetExtension( saveDlg.FileName ).ToUpper();
 
       if ( ( extension == ".KLA" )
       ||   ( extension == ".KOA" ) )

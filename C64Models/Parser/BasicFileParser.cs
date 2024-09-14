@@ -459,12 +459,11 @@ namespace RetroDevStudio.Parser
     {
       try
       {
-        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".dump" );
-
         if ( Lines == null )
         {
           return;
         }
+        string pathLog = GR.Path.RenameExtension( SourceFile, ".dump" );
 
         using ( var writer = System.IO.File.CreateText( pathLog ) )
         {
@@ -2649,7 +2648,7 @@ namespace RetroDevStudio.Parser
       string    outputPureFilename = "HURZ";
       try
       {
-        outputPureFilename = System.IO.Path.GetFileNameWithoutExtension( Config.OutputFile );
+        outputPureFilename = GR.Path.GetFileNameWithoutExtension( Config.OutputFile );
       }
       catch ( Exception )
       {
@@ -2742,7 +2741,7 @@ namespace RetroDevStudio.Parser
           header.AppendU8( 0 );   
 
           // cartridge name
-          string name = System.IO.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
+          string name = GR.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
 
           if ( name.Length > 32 )
           {
@@ -4375,7 +4374,7 @@ namespace RetroDevStudio.Parser
         {
           var info = pair.Value;
           //Debug.Log( "Key " + pair.Key + ": Source from " + info.GlobalStartLine + ", " + info.LineCount + " lines, from file " + info.Filename + " at offset " + info.LocalStartLine );
-          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + System.IO.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
+          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + GR.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
           fullLines += info.LineCount;
         }
         Debug.Log( "Total " + fullLines + " lines" );

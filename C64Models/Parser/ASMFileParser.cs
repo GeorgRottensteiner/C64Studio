@@ -4836,7 +4836,7 @@ namespace RetroDevStudio.Parser
     
     private string BuildFullPath( string ParentPath, string SubFilename )
     {
-      if ( System.IO.Path.IsPathRooted( SubFilename ) )
+      if ( GR.Path.IsPathRooted( SubFilename ) )
       {
         return SubFilename;
       }
@@ -4850,7 +4850,7 @@ namespace RetroDevStudio.Parser
       foreach ( var libFile in m_CompileConfig.LibraryFiles )
       {
         string    fullBasePath = libFile;
-        if ( !System.IO.Path.IsPathRooted( libFile ) )
+        if ( !GR.Path.IsPathRooted( libFile ) )
         {
 #if DEBUG
           fullBasePath = System.IO.Path.GetFullPath( "../../" + libFile );
@@ -4858,9 +4858,9 @@ namespace RetroDevStudio.Parser
           fullBasePath = System.IO.Path.GetFullPath( libFile );
 #endif
         }
-        if ( System.IO.File.Exists( System.IO.Path.Combine( fullBasePath, subFilename ) ) )
+        if ( System.IO.File.Exists(GR.Path.Append( fullBasePath, subFilename ) ) )
         {
-          return System.IO.Path.Combine( fullBasePath, subFilename );
+          return GR.Path.Append( fullBasePath, subFilename );
         }
 
       }
@@ -10664,7 +10664,7 @@ namespace RetroDevStudio.Parser
         foreach ( var pair in m_ASMFileInfo.SourceInfo )
         {
           var info = pair.Value;
-          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + System.IO.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
+          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + GR.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
           fullLines += info.LineCount;
         }
         Debug.Log( "Total " + fullLines + " lines" );
@@ -10899,12 +10899,11 @@ namespace RetroDevStudio.Parser
     {
       try
       {
-        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".dump" );
-
         if ( Lines == null )
         {
           return;
         }
+        string pathLog = GR.Path.RenameExtension( SourceFile, ".dump" );
 
         using ( StreamWriter writer = File.CreateText( pathLog ) )
         {
@@ -11003,12 +11002,11 @@ namespace RetroDevStudio.Parser
     {
       try
       {
-        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".loc" );
-
         if ( Lines == null )
         {
           return;
         }
+        string pathLog = GR.Path.RenameExtension( SourceFile, ".loc" );
 
         using ( StreamWriter writer = File.CreateText( pathLog ) )
         {
@@ -11532,7 +11530,7 @@ namespace RetroDevStudio.Parser
       string    outputPureFilename = "HURZ";
       try
       {
-        outputPureFilename = System.IO.Path.GetFileNameWithoutExtension( Config.OutputFile );
+        outputPureFilename = GR.Path.GetFileNameWithoutExtension( Config.OutputFile );
       }
       catch ( Exception )
       {

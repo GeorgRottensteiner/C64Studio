@@ -32,6 +32,7 @@ namespace RetroDevStudio.Controls
       this.label1 = new System.Windows.Forms.Label();
       this.editImportSkipBytes = new System.Windows.Forms.TextBox();
       this.checkImportExpectPadding = new System.Windows.Forms.CheckBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // label1
@@ -61,11 +62,23 @@ namespace RetroDevStudio.Controls
       this.checkImportExpectPadding.Text = "Data has padding bytes";
       this.checkImportExpectPadding.UseVisualStyleBackColor = true;
       // 
+      // label2
+      // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.Location = new System.Drawing.Point(3, 64);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(291, 45);
+      this.label2.TabIndex = 0;
+      this.label2.Text = "If a file extension is \".prg\", 2 bytes are automatically skipped from the beginni" +
+    "ng";
+      // 
       // ImportSpriteFromBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.checkImportExpectPadding);
+      this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.editImportSkipBytes);
       this.Name = "ImportSpriteFromBinaryFile";
@@ -80,5 +93,6 @@ namespace RetroDevStudio.Controls
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox editImportSkipBytes;
     private System.Windows.Forms.CheckBox checkImportExpectPadding;
+    private System.Windows.Forms.Label label2;
   }
 }
