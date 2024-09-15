@@ -854,14 +854,14 @@ namespace RetroDevStudio.Documents
 
     protected override void OnSizeChanged( EventArgs e )
     {
-      Debug.Log( $"DebugMemory size changed {ClientSize}" );
+      //Debug.Log( $"DebugMemory size changed {ClientSize}" );
       base.OnSizeChanged( e );
     }
 
 
     protected override void OnLocationChanged( EventArgs e )
     {
-      Debug.Log( $"DebugMemory location changed {Location}" );
+      //Debug.Log( $"DebugMemory location changed {Location}" );
       base.OnLocationChanged( e );
     }
 

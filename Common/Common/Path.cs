@@ -189,9 +189,9 @@ namespace GR
 
 
 
-    public static string ParentDirectory( string OrigPath, string Separators = PotentialPathSeparators )
+    public static string GetDirectoryName( string Path, string Separators = PotentialPathSeparators )
     {
-      string    cleanEnd = RemoveSeparator( OrigPath, Separators );
+      string    cleanEnd = RemoveSeparator( Path, Separators );
 
       int     prevPos = cleanEnd.LastIndexOfAny( Separators.ToCharArray() );
       if ( prevPos == -1 )
@@ -199,25 +199,6 @@ namespace GR
         return "";
       }
       return cleanEnd.Substring( 0, prevPos );
-    }
-
-
-
-    public static string GetDirectoryName( string Path, string Separators = PotentialPathSeparators )
-    {
-      string            result = Path;
-
-      int               pos = result.Length;
-
-      while ( pos > 0 )
-      {
-        --pos;
-        if ( IsSeparator( result[pos], Separators ) )
-        {
-          return result.Substring( 0, pos );
-        }
-      }
-      return result;
     }
 
 

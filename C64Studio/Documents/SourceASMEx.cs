@@ -4363,12 +4363,15 @@ namespace RetroDevStudio.Documents
     {
       var result = new Map<string,List<Breakpoint>>();
 
-      var allBPs = new List<Breakpoint>();
-      foreach ( var entries in m_BreakPoints.Values )
+      if ( m_BreakPoints.Count > 0 )
       {
-        allBPs.AddRange( entries );
+        var allBPs = new List<Breakpoint>();
+        foreach ( var entries in m_BreakPoints.Values )
+        {
+          allBPs.AddRange( entries );
+        }
+        result.Add( DocumentInfo.RelativePath, allBPs );
       }
-      result.Add( DocumentInfo.RelativePath, allBPs );
       return result;
     }
 

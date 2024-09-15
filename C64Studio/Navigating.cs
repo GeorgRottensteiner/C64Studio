@@ -197,7 +197,7 @@ namespace RetroDevStudio
       string    solutionParentDir         = solutionFullDir.Substring( GR.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
       bool      solutionFolderIsRenamed   = ( solutionParentDir == Solution.Name );
       string    newSolutionFullDir        = GR.Path.GetDirectoryName( NewSolutionPath );
-      string    renamedSolutionFullDir    = GR.Path.Append( GR.Path.ParentDirectory( newSolutionFullDir ), newSolutionName );
+      string    renamedSolutionFullDir    = GR.Path.Append( GR.Path.GetDirectoryName( newSolutionFullDir ), newSolutionName );
       string    renamedSolutionFullPath   = GR.Path.Append( renamedSolutionFullDir,GR.Path.GetFileName( NewSolutionPath ) );
 
       try

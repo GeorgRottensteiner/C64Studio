@@ -446,14 +446,29 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.SHUTTING_DOWN:
           Core.Settings.DialogSettings.StoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
           break;
+        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+          {
+            listBreakpoints.Items.Clear();
+            if ( ( Event.Doc != null )
+            &&   ( Event.Doc.Project != null ) )
+            {
+              RefillBreakpointList( Event.Doc.Project.Settings.BreakPoints );
+            }
+            else if ( Core.Debugging.Debugger != null )
+            {
+              // projectless debugging, use watches from debugger
+              RefillBreakpointList( Core.Debugging.BreakPoints );
+            }
+            else if ( ( Event.Doc != null )
+            &&        ( Event.Doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+            {
+              // assembler without project
+              var mappedBreakpoints = ( (SourceASMEx)Event.Doc.BaseDoc ).MapBreakpoints();
+              RefillBreakpointList( mappedBreakpoints );
+            }
+          }
+          break;
       }
-    }
-
-
-
-    public void ClearAllBreakpointEntries()
-    {
-      listBreakpoints.Items.Clear();
     }
 
 

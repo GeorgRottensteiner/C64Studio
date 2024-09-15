@@ -1479,31 +1479,29 @@ namespace RetroDevStudio
           }
           else
           {
-            m_DebugBreakpoints.ClearAllBreakpointEntries();
             var project = Event.Doc.Project;
-            if ( project != null )
-            {
-              foreach ( var watch in project.Settings.WatchEntries )
-              {
-                m_DebugWatch.AddWatchEntry( watch );
-              }
-              m_DebugBreakpoints.RefillBreakpointList( project.Settings.BreakPoints );
-              StudioCore.Debugging.BreakPoints = project.Settings.BreakPoints;
-            }
-            else if ( StudioCore.Debugging.Debugger != null )
+            if ( StudioCore.Debugging.Debugger != null )
             {
               // projectless debugging, use watches from debugger
+              m_DebugWatch.ClearAllWatchEntries();
               foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
               {
                 m_DebugWatch.AddWatchEntry( watch );
               }
-              m_DebugBreakpoints.RefillBreakpointList( StudioCore.Debugging.BreakPoints );
+            }
+            else if ( project != null )
+            {
+              m_DebugWatch.ClearAllWatchEntries();
+              foreach ( var watch in project.Settings.WatchEntries )
+              {
+                m_DebugWatch.AddWatchEntry( watch );
+              }
+              StudioCore.Debugging.BreakPoints = project.Settings.BreakPoints;
             }
             else if ( Event.Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
             {
               // assembler without project
               var mappedBreakpoints = ( (SourceASMEx)Event.Doc.BaseDoc ).MapBreakpoints();
-              m_DebugBreakpoints.RefillBreakpointList( mappedBreakpoints );
               StudioCore.Debugging.BreakPoints = mappedBreakpoints;
             }
 
@@ -3385,10 +3383,6 @@ namespace RetroDevStudio
       }
       if ( m_CurrentProject != NewProject )
       {
-        if ( m_CurrentProject != null )
-        {
-          m_CurrentProject.Settings.BreakPoints = StudioCore.Debugging.BreakPoints;
-        }
         m_CurrentProject = NewProject;
         RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject ) );
         if ( mainToolConfig.ComboBox != null )
@@ -3964,11 +3958,6 @@ namespace RetroDevStudio
       StudioCore.Settings.MainWindowPlacement = GR.Forms.WindowStateManager.GeometryToString( this );
 
       m_FindReplace.ToSettings( StudioCore.Settings );
-
-      if ( m_CurrentProject != null )
-      {
-        m_CurrentProject.Settings.BreakPoints = StudioCore.Debugging.BreakPoints;
-      }
 
       GR.Memory.ByteBuffer SettingsData = StudioCore.Settings.ToBuffer( StudioCore );
 
