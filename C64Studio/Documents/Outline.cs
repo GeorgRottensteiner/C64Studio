@@ -505,7 +505,9 @@ namespace RetroDevStudio.Documents
       }
 
       var doc = Core.Navigating.FindDocumentByPath( tokenInfo.DocumentFilename );
-      if ( doc != null )
+      if ( ( doc != null )
+      &&   ( tokenInfo.CharIndex >= 0 )
+      &&   ( tokenInfo.Length > 0 ) )
       {
         doc.HighlightText( tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
       }

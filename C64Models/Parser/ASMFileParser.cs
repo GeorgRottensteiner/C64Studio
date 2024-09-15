@@ -300,6 +300,9 @@ namespace RetroDevStudio.Parser
 
       Types.ASM.TemporaryLabelInfo tempInfo = new Types.ASM.TemporaryLabelInfo();
 
+      Value.CharIndex = CharIndex;
+      Value.Length    = Length;
+
       tempInfo.Name       = Name;
       tempInfo.LineIndex  = LineIndex;
       tempInfo.LineCount  = LineCount;
@@ -8729,6 +8732,7 @@ namespace RetroDevStudio.Parser
             return ParseLineResult.ERROR_ABORT;
           }
 
+          resultingValue.Zone = m_CurrentZoneName;
           if ( resultingValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
           {
             AddConstantF( defineName, resultingValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
