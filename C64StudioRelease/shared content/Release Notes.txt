@@ -17,6 +17,127 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+16.09.2024 - 7.9:         Add: Breakpoints now following project or single file
+                          Fix: ASM - zone info of local labels set with !set was empty
+                          Add: Dialog editor: import palette from binary file now adds new palettes if more were in the file
+                               Comment on empty line would put comment char on first pos if an empty line was included in selection
+                               Comment Selection now only adds ; on non empty lines
+                          Fix: Assembler, not collapsing number -number to two numbers
+                          Upd: Replace path methods through custom ones Add: Binary Import for sprites/chars/char screens handle .prg to skip load address
+                          Add: Sprite Editor Import/Export option for padding bytes
+                          Fix: Sprite editor import/export of binary data now also working correct for non c64 sprites (an additional byte was implanted errornously)
+                          Fix: Block autocomplete also on horz offset
+                          Fix: Intellisense in wrong line could still open
+                          Fix: Adding breakpoints with addresses outside of code wouldn't work
+                          Fix: Intellisense popup could occur on wrong line
+                          Fix: BASIC having 0 as unreferenced line numbers had funny side effects
+                          WIP: Breakpoints for non project files
+                          Add: PDS ".equ" also functions as "equ"
+                          Fix: Settings import of ASM hacks now working Fix: Mousewheel in graphic import dialog with sanity checks
+                          Fix: SpriteEditor crash if importing sprite with color set to [Any] Add: Mousewheel support for zooming in graphic import dialog
+                          Fix: Character editor: Graphic import of MC chars Add: Source editor, insert new line with auto-indent is now one Undo step
+                          Fix: PDS has >,< order reversed (> is lo byte, < is hi byte)
+                          Fix: Sprite editor force square pixels, and even grid cell sizes
+                          Fix: Chareditor paste of hires/mc char, adjust custom color to match target mode
+                          Fix: !sl pseudo po, allow absolute paths, add error in case file cannot be written
+                          Add: Assembler not showing generated labels (!mediasrc) as unused
+                          Add: FileManager - display name of opened file in caption Add: Breakpoints moving in source asm depends on the cursor position of the current line
+                          Fix: code editor - de-highlighted brackets force a redraw right away Fix: Graphic Screen Editor: Color Selector now properly sized
+                          Fix: Text dragging in between tabs not possible anymore
+                          Add: Map editor Add/Clone tile now inserts below (first) selected tile
+                          Fix: Solution Explore Paste element only allows one copy
+                          Fix: Autocomplete filling in macros properly (no duplicate +)        Tooltip shows macro params
+                          Add: Map Editor Shift-Mousewheel scrolls horizontally
+                          Fix: Commodoredisk: clearing newly allocated directory sectors
+                          Fix: Charset editor - rotating was broken for multicolor (again)
+                          Add: Several Map editor enhancements Add: ASM better error messages for duplicate inclusion
+                          Fix: Label not marked as used in </> hack mode sometimes
+                          Add: Map editor copy map to image now uses the full map
+                          Fix: MapEditor focus checks for actual map screen
+                          Fix: Next action after undo of fill shows broken map image
+                          Fix: Map Editor fill sometimes visually updates wrong area (but does it right in the background)
+                          Fix: ASM !fill with > operator and enabled hack
+                          Fix: Map Editor Copy/Paste also works with focus on scrollbars Fix: Custom Controls properly behave using Tab/Shift-Tab
+                          Fix: Another uncomment edge case (first line of selection starts in middle of line)
+                          Fix: Uncomment not working if selection was from end of last line to left end of start line
+                          Add: Map Editor - Mode change now also applies to charset Add: Map Editor - Single tile change undo is now combined
+                          Add: ASM !to also allows {Date..} inside file names
+                          Fix: MapEditor changing chars/colors on a tile (on the tile paint box) also redraws the map
+                          Fix: ASM negating expression in paranthesis not working
+                          Fix: ParseLiteralValue now works with negative numbers (allows LABEL ~ -LABEL expressions)
+                          Fix: PDS operator priority according to docs Fix: PDS .BLOCK behaving like !fill, not !byte
+                          Add: ASM math.sqrt
+                          Add: Modifying hacks is marking all open documents as dirty (no more build is current)
+                          Fix: ASM uncomment selection now also works if comment char is indented by spaces or tabs
+                          Fix: ASM PDS & prefix now seems to work as intended in all found cases
+                          Fix: ASM more PDS shenanigans Fix: Breakpoints not working with alternative debug start breakpoint
+                          WIP: Load/Save breakpoints
+                          Fix: ASM more PDS relevant stuff, e.g. &$20 resulted in one token
+                          Add/Fix: PDS support enhanced, add missing POs .WORD, DLOW, DHIGH, STRING
+                          Add: ASM Hack to enable </> precedence over complete expression
+                          Fix: ASM - breakpoints were auto-shifted wrong on line insert/removal
+                          Add/Fix: ASM local labels defined outside for loops, but referenced inside are not re-labeled anymore
+                          Fix: !basic not correctly checking for line numbers >= 10000
+                          Fix: Borked images (MissingManifestException) on button images in PropCompileTarget (4.8 only?)
+                          WIP: ArrangedItemList seems to behave again WIP: Palette selection
+                          Fix: Label Dump file could have internal flags although specified not to have them
+                          Fix: File Manager block size always shown as 0 for Commodore disk images
+                          Fix: ASM crash, when referencing forward label inside macro
+                          WIP: Palette preferences
+                          Fix: ASM status info now only counting bytes/cycles from lines that are deemed selected (having the end cursor at index 0 does not count a line a selected)
+                          Add: ASM options for PO !sl
+                          Fix: Broken dialect file S-BASIC 65
+                          Add: BASIC/Assembler, built in text macro DATE
+                          Add: BASIC Resume, Trap, Restore also allow line numbers (renumber, label mode)
+                          BASIC: Enhance dialect file to allow for tokens with line numbers in later arguments (e.g. BASIC 7 COLLISION)
+                          Fix: BASIC proper auto detect of casing on first load (without meta data) Fix: Theming, color of MRU menu items was off
+                          Fix: BASIC Fixing the fix of setting BASIC dialect led to crashes on non project BASIC files
+                          Add: dialog location sanity check (keep dialogs on screen)
+                          Fix: CompileResult - show sub messages of overlapping block in intended order
+                          Fix: BASIC added as existing file now properly chooses correct BASIC dialect on opening Fix: ASM Segment overlapping warning also issues on empty segments Upd: Replace ListBox in ArrangedItemList
+                          Add: Disassembler Pressing delete on lists
+                          Fix: Help expanded per default (in case js is not working)
+                          Add ARM build, clean up gitignore
+                          Fix a few theming issues (area beside toolbars), solution explorer icons, treeview background color
+                          Fix: BASIC entry Fix: MediaTool sprite export
+                          Fix: Custom TreeView not following some colors Fix: pure black icons in dark theme
+                          Add: Remember column widths and popup dialog placement
+                          Add: Solution/Label Explorer/Outline: Keyboard base selection modes for TreeView similar to ListView
+                          Fix: Assembler: make char literals with more than one char collapse consistently to a single char (ParseLiteralValue didn't use the same behaviour than PODefine)
+                          Add: Print Preview dialog (allows resizing on the fly)
+                          Add: Print option in File menu, also proper setup for BASIC Add: Store last check state of repo creation in solution/project wizard
+                          Fix: late evaluation of PO with no blank before string literal was broken
+                          WIP: TreeView text selection Fix: Charset as binary export, edit field was enabled per default Fix: Eliminated race condition with idle tasks
+                          Add: !jumplist pseudo op (https://github.com/GeorgRottensteiner/C64Studio/issues/119)
+                          Add: Copy Element in Solution Explorer also copies properties Fix: Several TreeView/New Project dialog issues
+                          Add: Scrolling and panel resizing in graphic import dialog
+                          Fix: Binary Editor Interleave gets stuck in infinite loop with data size <= 1
+                          Upd: SpritePad import now working for version 2, 3, 4 (5 maybe?)
+                          Fix: Solution Explorer drag&drop of folder with subitem
+                          Fix: Add new project could clear the solution (project is not included anymore) on cancel. (Issue #117) Fix: Crash by Drag&Drop in Solution Explorer to the lowr part of the last node Fix: Charscreen editor PETSCII export was broken when first char of a line was to be inside quotes
+                          Fix: Charscreen editor, export for !pet, issue #116
+                          Add: !pseudopc nestable
+                          Fix: Assembler not resetting some type specific flags on type change
+                          Fix: More TreeView issues
+                          Fix: Sprite Export only uses padding byte for C64 sprites (https://github.com/GeorgRottensteiner/C64Studio/issues/113 and 114)
+                          Fix: Commodore Disk images, file deletion was not clean, blocks kept accumulating.
+                          Fix: Several treeview fixes Add: Commander X16 samples with sprites in BASIC
+                          Fix: Samples - Broken Commander X16 sprite samples Upd: BASIC dialect file for Commander X16
+                          Add: Visual option for update check on startup
+                          Fix: More project/solution menu fun Add: BASIC macro mode, only insert {SPACE} if more than one
+                          Fix: BASIC Un-Quote mode only applies to string literals, not to general source code! ({SPACE})
+                          Fix: Charset editor - embarrassing range bugs
+                          Fix: Add/Delete nodes sometimes shows empty gaps
+                          Fix: Solution Explorer, display active element with bold style
+                          Fix: Broken release for GIT support (crash when creating new project with GIT)
+                          Fix: Solution Explorer rename file forgot extension
+                          RC1: Solution Explorer - TreeView replaced Fix: !pet/!scr/!text/!raw would add null bytes if a expression with a string literal in front would be used Fix: New Project/New Solution not closing existing project if canceled, also not saving an empty .s64 over the existing one
+                          Add: Solution Explorer -> Paste option also appears on project Add: Solution/Project Wizard -> Notify user if solution or project file already exists
+                          Add: Saveas prefill with original filename
+                          Upd: DecentForms treeview in Outline
+                          Fix: SpriteEditor preview resizing issues Fix: Image import of 4-bit and odd sized images Add: SpriteEditor export for S-BASIC SPRDEF Fix: Assembler - loops in inactive scope were not properly closed
+                          Fix: GetPreferredSize was botched, e.g. floating help window was restored to 20x20
+
 30.05.2024 - 7.8:         Fix: BASIC files opened from FileManager (extracted from image) did not convert PETCAT compatilibity chars.
                           Fix: Graphic Screen Editor - Zoom was displayed messed up
                           Add: Default charsets for Mega65 FCM Add/Fix: Label Explorer using DecentForms TreeView
