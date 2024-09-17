@@ -437,6 +437,10 @@ namespace GR
 
     public static string GetFileName( string Filename, string Separators = PotentialPathSeparators )
     {
+      if ( Filename == null )
+      {
+        return "";
+      }
       int               pos = Filename.Length;
 
       while ( pos > 0 )

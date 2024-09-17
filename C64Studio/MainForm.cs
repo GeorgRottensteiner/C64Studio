@@ -6521,10 +6521,11 @@ namespace RetroDevStudio
       {
         string localizedFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath(ParentProject.Settings.BasePath), true, newFilename, false);
 
-        ProjectElement el = CreateNewElement(Type, Description, ParentProject, ParentNode);
-        el.Filename = localizedFilename;
-        el.Node.Text = GR.Path.GetFileName( localizedFilename );
-        el.Document.SetDocumentFilename( localizedFilename );
+        ProjectElement el = CreateNewElement( Type, Description, ParentProject, ParentNode );
+        el.Filename = newFilename;
+        el.Node.Text = GR.Path.GetFileName( newFilename );
+        el.DocumentInfo.DocumentFilename = newFilename;
+        el.Document.SetDocumentFilename( newFilename );
         el.Document.Save( BaseDocument.SaveMethod.SAVE );
       }
     }
