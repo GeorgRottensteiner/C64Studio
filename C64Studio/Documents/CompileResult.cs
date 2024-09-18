@@ -394,5 +394,23 @@ namespace RetroDevStudio.Documents
     }
 
 
+
+    public void SelectMessage( int MessageIndex )
+    {
+      listMessages.SelectedItems.Clear();
+      if ( ( MessageIndex < 0 )
+      ||   ( MessageIndex >= listMessages.Items.Count ) )
+      {
+        
+      }
+      else
+      {
+        listMessages.Items[MessageIndex].Selected = true;
+        listMessages.EnsureVisible( MessageIndex );
+      }
+    }
+
+
+
   }
 }

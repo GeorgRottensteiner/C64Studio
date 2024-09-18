@@ -1,6 +1,8 @@
-ORG $2000
+	ORG $2000
 
 DATA
+
+FRED
 
 HITABLE
     CT    EQU    0
@@ -10,6 +12,6 @@ HITABLE
     LOOP
 
 
-DH 312
-DL 312
-DB 23,45+52-FRED,"This is a test message",13,10,"!"+128
+	DH 312
+	DL 312
+	DB 23,45+52-FRED,"This is a test message",13,10,"!"+128

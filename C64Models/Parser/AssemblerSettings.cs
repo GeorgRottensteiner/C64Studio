@@ -571,7 +571,7 @@ namespace RetroDevStudio.Parser
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
 
           // besides proper local labels we also misuse cheap labels as macro parameters

@@ -2945,13 +2945,13 @@ namespace RetroDevStudio.Parser
                       NeededParsedExpression[0].StartPos,
                       NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos + 1 - NeededParsedExpression[0].StartPos );
           }
-          else if ( ( m_LastErrorInfo.Pos >= 0 )
+          else if ( ( m_LastErrorInfo.Pos - lineInfo.LineOffsetInFront >= 0 )
           &&        ( m_LastErrorInfo.Length > 0 )
-          &&        ( m_LastErrorInfo.Pos + m_LastErrorInfo.Length <= lineInfo.Line.Length ) )
+          &&        ( m_LastErrorInfo.Pos + m_LastErrorInfo.Length - lineInfo.LineOffsetInFront <= lineInfo.Line.Length ) )
           {
             AddError( lineIndex,
                       m_LastErrorInfo.Code,
-                      "Could not evaluate " + lineInfo.Line.Substring( m_LastErrorInfo.Pos, m_LastErrorInfo.Length ),
+                      "Could not evaluate " + lineInfo.Line.Substring( m_LastErrorInfo.Pos - lineInfo.LineOffsetInFront, m_LastErrorInfo.Length ),
                       m_LastErrorInfo.Pos,
                       m_LastErrorInfo.Length );
           }
@@ -5039,7 +5039,7 @@ namespace RetroDevStudio.Parser
       {
         string parseLine = "";
 
-        _ParseContext.LineIndex = lineIndex;
+        _ParseContext.LineIndex           = lineIndex;
 
         if ( Lines[lineIndex] != null )
         {
@@ -8125,7 +8125,8 @@ namespace RetroDevStudio.Parser
       // cut off label for neededparsedexpression
       if ( lineTokenInfos.Count > 1 )
       {
-        info.Line = parseLine.Substring( lineTokenInfos[1].StartPos );
+        info.Line               = parseLine.Substring( lineTokenInfos[1].StartPos );
+        info.LineOffsetInFront  = lineTokenInfos[1].StartPos;
         parseLine = info.Line;
 
         // shift all tokens back

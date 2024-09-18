@@ -55,6 +55,7 @@ namespace RetroDevStudio.Types.ASM
     public int                    PseudoPCOffset = -1;    // -1 = not set, -2 at !REALPC, otherwise !PSEUDOPC pos
     public int                    NumBytes = 0;
     public int                    LineIndex = -1;
+    public int                    LineOffsetInFront = 0;
     public string                 Line = "";
     public string                 Zone = "";
     public string                 CheapLabelZone = "";

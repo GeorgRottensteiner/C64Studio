@@ -1039,9 +1039,6 @@ namespace RetroDevStudio.Controls
       {
         return;
       }
-      //e.Graphics.FillRectangle( new System.Drawing.SolidBrush( labelCharNo.BackColor ), labelCharNo.ClientRectangle );
-      //e.Graphics.DrawString( "lsmf", labelCharNo.Font, new System.Drawing.SolidBrush( labelCharNo.ForeColor ), labelCharNo.ClientRectangle );
-
       if ( !ConstantData.ScreenCodeToChar.ContainsKey( (byte)m_CurrentChar ) )
       {
         Debug.Log( "Missing char for " + m_CurrentChar );

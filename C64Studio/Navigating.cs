@@ -343,6 +343,7 @@ namespace RetroDevStudio
             documentFile = message.Value.AlternativeFile;
             documentLine = message.Value.AlternativeLineIndex;
           }
+          Core.MainForm.m_CompileResult.SelectMessage( LastShownMessageIndex );
 
           OpenDocumentAndGotoLine( Project, FindDocumentInfoByPath( documentFile ), documentLine );
           return;
