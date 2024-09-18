@@ -414,7 +414,7 @@ INTOVER	LDA	#0
 	LDY	YS
 NMI	RTI
 
-		
+
 
 
 		MAC	MoveWithYSortMacro

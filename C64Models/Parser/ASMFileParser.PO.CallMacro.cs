@@ -48,6 +48,10 @@ namespace RetroDevStudio.Parser
 
       int numParams = EstimateNumberOfParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
       var macroKey = new GR.Generic.Tupel<string,int>( functionName, numParams );
+      if ( !m_AssemblerSettings.CaseSensitive )
+      {
+        macroKey.first = macroKey.first.ToUpper();
+      }
 
       if ( !DoesMacroExist( macroFunctions, macroKey, out Types.MacroFunctionInfo macro ) )
       {

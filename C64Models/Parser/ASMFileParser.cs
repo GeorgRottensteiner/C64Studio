@@ -995,11 +995,14 @@ namespace RetroDevStudio.Parser
         return true;
       }
       // a good idea? collapse doubles to byte
-      double  numericResult = 0;
-      if ( ParseLiteralValueNumeric( tokenValue, out failed, out numericResult ) )
+      if ( m_AssemblerSettings.SupportsRealNumbers )
       {
-        ResultingSymbol = CreateNumberSymbol( numericResult );
-        return true;
+        double  numericResult = 0;
+        if ( ParseLiteralValueNumeric( tokenValue, out failed, out numericResult ) )
+        {
+          ResultingSymbol = CreateNumberSymbol( numericResult );
+          return true;
+        }
       }
       if ( ParseLiteralValueString( tokenValue, out bool failedDummy, out string stringResult ) )
       {
@@ -7706,6 +7709,10 @@ namespace RetroDevStudio.Parser
           {
             POText( lineIndex, lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
           }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.TEXT_SCREEN )
+          {
+            POText( lineIndex, lineTokenInfos, info, parseLine, m_TextCodeMappingScr, out lineSizeInBytes );
+          }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.MACRO )
           {
             string macroName = "";
@@ -8674,8 +8681,9 @@ namespace RetroDevStudio.Parser
       // removed line text code mapping from here
       var mapping =  new Map<byte, byte>();   // was textCodeMapping
 
-
+      _ParseContext.DuringExpressionEvaluation = true;
       List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, mapping );
+      _ParseContext.DuringExpressionEvaluation = false;
 
       if ( defineName == "*" )
       {

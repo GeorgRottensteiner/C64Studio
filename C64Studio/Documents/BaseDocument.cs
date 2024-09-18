@@ -406,6 +406,7 @@ namespace RetroDevStudio.Documents
     
     public void SetDocumentFilename( string DocumentFilename )
     {
+      DocumentInfo.DocumentFilename = DocumentFilename;
       Text = GR.Path.GetFileName( DocumentFilename );
       TabText = GR.Path.GetFileName( DocumentFilename );
       if ( FloatPane != null )

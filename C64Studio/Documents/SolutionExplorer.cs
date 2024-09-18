@@ -1456,7 +1456,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        newText += e.Label;
+        newText = e.Label;
       }
 
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )

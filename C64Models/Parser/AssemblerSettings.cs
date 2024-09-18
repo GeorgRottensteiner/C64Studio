@@ -47,6 +47,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     MessageAutoIncludesBlanksBetweenParameters = false;
     public bool                                                     AllowsCustomTextMappings = false;
     public bool                                                     IfWithoutBrackets = false;
+    public bool                                                     SupportsRealNumbers = false;
     public bool                                                     LocalLabelStacking = false;   // if true, TASM mode: ++ refers to 2nd + below, --- to 3rd - above, etc.
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
     public GR.Collections.Set<string>                               PlainAssignmentOperators = new GR.Collections.Set<string>();
@@ -116,6 +117,7 @@ namespace RetroDevStudio.Parser
       AllowsCustomTextMappings = false;
       IfWithoutBrackets = false;
       LocalLabelStacking = false;
+      SupportsRealNumbers = false;
       DefineSeparatorKeywords.Clear();
       PlainAssignmentOperators.Clear();
       StatementSeparatorChars.Clear();
@@ -283,6 +285,7 @@ namespace RetroDevStudio.Parser
           MacroFunctionCallPrefix.Add( "+" );
           MacrosCanBeOverloaded = true;
           GlobalLabelsAutoZone = false;
+          SupportsRealNumbers = true;
           DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=", "&=" }  );
           PlainAssignmentOperators.AddRange( new string[] { "=" } );
           IncludeExpectsStringLiteral = true;
@@ -426,7 +429,7 @@ namespace RetroDevStudio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß:";
           AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
