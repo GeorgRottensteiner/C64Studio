@@ -11,11 +11,11 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult PO65816Assume16BitAccu( int lineIndex )
+    private ParseLineResult PO65816Assume16BitAccu()
     {
       if ( m_ASMFileInfo.Processor.Name != "65816" )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !al, only allowed with 65816." );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !al, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
       _ParseContext.Assume16BitAccu = true;
@@ -24,11 +24,11 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult PO65816Assume8BitAccu( int lineIndex )
+    private ParseLineResult PO65816Assume8BitAccu()
     {
       if ( m_ASMFileInfo.Processor.Name != "65816" )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !as, only allowed with 65816." );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !as, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
       _ParseContext.Assume16BitAccu = false;
@@ -37,11 +37,11 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult PO65816Assume16BitRegisters( int lineIndex )
+    private ParseLineResult PO65816Assume16BitRegisters()
     {
       if ( m_ASMFileInfo.Processor.Name != "65816" )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !rl, only allowed with 65816." );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !rl, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
       _ParseContext.Assume16BitRegisters = true;
@@ -50,11 +50,11 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult PO65816Assume8BitRegisters( int lineIndex )
+    private ParseLineResult PO65816Assume8BitRegisters()
     {
       if ( m_ASMFileInfo.Processor.Name != "65816" )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !rs, only allowed with 65816." );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type for !rs, only allowed with 65816." );
         return ParseLineResult.RETURN_NULL;
       }
       _ParseContext.Assume16BitRegisters = false;

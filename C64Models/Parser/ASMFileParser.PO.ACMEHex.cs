@@ -12,7 +12,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POACMEHex( LineInfo info, List<TokenInfo> lineTokenInfos, int lineIndex, out int lineSizeInBytes )
+    private ParseLineResult POACMEHex( LineInfo info, List<TokenInfo> lineTokenInfos, out int lineSizeInBytes )
     {
       lineSizeInBytes = 0;
       info.LineData = new GR.Memory.ByteBuffer();
@@ -24,13 +24,13 @@ namespace RetroDevStudio.Parser
 
         if ( ( hexData.Length % 2 ) != 0 )
         {
-          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+          AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
 
           return ParseLineResult.RETURN_NULL;
         }
         if ( !info.LineData.AppendHex( hexData ) )
         {
-          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+          AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
 
           return ParseLineResult.RETURN_NULL;
         }

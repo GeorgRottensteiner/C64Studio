@@ -4660,7 +4660,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult POAlignDASM( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, ref int programStepPos, out int lineSizeInBytes )
+    private ParseLineResult POAlignDASM( List<Types.TokenInfo> lineTokenInfos, Types.ASM.LineInfo info, ref int programStepPos, out int lineSizeInBytes )
     {
       // ALIGN byte boundary<,fillvalue>
       lineSizeInBytes = 0;
@@ -4671,7 +4671,7 @@ namespace RetroDevStudio.Parser
 
       if ( lineTokenInfos.Count < 2 )
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected align <byte boundary>,[,<FillValue>]" );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected align <byte boundary>,[,<FillValue>]" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -4680,9 +4680,9 @@ namespace RetroDevStudio.Parser
         if ( lineTokenInfos[tokenIndex].Content == "," )
         {
           // found an expression
-          if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, info.LineCodeMapping, out SymbolInfo value ) )
+          if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, info.LineCodeMapping, out SymbolInfo value ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
+            AddError( _ParseContext.LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
             return ParseLineResult.RETURN_NULL;
           }          
           tokenParams.Add( value.ToInt32() );
@@ -4694,9 +4694,9 @@ namespace RetroDevStudio.Parser
           if ( expressionStartIndex <= tokenIndex - 1 )
           {
             // there's still data to evaluate
-            if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, info.LineCodeMapping, out SymbolInfo value ) )
+            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, info.LineCodeMapping, out SymbolInfo value ) )
             {
-              AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
+              AddError( _ParseContext.LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
               return ParseLineResult.RETURN_NULL;
             }
             tokenParams.Add( value.ToInt32() );
@@ -4708,7 +4708,7 @@ namespace RetroDevStudio.Parser
       if ( ( tokenParams.Count < 1 )
       ||   ( tokenParams.Count > 3 ) )
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected align <byte boundary>,[,<FillValue>]" );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected align <byte boundary>,[,<FillValue>]" );
         return ParseLineResult.RETURN_NULL;
       }
       byte fillValue = 0;
@@ -4716,7 +4716,7 @@ namespace RetroDevStudio.Parser
       {
         if ( !ValidByteValue( tokenParams[1] ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "FillValue out of bounds" );
+          AddError( _ParseContext.LineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "FillValue out of bounds" );
           return ParseLineResult.RETURN_NULL;
         }
         fillValue = (byte)tokenParams[1];
@@ -4729,7 +4729,7 @@ namespace RetroDevStudio.Parser
         info.LineData.AppendU8( fillValue );
         if ( programStepPos == 65536 )
         {
-          AddError( lineIndex, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Program step pos out of bounds, check !align condition" );
+          AddError( _ParseContext.LineIndex, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Program step pos out of bounds, check !align condition" );
           return ParseLineResult.RETURN_NULL;
         }
       }
@@ -5140,33 +5140,7 @@ namespace RetroDevStudio.Parser
           labelOffset = 1;
         }
         // a dot in front of a global label is potentially a pseudo op for PDS
-        if ( m_AssemblerSettings.AssemblerType == AssemblerType.PDS )
-        {
-          if ( ( lineTokenInfos.Count >= 2 + labelOffset )
-          &&   ( lineTokenInfos[labelOffset].Content == "." )
-          &&   ( lineTokenInfos[labelOffset].EndPos + 1 == lineTokenInfos[labelOffset + 1].StartPos )
-          &&   ( lineTokenInfos[labelOffset + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-          &&   ( m_AssemblerSettings.PseudoOps.TryGetValue( "." + lineTokenInfos[labelOffset + 1].Content, out MacroInfo po ) ) )
-          {
-            lineTokenInfos.RemoveAt( labelOffset );
-            lineTokenInfos[labelOffset].Content = "." + lineTokenInfos[labelOffset].Content;
-            --lineTokenInfos[labelOffset].StartPos;
-            ++lineTokenInfos[labelOffset].Length;
-            lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.PSEUDO_OP;
-          }
-          if ( ( lineTokenInfos.Count >= 2 + labelOffset )
-          &&   ( lineTokenInfos[labelOffset].Content == "." )
-          &&   ( lineTokenInfos[labelOffset].EndPos + 1 == lineTokenInfos[labelOffset + 1].StartPos )
-          &&   ( lineTokenInfos[labelOffset + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-          &&   ( m_AssemblerSettings.PlainAssignmentOperators.ContainsValue( "." + lineTokenInfos[labelOffset + 1].Content ) ) )
-          {
-            lineTokenInfos.RemoveAt( labelOffset );
-            lineTokenInfos[labelOffset].Content = "." + lineTokenInfos[labelOffset].Content;
-            --lineTokenInfos[labelOffset].StartPos;
-            ++lineTokenInfos[labelOffset].Length;
-            lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.OPERATOR;
-          }
-        }
+        PDSCombineDotLabelInFrontAsPseudoOP( lineTokenInfos, labelOffset );
 
         // do we have a DASM scope operator? (must skip scope check then)
         bool  isDASMScopePseudoOP = false;
@@ -5313,7 +5287,7 @@ namespace RetroDevStudio.Parser
         }
 
         // identify internal labels as such
-        DetectInternalLabels( lineIndex, lineTokenInfos );
+        DetectInternalLabels( lineTokenInfos );
         StripInternalBrackets( lineTokenInfos, 1 );
 
         string  upToken = lineTokenInfos[0].Content.ToUpper();
@@ -6703,7 +6677,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.COMPILE_TARGET )
             {
-              var result = POTo( lineTokenInfos, lineIndex );
+              var result = POTo( lineTokenInfos );
               if ( result == ParseLineResult.ERROR_ABORT )
               {
                 HadFatalError = true;
@@ -6988,11 +6962,11 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ZONE )
             {
-              POZone( lineIndex, info, lineTokenInfos, false );
+              POZone( info, lineTokenInfos, false );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LZONE )
             {
-              POZone( lineIndex, info, lineTokenInfos, true );
+              POZone( info, lineTokenInfos, true );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BANK )
             {
@@ -7195,7 +7169,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ALIGN_DASM )
             {
-              var parseResult = POAlignDASM( lineTokenInfos, lineIndex, info, ref programStepPos, out lineSizeInBytes );
+              var parseResult = POAlignDASM( lineTokenInfos, info, ref programStepPos, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7311,7 +7285,7 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HEX )
             {
               // HEX - special macro
-              var parseResult = POACMEHex( info, lineTokenInfos, lineIndex, out lineSizeInBytes );
+              var parseResult = POACMEHex( info, lineTokenInfos, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7330,7 +7304,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CPU )
             {
-              var parseResult = POCPU( lineTokenInfos, lineIndex );
+              var parseResult = POCPU( lineTokenInfos );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7352,7 +7326,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ASSUME_16BIT_ACCUMULATOR_65816 )
             {
-              var result = PO65816Assume16BitAccu( lineIndex );
+              var result = PO65816Assume16BitAccu();
               if ( result != ParseLineResult.OK )
               {
                 HadFatalError = true;
@@ -7361,7 +7335,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ASSUME_8BIT_ACCUMULATOR_65816 )
             {
-              var result = PO65816Assume8BitAccu( lineIndex );
+              var result = PO65816Assume8BitAccu();
               if ( result != ParseLineResult.OK )
               {
                 HadFatalError = true;
@@ -7370,7 +7344,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ASSUME_16BIT_REGISTERS_65816 )
             {
-              var result = PO65816Assume16BitRegisters( lineIndex );
+              var result = PO65816Assume16BitRegisters();
               if ( result != ParseLineResult.OK )
               {
                 HadFatalError = true;
@@ -7379,7 +7353,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ASSUME_8BIT_REGISTERS_65816 )
             {
-              var result = PO65816Assume8BitRegisters( lineIndex );
+              var result = PO65816Assume8BitRegisters();
               if ( result != ParseLineResult.OK )
               {
                 HadFatalError = true;
@@ -7388,7 +7362,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WHILE )
             {
-              var result = POWhile( lineTokenInfos, lineIndex, info, ref Lines, out lineSizeInBytes );
+              var result = POWhile( lineTokenInfos, info, ref Lines, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7837,7 +7811,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == MacroInfo.PseudoOpType.ALIGN_DASM )
           {
-            var parseResult = POAlignDASM( lineTokenInfos, lineIndex, info, ref programStepPos, out lineSizeInBytes );
+            var parseResult = POAlignDASM( lineTokenInfos, info, ref programStepPos, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7846,7 +7820,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == MacroInfo.PseudoOpType.REPEAT )
           {
-            var parseResult = PORepeat( lineTokenInfos, lineIndex, ref Lines, info );
+            var parseResult = PORepeat( lineTokenInfos, ref Lines, info );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7900,11 +7874,11 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.ZONE )
           {
-            POZone( lineIndex, info, lineTokenInfos, false );
+            POZone( info, lineTokenInfos, false );
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.LZONE )
           {
-            POZone( lineIndex, info, lineTokenInfos, true );
+            POZone( info, lineTokenInfos, true );
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.MESSAGE )
           {
@@ -8089,6 +8063,39 @@ namespace RetroDevStudio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private void PDSCombineDotLabelInFrontAsPseudoOP( List<TokenInfo> lineTokenInfos, int labelOffset )
+    {
+      if ( m_AssemblerSettings.AssemblerType == AssemblerType.PDS )
+      {
+        if ( ( lineTokenInfos.Count >= 2 + labelOffset )
+        &&   ( lineTokenInfos[labelOffset].Content == "." )
+        &&   ( lineTokenInfos[labelOffset].EndPos + 1 == lineTokenInfos[labelOffset + 1].StartPos )
+        &&   ( lineTokenInfos[labelOffset + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        &&   ( m_AssemblerSettings.PseudoOps.TryGetValue( "." + lineTokenInfos[labelOffset + 1].Content, out MacroInfo po ) ) )
+        {
+          lineTokenInfos.RemoveAt( labelOffset );
+          lineTokenInfos[labelOffset].Content = "." + lineTokenInfos[labelOffset].Content;
+          --lineTokenInfos[labelOffset].StartPos;
+          ++lineTokenInfos[labelOffset].Length;
+          lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.PSEUDO_OP;
+        }
+        if ( ( lineTokenInfos.Count >= 2 + labelOffset )
+        &&   ( lineTokenInfos[labelOffset].Content == "." )
+        &&   ( lineTokenInfos[labelOffset].EndPos + 1 == lineTokenInfos[labelOffset + 1].StartPos )
+        &&   ( lineTokenInfos[labelOffset + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        &&   ( m_AssemblerSettings.PlainAssignmentOperators.ContainsValue( "." + lineTokenInfos[labelOffset + 1].Content ) ) )
+        {
+          lineTokenInfos.RemoveAt( labelOffset );
+          lineTokenInfos[labelOffset].Content = "." + lineTokenInfos[labelOffset].Content;
+          --lineTokenInfos[labelOffset].StartPos;
+          ++lineTokenInfos[labelOffset].Length;
+          lineTokenInfos[labelOffset].Type = TokenInfo.TokenType.OPERATOR;
+        }
+      }
     }
 
 
@@ -9063,66 +9070,6 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void POZone( int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos, bool AutoGlobalLabel )
-    {
-      bool  scopedZone = false;
-
-      if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
-      {
-        lineTokenInfos.RemoveAt( lineTokenInfos.Count - 1 );
-
-        // TODO - check of zonescope exists, no nestes zone scopes!
-
-        Types.ScopeInfo   zoneScope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
-        zoneScope.StartIndex  = lineIndex;
-        _ParseContext.Scopes.Add( zoneScope );
-        OnScopeAdded( zoneScope );
-        scopedZone = true;
-      }
-      if ( lineTokenInfos.Count > 2 )
-      {
-        AddError( lineIndex, Types.ErrorCode.E1303_MALFORMED_ZONE_DESCRIPTOR, "Expected single zone descriptor" );
-      }
-      else
-      {
-        var   zoneToken = lineTokenInfos[0];
-        if ( lineTokenInfos.Count == 1 )
-        {
-          // anonymous zone -> all upper case 
-          // TODO - really?
-          //m_CurrentZoneName = "ANON_SCOPE_" + lineIndex.ToString();
-          // back to global zone 
-          DetermineActiveZone();
-          return;
-        }
-        else
-        {
-          m_CurrentZoneName = DeQuote( lineTokenInfos[1].Content );
-          if ( !scopedZone )
-          {
-            m_CurrentGlobalZoneName = m_CurrentZoneName;
-          }
-          else
-          {
-            _ParseContext.Scopes.Last().Name = m_CurrentZoneName;
-          }
-          zoneToken = lineTokenInfos[1];
-        }
-        info.Zone = m_CurrentZoneName;
-
-        AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
-        if ( AutoGlobalLabel )
-        {
-          var label = AddLabel( m_CurrentZoneName, m_CompileCurrentAddress, lineIndex, m_CurrentZoneName, zoneToken.StartPos, zoneToken.Length );
-
-          label.Info = m_CurrentCommentSB.ToString();
-          m_CurrentCommentSB = new StringBuilder();
-        }
-      }
-    }
-
-
-
     private bool IsLabelInFront( List<TokenInfo> lineTokenInfos, string UpToken )
     {
       if ( ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
@@ -9216,14 +9163,14 @@ namespace RetroDevStudio.Parser
 
 
 
-    private static void DetectInternalLabels( int lineIndex, List<TokenInfo> lineTokenInfos )
+    private void DetectInternalLabels( List<TokenInfo> lineTokenInfos )
     {
       if ( ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO )
       &&   ( ( lineTokenInfos[0].Content.StartsWith( "-" ) )
       ||     ( lineTokenInfos[0].Content.StartsWith( "+" ) ) ) )
       {
-        lineTokenInfos[0].Content = INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString();
-        lineTokenInfos[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+        lineTokenInfos[0].Content = INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + _ParseContext.LineIndex.ToString();
+        lineTokenInfos[0].Type    = TokenInfo.TokenType.LABEL_INTERNAL;
       }
     }
 
@@ -9319,7 +9266,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private ParseLineResult PORepeat( List<TokenInfo> lineTokenInfos, int lineIndex, ref string[] Lines, LineInfo info )
+    private ParseLineResult PORepeat( List<TokenInfo> lineTokenInfos, ref string[] Lines, LineInfo info )
     {
       if ( ScopeInsideMacroDefinition() )
       {
@@ -9328,9 +9275,9 @@ namespace RetroDevStudio.Parser
         // add dummy scope so !ends properly match
         Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.REPEAT );
 
-        scope.Active = false;
+        scope.Active      = false;
         scope.RepeatUntil = new RepeatUntilInfo();
-        scope.StartIndex = lineIndex;
+        scope.StartIndex  = _ParseContext.LineIndex;
         _ParseContext.Scopes.Add( scope );
 
         return ParseLineResult.CALL_CONTINUE;
@@ -9344,23 +9291,23 @@ namespace RetroDevStudio.Parser
         // REPEAT with no arguments means loop start
         Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.REPEAT );
 
-        scope.Active = true;
-        scope.RepeatUntil = new RepeatUntilInfo() { LineIndex = lineIndex };
-        scope.StartIndex = lineIndex;
+        scope.Active      = true;
+        scope.RepeatUntil = new RepeatUntilInfo() { LineIndex = _ParseContext.LineIndex };
+        scope.StartIndex  = _ParseContext.LineIndex;
         _ParseContext.Scopes.Add( scope );
         return ParseLineResult.CALL_CONTINUE;
       }
 
-      if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out lineParams ) )
+      if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, _ParseContext.LineIndex, false, out lineParams ) )
       {
         return ParseLineResult.ERROR_ABORT;
       }
       if ( lineParams.Count != 1 )
       {
-        AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Expected one argument" );
+        AddError( _ParseContext.LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Expected one argument" );
         return ParseLineResult.ERROR_ABORT;
       }
-      if ( !EvaluateTokens( lineIndex, lineParams[0], info.LineCodeMapping, out SymbolInfo numRepeatsSymbol ) )
+      if ( !EvaluateTokens( _ParseContext.LineIndex, lineParams[0], info.LineCodeMapping, out SymbolInfo numRepeatsSymbol ) )
       {
         return ParseLineResult.ERROR_ABORT;
       }
@@ -9368,7 +9315,7 @@ namespace RetroDevStudio.Parser
       if ( ( numRepeats < 0 )
       ||   ( numRepeats > 99999 ) )
       {
-        AddError( lineIndex,
+        AddError( _ParseContext.LineIndex,
                   ErrorCode.E1107_ARGUMENT_OUT_OF_BOUNDS,
                   "Number of repeats needs to be >= 0 and <= 99999",
                   lineParams[0][0].StartPos,
@@ -9376,10 +9323,10 @@ namespace RetroDevStudio.Parser
         return ParseLineResult.ERROR_ABORT;
       }
 
-      int nextLineIndex = lineIndex + 1;
+      int nextLineIndex = _ParseContext.LineIndex + 1;
       if ( nextLineIndex >= Lines.Length )
       {
-        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "REPEAT at end of code encountered" );
+        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "REPEAT at end of code encountered" );
         return ParseLineResult.ERROR_ABORT;
       }
       int loopLength = 1;
@@ -9387,32 +9334,32 @@ namespace RetroDevStudio.Parser
 
       for ( int i = 0; i < numRepeats - 1; ++i )
       {
-        System.Array.Copy( Lines, lineIndex + 1, tempContent, i * loopLength, loopLength );
+        System.Array.Copy( Lines, _ParseContext.LineIndex + 1, tempContent, i * loopLength, loopLength );
       }
 
-      string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, lineIndex, info.LineCodeMapping );
+      string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, _ParseContext.LineIndex, info.LineCodeMapping );
 
       string[] newLines = new string[Lines.Length + replacementLines.Length];
 
-      System.Array.Copy( Lines, 0, newLines, 0, lineIndex + 1 + loopLength );
-      System.Array.Copy( replacementLines, 0, newLines, lineIndex + 1 + loopLength, replacementLines.Length );
+      System.Array.Copy( Lines, 0, newLines, 0, _ParseContext.LineIndex + 1 + loopLength );
+      System.Array.Copy( replacementLines, 0, newLines, _ParseContext.LineIndex + 1 + loopLength, replacementLines.Length );
 
       // replaces the REPEND
-      System.Array.Copy( Lines, nextLineIndex + 1, newLines, lineIndex + 1 + loopLength + replacementLines.Length, Lines.Length - nextLineIndex - 1 );
+      System.Array.Copy( Lines, nextLineIndex + 1, newLines, _ParseContext.LineIndex + 1 + loopLength + replacementLines.Length, Lines.Length - nextLineIndex - 1 );
 
       // adjust source infos to make lookup work correctly
       string outerFilename = "";
       int outerLineIndex = -1;
-      m_ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
+      m_ASMFileInfo.FindTrueLineSource( _ParseContext.LineIndex + 1, out outerFilename, out outerLineIndex );
 
       for ( int i = 0; i < numRepeats - 1; ++i )
       {
         Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-        sourceInfo.Filename = outerFilename;
-        sourceInfo.FullPath = outerFilename;
-        sourceInfo.GlobalStartLine = lineIndex + 1 + ( 1 + i ) * loopLength;
-        sourceInfo.LineCount = loopLength;
-        sourceInfo.LocalStartLine = outerLineIndex;
+        sourceInfo.Filename         = outerFilename;
+        sourceInfo.FullPath         = outerFilename;
+        sourceInfo.GlobalStartLine  = _ParseContext.LineIndex + 1 + ( 1 + i ) * loopLength;
+        sourceInfo.LineCount        = loopLength;
+        sourceInfo.LocalStartLine   = outerLineIndex;
 
         InsertSourceInfo( sourceInfo );
       }

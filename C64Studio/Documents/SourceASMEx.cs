@@ -219,6 +219,7 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = ";";
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
       editSource.PreferredLineWidth = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
+      editSource.ToolTipDisplayDuration = 30000;
 
       btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
@@ -234,6 +235,7 @@ namespace RetroDevStudio.Documents
 
       m_ToolTip.Active = true;
       m_ToolTip.SetToolTip( editSource, "x" );
+      m_ToolTip.AutoPopDelay = 30000;
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       // we start out with one line
@@ -1071,7 +1073,7 @@ namespace RetroDevStudio.Documents
 
       if ( !m_ToolTip.Active )
       {
-        m_ToolTip.Show( "hurz", editSource );
+        m_ToolTip.Show( "hurz", editSource, 30000 );
       }
     }
 

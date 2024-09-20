@@ -11,11 +11,11 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POCPU( List<TokenInfo> lineTokenInfos, int lineIndex )
+    private ParseLineResult POCPU( List<TokenInfo> lineTokenInfos )
     {
       if ( lineTokenInfos.Count != 2 )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502, M65, 65816, Z80 and 68000 are supported" );
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502, M65, 65816, Z80 and 68000 are supported" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -58,7 +58,7 @@ namespace RetroDevStudio.Parser
           m_Processor = Processor.Create68000();
           break;
         default:
-          AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502, M65, 65816, Z80 or 68000 are supported" );
+          AddError( _ParseContext.LineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502, M65, 65816, Z80 or 68000 are supported" );
           return ParseLineResult.RETURN_NULL;
       }
 

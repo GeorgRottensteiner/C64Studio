@@ -13,12 +13,12 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POTo( List<TokenInfo> lineTokenInfos, int lineIndex )
+    private ParseLineResult POTo( List<TokenInfo> lineTokenInfos )
     {
       // !to targetfilename,outputtype
       if ( !string.IsNullOrEmpty( m_CompileTargetFile ) )
       {
-        AddWarning( lineIndex,
+        AddWarning( _ParseContext.LineIndex,
                     RetroDevStudio.Types.ErrorCode.W0004_TARGET_FILENAME_ALREADY_PROVIDED,
                     "A target file name was already provided, ignoring this one",
                     -1,
@@ -31,14 +31,14 @@ namespace RetroDevStudio.Parser
         if ( ( lineTokenInfos.Count != 3 )
         ||   ( lineTokenInfos[1].Content != "," ) )
         {
-          AddError( lineIndex,
+          AddError( _ParseContext.LineIndex,
                     Types.ErrorCode.E1302_MALFORMED_MACRO,
                     "Expected !to <Filename>,<Type = " + ListKeys( Lookup.CompileTargetModeToKeyword.Values ) + ">" );
           return ParseLineResult.ERROR_ABORT;
         }
         if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
         {
-          AddError( lineIndex,
+          AddError( _ParseContext.LineIndex,
                     Types.ErrorCode.E1307_FILENAME_INCOMPLETE,
                     "String as file name expected",
                     lineTokenInfos[0].StartPos,
@@ -55,7 +55,7 @@ namespace RetroDevStudio.Parser
         string    targetType = lineTokenInfos[2].Content.ToUpper();
         if ( !Lookup.CompileTargetModeToKeyword.ContainsValue( targetType ) )
         {
-          AddError( lineIndex,
+          AddError( _ParseContext.LineIndex,
                     Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
                     "Unsupported target type " + lineTokenInfos[2].Content + ", only " + ListKeys( Lookup.CompileTargetModeToKeyword.Values ) + " supported",
                     lineTokenInfos[2].StartPos,

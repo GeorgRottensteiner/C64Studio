@@ -61,6 +61,7 @@ namespace FastColoredTextBoxNS
     private readonly Timer timer2 = new Timer();
     private readonly Timer timer3 = new Timer();
     private readonly Timer timerCaret = new Timer();
+    private int _ToolTipDisplayDuration = 5000;
 
     private readonly Timer tripeClickTimer = new Timer();
     private int tripleClickCount = 0;
@@ -434,6 +435,24 @@ namespace FastColoredTextBoxNS
       set
       {
         timer3.Interval = value;
+      }
+    }
+
+    /// <summary>
+    /// Display duration (ms) of ToolTip
+    /// </summary>
+    [Browsable( true )]
+    [DefaultValue( 5000 )]
+    [Description( "Display duration(ms) of ToolTip." )]
+    public int ToolTipDisplayDuration
+    {
+      get
+      {
+        return _ToolTipDisplayDuration;
+      }
+      set
+      {
+        _ToolTipDisplayDuration = value;
       }
     }
 
@@ -2446,7 +2465,7 @@ namespace FastColoredTextBoxNS
         ToolTip.ToolTipTitle = ea.ToolTipTitle;
         ToolTip.ToolTipIcon = ea.ToolTipIcon;
         //ToolTip.SetToolTip(this, ea.ToolTipText);
-        ToolTip.Show( ea.ToolTipText, this, new Point( lastMouseCoord.X, lastMouseCoord.Y + CharHeight ) );
+        ToolTip.Show( ea.ToolTipText, this, new Point( lastMouseCoord.X, lastMouseCoord.Y + CharHeight ), _ToolTipDisplayDuration );
       }
     }
 
