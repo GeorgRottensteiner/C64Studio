@@ -574,6 +574,12 @@ namespace RetroDevStudio
       element.Name      = memChunk.ReadString();
       element.Filename  = memChunk.ReadString();
 
+      if ( string.IsNullOrEmpty( element.Filename ) )
+      {
+        // this could happen due to a bug I introduced with 7.9, give it a name so you can properly delete it
+        element.Filename = "my name was empty.asm";
+      }
+
       GR.IO.FileChunk           subChunk = new GR.IO.FileChunk();
 
       if ( !subChunk.ReadFromStream( memChunk ) )
