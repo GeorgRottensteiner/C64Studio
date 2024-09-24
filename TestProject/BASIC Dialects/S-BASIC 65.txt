@@ -105,6 +105,7 @@ GET;A1;
 GETSCR;FE2C;
 GOSUB;8D;;listoflinenumbers
 GOTO;89;;listoflinenumbers
+GO;CB;;gotoken
 GRAPHIC;DE;
 HEADER;F1;
 HELP;EA;

@@ -177,6 +177,10 @@ namespace RetroDevStudio
                 {
                   opCode.IsComment = true;
                 }
+                else if ( string.Compare( extraInfo[i], "GOTOKEN", true ) == 0 )
+                {
+                  opCode.GoTokenToMayFollow = true;
+                }
                 else if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {
                   opCode.IsPreLabelToken = true;

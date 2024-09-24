@@ -16,6 +16,7 @@ namespace C64Models.BASIC
     public bool           IsPreLabelToken = false;                  // at the start of a statement (no EXEC/PROC)
     public int            ArgumentIndexOfExpectedLineNumber = -1;   // 0 for THEN, GOTO, GOSUB, RUN, 1 for COLLISION (V7), etc.
     public bool           AllowsSeveralLineNumbers = false;         // true for (ON xxx) GOTO, GOSUB ..,..,..
+    public bool           GoTokenToMayFollow = false;               // special case Commodore GO TO, can only do 1 line number!
 
 
 
@@ -55,6 +56,7 @@ namespace C64Models.BASIC
 
     static Dialect()
     {
+      // V2 is hard coded, so we always have at least one dialect file
       BASICV2 = new Dialect();
       BASICV2.Name = "BASIC V2";
       BASICV2.AddOpcode( "END", 0x80, "eN" );
@@ -135,7 +137,8 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "LEFT$", 0xC8, "leF" );
       BASICV2.AddOpcode( "RIGHT$", 0xC9, "rI" );
       BASICV2.AddOpcode( "MID$", 0xCA, "mI" );
-      BASICV2.AddOpcode( "GO", 0xCB );
+      var goToken = BASICV2.AddOpcode( "GO", 0xCB );
+      goToken.GoTokenToMayFollow = true;
 
       // C64Studio extension
       BASICV2.AddExOpcode( "LABEL", 0xF0 );
@@ -286,6 +289,10 @@ namespace C64Models.BASIC
                 if ( string.Compare( extraInfo[i], "COMMENT", true ) == 0 )
                 {
                   opCode.IsComment = true;
+                }
+                if ( string.Compare( extraInfo[i], "GOTOKEN", true ) == 0 )
+                {
+                  opCode.GoTokenToMayFollow = true;
                 }
                 if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {

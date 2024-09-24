@@ -160,12 +160,6 @@ namespace RetroDevStudio.Parser
     private string                                    _LastLineNumberDocument  = "";
     private int                                       _LastLineNumberDocLineIndex  = -1;
 
-    //private Opcode                                    _OpcodeGosub  = null;
-    //private Opcode                                    _OpcodeGoto   = null;
-    //private Opcode                                    _OpcodeRun    = null;
-    private Opcode                                    _OpcodeRem    = null;
-    //private Opcode                                    _OpcodeThen   = null;
-
     public Dictionary<int, int>                       LabelLineMapping = new Dictionary<int, int>();
 
 
@@ -249,11 +243,6 @@ namespace RetroDevStudio.Parser
       Settings.BASICDialect = Dialect;
 
       var emptyOpcode = new Opcode( "", -1 );
-      //_OpcodeGosub = emptyOpcode;
-      //_OpcodeGoto = emptyOpcode;
-      //_OpcodeRun   = emptyOpcode;
-      _OpcodeRem = emptyOpcode;
-      //_OpcodeThen  = emptyOpcode;
 
       if ( Dialect != null )
       {
@@ -275,7 +264,7 @@ namespace RetroDevStudio.Parser
 
         //Dialect.Opcodes.TryGetValue( "GOSUB", out _OpcodeGosub );
         //Dialect.Opcodes.TryGetValue( "GOTO", out _OpcodeGoto );
-        Dialect.Opcodes.TryGetValue( "REM", out _OpcodeRem );
+        //Dialect.Opcodes.TryGetValue( "REM", out _OpcodeRem );
         //Dialect.Opcodes.TryGetValue( "RUN", out _OpcodeRun );
         //Dialect.Opcodes.TryGetValue( "THEN", out _OpcodeThen );
       }
@@ -1708,6 +1697,25 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.Opcodes[token.Content].GoTokenToMayFollow ) )
+        {
+          int nextTokenIndex = FindNextToken( info.Tokens, i );
+          if ( ( nextTokenIndex != -1 )
+          &&   ( info.Tokens[nextTokenIndex].TokenType == Token.Type.BASIC_TOKEN )
+          &&   ( info.Tokens[nextTokenIndex].Content == "TO" ) )
+          {
+            // GO, followed by TO has one line number
+            nextTokenIndex = FindNextToken( info.Tokens, nextTokenIndex );
+            if ( ( nextTokenIndex != -1 )
+            &&   ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL ) )
+            {
+              int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
+              info.ReferencedLineNumbers.Add( referencedLineNumber );
+            }
+          }
+        }
+
+        if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
         &&   ( Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber >= 0 ) )
         {
           // only one line number
@@ -2376,6 +2384,7 @@ namespace RetroDevStudio.Parser
 
         var pureInfo = PureTokenizeLine( line );
         pureInfo.LineNumber = lastLineNumber;
+        pureInfo.LineIndex  = lineIndex;
 
         // remember last line source if a line number was present
         if ( ( pureInfo.Tokens.Count > 0 )
@@ -2932,14 +2941,55 @@ namespace RetroDevStudio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
+            if ( Settings.BASICDialect.Opcodes[token.Content].GoTokenToMayFollow )
+            {
+              int nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, i );
+              if ( ( nextTokenIndex != -1 )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.BASIC_TOKEN )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex].Content == "TO" ) )
+              {
+                // GO, followed by TO has one line number
+                nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                if ( ( nextTokenIndex != -1 )
+                &&   ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL ) )
+                {
+                  if ( ( nextTokenIndex != -1 )
+                  &&   ( int.TryParse( lineInfo.Value.Tokens[nextTokenIndex].Content, out int refNo ) ) )
+                  {
+                    var nextToken = lineInfo.Value.Tokens[nextTokenIndex];
+                    int refNo1 = GR.Convert.ToI32( nextToken.Content );
+                    if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo1 ) )
+                    {
+                      //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo1}" );
+                      continue;
+                    }
+                    if ( !lineNumberReference.ContainsKey( refNo1 ) )
+                    {
+                      Debug.Log( "Error, found linenumber without reference " + refNo1 + " in line " + lineInfo.Value.LineNumber );
+                      continue;
+                    }
+                    sb.Append( token.Content );
+
+                    while ( i + 1 < nextTokenIndex )
+                    {
+                      sb.Append( lineInfo.Value.Tokens[i + 1].Content );
+                      ++i;
+                    }
+                    sb.Append( lineNumberReference[refNo].ToString() );
+
+                    i = nextTokenIndex;
+                    continue;
+                  }
+                }
+              }
+            }
             if ( Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber >= 0 )
             {
               // insert label instead of line number
-              sb.Append( token.Content );
-
               int   argIndex = Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber;
               int nextIndex = i + 1;
               bool labelWasInserted = false;
+              bool tokenWasInserted = false;
               while ( nextIndex < lineInfo.Value.Tokens.Count )
               {
                 Token nextToken = lineInfo.Value.Tokens[nextIndex];
@@ -2947,12 +2997,22 @@ namespace RetroDevStudio.Parser
                 {
                   if ( argIndex == 0 )
                   {
+                    if ( !tokenWasInserted )
+                    {
+                      tokenWasInserted = true;
+                      sb.Append( token.Content );
+                    }
                     // numeric!
                     int refNo = GR.Convert.ToI32( nextToken.Content );
+                    if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo ) )
+                    {
+                      //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo}" );
+                      break;
+                    }
                     if ( !lineNumberReference.ContainsKey( refNo ) )
                     {
                       Debug.Log( "Error, found linenumber without reference " + refNo + " in line " + lineInfo.Value.LineNumber );
-                      continue;
+                      break;
                     }
                     sb.Append( lineNumberReference[refNo].ToString() );
 
@@ -2965,6 +3025,11 @@ namespace RetroDevStudio.Parser
                 else if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
                 &&        ( nextToken.Content == " " ) )
                 {
+                  if ( !tokenWasInserted )
+                  {
+                    tokenWasInserted = true;
+                    sb.Append( token.Content );
+                  }
                   sb.Append( nextToken.Content );
                   ++nextIndex;
                   continue;
@@ -2972,6 +3037,11 @@ namespace RetroDevStudio.Parser
                 else if ( nextToken.Content == "," )
                 {
                   // comma after comma, is valid
+                  if ( !tokenWasInserted )
+                  {
+                    tokenWasInserted = true;
+                    sb.Append( token.Content );
+                  }
                   --argIndex;
                   sb.Append( ',' );
                   ++nextIndex;
@@ -2994,6 +3064,11 @@ namespace RetroDevStudio.Parser
                 int     refNo = -1;
                 if ( int.TryParse( lineInfo.Value.Tokens[i + 1].Content, out refNo ) )
                 {
+                  if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo ) )
+                  {
+                    //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo}" );
+                    break;
+                  }
                   if ( !lineNumberReference.ContainsKey( refNo ) )
                   {
                     Debug.Log( "Error, found linenumber without reference " + refNo + " in line " + lineInfo.Value.LineNumber );
@@ -3024,10 +3099,15 @@ namespace RetroDevStudio.Parser
                   {
                     // numeric!
                     int refNo = GR.Convert.ToI32( nextToken.Content );
+                    if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo ) )
+                    {
+                      //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo}" );
+                      break;
+                    }
                     if ( !lineNumberReference.ContainsKey( refNo ) )
                     {
                       Debug.Log( "Error, found linenumber without reference " + refNo + " in line " + lineInfo.Value.LineNumber );
-                      continue;
+                      break;
                     }
                     sb.Append( lineNumberReference[refNo].ToString() );
                   }
@@ -3082,16 +3162,9 @@ namespace RetroDevStudio.Parser
 
     public bool IsComment( Token token )
     {
-      if ( token.ByteValue == _OpcodeRem.InsertionValue )
+      if ( Settings.BASICDialect.Opcodes.TryGetValue( token.Content, out var opcode ) )
       {
-        return true;
-      }
-      if ( IsLightningOrLaserBASIC() )
-      {
-        if ( token.Content == "'" )
-        {
-          return true;
-        }
+        return opcode.IsComment;
       }
       return false;
     }
@@ -3227,6 +3300,47 @@ namespace RetroDevStudio.Parser
           if ( IsComment( token ) )
           {
             hadREM = true;
+          }
+
+          if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+          &&   ( Settings.BASICDialect.Opcodes[token.Content].GoTokenToMayFollow ) )
+          {
+            int nextTokenIndexC = FindNextToken( lineInfo.Value.Tokens, tokenIndex );
+            if ( ( nextTokenIndexC != -1 )
+            &&   ( lineInfo.Value.Tokens[nextTokenIndexC].TokenType == Token.Type.BASIC_TOKEN )
+            &&   ( lineInfo.Value.Tokens[nextTokenIndexC].Content == "TO" ) )
+            {
+              // GO, followed by TO has one line number
+              int nextTokenIndexA = FindNextToken( lineInfo.Value.Tokens, nextTokenIndexC );
+              int nextTokenIndexB = FindNextToken( lineInfo.Value.Tokens, nextTokenIndexA );
+
+              if ( ( lineInfo.Value.Tokens[nextTokenIndexA].TokenType == Token.Type.EX_BASIC_TOKEN )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndexA].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndexB].TokenType == Token.Type.NUMERIC_LITERAL ) )
+              {
+                sb.Append( token.Content );
+
+                while ( nextTokenIndexA - 1 > tokenIndex )
+                {
+                  // there were blanks in between
+                  sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                  ++tokenIndex;
+                }
+
+                string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndexB].Content;
+
+                if ( !labelToNumber.ContainsKey( label ) )
+                {
+                  AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                }
+                else
+                {
+                  sb.Append( labelToNumber[label].ToString() );
+                }
+                tokenIndex = nextTokenIndexB;
+                continue;
+              }
+            }
           }
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
@@ -3670,6 +3784,44 @@ namespace RetroDevStudio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
+            if ( Settings.BASICDialect.Opcodes[token.Content].GoTokenToMayFollow )
+            {
+              int nextTokenIndex = FindNextToken( lineInfo.Tokens, i );
+              if ( ( nextTokenIndex != -1 )
+              &&   ( lineInfo.Tokens[nextTokenIndex].TokenType == Token.Type.BASIC_TOKEN )
+              &&   ( lineInfo.Tokens[nextTokenIndex].Content == "TO" ) )
+              {
+                // GO, followed by TO has one line number
+                nextTokenIndex = FindNextToken( lineInfo.Tokens, nextTokenIndex );
+                if ( ( nextTokenIndex != -1 )
+                &&   ( lineInfo.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL ) )
+                {
+                  if ( ( nextTokenIndex != -1 )
+                  &&   ( int.TryParse( lineInfo.Tokens[nextTokenIndex].Content, out int refNo ) ) )
+                  {
+                    sb.Append( token.Content );
+
+                    while ( i + 1 < nextTokenIndex )
+                    {
+                      sb.Append( lineInfo.Tokens[i + 1].Content );
+                      ++i;
+                    }
+                    if ( ( refNo >= FirstLineNumber )
+                    &&   ( refNo <= LastLineNumber ) )
+                    {
+                      sb.Append( lineNumberReference[refNo] );
+                    }
+                    else
+                    {
+                      sb.Append( refNo );
+                    }
+                    ++i;
+                    continue;
+                  }
+                }
+              }
+            }
+
             if ( Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber == 0 )
             {
               // insert label instead of line number

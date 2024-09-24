@@ -98,6 +98,7 @@ CHR$;C7;chR
 LEFT$;C8;
 RIGHT$;C9;
 MID$;CA;mI
+GO;CB;;gotoken
 
 HIRES;6401;hI
 PLOT;6402;pL

@@ -95,6 +95,7 @@ CHR$;C7;cH
 LEFT$;C8;leF
 RIGHT$;C9;rI
 MID$;CA;mI
+GO;CB;;gotoken
 
 HIRES;6401;
 PLOT;6402;

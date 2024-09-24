@@ -104,7 +104,7 @@ GET;A1;
 GETKEY;a1f9;
 GOSUB;8d;;listoflinenumbers
 GOTO;89;;listoflinenumbers
-GO;CB;
+GO;CB;;gotoken
 GRAPHIC;de;
 HEADER;F1;
 HELP;ea;

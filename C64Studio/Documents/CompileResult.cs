@@ -395,18 +395,16 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void SelectMessage( int MessageIndex )
+    public void SelectMessage( Parser.ParserBase.ParseMessage Message )
     {
       listMessages.SelectedItems.Clear();
-      if ( ( MessageIndex < 0 )
-      ||   ( MessageIndex >= listMessages.Items.Count ) )
+      foreach ( ListViewItem item in listMessages.Items )
       {
-        
-      }
-      else
-      {
-        listMessages.Items[MessageIndex].Selected = true;
-        listMessages.EnsureVisible( MessageIndex );
+        if ( item.Tag == Message )
+        {
+          item.Selected = true;
+          listMessages.EnsureVisible( item.Index );
+        }
       }
     }
 

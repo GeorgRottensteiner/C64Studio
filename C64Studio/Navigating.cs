@@ -175,9 +175,6 @@ namespace RetroDevStudio
               newDoc.DocumentInfo.SetASMFileInfo( Core.Compiling.ASMFileInfo );
             }
           }
-          //Debug.Log( "m_Outline.RefreshFromDocument after showdoc" );
-          //Core.MainForm.m_Outline.RefreshFromDocument( newDoc.DocumentInfo.BaseDoc );
-
           newDoc.SetCursorToLine( Line, CharIndex, true );
           if ( Length > 0 )
           {
@@ -322,11 +319,11 @@ namespace RetroDevStudio
       }
       if ( LastShownMessageIndex >= CompileMessages.Count )
       {
-        LastShownMessageIndex = -1;
-        return;
+        LastShownMessageIndex = 0;
       }
 
       int     offset = LastShownMessageIndex;
+      int     actualMessageIndex = 0;
 
       foreach ( var message in CompileMessages )
       {
@@ -343,10 +340,15 @@ namespace RetroDevStudio
             documentFile = message.Value.AlternativeFile;
             documentLine = message.Value.AlternativeLineIndex;
           }
-          Core.MainForm.m_CompileResult.SelectMessage( LastShownMessageIndex );
+          Core.MainForm.m_CompileResult.SelectMessage( message.Value );
 
           OpenDocumentAndGotoLine( Project, FindDocumentInfoByPath( documentFile ), documentLine );
           return;
+        }
+        ++actualMessageIndex;
+        if ( message.Value.ChildMessages != null )
+        {
+          actualMessageIndex += message.Value.ChildMessages.Count;
         }
         --offset;
       }

@@ -2204,7 +2204,8 @@ namespace RetroDevStudio.Documents
       DocumentInfo.KnownKeywords  = DocumentInfo.ASMFileInfo.KnownTokens();
       DocumentInfo.KnownTokens    = DocumentInfo.ASMFileInfo.KnownTokenInfo();
 
-      if ( parser.Errors > 0 )
+      if ( ( parser.Errors > 0 )
+      ||   ( asmFileInfo.Messages.Any( em => em.Value.Code == ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND ) ) )
       {
         Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );

@@ -147,7 +147,7 @@ RIGHT$;C9;
 RI.;C9;
 MID$;CA;
 M.;CA;
-GO;CB;
+GO;CB;;gotoken
 
 # override without or different short cuts
 ELSE;cc;
