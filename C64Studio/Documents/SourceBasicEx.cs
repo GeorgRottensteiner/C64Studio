@@ -14,6 +14,7 @@ using GR.Image;
 using RetroDevStudio.Dialogs;
 using FastColoredTextBoxNS;
 using GR.Memory;
+using RetroDevStudio.Parser;
 
 namespace RetroDevStudio.Documents
 {
@@ -213,10 +214,15 @@ namespace RetroDevStudio.Documents
     {
       bool  hasLowercase = false;
       bool  hasUppercase = false;
+      bool  hasInvalidCharsInLowercase = false;
+      bool  hasInvalidCharsInUppercase = false;
       foreach ( var c in TextToPaste )
       {
         hasLowercase |= char.IsLower( c );
         hasUppercase |= char.IsUpper( c );
+
+        hasInvalidCharsInLowercase |= !BasicFileParser.IsValidChar( false, c );
+        hasInvalidCharsInUppercase |= !BasicFileParser.IsValidChar( true, c );
       }
 
       if ( m_LowerCaseMode != hasLowercase )

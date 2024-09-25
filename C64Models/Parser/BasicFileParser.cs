@@ -2092,6 +2092,27 @@ namespace RetroDevStudio.Parser
 
 
 
+    internal static bool IsValidChar( bool UpperCaseMode, char Character )
+    {
+      if ( !UpperCaseMode )
+      {
+        // lower case mode
+        if ( ConstantData.LowerCaseCharTo64Char.ContainsKey( Character ) )
+        {
+          return ConstantData.LowerCaseCharTo64Char[Character].HasPetSCII;
+        }
+      }
+      if ( ( !ConstantData.CharToC64Char.ContainsKey( Character ) )
+      ||   ( !ConstantData.CharToC64Char[Character].HasPetSCII ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+
     private bool VersionOnlyUsesUpperCase()
     {
       /*
