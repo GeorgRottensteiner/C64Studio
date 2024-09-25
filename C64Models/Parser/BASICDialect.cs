@@ -16,6 +16,7 @@ namespace C64Models.BASIC
     public bool           IsPreLabelToken = false;                  // at the start of a statement (no EXEC/PROC)
     public int            ArgumentIndexOfExpectedLineNumber = -1;   // 0 for THEN, GOTO, GOSUB, RUN, 1 for COLLISION (V7), etc.
     public bool           AllowsSeveralLineNumbers = false;         // true for (ON xxx) GOTO, GOSUB ..,..,..
+    public bool           LineListRange = false;                    // LIST <from> or LIST <from>-<to> or LIST -<to>
     public bool           GoTokenToMayFollow = false;               // special case Commodore GO TO, can only do 1 line number!
 
 
@@ -89,7 +90,7 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "PRINT", 0x99 );
       BASICV2.AddOpcode( "?", 0x99 );
       BASICV2.AddOpcode( "CONT", 0x9A, "cO" );
-      BASICV2.AddOpcode( "LIST", 0x9B, "lI" );
+      BASICV2.AddOpcode( "LIST", 0x9B, "lI" ).LineListRange = true;
       BASICV2.AddOpcode( "CLR", 0x9C, "cL" );
       BASICV2.AddOpcode( "CMD", 0x9D, "cM" );
       BASICV2.AddOpcode( "SYS", 0x9E, "sY" );
@@ -293,6 +294,10 @@ namespace C64Models.BASIC
                 if ( string.Compare( extraInfo[i], "GOTOKEN", true ) == 0 )
                 {
                   opCode.GoTokenToMayFollow = true;
+                }
+                if ( string.Compare( extraInfo[i], "LINELISTRANGE", true ) == 0 )
+                {
+                  opCode.LineListRange = true;
                 }
                 if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {

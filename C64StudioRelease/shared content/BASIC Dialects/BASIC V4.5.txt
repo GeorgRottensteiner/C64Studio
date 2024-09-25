@@ -42,7 +42,7 @@ PRINT#;98;pR
 PRINT;99;
 ?;99;
 CONT;9A;cO
-LIST;9B;lI
+LIST;9B;lI;linelistrange
 CLR;9C;cL
 CMD;9D;cM
 SYS;9E;sY

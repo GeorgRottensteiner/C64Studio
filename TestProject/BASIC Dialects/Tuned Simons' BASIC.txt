@@ -50,7 +50,7 @@ PRINT#;98;prI
 PRINT;99;
 ?;99;
 CONT;9A;coN
-LIST;9B;liS
+LIST;9B;liS;linelistrange
 CLR;9C;cL
 CMD;9D;
 SYS;9E;sY

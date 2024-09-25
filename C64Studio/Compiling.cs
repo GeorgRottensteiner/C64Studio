@@ -181,6 +181,10 @@ namespace RetroDevStudio
                 {
                   opCode.GoTokenToMayFollow = true;
                 }
+                else if ( string.Compare( extraInfo[i], "LINELISTRANGE", true ) == 0 )
+                {
+                  opCode.LineListRange = true;
+                }
                 else if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {
                   opCode.IsPreLabelToken = true;

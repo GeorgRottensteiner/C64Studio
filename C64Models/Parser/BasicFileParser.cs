@@ -1716,6 +1716,53 @@ namespace RetroDevStudio.Parser
         }
 
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.Opcodes[token.Content].LineListRange ) )
+        {
+          int   nextTokenIndex =  FindNextToken( info.Tokens, i );
+          if ( nextTokenIndex != -1 )
+          {
+            if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+            {
+              int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
+
+              info.ReferencedLineNumbers.Add( referencedLineNumber );
+
+              nextTokenIndex = FindNextToken( info.Tokens, nextTokenIndex );
+              if ( nextTokenIndex != -1 )
+              {
+                if ( info.Tokens[nextTokenIndex].Content == "-" )
+                {
+                  // a to part
+                  nextTokenIndex = FindNextToken( info.Tokens, nextTokenIndex );
+                  if ( nextTokenIndex != -1 )
+                  {
+                    if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+                    {
+                      referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
+                      info.ReferencedLineNumbers.Add( referencedLineNumber );
+                    }
+                  }
+                }
+              }
+            }
+            else if ( info.Tokens[nextTokenIndex].Content == "-" )
+            {
+              // a to part
+              nextTokenIndex = FindNextToken( info.Tokens, nextTokenIndex );
+              if ( nextTokenIndex != -1 )
+              {
+                if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+                {
+                  int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
+
+                  info.ReferencedLineNumbers.Add( referencedLineNumber );
+                }
+              }
+            }
+          }
+        }
+
+        if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
         &&   ( Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber >= 0 ) )
         {
           // only one line number
@@ -2983,6 +3030,110 @@ namespace RetroDevStudio.Parser
                 }
               }
             }
+            if ( Settings.BASICDialect.Opcodes[token.Content].LineListRange )
+            {
+              sb.Append( token.Content );
+              int   nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, i );
+              if ( nextTokenIndex != -1 )
+              {
+                while ( i + 1 < nextTokenIndex )
+                {
+                  sb.Append( lineInfo.Value.Tokens[i + 1].Content );
+                  ++i;
+                }
+                if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+                {
+                  ++i;
+                  int refNo1 = GR.Convert.ToI32( lineInfo.Value.Tokens[nextTokenIndex].Content );
+                  if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo1 ) )
+                  {
+                    //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo1}" );
+                    continue;
+                  }
+                  if ( !lineNumberReference.ContainsKey( refNo1 ) )
+                  {
+                    Debug.Log( "Error, found linenumber without reference " + refNo1 + " in line " + lineInfo.Value.LineNumber );
+                    continue;
+                  }
+                  sb.Append( lineNumberReference[refNo1].ToString() );
+
+                  nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                  if ( nextTokenIndex != -1 )
+                  {
+                    if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
+                    {
+                      while ( i + 1 < nextTokenIndex )
+                      {
+                        sb.Append( lineInfo.Value.Tokens[i + 1].Content );
+                        ++i;
+                      }
+                      // a to part
+                      nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                      if ( nextTokenIndex != -1 )
+                      {
+                        if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+                        {
+                          while ( i + 1 < nextTokenIndex )
+                          {
+                            sb.Append( lineInfo.Value.Tokens[i + 1].Content );
+                            ++i;
+                          }
+                          refNo1 = GR.Convert.ToI32( lineInfo.Value.Tokens[nextTokenIndex].Content );
+                          if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo1 ) )
+                          {
+                            //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo1}" );
+                            continue;
+                          }
+                          if ( !lineNumberReference.ContainsKey( refNo1 ) )
+                          {
+                            Debug.Log( "Error, found linenumber without reference " + refNo1 + " in line " + lineInfo.Value.LineNumber );
+                            continue;
+                          }
+                          sb.Append( lineNumberReference[refNo1].ToString() );
+                          i = nextTokenIndex;
+                        }
+                      }
+                    }
+                  }
+                  continue;
+                }
+                else if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
+                {
+                  // a to part
+                  while ( i + 1 < nextTokenIndex )
+                  {
+                    sb.Append( lineInfo.Value.Tokens[i + 1].Content );
+                    ++i;
+                  }
+                  nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                  if ( nextTokenIndex != -1 )
+                  {
+                    if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+                    {
+                      while ( i + 1 < nextTokenIndex )
+                      {
+                        sb.Append( lineInfo.Value.Tokens[i + 1].Content );
+                        ++i;
+                      }
+                      int refNo1 = GR.Convert.ToI32( lineInfo.Value.Tokens[nextTokenIndex].Content );
+                      if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo1 ) )
+                      {
+                        //AddError( lineInfo.Value.LineIndex, Types.ErrorCode.W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND, $"Referenced unknown line number {refNo1}" );
+                        continue;
+                      }
+                      if ( !lineNumberReference.ContainsKey( refNo1 ) )
+                      {
+                        Debug.Log( "Error, found linenumber without reference " + refNo1 + " in line " + lineInfo.Value.LineNumber );
+                        continue;
+                      }
+                      sb.Append( lineNumberReference[refNo1].ToString() );
+                    }
+                  }
+                }
+              }
+              ++i;
+              continue;
+            }
             if ( Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber >= 0 )
             {
               // insert label instead of line number
@@ -3436,6 +3587,119 @@ namespace RetroDevStudio.Parser
               }
             }
           }
+          if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+          &&   ( Settings.BASICDialect.Opcodes[token.Content].LineListRange ) )
+          {
+            sb.Append( token.Content );
+            nextTokenIndex =  FindNextToken( lineInfo.Value.Tokens, tokenIndex );
+            nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+            if ( nextTokenIndex != -1 )
+            {
+              while ( tokenIndex + 1 < nextTokenIndex )
+              {
+                sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                ++tokenIndex;
+              }
+              if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+              {
+                string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
+
+                if ( !labelToNumber.ContainsKey( label ) )
+                {
+                  AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                }
+                else
+                {
+                  sb.Append( labelToNumber[label].ToString() );
+                }
+                tokenIndex = nextTokenIndex2;
+
+                nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex2 );
+                if ( nextTokenIndex != -1 )
+                {
+                  if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
+                  {
+                    // a to part
+                    while ( tokenIndex + 1 < nextTokenIndex )
+                    {
+                      sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                      ++tokenIndex;
+                    }
+                    nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                    nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                    if ( nextTokenIndex != -1 )
+                    {
+                      if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
+                      &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
+                      &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+                      {
+                        while ( tokenIndex + 1 < nextTokenIndex )
+                        {
+                          sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                          ++tokenIndex;
+                        }
+                        label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
+
+                        if ( !labelToNumber.ContainsKey( label ) )
+                        {
+                          AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                        }
+                        else
+                        {
+                          sb.Append( labelToNumber[label].ToString() );
+                        }
+                        tokenIndex = nextTokenIndex2;
+                      }
+                    }
+                  }
+                }
+              }
+              else if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
+              {
+                // a to part
+                while ( tokenIndex + 1 < nextTokenIndex )
+                {
+                  sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                  ++tokenIndex;
+                }
+                nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                if ( nextTokenIndex != -1 )
+                {
+                  if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
+                  &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
+                  &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+                  {
+                    while ( tokenIndex + 1 < nextTokenIndex )
+                    {
+                      sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                      ++tokenIndex;
+                    }
+
+                    string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
+
+                    if ( !labelToNumber.ContainsKey( label ) )
+                    {
+                      AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                    }
+                    else
+                    {
+                      sb.Append( labelToNumber[label].ToString() );
+                    }
+                    tokenIndex = nextTokenIndex2;
+                  }
+                }
+              }
+            }
+            else
+            {
+              ++tokenIndex;
+            }
+            continue;
+          }
+
 
           if ( token.TokenType == Token.Type.STRING_LITERAL )
           {

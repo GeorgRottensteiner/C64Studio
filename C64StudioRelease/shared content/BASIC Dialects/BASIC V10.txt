@@ -105,7 +105,7 @@ LEFT$;c8;
 LEN;c3;
 LET;88;
 LINE;e5;
-LIST;9b;
+LIST;9b;;linelistrange
 LOAD;93;
 LOCATE;e6;
 LOG;bc;

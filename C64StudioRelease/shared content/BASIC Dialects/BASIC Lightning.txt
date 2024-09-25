@@ -68,8 +68,8 @@ PRINT;99;
 ?;99;
 CONT;9A;
 C.;9A;
-LIST;9B;
-LI.;9B;
+LIST;9B;;linelistrange
+LI.;9B;;linelistrange
 CLR;9C;
 CL.;9C;
 CMD;9D;

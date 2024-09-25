@@ -38,7 +38,7 @@ DEF;96;dE
 PRINT#;98;pR
 PRINT;99;
 ?;99;
-LIST;9B;lI
+LIST;9B;lI;linelistrange
 CLR;9C;cL
 CMD;9D;cM
 OPEN;9F;oP

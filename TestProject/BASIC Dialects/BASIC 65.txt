@@ -122,7 +122,7 @@ LEFT$;c8;
 LEN;c3;
 LET;88;
 LINE;e5;
-LIST;9b;
+LIST;9b;;linelistrange
 LOAD;93;
 LOADIFF;fe43;
 LOCK;fe50;
