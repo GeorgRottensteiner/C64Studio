@@ -138,7 +138,14 @@ namespace DecentForms
                 _PushedByKey = true;
                 Invalidate();
                 Click?.Invoke( this );
+                Event.Handled = true;
               }
+            }
+            else if ( Event.Key == Keys.Enter )
+            {
+              // continuous pressing is possible!
+              Click?.Invoke( this );
+              Event.Handled = true;
             }
           }
           break;
@@ -152,6 +159,7 @@ namespace DecentForms
                 _PushedByKey = false;
                 Invalidate();
               }
+              Event.Handled = true;
             }
           }
           break;

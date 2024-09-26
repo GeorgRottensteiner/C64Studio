@@ -891,9 +891,10 @@ namespace DecentForms
 
     private void DrawCheckBox( Rectangle CheckRect, bool MouseOver, bool Checked )
     {
-      uint    color = ( MouseOver ? ColorControlBackgroundMouseOver: ColorControlBorderFlat );
+      uint    color = ColorControlBorderFlat;
+      uint    bgColor = ( MouseOver ? ColorControlBackgroundMouseOver: ColorControlActiveBackground );
       DrawRectangle( CheckRect.Left, CheckRect.Top, CheckRect.Width, CheckRect.Height, color );
-      FillRectangle( CheckRect.Left + 1, CheckRect.Top + 1, CheckRect.Width - 2, CheckRect.Height - 2, ColorControlActiveBackground );
+      FillRectangle( CheckRect.Left + 1, CheckRect.Top + 1, CheckRect.Width - 2, CheckRect.Height - 2, bgColor );
       if ( Checked )
       {
         DrawLine( CheckRect.Left, CheckRect.Top, CheckRect.Right - 1, CheckRect.Bottom - 1, color );

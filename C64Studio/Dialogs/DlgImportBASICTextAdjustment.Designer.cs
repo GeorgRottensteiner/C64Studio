@@ -39,7 +39,7 @@
       // 
       this.labelIssueInfo.Location = new System.Drawing.Point(12, 9);
       this.labelIssueInfo.Name = "labelIssueInfo";
-      this.labelIssueInfo.Size = new System.Drawing.Size(411, 83);
+      this.labelIssueInfo.Size = new System.Drawing.Size(411, 57);
       this.labelIssueInfo.TabIndex = 0;
       this.labelIssueInfo.Text = "The imported image is x,y, the current screen size is x2,y2.\\r\\nShould the image " +
     "be clipped or the screen size be adjusted?";
@@ -110,7 +110,7 @@
       this.btnOK.Size = new System.Drawing.Size(127, 23);
       this.btnOK.TabIndex = 1;
       this.btnOK.Text = "OK";
-      this.btnOK.Click += new DecentForms.EventHandler(this.btnCancel_Click);
+      this.btnOK.Click += new DecentForms.EventHandler(this.btnOK_Click);
       // 
       // DlgImportBASICTextAdjustment
       // 
@@ -126,6 +126,7 @@
       this.Controls.Add(this.btnCancel);
       this.Controls.Add(this.labelIssueInfo);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.KeyPreview = true;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "DlgImportBASICTextAdjustment";
@@ -133,7 +134,7 @@
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-      this.Text = "Import issues detected";
+      this.Text = "Paste issues detected";
       this.ResumeLayout(false);
 
     }

@@ -250,34 +250,43 @@ namespace DecentForms
 
 
 
-    public void RaiseControlEvent( ControlEvent Event )
+    public bool RaiseControlEvent( ControlEvent Event )
     {
       OnControlEvent( Event );
+
+      return Event.Handled;
     }
 
 
 
-    public void RaiseControlEvent( ControlEvent.EventType Type, int MouseX = -1, int MouseY = -1, uint MouseButtons = 0, int MouseWheelDelta = 0 )
+    public bool RaiseControlEvent( ControlEvent.EventType Type, int MouseX = -1, int MouseY = -1, uint MouseButtons = 0, int MouseWheelDelta = 0 )
     {
-      OnControlEvent( new ControlEvent()
+      var newEvent = new ControlEvent()
       {
-        Type = Type,
-        MouseX = MouseX,
-        MouseY = MouseY,
-        MouseButtons = MouseButtons,
+        Type            = Type,
+        MouseX          = MouseX,
+        MouseY          = MouseY,
+        MouseButtons    = MouseButtons,
         MouseWheelDelta = MouseWheelDelta
-      } );
+      };
+      OnControlEvent( newEvent );
+
+      return newEvent.Handled;
     }
 
 
 
-    public void RaiseControlEvent( ControlEvent.EventType Type, Keys Key )
+    public bool RaiseControlEvent( ControlEvent.EventType Type, Keys Key )
     {
-      OnControlEvent( new ControlEvent()
+      var newEvent = new ControlEvent()
       {
-        Type = Type,
-        Key = Key
-      } );
+        Type  = Type,
+        Key   = Key
+      };
+
+      OnControlEvent( newEvent );
+
+      return newEvent.Handled;
     }
 
 
@@ -431,7 +440,7 @@ namespace DecentForms
 
     protected override void OnKeyDown( KeyEventArgs e )
     {
-      RaiseControlEvent( ControlEvent.EventType.KEY_DOWN, (Keys)e.KeyValue );
+      e.Handled = RaiseControlEvent( ControlEvent.EventType.KEY_DOWN, (Keys)e.KeyValue );
       base.OnKeyDown( e );
     }
 
@@ -439,7 +448,7 @@ namespace DecentForms
 
     protected override void OnKeyUp( KeyEventArgs e )
     {
-      RaiseControlEvent( ControlEvent.EventType.KEY_UP, (Keys)e.KeyValue );
+      e.Handled = RaiseControlEvent( ControlEvent.EventType.KEY_UP, (Keys)e.KeyValue );
       base.OnKeyUp( e );
     }
 
@@ -447,7 +456,7 @@ namespace DecentForms
 
     protected override void OnKeyPress( KeyPressEventArgs e )
     {
-      RaiseControlEvent( ControlEvent.EventType.KEY_PRESS, (Keys)e.KeyChar );
+      e.Handled = RaiseControlEvent( ControlEvent.EventType.KEY_PRESS, (Keys)e.KeyChar );
       base.OnKeyPress( e );
     }
 
@@ -472,6 +481,7 @@ namespace DecentForms
     protected override bool IsInputKey( Keys keyData )
     {
       if ( ( keyData == Keys.Tab )
+      ||   ( keyData == Keys.Escape )   // escape here, without that CancelButtons do not work!
       ||   ( keyData == ( Keys.Shift | Keys.Tab ) ) )
       {
         return false;

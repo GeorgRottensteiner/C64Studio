@@ -38,6 +38,8 @@ namespace DecentForms
     public uint             MouseButtons = 0;
 
     public Keys             Key = Keys.None;
+
+    public bool             Handled = false;
   }
 
 

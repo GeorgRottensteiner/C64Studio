@@ -9,13 +9,9 @@ namespace RetroDevStudio.Dialogs
 {
   partial class DlgImportBASICTextAdjustment : Form
   {
-    public bool AdjustCasing { get;  private set; } = true;
-    public bool ReplaceInvalidChars { get; private set; } = false;
-    public bool SkipInvalidChars { get; private set; } = false;
-
-    private bool      _CaseAdjustmentSolvesIssues = false;
-    private bool      _CaseAdjustmentSolvesIssues = false;
-
+    public bool   AdjustCasing { get;  private set; } = true;
+    public bool   ReplaceInvalidChars { get; private set; } = false;
+    public bool   SkipInvalidChars { get; private set; } = false;
 
 
 
@@ -23,59 +19,77 @@ namespace RetroDevStudio.Dialogs
     {
       InitializeComponent();
 
+      checkReplaceInvalidCharacters.Enabled = false;
+      checkSkipInvalidCharacters.Enabled    = false;
+      checkAdjustCasing.Enabled             = true;
+
+      string  fullInfo = "";
+
+      if ( ( ( UpperCaseActive ) 
+      &&     ( HasLowerCase ) ) 
+      ||   ( ( !UpperCaseActive )
+      &&     ( HasUpperCase ) ) )
+      {
+        checkAdjustCasing.Checked = true;
+
+        fullInfo += "The pasted text has mismatching casing.\r\n";
+      }
+
       if ( ( UppercaseInvalidChars )
       &&   ( LowercaseInvalidChars ) )
       {
-        _CaseAdjustmentSolvesIssues = false;
+        checkReplaceInvalidCharacters.Enabled = true;
+        checkSkipInvalidCharacters.Enabled    = true;
+        checkReplaceInvalidCharacters.Checked = true;
+
+        fullInfo += "The pasted text has invalid characters.\r\n";
       }
       else if ( UppercaseInvalidChars )
       {
+        fullInfo += "The pasted text has invalid characters.\r\n";
+        if ( UpperCaseActive )
+        {
+          checkReplaceInvalidCharacters.Enabled = true;
+          checkSkipInvalidCharacters.Enabled    = true;
+        }
         if ( HasLowerCase )
         {
-
+          checkAdjustCasing.Enabled = true;
         }
       }
       else if ( LowercaseInvalidChars )
       {
+        fullInfo += "The pasted text has invalid characters.\r\n";
+        if ( !UpperCaseActive )
+        {
+          checkReplaceInvalidCharacters.Enabled = true;
+          checkSkipInvalidCharacters.Enabled    = true;
+        }
+        if ( HasUpperCase )
+        {
+          checkAdjustCasing.Enabled = true;
+        }
       }
-
-      checkAdjustCasing.Checked = ( ( UpperCaseActive )
-                               &&   ( HasLowerCase ) )
-                               || ( ( !UpperCaseActive )
-                               &&   ( HasUpperCase ) );
-
-      if ( ( ( UpperCaseActive )
-      &&     ( UppercaseInvalidChars ) )
-      ||   ( ( !UpperCaseActive )
-      &&     ( LowercaseInvalidChars ) ) )
+      else
       {
-        checkSkipInvalidCharacters.Checked    = true;
-        checkReplaceInvalidCharacters.Checked = true;
+        checkReplaceInvalidCharacters.Enabled = false;
+        checkSkipInvalidCharacters.Enabled    = false;
       }
-      if ( ( UppercaseInvalidChars
-      checkSkipInvalidCharacters.Checked = UppercaseInvalidChars;
 
-      labelIssueInfo.Text = "The imported image has the size " + ImageWidth + "x" + ImageHeight + ".\r\n"
-                          + "The current screen has the size " + ScreenWidth + "x" + ScreenHeight + ".\r\n"
-                          + "\r\nClip the image (if it is bigger than the screen), adjust the screen size to the image size or cancel the import?";
+      
+      labelIssueInfo.Text = fullInfo + "\r\nChoose to auto-adjust casing and how to handle invalid characters";
 
       Core.Theming.ApplyTheme( this );
     }
 
 
 
-    private void btnClip_Click( DecentForms.ControlBase Sender )
+    private void btnOK_Click( DecentForms.ControlBase Sender )
     {
-      ChosenResult = ImportBehaviour.CLIP_IMAGE;
-      DialogResult = DialogResult.OK;
-      Close();
-    }
+      AdjustCasing        = checkAdjustCasing.Checked;
+      ReplaceInvalidChars = checkReplaceInvalidCharacters.Checked;
+      SkipInvalidChars    = checkSkipInvalidCharacters.Checked;
 
-
-
-    private void btnAdjustScreenSize_Click( DecentForms.ControlBase Sender )
-    {
-      ChosenResult = ImportBehaviour.ADJUST_SCREEN_SIZE;
       DialogResult = DialogResult.OK;
       Close();
     }
@@ -84,10 +98,10 @@ namespace RetroDevStudio.Dialogs
 
     private void btnCancel_Click( DecentForms.ControlBase Sender )
     {
-      ChosenResult = ImportBehaviour.CANCEL;
       DialogResult = DialogResult.Cancel;
       Close();
     }
+
 
 
   }

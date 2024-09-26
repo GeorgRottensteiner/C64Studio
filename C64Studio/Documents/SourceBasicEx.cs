@@ -221,24 +221,31 @@ namespace RetroDevStudio.Documents
         hasLowercase |= char.IsLower( c );
         hasUppercase |= char.IsUpper( c );
 
+        // custom macro characters (or label chars) must be allowed, even if they're not valid PETSCII
+        if ( "{}_".IndexOf( c ) != -1 )
+        {
+          continue;
+        }
+
         hasInvalidCharsInLowercase |= !BasicFileParser.IsValidChar( false, c );
         hasInvalidCharsInUppercase |= !BasicFileParser.IsValidChar( true, c );
       }
 
-      if ( m_LowerCaseMode != hasLowercase )
+      if ( ( hasInvalidCharsInLowercase )
+      ||   ( hasInvalidCharsInUppercase )
+      ||   ( ( m_LowerCaseMode )
+      &&     ( hasUppercase ) )
+      ||   ( ( !m_LowerCaseMode )
+      &&     ( hasLowercase ) ) )
       {
-        // in both cases potential problems arise, ask for automatic adjust
-        var buttons = MessageBoxButtons.YesNoCancel;
-        if ( MustChoose )
-        {
-          buttons = MessageBoxButtons.YesNo;
-        }
-        var result = System.Windows.Forms.MessageBox.Show( "The pasted text casing does not seem to match the target casing.\r\nAdapt the text casing before inserting?", "Adjust casing?", buttons );
-        if ( result == DialogResult.Cancel )
+        // we need clarification
+        var dlgPasteBASIC = new DlgImportBASICTextAdjustment( !m_LowerCaseMode, hasUppercase, hasLowercase, hasInvalidCharsInUppercase, hasInvalidCharsInLowercase, Core );
+        if ( dlgPasteBASIC.ShowDialog() != DialogResult.OK )
         {
           return null;
         }
-        if ( result == DialogResult.Yes )
+
+        if ( dlgPasteBASIC.AdjustCasing )
         {
           if ( m_LowerCaseMode )
           {
@@ -251,6 +258,23 @@ namespace RetroDevStudio.Documents
             TextToPaste = MakeUpperCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
           }
         }
+        var sb = new StringBuilder();
+        foreach ( var c in TextToPaste )
+        {
+          if ( ( dlgPasteBASIC.SkipInvalidChars )
+          &&   ( !BasicFileParser.IsValidChar( !m_LowerCaseMode, c ) ) )
+          {
+            continue;
+          }
+          if ( ( dlgPasteBASIC.ReplaceInvalidChars )
+          &&   ( !BasicFileParser.IsValidChar( !m_LowerCaseMode, c ) ) )
+          {
+            sb.Append( '?' );
+            continue;
+          }
+          sb.Append( c );
+        }
+        TextToPaste = sb.ToString();
       }
 
       return TextToPaste;
