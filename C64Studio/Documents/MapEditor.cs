@@ -11,6 +11,7 @@ using RetroDevStudio.Formats;
 using RetroDevStudio.Controls;
 using System.Runtime.InteropServices;
 using Be.Windows.Forms;
+using RetroDevStudio.Undo;
 
 
 
@@ -3126,6 +3127,7 @@ namespace RetroDevStudio.Documents
       {
         comboTiles.Invalidate();
       }
+      RedrawMap();
     }
 
 
@@ -3580,6 +3582,10 @@ namespace RetroDevStudio.Documents
 
     private void characterEditor_CharactersShifted( int[] OldToNew, int[] NewToOld )
     {
+      for ( int i = 0; i < m_MapProject.Tiles.Count; ++i )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, i ), false );
+      }
       foreach ( var tile in m_MapProject.Tiles )
       {
         for ( int i = 0; i < tile.Chars.Width; ++i )
