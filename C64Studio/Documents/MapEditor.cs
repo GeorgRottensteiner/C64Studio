@@ -2171,6 +2171,9 @@ namespace RetroDevStudio.Documents
 
       if ( listTileInfo.SelectedIndices.Count == 0 )
       {
+        btnCopyTileCharToNextIncreased.Enabled  = false;
+        btnSetNextTileChar.Enabled              = false;
+
         RedrawTile();
         return;
       }
@@ -2182,6 +2185,9 @@ namespace RetroDevStudio.Documents
       editTileName.Text = m_CurrentEditedTile.Name;
 
       UpdateCurrentTileCharacterList();
+
+      btnCopyTileCharToNextIncreased.Enabled  = ( listTileChars.SelectedIndices.Count != 0 );
+      btnSetNextTileChar.Enabled              = ( listTileChars.SelectedIndices.Count != 0 );
 
       RedrawTile();
     }
