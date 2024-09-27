@@ -2181,6 +2181,21 @@ namespace RetroDevStudio.Documents
       editTileHeight.Text = m_CurrentEditedTile.Chars.Height.ToString();
       editTileName.Text = m_CurrentEditedTile.Name;
 
+      UpdateCurrentTileCharacterList();
+
+      RedrawTile();
+    }
+
+
+
+    private void UpdateCurrentTileCharacterList()
+    {
+      if ( m_CurrentEditedTile == null )
+      {
+        return;
+      }
+      listTileChars.BeginUpdate();
+      listTileChars.Items.Clear();
       for ( int j = 0; j < m_CurrentEditedTile.Chars.Height; ++j )
       {
         for ( int i = 0; i < m_CurrentEditedTile.Chars.Width; ++i )
@@ -2195,8 +2210,7 @@ namespace RetroDevStudio.Documents
           listTileChars.Items.Add( item );
         }
       }
-
-      RedrawTile();
+      listTileChars.EndUpdate();
     }
 
 
@@ -3403,6 +3417,7 @@ namespace RetroDevStudio.Documents
 
     private void characterEditor_Modified( List<int> AffectedChars )
     {
+      panelCharacters.Invalidate();
       RedrawMap();
       RedrawColorChooser();
       RedrawTile();
@@ -3598,8 +3613,10 @@ namespace RetroDevStudio.Documents
       }
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {
+        RebuildCharImage( i );
         panelCharacters.Items[i].MemoryImage = m_MapProject.Charset.Characters[i].Tile.Image;
       }
+      UpdateCurrentTileCharacterList();
       RedrawMap();
       RedrawTile();
     }
