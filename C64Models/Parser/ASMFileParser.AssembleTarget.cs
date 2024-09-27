@@ -34,7 +34,7 @@ namespace RetroDevStudio.Parser
             t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
             t64.TapeInfo.UserDescription = "USERDESC";
             t64.FileRecords.Add( record );
-            t64.FileDatas.Add( Assembly );
+            t64.FileDatas.Add( Assembly.SubBuffer( 2 ) );
 
             return t64.Compile();
           }
