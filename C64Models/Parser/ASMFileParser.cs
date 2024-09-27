@@ -10769,6 +10769,10 @@ namespace RetroDevStudio.Parser
         return false;
       }
       m_CompileTargetFile = Config.OutputFile;
+      if ( Config.TargetType != CompileTargetType.NONE )
+      {
+        m_CompileTarget = Config.TargetType;
+      }
 
       GR.Memory.ByteBuffer    result = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer    currentResultBlock = new GR.Memory.ByteBuffer();
@@ -10817,7 +10821,7 @@ namespace RetroDevStudio.Parser
               startBytesSet = true;
               //fileStartAddress = currentAddress;
 
-              if ( TargetTypeRequiresLoadAddress( Config.TargetType ) )
+              if ( TargetTypeRequiresLoadAddress( m_CompileTarget ) )
               {
                 result.AppendU16( (ushort)currentAddress );
                 dataOffset = 2;
@@ -11163,7 +11167,7 @@ namespace RetroDevStudio.Parser
       }
       
       // prefix load address
-      if ( TargetTypeRequiresLoadAddress( Config.TargetType ) )
+      if ( TargetTypeRequiresLoadAddress( m_CompileTarget ) )
       {
         assembledData = new GR.Memory.ByteBuffer( 2 ) + assembledData;
         assembledData.SetU16At( 0, (ushort)lowestStart );
@@ -11195,7 +11199,7 @@ namespace RetroDevStudio.Parser
         // arghh exceptions!
       }
 
-      var resultingBinary = AssembleTarget( Config.TargetType, AssembledOutput.Assembly, outputPureFilename, fileStartAddress );
+      var resultingBinary = AssembleTarget( m_CompileTarget, AssembledOutput.Assembly, outputPureFilename, fileStartAddress );
       if ( resultingBinary == null )
       {
         return false;
