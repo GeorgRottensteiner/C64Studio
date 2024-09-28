@@ -9529,21 +9529,29 @@ window.status = ""#print"";
       if ( insertRange.ReadOnly )
         return;
 
-      // Abort, if dragged range contains target place
-      if ( ( draggedRange != null ) 
-      &&   ( draggedRange.Contains( place ) ) )
-      {
-        return;
-      }
-
       // Determine, if the dragged string should be copied or moved
       bool copyMode =
                 ( draggedRange == null ) ||       // drag from outside
           ( draggedRange.ReadOnly ) ||      // dragged range is read only
           ( ( ModifierKeys & Keys.Control ) != Keys.None );
 
-      if ( draggedRange == null )//drag from outside
+      // Abort, if dragged range contains target place
+      if ( ( draggedRange != null ) 
+      &&   ( draggedRange.Contains( place ) ) )
       {
+        // allow copying at the very edge of the dropped place
+        if ( ( !copyMode )
+        ||   ( ( draggedRange.Start != place )
+        &&     ( draggedRange.End != place ) ) )
+        {
+          return;
+        }
+      }
+
+
+      if ( draggedRange == null )
+      {
+        //drag from outside
         Selection.BeginUpdate();
         // Insert text
         Selection.Start = place;
@@ -9552,9 +9560,10 @@ window.status = ""#print"";
         Selection = new Range( this, place, Selection.Start );
         Selection.EndUpdate();
       }
-      else//drag from me
+      else
       {
-        if ( !draggedRange.Contains( place ) )
+        //drag from me
+        //if ( !draggedRange.Contains( place ) )
         {
           BeginAutoUndo();
 
