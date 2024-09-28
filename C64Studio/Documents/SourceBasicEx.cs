@@ -271,6 +271,7 @@ namespace RetroDevStudio.Documents
           ||   ( c == '\r' )
           ||   ( c == '\t' ) )
           {
+            sb.Append( c );
             continue;
           }
 
