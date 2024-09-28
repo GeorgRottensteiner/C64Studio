@@ -218,6 +218,12 @@ namespace RetroDevStudio.Documents
       bool  hasInvalidCharsInUppercase = false;
       foreach ( var c in TextToPaste )
       {
+        if ( ( c == '\n' )
+        ||   ( c == '\r' )
+        ||   ( c == '\t' ) )
+        {
+          continue;
+        }
         hasLowercase |= char.IsLower( c );
         hasUppercase |= char.IsUpper( c );
 
@@ -261,6 +267,13 @@ namespace RetroDevStudio.Documents
         var sb = new StringBuilder();
         foreach ( var c in TextToPaste )
         {
+          if ( ( c == '\n' )
+          ||   ( c == '\r' )
+          ||   ( c == '\t' ) )
+          {
+            continue;
+          }
+
           if ( ( dlgPasteBASIC.SkipInvalidChars )
           &&   ( !BasicFileParser.IsValidChar( !m_LowerCaseMode, c ) ) )
           {
