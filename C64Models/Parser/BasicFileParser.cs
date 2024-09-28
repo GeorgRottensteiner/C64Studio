@@ -200,7 +200,7 @@ namespace RetroDevStudio.Parser
 
       AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@";
 
-      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#" + (char)0xee1e;
+      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#$%" + (char)0xee1e;
 
       SetBasicDialect( Settings.BASICDialect );
 
@@ -261,12 +261,6 @@ namespace RetroDevStudio.Parser
             AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.BinPrefix;
           }
         }
-
-        //Dialect.Opcodes.TryGetValue( "GOSUB", out _OpcodeGosub );
-        //Dialect.Opcodes.TryGetValue( "GOTO", out _OpcodeGoto );
-        //Dialect.Opcodes.TryGetValue( "REM", out _OpcodeRem );
-        //Dialect.Opcodes.TryGetValue( "RUN", out _OpcodeRun );
-        //Dialect.Opcodes.TryGetValue( "THEN", out _OpcodeThen );
       }
 
       ActionTokens.Clear();
@@ -3038,11 +3032,7 @@ namespace RetroDevStudio.Parser
                     }
                     sb.Append( token.Content );
 
-                    while ( i + 1 < nextTokenIndex )
-                    {
-                      sb.Append( lineInfo.Value.Tokens[i + 1].Content );
-                      ++i;
-                    }
+                    AppendGapTokens( sb, lineInfo.Value.Tokens, ref i, nextTokenIndex );
                     sb.Append( lineNumberReference[refNo].ToString() );
 
                     i = nextTokenIndex;
@@ -3057,11 +3047,7 @@ namespace RetroDevStudio.Parser
               int   nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, i );
               if ( nextTokenIndex != -1 )
               {
-                while ( i + 1 < nextTokenIndex )
-                {
-                  sb.Append( lineInfo.Value.Tokens[i + 1].Content );
-                  ++i;
-                }
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref i, nextTokenIndex );
                 if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
                 {
                   ++i;
@@ -3083,22 +3069,14 @@ namespace RetroDevStudio.Parser
                   {
                     if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
                     {
-                      while ( i + 1 < nextTokenIndex )
-                      {
-                        sb.Append( lineInfo.Value.Tokens[i + 1].Content );
-                        ++i;
-                      }
+                      AppendGapTokens( sb, lineInfo.Value.Tokens, ref i, nextTokenIndex );
                       // a to part
                       nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                       if ( nextTokenIndex != -1 )
                       {
                         if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
                         {
-                          while ( i + 1 < nextTokenIndex )
-                          {
-                            sb.Append( lineInfo.Value.Tokens[i + 1].Content );
-                            ++i;
-                          }
+                          AppendGapTokens( sb, lineInfo.Value.Tokens, ref i, nextTokenIndex );
                           refNo1 = GR.Convert.ToI32( lineInfo.Value.Tokens[nextTokenIndex].Content );
                           if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo1 ) )
                           {
@@ -3121,21 +3099,13 @@ namespace RetroDevStudio.Parser
                 else if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
                 {
                   // a to part
-                  while ( i + 1 < nextTokenIndex )
-                  {
-                    sb.Append( lineInfo.Value.Tokens[i + 1].Content );
-                    ++i;
-                  }
+                  AppendGapTokens( sb, lineInfo.Value.Tokens, ref i, nextTokenIndex );
                   nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                   if ( nextTokenIndex != -1 )
                   {
                     if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
                     {
-                      while ( i + 1 < nextTokenIndex )
-                      {
-                        sb.Append( lineInfo.Value.Tokens[i + 1].Content );
-                        ++i;
-                      }
+                      AppendGapTokens( sb, lineInfo.Value.Tokens, ref i, nextTokenIndex );
                       int refNo1 = GR.Convert.ToI32( lineInfo.Value.Tokens[nextTokenIndex].Content );
                       if ( !m_LineInfos.Any( li => li.Value.LineNumber == refNo1 ) )
                       {
@@ -3332,6 +3302,17 @@ namespace RetroDevStudio.Parser
 
 
 
+    private void AppendGapTokens( StringBuilder sb, List<Token> Tokens, ref int CurrentTokenIndex, int FirstTokenIndexAfterGap )
+    {
+      while ( CurrentTokenIndex + 1 < FirstTokenIndexAfterGap )
+      {
+        sb.Append( Tokens[CurrentTokenIndex + 1].Content );
+        ++CurrentTokenIndex;
+      }
+    }
+
+
+
     public bool IsComment( Token token )
     {
       if ( Settings.BASICDialect.Opcodes.TryGetValue( token.Content, out var opcode ) )
@@ -3492,12 +3473,14 @@ namespace RetroDevStudio.Parser
               {
                 sb.Append( token.Content );
 
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndexA );
+                /*
                 while ( nextTokenIndexA - 1 > tokenIndex )
                 {
                   // there were blanks in between
                   sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
                   ++tokenIndex;
-                }
+                }*/
 
                 string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndexB].Content;
 
@@ -3527,12 +3510,14 @@ namespace RetroDevStudio.Parser
               tokenIsInserted = true;
               sb.Append( token.Content );
 
+              AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
+              /*
               while ( nextTokenIndex - 1 > tokenIndex )
               {
                 // there were blanks in between
                 sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
                 ++tokenIndex;
-              }
+              }*/
             }
 
             while ( ( nextTokenIndex != -1 )
@@ -3543,18 +3528,23 @@ namespace RetroDevStudio.Parser
               {
                 // comma is valid
                 sb.Append( "," );
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref nextTokenIndex, nextTokenIndex2 );
+                /*
                 while ( nextTokenIndex2 - nextTokenIndex > 1 )
                 {
                   sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
                   ++nextTokenIndex;
-                }
+                }*/
                 nextTokenIndex = nextTokenIndex2;
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref nextTokenIndex, nextTokenIndex2 );
+                /*
                 while ( nextTokenIndex2 - nextTokenIndex > 1 )
                 {
                   sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
                   ++nextTokenIndex;
-                }
+                }*/
                 continue;
               }
 
@@ -3574,11 +3564,6 @@ namespace RetroDevStudio.Parser
                   sb.Append( labelToNumber[label].ToString() );
                 }
                 tokenIndex = nextTokenIndex2;
-                /*
-                if ( !Settings.BASICDialect.Opcodes[token.Content].AllowsSeveralLineNumbers )
-                {
-                  break;
-                }*/
                 nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex2 );
                 if ( ( nextTokenIndex == -1 )
                 ||   ( lineInfo.Value.Tokens[nextTokenIndex].Content != "," ) )
@@ -3587,11 +3572,14 @@ namespace RetroDevStudio.Parser
                 }
                 sb.Append( ',' );
                 int nextTokenIndexB = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref nextTokenIndex, nextTokenIndexB );
+                /*
                 while ( nextTokenIndexB - nextTokenIndex > 1 )
                 {
                   sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
                   ++nextTokenIndex;
-                }
+                }*/
                 nextTokenIndex = nextTokenIndexB;
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
               }
@@ -3616,11 +3604,7 @@ namespace RetroDevStudio.Parser
             nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
             if ( nextTokenIndex != -1 )
             {
-              while ( tokenIndex + 1 < nextTokenIndex )
-              {
-                sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                ++tokenIndex;
-              }
+              AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
               if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
@@ -3643,11 +3627,7 @@ namespace RetroDevStudio.Parser
                   if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
                   {
                     // a to part
-                    while ( tokenIndex + 1 < nextTokenIndex )
-                    {
-                      sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                      ++tokenIndex;
-                    }
+                    AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
                     nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                     nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                     if ( nextTokenIndex != -1 )
@@ -3656,11 +3636,7 @@ namespace RetroDevStudio.Parser
                       &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
                       &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
                       {
-                        while ( tokenIndex + 1 < nextTokenIndex )
-                        {
-                          sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                          ++tokenIndex;
-                        }
+                        AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
                         label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
 
                         if ( !labelToNumber.ContainsKey( label ) )
@@ -3680,11 +3656,7 @@ namespace RetroDevStudio.Parser
               else if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
               {
                 // a to part
-                while ( tokenIndex + 1 < nextTokenIndex )
-                {
-                  sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                  ++tokenIndex;
-                }
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
                 nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                 if ( nextTokenIndex != -1 )
@@ -3693,11 +3665,7 @@ namespace RetroDevStudio.Parser
                   &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
                   &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
                   {
-                    while ( tokenIndex + 1 < nextTokenIndex )
-                    {
-                      sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                      ++tokenIndex;
-                    }
+                    AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
 
                     string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
 

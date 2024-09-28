@@ -1,0 +1,2 @@
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
+10 A=49152:B=$C000:C=$2F80:D=$0400:E=%10101010

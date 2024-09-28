@@ -198,7 +198,7 @@ namespace C64Models.BASIC
 
 
 
-    public static Dialect ReadBASICDialectForUnitTest( string File, out string ErrorMessage )
+    public static Dialect ParseFromFile( string File, out string ErrorMessage )
     {
       ErrorMessage = "";
       var dialect = new Dialect();
@@ -214,7 +214,7 @@ namespace C64Models.BASIC
           ++lineIndex;
           line = line.Trim();
           if ( ( string.IsNullOrEmpty( line ) )
-          ||   ( line.StartsWith( "#" ) ) )
+          || ( line.StartsWith( "#" ) ) )
           {
             continue;
           }
@@ -260,6 +260,8 @@ namespace C64Models.BASIC
             firstLine = false;
             continue;
           }
+
+
           if ( line == "ExOpcodes" )
           {
             exOpcodes = true;
@@ -268,9 +270,9 @@ namespace C64Models.BASIC
 
           string[] parts = line.Split( ';' );
           if ( ( parts.Length != 3 )
-          &&   ( parts.Length != 4 ) )
+          && ( parts.Length != 4 ) )
           {
-            ErrorMessage = "Invalid BASIC format file '" + File + "', expected three or four columns in line " + lineIndex;
+            ErrorMessage = $"Invalid BASIC format file '{File}', expected three or four columns in line {lineIndex}";
             return null;
           }
           if ( exOpcodes )
@@ -291,26 +293,31 @@ namespace C64Models.BASIC
                 {
                   opCode.IsComment = true;
                 }
-                if ( string.Compare( extraInfo[i], "GOTOKEN", true ) == 0 )
+                else if ( string.Compare( extraInfo[i], "GOTOKEN", true ) == 0 )
                 {
                   opCode.GoTokenToMayFollow = true;
                 }
-                if ( string.Compare( extraInfo[i], "LINELISTRANGE", true ) == 0 )
+                else if ( string.Compare( extraInfo[i], "LINELISTRANGE", true ) == 0 )
                 {
                   opCode.LineListRange = true;
                 }
-                if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
+                else if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {
                   opCode.IsPreLabelToken = true;
                 }
-                if ( extraInfo[i].ToUpper().StartsWith( "LINENUMBERAT:" ) )
+                else if ( extraInfo[i].ToUpper().StartsWith( "LINENUMBERAT:" ) )
                 {
                   int   argNo = GR.Convert.ToI32( extraInfo[i].Substring( "LINENUMBERAT:".Length ) );
                   opCode.ArgumentIndexOfExpectedLineNumber = argNo;
                 }
-                if ( string.Compare( extraInfo[i], "LISTOFLINENUMBERS", true ) == 0 )
+                else if ( string.Compare( extraInfo[i], "LISTOFLINENUMBERS", true ) == 0 )
                 {
                   opCode.AllowsSeveralLineNumbers = true;
+                }
+                else
+                {
+                  ErrorMessage = $"Invalid BASIC format file '{File}', unknown extra info {extraInfo[i]} in line {lineIndex}";
+                  return null;
                 }
               }
             }

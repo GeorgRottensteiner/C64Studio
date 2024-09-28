@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestProject
 {
   [TestClass]
-  public class UnitTestBASICParser
+  public class BASIC
   {
     private RetroDevStudio.Parser.BasicFileParser CreateParser( string BASICDialectName )
     {
@@ -23,7 +23,7 @@ namespace TestProject
         string error;
 
         var temp = AppDomain.CurrentDomain.BaseDirectory;
-        var dialect = Dialect.ReadBASICDialectForUnitTest( "BASIC Dialects/" + BASICDialectName + ".txt", out error );
+        var dialect = Dialect.ParseFromFile( "BASIC Dialects/" + BASICDialectName + ".txt", out error );
         if ( dialect == null )
         {
           Assert.Fail( error );
@@ -79,7 +79,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestRenumberWithSpaces()
+    public void RenumberWithSpaces()
     {
       string      source = @"20 IFA=1THEN 20";
 
@@ -99,7 +99,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestRenumberWithSpacesNoStripSpaces()
+    public void RenumberWithSpacesNoStripSpaces()
     {
       string      source = @"20 IFA=1THEN 20";
 
@@ -120,7 +120,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestRenumberOverLines()
+    public void RenumberOverLines()
     {
       string      source = @"10 GOTO 300
                           300 GOTO 10";
@@ -142,7 +142,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestRenumberOnGosub()
+    public void RenumberOnGosub()
     {
       string      source = @"10 ONXGOSUB100,400,700
                           100PRINTA
@@ -168,7 +168,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestRenumberWithStatementAfterGotoGosub()
+    public void RenumberWithStatementAfterGotoGosub()
     {
       string      source = @"10 ONXGOSUB100,400,700:GOTO2000
                           100PRINTA
@@ -196,7 +196,27 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestEncodeToLabels()
+    public void RenumberWithActionReplyPrefixes()
+    {
+      string      source = @"10 A=49152:B=$C000:C=$2F80:D=$0400:E=%10101010";
+
+      var parser = CreateParser( "BASIC V2" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      string result = parser.Renumber( 10, 3, 10, 64000 );
+
+      Assert.AreEqual( source, result );
+    }
+
+
+
+    [TestMethod]
+    public void EncodeToLabels()
     {
       string      source = @"10 PRINT ""HALLO""
                           15 GET#2,A$
@@ -222,7 +242,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestDecodeFromLabels()
+    public void DecodeFromLabels()
     {
       string      source = @"LABEL10
 PRINT ""HALLO""
@@ -256,7 +276,7 @@ GOTO LABEL10";
 
 
     [TestMethod]
-    public void TestEncodeAndDecode()
+    public void EncodeAndDecode()
     {
       string      source = @"10 PRINT ""HALLO""
 15 GET#2,A$
@@ -306,7 +326,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestEncodeAndDecodeToLabelsWithREM()
+    public void EncodeAndDecodeToLabelsWithREM()
     {
       string      source = @"10 PRINT ""HALLO""
 15 GET#2, A$:REM HURZ
@@ -356,7 +376,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestEncodeAndDecodeToLabelsWithOnGoto()
+    public void EncodeAndDecodeToLabelsWithOnGoto()
     {
       string      source = @"10 PRINT ""HALLO""
 15 GET#2, A$:REM HURZ
@@ -410,7 +430,7 @@ ON X GOTO LABEL10, LABEL15, LABEL20
 
 
     [TestMethod]
-    public void TestEncodeAndDecodeToLabelsWithLabelIn2ndArgument()
+    public void EncodeAndDecodeToLabelsWithLabelIn2ndArgument()
     {
       string      source = @"10 COLLISION 2, 50
 30 GET#2, A$:REM HURZ
@@ -463,7 +483,7 @@ PRINT ""HALLO"":GOTO LABEL10
 
 
     [TestMethod]
-    public void TestEncodeAndDecodeToLabelsWithSplitGoTo()
+    public void EncodeAndDecodeToLabelsWithSplitGoTo()
     {
       string      source = @"10 GO TO 50:PRINT ""HURZ""
 30 GET#2, A$:REM HURZ
@@ -516,7 +536,7 @@ PRINT ""HALLO"":GOTO LABEL10
 
 
     [TestMethod]
-    public void TestEncodeAndDecodeToLabelsWithList()
+    public void EncodeAndDecodeToLabelsWithList()
     {
       string      source = @"10 LIST 10 - 50:PRINT ""HURZ""
 30 LIST10-:REM HURZ
@@ -569,7 +589,7 @@ LIST-LABEL50:GOTO LABEL10
 
 
     [TestMethod]
-    public void TestEncodeToLabelsONGoto()
+    public void EncodeToLabelsONGoto()
     {
       string      source = @"10 PRINT ""HALLO""
                           15 GET#2, A$
@@ -599,7 +619,7 @@ ON X GOTO LABEL10,  LABEL15, LABEL20
 
 
     [TestMethod]
-    public void TestEncodeToLabelsNoStripSpaces()
+    public void EncodeToLabelsNoStripSpaces()
     {
       string      source = @"10 PRINT ""HALLO""
                           20 GOTO 10";
@@ -625,7 +645,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestLaserBASICNoTokenAfterTask()
+    public void LaserBASICNoTokenAfterTask()
     {
       // disabled for now
       /*
@@ -666,7 +686,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestBASICV2NoTokenAfterThen()
+    public void BASICV2NoTokenAfterThen()
     {
       string    source = @"66 IFINT(B)<>BTHEN66";
 
@@ -678,7 +698,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestBASICStripREM()
+    public void StripREM()
     {
       string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
                            20 PRINT""WELT""";
@@ -691,7 +711,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestBASICStripREMNoStripInREM()
+    public void StripREMNoStripInREM()
     {
       string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
                            20 PRINT""WELT""";
@@ -704,7 +724,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestBASICStripREMNoStripInDATA()
+    public void StripREMNoStripInDATA()
     {
       string    source = @"10 PRINT""HALLO"":REM PRINT""HURZ""
                            20 DATA LSR X,, RTS, ADC (X,,,,ADC $,ROR$,,PLA,ADC #,ROR,,JMP (,ADC?,ROR?,";
@@ -717,7 +737,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestBASICStripREMNoStripInDATAButOnStartOfDATAEntry()
+    public void StripREMNoStripInDATAButOnStartOfDATAEntry()
     {
       string    source = @"20 DATA A  B C,  D E  F   ,G H I   ";
 
@@ -730,7 +750,7 @@ GOTO LABEL10
 
     // we had a bug where GOTO/GOSUB in front of a REM was not added to references when REM stripping was active
     [TestMethod]
-    public void TestBASICStripREMWithGOTOInFront()
+    public void StripREMWithGOTOInFront()
     {
       string    source = @"10 GOTO 20:REM PRINT""HURZ""
                            20 PRINT""WELT""";
@@ -767,7 +787,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestLaserBASICKeywords()
+    public void LaserBASICKeywords()
     {
       string  source=@"1 END
                       2 FOR
@@ -1111,7 +1131,7 @@ GOTO LABEL10
 
 
     [TestMethod]
-    public void TestLaserBASICKeywordsAbbreviations()
+    public void LaserBASICKeywordsAbbreviations()
     {
       string source = @"1 E. : REM END
                       2 F. : REM FOR

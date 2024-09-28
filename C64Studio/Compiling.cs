@@ -66,7 +66,15 @@ namespace RetroDevStudio
         {
           try
           {
-            ReadBASICDialect( file );
+            var dialect = Dialect.ParseFromFile( file, out string errorMessage );
+            if ( dialect != null )
+            {
+              BASICDialects.Add( dialect.Name, dialect );
+            }
+            else
+            {
+              Core.AddToOutputLine( errorMessage );
+            }
           }
           catch ( Exception ex )
           {
@@ -79,139 +87,6 @@ namespace RetroDevStudio
         Core.AddToOutput( "Exception reading BASIC dialect files: " + ex.Message + System.Environment.NewLine );
       }
       return true;
-    }
-
-
-
-    private Dialect ReadBASICDialect( string File )
-    {
-      var dialect = new Dialect();
-      using ( var reader = new GR.IO.BinaryReader( File ) )
-      {
-        string    line;
-        bool      firstLine = true;
-        int       lineIndex = 0;
-        bool      exOpcodes = false;
-
-        while ( reader.ReadLine( out line ) )
-        {
-          ++lineIndex;
-          line = line.Trim();
-          if ( ( string.IsNullOrEmpty( line ) )
-          ||   ( line.StartsWith( "#" ) ) )
-          {
-            continue;
-          }
-          if ( line.StartsWith( "StartAddress=" ) )
-          {
-            dialect.DefaultStartAddress = line.Substring( 13 );
-            continue;
-          }
-          else if ( line.StartsWith( "SafeLineLength=" ) )
-          {
-            dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
-            continue;
-          }
-          else if ( line.StartsWith( "MaxLineNumber=" ) )
-          {
-            dialect.MaxLineNumber = GR.Convert.ToI32( line.Substring( 14 ) );
-            continue;
-          }
-          else if ( line.StartsWith( "HexPrefix=" ) )
-          {
-            dialect.HexPrefix = line.Substring( 10 );
-            continue;
-          }
-          else if ( line.StartsWith( "BinPrefix=" ) )
-          {
-            dialect.BinPrefix = line.Substring( 10 );
-            continue;
-          }
-          else if ( line == "HasTextLabels" )
-          {
-            dialect.HasTextLabels = true;
-            continue;
-          }
-          else if ( line == "ExtendedTokensRecognizedInsideComment" )
-          {
-            dialect.ExtendedTokensRecognizedInsideComment = true;
-            continue;
-          }
-
-          // skip header
-          if ( firstLine )
-          {
-            firstLine = false;
-            continue;
-          }
-          
-
-          if ( line == "ExOpcodes" )
-          {
-            exOpcodes = true;
-            continue;
-          }
-
-          string[] parts = line.Split( ';' );
-          if ( ( parts.Length != 3 )
-          &&   ( parts.Length != 4 ) )
-          {
-            Core.AddToOutput( "Invalid BASIC format file '" + File + "', expected three or four columns in line " + lineIndex + System.Environment.NewLine );
-            return null;
-          }
-          if ( exOpcodes )
-          {
-            dialect.AddExOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ) );
-          }
-          else
-          {
-            var opCode = dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
-
-            if ( parts.Length == 4 )
-            {
-              string[]    extraInfo = parts[3].Split( ',' );
-
-              for ( int i = 0; i < extraInfo.Length; ++i )
-              {
-                if ( string.Compare( extraInfo[i], "COMMENT", true ) == 0 )
-                {
-                  opCode.IsComment = true;
-                }
-                else if ( string.Compare( extraInfo[i], "GOTOKEN", true ) == 0 )
-                {
-                  opCode.GoTokenToMayFollow = true;
-                }
-                else if ( string.Compare( extraInfo[i], "LINELISTRANGE", true ) == 0 )
-                {
-                  opCode.LineListRange = true;
-                }
-                else if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
-                {
-                  opCode.IsPreLabelToken = true;
-                }
-                else if ( extraInfo[i].ToUpper().StartsWith( "LINENUMBERAT:" ) )
-                {
-                  int   argNo = GR.Convert.ToI32( extraInfo[i].Substring( "LINENUMBERAT:".Length ) );
-                  opCode.ArgumentIndexOfExpectedLineNumber = argNo;
-                }
-                else if ( string.Compare( extraInfo[i], "LISTOFLINENUMBERS", true ) == 0 )
-                {
-                  opCode.AllowsSeveralLineNumbers = true;
-                }
-                else
-                {
-                  Core.AddToOutputLine( $"Invalid BASIC format file '{File}', unknown extra info {extraInfo[i]} in line {lineIndex}" );
-                  return null;
-                }
-              }
-            }
-          }
-        }
-      }
-      dialect.Name = GR.Path.GetFileNameWithoutExtension( File );
-      BASICDialects.Add( dialect.Name, dialect );
-
-      return dialect;
     }
 
 
