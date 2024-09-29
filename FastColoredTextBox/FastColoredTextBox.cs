@@ -6906,6 +6906,9 @@ namespace FastColoredTextBoxNS
     }
 
     protected Range draggedRange;
+    // range of original selection that is dragged
+    protected Range dragHighlightRange;
+    protected int   dragCopyInsertOffset = 0;
 
     protected override void OnMouseMove( MouseEventArgs e )
     {
@@ -6927,7 +6930,21 @@ namespace FastColoredTextBoxNS
         var origStart = Selection.Start;
 
         draggedRange = Selection.Clone();
+
+        GetRange( draggedRange.Start, draggedRange.End ).SetStyle( SelectionStyle );
+        dragHighlightRange = draggedRange.Clone();
+        dragCopyInsertOffset = 0;
+        int   origStartPos = PlaceToPosition( dragHighlightRange.Start );
+        int   origEndPos = PlaceToPosition( dragHighlightRange.End );
         var dragDropEffect = DoDragDrop( SelectedText, DragDropEffects.Move | DragDropEffects.Copy );
+        if ( dragDropEffect != DragDropEffects.Move )
+        {
+          // copy could have shifted the range!! what now?
+          dragHighlightRange.Start = PositionToPlace( origStartPos + dragCopyInsertOffset );
+          dragHighlightRange.End = PositionToPlace( origEndPos + dragCopyInsertOffset );
+          GetRange( dragHighlightRange.Start, dragHighlightRange.End ).ClearStyle( SelectionStyle );
+        }
+
         draggedRange = null;
 
         if ( dragDropEffect == DragDropEffects.None )
@@ -9681,6 +9698,11 @@ window.status = ""#print"";
             }
           }
 
+          if ( ( copyMode )
+          &&   ( startPosition < dragHighlightRange.Start ) )
+          {
+            dragCopyInsertOffset += PlaceToPosition( endPosition ) - PlaceToPosition( startPosition );
+          }
 
           // Select inserted text
           if ( !draggedRange.ColumnSelectionMode )
