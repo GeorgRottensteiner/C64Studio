@@ -107,7 +107,7 @@ namespace RetroDevStudio.Parser
 
     protected CompileConfig       m_CompileConfig = null;
 
-    protected Types.CompileTargetType m_CompileTarget = Types.CompileTargetType.PRG;
+    protected Types.CompileTarget m_CompileTarget = new Types.CompileTarget();
 
     protected string              m_CompileTargetFile = null;
     protected string              m_DefaultTargetExtension = ".prg";
@@ -163,7 +163,7 @@ namespace RetroDevStudio.Parser
     }
 
 
-    public virtual Types.CompileTargetType CompileTarget
+    public virtual Types.CompileTarget CompileTarget
     {
       get
       {

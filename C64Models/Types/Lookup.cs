@@ -56,6 +56,7 @@ namespace RetroDevStudio
       CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN] = "ULTIMAX16BIN";
       CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT] = "ULTIMAX16CRT";
       CompileTargetModeToKeyword[CompileTargetType.DSK] = "DSK";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_NES] = "CARTNES";
 
       EnumerateMediaTypes();
     }

@@ -110,7 +110,7 @@ namespace RetroDevStudio
       }
       if ( compileTarget == RetroDevStudio.Types.CompileTargetType.NONE )
       {
-        compileTarget = Parser.CompileTarget;
+        compileTarget = Parser.CompileTarget.Type;
       }
       return compileTarget;
     }

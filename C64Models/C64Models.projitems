@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\AdditionalArgumentCount.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorSystem.cs" />
@@ -109,6 +110,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.SpriteData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.BinaryData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.Include.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\CompileTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\CompileTargetType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ColorType.cs" />

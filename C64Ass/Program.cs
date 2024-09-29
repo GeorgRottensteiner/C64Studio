@@ -59,9 +59,9 @@ namespace C64Ass
       {
         compileTargetType = config.TargetType;
       }
-      else if ( parser.CompileTarget != RetroDevStudio.Types.CompileTargetType.NONE )
+      else if ( parser.CompileTarget.Type != RetroDevStudio.Types.CompileTargetType.NONE )
       {
-        compileTargetType = parser.CompileTarget;
+        compileTargetType = parser.CompileTarget.Type;
       }
       config.TargetType = compileTargetType;
 

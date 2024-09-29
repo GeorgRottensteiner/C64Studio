@@ -714,7 +714,7 @@ namespace RetroDevStudio
         element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", dependency, true, false ) );
       }
 
-      var obsoleteBasicVersion = (BasicVersion)memChunk.ReadUInt32();
+      var obsoleteBasicVersion = (ObsoleteBasicVersion)memChunk.ReadUInt32();
 
       // dependency - project
       dependencyCount = memChunk.ReadInt32();
@@ -730,21 +730,21 @@ namespace RetroDevStudio
         string  dialectKey = "BASIC V2";
         switch ( obsoleteBasicVersion )
         {
-          case BasicVersion.C64_BASIC_V2:
+          case ObsoleteBasicVersion.C64_BASIC_V2:
             break;
-          case BasicVersion.BASIC_LIGHTNING:
+          case ObsoleteBasicVersion.BASIC_LIGHTNING:
             dialectKey = "BASIC Lightning";
             break;
-          case BasicVersion.LASER_BASIC:
+          case ObsoleteBasicVersion.LASER_BASIC:
             dialectKey = "Laser BASIC";
             break;
-          case BasicVersion.SIMONS_BASIC:
+          case ObsoleteBasicVersion.SIMONS_BASIC:
             dialectKey = "Simon's BASIC";
             break;
-          case BasicVersion.V3_5:
+          case ObsoleteBasicVersion.V3_5:
             dialectKey = "BASIC V3.5";
             break;
-          case BasicVersion.V7_0:
+          case ObsoleteBasicVersion.V7_0:
             dialectKey = "BASIC V7.0";
             break;
         }

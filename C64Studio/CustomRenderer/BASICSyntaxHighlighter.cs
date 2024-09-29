@@ -85,7 +85,7 @@ namespace RetroDevStudio.CustomRenderer
           {
             case Parser.BasicFileParser.Token.Type.BASIC_TOKEN:
               subRange.SetStyle( StyleIndex.Style8 );
-              if ( _Parser.IsComment( token ) )
+              if (  _Parser.IsComment( token ) )
               {
                 hadREM = true;
               }

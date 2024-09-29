@@ -701,7 +701,7 @@
       // mapHScroll
       // 
       this.mapHScroll.BorderStyle = DecentForms.BorderStyle.NONE;
-      this.mapHScroll.DisplayType = DecentForms.HScrollBar.SBDisplayType.RAISED;
+      this.mapHScroll.DisplayType = DecentForms.ScrollBar.SBDisplayType.RAISED;
       this.mapHScroll.Enabled = false;
       this.mapHScroll.LargeChange = 10;
       this.mapHScroll.Location = new System.Drawing.Point(8, 413);
@@ -717,7 +717,7 @@
       // mapVScroll
       // 
       this.mapVScroll.BorderStyle = DecentForms.BorderStyle.NONE;
-      this.mapVScroll.DisplayType = DecentForms.VScrollBar.SBDisplayType.RAISED;
+      this.mapVScroll.DisplayType = DecentForms.ScrollBar.SBDisplayType.RAISED;
       this.mapVScroll.Enabled = false;
       this.mapVScroll.LargeChange = 10;
       this.mapVScroll.Location = new System.Drawing.Point(655, 6);

@@ -58,6 +58,8 @@ namespace RetroDevStudio.Documents
     private System.Drawing.Point        m_DragEndPos = new System.Drawing.Point();
     private System.Drawing.Point        m_LastDragEndPos = new System.Drawing.Point( -1, -1 );
 
+    private bool                        _TileDisplayMouseReleased = true;
+
     private List<GR.Generic.Tupel<bool,int>>          m_FloatingSelection = null;
     private System.Drawing.Size                       m_FloatingSelectionSize;
     private System.Drawing.Point                      m_FloatingSelectionPos;
@@ -3284,6 +3286,7 @@ namespace RetroDevStudio.Documents
     {
       if ( ( e.Button & System.Windows.Forms.MouseButtons.Left ) != 0 )
       {
+        _TileDisplayMouseReleased = true;
         PaintTileChar( e );
       }
       if ( ( e.Button & System.Windows.Forms.MouseButtons.Right ) != 0 )
@@ -3319,7 +3322,11 @@ namespace RetroDevStudio.Documents
       if ( ( curChar.Character != m_CurrentChar )
       ||   ( curChar.Color != m_CurrentColor ) )
       {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, m_CurrentEditedTile.Index ) );
+        if ( _TileDisplayMouseReleased )
+        {
+          _TileDisplayMouseReleased = false;
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, m_CurrentEditedTile.Index ) );
+        }
 
         curChar.Character = m_CurrentChar;
         curChar.Color = m_CurrentColor;
@@ -3788,6 +3795,7 @@ namespace RetroDevStudio.Documents
       }
       return base.ProcessCmdKey( ref msg, keyData );
     }
+
 
 
   }

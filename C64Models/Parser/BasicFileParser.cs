@@ -17,7 +17,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class BasicFileParser : ParserBase
   {
-    public enum BasicVersion
+    public enum ObsoleteBasicVersion
     {
       [Description( "BASIC V2" )]
       C64_BASIC_V2 = 0, //  Anpassung des VIC BASIC V2 für VC10, C64, C128 (C64-Modus), SX64, PET 64.
@@ -200,6 +200,7 @@ namespace RetroDevStudio.Parser
 
       AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@";
 
+      // 0xeee1 = arrow up
       AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#$%" + (char)0xee1e;
 
       SetBasicDialect( Settings.BASICDialect );
@@ -414,7 +415,7 @@ namespace RetroDevStudio.Parser
 
     public override void Clear()
     {
-      m_CompileTarget     = Types.CompileTargetType.PRG;
+      m_CompileTarget     = new CompileTarget();
       m_CompileTargetFile = null;
 
       AssembledOutput = null;
@@ -2214,7 +2215,7 @@ namespace RetroDevStudio.Parser
         BytePos += potentialOpcode.Command.Length;
 
         InsideDataStatement = ( potentialOpcode.Command == "DATA" );
-        if ( IsComment( potentialOpcode ) )
+        if ( potentialOpcode.IsComment )
         {
           InsideREMStatement = true;
 

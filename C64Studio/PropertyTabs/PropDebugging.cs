@@ -59,6 +59,7 @@ namespace RetroDevStudio
         AddType( CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT );
         AddType( CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN );
         AddType( CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT );
+        AddType( CompileTargetType.CARTRIDGE_NES );
       }
 
       foreach ( var configName in Element.DocumentInfo.Project.Settings.GetConfigurationNames() )

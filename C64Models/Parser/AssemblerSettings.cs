@@ -56,7 +56,7 @@ namespace RetroDevStudio.Parser
 
     public Types.AssemblerType                                      AssemblerType = Types.AssemblerType.AUTO;
 
-    public Types.CompileTargetType                                  DefaultTargetType = Types.CompileTargetType.PRG;
+    public Types.CompileTarget                                      DefaultTarget = new Types.CompileTarget();
     public string                                                   DefaultTargetExtension = ".prg";
 
     public string                                                   OpcodeSizeIdentifierSeparator = ".";
@@ -124,8 +124,8 @@ namespace RetroDevStudio.Parser
 
       AssemblerType = Type;
 
-      DefaultTargetType = Types.CompileTargetType.PRG;
-      DefaultTargetExtension = ".prg";
+      DefaultTarget           = new Types.CompileTarget();
+      DefaultTargetExtension  = ".prg";
 
       OperatorPrecedence.Clear();
       OperatorPrecedence["-"] = 0;
@@ -484,7 +484,7 @@ namespace RetroDevStudio.Parser
           CaseSensitive = false;
           LoopEndHasNoScope = true;
           MessageAutoIncludesBlanksBetweenParameters = true;
-          DefaultTargetType       = Types.CompileTargetType.PLAIN;
+          DefaultTarget.Type      = Types.CompileTargetType.PLAIN;
           DefaultTargetExtension  = ".bin";
           LabelsMustBeAtStartOfLine = true;
 
@@ -562,8 +562,8 @@ namespace RetroDevStudio.Parser
           MacrosHaveVariableNumberOfArguments = true;
           CaseSensitive = false;
           LoopEndHasNoScope = true;
-          DefaultTargetType = Types.CompileTargetType.PLAIN;
-          DefaultTargetExtension = ".bin";
+          DefaultTarget.Type      = Types.CompileTargetType.PLAIN;
+          DefaultTargetExtension  = ".bin";
           GreaterOrLessThanAtBeginningAffectFullExpression  = true;
           AllowsCustomTextMappings                          = true;
           IfWithoutBrackets                                 = true;
@@ -876,8 +876,8 @@ namespace RetroDevStudio.Parser
           CaseSensitive = false;
           LoopEndHasNoScope = true;
           MessageAutoIncludesBlanksBetweenParameters = true;
-          DefaultTargetType = Types.CompileTargetType.PLAIN;
-          DefaultTargetExtension = ".bin";
+          DefaultTarget.Type      = Types.CompileTargetType.PLAIN;
+          DefaultTargetExtension  = ".bin";
           LabelsMustBeAtStartOfLine = true;
           break;
       }

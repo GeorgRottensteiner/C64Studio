@@ -5762,7 +5762,7 @@ namespace RetroDevStudio
 
       if ( Document.Element != null )
       {
-        Document.Element.CompileTarget      = Parser.CompileTarget;
+        Document.Element.CompileTarget      = Parser.CompileTarget.Type;
         Document.Element.CompileTargetFile  = Parser.CompileTargetFile;
       }
       if ( buildState != null )
@@ -5777,7 +5777,7 @@ namespace RetroDevStudio
           catch
           {
           }
-          buildState.BuildState.Add( dependency, new SingleBuildInfo() { TimeStampOfSourceFile = lastChangeTime, TargetFile = Parser.CompileTargetFile, TargetType = Parser.CompileTarget }  );
+          buildState.BuildState.Add( dependency, new SingleBuildInfo() { TimeStampOfSourceFile = lastChangeTime, TargetFile = Parser.CompileTargetFile, TargetType = Parser.CompileTarget.Type }  );
         }
       }
 

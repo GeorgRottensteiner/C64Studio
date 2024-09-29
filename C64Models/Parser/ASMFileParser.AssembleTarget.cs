@@ -12,9 +12,9 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ByteBuffer AssembleTarget( CompileTargetType TargetType, ByteBuffer Assembly, string OutputPureFilename, int FileStartAddress )
+    private ByteBuffer AssembleTarget( CompileTarget Target, ByteBuffer Assembly, string OutputPureFilename, int FileStartAddress )
     {
-      switch ( TargetType )
+      switch ( Target.Type )
       {
         case CompileTargetType.PRG:
         case CompileTargetType.PLAIN:
@@ -78,6 +78,17 @@ namespace RetroDevStudio.Parser
 
             return d81.Compile();
           }
+        case Types.CompileTargetType.CARTRIDGE_NES:
+          {
+            Formats.D81 d81 = new RetroDevStudio.Formats.D81();
+
+            d81.CreateEmptyMedia();
+
+            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
+            d81.WriteFile( bufName, Assembly, RetroDevStudio.Types.FileType.PRG );
+
+            return d81.Compile();
+          }
         case Types.CompileTargetType.CARTRIDGE_8K_BIN:
         case Types.CompileTargetType.CARTRIDGE_8K_CRT:
           {
@@ -86,7 +97,7 @@ namespace RetroDevStudio.Parser
               return null;
             }
 
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_8K_CRT )
             {
               // build cartridge header
               resultingAssembly = CompileCartridgeHeader( 0, 0, 0, m_CompileTargetFile ) 
@@ -101,7 +112,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_16K_CRT )
             {
               var header = CompileCartridgeHeader( 0, 0, 0, m_CompileTargetFile );
               resultingAssembly = CompileCartridgeHeader( 0, 0, 0, m_CompileTargetFile )
@@ -116,7 +127,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT )
             {
               resultingAssembly = CompileCartridgeHeader( 0, 1, 0, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0xF000, 0x1000 );
@@ -130,7 +141,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT )
             {
               resultingAssembly = CompileCartridgeHeader( 0, 1, 0, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0xE000, 0x2000 );
@@ -144,7 +155,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT )
             {
               resultingAssembly = CompileCartridgeHeader( 0, 1, 0, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0xe000, 0x2000, true );
@@ -158,7 +169,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_32K )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_32K )
             {
               resultingAssembly = CompileCartridgeHeader( 0x13, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -172,7 +183,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_64K )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_64K )
             {
               resultingAssembly = CompileCartridgeHeader( 0x13, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -186,7 +197,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_128K )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_128K )
             {
               resultingAssembly = CompileCartridgeHeader( 0x13, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -200,7 +211,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_256K )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_256K )
             {
               resultingAssembly = CompileCartridgeHeader( 0x13, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -214,7 +225,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_512K )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_512K )
             {
               resultingAssembly = CompileCartridgeHeader( 0x13, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -228,7 +239,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_1M )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT_1M )
             {
               resultingAssembly = CompileCartridgeHeader( 0x13, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -242,7 +253,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
             {
               resultingAssembly = CompileCartridgeHeader( 0x39, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -256,7 +267,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
             {
               resultingAssembly = CompileCartridgeHeader( 0x20, 1, 0, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 2, 0x8000, 0xa000, 0x2000, false );
@@ -270,7 +281,7 @@ namespace RetroDevStudio.Parser
             {
               return null;
             }
-            if ( TargetType == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
+            if ( Target.Type == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
             {
               resultingAssembly = CompileCartridgeHeader( 60, 0, 1, m_CompileTargetFile )
                                 + CompileCartridgeChips( resultingAssembly, 0, 0x8000, 0x2000 );
@@ -278,7 +289,7 @@ namespace RetroDevStudio.Parser
             return resultingAssembly;
           }
         default:
-          Debug.Log( $"Unsupported target type {TargetType} in AssembleTarget encountered" );
+          Debug.Log( $"Unsupported target type {Target.Type} in AssembleTarget encountered" );
           break;
       }
       return null;

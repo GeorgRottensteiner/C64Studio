@@ -225,15 +225,15 @@ namespace RetroDevStudio.Parser
 
 
 
-    public override Types.CompileTargetType CompileTarget
+    public override Types.CompileTarget CompileTarget
     {
       get
       {
-        if ( m_CompileTarget != CompileTargetType.NONE )
+        if ( m_CompileTarget.Type != CompileTargetType.NONE )
         {
           return m_CompileTarget;
         }
-        return m_AssemblerSettings.DefaultTargetType;
+        return m_AssemblerSettings.DefaultTarget;
       }
     }
 
@@ -10333,7 +10333,7 @@ namespace RetroDevStudio.Parser
 
     public override void Clear()
     {
-      m_CompileTarget         = Types.CompileTargetType.NONE;
+      m_CompileTarget         = new CompileTarget();
       m_CompileTargetFile     = null;
       m_CompileCurrentAddress = -1;
       ExternallyIncludedFiles.Clear();
@@ -10735,6 +10735,7 @@ namespace RetroDevStudio.Parser
       ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_CRT )
       ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_BIN )
       ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_NES )
       ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN )
       ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT )
       ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN )
@@ -10771,7 +10772,7 @@ namespace RetroDevStudio.Parser
       m_CompileTargetFile = Config.OutputFile;
       if ( Config.TargetType != CompileTargetType.NONE )
       {
-        m_CompileTarget = Config.TargetType;
+        m_CompileTarget.Type = Config.TargetType;
       }
 
       GR.Memory.ByteBuffer    result = new GR.Memory.ByteBuffer();
@@ -10821,7 +10822,7 @@ namespace RetroDevStudio.Parser
               startBytesSet = true;
               //fileStartAddress = currentAddress;
 
-              if ( TargetTypeRequiresLoadAddress( m_CompileTarget ) )
+              if ( TargetTypeRequiresLoadAddress( m_CompileTarget.Type ) )
               {
                 result.AppendU16( (ushort)currentAddress );
                 dataOffset = 2;
@@ -11167,7 +11168,7 @@ namespace RetroDevStudio.Parser
       }
       
       // prefix load address
-      if ( TargetTypeRequiresLoadAddress( m_CompileTarget ) )
+      if ( TargetTypeRequiresLoadAddress( m_CompileTarget.Type ) )
       {
         assembledData = new GR.Memory.ByteBuffer( 2 ) + assembledData;
         assembledData.SetU16At( 0, (ushort)lowestStart );
