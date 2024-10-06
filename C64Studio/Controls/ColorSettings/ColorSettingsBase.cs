@@ -22,19 +22,21 @@ namespace RetroDevStudio.Controls
 
     public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor, List<int> PaletteIndexMapping );
     public delegate void PaletteSelectedHandler( ColorSettings Colors );
+    public delegate void PaletteMappingModifiedHandler( ColorSettings Colors );
     public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
     public delegate void ColorSelectedHandler( ColorType Color );
     public delegate void CustomColorSelectedHandler( int SelectedCustomColor );
     public delegate void ExchangeColorsHandler( ColorType Color1, ColorType Color2 );
     public delegate void MulticolorFlagChangedHandler();
 
-    public event PaletteModifiedHandler       PaletteModified;
-    public event PaletteSelectedHandler       PaletteSelected;
-    public event ColorsModifiedHandler        ColorsModified;
-    public event ColorSelectedHandler         SelectedColorChanged;
-    public event CustomColorSelectedHandler   SelectedCustomColorChanged;
-    public event ExchangeColorsHandler        ColorsExchanged;
-    public event MulticolorFlagChangedHandler MulticolorFlagChanged;
+    public event PaletteModifiedHandler         PaletteModified;
+    public event PaletteSelectedHandler         PaletteSelected;
+    public event PaletteMappingModifiedHandler  PaletteMappingModified;
+    public event ColorsModifiedHandler          ColorsModified;
+    public event ColorSelectedHandler           SelectedColorChanged;
+    public event CustomColorSelectedHandler     SelectedCustomColorChanged;
+    public event ExchangeColorsHandler          ColorsExchanged;
+    public event MulticolorFlagChangedHandler   MulticolorFlagChanged;
 
 
 
@@ -149,6 +151,16 @@ namespace RetroDevStudio.Controls
       if ( ColorsModified != null )
       {
         ColorsModified( Color, Colors, CustomColor );
+      }
+    }
+
+
+
+    protected void RaisePaletteMappingModifiedEvent()
+    {
+      if ( PaletteMappingModified != null )
+      {
+        PaletteMappingModified( Colors );
       }
     }
 

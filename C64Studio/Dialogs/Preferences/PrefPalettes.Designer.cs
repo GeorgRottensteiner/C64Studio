@@ -34,7 +34,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       this.btnExportSettings = new DecentForms.Button();
       this.btnImportSettings = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.paletteEditor = new RetroDevStudio.Controls.PaletteEditor();
+      this.paletteEditor = new RetroDevStudio.Controls.PaletteEditorControl();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -87,11 +87,11 @@ namespace RetroDevStudio.Dialogs.Preferences
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.paletteEditor.Location = new System.Drawing.Point(6, 19);
-      this.paletteEditor.Name = "paletteEditor";
+      this.paletteEditor.Name = "paletteEditorControl";
       this.paletteEditor.Size = new System.Drawing.Size(888, 419);
       this.paletteEditor.TabIndex = 14;
-      this.paletteEditor.PaletteOrderModified += new RetroDevStudio.Controls.PaletteEditor.PaletteOrderModifiedHandler(this.paletteEditor_PaletteOrderModified);
-      this.paletteEditor.PaletteModified += new RetroDevStudio.Controls.PaletteEditor.PaletteModifiedHandler(this.paletteEditor_PaletteModified);
+      this.paletteEditor.PaletteOrderModified += new RetroDevStudio.Controls.PaletteEditorControl.PaletteOrderModifiedHandler(this.paletteEditor_PaletteOrderModified);
+      this.paletteEditor.PaletteModified += new RetroDevStudio.Controls.PaletteEditorControl.PaletteModifiedHandler(this.paletteEditor_PaletteModified);
       // 
       // PrefPalettes
       // 
@@ -110,6 +110,6 @@ namespace RetroDevStudio.Dialogs.Preferences
         private DecentForms.Button btnExportSettings;
         private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.GroupBox groupBox1;
-        private Controls.PaletteEditor paletteEditor;
+        private Controls.PaletteEditorControl paletteEditor;
   }
 }

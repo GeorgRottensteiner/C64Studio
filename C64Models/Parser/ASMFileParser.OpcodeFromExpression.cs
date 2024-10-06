@@ -61,7 +61,7 @@ namespace RetroDevStudio.Parser
 
         int   parserExpressionIndex = MatchRoundToParserExpression( info.Opcode, round );
 
-        if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+        if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, out SymbolInfo byteValueSymbol ) )
         {
           byteValue = byteValueSymbol.ToInteger();
           if ( !ValidateExpressionValueRange( ref byteValue, info, round, out int valueRangeListIndex ) )

@@ -252,6 +252,45 @@ namespace RetroDevStudio.Displayer
 
 
 
+    public static void DisplayNESChar( GR.Memory.ByteBuffer Data, Palette Palette, List<List<int>> PaletteIndexMapping, int PaletteMappingIndex, GR.Image.IImage TargetImage, int X, int Y )
+    {
+      for ( int j = 0; j < 8; ++j )
+      {
+        for ( int i = 0; i < 8; ++i )
+        {
+          int pixelValue    = ( ( Data.ByteAt( j ) >> ( 7 - i ) ) & 0x01 )
+                            | ( ( ( Data.ByteAt( 8 + j ) >> ( 7 - i ) ) & 0x01 ) * 2 );
+          int realPalIndex  = PaletteIndexMapping[PaletteMappingIndex][pixelValue];
+          uint color        = Palette.ColorValues[realPalIndex];
+          TargetImage.SetPixel( X + i, Y + j, color );
+        }
+      }
+    }
+
+
+
+    public static void DisplayNESChar( GR.Memory.ByteBuffer Data, Types.ColorSettings Setup, CustomDrawControlContext Context )
+    {
+      for ( int j = 0; j < 8; ++j )
+      {
+        for ( int i = 0; i < 8; ++i )
+        {
+          int pixelValue    = ( ( Data.ByteAt( j ) >> ( 7 - i ) ) & 0x01 )
+                            | ( ( ( Data.ByteAt( 8 + j ) >> ( 7 - i ) ) & 0x01 ) * 2 );
+
+          int realPalIndex  = Setup.PaletteIndexMapping[Setup.PaletteMappingIndex][pixelValue];
+
+          Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[realPalIndex],
+                                ( i * Context.Bounds.Width ) / 8,
+                                ( j * Context.Bounds.Height ) / 8,
+                                ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
+                                ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+        }
+      }
+    }
+
+
+
     public static void DisplayVIC20Char( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // multicolor
@@ -356,167 +395,181 @@ namespace RetroDevStudio.Displayer
 
     public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, int AlternativeColor )
     {
-      DisplayChar( Charset, CharIndex, Context, AlternativeColor, Charset.Colors.BackgroundColor, Charset.Colors.MultiColor1, Charset.Colors.MultiColor2, Charset.Colors.BGColor4 );
+      var alternativeSettings = new Types.AlternativeColorSettings( Charset.Colors );
+      alternativeSettings.CustomColor = AlternativeColor;
+
+      DisplayChar( Charset, CharIndex, Context, alternativeSettings );
     }
 
 
 
 
-    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4 )
+    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, Types.AlternativeColorSettings AlternativeSettings )
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      DisplayChar( Charset, CharIndex, Context, AlternativeColor, AltBGColor, AltMColor1, AltMColor2, AltBGColor4, Charset.Mode );
-    }
+      var palette   = Charset.Colors.Palette;
+      var mode      = ( AlternativeSettings.CharMode == TextCharMode.UNKNOWN ) ? Charset.Mode : AlternativeSettings.CharMode;
+      var bgColor   = ( AlternativeSettings.BackgroundColor == -1 ) ? Charset.Colors.BackgroundColor : AlternativeSettings.BackgroundColor;
+      var bgColor4  = ( AlternativeSettings.BGColor4 == -1 ) ? Charset.Colors.BGColor4 : AlternativeSettings.BGColor4;
+      var mColor1   = ( AlternativeSettings.MultiColor1 == -1 ) ? Charset.Colors.MultiColor1 : AlternativeSettings.MultiColor1;
+      var mColor2   = ( AlternativeSettings.MultiColor2 == -1 ) ? Charset.Colors.MultiColor2 : AlternativeSettings.MultiColor2;
+      var color     = AlternativeSettings.CustomColor;
 
-
-
-    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4, TextCharMode AlternativeMode )
-    {
-      Formats.CharData Char = Charset.Characters[CharIndex];
-
-      if ( ( AlternativeMode == TextCharMode.COMMODORE_ECM )
-      ||   ( AlternativeMode == TextCharMode.MEGA65_ECM ) )
+      if ( ( mode == TextCharMode.COMMODORE_ECM )
+      ||   ( mode == TextCharMode.MEGA65_ECM ) )
       {
         // ECM
         Formats.CharData origChar = Charset.Characters[CharIndex % 64];
 
-        int bgColor = AltBGColor;
+        var ecmBGColor = bgColor;
         switch ( CharIndex / 64 )
         {
           case 1:
-            bgColor = AltMColor1;
+            ecmBGColor = mColor1;
             break;
           case 2:
-            bgColor = AltMColor2;
+            ecmBGColor = mColor2;
             break;
           case 3:
-            bgColor = AltBGColor4;
+            ecmBGColor = bgColor4;
             break;
         }
-        DisplayHiResChar( origChar.Tile.Data, bgColor, AlternativeColor, Context );
+        DisplayHiResChar( origChar.Tile.Data, ecmBGColor, color, Context );
       }
-      else if ( AlternativeMode == TextCharMode.COMMODORE_MULTICOLOR )
+      else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
       {
-        DisplayMultiColorChar( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
+        DisplayMultiColorChar( Char.Tile.Data, bgColor, mColor1, mColor2, color, Context );
       }
-      else if ( ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
-      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES )
-      ||        ( AlternativeMode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
+      else if ( ( mode == TextCharMode.COMMODORE_HIRES )
+      ||        ( mode == TextCharMode.MEGA65_HIRES )
+      ||        ( mode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
-        DisplayHiResChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
+        DisplayHiResChar( Char.Tile.Data, bgColor, color, Context );
       }
-      else if ( ( AlternativeMode == TextCharMode.MEGA65_FCM )
-      ||        ( AlternativeMode == TextCharMode.MEGA65_FCM_16BIT ) )
+      else if ( ( mode == TextCharMode.MEGA65_FCM )
+      ||        ( mode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
-        DisplayMega65FCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
+        DisplayMega65FCMChar( Char.Tile.Data, bgColor, color, Context );
       }
-      else if ( AlternativeMode == TextCharMode.MEGA65_NCM )
+      else if ( mode == TextCharMode.MEGA65_NCM )
       {
-        DisplayMega65NCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
+        DisplayMega65NCMChar( Char.Tile.Data, bgColor, color, Context );
       }
-      else if ( AlternativeMode == TextCharMode.VIC20 )
+      else if ( mode == TextCharMode.VIC20 )
       {
-        DisplayVIC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
+        DisplayVIC20Char( Char.Tile.Data, bgColor, mColor1, mColor2, color, Context );
       }
-      else if ( AlternativeMode == TextCharMode.X16_HIRES )
+      else if ( mode == TextCharMode.X16_HIRES )
       {
-        DisplayHiResChar( Char.Tile.Data, ( AlternativeColor >> 4 ) & 0x0f, AlternativeColor & 0x0f, Context );
+        DisplayHiResChar( Char.Tile.Data, ( color >> 4 ) & 0x0f, color & 0x0f, Context );
+      }
+      else if ( mode == TextCharMode.NES )
+      {
+        DisplayNESChar( Char.Tile.Data, Charset.Colors, Context );
       }
       else
       {
-        Debug.Log( "DisplayChar unsupported mode " + AlternativeMode );
+        Debug.Log( "DisplayChar unsupported mode " + mode );
       }
     }
 
 
 
-    public static void DisplayChar( Formats.CharsetProject Charset, Palette Palette, int CharIndex, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y )
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      DisplayChar( Charset, Palette, CharIndex, TargetImage, X, Y, Char.Tile.CustomColor );
+      DisplayChar( Charset, CharIndex, TargetImage, X, Y, Char.Tile.CustomColor );
     }
 
 
 
-    public static void DisplayChar( Formats.CharsetProject Charset, Palette Palette, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor )
+    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor )
     {
-      DisplayChar( Charset, Palette, CharIndex, TargetImage, X, Y, AlternativeColor, Charset.Colors.BackgroundColor, Charset.Colors.MultiColor1, Charset.Colors.MultiColor2, Charset.Colors.BGColor4 );
+      var alternativeSettings = new Types.AlternativeColorSettings( Charset.Colors );
+
+      alternativeSettings.CustomColor = AlternativeColor;
+      DisplayChar( Charset, CharIndex, TargetImage, X, Y, alternativeSettings );
     }
 
 
 
 
-    public static void DisplayChar( Formats.CharsetProject Charset, Palette Palette, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4 )
-    {
-      if ( CharIndex >= Charset.Characters.Count )
-      {
-        return;
-      }
-
-      Formats.CharData Char = Charset.Characters[CharIndex];
-
-      DisplayChar( Charset, Palette, CharIndex, TargetImage, X, Y, AlternativeColor, AltBGColor, AltMColor1, AltMColor2, AltBGColor4, Charset.Mode );
-    }
-
-
-
-    public static void DisplayChar( Formats.CharsetProject Charset, Palette Palette, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4, TextCharMode AlternativeMode )
+    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, Types.AlternativeColorSettings AlternativeSettings )
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      if ( ( AlternativeMode == TextCharMode.COMMODORE_ECM )
-      ||   ( AlternativeMode == TextCharMode.MEGA65_ECM ) )
+      var palette = Charset.Colors.Palette;
+      var mode = ( AlternativeSettings.CharMode == TextCharMode.UNKNOWN ) ? Charset.Mode : AlternativeSettings.CharMode;
+      var bgColor = ( AlternativeSettings.BackgroundColor == -1 ) ? Charset.Colors.BackgroundColor : AlternativeSettings.BackgroundColor;
+      var bgColor4 = ( AlternativeSettings.BGColor4 == -1 ) ? Charset.Colors.BGColor4 : AlternativeSettings.BGColor4;
+      var mColor1 = ( AlternativeSettings.MultiColor1 == -1 ) ? Charset.Colors.MultiColor1 : AlternativeSettings.MultiColor1;
+      var mColor2 = ( AlternativeSettings.MultiColor2 == -1 ) ? Charset.Colors.MultiColor2 : AlternativeSettings.MultiColor2;
+      var color = AlternativeSettings.CustomColor;
+
+      if ( ( mode == TextCharMode.COMMODORE_ECM )
+      ||   ( mode == TextCharMode.MEGA65_ECM ) )
       {
         // ECM
         Formats.CharData origChar = Charset.Characters[CharIndex % 64];
 
-        int bgColor = AltBGColor;
+        var altBGColor = bgColor;
         switch ( CharIndex / 64 )
         {
           case 1:
-            bgColor = AltMColor1;
+            altBGColor = mColor1;
             break;
           case 2:
-            bgColor = AltMColor2;
+            altBGColor = mColor2;
             break;
           case 3:
-            bgColor = AltBGColor4;
+            altBGColor = bgColor4;
             break;
         }
-        DisplayHiResChar( origChar.Tile.Data, Palette, bgColor, AlternativeColor, TargetImage, X, Y );
+        DisplayHiResChar( origChar.Tile.Data, palette, altBGColor, color, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == TextCharMode.COMMODORE_MULTICOLOR )
+      else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
       {
-        DisplayMultiColorChar( Char.Tile.Data, Palette, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+        DisplayMultiColorChar( Char.Tile.Data, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
       }
-      else if ( ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
-      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES )
-      ||        ( AlternativeMode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
+      else if ( ( mode == TextCharMode.COMMODORE_HIRES )
+      ||        ( mode == TextCharMode.MEGA65_HIRES )
+      ||        ( mode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
-        DisplayHiResChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
+        DisplayHiResChar( Char.Tile.Data, palette, bgColor, color, TargetImage, X, Y );
       }
-      else if ( ( AlternativeMode == TextCharMode.MEGA65_FCM )
-      ||        ( AlternativeMode == TextCharMode.MEGA65_FCM_16BIT ) )
+      else if ( ( mode == TextCharMode.MEGA65_FCM )
+      ||        ( mode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
-        DisplayMega65FCMChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
+        DisplayMega65FCMChar( Char.Tile.Data, palette, bgColor, color, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == TextCharMode.MEGA65_NCM )
+      else if ( mode == TextCharMode.MEGA65_NCM )
       {
-        DisplayMega65NCMChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
+        DisplayMega65NCMChar( Char.Tile.Data, palette, bgColor, color, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == TextCharMode.VIC20 )
+      else if ( mode == TextCharMode.VIC20 )
       {
-        DisplayVIC20Char( Char.Tile.Data, Palette, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+        DisplayVIC20Char( Char.Tile.Data, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == TextCharMode.X16_HIRES )
+      else if ( mode == TextCharMode.X16_HIRES )
       {
-        DisplayHiResChar( Char.Tile.Data, Palette, ( AlternativeColor >> 4 ) & 0x0f, AlternativeColor & 0x0f, TargetImage, X, Y );
+        DisplayHiResChar( Char.Tile.Data, palette, ( color >> 4 ) & 0x0f, color & 0x0f, TargetImage, X, Y );
+      }
+      else if ( mode == TextCharMode.NES )
+      {
+        var paletteIndexMapping = Charset.Colors.PaletteIndexMapping;
+        int paletteMappingIndex = Charset.Colors.PaletteMappingIndex;
+        if ( AlternativeSettings.PaletteMappingIndex != -1 )
+        {
+          paletteIndexMapping = AlternativeSettings.PaletteIndexMapping;
+          paletteMappingIndex = AlternativeSettings.PaletteMappingIndex;
+        }
+        DisplayNESChar( Char.Tile.Data, palette, paletteIndexMapping, paletteMappingIndex, TargetImage, X, Y );
       }
       else
       {
-        Debug.Log( "DisplayChar #2 unsupported mode " + AlternativeMode );
+        Debug.Log( "DisplayChar #2 unsupported mode " + mode );
       }
     }
 

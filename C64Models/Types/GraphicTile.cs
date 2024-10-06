@@ -152,6 +152,41 @@ namespace RetroDevStudio.Types
             }
           }
           break;
+        case GraphicTileMode.NES:
+          {
+            bool changed = false;
+
+            int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
+            int bitShift = ( 7 - ( X % 8 ) );
+            int bitValue = 1 << bitShift;
+
+            // plane 1
+            int   byteValue = Data.ByteAt( bytePos );
+            if ( ( Color.second & 0x01 ) != ( ( byteValue & bitValue ) >> bitShift ) )
+            {
+              changed = true;
+              byteValue &= ~bitValue;
+              if ( ( Color.second & 0x01 ) != 0 )
+              {
+                byteValue |= bitValue;
+              }
+              Data.SetU8At( bytePos, (byte)byteValue );
+            }
+            // plane 1
+            bytePos += Lookup.NumBytesOfSingleCharacterBitmap( TextCharMode.NES ) / 2;
+            byteValue = Data.ByteAt( bytePos );
+            if ( ( ( Color.second & 0x02 ) >> 1 ) != ( ( byteValue & bitValue ) >> bitShift ) )
+            {
+              changed = true;
+              byteValue &= ~bitValue;
+              if ( ( Color.second & 0x02 ) != 0 )
+              {
+                byteValue |= bitValue;
+              }
+              Data.SetU8At( bytePos, (byte)byteValue );
+            }
+            return changed;
+          }
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
           {
             // Mega65 NCM char mode has nybbles swapped
@@ -293,6 +328,19 @@ namespace RetroDevStudio.Types
               default:
                 return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 2 );
             }
+          }
+        case GraphicTileMode.NES:
+          {
+            int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
+            int bitShift = ( 7 - ( X % 8 ) );
+            int bitValue = 1 << bitShift;
+
+            byte colValue = (byte)( ( Data.ByteAt( bytePos ) & bitValue ) >> bitShift );
+
+            bytePos += Lookup.NumBytesOfSingleCharacterBitmap( TextCharMode.NES ) / 2;
+            colValue |= (byte)( ( ( Data.ByteAt( bytePos ) & bitValue ) >> bitShift ) * 2 );
+
+            return new Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, colValue );
           }
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
           {

@@ -46,6 +46,7 @@ namespace RetroDevStudio
     public Outline                m_Outline = null;
     public LabelExplorer          m_LabelExplorer = null;
     public ValueTableEditor       m_ValueTableEditor = null;
+    public PaletteEditor          m_PaletteEditor = null;
     public Documents.Help         m_Help = null;
     public FormFindReplace        m_FindReplace = null;
     public FormFilesChanged       m_FilesChanged = null;
@@ -546,6 +547,7 @@ namespace RetroDevStudio
       m_DebugMemory         = new DebugMemory( StudioCore );
       m_DebugBreakpoints    = new DebugBreakpoints( StudioCore );
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
+      m_PaletteEditor       = new PaletteEditor( StudioCore );
       m_FindReplace         = new FormFindReplace( StudioCore );
       m_Help                = new Documents.Help( StudioCore );
       m_Bookmarks           = new Bookmarks( StudioCore );
@@ -583,6 +585,7 @@ namespace RetroDevStudio
       AddToolWindow( ToolWindowType.CHAR_SCREEN_EDITOR, m_CharScreenEditor, DockState.Document, charScreenEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.GRAPHIC_SCREEN_EDITOR, m_GraphicScreenEditor, DockState.Document, graphicScreenEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.MAP_EDITOR, m_MapEditor, DockState.Document, mapEditorToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.PALETTE_EDITOR, m_PaletteEditor, DockState.Document, paletteEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PETSCII_TABLE, m_PetSCIITable, DockState.Float, petSCIITableToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.CALCULATOR, m_Calculator, DockState.DockRight, calculatorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.HELP, m_Help, DockState.Document, helpToolStripMenuItem, false, false );
@@ -614,6 +617,7 @@ namespace RetroDevStudio
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SEARCH_RESULTS )]         = m_SearchResults;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REFERENCES )]        = m_FindReferences;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.LABEL_EXPLORER )]         = m_LabelExplorer;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PALETTE_EDITOR )]         = m_PaletteEditor;
 
 
       StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
@@ -2283,9 +2287,10 @@ namespace RetroDevStudio
           macroName = macroName.Substring( 2 );
         }
 
-        var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length, parser.m_TextCodeMappingRaw );
+        // TODO - was raw!
+        var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length );
         parser.InjectASMFileInfo( Document.ASMFileInfo );
-        if ( !parser.EvaluateTokens( 0, tokens, parser.m_TextCodeMappingRaw, out SymbolInfo macroValueSymbol ) )
+        if ( !parser.EvaluateTokens( 0, tokens, out SymbolInfo macroValueSymbol ) )
         {
           Error = true;
           StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );
@@ -5993,7 +5998,7 @@ namespace RetroDevStudio
 
       if ( itemsWithChanges.Any() )
       {
-        DialogResult result = System.Windows.Forms.MessageBox.Show( "There are unsaved changes, Really shut down?", "Unsaved changes! Shut down?", MessageBoxButtons.YesNo );
+        DialogResult result = System.Windows.Forms.MessageBox.Show( "There are unsaved changes, Really shut down?\r\n\r\nChanges found in\r\n" + string.Join( "\r\n", itemsWithChanges.ToArray() ), "Unsaved changes! Shut down?", MessageBoxButtons.YesNo );
         if ( result != DialogResult.Yes )
         {
           e.Cancel = true;

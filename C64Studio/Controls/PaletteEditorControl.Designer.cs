@@ -1,6 +1,6 @@
 ﻿namespace RetroDevStudio.Controls
 {
-  partial class PaletteEditor
+  partial class PaletteEditorControl
   {
     /// <summary> 
     /// Required designer variable.
@@ -604,7 +604,7 @@
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.Controls.Add(this.tabPalette);
-      this.Name = "PaletteEditor";
+      this.Name = "PaletteEditorControl";
       this.Size = new System.Drawing.Size(725, 429);
       this.tabPalette.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);

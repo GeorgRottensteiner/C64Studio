@@ -19,6 +19,8 @@ namespace RetroDevStudio
           return ConstantData.DefaultPaletteVIC20();
         case PaletteType.C128_VDC:
           return ConstantData.DefaultPaletteC128();
+        case PaletteType.NES:
+          return ConstantData.DefaultPaletteNES();
       }
       return ConstantData.DefaultPaletteC64();
     }
@@ -45,6 +47,11 @@ namespace RetroDevStudio
           return ConstantData.DefaultPaletteVIC20();
         case TextCharMode.COMMODORE_128_VDC_HIRES:
           return ConstantData.DefaultPaletteC128();
+        case TextCharMode.NES:
+          return ConstantData.DefaultPaletteNES();
+        default:
+          Debug.Log( $"PaletteFromMode unsupported mode {Mode}" );
+          break;
       }
       return ConstantData.DefaultPaletteC64();
     }

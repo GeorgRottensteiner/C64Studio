@@ -428,16 +428,11 @@ namespace RetroDevStudio.Documents
 
       if ( m_OverrideCharMode )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, CharIndex, Char.Tile.Image, 0, 0, m_CurrentColor,
-                m_CharsetScreen.CharSet.Colors.BackgroundColor,
-                m_CharsetScreen.CharSet.Colors.MultiColor1,
-                m_CharsetScreen.CharSet.Colors.MultiColor2,
-                m_CharsetScreen.CharSet.Colors.BGColor4,
-                Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0, m_CurrentColor );
       }
       else
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, CharIndex, Char.Tile.Image, 0, 0 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0 );
       }
     }
 
@@ -445,7 +440,7 @@ namespace RetroDevStudio.Documents
 
     void DrawCharImage( GR.Image.IImage TargetImage, int X, int Y, ushort Char, ushort Color )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, Char, TargetImage, X, Y, Color );
+      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, Char, TargetImage, X, Y, Color );
     }
 
 
@@ -1780,30 +1775,30 @@ namespace RetroDevStudio.Documents
     {
       if ( m_CharsetScreen.CharSet.Mode == TextCharMode.X16_HIRES )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
 
         // click for more
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 32, panelCharColors.DisplayPage, 8, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 3, panelCharColors.DisplayPage, 16, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 12, panelCharColors.DisplayPage, 24, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 9, panelCharColors.DisplayPage, 32, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 3, panelCharColors.DisplayPage, 40, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 11, panelCharColors.DisplayPage, 48, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 32, panelCharColors.DisplayPage, 56, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 6, panelCharColors.DisplayPage, 64, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 15, panelCharColors.DisplayPage, 72, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 18, panelCharColors.DisplayPage, 80, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 32, panelCharColors.DisplayPage, 88, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 13, panelCharColors.DisplayPage, 96, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 15, panelCharColors.DisplayPage, 104, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 18, panelCharColors.DisplayPage, 112, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, 5, panelCharColors.DisplayPage, 120, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 32, panelCharColors.DisplayPage, 8, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 3, panelCharColors.DisplayPage, 16, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 12, panelCharColors.DisplayPage, 24, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 9, panelCharColors.DisplayPage, 32, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 3, panelCharColors.DisplayPage, 40, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 11, panelCharColors.DisplayPage, 48, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 32, panelCharColors.DisplayPage, 56, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 6, panelCharColors.DisplayPage, 64, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 15, panelCharColors.DisplayPage, 72, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 18, panelCharColors.DisplayPage, 80, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 32, panelCharColors.DisplayPage, 88, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 13, panelCharColors.DisplayPage, 96, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 15, panelCharColors.DisplayPage, 104, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 18, panelCharColors.DisplayPage, 112, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 5, panelCharColors.DisplayPage, 120, 0, 1 );
       }
       else
       {
         for ( byte i = 0; i < m_NumColorsInColorChooser; ++i )
         {
-          Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * m_CharacterWidth, 0, i );
+          Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CurrentChar, panelCharColors.DisplayPage, i * m_CharacterWidth, 0, i );
         }
       }
       panelCharColors.Invalidate();
@@ -1855,7 +1850,7 @@ namespace RetroDevStudio.Documents
         {
           for ( byte j = 0; j < 16; ++j )
           {
-            Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, m_CurrentChar, popupControl.DisplayPage,
+            Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CurrentChar, popupControl.DisplayPage,
               i * 8, j * 8, j * 16 + i );
           }
         }

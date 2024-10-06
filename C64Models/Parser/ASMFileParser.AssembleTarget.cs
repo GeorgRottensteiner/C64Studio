@@ -80,14 +80,14 @@ namespace RetroDevStudio.Parser
           }
         case Types.CompileTargetType.CARTRIDGE_NES:
           {
-            Formats.D81 d81 = new RetroDevStudio.Formats.D81();
+            var inesHeader = new ByteBuffer( "4E45531A000000000000000000000000" );
 
-            d81.CreateEmptyMedia();
+            inesHeader.SetU8At( 4, m_CompileTarget.NESPrgROMUnits16k );
+            inesHeader.SetU8At( 5, m_CompileTarget.NESChrROMUnits8k );
+            inesHeader.SetU8At( 6, (byte)( ( m_CompileTarget.NESMapper << 4 ) | ( m_CompileTarget.NESMirroring & 0x0f ) ) );
+            inesHeader.SetU8At( 7, (byte)( m_CompileTarget.NESMapper & 0xf0 ) );
 
-            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
-            d81.WriteFile( bufName, Assembly, RetroDevStudio.Types.FileType.PRG );
-
-            return d81.Compile();
+            return inesHeader + Assembly;
           }
         case Types.CompileTargetType.CARTRIDGE_8K_BIN:
         case Types.CompileTargetType.CARTRIDGE_8K_CRT:

@@ -38,10 +38,11 @@ namespace RetroDevStudio.Parser
       }
 
       // removed line text code mapping from here
-      var mapping =  new Map<byte, byte>();   // was textCodeMapping
+      // TODO - WHY??
+      _ParseContext.CurrentTextMapping = new Map<byte, byte>();
 
       _ParseContext.DuringExpressionEvaluation = true;
-      List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, mapping );
+      List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
       _ParseContext.DuringExpressionEvaluation = false;
 
       if ( defineName == "*" )
@@ -49,14 +50,14 @@ namespace RetroDevStudio.Parser
         // set program step
         info.AddressSource = "*";
 
-        List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, mapping );
+        List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
         if ( ( tokens.Count > 0 )
         &&   ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
         {
           info.AddressSource = "*" + tokens[tokens.Count - 1].Content;
           tokens.RemoveAt( tokens.Count - 1 );
         }
-        if ( !EvaluateTokens( _ParseContext.LineIndex, tokens, mapping, out SymbolInfo newStepPosSymbol ) )
+        if ( !EvaluateTokens( _ParseContext.LineIndex, tokens, out SymbolInfo newStepPosSymbol ) )
         {
           AddError( _ParseContext.LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           return ParseLineResult.ERROR_ABORT;
@@ -81,7 +82,7 @@ namespace RetroDevStudio.Parser
           return ParseLineResult.CALL_CONTINUE;
         }
 
-        if ( !EvaluateTokens( _ParseContext.LineIndex, valueTokens, mapping, out SymbolInfo addressSymbol ) )
+        if ( !EvaluateTokens( _ParseContext.LineIndex, valueTokens, out SymbolInfo addressSymbol ) )
         {
           if ( !IsPlainAssignment( operatorToken ) )
           {
@@ -92,7 +93,7 @@ namespace RetroDevStudio.Parser
         }
         else
         {
-          EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 0, 1, mapping, out SymbolInfo originalValue );
+          EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 0, 1, out SymbolInfo originalValue );
 
           if ( !HandleAssignmentOperator( _ParseContext.LineIndex, lineTokenInfos, originalValue, operatorToken, addressSymbol, out SymbolInfo resultingValue ) )
           {

@@ -163,30 +163,30 @@ namespace RetroDevStudio.Controls
     {
       if ( m_Project.Mode == TextCharMode.X16_HIRES )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
 
         // click for more
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 32, panelCharColors.DisplayPage, 8, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 3, panelCharColors.DisplayPage, 16, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 12, panelCharColors.DisplayPage, 24, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 9, panelCharColors.DisplayPage, 32, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 3, panelCharColors.DisplayPage, 40, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 11, panelCharColors.DisplayPage, 48, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 32, panelCharColors.DisplayPage, 56, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 6, panelCharColors.DisplayPage, 64, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 15, panelCharColors.DisplayPage, 72, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 18, panelCharColors.DisplayPage, 80, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 32, panelCharColors.DisplayPage, 88, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 13, panelCharColors.DisplayPage, 96, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 15, panelCharColors.DisplayPage, 104, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 18, panelCharColors.DisplayPage, 112, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, 5, panelCharColors.DisplayPage, 120, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 32, panelCharColors.DisplayPage, 8, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 3, panelCharColors.DisplayPage, 16, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 12, panelCharColors.DisplayPage, 24, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 9, panelCharColors.DisplayPage, 32, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 3, panelCharColors.DisplayPage, 40, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 11, panelCharColors.DisplayPage, 48, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 32, panelCharColors.DisplayPage, 56, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 6, panelCharColors.DisplayPage, 64, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 15, panelCharColors.DisplayPage, 72, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 18, panelCharColors.DisplayPage, 80, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 32, panelCharColors.DisplayPage, 88, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 13, panelCharColors.DisplayPage, 96, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 15, panelCharColors.DisplayPage, 104, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 18, panelCharColors.DisplayPage, 112, 0, 1 );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, 5, panelCharColors.DisplayPage, 120, 0, 1 );
       }
       else
       {
         for ( byte i = 0; i < _NumColorsInColorSelector; ++i )
         {
-          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
+          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
         }
       }
       panelCharColors.Invalidate();
@@ -533,7 +533,7 @@ namespace RetroDevStudio.Controls
     {
       m_Project.Characters[CharIndex].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
 
-      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_Project.Characters[CharIndex].Tile.Image, 0, 0 );
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_Project.Characters[CharIndex].Tile.Image, 0, 0 );
       if ( CharIndex < panelCharacters.Items.Count )
       {
         panelCharacters.Items[CharIndex].MemoryImage = m_Project.Characters[CharIndex].Tile.Image;
@@ -547,7 +547,7 @@ namespace RetroDevStudio.Controls
           if ( ( m_Project.PlaygroundChars[i + j * 16] & 0xffff ) == CharIndex )
           {
             playgroundChanged = true;
-            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_ImagePlayground, i * m_CharacterWidth, j * m_CharacterHeight, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
+            Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_ImagePlayground, i * m_CharacterWidth, j * m_CharacterHeight, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
           }
         }
       }
@@ -1346,7 +1346,7 @@ namespace RetroDevStudio.Controls
         {
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorPlaygroundCharChange( this, m_Project, charX, charY ) );
 
-          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, m_ImagePlayground, charX * m_CharacterWidth, charY * m_CharacterHeight, m_CurrentColor );
+          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, m_ImagePlayground, charX * m_CharacterWidth, charY * m_CharacterHeight, m_CurrentColor );
           RedrawPlayground();
 
           m_Project.PlaygroundChars[charX + charY * 16] = (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) );
@@ -1401,7 +1401,7 @@ namespace RetroDevStudio.Controls
         {
           for ( byte j = 0; j < 16; ++j )
           {
-            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, popupControl.DisplayPage, 
+            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, popupControl.DisplayPage, 
               i * 8, j * 8, j * 16 + i );
           }
         }
@@ -1756,7 +1756,7 @@ namespace RetroDevStudio.Controls
 
     public void PlaygroundCharacterChanged( int X, int Y )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] & 0xffff ), m_ImagePlayground, X * m_CharacterWidth, Y * m_CharacterHeight, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] >> 16 ) );
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] & 0xffff ), m_ImagePlayground, X * m_CharacterWidth, Y * m_CharacterHeight, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] >> 16 ) );
       RedrawPlayground();
     }
 
@@ -1915,6 +1915,9 @@ namespace RetroDevStudio.Controls
         case TextCharMode.X16_HIRES:
           _ColorSettingsDlg = new ColorSettingsX16( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
+        case TextCharMode.NES:
+          _ColorSettingsDlg = new ColorSettingsNES( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
         default:
           Debug.Log( "ChangeColorSettingsDialog unsupported Mode " + m_Project.Mode );
           return;
@@ -1924,9 +1927,17 @@ namespace RetroDevStudio.Controls
       _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
+      _ColorSettingsDlg.PaletteMappingModified += _ColorSettingsDlg_PaletteMappingModified;
       _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
       _ColorSettingsDlg.SelectedCustomColorChanged += _ColorSettingsDlg_SelectedCustomColorChanged;
       _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_PaletteMappingModified( ColorSettings Colors )
+    {
+      _ColorSettingsDlg_PaletteModified( Colors, -1, null );
     }
 
 
@@ -2160,6 +2171,9 @@ namespace RetroDevStudio.Controls
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
           m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.MEGA65 );
+          break;
+        case TextCharMode.NES:
+          m_Project.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.NES );
           break;
         default:
           Debug.Log( "UpdatePalette - unsupported TextCharMode " + m_Project.Mode );

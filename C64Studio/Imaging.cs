@@ -191,7 +191,6 @@ namespace RetroDevStudio
       switch ( Machine )
       {
         case MachineType.C64:
-        default:
           return Core.Settings.Palettes[PaletteType.C64][0];
         case MachineType.C128:
           return Core.Settings.Palettes[PaletteType.C128_VDC][0];
@@ -201,6 +200,11 @@ namespace RetroDevStudio
           return Core.Settings.Palettes[PaletteType.VIC20][0];
         case MachineType.COMMANDER_X16:
           return Core.Settings.Palettes[PaletteType.COMMANDER_X16][0];
+        case MachineType.NES:
+          return Core.Settings.Palettes[PaletteType.NES][0];
+        default:
+          Debug.Log( $"Unsupported machine {Machine}" );
+          return Core.Settings.Palettes[PaletteType.C64][0];
       }
     }
 

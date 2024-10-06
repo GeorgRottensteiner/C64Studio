@@ -832,7 +832,7 @@ namespace RetroDevStudio.Documents
       }
       if ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
       {
-        saveResult = System.Windows.Forms.MessageBox.Show( "The unnamed document has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
+        saveResult = System.Windows.Forms.MessageBox.Show( $"The unnamed {DocumentInfo.Type} document has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
       }
       else
       {

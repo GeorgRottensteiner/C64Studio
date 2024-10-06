@@ -67,8 +67,8 @@ namespace RetroDevStudio.Parser
 
       int     fileSize = -1;
       int     fileSkip = -1;
-      bool    fileSizeValid = EvaluateTokens( lineIndex, paramsSize, info.LineCodeMapping, out SymbolInfo fileSizeSymbol );
-      bool    fileSkipValid = EvaluateTokens( lineIndex, paramsSkip, info.LineCodeMapping, out SymbolInfo fileSkipSymbol );
+      bool    fileSizeValid = EvaluateTokens( lineIndex, paramsSize, out SymbolInfo fileSizeSymbol );
+      bool    fileSkipValid = EvaluateTokens( lineIndex, paramsSkip, out SymbolInfo fileSkipSymbol );
 
       if ( ( paramsSize.Count > 0 )
       &&   ( !fileSizeValid ) )

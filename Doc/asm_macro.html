@@ -2801,14 +2801,44 @@ Sequence
     <br />
   </div>
   <a name="to"></a>
-  <H2>!TO &lt;file name&gt;,&lt;output type&gt;</H2>
+  <H2>!TO &lt;file name&gt;,&lt;output type&gt;,[&lt;additional parameters&gt;]</H2>
   <div id="mybody">
     This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br />
     <br />
     <br />
-    Valid output types are CBM, PLAIN, D64, T64, DSK, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, MAGICDESK32BIN, MAGICDESK32CRT, MAGICDESK128BIN, MAGICDESK128CRT, MAGICDESK256BIN, MAGICDESK256CRT, MAGICDESK512BIN, MAGICDESK512CRT, MAGICDESK1MBIN, MAGICDESK1MCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br />
+    Valid output types are CBM, PLAIN, D64, T64, DSK, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, MAGICDESK32BIN, MAGICDESK32CRT, MAGICDESK128BIN, MAGICDESK128CRT, MAGICDESK256BIN, MAGICDESK256CRT, MAGICDESK512BIN, MAGICDESK512CRT, MAGICDESK1MBIN, MAGICDESK1MCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT, CARTNES <br />
     <br />
-    For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br />
+    For cartridge and tape/disk formats a derived name is currently inserted in the final file. The name is derived from the filename of the originating source file.<br />
+    Some output types require additional parameters.<br />
+    <br />
+    <table>
+      <tr>
+        <th>
+          Output Type
+        </th>
+        <th>
+          Additional Arguments
+        </th>
+        <th>
+          Description
+        </th>
+      </tr>
+      <tr>
+        <td>
+          CARTNES
+        </td>
+        <td>
+          4
+        </td>
+        <td>
+          Four numbers which are set in the iNES file header<br />
+          1: Number of PRG units (16kB per unit, 0 to 64)<br />
+          2: Number of CHR units (8kB per unit, 0 to 64)<br />
+          3: Number of mapper (0 to 255)<br />
+          4: Mirroring nibble (0 to 15)<br />
+        </td>
+      </tr>
+    </table>
     <br />
     <br />
     <div id="code">

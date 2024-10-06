@@ -12,7 +12,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult PODataWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, GR.Collections.Map<byte, byte> TextMapping, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
+    private ParseLineResult PODataWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -42,13 +42,13 @@ namespace RetroDevStudio.Parser
                         parms[parms.Count - 1].EndPos - parms[0].StartPos + 1 );
         }
 
-        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, TextMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
+        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
         {
           if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
           {
             string    textLiteral = wordValueSymbol.ToString();
 
-            textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, TextMapping, out bool hadError );
+            textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, _ParseContext.CurrentTextMapping, out bool hadError );
             if ( hadError )
             {
               AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );

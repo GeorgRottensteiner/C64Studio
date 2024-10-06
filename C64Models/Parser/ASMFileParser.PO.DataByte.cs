@@ -12,7 +12,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private void PODataByte( int LineIndex, List<Types.TokenInfo> lineTokenInfos, int StartIndex, int Count, Types.ASM.LineInfo info, Types.MacroInfo.PseudoOpType Type, GR.Collections.Map<byte, byte> TextMapping, bool AllowNeededExpression )
+    private void PODataByte( int LineIndex, List<Types.TokenInfo> lineTokenInfos, int StartIndex, int Count, Types.ASM.LineInfo info, Types.MacroInfo.PseudoOpType Type, bool AllowNeededExpression )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -39,13 +39,13 @@ namespace RetroDevStudio.Parser
                        parms[parms.Count - 1].EndPos - parms[0].StartPos + 1 );
         }
 
-        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, TextMapping, out SymbolInfo byteValueSymbol, out numBytesGiven ) )
+        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, out SymbolInfo byteValueSymbol, out numBytesGiven ) )
         {
           if ( byteValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
           {
             string    textLiteral = byteValueSymbol.ToString();
 
-            textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, TextMapping, out bool hadError );
+            textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, _ParseContext.CurrentTextMapping, out bool hadError );
             if ( hadError )
             {
               AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );

@@ -1,4 +1,4 @@
-;;;;;;;;;;;;  VARIABLES------------
+﻿;;;;;;;;;;;;  VARIABLES------------
 
 * = $0000  ;start from location 0
 

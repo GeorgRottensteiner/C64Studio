@@ -30,12 +30,13 @@ namespace RetroDevStudio.Parser
       // only set to true during DetermineUnparsedLabels
       public bool         DuringExpressionEvaluation = false;
 
+      public GR.Collections.Map<byte, byte>     CurrentTextMapping = new GR.Collections.Map<byte, byte>();
 
       public GR.Collections.Map<string,GR.Collections.Map<byte, byte>>    TextMappings = new GR.Collections.Map<string, GR.Collections.Map<byte, byte>>();
 
-      public SortedList<int,string>     ForwardLabelStacked = new SortedList<int, string>();
+      public SortedList<int,string>             ForwardLabelStacked = new SortedList<int, string>();
 
-      public List<ScopeInfo>            Scopes = new List<ScopeInfo>();
+      public List<ScopeInfo>                    Scopes = new List<ScopeInfo>();
       
 
       public void Clear()

@@ -18,7 +18,7 @@
 
 * = $1000
 
-!hex 4E 45 53 1A 02 00 01 00 00 00 00 00 00 00 00 00
+;!hex 4E 45 53 1A 02 00 01 00 00 00 00 00 00 00 00 00
 
 ;4E 45 53 1A 02 00 01 00 00 00 00 00 00 00 00 00
 ;!text "NES",$1a
@@ -115,7 +115,7 @@ vblankwait2
   LDA #>(ArseFace_graphics+1)
   STA enemy_pointer+7
 
-LoadSpritePalettes:                ;load pallettes for sprites, background isn't used, so we don't need to populate it
+LoadSpritePalettes:                ;load palettes for sprites, background isn't used, so we don't need to populate it
   LDA $2002
   LDA #$3F
   STA $2006

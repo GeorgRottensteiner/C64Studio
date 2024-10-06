@@ -57,7 +57,7 @@ namespace RetroDevStudio.Parser
       {
         int numLoops = -1;
 
-        if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info.LineCodeMapping, out SymbolInfo numLoopsSymbol ) )
+        if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out SymbolInfo numLoopsSymbol ) )
         {
           numLoops = numLoopsSymbol.ToInt32();
           bool hadError = false;
@@ -85,7 +85,7 @@ namespace RetroDevStudio.Parser
                 System.Array.Copy( Lines, lineIndex + 1, tempContent, i * loopLength, loopLength );
               }
 
-              string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, lineIndex, info.LineCodeMapping );
+              string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, lineIndex );
 
               string[] newLines = new string[Lines.Length + replacementLines.Length];
 

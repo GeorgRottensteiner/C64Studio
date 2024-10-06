@@ -12,7 +12,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult PODataDWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, GR.Collections.Map<byte, byte> TextMapping, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
+    private ParseLineResult PODataDWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -42,7 +42,7 @@ namespace RetroDevStudio.Parser
                        parms[parms.Count - 1].EndPos - parms[0].StartPos + 1 );
         }
 
-        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, TextMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
+        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
         {
           if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
           {

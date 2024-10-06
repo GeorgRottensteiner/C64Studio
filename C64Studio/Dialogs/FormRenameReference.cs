@@ -257,7 +257,7 @@ namespace RetroDevStudio.Dialogs
       PosOfLineEnd -= PosOfLineEnd - PosOfLineStart - lineText.Length;
 
       reparse:
-      var tokens = _Parser.ParseTokenInfo( lineText, 0, lineText.Length, new GR.Collections.Map<byte, byte>() );
+      var tokens = _Parser.ParseTokenInfo( lineText, 0, lineText.Length );
       foreach ( var token in tokens )
       {
         if ( ( token.Type == TokenInfo.TokenType.LABEL_LOCAL )

@@ -28,7 +28,7 @@ namespace RetroDevStudio.Parser
       }
 
       int numBytes = -1;
-      if ( !EvaluateTokens( lineIndex, lineParams[0], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
+      if ( !EvaluateTokens( lineIndex, lineParams[0], out SymbolInfo numBytesSymbol ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not determine fill count parameter " + TokensToExpression( lineParams[0] ) );
         return ParseLineResult.RETURN_NULL;
@@ -75,7 +75,7 @@ namespace RetroDevStudio.Parser
               ++listLoopIndex;
             }
 
-            if ( !EvaluateTokens( lineIndex, listParams[i % listParams.Count], info.LineCodeMapping, out SymbolInfo expressionResultSymbol ) )
+            if ( !EvaluateTokens( lineIndex, listParams[i % listParams.Count], out SymbolInfo expressionResultSymbol ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( listParams[i % listParams.Count] ) );
               return ParseLineResult.RETURN_NULL;
@@ -99,7 +99,7 @@ namespace RetroDevStudio.Parser
             m_TemporaryFillLoopPos = i;
 
             int expressionResult = 0;
-            if ( !EvaluateTokens( lineIndex, lineParams[1], info.LineCodeMapping, out SymbolInfo expressionResultSymbol ) )
+            if ( !EvaluateTokens( lineIndex, lineParams[1], out SymbolInfo expressionResultSymbol ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( lineParams[1] ) );
               return ParseLineResult.RETURN_NULL;

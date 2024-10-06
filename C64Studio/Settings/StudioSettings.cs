@@ -77,7 +77,9 @@ namespace RetroDevStudio
     [Description( "Bookmarks") ]
     BOOKMARKS,
     [Description( "Label Explorer" )]
-    LABEL_EXPLORER
+    LABEL_EXPLORER,
+    [Description( "Palette Editor" )]
+    PALETTE_EDITOR
   };
 
   public enum MemoryDisplayType
@@ -352,6 +354,7 @@ namespace RetroDevStudio
       Palettes.Add( PaletteType.VIC20, new List<Palette>() { ConstantData.DefaultPaletteVIC20() } );
       Palettes.Add( PaletteType.MEGA65, new List<Palette>() { ConstantData.DefaultPaletteMega65_256() } );
       Palettes.Add( PaletteType.COMMANDER_X16, new List<Palette>() { ConstantData.DefaultPaletteCommanderX16() } );
+      Palettes.Add( PaletteType.NES, new List<Palette>() { ConstantData.DefaultPaletteNES() } );
     }
 
 
@@ -1465,7 +1468,6 @@ namespace RetroDevStudio
               if ( chunkPalette.ReadFromStream( binIn ) )
               {
                 var pal = Palette.Read( chunkPalette.MemoryReader() );
-
                 Palettes[palSystem].Add( pal );
               }
             }
@@ -1855,6 +1857,9 @@ namespace RetroDevStudio
         if ( !Core.Settings.Palettes.ContainsKey( palType ) )
         {
           Core.Settings.Palettes.Add( palType, new List<Palette>() );
+        }
+        if ( Core.Settings.Palettes[palType].Count == 0 )
+        {
           Core.Settings.Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );
         }
       }

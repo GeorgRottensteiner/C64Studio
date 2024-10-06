@@ -402,7 +402,7 @@ namespace RetroDevStudio.Documents
 
       // no autocomplete on comments
       string    line = editSource.Lines[sourceLineIndex];
-      var tokens = Parser.ParseTokenInfo( line, 0, line.Length, Parser.m_TextCodeMappingScr );
+      var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
 
       if ( tokens != null )
       {
@@ -2539,7 +2539,7 @@ namespace RetroDevStudio.Documents
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
 
         if ( tokens.Count != 0 )
         {
@@ -3588,7 +3588,7 @@ namespace RetroDevStudio.Documents
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
 
         if ( tokens.Count > 0 )
         {
@@ -3823,7 +3823,7 @@ namespace RetroDevStudio.Documents
       {
         string    text = editSource.Lines[lineIndex];
 
-        var tokens = Parser.ParseTokenInfo( text, 0, text.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
 
         int     firstLiteralTokenIndex = 1;
 
@@ -3864,7 +3864,7 @@ namespace RetroDevStudio.Documents
                 &&         ( tokens[i + 1].Content == "," ) )
                 ||       ( i + 1 == tokens.Count ) ) ) )
                 {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
                   {
                     int resultValue = resultValueSymbol.ToInt32();
                     resultValue += formDelta.Delta;
@@ -3922,7 +3922,7 @@ namespace RetroDevStudio.Documents
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
 
         if ( tokens.Count != 0 )
         {
@@ -4040,7 +4040,7 @@ namespace RetroDevStudio.Documents
       {
         string    text = editSource.Lines[lineIndex];
 
-        var tokens = Parser.ParseTokenInfo( text, 0, text.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
 
         int     firstLiteralTokenIndex = 1;
 
@@ -4081,7 +4081,7 @@ namespace RetroDevStudio.Documents
                 &&         ( tokens[i + 1].Content == "," ) )
                 ||       ( i + 1 == tokens.Count ) ) ) )
                 {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
                   {
                     int resultValue = resultValueSymbol.ToInt32();
                     tokens[i].Content = "$" + resultValue.ToString( "X2" );
@@ -4130,7 +4130,7 @@ namespace RetroDevStudio.Documents
       {
         string    text = editSource.Lines[lineIndex];
 
-        var tokens = Parser.ParseTokenInfo( text, 0, text.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
 
         int     firstLiteralTokenIndex = 1;
 
@@ -4171,7 +4171,7 @@ namespace RetroDevStudio.Documents
                 &&         ( tokens[i + 1].Content == "," ) )
                 ||       ( i + 1 == tokens.Count ) ) ) )
                 {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
                   {
                     int resultValue = resultValueSymbol.ToInt32();
                     tokens[i].Content = resultValue.ToString();

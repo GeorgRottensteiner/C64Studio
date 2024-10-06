@@ -38,7 +38,7 @@ namespace RetroDevStudio.Parser
         --TokenCount;
       }
 
-      if ( !EvaluateTokens( lineIndex, lineTokenInfos, TokenStartIndex, TokenCount, info.LineCodeMapping, out SymbolInfo pseudoStepPos ) )
+      if ( !EvaluateTokens( lineIndex, lineTokenInfos, TokenStartIndex, TokenCount, out SymbolInfo pseudoStepPos ) )
       {
         string expressionCheck = TokensToExpression( lineTokenInfos, TokenStartIndex, TokenCount );
 

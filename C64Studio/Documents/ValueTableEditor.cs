@@ -530,13 +530,13 @@ namespace RetroDevStudio.Documents
       {
         m_Parser.ClearASMInfo();
         m_Parser.AddConstantF( "x", m_Parser.CreateNumberSymbol( curValue ), 0, "", "", 0, 1 );
-        var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length, m_Parser.m_TextCodeMappingRaw );
+        var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length );
         if ( tokens == null )
         {
           SetError( m_Parser.GetError().Code.ToString() );
           return;
         }
-        if ( !m_Parser.EvaluateTokens( 0, tokens, m_Parser.m_TextCodeMappingRaw, out SymbolInfo result ) )
+        if ( !m_Parser.EvaluateTokens( 0, tokens, out SymbolInfo result ) )
         {
           SetError( m_Parser.GetError().Code.ToString() );
           return;
@@ -592,7 +592,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private List<TokenInfo> ExtSinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtSinus( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -601,7 +601,7 @@ namespace RetroDevStudio.Documents
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -617,7 +617,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private List<TokenInfo> ExtToRadians( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtToRadians( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -626,7 +626,7 @@ namespace RetroDevStudio.Documents
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -642,7 +642,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private List<TokenInfo> ExtToDegrees( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtToDegrees( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -651,7 +651,7 @@ namespace RetroDevStudio.Documents
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -667,7 +667,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private List<TokenInfo> ExtCosinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtCosinus( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -676,7 +676,7 @@ namespace RetroDevStudio.Documents
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -692,7 +692,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private List<TokenInfo> ExtTan( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtTan( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -701,7 +701,7 @@ namespace RetroDevStudio.Documents
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;

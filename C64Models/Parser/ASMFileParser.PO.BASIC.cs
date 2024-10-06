@@ -95,7 +95,7 @@ namespace RetroDevStudio.Parser
       &&        ( poParams.Count == 1 ) )
       {
         // !basic <jump address>
-        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, info.LineCodeMapping, out SymbolInfo jumpAddressSymbol ) )
+        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out SymbolInfo jumpAddressSymbol ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
@@ -127,7 +127,7 @@ namespace RetroDevStudio.Parser
       &&        ( realNumParams == 2 ) )
       {
         // !basic <line number>,<jump address>
-        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, info.LineCodeMapping, out SymbolInfo basicLineNumberSymbol ) )
+        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out SymbolInfo basicLineNumberSymbol ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
@@ -153,7 +153,7 @@ namespace RetroDevStudio.Parser
           return ParseLineResult.RETURN_NULL;
         }
 
-        if ( !EvaluateTokens( lineIndex, poParams[1], 0, poParams[1].Count, info.LineCodeMapping, out SymbolInfo jumpAddressSymbol ) )
+        if ( !EvaluateTokens( lineIndex, poParams[1], 0, poParams[1].Count, out SymbolInfo jumpAddressSymbol ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
@@ -185,7 +185,7 @@ namespace RetroDevStudio.Parser
       {
         info.NeededParsedExpression = null;
         // !basic <line number>,<comment>[,<comment-bytes>],<jump address>
-        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, info.LineCodeMapping, out SymbolInfo basicLineNumberSymbol ) )
+        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out SymbolInfo basicLineNumberSymbol ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
@@ -247,7 +247,7 @@ namespace RetroDevStudio.Parser
 
         int   lengthOfCommentData = (int)commentDataTemp.Length;
 
-        if ( !EvaluateTokens( lineIndex, poParams[poParams.Count - 1], 0, poParams[poParams.Count - 1].Count, info.LineCodeMapping, out SymbolInfo jumpAddressSymbol ) )
+        if ( !EvaluateTokens( lineIndex, poParams[poParams.Count - 1], 0, poParams[poParams.Count - 1].Count, out SymbolInfo jumpAddressSymbol ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;// poParams[poParams.Count - 1];

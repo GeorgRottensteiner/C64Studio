@@ -80,10 +80,10 @@ namespace RetroDevStudio.Documents
     private void editCalc_TextChanged( object sender, EventArgs e )
     {
       Parser.ASMFileParser    parser = new RetroDevStudio.Parser.ASMFileParser();
-      var tokens = parser.ParseTokenInfo( editCalc.Text, 0, editCalc.TextLength, parser.m_TextCodeMappingRaw );
+      var tokens = parser.ParseTokenInfo( editCalc.Text, 0, editCalc.TextLength );
       if ( tokens != null )
       {
-        if ( parser.EvaluateTokens( -1, tokens, parser.m_TextCodeMappingRaw, out SymbolInfo result ) )
+        if ( parser.EvaluateTokens( -1, tokens, out SymbolInfo result ) )
         {
           editResult.Text = "$" + result.ToInteger().ToString( "X" ) + ", " + result.ToInteger().ToString();
           editCalc.BackColor = System.Drawing.SystemColors.Window;

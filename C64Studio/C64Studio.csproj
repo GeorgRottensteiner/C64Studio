@@ -17,13 +17,16 @@
     <Compile Update="Controls\ArrangedItemList.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxSelectedItemCollection.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\PaletteEditor.cs">
+    <Compile Update="Controls\PaletteEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\CharacterEditor.cs">
@@ -305,6 +308,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Documents\Bookmarks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Documents\PaletteEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Documents\LabelExplorer.cs">

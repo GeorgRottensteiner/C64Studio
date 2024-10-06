@@ -78,7 +78,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    public delegate List<Types.TokenInfo> ExtFunction( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping );
+    public delegate List<Types.TokenInfo> ExtFunction( List<Types.TokenInfo> Arguments );
 
     public class ExtFunctionInfo
     {
@@ -1199,19 +1199,19 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool EvaluateLabel( int LineIndex, string LabelContent, GR.Collections.Map<byte, byte> TextCodeMapping, out long Result )
+    private bool EvaluateLabel( int LineIndex, string LabelContent, out long Result )
     {
       Result = 0;
       ClearErrorInfo();
 
-      List<Types.TokenInfo>  tokens = ParseTokenInfo( LabelContent, 0, LabelContent.Length, TextCodeMapping );
+      List<Types.TokenInfo>  tokens = ParseTokenInfo( LabelContent, 0, LabelContent.Length );
       if ( m_LastErrorInfo.Code != Types.ErrorCode.OK )
       {
         return false;
       }
 
       //dh.Log( "Eval Label (" + LabelContent + ") = " + tokens.Count + " parts" );
-      if ( !EvaluateTokens( LineIndex, tokens, TextCodeMapping, out SymbolInfo symbol ) )
+      if ( !EvaluateTokens( LineIndex, tokens, out SymbolInfo symbol ) )
       {
         return false;
       }
@@ -1593,7 +1593,7 @@ namespace RetroDevStudio.Parser
         }
 
         SymbolInfo     result;
-        if ( !EvaluateTokens( LineIndex, argumentExpressions, TextCodeMapping, out result ) )
+        if ( !EvaluateTokens( LineIndex, argumentExpressions, out result ) )
         {
           AddError( LineIndex, m_LastErrorInfo.Code, "Failed to evaluate expression " + TokensToExpression( argumentExpressions ) 
             + " for argument " + ( argIndex + 1 ) + " for extended function '" + FunctionName + "'" );
@@ -1625,7 +1625,7 @@ namespace RetroDevStudio.Parser
       }
 
       // run ext function
-      List<Types.TokenInfo>  results = fInfo.Function( functionArguments, TextCodeMapping );
+      List<Types.TokenInfo>  results = fInfo.Function( functionArguments );
 
       // make sure we have the expected number of result tokens
       while ( results.Count < fInfo.NumResults )
@@ -1644,32 +1644,32 @@ namespace RetroDevStudio.Parser
 
 
 
-    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, GR.Collections.Map<byte, byte> TextCodeMapping, out SymbolInfo ResultingToken )
+    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out SymbolInfo ResultingToken )
     {
       int dummy = 0;
       ClearErrorInfo();
-      return EvaluateTokens( LineIndex, Tokens, TextCodeMapping, out ResultingToken, out dummy );
+      return EvaluateTokens( LineIndex, Tokens, out ResultingToken, out dummy );
     }
 
 
 
-    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, GR.Collections.Map<byte, byte> TextCodeMapping, out SymbolInfo ResultingToken )
+    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out SymbolInfo ResultingToken )
     {
       int dummy = 0;
       ClearErrorInfo();
-      return EvaluateTokens( LineIndex, Tokens, StartIndex, Count, TextCodeMapping, out ResultingToken, out dummy );
+      return EvaluateTokens( LineIndex, Tokens, StartIndex, Count, out ResultingToken, out dummy );
     }
 
 
 
-    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, GR.Collections.Map<byte, byte> TextCodeMapping, out SymbolInfo ResultingToken, out int NumBytesGiven )
+    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out SymbolInfo ResultingToken, out int NumBytesGiven )
     {
-      return EvaluateTokens( LineIndex, Tokens, 0, Tokens.Count, TextCodeMapping, out ResultingToken, out NumBytesGiven );
+      return EvaluateTokens( LineIndex, Tokens, 0, Tokens.Count, out ResultingToken, out NumBytesGiven );
     }
 
 
 
-    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, GR.Collections.Map<byte, byte> TextCodeMapping, out SymbolInfo ResultingToken, out int NumBytesGiven )
+    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out SymbolInfo ResultingToken, out int NumBytesGiven )
     {
       ResultingToken = null;
       NumBytesGiven = 0;
@@ -1698,7 +1698,7 @@ namespace RetroDevStudio.Parser
                 Tokens[StartIndex].Content  = closestLabel;
                 Tokens[StartIndex].Type     = TokenInfo.TokenType.LABEL_LOCAL;
 
-                if ( EvaluateTokens( LineIndex, Tokens, StartIndex, 1, TextCodeMapping, out ResultingToken ) )
+                if ( EvaluateTokens( LineIndex, Tokens, StartIndex, 1, out ResultingToken ) )
                 {
                   int result = (int)ResultingToken.ToInteger();
                   result &= 0xffff;
@@ -1766,7 +1766,7 @@ namespace RetroDevStudio.Parser
               symbol.LineIndex = LineIndex;
               NumBytesGiven = Tokens[StartIndex].Length;
 
-              symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, TextCodeMapping, out bool hadError );
+              symbol.String = BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, _ParseContext.CurrentTextMapping, out bool hadError );
               if ( hadError )
               {
                 AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
@@ -1804,7 +1804,7 @@ namespace RetroDevStudio.Parser
         // unary operators
         if ( Tokens[StartIndex].Content == "-" )
         {
-          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, TextCodeMapping, out ResultingToken, out NumBytesGiven ) )
+          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out ResultingToken, out NumBytesGiven ) )
           {
             if ( ResultingToken.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
             {
@@ -1827,7 +1827,7 @@ namespace RetroDevStudio.Parser
           // binary not
           SymbolInfo     value;
 
-          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, TextCodeMapping, out value, out NumBytesGiven ) )
+          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value, out NumBytesGiven ) )
           {
             if ( value.IsInteger() )
             {
@@ -1880,7 +1880,7 @@ namespace RetroDevStudio.Parser
             if ( m_ExtFunctions.Any( ef => ef.Key.first == possibleFunction ) )
             {
               // handle function!
-              List<Types.TokenInfo> results = ProcessExtFunction( LineIndex, possibleFunction, subTokenRange,  bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, TextCodeMapping );
+              List<Types.TokenInfo> results = ProcessExtFunction( LineIndex, possibleFunction, subTokenRange,  bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, _ParseContext.CurrentTextMapping );
               if ( ( results == null )
               ||   ( results.Count != 1 ) )
               {
@@ -1918,7 +1918,7 @@ namespace RetroDevStudio.Parser
               m_ASMFileInfo.Labels.Add( "i", countSymbol );
             }
 
-            bool evaluationResult = EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, TextCodeMapping, out resultValue, out numBytesGiven );
+            bool evaluationResult = EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven );
 
             // restore temp symbol
             if ( oldValue == null )
@@ -1935,7 +1935,7 @@ namespace RetroDevStudio.Parser
               return false;
             }
           }
-          else if ( !EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, TextCodeMapping, out resultValue, out numBytesGiven ) )
+          else if ( !EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven ) )
           {
             return false;
           }
@@ -1975,7 +1975,7 @@ namespace RetroDevStudio.Parser
           &&   ( m_AssemblerSettings.EnabledHacks.Contains( AssemblerSettings.Hacks.GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION ) ) )
           {
             SymbolInfo value;
-            if ( EvaluateTokens( LineIndex, subTokenRange, 1, subTokenRange.Count - 1, TextCodeMapping, out value, out numBytesGiven ) )
+            if ( EvaluateTokens( LineIndex, subTokenRange, 1, subTokenRange.Count - 1, out value, out numBytesGiven ) )
             {
               NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
@@ -2050,7 +2050,7 @@ namespace RetroDevStudio.Parser
                 &&     ( subTokenRange[highestPrecedenceTokenIndex].Content == ">" ) ) )
                 {
                   SymbolInfo value;
-                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, TextCodeMapping, out value, out numBytesGiven ) )
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
                   {
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
@@ -2074,7 +2074,7 @@ namespace RetroDevStudio.Parser
                 &&          ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" ) ) )
                 {
                   SymbolInfo value;
-                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, TextCodeMapping, out value, out numBytesGiven ) )
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
                   {
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
@@ -2097,7 +2097,7 @@ namespace RetroDevStudio.Parser
                 {
                   SymbolInfo     value;
 
-                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, Count - highestPrecedenceTokenIndex - 1, TextCodeMapping, out value, out NumBytesGiven ) )
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, Count - highestPrecedenceTokenIndex - 1, out value, out NumBytesGiven ) )
                   {
                     if ( !value.IsInteger() )
                     {
@@ -2134,7 +2134,7 @@ namespace RetroDevStudio.Parser
             &&   ( subTokenRange[highestPrecedenceTokenIndex + 1].Content == "-" ) )
             {
               SymbolInfo     value;
-              if ( !EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 2, 1, TextCodeMapping, out value, out NumBytesGiven ) )
+              if ( !EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 2, 1, out value, out NumBytesGiven ) )
               {
                 return false;
               }
@@ -2210,7 +2210,7 @@ namespace RetroDevStudio.Parser
         // unary operators
         if ( subTokenRange[0].Content == "-" )
         {
-          if ( EvaluateTokens( LineIndex, subTokenRange, 1, Count - 1, TextCodeMapping, out ResultingToken, out NumBytesGiven ) )
+          if ( EvaluateTokens( LineIndex, subTokenRange, 1, Count - 1, out ResultingToken, out NumBytesGiven ) )
           {
             if ( ResultingToken.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
             {
@@ -2233,7 +2233,7 @@ namespace RetroDevStudio.Parser
           // binary not
           SymbolInfo     value;
 
-          if ( EvaluateTokens( LineIndex, subTokenRange, 1, Count - 1, TextCodeMapping, out value, out NumBytesGiven ) )
+          if ( EvaluateTokens( LineIndex, subTokenRange, 1, Count - 1, out value, out NumBytesGiven ) )
           {
             if ( value.IsInteger() )
             {
@@ -2388,7 +2388,7 @@ namespace RetroDevStudio.Parser
       int                   expressionStartIndex = 0;
       byte                  xorValue = 0;
 
-      var origTokens = ParseTokenInfo( lineInfo.Line, 0, lineInfo.Line.Length, lineInfo.LineCodeMapping );
+      var origTokens = ParseTokenInfo( lineInfo.Line, 0, lineInfo.Line.Length );
       if ( ( origTokens.Count > 0 )
       &&   ( origTokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
       &&   ( m_AssemblerSettings.PseudoOps.ContainsKey( origTokens[0].Content.ToUpper() ) )
@@ -2399,7 +2399,7 @@ namespace RetroDevStudio.Parser
           return ParseLineResult.ERROR_ABORT;
         }
         // lineParams[0] is the XOR value
-        if ( !EvaluateTokens( lineIndex, lineParams[0], lineInfo.LineCodeMapping, out SymbolInfo resultingValue ) )
+        if ( !EvaluateTokens( lineIndex, lineParams[0], out SymbolInfo resultingValue ) )
         {
           if ( AddErrors )
           {
@@ -2441,7 +2441,7 @@ namespace RetroDevStudio.Parser
             else
             {
               SymbolInfo value;
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, lineInfo.LineCodeMapping, out value ) )
+              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
               {
                 if ( AddErrors )
                 {
@@ -2455,7 +2455,7 @@ namespace RetroDevStudio.Parser
           else
           {
             SymbolInfo value;
-            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, lineInfo.LineCodeMapping, out value ) )
+            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
             {
               if ( AddErrors )
               {
@@ -2499,7 +2499,7 @@ namespace RetroDevStudio.Parser
               else
               {
                 SymbolInfo value;
-                if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, lineInfo.LineCodeMapping, out value ) )
+                if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
                 {
                   if ( AddErrors )
                   {
@@ -2513,7 +2513,7 @@ namespace RetroDevStudio.Parser
             else
             {
               SymbolInfo value;
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, lineInfo.LineCodeMapping, out value ) )
+              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
               {
                 if ( AddErrors )
                 {
@@ -2612,7 +2612,9 @@ namespace RetroDevStudio.Parser
           m_CompileCurrentAddress = m_ASMFileInfo.LineInfo[curLine].AddressStart;
           trueCompileCurrentAddress = m_CompileCurrentAddress;
 
-          if ( EvaluateLabel( m_ASMFileInfo.UnparsedLabels[label].LineIndex, m_ASMFileInfo.UnparsedLabels[label].ToEval, m_ASMFileInfo.LineInfo[curLine].LineCodeMapping, out result ) )
+          _ParseContext.CurrentTextMapping = m_ASMFileInfo.LineInfo[curLine].LineCodeMapping;
+
+          if ( EvaluateLabel( m_ASMFileInfo.UnparsedLabels[label].LineIndex, m_ASMFileInfo.UnparsedLabels[label].ToEval, out result ) )
           {
             if ( m_ASMFileInfo.Labels.ContainsKey( label ) )
             {
@@ -2651,6 +2653,7 @@ namespace RetroDevStudio.Parser
         Types.ASM.LineInfo lineInfo = m_ASMFileInfo.LineInfo[lineIndex];
 
         m_CompileCurrentAddress = lineInfo.AddressStart;
+        _ParseContext.CurrentTextMapping = lineInfo.LineCodeMapping;
         if ( lineInfo.NeededParsedExpression != null )
         {
           if ( lineInfo.NeededParsedExpression.Count == 0 )
@@ -2765,7 +2768,7 @@ namespace RetroDevStudio.Parser
 
       if ( isPseudoOP )
       {
-        var tokens = ParseTokenInfo( lineToCheck, 0, lineToCheck.Length, lineInfo.LineCodeMapping );
+        var tokens = ParseTokenInfo( lineToCheck, 0, lineToCheck.Length );
         if ( tokens == null )
         {
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
@@ -2793,12 +2796,12 @@ namespace RetroDevStudio.Parser
               case MacroInfo.PseudoOpType.BYTE:
               case MacroInfo.PseudoOpType.LOW_BYTE:
               case MacroInfo.PseudoOpType.HIGH_BYTE:
-                PODataByte( lineIndex, NeededParsedExpression, 0, NeededParsedExpression.Count, lineInfo, pseudoOp.Type, lineInfo.LineCodeMapping, false );
+                PODataByte( lineIndex, NeededParsedExpression, 0, NeededParsedExpression.Count, lineInfo, pseudoOp.Type, false );
                 break;
               case MacroInfo.PseudoOpType.WORD:
                 {
                   int     lineInBytes = 0;
-                  var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
+                  var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, out lineInBytes );
                   if ( result == ParseLineResult.RETURN_FALSE )
                   {
                     return ParseLineResult.RETURN_FALSE;
@@ -2808,7 +2811,7 @@ namespace RetroDevStudio.Parser
               case MacroInfo.PseudoOpType.WORD_BE:
                 {
                   int     lineInBytes = 0;
-                  var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
+                  var result = PODataWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, false, out lineInBytes );
                   if ( result == ParseLineResult.RETURN_FALSE )
                   {
                     return ParseLineResult.RETURN_FALSE;
@@ -2818,7 +2821,7 @@ namespace RetroDevStudio.Parser
               case MacroInfo.PseudoOpType.DWORD:
                 {
                   int     lineInBytes = 0;
-                  var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, true, out lineInBytes );
+                  var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, out lineInBytes );
                   if ( result == ParseLineResult.RETURN_FALSE )
                   {
                     return ParseLineResult.RETURN_FALSE;
@@ -2828,7 +2831,7 @@ namespace RetroDevStudio.Parser
               case MacroInfo.PseudoOpType.DWORD_BE:
                 {
                   int     lineInBytes = 0;
-                  var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, false, out lineInBytes );
+                  var result = PODataDWord( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, false, out lineInBytes );
                   if ( result == ParseLineResult.RETURN_FALSE )
                   {
                     return ParseLineResult.RETURN_FALSE;
@@ -2838,7 +2841,7 @@ namespace RetroDevStudio.Parser
               case MacroInfo.PseudoOpType.JUMP_TABLE:
                 {
                   int     lineInBytes = 0;
-                  var result = POJumpTable( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, lineInfo.LineCodeMapping, false, out lineInBytes );
+                  var result = POJumpTable( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, out lineInBytes );
                   if ( result == ParseLineResult.RETURN_FALSE )
                   {
                     return ParseLineResult.RETURN_FALSE;
@@ -2880,7 +2883,7 @@ namespace RetroDevStudio.Parser
                   long    value = -1;
                   int     dummyBytesGiven;
 
-                  if ( !EvaluateTokens( lineIndex, NeededParsedExpression, 0, tokenCommaIndex, lineInfo.LineCodeMapping, out SymbolInfo symbol, out dummyBytesGiven ) )
+                  if ( !EvaluateTokens( lineIndex, NeededParsedExpression, 0, tokenCommaIndex, out SymbolInfo symbol, out dummyBytesGiven ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
@@ -2889,7 +2892,7 @@ namespace RetroDevStudio.Parser
                               NeededParsedExpression[tokenCommaIndex - 1].EndPos + 1 - NeededParsedExpression[0].StartPos );
                   }
                   count = symbol.ToInteger();
-                  if ( !EvaluateTokens( lineIndex, NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1, lineInfo.LineCodeMapping, out symbol ) )
+                  if ( !EvaluateTokens( lineIndex, NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1, out symbol ) )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( NeededParsedExpression, tokenCommaIndex + 1, NeededParsedExpression.Count - tokenCommaIndex - 1 ) );
                   }
@@ -2928,7 +2931,7 @@ namespace RetroDevStudio.Parser
         ||   ( ( lineInfo.Opcode != null )
         &&     ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_RELATIVE )
         &&     ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y ) ) )
-        &&     ( !EvaluateTokens( lineIndex, NeededParsedExpression, lineInfo.LineCodeMapping, out value ) ) )
+        &&     ( !EvaluateTokens( lineIndex, NeededParsedExpression, out value ) ) )
         {
           /*
           if ( HasError() )
@@ -3191,7 +3194,7 @@ namespace RetroDevStudio.Parser
               }
               else
               {
-                if ( !EvaluateTokens( lineIndex, tokenInfos[0], lineInfo.LineCodeMapping, out SymbolInfo zeroPageValueSymbol ) )
+                if ( !EvaluateTokens( lineIndex, tokenInfos[0], out SymbolInfo zeroPageValueSymbol ) )
                 {
                   AddError( lineIndex,
                             m_LastErrorInfo.Code,
@@ -3199,7 +3202,7 @@ namespace RetroDevStudio.Parser
                             m_LastErrorInfo.Pos,
                             m_LastErrorInfo.Length );
                 }
-                else if ( !EvaluateTokens( lineIndex, tokenInfos[1], lineInfo.LineCodeMapping, out SymbolInfo relativeValueSymbol ) )
+                else if ( !EvaluateTokens( lineIndex, tokenInfos[1], out SymbolInfo relativeValueSymbol ) )
                 {
                   AddError( lineIndex,
                            m_LastErrorInfo.Code,
@@ -3275,7 +3278,7 @@ namespace RetroDevStudio.Parser
               }
               else
               {
-                if ( !EvaluateTokens( lineIndex, tokenInfos[0], lineInfo.LineCodeMapping, out SymbolInfo zeroPageValueSymbol ) )
+                if ( !EvaluateTokens( lineIndex, tokenInfos[0], out SymbolInfo zeroPageValueSymbol ) )
                 {
                   AddError( lineIndex,
                             m_LastErrorInfo.Code,
@@ -3613,7 +3616,6 @@ namespace RetroDevStudio.Parser
 
     private ParseLineResult HandleScopeEnd( GR.Collections.Map<GR.Generic.Tupel<string,int>, Types.MacroFunctionInfo> macroFunctions,
                                             List<TokenInfo> lineTokenInfos, 
-                                            GR.Collections.Map<byte, byte> TextCodeMapping,
                                             ref int lineIndex,
                                             ref int intermediateLineOffset,
                                             ref String[] Lines )
@@ -3655,7 +3657,7 @@ namespace RetroDevStudio.Parser
         {
           for ( int i = 0; i < macroInfo.Content.Length; ++i )
           {
-            var lineTokens = ParseTokenInfo( macroInfo.Content[i], 0, macroInfo.Content[i].Length, TextCodeMapping );
+            var lineTokens = ParseTokenInfo( macroInfo.Content[i], 0, macroInfo.Content[i].Length );
             if ( lineTokens != null )
             {
               for ( int j = 0; j < lineTokens.Count; ++j )
@@ -3722,16 +3724,16 @@ namespace RetroDevStudio.Parser
           // fix up internal labels for first loop
           var lineReplacement = new string[repeatUntil.LoopLength];
           System.Array.Copy( Lines, repeatUntil.LineIndex + 1, lineReplacement, 0, repeatUntil.LoopLength );
-          lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, lineIndex, TextCodeMapping );
+          lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, lineIndex );
           System.Array.Copy( lineReplacement, 0, Lines, repeatUntil.LineIndex + 1, repeatUntil.LoopLength );
 
           // fix up internal labels
-          repeatUntil.Content = RelabelLocalLabelsForLoop( repeatUntil.Content, lineIndex, TextCodeMapping );
+          repeatUntil.Content = RelabelLocalLabelsForLoop( repeatUntil.Content, lineIndex );
         }
 
         bool  endReached = false;
 
-        if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, TextCodeMapping, out SymbolInfo resultSymbol ) )
+        if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out SymbolInfo resultSymbol ) )
         {
           AddError( repeatUntil.LineIndex + 1, ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
           return ParseLineResult.ERROR_ABORT;
@@ -3790,7 +3792,7 @@ namespace RetroDevStudio.Parser
           System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
 
           // fix up internal labels
-          repeatUntil.Content = RelabelLocalLabelsForLoop( repeatUntil.Content, lineIndex, TextCodeMapping );
+          repeatUntil.Content = RelabelLocalLabelsForLoop( repeatUntil.Content, lineIndex );
 
           //DumpLines( newLines, "b" );
 
@@ -3860,11 +3862,15 @@ namespace RetroDevStudio.Parser
 
         bool  endReached = false;
 
-        if ( !EvaluateTokens( lineIndex, whileInfo.EndValueTokens, whileInfo.EndValueTokensTextmapping, out SymbolInfo resultSymbol ) )
+        var origMapping = _ParseContext.CurrentTextMapping;
+        _ParseContext.CurrentTextMapping = whileInfo.EndValueTokensTextmapping;
+        if ( !EvaluateTokens( lineIndex, whileInfo.EndValueTokens, out SymbolInfo resultSymbol ) )
         {
+          _ParseContext.CurrentTextMapping = origMapping;
           AddError( whileInfo.LineIndex + 1, ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate " + TokensToExpression( whileInfo.EndValueTokens ) );
           return ParseLineResult.ERROR_ABORT;
         }
+        _ParseContext.CurrentTextMapping = origMapping;
 
         long result = resultSymbol.ToInteger();
 
@@ -3991,7 +3997,7 @@ namespace RetroDevStudio.Parser
           // fix up internal labels for first loop
           var lineReplacement = new string[lastLoop.LoopLength];
           System.Array.Copy( Lines, lastLoop.LineIndex + 1, lineReplacement, 0, lastLoop.LoopLength );
-          lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, lineIndex, TextCodeMapping );
+          lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, lineIndex );
 
           for ( int j = 0; j < lineReplacement.Length; ++j )
           {
@@ -4001,14 +4007,18 @@ namespace RetroDevStudio.Parser
           System.Array.Copy( lineReplacement, 0, Lines, lastLoop.LineIndex + 1, lastLoop.LoopLength );
 
           // fix up internal labels
-          lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, lineIndex, TextCodeMapping );
+          lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, lineIndex );
         }
 
         bool  endReached = false;
 
         // re-evaluate end token value
-        if ( !EvaluateTokens( lineIndex, lastLoop.EndValueTokens, 0, lastLoop.EndValueTokens.Count, lastLoop.EndValueTokensTextmapping, out SymbolInfo endValueSymbol ) )
+        var origMapping = _ParseContext.CurrentTextMapping;
+        _ParseContext.CurrentTextMapping = lastLoop.EndValueTokensTextmapping;
+
+        if ( !EvaluateTokens( lineIndex, lastLoop.EndValueTokens, 0, lastLoop.EndValueTokens.Count, out SymbolInfo endValueSymbol ) )
         {
+          _ParseContext.CurrentTextMapping = origMapping;
           AddError( lineIndex,
                     RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
                     $"Could not evaluate end value for {lastLoop.IterationCount}th iteration",
@@ -4016,6 +4026,7 @@ namespace RetroDevStudio.Parser
                     lastLoop.EndValueTokens.Last().EndPos + 1 - lastLoop.EndValueTokens[0].StartPos );
           return ParseLineResult.ERROR_ABORT;
         }
+        _ParseContext.CurrentTextMapping = origMapping;
         ++lastLoop.IterationCount;
         lastLoop.EndValue = endValueSymbol.ToInt32();
         //Debug.Log( $"Loop for {lastLoop.Label}, {lastLoop.IterationCount}th iteration, end value from {TokensToExpression( lastLoop.EndValueTokens )} = {lastLoop.EndValue}" );
@@ -4095,7 +4106,7 @@ namespace RetroDevStudio.Parser
           System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
 
           // fix up internal labels
-          lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, lineIndex, TextCodeMapping );
+          lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, lineIndex );
 
           // also copy scoped variables if overlapping!!!
           //if ( !endReached )
@@ -4181,7 +4192,7 @@ namespace RetroDevStudio.Parser
 
     public List<Types.TokenInfo> PrepareLineTokens( string Line, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
-      List<Types.TokenInfo> lineTokenInfos = ParseTokenInfo( Line, 0, Line.Length, TextCodeMapping );
+      List<Types.TokenInfo> lineTokenInfos = ParseTokenInfo( Line, 0, Line.Length );
       if ( HasError() )
       {
         return null;
@@ -4680,7 +4691,7 @@ namespace RetroDevStudio.Parser
         if ( lineTokenInfos[tokenIndex].Content == "," )
         {
           // found an expression
-          if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, info.LineCodeMapping, out SymbolInfo value ) )
+          if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out SymbolInfo value ) )
           {
             AddError( _ParseContext.LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
             return ParseLineResult.RETURN_NULL;
@@ -4694,7 +4705,7 @@ namespace RetroDevStudio.Parser
           if ( expressionStartIndex <= tokenIndex - 1 )
           {
             // there's still data to evaluate
-            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, info.LineCodeMapping, out SymbolInfo value ) )
+            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out SymbolInfo value ) )
             {
               AddError( _ParseContext.LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
               return ParseLineResult.RETURN_NULL;
@@ -4999,7 +5010,7 @@ namespace RetroDevStudio.Parser
       m_ErrorMessages = 0;
 
       // default text code mapping
-      var textCodeMapping = m_TextCodeMappingRaw;
+      _ParseContext.CurrentTextMapping = m_TextCodeMappingRaw;
       if ( AssemblerSettings.AllowsCustomTextMappings )
       {
         _ParseContext.TextMappings["none"]    = m_TextCodeMappingRaw;
@@ -5008,11 +5019,11 @@ namespace RetroDevStudio.Parser
 
       if ( !string.IsNullOrEmpty( AdditionalPredefines ) )
       {
-        ParseAndAddPreDefines( AdditionalPredefines, textCodeMapping );
+        ParseAndAddPreDefines( AdditionalPredefines );
       }
       if ( Configuration != null )
       {
-        ParseAndAddPreDefines( Configuration.Defines, textCodeMapping );
+        ParseAndAddPreDefines( Configuration.Defines );
       }
       AddPreprocessorConstant( ASSEMBLER_ID_C64STUDIO, 1, -1 );
       AddPreprocessorConstant( ASSEMBLER_ID_RETRODEVSTUDIO, 1, -1 );
@@ -5093,7 +5104,7 @@ namespace RetroDevStudio.Parser
           }
         }
 
-        List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, textCodeMapping );
+        List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, _ParseContext.CurrentTextMapping );
         if ( lineTokenInfos == null )
         {
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error at position " + ( m_LastErrorInfo.Pos + 1 ).ToString() + " (" + parseLine[m_LastErrorInfo.Pos] + ")" );
@@ -5323,7 +5334,7 @@ namespace RetroDevStudio.Parser
                   AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
-                var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -5349,7 +5360,7 @@ namespace RetroDevStudio.Parser
                   AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
-                var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -5377,7 +5388,7 @@ namespace RetroDevStudio.Parser
                 }
                 OnScopeRemoved( lineIndex );
                 _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
-                var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -5479,7 +5490,7 @@ namespace RetroDevStudio.Parser
                   }
                   else
                   {
-                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out SymbolInfo defineResultSymbol ) )
                     {
                       AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
                                 + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
@@ -5526,7 +5537,7 @@ namespace RetroDevStudio.Parser
         else if ( IsDefine( lineTokenInfos ) )
         {
           // a define
-          var callReturn = PODefine( lineTokenInfos, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+          var callReturn = PODefine( lineTokenInfos, info, _ParseContext.CurrentTextMapping, ref programStepPos, ref trueCompileCurrentAddress );
           if ( callReturn == ParseLineResult.ERROR_ABORT )
           {
             HadFatalError = true;
@@ -5563,7 +5574,7 @@ namespace RetroDevStudio.Parser
               return Lines;
             }
 
-            List<Types.TokenInfo> results = ProcessExtFunction( lineIndex, possibleFunction, arguments[0], 1, arguments[0].Count - 2, textCodeMapping );
+            List<Types.TokenInfo> results = ProcessExtFunction( lineIndex, possibleFunction, arguments[0], 1, arguments[0].Count - 2 , _ParseContext.CurrentTextMapping );
             if ( results == null )
             {
               HadFatalError = true;
@@ -5574,7 +5585,7 @@ namespace RetroDevStudio.Parser
         }
         else if ( IsLabelInFront( lineTokenInfos, upToken ) )
         {
-          var callResult = HandleLabelInFront( lineIndex, info, lineTokenInfos, ref upToken, textCodeMapping,
+          var callResult = HandleLabelInFront( lineIndex, info, lineTokenInfos, ref upToken, _ParseContext.CurrentTextMapping,
             ref programStepPos, ref trueCompileCurrentAddress, ref labelInFront, ref tokenInFront, ref parseLine );
           if ( callResult == ParseLineResult.ERROR_ABORT )
           {
@@ -5661,7 +5672,7 @@ namespace RetroDevStudio.Parser
           }
 
           info.Line             = parseLine;
-          info.LineCodeMapping  = textCodeMapping;
+          info.LineCodeMapping  = _ParseContext.CurrentTextMapping;
 
           var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info, out List<List<TokenInfo>> opcodeExpressions, out ulong resultingOpcodePatchValue, out bool hadError );
           if ( estimatedOpcode != null )
@@ -5745,7 +5756,7 @@ namespace RetroDevStudio.Parser
             bool  hasExpressions = info.Opcode.ParserExpressions.Count > 0;
             if ( hasExpressions )
             {
-              var opcodeHandlingResult = HandleOpcode( info, lineIndex, lineTokenInfos, opcodeExpressions, resultingOpcodePatchValue, textCodeMapping );
+              var opcodeHandlingResult = HandleOpcode( info, lineIndex, lineTokenInfos, opcodeExpressions, resultingOpcodePatchValue, _ParseContext.CurrentTextMapping );
               if ( opcodeHandlingResult == ParseLineResult.CALL_CONTINUE )
               {
                 continue;
@@ -5830,7 +5841,7 @@ namespace RetroDevStudio.Parser
                   count             = tokensToEvaluate.Count;
                 }
 
-                if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+                if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, out SymbolInfo byteValueSymbol ) )
                 {
                   byteValue = byteValueSymbol.ToInt32();
                   if ( !ValidateExpressionValueRange( ref byteValue, info, round, out int valueRangeListIndex ) )
@@ -6021,8 +6032,8 @@ namespace RetroDevStudio.Parser
                   }
                   else
                   {
-                    if ( ( !EvaluateTokens( lineIndex, tokenInfos[0], textCodeMapping, out SymbolInfo firstValueSymbol ) )
-                    ||   ( !EvaluateTokens( lineIndex, tokenInfos[1], textCodeMapping, out SymbolInfo secondValueSymbol ) ) )
+                    if ( ( !EvaluateTokens( lineIndex, tokenInfos[0], out SymbolInfo firstValueSymbol ) )
+                    ||   ( !EvaluateTokens( lineIndex, tokenInfos[1], out SymbolInfo secondValueSymbol ) ) )
                     {
                       info.NeededParsedExpression = tokensToEvaluate.GetRange( 1, count );
                     }
@@ -6097,7 +6108,7 @@ namespace RetroDevStudio.Parser
                     }
                   }
                 }
-                else if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+                else if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, out SymbolInfo byteValueSymbol ) )
                 {
                   byteValue = byteValueSymbol.ToInt32();
                   if ( ( info.Opcode.ByteValue == 0x6C )
@@ -6233,7 +6244,7 @@ namespace RetroDevStudio.Parser
                 count             = tokensToEvaluate.Count;
               }
 
-              if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+              if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, out SymbolInfo byteValueSymbol ) )
               {
                 byteValue = byteValueSymbol.ToInt32();
                 if ( !Valid24BitValue( byteValue ) )
@@ -6277,7 +6288,7 @@ namespace RetroDevStudio.Parser
                 int               count = opcodeExpressions[round].Count;
                 List<TokenInfo>   tokensToEvaluate = opcodeExpressions[round];
 
-                if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, textCodeMapping, out SymbolInfo byteValueSymbol ) )
+                if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, out SymbolInfo byteValueSymbol ) )
                 {
                   byteValue = (uint)byteValueSymbol.ToInteger();
 
@@ -6432,7 +6443,7 @@ namespace RetroDevStudio.Parser
 
           if ( !ScopeInsideMacroDefinition() )
           {
-            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, m_ASMFileInfo.Macros, ref Lines, textCodeMapping, out lineSizeInBytes );
+            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, m_ASMFileInfo.Macros, ref Lines, _ParseContext.CurrentTextMapping, out lineSizeInBytes );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;
@@ -6491,7 +6502,7 @@ namespace RetroDevStudio.Parser
             {
               if ( !ScopeInsideMacroDefinition() )
               {
-                AddError( lineIndex, Types.ErrorCode.E1308_USER_ERROR, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+                AddError( lineIndex, Types.ErrorCode.E1308_USER_ERROR, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, _ParseContext.CurrentTextMapping ) );
               }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WARN )
@@ -6500,7 +6511,7 @@ namespace RetroDevStudio.Parser
               {
                 AddWarning( lineIndex,
                             Types.ErrorCode.W0005_USER_WARNING,
-                            EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ),
+                            EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, _ParseContext.CurrentTextMapping ),
                             lineTokenInfos[0].StartPos,
                             lineTokenInfos[0].Length );
               }
@@ -6509,12 +6520,12 @@ namespace RetroDevStudio.Parser
             {
               if ( !ScopeInsideMacroDefinition() )
               {
-                AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+                AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, _ParseContext.CurrentTextMapping ) );
               }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SET )
             {
-              var callReturn = PODefine( lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 ), info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+              var callReturn = PODefine( lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 ), info, _ParseContext.CurrentTextMapping, ref programStepPos, ref trueCompileCurrentAddress );
               if ( callReturn == ParseLineResult.ERROR_ABORT )
               {
                 HadFatalError = true;
@@ -6761,7 +6772,7 @@ namespace RetroDevStudio.Parser
 
                   StripInternalBrackets( tokens );//, 1 );
                   // TODO - have to evaluate the rest of the line if it exists!!
-                  if ( !EvaluateTokens( lineIndex, tokens, 0, 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                  if ( !EvaluateTokens( lineIndex, tokens, 0, 1, out SymbolInfo defineResultSymbol ) )
                   {
                     scope.Active = hadElse;
                   }
@@ -6806,11 +6817,11 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.FOR )
             {
               // !FOR var = start TO stop
-              POFor( m_CurrentZoneName, ref intermediateLineOffset, lineTokenInfos, textCodeMapping );
+              POFor( m_CurrentZoneName, ref intermediateLineOffset, lineTokenInfos );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.END )
             {
-              var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+              var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 --lineIndex;
@@ -6847,7 +6858,7 @@ namespace RetroDevStudio.Parser
               {
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
-                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, out SymbolInfo defineResultSymbol ) )
                 {
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
@@ -6898,7 +6909,7 @@ namespace RetroDevStudio.Parser
                 Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
 
-                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, numTokensForIf, textCodeMapping, out SymbolInfo defineResultSymbol ) )
+                if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, numTokensForIf, out SymbolInfo defineResultSymbol ) )
                 {
                   AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, numTokensForIf ) );
                   scope.Active = true;
@@ -7008,14 +7019,14 @@ namespace RetroDevStudio.Parser
                 int number = -1;
                 int size = -1;
                 SymbolInfo sizeSymbol = null;
-                if ( !EvaluateTokens( lineIndex, paramsNo, textCodeMapping, out SymbolInfo numberSymbol ) )
+                if ( !EvaluateTokens( lineIndex, paramsNo, out SymbolInfo numberSymbol ) )
                 {
                   string expressionCheck = TokensToExpression( paramsNo );
 
                   AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression " + expressionCheck );
                 }
                 else if ( ( paramsSize.Count > 0 )
-                && ( !EvaluateTokens( lineIndex, paramsSize, textCodeMapping, out sizeSymbol ) ) )
+                && ( !EvaluateTokens( lineIndex, paramsSize, out sizeSymbol ) ) )
                 {
                   string expressionCheck = TokensToExpression( paramsNo );
 
@@ -7103,7 +7114,7 @@ namespace RetroDevStudio.Parser
                 if ( lineTokenInfos[tokenIndex].Content == "," )
                 {
                   // found an expression
-                  if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, textCodeMapping, out SymbolInfo value ) )
+                  if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out SymbolInfo value ) )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
                     HadFatalError = true;
@@ -7118,7 +7129,7 @@ namespace RetroDevStudio.Parser
                   if ( expressionStartIndex <= tokenIndex - 1 )
                   {
                     // there's still data to evaluate
-                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, textCodeMapping, out SymbolInfo value ) )
+                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out SymbolInfo value ) )
                     {
                       AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
                       HadFatalError = true;
@@ -7180,14 +7191,14 @@ namespace RetroDevStudio.Parser
             ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
             ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
-              PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, textCodeMapping, true );
+              PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, true );
               info.Line = parseLine;
               lineSizeInBytes = info.NumBytes;
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD )
             {
-              info.LineCodeMapping = textCodeMapping;
-              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, true, out lineSizeInBytes );
+              info.LineCodeMapping = _ParseContext.CurrentTextMapping;
+              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7200,8 +7211,8 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
             {
-              info.LineCodeMapping = textCodeMapping;
-              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, false, out lineSizeInBytes );
+              info.LineCodeMapping = _ParseContext.CurrentTextMapping;
+              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7214,8 +7225,8 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.DWORD )
             {
-              info.LineCodeMapping = textCodeMapping;
-              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, true, out lineSizeInBytes );
+              info.LineCodeMapping = _ParseContext.CurrentTextMapping;
+              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7228,8 +7239,8 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.DWORD_BE )
             {
-              info.LineCodeMapping = textCodeMapping;
-              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, false, out lineSizeInBytes );
+              info.LineCodeMapping = _ParseContext.CurrentTextMapping;
+              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7254,7 +7265,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT )
             {
-              POText( lineIndex, lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
+              POText( lineIndex, lineTokenInfos, info, parseLine, _ParseContext.CurrentTextMapping, out lineSizeInBytes );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.TEXT_RAW )
             {
@@ -7262,7 +7273,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB )
             {
-              textCodeMapping = POConversionTab( pseudoOp.Keyword, textCodeMapping, lineIndex, lineTokenInfos );
+              _ParseContext.CurrentTextMapping = POConversionTab( pseudoOp.Keyword, _ParseContext.CurrentTextMapping, lineIndex, lineTokenInfos );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
             {
@@ -7275,7 +7286,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC )
             {
-              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
+              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, _ParseContext.CurrentTextMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7294,7 +7305,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SKIP )
             {
-              var parseResult = POSkip( lineTokenInfos, lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+              var parseResult = POSkip( lineTokenInfos, lineIndex, info, ref programStepPos, ref trueCompileCurrentAddress );
               if ( ( parseResult == ParseLineResult.RETURN_NULL )
               ||   ( parseResult == ParseLineResult.ERROR_ABORT ) )
               {
@@ -7313,11 +7324,11 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS )
             {
-              textCodeMapping = POConversionTabTASS( pseudoOp.Keyword, textCodeMapping, lineIndex, lineTokenInfos );
+              _ParseContext.CurrentTextMapping = POConversionTabTASS( pseudoOp.Keyword, _ParseContext.CurrentTextMapping, lineIndex, lineTokenInfos );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS_ENTRY )
             {
-              var result = POConversionTabTASSEntry( pseudoOp.Keyword, textCodeMapping, lineIndex, lineTokenInfos, out textCodeMapping );
+              var result = POConversionTabTASSEntry( pseudoOp.Keyword, _ParseContext.CurrentTextMapping, lineIndex, lineTokenInfos, out _ParseContext.CurrentTextMapping );
               if ( result != ParseLineResult.OK )
               {
                 HadFatalError = true;
@@ -7375,7 +7386,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.JUMP_TABLE )
             {
-              var result = POJumpTable( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, textCodeMapping, true, out lineSizeInBytes );
+              var result = POJumpTable( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7448,7 +7459,7 @@ namespace RetroDevStudio.Parser
             int     pseudoOpEndPos = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
             string defineCheck = parseLine.Substring( pseudoOpEndPos ).Trim();
 
-            List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
+            List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length );
 
             if ( ( tokens.Count != 1 )
             ||   ( !IsTokenLabel( tokens[0].Type ) ) )
@@ -7482,7 +7493,7 @@ namespace RetroDevStudio.Parser
             int     pseudoOpEndPos = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
             string defineCheck = parseLine.Substring( pseudoOpEndPos ).Trim();
 
-            List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
+            List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length );
             StripInternalBrackets( tokens );
 
             if ( ( tokens.Count != 1 )
@@ -7513,7 +7524,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC )
           {
-            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
+            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, _ParseContext.CurrentTextMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7548,13 +7559,13 @@ namespace RetroDevStudio.Parser
             }
             if ( commaCount == 1 )
             {
-              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, commaPos - 1, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
+              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, commaPos - 1, out SymbolInfo newStepPosSymbol ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG position value" );
                 HadFatalError = true;
                 return Lines;
               }
-              if ( !EvaluateTokens( lineIndex, lineTokenInfos, commaPos + 1, lineTokenInfos.Count - commaPos - 1, textCodeMapping, out SymbolInfo newPseudoPosSymbol ) )
+              if ( !EvaluateTokens( lineIndex, lineTokenInfos, commaPos + 1, lineTokenInfos.Count - commaPos - 1, out SymbolInfo newPseudoPosSymbol ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG pseudo position value" );
                 HadFatalError = true;
@@ -7565,7 +7576,7 @@ namespace RetroDevStudio.Parser
             }
             else
             {
-              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
+              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out SymbolInfo newStepPosSymbol ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG position value" );
                 HadFatalError = true;
@@ -7597,13 +7608,13 @@ namespace RetroDevStudio.Parser
           ||        ( macroInfo.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
           ||        ( macroInfo.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
           {
-            PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macroInfo.Type, textCodeMapping, true );
+            PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macroInfo.Type, true );
             info.Line = parseLine;
             lineSizeInBytes = info.NumBytes;
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD )
           {
-            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, true, out lineSizeInBytes );
+            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7616,7 +7627,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
           {
-            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, false, out lineSizeInBytes );
+            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7629,7 +7640,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.DWORD )
           {
-            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, true, out lineSizeInBytes );
+            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7642,7 +7653,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.DWORD_BE )
           {
-            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, info.LineCodeMapping, true, false, out lineSizeInBytes );
+            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -7681,7 +7692,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.TEXT )
           {
-            POText( lineIndex, lineTokenInfos, info, parseLine, textCodeMapping, out lineSizeInBytes );
+            POText( lineIndex, lineTokenInfos, info, parseLine, _ParseContext.CurrentTextMapping, out lineSizeInBytes );
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.TEXT_SCREEN )
           {
@@ -7712,7 +7723,7 @@ namespace RetroDevStudio.Parser
             {
               continue;
             }
-            var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
+            var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               --lineIndex;
@@ -7768,7 +7779,7 @@ namespace RetroDevStudio.Parser
 
             Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
             scope.StartIndex = lineIndex;
-            if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping, out SymbolInfo defineResult ) )
+            if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out SymbolInfo defineResult ) )
             {
               AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
               scope.Active = true;
@@ -7884,7 +7895,7 @@ namespace RetroDevStudio.Parser
           {
             if ( !ScopeInsideMacroDefinition() )
             {
-              AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
+              AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, _ParseContext.CurrentTextMapping ) );
             }
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
@@ -9200,7 +9211,7 @@ namespace RetroDevStudio.Parser
         AddError( _ParseContext.LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Expected one argument" );
         return ParseLineResult.ERROR_ABORT;
       }
-      if ( !EvaluateTokens( _ParseContext.LineIndex, lineParams[0], info.LineCodeMapping, out SymbolInfo numRepeatsSymbol ) )
+      if ( !EvaluateTokens( _ParseContext.LineIndex, lineParams[0], out SymbolInfo numRepeatsSymbol ) )
       {
         return ParseLineResult.ERROR_ABORT;
       }
@@ -9230,7 +9241,7 @@ namespace RetroDevStudio.Parser
         System.Array.Copy( Lines, _ParseContext.LineIndex + 1, tempContent, i * loopLength, loopLength );
       }
 
-      string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, _ParseContext.LineIndex, info.LineCodeMapping );
+      string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, _ParseContext.LineIndex );
 
       string[] newLines = new string[Lines.Length + replacementLines.Length];
 
@@ -9617,7 +9628,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void POFor( string zoneName, ref int intermediateLineOffset, List<Types.TokenInfo> lineTokenInfos, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private void POFor( string zoneName, ref int intermediateLineOffset, List<Types.TokenInfo> lineTokenInfos )
     {
       if ( ScopeInsideMacroDefinition() )
       {
@@ -9671,7 +9682,7 @@ namespace RetroDevStudio.Parser
           }
           if ( indexStep != -1 )
           {
-            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, indexStep + 1, lineTokenInfos.Count - indexStep - 1, TextCodeMapping, out SymbolInfo stepValueSymbol ) )
+            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, indexStep + 1, lineTokenInfos.Count - indexStep - 1, out SymbolInfo stepValueSymbol ) )
             {
               AddError( _ParseContext.LineIndex,
                         RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -9704,7 +9715,7 @@ namespace RetroDevStudio.Parser
             var endValueTokens = lineTokenInfos.GetRange( indexTo + 1, indexStep - indexTo - 1 );
             int startValue = 0;
             int endValue = 0;
-            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 3, indexTo - 3, TextCodeMapping, out SymbolInfo startValueSymbol ) )
+            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 3, indexTo - 3, out SymbolInfo startValueSymbol ) )
             {
               AddError( _ParseContext.LineIndex,
                         RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -9713,7 +9724,7 @@ namespace RetroDevStudio.Parser
                         lineTokenInfos[indexTo - 3].EndPos + 1 - lineTokenInfos[3].StartPos );
               hadError = true;
             }
-            else if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, indexTo + 1, indexStep - indexTo - 1, TextCodeMapping, out SymbolInfo endValueSymbol ) )
+            else if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, indexTo + 1, indexStep - indexTo - 1, out SymbolInfo endValueSymbol ) )
             {
               AddError( _ParseContext.LineIndex,
                         RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -9758,7 +9769,7 @@ namespace RetroDevStudio.Parser
               loop.StepValue                  = stepValue;
               loop.CurrentValue               = startValue;
               loop.EndValueTokens             = endValueTokens;
-              loop.EndValueTokensTextmapping  = TextCodeMapping;
+              loop.EndValueTokensTextmapping  = _ParseContext.CurrentTextMapping;
 
               //Debug.Log( $"Begin Loop for {loop.Label}" );
 
@@ -9791,7 +9802,7 @@ namespace RetroDevStudio.Parser
 
       for ( int i = functionInfo.LineIndex + 1; i < functionInfo.LineEnd; ++i )
       {
-        List<Types.TokenInfo> tokens = ParseTokenInfo( functionInfo.Content[i - functionInfo.LineIndex - 1], 0, functionInfo.Content[i - functionInfo.LineIndex - 1].Length, TextCodeMapping );
+        List<Types.TokenInfo> tokens = ParseTokenInfo( functionInfo.Content[i - functionInfo.LineIndex - 1], 0, functionInfo.Content[i - functionInfo.LineIndex - 1].Length );
         if ( tokens == null )
         {
           // there was an error!
@@ -9813,9 +9824,9 @@ namespace RetroDevStudio.Parser
           {
             int     paramIndex = paramName.IndexOf( tokens[j + 2].Content );
 
-            var replacementToken = ParseTokenInfo( param[paramIndex], 0, param[paramIndex].Length, TextCodeMapping );
+            var replacementToken = ParseTokenInfo( param[paramIndex], 0, param[paramIndex].Length );
 
-            if ( !EvaluateTokens( lineIndex + i, replacementToken, 0, 1, TextCodeMapping, out SymbolInfo resultingToken ) )
+            if ( !EvaluateTokens( lineIndex + i, replacementToken, 0, 1, out SymbolInfo resultingToken ) )
             {
               // there was an error!
               LineIndexInsideMacro = i;
@@ -9971,7 +9982,7 @@ namespace RetroDevStudio.Parser
                 token.Content = param[j];
                 token.Length = param[j].Length;
 
-                tempTokens = ParseTokenInfo( token.Content, 0, token.Content.Length, TextCodeMapping );
+                tempTokens = ParseTokenInfo( token.Content, 0, token.Content.Length );
                 for ( int k = 0; k < tempTokens.Count; ++k )
                 {
                   // may look useless, but actually fetches the substring and stores it in the content cache
@@ -10065,7 +10076,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private string[] RelabelLocalLabelsForLoop( string[] Lines, int lineIndex, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private string[] RelabelLocalLabelsForLoop( string[] Lines, int lineIndex )
     {
       string[] replacementLines = new string[Lines.Length];
       int replacementLineIndex = 0;
@@ -10075,7 +10086,7 @@ namespace RetroDevStudio.Parser
       // check for definitions of local labels
       for ( int i = 0; i < Lines.Length; ++i )
       {
-        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length, TextCodeMapping );
+        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length );
 
         if ( ( tokens.Count > 0 )
         &&   ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL ) )
@@ -10087,7 +10098,7 @@ namespace RetroDevStudio.Parser
 
       for ( int i = 0; i < Lines.Length; ++i )
       {
-        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length, TextCodeMapping );
+        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length );
         bool replacedParam = false;
 
         int   tokenIndex = 0;
@@ -10350,7 +10361,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    public void ParseAndAddPreDefines( string PreDefines, GR.Collections.Map<byte, byte> TextCodeMapping )
+    public void ParseAndAddPreDefines( string PreDefines )
     {
       string[]    makros = PreDefines.Split( '\n' );
 
@@ -10358,7 +10369,7 @@ namespace RetroDevStudio.Parser
       {
         string singleMakro = makro.Trim();
 
-        List<Types.TokenInfo> lineTokens = ParseTokenInfo( singleMakro, 0, singleMakro.Length, TextCodeMapping );
+        List<Types.TokenInfo> lineTokens = ParseTokenInfo( singleMakro, 0, singleMakro.Length );
 
         if ( lineTokens.Count == 1 )
         {
@@ -10371,8 +10382,8 @@ namespace RetroDevStudio.Parser
           int equPos = lineTokens[1].StartPos;
           string defineName = singleMakro.Substring( 0, equPos ).Trim();
           string defineValue = singleMakro.Substring( equPos + 1 ).Trim();
-          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, TextCodeMapping );
-          if ( !EvaluateTokens( -1, valueTokens, TextCodeMapping, out SymbolInfo address ) )
+          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
+          if ( !EvaluateTokens( -1, valueTokens, out SymbolInfo address ) )
           {
             AddError( -1, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot evaluate predefine expression " + defineValue );
           }
@@ -11190,15 +11201,7 @@ namespace RetroDevStudio.Parser
       AssembledOutput.OriginalAssemblySize          = highestEnd - lowestStart;
       AssembledOutput.MemoryMap                     = memoryMap;
 
-      string    outputPureFilename = "HURZ";
-      try
-      {
-        outputPureFilename = GR.Path.GetFileNameWithoutExtension( Config.OutputFile );
-      }
-      catch ( Exception )
-      {
-        // arghh exceptions!
-      }
+      string    outputPureFilename = GR.Path.GetFileNameWithoutExtension( Config.OutputFile );
 
       var resultingBinary = AssembleTarget( m_CompileTarget, AssembledOutput.Assembly, outputPureFilename, fileStartAddress );
       if ( resultingBinary == null )
@@ -11212,7 +11215,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    public List<Types.TokenInfo> ParseTokenInfo( string Source, int Start, int Length, GR.Collections.Map<byte, byte> TextCodeMapping )
+    public List<Types.TokenInfo> ParseTokenInfo( string Source, int Start, int Length )
     {
       ClearErrorInfo();
 
@@ -11605,7 +11608,7 @@ namespace RetroDevStudio.Parser
       CollapseBinaryTokens( result );
 
       // collapse ## (with labels!)
-      CollapsePreprocessorLabels( result, TextCodeMapping );
+      CollapsePreprocessorLabels( result );
 
       // if the last token is an internal label (+/-), and something useless is following, it is interpreted as operator
       if ( ( result.Count >= 2 )
@@ -12344,7 +12347,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void CollapsePreprocessorLabels( List<TokenInfo> result, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private void CollapsePreprocessorLabels( List<TokenInfo> result )
     {
       // collapse <label#>#<value> (make a single token label name)
       if ( result.Count >= 3 )
@@ -12358,7 +12361,7 @@ namespace RetroDevStudio.Parser
           &&   ( IsTokenLabel( result[i + 1].Type ) ) )
           {
             // collapse
-            if ( EvaluateLabel( -1, result[i + 1].Content, TextCodeMapping, out long labelValue ) )
+            if ( EvaluateLabel( -1, result[i + 1].Content, out long labelValue ) )
             {
               result[i - 1].Content = result[i - 1].Content.Substring( 0, result[i - 1].Length - 1 ) + labelValue.ToString();
               result[i - 1].Length  = result[i - 1].Content.Length;
@@ -12380,7 +12383,7 @@ namespace RetroDevStudio.Parser
           &&   ( IsTokenLabel( result[i + 2].Type ) ) )
           {
             // collapse
-            if ( EvaluateLabel( -1, result[i + 2].Content, TextCodeMapping, out long labelValue ) )
+            if ( EvaluateLabel( -1, result[i + 2].Content, out long labelValue ) )
             {
               result[i - 1].Content = result[i - 1].Content + labelValue.ToString();
               result[i - 1].Length  = result[i - 1].Content.Length;
@@ -12592,7 +12595,7 @@ namespace RetroDevStudio.Parser
 
             int numGivenBytes = 0;
             _ParseContext.DoNotAddReferences = true;
-            bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, info.LineCodeMapping, out SymbolInfo value, out numGivenBytes );
+            bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out SymbolInfo value, out numGivenBytes );
             _ParseContext.DoNotAddReferences = false;
             if ( couldEvaluate )
             {
@@ -12677,7 +12680,7 @@ namespace RetroDevStudio.Parser
             numBytesFirstParam = 1;
             // still call evaluate tokens since it will collapse the result
             //_ParseContext.DoNotAddReferences = true;
-            bool couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex + 2, expressionTokenCount - 2, info.LineCodeMapping, out SymbolInfo valueSymbol, out numGivenBytes );
+            bool couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex + 2, expressionTokenCount - 2, out SymbolInfo valueSymbol, out numGivenBytes );
             //_ParseContext.DoNotAddReferences = false;
             if ( couldEvaluate )
             {
@@ -12703,7 +12706,7 @@ namespace RetroDevStudio.Parser
           {
             // determine addressing from parameter size
             _ParseContext.DoNotAddReferences = true;
-            bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, info.LineCodeMapping, out SymbolInfo valueSymbol, out numGivenBytes );
+            bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out SymbolInfo valueSymbol, out numGivenBytes );
             _ParseContext.DoNotAddReferences = false;
             if ( couldEvaluate )
             {
@@ -12788,7 +12791,7 @@ namespace RetroDevStudio.Parser
             ||     ( extraTokens[0].Content == ">" ) ) )
             {
               //_ParseContext.DoNotAddReferences = true;
-              if ( EvaluateTokens( LineIndex, extraTokens, 1, extraTokens.Count - 1, info.LineCodeMapping, out SymbolInfo expressionResultSymbol2 ) )
+              if ( EvaluateTokens( LineIndex, extraTokens, 1, extraTokens.Count - 1, out SymbolInfo expressionResultSymbol2 ) )
               {
                 expressionResult = expressionResultSymbol2.ToInteger();
                 if ( ( ( extraTokens[0].Content == "<" )
@@ -12821,7 +12824,7 @@ namespace RetroDevStudio.Parser
               //_ParseContext.DoNotAddReferences = false;
             }
             _ParseContext.DoNotAddReferences = true;
-            if ( EvaluateTokens( LineIndex, extraTokens, info.LineCodeMapping, out SymbolInfo expressionResultSymbol ) )
+            if ( EvaluateTokens( LineIndex, extraTokens, out SymbolInfo expressionResultSymbol ) )
             {
               /*
               expressionResult = expressionResultSymbol.ToInteger();
@@ -13650,12 +13653,12 @@ namespace RetroDevStudio.Parser
           &&   ( Tokens[startTokenIndex + Count - 1].Content == "D" ) )
           {
             // DASM special, evaluate and enter as string
-            if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex + 1, StartIndex + Count - startTokenIndex - 3, TextCodeMapping, out result ) )
+            if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex + 1, StartIndex + Count - startTokenIndex - 3, out result ) )
             {
               return "";
             }
           }
-          else if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, TextCodeMapping, out result ) )
+          else if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, out result ) )
           {
             // treat as empty string (e.g. undefined symbol)
             result = new SymbolInfo();

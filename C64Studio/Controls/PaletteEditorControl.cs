@@ -17,7 +17,7 @@ using GR.Memory;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class PaletteEditor : UserControl
+  public partial class PaletteEditorControl : UserControl
   {
     public StudioCore                           Core = null;
 
@@ -39,14 +39,14 @@ namespace RetroDevStudio.Controls
 
 
 
-    public PaletteEditor()
+    public PaletteEditorControl()
     {
       Setup();
     }
 
 
 
-    public PaletteEditor( StudioCore Core )
+    public PaletteEditorControl( StudioCore Core )
     {
       this.Core = Core;
 
@@ -55,6 +55,7 @@ namespace RetroDevStudio.Controls
 
 
 
+    [EditorBrowsable( EditorBrowsableState.Never )]
     public Dictionary<PaletteType, List<Palette>> Palettes
     {
       get 
@@ -90,14 +91,20 @@ namespace RetroDevStudio.Controls
 
     private void comboSystem_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( ( comboSystem.SelectedIndex == -1 )
-      ||   ( Palettes.Count == 0 ) )
+      if ( comboSystem.SelectedIndex == -1 )
       {
         return;
       }
 
       var palette = (PaletteType)comboSystem.SelectedItem;
       _CurrentPaletteType = palette;
+
+      if ( Palettes.Count == 0 )
+      {
+        //Palettes.Add( _CurrentPaletteType, new List<Palette>() );
+        return;
+      }
+
       _CurrentSystem      = Palettes[palette];
 
       paletteList.BeginUpdate();
@@ -423,7 +430,7 @@ namespace RetroDevStudio.Controls
       var palToCopy = _CurrentPalette;
       if ( palToCopy == null )
       {
-        palToCopy = new Palette();
+        palToCopy = new Palette( PaletteManager.PaletteFromType( _CurrentPaletteType ) );
       }
       var palette = new Palette( palToCopy );
 

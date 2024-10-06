@@ -69,7 +69,7 @@ namespace RetroDevStudio.Parser
           {
             if ( startTokenIndex < tokenIndex )
             {
-              if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, tokenIndex - startTokenIndex, textCodeMapping, out SymbolInfo aByte ) )
+              if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, tokenIndex - startTokenIndex, out SymbolInfo aByte ) )
               {
                 data.AppendU8( (byte)aByte.ToInteger() );
               }
@@ -85,7 +85,7 @@ namespace RetroDevStudio.Parser
         }
         if ( startTokenIndex < lineTokenInfos.Count )
         {
-          if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex, textCodeMapping, out SymbolInfo aByte ) )
+          if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex, out SymbolInfo aByte ) )
           {
             data.AppendU8( (byte)aByte.ToInteger() );
           }
@@ -163,7 +163,7 @@ namespace RetroDevStudio.Parser
             return ParseLineResult.ERROR_ABORT;
           }
           // 2nd must be a byte value (or result in one)
-          if ( !EvaluateTokens( lineIndex, lineParams[firstIndex + 1], 0, lineParams[firstIndex + 1].Count, textCodeMapping, out SymbolInfo aByte ) )
+          if ( !EvaluateTokens( lineIndex, lineParams[firstIndex + 1], 0, lineParams[firstIndex + 1].Count, out SymbolInfo aByte ) )
           {
             // could not fully parse
             AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not parse " + TokensToExpression( lineParams[firstIndex + 1] ) );

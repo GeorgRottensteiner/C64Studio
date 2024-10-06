@@ -12,7 +12,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POSkip( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, Map<byte, byte> textCodeMapping, ref int programStepPos, ref int trueCompileCurrentAddress )
+    private ParseLineResult POSkip( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, ref int programStepPos, ref int trueCompileCurrentAddress )
     {
       if ( lineTokenInfos.Count <= 1 )
       {
@@ -22,7 +22,7 @@ namespace RetroDevStudio.Parser
 
       // set program step
       info.AddressSource = "*";
-      if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
+      if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out SymbolInfo newStepPosSymbol ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
         return ParseLineResult.ERROR_ABORT;

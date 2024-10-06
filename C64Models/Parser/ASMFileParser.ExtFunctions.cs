@@ -30,7 +30,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<Types.TokenInfo> ExtFileSize( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<Types.TokenInfo> ExtFileSize( List<Types.TokenInfo> Arguments )
     {
       List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
 
@@ -65,15 +65,15 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<Types.TokenInfo> ExtMathMin( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<Types.TokenInfo> ExtMathMin( List<Types.TokenInfo> Arguments )
     {
       List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
 
-      if ( !EvaluateTokens( 0, Arguments, 0, 1, TextCodeMapping, out SymbolInfo arg1 ) )
+      if ( !EvaluateTokens( 0, Arguments, 0, 1, out SymbolInfo arg1 ) )
       {
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, 1, 1, TextCodeMapping, out SymbolInfo arg2 ) )
+      if ( !EvaluateTokens( 0, Arguments, 1, 1, out SymbolInfo arg2 ) )
       {
         return result;
       }
@@ -106,15 +106,15 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<Types.TokenInfo> ExtMathMax( List<Types.TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<Types.TokenInfo> ExtMathMax( List<Types.TokenInfo> Arguments )
     {
       List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
 
-      if ( !EvaluateTokens( 0, Arguments, 0, 1, TextCodeMapping, out SymbolInfo arg1 ) )
+      if ( !EvaluateTokens( 0, Arguments, 0, 1, out SymbolInfo arg1 ) )
       {
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, 1, 1, TextCodeMapping, out SymbolInfo arg2 ) )
+      if ( !EvaluateTokens( 0, Arguments, 1, 1, out SymbolInfo arg2 ) )
       {
         return result;
       }
@@ -147,7 +147,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathSinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathSinus( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -155,7 +155,7 @@ namespace RetroDevStudio.Parser
       {
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -172,7 +172,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathCosinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathCosinus( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -181,7 +181,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -198,7 +198,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathTangens( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathTangens( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -207,7 +207,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -224,7 +224,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathSquareRoot( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathSquareRoot( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -232,7 +232,7 @@ namespace RetroDevStudio.Parser
       {
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -249,7 +249,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathToRadians( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathToRadians( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -258,7 +258,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -274,7 +274,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathToDegrees( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathToDegrees( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -283,7 +283,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -300,7 +300,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathFloor( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathFloor( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -309,7 +309,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -325,7 +325,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathRandom( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathRandom( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -334,7 +334,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -362,7 +362,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathRandomRange( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathRandomRange( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -371,8 +371,8 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( ( !EvaluateTokens( 0, Arguments, 0, 1, TextCodeMapping, out SymbolInfo arg1 ) )
-      ||   ( !EvaluateTokens( 0, Arguments, 1, 1, TextCodeMapping, out SymbolInfo arg2 ) ) )
+      if ( ( !EvaluateTokens( 0, Arguments, 0, 1, out SymbolInfo arg1 ) )
+      ||   ( !EvaluateTokens( 0, Arguments, 1, 1, out SymbolInfo arg2 ) ) )
       {
         return result;
       }
@@ -407,7 +407,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathRandomSeed( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathRandomSeed( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -415,7 +415,7 @@ namespace RetroDevStudio.Parser
       {
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }
@@ -439,7 +439,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private List<TokenInfo> ExtMathCeiling( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
+    private List<TokenInfo> ExtMathCeiling( List<TokenInfo> Arguments )
     {
       var result = new List<TokenInfo>();
 
@@ -448,7 +448,7 @@ namespace RetroDevStudio.Parser
         //SetError( "Invalid argument count" );
         return result;
       }
-      if ( !EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         return result;
       }

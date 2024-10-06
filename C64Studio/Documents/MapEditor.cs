@@ -512,13 +512,8 @@ namespace RetroDevStudio.Documents
     void RebuildCharImage( int CharIndex )
     {
       Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset,
-                                                m_MapProject.Charset.Colors.Palette,
                                                 CharIndex, m_MapProject.Charset.Characters[CharIndex].Tile.Image, 0, 0,
-                                                m_MapProject.Charset.Characters[CharIndex].Tile.CustomColor,
-                                                m_MapProject.BackgroundColor,
-                                                m_MapProject.MultiColor1,
-                                                m_MapProject.MultiColor2,
-                                                m_MapProject.BGColor4 );
+                                                m_MapProject.Charset.Characters[CharIndex].Tile.CustomColor );
 
       if ( CharIndex < panelCharacters.Items.Count )
       {
@@ -553,7 +548,16 @@ namespace RetroDevStudio.Documents
           bgColor4 = m_CurrentMap.AlternativeBGColor4;
         }
       }
-      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, m_MapProject.Charset.Colors.Palette, Char, TargetImage, X, Y, Color, bgColor, mColor1, mColor2, bgColor4 );
+      var alternativeSettings = new Types.AlternativeColorSettings()
+      {
+        CustomColor     = Color,
+        BackgroundColor = bgColor,
+        MultiColor1     = mColor1,
+        MultiColor2     = mColor2,
+        BGColor4        = bgColor4
+      };
+
+      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, Char, TargetImage, X, Y, alternativeSettings );
     }
 
 
@@ -1221,22 +1225,26 @@ namespace RetroDevStudio.Documents
             // a real tile
             var tile = m_MapProject.Tiles[tileIndex];
 
+            var alternativeSettings = new Types.AlternativeColorSettings()
+            {
+              BackgroundColor = ( m_CurrentMap.AlternativeBackgroundColor != -1 ) ? m_CurrentMap.AlternativeBackgroundColor : m_MapProject.BackgroundColor,
+              MultiColor1     = ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
+              MultiColor2     = ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
+              BGColor4        = ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
+              CharMode        = ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.TextCharModeFromTextMode( m_MapProject.Mode )
+            };
+
             for ( int j = 0; j < tile.Chars.Height; ++j )
             {
               for ( int i = 0; i < tile.Chars.Width; ++i )
               {
+                alternativeSettings.CustomColor = tile.Chars[i, j].Color;
                 Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset,
-                                                          m_MapProject.Charset.Colors.Palette,
                                                           tile.Chars[i, j].Character,
-                                                          pictureEditor.DisplayPage, 
-                                                          ( ( x - offsetX ) * m_CurrentMap.TileSpacingX + i ) * 8, 
+                                                          pictureEditor.DisplayPage,
+                                                          ( ( x - offsetX ) * m_CurrentMap.TileSpacingX + i ) * 8,
                                                           ( ( y - offsetY ) * m_CurrentMap.TileSpacingY + j ) * 8,
-                                                          tile.Chars[i,j].Color,
-                                                          ( m_CurrentMap.AlternativeBackgroundColor != -1 ) ? m_CurrentMap.AlternativeBackgroundColor : m_MapProject.BackgroundColor,
-                                                          ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
-                                                          ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
-                                                          ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
-                                                          ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.TextCharModeFromTextMode( m_MapProject.Mode ) );
+                                                          alternativeSettings );
               }
             }
           }
@@ -3470,22 +3478,27 @@ namespace RetroDevStudio.Documents
             continue;
           }
           var tile = m_MapProject.Tiles[tileIndex];
+
+          var alternativeSettings = new Types.AlternativeColorSettings()
+          {
+            BackgroundColor = ( m_CurrentMap.AlternativeBackgroundColor != -1 ) ? m_CurrentMap.AlternativeBackgroundColor : m_MapProject.BackgroundColor,
+            MultiColor1     = ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
+            MultiColor2     = ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
+            BGColor4        = ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
+            CharMode        = ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.TextCharModeFromTextMode( m_MapProject.Mode )
+          };
+
           for ( int j = 0; j < tile.Chars.Height; ++j )
           {
             for ( int i = 0; i < tile.Chars.Width; ++i )
             {
+              alternativeSettings.CustomColor = tile.Chars[i, j].Color;
               Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset,
-                                                        m_MapProject.Charset.Colors.Palette,
                                                         tile.Chars[i, j].Character,
                                                         fullImage,
                                                         ( x * m_CurrentMap.TileSpacingX + i ) * 8,
                                                         ( y * m_CurrentMap.TileSpacingY + j ) * 8,
-                                                        tile.Chars[i, j].Color,
-                                                        ( m_CurrentMap.AlternativeBackgroundColor != -1 ) ? m_CurrentMap.AlternativeBackgroundColor : m_MapProject.BackgroundColor,
-                                                        ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
-                                                        ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
-                                                        ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
-                                                        ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.TextCharModeFromTextMode( m_MapProject.Mode ) );
+                                                        alternativeSettings );
             }
           }
         }

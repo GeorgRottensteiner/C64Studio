@@ -27,7 +27,9 @@ namespace RetroDevStudio
     [Description( "Commander X16 HiRes" )]
     X16_HIRES,
     [Description( "C128 VDC HiRes" )]
-    COMMODORE_128_VDC_HIRES
+    COMMODORE_128_VDC_HIRES,
+    [Description( "NES" )]
+    NES
   }
 
 }

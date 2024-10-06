@@ -27,7 +27,9 @@ namespace RetroDevStudio
     [Description( "Commander X16 256 colors" )]
     COMMANDERX16_256_COLORS,
     [Description( "Commodore 128 VDC HiRes" )]
-    COMMODORE_128_VDC_HIRES
+    COMMODORE_128_VDC_HIRES,
+    [Description( "NES" )]
+    NES
   }
 
 }

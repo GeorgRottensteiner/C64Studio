@@ -6,6 +6,7 @@
     C128_VDC,
     VIC20,
     MEGA65,
-    COMMANDER_X16
+    COMMANDER_X16,
+    NES
   }
 }

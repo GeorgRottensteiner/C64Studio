@@ -29,7 +29,7 @@ namespace RetroDevStudio.Parser
 
       int expressionCheck = -1;
 
-      if ( EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, info.LineCodeMapping, out SymbolInfo whileExpressionSymbol ) )
+      if ( EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 2, out SymbolInfo whileExpressionSymbol ) )
       {
         expressionCheck = whileExpressionSymbol.ToInt32();
 

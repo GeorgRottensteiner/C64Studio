@@ -31,10 +31,15 @@ namespace RetroDevStudio
         Debug.Log( "< 16 colors" );
         NumColors = 16;
       }
+      else if ( ( NumColors == 32 )
+      ||        ( NumColors == 64 ) )
+      {
+        // fine
+      }
       else if ( ( NumColors > 16 )
       &&        ( NumColors < 256 ) )
       {
-        Debug.Log( "< 256 colors and != 32" );
+        Debug.Log( "< 256 colors and != 32 and != 64" );
         NumColors = 256;
       }
       if ( NumColors == 257 )

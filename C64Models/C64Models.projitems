@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteCommanderX16.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65_256.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteNES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteVIC20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.SpriteData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.BinaryData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.Include.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\AlternativeColorSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\CompileTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\CompileTargetType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicMode.cs" />

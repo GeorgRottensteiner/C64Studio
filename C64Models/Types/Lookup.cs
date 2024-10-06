@@ -105,10 +105,13 @@ namespace RetroDevStudio
 
 
 
+    // number of colors in corresponding palette
     public static int NumberOfColorsInCharacter( TextCharMode Mode )
     {
       switch ( Mode )
       {
+        case TextCharMode.NES:
+          return 4;
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
@@ -143,6 +146,8 @@ namespace RetroDevStudio
         case TextCharMode.X16_HIRES:
         case TextCharMode.COMMODORE_128_VDC_HIRES:
           return 8;
+        case TextCharMode.NES:
+          return 16;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
@@ -254,6 +259,7 @@ namespace RetroDevStudio
         case TextCharMode.VIC20:
         case TextCharMode.X16_HIRES:
         case TextCharMode.COMMODORE_128_VDC_HIRES:
+        case TextCharMode.NES:
           return 256;
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
@@ -282,6 +288,7 @@ namespace RetroDevStudio
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
         case TextCharMode.MEGA65_NCM:
+        case TextCharMode.NES:
           return false;
         default:
           Debug.Log( "RequiresCustomColorForCharacter unsupported Mode " + Mode );
@@ -316,6 +323,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.NES:
           return false;
         case GraphicTileMode.MEGA65_NCM_CHARACTERS :
         case GraphicTileMode.MEGA65_NCM_SPRITES:
@@ -557,6 +565,8 @@ namespace RetroDevStudio
           return GraphicTileMode.COMMANDERX16_HIRES;
         case TextCharMode.COMMODORE_128_VDC_HIRES:
           return GraphicTileMode.COMMODORE_128_VDC_HIRES;
+        case TextCharMode.NES:
+          return GraphicTileMode.NES;
         default:
           Debug.Log( "GraphicTileModeFromTextCharMode unsupported mode " + Mode );
           return GraphicTileMode.COMMODORE_HIRES;
@@ -782,6 +792,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.NES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterWidthInPixel - unsupported mode " + Mode );
@@ -802,6 +813,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
+        case GraphicTileMode.NES:
           return 8;
         default:
           Debug.Log( "Lookup.CharacterHeightInPixel - unsupported mode " + Mode );

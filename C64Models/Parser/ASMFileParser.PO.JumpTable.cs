@@ -12,7 +12,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POJumpTable( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, GR.Collections.Map<byte, byte> TextMapping, bool AllowNeededExpression, out int lineSizeInBytes )
+    private ParseLineResult POJumpTable( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, out int lineSizeInBytes )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -75,7 +75,7 @@ namespace RetroDevStudio.Parser
           realLabel = parms[0].Content;
         }
         newList[0].Content = realLabel;
-        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, TextMapping, out var wordValueSymbol, out numBytesGiven ) )
+        if ( EvaluateTokens( LineIndex, parms, 0, parms.Count, out var wordValueSymbol, out numBytesGiven ) )
         {
           // add label with offset
           if ( AllowNeededExpression )

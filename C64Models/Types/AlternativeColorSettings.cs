@@ -6,16 +6,16 @@ using System.Linq;
 
 namespace RetroDevStudio.Types
 {
-  public class ColorSettings
+  public class AlternativeColorSettings
   {
     public TextCharMode   CharMode = RetroDevStudio.TextCharMode.UNKNOWN;
 
     // Commodore
-    public int            CustomColor     = 1;
-    public int            BackgroundColor = 0;
-    public int            MultiColor1     = 0;
-    public int            MultiColor2     = 0;
-    public int            BGColor4        = 0;
+    public int            CustomColor     = -1;
+    public int            BackgroundColor = -1;
+    public int            MultiColor1     = -1;
+    public int            MultiColor2     = -1;
+    public int            BGColor4        = -1;
 
     // index in Palettes list
     public int            ActivePalette   = 0;
@@ -28,7 +28,7 @@ namespace RetroDevStudio.Types
     // used for e.g. NES
     public List<List<int>>PaletteIndexMapping = new List<List<int>>();
     // index in PaletteIndexMapping
-    public int            PaletteMappingIndex = 0;
+    public int            PaletteMappingIndex = -1;
 
 
 
@@ -51,38 +51,40 @@ namespace RetroDevStudio.Types
 
 
 
-    public ColorSettings()
+    public AlternativeColorSettings()
     {
       Palettes.Add( new Palette() );
-
-      for ( int i = 0; i < 4; ++i )
-      {
-        var list = new List<int>();
-        PaletteIndexMapping.Add( list );
-      }
-      // presets from NEXXT
-      PaletteIndexMapping[0].Add( 15 );
-      PaletteIndexMapping[0].Add( 0 );
-      PaletteIndexMapping[0].Add( 16 );
-      PaletteIndexMapping[0].Add( 48 );
-      PaletteIndexMapping[1].Add( 15 );
-      PaletteIndexMapping[1].Add( 1 );
-      PaletteIndexMapping[1].Add( 33 );
-      PaletteIndexMapping[1].Add( 49 );
-      PaletteIndexMapping[2].Add( 15 );
-      PaletteIndexMapping[2].Add( 6 );
-      PaletteIndexMapping[2].Add( 22 );
-      PaletteIndexMapping[2].Add( 38 );
-      PaletteIndexMapping[3].Add( 15 );
-      PaletteIndexMapping[3].Add( 9 );
-      PaletteIndexMapping[3].Add( 25 );
-      PaletteIndexMapping[3].Add( 41 );
-
     }
 
 
 
-    public ColorSettings( ColorSettings OtherSettings )
+    public AlternativeColorSettings( ColorSettings OtherSettings )
+    {
+      CustomColor     = OtherSettings.CustomColor;
+      BackgroundColor = OtherSettings.BackgroundColor;
+      MultiColor1     = OtherSettings.MultiColor1;
+      MultiColor2     = OtherSettings.MultiColor2;
+      BGColor4        = OtherSettings.BGColor4;
+
+      Palettes = new List<Palette>();
+      foreach ( var pal in OtherSettings.Palettes )
+      {
+        Palettes.Add( new Palette( pal ) );
+      }
+      ActivePalette = OtherSettings.ActivePalette;
+      PaletteOffset = OtherSettings.PaletteOffset;
+
+      PaletteIndexMapping = new List<List<int>>();
+      foreach ( var palEntry in OtherSettings.PaletteIndexMapping )
+      {
+        PaletteIndexMapping.Add( new List<int>( palEntry ) );
+      }
+      PaletteMappingIndex = OtherSettings.PaletteMappingIndex;
+    }
+
+
+
+    public AlternativeColorSettings( AlternativeColorSettings OtherSettings )
     {
       CustomColor     = OtherSettings.CustomColor;
       BackgroundColor = OtherSettings.BackgroundColor;

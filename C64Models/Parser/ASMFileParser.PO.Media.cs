@@ -109,12 +109,12 @@ namespace RetroDevStudio.Parser
         int numChars = 256;
 
         if ( ( paramTokens.Count >= 3 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
         {
           startIndex = (int)startIndexSymbol.ToInteger();
         }
         if ( ( paramTokens.Count >= 4 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numCharsSymbol ) ) )
         {
           numChars = (int)numCharsSymbol.ToInteger();
         }
@@ -175,13 +175,13 @@ namespace RetroDevStudio.Parser
         int numChars = 256;
 
         if ( ( paramTokens.Count >= 3 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
         {
           startIndex = (int)startIndexSymbol.ToInteger();
         }
         if ( paramTokens.Count >= 4 )
         {
-          if ( !EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numCharsSymbol ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Failed to evaluate expression " + TokensToExpression( paramTokens[3] ) );
             return false;
@@ -286,12 +286,12 @@ namespace RetroDevStudio.Parser
         int   numBytes = -1;
         int   startIndex = 0;
         if ( ( paramTokens.Count >= 3 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
         {
           startIndex = (int)startIndexSymbol.ToInteger();
         }
         if ( ( paramTokens.Count >= 4 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numBytesSymbol ) ) )
         {
           numBytes = (int)numBytesSymbol.ToInteger();
         }
@@ -369,12 +369,12 @@ namespace RetroDevStudio.Parser
           int numSprites = -1;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numSpritesSymbol ) ) )
           {
             numSprites = (int)numSpritesSymbol.ToInteger();
           }
@@ -417,19 +417,19 @@ namespace RetroDevStudio.Parser
           int   offsetBytes = 0;
           int   numBytes = numSprites * 64;
 
-          if ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) )
           {
             startIndex = (int)startIndexSymbol.ToInteger();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numSpritesSymbol ) )
           {
             numSprites = (int)numSpritesSymbol.ToInteger();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo offsetBytesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo offsetBytesSymbol ) )
           {
             offsetBytes = (int)offsetBytesSymbol.ToInteger();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo numBytesSymbol ) )
           {
             numBytes = (int)numBytesSymbol.ToInteger();
           }
@@ -539,12 +539,12 @@ namespace RetroDevStudio.Parser
           int numColors = totalNumColors;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numColorsSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numColorsSymbol ) ) )
           {
             numColors = (int)numColorsSymbol.ToInteger();
           }
@@ -589,12 +589,12 @@ namespace RetroDevStudio.Parser
           int   numSprites = -1; 
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numSpritesSymbol ) ) )
           {
             numSprites = (int)numSpritesSymbol.ToInteger();
           }
@@ -695,19 +695,19 @@ namespace RetroDevStudio.Parser
           int   offsetBytes = 0;
           int   numBytes = numSprites * 64;
 
-          if ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) )
           {
             startIndex = (int)startIndexSymbol.ToInteger();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numSpritesSymbol ) )
           {
             numSprites = (int)numSpritesSymbol.ToInteger();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo offsetBytesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo offsetBytesSymbol ) )
           {
             offsetBytes = (int)offsetBytesSymbol.ToInteger();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo numBytesSymbol ) )
           {
             numBytes = (int)numBytesSymbol.ToInteger();
           }
@@ -849,12 +849,12 @@ namespace RetroDevStudio.Parser
           int   numSprites = -1;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = startIndexSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numSpritesSymbol ) ) )
           {
             numSprites = numSpritesSymbol.ToInt32();
           }
@@ -910,19 +910,19 @@ namespace RetroDevStudio.Parser
           int   offsetBytes = 0;
           int   numBytes = numSprites * 64;
 
-          if ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) )
           {
             startIndex = startIndexSymbol.ToInt32();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numSpritesSymbol ) )
           {
             numSprites = numSpritesSymbol.ToInt32();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo offsetBytesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo offsetBytesSymbol ) )
           {
             offsetBytes = offsetBytesSymbol.ToInt32();
           }
-          if ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
+          if ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo numBytesSymbol ) )
           {
             numBytes = numBytesSymbol.ToInt32();
           }
@@ -1053,12 +1053,12 @@ namespace RetroDevStudio.Parser
           int numChars = screenProject.CharSet.ExportNumCharacters;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = startIndexSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numCharsSymbol ) ) )
           {
             numChars = numCharsSymbol.ToInt32();
           }
@@ -1096,12 +1096,12 @@ namespace RetroDevStudio.Parser
           int numColors = screenProject.CharSet.Colors.Palette.NumColors;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = startIndexSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numColorsSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numColorsSymbol ) ) )
           {
             numColors = numColorsSymbol.ToInt32();
           }
@@ -1132,22 +1132,22 @@ namespace RetroDevStudio.Parser
           int   h = screenProject.ScreenHeight;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo xSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo xSymbol ) ) )
           {
             x = xSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo ySymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo ySymbol ) ) )
           {
             y = ySymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 5 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo wSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo wSymbol ) ) )
           {
             w = wSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 6 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo hSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo hSymbol ) ) )
           {
             h = hSymbol.ToInt32();
           }
@@ -1317,22 +1317,22 @@ namespace RetroDevStudio.Parser
         int   h = screenProject.ScreenHeight;
 
         if ( ( paramTokens.Count >= 3 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo xSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo xSymbol ) ) )
         {
           x = xSymbol.ToInt32();
         }
         if ( ( paramTokens.Count >= 4 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo ySymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo ySymbol ) ) )
         {
           y = ySymbol.ToInt32();
         }
         if ( ( paramTokens.Count >= 5 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo wSymbol ) ) )
+        &&   ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo wSymbol ) ) )
         {
           w = wSymbol.ToInt32();
         }
         if ( ( paramTokens.Count >= 6 )
-        && ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo hSymbol ) ) )
+        && ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo hSymbol ) ) )
         {
           h = hSymbol.ToInt32();
         }
@@ -1522,13 +1522,13 @@ namespace RetroDevStudio.Parser
           int numChars = 256;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
           {
             startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( paramTokens.Count >= 4 )
           {
-            if ( !EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) )
+            if ( !EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo numCharsSymbol ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Failed to evaluate expression " + TokensToExpression( paramTokens[3] ) );
               return false;
