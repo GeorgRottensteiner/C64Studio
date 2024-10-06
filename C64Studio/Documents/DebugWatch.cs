@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Types;
+﻿using GR.Memory;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,7 +30,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void AddWatchEntry( WatchEntry Watch )
+    public void AddWatchEntry( WatchEntry Watch, bool ShowLastValues = false )
     {
       ListViewItem  item = new ListViewItem();
 
@@ -45,12 +46,23 @@ namespace RetroDevStudio.Documents
       item.SubItems.Add( TypeToString( Watch ) );
       if ( Watch.DisplayMemory )
       {
-        item.SubItems.Add( "(unread)" );
+        if ( ShowLastValues )
+        {
+          item.SubItems.Add( FormatWatchValue( Watch, Watch.CurrentValue ) );
+        }
+        else
+        {
+          item.SubItems.Add( "(unread)" );
+        }
         m_WatchEntries.Add( Watch );
       }
       else if ( !Watch.DisplayMemory )
       {
-        if ( Watch.SizeInBytes == 1 )
+        if ( ShowLastValues )
+        {
+          item.SubItems.Add( FormatWatchValue( Watch, Watch.CurrentValue ) );
+        }
+        else if ( Watch.SizeInBytes == 1 )
         {
           GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( Watch.Address.ToString( "x02" ) );
           Watch.CurrentValue = data;
@@ -131,101 +143,99 @@ namespace RetroDevStudio.Documents
             continue;
           }
 
-          switch ( watchEntry.Type )
-          {
-            case WatchEntry.DisplayType.HEX:
-              if ( watchEntry.DisplayMemory )
-              {
-                StringBuilder sb = new StringBuilder();
-
-                sb.Append( "$" );
-                if ( watchEntry.BigEndian )
-                {
-                  for ( int i = 0; i < Data.Length; ++i )
-                  {
-                    sb.Append( Data.ByteAt( i ).ToString( "x2" ) );
-                    if ( i + 1 < Data.Length )
-                    {
-                      sb.Append( " " );
-                    }
-                  }
-                }
-                else
-                {
-                  for ( int i = 0; i < Data.Length; ++i )
-                  {
-                    sb.Append( Data.ByteAt( (int)Data.Length - 1 - i ).ToString( "x2" ) );
-                    if ( i + 1 < Data.Length )
-                    {
-                      sb.Append( " " );
-                    }
-                  }
-                }
-                item.SubItems[2].Text = sb.ToString();
-              }
-              else
-              {
-                item.SubItems[2].Text = "$" + watchEntry.Address.ToString( "x4" );
-              }
-              break;
-            case WatchEntry.DisplayType.DEZ:
-              if ( !watchEntry.DisplayMemory )
-              {
-                item.SubItems[2].Text = watchEntry.Address.ToString();
-              }
-              else if ( watchEntry.SizeInBytes == 1 )
-              {
-                item.SubItems[2].Text = Data.ByteAt( 0 ).ToString();
-              }
-              else if ( watchEntry.BigEndian )
-              {
-                string totalText = "";
-                for ( uint i = 0; i < Data.Length; ++i )
-                {
-                  totalText += Data.ByteAt( (int)i ).ToString( "d" ) + " ";
-                }
-                item.SubItems[2].Text = totalText;
-              }
-              else
-              {
-                string totalText = "";
-                for ( uint i = 0; i < Data.Length; ++i )
-                {
-                  totalText += Data.ByteAt( (int)Data.Length - 1 - (int)i ).ToString( "d" ) + " ";
-                }
-                item.SubItems[2].Text = totalText;
-              }
-              break;
-            case WatchEntry.DisplayType.BINARY:
-              if ( !watchEntry.DisplayMemory )
-              {
-                item.SubItems[2].Text = "%" + Convert.ToString( watchEntry.Address, 2 );
-              }
-              else if ( watchEntry.SizeInBytes == 1 )
-              {
-                item.SubItems[2].Text = "%" + Convert.ToString( Data.ByteAt( 0 ), 2 );
-              }
-              else if ( watchEntry.SizeInBytes == 2 )
-              {
-                item.SubItems[2].Text = "%" + Convert.ToString( Data.UInt16At( 0 ), 2 );
-              }
-              else
-              {
-                item.SubItems[2].Text = Data.ToString();
-              }
-              break;
-            default:
-              if ( watchEntry.DisplayMemory )
-              {
-                item.SubItems[2].Text = Data.ByteAt( 0 ).ToString();
-              }
-              else
-              {
-                item.SubItems[2].Text = watchEntry.Address.ToString( "x4" );
-              }
-              break;
-          }
+          item.SubItems[2].Text = FormatWatchValue( watchEntry, Data );
         }
+      }
+    }
+
+
+
+    private string FormatWatchValue( WatchEntry Entry, ByteBuffer Data )
+    {
+      if ( Entry.CurrentValue.Length == 0 )
+      {
+        return "(unread)";
+      }
+      switch ( Entry.Type )
+      {
+        case WatchEntry.DisplayType.HEX:
+          if ( Entry.DisplayMemory )
+          {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append( "$" );
+            if ( Entry.BigEndian )
+            {
+              for ( int i = 0; i < Data.Length; ++i )
+              {
+                sb.Append( Data.ByteAt( i ).ToString( "x2" ) );
+                if ( i + 1 < Data.Length )
+                {
+                  sb.Append( " " );
+                }
+              }
+            }
+            else
+            {
+              for ( int i = 0; i < Data.Length; ++i )
+              {
+                sb.Append( Data.ByteAt( (int)Data.Length - 1 - i ).ToString( "x2" ) );
+                if ( i + 1 < Data.Length )
+                {
+                  sb.Append( " " );
+                }
+              }
+            }
+            return sb.ToString();
+          }
+          return "$" + Entry.Address.ToString( "x4" );
+        case WatchEntry.DisplayType.DEZ:
+          if ( !Entry.DisplayMemory )
+          {
+            return Entry.Address.ToString();
+          }
+          else if ( Entry.SizeInBytes == 1 )
+          {
+            return Data.ByteAt( 0 ).ToString();
+          }
+          else if ( Entry.BigEndian )
+          {
+            string totalText = "";
+            for ( uint i = 0; i < Data.Length; ++i )
+            {
+              totalText += Data.ByteAt( (int)i ).ToString( "d" ) + " ";
+            }
+            return totalText;
+          }
+          else
+          {
+            string totalText = "";
+            for ( uint i = 0; i < Data.Length; ++i )
+            {
+              totalText += Data.ByteAt( (int)Data.Length - 1 - (int)i ).ToString( "d" ) + " ";
+            }
+            return totalText;
+          }
+        case WatchEntry.DisplayType.BINARY:
+          if ( !Entry.DisplayMemory )
+          {
+            return "%" + Convert.ToString( Entry.Address, 2 );
+          }
+          else if ( Entry.SizeInBytes == 1 )
+          {
+            return "%" + Convert.ToString( Data.ByteAt( 0 ), 2 );
+          }
+          else if ( Entry.SizeInBytes == 2 )
+          {
+            return "%" + Convert.ToString( Data.UInt16At( 0 ), 2 );
+          }
+          return Data.ToString();
+        default:
+          if ( Entry.DisplayMemory )
+          {
+            return Data.ByteAt( 0 ).ToString();
+          }
+          return Entry.Address.ToString( "x4" );
       }
     }
 
@@ -445,21 +455,7 @@ namespace RetroDevStudio.Documents
 
         if ( !watchEntry.DisplayMemory )
         {
-          switch ( watchEntry.Type )
-          {
-            case WatchEntry.DisplayType.HEX:
-              itemToModify.SubItems[2].Text = "$" + watchEntry.Address.ToString( "x4" );
-              break;
-            case WatchEntry.DisplayType.DEZ:
-              itemToModify.SubItems[2].Text = watchEntry.Address.ToString();
-              break;
-            case WatchEntry.DisplayType.BINARY:
-              itemToModify.SubItems[2].Text = "%" + Convert.ToString( watchEntry.Address, 2 );
-              break;
-            default:
-              itemToModify.SubItems[2].Text = watchEntry.Address.ToString( "x4" );
-              break;
-          }
+          itemToModify.SubItems[2].Text = FormatWatchValue( watchEntry, watchEntry.CurrentValue );
         }
       }
     }

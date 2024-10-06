@@ -1490,7 +1490,7 @@ namespace RetroDevStudio
               m_DebugWatch.ClearAllWatchEntries();
               foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
               {
-                m_DebugWatch.AddWatchEntry( watch );
+                m_DebugWatch.AddWatchEntry( watch, true );
               }
             }
             else if ( project != null )
@@ -1498,7 +1498,7 @@ namespace RetroDevStudio
               m_DebugWatch.ClearAllWatchEntries();
               foreach ( var watch in project.Settings.WatchEntries )
               {
-                m_DebugWatch.AddWatchEntry( watch );
+                m_DebugWatch.AddWatchEntry( watch, true );
               }
               StudioCore.Debugging.BreakPoints = project.Settings.BreakPoints;
             }
@@ -1589,7 +1589,7 @@ namespace RetroDevStudio
           {
             foreach ( var watch in m_CurrentProject.Settings.WatchEntries )
             {
-              m_DebugWatch.AddWatchEntry( watch );
+              m_DebugWatch.AddWatchEntry( watch, true );
             }
           }
           else if ( StudioCore.Debugging.Debugger != null )
@@ -1597,7 +1597,7 @@ namespace RetroDevStudio
             // projectless debugging, use watches from debugger
             foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
             {
-              m_DebugWatch.AddWatchEntry( watch );
+              m_DebugWatch.AddWatchEntry( watch, true );
             }
           }
           m_DebugRegisters.DebuggedProject    = m_CurrentProject;
