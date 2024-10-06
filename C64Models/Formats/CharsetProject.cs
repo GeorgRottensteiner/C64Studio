@@ -174,6 +174,17 @@ namespace RetroDevStudio.Formats
       chunkColorSettings.AppendI32( Colors.MultiColor2 );
       chunkColorSettings.AppendI32( Colors.BGColor4 );
       chunkColorSettings.AppendI32( Colors.ActivePalette );
+      chunkColorSettings.AppendI32( Colors.PaletteIndexMapping.Count );
+      foreach ( var palMapping in Colors.PaletteIndexMapping )
+      {
+        chunkColorSettings.AppendI32( palMapping.Count );
+        foreach ( var colorIndex in palMapping )
+        {
+          chunkColorSettings.AppendI32( colorIndex );
+        }
+      }
+      chunkColorSettings.AppendI32( Colors.PaletteMappingIndex );
+
       chunkCharsetProject.Append( chunkColorSettings.ToBuffer() );
 
       foreach ( var pal in Colors.Palettes )
@@ -445,6 +456,7 @@ namespace RetroDevStudio.Formats
         Characters.Clear();
         Categories.Clear();
         Colors.Palettes.Clear();
+        Colors.PaletteIndexMapping.Clear();
         TotalNumberOfCharacters = 256;
         Mode = TextCharMode.COMMODORE_HIRES;
 
@@ -469,11 +481,27 @@ namespace RetroDevStudio.Formats
                   ShowGrid = ( ( subMemIn.ReadInt32() & 1 ) == 1 );
                   break;
                 case FileChunkConstants.CHARSET_COLOR_SETTINGS:
-                  Colors.BackgroundColor = subMemIn.ReadInt32();
-                  Colors.MultiColor1 = subMemIn.ReadInt32();
-                  Colors.MultiColor2 = subMemIn.ReadInt32();
-                  Colors.BGColor4 = subMemIn.ReadInt32();
-                  Colors.ActivePalette = subMemIn.ReadInt32();
+                  {
+                    Colors.BackgroundColor = subMemIn.ReadInt32();
+                    Colors.MultiColor1 = subMemIn.ReadInt32();
+                    Colors.MultiColor2 = subMemIn.ReadInt32();
+                    Colors.BGColor4 = subMemIn.ReadInt32();
+                    Colors.ActivePalette = subMemIn.ReadInt32();
+
+                    int numMaps = subMemIn.ReadInt32();
+                    for ( int i = 0; i < numMaps; ++i )
+                    {
+                      var mapList = new List<int>();
+
+                      int listEntryCount = subMemIn.ReadInt32();
+                      for ( int j = 0; j < listEntryCount; ++j )
+                      {
+                        mapList.Add( subMemIn.ReadInt32() );
+                      }
+                      Colors.PaletteIndexMapping.Add( mapList );
+                    }
+                    Colors.PaletteMappingIndex = subMemIn.ReadInt32();
+                  }
                   break;
                 case FileChunkConstants.PALETTE:
                   Colors.Palettes.Add( Palette.Read( subMemIn ) );
@@ -522,6 +550,10 @@ namespace RetroDevStudio.Formats
         if ( Colors.Palettes.Count == 0 )
         {
           Colors.Palettes.Add( PaletteManager.PaletteFromMode( Mode ) );
+          if ( Colors.PaletteIndexMapping.Count == 0 )
+          {
+            Colors.SetDefaultPaletteIndexMapping();
+          }
         }
       }
       else

@@ -444,7 +444,14 @@ namespace DecentForms
         case Button.ButtonStyle.RAISED:
           if ( !_Control.Enabled )
           {
-            FillRaisedRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackground );
+            if ( Pushed )
+            {
+              FillSunkenRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackgroundSelected );
+            }
+            else
+            {
+              FillRaisedRectangle( Rect.Left, Rect.Top, Rect.Width, Rect.Height, ColorControlBackground );
+            }
             if ( imageToDraw != null )
             {
               DrawImageCentered( imageToDraw, Rect );

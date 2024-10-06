@@ -13,6 +13,9 @@ namespace RetroDevStudio.Controls
   {
     private List<FastPictureBox>    _Palettes = new List<FastPictureBox>();
 
+    // A to D
+    private int                     _PaletteMappingGroup = 0;        
+
 
 
     public override byte SelectedCustomColor
@@ -25,7 +28,7 @@ namespace RetroDevStudio.Controls
       {
         _SelectedCustomColor = value;
 
-        _Palettes[Colors.PaletteMappingIndex].Invalidate();
+        _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
       }
     }
 
@@ -72,18 +75,31 @@ namespace RetroDevStudio.Controls
       picPalette4.Tag = 3;
       picFullPalette.DisplayPage.Create( 64, 16, GR.Drawing.PixelFormat.Format32bppRgb );
 
+      RedrawPaletteGroups();
       for ( int i = 0; i < 4; ++i )
       {
-        picPalette1.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[0][i]] );
-        picPalette2.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[1][i]] );
-        picPalette3.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[2][i]] );
-        picPalette4.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[3][i]] );
-
         for ( int j = 0; j < 16; ++j )
         {
           picFullPalette.DisplayPage.Box( j * 4, i * 4, 4, 4, Colors.Palette.ColorValues[i * 16 + j] );
         }
       }
+    }
+
+
+
+    private void RedrawPaletteGroups()
+    {
+      for ( int i = 0; i < 4; ++i )
+      {
+        picPalette1.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[_PaletteMappingGroup * 4 + 0][i]] );
+        picPalette2.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[_PaletteMappingGroup * 4 + 1][i]] );
+        picPalette3.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[_PaletteMappingGroup * 4 + 2][i]] );
+        picPalette4.DisplayPage.Box( i * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[_PaletteMappingGroup * 4 + 3][i]] );
+      }
+      picPalette1.Invalidate();
+      picPalette2.Invalidate();
+      picPalette3.Invalidate();
+      picPalette4.Invalidate();
     }
 
 
@@ -116,15 +132,15 @@ namespace RetroDevStudio.Controls
       }
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
-        int palIndex = (int)Control.Tag;
+        int palIndex = _PaletteMappingGroup * 4 + (int)Control.Tag;
 
         if ( Colors.PaletteMappingIndex != palIndex )
         {
-          int   oldIndex = Colors.PaletteMappingIndex;
+          int   oldIndex = _PaletteMappingGroup * 4 + Colors.PaletteMappingIndex;
           Colors.PaletteMappingIndex = palIndex;
           picFullPalette.Invalidate();
-          _Palettes[oldIndex].Invalidate();
-          _Palettes[Colors.PaletteMappingIndex].Invalidate();
+          _Palettes[oldIndex % 4].Invalidate();
+          _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
           RaisePaletteMappingModifiedEvent();
         }
         byte    newColor = (byte)( ( 4 * X ) / Control.ClientSize.Width );
@@ -137,7 +153,7 @@ namespace RetroDevStudio.Controls
         if ( CustomColor != newColor )
         {
           CustomColor = newColor;
-          _Palettes[Colors.PaletteMappingIndex].Invalidate();
+          _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
           RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
         }
       }
@@ -149,7 +165,7 @@ namespace RetroDevStudio.Controls
     {
       if ( Core != null )
       {
-        int palIndex = (int)Control.Tag;
+        int palIndex =_PaletteMappingGroup * 4 + (int)Control.Tag;
         if ( palIndex == Colors.PaletteMappingIndex )
         {
           uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
@@ -250,12 +266,12 @@ namespace RetroDevStudio.Controls
 
         if ( Colors.PaletteIndexMapping[Colors.PaletteMappingIndex][_SelectedCustomColor] != colIndex )
         {
-          if ( _SelectedCustomColor == 0 )
+          if ( ( _SelectedCustomColor % 4 ) == 0 )
           {
             // 0 is shared!
             for ( int i = 0; i < 4; ++i )
             {
-              Colors.PaletteIndexMapping[i][0] = colIndex;
+              Colors.PaletteIndexMapping[_PaletteMappingGroup * 4 + i][0] = colIndex;
               _Palettes[i].Invalidate();
               _Palettes[i].DisplayPage.Box( 0 * 16, 0, 16, 16, Colors.Palette.ColorValues[Colors.PaletteIndexMapping[i][0]] );
             }
@@ -263,8 +279,8 @@ namespace RetroDevStudio.Controls
           else
           {
             Colors.PaletteIndexMapping[Colors.PaletteMappingIndex][_SelectedCustomColor] = colIndex;
-            _Palettes[Colors.PaletteMappingIndex].Invalidate();
-            _Palettes[Colors.PaletteMappingIndex].DisplayPage.Box( _SelectedCustomColor * 16, 0, 16, 16,
+            _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
+            _Palettes[Colors.PaletteMappingIndex % 4].DisplayPage.Box( _SelectedCustomColor * 16, 0, 16, 16,
                                                                    Colors.Palette.ColorValues[Colors.PaletteIndexMapping[Colors.PaletteMappingIndex][_SelectedCustomColor]] );
           }
 
@@ -288,6 +304,99 @@ namespace RetroDevStudio.Controls
         int   y2 = ( ( colIndex / 16 ) + 1 ) * TargetBuffer.Height / 4 - 1;
 
         TargetBuffer.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, selColor );
+      }
+    }
+
+
+
+    private void checkPaletteSet1_CheckedChanged( DecentForms.ControlBase Sender )
+    {
+      if ( checkPaletteSet1.Checked )
+      {
+        checkPaletteSet2.Checked = false;
+        checkPaletteSet2.Enabled = true;
+        checkPaletteSet3.Checked = false;
+        checkPaletteSet3.Enabled = true;
+        checkPaletteSet4.Checked = false;
+        checkPaletteSet4.Enabled = true;
+
+        checkPaletteSet1.Enabled = false;
+        _PaletteMappingGroup = 0;
+        Colors.PaletteMappingIndex = _PaletteMappingGroup * 4 + ( Colors.PaletteMappingIndex % 4 );
+        picFullPalette.Invalidate();
+        RaisePaletteMappingModifiedEvent();
+        RedrawPaletteGroups();
+        RaisePaletteMappingModifiedEvent();
+      }
+    }
+
+
+
+    private void checkPaletteSet2_CheckedChanged( DecentForms.ControlBase Sender )
+    {
+      if ( checkPaletteSet2.Checked )
+      {
+        checkPaletteSet1.Checked = false;
+        checkPaletteSet1.Enabled = true;
+        checkPaletteSet3.Checked = false;
+        checkPaletteSet3.Enabled = true;
+        checkPaletteSet4.Checked = false;
+        checkPaletteSet4.Enabled = true;
+
+        checkPaletteSet2.Enabled = false;
+        _PaletteMappingGroup = 1;
+        Colors.PaletteMappingIndex = _PaletteMappingGroup * 4 + ( Colors.PaletteMappingIndex % 4 );
+        picFullPalette.Invalidate();
+        RaisePaletteMappingModifiedEvent();
+        RedrawPaletteGroups();
+        RaisePaletteMappingModifiedEvent();
+      }
+    }
+
+
+
+    private void checkPaletteSet3_CheckedChanged( DecentForms.ControlBase Sender )
+    {
+      if ( checkPaletteSet3.Checked )
+      {
+        checkPaletteSet2.Checked = false;
+        checkPaletteSet2.Enabled = true;
+        checkPaletteSet1.Checked = false;
+        checkPaletteSet1.Enabled = true;
+        checkPaletteSet4.Checked = false;
+        checkPaletteSet4.Enabled = true;
+
+        checkPaletteSet3.Enabled = false;
+        _PaletteMappingGroup = 2;
+        Colors.PaletteMappingIndex = _PaletteMappingGroup * 4 + ( Colors.PaletteMappingIndex % 4 );
+        picFullPalette.Invalidate();
+        RaisePaletteMappingModifiedEvent();
+        RedrawPaletteGroups();
+        RaisePaletteMappingModifiedEvent();
+      }
+    }
+
+
+
+    private void checkPaletteSet4_CheckedChanged( DecentForms.ControlBase Sender )
+    {
+      if ( checkPaletteSet4.Checked )
+      {
+        checkPaletteSet2.Checked = false;
+        checkPaletteSet2.Enabled = true;
+        checkPaletteSet3.Checked = false;
+        checkPaletteSet3.Enabled = true;
+        checkPaletteSet1.Checked = false;
+        checkPaletteSet1.Enabled = true;
+
+        checkPaletteSet4.Enabled = false;
+        _PaletteMappingGroup = 3;
+        Colors.PaletteMappingIndex = _PaletteMappingGroup * 4 + ( Colors.PaletteMappingIndex % 4 );
+        picFullPalette.Invalidate();
+        RaisePaletteMappingModifiedEvent();
+
+        RedrawPaletteGroups();
+        RaisePaletteMappingModifiedEvent();
       }
     }
 
