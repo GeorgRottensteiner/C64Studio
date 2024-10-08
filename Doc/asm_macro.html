@@ -701,7 +701,8 @@ Sequence
           None
         </td>
         <td>
-          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues
+          If NES, exports all palette mappings (4 bytes per mapping)<br />
+          Any other mode: Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues
         </td>
       </tr>
       <tr>
@@ -718,7 +719,8 @@ Sequence
           Index, Count
         </td>
         <td>
-          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues
+          If NES, exports count palette mappings (4 bytes per mapping), starting at index.<br />
+          Any other mode: Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues
         </td>
       </tr>
       <tr>

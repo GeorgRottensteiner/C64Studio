@@ -1929,8 +1929,24 @@ namespace RetroDevStudio.Controls
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
       _ColorSettingsDlg.PaletteMappingModified += _ColorSettingsDlg_PaletteMappingModified;
       _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
+      _ColorSettingsDlg.PaletteMappingSelected += _ColorSettingsDlg_PaletteMappingSelected;
       _ColorSettingsDlg.SelectedCustomColorChanged += _ColorSettingsDlg_SelectedCustomColorChanged;
       _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_PaletteMappingSelected( ColorSettings Colors )
+    {
+      m_Project.Colors.PaletteMappingIndex = Colors.PaletteMappingIndex;
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        RebuildCharImage( i );
+        panelCharacters.InvalidateItemRect( i );
+      }
+      canvasEditor.Invalidate();
+
+      OnPaletteChanged();
     }
 
 

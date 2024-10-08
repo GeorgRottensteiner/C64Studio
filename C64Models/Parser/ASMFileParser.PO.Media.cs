@@ -13,10 +13,6 @@ namespace RetroDevStudio.Parser
       ReplacementLines = null;
       lineSizeInBytes = 0;
 
-
-      //List<List<Types.TokenInfo>>   paramTokens = new List<List<RetroDevStudio.Types.TokenInfo>>();
-      //paramTokens.Add( new List<RetroDevStudio.Types.TokenInfo>() );
-
       ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<Types.TokenInfo>> paramTokens );
 
       if ( ( paramTokens.Count > 7 )
@@ -223,24 +219,64 @@ namespace RetroDevStudio.Parser
 
           long numColors = numChars;
 
-          if ( ( startIndex < 0 )
-          ||   ( startIndex >= charProject.Colors.Palette.NumColors ) )
+          if ( charProject.Mode == TextCharMode.NES )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
-            return false;
+            if ( method != "PALETTE" )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export for NES mode supports only palette" );
+              return false;
+            }
+
+            // NES uses palette mapping instead of palette
+            if ( ( startIndex < 0 )
+            ||   ( startIndex >= charProject.Colors.PaletteIndexMapping.Count ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
+              return false;
+            }
+            if ( numColors <= 0 )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of palette mappings, must be >= 1" );
+              return false;
+            }
+            if ( startIndex + numColors > charProject.Colors.PaletteIndexMapping.Count )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of palette mappings, charset has "
+                    + charProject.Colors.PaletteIndexMapping.Count + " palette mappings, but we're trying to fetch up to " + ( startIndex + numColors ) );
+              return false;
+            }
+            dataToInclude = new ByteBuffer( (uint)( 4 * numColors ) );
+
+            for ( int i = 0; i < numColors; ++i )
+            {
+              for ( int j = 0; j < 4; ++j )
+              {
+                dataToInclude.SetU8At( i * 4 + j, (byte)charProject.Colors.PaletteIndexMapping[startIndex + i][j] );
+              }
+            }
           }
-          if ( numColors <= 0 )
+          else
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, must be >= 1" );
-            return false;
+
+            if ( ( startIndex < 0 )
+            ||   ( startIndex >= charProject.Colors.Palette.NumColors ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
+              return false;
+            }
+            if ( numColors <= 0 )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, must be >= 1" );
+              return false;
+            }
+            if ( startIndex + numColors > charProject.Colors.Palette.NumColors )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, charset has "
+                    + charProject.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
+              return false;
+            }
+            dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method.EndsWith( "SWIZZLED" ), !method.Contains( "RGB" ) );
           }
-          if ( startIndex + numColors > charProject.Colors.Palette.NumColors )
-          {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, charset has "
-                  + charProject.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
-            return false;
-          }
-          dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method.EndsWith( "SWIZZLED" ), !method.Contains( "RGB" ) );
         }
         else
         {

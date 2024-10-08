@@ -23,6 +23,7 @@ namespace RetroDevStudio.Controls
     public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor, List<int> PaletteIndexMapping );
     public delegate void PaletteSelectedHandler( ColorSettings Colors );
     public delegate void PaletteMappingModifiedHandler( ColorSettings Colors );
+    public delegate void PaletteMappingSelectedHandler( ColorSettings Colors );
     public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
     public delegate void ColorSelectedHandler( ColorType Color );
     public delegate void CustomColorSelectedHandler( int SelectedCustomColor );
@@ -32,6 +33,7 @@ namespace RetroDevStudio.Controls
     public event PaletteModifiedHandler         PaletteModified;
     public event PaletteSelectedHandler         PaletteSelected;
     public event PaletteMappingModifiedHandler  PaletteMappingModified;
+    public event PaletteMappingSelectedHandler  PaletteMappingSelected;
     public event ColorsModifiedHandler          ColorsModified;
     public event ColorSelectedHandler           SelectedColorChanged;
     public event CustomColorSelectedHandler     SelectedCustomColorChanged;
@@ -171,6 +173,16 @@ namespace RetroDevStudio.Controls
       if ( SelectedColorChanged != null )
       {
         SelectedColorChanged( _CurrentColorType );
+      }
+    }
+
+
+
+    protected void RaisePaletteMappingSelectedEvent()
+    {
+      if ( PaletteMappingSelected != null )
+      {
+        PaletteMappingSelected( Colors );
       }
     }
 

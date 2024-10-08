@@ -1,34 +1,62 @@
-﻿;;;;;;;;;;;;  VARIABLES------------
+* = $0000
 
-* = $0000  ;start from location 0
+;for the chr rom data
+tile_loader_ptr
+          !word ?
 
-tile_loader_ptr  !word ?        ;for the chr rom data
+;main program flag
+sleeping
+          !byte ?
 
-sleeping  !byte ?           ;main program flag
-updating_background  !word ?    ;0 = nothing, 1 = main program is updating the room
+;0 = nothing, 1 = main program is updating the room
+updating_background
+          !word ?
 
-Enemy_Animation  !dword ?        ;Animation Counters
-Enemy_Frame  !dword ?            ;Animation Frame Number
+;Animation Counters
+Enemy_Animation
+          !dword ?
 
-random_direction1  !byte ?      ;random direction counter
-random_direction2  !byte ?      ;random direction counter
+;Animation Frame Number
+Enemy_Frame
+          !dword ?
 
-enemy_direction  !dword ?        ;direction for enemys; 0=up,1=down,2=right,3=left
+;random direction counter
+random_direction1
+          !byte ?
 
-enemy_pointer  !dword ?        ;pointer for the graphics data for Enemys
-!dword ?
-enemygraphicspointer  !word ?  ;pointer for the graphics updates
+;random direction counter
+random_direction2
+          !byte ?
 
-enemy_number  !byte ?           ;enemy number for direction routine 0=Crewman, 1=punisher, 2=McBoobins, 3=ArseFace
-enemy_ptrnumber  !byte ?        ;enemy pointer number (i.e. 2x the enemy number, 0=Crewman, 2=punisher, 4=McBoobins, 6=ArseFace
+;direction for enemys; 0=up,1=down,2=right,3=left
+enemy_direction
+          !dword ?
 
-;;;;;;;;;;;;;;;;;;  CONSTANTS----------
+;pointer for the graphics data for Enemys
+enemy_pointer
+          !dword ?
+          !dword ?
 
-enemyFrames1 = $0C  ;enemy's counter resets
-enemyFrames2 = $18
-enemyFrames3 = $24
-enemyFrames4 = $30
+;pointer for the graphics updates
+enemygraphicspointer
+          !word ?
 
-sprite_RAM = $0200   ;constant for sprite updates
+;enemy number for direction routine 0=Crewman, 1=punisher, 2=McBoobins, 3=ArseFace
+enemy_number
+          !byte ?
 
-enemy_speed = $01
+;enemy pointer number (i.e. 2x the enemy number, 0=Crewman, 2=punisher, 4=McBoobins, 6=ArseFace
+enemy_ptrnumber
+          !byte ?
+
+
+;enemy's counter resets
+enemyFrames1  = $0C
+enemyFrames2  = $18
+enemyFrames3  = $24
+enemyFrames4  = $30
+
+;constant for sprite updates
+sprite_RAM    = $0200
+
+enemy_speed   = $01

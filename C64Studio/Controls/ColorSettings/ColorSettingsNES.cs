@@ -141,21 +141,23 @@ namespace RetroDevStudio.Controls
           picFullPalette.Invalidate();
           _Palettes[oldIndex % 4].Invalidate();
           _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
-          RaisePaletteMappingModifiedEvent();
+          RaisePaletteMappingSelectedEvent();
         }
         byte    newColor = (byte)( ( 4 * X ) / Control.ClientSize.Width );
         if ( SelectedCustomColor != newColor )
         {
           SelectedCustomColor = newColor;
+          _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
           picFullPalette.Invalidate();
           RaiseColorSelectedEvent();
         }
+        /*
         if ( CustomColor != newColor )
         {
           CustomColor = newColor;
           _Palettes[Colors.PaletteMappingIndex % 4].Invalidate();
           RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
-        }
+        }*/
       }
     }
 
