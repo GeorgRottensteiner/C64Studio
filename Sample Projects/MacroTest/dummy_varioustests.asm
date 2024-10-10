@@ -1,4 +1,6 @@
 *=$0801
+
+* = $40000
             !basic
 
             inc $d020
@@ -33,15 +35,15 @@
             ; ***ERROR * **
             !if (.theValue <= .intMinVal ) {
             }
-            
+
             ; OK in 2018 - 09 - 15 build( was broken in 2018 - 09 - 08 build )
             !if (.intMinVal >= .theValue ) {
             }
-             
+
             ; OK in 2018 - 09 - 15 build( was broken in 2018 - 09 - 08 build )
             !if (.theValue <> 0 ) {
             }
-            
+
             ; OK in 2018 - 09 - 15 build( was broken in 2018 - 09 - 08 build )
             !if (.theValue = 0 ) {
             }
