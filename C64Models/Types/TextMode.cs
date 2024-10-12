@@ -54,6 +54,8 @@ namespace RetroDevStudio
     X16_20_X_15,
     [Description( "Commodore C128 80x25 HiRes" )]
     COMMODORE_128_VDC_80_X_25_HIRES,
+    [Description( "NES 32x30" )]
+    NES
   }
 
 }

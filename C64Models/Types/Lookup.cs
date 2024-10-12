@@ -238,6 +238,8 @@ namespace RetroDevStudio
         case TextMode.X16_80_X_30:
         case TextMode.X16_80_X_60:
           return TextCharMode.X16_HIRES;
+        case TextMode.NES:
+          return TextCharMode.NES;
         default:
           Debug.Log( "TextCharModeFromTextMode unsupported Mode " + Mode );
           return TextCharMode.COMMODORE_HIRES;
@@ -896,6 +898,8 @@ namespace RetroDevStudio
         case TextMode.X16_20_X_15:
         case TextMode.X16_20_X_30:
           return 20;
+        case TextMode.NES:
+          return 32;
         default:
           Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
           return 40;
@@ -937,6 +941,8 @@ namespace RetroDevStudio
         case TextMode.X16_40_X_60:
         case TextMode.X16_80_X_60:
           return 60;
+        case TextMode.NES:
+          return 30;
         default:
           Debug.Log( "ScreenWidthInCharacters unsupported mode " + Mode );
           return 25;

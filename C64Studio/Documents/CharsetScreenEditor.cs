@@ -95,6 +95,9 @@ namespace RetroDevStudio.Documents
 
     private bool                        m_ColorChooserPopupActive = false;
 
+    private Dictionary<Control,int>               m_ControlsToTheRight = new Dictionary<Control, int>();
+    private Dictionary<Control,int>               m_ControlsBelow = new Dictionary<Control, int>();
+
 
 
     public CharsetScreenEditor( StudioCore Core )
@@ -197,6 +200,26 @@ namespace RetroDevStudio.Documents
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
       ResumeLayout();
+
+      // remember controls to the right and below the editor
+      int     rightEnd = pictureEditor.Bounds.Right;
+      int     bottomEnd = pictureEditor.Bounds.Bottom;
+
+      foreach ( Control control in tabEditor.Controls )
+      {
+        if ( control == pictureEditor )
+        {
+          continue;
+        }
+        if ( control.Location.X >= rightEnd )
+        {
+          m_ControlsToTheRight.Add( control, control.Location.X - rightEnd );
+        }
+        else if ( control.Location.Y >= bottomEnd )
+        {
+          m_ControlsBelow.Add( control, control.Location.Y - bottomEnd );
+        }
+      }
     }
 
 
@@ -1366,8 +1389,6 @@ namespace RetroDevStudio.Documents
 
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
 
-      UpdatePalette();
-
       comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
       comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
       comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
@@ -1409,6 +1430,7 @@ namespace RetroDevStudio.Documents
       }
       editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
       editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
+      OnCharsetScreenModeChanged();
 
       AdjustScrollbars();
 
@@ -2729,10 +2751,14 @@ namespace RetroDevStudio.Documents
       comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
       comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
       comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
-      comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
-
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
+
+      if ( comboCharsetMode.SelectedIndex != (int)m_CharsetScreen.Mode )
+      {
+        comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
+        OnCharsetScreenModeChanged();
+      }
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
@@ -2862,6 +2888,16 @@ namespace RetroDevStudio.Documents
           labelBGColor.Enabled = true;
           comboBackground.Enabled = true;
           break;
+        case TextCharMode.NES:
+          labelMColor1.Enabled = false;
+          labelMColor2.Enabled = false;
+          labelBGColor4.Enabled = false;
+          comboMulticolor1.Enabled = false;
+          comboMulticolor2.Enabled = false;
+          comboBGColor4.Enabled = false;
+          labelBGColor.Enabled = false;
+          comboBackground.Enabled = false;
+          break;
         default:
           Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
           break;
@@ -2912,6 +2948,9 @@ namespace RetroDevStudio.Documents
         case TextMode.COMMODORE_VIC20_22_X_23:
           pictureEditor.DisplayPage.Create( 176, 184, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
+        case TextMode.NES:
+          pictureEditor.DisplayPage.Create( 256, 240, GR.Drawing.PixelFormat.Format32bppRgb );
+          break;
         default:
           Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
           break;
@@ -2924,6 +2963,35 @@ namespace RetroDevStudio.Documents
     private void OnCharsetScreenModeChanged()
     {
       Modified = true;
+
+      if ( m_CharsetScreen.Mode == TextMode.NES )
+      {
+        // NES uses 256*240
+        pictureEditor.ClientSize = new Size( 516, 484 );
+        pictureEditor.DisplayPage.Create( 256, 240, GR.Drawing.PixelFormat.Format32bppRgb );
+      }
+      else
+      {
+        // all others use 16:10 (do they?)
+        pictureEditor.ClientSize = new Size( 644, 404 );
+        pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
+      }
+
+      int     rightEnd = pictureEditor.Bounds.Right;
+      int     bottomEnd = pictureEditor.Bounds.Bottom;
+
+      screenHScroll.Width = pictureEditor.Width;
+      screenVScroll.Height = pictureEditor.Height;
+
+      foreach ( var controlEntry in m_ControlsToTheRight )
+      {
+        controlEntry.Key.Location = new Point( rightEnd + controlEntry.Value, controlEntry.Key.Location.Y );
+      }
+      foreach ( var controlEntry in m_ControlsBelow )
+      {
+        controlEntry.Key.Location = new Point( controlEntry.Key.Location.X, bottomEnd + controlEntry.Value );
+      }
+
       panelCharacters.ItemWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.ItemHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.Invalidate();
@@ -3717,7 +3785,6 @@ namespace RetroDevStudio.Documents
 
             }
             charEditor.ColorsChanged();
-            //OnCharsetScreenModeChanged();
             Modified = prevModified;
           }
           break;
