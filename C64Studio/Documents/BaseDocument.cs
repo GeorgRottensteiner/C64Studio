@@ -789,7 +789,8 @@ namespace RetroDevStudio.Documents
           //System.Drawing.Size newSize = GetPreferredSize( new System.Drawing.Size( 200, 200 ) );
           //DockHandler.FloatPane.FloatWindow.Bounds = new System.Drawing.Rectangle( DockHandler.FloatPane.FloatWindow.Bounds.Location, new System.Drawing.Size( 677, 417 ) );
           System.Drawing.Size newSize = GetPreferredSize( new System.Drawing.Size( 677, 417 ) );
-          DockHandler.FloatPane.FloatWindow.Bounds = new System.Drawing.Rectangle( DockHandler.FloatPane.FloatWindow.Bounds.Location, newSize );
+          DockHandler.FloatPane.FloatWindow.ClientSize = newSize;
+          //DockHandler.FloatPane.FloatWindow.Bounds = new System.Drawing.Rectangle( DockHandler.FloatPane.FloatWindow.Bounds.Location, newSize );
         }
       }
       base.OnShown( e );

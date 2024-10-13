@@ -42,7 +42,6 @@ namespace RetroDevStudio.Documents
 
     private ushort                      m_CurrentChar = 0;
     private ushort                      m_CurrentColor = 1;
-    private bool                        m_OverrideCharMode = false;
     private int                         m_CharsWidth = 40;
     private int                         m_CharsHeight = 25;
     private int                         m_CharacterWidth = 8;
@@ -140,17 +139,6 @@ namespace RetroDevStudio.Documents
 
       DPIHandler.ResizeControlsForDPI( this );
       ApplyPalette();
-      for ( int i = 0; i < m_CharsetScreen.CharSet.Colors.Palette.NumColors; ++i )
-      {
-        comboBackground.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor1.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor2.Items.Add( i.ToString( "d2" ) );
-        comboBGColor4.Items.Add( i.ToString( "d2" ) );
-      }
-      comboBackground.SelectedIndex = 0;
-      comboMulticolor1.SelectedIndex = 0;
-      comboMulticolor2.SelectedIndex = 0;
-      comboBGColor4.SelectedIndex = 0;
 
       comboExportData.SelectedIndex = 0;
 
@@ -229,7 +217,6 @@ namespace RetroDevStudio.Documents
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
       PaletteManager.ApplyPalette( panelCharacters.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
       PaletteManager.ApplyPalette( m_Image, m_CharsetScreen.CharSet.Colors.Palette );
-      PaletteManager.ApplyPalette( panelCharColors.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
     }
 
 
@@ -449,14 +436,7 @@ namespace RetroDevStudio.Documents
     {
       Formats.CharData Char = m_CharsetScreen.CharSet.Characters[CharIndex];
 
-      if ( m_OverrideCharMode )
-      {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0, m_CurrentColor );
-      }
-      else
-      {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0 );
-      }
+      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0 );
     }
 
 
@@ -1295,18 +1275,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_CharsetScreen.CharSet.Colors.BackgroundColor != comboBackground.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
-
-        SetBackgroundColor( comboBackground.SelectedIndex );
-      }
-    }
-
-
-
     private void SetBackgroundColor( int ColorIndex )
     {
       m_CharsetScreen.CharSet.Colors.BackgroundColor = ColorIndex;
@@ -1319,48 +1287,6 @@ namespace RetroDevStudio.Documents
       pictureEditor.Invalidate();
       panelCharacters.Invalidate();
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-    }
-
-
-
-    private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_CharsetScreen.CharSet.Colors.MultiColor1 != comboMulticolor1.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
-
-        m_CharsetScreen.CharSet.Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        Modified = true;
-        RedrawFullScreen();
-        panelCharacters.Invalidate();
-        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-        RedrawColorChooser();
-      }
-    }
-
-
-
-    private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_CharsetScreen.CharSet.Colors.MultiColor2 != comboMulticolor2.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
-
-        m_CharsetScreen.CharSet.Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        Modified = true;
-        RedrawFullScreen();
-        panelCharacters.Invalidate();
-        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-        RedrawColorChooser();
-      }
     }
 
 
@@ -1389,11 +1315,7 @@ namespace RetroDevStudio.Documents
 
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
 
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
 
       panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
@@ -1824,13 +1746,6 @@ namespace RetroDevStudio.Documents
         }
       }
       panelCharColors.Invalidate();
-
-      /*
-      for ( byte i = 0; i < m_NumColorsInColorChooser; ++i )
-      {
-        DrawCharImage( panelCharColors.DisplayPage, i * m_CharacterHeight, 0, m_CurrentChar, i );
-      }
-      panelCharColors.Invalidate();*/
     }
 
 
@@ -1900,11 +1815,6 @@ namespace RetroDevStudio.Documents
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
         labelInfo.Text = InfoText();
-
-        if ( m_OverrideCharMode )
-        {
-          RebuildCharPanelImages();
-        }
       }
     }
 
@@ -2027,7 +1937,6 @@ namespace RetroDevStudio.Documents
         SetScreenSize( 40, 25 );
       }
       // update bg color
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       int   curBytePos = 0;
@@ -2247,11 +2156,7 @@ namespace RetroDevStudio.Documents
       m_CharsetScreen = CharScreen;
       m_CharsetScreen.CharSet = CharSet;
 
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
 
       OnCharsetScreenModeChanged();
 
@@ -2748,10 +2653,6 @@ namespace RetroDevStudio.Documents
 
     public void ValuesChanged()
     {
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
 
       if ( comboCharsetMode.SelectedIndex != (int)m_CharsetScreen.Mode )
@@ -2809,98 +2710,6 @@ namespace RetroDevStudio.Documents
         m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
 
         OnCharsetScreenModeChanged();
-      }
-
-      if ( m_OverrideCharMode )
-      {
-        RebuildCharPanelImages();
-      }
-
-      switch ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
-      {
-        case TextCharMode.COMMODORE_HIRES:
-        case TextCharMode.MEGA65_HIRES:
-        case TextCharMode.COMMODORE_128_VDC_HIRES:
-          labelMColor1.Enabled = false;
-          labelMColor2.Enabled = false;
-          labelBGColor4.Enabled = false;
-          comboMulticolor1.Enabled = false;
-          comboMulticolor2.Enabled = false;
-          comboBGColor4.Enabled = false;
-          labelBGColor.Enabled = true;
-          comboBackground.Enabled = true;
-          break;
-        case TextCharMode.X16_HIRES:
-          labelMColor1.Enabled = false;
-          labelMColor2.Enabled = false;
-          labelBGColor4.Enabled = false;
-          comboMulticolor1.Enabled = false;
-          comboMulticolor2.Enabled = false;
-          comboBGColor4.Enabled = false;
-          labelBGColor.Enabled = false;
-          comboBackground.Enabled = false;
-          break;
-        case TextCharMode.VIC20:
-          labelMColor1.Enabled = true;
-          labelMColor1.Text = "Border Color";
-          labelMColor2.Enabled = true;
-          labelMColor2.Text = "Aux. Color";
-          labelBGColor4.Enabled = false;
-          comboMulticolor1.Enabled = true;
-          comboMulticolor2.Enabled = true;
-          comboBGColor4.Enabled = false;
-          labelBGColor.Enabled = true;
-          comboBackground.Enabled = true;
-          break;
-        case TextCharMode.COMMODORE_MULTICOLOR:
-          labelMColor1.Enabled = true;
-          labelMColor1.Text = "Multicolor 1";
-          labelMColor2.Enabled = true;
-          labelMColor2.Text = "Multicolor 2";
-          labelBGColor4.Enabled = false;
-          comboMulticolor1.Enabled = true;
-          comboMulticolor2.Enabled = true;
-          comboBGColor4.Enabled = false;
-          labelBGColor.Enabled = true;
-          comboBackground.Enabled = true;
-          break;
-        case TextCharMode.COMMODORE_ECM:
-          labelMColor1.Enabled = true;
-          labelMColor1.Text = "BGColor 2";
-          labelMColor2.Enabled = true;
-          labelMColor2.Text = "BGColor 3";
-          labelBGColor4.Enabled = true;
-          comboMulticolor1.Enabled = true;
-          comboMulticolor2.Enabled = true;
-          comboBGColor4.Enabled = true;
-          labelBGColor.Enabled = true;
-          comboBackground.Enabled = true;
-          break;
-        case TextCharMode.MEGA65_FCM:
-        case TextCharMode.MEGA65_FCM_16BIT:
-        case TextCharMode.MEGA65_NCM:
-          labelMColor1.Enabled = false;
-          labelMColor2.Enabled = false;
-          labelBGColor4.Enabled = false;
-          comboMulticolor1.Enabled = false;
-          comboMulticolor2.Enabled = false;
-          comboBGColor4.Enabled = false;
-          labelBGColor.Enabled = true;
-          comboBackground.Enabled = true;
-          break;
-        case TextCharMode.NES:
-          labelMColor1.Enabled = false;
-          labelMColor2.Enabled = false;
-          labelBGColor4.Enabled = false;
-          comboMulticolor1.Enabled = false;
-          comboMulticolor2.Enabled = false;
-          comboBGColor4.Enabled = false;
-          labelBGColor.Enabled = false;
-          comboBackground.Enabled = false;
-          break;
-        default:
-          Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
-          break;
       }
 
       m_CharacterWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
@@ -3035,16 +2844,13 @@ namespace RetroDevStudio.Documents
       int numColors = Lookup.NumberOfColorsInCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
 
       // hard coded palettes
-      int     numColorsBackground = 16;
       int     numColorsInChooser = 16;
-      int     numColorsMulticolor1 = 16;
 
       switch ( m_CharsetScreen.Mode )
       {
         case TextMode.MEGA65_40_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_HIRES:
           numColorsInChooser = 32;
-          numColorsBackground = 256;
           break;
         case TextMode.MEGA65_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_NCM:
@@ -3056,7 +2862,6 @@ namespace RetroDevStudio.Documents
         case TextMode.MEGA65_80_X_25_FCM:
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
-          numColorsBackground = 256;
           break;
         case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C128 );
@@ -3068,7 +2873,6 @@ namespace RetroDevStudio.Documents
           break;
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.VIC20 );
-          numColorsMulticolor1 = 8;
           break;
       }
 
@@ -3080,30 +2884,7 @@ namespace RetroDevStudio.Documents
         RedrawColorChooser();
       }
 
-      RetroDevStudio.UtilForms.UpdateColorComboItemCount( comboBackground, numColorsBackground );
-      RetroDevStudio.UtilForms.UpdateColorComboItemCount( comboMulticolor1, numColorsMulticolor1 );
       m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
-    }
-
-
-
-    private void comboBGColor4_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_CharsetScreen.CharSet.Colors.BGColor4 != comboBGColor4.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
-
-        m_CharsetScreen.CharSet.Colors.BGColor4 = comboBGColor4.SelectedIndex;
-        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        Modified = true;
-        RedrawFullScreen();
-        panelCharacters.Invalidate();
-        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-        RedrawColorChooser();
-      }
     }
 
 
@@ -3308,11 +3089,7 @@ namespace RetroDevStudio.Documents
       ByteBuffer    CharsetProject = Charset.SaveToBuffer();
       m_CharsetScreen.CharSet.ReadFromBuffer( CharsetProject );
 
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
       editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
       editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
 
@@ -3323,15 +3100,6 @@ namespace RetroDevStudio.Documents
       RedrawFullScreen();
       RedrawColorChooser();
       Modified = true;
-    }
-
-
-
-    private void checkOverrideMode_CheckedChanged( object sender, EventArgs e )
-    {
-      m_OverrideCharMode = checkOverrideOriginalColorSettings.Checked;
-
-      RebuildCharPanelImages();
     }
 
 
