@@ -1,5 +1,6 @@
 ﻿using RetroDevStudio;
 using RetroDevStudio.Types;
+using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,43 +10,26 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+
+
 namespace RetroDevStudio.Controls
 {
   public partial class ColorChooserBase : UserControl
   {
     public StudioCore                   Core = null;
-    public ColorSettings                Colors = null;
 
-    protected ColorType                 _CurrentColorType;
-    protected byte                      _CustomColor = 1;
-    protected byte                      _SelectedCustomColor = 1;
+    private ushort                      _SelectedColor = 1;
+    private ushort                      _SelectedChar = 0;
 
-    public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor, List<int> PaletteIndexMapping );
-    public delegate void PaletteSelectedHandler( ColorSettings Colors );
-    public delegate void PaletteMappingModifiedHandler( ColorSettings Colors );
-    public delegate void PaletteMappingSelectedHandler( ColorSettings Colors );
-    public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
-    public delegate void ColorSelectedHandler( ColorType Color );
-    public delegate void CustomColorSelectedHandler( int SelectedCustomColor );
-    public delegate void ExchangeColorsHandler( ColorType Color1, ColorType Color2 );
-    public delegate void MulticolorFlagChangedHandler();
+    protected CharsetProject            _Charset = null;
 
-    public event PaletteModifiedHandler         PaletteModified;
-    public event PaletteSelectedHandler         PaletteSelected;
-    public event PaletteMappingModifiedHandler  PaletteMappingModified;
+
+
+    public delegate void PaletteMappingSelectedHandler();
+    public delegate void ColorSelectedHandler( ushort Color );
+
     public event PaletteMappingSelectedHandler  PaletteMappingSelected;
-    public event ColorsModifiedHandler          ColorsModified;
     public event ColorSelectedHandler           SelectedColorChanged;
-    public event CustomColorSelectedHandler     SelectedCustomColorChanged;
-    public event ExchangeColorsHandler          ColorsExchanged;
-    public event MulticolorFlagChangedHandler   MulticolorFlagChanged;
-
-
-
-    public virtual byte CustomColor
-    {
-      get; set;
-    }
 
 
 
@@ -56,55 +40,31 @@ namespace RetroDevStudio.Controls
 
 
 
-    public virtual ColorType SelectedColor
+    public ushort SelectedColor
     {
       get
       {
-        return _CurrentColorType;
+        return _SelectedColor;
       }
       set
       {
-        _CurrentColorType = value;
+        _SelectedColor = value;
+        Redraw();
       }
     }
 
 
 
-    public virtual byte SelectedCustomColor
+    public ushort SelectedChar
     {
       get
       {
-        return _SelectedCustomColor;
+        return _SelectedChar;
       }
       set
       {
-        _SelectedCustomColor = value;
-      }
-    }
-
-
-
-    public virtual bool MultiColorEnabled 
-    {
-      get
-      {
-        return false;
-      }
-      set
-      {
-      }
-    }
-
-
-
-    public virtual int ActivePalette
-    {
-      get
-      {
-        return 0;
-      }
-      set
-      {
+        _SelectedChar = value;
+        Redraw();
       }
     }
 
@@ -117,53 +77,14 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorChooserBase( StudioCore Core, ColorSettings Colors, byte CustomColor )
+    public ColorChooserBase( StudioCore Core, CharsetProject Charset, ushort SelectedChar, byte SelectedColor )
     {
-      this.Colors       = new ColorSettings( Colors );
       this.Core         = Core;
-      this.CustomColor  = CustomColor;
+      _Charset          = Charset;  
+      _SelectedColor    = SelectedColor;
+      _SelectedChar     = SelectedChar;
 
       InitializeComponent();
-    }
-
-
-
-    protected void RaisePaletteModifiedEvent( List<int> PaletteMapping )
-    {
-      if ( PaletteModified != null )
-      {
-        PaletteModified( Colors, CustomColor, PaletteMapping );
-      }
-    }
-
-
-
-    protected void RaisePaletteSelectedEvent()
-    {
-      if ( PaletteSelected != null )
-      {
-        PaletteSelected( Colors );
-      }
-    }
-
-
-
-    protected void RaiseColorsModifiedEvent( ColorType Color )
-    {
-      if ( ColorsModified != null )
-      {
-        ColorsModified( Color, Colors, CustomColor );
-      }
-    }
-
-
-
-    protected void RaisePaletteMappingModifiedEvent()
-    {
-      if ( PaletteMappingModified != null )
-      {
-        PaletteMappingModified( Colors );
-      }
     }
 
 
@@ -172,7 +93,7 @@ namespace RetroDevStudio.Controls
     {
       if ( SelectedColorChanged != null )
       {
-        SelectedColorChanged( _CurrentColorType );
+        SelectedColorChanged( _SelectedColor );
       }
     }
 
@@ -182,57 +103,13 @@ namespace RetroDevStudio.Controls
     {
       if ( PaletteMappingSelected != null )
       {
-        PaletteMappingSelected( Colors );
+        PaletteMappingSelected();
       }
     }
 
 
 
-    protected void RaiseCustomColorSelectedEvent()
-    {
-      if ( SelectedCustomColorChanged != null )
-      {
-        SelectedCustomColorChanged( _SelectedCustomColor );
-      }
-    }
-
-
-
-    protected void RaiseColorsExchangedEvent( ColorType Color1, ColorType Color2 )
-    {
-      if ( ColorsExchanged != null )
-      {
-        ColorsExchanged( Color1, Color2 );
-      }
-    }
-
-
-
-    protected void RaiseMulticolorFlagChanged()
-    {
-      if ( MulticolorFlagChanged != null )
-      {
-        MulticolorFlagChanged();
-      }
-    }
-
-
-
-    public virtual void ColorChanged( ColorType Color, int Value )
-    {
-    }
-
-
-
-    public void PaletteChanged( Palette Palette )
-    {
-      Colors.Palette = new Palette( Palette );
-      Invalidate();
-    }
-
-
-
-    public virtual void PalettesChanged()
+    public virtual void Redraw()
     {
     }
 

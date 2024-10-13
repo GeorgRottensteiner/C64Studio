@@ -20,6 +20,12 @@
     <Compile Update="Controls\ColorChooser\ColorChooserBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorChooser\ColorChooserX16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorChooser\ColorChooserCommodore.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">
       <SubType>UserControl</SubType>
     </Compile>

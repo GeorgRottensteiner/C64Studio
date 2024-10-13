@@ -92,10 +92,10 @@ namespace RetroDevStudio.Documents
     private ExportCharscreenFormBase    m_ExportForm = null;
     private ImportCharscreenFormBase    m_ImportForm = null;
 
-    private bool                        m_ColorChooserPopupActive = false;
+    private ColorChooserBase            _ColorChooserDlg = null;
 
-    private Dictionary<Control,int>               m_ControlsToTheRight = new Dictionary<Control, int>();
-    private Dictionary<Control,int>               m_ControlsBelow = new Dictionary<Control, int>();
+    private Dictionary<Control,int>     m_ControlsToTheRight = new Dictionary<Control, int>();
+    private Dictionary<Control,int>     m_ControlsBelow = new Dictionary<Control, int>();
 
 
 
@@ -134,7 +134,6 @@ namespace RetroDevStudio.Documents
       pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
       panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
       m_Image.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
 
       DPIHandler.ResizeControlsForDPI( this );
@@ -187,6 +186,7 @@ namespace RetroDevStudio.Documents
         panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+      SetupColorChooserDialog();
       ResumeLayout();
 
       // remember controls to the right and below the editor
@@ -1106,6 +1106,8 @@ namespace RetroDevStudio.Documents
             break;
           }
         }
+        _ColorChooserDlg.SelectedColor  = m_CurrentColor;
+        _ColorChooserDlg.SelectedChar   = m_CurrentChar;
         labelInfo.Text = InfoText();
         RedrawColorChooser();
       }
@@ -1312,6 +1314,7 @@ namespace RetroDevStudio.Documents
       }
 
       ApplyPalette();
+      SetupColorChooserDialog();
 
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
 
@@ -1369,7 +1372,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       RedrawColorChooser();
@@ -1708,6 +1710,7 @@ namespace RetroDevStudio.Documents
     private void panelCharacters_SelectedIndexChanged( object sender, EventArgs e )
     {
       m_CurrentChar = (ushort)m_CharlistLayout[(ushort)panelCharacters.SelectedIndex];
+      _ColorChooserDlg.SelectedChar = m_CurrentChar;
 
       RedrawColorChooser();
       labelInfo.Text = InfoText();
@@ -1717,121 +1720,7 @@ namespace RetroDevStudio.Documents
 
     private void RedrawColorChooser()
     {
-      if ( m_CharsetScreen.CharSet.Mode == TextCharMode.X16_HIRES )
-      {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CurrentChar, panelCharColors.DisplayPage, 0, 0, m_CurrentColor );
-
-        // click for more
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 32, panelCharColors.DisplayPage, 8, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 3, panelCharColors.DisplayPage, 16, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 12, panelCharColors.DisplayPage, 24, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 9, panelCharColors.DisplayPage, 32, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 3, panelCharColors.DisplayPage, 40, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 11, panelCharColors.DisplayPage, 48, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 32, panelCharColors.DisplayPage, 56, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 6, panelCharColors.DisplayPage, 64, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 15, panelCharColors.DisplayPage, 72, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 18, panelCharColors.DisplayPage, 80, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 32, panelCharColors.DisplayPage, 88, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 13, panelCharColors.DisplayPage, 96, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 15, panelCharColors.DisplayPage, 104, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 18, panelCharColors.DisplayPage, 112, 0, 1 );
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, 5, panelCharColors.DisplayPage, 120, 0, 1 );
-      }
-      else
-      {
-        for ( byte i = 0; i < m_NumColorsInColorChooser; ++i )
-        {
-          Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CurrentChar, panelCharColors.DisplayPage, i * m_CharacterWidth, 0, i );
-        }
-      }
-      panelCharColors.Invalidate();
-    }
-
-
-
-    private void pictureCharColor_MouseDown( object sender, MouseEventArgs e )
-    {
-      HandleMouseOnColorChooser( e.X, e.Y, e.Button );
-    }
-
-
-
-    private void pictureCharColor_MouseMove( object sender, MouseEventArgs e )
-    {
-      HandleMouseOnColorChooser( e.X, e.Y, e.Button );
-    }
-
-
-
-    private void HandleMouseOnColorChooser( int X, int Y, MouseButtons Buttons )
-    {
-      if ( m_ColorChooserPopupActive )
-      {
-        return;
-      }
-
-      if ( ( Buttons == MouseButtons.Left )
-      &&   ( m_CharsetScreen.CharSet.Mode == TextCharMode.X16_HIRES )
-      &&   ( panelCharColors.ClientRectangle.Contains( X, Y ) ) )
-      {
-        var popupControl = new FastPictureBox();
-        popupControl.DisplayPage = new FastImage( 128, 128 );
-        popupControl.Size = new Size( 256, 256 );
-
-        var popup = new SingleActionPopupControl( popupControl );
-        popup.ClientSize = new Size( 256, 256 );
-
-        // build all variations
-        for ( byte i = 0; i < 16; ++i )
-        {
-          for ( byte j = 0; j < 16; ++j )
-          {
-            Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CurrentChar, popupControl.DisplayPage,
-              i * 8, j * 8, j * 16 + i );
-          }
-        }
-
-
-        var screenPos = panelCharColors.Parent.PointToScreen( panelCharColors.Location );
-        popup.Location = new Point( screenPos.X, screenPos.Y - popup.Height + panelCharColors.Height );
-        popup.Clicked += m_ColorChoserPopup_Clicked;
-        popup.HandleDestroyed += Popup_HandleDestroyed;
-        popup.Show();
-        popup.Focus();
-        m_ColorChooserPopupActive = true;
-        return;
-      }
-
-      if ( ( X < 0 )
-      ||   ( X >= panelCharColors.ClientSize.Width ) )
-      {
-        return;
-      }
-
-      if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
-      {
-        int colorIndex = (int)( ( m_NumColorsInColorChooser * X ) / panelCharColors.ClientSize.Width );
-        m_CurrentColor = (byte)colorIndex;
-        RedrawColorChooser();
-        labelInfo.Text = InfoText();
-      }
-    }
-
-
-
-    private void Popup_HandleDestroyed( object sender, EventArgs e )
-    {
-      m_ColorChooserPopupActive = false;
-    }
-
-
-
-    private void m_ColorChoserPopup_Clicked( int X, int Y )
-    {
-      int colorIndex = ( X / 16 ) + ( Y / 16 ) * 16;
-      m_CurrentColor = (byte)colorIndex;
-      RedrawColorChooser();
+      _ColorChooserDlg.Redraw();
     }
 
 
@@ -2709,6 +2598,8 @@ namespace RetroDevStudio.Documents
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
         m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
 
+        SetupColorChooserDialog();
+
         OnCharsetScreenModeChanged();
       }
 
@@ -2769,22 +2660,69 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void SetupColorChooserDialog()
+    {
+      if ( _ColorChooserDlg != null )
+      {
+        panelColorChooser.Controls.Remove( _ColorChooserDlg );
+        _ColorChooserDlg.Dispose();
+        _ColorChooserDlg = null;
+      }
+
+      switch ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
+      {
+        case TextCharMode.X16_HIRES:
+          _ColorChooserDlg = new ColorChooserX16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          break;
+        default:
+          _ColorChooserDlg = new ColorChooserCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          break;
+      }
+      _ColorChooserDlg.SelectedColorChanged += _ColorChooserDlg_SelectedColorChanged;
+      _ColorChooserDlg.Redraw();
+      panelColorChooser.Controls.Add( _ColorChooserDlg );
+    }
+
+
+
+    private void _ColorChooserDlg_SelectedColorChanged( ushort Color )
+    {
+      m_CurrentColor = Color;
+      labelInfo.Text = InfoText();
+    }
+
+
+
     private void OnCharsetScreenModeChanged()
     {
       Modified = true;
 
-      if ( m_CharsetScreen.Mode == TextMode.NES )
+      var clientSize = new Size( 640, 400 );
+      var displaySize = new Size( 320, 200 );
+
+      switch ( m_CharsetScreen.Mode )
       {
-        // NES uses 256*240
-        pictureEditor.ClientSize = new Size( 516, 484 );
-        pictureEditor.DisplayPage.Create( 256, 240, GR.Drawing.PixelFormat.Format32bppRgb );
+        case TextMode.NES:
+          clientSize = new Size( 512, 480 );
+          displaySize = new Size( 256, 240 );
+          break;
+        case TextMode.X16_20_X_15:
+        case TextMode.X16_20_X_30:
+        case TextMode.X16_40_X_15:
+        case TextMode.X16_40_X_30:
+        case TextMode.X16_40_X_60:
+        case TextMode.X16_80_X_30:
+        case TextMode.X16_80_X_60:
+          // these modes adapt aspect ratio!
+          displaySize = new Size( Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode ) * 8, Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode ) * 8 );
+          break;
+        default:
+          // all others use 16:10 (do they?)
+          break;
       }
-      else
-      {
-        // all others use 16:10 (do they?)
-        pictureEditor.ClientSize = new Size( 644, 404 );
-        pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
-      }
+
+      pictureEditor.ClientSize = new Size( clientSize.Width + 4, clientSize.Height + 4 );
+      pictureEditor.DisplayPage.Create( displaySize.Width, displaySize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
       int     rightEnd = pictureEditor.Bounds.Right;
       int     bottomEnd = pictureEditor.Bounds.Bottom;
@@ -2833,8 +2771,6 @@ namespace RetroDevStudio.Documents
 
       RedrawColorChooser();
       RedrawFullScreen();
-
-      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
     }
 
 
@@ -2879,8 +2815,6 @@ namespace RetroDevStudio.Documents
       if ( m_NumColorsInColorChooser != numColorsInChooser )
       {
         m_NumColorsInColorChooser = numColorsInChooser;
-
-        panelCharColors.DisplayPage.Create( m_CharacterWidth * m_NumColorsInColorChooser, m_CharacterHeight, GR.Drawing.PixelFormat.Format32bppRgb );
         RedrawColorChooser();
       }
 

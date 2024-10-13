@@ -31,14 +31,13 @@ namespace RetroDevStudio.Controls
     {
       this.SuspendLayout();
       // 
-      // ColorSettingsMC
+      // ColorChooserBase
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Name = "ColorSettingsMC";
-      this.Size = new System.Drawing.Size(176, 185);
+      this.Name = "ColorChooserBase";
+      this.Size = new System.Drawing.Size(280, 120);
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 

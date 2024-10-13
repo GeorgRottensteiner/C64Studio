@@ -31,7 +31,6 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +57,7 @@
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.panelColorChooser = new System.Windows.Forms.Panel();
       this.comboCharlistLayout = new System.Windows.Forms.ComboBox();
       this.btnPaste = new DecentForms.Button();
       this.btnCopy = new DecentForms.Button();
@@ -90,7 +90,6 @@
       this.label7 = new System.Windows.Forms.Label();
       this.labelCharPanelLayout = new System.Windows.Forms.Label();
       this.panelCharacters = new GR.Forms.ImageListbox();
-      this.panelCharColors = new GR.Forms.FastPictureBox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabCharset = new System.Windows.Forms.TabPage();
@@ -105,7 +104,6 @@
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
       this.tabEditor.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharset.SuspendLayout();
@@ -372,6 +370,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.panelColorChooser);
       this.tabEditor.Controls.Add(this.comboCharlistLayout);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
@@ -404,7 +403,6 @@
       this.tabEditor.Controls.Add(this.label7);
       this.tabEditor.Controls.Add(this.labelCharPanelLayout);
       this.tabEditor.Controls.Add(this.panelCharacters);
-      this.tabEditor.Controls.Add(this.panelCharColors);
       this.tabEditor.Controls.Add(this.pictureEditor);
       this.tabEditor.ImageKey = "(none)";
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
@@ -414,6 +412,13 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // panelColorChooser
+      // 
+      this.panelColorChooser.Location = new System.Drawing.Point(680, 380);
+      this.panelColorChooser.Name = "panelColorChooser";
+      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
+      this.panelColorChooser.TabIndex = 50;
       // 
       // comboCharlistLayout
       // 
@@ -633,7 +638,7 @@
       // 
       // labelInfo
       // 
-      this.labelInfo.Location = new System.Drawing.Point(337, 438);
+      this.labelInfo.Location = new System.Drawing.Point(339, 432);
       this.labelInfo.Name = "labelInfo";
       this.labelInfo.Size = new System.Drawing.Size(315, 74);
       this.labelInfo.TabIndex = 33;
@@ -828,26 +833,11 @@
       this.panelCharacters.VisibleAutoScrollVertical = false;
       this.panelCharacters.SelectedIndexChanged += new System.EventHandler(this.panelCharacters_SelectedIndexChanged);
       // 
-      // panelCharColors
-      // 
-      this.panelCharColors.AutoResize = false;
-      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
-      this.panelCharColors.Image = null;
-      this.panelCharColors.Location = new System.Drawing.Point(680, 390);
-      this.panelCharColors.Name = "panelCharColors";
-      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
-      this.panelCharColors.TabIndex = 0;
-      this.panelCharColors.TabStop = false;
-      this.panelCharColors.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.panelCharColors_PostPaint);
-      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureCharColor_MouseDown);
-      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureCharColor_MouseMove);
-      // 
       // pictureEditor
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage1;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -966,7 +956,6 @@
       this.tabProject.PerformLayout();
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabCharsetEditor.ResumeLayout(false);
       this.tabCharset.ResumeLayout(false);
@@ -990,7 +979,6 @@
     private GR.Forms.FastPictureBox pictureEditor;
     private System.Windows.Forms.TabControl tabCharsetEditor;
     private GR.Forms.ImageListbox panelCharacters;
-    private GR.Forms.FastPictureBox panelCharColors;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.ComboBox comboExportData;
     private DecentForms.VScrollBar screenVScroll;
@@ -1048,5 +1036,6 @@
     public System.Windows.Forms.ComboBox comboCharsetMode;
         private System.Windows.Forms.ComboBox comboCharlistLayout;
         private System.Windows.Forms.Label labelCharPanelLayout;
-    }
+    private System.Windows.Forms.Panel panelColorChooser;
+  }
 }
