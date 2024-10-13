@@ -2389,6 +2389,8 @@ Sequence
           Label &lt;LabelPrefix&gt;TILE_COLORS_HI (high byte of pointer to tile color list)<br />
           Label &lt;LabelPrefix&gt;TILE_CHAR_(tile name) (tile chars of tile)<br />
           Label &lt;LabelPrefix&gt;TILE_COLOR_(tile name) (tile colors of tile)<br />
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
       <tr>
@@ -2408,6 +2410,8 @@ Sequence
           Exports all tiles as two byte blocks (char/colors) like this:<br />
           Label &lt;LabelPrefix&gt;_&lt;TileIndex&gt;_CHARS (characters of tile)<br />
           Label &lt;LabelPrefix&gt;_&lt;TileIndex&gt;_COLORS (colors of tile)<br />
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
       <tr>
@@ -2428,6 +2432,8 @@ Sequence
           &lt;LabelPrefix&gt;NUM_TILES = (number of tiles)<br />
           Label &lt;LabelPrefix&gt;TILE_CHARS_&lt;0..max width - 1&gt_&lt;0..max height - 1&gt; (all tiles chars at x, y)<br />
           Label &lt;LabelPrefix&gt;TILE_COLORS_&lt;0..max width - 1&gt_&lt;0..max height - 1&gt; (all tiles colors at x, y)<br />
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
       <tr>
@@ -2454,6 +2460,8 @@ Sequence
           For every map:<br />
           &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map)<br />
           (all extra data bytes of a map)<br />
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
       <tr>
@@ -2480,6 +2488,8 @@ Sequence
           For every map:<br />
           &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br />
           (all extra data bytes of a map)<br />
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
       <tr>
@@ -2521,6 +2531,8 @@ Sequence
         </td>
         <td>
           Exports all tiles and maps. Simply concatenates the output of "tile" and "map"
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
       <tr>
@@ -2538,6 +2550,8 @@ Sequence
         </td>
         <td>
           Exports all tiles and maps. Simply concatenates the output of "tile" and "mapvertical"
+          <br />
+          Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
     </table>

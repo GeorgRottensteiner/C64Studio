@@ -602,6 +602,28 @@ namespace RetroDevStudio.Formats
 
 
 
+    public bool ExportTileNamesAsAssembly( out string TileData, string LabelPrefix )
+    {
+      TileData = "";
+
+      var sb = new StringBuilder();
+
+      string  prefix = NormalizeAsLabel( LabelPrefix );
+      for ( int i = 0; i < Tiles.Count; ++i )
+      {
+        sb.Append( prefix );
+        sb.Append( "TILE_" );
+        sb.Append( NormalizeAsLabel( Tiles[i].Name ) );
+        sb.Append( "=" );
+        sb.Append( i );
+        sb.AppendLine();
+      }
+      TileData = sb.ToString();
+      return true;
+    }
+
+
+
     public bool ExportTileDataAsAssembly( out string TileData, string LabelPrefix, bool WrapData, int WrapByteCount, string DataByteDirective )
     {
       var sbTileChars = new StringBuilder();
@@ -645,7 +667,9 @@ namespace RetroDevStudio.Formats
         ++tileIndex;
       }
 
-      TileData = sbTileChars.ToString() + sbTileColors.ToString();
+      var sb = new StringBuilder();
+
+      TileData = sb.ToString() + sbTileChars.ToString() + sbTileColors.ToString();
       return true;
     }
 

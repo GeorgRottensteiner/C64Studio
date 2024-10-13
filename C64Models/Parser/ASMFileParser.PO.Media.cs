@@ -1531,10 +1531,14 @@ namespace RetroDevStudio.Parser
         if ( method == "TILEELEMENTS" )
         {
           map.ExportTilesAsElements( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
         else if ( method == "MAP" )
         {
           map.ExportMapsAsAssembly( false, out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
         else if ( method == "MAPEXTRADATA" )
         {
@@ -1543,14 +1547,20 @@ namespace RetroDevStudio.Parser
         else if ( method == "MAPVERTICAL" )
         {
           map.ExportMapsAsAssembly( true, out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
         else if ( method == "TILE" )
         {
           map.ExportTilesAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
         else if ( method == "TILEDATA" )
         {
           map.ExportTileDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
         else if ( method == "CHAR" )
         {
@@ -1595,7 +1605,9 @@ namespace RetroDevStudio.Parser
 
           map.ExportMapsAsAssembly( false, out dummy, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
           textToInclude += dummy;
-          //Debug.Log( textToInclude );
+
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
         else if ( method == "MAPVERTICALTILE" )
         {
@@ -1605,7 +1617,9 @@ namespace RetroDevStudio.Parser
 
           map.ExportMapsAsAssembly( true, out dummy, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
           textToInclude += dummy;
-          //Debug.Log( textToInclude );
+
+          map.ExportTileNamesAsAssembly( out string textToIncludeTiles, labelPrefix );
+          textToInclude = textToIncludeTiles + textToInclude;
         }
 
         if ( !Binary )
