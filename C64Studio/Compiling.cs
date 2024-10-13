@@ -201,7 +201,9 @@ namespace RetroDevStudio
             DocInfo.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
           }
           var configSettingInner = DocInfo.Element.Settings[ConfigSetting];
-          if ( configSettingInner.PreBuildChain.Active )
+          if ( ( configSettingInner != null )
+          &&   ( configSettingInner.PreBuildChain != null )
+          &&   ( configSettingInner.PreBuildChain.Active ) )
           {
             foreach ( var chainEntry in configSettingInner.PreBuildChain.Entries )
             {
@@ -234,7 +236,9 @@ namespace RetroDevStudio
               }
             }
           }
-          if ( configSettingInner.PostBuildChain.Active )
+          if ( ( configSettingInner != null )
+          &&   ( configSettingInner.PostBuildChain != null )
+          &&   ( configSettingInner.PostBuildChain.Active ) )
           {
             foreach ( var chainEntry in configSettingInner.PostBuildChain.Entries )
             {
