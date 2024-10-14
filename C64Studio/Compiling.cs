@@ -247,7 +247,9 @@ namespace RetroDevStudio
               {
                 string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
                 var fileTime = FileLastWriteTime( fullPath );
-                if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile )
+                if ( ( !DocInfo.DeducedDependency.ContainsKey( ConfigSetting ) )
+                ||   ( !DocInfo.DeducedDependency[ConfigSetting].BuildState.ContainsKey( fullPath ) )
+                ||   ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile ) )
                 {
                   if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile == default( DateTime ) )
                   {
