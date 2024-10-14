@@ -248,12 +248,15 @@ namespace RetroDevStudio
                 string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
                 var fileTime = FileLastWriteTime( fullPath );
                 if ( ( !DocInfo.DeducedDependency.ContainsKey( ConfigSetting ) )
-                ||   ( !DocInfo.DeducedDependency[ConfigSetting].BuildState.ContainsKey( fullPath ) )
-                ||   ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile ) )
+                ||   ( !DocInfo.DeducedDependency[ConfigSetting].BuildState.ContainsKey( fullPath ) ) )
+                {
+                  Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                }
+                else if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile )
                 {
                   if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath].TimeStampOfSourceFile == default( DateTime ) )
                   {
-                    Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                    Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
                   }
                   else
                   {
