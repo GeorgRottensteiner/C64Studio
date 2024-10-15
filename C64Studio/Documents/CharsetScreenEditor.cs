@@ -2674,6 +2674,9 @@ namespace RetroDevStudio.Documents
         case TextCharMode.X16_HIRES:
           _ColorChooserDlg = new ColorChooserX16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
+        case TextCharMode.NES:
+          _ColorChooserDlg = new ColorChooserNES( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          break;
         default:
           _ColorChooserDlg = new ColorChooserCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;

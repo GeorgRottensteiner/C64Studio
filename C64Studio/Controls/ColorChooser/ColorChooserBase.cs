@@ -20,6 +20,7 @@ namespace RetroDevStudio.Controls
 
     private ushort                      _SelectedColor = 1;
     private ushort                      _SelectedChar = 0;
+    private int                         _SelectedPaletteMapping = 0;
 
     protected CharsetProject            _Charset = null;
 
@@ -64,6 +65,21 @@ namespace RetroDevStudio.Controls
       set
       {
         _SelectedChar = value;
+        Redraw();
+      }
+    }
+
+
+
+    public int SelectedPaletteMapping
+    {
+      get
+      {
+        return _SelectedPaletteMapping;
+      }
+      set
+      {
+        _SelectedPaletteMapping = value;
         Redraw();
       }
     }
