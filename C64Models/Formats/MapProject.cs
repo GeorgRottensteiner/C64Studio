@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 
@@ -612,8 +613,8 @@ namespace RetroDevStudio.Formats
       for ( int i = 0; i < Tiles.Count; ++i )
       {
         sb.Append( prefix );
-        sb.Append( "TILE_" );
-        sb.Append( NormalizeAsLabel( Tiles[i].Name ) );
+        sb.Append( "TILE_NAME_" );
+        sb.Append( NormalizeAsLabel( Tiles[i].Name ).ToUpper() );
         sb.Append( "=" );
         sb.Append( i );
         sb.AppendLine();
@@ -802,8 +803,15 @@ namespace RetroDevStudio.Formats
     {
       StringBuilder   sb = new StringBuilder();
 
-      foreach ( var c in Label )
+      // remove diacritics
+      string normalizedString = Label.Normalize( NormalizationForm.FormD );
+
+      foreach ( var c in normalizedString )
       {
+        if ( CharUnicodeInfo.GetUnicodeCategory( c ) == UnicodeCategory.NonSpacingMark )
+        {
+          continue;
+        }
         if ( ( !char.IsDigit( c ) )
         &&   ( !char.IsLetter( c ) )
         &&   ( c != '_' ) )

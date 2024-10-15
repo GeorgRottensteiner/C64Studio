@@ -2440,11 +2440,12 @@ namespace RetroDevStudio.Documents
         // TODO - should not be defined here
         switch ( DocumentInfo.Element.AssemblerType )
         {
-          case Types.AssemblerType.PDS:
-          case Types.AssemblerType.AUTO:
+          case AssemblerType.PDS:
+          case AssemblerType.AUTO:
+          case AssemblerType.C64_STUDIO:
             tokenAllowedChars = "!@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.$";
             break;
-          case Types.AssemblerType.DASM:
+          case AssemblerType.DASM:
             tokenAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.$";
             break;
           default:
