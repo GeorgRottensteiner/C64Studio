@@ -308,7 +308,8 @@ namespace RetroDevStudio.Parser
         {
           hasTo = true;
         }
-        if ( upperCaseLine.IndexOf( "EQU " ) != -1 )
+        if ( ( upperCaseLine.IndexOf( "EQU " ) == 0 )
+        ||   ( upperCaseLine.IndexOf( " EQU " ) != -1 ) )
         {
           hasEQU = true;
         }
