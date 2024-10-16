@@ -42,6 +42,7 @@ namespace RetroDevStudio.Documents
 
     private ushort                      m_CurrentChar = 0;
     private ushort                      m_CurrentColor = 1;
+    private int                         m_CurrentPaletteMapping = 0;
     private int                         m_CharsWidth = 40;
     private int                         m_CharsHeight = 25;
     private int                         m_CharacterWidth = 8;
@@ -2682,8 +2683,16 @@ namespace RetroDevStudio.Documents
           break;
       }
       _ColorChooserDlg.SelectedColorChanged += _ColorChooserDlg_SelectedColorChanged;
+      _ColorChooserDlg.PaletteMappingSelected += _ColorChooserDlg_PaletteMappingSelected;
       _ColorChooserDlg.Redraw();
       panelColorChooser.Controls.Add( _ColorChooserDlg );
+    }
+
+
+
+    private void _ColorChooserDlg_PaletteMappingSelected( int PaletteMapping )
+    {
+      m_CurrentPaletteMapping = PaletteMapping;
     }
 
 

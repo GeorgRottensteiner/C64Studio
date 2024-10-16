@@ -26,7 +26,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public delegate void PaletteMappingSelectedHandler();
+    public delegate void PaletteMappingSelectedHandler( int PaletteMapping );
     public delegate void ColorSelectedHandler( ushort Color );
 
     public event PaletteMappingSelectedHandler  PaletteMappingSelected;
@@ -119,7 +119,7 @@ namespace RetroDevStudio.Controls
     {
       if ( PaletteMappingSelected != null )
       {
-        PaletteMappingSelected();
+        PaletteMappingSelected( _SelectedPaletteMapping );
       }
     }
 

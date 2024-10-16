@@ -78,7 +78,9 @@ namespace RetroDevStudio.Controls
       }
       for ( int i = 0; i < 4; ++i )
       {
-        Displayer.CharacterDisplayer.DisplayChar( _Charset, SelectedChar, _Palettes[i].DisplayPage, 0, 0, i );
+        var altColors = new AlternativeColorSettings( _Charset.Colors );
+        altColors.PaletteMappingIndex = i;
+        Displayer.CharacterDisplayer.DisplayChar( _Charset, SelectedChar, _Palettes[i].DisplayPage, 0, 0, altColors );
       }
       picPalette1.Invalidate();
       picPalette2.Invalidate();
