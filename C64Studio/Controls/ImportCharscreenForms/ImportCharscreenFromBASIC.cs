@@ -77,15 +77,15 @@ namespace RetroDevStudio.Controls
                   if ( key != null )
                   {
                     if ( ( key.Type == KeyType.GRAPHIC_SYMBOL )
-                    || ( key.Type == KeyType.NORMAL ) )
+                    ||   ( key.Type == KeyType.NORMAL ) )
                     {
                       if ( reverseMode )
                       {
-                        Editor.SetCharacter( cursorX, cursorY, (ushort)( key.ScreenCodeValue + 128 ), curColor );
+                        Editor.SetCharacter( cursorX, cursorY, (ushort)( key.ScreenCodeValue + 128 ), curColor, 0 );
                       }
                       else
                       {
-                        Editor.SetCharacter( cursorX, cursorY, key.ScreenCodeValue, curColor );
+                        Editor.SetCharacter( cursorX, cursorY, key.ScreenCodeValue, curColor, 0 );
                       }
                       ++cursorX;
                       if ( cursorX >= CharScreen.ScreenWidth )

@@ -442,9 +442,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    void DrawCharImage( GR.Image.IImage TargetImage, int X, int Y, ushort Char, ushort Color )
+    void DrawCharImage( GR.Image.IImage TargetImage, int X, int Y, ushort Char, ushort Color, int PaletteMappingIndex )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, Char, TargetImage, X, Y, Color );
+      var altSettings = new AlternativeColorSettings( m_CharsetScreen.CharSet.Colors );
+      altSettings.CustomColor         = Color;
+      altSettings.PaletteMappingIndex = PaletteMappingIndex;
+      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, Char, TargetImage, X, Y, altSettings );
     }
 
 
@@ -573,12 +576,14 @@ namespace RetroDevStudio.Documents
                  ( undoX + i ) * m_CharacterWidth,
                  ( undoY + j ) * m_CharacterHeight,
                  (ushort)( selectionChar.second & 0xffff ),
+                 (ushort)( selectionChar.second >> 16 ),
                  (ushort)( selectionChar.second >> 16 ) );
 
               DrawCharImage( m_Image,
                  ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * m_CharacterWidth,
                  ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * m_CharacterHeight,
                  (ushort)( selectionChar.second & 0xffff ),
+                 (ushort)( selectionChar.second >> 16 ),
                  (ushort)( selectionChar.second >> 16 ) );
 
               pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * m_CharacterWidth,
@@ -617,8 +622,8 @@ namespace RetroDevStudio.Documents
 
         if ( m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * point.Y] != charToInsert )
         {
-          DrawCharImage( m_Image, point.X * m_CharacterWidth, point.Y * m_CharacterHeight, m_CurrentChar, m_CurrentColor );
-          DrawCharImage( pictureEditor.DisplayPage, ( point.X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( point.Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, m_CurrentColor );
+          DrawCharImage( m_Image, point.X * m_CharacterWidth, point.Y * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
+          DrawCharImage( pictureEditor.DisplayPage, ( point.X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( point.Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
 
           m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * point.Y] = charToInsert;
 
@@ -954,7 +959,7 @@ namespace RetroDevStudio.Documents
             break;
           case ToolMode.SINGLE_CHAR:
             if ( ( m_ReverseChars )
-            ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) ) ) )
+            ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != CombineChar( m_CurrentChar, m_CurrentChar, m_CurrentPaletteMapping ) ) )
             {
               if ( m_ReverseChars )
               {
@@ -1097,8 +1102,9 @@ namespace RetroDevStudio.Documents
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        m_CurrentChar = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] & 0xffff );
-        m_CurrentColor = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] >> 16 );
+        m_CurrentChar           = m_CharsetScreen.CharacterAt( charX, charY );
+        m_CurrentColor          = m_CharsetScreen.ColorAt( charX, charY );
+        m_CurrentPaletteMapping = m_CharsetScreen.PaletteMappingAt( charX, charY );
         for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           if ( m_CharlistLayout[i] == m_CurrentChar )
@@ -1107,11 +1113,23 @@ namespace RetroDevStudio.Documents
             break;
           }
         }
-        _ColorChooserDlg.SelectedColor  = m_CurrentColor;
-        _ColorChooserDlg.SelectedChar   = m_CurrentChar;
+        _ColorChooserDlg.SelectedColor          = m_CurrentColor;
+        _ColorChooserDlg.SelectedChar           = m_CurrentChar;
+        _ColorChooserDlg.SelectedPaletteMapping = m_CurrentPaletteMapping;
         labelInfo.Text = InfoText();
         RedrawColorChooser();
       }
+    }
+
+
+
+    private uint CombineChar( ushort Char, ushort Color, int PaletteMapping )
+    {
+      if ( m_CharsetScreen.Mode == TextMode.NES )
+      {
+        return (uint)( Char | ( PaletteMapping << 16 ) );
+      }
+      return (uint)( Char | ( Color << 16 ) );
     }
 
 
@@ -1122,6 +1140,7 @@ namespace RetroDevStudio.Documents
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
                        (ushort)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ) ^ 0x80 ), 
+                       (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ),
                        (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
         return;
       }
@@ -1129,15 +1148,15 @@ namespace RetroDevStudio.Documents
       if ( ( m_AffectChars )
       &&   ( m_AffectColors ) )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, m_CurrentColor );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
       }
       else if ( m_AffectChars )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ), (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
       }
       else if ( m_AffectColors )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ), m_CurrentColor );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ), m_CurrentColor, m_CurrentPaletteMapping );
       }
     }
 
@@ -1145,12 +1164,12 @@ namespace RetroDevStudio.Documents
 
     private void SetCharacter( int X, int Y )
     {
-      SetCharacter( X, Y, m_CurrentChar, m_CurrentColor );
+      SetCharacter( X, Y, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
     }
 
 
 
-    public void SetCharacter( int X, int Y, ushort Char, ushort Color )
+    public void SetCharacter( int X, int Y, ushort Char, ushort Color, int PaletteMappingIndex )
     {
       if ( m_ReverseChars )
       {
@@ -1159,22 +1178,26 @@ namespace RetroDevStudio.Documents
         DrawCharImage( pictureEditor.DisplayPage,
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
-                       (ushort)( origChar ^ 0x80 ), Color );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( origChar ^ 0x80 ) | ( Color << 16 ) );
+                       (ushort)( origChar ^ 0x80 ), 
+                       Color, 
+                       PaletteMappingIndex );
+        origChar ^= 0x80;
+        m_CharsetScreen.SetAt( X, Y, origChar, Color, PaletteMappingIndex );
         return;
       }
-      SetCharacterWithoutReverse( X, Y, Char, Color );
+      SetCharacterWithoutReverse( X, Y, Char, Color, PaletteMappingIndex );
     }
 
 
 
-    public void SetCharacterWithoutReverse( int X, int Y, ushort Char, ushort Color )
+    public void SetCharacterWithoutReverse( int X, int Y, ushort Char, ushort Color, int PaletteMappingIndex )
     {
       if ( ( m_AffectChars )
       &&   ( m_AffectColors ) )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, Char, Color );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( Char | ( Color << 16 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
+                       Char, Color, PaletteMappingIndex );
+        m_CharsetScreen.SetAt( X, Y, Char, Color, PaletteMappingIndex );
       }
       else if ( m_AffectChars )
       {
@@ -1182,6 +1205,7 @@ namespace RetroDevStudio.Documents
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
                        Char,
+                       m_CharsetScreen.ColorAt( X, Y ),
                        m_CharsetScreen.ColorAt( X, Y ) );
         m_CharsetScreen.SetCharacterAt( X, Y, Char );
       }
@@ -1191,8 +1215,9 @@ namespace RetroDevStudio.Documents
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
                        m_CharsetScreen.CharacterAt( X, Y ),
-                       Color );
-        m_CharsetScreen.SetColorAt( X, Y, Color );
+                       Color,
+                       PaletteMappingIndex );
+        m_CharsetScreen.SetColorAt( X, Y, Color, PaletteMappingIndex );
       }
     }
 
@@ -1260,7 +1285,8 @@ namespace RetroDevStudio.Documents
                          ( i - x1 ) * charWidth,
                          ( j - y1 ) * charHeight,
                          m_CharsetScreen.CharacterAt( i, j ),
-                         m_CharsetScreen.ColorAt( i, j ) );
+                         m_CharsetScreen.ColorAt( i, j ),
+                         m_CharsetScreen.PaletteMappingAt( i, j ) );
         }
       }
       for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
@@ -1269,7 +1295,8 @@ namespace RetroDevStudio.Documents
         {
           DrawCharImage( m_Image, i * charWidth, j * charHeight,
                          m_CharsetScreen.CharacterAt( i, j ),
-                         m_CharsetScreen.ColorAt( i, j ) );
+                         m_CharsetScreen.ColorAt( i, j ),
+                         m_CharsetScreen.PaletteMappingAt( i, j ) );
         }
       }
 
@@ -1368,8 +1395,9 @@ namespace RetroDevStudio.Documents
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * m_CharacterWidth, j * m_CharacterHeight,
-                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ),
-                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 16 ) );
+                         m_CharsetScreen.CharacterAt( i, j ),
+                         m_CharsetScreen.ColorAt( i, j ),
+                         m_CharsetScreen.PaletteMappingAt( i, j ) );
         }
       }
 
@@ -1681,6 +1709,7 @@ namespace RetroDevStudio.Documents
                  ( m_MousePos.X + i ) * m_CharacterWidth,
                  ( m_MousePos.Y + j ) * m_CharacterHeight,
                  (ushort)( selectionChar.second & 0xffff ),
+                 (ushort)( selectionChar.second >> 16 ),
                  (ushort)( selectionChar.second >> 16 ) );
             }
           }
@@ -1852,7 +1881,7 @@ namespace RetroDevStudio.Documents
       }
       if ( curBytePos < Data.Length )
       {
-        // colors
+        // sanity/shuffle colors
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
@@ -1874,7 +1903,7 @@ namespace RetroDevStudio.Documents
               colorValue &= 0x0f;
             }
 
-            m_CharsetScreen.SetColorAt( i, j, colorValue );
+            m_CharsetScreen.SetColorAt( i, j, colorValue, colorValue );
             ++curBytePos;
             if ( curBytePos >= Data.Length )
             {
@@ -2071,8 +2100,9 @@ namespace RetroDevStudio.Documents
         for ( int j = 0; j < CharScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * m_CharacterWidth, j * m_CharacterHeight,
-                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ),
-                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 16 ) );
+                         m_CharsetScreen.CharacterAt( i, j ),
+                         m_CharsetScreen.ColorAt( i, j ),
+                         m_CharsetScreen.PaletteMappingAt( i, j ) );
         }
       }
       pictureEditor.Invalidate();
@@ -2389,7 +2419,7 @@ namespace RetroDevStudio.Documents
               {
                 ushort origChar = (ushort)( m_TextEntryCachedLine[i] & 0xffff );
                 ushort origColor = (ushort)( m_TextEntryCachedLine[i] >> 16 );
-                SetCharacter( i, charY, origChar, origColor );
+                SetCharacter( i, charY, origChar, origColor, origColor );
               }
               pictureEditor.DisplayPage.DrawTo( m_Image,
                                                 0, m_SelectedChar.Y * m_CharacterHeight,
@@ -2466,7 +2496,7 @@ namespace RetroDevStudio.Documents
               {
                 ushort  origChar = (ushort)( m_TextEntryEnteredText[i] & 0xffff );
                 ushort  origColor = (ushort)( m_TextEntryEnteredText[i] >> 16 );
-                SetCharacterWithoutReverse( newX + i, m_SelectedChar.Y, origChar, origColor );
+                SetCharacterWithoutReverse( newX + i, m_SelectedChar.Y, origChar, origColor, origColor );
               }
               pictureEditor.DisplayPage.DrawTo( m_Image,
                                                 newX * m_CharacterWidth, m_SelectedChar.Y * m_CharacterHeight,
@@ -2477,7 +2507,7 @@ namespace RetroDevStudio.Documents
             }
             else
             {
-              SetCharacterWithoutReverse( charX, charY, charIndex, m_CurrentColor );
+              SetCharacterWithoutReverse( charX, charY, charIndex, m_CurrentColor, m_CurrentPaletteMapping );
               pictureEditor.DisplayPage.DrawTo( m_Image,
                                                 charX * m_CharacterWidth, charY * m_CharacterHeight,
                                                 ( charX - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( charY - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
@@ -2526,13 +2556,15 @@ namespace RetroDevStudio.Documents
                          ( x - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                          ( y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
                          m_CharsetScreen.CharacterAt( x, y ),
-                         m_CharsetScreen.ColorAt( x, y ) );
+                         m_CharsetScreen.ColorAt( x, y ),
+                         m_CharsetScreen.PaletteMappingAt( x, y ) );
 
           DrawCharImage( m_Image,
                          x * m_CharacterWidth,
                          y * m_CharacterHeight,
                          m_CharsetScreen.CharacterAt( x, y ),
-                         m_CharsetScreen.ColorAt( x, y ) );
+                         m_CharsetScreen.ColorAt( x, y ),
+                         m_CharsetScreen.PaletteMappingAt( x, y ) );
         }
       }
       pictureEditor.Invalidate( new System.Drawing.Rectangle( ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
@@ -3150,7 +3182,7 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
         {
-          SetCharacter( i, j, 32, 1 );
+          SetCharacter( i, j, 32, 1, 0 );
         }
       }
 

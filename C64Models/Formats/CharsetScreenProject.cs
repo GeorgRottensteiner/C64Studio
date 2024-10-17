@@ -143,7 +143,24 @@ namespace RetroDevStudio.Formats
       if ( ( X < 0 )
       ||   ( X >= ScreenWidth )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
+      ||   ( Y >= ScreenHeight )
+      ||   ( Mode == TextMode.NES ) )
+      {
+        return 0;
+      }
+
+      return (ushort)( Chars[Y * ScreenWidth + X] >> 16 );
+    }
+
+
+
+    public int PaletteMappingAt( int X, int Y )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight )
+      ||   ( Mode != TextMode.NES ) )
       {
         return 0;
       }
@@ -170,7 +187,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public bool SetColorAt( int X, int Y, ushort ColorValue )
+    public bool SetColorAt( int X, int Y, ushort ColorValue, int PaletteMappingIndex )
     {
       if ( ( X < 0 )
       ||   ( X >= ScreenWidth )
@@ -180,7 +197,15 @@ namespace RetroDevStudio.Formats
         return false;
       }
 
-      Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
+      if ( Mode == TextMode.NES )
+      {
+        // uses palette mapping index inside color 
+        Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
+      }
+      else
+      {
+        Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
+      }
 
       return true;
     }
@@ -303,7 +328,9 @@ namespace RetroDevStudio.Formats
         {
           for ( int x = 0; x < Info.Area.Width; ++x )
           {
-            byte newColor   = (byte)ColorAt( Info.Area.X + x, Info.Area.Y + i );
+            // "Smart" way of choosing either one
+            byte newColor   = (byte)( ColorAt( Info.Area.X + x, Info.Area.Y + i )
+                                    + PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
             ushort newChar  = CharacterAt( Info.Area.X + x, Info.Area.Y + i );
 
             newChar = (ushort)( newChar + CharOffset );
@@ -348,8 +375,10 @@ namespace RetroDevStudio.Formats
         {
           for ( int i = 0; i < Info.Area.Height; ++i )
           {
-            byte newColor = (byte)( ( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xff0000 ) >> 16 );
-            ushort newChar = (ushort)( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xffff );
+            byte newColor   = (byte)( ColorAt( Info.Area.X + x, Info.Area.Y + i )
+                                    + PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
+
+            ushort newChar = CharacterAt( x + Info.Area.X, i + Info.Area.Y );
 
             newChar = (ushort)( newChar + CharOffset );
 
@@ -425,6 +454,32 @@ namespace RetroDevStudio.Formats
         }
       }
       Chars = newChars;
+    }
+
+
+
+    public bool SetAt( int X, int Y, ushort Char, ushort Color, int PaletteMappingIndex )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight ) )
+      {
+        return false;
+      }
+
+      if ( Mode == TextMode.NES )
+      {
+        // uses palette mapping index inside color 
+        Chars[Y * ScreenWidth + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
+      }
+      else
+      {
+        Chars[Y * ScreenWidth + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( Color << 16 ) );
+      }
+
+      return true;
+        
     }
 
 
