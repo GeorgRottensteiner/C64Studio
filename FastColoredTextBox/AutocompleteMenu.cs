@@ -5,6 +5,7 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace FastColoredTextBoxNS
 {
@@ -903,6 +904,8 @@ namespace FastColoredTextBoxNS
       IWin32Window window = this.Parent ?? this;
       Point location = new Point( ( window == this ? Width : Right ) + 3, 0 );
 
+      // not calling hide sometimes makes the tooltip show older content??
+      toolTip.Hide( window );
       if ( string.IsNullOrEmpty( text ) )
       {
         toolTip.ToolTipTitle = null;
@@ -980,11 +983,6 @@ namespace FastColoredTextBoxNS
       Menu.host.Width = maxWidth;
       MaximumSize = new Size( maxWidth, MaximumSize.Height );
       Width = maxWidth;
-      /*
-      AutoSize = false;
-      Size = new Size( maxWidth, Height );
-      //SetClientSizeCore( maxWidth, ClientSize.Height );
-      //Width = maxWidth;*/
       Menu.CalcSize();
     }
   }

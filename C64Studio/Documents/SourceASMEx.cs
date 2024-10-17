@@ -417,7 +417,7 @@ namespace RetroDevStudio.Documents
         }
       }
       /*
-      // this is just a attempt on context dependant info!
+      // this is just a attempt on context dependent info!
       // TODO - adjust the content depending on the content
       string    line = editSource.Lines[sourceLineIndex];
       var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
@@ -1407,6 +1407,7 @@ namespace RetroDevStudio.Documents
             }
           }
 
+          // try to find a match with arg numbers
           var macroInfo = debugFileInfo.MacroFromName( wordBelow, numArgs );
           if ( macroInfo != null )
           {
@@ -1424,8 +1425,36 @@ namespace RetroDevStudio.Documents
               toolTipText += " " + parameter;
             }
           }
+          else
+          {
+            // no match, then list all variants
+            toolTipText = "";
+            foreach ( var macro in debugFileInfo.Macros.Where( m => m.Key.first == wordBelow ) )
+            {
+              var macroInfo2 = debugFileInfo.MacroFromName( macro.Key.first, macro.Key.second );
+              if ( macroInfo2 != null )
+              {
+                if ( toolTipText.Length > 0 )
+                {
+                  toolTipText += "\r\n";
+                }
+                if ( debugFileInfo.AssemblerSettings.MacroFunctionCallPrefix.Any() )
+                {
+                  toolTipText += debugFileInfo.AssemblerSettings.MacroFunctionCallPrefix[0] + macroInfo2.Name;
+                }
+                else
+                {
+                  toolTipText += macroInfo2.Name;
+                }
+
+                foreach ( var parameter in macroInfo2.ParameterNames )
+                {
+                  toolTipText += " " + parameter;
+                }
+              }
+            }
+          }
         }
-        
         if ( m_LastTooltipText != toolTipText )
         {
           m_LastTooltipText = toolTipText;
@@ -1437,6 +1466,8 @@ namespace RetroDevStudio.Documents
       string  upperWord = wordBelow.ToUpper();
       if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperWord ) )
       {
+        // TODO - add PO hints?
+        m_ToolTip.Hide( editSource );
         return;
       }
       m_ToolTip.Hide( editSource );
