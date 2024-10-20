@@ -831,7 +831,9 @@ namespace RetroDevStudio.Documents
 
                 CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
 
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, p1.X, p1.Y, p2.X - p1.X + 1, p2.Y - p1.Y + 1 ) );
+                var affectedArea = DetermineAffectedArea( p1.X, p1.Y, p2.X - p1.X + 1, p2.Y - p1.Y + 1 );
+
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
 
                 if ( m_ToolMode == ToolMode.RECTANGLE )
                 {
@@ -970,14 +972,16 @@ namespace RetroDevStudio.Documents
                 m_ReverseCache[charX, charY] = true;
               }
 
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ), m_MouseButtonReleased );
+              var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ), m_MouseButtonReleased );
               m_MouseButtonReleased = false;
 
               SetCharacter( charX, charY );
               pictureEditor.DisplayPage.DrawTo( m_Image,
-                                                charX * m_CharacterWidth, charY * m_CharacterHeight,
-                                                ( charX - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( charY - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
-                                                m_CharacterWidth, m_CharacterHeight );
+                                                affectedArea.X * m_CharacterWidth, affectedArea.Y * m_CharacterHeight,
+                                                ( affectedArea.X - m_CharsetScreen.ScreenOffsetX ) * affectedArea.Width * m_CharacterWidth, 
+                                                ( affectedArea.Y - m_CharsetScreen.ScreenOffsetY ) * affectedArea.Height * m_CharacterHeight,
+                                                m_CharacterWidth * affectedArea.Width, m_CharacterHeight * affectedArea.Height );
 
               pictureEditor.Invalidate( new System.Drawing.Rectangle( X, Y, m_CharacterWidth, m_CharacterHeight ) );
               Modified = true;
@@ -1123,6 +1127,18 @@ namespace RetroDevStudio.Documents
 
 
 
+    private Rectangle DetermineAffectedArea( int X, int Y, int Width, int Height )
+    {
+      int x = ( m_CharsetScreen.Mode == TextMode.NES ) ? ( X & ~0x01 ) : X;
+      int y = ( m_CharsetScreen.Mode == TextMode.NES ) ? ( Y & ~0x01 ) : Y;
+      int x2 = ( m_CharsetScreen.Mode == TextMode.NES ) ? ( ( ( X + Width - 1 ) & ~0x01 ) + 1 ) : ( X + Width - 1 );
+      int y2 = ( m_CharsetScreen.Mode == TextMode.NES ) ? ( ( ( Y + Height - 1 ) & ~0x01 ) + 1 ) : ( Y + Height - 1 );
+
+      return new Rectangle( x, y, x2 - x + 1, y2 - y + 1 );
+    }
+
+
+
     private uint CombineChar( ushort Char, ushort Color, int PaletteMapping )
     {
       if ( m_CharsetScreen.Mode == TextMode.NES )
@@ -1175,14 +1191,7 @@ namespace RetroDevStudio.Documents
       {
         byte  origChar = (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff );
 
-        DrawCharImage( pictureEditor.DisplayPage,
-                       ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
-                       ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
-                       (ushort)( origChar ^ 0x80 ), 
-                       Color, 
-                       PaletteMappingIndex );
-        origChar ^= 0x80;
-        m_CharsetScreen.SetAt( X, Y, origChar, Color, PaletteMappingIndex );
+        SetCharacterWithoutReverse( X, Y, (byte)( Char ^ 0x80 ), Color, PaletteMappingIndex );
         return;
       }
       SetCharacterWithoutReverse( X, Y, Char, Color, PaletteMappingIndex );
@@ -1218,6 +1227,36 @@ namespace RetroDevStudio.Documents
                        Color,
                        PaletteMappingIndex );
         m_CharsetScreen.SetColorAt( X, Y, Color, PaletteMappingIndex );
+      }
+
+      if ( ( m_AffectColors )
+      &&   ( m_CharsetScreen.Mode == TextMode.NES ) )
+      {
+        // NES allows one palette mapping per 2x2 char block
+        int     xx = X & ~0x01;
+        int     yy = Y & ~0x01;
+
+        for ( int i = 0; i < 2; ++i )
+        {
+          for ( int j = 0; j < 2; ++j )
+          {
+            if ( ( xx == X )
+            &&   ( yy == Y ) )
+            {
+              continue;
+            }
+            if ( m_CharsetScreen.PaletteMappingAt( xx + i, yy + j ) != PaletteMappingIndex )
+            {
+              m_CharsetScreen.SetColorAt( xx + i, yy + j, Color, PaletteMappingIndex );
+              DrawCharImage( pictureEditor.DisplayPage,
+                       ( xx + i - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
+                       ( yy + j - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
+                       m_CharsetScreen.CharacterAt( xx + i, yy + j ),
+                       Color,
+                       PaletteMappingIndex );
+            }
+          }
+        }
       }
     }
 
@@ -2353,8 +2392,6 @@ namespace RetroDevStudio.Documents
         }
         if ( Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) )
         {
-          //Debug.Log( "KeyData " + bareKey );
-
           var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
           C64Character    c64Key = null;
           if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
@@ -2412,13 +2449,15 @@ namespace RetroDevStudio.Documents
 
             if ( m_AutoCenterText )
             {
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, charY, m_CharsetScreen.ScreenWidth, 1 ) );
+              var affectedArea = DetermineAffectedArea( 0, charY, m_CharsetScreen.ScreenWidth, 1 );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
 
               // restore old line
               for ( int i = 0; i < m_TextEntryCachedLine.Count; ++i )
               {
                 ushort origChar = (ushort)( m_TextEntryCachedLine[i] & 0xffff );
                 ushort origColor = (ushort)( m_TextEntryCachedLine[i] >> 16 );
+
                 SetCharacter( i, charY, origChar, origColor, origColor );
               }
               pictureEditor.DisplayPage.DrawTo( m_Image,
@@ -2445,7 +2484,8 @@ namespace RetroDevStudio.Documents
                   // blank with space
                   --charX;
                 }
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
+                var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
                 charIndex = 32;
                 if ( m_ReverseChars )
                 {
@@ -2470,7 +2510,8 @@ namespace RetroDevStudio.Documents
             }
             else
             {
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
+              var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
               if ( m_SelectedChar.X >= m_CharsetScreen.ScreenWidth - 1 )
               {
                 m_SelectedChar.X = 0;
@@ -2508,12 +2549,19 @@ namespace RetroDevStudio.Documents
             else
             {
               SetCharacterWithoutReverse( charX, charY, charIndex, m_CurrentColor, m_CurrentPaletteMapping );
+
+              var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
               pictureEditor.DisplayPage.DrawTo( m_Image,
-                                                charX * m_CharacterWidth, charY * m_CharacterHeight,
-                                                ( charX - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( charY - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
-                                                m_CharacterWidth, m_CharacterHeight );
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * m_CharacterWidth, charY * m_CharacterHeight, m_CharacterWidth, m_CharacterHeight ) );
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( m_SelectedChar.X * m_CharacterWidth, m_SelectedChar.Y * m_CharacterHeight, m_CharacterWidth, m_CharacterHeight ) );
+                                                affectedArea.X * m_CharacterWidth, 
+                                                affectedArea.Y * m_CharacterHeight,
+                                                ( affectedArea.X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
+                                                ( affectedArea.Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
+                                                affectedArea.Width * m_CharacterWidth, affectedArea.Height * m_CharacterHeight );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( affectedArea.X * m_CharacterWidth, affectedArea.Y * m_CharacterHeight,
+                                                                      affectedArea.Width * m_CharacterWidth, affectedArea.Height * m_CharacterHeight ) );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( m_SelectedChar.X * m_CharacterWidth, 
+                                                                      m_SelectedChar.Y * m_CharacterHeight, 
+                                                                      m_CharacterWidth, m_CharacterHeight ) );
             }
             Redraw();
             Modified = true;
@@ -2538,6 +2586,7 @@ namespace RetroDevStudio.Documents
     private void CacheScreenLine( int LineIndex )
     {
       m_TextEntryCachedLine.Clear();
+
       for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
       {
         m_TextEntryCachedLine.Add( m_CharsetScreen.Chars[i + LineIndex * m_CharsetScreen.ScreenWidth] );
