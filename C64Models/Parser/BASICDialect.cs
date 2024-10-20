@@ -50,6 +50,7 @@ namespace C64Models.BASIC
     public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
     public bool                             ExtendedTokensRecognizedInsideComment = false;
     public int                              MaxLineNumber = 63999;
+    public bool                             LowerCase = false;
 
     public static Dialect                   BASICV2;
 
@@ -246,6 +247,11 @@ namespace C64Models.BASIC
           else if ( line == "HasTextLabels" )
           {
             dialect.HasTextLabels = true;
+            continue;
+          }
+          else if ( line == "Lowercase" )
+          {
+            dialect.LowerCase = true;
             continue;
           }
           else if ( line == "ExtendedTokensRecognizedInsideComment" )

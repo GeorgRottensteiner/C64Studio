@@ -1191,7 +1191,7 @@ namespace RetroDevStudio.Tasks
         }
 
         // ugly hack to force rebuild -> problem: we do not check output file timestamps if we need to recompile -> can't have build chain with same file in different configs!
-        Core.MainForm.MarkAsDirty( element.DocumentInfo );
+        element.DocumentInfo.MarkAsDirty();
 
         // consolidate build chain and project config pre defines
         //var config = project.Settings.GetConfigurationByName( entry.Config );

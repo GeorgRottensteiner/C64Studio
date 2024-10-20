@@ -164,7 +164,7 @@ namespace RetroDevStudio
       {
         buildChainEntry.PreDefines = editBuildChainDefines.Text;
         Element.DocumentInfo.Project.SetModified();
-        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+        Element.DocumentInfo.MarkAsDirty();
       }
     }
 
@@ -206,7 +206,7 @@ namespace RetroDevStudio
 
           listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
           Element.DocumentInfo.Project.SetModified();
-          Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+          Element.DocumentInfo.MarkAsDirty();
           listBuildChainProjects.Update();
         }
       }
@@ -231,7 +231,7 @@ namespace RetroDevStudio
         listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
 
         Element.DocumentInfo.Project.SetModified();
-        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+        Element.DocumentInfo.MarkAsDirty();
 
         listBuildChainProjects.Update();
       }
@@ -278,7 +278,7 @@ namespace RetroDevStudio
       {
         buildChainEntry.DocumentFilename = newFile;
         Element.DocumentInfo.Project.SetModified();
-        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+        Element.DocumentInfo.MarkAsDirty();
 
         listBuildChainProjects.Invalidate();
       }

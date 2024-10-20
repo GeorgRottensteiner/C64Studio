@@ -12,10 +12,12 @@
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
 #HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+#Lowercase              = starts in lower case
 
 StartAddress=2049
 SafeLineLength=80
 HasTextLabels
+Lowercase
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;

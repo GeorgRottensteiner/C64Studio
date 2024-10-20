@@ -1,4 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC,lowercase
+#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC,lowercase,10,10
 5.SCRLOAD:.DISKERROR
 7IF FF=0 THEN .IMAGE:ELSE .DSPERRNOR
 
@@ -13,3 +13,4 @@
 90PRINT$$240
 100PRINT$$$C000+1000
 110PRINT%%15
+ 

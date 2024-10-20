@@ -124,6 +124,8 @@ namespace RetroDevStudio
       }
     }
 
+
+
     private void btnParseTarget_Click( DecentForms.ControlBase Sender )
     {
       Core.MainForm.EnsureFileIsParsed();
@@ -220,6 +222,7 @@ namespace RetroDevStudio
             depItem.DependencyInfo.IncludeSymbols = false;
           }
           Element.DocumentInfo.Project.SetModified();
+          Element.DocumentInfo.MarkAsDirty();
           listDependencies.Invalidate( hitInfo.Item.Bounds );
         }
         else if ( hitInfo.SubItem == hitInfo.Item.SubItems[3] )
@@ -230,6 +233,7 @@ namespace RetroDevStudio
           {
             depItem.DependencyInfo.IncludeSymbols = !depItem.DependencyInfo.IncludeSymbols;
             Element.DocumentInfo.Project.SetModified();
+            Element.DocumentInfo.MarkAsDirty();
             listDependencies.Invalidate( hitInfo.Item.Bounds );
           }
         }
@@ -243,6 +247,7 @@ namespace RetroDevStudio
       if ( editTargetFilename.Text != Element.TargetFilename )
       {
         Element.DocumentInfo.Project.SetModified();
+        Element.DocumentInfo.MarkAsDirty();
       }
     }
 
@@ -253,6 +258,7 @@ namespace RetroDevStudio
       if ( comboTargetType.SelectedIndex != (int)Element.TargetType )
       {
         Element.DocumentInfo.Project.SetModified();
+        Element.DocumentInfo.MarkAsDirty();
       }
     }
 
@@ -300,6 +306,7 @@ namespace RetroDevStudio
       Element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", relativeFilename, true, false ) );
       listExternalDependencies.Items.Add( relativeFilename );
       Element.DocumentInfo.Project.SetModified();
+      Element.DocumentInfo.MarkAsDirty();
     }
 
 
@@ -313,6 +320,7 @@ namespace RetroDevStudio
       Element.ExternalDependencies.DependentOnFile.RemoveAt( listExternalDependencies.SelectedIndex );
       listExternalDependencies.Items.RemoveAt( listExternalDependencies.SelectedIndex );
       Element.DocumentInfo.Project.SetModified();
+      Element.DocumentInfo.MarkAsDirty();
     }
 
 

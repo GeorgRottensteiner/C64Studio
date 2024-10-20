@@ -279,5 +279,50 @@ namespace RetroDevStudio
       }
     }
 
+
+
+    public void MarkAsDirty()
+    {
+      if ( !HasBeenSuccessfullyBuilt )
+      {
+        return;
+      }
+      HasBeenSuccessfullyBuilt = false;
+
+      if ( Element != null )
+      {
+        foreach ( var dependency in Element.ForcedDependency.DependentOnFile )
+        {
+          ProjectElement elementDependency = Project.GetElementByFilename(dependency.Filename);
+          if ( elementDependency == null )
+          {
+            return;
+          }
+          elementDependency.DocumentInfo.MarkAsDirty();
+        }
+      }
+      if ( Project != null )
+      {
+        lock ( DeducedDependency )
+        {
+          if ( !DeducedDependency.ContainsKey( Project.Settings.CurrentConfig.Name ) )
+          {
+            DeducedDependency.Add( Project.Settings.CurrentConfig.Name, new DependencyBuildState() );
+          }
+          foreach ( var deducedDependency in DeducedDependency[Project.Settings.CurrentConfig.Name].BuildState )
+          {
+            ProjectElement elementDependency = Project.GetElementByFilename(deducedDependency.Key);
+            if ( elementDependency == null )
+            {
+              return;
+            }
+            elementDependency.DocumentInfo.MarkAsDirty();
+          }
+        }
+      }
+    }
+
+
+
   }
 }

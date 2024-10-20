@@ -1458,7 +1458,7 @@ namespace RetroDevStudio
             {
               foreach ( var doc in project.Elements )
               {
-                MarkAsDirty( doc.DocumentInfo );
+                doc.DocumentInfo.MarkAsDirty();
               }
             }
           }
@@ -1466,7 +1466,7 @@ namespace RetroDevStudio
           {
             foreach ( BaseDocument doc in StudioCore.MainForm.panelMain.Documents )
             {
-              MarkAsDirty( doc.DocumentInfo );
+              doc.DocumentInfo.MarkAsDirty();
             }
           }
           break;
@@ -2460,53 +2460,6 @@ namespace RetroDevStudio
 
 
 
-    public void MarkAsDirty( DocumentInfo DocInfo )
-    {
-      if ( DocInfo == null )
-      {
-        return;
-      }
-      if ( !DocInfo.HasBeenSuccessfullyBuilt )
-      {
-        return;
-      }
-      DocInfo.HasBeenSuccessfullyBuilt = false;
-
-      if ( DocInfo.Element != null )
-      {
-        foreach ( var dependency in DocInfo.Element.ForcedDependency.DependentOnFile )
-        {
-          ProjectElement elementDependency = DocInfo.Project.GetElementByFilename(dependency.Filename);
-          if ( elementDependency == null )
-          {
-            return;
-          }
-          MarkAsDirty( elementDependency.DocumentInfo );
-        }
-      }
-      if ( DocInfo.Project != null )
-      {
-        lock ( DocInfo.DeducedDependency )
-        {
-          if ( !DocInfo.DeducedDependency.ContainsKey( DocInfo.Project.Settings.CurrentConfig.Name ) )
-          {
-            DocInfo.DeducedDependency.Add( DocInfo.Project.Settings.CurrentConfig.Name, new DependencyBuildState() );
-          }
-          foreach ( var deducedDependency in DocInfo.DeducedDependency[DocInfo.Project.Settings.CurrentConfig.Name].BuildState )
-          {
-            ProjectElement elementDependency = DocInfo.Project.GetElementByFilename(deducedDependency.Key);
-            if ( elementDependency == null )
-            {
-              return;
-            }
-            MarkAsDirty( elementDependency.DocumentInfo );
-          }
-        }
-      }
-    }
-
-
-
     private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
       StudioCore.TaskManager.AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution, CreatePreProcessedFile, CreateRelocationFile ) );
@@ -2528,7 +2481,7 @@ namespace RetroDevStudio
         return;
       }
 
-      MarkAsDirty( DocInfo );
+      DocInfo.MarkAsDirty();
 
       AppState = Types.StudioState.BUILD;
       StudioCore.Debugging.OverrideDebugStart = -1;
@@ -2558,13 +2511,13 @@ namespace RetroDevStudio
         AppState = Types.StudioState.BUILD_RELOCATION_FILE;
 
         // always build if relocation file is wanted
-        MarkAsDirty( Document );
+        Document.MarkAsDirty();
       }
       else if ( CreatePreProcessedFile )
       {
         AppState = Types.StudioState.BUILD_PRE_PROCESSED_FILE;
         // always build if preprocessed file is wanted
-        MarkAsDirty( Document );
+        Document.MarkAsDirty();
       }
       else
       {

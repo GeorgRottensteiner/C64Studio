@@ -9,6 +9,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Dialogs;
 using System.Reflection;
 using System.Linq;
+using RetroDevStudio.Parser;
 
 
 
@@ -893,7 +894,12 @@ namespace RetroDevStudio.Documents
               {
                 sb.AppendLine( line );
               }
-              document.FillContent( sb.ToString(), false, false );
+              string  insertText = sb.ToString();
+              if ( Dialect.LowerCase )
+              {
+                insertText = BasicFileParser.MakeLowerCase( insertText, Core.Settings.BASICUseNonC64Font );
+              }
+              document.FillContent( insertText, false, false );
             }
           }
         }

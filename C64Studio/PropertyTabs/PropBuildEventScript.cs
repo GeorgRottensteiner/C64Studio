@@ -64,21 +64,21 @@ namespace RetroDevStudio
           if ( Settings.PreBuild != command )
           {
             Settings.PreBuild = command;
-            Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+            Element.DocumentInfo.MarkAsDirty();
           }
           break;
         case ProjectElement.PerConfigSettings.BuildEvent.CUSTOM:
           if ( Settings.CustomBuild != command )
           {
             Settings.CustomBuild = command;
-            Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+            Element.DocumentInfo.MarkAsDirty();
           }
           break;
         case ProjectElement.PerConfigSettings.BuildEvent.POST:
           if ( Settings.PostBuild != command )
           {
             Settings.PostBuild = command;
-            Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+            Element.DocumentInfo.MarkAsDirty();
           }
           break;
       }
