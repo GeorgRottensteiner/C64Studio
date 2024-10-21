@@ -55,7 +55,7 @@ namespace RetroDevStudio.Parser
 
       if ( !DoesMacroExist( macroFunctions, macroKey, out Types.MacroFunctionInfo macro ) )
       {
-        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, $"No matching macro with name {functionName} and {numParams + 1} arguments found", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, $"No matching macro with name {functionName} and {numParams} arguments found", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
       }
       else
       {

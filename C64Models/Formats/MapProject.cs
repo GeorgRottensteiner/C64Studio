@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Collections;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -458,22 +459,37 @@ namespace RetroDevStudio.Formats
       GR.Memory.ByteBuffer tileDataChars = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer tileDataHi = new GR.Memory.ByteBuffer();
 
+      var usedLabels = new Dictionary<string, int>();
+
       foreach ( Formats.MapProject.Tile tile in Tiles )
       {
         tileDataW.AppendU8( (byte)tile.Chars.Width );
         tileDataH.AppendU8( (byte)tile.Chars.Height );
 
+        string    normalizedLabel = NormalizeAsLabel( tile.Name ).ToUpper();
+        if ( usedLabels.ContainsKey( normalizedLabel ) )
+        {
+          int   subIndex = usedLabels[normalizedLabel] + 1;
+
+          usedLabels[normalizedLabel] = subIndex;
+          normalizedLabel += "_" + subIndex;
+        }
+        else
+        {
+          usedLabels.Add( normalizedLabel, 1 );
+        }
+
         sbTileCharLo.Append( DataByteDirective );
-        sbTileCharLo.Append( " <" + LabelPrefix + "TILE_CHAR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
+        sbTileCharLo.AppendLine( " <" + LabelPrefix + "TILE_CHAR_" + normalizedLabel );
         sbTileCharHi.Append( DataByteDirective );
-        sbTileCharHi.Append( " >" + LabelPrefix + "TILE_CHAR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
+        sbTileCharHi.AppendLine( " >" + LabelPrefix + "TILE_CHAR_" + normalizedLabel );
 
         sbTileColorLo.Append( DataByteDirective );
-        sbTileColorLo.Append( " <" + LabelPrefix + "TILE_COLOR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
+        sbTileColorLo.AppendLine( " <" + LabelPrefix + "TILE_COLOR_" + normalizedLabel );
         sbTileColorHi.Append( DataByteDirective );
-        sbTileColorHi.Append( " >" + LabelPrefix + "TILE_COLOR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
+        sbTileColorHi.AppendLine( " >" + LabelPrefix + "TILE_COLOR_" + normalizedLabel );
 
-        sbTileChars.Append( LabelPrefix + "TILE_CHAR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
+        sbTileChars.AppendLine( LabelPrefix + "TILE_CHAR_" + normalizedLabel );
 
         var tileCharData = new GR.Memory.ByteBuffer();
         for ( int j = 0; j < tile.Chars.Height; ++j )
@@ -486,7 +502,7 @@ namespace RetroDevStudio.Formats
         sbTileChars.AppendLine( Util.ToASMData( tileCharData, WrapData, WrapByteCount, DataByteDirective ) );
 
 
-        sbTileColors.Append( LabelPrefix + "TILE_COLOR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
+        sbTileColors.AppendLine( LabelPrefix + "TILE_COLOR_" + normalizedLabel );
 
         var tileColorData = new GR.Memory.ByteBuffer();
         for ( int j = 0; j < tile.Chars.Height; ++j )
@@ -609,12 +625,28 @@ namespace RetroDevStudio.Formats
 
       var sb = new StringBuilder();
 
+      var usedLabels = new Dictionary<string, int>();
+
       string  prefix = NormalizeAsLabel( LabelPrefix );
       for ( int i = 0; i < Tiles.Count; ++i )
       {
         sb.Append( prefix );
         sb.Append( "TILE_NAME_" );
-        sb.Append( NormalizeAsLabel( Tiles[i].Name ).ToUpper() );
+
+        string    normalizedLabel = NormalizeAsLabel( Tiles[i].Name ).ToUpper();
+        if ( usedLabels.ContainsKey( normalizedLabel ) )
+        {
+          int   subIndex = usedLabels[normalizedLabel] + 1;
+
+          usedLabels[normalizedLabel] = subIndex;
+          normalizedLabel += "_" + subIndex;
+        }
+        else
+        {
+          usedLabels.Add( normalizedLabel, 1 );
+        }
+
+        sb.Append( normalizedLabel );
         sb.Append( "=" );
         sb.Append( i );
         sb.AppendLine();
