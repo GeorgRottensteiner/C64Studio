@@ -93,7 +93,9 @@ namespace RetroDevStudio.Parser
         }
         else
         {
+          _ParseContext.DoNotAddReferences = true;
           EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 0, 1, out SymbolInfo originalValue );
+          _ParseContext.DoNotAddReferences = false;
 
           if ( !HandleAssignmentOperator( _ParseContext.LineIndex, lineTokenInfos, originalValue, operatorToken, addressSymbol, out SymbolInfo resultingValue ) )
           {

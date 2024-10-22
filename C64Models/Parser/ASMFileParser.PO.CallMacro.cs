@@ -68,7 +68,7 @@ namespace RetroDevStudio.Parser
 
         if ( !_ParseContext.DoNotAddReferences )
         {
-          functionInfo.Symbol.References.Add( lineIndex, new SymbolReference() { GlobalLineIndex = lineIndex, TokenInfo = lineTokenInfos[0] } );
+          functionInfo.Symbol.AddReference( lineIndex, lineTokenInfos[0] );
         }
 
         for ( int i = 1; i < lineTokenInfos.Count; ++i )

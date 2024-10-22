@@ -310,6 +310,7 @@ namespace RetroDevStudio.Parser
       tempInfo.Info       = Info;
       tempInfo.CharIndex  = CharIndex;
       tempInfo.Length     = Length;
+      tempInfo.Symbol.AddReference( LineIndex, new TokenInfo() { StartPos = CharIndex, Length = Length } );
 
       m_ASMFileInfo.TempLabelInfo.Add( tempInfo );
 
@@ -677,7 +678,7 @@ namespace RetroDevStudio.Parser
       }
       else
       {
-        if ( ( m_ASMFileInfo.Labels[Name] != Value )
+        if ( ( m_ASMFileInfo.Labels[Name].AddressOrValue != Value.AddressOrValue )
         ||   ( m_ASMFileInfo.Labels[Name].Type != Value.Type ) )
         {
           if ( Name != "*" )
@@ -711,7 +712,18 @@ namespace RetroDevStudio.Parser
             return;
           }
         }
-        m_ASMFileInfo.Labels[Name] = Value;
+        // a duplicate entry?
+        //m_ASMFileInfo.Labels[Name] = Value;
+        var token = new TokenInfo()
+        {
+          StartPos = CharIndex,
+          Length = Length
+        };
+
+        if ( !_ParseContext.DoNotAddReferences )
+        {
+          m_ASMFileInfo.Labels[Name].AddReference( Value.LineIndex, token );
+        }
       }
     }
 
