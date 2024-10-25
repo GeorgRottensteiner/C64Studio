@@ -31,7 +31,6 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +57,7 @@
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.panelColorChooser = new System.Windows.Forms.Panel();
       this.comboCharlistLayout = new System.Windows.Forms.ComboBox();
       this.btnPaste = new DecentForms.Button();
       this.btnCopy = new DecentForms.Button();
@@ -67,7 +67,6 @@
       this.btnShiftRight = new DecentForms.Button();
       this.btnShiftLeft = new DecentForms.Button();
       this.btnClearScreen = new DecentForms.Button();
-      this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       this.checkShowGrid = new DecentForms.CheckBox();
       this.checkReverse = new DecentForms.CheckBox();
       this.checkAutoCenter = new DecentForms.CheckBox();
@@ -89,17 +88,8 @@
       this.screenVScroll = new DecentForms.VScrollBar();
       this.screenHScroll = new DecentForms.HScrollBar();
       this.label7 = new System.Windows.Forms.Label();
-      this.labelBGColor4 = new System.Windows.Forms.Label();
-      this.labelMColor2 = new System.Windows.Forms.Label();
-      this.labelMColor1 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
-      this.labelBGColor = new System.Windows.Forms.Label();
+      this.labelCharPanelLayout = new System.Windows.Forms.Label();
       this.panelCharacters = new GR.Forms.ImageListbox();
-      this.comboBGColor4 = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor1 = new System.Windows.Forms.ComboBox();
-      this.comboBackground = new System.Windows.Forms.ComboBox();
-      this.panelCharColors = new GR.Forms.FastPictureBox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabCharset = new System.Windows.Forms.TabPage();
@@ -114,7 +104,6 @@
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
       this.tabEditor.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharset.SuspendLayout();
@@ -195,6 +184,11 @@
       // 
       // btnExport
       // 
+      this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExport.Image = null;
       this.btnExport.Location = new System.Drawing.Point(370, 118);
       this.btnExport.Name = "btnExport";
       this.btnExport.Size = new System.Drawing.Size(75, 21);
@@ -376,6 +370,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.panelColorChooser);
       this.tabEditor.Controls.Add(this.comboCharlistLayout);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
@@ -385,7 +380,6 @@
       this.tabEditor.Controls.Add(this.btnShiftRight);
       this.tabEditor.Controls.Add(this.btnShiftLeft);
       this.tabEditor.Controls.Add(this.btnClearScreen);
-      this.tabEditor.Controls.Add(this.checkOverrideOriginalColorSettings);
       this.tabEditor.Controls.Add(this.checkShowGrid);
       this.tabEditor.Controls.Add(this.checkReverse);
       this.tabEditor.Controls.Add(this.checkAutoCenter);
@@ -407,17 +401,8 @@
       this.tabEditor.Controls.Add(this.screenVScroll);
       this.tabEditor.Controls.Add(this.screenHScroll);
       this.tabEditor.Controls.Add(this.label7);
-      this.tabEditor.Controls.Add(this.labelBGColor4);
-      this.tabEditor.Controls.Add(this.labelMColor2);
-      this.tabEditor.Controls.Add(this.labelMColor1);
-      this.tabEditor.Controls.Add(this.label1);
-      this.tabEditor.Controls.Add(this.labelBGColor);
+      this.tabEditor.Controls.Add(this.labelCharPanelLayout);
       this.tabEditor.Controls.Add(this.panelCharacters);
-      this.tabEditor.Controls.Add(this.comboBGColor4);
-      this.tabEditor.Controls.Add(this.comboMulticolor2);
-      this.tabEditor.Controls.Add(this.comboMulticolor1);
-      this.tabEditor.Controls.Add(this.comboBackground);
-      this.tabEditor.Controls.Add(this.panelCharColors);
       this.tabEditor.Controls.Add(this.pictureEditor);
       this.tabEditor.ImageKey = "(none)";
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
@@ -428,11 +413,18 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // panelColorChooser
+      // 
+      this.panelColorChooser.Location = new System.Drawing.Point(680, 380);
+      this.panelColorChooser.Name = "panelColorChooser";
+      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
+      this.panelColorChooser.TabIndex = 50;
+      // 
       // comboCharlistLayout
       // 
       this.comboCharlistLayout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCharlistLayout.FormattingEnabled = true;
-      this.comboCharlistLayout.Location = new System.Drawing.Point(726, 442);
+      this.comboCharlistLayout.Location = new System.Drawing.Point(726, 353);
       this.comboCharlistLayout.Name = "comboCharlistLayout";
       this.comboCharlistLayout.Size = new System.Drawing.Size(211, 21);
       this.comboCharlistLayout.TabIndex = 49;
@@ -440,6 +432,10 @@
       // 
       // btnPaste
       // 
+      this.btnPaste.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnPaste.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnPaste.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnPaste.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnPaste.Enabled = false;
       this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
       this.btnPaste.Location = new System.Drawing.Point(198, 460);
@@ -451,6 +447,10 @@
       // 
       // btnCopy
       // 
+      this.btnCopy.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCopy.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnCopy.Enabled = false;
       this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
       this.btnCopy.Location = new System.Drawing.Point(168, 460);
@@ -462,7 +462,7 @@
       // 
       // editCharOffset
       // 
-      this.editCharOffset.Location = new System.Drawing.Point(897, 35);
+      this.editCharOffset.Location = new System.Drawing.Point(751, 61);
       this.editCharOffset.Name = "editCharOffset";
       this.editCharOffset.Size = new System.Drawing.Size(70, 20);
       this.editCharOffset.TabIndex = 18;
@@ -470,6 +470,10 @@
       // 
       // btnShiftDown
       // 
+      this.btnShiftDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
       this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
       this.btnShiftDown.Name = "btnShiftDown";
@@ -480,6 +484,10 @@
       // 
       // btnShiftUp
       // 
+      this.btnShiftUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
       this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
       this.btnShiftUp.Name = "btnShiftUp";
@@ -490,6 +498,10 @@
       // 
       // btnShiftRight
       // 
+      this.btnShiftRight.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftRight.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftRight.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
       this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
       this.btnShiftRight.Name = "btnShiftRight";
@@ -500,6 +512,10 @@
       // 
       // btnShiftLeft
       // 
+      this.btnShiftLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
       this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
       this.btnShiftLeft.Name = "btnShiftLeft";
@@ -510,6 +526,10 @@
       // 
       // btnClearScreen
       // 
+      this.btnClearScreen.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnClearScreen.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClearScreen.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClearScreen.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
       this.btnClearScreen.Location = new System.Drawing.Point(8, 460);
       this.btnClearScreen.Name = "btnClearScreen";
@@ -518,20 +538,13 @@
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
       this.btnClearScreen.Click += new DecentForms.EventHandler(this.btnClearScreen_Click);
       // 
-      // checkOverrideOriginalColorSettings
-      // 
-      this.checkOverrideOriginalColorSettings.AutoSize = true;
-      this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(751, 37);
-      this.checkOverrideOriginalColorSettings.Name = "checkOverrideOriginalColorSettings";
-      this.checkOverrideOriginalColorSettings.Size = new System.Drawing.Size(96, 17);
-      this.checkOverrideOriginalColorSettings.TabIndex = 17;
-      this.checkOverrideOriginalColorSettings.Text = "Override Mode";
-      this.checkOverrideOriginalColorSettings.UseVisualStyleBackColor = true;
-      this.checkOverrideOriginalColorSettings.CheckedChanged += new System.EventHandler(this.checkOverrideMode_CheckedChanged);
-      // 
       // checkShowGrid
       // 
-      this.checkShowGrid.AutoSize = true;
+      this.checkShowGrid.Appearance = System.Windows.Forms.Appearance.Normal;
+      this.checkShowGrid.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkShowGrid.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.checkShowGrid.Checked = false;
+      this.checkShowGrid.Image = null;
       this.checkShowGrid.Location = new System.Drawing.Point(258, 462);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
@@ -542,7 +555,10 @@
       // checkReverse
       // 
       this.checkReverse.Appearance = System.Windows.Forms.Appearance.Button;
-      this.checkReverse.Image = global::RetroDevStudio.Properties.Resources.charscreen_reverse_off;
+      this.checkReverse.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkReverse.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.checkReverse.Checked = false;
+      this.checkReverse.Image = ((System.Drawing.Image)(resources.GetObject("checkReverse.Image")));
       this.checkReverse.Location = new System.Drawing.Point(228, 432);
       this.checkReverse.Name = "checkReverse";
       this.checkReverse.Size = new System.Drawing.Size(24, 24);
@@ -553,6 +569,9 @@
       // checkAutoCenter
       // 
       this.checkAutoCenter.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkAutoCenter.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkAutoCenter.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.checkAutoCenter.Checked = false;
       this.checkAutoCenter.Image = ((System.Drawing.Image)(resources.GetObject("checkAutoCenter.Image")));
       this.checkAutoCenter.Location = new System.Drawing.Point(258, 432);
       this.checkAutoCenter.Name = "checkAutoCenter";
@@ -564,8 +583,10 @@
       // checkApplyColors
       // 
       this.checkApplyColors.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkApplyColors.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkApplyColors.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
       this.checkApplyColors.Checked = true;
-      this.checkApplyColors.Image = global::RetroDevStudio.Properties.Resources.charscreen_colors;
+      this.checkApplyColors.Image = ((System.Drawing.Image)(resources.GetObject("checkApplyColors.Image")));
       this.checkApplyColors.Location = new System.Drawing.Point(198, 432);
       this.checkApplyColors.Name = "checkApplyColors";
       this.checkApplyColors.Size = new System.Drawing.Size(24, 24);
@@ -576,8 +597,10 @@
       // checkApplyCharacter
       // 
       this.checkApplyCharacter.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkApplyCharacter.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkApplyCharacter.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
       this.checkApplyCharacter.Checked = true;
-      this.checkApplyCharacter.Image = global::RetroDevStudio.Properties.Resources.charscreen_chars;
+      this.checkApplyCharacter.Image = ((System.Drawing.Image)(resources.GetObject("checkApplyCharacter.Image")));
       this.checkApplyCharacter.Location = new System.Drawing.Point(168, 432);
       this.checkApplyCharacter.Name = "checkApplyCharacter";
       this.checkApplyCharacter.Size = new System.Drawing.Size(24, 24);
@@ -588,7 +611,7 @@
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(853, 38);
+      this.label10.Location = new System.Drawing.Point(677, 64);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(38, 13);
       this.label10.TabIndex = 35;
@@ -615,7 +638,7 @@
       // 
       // labelInfo
       // 
-      this.labelInfo.Location = new System.Drawing.Point(337, 438);
+      this.labelInfo.Location = new System.Drawing.Point(339, 432);
       this.labelInfo.Name = "labelInfo";
       this.labelInfo.Size = new System.Drawing.Size(315, 74);
       this.labelInfo.TabIndex = 33;
@@ -624,6 +647,9 @@
       // btnToolText
       // 
       this.btnToolText.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolText.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolText.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolText.Checked = false;
       this.btnToolText.Image = ((System.Drawing.Image)(resources.GetObject("btnToolText.Image")));
       this.btnToolText.Location = new System.Drawing.Point(128, 432);
       this.btnToolText.Name = "btnToolText";
@@ -635,7 +661,10 @@
       // btnToolSelect
       // 
       this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolSelect.Image = global::RetroDevStudio.Properties.Resources.tool_select;
+      this.btnToolSelect.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolSelect.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolSelect.Checked = false;
+      this.btnToolSelect.Image = ((System.Drawing.Image)(resources.GetObject("btnToolSelect.Image")));
       this.btnToolSelect.Location = new System.Drawing.Point(104, 432);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
@@ -646,7 +675,10 @@
       // btnToolFill
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
+      this.btnToolFill.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolFill.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolFill.Checked = false;
+      this.btnToolFill.Image = ((System.Drawing.Image)(resources.GetObject("btnToolFill.Image")));
       this.btnToolFill.Location = new System.Drawing.Point(80, 432);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
@@ -657,7 +689,10 @@
       // btnToolQuad
       // 
       this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolQuad.Image = global::RetroDevStudio.Properties.Resources.tool_quad;
+      this.btnToolQuad.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolQuad.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolQuad.Checked = false;
+      this.btnToolQuad.Image = ((System.Drawing.Image)(resources.GetObject("btnToolQuad.Image")));
       this.btnToolQuad.Location = new System.Drawing.Point(56, 432);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
@@ -668,7 +703,10 @@
       // btnToolRect
       // 
       this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolRect.Image = global::RetroDevStudio.Properties.Resources.tool_rect;
+      this.btnToolRect.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolRect.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToolRect.Checked = false;
+      this.btnToolRect.Image = ((System.Drawing.Image)(resources.GetObject("btnToolRect.Image")));
       this.btnToolRect.Location = new System.Drawing.Point(32, 432);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
@@ -679,19 +717,25 @@
       // btnToolEdit
       // 
       this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolEdit.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToolEdit.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
       this.btnToolEdit.Checked = true;
-      this.btnToolEdit.Image = global::RetroDevStudio.Properties.Resources.tool_none;
+      this.btnToolEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnToolEdit.Image")));
       this.btnToolEdit.Location = new System.Drawing.Point(8, 432);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
       this.btnToolEdit.TabIndex = 0;
-      this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
       this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
       // btnApplyScreenSize
       // 
-      this.btnApplyScreenSize.Location = new System.Drawing.Point(897, 114);
+      this.btnApplyScreenSize.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnApplyScreenSize.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnApplyScreenSize.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnApplyScreenSize.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnApplyScreenSize.Image = null;
+      this.btnApplyScreenSize.Location = new System.Drawing.Point(897, 35);
       this.btnApplyScreenSize.Name = "btnApplyScreenSize";
       this.btnApplyScreenSize.Size = new System.Drawing.Size(67, 20);
       this.btnApplyScreenSize.TabIndex = 25;
@@ -700,7 +744,7 @@
       // 
       // editScreenHeight
       // 
-      this.editScreenHeight.Location = new System.Drawing.Point(830, 114);
+      this.editScreenHeight.Location = new System.Drawing.Point(830, 35);
       this.editScreenHeight.Name = "editScreenHeight";
       this.editScreenHeight.Size = new System.Drawing.Size(61, 20);
       this.editScreenHeight.TabIndex = 24;
@@ -708,7 +752,7 @@
       // 
       // editScreenWidth
       // 
-      this.editScreenWidth.Location = new System.Drawing.Point(751, 114);
+      this.editScreenWidth.Location = new System.Drawing.Point(751, 35);
       this.editScreenWidth.Name = "editScreenWidth";
       this.editScreenWidth.Size = new System.Drawing.Size(70, 20);
       this.editScreenWidth.TabIndex = 23;
@@ -716,73 +760,51 @@
       // 
       // screenVScroll
       // 
+      this.screenVScroll.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.screenVScroll.DisplayType = DecentForms.ScrollBar.SBDisplayType.RAISED;
+      this.screenVScroll.LargeChange = 10;
       this.screenVScroll.Location = new System.Drawing.Point(655, 6);
+      this.screenVScroll.Maximum = 100;
+      this.screenVScroll.Minimum = 0;
       this.screenVScroll.Name = "screenVScroll";
       this.screenVScroll.Size = new System.Drawing.Size(16, 404);
+      this.screenVScroll.SmallChange = 1;
       this.screenVScroll.TabIndex = 0;
+      this.screenVScroll.Value = 0;
       this.screenVScroll.Scroll += new DecentForms.EventHandler(this.screenVScroll_Scroll);
       // 
       // screenHScroll
       // 
+      this.screenHScroll.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.screenHScroll.DisplayType = DecentForms.ScrollBar.SBDisplayType.RAISED;
+      this.screenHScroll.LargeChange = 10;
       this.screenHScroll.Location = new System.Drawing.Point(8, 413);
+      this.screenHScroll.Maximum = 100;
+      this.screenHScroll.Minimum = 0;
       this.screenHScroll.Name = "screenHScroll";
       this.screenHScroll.Size = new System.Drawing.Size(644, 16);
+      this.screenHScroll.SmallChange = 1;
       this.screenHScroll.TabIndex = 1;
+      this.screenHScroll.Value = 0;
       this.screenHScroll.Scroll += new DecentForms.EventHandler(this.screenHScroll_Scroll);
       // 
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(677, 117);
+      this.label7.Location = new System.Drawing.Point(677, 38);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(30, 13);
       this.label7.TabIndex = 22;
       this.label7.Text = "Size:";
       // 
-      // labelBGColor4
+      // labelCharPanelLayout
       // 
-      this.labelBGColor4.AutoSize = true;
-      this.labelBGColor4.Location = new System.Drawing.Point(677, 90);
-      this.labelBGColor4.Name = "labelBGColor4";
-      this.labelBGColor4.Size = new System.Drawing.Size(58, 13);
-      this.labelBGColor4.TabIndex = 22;
-      this.labelBGColor4.Text = "BGColor 4:";
-      // 
-      // labelMColor2
-      // 
-      this.labelMColor2.AutoSize = true;
-      this.labelMColor2.Location = new System.Drawing.Point(827, 90);
-      this.labelMColor2.Name = "labelMColor2";
-      this.labelMColor2.Size = new System.Drawing.Size(64, 13);
-      this.labelMColor2.TabIndex = 22;
-      this.labelMColor2.Text = "Multicolor 2:";
-      // 
-      // labelMColor1
-      // 
-      this.labelMColor1.AutoSize = true;
-      this.labelMColor1.Location = new System.Drawing.Point(827, 63);
-      this.labelMColor1.Name = "labelMColor1";
-      this.labelMColor1.Size = new System.Drawing.Size(64, 13);
-      this.labelMColor1.TabIndex = 22;
-      this.labelMColor1.Text = "Multicolor 1:";
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(677, 445);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(42, 13);
-      this.label1.TabIndex = 22;
-      this.label1.Text = "Layout:";
-      // 
-      // labelBGColor
-      // 
-      this.labelBGColor.AutoSize = true;
-      this.labelBGColor.Location = new System.Drawing.Point(677, 63);
-      this.labelBGColor.Name = "labelBGColor";
-      this.labelBGColor.Size = new System.Drawing.Size(68, 13);
-      this.labelBGColor.TabIndex = 22;
-      this.labelBGColor.Text = "Background:";
+      this.labelCharPanelLayout.AutoSize = true;
+      this.labelCharPanelLayout.Location = new System.Drawing.Point(677, 356);
+      this.labelCharPanelLayout.Name = "labelCharPanelLayout";
+      this.labelCharPanelLayout.Size = new System.Drawing.Size(42, 13);
+      this.labelCharPanelLayout.TabIndex = 22;
+      this.labelCharPanelLayout.Text = "Layout:";
       // 
       // panelCharacters
       // 
@@ -800,7 +822,7 @@
       this.panelCharacters.HottrackColor = ((uint)(2151694591u));
       this.panelCharacters.ItemHeight = 8;
       this.panelCharacters.ItemWidth = 8;
-      this.panelCharacters.Location = new System.Drawing.Point(677, 150);
+      this.panelCharacters.Location = new System.Drawing.Point(677, 87);
       this.panelCharacters.Name = "panelCharacters";
       this.panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelCharacters.SelectedIndex = -1;
@@ -811,74 +833,11 @@
       this.panelCharacters.VisibleAutoScrollVertical = false;
       this.panelCharacters.SelectedIndexChanged += new System.EventHandler(this.panelCharacters_SelectedIndexChanged);
       // 
-      // comboBGColor4
-      // 
-      this.comboBGColor4.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBGColor4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBGColor4.FormattingEnabled = true;
-      this.comboBGColor4.Location = new System.Drawing.Point(751, 87);
-      this.comboBGColor4.Name = "comboBGColor4";
-      this.comboBGColor4.Size = new System.Drawing.Size(70, 21);
-      this.comboBGColor4.TabIndex = 21;
-      this.comboBGColor4.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBGColor4.SelectedIndexChanged += new System.EventHandler(this.comboBGColor4_SelectedIndexChanged);
-      // 
-      // comboMulticolor2
-      // 
-      this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(897, 87);
-      this.comboMulticolor2.Name = "comboMulticolor2";
-      this.comboMulticolor2.Size = new System.Drawing.Size(70, 21);
-      this.comboMulticolor2.TabIndex = 22;
-      this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
-      // 
-      // comboMulticolor1
-      // 
-      this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(897, 60);
-      this.comboMulticolor1.Name = "comboMulticolor1";
-      this.comboMulticolor1.Size = new System.Drawing.Size(70, 21);
-      this.comboMulticolor1.TabIndex = 20;
-      this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
-      // 
-      // comboBackground
-      // 
-      this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(751, 60);
-      this.comboBackground.Name = "comboBackground";
-      this.comboBackground.Size = new System.Drawing.Size(70, 21);
-      this.comboBackground.TabIndex = 19;
-      this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
-      // 
-      // panelCharColors
-      // 
-      this.panelCharColors.AutoResize = false;
-      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
-      this.panelCharColors.Image = null;
-      this.panelCharColors.Location = new System.Drawing.Point(677, 416);
-      this.panelCharColors.Name = "panelCharColors";
-      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
-      this.panelCharColors.TabIndex = 0;
-      this.panelCharColors.TabStop = false;
-      this.panelCharColors.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.panelCharColors_PostPaint);
-      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureCharColor_MouseDown);
-      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureCharColor_MouseMove);
-      // 
       // pictureEditor
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage1;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -951,6 +910,11 @@
       // 
       // btnImport
       // 
+      this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImport.Image = null;
       this.btnImport.Location = new System.Drawing.Point(342, 5);
       this.btnImport.Name = "btnImport";
       this.btnImport.Size = new System.Drawing.Size(75, 21);
@@ -992,7 +956,6 @@
       this.tabProject.PerformLayout();
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabCharsetEditor.ResumeLayout(false);
       this.tabCharset.ResumeLayout(false);
@@ -1016,10 +979,6 @@
     private GR.Forms.FastPictureBox pictureEditor;
     private System.Windows.Forms.TabControl tabCharsetEditor;
     private GR.Forms.ImageListbox panelCharacters;
-    private GR.Forms.FastPictureBox panelCharColors;
-    private System.Windows.Forms.Label labelMColor2;
-    private System.Windows.Forms.Label labelMColor1;
-    private System.Windows.Forms.Label labelBGColor;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.ComboBox comboExportData;
     private DecentForms.VScrollBar screenVScroll;
@@ -1046,13 +1005,11 @@
     private System.Windows.Forms.TextBox editAreaWidth;
     private System.Windows.Forms.Label labelAreaWidth;
     private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.Label labelBGColor4;
     private DecentForms.CheckBox checkApplyCharacter;
     private DecentForms.CheckBox checkApplyColors;
     private DecentForms.RadioButton btnToolText;
     private DecentForms.CheckBox checkShowGrid;
     private System.Windows.Forms.TabPage tabCharset;
-    private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
     private DecentForms.CheckBox checkAutoCenter;
     private DecentForms.CheckBox checkReverse;
         private Controls.CharacterEditor charEditor;
@@ -1076,12 +1033,9 @@
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Panel panelImport;
-    public System.Windows.Forms.ComboBox comboBackground;
-    public System.Windows.Forms.ComboBox comboMulticolor2;
-    public System.Windows.Forms.ComboBox comboMulticolor1;
-    public System.Windows.Forms.ComboBox comboBGColor4;
     public System.Windows.Forms.ComboBox comboCharsetMode;
         private System.Windows.Forms.ComboBox comboCharlistLayout;
-        private System.Windows.Forms.Label label1;
-    }
+        private System.Windows.Forms.Label labelCharPanelLayout;
+    private System.Windows.Forms.Panel panelColorChooser;
+  }
 }

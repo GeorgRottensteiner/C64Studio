@@ -372,11 +372,13 @@ namespace RetroDevStudio
       {
         return null;
       }
+      Debug.Log( $"persistString = {persistString}" );
 
       foreach ( var toolEntry in Tools )
       {
         if ( persistString == toolEntry.Value.ToolDescription )
         {
+          Debug.Log( $"--found as actual tool" );
           return toolEntry.Value.Document;
         }
       }
@@ -390,10 +392,12 @@ namespace RetroDevStudio
             view.Text = "Memory View";
             view.Hide();
 
+            Debug.Log( $"--found as additional memory view" );
+
             return view;
           }
       }
-      //Debug.Log( "persist doc not found for " + persistString );
+      Debug.Log( "persist doc not found for " + persistString );
       return null;
     }
 
@@ -978,6 +982,12 @@ namespace RetroDevStudio
         Data = Data.SubBuffer( 3 );
       }
 
+      /*
+      var layout = System.Text.Encoding.UTF8.GetString( Data.Data() );
+      layout = layout.Replace( "PersistString=\"\"", "PersistString=\"DummyContent\"" );
+      Data = new ByteBuffer( System.Text.Encoding.UTF8.GetBytes( layout ) );
+      */
+
       System.IO.MemoryStream    memIn = new System.IO.MemoryStream( Data.Data(), false );
 
       //var layout = System.Text.Encoding.UTF8.GetString( Data.Data() );
@@ -990,6 +1000,7 @@ namespace RetroDevStudio
       catch ( Exception ex )
       {
         Debug.Log( "SetLayoutFromData: " + ex.ToString() );
+        Debug.Log( Data.ToAsciiString() );
       }
 
       memIn.Close();

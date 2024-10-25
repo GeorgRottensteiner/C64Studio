@@ -43,6 +43,27 @@ namespace RetroDevStudio.Undo
 
 
 
+    public UndoCharscreenCharChange( CharsetScreenProject Project, CharsetScreenEditor Editor, System.Drawing.Rectangle Area )
+    {
+      X           = Area.X;
+      Y           = Area.Y;
+      Width       = Area.Width;
+      Height      = Area.Height;
+      this.Editor = Editor;
+      this.Project = Project;
+
+      ChangedData.Resize( Width, Height );
+
+      for ( int i = 0; i < Width; ++i )
+      {
+        for ( int j = 0; j < Height; ++j )
+        {
+          ChangedData[i, j] = Project.Chars[X + i + ( Y + j ) * Project.ScreenWidth];
+        }
+      }
+    }
+
+
 
     public override string Description
     {

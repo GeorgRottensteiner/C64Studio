@@ -104,10 +104,6 @@ namespace RetroDevStudio.Controls
           map.TileSpacingY = cpProject.TileHeight;
           mapProject.Maps.Add( map );
 
-          Editor.comboBackground.SelectedIndex = mapProject.Charset.Colors.BackgroundColor;
-          Editor.comboMulticolor1.SelectedIndex = mapProject.Charset.Colors.MultiColor1;
-          Editor.comboMulticolor2.SelectedIndex = mapProject.Charset.Colors.MultiColor2;
-          Editor.comboBGColor4.SelectedIndex = mapProject.Charset.Colors.BGColor4;
           Editor.comboCharsetMode.SelectedIndex = (int)cpProject.DisplayModeFile;
 
           GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );

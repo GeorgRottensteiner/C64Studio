@@ -460,11 +460,41 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModePETConvTab()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $3000
+                                      !ct pet
+                                      !text ""ABCabc123"" ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0030C1C2C3414243313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModeRaw()
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $5000
                                       !raw ""ABCabc123""";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0050414243616263313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestTextModeRawConvTab()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $5000
+                                      !ct raw
+                                      !text""ABCabc123""";
 
       var assembly = TestAssemble( source );
 
@@ -493,6 +523,21 @@ namespace TestProject
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $4000
                                       !scr ""ABCabc123""";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0040414243010203313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestTextModeScreenConvTab()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $4000
+                                      !ct scr
+                                      !text ""ABCabc123""";
 
       var assembly = TestAssemble( source );
 

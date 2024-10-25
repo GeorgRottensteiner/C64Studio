@@ -1864,7 +1864,10 @@ namespace RetroDevStudio
             tool.Visible[m_ActivePerspective] = tool.MenuItem.Checked;
             if ( tool.MenuItem.Checked )
             {
-              tool.Document.Show( panelMain );
+              if ( !tool.Document.Visible )
+              {
+                tool.Document.Show( panelMain );
+              }
             }
             else
             {

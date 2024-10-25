@@ -39,11 +39,13 @@ namespace RetroDevStudio.Parser
 
       // removed line text code mapping from here
       // TODO - WHY??
+      var origMapping = _ParseContext.CurrentTextMapping;
       _ParseContext.CurrentTextMapping = new Map<byte, byte>();
 
       _ParseContext.DuringExpressionEvaluation = true;
       List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
       _ParseContext.DuringExpressionEvaluation = false;
+      _ParseContext.CurrentTextMapping = origMapping;
 
       if ( defineName == "*" )
       {
