@@ -425,8 +425,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DockPanelSuite" Version="3.1.0" />
-    <PackageReference Include="DockPanelSuite.ThemeVS2005" Version="3.1.0" />
+    <PackageReference Include="DockPanelSuite" Version="3.1.1" />
+    <PackageReference Include="DockPanelSuite.ThemeVS2005" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FastColoredTextBox\FastColoredTextBox.csproj">

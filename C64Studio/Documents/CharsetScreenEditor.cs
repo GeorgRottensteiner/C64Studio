@@ -606,8 +606,8 @@ namespace RetroDevStudio.Documents
 
       pointsToCheck.Add( new System.Drawing.Point( X, Y ) );
 
-      uint charToFill = m_CharsetScreen.Chars[X + m_CharsetScreen.ScreenWidth * Y];
-      uint charToInsert = (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) );
+      uint charToFill   = m_CharsetScreen.CompleteCharAt( X, Y );
+      uint charToInsert = m_CharsetScreen.AssembleChar( m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
       if ( charToFill == charToInsert )
       {
         return;
@@ -615,39 +615,52 @@ namespace RetroDevStudio.Documents
 
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
+      // for NES style filling to work we need to remember the original positions and replant later
+      var changedChars = new List<System.Drawing.Point>();
+
       while ( pointsToCheck.Count != 0 )
       {
         System.Drawing.Point    point = pointsToCheck[pointsToCheck.Count - 1];
         pointsToCheck.RemoveAt( pointsToCheck.Count - 1 );
 
-        if ( m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * point.Y] != charToInsert )
+        if ( m_CharsetScreen.CompleteCharAt( point.X, point.Y ) != charToInsert )
         {
           DrawCharImage( m_Image, point.X * m_CharacterWidth, point.Y * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
-          DrawCharImage( pictureEditor.DisplayPage, ( point.X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( point.Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
-
-          m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * point.Y] = charToInsert;
+          m_CharsetScreen.SetCompleteCharAt( point.X, point.Y, charToInsert );
+          changedChars.Add( point );
 
           if ( ( point.X > 0 )
-          && ( m_CharsetScreen.Chars[point.X - 1 + m_CharsetScreen.ScreenWidth * point.Y] == charToFill ) )
+          &&   ( m_CharsetScreen.CompleteCharAt( point.X - 1, point.Y ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X - 1, point.Y ) );
           }
           if ( ( point.X + 1 < m_CharsetScreen.ScreenWidth )
-          && ( m_CharsetScreen.Chars[point.X + 1 + m_CharsetScreen.ScreenWidth * point.Y] == charToFill ) )
+          &&   ( m_CharsetScreen.CompleteCharAt( point.X + 1, point.Y ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X + 1, point.Y ) );
           }
           if ( ( point.Y > 0 )
-          && ( m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * ( point.Y - 1 )] == charToFill ) )
+          &&   ( m_CharsetScreen.CompleteCharAt( point.X, point.Y - 1 ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y - 1 ) );
           }
           if ( ( point.Y + 1 < m_CharsetScreen.ScreenHeight )
-          && ( m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * ( point.Y + 1 )] == charToFill ) )
+          &&   ( m_CharsetScreen.CompleteCharAt( point.X, point.Y + 1 ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y + 1 ) );
           }
         }
+      }
+      // for NES this fixes the 2x2 block palette mapping
+      if ( m_CharsetScreen.Mode == TextMode.NES )
+      {
+        foreach ( var point in changedChars )
+        {
+          // two times to force a change
+          SetCharacter( point.X, point.Y, m_CurrentChar, m_CurrentColor, ( m_CurrentPaletteMapping + 1 ) % 4 );
+          SetCharacter( point.X, point.Y, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
+        }
+        RedrawFullScreen();
       }
       Modified = true;
       Redraw();
@@ -977,13 +990,7 @@ namespace RetroDevStudio.Documents
               m_MouseButtonReleased = false;
 
               SetCharacter( charX, charY );
-              pictureEditor.DisplayPage.DrawTo( m_Image,
-                                                affectedArea.X * m_CharacterWidth, affectedArea.Y * m_CharacterHeight,
-                                                ( affectedArea.X - m_CharsetScreen.ScreenOffsetX ) * affectedArea.Width * m_CharacterWidth, 
-                                                ( affectedArea.Y - m_CharsetScreen.ScreenOffsetY ) * affectedArea.Height * m_CharacterHeight,
-                                                m_CharacterWidth * affectedArea.Width, m_CharacterHeight * affectedArea.Height );
-
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( X, Y, m_CharacterWidth, m_CharacterHeight ) );
+              UpdateArea( affectedArea.X, affectedArea.Y, affectedArea.Width, affectedArea.Height );
               Modified = true;
             }
             break;
@@ -1240,8 +1247,8 @@ namespace RetroDevStudio.Documents
         {
           for ( int j = 0; j < 2; ++j )
           {
-            if ( ( xx == X )
-            &&   ( yy == Y ) )
+            if ( ( xx + i == X )
+            &&   ( yy + j == Y ) )
             {
               continue;
             }
@@ -2679,6 +2686,10 @@ namespace RetroDevStudio.Documents
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
         m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
+        if ( m_CharsetScreen.Mode != TextMode.NES )
+        {
+          m_CurrentPaletteMapping = 0;
+        }
 
         SetupColorChooserDialog();
 

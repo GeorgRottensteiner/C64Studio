@@ -5079,6 +5079,8 @@ namespace RetroDevStudio.Parser
         info.Accu16Bit                = _ParseContext.Assume16BitAccu;
         info.Registers16Bit           = _ParseContext.Assume16BitRegisters;
 
+        Debug.Log( $"Line {lineIndex}, Mapping {_ParseContext.CurrentTextMapping.Count}" );
+
         if ( !ScopeInsideMacroDefinition() )
         {
           // do not store code inside a macro definition

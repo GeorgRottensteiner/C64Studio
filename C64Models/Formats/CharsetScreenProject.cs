@@ -170,6 +170,22 @@ namespace RetroDevStudio.Formats
 
 
 
+    public uint CompleteCharAt( int X, int Y )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight )
+      ||   ( Mode != TextMode.NES ) )
+      {
+        return 0;
+      }
+
+      return Chars[Y * ScreenWidth + X];
+    }
+
+
+
     public bool SetCharacterAt( int X, int Y, ushort CharValue )
     {
       if ( ( X < 0 )
@@ -207,6 +223,22 @@ namespace RetroDevStudio.Formats
         Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
       }
 
+      return true;
+    }
+
+
+
+    public bool SetCompleteCharAt( int X, int Y, uint CompleteCharValue )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight ) )
+      {
+        return false;
+      }
+
+      Chars[Y * ScreenWidth + X] = CompleteCharValue;
       return true;
     }
 
@@ -480,6 +512,17 @@ namespace RetroDevStudio.Formats
 
       return true;
         
+    }
+
+
+
+    public uint AssembleChar( ushort Char, ushort Color, int PaletteMappingIndex )
+    {
+      if ( Mode == TextMode.NES )
+      {
+        return (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
+      }
+      return (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)Color << 16 ) );
     }
 
 
