@@ -45,7 +45,6 @@ namespace RetroDevStudio.Parser
       _ParseContext.DuringExpressionEvaluation = true;
       List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
       _ParseContext.DuringExpressionEvaluation = false;
-      _ParseContext.CurrentTextMapping = origMapping;
 
       if ( defineName == "*" )
       {
@@ -61,6 +60,7 @@ namespace RetroDevStudio.Parser
         }
         if ( !EvaluateTokens( _ParseContext.LineIndex, tokens, out SymbolInfo newStepPosSymbol ) )
         {
+          _ParseContext.CurrentTextMapping = origMapping;
           AddError( _ParseContext.LineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           return ParseLineResult.ERROR_ABORT;
         }
@@ -68,6 +68,7 @@ namespace RetroDevStudio.Parser
         var origPos = CreateIntegerSymbol( programStepPos );
         if ( !HandleAssignmentOperator( _ParseContext.LineIndex, lineTokenInfos, origPos, operatorToken, newStepPosSymbol, out SymbolInfo resultingValue ) )
         {
+          _ParseContext.CurrentTextMapping = origMapping;
           return ParseLineResult.ERROR_ABORT;
         }
 
@@ -81,6 +82,7 @@ namespace RetroDevStudio.Parser
       {
         if ( ScopeInsideMacroDefinition() )
         {
+          _ParseContext.CurrentTextMapping = origMapping;
           return ParseLineResult.CALL_CONTINUE;
         }
 
@@ -88,6 +90,7 @@ namespace RetroDevStudio.Parser
         {
           if ( !IsPlainAssignment( operatorToken ) )
           {
+            _ParseContext.CurrentTextMapping = origMapping;
             AddError( _ParseContext.LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Assignment operators must be solvable in one pass" );
             return ParseLineResult.ERROR_ABORT;
           }
@@ -101,6 +104,7 @@ namespace RetroDevStudio.Parser
 
           if ( !HandleAssignmentOperator( _ParseContext.LineIndex, lineTokenInfos, originalValue, operatorToken, addressSymbol, out SymbolInfo resultingValue ) )
           {
+            _ParseContext.CurrentTextMapping = origMapping;
             return ParseLineResult.ERROR_ABORT;
           }
 
@@ -120,6 +124,7 @@ namespace RetroDevStudio.Parser
         }
       }
       m_CurrentCommentSB = new StringBuilder();
+      _ParseContext.CurrentTextMapping = origMapping;
 
       return ParseLineResult.CALL_CONTINUE;
     }

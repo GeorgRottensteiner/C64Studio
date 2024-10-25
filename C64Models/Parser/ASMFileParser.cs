@@ -2945,12 +2945,6 @@ namespace RetroDevStudio.Parser
         &&     ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y ) ) )
         &&     ( !EvaluateTokens( lineIndex, NeededParsedExpression, out value ) ) )
         {
-          /*
-          if ( HasError() )
-          {
-            Debug.Log( $"LineIndex {lineIndex}, could not evaluate " + TokensToExpression( NeededParsedExpression ) + $" from {NeededParsedExpression[0].StartPos} to {NeededParsedExpression[NeededParsedExpression.Count - 1].EndPos}" );
-          }*/
-
           if ( !HasError() )
           {
             Debug.Log( "EvaluateTokens failed without error info!" );
@@ -5090,8 +5084,6 @@ namespace RetroDevStudio.Parser
         info.HideInPreprocessedOutput = hideInPreprocessedOutput;
         info.Accu16Bit                = _ParseContext.Assume16BitAccu;
         info.Registers16Bit           = _ParseContext.Assume16BitRegisters;
-
-        Debug.Log( $"Line {lineIndex}, Mapping {_ParseContext.CurrentTextMapping.Count}" );
 
         if ( !ScopeInsideMacroDefinition() )
         {

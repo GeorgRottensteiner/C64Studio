@@ -379,6 +379,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $2000
+                                      A = 3
                                       !text ""ABCabc123""";
 
       var assembly = TestAssemble( source );
@@ -393,6 +394,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $4000
+                                      A = 3
                                       !scrxor 0,""ABCabc123""
                                       !scrxor $55,""ABCabc123"" ";
 
@@ -408,6 +410,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $2000
+                                      A = 3
                                       !text ""ABCabc123{clr}""";
 
       var assembly = TestAssemble( source );
@@ -422,6 +425,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $3000
+                                      A = 3
                                       !pet ""ABCabc123"" ";
 
       var assembly = TestAssemble( source );
@@ -436,6 +440,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $3000
+                                      A = 3
                                       !pet ""abc"",""$""+$80";
 
       var assembly = TestAssemble( source );
@@ -450,6 +455,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $3000
+                                      A = 3
                                       !pet ""{clr}ABCabc123"" ";
 
       var assembly = TestAssemble( source );
@@ -464,6 +470,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $3000
+                                      A = 3
                                       !ct pet
                                       !text ""ABCabc123"" ";
 
@@ -479,6 +486,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $5000
+                                      A = 3
                                       !raw ""ABCabc123""";
 
       var assembly = TestAssemble( source );
@@ -493,6 +501,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $5000
+                                      A = 3
                                       !ct raw
                                       !text""ABCabc123""";
 
@@ -508,6 +517,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $5000
+                                      A = 3
                                       !raw ""ABC{clr}abc123""";
 
       var assembly = TestAssemble( source );
@@ -522,6 +532,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $4000
+                                A = 3
                                       !scr ""ABCabc123""";
 
       var assembly = TestAssemble( source );
@@ -536,6 +547,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $4000
+                                  A = 3
                                       !ct scr
                                       !text ""ABCabc123""";
 
@@ -551,6 +563,7 @@ namespace TestProject
     {
       string      source = @"!to ""text-modes.prg"",cbm
                               * = $4000
+                                      A = 3
                                       !scr ""ABCabc{clr}123""";
 
       var assembly = TestAssemble( source );
