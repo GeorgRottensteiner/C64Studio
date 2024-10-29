@@ -895,11 +895,12 @@ namespace RetroDevStudio.Documents
                 sb.AppendLine( line );
               }
               string  insertText = sb.ToString();
+              document.FillContent( insertText, false, false );
               if ( Dialect.LowerCase )
               {
-                insertText = BasicFileParser.MakeLowerCase( insertText, Core.Settings.BASICUseNonC64Font );
+                //insertText = BasicFileParser.MakeLowerCase( insertText, Core.Settings.BASICUseNonC64Font );
+                document.SetLowerCase();
               }
-              document.FillContent( insertText, false, false );
             }
           }
         }

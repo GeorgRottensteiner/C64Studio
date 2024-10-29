@@ -2975,5 +2975,15 @@ namespace RetroDevStudio.Documents
 
 
 
+    public void SetLowerCase()
+    {
+      if ( !m_LowerCaseMode )
+      {
+        ToggleCase();
+      }
+    }
+
+
+
   }
 }
