@@ -372,13 +372,13 @@ namespace RetroDevStudio
       {
         return null;
       }
-      Debug.Log( $"persistString = {persistString}" );
+      //Debug.Log( $"persistString = {persistString}" );
 
       foreach ( var toolEntry in Tools )
       {
         if ( persistString == toolEntry.Value.ToolDescription )
         {
-          Debug.Log( $"--found as actual tool" );
+          //Debug.Log( $"--found as actual tool" );
           return toolEntry.Value.Document;
         }
       }
@@ -392,12 +392,12 @@ namespace RetroDevStudio
             view.Text = "Memory View";
             view.Hide();
 
-            Debug.Log( $"--found as additional memory view" );
+            //Debug.Log( $"--found as additional memory view" );
 
             return view;
           }
       }
-      Debug.Log( "persist doc not found for " + persistString );
+      //Debug.Log( "persist doc not found for " + persistString );
       return null;
     }
 

@@ -15,20 +15,20 @@ using GR.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorChooserNES : ColorChooserBase
+  public partial class ColorPickerNES : ColorPickerBase
   {
     private List<FastPictureBox>    _Palettes = new List<FastPictureBox>();
 
 
 
-    public ColorChooserNES() :
+    public ColorPickerNES() :
       base( null, null, 0, 1 )
     { 
     }
 
 
 
-    public ColorChooserNES( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
+    public ColorPickerNES( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
       base( Core, Charset, CurrentChar, CustomColor )
     {
       _Charset = Charset;

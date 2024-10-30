@@ -1,7 +1,7 @@
 ﻿
 namespace RetroDevStudio.Controls
 {
-  partial class ColorChooserCommodore
+  partial class ColorPickerCommodore
   {
     /// <summary> 
     /// Required designer variable.

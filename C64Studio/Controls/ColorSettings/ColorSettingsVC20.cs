@@ -108,7 +108,7 @@ namespace RetroDevStudio.Controls
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core?.Theming.DrawMultiColorComboBox( combo, e, Colors.Palette );
+      Core?.Theming.DrawVC20ColorComboBox( combo, e, Colors.Palette );
     }
 
 

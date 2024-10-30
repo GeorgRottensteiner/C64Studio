@@ -20,7 +20,9 @@ namespace RetroDevStudio.Formats
       [Description( "Mega65 FCM Charset" )]
       MEGA65_FCM_CHARSET,
       [Description( "Mega65 FCM 16bit Charset" )]
-      MEGA65_FCM_CHARSET_16BIT
+      MEGA65_FCM_CHARSET_16BIT,
+      [Description( "VIC20 Charset" )]
+      VIC20_CHARSET,
     };
 
     public enum ColorMappingTarget

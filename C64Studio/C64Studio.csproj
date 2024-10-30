@@ -20,13 +20,25 @@
     <Compile Update="Controls\ColorChooser\ColorChooserBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorChooser\ColorChooserNES.cs">
+    <Compile Update="Controls\ColorChooser\ColorChooserCommodoreHiRes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorChooser\ColorChooserX16.cs">
+    <Compile Update="Controls\ColorChooser\ColorChooserCommodoreVIC20.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorChooser\ColorChooserCommodore.cs">
+    <Compile Update="Controls\ColorChooser\ColorChooserCommodoreMultiColor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPicker\ColorPickerBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPicker\ColorPickerNES.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPicker\ColorPickerX16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPicker\ColorPickerCommodore.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">

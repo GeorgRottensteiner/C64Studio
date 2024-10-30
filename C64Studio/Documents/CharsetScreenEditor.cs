@@ -93,7 +93,7 @@ namespace RetroDevStudio.Documents
     private ExportCharscreenFormBase    m_ExportForm = null;
     private ImportCharscreenFormBase    m_ImportForm = null;
 
-    private ColorChooserBase            _ColorChooserDlg = null;
+    private ColorPickerBase            _ColorChooserDlg = null;
 
     private Dictionary<Control,int>     m_ControlsToTheRight = new Dictionary<Control, int>();
     private Dictionary<Control,int>     m_ControlsBelow = new Dictionary<Control, int>();
@@ -2153,7 +2153,7 @@ namespace RetroDevStudio.Documents
       }
       pictureEditor.Invalidate();
 
-      RedrawColorChooser();
+      SetupColorChooserDialog();
     }
 
 
@@ -2765,13 +2765,13 @@ namespace RetroDevStudio.Documents
       switch ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
       {
         case TextCharMode.X16_HIRES:
-          _ColorChooserDlg = new ColorChooserX16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _ColorChooserDlg = new ColorPickerX16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.NES:
-          _ColorChooserDlg = new ColorChooserNES( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _ColorChooserDlg = new ColorPickerNES( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         default:
-          _ColorChooserDlg = new ColorChooserCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _ColorChooserDlg = new ColorPickerCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
       }
       _ColorChooserDlg.SelectedColorChanged += _ColorChooserDlg_SelectedColorChanged;
@@ -2819,6 +2819,9 @@ namespace RetroDevStudio.Documents
         case TextMode.X16_80_X_60:
           // these modes adapt aspect ratio!
           displaySize = new Size( Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode ) * 8, Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode ) * 8 );
+          break;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          displaySize = new Size( 176, 184 );
           break;
         default:
           // all others use 16:10 (do they?)

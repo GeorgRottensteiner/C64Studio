@@ -12,16 +12,16 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorChooserCommodore : ColorChooserBase
+  public partial class ColorPickerCommodore : ColorPickerBase
   {
-    public ColorChooserCommodore() :
+    public ColorPickerCommodore() :
       base( null, null, 0, 1 )
     { 
     }
 
 
 
-    public ColorChooserCommodore( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
+    public ColorPickerCommodore( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
       base( Core, Charset, CurrentChar, CustomColor )
     {
       _Charset = Charset;

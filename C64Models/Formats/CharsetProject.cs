@@ -28,10 +28,10 @@ namespace RetroDevStudio.Formats
       CharData copy = new CharData();
 
       copy.Tile = new GraphicTile( Tile );
-      copy.Category = Category;
-      copy.Replacement = Replacement;
-      copy.Error = Error;
-      copy.Index = Index;
+      copy.Category     = Category;
+      copy.Replacement  = Replacement;
+      copy.Error        = Error;
+      copy.Index        = Index;
       return copy;
     }
   }

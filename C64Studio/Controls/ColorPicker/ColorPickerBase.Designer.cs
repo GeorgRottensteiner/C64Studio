@@ -1,7 +1,7 @@
 ﻿
 namespace RetroDevStudio.Controls
 {
-  partial class ColorChooserBase
+  partial class ColorPickerBase
   {
     /// <summary> 
     /// Required designer variable.
@@ -36,7 +36,7 @@ namespace RetroDevStudio.Controls
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Name = "ColorChooserBase";
-      this.Size = new System.Drawing.Size(176, 185);
+      this.Size = new System.Drawing.Size(280, 120);
       this.ResumeLayout(false);
 
     }

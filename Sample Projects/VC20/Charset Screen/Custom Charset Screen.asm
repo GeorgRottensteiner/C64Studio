@@ -33,4 +33,4 @@
 
 
 SCREEN_DATA
-          !media "VC20 - Text Screen.charscreen",CHARCOLOR
+          !media "Text Screen.charscreen",CHARCOLOR

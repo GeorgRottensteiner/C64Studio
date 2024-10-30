@@ -1,4 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC
+#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC,lowercase,10,10
 10REM DUP
 2001SPRITES=5 
 2002SPITAL=6

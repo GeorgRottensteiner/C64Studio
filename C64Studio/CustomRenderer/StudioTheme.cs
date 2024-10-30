@@ -397,5 +397,42 @@ namespace RetroDevStudio.CustomRenderer
       }
     }
 
+
+
+    public void DrawVC20ColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
+    {
+      e.DrawBackground();
+      if ( e.Index == -1 )
+      {
+        return;
+      }
+
+      int offset = (int)e.Graphics.MeasureString( "22 MC", Combo.Font ).Width + 3;
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, e.Bounds.Width - offset, e.Bounds.Height );
+
+
+      if ( e.Index < Pal.ColorBrushes.Length )
+      {
+        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index % 8], itemRect );
+      }
+      string  text = ( e.Index % 8 ).ToString( "D2" );
+      if ( e.Index >= 8 )
+      {
+        text += " MC";
+      }
+      if ( ( e.State & DrawItemState.Disabled ) != 0 )
+      {
+        e.Graphics.DrawString( text, Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+      else if ( ( e.State & DrawItemState.Selected ) != 0 )
+      {
+        e.Graphics.DrawString( text, Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+      else
+      {
+        e.Graphics.DrawString( text, Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+    }
+
   }
 }

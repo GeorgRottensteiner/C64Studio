@@ -18,55 +18,23 @@ namespace RetroDevStudio.Controls
   {
     public StudioCore                   Core = null;
 
-    private ushort                      _SelectedColor = 1;
-    private ushort                      _SelectedChar = 0;
     private int                         _SelectedPaletteMapping = 0;
 
-    protected CharsetProject            _Charset = null;
+    protected ColorSettings             _Colors = null;
 
 
 
     public delegate void PaletteMappingSelectedHandler( int PaletteMapping );
-    public delegate void ColorSelectedHandler( ushort Color );
+    public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors );
 
     public event PaletteMappingSelectedHandler  PaletteMappingSelected;
-    public event ColorSelectedHandler           SelectedColorChanged;
+    public event ColorsModifiedHandler          ColorsModified;
 
 
 
     public virtual int PaletteOffset
     {
       get; set;
-    }
-
-
-
-    public ushort SelectedColor
-    {
-      get
-      {
-        return _SelectedColor;
-      }
-      set
-      {
-        _SelectedColor = value;
-        Redraw();
-      }
-    }
-
-
-
-    public ushort SelectedChar
-    {
-      get
-      {
-        return _SelectedChar;
-      }
-      set
-      {
-        _SelectedChar = value;
-        Redraw();
-      }
     }
 
 
@@ -93,23 +61,27 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorChooserBase( StudioCore Core, CharsetProject Charset, ushort SelectedChar, byte SelectedColor )
+    public ColorChooserBase( StudioCore Core, ColorSettings Colors )
     {
-      this.Core         = Core;
-      _Charset          = Charset;  
-      _SelectedColor    = SelectedColor;
-      _SelectedChar     = SelectedChar;
+      this.Core   = Core;
+      _Colors     = Colors;  
 
       InitializeComponent();
     }
 
 
 
-    protected void RaiseColorSelectedEvent()
+    public virtual void ColorChanged( ColorType Color, int Value )
     {
-      if ( SelectedColorChanged != null )
+    }
+
+
+
+    protected void RaiseColorsModifiedEvent( ColorType Color )
+    {
+      if ( ColorsModified != null )
       {
-        SelectedColorChanged( _SelectedColor );
+        ColorsModified( Color, _Colors );
       }
     }
 

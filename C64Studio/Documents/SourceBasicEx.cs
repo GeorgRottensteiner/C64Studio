@@ -237,12 +237,11 @@ namespace RetroDevStudio.Documents
         hasInvalidCharsInUppercase |= !BasicFileParser.IsValidChar( true, c );
       }
 
-      if ( ( hasInvalidCharsInLowercase )
-      ||   ( hasInvalidCharsInUppercase )
-      ||   ( ( m_LowerCaseMode )
-      &&     ( hasUppercase ) )
+      if ( ( ( m_LowerCaseMode )
+      &&     ( hasInvalidCharsInLowercase ) )
       ||   ( ( !m_LowerCaseMode )
-      &&     ( hasLowercase ) ) )
+      &&     ( ( hasInvalidCharsInUppercase ) 
+      ||       ( hasLowercase ) ) ) )
       {
         // we need clarification
         var dlgPasteBASIC = new DlgImportBASICTextAdjustment( !m_LowerCaseMode, hasUppercase, hasLowercase, hasInvalidCharsInUppercase, hasInvalidCharsInLowercase, Core );

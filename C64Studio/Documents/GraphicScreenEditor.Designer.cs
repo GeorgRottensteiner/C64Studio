@@ -30,9 +30,9 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +65,7 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.panelColorSettings = new System.Windows.Forms.Panel();
       this.btnZoomOut = new DecentForms.Button();
       this.btnZoomIn = new DecentForms.Button();
       this.btnClearScreen = new DecentForms.Button();
@@ -76,10 +77,6 @@
       this.btnToolLineDrag = new DecentForms.RadioButton();
       this.btnToolLine = new DecentForms.RadioButton();
       this.btnToolPaint = new DecentForms.RadioButton();
-      this.label9 = new System.Windows.Forms.Label();
-      this.label8 = new System.Windows.Forms.Label();
-      this.label6 = new System.Windows.Forms.Label();
-      this.label5 = new System.Windows.Forms.Label();
       this.btnApplyScreenSize = new DecentForms.Button();
       this.editScreenHeight = new System.Windows.Forms.TextBox();
       this.editScreenWidth = new System.Windows.Forms.TextBox();
@@ -102,11 +99,6 @@
       this.btnPasteFromClipboard = new DecentForms.Button();
       this.labelCursorInfo = new System.Windows.Forms.Label();
       this.labelCharInfo = new System.Windows.Forms.Label();
-      this.checkMulticolor = new System.Windows.Forms.CheckBox();
-      this.comboCharColor = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor1 = new System.Windows.Forms.ComboBox();
-      this.comboBackground = new System.Windows.Forms.ComboBox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabGraphicScreenEditor = new System.Windows.Forms.TabControl();
       this.tabColorMapping = new System.Windows.Forms.TabPage();
@@ -136,7 +128,7 @@
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(964, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(988, 24);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -180,7 +172,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(956, 502);
+      this.tabProject.Size = new System.Drawing.Size(980, 502);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -485,6 +477,12 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.comboCheckType);
+      this.tabEditor.Controls.Add(this.btnCheck);
+      this.tabEditor.Controls.Add(this.labelCharInfo);
+      this.tabEditor.Controls.Add(this.panelColorSettings);
+      this.tabEditor.Controls.Add(this.colorSelector);
+      this.tabEditor.Controls.Add(this.charEditor);
       this.tabEditor.Controls.Add(this.btnZoomOut);
       this.tabEditor.Controls.Add(this.btnZoomIn);
       this.tabEditor.Controls.Add(this.btnClearScreen);
@@ -496,45 +494,38 @@
       this.tabEditor.Controls.Add(this.btnToolLineDrag);
       this.tabEditor.Controls.Add(this.btnToolLine);
       this.tabEditor.Controls.Add(this.btnToolPaint);
-      this.tabEditor.Controls.Add(this.label9);
-      this.tabEditor.Controls.Add(this.label8);
-      this.tabEditor.Controls.Add(this.label6);
-      this.tabEditor.Controls.Add(this.label5);
       this.tabEditor.Controls.Add(this.btnApplyScreenSize);
       this.tabEditor.Controls.Add(this.editScreenHeight);
       this.tabEditor.Controls.Add(this.editScreenWidth);
       this.tabEditor.Controls.Add(this.label7);
       this.tabEditor.Controls.Add(this.screenVScroll);
       this.tabEditor.Controls.Add(this.screenHScroll);
-      this.tabEditor.Controls.Add(this.comboCheckType);
       this.tabEditor.Controls.Add(this.btnMirrorY);
       this.tabEditor.Controls.Add(this.btnMirrorX);
       this.tabEditor.Controls.Add(this.btnShiftDown);
       this.tabEditor.Controls.Add(this.btnShiftUp);
       this.tabEditor.Controls.Add(this.btnShiftRight);
       this.tabEditor.Controls.Add(this.btnShiftLeft);
-      this.tabEditor.Controls.Add(this.colorSelector);
-      this.tabEditor.Controls.Add(this.charEditor);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
-      this.tabEditor.Controls.Add(this.btnCheck);
       this.tabEditor.Controls.Add(this.btnFullCopy);
       this.tabEditor.Controls.Add(this.btnPasteFromClipboard);
       this.tabEditor.Controls.Add(this.labelCursorInfo);
-      this.tabEditor.Controls.Add(this.labelCharInfo);
-      this.tabEditor.Controls.Add(this.checkMulticolor);
-      this.tabEditor.Controls.Add(this.comboCharColor);
-      this.tabEditor.Controls.Add(this.comboMulticolor2);
-      this.tabEditor.Controls.Add(this.comboMulticolor1);
-      this.tabEditor.Controls.Add(this.comboBackground);
       this.tabEditor.Controls.Add(this.pictureEditor);
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(956, 502);
+      this.tabEditor.Size = new System.Drawing.Size(980, 534);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // panelColorSettings
+      // 
+      this.panelColorSettings.Location = new System.Drawing.Point(677, 303);
+      this.panelColorSettings.Name = "panelColorSettings";
+      this.panelColorSettings.Size = new System.Drawing.Size(231, 186);
+      this.panelColorSettings.TabIndex = 42;
       // 
       // btnZoomOut
       // 
@@ -544,9 +535,9 @@
       this.btnZoomOut.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnZoomOut.Enabled = false;
       this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
-      this.btnZoomOut.Location = new System.Drawing.Point(251, 438);
+      this.btnZoomOut.Location = new System.Drawing.Point(244, 438);
       this.btnZoomOut.Name = "btnZoomOut";
-      this.btnZoomOut.Size = new System.Drawing.Size(26, 26);
+      this.btnZoomOut.Size = new System.Drawing.Size(24, 24);
       this.btnZoomOut.TabIndex = 8;
       this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out");
       this.btnZoomOut.Click += new DecentForms.EventHandler(this.btnZoomOut_Click);
@@ -558,9 +549,9 @@
       this.btnZoomIn.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnZoomIn.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
-      this.btnZoomIn.Location = new System.Drawing.Point(219, 438);
+      this.btnZoomIn.Location = new System.Drawing.Point(220, 438);
       this.btnZoomIn.Name = "btnZoomIn";
-      this.btnZoomIn.Size = new System.Drawing.Size(26, 26);
+      this.btnZoomIn.Size = new System.Drawing.Size(24, 24);
       this.btnZoomIn.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In");
       this.btnZoomIn.Click += new DecentForms.EventHandler(this.btnZoomIn_Click);
@@ -574,7 +565,7 @@
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
       this.btnClearScreen.Location = new System.Drawing.Point(73, 469);
       this.btnClearScreen.Name = "btnClearScreen";
-      this.btnClearScreen.Size = new System.Drawing.Size(26, 26);
+      this.btnClearScreen.Size = new System.Drawing.Size(24, 24);
       this.btnClearScreen.TabIndex = 41;
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
       this.btnClearScreen.Click += new DecentForms.EventHandler(this.btnClearScreen_Click);
@@ -690,42 +681,6 @@
       this.toolTip1.SetToolTip(this.btnToolPaint, "Single Pixel");
       this.btnToolPaint.CheckedChanged += new DecentForms.EventHandler(this.btnToolPaint_CheckedChanged);
       // 
-      // label9
-      // 
-      this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(681, 90);
-      this.label9.Name = "label9";
-      this.label9.Size = new System.Drawing.Size(69, 13);
-      this.label9.TabIndex = 35;
-      this.label9.Text = "Custom Color";
-      // 
-      // label8
-      // 
-      this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(680, 63);
-      this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(61, 13);
-      this.label8.TabIndex = 35;
-      this.label8.Text = "Multicolor 2";
-      // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(680, 36);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(61, 13);
-      this.label6.TabIndex = 35;
-      this.label6.Text = "Multicolor 1";
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(681, 9);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(65, 13);
-      this.label5.TabIndex = 35;
-      this.label5.Text = "Background";
-      // 
       // btnApplyScreenSize
       // 
       this.btnApplyScreenSize.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -733,9 +688,9 @@
       this.btnApplyScreenSize.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnApplyScreenSize.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnApplyScreenSize.Image = null;
-      this.btnApplyScreenSize.Location = new System.Drawing.Point(893, 120);
+      this.btnApplyScreenSize.Location = new System.Drawing.Point(411, 469);
       this.btnApplyScreenSize.Name = "btnApplyScreenSize";
-      this.btnApplyScreenSize.Size = new System.Drawing.Size(50, 20);
+      this.btnApplyScreenSize.Size = new System.Drawing.Size(50, 24);
       this.btnApplyScreenSize.TabIndex = 34;
       this.btnApplyScreenSize.Text = "Apply";
       this.toolTip1.SetToolTip(this.btnApplyScreenSize, "Apply new size");
@@ -743,7 +698,7 @@
       // 
       // editScreenHeight
       // 
-      this.editScreenHeight.Location = new System.Drawing.Point(846, 118);
+      this.editScreenHeight.Location = new System.Drawing.Point(368, 473);
       this.editScreenHeight.Name = "editScreenHeight";
       this.editScreenHeight.Size = new System.Drawing.Size(37, 20);
       this.editScreenHeight.TabIndex = 33;
@@ -751,7 +706,7 @@
       // 
       // editScreenWidth
       // 
-      this.editScreenWidth.Location = new System.Drawing.Point(803, 118);
+      this.editScreenWidth.Location = new System.Drawing.Point(325, 473);
       this.editScreenWidth.Name = "editScreenWidth";
       this.editScreenWidth.Size = new System.Drawing.Size(37, 20);
       this.editScreenWidth.TabIndex = 32;
@@ -760,7 +715,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(767, 121);
+      this.label7.Location = new System.Drawing.Point(289, 476);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(30, 13);
       this.label7.TabIndex = 31;
@@ -800,9 +755,9 @@
       // 
       this.comboCheckType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCheckType.FormattingEnabled = true;
-      this.comboCheckType.Location = new System.Drawing.Point(377, 473);
+      this.comboCheckType.Location = new System.Drawing.Point(81, 501);
       this.comboCheckType.Name = "comboCheckType";
-      this.comboCheckType.Size = new System.Drawing.Size(100, 21);
+      this.comboCheckType.Size = new System.Drawing.Size(193, 21);
       this.comboCheckType.TabIndex = 21;
       this.comboCheckType.SelectedIndexChanged += new System.EventHandler(this.comboCheckType_SelectedIndexChanged);
       // 
@@ -813,9 +768,9 @@
       this.btnMirrorY.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnMirrorY.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
-      this.btnMirrorY.Location = new System.Drawing.Point(844, 438);
+      this.btnMirrorY.Location = new System.Drawing.Point(388, 438);
       this.btnMirrorY.Name = "btnMirrorY";
-      this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
+      this.btnMirrorY.Size = new System.Drawing.Size(24, 24);
       this.btnMirrorY.TabIndex = 18;
       this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Vertically");
       this.btnMirrorY.Click += new DecentForms.EventHandler(this.btnMirrorY_Click);
@@ -827,9 +782,9 @@
       this.btnMirrorX.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnMirrorX.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
-      this.btnMirrorX.Location = new System.Drawing.Point(812, 438);
+      this.btnMirrorX.Location = new System.Drawing.Point(364, 438);
       this.btnMirrorX.Name = "btnMirrorX";
-      this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
+      this.btnMirrorX.Size = new System.Drawing.Size(24, 24);
       this.btnMirrorX.TabIndex = 19;
       this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror Horizontally");
       this.btnMirrorX.Click += new DecentForms.EventHandler(this.btnMirrorX_Click);
@@ -841,9 +796,9 @@
       this.btnShiftDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnShiftDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
-      this.btnShiftDown.Location = new System.Drawing.Point(780, 438);
+      this.btnShiftDown.Location = new System.Drawing.Point(340, 438);
       this.btnShiftDown.Name = "btnShiftDown";
-      this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
+      this.btnShiftDown.Size = new System.Drawing.Size(24, 24);
       this.btnShiftDown.TabIndex = 20;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
@@ -855,9 +810,9 @@
       this.btnShiftUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnShiftUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
-      this.btnShiftUp.Location = new System.Drawing.Point(748, 438);
+      this.btnShiftUp.Location = new System.Drawing.Point(316, 438);
       this.btnShiftUp.Name = "btnShiftUp";
-      this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
+      this.btnShiftUp.Size = new System.Drawing.Size(24, 24);
       this.btnShiftUp.TabIndex = 15;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift up");
       this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
@@ -869,9 +824,9 @@
       this.btnShiftRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnShiftRight.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
-      this.btnShiftRight.Location = new System.Drawing.Point(716, 438);
+      this.btnShiftRight.Location = new System.Drawing.Point(292, 438);
       this.btnShiftRight.Name = "btnShiftRight";
-      this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
+      this.btnShiftRight.Size = new System.Drawing.Size(24, 24);
       this.btnShiftRight.TabIndex = 16;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift right");
       this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
@@ -883,9 +838,9 @@
       this.btnShiftLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnShiftLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
-      this.btnShiftLeft.Location = new System.Drawing.Point(684, 438);
+      this.btnShiftLeft.Location = new System.Drawing.Point(268, 438);
       this.btnShiftLeft.Name = "btnShiftLeft";
-      this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
+      this.btnShiftLeft.Size = new System.Drawing.Size(24, 24);
       this.btnShiftLeft.TabIndex = 17;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift left");
       this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
@@ -894,9 +849,9 @@
       // 
       this.colorSelector.AutoResize = false;
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage1;
+      this.colorSelector.DisplayPage = fastImage4;
       this.colorSelector.Image = null;
-      this.colorSelector.Location = new System.Drawing.Point(683, 413);
+      this.colorSelector.Location = new System.Drawing.Point(677, 272);
       this.colorSelector.Name = "colorSelector";
       this.colorSelector.Size = new System.Drawing.Size(260, 19);
       this.colorSelector.TabIndex = 14;
@@ -908,9 +863,9 @@
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage2;
+      this.charEditor.DisplayPage = fastImage5;
       this.charEditor.Image = null;
-      this.charEditor.Location = new System.Drawing.Point(683, 148);
+      this.charEditor.Location = new System.Drawing.Point(677, 6);
       this.charEditor.Name = "charEditor";
       this.charEditor.Size = new System.Drawing.Size(260, 260);
       this.charEditor.TabIndex = 14;
@@ -927,7 +882,7 @@
       this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
       this.btnPaste.Location = new System.Drawing.Point(41, 469);
       this.btnPaste.Name = "btnPaste";
-      this.btnPaste.Size = new System.Drawing.Size(26, 26);
+      this.btnPaste.Size = new System.Drawing.Size(24, 24);
       this.btnPaste.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnPaste, "Paste at selected location");
       this.btnPaste.Click += new DecentForms.EventHandler(this.btnPaste_Click);
@@ -941,7 +896,7 @@
       this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
       this.btnCopy.Location = new System.Drawing.Point(9, 469);
       this.btnCopy.Name = "btnCopy";
-      this.btnCopy.Size = new System.Drawing.Size(26, 26);
+      this.btnCopy.Size = new System.Drawing.Size(24, 24);
       this.btnCopy.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy selected 8x8 block");
       this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
@@ -953,7 +908,7 @@
       this.btnCheck.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCheck.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnCheck.Image = null;
-      this.btnCheck.Location = new System.Drawing.Point(304, 471);
+      this.btnCheck.Location = new System.Drawing.Point(8, 499);
       this.btnCheck.Name = "btnCheck";
       this.btnCheck.Size = new System.Drawing.Size(67, 23);
       this.btnCheck.TabIndex = 6;
@@ -967,9 +922,9 @@
       this.btnFullCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnFullCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnFullCopy.Image = null;
-      this.btnFullCopy.Location = new System.Drawing.Point(117, 470);
+      this.btnFullCopy.Location = new System.Drawing.Point(104, 469);
       this.btnFullCopy.Name = "btnFullCopy";
-      this.btnFullCopy.Size = new System.Drawing.Size(80, 23);
+      this.btnFullCopy.Size = new System.Drawing.Size(80, 24);
       this.btnFullCopy.TabIndex = 6;
       this.btnFullCopy.Text = "Full Copy";
       this.toolTip1.SetToolTip(this.btnFullCopy, "Copy Full Screen");
@@ -982,9 +937,9 @@
       this.btnPasteFromClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnPasteFromClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnPasteFromClipboard.Image = null;
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(203, 470);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(190, 469);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
-      this.btnPasteFromClipboard.Size = new System.Drawing.Size(84, 23);
+      this.btnPasteFromClipboard.Size = new System.Drawing.Size(84, 24);
       this.btnPasteFromClipboard.TabIndex = 6;
       this.btnPasteFromClipboard.Text = "Full Paste";
       this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Full Screen");
@@ -992,84 +947,25 @@
       // 
       // labelCursorInfo
       // 
-      this.labelCursorInfo.Location = new System.Drawing.Point(483, 446);
+      this.labelCursorInfo.Location = new System.Drawing.Point(418, 444);
       this.labelCursorInfo.Name = "labelCursorInfo";
-      this.labelCursorInfo.Size = new System.Drawing.Size(191, 18);
+      this.labelCursorInfo.Size = new System.Drawing.Size(234, 18);
       this.labelCursorInfo.TabIndex = 5;
       this.labelCursorInfo.Text = "No selected block";
       // 
       // labelCharInfo
       // 
-      this.labelCharInfo.Location = new System.Drawing.Point(483, 476);
+      this.labelCharInfo.Location = new System.Drawing.Point(280, 504);
       this.labelCharInfo.Name = "labelCharInfo";
-      this.labelCharInfo.Size = new System.Drawing.Size(170, 24);
+      this.labelCharInfo.Size = new System.Drawing.Size(372, 24);
       this.labelCharInfo.TabIndex = 5;
       this.labelCharInfo.Text = "No selected block";
-      // 
-      // checkMulticolor
-      // 
-      this.checkMulticolor.AutoSize = true;
-      this.checkMulticolor.Location = new System.Drawing.Point(683, 120);
-      this.checkMulticolor.Name = "checkMulticolor";
-      this.checkMulticolor.Size = new System.Drawing.Size(71, 17);
-      this.checkMulticolor.TabIndex = 3;
-      this.checkMulticolor.Text = "Multicolor";
-      this.checkMulticolor.UseVisualStyleBackColor = true;
-      this.checkMulticolor.CheckedChanged += new System.EventHandler(this.checkMulticolor_CheckedChanged);
-      // 
-      // comboCharColor
-      // 
-      this.comboCharColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboCharColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharColor.FormattingEnabled = true;
-      this.comboCharColor.Location = new System.Drawing.Point(790, 87);
-      this.comboCharColor.Name = "comboCharColor";
-      this.comboCharColor.Size = new System.Drawing.Size(121, 21);
-      this.comboCharColor.TabIndex = 1;
-      this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboMulticolor_DrawItem);
-      this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
-      // 
-      // comboMulticolor2
-      // 
-      this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(790, 60);
-      this.comboMulticolor2.Name = "comboMulticolor2";
-      this.comboMulticolor2.Size = new System.Drawing.Size(121, 21);
-      this.comboMulticolor2.TabIndex = 1;
-      this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
-      // 
-      // comboMulticolor1
-      // 
-      this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(790, 33);
-      this.comboMulticolor1.Name = "comboMulticolor1";
-      this.comboMulticolor1.Size = new System.Drawing.Size(121, 21);
-      this.comboMulticolor1.TabIndex = 1;
-      this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
-      // 
-      // comboBackground
-      // 
-      this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(790, 6);
-      this.comboBackground.Name = "comboBackground";
-      this.comboBackground.Size = new System.Drawing.Size(121, 21);
-      this.comboBackground.TabIndex = 1;
-      this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
       // pictureEditor
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1092,7 +988,7 @@
       this.tabGraphicScreenEditor.Location = new System.Drawing.Point(0, 24);
       this.tabGraphicScreenEditor.Name = "tabGraphicScreenEditor";
       this.tabGraphicScreenEditor.SelectedIndex = 0;
-      this.tabGraphicScreenEditor.Size = new System.Drawing.Size(964, 528);
+      this.tabGraphicScreenEditor.Size = new System.Drawing.Size(988, 560);
       this.tabGraphicScreenEditor.TabIndex = 0;
       // 
       // tabColorMapping
@@ -1101,7 +997,7 @@
       this.tabColorMapping.Location = new System.Drawing.Point(4, 22);
       this.tabColorMapping.Name = "tabColorMapping";
       this.tabColorMapping.Padding = new System.Windows.Forms.Padding(3);
-      this.tabColorMapping.Size = new System.Drawing.Size(956, 502);
+      this.tabColorMapping.Size = new System.Drawing.Size(980, 502);
       this.tabColorMapping.TabIndex = 2;
       this.tabColorMapping.Text = "Color Mapping";
       this.tabColorMapping.UseVisualStyleBackColor = true;
@@ -1117,7 +1013,7 @@
       this.groupColorMapping.Controls.Add(this.listColorMappingColors);
       this.groupColorMapping.Location = new System.Drawing.Point(6, 6);
       this.groupColorMapping.Name = "groupColorMapping";
-      this.groupColorMapping.Size = new System.Drawing.Size(942, 488);
+      this.groupColorMapping.Size = new System.Drawing.Size(966, 488);
       this.groupColorMapping.TabIndex = 0;
       this.groupColorMapping.TabStop = false;
       this.groupColorMapping.Text = "Map Colors";
@@ -1180,7 +1076,7 @@
       // 
       // GraphicScreenEditor
       // 
-      this.ClientSize = new System.Drawing.Size(964, 552);
+      this.ClientSize = new System.Drawing.Size(988, 584);
       this.Controls.Add(this.tabGraphicScreenEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1230,11 +1126,6 @@
     private DecentForms.Button btnCopy;
     private DecentForms.Button btnPasteFromClipboard;
     private System.Windows.Forms.Label labelCharInfo;
-    private System.Windows.Forms.CheckBox checkMulticolor;
-    private System.Windows.Forms.ComboBox comboCharColor;
-    private System.Windows.Forms.ComboBox comboMulticolor2;
-    private System.Windows.Forms.ComboBox comboMulticolor1;
-    private System.Windows.Forms.ComboBox comboBackground;
     private GR.Forms.FastPictureBox pictureEditor;
     private System.Windows.Forms.TabControl tabGraphicScreenEditor;
     private DecentForms.Button btnMirrorY;
@@ -1271,10 +1162,6 @@
     private System.Windows.Forms.Label label4;
     private DecentForms.Button btnExportToBASICData;
     private GR.Forms.FastPictureBox colorSelector;
-    private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.Label label5;
     private DecentForms.Button btnExportToImage;
     private DecentForms.Button btnFullCopy;
     private DecentForms.RadioButton btnToolValidate;
@@ -1292,5 +1179,6 @@
     private DecentForms.RadioButton btnToolLineDrag;
     private System.Windows.Forms.CheckBox checkInsertSpaces;
     private System.Windows.Forms.Label labelCursorInfo;
+    private System.Windows.Forms.Panel panelColorSettings;
   }
 }

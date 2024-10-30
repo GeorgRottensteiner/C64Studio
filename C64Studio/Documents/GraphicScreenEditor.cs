@@ -105,6 +105,8 @@ namespace RetroDevStudio.Documents
 
     private System.Drawing.Point        m_LastPixelUnderMouse = new Point();
 
+    private ColorChooserBase            _ColorChooserDlg = null;
+
 
 
     public GraphicScreenEditor( StudioCore Core )
@@ -133,20 +135,11 @@ namespace RetroDevStudio.Documents
 
       for ( int i = 0; i < 16; ++i )
       {
-        comboBackground.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor1.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor2.Items.Add( i.ToString( "d2" ) );
-        comboCharColor.Items.Add( i.ToString( "d2" ) );
-
         listColorMappingColors.Items.Add( i.ToString( "d2" ) );
       }
 
       RedrawColorSelector();
 
-      comboBackground.SelectedIndex = 0;
-      comboMulticolor1.SelectedIndex = 0;
-      comboMulticolor2.SelectedIndex = 0;
-      comboCharColor.SelectedIndex = 1;
       comboColorMappingTargets.SelectedIndex = 0;
 
       foreach ( Formats.GraphicScreenProject.CheckType checkType in System.Enum.GetValues( typeof( Formats.GraphicScreenProject.CheckType ) ) )
@@ -196,8 +189,65 @@ namespace RetroDevStudio.Documents
 
       pictureEditor.KeyUp += PictureEditor_KeyUp;
       pictureEditor.LostFocus += PictureEditor_LostFocus;
+      ChangeColorChooserDialog();
 
       UpdateCursorInfo();
+    }
+
+
+
+    private void ChangeColorChooserDialog()
+    {
+      if ( _ColorChooserDlg != null )
+      {
+        panelColorSettings.Controls.Remove( _ColorChooserDlg );
+        _ColorChooserDlg.Dispose();
+        _ColorChooserDlg = null;
+      }
+
+      switch ( m_GraphicScreenProject.SelectedCheckType )
+      {
+        case Formats.GraphicScreenProject.CheckType.HIRES_CHARSET:
+        case Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
+          _ColorChooserDlg = new ColorChooserCommodoreHiRes( Core, m_GraphicScreenProject.Colors );
+          break;
+        case Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
+        case Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
+          _ColorChooserDlg = new ColorChooserCommodoreMultiColor( Core, m_GraphicScreenProject.Colors );
+          break;
+        case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
+          _ColorChooserDlg = new ColorChooserCommodoreVIC20( Core, m_GraphicScreenProject.Colors );
+          break;
+        /*
+      case Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
+      case Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+        _ColorChooserDlg = new ColorChooserMega65( Core, m_GraphicScreenProject.Colors );
+        break;
+*/
+        default:
+          Debug.Log( "ChangeColorSettingsDialog unsupported Mode " + m_GraphicScreenProject.SelectedCheckType );
+          return;
+      }
+      panelColorSettings.Controls.Add( _ColorChooserDlg );
+
+      /*
+      _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
+      _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
+      _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
+      _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
+      _ColorSettingsDlg.PaletteMappingModified += _ColorSettingsDlg_PaletteMappingModified;
+      _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
+      _ColorSettingsDlg.PaletteMappingSelected += _ColorSettingsDlg_PaletteMappingSelected;
+      
+      _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+      */
+      _ColorChooserDlg.ColorsModified += _ColorChooserDlg_ColorsModified;
+    }
+
+
+
+    private void _ColorChooserDlg_ColorsModified( Types.ColorType Color, ColorSettings Colors )
+    {
     }
 
 
@@ -507,19 +557,7 @@ namespace RetroDevStudio.Documents
               charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
               charEditor.Invalidate();
 
-              if ( m_GraphicScreenProject.SelectedCheckType == RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
-              {
-                checkMulticolor.Checked = true;
-              }
-              else if ( m_GraphicScreenProject.SelectedCheckType == RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET )
-              {
-                checkMulticolor.Checked = true;
-              }
-              else
-              {
-                checkMulticolor.Checked = false;
-              }
-              comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Tile.CustomColor;
+              //comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Tile.CustomColor;
 
               Redraw();
             }
@@ -537,14 +575,14 @@ namespace RetroDevStudio.Documents
                 {
                   usedChar = usedChar.Replacement;
                 }
-                labelCharInfo.Text = "Duplicate of " + usedChar.Index;
+                labelCharInfo.Text = $"Duplicate of {usedChar.Index}, color {m_Chars[charX + charY * BlockWidth].Tile.CustomColor}";
               }
               else
               {
-                labelCharInfo.Text = "Determined index " + usedChar.Index;
+                labelCharInfo.Text = $"Determined index {usedChar.Index}, color {m_Chars[charX + charY * BlockWidth].Tile.CustomColor}";
               }
             }
-            comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Tile.CustomColor;
+            _ColorChooserDlg.ColorChanged( Types.ColorType.CUSTOM_COLOR, m_Chars[charX + charY * BlockWidth].Tile.CustomColor );
             break;
           case PaintTool.FLOOD_FILL:
             if ( m_ButtonReleased )
@@ -671,6 +709,7 @@ namespace RetroDevStudio.Documents
           case PaintTool.DRAW_PIXEL:
           default:
             m_CurrentColor = (byte)m_GraphicScreenProject.Image.GetPixel( pixelX, pixelY );
+            RedrawColorSelector();
             break;
         }
       }
@@ -720,66 +759,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void checkMulticolor_CheckedChanged( object sender, EventArgs e )
-    {
-      if ( m_GraphicScreenProject.MultiColor != checkMulticolor.Checked )
-      {
-        m_GraphicScreenProject.MultiColor = checkMulticolor.Checked;
-        Modified = true;
-      }
-    }
-
-
-
-    private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_GraphicScreenProject.Colors.BackgroundColor != comboBackground.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
-        m_GraphicScreenProject.Colors.BackgroundColor = comboBackground.SelectedIndex;
-        Modified = true;
-        pictureEditor.Invalidate();
-      }
-    }
-
-
-
-    private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_GraphicScreenProject.Colors.MultiColor1 != comboMulticolor1.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
-        m_GraphicScreenProject.Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-        Modified = true;
-        pictureEditor.Invalidate();
-      }
-    }
-
-
-
-    private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_GraphicScreenProject.Colors.MultiColor2 != comboMulticolor2.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
-        m_GraphicScreenProject.Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-        Modified = true;
-        pictureEditor.Invalidate();
-      }
-    }
-
-
-
-    private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_SelectedChar.X != -1 )
-      {
-        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Tile.CustomColor = (byte)comboCharColor.SelectedIndex;
-      }
-    }
-
-
-
     private bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, ImageInsertionMode InsertMode )
     {
       GR.Image.FastImage mappedImage = null;
@@ -797,6 +776,10 @@ namespace RetroDevStudio.Documents
       ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT ) )
       {
         importType = GraphicType.CHARACTERS_FCM;
+      }
+      else if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+      {
+        importType = GraphicType.CHARACTERS_MULTICOLOR;
       }
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
                                        8, 8, out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
@@ -861,9 +844,9 @@ namespace RetroDevStudio.Documents
       }
       mappedImage.Dispose();
 
-      comboBackground.SelectedIndex   = NormalizeColor( mcSettings.BackgroundColor );
-      comboMulticolor1.SelectedIndex  = NormalizeColor( mcSettings.MultiColor1 );
-      comboMulticolor2.SelectedIndex  = NormalizeColor( mcSettings.MultiColor2 );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, NormalizeColor( mcSettings.BackgroundColor ) );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_1, NormalizeColor( mcSettings.MultiColor1 ) );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_2, NormalizeColor( mcSettings.MultiColor2 ) );
 
       btnCheck_Click( null );
       Redraw();
@@ -954,11 +937,12 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      comboBackground.SelectedIndex   = m_GraphicScreenProject.Colors.BackgroundColor;
-      checkMulticolor.Checked = m_GraphicScreenProject.MultiColor;
-      comboMulticolor1.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor2;
       comboCheckType.SelectedIndex = (int)m_GraphicScreenProject.SelectedCheckType;
+      ChangeColorChooserDialog();
+
+      _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, m_GraphicScreenProject.Colors.BackgroundColor );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_1, m_GraphicScreenProject.Colors.MultiColor1 );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_2, m_GraphicScreenProject.Colors.MultiColor2 );
 
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
       PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
@@ -1166,7 +1150,7 @@ namespace RetroDevStudio.Documents
           if ( imageData.UInt16At( 0 ) == 0x6000 )
           {
             // background color
-            comboBackground.SelectedIndex = imageData.ByteAt( 10002 ) % 16;
+            _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, imageData.ByteAt( 10002 ) % 16 );
 
             for ( int i = 0; i < BlockWidth * BlockHeight; ++i )
             {
@@ -1573,7 +1557,7 @@ namespace RetroDevStudio.Documents
           for ( int i = 0; i < 16; ++i )
           {
             if ( ( usedColor[i] )
-            && ( i != m_GraphicScreenProject.Colors.BackgroundColor ) )
+            &&   ( i != m_GraphicScreenProject.Colors.BackgroundColor ) )
             {
               otherColorIndex = i;
               break;
@@ -1687,13 +1671,27 @@ namespace RetroDevStudio.Documents
               }
               else if ( ColorIndex == m_GraphicScreenProject.Colors.MultiColor2 )
               {
-                BitPattern = 0x02;
+                if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                {
+                  BitPattern = 0x03;
+                }
+                else
+                {
+                  BitPattern = 0x02;
+                }
               }
               else
               {
                 // noch nicht verwendete Farbe
                 chosenCharColor = usedFreeColor;
-                BitPattern = 0x03;
+                if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                {
+                  BitPattern = 0x02;
+                }
+                else
+                {
+                  BitPattern = 0x03;
+                }
               }
               cd.Tile.Data.SetU8At( y + x / 4, (byte)( cd.Tile.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
             }
@@ -1721,6 +1719,82 @@ namespace RetroDevStudio.Documents
 
 
     private bool CheckForMCCharsetErrors()
+    {
+      btnExportAs.Enabled = false;
+
+      bool      foundError = false;
+      for ( int j = 0; j < BlockHeight; ++j )
+      {
+        for ( int i = 0; i < BlockWidth; ++i )
+        {
+          CheckCharBox( m_Chars[i + j * BlockWidth], i * 8, j * 8, true );
+          if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
+          {
+            m_ErrornousChars[i, j] = true;
+            foundError = true;
+          }
+          else
+          {
+            m_ErrornousChars[i, j] = false;
+          }
+        }
+      }
+      if ( foundError )
+      {
+        return true;
+      }
+
+      // check for duplicates
+      int items = m_Chars.Count;
+      int foldedItems = 0;
+      int curIndex = 0;
+
+      for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
+      {
+        bool wasFolded = false;
+        for ( int index2 = 0; index2 < index1; ++index2 )
+        {
+          if ( m_Chars[index1].Tile.Data.Compare( m_Chars[index2].Tile.Data ) == 0 )
+          {
+            // same data
+            if ( m_Chars[index2].Replacement != null )
+            {
+              m_Chars[index1].Replacement = m_Chars[index2].Replacement;
+            }
+            else
+            {
+              m_Chars[index1].Replacement = m_Chars[index2];
+            }
+            ++foldedItems;
+            wasFolded = true;
+            break;
+          }
+        }
+        if ( !wasFolded )
+        {
+          // item was not folded
+          m_Chars[index1].Index = curIndex;
+          ++curIndex;
+        }
+      }
+      labelCharInfo.Text = "";
+      labelCharInfoExport.Text = "";
+      if ( items - foldedItems > 256 )
+      {
+        labelCharInfo.Text = "Too many unique characters (" + ( items - foldedItems ) + ")";
+        labelCharInfoExport.Text = labelCharInfo.Text;
+        return true;
+      }
+      labelCharInfo.Text = ( items - foldedItems ).ToString() + " unique chars, duplicates removed " + foldedItems;
+      labelCharInfoExport.Text = labelCharInfo.Text;
+
+      btnExportAs.Enabled = true;
+      return false;
+    }
+
+
+
+    private bool CheckForVIC20CharsetErrors()
     {
       btnExportAs.Enabled = false;
 
@@ -2202,6 +2276,9 @@ namespace RetroDevStudio.Documents
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
           CheckForFCMCharsetErrors( 8192 );
           break;
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
+          CheckForVIC20CharsetErrors();
+          break;
         default:
           Debug.Log( "Unsupported CheckType: " + (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex );
           break;
@@ -2280,30 +2357,40 @@ namespace RetroDevStudio.Documents
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
-        ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET ) )
+        if ( !Core.Settings.BehaviourRightClickIsBGColorPaint )
         {
-          byte    colorToSet = (byte)m_GraphicScreenProject.Colors.BackgroundColor;
-          charX /= 2;
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2, m_SelectedChar.Y * 8 + charY, colorToSet );
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2 + 1, m_SelectedChar.Y * 8 + charY, colorToSet );
-
-          charEditor.DisplayPage.SetPixel( charX * 2, charY, colorToSet );
-          charEditor.DisplayPage.SetPixel( charX * 2 + 1, charY, colorToSet );
-          charEditor.Invalidate();
-          Modified = true;
-          Redraw();
+          m_CurrentColor = (byte)m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY );
+          RedrawColorSelector();
         }
         else
         {
-          byte  colorToSet = (byte)m_GraphicScreenProject.Colors.BackgroundColor;
+          // TODO - optional paint only possible pixels?
+          /*
+          if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
+          ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET ) )
+          {
+            byte    colorToSet = (byte)m_GraphicScreenProject.Colors.BackgroundColor;
+            charX /= 2;
+            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2, m_SelectedChar.Y * 8 + charY, colorToSet );
+            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2 + 1, m_SelectedChar.Y * 8 + charY, colorToSet );
 
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY, colorToSet );
+            charEditor.DisplayPage.SetPixel( charX * 2, charY, colorToSet );
+            charEditor.DisplayPage.SetPixel( charX * 2 + 1, charY, colorToSet );
+            charEditor.Invalidate();
+            Modified = true;
+            Redraw();
+          }
+          else*/
+          {
+            byte  colorToSet = (byte)m_GraphicScreenProject.Colors.BackgroundColor;
 
-          charEditor.DisplayPage.SetPixel( charX, charY, colorToSet );
-          charEditor.Invalidate();
-          Modified = true;
-          Redraw();
+            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY, colorToSet );
+
+            charEditor.DisplayPage.SetPixel( charX, charY, colorToSet );
+            charEditor.Invalidate();
+            Modified = true;
+            Redraw();
+          }
         }
       }
 
@@ -2708,6 +2795,8 @@ namespace RetroDevStudio.Documents
       comboExportType.SelectedIndex = comboCheckType.SelectedIndex;
       m_GraphicScreenProject.SelectedCheckType = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
 
+      ChangeColorChooserDialog();
+
       int     numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
       if ( ( m_Chars.Count > 0 )
       &&   ( numBytes != m_Chars[0].Tile.Data.Length ) )
@@ -2939,9 +3028,12 @@ namespace RetroDevStudio.Documents
 
         project.SetScreenSize( BlockWidth, BlockHeight );
 
-        charset.Colors.BackgroundColor = m_GraphicScreenProject.Colors.BackgroundColor;
-        charset.Colors.MultiColor1     = m_GraphicScreenProject.Colors.MultiColor1;
-        charset.Colors.MultiColor2     = m_GraphicScreenProject.Colors.MultiColor2;
+        project.CharSet.Colors.BackgroundColor      = m_GraphicScreenProject.Colors.BackgroundColor;
+        project.CharSet.Colors.MultiColor1          = m_GraphicScreenProject.Colors.MultiColor1;
+        project.CharSet.Colors.MultiColor2          = m_GraphicScreenProject.Colors.MultiColor2;
+        project.CharSet.Colors.BGColor4             = m_GraphicScreenProject.Colors.BGColor4;
+        project.CharSet.Colors.PaletteIndexMapping  = m_GraphicScreenProject.Colors.PaletteIndexMapping;
+        project.CharSet.Colors.PaletteMappingIndex  = m_GraphicScreenProject.Colors.PaletteMappingIndex;
 
         switch ( m_GraphicScreenProject.SelectedCheckType )
         {
@@ -2963,12 +3055,21 @@ namespace RetroDevStudio.Documents
             project.Mode = TextMode.MEGA65_40_X_25_FCM_16BIT;
             charset.Mode = TextCharMode.MEGA65_FCM_16BIT;
             break;
+          case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
+            project.Mode = TextMode.COMMODORE_VIC20_22_X_23;
+            charset.Mode = TextCharMode.VIC20;
+            break;
+          default:
+            Debug.Log( $"ExportToCharscreen: Unsupported Check Type {m_GraphicScreenProject.SelectedCheckType}" );
+            break;
         }
-        charset.Colors.Palette          = new Palette( m_GraphicScreenProject.Colors.Palette );
-        charset.Colors.BackgroundColor  = project.CharSet.Colors.BackgroundColor;
-        charset.Colors.MultiColor1      = project.CharSet.Colors.MultiColor1;
-        charset.Colors.MultiColor2      = project.CharSet.Colors.MultiColor2;
-        charset.Colors.BGColor4         = project.CharSet.Colors.BGColor4;
+        charset.Colors.Palette              = new Palette( m_GraphicScreenProject.Colors.Palette );
+        charset.Colors.BackgroundColor      = project.CharSet.Colors.BackgroundColor;
+        charset.Colors.MultiColor1          = project.CharSet.Colors.MultiColor1;
+        charset.Colors.MultiColor2          = project.CharSet.Colors.MultiColor2;
+        charset.Colors.BGColor4             = project.CharSet.Colors.BGColor4;
+        charset.Colors.PaletteIndexMapping  = project.CharSet.Colors.PaletteIndexMapping;
+        charset.Colors.PaletteMappingIndex  = project.CharSet.Colors.PaletteMappingIndex;
 
         for ( int i = 0; i < m_Chars.Count; ++i )
         {
@@ -3971,10 +4072,10 @@ namespace RetroDevStudio.Documents
     public void ColorValuesChanged()
     {
       UpdateCurrentColorMapping();
-      comboBackground.SelectedIndex = m_GraphicScreenProject.Colors.BackgroundColor;
-      checkMulticolor.Checked = m_GraphicScreenProject.MultiColor;
-      comboMulticolor1.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor2;
+
+      _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, m_GraphicScreenProject.Colors.BackgroundColor );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_1, m_GraphicScreenProject.Colors.MultiColor1 );
+      _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_2, m_GraphicScreenProject.Colors.MultiColor2 );
     }
 
 

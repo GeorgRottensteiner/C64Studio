@@ -53,7 +53,7 @@ namespace RetroDevStudio.Controls
       this.comboBackground.FormattingEnabled = true;
       this.comboBackground.Location = new System.Drawing.Point(93, 11);
       this.comboBackground.Name = "comboBackground";
-      this.comboBackground.Size = new System.Drawing.Size(71, 21);
+      this.comboBackground.Size = new System.Drawing.Size(80, 21);
       this.comboBackground.TabIndex = 1;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
@@ -65,7 +65,7 @@ namespace RetroDevStudio.Controls
       this.comboBorderColor.FormattingEnabled = true;
       this.comboBorderColor.Location = new System.Drawing.Point(93, 38);
       this.comboBorderColor.Name = "comboBorderColor";
-      this.comboBorderColor.Size = new System.Drawing.Size(71, 21);
+      this.comboBorderColor.Size = new System.Drawing.Size(80, 21);
       this.comboBorderColor.TabIndex = 3;
       this.comboBorderColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBorderColor.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
@@ -77,7 +77,7 @@ namespace RetroDevStudio.Controls
       this.comboCharColor.FormattingEnabled = true;
       this.comboCharColor.Location = new System.Drawing.Point(93, 92);
       this.comboCharColor.Name = "comboCharColor";
-      this.comboCharColor.Size = new System.Drawing.Size(71, 21);
+      this.comboCharColor.Size = new System.Drawing.Size(80, 21);
       this.comboCharColor.TabIndex = 7;
       this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
       this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
@@ -137,7 +137,7 @@ namespace RetroDevStudio.Controls
       this.btnExchangeColors.Image = null;
       this.btnExchangeColors.Location = new System.Drawing.Point(3, 156);
       this.btnExchangeColors.Name = "btnExchangeColors";
-      this.btnExchangeColors.Size = new System.Drawing.Size(161, 26);
+      this.btnExchangeColors.Size = new System.Drawing.Size(170, 26);
       this.btnExchangeColors.TabIndex = 8;
       this.btnExchangeColors.Text = "Exchange Colors";
       this.btnExchangeColors.Click += new DecentForms.EventHandler(this.btnExchangeColors_Click);
@@ -149,7 +149,7 @@ namespace RetroDevStudio.Controls
       this.comboAuxColor.FormattingEnabled = true;
       this.comboAuxColor.Location = new System.Drawing.Point(93, 65);
       this.comboAuxColor.Name = "comboAuxColor";
-      this.comboAuxColor.Size = new System.Drawing.Size(71, 21);
+      this.comboAuxColor.Size = new System.Drawing.Size(80, 21);
       this.comboAuxColor.TabIndex = 5;
       this.comboAuxColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboAuxColor.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
