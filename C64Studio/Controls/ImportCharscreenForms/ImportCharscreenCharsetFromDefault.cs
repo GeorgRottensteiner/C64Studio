@@ -1,5 +1,7 @@
 ﻿using RetroDevStudio.Formats;
 using RetroDevStudio.Documents;
+using GR.Generic;
+using GR.Image;
 
 
 
@@ -19,13 +21,13 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
-      comboImportFromDefault.Items.Add( "C64 Uppercase" );
-      comboImportFromDefault.Items.Add( "C64 Lowercase" );
-      comboImportFromDefault.Items.Add( "VIC20 Uppercase" );
-      comboImportFromDefault.Items.Add( "VIC20 Lowercase" );
-      comboImportFromDefault.Items.Add( "Commander X16 Uppercase" );
-      comboImportFromDefault.Items.Add( "Commander X16 Lowercase" );
-      comboImportFromDefault.Items.Add( "Commander X16 ISO-8859-15" );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "C64 Uppercase", ConstantData.UpperCaseCharsetC64 ) );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "C64 Lowercase", ConstantData.LowerCaseCharsetC64 ) );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "VIC20 Uppercase", ConstantData.UpperCaseCharsetViC20 ) );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "VIC20 Lowercase", ConstantData.LowerCaseCharsetViC20 ) );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "Commander X16 Uppercase", ConstantData.UpperCaseCharsetCommanderX16 ) );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "Commander X16 Lowercase", ConstantData.LowerCaseCharsetCommanderX16 ) );
+      comboImportFromDefault.Items.Add( new Tupel<string, GR.Memory.ByteBuffer>( "Commander X16 ISO8859", ConstantData.ISO8859CommanderX16 ) );
 
       comboImportFromDefault.SelectedIndex = 0;
     }
@@ -34,6 +36,32 @@ namespace RetroDevStudio.Controls
 
     public override bool HandleImport( CharsetScreenProject CharScreen, CharsetScreenEditor Editor )
     {
+      if ( comboImportFromDefault.SelectedItem == null )
+      {
+        return false;
+      }
+      GR.Memory.ByteBuffer imageSource = ( (Tupel<string, GR.Memory.ByteBuffer>)comboImportFromDefault.SelectedItem ).second;
+
+      var image = new MemoryImage( 256 * 8, 8, GR.Drawing.PixelFormat.Format8bppIndexed );
+      image.SetPaletteColor( 0, 0, 0, 0 );
+      image.SetPaletteColor( 1, 255, 255, 255 );
+      for ( int c = 0; c < 256; ++c )
+      {
+        for ( int i = 0; i < 8; ++i )
+        {
+          for ( int j = 0; j < 8; ++j )
+          {
+            if ( ( imageSource.ByteAt( c * 8 + i ) & ( 1 << ( 7 - j ) ) ) != 0 )
+            {
+              image.SetPixel( c * 8 + j, i, 1 );
+            }
+          }
+        }
+      }
+
+      // make up fake image
+      Editor.ImportCharsetFromImage( image );
+      /*
       switch ( comboImportFromDefault.SelectedIndex )
       {
         case 0:
@@ -113,7 +141,7 @@ namespace RetroDevStudio.Controls
           }
           Editor.CharsetChanged();
           return true;
-      }
+      }*/
       return false;
     }
 

@@ -13,7 +13,7 @@ namespace RetroDevStudio.Documents
 {
   public partial class GraphicScreenEditor : BaseDocument, IDisposable
   {
-    private enum ImageInsertionMode
+    public enum ImageInsertionMode
     {
       AS_FULL_SCREEN,
       AT_SELECTED_LOCATION,
@@ -107,6 +107,8 @@ namespace RetroDevStudio.Documents
 
     private ColorChooserBase            _ColorChooserDlg = null;
 
+    private ImportCharscreenFormBase    m_ImportForm = null;
+
 
 
     public GraphicScreenEditor( StudioCore Core )
@@ -186,6 +188,11 @@ namespace RetroDevStudio.Documents
         }
       }
       comboCharScreens.SelectedIndex = 0;
+
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image", typeof( ImportGraphicScreenFromImage ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from Koala file (.prg)", typeof( ImportGraphicScreenFromKoalaFile ) ) );
+      //comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from MiniPaint (VIC20) (.prg)", typeof( ImportGraphicScreenFromMiniPaint ) ) );
+      comboImportMethod.SelectedIndex = 0;
 
       pictureEditor.KeyUp += PictureEditor_KeyUp;
       pictureEditor.LostFocus += PictureEditor_LostFocus;
@@ -759,7 +766,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, ImageInsertionMode InsertMode )
+    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, ImageInsertionMode InsertMode )
     {
       GR.Image.FastImage mappedImage = null;
 
@@ -4253,6 +4260,37 @@ namespace RetroDevStudio.Documents
     private void colorSelector_SizeChanged( object sender, EventArgs e )
     {
       RedrawColorSelector();
+    }
+
+
+
+    private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ImportForm != null )
+      {
+        m_ImportForm.Dispose();
+        m_ImportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
+      {
+        return;
+      }
+      m_ImportForm = (ImportCharscreenFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ImportForm.Parent = panelImport;
+      m_ImportForm.Size = panelImport.ClientSize;
+      m_ImportForm.CreateControl();
+    }
+
+
+
+    public void DataImported()
+    {
+      Redraw();
+      RedrawColorSelector();
+      SetModified();
     }
 
 

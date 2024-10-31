@@ -29,10 +29,10 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      GR.Image.FastImage fastImage13 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage14 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage15 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +65,12 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.comboCheckType = new System.Windows.Forms.ComboBox();
+      this.btnCheck = new DecentForms.Button();
+      this.labelCharInfo = new System.Windows.Forms.Label();
       this.panelColorSettings = new System.Windows.Forms.Panel();
+      this.colorSelector = new GR.Forms.FastPictureBox();
+      this.charEditor = new GR.Forms.FastPictureBox();
       this.btnZoomOut = new DecentForms.Button();
       this.btnZoomIn = new DecentForms.Button();
       this.btnClearScreen = new DecentForms.Button();
@@ -83,22 +88,17 @@
       this.label7 = new System.Windows.Forms.Label();
       this.screenVScroll = new DecentForms.VScrollBar();
       this.screenHScroll = new DecentForms.HScrollBar();
-      this.comboCheckType = new System.Windows.Forms.ComboBox();
       this.btnMirrorY = new DecentForms.Button();
       this.btnMirrorX = new DecentForms.Button();
       this.btnShiftDown = new DecentForms.Button();
       this.btnShiftUp = new DecentForms.Button();
       this.btnShiftRight = new DecentForms.Button();
       this.btnShiftLeft = new DecentForms.Button();
-      this.colorSelector = new GR.Forms.FastPictureBox();
-      this.charEditor = new GR.Forms.FastPictureBox();
       this.btnPaste = new DecentForms.Button();
       this.btnCopy = new DecentForms.Button();
-      this.btnCheck = new DecentForms.Button();
       this.btnFullCopy = new DecentForms.Button();
       this.btnPasteFromClipboard = new DecentForms.Button();
       this.labelCursorInfo = new System.Windows.Forms.Label();
-      this.labelCharInfo = new System.Windows.Forms.Label();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabGraphicScreenEditor = new System.Windows.Forms.TabControl();
       this.tabColorMapping = new System.Windows.Forms.TabPage();
@@ -108,6 +108,11 @@
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.tabImport = new System.Windows.Forms.TabPage();
+      this.btnImport = new DecentForms.Button();
+      this.comboImportMethod = new System.Windows.Forms.ComboBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.panelImport = new System.Windows.Forms.Panel();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -120,6 +125,7 @@
       this.tabGraphicScreenEditor.SuspendLayout();
       this.tabColorMapping.SuspendLayout();
       this.groupColorMapping.SuspendLayout();
+      this.tabImport.SuspendLayout();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -172,7 +178,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(980, 502);
+      this.tabProject.Size = new System.Drawing.Size(980, 534);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -185,7 +191,7 @@
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 488);
+      this.groupBox1.Size = new System.Drawing.Size(324, 520);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -245,7 +251,7 @@
       this.groupExport.Controls.Add(this.editDataExport);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 488);
+      this.groupExport.Size = new System.Drawing.Size(441, 520);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -470,7 +476,7 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 219);
+      this.editDataExport.Size = new System.Drawing.Size(429, 251);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
@@ -520,12 +526,72 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // comboCheckType
+      // 
+      this.comboCheckType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboCheckType.FormattingEnabled = true;
+      this.comboCheckType.Location = new System.Drawing.Point(81, 501);
+      this.comboCheckType.Name = "comboCheckType";
+      this.comboCheckType.Size = new System.Drawing.Size(193, 21);
+      this.comboCheckType.TabIndex = 21;
+      this.comboCheckType.SelectedIndexChanged += new System.EventHandler(this.comboCheckType_SelectedIndexChanged);
+      // 
+      // btnCheck
+      // 
+      this.btnCheck.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCheck.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCheck.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCheck.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnCheck.Image = null;
+      this.btnCheck.Location = new System.Drawing.Point(8, 499);
+      this.btnCheck.Name = "btnCheck";
+      this.btnCheck.Size = new System.Drawing.Size(67, 23);
+      this.btnCheck.TabIndex = 6;
+      this.btnCheck.Text = "Check as";
+      this.btnCheck.Click += new DecentForms.EventHandler(this.btnCheck_Click);
+      // 
+      // labelCharInfo
+      // 
+      this.labelCharInfo.Location = new System.Drawing.Point(280, 504);
+      this.labelCharInfo.Name = "labelCharInfo";
+      this.labelCharInfo.Size = new System.Drawing.Size(372, 24);
+      this.labelCharInfo.TabIndex = 5;
+      this.labelCharInfo.Text = "No selected block";
+      // 
       // panelColorSettings
       // 
       this.panelColorSettings.Location = new System.Drawing.Point(677, 303);
       this.panelColorSettings.Name = "panelColorSettings";
       this.panelColorSettings.Size = new System.Drawing.Size(231, 186);
       this.panelColorSettings.TabIndex = 42;
+      // 
+      // colorSelector
+      // 
+      this.colorSelector.AutoResize = false;
+      this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.colorSelector.DisplayPage = fastImage13;
+      this.colorSelector.Image = null;
+      this.colorSelector.Location = new System.Drawing.Point(677, 272);
+      this.colorSelector.Name = "colorSelector";
+      this.colorSelector.Size = new System.Drawing.Size(260, 19);
+      this.colorSelector.TabIndex = 14;
+      this.colorSelector.TabStop = false;
+      this.colorSelector.SizeChanged += new System.EventHandler(this.colorSelector_SizeChanged);
+      this.colorSelector.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSelector_MouseDown);
+      // 
+      // charEditor
+      // 
+      this.charEditor.AutoResize = false;
+      this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.charEditor.DisplayPage = fastImage14;
+      this.charEditor.Image = null;
+      this.charEditor.Location = new System.Drawing.Point(677, 6);
+      this.charEditor.Name = "charEditor";
+      this.charEditor.Size = new System.Drawing.Size(260, 260);
+      this.charEditor.TabIndex = 14;
+      this.charEditor.TabStop = false;
+      this.charEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.charEditor_MouseDown);
+      this.charEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.charEditor_MouseMove);
       // 
       // btnZoomOut
       // 
@@ -751,16 +817,6 @@
       this.screenHScroll.Value = 0;
       this.screenHScroll.Scroll += new DecentForms.EventHandler(this.screenHScroll_Scroll);
       // 
-      // comboCheckType
-      // 
-      this.comboCheckType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCheckType.FormattingEnabled = true;
-      this.comboCheckType.Location = new System.Drawing.Point(81, 501);
-      this.comboCheckType.Name = "comboCheckType";
-      this.comboCheckType.Size = new System.Drawing.Size(193, 21);
-      this.comboCheckType.TabIndex = 21;
-      this.comboCheckType.SelectedIndexChanged += new System.EventHandler(this.comboCheckType_SelectedIndexChanged);
-      // 
       // btnMirrorY
       // 
       this.btnMirrorY.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -845,34 +901,6 @@
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift left");
       this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
       // 
-      // colorSelector
-      // 
-      this.colorSelector.AutoResize = false;
-      this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage4;
-      this.colorSelector.Image = null;
-      this.colorSelector.Location = new System.Drawing.Point(677, 272);
-      this.colorSelector.Name = "colorSelector";
-      this.colorSelector.Size = new System.Drawing.Size(260, 19);
-      this.colorSelector.TabIndex = 14;
-      this.colorSelector.TabStop = false;
-      this.colorSelector.SizeChanged += new System.EventHandler(this.colorSelector_SizeChanged);
-      this.colorSelector.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSelector_MouseDown);
-      // 
-      // charEditor
-      // 
-      this.charEditor.AutoResize = false;
-      this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage5;
-      this.charEditor.Image = null;
-      this.charEditor.Location = new System.Drawing.Point(677, 6);
-      this.charEditor.Name = "charEditor";
-      this.charEditor.Size = new System.Drawing.Size(260, 260);
-      this.charEditor.TabIndex = 14;
-      this.charEditor.TabStop = false;
-      this.charEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.charEditor_MouseDown);
-      this.charEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.charEditor_MouseMove);
-      // 
       // btnPaste
       // 
       this.btnPaste.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -900,20 +928,6 @@
       this.btnCopy.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy selected 8x8 block");
       this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
-      // 
-      // btnCheck
-      // 
-      this.btnCheck.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnCheck.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnCheck.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnCheck.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnCheck.Image = null;
-      this.btnCheck.Location = new System.Drawing.Point(8, 499);
-      this.btnCheck.Name = "btnCheck";
-      this.btnCheck.Size = new System.Drawing.Size(67, 23);
-      this.btnCheck.TabIndex = 6;
-      this.btnCheck.Text = "Check as";
-      this.btnCheck.Click += new DecentForms.EventHandler(this.btnCheck_Click);
       // 
       // btnFullCopy
       // 
@@ -953,19 +967,11 @@
       this.labelCursorInfo.TabIndex = 5;
       this.labelCursorInfo.Text = "No selected block";
       // 
-      // labelCharInfo
-      // 
-      this.labelCharInfo.Location = new System.Drawing.Point(280, 504);
-      this.labelCharInfo.Name = "labelCharInfo";
-      this.labelCharInfo.Size = new System.Drawing.Size(372, 24);
-      this.labelCharInfo.TabIndex = 5;
-      this.labelCharInfo.Text = "No selected block";
-      // 
       // pictureEditor
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage15;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -984,6 +990,7 @@
       this.tabGraphicScreenEditor.Controls.Add(this.tabEditor);
       this.tabGraphicScreenEditor.Controls.Add(this.tabColorMapping);
       this.tabGraphicScreenEditor.Controls.Add(this.tabProject);
+      this.tabGraphicScreenEditor.Controls.Add(this.tabImport);
       this.tabGraphicScreenEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabGraphicScreenEditor.Location = new System.Drawing.Point(0, 24);
       this.tabGraphicScreenEditor.Name = "tabGraphicScreenEditor";
@@ -997,7 +1004,7 @@
       this.tabColorMapping.Location = new System.Drawing.Point(4, 22);
       this.tabColorMapping.Name = "tabColorMapping";
       this.tabColorMapping.Padding = new System.Windows.Forms.Padding(3);
-      this.tabColorMapping.Size = new System.Drawing.Size(980, 502);
+      this.tabColorMapping.Size = new System.Drawing.Size(980, 534);
       this.tabColorMapping.TabIndex = 2;
       this.tabColorMapping.Text = "Color Mapping";
       this.tabColorMapping.UseVisualStyleBackColor = true;
@@ -1013,7 +1020,7 @@
       this.groupColorMapping.Controls.Add(this.listColorMappingColors);
       this.groupColorMapping.Location = new System.Drawing.Point(6, 6);
       this.groupColorMapping.Name = "groupColorMapping";
-      this.groupColorMapping.Size = new System.Drawing.Size(966, 488);
+      this.groupColorMapping.Size = new System.Drawing.Size(966, 520);
       this.groupColorMapping.TabIndex = 0;
       this.groupColorMapping.TabStop = false;
       this.groupColorMapping.Text = "Map Colors";
@@ -1074,6 +1081,62 @@
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
       // 
+      // tabImport
+      // 
+      this.tabImport.Controls.Add(this.panelImport);
+      this.tabImport.Controls.Add(this.btnImport);
+      this.tabImport.Controls.Add(this.comboImportMethod);
+      this.tabImport.Controls.Add(this.label5);
+      this.tabImport.Location = new System.Drawing.Point(4, 22);
+      this.tabImport.Name = "tabImport";
+      this.tabImport.Padding = new System.Windows.Forms.Padding(3);
+      this.tabImport.Size = new System.Drawing.Size(980, 534);
+      this.tabImport.TabIndex = 3;
+      this.tabImport.Text = "Import";
+      this.tabImport.UseVisualStyleBackColor = true;
+      // 
+      // btnImport
+      // 
+      this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImport.Image = null;
+      this.btnImport.Location = new System.Drawing.Point(341, 6);
+      this.btnImport.Name = "btnImport";
+      this.btnImport.Size = new System.Drawing.Size(75, 21);
+      this.btnImport.TabIndex = 35;
+      this.btnImport.Text = "Import";
+      // 
+      // comboImportMethod
+      // 
+      this.comboImportMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboImportMethod.FormattingEnabled = true;
+      this.comboImportMethod.Location = new System.Drawing.Point(92, 6);
+      this.comboImportMethod.Name = "comboImportMethod";
+      this.comboImportMethod.Size = new System.Drawing.Size(243, 21);
+      this.comboImportMethod.TabIndex = 33;
+      this.comboImportMethod.SelectedIndexChanged += new System.EventHandler(this.comboImportMethod_SelectedIndexChanged);
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(8, 9);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(78, 13);
+      this.label5.TabIndex = 34;
+      this.label5.Text = "Import Method:";
+      // 
+      // panelImport
+      // 
+      this.panelImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.panelImport.Location = new System.Drawing.Point(8, 33);
+      this.panelImport.Name = "panelImport";
+      this.panelImport.Size = new System.Drawing.Size(964, 493);
+      this.panelImport.TabIndex = 36;
+      // 
       // GraphicScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(988, 584);
@@ -1098,6 +1161,8 @@
       this.tabColorMapping.ResumeLayout(false);
       this.groupColorMapping.ResumeLayout(false);
       this.groupColorMapping.PerformLayout();
+      this.tabImport.ResumeLayout(false);
+      this.tabImport.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1180,5 +1245,10 @@
     private System.Windows.Forms.CheckBox checkInsertSpaces;
     private System.Windows.Forms.Label labelCursorInfo;
     private System.Windows.Forms.Panel panelColorSettings;
+    private System.Windows.Forms.TabPage tabImport;
+    private DecentForms.Button btnImport;
+    private System.Windows.Forms.ComboBox comboImportMethod;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Panel panelImport;
   }
 }

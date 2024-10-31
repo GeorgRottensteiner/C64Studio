@@ -3637,5 +3637,50 @@ namespace RetroDevStudio.Documents
 
 
 
+    public void ImportCharsetFromImage( GR.Image.IImage Image )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( charEditor, m_CharsetScreen.CharSet, 0, m_CharsetScreen.CharSet.TotalNumberOfCharacters ) );
+
+      int   charWidth   = Lookup.CharacterWidthInPixel( m_CharsetScreen.CharSet.Characters[0].Tile.Mode );
+      int   charHeight  = Lookup.CharacterHeightInPixel( m_CharsetScreen.CharSet.Characters[0].Tile.Mode );
+      int   numCharsX   = Image.Width / charWidth;
+      int   numCharsY   = Image.Height / charHeight;
+
+      var   customColor = new GR.Generic.Tupel<ColorType, byte>( ColorType.CUSTOM_COLOR, 1 );
+      var   bgColor = new GR.Generic.Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
+
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        int x = ( i % numCharsX );
+        int y = i / numCharsX;
+
+        if ( ( x >= Image.Width )
+        ||   ( y >= Image.Height ) )
+        {
+          break;
+        }
+        for ( int xx = 0; xx < charWidth; ++xx )
+        {
+          for ( int yy = 0; yy < charHeight; ++yy )
+          {
+            if ( Image.GetPixel( x * charWidth + xx, y * charHeight + yy ) != 0 )
+            {
+              m_CharsetScreen.CharSet.Characters[i].Tile.SetPixel( xx, yy, customColor );
+            }
+            else
+            {
+              m_CharsetScreen.CharSet.Characters[i].Tile.SetPixel( xx, yy, bgColor );
+            }
+          }
+        }
+        RebuildCharImage( i );
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
+      }
+      RedrawFullScreen();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+    }
+
+
+
   } 
 }

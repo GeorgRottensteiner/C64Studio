@@ -144,8 +144,8 @@ namespace RetroDevStudio.Controls
           }
 
           Editor.ImportFromData( map.TileSpacingX * map.Tiles.Width,
-                          map.TileSpacingY * map.Tiles.Height,
-                          charData, colorData, CharScreen.CharSet );
+                                 map.TileSpacingY * map.Tiles.Height,
+                                 charData, colorData, CharScreen.CharSet );
         }
         else if ( GR.Path.GetExtension( filename ).ToUpper() == ".C" )
         {

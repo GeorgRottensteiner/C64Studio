@@ -583,7 +583,6 @@ namespace RetroDevStudio.Controls
         Image.Dispose();
         return;
       }
-
       if ( mappedImage.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         mappedImage.Dispose();
@@ -725,7 +724,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    private bool ImportChar( GR.Image.FastImage Image, int CharIndex, bool ForceMulticolor )
+    public bool ImportChar( GR.Image.IImage Image, int CharIndex, bool ForceMulticolor )
     {
       if ( Image.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
@@ -744,7 +743,7 @@ namespace RetroDevStudio.Controls
       {
         for ( int i = 0; i < Buffer.Length; ++i )
         {
-          Buffer.SetU8At( i, (byte)Image.GetPixelData( i % 8, i / 8 ) );
+          Buffer.SetU8At( i, (byte)Image.GetPixel( i % 8, i / 8 ) );
         }
       }
       else
@@ -759,14 +758,14 @@ namespace RetroDevStudio.Controls
         {
           for ( int x = 0; x < Image.Width; ++x )
           {
-            int     colorIndex = (int)Image.GetPixelData( x, y ) % 16;
+            int     colorIndex = (int)Image.GetPixel( x, y ) % 16;
             if ( colorIndex >= 16 )
             {
               return false;
             }
             if ( ( x % 2 ) == 0 )
             {
-              if ( colorIndex != (int)Image.GetPixelData( x + 1, y ) % 16 )
+              if ( colorIndex != (int)Image.GetPixel( x + 1, y ) % 16 )
               {
                 // not a double pixel, must be single color then
                 hasSinglePixel = true;
@@ -786,36 +785,36 @@ namespace RetroDevStudio.Controls
         }
         //Debug.Log( "For Char " + CharIndex + ", hasSinglePixel = " + hasSinglePixel + ", numColors = " + numColors + ", usedBackgroundColor = " + usedBackgroundColor );
         if ( ( hasSinglePixel )
-        && ( numColors > 2 ) )
+        &&   ( numColors > 2 ) )
         {
           return false;
         }
         if ( ( hasSinglePixel )
-        && ( numColors == 2 )
-        && ( !usedBackgroundColor ) )
+        &&   ( numColors == 2 )
+        &&   ( !usedBackgroundColor ) )
         {
           return false;
         }
         if ( ( !hasSinglePixel )
-        && ( numColors > 4 ) )
+        &&   ( numColors > 4 ) )
         {
           return false;
         }
         if ( ( !hasSinglePixel )
-        && ( numColors == 4 )
-        && ( !usedBackgroundColor ) )
+        &&   ( numColors == 4 )
+        &&   ( !usedBackgroundColor ) )
         {
           return false;
         }
         int     otherColorIndex = 16;
         if ( ( !hasSinglePixel )
-        && ( numColors == 2 )
-        && ( usedBackgroundColor ) )
+        &&   ( numColors == 2 )
+        &&   ( usedBackgroundColor ) )
         {
           for ( int i = 0; i < 16; ++i )
           {
             if ( ( usedColor[i] )
-            && ( i != m_Project.Colors.BackgroundColor ) )
+            &&   ( i != m_Project.Colors.BackgroundColor ) )
             {
               otherColorIndex = i;
               break;
@@ -823,10 +822,10 @@ namespace RetroDevStudio.Controls
           }
         }
         if ( ( !ForceMulticolor )
-        && ( ( hasSinglePixel )
-        || ( ( numColors == 2 )
-        && ( usedBackgroundColor )
-        && ( otherColorIndex < 8 ) ) ) )
+        &&   ( ( hasSinglePixel )
+        ||     ( ( numColors == 2 )
+        &&   ( usedBackgroundColor )
+        &&   ( otherColorIndex < 8 ) ) ) )
         //||   ( numColors == 2 ) )
         {
           // eligible for single color
@@ -850,7 +849,7 @@ namespace RetroDevStudio.Controls
           {
             for ( int x = 0; x < Image.Width; ++x )
             {
-              int ColorIndex = (int)Image.GetPixelData( x, y ) % 16;
+              int ColorIndex = (int)Image.GetPixel( x, y ) % 16;
 
               int BitPattern = 0;
 
@@ -900,7 +899,7 @@ namespace RetroDevStudio.Controls
           {
             for ( int x = 0; x < Image.Width / 2; ++x )
             {
-              int ColorIndex = (int)Image.GetPixelData( 2 * x, y ) % 16;
+              int ColorIndex = (int)Image.GetPixel( 2 * x, y ) % 16;
 
               byte BitPattern = 0;
 
@@ -977,7 +976,6 @@ namespace RetroDevStudio.Controls
       }
 
       OnPaletteChanged();
-      //UpdateCustomColorCombo();
 
       listCategories.Items.Clear();
       int categoryIndex = 0;

@@ -50,6 +50,18 @@
     <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Controls\ImportGraphicScreenForms\ImportGraphicScreenFromMiniPaint.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportGraphicScreenForms\ImportGraphicScreenFromImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportGraphicScreenForms\ImportGraphicScreenFromKoalaFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportGraphicScreenForms\ImportGraphicScreenFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\PaletteEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -100,6 +100,7 @@ MID$;CA;mI
 BANK;fe02;
 
 #X16 tokens
+BANK;ce98;bA
 BIN$;ce9e;
 BINPUT#;ceb5;
 BLOAD;ce95;
@@ -146,6 +147,7 @@ MY;ce9a;
 MB;ce9b;
 MWHEEL;cedb;
 OLD;ce82;
+POINTER;ced8;poI
 POWEROFF;cead;
 PSET;ce87;
 PSGCHORD;ceab;

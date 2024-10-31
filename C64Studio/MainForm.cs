@@ -3796,7 +3796,27 @@ namespace RetroDevStudio
         element.ProjectHierarchy.Insert( 0, parentNodeToInsertTo.Text );
         parentNodeToInsertTo = parentNodeToInsertTo.Parent;
       }
-      ProjectToAddTo.ShowDocument( element );
+
+      // do we already have a opened free floating document for this file?
+      var alreadyOpenedDoc = StudioCore.Navigating.FindDocumentByPath( importFile );
+      if ( alreadyOpenedDoc != null )
+      {
+        element.Document              = alreadyOpenedDoc;
+        element.DocumentInfo          = alreadyOpenedDoc.DocumentInfo;
+        element.DocumentInfo.Project  = ProjectToAddTo;
+        element.DocumentInfo.BaseDoc  = alreadyOpenedDoc;
+        element.DocumentInfo.Element  = element;
+
+        alreadyOpenedDoc.Core = StudioCore;
+        alreadyOpenedDoc.Icon = IconFromType( element.DocumentInfo );
+        alreadyOpenedDoc.SetDocumentFilename( importFile );
+        // force icon refresh
+        panelMain.Refresh();
+      }
+      else
+      {
+        ProjectToAddTo.ShowDocument( element );
+      }
       element.DocumentInfo.DocumentFilename = relativeFilename;
       if ( element.Document != null )
       {

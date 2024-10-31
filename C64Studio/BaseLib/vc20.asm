@@ -16,7 +16,7 @@
 
 .RASTER_POS           = $9004
 
-;| Bit  4-7 | is rest of video address    (default= F)
+;| Bit  4-7 | is rest of video address    (default = F)
 ;| Bit  0-3 | start of character memory   (default = 0)
 ;BITS 3,2,1,0 CM starting address
 ;             HEX   DEC
@@ -68,3 +68,5 @@
 
 
 
+.COLOR_RAM            = $9600
+.COLOR_RAM_EXPANDED   = $9400
