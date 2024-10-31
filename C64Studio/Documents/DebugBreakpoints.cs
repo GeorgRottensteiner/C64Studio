@@ -196,7 +196,7 @@ namespace RetroDevStudio.Documents
 
     private DocumentInfo DetermineAffectedDocument( int BreakpointAddress, out string DocumentFilename, out int LineIndex )
     {
-      DocumentFilename  = null;
+      DocumentFilename  = "";
       LineIndex         = -1;
       if ( Core.MainForm.CurrentProject != null )
       {
@@ -364,9 +364,15 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      Types.Breakpoint bp = (Types.Breakpoint)listBreakpoints.SelectedItems[0].Tag;
-
-      RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+      var bps = new List<Types.Breakpoint>();
+      foreach ( ListViewItem item in listBreakpoints.SelectedItems )
+      {
+        bps.Add( (Types.Breakpoint)item.Tag );
+      }
+      foreach ( var bp in bps )
+      {
+        RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+      }
     }
 
 
