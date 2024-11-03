@@ -359,7 +359,8 @@ git checkout <file>*/
 
     public bool CanAddToRepository( FileState FileState )
     {
-      return ( FileState == FileState.NewInWorkdir );
+      return ( ( FileState == FileState.NewInWorkdir )
+        ||     ( FileState == FileState.Nonexistent ) );
     }
 
 

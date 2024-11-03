@@ -591,6 +591,12 @@ namespace RetroDevStudio
         return false;
       }
       // Element Data
+      // sanitize filename
+      if ( ( GR.Path.IsPathRooted( element.Filename ) )
+      &&   ( GR.Path.CommonPrefix( element.Filename, Settings.BasePath ) == Settings.BasePath ) )
+      {
+        element.Filename = GR.Path.RelativePathTo( element.Filename, false, Settings.BasePath, true );
+      }
       element.DocumentInfo.DocumentFilename = element.Filename;
       if ( element.Document != null )
       {

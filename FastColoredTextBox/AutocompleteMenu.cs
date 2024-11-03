@@ -904,17 +904,20 @@ namespace FastColoredTextBoxNS
       IWin32Window window = this.Parent ?? this;
       Point location = new Point( ( window == this ? Width : Right ) + 3, 0 );
 
-      // not calling hide sometimes makes the tooltip show older content??
-      toolTip.Hide( window );
-      if ( string.IsNullOrEmpty( text ) )
+      if ( toolTip.ToolTipTitle != title )
       {
-        toolTip.ToolTipTitle = null;
-        toolTip.Show( title, window, location.X, location.Y, ToolTipDuration );
-      }
-      else
-      {
-        toolTip.ToolTipTitle = title;
-        toolTip.Show( text, window, location.X, location.Y, ToolTipDuration );
+        // not calling hide sometimes makes the tooltip show older content??
+        toolTip.Hide( window );
+        if ( string.IsNullOrEmpty( text ) )
+        {
+          toolTip.ToolTipTitle = null;
+          toolTip.Show( title, window, location.X, location.Y, ToolTipDuration );
+        }
+        else
+        {
+          toolTip.ToolTipTitle = title;
+          toolTip.Show( text, window, location.X, location.Y, ToolTipDuration );
+        }
       }
     }
 
