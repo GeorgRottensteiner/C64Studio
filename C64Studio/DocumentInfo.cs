@@ -180,6 +180,8 @@ namespace RetroDevStudio
 
       SourceASMEx   asm = null;
 
+      var clonedInfo = FileInfo;
+
       if ( ( BaseDoc != null )
       &&   ( Type == ProjectElement.ElementType.ASM_SOURCE ) )
       {
@@ -189,12 +191,13 @@ namespace RetroDevStudio
       {
         asm.DoNotFollowZoneSelectors = true;
 
-        asm.SetLineInfos( FileInfo );
+        asm.SetLineInfos( clonedInfo );
       }
 
-      ASMFileInfo   = FileInfo;
-      KnownKeywords = FileInfo.KnownTokens();
-      KnownTokens   = FileInfo.KnownTokenInfo();
+      //Debug.Log( $"      doc {FullPath} getting file info with spriteinitbytemsb {clonedInfo.Labels.ContainsKey( "spriteinitbytemsb" )}" );
+      ASMFileInfo   = clonedInfo;
+      KnownKeywords = clonedInfo.KnownTokens();
+      KnownTokens   = clonedInfo.KnownTokenInfo();
       if ( BaseDoc != null )
       {
         BaseDoc.Core.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
@@ -268,7 +271,10 @@ namespace RetroDevStudio
             if ( ( element != null )
             &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
             {
-              element.DocumentInfo.SetASMFileInfo( FileInfo );
+              if ( !Element.ForcedDependency.DependsOn( element.DocumentInfo.Project.Settings.Name, element.DocumentInfo.DocumentFilename ) )
+              {
+                element.DocumentInfo.SetASMFileInfo( clonedInfo );
+              }
             }
           }
         }

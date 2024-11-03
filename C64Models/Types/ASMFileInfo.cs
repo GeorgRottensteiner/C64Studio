@@ -221,6 +221,26 @@ namespace RetroDevStudio.Types.ASM
 
 
 
+    /*
+    public FileInfo( FileInfo OtherInfo )
+    {
+      SourceInfo      = new SortedDictionary<int, SourceInfo>( OtherInfo.SourceInfo );
+      AddressToLine   = new Dictionary<int, int>( OtherInfo.AddressToLine );
+      LineInfo        = new Dictionary<int, LineInfo>( OtherInfo.LineInfo );
+      UnparsedLabels  = new Dictionary<string, UnparsedEvalInfo>( OtherInfo.UnparsedLabels );
+      Labels          = new Dictionary<string, SymbolInfo>( OtherInfo.Labels );
+      Zones           = new Dictionary<string, List<SymbolInfo>>( OtherInfo.Zones );
+      MappedVariables = new Dictionary<string, List<SymbolInfo>>( OtherInfo.MappedVariables );
+      OriginalVariables = new Set<string>( OtherInfo.OriginalVariables );
+      Banks = new List<BankInfo>( OtherInfo.Banks );
+      TempLabelInfo = new List<TemporaryLabelInfo>( OtherInfo.TempLabelInfo );
+      AssemblerSettings = OtherInfo.AssemblerSettings;
+      Macros = new Map<Tupel<string, int>, MacroFunctionInfo>( OtherInfo.Macros );
+      Messages = new MultiMap<int, ParserBase.ParseMessage>( OtherInfo.Messages );
+    }*/
+
+
+
     public void Clear()
     {
       SourceInfo.Clear();

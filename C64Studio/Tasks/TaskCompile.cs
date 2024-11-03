@@ -679,7 +679,7 @@ namespace RetroDevStudio.Tasks
                     combinedFileInfo.Labels.Add( entry.Key, entry.Value );
                   }
                 }
-                //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
+                //Debug.Log( $"Doc {Doc.FullPath} receives {dependencyFileInfo.Labels.Count} dependency labels from dependency {dependency.Filename}, has label spriteinitbytemsb {combinedFileInfo.Labels.ContainsKey( "spriteinitbytemsb" )}" );
               }
             }
           }
@@ -867,6 +867,7 @@ namespace RetroDevStudio.Tasks
                 {
                   if ( asmFileInfo.ContainsFile( document.FullPath ) )
                   {
+                    Debug.Log( $"  Post build, pass spriteinitbytemsb {asmFileInfo.Labels.ContainsKey( "spriteinitbytemsb" )} to file info {document.FullPath}" );
                     document.SetASMFileInfo( asmFileInfo );
                   }
                 }
@@ -1031,13 +1032,15 @@ namespace RetroDevStudio.Tasks
         if ( asmFileInfo != null )
         {
           // spread asm info to all participating files
+          var clonedInfo = asmFileInfo; // new Types.ASM.FileInfo( asmFileInfo );
           foreach ( var document in Core.MainForm.DocumentInfos )
           {
             if ( document != null )
             {
-              if ( asmFileInfo.ContainsFile( document.FullPath ) )
+              if ( clonedInfo.ContainsFile( document.FullPath ) )
               {
-                document.SetASMFileInfo( asmFileInfo );
+                //Debug.Log( $"  Post build of {Doc.FullPath}, pass spriteinitbytemsb {clonedInfo.Labels.ContainsKey( "spriteinitbytemsb" )} to file info {document.FullPath}" );
+                document.SetASMFileInfo( clonedInfo );
               }
             }
           }
@@ -1211,6 +1214,10 @@ namespace RetroDevStudio.Tasks
 
         lock ( m_DocumentToBuild.DeducedDependency )
         {
+          if ( !m_DocumentToBuild.DeducedDependency.ContainsKey( ParentDocumentConfigSetting ) )
+          {
+            m_DocumentToBuild.DeducedDependency.Add( ParentDocumentConfigSetting, new DependencyBuildState() );
+          }
           if ( !m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState.ContainsKey( element.DocumentInfo.FullPath ) )
           {
             m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState.Add( element.DocumentInfo.FullPath, new SingleBuildInfo() );

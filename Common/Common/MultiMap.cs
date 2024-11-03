@@ -1,3 +1,4 @@
+using RetroDevStudio.Parser;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,16 @@ namespace GR.Collections
     public MultiMap()
 		{
 		}
+
+
+
+    public MultiMap( IEnumerable<KeyValuePair<TKey, TValue>> OtherMap )
+    {
+      foreach ( var entry in OtherMap )
+      {
+        Add( entry.Key, entry.Value );
+      }
+    }
 
 
 

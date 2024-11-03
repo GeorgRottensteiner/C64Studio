@@ -2212,12 +2212,10 @@ namespace RetroDevStudio.Controls
         m_Project.Colors.Palette = PaletteManager.PaletteFromMode( m_Project.Mode );
       }
 
-      int   colorsInSelector = 16;
       switch ( m_Project.Mode )
       {
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
-          colorsInSelector = 32;
           break;
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
@@ -2246,13 +2244,6 @@ namespace RetroDevStudio.Controls
           Debug.Log( "UpdatePalette - unsupported TextCharMode " + m_Project.Mode );
           break;
       }
-
-      /*
-      if ( _NumColorsInColorSelector != colorsInSelector )
-      {
-        _NumColorsInColorSelector = colorsInSelector;
-        panelCharColors.DisplayPage.Create( 8 * _NumColorsInColorSelector, 8, GR.Drawing.PixelFormat.Format32bppRgb );
-      }*/
 
       OnPaletteChanged();
     }
