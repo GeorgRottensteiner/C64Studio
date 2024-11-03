@@ -3794,5 +3794,98 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void btnMoveSelectionToTarget_Click( DecentForms.ControlBase Sender )
+    {
+      int targetIndex = GR.Convert.ToI32( editMoveTargetIndex.Text );
+
+      var selection = panelSprites.SelectedIndices;
+      if ( selection.Count == 0 )
+      {
+        return;
+      }
+      if ( targetIndex + selection.Count > m_SpriteProject.TotalNumberOfSprites )
+      {
+        MessageBox.Show( "Not enough sprites for selection starting at the given index!", "Can't move selection" );
+        return;
+      }
+
+      int[]   spriteMapNewToOld = new int[m_SpriteProject.TotalNumberOfSprites];
+      int[]   spriteMapOldToNew = new int[m_SpriteProject.TotalNumberOfSprites];
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        spriteMapNewToOld[i] = -1;
+        spriteMapOldToNew[i] = -1;
+      }
+
+      int     insertIndex = targetIndex;
+      foreach ( var entry in selection )
+      {
+        spriteMapNewToOld[insertIndex] = entry;
+        spriteMapOldToNew[entry] = insertIndex;
+        ++insertIndex;
+      }
+
+      // now fill all other entries
+      byte    insertSpriteIndex = 0;
+      int     spritePos = 0;
+      while ( spritePos < 256 )
+      {
+        // already inserted, skip
+        if ( spriteMapNewToOld[spritePos] != -1 )
+        {
+          ++spritePos;
+          continue;
+        }
+        while ( selection.Contains( insertSpriteIndex ) )
+        {
+          ++insertSpriteIndex;
+        }
+        spriteMapNewToOld[spritePos] = insertSpriteIndex;
+        spriteMapOldToNew[insertSpriteIndex] = spritePos;
+        ++spritePos;
+        ++insertSpriteIndex;
+      }
+
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetShiftSprites( this, m_SpriteProject, spriteMapNewToOld, spriteMapOldToNew ) );
+
+      ShiftSprites( spriteMapOldToNew, spriteMapNewToOld );
+    }
+
+
+
+    public void ShiftSprites( int[] OldToNew, int[] NewToOld )
+    {
+      // ..and sprites
+      List<SpriteProject.SpriteData>    origSpriteData = new List<SpriteProject.SpriteData>();
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems = new List<GR.Forms.ImageListbox.ImageListItem>();
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems2 = new List<GR.Forms.ImageListbox.ImageListItem>();
+
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        origSpriteData.Add( m_SpriteProject.Sprites[i] );
+        origListItems.Add( panelSprites.Items[i] );
+      }
+
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        m_SpriteProject.Sprites[i]  = origSpriteData[NewToOld[i]];
+        panelSprites.Items[i]       = origListItems[NewToOld[i]];
+      }
+      foreach ( var layer in m_SpriteProject.SpriteLayers )
+      {
+        foreach ( var entry in layer.Sprites )
+        {
+          entry.Index = OldToNew[entry.Index];
+        }
+      }
+      comboSprite.SelectedIndex = OldToNew[comboSprite.SelectedIndex];
+      panelSprites.Invalidate();
+
+      RedrawPreviewLayer();
+      pictureEditor.Invalidate();
+    }
+
+
+
   }
 }
