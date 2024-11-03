@@ -3,6 +3,7 @@ using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Policy;
 
 
 
@@ -10,13 +11,20 @@ namespace RetroDevStudio.Displayer
 {
   public class CharacterDisplayer
   {
-    public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, int BGColor, int CharColor, CustomDrawControlContext Context )
+    public static void DisplayHiResChar( Types.GraphicTile Tile, int BGColor, int CharColor, CustomDrawControlContext Context )
+    {
+      DisplayHiResChar( Tile.Data, Tile.Width, Tile.Height, BGColor, CharColor, Context );  
+    }
+
+
+
+    public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, int CharColor, CustomDrawControlContext Context )
     {
       // single color
       int colorIndex = 0;
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < Height; ++j )
       {
-        for ( int i = 0; i < 8; ++i )
+        for ( int i = 0; i < Width; ++i )
         {
           if ( ( Data.ByteAt( j ) & ( 1 << ( 7 - i ) ) ) != 0 )
           {
@@ -27,29 +35,36 @@ namespace RetroDevStudio.Displayer
             colorIndex = BGColor;
           }
           Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[colorIndex], 
-                                          ( i * Context.Bounds.Width ) / 8,
-                                          ( j * Context.Bounds.Height ) / 8,
-                                          ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
-                                          ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+                                          ( i * Context.Bounds.Width ) / Width,
+                                          ( j * Context.Bounds.Height ) / Height,
+                                          ( ( i + 1 ) * Context.Bounds.Width ) / Width - ( i * Context.Bounds.Width ) / Width,
+                                          ( ( j + 1 ) * Context.Bounds.Height ) / Height - ( j * Context.Bounds.Height ) / Height );
         }
       }
     }
 
 
 
-    public static void DisplayMultiColorChar( GR.Memory.ByteBuffer Data, int BGColor, int MColor1, int MColor2, int CharColor, CustomDrawControlContext Context )
+    public static void DisplayMultiColorChar( Types.GraphicTile Tile, int BGColor, int MColor1, int MColor2, int CharColor, CustomDrawControlContext Context, int X, int Y )
+    {
+      DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, BGColor, MColor1, MColor2, CharColor, Context, X, Y );
+    }
+
+
+
+    public static void DisplayMultiColorChar( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, int MColor1, int MColor2, int CharColor, CustomDrawControlContext Context, int X, int Y )
     {
       // multicolor
       if ( CharColor < 8 )
       {
-        DisplayHiResChar( Data, BGColor, CharColor, Context );
+        DisplayHiResChar( Data, Width, Height, BGColor, CharColor, Context );
         return;
       }
 
       // single color
       int charColor = CharColor - 8;
 
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < Height; ++j )
       {
         for ( int i = 0; i < 4; ++i )
         {
@@ -72,32 +87,32 @@ namespace RetroDevStudio.Displayer
           }
           Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[pixelValue],
                                           ( i * Context.Bounds.Width ) / 4,
-                                          ( j * Context.Bounds.Height ) / 8,
+                                          ( j * Context.Bounds.Height ) / Height,
                                           ( ( i + 1 ) * Context.Bounds.Width ) / 4 - ( i * Context.Bounds.Width ) / 4,
-                                          ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+                                          ( ( j + 1 ) * Context.Bounds.Height ) / Height - ( j * Context.Bounds.Height ) / Height );
         }
       }
     }
 
 
 
-    public static void DisplayVIC20Char( GR.Memory.ByteBuffer Data, int BGColor, int BorderColor, int AuxiliaryColor, int CharColor, CustomDrawControlContext Context )
+    public static void DisplayVIC20Char( Types.GraphicTile Tile, int BGColor, int BorderColor, int AuxiliaryColor, int CharColor, CustomDrawControlContext Context )
     {
       // multicolor
       if ( CharColor < 8 )
       {
-        DisplayHiResChar( Data, BGColor, CharColor, Context );
+        DisplayHiResChar( Tile, BGColor, CharColor, Context );
         return;
       }
 
       // single color
       int charColor = CharColor - 8;
 
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < Tile.Height; ++j )
       {
         for ( int i = 0; i < 4; ++i )
         {
-          int pixelValue = ( Data.ByteAt( j ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
+          int pixelValue = ( Tile.Data.ByteAt( j ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
 
           switch ( pixelValue )
           {
@@ -116,9 +131,9 @@ namespace RetroDevStudio.Displayer
           }
           Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[pixelValue],
                                           ( i * Context.Bounds.Width ) / 4,
-                                          ( j * Context.Bounds.Height ) / 8,
+                                          ( j * Context.Bounds.Height ) / Tile.Height,
                                           ( ( i + 1 ) * Context.Bounds.Width ) / 4 - ( i * Context.Bounds.Width ) / 4,
-                                          ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+                                          ( ( j + 1 ) * Context.Bounds.Height ) / Tile.Height - ( j * Context.Bounds.Height ) / Tile.Height );
         }
       }
     }
@@ -185,11 +200,18 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayHiResChar( Types.GraphicTile Tile, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    {
+      DisplayHiResChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, CharColor, TargetImage, X, Y );
+    }
+
+
+
+    public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, int Width, int Height, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // single color
       int colorIndex = 0;
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < Height; ++j )
       {
         for ( int i = 0; i < 8; ++i )
         {
@@ -210,18 +232,25 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayMultiColorChar( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMultiColorChar( Types.GraphicTile Tile, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    {
+      DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, MColor1, MColor2, CharColor, TargetImage, X, Y );
+    }
+
+
+
+    public static void DisplayMultiColorChar( GR.Memory.ByteBuffer Data, int Width, int Height, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // multicolor
       if ( CharColor < 8 )
       {
-        DisplayHiResChar( Data, Palette, BGColor, CharColor, TargetImage, X, Y );
+        DisplayHiResChar( Data, Width, Height, Palette, BGColor, CharColor, TargetImage, X, Y );
         return;
       }
 
       int charColor = CharColor - 8;
 
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < Height; ++j )
       {
         for ( int i = 0; i < 4; ++i )
         {
@@ -291,22 +320,22 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayVIC20Char( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayVIC20Char( Types.GraphicTile Tile, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // multicolor
       if ( CharColor < 8 )
       {
-        DisplayHiResChar( Data, Palette, BGColor, CharColor, TargetImage, X, Y );
+        DisplayHiResChar( Tile, Palette, BGColor, CharColor, TargetImage, X, Y );
         return;
       }
 
       int charColor = CharColor - 8;
 
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < Tile.Height; ++j )
       {
         for ( int i = 0; i < 4; ++i )
         {
-          int pixelValue = ( Data.ByteAt( j ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
+          int pixelValue = ( Tile.Data.ByteAt( j ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
 
           switch ( pixelValue )
           {
@@ -435,17 +464,17 @@ namespace RetroDevStudio.Displayer
             ecmBGColor = bgColor4;
             break;
         }
-        DisplayHiResChar( origChar.Tile.Data, ecmBGColor, color, Context );
+        DisplayHiResChar( origChar.Tile, ecmBGColor, color, Context );
       }
       else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
       {
-        DisplayMultiColorChar( Char.Tile.Data, bgColor, mColor1, mColor2, color, Context );
+        DisplayMultiColorChar( Char.Tile, bgColor, mColor1, mColor2, color, Context, 0, 0 );
       }
       else if ( ( mode == TextCharMode.COMMODORE_HIRES )
       ||        ( mode == TextCharMode.MEGA65_HIRES )
       ||        ( mode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
-        DisplayHiResChar( Char.Tile.Data, bgColor, color, Context );
+        DisplayHiResChar( Char.Tile, bgColor, color, Context );
       }
       else if ( ( mode == TextCharMode.MEGA65_FCM )
       ||        ( mode == TextCharMode.MEGA65_FCM_16BIT ) )
@@ -456,13 +485,14 @@ namespace RetroDevStudio.Displayer
       {
         DisplayMega65NCMChar( Char.Tile.Data, bgColor, color, Context );
       }
-      else if ( mode == TextCharMode.VIC20 )
+      else if ( ( mode == TextCharMode.VIC20 )
+      ||        ( mode == TextCharMode.VIC20_8X16 ) )
       {
-        DisplayVIC20Char( Char.Tile.Data, bgColor, mColor1, mColor2, color, Context );
+        DisplayVIC20Char( Char.Tile, bgColor, mColor1, mColor2, color, Context );
       }
       else if ( mode == TextCharMode.X16_HIRES )
       {
-        DisplayHiResChar( Char.Tile.Data, ( color >> 4 ) & 0x0f, color & 0x0f, Context );
+        DisplayHiResChar( Char.Tile, ( color >> 4 ) & 0x0f, color & 0x0f, Context );
       }
       else if ( mode == TextCharMode.NES )
       {
@@ -527,17 +557,17 @@ namespace RetroDevStudio.Displayer
             altBGColor = bgColor4;
             break;
         }
-        DisplayHiResChar( origChar.Tile.Data, palette, altBGColor, color, TargetImage, X, Y );
+        DisplayHiResChar( origChar.Tile, palette, altBGColor, color, TargetImage, X, Y );
       }
       else if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
       {
-        DisplayMultiColorChar( Char.Tile.Data, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
+        DisplayMultiColorChar( Char.Tile, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
       }
       else if ( ( mode == TextCharMode.COMMODORE_HIRES )
       ||        ( mode == TextCharMode.MEGA65_HIRES )
       ||        ( mode == TextCharMode.COMMODORE_128_VDC_HIRES ) )
       {
-        DisplayHiResChar( Char.Tile.Data, palette, bgColor, color, TargetImage, X, Y );
+        DisplayHiResChar( Char.Tile, palette, bgColor, color, TargetImage, X, Y );
       }
       else if ( ( mode == TextCharMode.MEGA65_FCM )
       ||        ( mode == TextCharMode.MEGA65_FCM_16BIT ) )
@@ -548,13 +578,14 @@ namespace RetroDevStudio.Displayer
       {
         DisplayMega65NCMChar( Char.Tile.Data, palette, bgColor, color, TargetImage, X, Y );
       }
-      else if ( mode == TextCharMode.VIC20 )
+      else if ( ( mode == TextCharMode.VIC20 )
+      ||        ( mode == TextCharMode.VIC20_8X16 ) )
       {
-        DisplayVIC20Char( Char.Tile.Data, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
+        DisplayVIC20Char( Char.Tile, palette, bgColor, mColor1, mColor2, color, TargetImage, X, Y );
       }
       else if ( mode == TextCharMode.X16_HIRES )
       {
-        DisplayHiResChar( Char.Tile.Data, palette, ( color >> 4 ) & 0x0f, color & 0x0f, TargetImage, X, Y );
+        DisplayHiResChar( Char.Tile, palette, ( color >> 4 ) & 0x0f, color & 0x0f, TargetImage, X, Y );
       }
       else if ( mode == TextCharMode.NES )
       {

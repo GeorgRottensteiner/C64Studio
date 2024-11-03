@@ -66,6 +66,7 @@ namespace RetroDevStudio.Types
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.COMMODORE_HIRES_8X16:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           {
@@ -87,6 +88,7 @@ namespace RetroDevStudio.Types
           }
           break;
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
 
@@ -276,6 +278,7 @@ namespace RetroDevStudio.Types
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.COMMODORE_HIRES_8X16:
         case GraphicTileMode.COMMANDERX16_HIRES:
         case GraphicTileMode.COMMODORE_128_VDC_HIRES:
           {
@@ -286,6 +289,7 @@ namespace RetroDevStudio.Types
             return new Tupel<ColorType, byte>( ColorType.BACKGROUND, 0 );
           }
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
           {
             // multi color
             int innerX = ( X % 8 ) / 2;

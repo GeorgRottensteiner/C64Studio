@@ -29,7 +29,11 @@ namespace RetroDevStudio
     [Description( "Commodore 128 VDC HiRes" )]
     COMMODORE_128_VDC_HIRES,
     [Description( "NES" )]
-    NES
+    NES,
+    [Description( "Commodore HiRes VIC20 8x16" )]
+    COMMODORE_HIRES_8X16,
+    [Description( "Commodore Multicolor VIC20 8x16" )]
+    COMMODORE_MULTICOLOR_CHARACTERS_8X16
   }
 
 }

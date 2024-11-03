@@ -30,9 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new DecentForms.Button();
       this.comboCategories = new System.Windows.Forms.ComboBox();
       this.btnPasteFromClipboard = new DecentForms.Button();
@@ -58,11 +56,11 @@
       this.btnShiftLeft = new DecentForms.Button();
       this.tabCharacterEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnHighlightDuplicates = new DecentForms.Button();
       this.panelColorSettings = new System.Windows.Forms.Panel();
       this.canvasEditor = new RetroDevStudio.Controls.CustomDrawControl();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelCharsetMode = new System.Windows.Forms.Label();
-      this.panelCharColors = new GR.Forms.FastPictureBox();
       this.picturePlayground = new GR.Forms.FastPictureBox();
       this.panelCharacters = new GR.Forms.ImageListbox();
       this.tabCategories = new System.Windows.Forms.TabPage();
@@ -82,34 +80,27 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.btnHighlightDuplicates = new DecentForms.Button();
-      this.groupBox2.SuspendLayout();
+      this.panelColorChooser = new System.Windows.Forms.Panel();
       this.groupBox1.SuspendLayout();
       this.tabCharacterEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
       this.tabCategories.SuspendLayout();
       this.groupAllCategories.SuspendLayout();
       this.groupCategorySpecific.SuspendLayout();
       this.SuspendLayout();
       // 
-      // groupBox2
-      // 
-      this.groupBox2.Controls.Add(this.btnClearChars);
-      this.groupBox2.Location = new System.Drawing.Point(497, 301);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(150, 56);
-      this.groupBox2.TabIndex = 50;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "With selected characters";
-      // 
       // btnClearChars
       // 
-      this.btnClearChars.Location = new System.Drawing.Point(6, 21);
+      this.btnClearChars.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnClearChars.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClearChars.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClearChars.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnClearChars.Image = null;
+      this.btnClearChars.Location = new System.Drawing.Point(514, 301);
       this.btnClearChars.Name = "btnClearChars";
-      this.btnClearChars.Size = new System.Drawing.Size(48, 22);
+      this.btnClearChars.Size = new System.Drawing.Size(58, 26);
       this.btnClearChars.TabIndex = 0;
       this.btnClearChars.Text = "Clear";
       this.btnClearChars.Click += new DecentForms.EventHandler(this.btnClear_Click);
@@ -126,6 +117,11 @@
       // 
       // btnPasteFromClipboard
       // 
+      this.btnPasteFromClipboard.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnPasteFromClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnPasteFromClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnPasteFromClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnPasteFromClipboard.Image = null;
       this.btnPasteFromClipboard.Location = new System.Drawing.Point(578, 269);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(97, 26);
@@ -177,7 +173,7 @@
       this.groupBox1.Controls.Add(this.btnMoveSelectionToTarget);
       this.groupBox1.Controls.Add(this.editMoveTargetIndex);
       this.groupBox1.Controls.Add(this.label10);
-      this.groupBox1.Location = new System.Drawing.Point(653, 301);
+      this.groupBox1.Location = new System.Drawing.Point(514, 333);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(249, 56);
       this.groupBox1.TabIndex = 53;
@@ -186,6 +182,11 @@
       // 
       // btnMoveSelectionToTarget
       // 
+      this.btnMoveSelectionToTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveSelectionToTarget.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMoveSelectionToTarget.Image = null;
       this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 20);
       this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
       this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
@@ -211,6 +212,10 @@
       // 
       // btnPaste
       // 
+      this.btnPaste.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnPaste.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnPaste.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnPaste.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
       this.btnPaste.Location = new System.Drawing.Point(546, 269);
       this.btnPaste.Name = "btnPaste";
@@ -221,6 +226,10 @@
       // 
       // btnCopy
       // 
+      this.btnCopy.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCopy.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
       this.btnCopy.Location = new System.Drawing.Point(514, 269);
       this.btnCopy.Name = "btnCopy";
@@ -231,6 +240,10 @@
       // 
       // btnInvert
       // 
+      this.btnInvert.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnInvert.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnInvert.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnInvert.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnInvert.Image = ((System.Drawing.Image)(resources.GetObject("btnInvert.Image")));
       this.btnInvert.Location = new System.Drawing.Point(198, 269);
       this.btnInvert.Name = "btnInvert";
@@ -241,6 +254,10 @@
       // 
       // btnMirrorY
       // 
+      this.btnMirrorY.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMirrorY.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMirrorY.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMirrorY.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
       this.btnMirrorY.Location = new System.Drawing.Point(166, 269);
       this.btnMirrorY.Name = "btnMirrorY";
@@ -251,6 +268,10 @@
       // 
       // btnMirrorX
       // 
+      this.btnMirrorX.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMirrorX.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMirrorX.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMirrorX.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
       this.btnMirrorX.Location = new System.Drawing.Point(134, 269);
       this.btnMirrorX.Name = "btnMirrorX";
@@ -261,6 +282,10 @@
       // 
       // btnShiftDown
       // 
+      this.btnShiftDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
       this.btnShiftDown.Location = new System.Drawing.Point(102, 269);
       this.btnShiftDown.Name = "btnShiftDown";
@@ -271,6 +296,10 @@
       // 
       // btnShiftUp
       // 
+      this.btnShiftUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
       this.btnShiftUp.Location = new System.Drawing.Point(70, 269);
       this.btnShiftUp.Name = "btnShiftUp";
@@ -281,6 +310,10 @@
       // 
       // btnShiftRight
       // 
+      this.btnShiftRight.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftRight.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftRight.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftRight.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
       this.btnShiftRight.Location = new System.Drawing.Point(38, 269);
       this.btnShiftRight.Name = "btnShiftRight";
@@ -291,6 +324,10 @@
       // 
       // button3
       // 
+      this.button3.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.button3.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.button3.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.button3.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
       this.button3.Location = new System.Drawing.Point(38, 301);
       this.button3.Name = "button3";
@@ -301,6 +338,10 @@
       // 
       // btnRotateLeft
       // 
+      this.btnRotateLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnRotateLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnRotateLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnRotateLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnRotateLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateLeft.Image")));
       this.btnRotateLeft.Location = new System.Drawing.Point(6, 301);
       this.btnRotateLeft.Name = "btnRotateLeft";
@@ -311,6 +352,10 @@
       // 
       // btnShiftLeft
       // 
+      this.btnShiftLeft.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnShiftLeft.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnShiftLeft.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnShiftLeft.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
       this.btnShiftLeft.Location = new System.Drawing.Point(6, 269);
       this.btnShiftLeft.Name = "btnShiftLeft";
@@ -327,20 +372,20 @@
       this.tabCharacterEditor.Location = new System.Drawing.Point(0, 0);
       this.tabCharacterEditor.Name = "tabCharacterEditor";
       this.tabCharacterEditor.SelectedIndex = 0;
-      this.tabCharacterEditor.Size = new System.Drawing.Size(1057, 490);
+      this.tabCharacterEditor.Size = new System.Drawing.Size(1070, 490);
       this.tabCharacterEditor.TabIndex = 0;
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.panelColorChooser);
+      this.tabEditor.Controls.Add(this.btnClearChars);
       this.tabEditor.Controls.Add(this.btnHighlightDuplicates);
       this.tabEditor.Controls.Add(this.panelColorSettings);
       this.tabEditor.Controls.Add(this.canvasEditor);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
       this.tabEditor.Controls.Add(this.labelCharsetMode);
       this.tabEditor.Controls.Add(this.groupBox1);
-      this.tabEditor.Controls.Add(this.panelCharColors);
       this.tabEditor.Controls.Add(this.picturePlayground);
-      this.tabEditor.Controls.Add(this.groupBox2);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
       this.tabEditor.Controls.Add(this.btnInvert);
@@ -362,10 +407,24 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(1049, 464);
+      this.tabEditor.Size = new System.Drawing.Size(1062, 464);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Editor";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // btnHighlightDuplicates
+      // 
+      this.btnHighlightDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnHighlightDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnHighlightDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnHighlightDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnHighlightDuplicates.Image = null;
+      this.btnHighlightDuplicates.Location = new System.Drawing.Point(681, 269);
+      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
+      this.btnHighlightDuplicates.Size = new System.Drawing.Size(93, 26);
+      this.btnHighlightDuplicates.TabIndex = 18;
+      this.btnHighlightDuplicates.Text = "Duplicates";
+      this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
       // 
       // panelColorSettings
       // 
@@ -404,21 +463,6 @@
       this.labelCharsetMode.Size = new System.Drawing.Size(37, 13);
       this.labelCharsetMode.TabIndex = 17;
       this.labelCharsetMode.Text = "Mode:";
-      // 
-      // panelCharColors
-      // 
-      this.panelCharColors.AutoResize = false;
-      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
-      this.panelCharColors.Image = null;
-      this.panelCharColors.Location = new System.Drawing.Point(780, 271);
-      this.panelCharColors.Name = "panelCharColors";
-      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
-      this.panelCharColors.TabIndex = 52;
-      this.panelCharColors.TabStop = false;
-      this.panelCharColors.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.panelCharColors_PostPaint);
-      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseDown);
-      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseMove);
       // 
       // picturePlayground
       // 
@@ -475,14 +519,19 @@
       this.tabCategories.Location = new System.Drawing.Point(4, 22);
       this.tabCategories.Name = "tabCategories";
       this.tabCategories.Padding = new System.Windows.Forms.Padding(3);
-      this.tabCategories.Size = new System.Drawing.Size(1049, 464);
+      this.tabCategories.Size = new System.Drawing.Size(1062, 464);
       this.tabCategories.TabIndex = 1;
       this.tabCategories.Text = "Categories";
       this.tabCategories.UseVisualStyleBackColor = true;
       // 
       // btnMoveCategoryDown
       // 
+      this.btnMoveCategoryDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveCategoryDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveCategoryDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveCategoryDown.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveCategoryDown.Enabled = false;
+      this.btnMoveCategoryDown.Image = null;
       this.btnMoveCategoryDown.Location = new System.Drawing.Point(90, 201);
       this.btnMoveCategoryDown.Name = "btnMoveCategoryDown";
       this.btnMoveCategoryDown.Size = new System.Drawing.Size(75, 23);
@@ -492,7 +541,12 @@
       // 
       // btnMoveCategoryUp
       // 
+      this.btnMoveCategoryUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveCategoryUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveCategoryUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveCategoryUp.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveCategoryUp.Enabled = false;
+      this.btnMoveCategoryUp.Image = null;
       this.btnMoveCategoryUp.Location = new System.Drawing.Point(9, 201);
       this.btnMoveCategoryUp.Name = "btnMoveCategoryUp";
       this.btnMoveCategoryUp.Size = new System.Drawing.Size(75, 23);
@@ -512,6 +566,11 @@
       // 
       // btnSortCategories
       // 
+      this.btnSortCategories.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnSortCategories.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSortCategories.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSortCategories.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSortCategories.Image = null;
       this.btnSortCategories.Location = new System.Drawing.Point(6, 19);
       this.btnSortCategories.Name = "btnSortCategories";
       this.btnSortCategories.Size = new System.Drawing.Size(105, 23);
@@ -550,7 +609,12 @@
       // 
       // btnCollapseCategory
       // 
+      this.btnCollapseCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCollapseCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnCollapseCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnCollapseCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnCollapseCategory.Enabled = false;
+      this.btnCollapseCategory.Image = null;
       this.btnCollapseCategory.Location = new System.Drawing.Point(6, 19);
       this.btnCollapseCategory.Name = "btnCollapseCategory";
       this.btnCollapseCategory.Size = new System.Drawing.Size(140, 23);
@@ -560,7 +624,12 @@
       // 
       // btnReseatCategory
       // 
+      this.btnReseatCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnReseatCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnReseatCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnReseatCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnReseatCategory.Enabled = false;
+      this.btnReseatCategory.Image = null;
       this.btnReseatCategory.Location = new System.Drawing.Point(6, 47);
       this.btnReseatCategory.Name = "btnReseatCategory";
       this.btnReseatCategory.Size = new System.Drawing.Size(105, 23);
@@ -570,7 +639,12 @@
       // 
       // btnDelete
       // 
+      this.btnDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnDelete.Enabled = false;
+      this.btnDelete.Image = null;
       this.btnDelete.Location = new System.Drawing.Point(342, 8);
       this.btnDelete.Name = "btnDelete";
       this.btnDelete.Size = new System.Drawing.Size(96, 23);
@@ -580,7 +654,12 @@
       // 
       // btnAddCategory
       // 
+      this.btnAddCategory.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnAddCategory.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddCategory.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddCategory.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnAddCategory.Enabled = false;
+      this.btnAddCategory.Image = null;
       this.btnAddCategory.Location = new System.Drawing.Point(261, 8);
       this.btnAddCategory.Name = "btnAddCategory";
       this.btnAddCategory.Size = new System.Drawing.Size(75, 23);
@@ -631,29 +710,25 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
-      // btnHighlightDuplicates
+      // panelColorChooser
       // 
-      this.btnHighlightDuplicates.Location = new System.Drawing.Point(681, 269);
-      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
-      this.btnHighlightDuplicates.Size = new System.Drawing.Size(93, 26);
-      this.btnHighlightDuplicates.TabIndex = 18;
-      this.btnHighlightDuplicates.Text = "Duplicates";
-      this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
+      this.panelColorChooser.Location = new System.Drawing.Point(780, 275);
+      this.panelColorChooser.Name = "panelColorChooser";
+      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
+      this.panelColorChooser.TabIndex = 55;
       // 
       // CharacterEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.Controls.Add(this.tabCharacterEditor);
       this.Name = "CharacterEditor";
-      this.Size = new System.Drawing.Size(1057, 490);
-      this.groupBox2.ResumeLayout(false);
+      this.Size = new System.Drawing.Size(1070, 490);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.tabCharacterEditor.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       this.tabCategories.ResumeLayout(false);
       this.tabCategories.PerformLayout();
@@ -665,10 +740,7 @@
     }
 
         #endregion
-
-        private GR.Forms.FastPictureBox panelCharColors;
         private GR.Forms.FastPictureBox picturePlayground;
-        private System.Windows.Forms.GroupBox groupBox2;
         private DecentForms.Button btnClearChars;
         private DecentForms.Button btnPaste;
         private DecentForms.Button btnCopy;
@@ -717,5 +789,6 @@
     private System.Windows.Forms.Label labelCharsetMode;
     private System.Windows.Forms.Panel panelColorSettings;
     private DecentForms.Button btnHighlightDuplicates;
+    private System.Windows.Forms.Panel panelColorChooser;
   }
 }

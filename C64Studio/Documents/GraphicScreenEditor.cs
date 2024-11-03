@@ -3063,7 +3063,7 @@ namespace RetroDevStudio.Documents
             charset.Mode = TextCharMode.MEGA65_FCM_16BIT;
             break;
           case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
-            project.Mode = TextMode.COMMODORE_VIC20_22_X_23;
+            project.Mode = TextMode.COMMODORE_VIC20_8_X_8;
             charset.Mode = TextCharMode.VIC20;
             break;
           default:

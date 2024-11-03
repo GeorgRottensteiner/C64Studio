@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
+
+
 namespace Be.Windows.Forms
 {
   public class HexBoxCharViewer : ICustomHexViewer
@@ -68,7 +70,7 @@ namespace Be.Windows.Forms
 
         int     boxSize = (int)Box.CharSize.Height - 2;
         int     charsPerLine = (Box.BytesPerLine + 7) >> 3;
-        ByteBuffer    charData = new ByteBuffer(8);
+        ByteBuffer    charData = new ByteBuffer( 8 );
         using ( GR.Image.FastImage charImage = new GR.Image.FastImage( charsPerLine * 8, 8, GR.Drawing.PixelFormat.Format32bppRgb ) )
         {
           PaletteManager.ApplyPalette( charImage, PaletteC64 );
@@ -85,14 +87,14 @@ namespace Be.Windows.Forms
               switch ( Mode )
               {
                 case TextMode.COMMODORE_40_X_25_HIRES:
-                  CharacterDisplayer.DisplayHiResChar( charData, PaletteC64, BackgroundColor, CustomColor, charImage, x, 0 );
+                  CharacterDisplayer.DisplayHiResChar( charData, 8, 8, PaletteC64, BackgroundColor, CustomColor, charImage, x, 0 );
                   break;
                 case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-                  CharacterDisplayer.DisplayMultiColorChar( charData, PaletteC64, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, x, 0 );
+                  CharacterDisplayer.DisplayMultiColorChar( charData, 8, 8, PaletteC64, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, x, 0 );
                   break;
                 case TextMode.COMMODORE_40_X_25_ECM:
                   // TODO - not correct
-                  CharacterDisplayer.DisplayHiResChar( charData, PaletteC64, BackgroundColor, CustomColor, charImage, x, 0 );
+                  CharacterDisplayer.DisplayHiResChar( charData, 8, 8, PaletteC64, BackgroundColor, CustomColor, charImage, x, 0 );
                   break;
                 default:
                   Debug.Log( "PaintHexData: Missing mode displayer" );

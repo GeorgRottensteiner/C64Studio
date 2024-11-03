@@ -32,6 +32,12 @@
     <Compile Update="Controls\ColorPicker\ColorPickerBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorPicker\ColorPickerMega65_32.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPicker\ColorPickerCommodoreVIC20X16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorPicker\ColorPickerNES.cs">
       <SubType>UserControl</SubType>
     </Compile>

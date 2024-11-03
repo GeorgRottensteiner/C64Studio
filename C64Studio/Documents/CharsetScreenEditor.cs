@@ -1974,7 +1974,7 @@ namespace RetroDevStudio.Documents
       m_ReverseCache = new bool[Width, Height];
 
       m_CharsetScreen.SetScreenSize( Width, Height );
-      m_Image.Create( Width * 8, Height * 8, GR.Drawing.PixelFormat.Format32bppRgb );
+      m_Image.Create( Width * m_CharacterWidth, Height * m_CharacterHeight, GR.Drawing.PixelFormat.Format32bppRgb );
 
       m_TextEntryCachedLine.Clear();
       m_TextEntryEnteredText.Clear();
@@ -2738,8 +2738,11 @@ namespace RetroDevStudio.Documents
           m_CharsWidth = 40;
           pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
-        case TextMode.COMMODORE_VIC20_22_X_23:
+        case TextMode.COMMODORE_VIC20_8_X_8:
           pictureEditor.DisplayPage.Create( 176, 184, GR.Drawing.PixelFormat.Format32bppRgb );
+          break;
+        case TextMode.COMMODORE_VIC20_8_X_16:
+          pictureEditor.DisplayPage.Create( 176, 192, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.NES:
           pictureEditor.DisplayPage.Create( 256, 240, GR.Drawing.PixelFormat.Format32bppRgb );
@@ -2748,7 +2751,9 @@ namespace RetroDevStudio.Documents
           Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
           break;
       }
+      SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
       RedrawFullScreen();
+      AdjustScrollbars();
     }
 
 
@@ -2820,7 +2825,7 @@ namespace RetroDevStudio.Documents
           // these modes adapt aspect ratio!
           displaySize = new Size( Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode ) * 8, Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode ) * 8 );
           break;
-        case TextMode.COMMODORE_VIC20_22_X_23:
+        case TextMode.COMMODORE_VIC20_8_X_8:
           displaySize = new Size( 176, 184 );
           break;
         default:
@@ -2914,7 +2919,7 @@ namespace RetroDevStudio.Documents
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.C64 );
           break;
-        case TextMode.COMMODORE_VIC20_22_X_23:
+        case TextMode.COMMODORE_VIC20_8_X_8:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = Core.Imaging.PaletteFromMachine( MachineType.VIC20 );
           break;
       }

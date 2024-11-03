@@ -44,6 +44,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_MULTICOLOR:
           return ConstantData.DefaultPaletteC64();
         case TextCharMode.VIC20:
+        case TextCharMode.VIC20_8X16:
           return ConstantData.DefaultPaletteVIC20();
         case TextCharMode.COMMODORE_128_VDC_HIRES:
           return ConstantData.DefaultPaletteC128();

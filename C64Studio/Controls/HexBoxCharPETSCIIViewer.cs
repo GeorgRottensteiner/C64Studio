@@ -47,12 +47,14 @@ namespace Be.Windows.Forms
           {
             case PETSCIIDisplay.UPPER_CASE:
               CharacterDisplayer.DisplayHiResChar( ConstantData.UpperCaseCharsetC64.SubBuffer( character * 8, 8 ),
+                                                   8, 8,
                                                    PaletteC64,
                                                    bgColor, displayColor,
                                                    charImage, 0, 0 );
               break;
             case PETSCIIDisplay.LOWER_CASE:
               CharacterDisplayer.DisplayHiResChar( ConstantData.LowerCaseCharsetC64.SubBuffer( character * 8, 8 ),
+                                                   8, 8,
                                                    PaletteC64,
                                                    bgColor, displayColor,
                                                    charImage, 0, 0 );

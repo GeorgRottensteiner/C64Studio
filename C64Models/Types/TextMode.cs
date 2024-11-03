@@ -26,8 +26,8 @@ namespace RetroDevStudio
     MEGA65_80_X_25_FCM,
     [Description( "Mega 65 80x25 FCM 16bit Chars" )]
     MEGA65_80_X_25_FCM_16BIT,
-    [Description( "Commodore VIC20 22x23" )]
-    COMMODORE_VIC20_22_X_23,
+    [Description( "Commodore VIC20" )]
+    COMMODORE_VIC20_8_X_8,
     [Description( "Mega 65 40x25 ECM" )]
     MEGA65_40_X_25_ECM,
     [Description( "Mega 65 40x25 HiRes" )]
@@ -55,7 +55,9 @@ namespace RetroDevStudio
     [Description( "Commodore C128 80x25 HiRes" )]
     COMMODORE_128_VDC_80_X_25_HIRES,
     [Description( "NES 32x30" )]
-    NES
+    NES,
+    [Description( "Commodore VIC20 8x16" )]
+    COMMODORE_VIC20_8_X_16
   }
 
 }

@@ -98,7 +98,7 @@ namespace RetroDevStudio.Controls
         default:
           sb.Append( "C64" );
           break;
-        case TextMode.COMMODORE_VIC20_22_X_23:
+        case TextMode.COMMODORE_VIC20_8_X_8:
           sb.Append( "VIC20" );
           break;
       }

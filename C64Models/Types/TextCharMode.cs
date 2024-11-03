@@ -29,7 +29,9 @@ namespace RetroDevStudio
     [Description( "C128 VDC HiRes" )]
     COMMODORE_128_VDC_HIRES,
     [Description( "NES" )]
-    NES
+    NES,
+    [Description( "VIC20 8x16 Text Mode" )]
+    VIC20_8X16
   }
 
 }

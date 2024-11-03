@@ -116,7 +116,20 @@ namespace RetroDevStudio.Documents
           }
           break;
         case ApplicationEvent.Type.PROJECT_CLOSED:
-
+          if ( ( ActiveDocumentInfo != null )
+          &&   ( ActiveDocumentInfo.Project == Event.Project ) )
+          {
+            ActiveDocumentInfo = null;
+            NodeRoot.Nodes.Clear();
+          }
+          break;
+        case ApplicationEvent.Type.SOLUTION_CLOSED:
+          if ( ( ActiveDocumentInfo != null )
+          &&   ( ActiveDocumentInfo.Project != null ) )
+          {
+            ActiveDocumentInfo = null;
+            NodeRoot.Nodes.Clear();
+          }
           break;
       }
     }
