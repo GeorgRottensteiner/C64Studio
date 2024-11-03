@@ -918,6 +918,25 @@ namespace RetroDevStudio.Controls
       &&   ( chosenCharColor < 8 ) )
       {
         m_Project.Characters[CharIndex].Tile.CustomColor = (byte)( chosenCharColor + 8 );
+        if ( m_Project.Characters[CharIndex].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
+        {
+          m_Project.Characters[CharIndex].Tile.Mode = GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS;
+        }
+        else if ( m_Project.Characters[CharIndex].Tile.Mode == GraphicTileMode.COMMODORE_HIRES_8X16 )
+        {
+          m_Project.Characters[CharIndex].Tile.Mode = GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16;
+        }
+      }
+      else
+      {
+        if ( m_Project.Characters[CharIndex].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS )
+        {
+          m_Project.Characters[CharIndex].Tile.Mode = GraphicTileMode.COMMODORE_HIRES;
+        }
+        else if ( m_Project.Characters[CharIndex].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16 )
+        {
+          m_Project.Characters[CharIndex].Tile.Mode = GraphicTileMode.COMMODORE_HIRES_8X16;
+        }
       }
       RebuildCharImage( CharIndex );
       return true;
