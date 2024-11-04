@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       this.btnClearChars = new DecentForms.Button();
       this.comboCategories = new System.Windows.Forms.ComboBox();
       this.btnPasteFromClipboard = new DecentForms.Button();
@@ -38,10 +38,8 @@
       this.labelCharNo = new System.Windows.Forms.Label();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.checkPasteMultiColor = new System.Windows.Forms.CheckBox();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnMoveSelectionToTarget = new DecentForms.Button();
       this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
-      this.label10 = new System.Windows.Forms.Label();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.btnPaste = new DecentForms.Button();
       this.btnCopy = new DecentForms.Button();
@@ -56,6 +54,7 @@
       this.btnShiftLeft = new DecentForms.Button();
       this.tabCharacterEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.panelColorChooser = new System.Windows.Forms.Panel();
       this.btnHighlightDuplicates = new DecentForms.Button();
       this.panelColorSettings = new System.Windows.Forms.Panel();
       this.canvasEditor = new RetroDevStudio.Controls.CustomDrawControl();
@@ -80,8 +79,6 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.panelColorChooser = new System.Windows.Forms.Panel();
-      this.groupBox1.SuspendLayout();
       this.tabCharacterEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
@@ -168,18 +165,6 @@
       this.checkPasteMultiColor.Text = "Force Multicolor on paste";
       this.checkPasteMultiColor.UseVisualStyleBackColor = true;
       // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.btnMoveSelectionToTarget);
-      this.groupBox1.Controls.Add(this.editMoveTargetIndex);
-      this.groupBox1.Controls.Add(this.label10);
-      this.groupBox1.Location = new System.Drawing.Point(514, 333);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(249, 56);
-      this.groupBox1.TabIndex = 53;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Move Selection To";
-      // 
       // btnMoveSelectionToTarget
       // 
       this.btnMoveSelectionToTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -187,28 +172,19 @@
       this.btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveSelectionToTarget.Image = null;
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 20);
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(578, 301);
       this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
-      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
+      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(97, 26);
       this.btnMoveSelectionToTarget.TabIndex = 1;
-      this.btnMoveSelectionToTarget.Text = "Move";
+      this.btnMoveSelectionToTarget.Text = "Move to Index";
       this.btnMoveSelectionToTarget.Click += new DecentForms.EventHandler(this.btnMoveSelectionToTarget_Click);
       // 
       // editMoveTargetIndex
       // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 21);
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(681, 305);
       this.editMoveTargetIndex.Name = "editMoveTargetIndex";
-      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
+      this.editMoveTargetIndex.Size = new System.Drawing.Size(93, 20);
       this.editMoveTargetIndex.TabIndex = 0;
-      // 
-      // label10
-      // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 24);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(70, 13);
-      this.label10.TabIndex = 0;
-      this.label10.Text = "Target Index:";
       // 
       // btnPaste
       // 
@@ -377,14 +353,15 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnMoveSelectionToTarget);
       this.tabEditor.Controls.Add(this.panelColorChooser);
+      this.tabEditor.Controls.Add(this.editMoveTargetIndex);
       this.tabEditor.Controls.Add(this.btnClearChars);
       this.tabEditor.Controls.Add(this.btnHighlightDuplicates);
       this.tabEditor.Controls.Add(this.panelColorSettings);
       this.tabEditor.Controls.Add(this.canvasEditor);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
       this.tabEditor.Controls.Add(this.labelCharsetMode);
-      this.tabEditor.Controls.Add(this.groupBox1);
       this.tabEditor.Controls.Add(this.picturePlayground);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
@@ -411,6 +388,13 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Editor";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // panelColorChooser
+      // 
+      this.panelColorChooser.Location = new System.Drawing.Point(780, 275);
+      this.panelColorChooser.Name = "panelColorChooser";
+      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
+      this.panelColorChooser.TabIndex = 55;
       // 
       // btnHighlightDuplicates
       // 
@@ -468,7 +452,7 @@
       // 
       this.picturePlayground.AutoResize = false;
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage2;
+      this.picturePlayground.DisplayPage = fastImage1;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(780, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -710,21 +694,12 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
-      // panelColorChooser
-      // 
-      this.panelColorChooser.Location = new System.Drawing.Point(780, 275);
-      this.panelColorChooser.Name = "panelColorChooser";
-      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
-      this.panelColorChooser.TabIndex = 55;
-      // 
       // CharacterEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.Controls.Add(this.tabCharacterEditor);
       this.Name = "CharacterEditor";
       this.Size = new System.Drawing.Size(1070, 490);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
       this.tabCharacterEditor.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
@@ -760,10 +735,8 @@
         private GR.Forms.ImageListbox panelCharacters;
         private System.Windows.Forms.CheckBox checkShowGrid;
         private System.Windows.Forms.CheckBox checkPasteMultiColor;
-        private System.Windows.Forms.GroupBox groupBox1;
         private DecentForms.Button btnMoveSelectionToTarget;
         private System.Windows.Forms.TextBox editMoveTargetIndex;
-        private System.Windows.Forms.Label label10;
     private CustomDrawControl canvasEditor;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.TabControl tabCharacterEditor;

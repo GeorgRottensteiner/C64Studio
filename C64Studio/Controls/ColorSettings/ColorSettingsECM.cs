@@ -44,15 +44,6 @@ namespace RetroDevStudio.Controls
           case ColorType.BACKGROUND:
             radioBackground.Checked = true;
             break;
-          case ColorType.MULTICOLOR_1:
-            radioMultiColor1.Checked = true;
-            break;
-          case ColorType.MULTICOLOR_2:
-            radioMulticolor2.Checked = true;
-            break;
-          case ColorType.BGCOLOR4:
-            radioBGColor4.Checked = true;
-            break;
           case ColorType.CUSTOM_COLOR:
             radioCharColor.Checked = true;
             break;
@@ -126,7 +117,6 @@ namespace RetroDevStudio.Controls
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-      radioMultiColor1.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_1 );
     }
 
@@ -135,7 +125,6 @@ namespace RetroDevStudio.Controls
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-      radioMulticolor2.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_2 );
     }
 
@@ -153,7 +142,6 @@ namespace RetroDevStudio.Controls
     private void comboBGColor4_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BGColor4 = comboBGColor4.SelectedIndex;
-      radioBGColor4.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BGCOLOR4 );
     }
 
