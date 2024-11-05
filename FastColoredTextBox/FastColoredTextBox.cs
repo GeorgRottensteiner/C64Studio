@@ -2708,7 +2708,7 @@ namespace FastColoredTextBoxNS
     /// <remarks></remarks>
     [Browsable( true )]
     [Description( "Occurs when undo/redo stack is changed." )]
-    public event EventHandler<EventArgs> UndoRedoStateChanged;
+    public event EventHandler<UndoRedoEventArgs> UndoRedoStateChanged;
 
     /// <summary>
     /// Occurs when component was zoomed
@@ -4863,7 +4863,7 @@ namespace FastColoredTextBoxNS
             if ( isChanged )
             {
               OnTextChanged( curPlace.iLine, curPlace.iLine );
-              OnUndoRedoStateChanged();
+              OnUndoRedoStateChanged( UndoRedoEventArgs.UndoRedoAction.UNDO_ADDED );
             }
           }
           break;
@@ -9431,10 +9431,10 @@ window.status = ""#print"";
     /// <summary>
     /// Occurs when undo/redo stack is changed
     /// </summary>
-    public void OnUndoRedoStateChanged()
+    public void OnUndoRedoStateChanged( UndoRedoEventArgs.UndoRedoAction Action, bool IsGrouped = false )
     {
       if ( UndoRedoStateChanged != null )
-        UndoRedoStateChanged( this, EventArgs.Empty );
+        UndoRedoStateChanged( this, new UndoRedoEventArgs( Action, IsGrouped ) );
     }
 
     /// <summary>
@@ -10173,6 +10173,38 @@ window.status = ""#print"";
       get;
       private set;
     }
+  }
+
+
+
+  public class UndoRedoEventArgs : EventArgs
+  {
+    public enum UndoRedoAction
+    {
+      UNDO_ADDED,
+      UNDO_HANDLED,
+      REDO_HANDLED,
+      UNDO_REDO_CLEARED
+    }
+
+    public UndoRedoEventArgs( UndoRedoAction Action, bool IsGrouped )
+    {
+      this.Action     = Action;
+      this.IsGrouped  = IsGrouped;
+    }
+
+    public UndoRedoAction Action
+    {
+      get;
+      private set;
+    }
+
+    public bool IsGrouped
+    {
+      get;
+      private set;
+    }
+
   }
 
 

@@ -61,12 +61,21 @@ namespace RetroDevStudio.Undo
 
 
 
+    public bool InsideUndoRedo
+    {
+      get;
+      internal set;
+    } = false;
+
+
+
     public void Undo()
     {
       if ( UndoTasks.Count == 0 )
       {
         return;
       }
+      InsideUndoRedo = true;
       int   currentGroup = UndoTasks[UndoTasks.Count - 1].UndoGroup;
 
       while ( ( UndoTasks.Count > 0 )
@@ -81,6 +90,7 @@ namespace RetroDevStudio.Undo
 
         task.Apply();
       }
+      InsideUndoRedo = false;
       MainForm.UpdateUndoSettings();
     }
 
@@ -94,7 +104,7 @@ namespace RetroDevStudio.Undo
       }
 
       int   currentGroup = RedoTasks[RedoTasks.Count - 1].UndoGroup;
-
+      InsideUndoRedo = true;
       while ( ( RedoTasks.Count > 0 )
       &&      ( RedoTasks[RedoTasks.Count - 1].UndoGroup == currentGroup ) )
       {
@@ -107,6 +117,7 @@ namespace RetroDevStudio.Undo
 
         task.Apply();
       }
+      InsideUndoRedo = false;
       MainForm.UpdateUndoSettings();
     }
 
@@ -145,6 +156,13 @@ namespace RetroDevStudio.Undo
       AddUndoTask( Task, false );
     }
 
+
+
+    public void Clear()
+    {
+      UndoTasks.Clear();
+      RedoTasks.Clear();
+    }
 
 
 

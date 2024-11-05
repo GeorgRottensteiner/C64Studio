@@ -210,7 +210,7 @@ namespace RetroDevStudio.Documents
       editSource.BookmarkAdded += EditSource_BookmarkAdded;
       editSource.BookmarkRemoved += EditSource_BookmarkRemoved;
 
-      editSource.UndoRedoStateChanged += new EventHandler<EventArgs>( editSource_UndoRedoStateChanged );
+      editSource.UndoRedoStateChanged += new EventHandler<UndoRedoEventArgs>( editSource_UndoRedoStateChanged );
 
       editSource.LeftBracket = '(';
       editSource.RightBracket = ')';

@@ -1,4 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC,lowercase
+#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC,lowercase,10,10
 1000 PROC LOS
 1010 MEM
 1020 DESIGN 2,$E000+8*28
@@ -10,4 +10,4 @@
 1035 @.BB..BB.
 1036 @.BBBBB..
 1037 @.BB.....
-1040 END PROC
+1040 END PROC 

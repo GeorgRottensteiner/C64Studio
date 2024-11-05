@@ -46,6 +46,7 @@ namespace RetroDevStudio.Documents
     private Parser.BasicFileParser            m_Parser = null;
     private bool                              m_InsideLoad = false;
     private bool                              m_InsideToggleSymbolHandler = false;
+    private bool                              m_InsideToggleCaseHandler = false;
     bool                                      m_InsertingText = false;
 
     public string                             m_LastLabelAutoRenumberStartLine  = "10";
@@ -165,12 +166,12 @@ namespace RetroDevStudio.Documents
       editSource.KeyPress += new System.Windows.Forms.KeyPressEventHandler( editSource_KeyPress );
       editSource.KeyUp += new System.Windows.Forms.KeyEventHandler( editSource_KeyUp );
       editSource.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler( editSource_PreviewKeyDown );
-      editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
       editSource.SelectionChanged += EditSource_SelectionChanged;
       editSource.LineInserted += EditSource_LineInserted;
       editSource.LineRemoved += EditSource_LineRemoved;
       editSource.Pasting += EditSource_Pasting;
+      editSource.UndoRedoStateChanged += EditSource_UndoRedoStateChanged;
 
       editSource.PreferredLineWidth = Core.Settings.BASICShowMaxLineLengthIndicatorLength;
 
@@ -192,6 +193,26 @@ namespace RetroDevStudio.Documents
       UpdateLabelModeText();
     }
 
+
+
+    private void EditSource_UndoRedoStateChanged( object sender, UndoRedoEventArgs e )
+    {
+      if ( e.Action == UndoRedoEventArgs.UndoRedoAction.UNDO_ADDED )
+      {
+        /*
+        if ( DocumentInfo.UndoManager.InsideUndoRedo )
+        {
+          return;
+        }*/
+        // undo was added
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoBASICCodeChange( editSource, true ) );
+        SetModified();
+      }
+      else if ( e.Action == UndoRedoEventArgs.UndoRedoAction.UNDO_REDO_CLEARED )
+      {
+        DocumentInfo.UndoManager.Clear();
+      }
+    }
 
 
     private void EditSource_Pasting( object sender, TextPastingEventArgs e )
@@ -453,6 +474,18 @@ namespace RetroDevStudio.Documents
 
 
 
+    public void SetStartAddress( string StartAddress )
+    {
+      if ( DocumentInfo.Element != null )
+      {
+        DocumentInfo.Element.StartAddress = StartAddress;
+      }
+      m_StartAddress              = StartAddress;
+      editBASICStartAddress.Text  = StartAddress;
+    }
+
+
+
     public Dialect BASICDialect
     {
       get
@@ -566,16 +599,6 @@ namespace RetroDevStudio.Documents
 
           editSource.Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS )], regex );
         }
-      }
-    }
-
-
-
-    void editSource_TextChanged( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
-    {
-      if ( UndoPossible )
-      {
-        SetModified();
       }
     }
 
@@ -1224,13 +1247,19 @@ namespace RetroDevStudio.Documents
 
     public void SetBASICDialect( Dialect Dialect )
     {
-      foreach ( GR.Generic.Tupel<string, Dialect> dialect in comboBASICVersion.Items )
+      if ( comboBASICVersion.SelectedItem != Dialect )
       {
-        if ( dialect.second == Dialect )
+        m_BASICDialect      = Dialect;
+        m_BASICDialectName  = Dialect.Name;
+        foreach ( GR.Generic.Tupel<string, Dialect> dialect in comboBASICVersion.Items )
         {
-          comboBASICVersion.SelectedItem = dialect;
-          return;
+          if ( dialect.second == Dialect )
+          {
+            comboBASICVersion.SelectedItem = dialect;
+            return;
+          }
         }
+        ApplyDialect( Dialect );
       }
     }
 
@@ -1433,6 +1462,7 @@ namespace RetroDevStudio.Documents
 
 
 
+    /*
     public override bool UndoPossible
     {
       get
@@ -1449,10 +1479,11 @@ namespace RetroDevStudio.Documents
       {
         return editSource.RedoEnabled;
       }
-    }
+    }*/
 
 
 
+    /*
     public override void Undo()
     {
       editSource.Undo();
@@ -1466,6 +1497,7 @@ namespace RetroDevStudio.Documents
       editSource.Redo();
       SetModified();
     }
+    */
 
 
 
@@ -2136,21 +2168,17 @@ namespace RetroDevStudio.Documents
       Core.MainForm.m_CompileResult.ClearMessages();
       m_CurrentHighlightLocations.Clear();
 
-      string toggledContent;
-
-      if ( !PerformLabelModeToggle( out toggledContent ) )
+      if ( !PerformLabelModeToggle( out string toggledContent ) )
       {
         btnToggleLabelMode.Checked = false;
         UpdateLabelModeText();
         return false;
       }
 
-      /*
-      if ( DocumentInfo.ASMFileInfoOriginal != null )
-      {
-        DocumentInfo.ASMFileInfo = DocumentInfo.ASMFileInfoOriginal;
-      }*/
       editSource.Text = toggledContent;
+
+      DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoBASICLabelModeToggle( this ) );
+
       m_LabelMode = labelMode;
       UpdateLabelModeText();
 
@@ -2468,10 +2496,15 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      m_InsideToggleSymbolHandler = true;
-      m_SymbolMode = btnToggleSymbolMode.Checked;
 
-      btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
+      bool  newSymbolMode = btnToggleSymbolMode.Checked;
+      if ( newSymbolMode == m_SymbolMode )
+      {
+        return;
+      }
+
+      m_InsideToggleSymbolHandler = true;
+      btnToggleSymbolMode.Image = newSymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
 
       bool    hadError = false;
       string  newText = editSource.Text;
@@ -2481,7 +2514,7 @@ namespace RetroDevStudio.Documents
         newText = Parser.BasicFileParser.MakeUpperCase( newText, Core.Settings.BASICUseNonC64Font );
       }
 
-      if ( m_SymbolMode )
+      if ( newSymbolMode )
       {
         newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
       }
@@ -2491,7 +2524,7 @@ namespace RetroDevStudio.Documents
       }
       if ( hadError )
       {
-        m_SymbolMode = !m_SymbolMode;
+        m_SymbolMode = !newSymbolMode;
         btnToggleSymbolMode.Checked = m_SymbolMode;
         btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
 
@@ -2508,6 +2541,9 @@ namespace RetroDevStudio.Documents
       editSource.Text = newText;
       editSource.VerticalScroll.Value = offset;
       editSource.UpdateScrollbars();
+
+      DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoBASICSymbolModeToggle( this ) );
+      m_SymbolMode = newSymbolMode;
 
       m_InsideToggleSymbolHandler = false;
     }
@@ -2577,13 +2613,24 @@ namespace RetroDevStudio.Documents
 
     private void ToggleCase()
     {
-      m_LowerCaseMode = !m_LowerCaseMode;
+      if ( m_InsideToggleCaseHandler )
+      {
+        return;
+      }
+      bool  newMode = !btnToggleUpperLowerCase.Checked;
+
+      if ( newMode == m_LowerCaseMode )
+      {
+        return;
+      }
+
+      m_InsideToggleCaseHandler = true;
 
       int     topLine = editSource.VerticalScroll.Value;
 
       string    text = editSource.Text;
 
-      if ( m_LowerCaseMode )
+      if ( newMode )
       {
         text = MakeLowerCase( text, Core.Settings.BASICUseNonC64Font );
       }
@@ -2596,7 +2643,12 @@ namespace RetroDevStudio.Documents
       editSource.VerticalScroll.Value = topLine;
       editSource.UpdateScrollbars();
 
+      DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoBASICCaseToggle( this ) );
+
+      m_LowerCaseMode = newMode;
+
       UpdateCaseButtonCaption();
+      m_InsideToggleCaseHandler = false;
     }
 
 
@@ -2619,6 +2671,10 @@ namespace RetroDevStudio.Documents
 
     private void editBASICStartAddress_TextChanged( object sender, EventArgs e )
     {
+      if ( m_StartAddress != editBASICStartAddress.Text )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoBASICStartAddressChange( this, m_StartAddress ) );
+      }
       if ( DocumentInfo.Element != null )
       {
         if ( DocumentInfo.Element.StartAddress != editBASICStartAddress.Text )
@@ -2671,10 +2727,23 @@ namespace RetroDevStudio.Documents
         }
       }
 
+      if ( ( !string.IsNullOrEmpty( m_BASICDialectName ) )
+      &&   ( m_BASICDialectName != dialect ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoBASICDialectChange( this, m_BASICDialectName ) );
+      }
+
+      ApplyDialect( basicDialect );
+    }
+
+
+
+    private void ApplyDialect( Dialect basicDialect )
+    {
       if ( ( DocumentInfo != null )
       &&   ( DocumentInfo.Element != null ) )
       {
-        DocumentInfo.Element.BASICDialect = dialect;
+        DocumentInfo.Element.BASICDialect = basicDialect.Name;
         SetModified();
       }
 
@@ -2686,7 +2755,7 @@ namespace RetroDevStudio.Documents
       Core.Compiling.ParserBasic.Settings.UpperCaseMode = !m_LowerCaseMode;
       Core.Compiling.ParserBasic.Settings.UseC64Font    = !Core.Settings.BASICUseNonC64Font;
 
-      m_BASICDialectName  = dialect;
+      m_BASICDialectName  = basicDialect.Name;
       m_BASICDialect      = basicDialect;
 
       m_Parser = new Parser.BasicFileParser( settings, "" );
@@ -2980,6 +3049,40 @@ namespace RetroDevStudio.Documents
       {
         ToggleCase();
       }
+    }
+
+
+
+    public void LabelModeToggled()
+    {
+      // called from inside undo, do NOT change text, this is handled in other undo step
+      bool labelMode = !m_LabelMode;
+
+      Core.MainForm.m_CompileResult.ClearMessages();
+      m_CurrentHighlightLocations.Clear();
+
+      m_LabelMode = labelMode;
+      UpdateLabelModeText();
+
+      Core.MainForm.m_LabelExplorer.RefreshFromDocument( this );
+    }
+
+
+
+    public void SymbolModeToggled()
+    {
+      m_SymbolMode                = !m_SymbolMode;
+      btnToggleSymbolMode.Checked = m_SymbolMode;
+      btnToggleSymbolMode.Image   = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
+    }
+
+
+
+    public void CaseToggled()
+    {
+      m_LowerCaseMode                 = !m_LowerCaseMode;
+      btnToggleUpperLowerCase.Checked = !m_LowerCaseMode;
+      UpdateCaseButtonCaption();
     }
 
 
