@@ -5944,8 +5944,11 @@ namespace RetroDevStudio
 
       foreach ( BaseDocument doc in panelMain.Documents )
       {
-        if ( doc.Modified )
+        if ( ( doc.Modified )
+        &&   ( doc.DocumentInfo.Project == null )
+        &&   ( doc.DocumentInfo.Element == null ) )
         {
+
           itemsWithChanges.Add( doc.Name );
         }
       }

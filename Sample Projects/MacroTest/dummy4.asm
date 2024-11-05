@@ -1,7 +1,12 @@
-﻿
+* = $0801
 
-*=$2000
-  !trace $d012
-  jmp Init
-    !fill 10,0
-  Init rts
+          lda Enemies.Frame,x
+          rts
+
+!zone Enemies
+
+.Frame
+          !byte 8
+
+.Color
+          !byte 8

@@ -2976,6 +2976,7 @@ namespace RetroDevStudio.Documents
     public override void Cut()
     {
       editSource.Cut();
+      ShowAutoComplete();
     }
 
 
@@ -3275,6 +3276,7 @@ namespace RetroDevStudio.Documents
     private void cutToolStripMenuItem_Click( object sender, EventArgs e )
     {
       editSource.Cut();
+      ShowAutoComplete();
     }
 
 
