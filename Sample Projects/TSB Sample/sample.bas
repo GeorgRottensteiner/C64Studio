@@ -1,4 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:2049,Tuned Simons' BASIC,lowercase,10,10
+#RetroDevStudio.MetaData.BASIC:2049,BASIC Lightning,lowercase,10,10
 10REM DUP
 2001SPRITES=5 
 2002SPITAL=6
