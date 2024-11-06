@@ -1770,7 +1770,7 @@ namespace RetroDevStudio.Documents
       }
 
       var newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
-      string curLine = editSource.Lines[LineIndex].TrimEnd( new char[] { '\r', '\n' } );
+      string curLine = editSource.ReTabifyLine( editSource.Lines[LineIndex], editSource.TabLength ).TrimEnd( new char[] { '\r', '\n' } );
       int position = editSource.PlaceToPosition( editSource.Selection.Start );
       int posX = editSource.Selection.Start.iChar;
 

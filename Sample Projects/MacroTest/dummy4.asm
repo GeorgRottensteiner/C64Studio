@@ -1,6 +1,6 @@
-* = $0801
+﻿* = $0801
 
-          lda Enemies.Frame,x
+		lda	Enemies.co,x
           rts
 
 !zone Enemies
