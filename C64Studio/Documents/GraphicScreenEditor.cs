@@ -223,6 +223,7 @@ namespace RetroDevStudio.Documents
           _ColorChooserDlg = new ColorChooserCommodoreMultiColor( Core, m_GraphicScreenProject.Colors );
           break;
         case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
+        case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
           _ColorChooserDlg = new ColorChooserCommodoreVIC20( Core, m_GraphicScreenProject.Colors );
           break;
         /*
@@ -261,7 +262,32 @@ namespace RetroDevStudio.Documents
 
     private void UpdateCursorInfo()
     {
-      labelCursorInfo.Text = $"{m_LastPixelUnderMouse.X}, {m_LastPixelUnderMouse.Y} - {m_LastPixelUnderMouse.X / 8}, {m_LastPixelUnderMouse.Y / 8}";
+      labelCursorInfo.Text = $"{m_LastPixelUnderMouse.X}, {m_LastPixelUnderMouse.Y} - {m_LastPixelUnderMouse.X / CheckBlockWidth}, {m_LastPixelUnderMouse.Y / CheckBlockHeight}";
+    }
+
+
+
+    private int CheckBlockWidth
+    {
+      get
+      {
+        return 8;
+      }
+    }
+
+
+
+    private int CheckBlockHeight
+    {
+      get
+      {
+        switch ( m_GraphicScreenProject.SelectedCheckType )
+        {
+          case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
+            return 16;
+        }
+        return 8;
+      }
     }
 
 
@@ -270,7 +296,7 @@ namespace RetroDevStudio.Documents
     {
       get
       {
-        return ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8;
+        return ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth;
       }
     }
 
@@ -280,7 +306,7 @@ namespace RetroDevStudio.Documents
     {
       get
       {
-        return ( m_GraphicScreenProject.ScreenHeight + 7 ) / 8;
+        return ( m_GraphicScreenProject.ScreenHeight + CheckBlockHeight - 1 ) / CheckBlockHeight;
       }
     }
 
@@ -338,8 +364,8 @@ namespace RetroDevStudio.Documents
     {
       int pixelX = ToLocalX( X );
       int pixelY = ToLocalY( Y );
-      int charX = pixelX / 8;
-      int charY = pixelY / 8;
+      int charX = pixelX / CheckBlockWidth;
+      int charY = pixelY / CheckBlockHeight;
       bool mouseMoved = false;
 
       if ( m_LastPixelUnderMouse.X != pixelX )
@@ -561,7 +587,7 @@ namespace RetroDevStudio.Documents
               m_SelectedChar.X = charX;
               m_SelectedChar.Y = charY;
 
-              charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+              charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
               charEditor.Invalidate();
 
               //comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Tile.CustomColor;
@@ -784,12 +810,14 @@ namespace RetroDevStudio.Documents
       {
         importType = GraphicType.CHARACTERS_FCM;
       }
-      else if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+      else if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+      ||        ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
       {
         importType = GraphicType.CHARACTERS_MULTICOLOR;
       }
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
-                                       8, 8, out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
+                                       CheckBlockWidth, CheckBlockHeight, 
+                                       out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         return false;
       }
@@ -833,9 +861,9 @@ namespace RetroDevStudio.Documents
 
       if ( InsertMode == ImageInsertionMode.AT_SELECTED_LOCATION )
       {
-        mappedImage.DrawTo( m_GraphicScreenProject.Image, m_SelectedChar.X * 8, m_SelectedChar.Y * 8 );
+        mappedImage.DrawTo( m_GraphicScreenProject.Image, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight );
 
-        charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+        charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
         charEditor.Invalidate();
       }
       else if ( InsertMode == ImageInsertionMode.AS_FLOATING_SELECTION )
@@ -885,7 +913,7 @@ namespace RetroDevStudio.Documents
 
       m_GraphicScreenProject.Image = m_GraphicScreenProject.Image.GetImage( 0, 0, Width, Height ) as GR.Image.MemoryImage;
 
-      m_ErrornousChars = new bool[( Width + 7 ) / 8, ( Height + 7 ) / 8];
+      m_ErrornousChars = new bool[( Width + CheckBlockWidth - 1 ) / CheckBlockWidth, ( Height + CheckBlockHeight - 1 ) / CheckBlockHeight];
       m_Chars.Clear();
 
       int     numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
@@ -1309,7 +1337,7 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      Core.Imaging.ImageToClipboard( m_GraphicScreenProject.Image, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      Core.Imaging.ImageToClipboard( m_GraphicScreenProject.Image, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
     }
 
 
@@ -1482,9 +1510,9 @@ namespace RetroDevStudio.Documents
         bool hasSinglePixel = false;
         bool usedBackgroundColor = false;
 
-        for ( int y = 0; y < 8; ++y )
+        for ( int y = 0; y < CheckBlockHeight; ++y )
         {
-          for ( int x = 0; x < 8; ++x )
+          for ( int x = 0; x < CheckBlockWidth; ++x )
           {
             int colorIndex = (int)m_GraphicScreenProject.Image.GetPixel( X + x, Y + y ) % 16;
             if ( colorIndex >= 16 )
@@ -1605,9 +1633,9 @@ namespace RetroDevStudio.Documents
             return false;
           }
 
-          for ( int y = 0; y < 8; ++y )
+          for ( int y = 0; y < CheckBlockHeight; ++y )
           {
-            for ( int x = 0; x < 8; ++x )
+            for ( int x = 0; x < CheckBlockWidth; ++x )
             {
               int ColorIndex = (int)m_GraphicScreenProject.Image.GetPixel( X + x, Y + y ) % 16;
 
@@ -1660,9 +1688,9 @@ namespace RetroDevStudio.Documents
             cd.Error = "Free color must be of index < 8";
             return false;
           }
-          for ( int y = 0; y < 8; ++y )
+          for ( int y = 0; y < CheckBlockHeight; ++y )
           {
-            for ( int x = 0; x < 4; ++x )
+            for ( int x = 0; x < CheckBlockWidth / 2; ++x )
             {
               int ColorIndex = (int)m_GraphicScreenProject.Image.GetPixel( X + 2 * x, Y + y ) % 16;
 
@@ -1678,7 +1706,8 @@ namespace RetroDevStudio.Documents
               }
               else if ( ColorIndex == m_GraphicScreenProject.Colors.MultiColor2 )
               {
-                if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
                 {
                   BitPattern = 0x03;
                 }
@@ -1691,7 +1720,8 @@ namespace RetroDevStudio.Documents
               {
                 // noch nicht verwendete Farbe
                 chosenCharColor = usedFreeColor;
-                if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
                 {
                   BitPattern = 0x02;
                 }
@@ -1734,7 +1764,7 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * 8, j * 8, true );
+          CheckCharBox( m_Chars[i + j * BlockWidth], i * CheckBlockWidth, j * CheckBlockHeight, true );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;
@@ -1810,7 +1840,7 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * 8, j * 8, true );
+          CheckCharBox( m_Chars[i + j * BlockWidth], i * BlockWidth, j * BlockHeight, true );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;
@@ -1886,7 +1916,7 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * 8, j * 8, false );
+          CheckCharBox( m_Chars[i + j * BlockWidth], i * CheckBlockWidth, j * CheckBlockHeight, false );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;
@@ -1978,15 +2008,15 @@ namespace RetroDevStudio.Documents
 
       for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
       {
-        var  tile1 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index1 % ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
-          ( index1 / ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
-          8, 8 ) ).GetAsData();
+        var  tile1 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index1 % ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockWidth,
+          ( index1 / ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockHeight,
+          CheckBlockWidth, CheckBlockHeight ) ).GetAsData();
         bool wasFolded = false;
         for ( int index2 = 0; index2 < index1; ++index2 )
         {
-          var  tile2 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index2 % ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
-                                    ( index2 / ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
-                                    8, 8 ) ).GetAsData();
+          var  tile2 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index2 % ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockWidth,
+                                    ( index2 / ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockHeight,
+                                    CheckBlockWidth, CheckBlockHeight ) ).GetAsData();
 
           if ( tile1.Compare( tile2 ) == 0 )
           {
@@ -2044,16 +2074,16 @@ namespace RetroDevStudio.Documents
           bool usedBackgroundColor = false;
           int determinedBackgroundColor = -1;// comboBackground.SelectedIndex;
 
-          for ( int charY = 0; charY < 8; ++charY )
+          for ( int charY = 0; charY < CheckBlockHeight; ++charY )
           {
-            for ( int charX = 0; charX < 8; ++charX )
+            for ( int charX = 0; charX < CheckBlockWidth; ++charX )
             {
-              byte  colorIndex = (byte)m_GraphicScreenProject.Image.GetPixel( x * 8 + charX, y * 8 + charY );
+              byte  colorIndex = (byte)m_GraphicScreenProject.Image.GetPixel( x * CheckBlockWidth + charX, y * CheckBlockHeight + charY );
 
               if ( colorIndex >= 16 )
               {
                 m_ErrornousChars[x, y] = true;
-                m_Chars[x + y * BlockWidth].Error = "Encountered color index >= 16 at " + ( x * 8 + charX ) + "," + ( y * 8 + charY );
+                m_Chars[x + y * BlockWidth].Error = "Encountered color index >= 16 at " + ( x * CheckBlockWidth + charX ) + "," + ( y * CheckBlockHeight + charY );
               }
               else
               {
@@ -2073,7 +2103,7 @@ namespace RetroDevStudio.Documents
           if ( numColors > 2 )
           {
             m_ErrornousChars[x, y] = true;
-            m_Chars[x + y * BlockWidth].Error = "Uses more than two colors at " + ( x * 8 ) + "," + ( y * 8 );
+            m_Chars[x + y * BlockWidth].Error = "Uses more than two colors at " + ( x * CheckBlockWidth ) + "," + ( y * CheckBlockHeight );
             continue;
           }
           /*
@@ -2101,7 +2131,7 @@ namespace RetroDevStudio.Documents
           &&   ( numColors >= 2 ) )
           {
             m_ErrornousChars[x, y] = true;
-            m_Chars[x + y * BlockWidth].Error = "Looks like single color, but doesn't use the set background color " + ( x * 8 ) + "," + ( y * 8 );
+            m_Chars[x + y * BlockWidth].Error = "Looks like single color, but doesn't use the set background color " + ( x * CheckBlockWidth ) + "," + ( y * CheckBlockHeight );
             continue;
           }
           int usedFreeColor = -1;
@@ -2115,7 +2145,7 @@ namespace RetroDevStudio.Documents
                 if ( usedFreeColor != -1 )
                 {
                   m_ErrornousChars[x, y] = true;
-                  m_Chars[x + y * BlockWidth].Error = "Uses more than one free color " + ( x * 8 ) + "," + ( y * 8 );
+                  m_Chars[x + y * BlockWidth].Error = "Uses more than one free color " + ( x * CheckBlockWidth ) + "," + ( y * CheckBlockHeight );
                   continue;
                 }
                 usedFreeColor = i;
@@ -2143,20 +2173,20 @@ namespace RetroDevStudio.Documents
           // ein zeichen-block
           usedColors.Clear();
           m_ErrornousChars[x, y] = false;
-          for ( int charY = 0; charY < 8; ++charY )
+          for ( int charY = 0; charY < CheckBlockHeight; ++charY )
           {
-            for ( int charX = 0; charX < 4; ++charX )
+            for ( int charX = 0; charX < CheckBlockWidth / 2; ++charX )
             {
-              byte  colorIndex = (byte)m_GraphicScreenProject.Image.GetPixel( x * 8 + charX * 2, y * 8 + charY );
+              byte  colorIndex = (byte)m_GraphicScreenProject.Image.GetPixel( x * CheckBlockWidth + charX * 2, y * CheckBlockHeight + charY );
               if ( colorIndex >= 16 )
               {
-                m_Chars[x + y * BlockWidth].Error = "Color index >= 16 at " + ( x * 8 + charX * 2 ).ToString() + ", " + ( y * 8 + charY ).ToString() + " (" + charX + "," + charY + ")";
+                m_Chars[x + y * BlockWidth].Error = "Color index >= 16 at " + ( x * CheckBlockWidth + charX * 2 ).ToString() + ", " + ( y * CheckBlockHeight + charY ).ToString() + " (" + charX + "," + charY + ")";
                 m_ErrornousChars[x, y] = true;
               }
-              byte  colorIndex2 = (byte)m_GraphicScreenProject.Image.GetPixel( x * 8 + charX * 2 + 1, y * 8 + charY );
+              byte  colorIndex2 = (byte)m_GraphicScreenProject.Image.GetPixel( x * CheckBlockWidth + charX * 2 + 1, y * CheckBlockHeight + charY );
               if ( colorIndex != colorIndex2 )
               {
-                m_Chars[x + y * BlockWidth].Error = "Used HiRes pixel >= 16 at " + ( x * 8 + charX * 2 ).ToString() + ", " + ( y * 8 + charY ).ToString() + " (" + charX + "," + charY + ")";
+                m_Chars[x + y * BlockWidth].Error = "Used HiRes pixel >= 16 at " + ( x * CheckBlockWidth + charX * 2 ).ToString() + ", " + ( y * CheckBlockHeight + charY ).ToString() + " (" + charX + "," + charY + ")";
                 m_ErrornousChars[x, y] = true;
               }
 
@@ -2211,16 +2241,16 @@ namespace RetroDevStudio.Documents
               }
             }
             // write out bits
-            for ( int charY = 0; charY < 8; ++charY )
+            for ( int charY = 0; charY < CheckBlockHeight; ++charY )
             {
-              for ( int charX = 0; charX < 4; ++charX )
+              for ( int charX = 0; charX < CheckBlockWidth / 2; ++charX )
               {
-                byte colorIndex = (byte)m_GraphicScreenProject.Image.GetPixel( x * 8 + charX * 2, y * 8 + charY );
+                byte colorIndex = (byte)m_GraphicScreenProject.Image.GetPixel( x * CheckBlockWidth + charX * 2, y * CheckBlockHeight + charY );
                 if ( colorIndex != m_GraphicScreenProject.Colors.BackgroundColor )
                 {
                   // other color
                   byte colorValue = usedColors[colorIndex];
-                  int bitmapIndex = x * 8 + y * 320 + charY;
+                  int bitmapIndex = x * CheckBlockWidth + y * 320 + charY;
 
                   byte value = bitmapData.ByteAt( bitmapIndex );
                   if ( charX == 0 )
@@ -2284,6 +2314,7 @@ namespace RetroDevStudio.Documents
           CheckForFCMCharsetErrors( 8192 );
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
           CheckForVIC20CharsetErrors();
           break;
         default:
@@ -2321,15 +2352,15 @@ namespace RetroDevStudio.Documents
       }
       Formats.CharData    charToEdit = m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth];
 
-      int     charX = X / ( charEditor.ClientRectangle.Width / 8 );
-      int     charY = Y / ( charEditor.ClientRectangle.Height / 8 );
+      int     charX = X / ( charEditor.ClientRectangle.Width / CheckBlockWidth );
+      int     charY = Y / ( charEditor.ClientRectangle.Height / CheckBlockHeight );
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
         if ( m_ButtonReleased )
         {
           m_ButtonReleased = false;
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight ) );
         }
         if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
         ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET ) )
@@ -2337,8 +2368,8 @@ namespace RetroDevStudio.Documents
           byte    colorToSet = m_CurrentColor;
 
           charX /= 2;
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2, m_SelectedChar.Y * 8 + charY, colorToSet );
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2 + 1, m_SelectedChar.Y * 8 + charY, colorToSet );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + charX * 2, m_SelectedChar.Y * CheckBlockHeight + charY, colorToSet );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + charX * 2 + 1, m_SelectedChar.Y * CheckBlockHeight + charY, colorToSet );
 
           charEditor.DisplayPage.SetPixel( charX * 2, charY, colorToSet );
           charEditor.DisplayPage.SetPixel( charX * 2 + 1, charY, colorToSet );
@@ -2350,7 +2381,7 @@ namespace RetroDevStudio.Documents
         {
           byte    colorToSet = m_CurrentColor;
 
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY, colorToSet );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + charX, m_SelectedChar.Y * CheckBlockHeight + charY, colorToSet );
 
           charEditor.DisplayPage.SetPixel( charX, charY, colorToSet );
           charEditor.Invalidate();
@@ -2366,7 +2397,7 @@ namespace RetroDevStudio.Documents
       {
         if ( !Core.Settings.BehaviourRightClickIsBGColorPaint )
         {
-          m_CurrentColor = (byte)m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY );
+          m_CurrentColor = (byte)m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + charX, m_SelectedChar.Y * CheckBlockHeight + charY );
           RedrawColorSelector();
         }
         else
@@ -2378,8 +2409,8 @@ namespace RetroDevStudio.Documents
           {
             byte    colorToSet = (byte)m_GraphicScreenProject.Colors.BackgroundColor;
             charX /= 2;
-            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2, m_SelectedChar.Y * 8 + charY, colorToSet );
-            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2 + 1, m_SelectedChar.Y * 8 + charY, colorToSet );
+            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + charX * 2, m_SelectedChar.Y * CheckBlockHeight + charY, colorToSet );
+            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + charX * 2 + 1, m_SelectedChar.Y * CheckBlockHeight + charY, colorToSet );
 
             charEditor.DisplayPage.SetPixel( charX * 2, charY, colorToSet );
             charEditor.DisplayPage.SetPixel( charX * 2 + 1, charY, colorToSet );
@@ -2391,7 +2422,7 @@ namespace RetroDevStudio.Documents
           {
             byte  colorToSet = (byte)m_GraphicScreenProject.Colors.BackgroundColor;
 
-            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY, colorToSet );
+            m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + charX, m_SelectedChar.Y * CheckBlockHeight + charY, colorToSet );
 
             charEditor.DisplayPage.SetPixel( charX, charY, colorToSet );
             charEditor.Invalidate();
@@ -2781,8 +2812,8 @@ namespace RetroDevStudio.Documents
 
         dataSelection.AppendI32( 0 ); // was (int)projectToExport.Characters[i].Mode );
         dataSelection.AppendI32( projectToExport.Characters[i].Tile.CustomColor );
-        dataSelection.AppendU32( 8 );
-        dataSelection.AppendU32( 8 );
+        dataSelection.AppendI32( CheckBlockWidth );
+        dataSelection.AppendI32( CheckBlockHeight );
         dataSelection.AppendU32( projectToExport.Characters[i].Tile.Data.Length );
         dataSelection.Append( projectToExport.Characters[i].Tile.Data );
         dataSelection.AppendI32( i );
@@ -2799,7 +2830,6 @@ namespace RetroDevStudio.Documents
 
     private void comboCheckType_SelectedIndexChanged( object sender, EventArgs e )
     {
-      comboExportType.SelectedIndex = comboCheckType.SelectedIndex;
       m_GraphicScreenProject.SelectedCheckType = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
 
       ChangeColorChooserDialog();
@@ -3066,6 +3096,10 @@ namespace RetroDevStudio.Documents
             project.Mode = TextMode.COMMODORE_VIC20_8_X_8;
             charset.Mode = TextCharMode.VIC20;
             break;
+          case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
+            project.Mode = TextMode.COMMODORE_VIC20_8_X_16;
+            charset.Mode = TextCharMode.VIC20_8X16;
+            break;
           default:
             Debug.Log( $"ExportToCharscreen: Unsupported Check Type {m_GraphicScreenProject.SelectedCheckType}" );
             break;
@@ -3148,9 +3182,9 @@ namespace RetroDevStudio.Documents
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
       btnApplyScreenSize.Enabled = ( ( newWidth > 0 ) 
-                                &&   ( ( newWidth % 8 ) == 0 )
+                                &&   ( ( newWidth % CheckBlockWidth ) == 0 )
                                 &&   ( newHeight > 0 ) 
-                                &&   ( ( newHeight % 8 ) == 0 ) );
+                                &&   ( ( newHeight % CheckBlockHeight ) == 0 ) );
     }
 
 
@@ -3161,9 +3195,9 @@ namespace RetroDevStudio.Documents
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
       btnApplyScreenSize.Enabled = ( ( newWidth > 0 ) 
-                                &&   ( ( newWidth % 8 ) == 0 )
+                                &&   ( ( newWidth % CheckBlockWidth ) == 0 )
                                 &&   ( newHeight > 0 ) 
-                                &&   ( ( newHeight % 8 ) == 0 ) );
+                                &&   ( ( newHeight % CheckBlockHeight ) == 0 ) );
     }
 
 
@@ -3172,7 +3206,7 @@ namespace RetroDevStudio.Documents
     {
       pictureEditor.Invalidate();
       // in case the selected char was modified
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
       Redraw();
     }
@@ -3647,20 +3681,20 @@ namespace RetroDevStudio.Documents
 
     private void MirrorH()
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight ) );
 
-      for ( int j = 0; j < 8; ++j )
+      for ( int j = 0; j < CheckBlockHeight; ++j )
       {
         for ( int i = 0; i < 4; ++i )
         {
-          uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j );
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j, 
-            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + 7 - i, m_SelectedChar.Y * 8 + j ) );
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + 7 - i, m_SelectedChar.Y * 8 + j, curColor );
+          uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + j );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + j, 
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + CheckBlockWidth - 1 - i, m_SelectedChar.Y * CheckBlockHeight + j ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + CheckBlockWidth - 1 - i, m_SelectedChar.Y * CheckBlockHeight + j, curColor );
         }
       }
 
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
 
       Redraw();
@@ -3679,20 +3713,20 @@ namespace RetroDevStudio.Documents
 
     private void MirrorV()
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight ) );
 
-      for ( int j = 0; j < 4; ++j )
+      for ( int j = 0; j < CheckBlockHeight / 2; ++j )
       {
-        for ( int i = 0; i < 8; ++i )
+        for ( int i = 0; i < CheckBlockWidth; ++i )
         {
-          uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j );
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j,
-            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j ) );
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j, curColor );
+          uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + j );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + j,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + CheckBlockHeight - 1 - j ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + CheckBlockHeight - 1 - j, curColor );
         }
       }
 
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
 
       Redraw();
@@ -3711,21 +3745,21 @@ namespace RetroDevStudio.Documents
 
     private void ShiftUp()
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, 8 ) );
 
-      for ( int i = 0; i < 8; ++i )
+      for ( int i = 0; i < CheckBlockWidth; ++i )
       {
-        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 );
-        for ( int j = 0; j < 7; ++j )
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight );
+        for ( int j = 0; j < CheckBlockHeight - 1; ++j )
         {
           
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j,
-            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j + 1 ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + j,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + j + 1 ) );
         }
-        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7, curColor );
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + CheckBlockHeight - 1, curColor );
       }
 
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
 
       Redraw();
@@ -3744,20 +3778,20 @@ namespace RetroDevStudio.Documents
 
     private void ShiftDown()
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockWidth ) );
 
-      for ( int i = 0; i < 8; ++i )
+      for ( int i = 0; i < CheckBlockWidth; ++i )
       {
-        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 );
-        for ( int j = 0; j < 7; ++j )
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + CheckBlockHeight - 1 );
+        for ( int j = 0; j < CheckBlockHeight - 1; ++j )
         {
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j,
-            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 6 - j ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + CheckBlockHeight - 1 - j,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight + CheckBlockHeight - 2 - j ) );
         }
-        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8, curColor );
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + i, m_SelectedChar.Y * CheckBlockHeight, curColor );
       }
 
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
 
       Redraw();
@@ -3776,20 +3810,20 @@ namespace RetroDevStudio.Documents
 
     private void ShiftRight()
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockWidth ) );
 
-      for ( int i = 0; i < 8; ++i )
+      for ( int i = 0; i < CheckBlockHeight; ++i )
       {
-        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + 7, m_SelectedChar.Y * 8 + i );
-        for ( int j = 0; j < 7; ++j )
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + CheckBlockWidth - 1, m_SelectedChar.Y * CheckBlockHeight + i );
+        for ( int j = 0; j < CheckBlockWidth - 1; ++j )
         {
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + 7 - j, m_SelectedChar.Y * 8 + i,
-            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + 6 - j, m_SelectedChar.Y * 8 + i ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + CheckBlockWidth - 1 - j, m_SelectedChar.Y * CheckBlockHeight + i,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + CheckBlockWidth - 2 - j, m_SelectedChar.Y * CheckBlockHeight + i ) );
         }
-        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8, m_SelectedChar.Y * 8 + i, curColor );
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight + i, curColor );
       }
 
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
 
       Redraw();
@@ -3808,20 +3842,20 @@ namespace RetroDevStudio.Documents
 
     private void ShiftLeft()
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockWidth ) );
 
-      for ( int i = 0; i < 8; ++i )
+      for ( int i = 0; i < CheckBlockHeight; ++i )
       {
-        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8, m_SelectedChar.Y * 8 + i );
-        for ( int j = 0; j < 7; ++j )
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight + i );
+        for ( int j = 0; j < CheckBlockWidth - 1; ++j )
         {
-          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + j, m_SelectedChar.Y * 8 + i,
-            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + j + 1, m_SelectedChar.Y * 8 + i ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + j, m_SelectedChar.Y * CheckBlockHeight + i,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * CheckBlockWidth + j + 1, m_SelectedChar.Y * CheckBlockHeight + i ) );
         }
-        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + 7, m_SelectedChar.Y * 8 + i, curColor );
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * CheckBlockWidth + CheckBlockWidth - 1, m_SelectedChar.Y * CheckBlockHeight + i, curColor );
       }
 
-      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
       charEditor.Invalidate();
 
       Redraw();
@@ -3935,10 +3969,10 @@ namespace RetroDevStudio.Documents
             {
               if ( m_ErrornousChars[i, j] )
               {
-                int sx1 = ToScreenX( i * 8 );
-                int sx2 = ToScreenX( ( i + 1 ) * 8 );
-                int sy1 = ToScreenY( j * 8 );
-                int sy2 = ToScreenY( ( j + 1 ) * 8 );
+                int sx1 = ToScreenX( i * CheckBlockWidth );
+                int sx2 = ToScreenX( ( i + 1 ) * CheckBlockWidth );
+                int sy1 = ToScreenY( j * CheckBlockHeight );
+                int sy2 = ToScreenY( ( j + 1 ) * CheckBlockHeight );
 
                 for ( int x = sx1; x <= sx2; ++x )
                 {
@@ -3953,10 +3987,10 @@ namespace RetroDevStudio.Documents
           }
           if ( m_SelectedChar.X != -1 )
           {
-            int sx1 = ToScreenX( m_SelectedChar.X * 8 );
-            int sx2 = ToScreenX( ( m_SelectedChar.X + 1 ) * 8 );
-            int sy1 = ToScreenY( m_SelectedChar.Y * 8 );
-            int sy2 = ToScreenY( ( m_SelectedChar.Y + 1 ) * 8 );
+            int sx1 = ToScreenX( m_SelectedChar.X * CheckBlockWidth );
+            int sx2 = ToScreenX( ( m_SelectedChar.X + 1 ) * CheckBlockWidth );
+            int sy1 = ToScreenY( m_SelectedChar.Y * CheckBlockHeight );
+            int sy2 = ToScreenY( ( m_SelectedChar.Y + 1 ) * CheckBlockHeight );
 
             TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
           }

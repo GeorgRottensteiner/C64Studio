@@ -1363,6 +1363,11 @@ namespace GR.Image
     // resize and try to keep existing data intact
     public void Resize( int NewWidth, int NewHeight )
     {
+      if ( ( NewWidth == Width )
+      &&   ( NewHeight == Height ) )
+      {
+        return;
+      }
       int     safeWidth = System.Math.Min( Width, NewWidth );
       int     safeHeight = System.Math.Min( Height, NewHeight );
 

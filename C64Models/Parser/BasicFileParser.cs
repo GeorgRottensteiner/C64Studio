@@ -3193,6 +3193,14 @@ namespace RetroDevStudio.Parser
                 else
                 {
                   // error or end
+                  // label was not inserted, but we want to skip to the next loop
+                  if ( !tokenWasInserted )
+                  {
+                    tokenWasInserted = true;
+                    sb.Append( token.Content );
+                  }
+                  i = nextIndex - 1;
+                  labelWasInserted = true;
                   break;
                 }
                 ++nextIndex;
@@ -3520,7 +3528,6 @@ namespace RetroDevStudio.Parser
                 ++tokenIndex;
               }*/
             }
-
             while ( ( nextTokenIndex != -1 )
             &&      ( nextTokenIndex2 != -1 ) )
             {
@@ -3584,8 +3591,10 @@ namespace RetroDevStudio.Parser
                 nextTokenIndex = nextTokenIndexB;
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
               }
-              else if ( lineInfo.Value.Tokens[nextTokenIndex].Content == ":" )
+              else if ( ( lineInfo.Value.Tokens[nextTokenIndex].Content == ":" )
+              ||        ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.BASIC_TOKEN ) )
               {
+                // we're leaving the scope of the token
                 break;
               }
               else

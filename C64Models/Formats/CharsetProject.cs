@@ -517,11 +517,14 @@ namespace RetroDevStudio.Formats
 
                     subMemIn.ReadInt32(); // was TextCharMode
                     charData.Tile.CustomColor = (byte)subMemIn.ReadInt32();
-                    charData.Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( Mode, charData.Tile.CustomColor );
+                    charData.Tile.Mode    = Lookup.GraphicTileModeFromTextCharMode( Mode, charData.Tile.CustomColor );
+                    charData.Tile.Width   = Lookup.CharacterWidthInPixel( charData.Tile.Mode );
+                    charData.Tile.Height  = Lookup.CharacterHeightInPixel( charData.Tile.Mode );
 
                     charData.Category = subMemIn.ReadInt32();
 
                     int dataLength = subMemIn.ReadInt32();
+                    charData.Tile.Image.Resize( charData.Tile.Width, charData.Tile.Height );
                     charData.Tile.Data = new GR.Memory.ByteBuffer();
                     subMemIn.ReadBlock( charData.Tile.Data, (uint)dataLength );
 

@@ -589,6 +589,52 @@ LIST-LABEL50:GOTO LABEL10
 
 
     [TestMethod]
+    public void EncodeAndDecodeToLabelsWithThenPlusBASICToken()
+    {
+      string      source = @"10 IFA=0THENPOKE1024,1:GOTO 10";
+      var parser = CreateParser( "BASIC V7.0" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.DoNotExpandStringLiterals = true;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"LABEL10
+IFA=0THENPOKE1024,1:GOTO LABEL10
+", encoded );
+
+      // and reverse...
+      parser.LabelMode = true;
+
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  decoded = parser.DecodeFromLabels( 10, 20 ).Trim();
+      Assert.AreEqual( source, decoded );
+    }
+
+
+
+    [TestMethod]
     public void EncodeToLabelsONGoto()
     {
       string      source = @"10 PRINT ""HALLO""

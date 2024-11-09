@@ -961,7 +961,8 @@ namespace RetroDevStudio.Controls
       {
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
-
+      panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( m_Project.Characters[0].Tile.Mode );
+      panelCharacters.ItemHeight  = Lookup.CharacterHeightInPixel( m_Project.Characters[0].Tile.Mode );
 
       ChangeColorSettingsDialog();
       ChangeColorPickerDialog();
