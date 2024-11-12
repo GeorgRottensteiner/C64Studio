@@ -2827,6 +2827,11 @@ namespace RetroDevStudio.Documents
           break;
         case TextMode.COMMODORE_VIC20_8_X_8:
           displaySize = new Size( 176, 184 );
+          clientSize = new Size( displaySize.Width * 4, displaySize.Height * 2 );
+          break;
+        case TextMode.COMMODORE_VIC20_8_X_16:
+          displaySize = new Size( 160, 192 );
+          clientSize = new Size( displaySize.Width * 4, displaySize.Height * 2 );
           break;
         default:
           // all others use 16:10 (do they?)

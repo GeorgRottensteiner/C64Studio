@@ -867,7 +867,6 @@ namespace RetroDevStudio.Tasks
                 {
                   if ( asmFileInfo.ContainsFile( document.FullPath ) )
                   {
-                    Debug.Log( $"  Post build, pass spriteinitbytemsb {asmFileInfo.Labels.ContainsKey( "spriteinitbytemsb" )} to file info {document.FullPath}" );
                     document.SetASMFileInfo( asmFileInfo );
                   }
                 }

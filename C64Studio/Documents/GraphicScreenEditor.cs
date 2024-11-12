@@ -1495,12 +1495,6 @@ namespace RetroDevStudio.Documents
       cd.Replacement = null;
       cd.Index = 0;
 
-      // clear data
-      for ( int i = 0; i < cd.Tile.Data.Length; ++i )
-      {
-        cd.Tile.Data.SetU8At( i, 0 );
-      }
-
       bool  isMultiColor = false;
 
       {
@@ -1633,6 +1627,9 @@ namespace RetroDevStudio.Documents
             return false;
           }
 
+          cd.Tile = new GraphicTile( CheckBlockWidth, CheckBlockHeight, Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ), 0 ), m_GraphicScreenProject.Colors );
+          cd.Tile.Data.Fill( 0, (int)cd.Tile.Data.Length, 0 );
+
           for ( int y = 0; y < CheckBlockHeight; ++y )
           {
             for ( int x = 0; x < CheckBlockWidth; ++x )
@@ -1653,6 +1650,10 @@ namespace RetroDevStudio.Documents
               }
               cd.Tile.Data.SetU8At( y + x / 8, (byte)( cd.Tile.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
             }
+          }
+          if ( chosenCharColor != -1 )
+          {
+            cd.Tile.CustomColor = (byte)chosenCharColor;
           }
         }
         else
@@ -1688,6 +1689,9 @@ namespace RetroDevStudio.Documents
             cd.Error = "Free color must be of index < 8";
             return false;
           }
+          cd.Tile = new GraphicTile( CheckBlockWidth, CheckBlockHeight, Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ), 8 ), m_GraphicScreenProject.Colors );
+          cd.Tile.Data.Fill( 0, (int)cd.Tile.Data.Length, 0 );
+
           for ( int y = 0; y < CheckBlockHeight; ++y )
           {
             for ( int x = 0; x < CheckBlockWidth / 2; ++x )
@@ -1738,17 +1742,18 @@ namespace RetroDevStudio.Documents
             // only the two multi colors were used, we need to force multi color index though
             chosenCharColor = 8;
           }
+          cd.Tile.CustomColor = (byte)chosenCharColor;
         }
       }
       if ( chosenCharColor == -1 )
       {
         chosenCharColor = 0;
       }
-      cd.Tile.CustomColor = (byte)chosenCharColor;
+      byte  customColor = (byte)chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        cd.Tile.CustomColor = (byte)( chosenCharColor + 8 );
+        customColor = (byte)( chosenCharColor + 8 );
       }
       return true;
     }
@@ -1840,7 +1845,7 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * BlockWidth, j * BlockHeight, true );
+          CheckCharBox( m_Chars[i + j * BlockWidth], i * CheckBlockWidth, j * CheckBlockHeight, true );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;

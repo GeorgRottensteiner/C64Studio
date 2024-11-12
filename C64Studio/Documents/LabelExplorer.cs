@@ -366,6 +366,9 @@ namespace RetroDevStudio.Documents
           case SymbolInfo.Types.VARIABLE_INTEGER:
             node.Text += " = Integer";
             break;
+          case SymbolInfo.Types.TEXT_LABEL:
+            node.Text += " = Label";
+            break;
           case SymbolInfo.Types.CONSTANT_STRING:
             node.Text += " = " + token.String;
             break;

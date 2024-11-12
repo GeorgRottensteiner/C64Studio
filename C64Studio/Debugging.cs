@@ -217,7 +217,9 @@ namespace RetroDevStudio
           breakPoint.Virtual.Clear();
           breakPoint.Virtual.Add( breakPoint );
 
-          if ( key != "RetroDevStudio.DebugBreakpoints" )
+          // reseat breakpoints which are set to a line
+          if ( ( key != "RetroDevStudio.DebugBreakpoints" )
+          &&   ( breakPoint.LineIndex != -1 ) )
           {
             breakPoint.Address = -1;
             int globalLineIndex = 0;

@@ -138,11 +138,24 @@ namespace RetroDevStudio.Documents
       {
         Types.Breakpoint bp = (Types.Breakpoint)listBreakpoints.SelectedItems[0].Tag;
 
-        editBPAddress.Text = bp.Address.ToString( "x" );
-        checkTriggerExec.Checked = bp.TriggerOnExec;
-        checkTriggerLoad.Checked = bp.TriggerOnLoad;
-        checkTriggerStore.Checked = bp.TriggerOnStore;
-        editTriggerConditions.Text = bp.Conditions;
+        if ( bp.AddressSource != null )
+        {
+          try
+          {
+            comboSymbols.SelectedItem = bp.AddressSource;
+          }
+          catch ( Exception )
+          {
+          }
+        }
+        else
+        {
+          editBPAddress.Text = bp.Address.ToString( "x" );
+        }
+        checkTriggerExec.Checked    = bp.TriggerOnExec;
+        checkTriggerLoad.Checked    = bp.TriggerOnLoad;
+        checkTriggerStore.Checked   = bp.TriggerOnStore;
+        editTriggerConditions.Text  = bp.Conditions;
       }
     }
 

@@ -374,6 +374,7 @@ namespace FastColoredTextBoxNS
     FastColoredTextBox tb;
     internal ToolTip toolTip = new ToolTip();
     System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+    internal DateTime lastToolTipShowTimestamp = DateTime.Now;
 
     internal bool AllowTabKey
     {
@@ -907,7 +908,13 @@ namespace FastColoredTextBoxNS
       if ( toolTip.ToolTipTitle != title )
       {
         // not calling hide sometimes makes the tooltip show older content??
-        toolTip.Hide( window );
+        var showDate = DateTime.Now;
+        var showTime = ( showDate - lastToolTipShowTimestamp ).TotalSeconds;
+        if ( showTime >= 3.0f )
+        {
+          // hiding causes timing hickups??
+          toolTip.Hide( window );
+        }
         if ( string.IsNullOrEmpty( text ) )
         {
           toolTip.ToolTipTitle = null;
@@ -918,6 +925,7 @@ namespace FastColoredTextBoxNS
           toolTip.ToolTipTitle = title;
           toolTip.Show( text, window, location.X, location.Y, ToolTipDuration );
         }
+        lastToolTipShowTimestamp = showDate;
       }
     }
 

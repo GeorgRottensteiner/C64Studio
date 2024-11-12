@@ -819,7 +819,7 @@ namespace RetroDevStudio.Parser
         {
           insideMacro = true;
           if ( ( currentToken != null )
-          &&   ( currentToken.TokenType != Token.Type.MACRO ) )
+          && ( currentToken.TokenType != Token.Type.MACRO ) )
           {
             // end of previous token
             currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
@@ -840,7 +840,7 @@ namespace RetroDevStudio.Parser
         if ( nextByte == 34 )
         {
           if ( ( currentToken != null )
-          &&   ( currentToken.TokenType != Token.Type.STRING_LITERAL ) )
+          && ( currentToken.TokenType != Token.Type.STRING_LITERAL ) )
           {
             // end of previous token
             currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
@@ -863,7 +863,7 @@ namespace RetroDevStudio.Parser
         {
           // BASIC tokens are always searched forward
           if ( ( !insideDataStatement )
-          &&   ( IsBASICTokenStartingHere( Line, posInLine, out string Token, out int tokenValue ) ) )
+          && ( IsBASICTokenStartingHere( Line, posInLine, out string Token, out int tokenValue ) ) )
           {
             if ( currentToken != null )
             {
@@ -871,10 +871,10 @@ namespace RetroDevStudio.Parser
               currentToken = null;
             }
             var basicToken = new Token();
-            basicToken.TokenType  = BasicFileParser.Token.Type.BASIC_TOKEN;
+            basicToken.TokenType = BasicFileParser.Token.Type.BASIC_TOKEN;
             basicToken.StartIndex = posInLine;
-            basicToken.Content    = Token;
-            basicToken.ByteValue  = tokenValue;
+            basicToken.Content = Token;
+            basicToken.ByteValue = tokenValue;
 
             lineInfo.Tokens.Add( basicToken );
 
@@ -920,9 +920,9 @@ namespace RetroDevStudio.Parser
               continue;
             }
             if ( ( currentToken.TokenType == BasicFileParser.Token.Type.NUMERIC_LITERAL )
-            &&   ( Line.Substring( currentToken.StartIndex, posInLine - currentToken.StartIndex ).Contains( "." ) )
-            &&   ( nextByte >= 'A' )
-            &&   ( nextByte <= 'F' ) )
+            && ( Line.Substring( currentToken.StartIndex, posInLine - currentToken.StartIndex ).Contains( "." ) )
+            && ( nextByte >= 'A' )
+            && ( nextByte <= 'F' ) )
             {
               // in case of hex literals they are not allowed after a dot!
             }
@@ -982,9 +982,9 @@ namespace RetroDevStudio.Parser
           {
             Token numericToken      = new Token();
 
-            numericToken.TokenType  = Token.Type.DIRECT_TOKEN;
+            numericToken.TokenType = Token.Type.DIRECT_TOKEN;
             numericToken.StartIndex = posInLine;
-            numericToken.Content    = "" + nextByte;
+            numericToken.Content = "" + nextByte;
             lineInfo.Tokens.Add( numericToken );
             tokenStartPos = posInLine;
 
@@ -1021,6 +1021,14 @@ namespace RetroDevStudio.Parser
       }
 
       // sanitize
+      SanitizeTokens( lineInfo );
+      return lineInfo;
+    }
+
+
+
+    private void SanitizeTokens( LineInfo lineInfo )
+    {
       if ( ( lineInfo.Tokens.Count > 0 )
       &&   ( !LabelMode )
       &&   ( lineInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL ) )
@@ -1047,19 +1055,31 @@ namespace RetroDevStudio.Parser
         }
         for ( int i = startIndex; i < lineInfo.Tokens.Count; i++ )
         {
+          int   prevTokenIndex = FindPrevToken( lineInfo.Tokens, i );
+          // previous token found the line number
+          if ( ( prevTokenIndex != -1 )
+          &&   ( prevTokenIndex < startIndex ) )
+          {
+            prevTokenIndex = -1;
+          }
+          int   nextTokenIndex = FindNextToken( lineInfo.Tokens, i );
+
           // a variable
           if ( ( ( lineInfo.Tokens[i].TokenType == Token.Type.VARIABLE )
           ||     ( lineInfo.Tokens[i].Content == "." ) )
 
           // at the start of a statement (no EXEC/PROC)
           &&   ( ( i == startIndex )
-          ||     ( ( lineInfo.Tokens[i - 1].TokenType == Token.Type.BASIC_TOKEN )
-          &&       ( IsPreLabelToken( lineInfo.Tokens[i - 1] ) ) )
-          ||     ( lineInfo.Tokens[i - 1].Content == ":" ) )
+          ||     ( prevTokenIndex == -1 )
+          ||     ( ( prevTokenIndex != -1 )
+          &&       ( lineInfo.Tokens[prevTokenIndex].TokenType == Token.Type.BASIC_TOKEN )
+          &&       ( IsPreLabelToken( lineInfo.Tokens[prevTokenIndex] ) ) )
+          ||     ( ( prevTokenIndex != -1 )
+          &&       ( lineInfo.Tokens[prevTokenIndex].Content == ":" ) ) )
 
           // no assignment, so probably really a label
-          && ( ( i + 1 >= lineInfo.Tokens.Count )
-          ||     ( lineInfo.Tokens[i + 1].Content != "=" ) ) )
+          &&   ( ( nextTokenIndex == -1 )
+          ||     ( lineInfo.Tokens[nextTokenIndex].Content != "=" ) ) )
           {
             // look up until next separator
             int   lastValidTokenIndex = i;
@@ -1085,6 +1105,8 @@ namespace RetroDevStudio.Parser
               lineInfo.Tokens[i].Content = fullLabel;
 
               lineInfo.Tokens.RemoveRange( i + 1, lastValidTokenIndex - i );
+
+              ++i;
             }
           }
         }
@@ -1113,8 +1135,6 @@ namespace RetroDevStudio.Parser
           token.Content = token.Content.Substring( 0, 5 );
         }
       }
-
-      return lineInfo;
     }
 
 
@@ -1643,7 +1663,6 @@ namespace RetroDevStudio.Parser
       {
         AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
       }
-
 
       UpdateLineNumberReferences( info );
       
@@ -2607,6 +2626,33 @@ namespace RetroDevStudio.Parser
               } );
             
           }
+          else if ( variable.TokenType == Token.Type.TEXT_LABEL )
+          {
+            // PROC/EXEC labels
+            var varName = variable.Content;
+            if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
+            {
+              var symbolInfo              = new SymbolInfo();
+              symbolInfo.AddressOrValue   = 0;
+              symbolInfo.CharIndex        = variable.StartIndex;
+              symbolInfo.Name             = varName;
+              symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
+              symbolInfo.Length           = varName.Length;
+              symbolInfo.LineIndex        = lineIndex;
+              symbolInfo.LocalLineIndex   = lineIndex;
+              symbolInfo.Type             = SymbolInfo.Types.TEXT_LABEL;
+
+              m_ASMFileInfo.Labels.Add( varName, symbolInfo );
+            }
+            var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
+            existingSymbolInfo.References.Add( lineIndex,
+              new SymbolReference()
+              {
+                GlobalLineIndex = lineIndex,
+                TokenInfo = new TokenInfo() { StartPos = variable.StartIndex, Length = variable.Content.Length, OriginatingString = info.Line }
+              } );
+          }
+
           ++tokenIndex;
         }
 
@@ -3329,6 +3375,26 @@ namespace RetroDevStudio.Parser
         return opcode.IsComment;
       }
       return false;
+    }
+
+
+
+    // finds prev non-space token or returns -1
+    private int FindPrevToken( List<Token> Tokens, int StartIndex )
+    {
+      int curIndex = StartIndex - 1;
+
+      while ( curIndex >= 0 )
+      {
+        if ( ( Tokens[curIndex].TokenType != Token.Type.DIRECT_TOKEN )
+        ||   ( Tokens[curIndex].ByteValue != 0x20 ) )
+        {
+          // not a Space
+          return curIndex;
+        }
+        --curIndex;
+      }
+      return -1;
     }
 
 

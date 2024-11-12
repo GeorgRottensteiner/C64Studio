@@ -24,7 +24,8 @@ namespace RetroDevStudio
       VARIABLE_STRING,
       VARIABLE_ARRAY,
       TEMP_LABEL,
-      MACRO
+      MACRO,
+      TEXT_LABEL
     };
 
     public Types      Type = Types.UNKNOWN;

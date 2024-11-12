@@ -1,3 +1,7 @@
+;BASIC start at $1000 (unexpanded)
+;BASIC start at $1200 (expanded)
+
+
 !zone VIC
 ;| Bit  7   |    Interlace scan
 ;| Bit  0-6 |    Horizontal centering

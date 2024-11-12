@@ -235,7 +235,7 @@ LOCAL;f7;
 LOC.;f7;
 PROCEND;f8;
 PRO.;f8;
-PROC;f9;
+PROC;f9;;prelabeltoken
 CASEND;fa;
 CA.;fa;
 OF;fb;

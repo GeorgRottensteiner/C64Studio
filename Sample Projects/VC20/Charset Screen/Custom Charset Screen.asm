@@ -1,5 +1,7 @@
 !source <vc20.asm>
 
+;using regular VIC20 screen mode, for unexpanded memory
+
 * = $1001
 
 SCREEN_CHAR       = $1e00
