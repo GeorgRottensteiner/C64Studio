@@ -1349,6 +1349,8 @@ namespace RetroDevStudio.Documents
         m_ToolTip.Hide( editSource );
         return;
       }
+      DetermineTokenAndTypeBelow( lineNumber, charPos, out List<TokenInfo> lineTokens, out TokenInfo tokenBelow, out TokenInfo.TokenType tokenTypeBelow );
+
       Types.ASM.FileInfo    debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( debugFileInfo == null )
       {
@@ -1372,7 +1374,7 @@ namespace RetroDevStudio.Documents
 
       debugFileInfo.FindGlobalLineIndex( lineNumber, DocumentInfo.FullPath, out int globalLineIndex );
 
-      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent, globalLineIndex );
+      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent, globalLineIndex, tokenTypeBelow );
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.Type != SymbolInfo.Types.UNKNOWN ) )
       {
@@ -1395,16 +1397,12 @@ namespace RetroDevStudio.Documents
         }
         if ( tokenInfo.Type == SymbolInfo.Types.MACRO )
         {
-          var tokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new GR.Collections.Map<byte, byte>() );
           int numArgs = -1;
-          if ( tokens != null )
+          if ( ( lineTokens != null )
+          &&   ( tokenBelow != null ) )
           {
-            var currentToken = tokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( charPos < t.StartPos + t.Length ) );
-            if ( currentToken != null )
-            {
-              int tokenIndexOfMacro = tokens.IndexOf( currentToken );
-              numArgs = Parser.EstimateNumberOfParameters( tokens, tokenIndexOfMacro + 1, tokens.Count - tokenIndexOfMacro - 1 );
-            }
+            int tokenIndexOfMacro = lineTokens.IndexOf( tokenBelow );
+            numArgs = Parser.EstimateNumberOfParameters( lineTokens, tokenIndexOfMacro + 1, lineTokens.Count - tokenIndexOfMacro - 1 );
           }
 
           // try to find a match with arg numbers
@@ -1471,6 +1469,32 @@ namespace RetroDevStudio.Documents
         return;
       }
       m_ToolTip.Hide( editSource );
+    }
+
+
+
+    private void DetermineTokenAndTypeBelow( int lineNumber, int charPos, out List<TokenInfo> lineTokens, out TokenInfo tokenBelow, out TokenInfo.TokenType tokenTypeBelow )
+    {
+      tokenTypeBelow = TokenInfo.TokenType.UNKNOWN;
+      tokenBelow = null;
+      lineTokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new Map<byte, byte>() );
+      if ( lineTokens != null )
+      {
+        tokenBelow = lineTokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( t.EndPos >= charPos ) );
+        if ( tokenBelow != null )
+        {
+          tokenTypeBelow = tokenBelow.Type;
+
+          // is it a macro name in the macro definition?
+          int tokenIndex = lineTokens.IndexOf( tokenBelow );
+          if ( ( tokenIndex > 0 )
+          && ( lineTokens[tokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP )
+          && ( lineTokens[tokenIndex - 1].Content.ToUpper() == Parser.AssemblerSettings.PseudoOps.First( po => po.Value.Type == MacroInfo.PseudoOpType.MACRO ).Key ) )
+          {
+            tokenTypeBelow = TokenInfo.TokenType.CALL_MACRO;
+          }
+        }
+      }
     }
 
 
@@ -2782,6 +2806,9 @@ namespace RetroDevStudio.Documents
 
     private void GoToDeclaration()
     {
+      int charPos = editSource.PositionToPlace( m_ContextMenuPosition ).iChar;
+      int lineNumber = editSource.PositionToPlace( m_ContextMenuPosition ).iLine;
+
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
       string zone;
       string cheapLabelParent;
@@ -2795,7 +2822,9 @@ namespace RetroDevStudio.Documents
 
       FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
-      Core.Navigating.GotoDeclaration( DocumentInfo, m_ContextMenuPosition, m_ContextMenuLineIndex, wordBelow, zone, cheapLabelParent );
+      DetermineTokenAndTypeBelow( lineNumber, charPos, out List<TokenInfo> lineTokens, out TokenInfo tokenBelow, out TokenInfo.TokenType tokenTypeBelow );
+
+      Core.Navigating.GotoDeclaration( DocumentInfo, m_ContextMenuPosition, m_ContextMenuLineIndex, wordBelow, zone, cheapLabelParent, tokenTypeBelow );
       CenterOnCaret();
     }
 
@@ -4315,12 +4344,17 @@ namespace RetroDevStudio.Documents
 
     internal void GoToDeclarationAtCaretPosition()
     {
+      int charPos = editSource.PositionToPlace( m_ContextMenuPosition ).iChar;
+      int lineNumber = editSource.PositionToPlace( m_ContextMenuPosition ).iLine;
+
       string wordBelow = FindWordAtCaretPosition();
       string zone;
       string cheapLabelParent;
 
       FindZoneAtCaretPosition( out zone, out cheapLabelParent );
-      Core.Navigating.GotoDeclaration( DocumentInfo, CurrentPosition(), CurrentLineIndex, wordBelow, zone, cheapLabelParent );
+      DetermineTokenAndTypeBelow( lineNumber, charPos, out List<TokenInfo> lineTokens, out TokenInfo tokenBelow, out TokenInfo.TokenType tokenTypeBelow );
+
+      Core.Navigating.GotoDeclaration( DocumentInfo, CurrentPosition(), CurrentLineIndex, wordBelow, zone, cheapLabelParent, tokenTypeBelow );
     }
 
 

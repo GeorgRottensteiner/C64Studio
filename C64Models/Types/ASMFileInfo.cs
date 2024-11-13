@@ -817,7 +817,7 @@ namespace RetroDevStudio.Types.ASM
 
 
 
-    public SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent, int GlobalLineIndex = -1 )
+    public SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent, int GlobalLineIndex = -1, TokenInfo.TokenType TokenTypeToSearch = TokenInfo.TokenType.UNKNOWN )
     {
       if ( AssemblerSettings != null )
       {
@@ -828,49 +828,82 @@ namespace RetroDevStudio.Types.ASM
       }
       if ( !Labels.ContainsKey( Token ) )
       {
-        if ( Token.StartsWith( "@" ) )
+        if ( ( TokenTypeToSearch == TokenInfo.TokenType.UNKNOWN )
+        ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) )
         {
-          if ( Labels.ContainsKey( CheapLabelParent + Token ) )
+          if ( Token.StartsWith( "@" ) )
           {
-            return Labels[CheapLabelParent + Token];
+            if ( Labels.ContainsKey( CheapLabelParent + Token ) )
+            {
+              return Labels[CheapLabelParent + Token];
+            }
           }
         }
-        if ( Labels.ContainsKey( Zone + Token ) )
+        if ( ( TokenTypeToSearch == TokenInfo.TokenType.UNKNOWN )
+        ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_LOCAL )
+        ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_GLOBAL )
+        ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+        ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_INTERNAL ) )
         {
-          return Labels[Zone + Token];
+          if ( Labels.ContainsKey( Zone + Token ) )
+          {
+            return Labels[Zone + Token];
+          }
+
+          if ( Token.StartsWith( "." ) )
+          {
+            Token = Zone + Token;
+          }
+
+          TemporaryLabelInfo    tempLabel = null;
+          if ( GlobalLineIndex != -1 )
+          {
+            tempLabel = TempLabelInfo.FirstOrDefault( tl => 
+                    ( tl.Name == Token ) 
+                && ( GlobalLineIndex >= tl.LineIndex ) 
+                && ( ( tl.LineCount == -1 ) 
+                ||   ( GlobalLineIndex < tl.LineIndex + tl.LineCount ) ) );
+          }
+          else
+          {
+            tempLabel = TempLabelInfo.FirstOrDefault( tl => tl.Name == Token );
+          }
+          if ( tempLabel != null )
+          {
+            return tempLabel.Symbol;
+          }
         }
 
-        if ( Token.StartsWith( "." ) )
+        if ( ( TokenTypeToSearch == TokenInfo.TokenType.UNKNOWN )
+        ||   ( TokenTypeToSearch == TokenInfo.TokenType.CALL_MACRO ) )
         {
-          Token = Zone + Token;
-        }
-
-        TemporaryLabelInfo    tempLabel = null;
-        if ( GlobalLineIndex != -1 )
-        {
-          tempLabel = TempLabelInfo.FirstOrDefault( tl => 
-                 ( tl.Name == Token ) 
-              && ( GlobalLineIndex >= tl.LineIndex ) 
-              && ( ( tl.LineCount == -1 ) 
-              ||   ( GlobalLineIndex < tl.LineIndex + tl.LineCount ) ) );
-        }
-        else
-        {
-          tempLabel = TempLabelInfo.FirstOrDefault( tl => tl.Name == Token );
-        }
-        if ( tempLabel != null )
-        {
-          return tempLabel.Symbol;
-        }
-
-        var symbol = Macros.Keys.FirstOrDefault( m => m.first == Token );
-        if ( symbol != null ) 
-        {
-          return Macros[symbol].Symbol;
+          var symbol = Macros.Keys.FirstOrDefault( m => m.first == Token );
+          if ( symbol != null ) 
+          {
+            return Macros[symbol].Symbol;
+          }
         }
         return null;
       }
-      return Labels[Token];
+      if ( ( TokenTypeToSearch == TokenInfo.TokenType.UNKNOWN )
+      ||   ( TokenTypeToSearch == TokenInfo.TokenType.CALL_MACRO ) )
+      {
+        var symbol = Macros.Keys.FirstOrDefault( m => m.first == Token );
+        if ( symbol != null )
+        {
+          return Macros[symbol].Symbol;
+        }
+      }
+
+      if ( ( TokenTypeToSearch == TokenInfo.TokenType.UNKNOWN )
+      ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_LOCAL )
+      ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_GLOBAL )
+      ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+      ||   ( TokenTypeToSearch == TokenInfo.TokenType.LABEL_INTERNAL ) )
+      {
+        return Labels[Token];
+      }
+      return null;
     }
 
 

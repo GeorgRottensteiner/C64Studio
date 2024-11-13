@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -356,30 +357,38 @@ namespace RetroDevStudio
 
 
 
-    public void GotoDeclaration( DocumentInfo ASMDoc, int SourcePosition, int LineIndex, string Word, string Zone, string CheapLabelParent )
+    public void GotoDeclaration( DocumentInfo ASMDoc, int SourcePosition, int LineIndex, string Word, string Zone, string CheapLabelParent, TokenInfo.TokenType TokenTypeBelow )
     {
       Types.ASM.FileInfo fileToDebug = DetermineASMFileInfo( ASMDoc );
 
-      SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent );
+      SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent, -1, TokenTypeBelow );
 
       int numArgs = -1;
       int  numMacros = fileToDebug.Macros.Keys.Count( m => m.first == Word );
 
-      if ( ( numMacros > 1 )
-      &&   ( ASMDoc.BaseDoc != null ) )
+      if ( ( TokenTypeBelow == TokenInfo.TokenType.UNKNOWN )
+      ||   ( TokenTypeBelow == TokenInfo.TokenType.CALL_MACRO ) )
       {
-        var asm = (SourceASMEx)ASMDoc.BaseDoc;
-
-        numArgs = asm.DetermineNumberOfMacroArguments( LineIndex, SourcePosition );
-      }
-      var macro = ASMDoc.ASMFileInfo.MacroFromName( Word, numArgs );
-      if ( macro != null )
-      {
-        if ( fileToDebug.FindTrueLineSource( macro.LineIndex, out string fileName, out int localLineIndex ) )
+        if ( ( numMacros > 1 )
+        &&   ( ASMDoc.BaseDoc != null ) )
         {
-          OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( fileName ), localLineIndex );
-          return;
+          var asm = (SourceASMEx)ASMDoc.BaseDoc;
+
+          numArgs = asm.DetermineNumberOfMacroArguments( LineIndex, SourcePosition );
         }
+        var macro = ASMDoc.ASMFileInfo.MacroFromName( Word, numArgs );
+        if ( macro != null )
+        {
+          if ( fileToDebug.FindTrueLineSource( macro.LineIndex, out string fileName, out int localLineIndex ) )
+          {
+            OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( fileName ), localLineIndex );
+            return;
+          }
+        }
+      }
+      if ( TokenTypeBelow == TokenInfo.TokenType.CALL_MACRO )
+      {
+        return;
       }
       if ( tokenInfo == null )
       {
