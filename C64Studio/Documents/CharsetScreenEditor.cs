@@ -1390,8 +1390,6 @@ namespace RetroDevStudio.Documents
       ApplyPalette();
       SetupColorChooserDialog();
 
-      SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
-
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
 
@@ -1429,7 +1427,6 @@ namespace RetroDevStudio.Documents
       }
       editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
       editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
-      OnCharsetScreenModeChanged();
 
       AdjustScrollbars();
 
@@ -2774,6 +2771,9 @@ namespace RetroDevStudio.Documents
           break;
         case TextCharMode.NES:
           _ColorChooserDlg = new ColorPickerNES( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          break;
+        case TextCharMode.VIC20_8X16:
+          _ColorChooserDlg = new ColorPickerCommodoreVIC20X16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         default:
           _ColorChooserDlg = new ColorPickerCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );

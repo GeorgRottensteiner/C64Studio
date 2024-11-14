@@ -600,8 +600,6 @@ namespace RetroDevStudio.Documents
       int         lineNo = 0;
       string      currentFilename = "";
 
-      var occurrences = new List<TextLocation>();
-
       if ( e.Node.Level == 3 )
       {
         var reference = (KeyValuePair<int,SymbolReference>)e.Node.Tag;
@@ -633,8 +631,15 @@ namespace RetroDevStudio.Documents
           currentFilename = tokenInfo.DocumentFilename;
         }
       }
+
+      var occurrences = new List<TextLocation>();
+      var doc = Core.Navigating.FindDocumentByPath( currentFilename );
       if ( tokenInfo == null )
       {
+        if ( doc != null )
+        {
+          doc.HighlightOccurrences( lineNo, startPos, 0, occurrences );
+        }
         return;
       }
 
@@ -661,7 +666,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      var doc = Core.Navigating.FindDocumentByPath( currentFilename );
       if ( doc != null )
       {
         doc.SetCursorToLine( lineNo, startPos, false );

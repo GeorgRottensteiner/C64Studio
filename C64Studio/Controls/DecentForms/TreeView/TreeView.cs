@@ -465,8 +465,8 @@ namespace DecentForms
         {
           _SelectedNode.EnsureVisible();
           Invalidate( _SelectedNode.Bounds );
-          AfterSelect?.Invoke( this, new TreeViewEventArgs( _SelectedNode ) );
         }
+        AfterSelect?.Invoke( this, new TreeViewEventArgs( _SelectedNode ) );
       }
     }
 

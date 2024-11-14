@@ -565,6 +565,7 @@ namespace RetroDevStudio.Documents
       {
         newHighlightText = null;
       }
+      m_CurrentHighlightLocations.Clear();
       if ( m_CurrentHighlightText != newHighlightText )
       {
         if ( !string.IsNullOrEmpty( m_CurrentHighlightText ) )
