@@ -306,7 +306,7 @@ namespace DecentForms
 
 
 
-    public void DrawText( Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, int DX = 0, int DY = 0 )
+    public void DrawText( System.Drawing.Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, int DX = 0, int DY = 0 )
     {
       BoundsX -= _DisplayOffsetX;
       BoundsY -= _DisplayOffsetY;
@@ -323,7 +323,7 @@ namespace DecentForms
 
 
 
-    public void DrawText( Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, uint Color )
+    public void DrawText( System.Drawing.Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, uint Color )
     {
       BoundsX -= _DisplayOffsetX;
       BoundsY -= _DisplayOffsetY;

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net3.5;net4.8;net8.0-windows</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>FastColoredTextBoxNS</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -33,10 +33,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.6" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Design" Condition="'$(TargetFramework)' == 'net3.5'" />

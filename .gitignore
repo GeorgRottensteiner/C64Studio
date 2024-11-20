@@ -154,7 +154,6 @@
 /Sample Projects/MacroTest/macro_overloaded.prg
 /Sample Projects/MacroTest/po_nested_zone.prg
 /C64Ass/publish
-/C64StudioRelease/net6.0
 /Sample Projects/MacroTest/referencenotlisted.prg
 /Sample Projects/MacroTest/cpc_z80.prg
 /Sample Projects/MacroTest/cpc_all.prg
@@ -167,6 +166,8 @@
 /C64StudioRelease/net4.8
 /C64StudioRelease/net6.0
 /C64StudioRelease/net6.0-windows
+/C64StudioRelease/net8.0
+/C64StudioRelease/net8.0-windows
 /Sample Projects/MacroTest/po_while.prg
 /Sample Projects/MacroTest/shifted-letters-petscii.prg
 /Sample Projects/MacroTest/acme.prg
@@ -220,6 +221,7 @@
 /C64StudioRelease3.5ARM.zip
 /C64StudioRelease4.8ARM.zip
 /C64StudioRelease6.0ARM.zip
+/C64StudioRelease8.0ARM.zip
 /C64StudioReleaseARM.zip
 /Sample Projects/MacroTest/segment_overlapping.prg
 /C64StudioRelease.zip

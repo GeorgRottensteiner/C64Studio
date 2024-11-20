@@ -1183,7 +1183,7 @@ namespace GR.Image
 
 
 
-#if !OS_CROSS_PLATFORM
+#if ( OS_WINDOWS ) && ( !OS_CROSS_PLATFORM )
 #if NET5_0_OR_GREATER
     [SupportedOSPlatform("windows")]
 #endif

@@ -25,7 +25,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\Map.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\MemoryImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\MemoryReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\MultiMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\PixelFormat.cs" />

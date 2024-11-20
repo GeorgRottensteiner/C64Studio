@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net3.5;net4.8;net8.0-windows</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <IsPublishable>False</IsPublishable>
@@ -33,7 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.30.0" Condition="'$(TargetFramework)'=='net6.0-windows'" />
+    <PackageReference Include="LibGit2Sharp" Version="0.30.0" Condition="'$(TargetFramework)'=='net8.0-windows'" />
   </ItemGroup>
 
 </Project>

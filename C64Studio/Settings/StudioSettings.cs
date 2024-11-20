@@ -9,7 +9,6 @@ using RetroDevStudio.Types;
 using System.Drawing;
 using RetroDevStudio.Documents;
 using System.Linq;
-using MDIApp;
 using System.Management;
 
 namespace RetroDevStudio

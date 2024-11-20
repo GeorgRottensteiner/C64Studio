@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net6.0-windows;net6.0</TargetFrameworks>
+    <TargetFrameworks>net3.5;net4.8;net8.0-windows;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
     <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
     <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
-	  <UseWindowsForms Condition="'$(TargetFramework)' != 'net6.0'">true</UseWindowsForms>
-	  <ImportWindowsDesktopTargets Condition="'$(TargetFramework)' != 'net6.0'">true</ImportWindowsDesktopTargets>
-	  <RuntimeIdentifiers>win7-x86;win7-x64;linux-x64</RuntimeIdentifiers>
+	  <UseWindowsForms Condition="'$(TargetFramework)' != 'net8.0'">true</UseWindowsForms>
+	  <ImportWindowsDesktopTargets Condition="'$(TargetFramework)' != 'net8.0'">true</ImportWindowsDesktopTargets>
+	  <RuntimeIdentifiers>win-x86;win-x64;linux-x64</RuntimeIdentifiers>
     <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsWindows)'=='true'">
     <DefineConstants>OS_WINDOWS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
 	<DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
@@ -55,12 +55,12 @@
     </PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
   <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'net6.0'" />
+  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" Condition="'$(TargetFramework)' != 'net8.0'" />
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
 </Project>
