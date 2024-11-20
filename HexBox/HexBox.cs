@@ -1983,16 +1983,18 @@ namespace Be.Windows.Forms
 				return new BytePositionInfo(0, 0);
 			return new BytePositionInfo(bytePos, byteCharacterPos);
 		}
-		#endregion
+    #endregion
 
-		#region PreProcessMessage methods
-		/// <summary>
-		/// Preprocesses windows messages.
-		/// </summary>
-		/// <param name="m">the message to process.</param>
-		/// <returns>true, if the message was processed</returns>
-		[SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true), SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
-		public override bool PreProcessMessage(ref Message m)
+    #region PreProcessMessage methods
+    /// <summary>
+    /// Preprocesses windows messages.
+    /// </summary>
+    /// <param name="m">the message to process.</param>
+    /// <returns>true, if the message was processed</returns>
+#if !NET5_0_OR_GREATER
+    [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true), SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
+#endif
+    public override bool PreProcessMessage(ref Message m)
 		{
 			switch (m.Msg)
 			{
