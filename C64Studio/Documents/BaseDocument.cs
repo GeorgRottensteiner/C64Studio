@@ -839,6 +839,11 @@ namespace RetroDevStudio.Documents
       {
         saveResult = System.Windows.Forms.MessageBox.Show( "The item " + DocumentInfo.DocumentFilename + " has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
       }
+      // remember decision for final modified item list
+      if ( saveResult == DialogResult.No )
+      {
+        Core.ShuttingDownDeniedSave( this );
+      }
       if ( ( saveResult == DialogResult.Cancel )
       ||   ( saveResult == DialogResult.No ) )
       {

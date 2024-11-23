@@ -49,7 +49,7 @@ namespace RetroDevStudio.Types
       this.Mode = Mode;
       Colors = Color;
 
-      Data  = new ByteBuffer( (uint)Lookup.NumBytes( Width, Height, Mode ) );
+      Data  = new ByteBuffer( (uint)Lookup.NumBytesForGraphic( Width, Height, Mode ) );
       Image = new GR.Image.MemoryImage( Width, Height, GR.Drawing.PixelFormat.Format32bppRgb );
     }
 

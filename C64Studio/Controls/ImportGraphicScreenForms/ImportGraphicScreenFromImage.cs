@@ -8,7 +8,7 @@ using RetroDevStudio.Documents;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ImportGraphicScreenFromImage : ImportCharscreenFormBase
+  public partial class ImportGraphicScreenFromImage : ImportGraphicScreenFormBase
   {
     public ImportGraphicScreenFromImage() :
       base( null )
@@ -25,7 +25,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public virtual bool HandleImport( GraphicScreenProject Project, GraphicScreenEditor Editor )
+    public override bool HandleImport( GraphicScreenProject Project, GraphicScreenEditor Editor )
     {
       string filename;
 

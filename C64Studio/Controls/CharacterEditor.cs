@@ -543,9 +543,6 @@ namespace RetroDevStudio.Controls
 
     public void PasteImage( string FromFile, GR.Image.FastImage Image, bool ForceMulticolor )
     {
-      GR.Image.FastImage mappedImage = null;
-
-
       var   mcSettings = new ColorSettings( m_Project.Colors );
 
       bool pasteAsBlock = false;
@@ -556,7 +553,7 @@ namespace RetroDevStudio.Controls
       {
         importType = Types.GraphicType.CHARACTERS_FCM;
       }
-      if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, m_CharacterWidth, m_CharacterHeight, out mappedImage, out mcSettings, out pasteAsBlock, out Types.GraphicType importAsType ) )
+      if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, m_CharacterWidth, m_CharacterHeight, out GR.Image.IImage mappedImage, out mcSettings, out pasteAsBlock, out Types.GraphicType importAsType ) )
       {
         Image.Dispose();
         return;
@@ -1170,6 +1167,7 @@ namespace RetroDevStudio.Controls
       _ColorPickerDlg.PaletteMappingSelected += _ColorChooserDlg_PaletteMappingSelected;
       _ColorPickerDlg.Redraw();
       panelColorChooser.Controls.Add( _ColorPickerDlg );
+      DPIHandler.ResizeControlsForDPI( _ColorPickerDlg );
     }
 
 
@@ -1991,6 +1989,7 @@ namespace RetroDevStudio.Controls
           return;
       }
       panelColorSettings.Controls.Add( _ColorSettingsDlg );
+      DPIHandler.ResizeControlsForDPI( _ColorSettingsDlg );
       _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
       _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;

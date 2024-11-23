@@ -1393,6 +1393,9 @@ namespace RetroDevStudio.Documents
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
 
+      SetupColorChooserDialog();
+      OnCharsetScreenModeChanged();
+
       panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
       panelCharacters.ItemHeight  = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
 
@@ -2151,6 +2154,7 @@ namespace RetroDevStudio.Documents
       pictureEditor.Invalidate();
 
       SetupColorChooserDialog();
+      Modified = true;
     }
 
 
@@ -2687,67 +2691,16 @@ namespace RetroDevStudio.Documents
         {
           m_CurrentPaletteMapping = 0;
         }
-
-        SetupColorChooserDialog();
-
-        OnCharsetScreenModeChanged();
+        Modified = true;
       }
-
       m_CharacterWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       m_CharacterHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
 
       m_CharsWidth = Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode );
       m_CharsHeight = Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode );
 
-      switch ( m_CharsetScreen.Mode )
-      {
-        case TextMode.COMMODORE_40_X_25_HIRES:
-        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-        case TextMode.COMMODORE_40_X_25_ECM:
-        case TextMode.MEGA65_40_X_25_FCM:
-        case TextMode.MEGA65_40_X_25_FCM_16BIT:
-        case TextMode.MEGA65_40_X_25_ECM:
-        case TextMode.MEGA65_40_X_25_HIRES:
-          pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.X16_20_X_15:
-        case TextMode.X16_20_X_30:
-        case TextMode.X16_40_X_15:
-        case TextMode.X16_40_X_30:
-        case TextMode.X16_40_X_60:
-        case TextMode.X16_80_X_30:
-        case TextMode.X16_80_X_60:
-          pictureEditor.DisplayPage.Create( m_CharsWidth * 8, m_CharsHeight * 8, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.MEGA65_40_X_25_NCM:
-          m_CharsWidth = 20;
-          pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.MEGA65_80_X_25_HIRES:
-        case TextMode.MEGA65_80_X_25_MULTICOLOR:
-        case TextMode.MEGA65_80_X_25_FCM:
-        case TextMode.MEGA65_80_X_25_FCM_16BIT:
-        case TextMode.MEGA65_80_X_25_ECM:
-        case TextMode.COMMODORE_128_VDC_80_X_25_HIRES:
-          pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.MEGA65_80_X_25_NCM:
-          m_CharsWidth = 40;
-          pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.COMMODORE_VIC20_8_X_8:
-          pictureEditor.DisplayPage.Create( 176, 184, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.COMMODORE_VIC20_8_X_16:
-          pictureEditor.DisplayPage.Create( 176, 192, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        case TextMode.NES:
-          pictureEditor.DisplayPage.Create( 256, 240, GR.Drawing.PixelFormat.Format32bppRgb );
-          break;
-        default:
-          Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
-          break;
-      }
+      SetupColorChooserDialog();
+      OnCharsetScreenModeChanged();
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
       RedrawFullScreen();
       AdjustScrollbars();
@@ -2804,8 +2757,6 @@ namespace RetroDevStudio.Documents
 
     private void OnCharsetScreenModeChanged()
     {
-      Modified = true;
-
       var clientSize = new Size( 640, 400 );
       var displaySize = new Size( 320, 200 );
 
@@ -2838,7 +2789,7 @@ namespace RetroDevStudio.Documents
           break;
       }
 
-      pictureEditor.ClientSize = new Size( clientSize.Width + 4, clientSize.Height + 4 );
+      pictureEditor.ClientSize = new Size( clientSize.Width, clientSize.Height );
       pictureEditor.DisplayPage.Create( displaySize.Width, displaySize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
       int     rightEnd = pictureEditor.Bounds.Right;

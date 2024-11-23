@@ -119,9 +119,9 @@ namespace RetroDevStudio.Controls
 
     public ColorSettingsBase( StudioCore Core, ColorSettings Colors, byte CustomColor )
     {
-      this.Colors       = new ColorSettings( Colors );
-      this.Core         = Core;
-      this.CustomColor  = CustomColor;
+      this.Colors         = new ColorSettings( Colors );
+      this.Core           = Core;
+      this.CustomColor    = CustomColor;
 
       InitializeComponent();
     }

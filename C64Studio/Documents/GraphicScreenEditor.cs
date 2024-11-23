@@ -107,7 +107,7 @@ namespace RetroDevStudio.Documents
 
     private ColorChooserBase            _ColorChooserDlg = null;
 
-    private ImportCharscreenFormBase    m_ImportForm = null;
+    private ImportGraphicScreenFormBase _ImportForm = null;
 
 
 
@@ -165,13 +165,7 @@ namespace RetroDevStudio.Documents
       checkExportToDataIncludeRes.Checked = true;
       checkExportToDataWrap.Checked = true;
 
-      for ( int j = 0; j < BlockHeight; ++j )
-      {
-        for ( int i = 0; i < BlockWidth; ++i )
-        {
-          m_Chars.Add( new Formats.CharData() );
-        }
-      }
+      SetCharCheckList();
 
       editScreenWidth.Text = "320";
       editScreenHeight.Text = "200";
@@ -191,7 +185,7 @@ namespace RetroDevStudio.Documents
 
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image", typeof( ImportGraphicScreenFromImage ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from Koala file (.prg)", typeof( ImportGraphicScreenFromKoalaFile ) ) );
-      //comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from MiniPaint (VIC20) (.prg)", typeof( ImportGraphicScreenFromMiniPaint ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from MiniPaint (VIC20) (.prg)", typeof( ImportGraphicScreenFromMiniPaint ) ) );
       comboImportMethod.SelectedIndex = 0;
 
       pictureEditor.KeyUp += PictureEditor_KeyUp;
@@ -792,10 +786,8 @@ namespace RetroDevStudio.Documents
 
 
 
-    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, ImageInsertionMode InsertMode )
+    public bool ImportImage( string Filename, GR.Image.IImage IncomingImage, ImageInsertionMode InsertMode )
     {
-      GR.Image.FastImage mappedImage = null;
-
       var mcSettings = new ColorSettings();
       mcSettings.BackgroundColor  = m_GraphicScreenProject.Colors.BackgroundColor;
       mcSettings.MultiColor1      = m_GraphicScreenProject.Colors.MultiColor1;
@@ -817,7 +809,7 @@ namespace RetroDevStudio.Documents
       }
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
                                        CheckBlockWidth, CheckBlockHeight, 
-                                       out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
+                                       out GR.Image.IImage mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         return false;
       }
@@ -914,6 +906,22 @@ namespace RetroDevStudio.Documents
       m_GraphicScreenProject.Image = m_GraphicScreenProject.Image.GetImage( 0, 0, Width, Height ) as GR.Image.MemoryImage;
 
       m_ErrornousChars = new bool[( Width + CheckBlockWidth - 1 ) / CheckBlockWidth, ( Height + CheckBlockHeight - 1 ) / CheckBlockHeight];
+
+      SetCharCheckList();
+      if ( ( m_SelectedChar.X >= BlockWidth )
+      ||   ( m_SelectedChar.Y >= BlockHeight ) )
+      {
+        m_SelectedChar.X = -1;
+        m_SelectedChar.Y = -1;
+      }
+
+      AdjustScrollbars();
+    }
+
+
+
+    private void SetCharCheckList()
+    {
       m_Chars.Clear();
 
       int     numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
@@ -927,14 +935,6 @@ namespace RetroDevStudio.Documents
           m_Chars.Add( charData );
         }
       }
-      if ( ( m_SelectedChar.X >= BlockWidth )
-      ||   ( m_SelectedChar.Y >= BlockHeight ) )
-      {
-        m_SelectedChar.X = -1;
-        m_SelectedChar.Y = -1;
-      }
-
-      AdjustScrollbars();
     }
 
 
@@ -1753,7 +1753,8 @@ namespace RetroDevStudio.Documents
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        customColor = (byte)( chosenCharColor + 8 );
+        customColor         = (byte)( chosenCharColor + 8 );
+        cd.Tile.CustomColor = customColor;
       }
       return true;
     }
@@ -2835,9 +2836,12 @@ namespace RetroDevStudio.Documents
 
     private void comboCheckType_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_GraphicScreenProject.SelectedCheckType = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
+      m_GraphicScreenProject.SelectedCheckType  = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
+      m_GraphicScreenProject.Colors.Palette     = PaletteManager.PaletteFromMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
 
       ChangeColorChooserDialog();
+      SetCharCheckList();
+      RedrawColorSelector();
 
       int     numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
       if ( ( m_Chars.Count > 0 )
@@ -2849,7 +2853,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      m_GraphicScreenProject.Colors.Palette = PaletteManager.PaletteFromMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
       PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
 
@@ -4305,10 +4308,10 @@ namespace RetroDevStudio.Documents
 
     private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_ImportForm != null )
+      if ( _ImportForm != null )
       {
-        m_ImportForm.Dispose();
-        m_ImportForm = null;
+        _ImportForm.Dispose();
+        _ImportForm = null;
       }
 
       var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
@@ -4317,10 +4320,10 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      m_ImportForm = (ImportCharscreenFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
-      m_ImportForm.Parent = panelImport;
-      m_ImportForm.Size = panelImport.ClientSize;
-      m_ImportForm.CreateControl();
+      _ImportForm         = (ImportGraphicScreenFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      _ImportForm.Parent  = panelImport;
+      _ImportForm.Size    = panelImport.ClientSize;
+      _ImportForm.CreateControl();
     }
 
 
@@ -4330,6 +4333,19 @@ namespace RetroDevStudio.Documents
       Redraw();
       RedrawColorSelector();
       SetModified();
+    }
+
+
+
+    private void btnImport_Click( DecentForms.ControlBase Sender )
+    {
+      var undo = new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight );
+
+      if ( _ImportForm.HandleImport( m_GraphicScreenProject, this ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( undo );
+        SetModified();
+      }
     }
 
 

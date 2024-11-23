@@ -5912,6 +5912,7 @@ namespace RetroDevStudio
 
       Program.s_Exiting = true;
 
+      StudioCore.ShuttingDownDeniedSaveDocs.Clear();
       if ( m_CurrentProject == null )
       {
         try
@@ -5944,7 +5945,8 @@ namespace RetroDevStudio
 
       foreach ( BaseDocument doc in panelMain.Documents )
       {
-        if ( ( doc.Modified )
+        if ( ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( doc ) )
+        &&   ( doc.Modified )
         &&   ( doc.DocumentInfo.Project == null )
         &&   ( doc.DocumentInfo.Element == null ) )
         {
@@ -5966,6 +5968,7 @@ namespace RetroDevStudio
             foreach ( var element in project.Elements )
             {
               if ( ( element.Document != null )
+              &&   ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( element.Document ) )
               &&   ( element.Document.Modified ) )
               {
                 itemsWithChanges.Add( element.Name );
@@ -7205,8 +7208,8 @@ namespace RetroDevStudio
 
 
 
-    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, 
-                             out GR.Image.FastImage MappedImage, 
+    public bool ImportImage( string Filename, GR.Image.IImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, 
+                             out GR.Image.IImage MappedImage, 
                              out ColorSettings NewMCSettings, 
                              out bool PasteAsBlock, 
                              out Types.GraphicType SelectedImportAsType )
@@ -7237,7 +7240,7 @@ namespace RetroDevStudio
         }
         if ( match )
         {
-          MappedImage = IncomingImage;
+          MappedImage   = IncomingImage;
           NewMCSettings = MCSettings;
           return true;
         }

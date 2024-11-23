@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.CustomRenderer;
+﻿using GR.Collections;
+using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Documents;
 using System;
 using System.CodeDom;
@@ -23,6 +24,7 @@ namespace RetroDevStudio
     public Notification       Notification;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
+    public Set<BaseDocument>  ShuttingDownDeniedSaveDocs = new Set<BaseDocument>();
     public const string       StudioVersion = Version.VersionBase;
     public StudioTheme        Theming;
 
@@ -364,6 +366,13 @@ namespace RetroDevStudio
       {
         --SuppressOutputCount;
       }
+    }
+
+
+
+    public void ShuttingDownDeniedSave( BaseDocument Document )
+    {
+      ShuttingDownDeniedSaveDocs.Add( Document );
     }
 
 

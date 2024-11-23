@@ -135,7 +135,7 @@ namespace RetroDevStudio.Controls
       this.btnExchangeColors.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnExchangeColors.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnExchangeColors.Image = null;
-      this.btnExchangeColors.Location = new System.Drawing.Point(3, 156);
+      this.btnExchangeColors.Location = new System.Drawing.Point(3, 119);
       this.btnExchangeColors.Name = "btnExchangeColors";
       this.btnExchangeColors.Size = new System.Drawing.Size(170, 26);
       this.btnExchangeColors.TabIndex = 8;

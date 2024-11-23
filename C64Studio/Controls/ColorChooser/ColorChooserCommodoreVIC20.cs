@@ -28,12 +28,15 @@ namespace RetroDevStudio.Controls
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {
         comboBackground.Items.Add( i.ToString( "d2" ) );
-        comboBorderColor.Items.Add( i.ToString( "d2" ) );
+        if ( i < 8 )
+        {
+          comboBorderColor.Items.Add( i.ToString( "d2" ) );
+        }
         comboAuxColor.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = Colors.BackgroundColor;
-      comboBorderColor.SelectedIndex = Colors.MultiColor1;
-      comboAuxColor.SelectedIndex = Colors.MultiColor2;
+      comboBackground.SelectedIndex   = Colors.BackgroundColor;
+      comboBorderColor.SelectedIndex  = Colors.MultiColor1;
+      comboAuxColor.SelectedIndex     = Colors.MultiColor2;
     }
 
 

@@ -8,7 +8,7 @@ using RetroDevStudio.Documents;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ImportGraphicScreenFromKoalaFile : ImportCharscreenFormBase
+  public partial class ImportGraphicScreenFromKoalaFile : ImportGraphicScreenFormBase
   {
     public ImportGraphicScreenFromKoalaFile() :
       base( null )
@@ -25,7 +25,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public virtual bool HandleImport( GraphicScreenProject Project, GraphicScreenEditor Editor )
+    public override bool HandleImport( GraphicScreenProject Project, GraphicScreenEditor Editor )
     {
       string    filename;
       if ( Editor.OpenFile( "Open Koala file", Types.Constants.FILEFILTER_ALL, out filename ) )

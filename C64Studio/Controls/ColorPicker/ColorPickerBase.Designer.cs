@@ -34,7 +34,7 @@ namespace RetroDevStudio.Controls
       // ColorChooserBase
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.Name = "ColorChooserBase";
       this.Size = new System.Drawing.Size(280, 120);
       this.ResumeLayout(false);

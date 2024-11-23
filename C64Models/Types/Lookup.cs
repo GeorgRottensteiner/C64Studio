@@ -176,15 +176,17 @@ namespace RetroDevStudio
 
 
 
-    internal static int NumBytes( int Width, int Height, GraphicTileMode Mode )
+    internal static int NumBytesForGraphic( int Width, int Height, GraphicTileMode Mode )
     {
       switch ( Mode )
       {
         case GraphicTileMode.COMMODORE_ECM:
         case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.COMMODORE_HIRES_8X16:
         case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS:
         case GraphicTileMode.COMMODORE_MULTICOLOR_SPRITES:
         case GraphicTileMode.COMMANDERX16_HIRES:
+        case GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS_8X16:
           return ( ( Width + 7 ) / 8 ) * Height;
         case GraphicTileMode.MEGA65_NCM_CHARACTERS:
         case GraphicTileMode.MEGA65_NCM_SPRITES:
@@ -194,7 +196,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMANDERX16_256_COLORS:
           return Width * Height;
         default:
-          Debug.Log( "Lookup.NumBytes unsupported mode " + Mode );
+          Debug.Log( "Lookup.NumBytesForGraphic unsupported mode " + Mode );
           return 0;
       }
     }
@@ -876,8 +878,9 @@ namespace RetroDevStudio
         case TextMode.X16_40_X_60:
           return 40;
         case TextMode.COMMODORE_VIC20_8_X_8:
-        case TextMode.COMMODORE_VIC20_8_X_16:
           return 22;
+        case TextMode.COMMODORE_VIC20_8_X_16:
+          return 20;
         case TextMode.MEGA65_80_X_25_NCM:
         case TextMode.MEGA65_80_X_25_ECM:
         case TextMode.MEGA65_80_X_25_FCM:
@@ -1023,6 +1026,10 @@ namespace RetroDevStudio
         case GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
         case GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
           return TextCharMode.COMMODORE_MULTICOLOR;
+        case GraphicScreenProject.CheckType.VIC20_CHARSET:
+          return TextCharMode.VIC20;
+        case GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
+          return TextCharMode.VIC20_8X16;
       }
     }
 

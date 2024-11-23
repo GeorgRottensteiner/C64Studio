@@ -184,16 +184,21 @@ namespace RetroDevStudio.Documents
     {
       Types.Breakpoint bp = new RetroDevStudio.Types.Breakpoint();
 
-      bp.Address = GR.Convert.ToI32( editBPAddress.Text, 16 );
-      bp.TriggerOnExec  = checkTriggerExec.Checked;
-      bp.TriggerOnLoad  = checkTriggerLoad.Checked;
-      bp.TriggerOnStore = checkTriggerStore.Checked;
-      bp.LineIndex = -1;
-      bp.Conditions = editTriggerConditions.Text;
+      bp.Address          = GR.Convert.ToI32( editBPAddress.Text, 16 );
+      bp.TriggerOnExec    = checkTriggerExec.Checked;
+      bp.TriggerOnLoad    = checkTriggerLoad.Checked;
+      bp.TriggerOnStore   = checkTriggerStore.Checked;
+      bp.LineIndex        = -1;
+      bp.Conditions       = editTriggerConditions.Text;
       bp.DocumentFilename = "RetroDevStudio.DebugBreakpoints";
 
+      if ( comboSymbols.SelectedIndex != -1 )
+      {
+        bp.AddressSource = (string)comboSymbols.SelectedItem;
+      }
+
       // set marker in associated file
-      var docInfo = DetermineAffectedDocument( bp.Address, out bp.DocumentFilename, out bp.LineIndex );
+      var docInfo = DetermineAffectedDocument( bp.Address, out bp.DocumentFilename, out int lineIndex );
       if ( docInfo != null )
       {
         var sourceFile = docInfo.BaseDoc as SourceASMEx;
@@ -251,6 +256,20 @@ namespace RetroDevStudio.Documents
     private void editBPAddress_TextChanged( object sender, EventArgs e )
     {
       btnAddBreakpoint.Enabled = AreValidBreakpointSettings();
+
+      if ( ( comboSymbols.SelectedIndex != -1 )
+      &&   ( m_TokenInfos.ContainsKey( (string)comboSymbols.SelectedItem ) ) )
+      {
+        List<SymbolInfo> tokens = m_TokenInfos.GetValues( (string)comboSymbols.SelectedItem, false );
+        if ( tokens == null )
+        {
+          return;
+        }
+        if ( editBPAddress.Text != tokens[0].AddressOrValue.ToString( "x" ) )
+        {
+          comboSymbols.SelectedIndex = -1;
+        }
+      }
 
       UpdateApplyButton();
     }

@@ -29,19 +29,16 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage13 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage14 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage15 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabProject = new System.Windows.Forms.TabPage();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnImportCharsetFromImage = new DecentForms.Button();
-      this.btnImportFromFile = new DecentForms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
       this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
@@ -107,16 +104,15 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.tabImport = new System.Windows.Forms.TabPage();
+      this.panelImport = new System.Windows.Forms.Panel();
       this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
-      this.panelImport = new System.Windows.Forms.Panel();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
-      this.groupBox1.SuspendLayout();
       this.groupExport.SuspendLayout();
       this.tabEditor.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).BeginInit();
@@ -173,7 +169,6 @@
       // 
       // tabProject
       // 
-      this.tabProject.Controls.Add(this.groupBox1);
       this.tabProject.Controls.Add(this.groupExport);
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
@@ -182,47 +177,6 @@
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.groupBox1.Controls.Add(this.btnImportCharsetFromImage);
-      this.groupBox1.Controls.Add(this.btnImportFromFile);
-      this.groupBox1.Location = new System.Drawing.Point(458, 6);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 520);
-      this.groupBox1.TabIndex = 4;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Import";
-      // 
-      // btnImportCharsetFromImage
-      // 
-      this.btnImportCharsetFromImage.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportCharsetFromImage.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportCharsetFromImage.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportCharsetFromImage.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportCharsetFromImage.Image = null;
-      this.btnImportCharsetFromImage.Location = new System.Drawing.Point(6, 77);
-      this.btnImportCharsetFromImage.Name = "btnImportCharsetFromImage";
-      this.btnImportCharsetFromImage.Size = new System.Drawing.Size(117, 23);
-      this.btnImportCharsetFromImage.TabIndex = 2;
-      this.btnImportCharsetFromImage.Text = "From Image...";
-      this.btnImportCharsetFromImage.Click += new DecentForms.EventHandler(this.btnImportCharsetFromFile_Click);
-      // 
-      // btnImportFromFile
-      // 
-      this.btnImportFromFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportFromFile.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportFromFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportFromFile.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportFromFile.Image = null;
-      this.btnImportFromFile.Location = new System.Drawing.Point(6, 19);
-      this.btnImportFromFile.Name = "btnImportFromFile";
-      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromFile.TabIndex = 2;
-      this.btnImportFromFile.Text = "From File...";
-      this.btnImportFromFile.Click += new DecentForms.EventHandler(this.btnImportCharset_Click);
       // 
       // groupExport
       // 
@@ -569,7 +523,7 @@
       // 
       this.colorSelector.AutoResize = false;
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage13;
+      this.colorSelector.DisplayPage = fastImage1;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(677, 272);
       this.colorSelector.Name = "colorSelector";
@@ -583,7 +537,7 @@
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage14;
+      this.charEditor.DisplayPage = fastImage2;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(677, 6);
       this.charEditor.Name = "charEditor";
@@ -971,7 +925,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage15;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1095,6 +1049,16 @@
       this.tabImport.Text = "Import";
       this.tabImport.UseVisualStyleBackColor = true;
       // 
+      // panelImport
+      // 
+      this.panelImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.panelImport.Location = new System.Drawing.Point(8, 33);
+      this.panelImport.Name = "panelImport";
+      this.panelImport.Size = new System.Drawing.Size(964, 493);
+      this.panelImport.TabIndex = 36;
+      // 
       // btnImport
       // 
       this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -1107,6 +1071,7 @@
       this.btnImport.Size = new System.Drawing.Size(75, 21);
       this.btnImport.TabIndex = 35;
       this.btnImport.Text = "Import";
+      this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
       // comboImportMethod
       // 
@@ -1127,16 +1092,6 @@
       this.label5.TabIndex = 34;
       this.label5.Text = "Import Method:";
       // 
-      // panelImport
-      // 
-      this.panelImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.panelImport.Location = new System.Drawing.Point(8, 33);
-      this.panelImport.Name = "panelImport";
-      this.panelImport.Size = new System.Drawing.Size(964, 493);
-      this.panelImport.TabIndex = 36;
-      // 
       // GraphicScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(988, 584);
@@ -1149,7 +1104,6 @@
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.tabProject.ResumeLayout(false);
-      this.groupBox1.ResumeLayout(false);
       this.groupExport.ResumeLayout(false);
       this.groupExport.PerformLayout();
       this.tabEditor.ResumeLayout(false);
@@ -1176,9 +1130,6 @@
     private System.Windows.Forms.ToolStripMenuItem closeCharsetProjectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem saveCharsetProjectToolStripMenuItem;
     private System.Windows.Forms.TabPage tabProject;
-    private System.Windows.Forms.GroupBox groupBox1;
-    private DecentForms.Button btnImportCharsetFromImage;
-    private DecentForms.Button btnImportFromFile;
     private System.Windows.Forms.GroupBox groupExport;
     private System.Windows.Forms.TextBox editPrefix;
     private System.Windows.Forms.Label label2;

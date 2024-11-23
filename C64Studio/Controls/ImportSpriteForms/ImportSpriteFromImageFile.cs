@@ -32,8 +32,6 @@ namespace RetroDevStudio.Controls
         return false;
       }
 
-      GR.Image.FastImage spriteImage;
-
       var mcSettings = new ColorSettings( Project.Colors );
 
       var importType = Types.GraphicType.SPRITES;
@@ -45,7 +43,7 @@ namespace RetroDevStudio.Controls
       bool pasteAsBlock = false;
       if ( !Core.MainForm.ImportImage( filename, null, importType, mcSettings, 
                                        Lookup.SpriteWidth( Project.Mode ), Lookup.SpriteHeight( Project.Mode ),
-                                       out spriteImage, out mcSettings, out pasteAsBlock, out importType ) )
+                                       out GR.Image.IImage spriteImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         return false;
       }

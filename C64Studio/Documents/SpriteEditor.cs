@@ -1164,8 +1164,6 @@ namespace RetroDevStudio.Documents
         System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
         return;
       }
-      GR.Image.FastImage mappedImage = null;
-
       var mcSettings = new ColorSettings( m_SpriteProject.Colors );
 
       bool pasteAsBlock = false;
@@ -1174,7 +1172,7 @@ namespace RetroDevStudio.Documents
 
       if ( !Core.MainForm.ImportImage( "", imgClip, importType, mcSettings, 
                                        Lookup.SpriteWidth( m_SpriteProject.Mode ), Lookup.SpriteHeight( m_SpriteProject.Mode ),
-                                       out mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
+                                       out GR.Image.IImage mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
       {
         imgClip.Dispose();
         m_ImportError = "";
