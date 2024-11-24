@@ -12,6 +12,7 @@ using RetroDevStudio.Controls;
 using System.Runtime.InteropServices;
 using Be.Windows.Forms;
 using RetroDevStudio.Undo;
+using System.Linq;
 
 
 
@@ -2099,7 +2100,7 @@ namespace RetroDevStudio.Documents
       }
       Formats.MapProject.Tile tile = new Formats.MapProject.Tile();
       tile.Chars.Resize( w, h );
-      tile.Name = editTileName.Text;
+      tile.Name = MakeTileNameUnique( editTileName.Text );
 
       int indexToInsertAt = m_MapProject.Tiles.Count;
       if ( listTileInfo.SelectedIndices.Count > 0 )
@@ -3410,7 +3411,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       var     clonedTile = new Formats.MapProject.Tile();
-      clonedTile.Name = m_CurrentEditedTile.Name + " cloned";
+      clonedTile.Name = MakeTileNameUnique( m_CurrentEditedTile.Name );
 
       clonedTile.Chars.Resize( m_CurrentEditedTile.Chars.Width, m_CurrentEditedTile.Chars.Height );
 
@@ -3432,6 +3433,39 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileAdd( this, m_MapProject, indexToInsertAt ) );
 
       AddTile( indexToInsertAt, clonedTile );
+    }
+
+
+
+    private string MakeTileNameUnique( string OrigName )
+    {
+      if ( !m_MapProject.Tiles.Any( t => t.Name == OrigName ) )
+      {
+        return OrigName;
+      }
+      int     copyIndex = 2;
+
+      // is there a index at the end?
+      int spacePos = OrigName.LastIndexOf( ' ' );
+      if ( spacePos != -1 )
+      {
+        // use existing index as starting point
+        if ( int.TryParse( OrigName.Substring( spacePos + 1 ), out copyIndex ) )
+        {
+          ++copyIndex;
+          OrigName = OrigName.Substring( 0, spacePos );
+        }
+      }
+
+      
+      string  newName = OrigName + " " + copyIndex;
+
+      while ( m_MapProject.Tiles.Any( t => t.Name == newName ) )
+      {
+        ++copyIndex;
+        newName = OrigName + " " + copyIndex;
+      }
+      return newName;
     }
 
 

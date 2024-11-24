@@ -346,6 +346,14 @@ namespace DecentForms
 
 
 
+    protected override void OnTextChanged( EventArgs e )
+    {
+      Invalidate();
+      base.OnTextChanged( e );
+    }
+
+
+
     protected sealed override void OnPaint( PaintEventArgs e )
     {
       var renderer = new ControlRenderer( e.Graphics, this );

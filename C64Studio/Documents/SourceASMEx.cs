@@ -3006,7 +3006,7 @@ namespace RetroDevStudio.Documents
     public override void Cut()
     {
       editSource.Cut();
-      ShowAutoComplete();
+      //ShowAutoComplete();
     }
 
 

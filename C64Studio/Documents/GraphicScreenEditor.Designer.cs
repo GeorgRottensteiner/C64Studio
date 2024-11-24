@@ -109,7 +109,13 @@
       this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
+      this.tabExport = new System.Windows.Forms.TabPage();
+      this.panelExport = new System.Windows.Forms.Panel();
+      this.btnExport = new DecentForms.Button();
+      this.comboExportMethod = new System.Windows.Forms.ComboBox();
+      this.label6 = new System.Windows.Forms.Label();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.editExportOutput = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -122,6 +128,7 @@
       this.tabColorMapping.SuspendLayout();
       this.groupColorMapping.SuspendLayout();
       this.tabImport.SuspendLayout();
+      this.tabExport.SuspendLayout();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -945,6 +952,7 @@
       this.tabGraphicScreenEditor.Controls.Add(this.tabColorMapping);
       this.tabGraphicScreenEditor.Controls.Add(this.tabProject);
       this.tabGraphicScreenEditor.Controls.Add(this.tabImport);
+      this.tabGraphicScreenEditor.Controls.Add(this.tabExport);
       this.tabGraphicScreenEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabGraphicScreenEditor.Location = new System.Drawing.Point(0, 24);
       this.tabGraphicScreenEditor.Name = "tabGraphicScreenEditor";
@@ -1092,6 +1100,76 @@
       this.label5.TabIndex = 34;
       this.label5.Text = "Import Method:";
       // 
+      // tabExport
+      // 
+      this.tabExport.Controls.Add(this.editExportOutput);
+      this.tabExport.Controls.Add(this.panelExport);
+      this.tabExport.Controls.Add(this.btnExport);
+      this.tabExport.Controls.Add(this.comboExportMethod);
+      this.tabExport.Controls.Add(this.label6);
+      this.tabExport.Location = new System.Drawing.Point(4, 22);
+      this.tabExport.Name = "tabExport";
+      this.tabExport.Padding = new System.Windows.Forms.Padding(3);
+      this.tabExport.Size = new System.Drawing.Size(980, 534);
+      this.tabExport.TabIndex = 4;
+      this.tabExport.Text = "Export";
+      this.tabExport.UseVisualStyleBackColor = true;
+      // 
+      // panelExport
+      // 
+      this.panelExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.panelExport.Location = new System.Drawing.Point(8, 34);
+      this.panelExport.Name = "panelExport";
+      this.panelExport.Size = new System.Drawing.Size(408, 493);
+      this.panelExport.TabIndex = 40;
+      // 
+      // btnExport
+      // 
+      this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExport.Image = null;
+      this.btnExport.Location = new System.Drawing.Point(341, 7);
+      this.btnExport.Name = "btnExport";
+      this.btnExport.Size = new System.Drawing.Size(75, 21);
+      this.btnExport.TabIndex = 39;
+      this.btnExport.Text = "Export";
+      this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
+      // 
+      // comboExportMethod
+      // 
+      this.comboExportMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboExportMethod.FormattingEnabled = true;
+      this.comboExportMethod.Location = new System.Drawing.Point(92, 7);
+      this.comboExportMethod.Name = "comboExportMethod";
+      this.comboExportMethod.Size = new System.Drawing.Size(243, 21);
+      this.comboExportMethod.TabIndex = 37;
+      this.comboExportMethod.SelectedIndexChanged += new System.EventHandler(this.comboExportMethod_SelectedIndexChanged);
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(8, 10);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(79, 13);
+      this.label6.TabIndex = 38;
+      this.label6.Text = "Export Method:";
+      // 
+      // editExportOutput
+      // 
+      this.editExportOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editExportOutput.Location = new System.Drawing.Point(422, 6);
+      this.editExportOutput.Multiline = true;
+      this.editExportOutput.Name = "editExportOutput";
+      this.editExportOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editExportOutput.Size = new System.Drawing.Size(552, 521);
+      this.editExportOutput.TabIndex = 41;
+      this.editExportOutput.WordWrap = false;
+      // 
       // GraphicScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(988, 584);
@@ -1117,6 +1195,8 @@
       this.groupColorMapping.PerformLayout();
       this.tabImport.ResumeLayout(false);
       this.tabImport.PerformLayout();
+      this.tabExport.ResumeLayout(false);
+      this.tabExport.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1201,5 +1281,11 @@
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Panel panelImport;
+    private System.Windows.Forms.TabPage tabExport;
+    private System.Windows.Forms.Panel panelExport;
+    private DecentForms.Button btnExport;
+    private System.Windows.Forms.ComboBox comboExportMethod;
+    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.TextBox editExportOutput;
   }
 }

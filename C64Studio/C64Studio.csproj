@@ -56,6 +56,18 @@
     <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsBASIC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ImportGraphicScreenForms\ImportGraphicScreenFromMiniPaint.cs">
       <SubType>UserControl</SubType>
     </Compile>

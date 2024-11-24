@@ -71,6 +71,16 @@ namespace RetroDevStudio
 
 
 
+    internal static void FillComboWithEnumDescription( ComboBox Combo, Type EnumArg )
+    {
+      foreach ( Enum enumValue in Enum.GetValues( EnumArg ) )
+      {
+        Combo.Items.Add( GR.EnumHelper.GetDescription( enumValue ) );
+      }
+    }
+
+
+
     internal static void FillComboWithFilesOfType( StudioCore Core, ComboBox ComboFiles, ProjectElement.ElementType RequiredType )
     {
       var items = new List<Types.ComboItem>();

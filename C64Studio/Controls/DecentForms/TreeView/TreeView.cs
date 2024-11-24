@@ -1556,6 +1556,7 @@ namespace DecentForms
         _PopupEditControl.LostFocus += _PopupEditControl_LostFocus;
         _PopupEditControl.HandleDestroyed += _PopupEditControl_HandleDestroyed;
         _PopupEditControl.PreviewKeyDown += _PopupEditControl_PreviewKeyDown;
+        _PopupEditControl.KeyDown += _PopupEditControl_KeyDown;
       }
       var bounds = _SelectedNode.Bounds;
 
@@ -1580,10 +1581,12 @@ namespace DecentForms
     {
       if ( e.KeyCode == Keys.Escape )
       {
+        e.IsInputKey = true;
         EndEdit( true );
       }
       else if ( e.KeyCode == Keys.Enter )
       {
+        e.IsInputKey = true;
         EndEdit( false );
       }
     }
@@ -1664,6 +1667,17 @@ namespace DecentForms
       _PopupEditControl.Visible = false;
 
       _EditedNode = null;
+    }
+
+
+
+    private void _PopupEditControl_KeyDown( object sender, KeyEventArgs e )
+    {
+      if ( ( e.KeyCode == Keys.Escape )
+      ||   ( e.KeyCode == Keys.Enter ) )
+      {
+        e.SuppressKeyPress = true;
+      }
     }
 
 

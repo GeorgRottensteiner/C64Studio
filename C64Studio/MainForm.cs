@@ -3206,7 +3206,8 @@ namespace RetroDevStudio
       {
         if ( element.Document != null )
         {
-          if ( element.Document.Modified )
+          if ( ( element.Document.Modified )
+          &&   ( !StudioCore.ShuttingDownDeniedSaveDocs.ContainsValue( element.Document ) ) )
           {
             changes = true;
             break;
@@ -3221,7 +3222,7 @@ namespace RetroDevStudio
         {
           endButtons = MessageBoxButtons.YesNo;
         }
-        DialogResult res = System.Windows.Forms.MessageBox.Show("There are changes in one or more items. Do you want to save them before closing?", "Unsaved changes, save now?", endButtons );
+        DialogResult res = System.Windows.Forms.MessageBox.Show( "There are changes in one or more items. Do you want to save them before closing?", "Unsaved changes, save now?", endButtons );
         if ( res == DialogResult.Cancel )
         {
           return false;
@@ -5941,7 +5942,8 @@ namespace RetroDevStudio
       }
 
       // check ALL projects
-      List<string>  itemsWithChanges = new List<string>();
+      var itemsWithChanges = new List<string>();
+      var docsWithChanges = new List<BaseDocument>();
 
       foreach ( BaseDocument doc in panelMain.Documents )
       {
@@ -5952,6 +5954,7 @@ namespace RetroDevStudio
         {
 
           itemsWithChanges.Add( doc.Name );
+          docsWithChanges.Add( doc );
         }
       }
 
@@ -5972,6 +5975,7 @@ namespace RetroDevStudio
               &&   ( element.Document.Modified ) )
               {
                 itemsWithChanges.Add( element.Name );
+                docsWithChanges.Add( element.Document );
               }
             }
           }
@@ -5986,6 +5990,7 @@ namespace RetroDevStudio
           e.Cancel = true;
           return;
         }
+        StudioCore.ShuttingDownDeniedSaveDocs.AddRange( docsWithChanges );
       }
       e.Cancel = false;
       StudioCore.ShuttingDown = true;
