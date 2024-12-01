@@ -29,38 +29,15 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.tabProject = new System.Windows.Forms.TabPage();
-      this.groupExport = new System.Windows.Forms.GroupBox();
-      this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
-      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
-      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
-      this.btnExportToBASICHexData = new DecentForms.Button();
-      this.btnExportToBASICData = new DecentForms.Button();
-      this.comboCharScreens = new System.Windows.Forms.ComboBox();
-      this.comboExportData = new System.Windows.Forms.ComboBox();
-      this.comboExportType = new System.Windows.Forms.ComboBox();
-      this.btnExportToCharScreen = new DecentForms.Button();
-      this.labelCharInfoExport = new System.Windows.Forms.Label();
-      this.btnExportAsBinary = new DecentForms.Button();
-      this.btnExportToImage = new DecentForms.Button();
-      this.btnExportAs = new DecentForms.Button();
-      this.editPrefix = new System.Windows.Forms.TextBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.editWrapByteCount = new System.Windows.Forms.TextBox();
-      this.checkExportToDataWrap = new System.Windows.Forms.CheckBox();
-      this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
-      this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.comboCheckType = new System.Windows.Forms.ComboBox();
       this.btnCheck = new DecentForms.Button();
@@ -110,16 +87,14 @@
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
       this.tabExport = new System.Windows.Forms.TabPage();
+      this.editExportOutput = new System.Windows.Forms.TextBox();
       this.panelExport = new System.Windows.Forms.Panel();
       this.btnExport = new DecentForms.Button();
       this.comboExportMethod = new System.Windows.Forms.ComboBox();
       this.label6 = new System.Windows.Forms.Label();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.editExportOutput = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
-      this.tabProject.SuspendLayout();
-      this.groupExport.SuspendLayout();
       this.tabEditor.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.charEditor)).BeginInit();
@@ -173,274 +148,6 @@
       this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
       this.closeCharsetProjectToolStripMenuItem.Text = "&Close Graphic Screen Project";
       this.closeCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
-      // 
-      // tabProject
-      // 
-      this.tabProject.Controls.Add(this.groupExport);
-      this.tabProject.Location = new System.Drawing.Point(4, 22);
-      this.tabProject.Name = "tabProject";
-      this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(980, 534);
-      this.tabProject.TabIndex = 1;
-      this.tabProject.Text = "Import/Export";
-      this.tabProject.UseVisualStyleBackColor = true;
-      // 
-      // groupExport
-      // 
-      this.groupExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.groupExport.Controls.Add(this.checkInsertSpaces);
-      this.groupExport.Controls.Add(this.editExportBASICLineOffset);
-      this.groupExport.Controls.Add(this.editExportBASICLineNo);
-      this.groupExport.Controls.Add(this.label3);
-      this.groupExport.Controls.Add(this.label4);
-      this.groupExport.Controls.Add(this.btnExportToBASICHexData);
-      this.groupExport.Controls.Add(this.btnExportToBASICData);
-      this.groupExport.Controls.Add(this.comboCharScreens);
-      this.groupExport.Controls.Add(this.comboExportData);
-      this.groupExport.Controls.Add(this.comboExportType);
-      this.groupExport.Controls.Add(this.btnExportToCharScreen);
-      this.groupExport.Controls.Add(this.labelCharInfoExport);
-      this.groupExport.Controls.Add(this.btnExportAsBinary);
-      this.groupExport.Controls.Add(this.btnExportToImage);
-      this.groupExport.Controls.Add(this.btnExportAs);
-      this.groupExport.Controls.Add(this.editPrefix);
-      this.groupExport.Controls.Add(this.label2);
-      this.groupExport.Controls.Add(this.editWrapByteCount);
-      this.groupExport.Controls.Add(this.checkExportToDataWrap);
-      this.groupExport.Controls.Add(this.checkExportToDataIncludeRes);
-      this.groupExport.Controls.Add(this.editDataExport);
-      this.groupExport.Location = new System.Drawing.Point(11, 6);
-      this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 520);
-      this.groupExport.TabIndex = 3;
-      this.groupExport.TabStop = false;
-      this.groupExport.Text = "Export";
-      // 
-      // checkInsertSpaces
-      // 
-      this.checkInsertSpaces.AutoSize = true;
-      this.checkInsertSpaces.Location = new System.Drawing.Point(325, 166);
-      this.checkInsertSpaces.Name = "checkInsertSpaces";
-      this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
-      this.checkInsertSpaces.TabIndex = 30;
-      this.checkInsertSpaces.Text = "Insert Spaces";
-      this.checkInsertSpaces.UseVisualStyleBackColor = true;
-      // 
-      // editExportBASICLineOffset
-      // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(343, 221);
-      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
-      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineOffset.TabIndex = 28;
-      this.editExportBASICLineOffset.Text = "10";
-      // 
-      // editExportBASICLineNo
-      // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(209, 221);
-      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
-      this.editExportBASICLineNo.Size = new System.Drawing.Size(61, 20);
-      this.editExportBASICLineNo.TabIndex = 29;
-      this.editExportBASICLineNo.Text = "10";
-      // 
-      // label3
-      // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(276, 224);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(55, 13);
-      this.label3.TabIndex = 26;
-      this.label3.Text = "Line Step:";
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(155, 224);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(55, 13);
-      this.label4.TabIndex = 27;
-      this.label4.Text = "Start Line:";
-      // 
-      // btnExportToBASICHexData
-      // 
-      this.btnExportToBASICHexData.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToBASICHexData.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToBASICHexData.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToBASICHexData.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToBASICHexData.Image = null;
-      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 191);
-      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
-      this.btnExportToBASICHexData.Size = new System.Drawing.Size(143, 23);
-      this.btnExportToBASICHexData.TabIndex = 25;
-      this.btnExportToBASICHexData.Text = "Export to BASIC data hex";
-      this.btnExportToBASICHexData.Click += new DecentForms.EventHandler(this.btnExportToBASICDataHex_Click);
-      // 
-      // btnExportToBASICData
-      // 
-      this.btnExportToBASICData.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToBASICData.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToBASICData.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToBASICData.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToBASICData.Image = null;
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 162);
-      this.btnExportToBASICData.Name = "btnExportToBASICData";
-      this.btnExportToBASICData.Size = new System.Drawing.Size(143, 23);
-      this.btnExportToBASICData.TabIndex = 25;
-      this.btnExportToBASICData.Text = "Export to BASIC data";
-      this.btnExportToBASICData.Click += new DecentForms.EventHandler(this.btnExportToBASICData_Click);
-      // 
-      // comboCharScreens
-      // 
-      this.comboCharScreens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharScreens.FormattingEnabled = true;
-      this.comboCharScreens.Location = new System.Drawing.Point(132, 74);
-      this.comboCharScreens.Name = "comboCharScreens";
-      this.comboCharScreens.Size = new System.Drawing.Size(303, 21);
-      this.comboCharScreens.TabIndex = 11;
-      // 
-      // comboExportData
-      // 
-      this.comboExportData.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboExportData.FormattingEnabled = true;
-      this.comboExportData.Location = new System.Drawing.Point(132, 47);
-      this.comboExportData.Name = "comboExportData";
-      this.comboExportData.Size = new System.Drawing.Size(303, 21);
-      this.comboExportData.TabIndex = 11;
-      // 
-      // comboExportType
-      // 
-      this.comboExportType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboExportType.FormattingEnabled = true;
-      this.comboExportType.Location = new System.Drawing.Point(132, 101);
-      this.comboExportType.Name = "comboExportType";
-      this.comboExportType.Size = new System.Drawing.Size(303, 21);
-      this.comboExportType.TabIndex = 11;
-      // 
-      // btnExportToCharScreen
-      // 
-      this.btnExportToCharScreen.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToCharScreen.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToCharScreen.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToCharScreen.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToCharScreen.Image = null;
-      this.btnExportToCharScreen.Location = new System.Drawing.Point(6, 72);
-      this.btnExportToCharScreen.Name = "btnExportToCharScreen";
-      this.btnExportToCharScreen.Size = new System.Drawing.Size(120, 23);
-      this.btnExportToCharScreen.TabIndex = 8;
-      this.btnExportToCharScreen.Text = "Export to Char Screen";
-      this.btnExportToCharScreen.Click += new DecentForms.EventHandler(this.btnExportToCharScreen_Click);
-      // 
-      // labelCharInfoExport
-      // 
-      this.labelCharInfoExport.Location = new System.Drawing.Point(129, 24);
-      this.labelCharInfoExport.Name = "labelCharInfoExport";
-      this.labelCharInfoExport.Size = new System.Drawing.Size(306, 18);
-      this.labelCharInfoExport.TabIndex = 10;
-      this.labelCharInfoExport.Text = "No selected block";
-      // 
-      // btnExportAsBinary
-      // 
-      this.btnExportAsBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportAsBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportAsBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportAsBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportAsBinary.Image = null;
-      this.btnExportAsBinary.Location = new System.Drawing.Point(6, 45);
-      this.btnExportAsBinary.Name = "btnExportAsBinary";
-      this.btnExportAsBinary.Size = new System.Drawing.Size(120, 23);
-      this.btnExportAsBinary.TabIndex = 8;
-      this.btnExportAsBinary.Text = "Export binary";
-      this.btnExportAsBinary.Click += new DecentForms.EventHandler(this.btnExportAsBinary_Click);
-      // 
-      // btnExportToImage
-      // 
-      this.btnExportToImage.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToImage.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToImage.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToImage.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToImage.Image = null;
-      this.btnExportToImage.Location = new System.Drawing.Point(6, 128);
-      this.btnExportToImage.Name = "btnExportToImage";
-      this.btnExportToImage.Size = new System.Drawing.Size(120, 23);
-      this.btnExportToImage.TabIndex = 8;
-      this.btnExportToImage.Text = "Export to Image";
-      this.btnExportToImage.Click += new DecentForms.EventHandler(this.btnExportToImage_Click);
-      // 
-      // btnExportAs
-      // 
-      this.btnExportAs.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportAs.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportAs.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportAs.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportAs.Image = null;
-      this.btnExportAs.Location = new System.Drawing.Point(6, 99);
-      this.btnExportAs.Name = "btnExportAs";
-      this.btnExportAs.Size = new System.Drawing.Size(120, 23);
-      this.btnExportAs.TabIndex = 8;
-      this.btnExportAs.Text = "Export image data as";
-      this.btnExportAs.Click += new DecentForms.EventHandler(this.btnExportAsCharset_Click);
-      // 
-      // editPrefix
-      // 
-      this.editPrefix.Location = new System.Drawing.Point(238, 164);
-      this.editPrefix.Name = "editPrefix";
-      this.editPrefix.Size = new System.Drawing.Size(43, 20);
-      this.editPrefix.TabIndex = 7;
-      this.editPrefix.Text = "!byte ";
-      // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(298, 196);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(32, 13);
-      this.label2.TabIndex = 6;
-      this.label2.Text = "bytes";
-      // 
-      // editWrapByteCount
-      // 
-      this.editWrapByteCount.Enabled = false;
-      this.editWrapByteCount.Location = new System.Drawing.Point(238, 193);
-      this.editWrapByteCount.Name = "editWrapByteCount";
-      this.editWrapByteCount.Size = new System.Drawing.Size(54, 20);
-      this.editWrapByteCount.TabIndex = 5;
-      this.editWrapByteCount.Text = "8";
-      // 
-      // checkExportToDataWrap
-      // 
-      this.checkExportToDataWrap.AutoSize = true;
-      this.checkExportToDataWrap.Location = new System.Drawing.Point(158, 195);
-      this.checkExportToDataWrap.Name = "checkExportToDataWrap";
-      this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
-      this.checkExportToDataWrap.TabIndex = 4;
-      this.checkExportToDataWrap.Text = "Wrap at";
-      this.checkExportToDataWrap.UseVisualStyleBackColor = true;
-      this.checkExportToDataWrap.CheckedChanged += new System.EventHandler(this.checkExportToDataWrap_CheckedChanged);
-      // 
-      // checkExportToDataIncludeRes
-      // 
-      this.checkExportToDataIncludeRes.AutoSize = true;
-      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(158, 166);
-      this.checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
-      this.checkExportToDataIncludeRes.Size = new System.Drawing.Size(74, 17);
-      this.checkExportToDataIncludeRes.TabIndex = 4;
-      this.checkExportToDataIncludeRes.Text = "Prefix with";
-      this.checkExportToDataIncludeRes.UseVisualStyleBackColor = true;
-      this.checkExportToDataIncludeRes.CheckedChanged += new System.EventHandler(this.checkExportToDataIncludeRes_CheckedChanged);
-      // 
-      // editDataExport
-      // 
-      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 263);
-      this.editDataExport.Multiline = true;
-      this.editDataExport.Name = "editDataExport";
-      this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 251);
-      this.editDataExport.TabIndex = 3;
-      this.editDataExport.WordWrap = false;
-      this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
       // 
       // tabEditor
       // 
@@ -530,7 +237,7 @@
       // 
       this.colorSelector.AutoResize = false;
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage1;
+      this.colorSelector.DisplayPage = fastImage4;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(677, 272);
       this.colorSelector.Name = "colorSelector";
@@ -544,7 +251,7 @@
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage2;
+      this.charEditor.DisplayPage = fastImage5;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(677, 6);
       this.charEditor.Name = "charEditor";
@@ -932,7 +639,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -950,7 +657,6 @@
       // 
       this.tabGraphicScreenEditor.Controls.Add(this.tabEditor);
       this.tabGraphicScreenEditor.Controls.Add(this.tabColorMapping);
-      this.tabGraphicScreenEditor.Controls.Add(this.tabProject);
       this.tabGraphicScreenEditor.Controls.Add(this.tabImport);
       this.tabGraphicScreenEditor.Controls.Add(this.tabExport);
       this.tabGraphicScreenEditor.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1115,6 +821,20 @@
       this.tabExport.Text = "Export";
       this.tabExport.UseVisualStyleBackColor = true;
       // 
+      // editExportOutput
+      // 
+      this.editExportOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editExportOutput.Location = new System.Drawing.Point(422, 6);
+      this.editExportOutput.Multiline = true;
+      this.editExportOutput.Name = "editExportOutput";
+      this.editExportOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editExportOutput.Size = new System.Drawing.Size(552, 521);
+      this.editExportOutput.TabIndex = 41;
+      this.editExportOutput.WordWrap = false;
+      this.editExportOutput.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editExportOutput_PreviewKeyDown);
+      // 
       // panelExport
       // 
       this.panelExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1157,19 +877,6 @@
       this.label6.TabIndex = 38;
       this.label6.Text = "Export Method:";
       // 
-      // editExportOutput
-      // 
-      this.editExportOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editExportOutput.Location = new System.Drawing.Point(422, 6);
-      this.editExportOutput.Multiline = true;
-      this.editExportOutput.Name = "editExportOutput";
-      this.editExportOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editExportOutput.Size = new System.Drawing.Size(552, 521);
-      this.editExportOutput.TabIndex = 41;
-      this.editExportOutput.WordWrap = false;
-      // 
       // GraphicScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(988, 584);
@@ -1181,9 +888,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
-      this.tabProject.ResumeLayout(false);
-      this.groupExport.ResumeLayout(false);
-      this.groupExport.PerformLayout();
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).EndInit();
@@ -1209,14 +913,6 @@
     private System.Windows.Forms.ToolStripMenuItem importImageToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem closeCharsetProjectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem saveCharsetProjectToolStripMenuItem;
-    private System.Windows.Forms.TabPage tabProject;
-    private System.Windows.Forms.GroupBox groupExport;
-    private System.Windows.Forms.TextBox editPrefix;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.TextBox editWrapByteCount;
-    private System.Windows.Forms.CheckBox checkExportToDataWrap;
-    private System.Windows.Forms.CheckBox checkExportToDataIncludeRes;
-    private System.Windows.Forms.TextBox editDataExport;
     private System.Windows.Forms.TabPage tabEditor;
     private DecentForms.Button btnPaste;
     private DecentForms.Button btnCopy;
@@ -1231,17 +927,10 @@
     private DecentForms.Button btnShiftRight;
     private DecentForms.Button btnShiftLeft;
     private GR.Forms.FastPictureBox charEditor;
-    private DecentForms.Button btnExportAs;
     private DecentForms.Button btnCheck;
-    private System.Windows.Forms.Label labelCharInfoExport;
     private System.Windows.Forms.ComboBox comboCheckType;
-    private System.Windows.Forms.ComboBox comboExportType;
-    private DecentForms.Button btnExportAsBinary;
-    private System.Windows.Forms.ComboBox comboExportData;
     private DecentForms.HScrollBar screenHScroll;
     private DecentForms.VScrollBar screenVScroll;
-    private System.Windows.Forms.ComboBox comboCharScreens;
-    private DecentForms.Button btnExportToCharScreen;
     private DecentForms.Button btnApplyScreenSize;
     private System.Windows.Forms.TextBox editScreenHeight;
     private System.Windows.Forms.TextBox editScreenWidth;
@@ -1252,13 +941,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ListBox listColorMappingColors;
     private Controls.ArrangedItemList listColorMappingTargets;
-    private System.Windows.Forms.TextBox editExportBASICLineOffset;
-    private System.Windows.Forms.TextBox editExportBASICLineNo;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.Label label4;
-    private DecentForms.Button btnExportToBASICData;
     private GR.Forms.FastPictureBox colorSelector;
-    private DecentForms.Button btnExportToImage;
     private DecentForms.Button btnFullCopy;
     private DecentForms.RadioButton btnToolValidate;
     private DecentForms.RadioButton btnToolSelect;
@@ -1266,14 +949,12 @@
     private DecentForms.RadioButton btnToolQuad;
     private DecentForms.RadioButton btnToolRect;
     private DecentForms.RadioButton btnToolPaint;
-    private DecentForms.Button btnExportToBASICHexData;
     private System.Windows.Forms.ToolTip toolTip1;
     private DecentForms.Button btnClearScreen;
     private DecentForms.Button btnZoomIn;
     private DecentForms.Button btnZoomOut;
     private DecentForms.RadioButton btnToolLine;
     private DecentForms.RadioButton btnToolLineDrag;
-    private System.Windows.Forms.CheckBox checkInsertSpaces;
     private System.Windows.Forms.Label labelCursorInfo;
     private System.Windows.Forms.Panel panelColorSettings;
     private System.Windows.Forms.TabPage tabImport;

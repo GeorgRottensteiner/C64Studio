@@ -5964,10 +5964,12 @@ namespace RetroDevStudio
         {
           if ( project != null )
           {
+            /*
             if ( project.Modified )
             {
-              itemsWithChanges.Add( project.Settings.Name );
+              itemsWithChanges.Add( project.Settings.Name + " (Project)" );
             }
+            */
             foreach ( var element in project.Elements )
             {
               if ( ( element.Document != null )
@@ -6714,11 +6716,11 @@ namespace RetroDevStudio
           break;
         }
       }
-      saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
-      saveAsToolStripMenuItem.Enabled = true;
-      saveAllToolStripMenuItem.Enabled = modifications;
-      mainToolSave.Enabled = ActiveDocument.Modified;
-      mainToolSaveAll.Enabled = modifications;
+      saveToolStripMenuItem.Enabled     = ActiveDocument.Modified;
+      saveAsToolStripMenuItem.Enabled   = true;
+      saveAllToolStripMenuItem.Enabled  = modifications;
+      mainToolSave.Enabled              = ActiveDocument.Modified;
+      mainToolSaveAll.Enabled           = modifications;
     }
 
 

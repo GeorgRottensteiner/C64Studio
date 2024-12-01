@@ -2618,12 +2618,7 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      bool  newMode = !btnToggleUpperLowerCase.Checked;
-
-      if ( newMode == m_LowerCaseMode )
-      {
-        return;
-      }
+      bool  newMode = !m_LowerCaseMode;
 
       m_InsideToggleCaseHandler = true;
 
@@ -3082,7 +3077,6 @@ namespace RetroDevStudio.Documents
     public void CaseToggled()
     {
       m_LowerCaseMode                 = !m_LowerCaseMode;
-      btnToggleUpperLowerCase.Checked = !m_LowerCaseMode;
       UpdateCaseButtonCaption();
     }
 

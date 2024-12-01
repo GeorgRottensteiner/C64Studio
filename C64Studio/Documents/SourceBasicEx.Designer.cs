@@ -57,7 +57,7 @@ namespace RetroDevStudio.Documents
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnToggleSymbolMode = new DecentForms.CheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnToggleUpperLowerCase = new DecentForms.CheckBox();
+      this.btnToggleUpperLowerCase = new DecentForms.Button();
       this.btnToggleStringEntryMode = new DecentForms.CheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.labelStartAddress = new System.Windows.Forms.Label();
@@ -304,17 +304,14 @@ namespace RetroDevStudio.Documents
       // 
       // btnToggleUpperLowerCase
       // 
-      this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleUpperLowerCase.BorderStyle = DecentForms.BorderStyle.NONE;
-      this.btnToggleUpperLowerCase.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
-      this.btnToggleUpperLowerCase.Checked = false;
       this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
       this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(164, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
       this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
       this.btnToggleUpperLowerCase.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToggleUpperLowerCase, "Toggle Upper/Lower Case (Currently Upper Case)");
-      this.btnToggleUpperLowerCase.CheckedChanged += new DecentForms.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
+      this.btnToggleUpperLowerCase.Click += new DecentForms.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
       // 
       // btnToggleStringEntryMode
       // 
@@ -406,7 +403,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
     private DecentForms.CheckBox btnToggleSymbolMode;
     private System.Windows.Forms.ToolTip toolTip1;
-    private DecentForms.CheckBox btnToggleUpperLowerCase;
+    private DecentForms.Button btnToggleUpperLowerCase;
     private System.Windows.Forms.TextBox editBASICStartAddress;
     private System.Windows.Forms.Label labelStartAddress;
     private System.Windows.Forms.Label labelBASICVersion;

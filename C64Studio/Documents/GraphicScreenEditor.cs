@@ -8,6 +8,7 @@ using RetroDevStudio.Properties;
 using System.Drawing;
 using RetroDevStudio.Formats;
 using GR.Memory;
+using System.Linq;
 
 
 
@@ -89,7 +90,7 @@ namespace RetroDevStudio.Documents
       m_IsSaveable = true;
       InitializeComponent();
 
-      m_DefaultOutputFont = editDataExport.Font;
+      m_DefaultOutputFont = editExportOutput.Font;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
@@ -122,9 +123,6 @@ namespace RetroDevStudio.Documents
       }
       comboCheckType.SelectedIndex = 1;
 
-      checkExportToDataIncludeRes.Checked = true;
-      checkExportToDataWrap.Checked = true;
-
       SetCharCheckList();
 
       editScreenWidth.Text = "320";
@@ -133,16 +131,6 @@ namespace RetroDevStudio.Documents
 
       Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
 
-      comboCharScreens.Items.Add( new Types.ComboItem( "To new file" ) );
-      foreach ( DocumentInfo doc in Core.MainForm.DocumentInfos )
-      {
-        if ( doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
-        {
-          comboCharScreens.Items.Add( new Types.ComboItem( doc.DocumentFilename, doc ) );
-        }
-      }
-      comboCharScreens.SelectedIndex = 0;
-
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image", typeof( ImportGraphicScreenFromImage ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from Koala file (.prg)", typeof( ImportGraphicScreenFromKoalaFile ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from MiniPaint (VIC20) (.prg)", typeof( ImportGraphicScreenFromMiniPaint ) ) );
@@ -150,16 +138,10 @@ namespace RetroDevStudio.Documents
 
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportGraphicScreenAsAssembly ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportGraphicScreenAsBinaryFile ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC code (as charset)", typeof( ExportGraphicScreenAsBASIC ) ) );
-      /*
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportCharscreenAsBASICData ) ) );
-      
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportCharscreenAsBinaryFile ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to charset project file", typeof( ExportCharscreenAsCharset ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportCharscreenAsImageFile ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportCharscreenAsImage ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Marq's PETSCII editor", typeof( ExportCharscreenAsMarqSPETSCII ) ) );
-      */
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportGraphicScreenAsBASICData ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC PRINT code (convert to charset)", typeof( ExportGraphicScreenAsBASIC ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportGraphicScreenAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to charset project file", typeof( ExportGraphicScreenAsCharsetFile ) ) );
       comboExportMethod.SelectedIndex = 0;
 
       pictureEditor.KeyUp += PictureEditor_KeyUp;
@@ -565,7 +547,6 @@ namespace RetroDevStudio.Documents
             if ( !string.IsNullOrEmpty( m_Chars[charX + charY * BlockWidth].Error ) )
             {
               labelCharInfo.Text = m_Chars[charX + charY * BlockWidth].Error;
-              labelCharInfoExport.Text = m_Chars[charX + charY * BlockWidth].Error;
             }
             else
             {
@@ -1067,81 +1048,6 @@ namespace RetroDevStudio.Documents
     private void saveCharsetProjectToolStripMenuItem_Click( object sender, EventArgs e )
     {
       Save( SaveMethod.SAVE );
-    }
-
-
-
-    private string ToASMData( GR.Memory.ByteBuffer Data )
-    {
-      int wrapByteCount = GetExportWrapCount();
-      if ( wrapByteCount <= 0 )
-      {
-        wrapByteCount = 8;
-      }
-      string prefix = editPrefix.Text;
-
-      bool wrapData = checkExportToDataWrap.Checked;
-      bool prefixRes = checkExportToDataIncludeRes.Checked;
-
-      string line = "";
-      if ( wrapData )
-      {
-        if ( prefixRes )
-        {
-          line += prefix;
-        }
-        int byteCount = 0;
-        for ( int i = 0; i < Data.Length; ++i )
-        {
-          line += "$" + Data.ByteAt( i ).ToString( "x2" );
-          ++byteCount;
-          if ( ( byteCount < wrapByteCount )
-          &&   ( i < Data.Length - 1 ) )
-          {
-            line += ",";
-          }
-          if ( byteCount == wrapByteCount )
-          {
-            byteCount = 0;
-            line += System.Environment.NewLine;
-            if ( ( i < Data.Length - 1 )
-            &&   ( prefixRes ) )
-            {
-              line += prefix;
-            }
-          }
-        }
-      }
-      else
-      {
-        if ( prefixRes )
-        {
-          line += prefix;
-        }
-        for ( int i = 0; i < Data.Length; ++i )
-        {
-          line += "$" + Data.ByteAt( i ).ToString( "x2" );
-          if ( i < Data.Length - 1 )
-          {
-            line += ",";
-          }
-        }
-      }
-      return line;
-    }
-
-
-
-    private void checkExportToDataWrap_CheckedChanged( object sender, EventArgs e )
-    {
-      editWrapByteCount.Enabled = checkExportToDataWrap.Checked;
-    }
-
-
-
-    private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
-    {
-      editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
     }
 
 
@@ -1737,8 +1643,6 @@ namespace RetroDevStudio.Documents
 
     private bool CheckForMCCharsetErrors()
     {
-      btnExportAs.Enabled = false;
-
       bool      foundError = false;
       for ( int j = 0; j < BlockHeight; ++j )
       {
@@ -1795,17 +1699,12 @@ namespace RetroDevStudio.Documents
         }
       }
       labelCharInfo.Text = "";
-      labelCharInfoExport.Text = "";
       if ( items - foldedItems > 256 )
       {
         labelCharInfo.Text = "Too many unique characters (" + ( items - foldedItems ) + ")";
-        labelCharInfoExport.Text = labelCharInfo.Text;
         return true;
       }
       labelCharInfo.Text = ( items - foldedItems ).ToString() + " unique chars, duplicates removed " + foldedItems;
-      labelCharInfoExport.Text = labelCharInfo.Text;
-
-      btnExportAs.Enabled = true;
       return false;
     }
 
@@ -1813,8 +1712,6 @@ namespace RetroDevStudio.Documents
 
     private bool CheckForVIC20CharsetErrors()
     {
-      btnExportAs.Enabled = false;
-
       bool      foundError = false;
       for ( int j = 0; j < BlockHeight; ++j )
       {
@@ -1871,17 +1768,12 @@ namespace RetroDevStudio.Documents
         }
       }
       labelCharInfo.Text = "";
-      labelCharInfoExport.Text = "";
       if ( items - foldedItems > 256 )
       {
         labelCharInfo.Text = "Too many unique characters (" + ( items - foldedItems ) + ")";
-        labelCharInfoExport.Text = labelCharInfo.Text;
         return true;
       }
       labelCharInfo.Text = ( items - foldedItems ).ToString() + " unique chars, duplicates removed " + foldedItems;
-      labelCharInfoExport.Text = labelCharInfo.Text;
-
-      btnExportAs.Enabled = true;
       return false;
     }
 
@@ -1889,8 +1781,6 @@ namespace RetroDevStudio.Documents
 
     private bool CheckForHiResCharsetErrors()
     {
-      btnExportAs.Enabled = false;
-
       bool      foundError = false;
       for ( int j = 0; j < BlockHeight; ++j )
       {
@@ -1947,17 +1837,12 @@ namespace RetroDevStudio.Documents
         }
       }
       labelCharInfo.Text = "";
-      labelCharInfoExport.Text = "";
       if ( items - foldedItems > 256 )
       {
         labelCharInfo.Text = "Too many unique characters (" + ( items - foldedItems ) + ")";
-        labelCharInfoExport.Text = labelCharInfo.Text;
         return true;
       }
       labelCharInfo.Text = ( items - foldedItems ).ToString() + " unique chars, duplicates removed " + foldedItems;
-      labelCharInfoExport.Text = labelCharInfo.Text;
-
-      btnExportAs.Enabled = true;
       return false;
     }
 
@@ -1965,8 +1850,6 @@ namespace RetroDevStudio.Documents
 
     private bool CheckForFCMCharsetErrors( int AllowedNumberOfChars )
     {
-      btnExportAs.Enabled = false;
-
       bool      foundError = false;
       for ( int j = 0; j < BlockHeight; ++j )
       {
@@ -2023,17 +1906,12 @@ namespace RetroDevStudio.Documents
         }
       }
       labelCharInfo.Text = "";
-      labelCharInfoExport.Text = "";
       if ( items - foldedItems > AllowedNumberOfChars )
       {
         labelCharInfo.Text = "Too many unique characters (" + ( items - foldedItems ) + ")";
-        labelCharInfoExport.Text = labelCharInfo.Text;
         return true;
       }
       labelCharInfo.Text = ( items - foldedItems ).ToString() + " unique chars, duplicates removed " + foldedItems;
-      labelCharInfoExport.Text = labelCharInfo.Text;
-
-      btnExportAs.Enabled = true;
       return false;
     }
 
@@ -2470,89 +2348,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void ExportHiresBitmap()
-    {
-      GR.Memory.ByteBuffer screenChar;
-      GR.Memory.ByteBuffer screenColor;
-      GR.Memory.ByteBuffer bitmapData;
-
-      m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
-
-      // export data
-      string result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
-
-      result += System.Environment.NewLine + System.Environment.NewLine + ";screen ram data" + System.Environment.NewLine + ToASMData( screenChar );
-      result += System.Environment.NewLine + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + ToASMData( screenColor );
-
-      editDataExport.Text = result;
-    }
-
-
-
-    private void ExportHiresBitmap( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
-    {
-      GR.Memory.ByteBuffer screenChar;
-      GR.Memory.ByteBuffer screenColor;
-      GR.Memory.ByteBuffer bitmapData;
-      bool insertSpaces = checkInsertSpaces.Checked;
-
-      m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
-
-      if ( Hex )
-      {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-      else
-      {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-    }
-
-
-
-    private void ExportMCBitmap()
-    {
-      GR.Memory.ByteBuffer              screenChar;
-      GR.Memory.ByteBuffer              screenColor;
-      GR.Memory.ByteBuffer              bitmapData;
-      //Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
-
-      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
-
-      // export data
-      string    result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
-
-      result += System.Environment.NewLine + System.Environment.NewLine + ";screen ram data" + System.Environment.NewLine + ToASMData( screenChar );
-      result += System.Environment.NewLine + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + ToASMData( screenColor );
-
-      editDataExport.Text = result;
-    }
-
-
-
-    private void ExportMCBitmap( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
-    {
-      GR.Memory.ByteBuffer              screenChar;
-      GR.Memory.ByteBuffer              screenColor;
-      GR.Memory.ByteBuffer              bitmapData;
-      bool insertSpaces = checkInsertSpaces.Checked;
-
-      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
-
-      if ( Hex )
-      {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-      else
-      {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-    }
-
-
-
     public static Formats.CharsetProject ExportToCharset( GraphicScreenProject Project, List<CharData> Chars )
     {
+      if ( Chars.Any( c => !string.IsNullOrEmpty( c.Error ) ) )
+      {
+        return null;
+      }
       // export possible
       Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
       int curCharIndex = 0;
@@ -2565,11 +2366,11 @@ namespace RetroDevStudio.Documents
       {
         if ( charData.Replacement == null )
         {
-          if ( curCharIndex >= projectToExport.TotalNumberOfCharacters )
+          if ( charData.Index >= projectToExport.TotalNumberOfCharacters )
           {
             return null;
           }
-          projectToExport.Characters[curCharIndex] = charData.Clone();
+          projectToExport.Characters[charData.Index] = charData.Clone();
           ++curCharIndex;
         }
       }
@@ -2596,171 +2397,6 @@ namespace RetroDevStudio.Documents
         }
       }
       return true;
-    }
-
-
-
-    private void ExportHiResCharset( bool ExportScreenAssembly )
-    {
-      var projectToExport = ExportToCharset( m_GraphicScreenProject, m_Chars );
-      if ( projectToExport == null )
-      {
-        System.Windows.Forms.MessageBox.Show( "Too many characters!" );
-        return;
-      }
-
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save Charset Project as";
-      saveDlg.Filter = "Charset Projects|*.charsetproject|All Files|*.*";
-      if ( saveDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK )
-      {
-        GR.IO.File.WriteAllBytes( saveDlg.FileName, projectToExport.SaveToBuffer() );
-      }
-      if ( ExportScreenAssembly )
-      {
-        ExportToCharScreen( m_Chars, BlockWidth, BlockHeight, out ByteBuffer screenCharData, out ByteBuffer screenColorData );
-        string screenDataASM = ToASMData( screenCharData );
-        string colorDataASM = ToASMData( screenColorData );
-
-        editDataExport.Text = ";screen char data" + System.Environment.NewLine + screenDataASM + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + colorDataASM;
-      }
-    }
-
-
-
-    private void ExportHiResCharset( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
-    {
-      // export possible
-      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
-      int curCharIndex = 0;
-
-      projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.Colors.MultiColor1;
-      projectToExport.Colors.MultiColor2 = m_GraphicScreenProject.Colors.MultiColor2;
-      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.Colors.BackgroundColor;
-      // TODO
-      //projectToExport.Colors.BGColor4 = m_GraphicScreenProject.
-      foreach ( Formats.CharData charData in m_Chars )
-      {
-        if ( charData.Replacement == null )
-        {
-          if ( curCharIndex >= 256 )
-          {
-            System.Windows.Forms.MessageBox.Show( "Too many characters!" );
-            return;
-          }
-          projectToExport.Characters[curCharIndex] = charData.Clone();
-          ++curCharIndex;
-        }
-      }
-
-      GR.Memory.ByteBuffer screenCharData   = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      GR.Memory.ByteBuffer screenColorData  = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      bool insertSpaces = checkInsertSpaces.Checked;
-
-      for ( int y = 0; y < BlockHeight; ++y )
-      {
-        for ( int x = 0; x < BlockWidth; ++x )
-        {
-          RetroDevStudio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
-          while ( charUsed.Replacement != null )
-          {
-            charUsed = charUsed.Replacement;
-          }
-          screenCharData.SetU8At( x + y * BlockWidth, (byte)charUsed.Index );
-          screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Tile.CustomColor );
-        }
-      }
-
-      if ( Hex )
-      {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-      else
-      {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-    }
-
-
-
-    private void ExportMCCharset( bool ExportScreenAssembly )
-    {
-      // export possible
-      var projectToExport = ExportToCharset( m_GraphicScreenProject, m_Chars );
-      if ( projectToExport == null )
-      {
-        System.Windows.Forms.MessageBox.Show( "Too many characters!" );
-        return;
-      }
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save Charset Project as";
-      saveDlg.Filter = "Charset Projects|*.charsetproject|All Files|*.*";
-      if ( saveDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK )
-      {
-        GR.IO.File.WriteAllBytes( saveDlg.FileName, projectToExport.SaveToBuffer() );
-      }
-      if ( ExportScreenAssembly )
-      {
-        ExportToCharScreen( m_Chars, BlockWidth, BlockHeight, out ByteBuffer screenCharData, out ByteBuffer screenColorData );
-        string screenDataASM = ToASMData( screenCharData );
-        string colorDataASM = ToASMData( screenColorData );
-
-        editDataExport.Text = ";screen char data" + System.Environment.NewLine + screenDataASM + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + colorDataASM;
-      }
-    }
-
-
-
-    private void ExportMCCharset( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
-    {
-      // export possible
-      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
-      int curCharIndex = 0;
-
-      projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.Colors.MultiColor1;
-      projectToExport.Colors.MultiColor2 = m_GraphicScreenProject.Colors.MultiColor2;
-      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.Colors.BackgroundColor;
-      foreach ( Formats.CharData charData in m_Chars )
-      {
-        if ( charData.Replacement == null )
-        {
-          if ( curCharIndex >= 256 )
-          {
-            System.Windows.Forms.MessageBox.Show( "Too many characters!" );
-            return;
-          }
-          projectToExport.Characters[curCharIndex] = charData.Clone();
-          ++curCharIndex;
-        }
-      }
-      GR.Memory.ByteBuffer screenCharData   = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      GR.Memory.ByteBuffer screenColorData  = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      bool insertSpaces = checkInsertSpaces.Checked;
-
-      for ( int y = 0; y < BlockHeight; ++y )
-      {
-        for ( int x = 0; x < BlockWidth; ++x )
-        {
-          RetroDevStudio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
-          while ( charUsed.Replacement != null )
-          {
-            charUsed = charUsed.Replacement;
-          }
-          screenCharData.SetU8At( x + y * BlockWidth, (byte)charUsed.Index );
-          screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Tile.CustomColor );
-        }
-      }
-
-      if ( Hex )
-      {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
-      else
-      {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0, insertSpaces );
-      }
     }
 
 
@@ -2852,111 +2488,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void editDataExport_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      //Debug.Log( "Key = " + e.KeyData.ToString() );
-      if ( e.KeyData == ( Keys.A | Keys.Control ) )
-      {
-        editDataExport.SelectAll();
-      }
-    }
-
-
-
-    private void btnExportAsBinary_Click( DecentForms.ControlBase Sender )
-    {
-      int selExportType = comboExportData.SelectedIndex;
-      if ( selExportType == -1 )
-      {
-        return;
-      }
-
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save binary data as";
-      saveDlg.Filter = "Binary Data|*.bin|All Files|*.*";
-      if ( DocumentInfo.Project != null )
-      {
-        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-      }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return;
-      }
-
-      /*
-      ExportBinaryType exportTypeToUse = ExportBinaryType.BITMAP_SCREEN_COLOR;
-      foreach ( ExportBinaryType exportType in System.Enum.GetValues( typeof( ExportBinaryType ) ) )
-      {
-        if ( comboExportData.Items[selExportType].ToString() == GR.EnumHelper.GetDescription( exportType ) )
-        {
-          exportTypeToUse = exportType;
-          break;
-        }
-      }
-
-      GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
-      GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
-      GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
-
-      switch ( comboExportType.SelectedIndex )
-      {
-        case 0:
-          // hires bitmap
-          m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
-          break;
-        case 1:
-          // MC bitmap
-          m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
-          break;
-        case 2:
-          // hires charset
-          break;
-        case 3:
-          // MC charset
-          //ExportMCCharset( false );
-          break;
-        case 4:
-          // MC charset and screen assembly
-          //ExportMCCharset( true );
-          break;
-      }
-
-
-      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
-
-      switch ( exportTypeToUse )
-      {
-        case ExportBinaryType.BITMAP_SCREEN_COLOR:
-          exportData.Append( bitmapData );
-          exportData.Append( screenChar );
-          exportData.Append( screenColor );
-          break;
-        case ExportBinaryType.BITMAP_COLOR_SCREEN:
-          exportData.Append( bitmapData );
-          exportData.Append( screenColor );
-          exportData.Append( screenChar );
-          break;
-        case ExportBinaryType.BITMAP:
-          exportData.Append( bitmapData );
-          break;
-        case ExportBinaryType.BITMAP_COLOR:
-          exportData.Append( bitmapData );
-          exportData.Append( screenColor );
-          break;
-        case ExportBinaryType.BITMAP_SCREEN:
-          exportData.Append( bitmapData );
-          exportData.Append( screenChar );
-          break;
-      }
-      if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, exportData ) )
-      {
-        MessageBox.Show( "Could not write data to file" );
-      }*/
-    }
-
-
-
     private void AdjustScrollbars()
     {
       screenHScroll.Minimum = 0;
@@ -3026,114 +2557,10 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnExportToCharScreen_Click( DecentForms.ControlBase Sender )
-    {
-      if ( comboCharScreens.SelectedIndex == -1 )
-      {
-        return;
-      }
-      // automatic check
-      btnCheck_Click( Sender );
-      if ( !btnExportAs.Enabled )
-      {
-        return;
-      }
-
-      DocumentInfo    docToImportTo = (DocumentInfo)( (Types.ComboItem)comboCharScreens.SelectedItem ).Tag;
-
-      CharsetScreenEditor   charScreen = null;
-
-      if ( docToImportTo == null )
-      {
-        // import to new file
-        charScreen = (CharsetScreenEditor)Core.MainForm.CreateNewDocument( ProjectElement.ElementType.CHARACTER_SCREEN, Core.MainForm.CurrentProject );
-      }
-      else
-      {
-        // import to existing file
-        if ( docToImportTo.BaseDoc == null )
-        {
-          docToImportTo.Project.ShowDocument( docToImportTo.Element );
-        }
-        charScreen = (CharsetScreenEditor)docToImportTo.BaseDoc;
-      }
-
-      if ( charScreen != null )
-      {
-        Formats.CharsetScreenProject    project = new RetroDevStudio.Formats.CharsetScreenProject();
-        Formats.CharsetProject          charset = new RetroDevStudio.Formats.CharsetProject();
-
-        project.SetScreenSize( BlockWidth, BlockHeight );
-
-        project.CharSet.Colors.BackgroundColor      = m_GraphicScreenProject.Colors.BackgroundColor;
-        project.CharSet.Colors.MultiColor1          = m_GraphicScreenProject.Colors.MultiColor1;
-        project.CharSet.Colors.MultiColor2          = m_GraphicScreenProject.Colors.MultiColor2;
-        project.CharSet.Colors.BGColor4             = m_GraphicScreenProject.Colors.BGColor4;
-        project.CharSet.Colors.PaletteIndexMapping  = m_GraphicScreenProject.Colors.PaletteIndexMapping;
-        project.CharSet.Colors.PaletteMappingIndex  = m_GraphicScreenProject.Colors.PaletteMappingIndex;
-
-        switch ( m_GraphicScreenProject.SelectedCheckType )
-        {
-          case Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
-          case Formats.GraphicScreenProject.CheckType.HIRES_CHARSET:
-            project.Mode = TextMode.COMMODORE_40_X_25_HIRES;
-            charset.Mode = TextCharMode.COMMODORE_HIRES;
-            break;
-          case Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
-          case Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
-            project.Mode = TextMode.COMMODORE_40_X_25_MULTICOLOR;
-            charset.Mode = TextCharMode.COMMODORE_MULTICOLOR;
-            break;
-          case Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
-            project.Mode = TextMode.MEGA65_40_X_25_FCM;
-            charset.Mode = TextCharMode.MEGA65_FCM;
-            break;
-          case Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
-            project.Mode = TextMode.MEGA65_40_X_25_FCM_16BIT;
-            charset.Mode = TextCharMode.MEGA65_FCM_16BIT;
-            break;
-          case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
-            project.Mode = TextMode.COMMODORE_VIC20_8_X_8;
-            charset.Mode = TextCharMode.VIC20;
-            break;
-          case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
-            project.Mode = TextMode.COMMODORE_VIC20_8_X_16;
-            charset.Mode = TextCharMode.VIC20_8X16;
-            break;
-          default:
-            Debug.Log( $"ExportToCharscreen: Unsupported Check Type {m_GraphicScreenProject.SelectedCheckType}" );
-            break;
-        }
-        charset.Colors.Palette              = new Palette( m_GraphicScreenProject.Colors.Palette );
-        charset.Colors.BackgroundColor      = project.CharSet.Colors.BackgroundColor;
-        charset.Colors.MultiColor1          = project.CharSet.Colors.MultiColor1;
-        charset.Colors.MultiColor2          = project.CharSet.Colors.MultiColor2;
-        charset.Colors.BGColor4             = project.CharSet.Colors.BGColor4;
-        charset.Colors.PaletteIndexMapping  = project.CharSet.Colors.PaletteIndexMapping;
-        charset.Colors.PaletteMappingIndex  = project.CharSet.Colors.PaletteMappingIndex;
-
-        for ( int i = 0; i < m_Chars.Count; ++i )
-        {
-          project.Chars[i] = (uint)( ( m_Chars[i].Index & 0xffff ) | ( m_Chars[i].Tile.CustomColor << 16 ) );
-          if ( m_Chars[i].Replacement == null )
-          {
-            charset.Characters[m_Chars[i].Index].Tile.Data = m_Chars[i].Tile.Data;
-          }
-          else
-          {
-            project.Chars[i] = (uint)( ( m_Chars[i].Replacement.Index & 0xffff ) | ( m_Chars[i].Tile.CustomColor << 16 ) );
-          }
-        }
-
-        charScreen.InjectProjects( project, charset );
-        charScreen.SetModified();
-      }
-    }
-
-
-
     void MainForm_ApplicationEvent( Types.ApplicationEvent Event )
     {
+      // TODO
+      /*
       if ( ( Event.EventType == Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED )
       &&   ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN ) )
       {
@@ -3155,7 +2582,7 @@ namespace RetroDevStudio.Documents
             break;
           }
         }
-      }
+      }*/
     }
 
 
@@ -3422,62 +2849,6 @@ namespace RetroDevStudio.Documents
     {
       listColorMappingTargets.Items.Remove( Item );
       listColorMappingTargets.Items.Insert( listColorMappingTargets.Items.Count - 1, Item );
-    }
-
-
-
-    private void btnExportToBASICData_Click( DecentForms.ControlBase Sender )
-    {
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int wrapByteCount = GetExportWrapCount();
-      if ( wrapByteCount < 10 )
-      {
-        wrapByteCount = 10;
-      }
-
-      /*
-      switch ( (ExportDataType)comboExportType.SelectedIndex )
-      {
-        case ExportDataType.HIRES_BITMAP:
-          ExportHiresBitmap( startLine, lineOffset, false, wrapByteCount );
-          break;
-        case ExportDataType.MULTICOLOR_BITMAP:
-          ExportMCBitmap( startLine, lineOffset, false, wrapByteCount );
-          break;
-        case ExportDataType.HIRES_CHARSET:
-        case ExportDataType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          ExportHiResCharset( startLine, lineOffset, false, wrapByteCount );
-          break;
-        case ExportDataType.MULTICOLOR_CHARSET:
-        case ExportDataType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          ExportMCCharset( startLine, lineOffset, false, wrapByteCount );
-          break;
-        case ExportDataType.CHARACTERS_TO_CLIPBOARD:
-          UsedCharsToClipboard();
-          break;
-      }*/
-    }
-
-
-
-    private int GetExportWrapCount()
-    {
-      if ( !checkExportToDataWrap.Checked )
-      {
-        return 80;
-      }
-      return GR.Convert.ToI32( editWrapByteCount.Text );
     }
 
 
@@ -3901,51 +3272,6 @@ namespace RetroDevStudio.Documents
           return true;
       }
       return base.ApplyFunction( Function );
-    }
-
-
-
-    private void btnExportToBASICDataHex_Click( DecentForms.ControlBase Sender )
-    {
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int wrapByteCount = GetExportWrapCount();
-      if ( wrapByteCount < 10 )
-      {
-        wrapByteCount = 10;
-      }
-
-      /*
-      switch ( (ExportDataType)comboExportType.SelectedIndex )
-      {
-        case ExportDataType.HIRES_BITMAP:
-          ExportHiresBitmap( startLine, lineOffset, true, wrapByteCount );
-          break;
-        case ExportDataType.MULTICOLOR_BITMAP:
-          ExportMCBitmap( startLine, lineOffset, true, wrapByteCount );
-          break;
-        case ExportDataType.HIRES_CHARSET:
-        case ExportDataType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          ExportHiResCharset( startLine, lineOffset, true, wrapByteCount );
-          break;
-        case ExportDataType.MULTICOLOR_CHARSET:
-        case ExportDataType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          ExportMCCharset( startLine, lineOffset, true, wrapByteCount );
-          break;
-        case ExportDataType.CHARACTERS_TO_CLIPBOARD:
-          UsedCharsToClipboard();
-          break;
-      }*/
     }
 
 
@@ -4385,6 +3711,16 @@ namespace RetroDevStudio.Documents
       _ExportForm = (ExportGraphicScreenFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
       _ExportForm.Parent = panelExport;
       _ExportForm.CreateControl();
+    }
+
+
+
+    private void editExportOutput_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyData == ( Keys.A | Keys.Control ) )
+      {
+        editExportOutput.SelectAll();
+      }
     }
 
 

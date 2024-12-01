@@ -1529,25 +1529,32 @@ namespace RetroDevStudio.Documents
       }
       if ( e.KeyCode == System.Windows.Forms.Keys.F2 )
       {
-        if ( treeProject.SelectedNode.Level >= 0 )
+        if ( ( treeProject.SelectedNode != null )
+        &&   ( treeProject.SelectedNode.Level >= 0 ) )
         {
           treeProject.StartLabelEdit();
-          e.Handled = true;
-          e.SuppressKeyPress = true;
         }
+        e.Handled           = true;
+        e.SuppressKeyPress  = true;
       }
       else if ( e.KeyCode == System.Windows.Forms.Keys.Delete )
       {
-        DeleteNode( treeProject.SelectedNode );
-        e.Handled = true;
-        e.SuppressKeyPress = true;
+        if ( treeProject.SelectedNode != null )
+        {
+          DeleteNode( treeProject.SelectedNode );
+        }
+        e.Handled           = true;
+        e.SuppressKeyPress  = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.C )
       &&        ( e.Control ) )
       {
-        CopyElement( treeProject.SelectedNode );
-        e.Handled = true;
-        e.SuppressKeyPress = true;
+        if ( treeProject.SelectedNode != null )
+        {
+          CopyElement( treeProject.SelectedNode );
+        }
+        e.Handled           = true;
+        e.SuppressKeyPress  = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.V )
       &&        ( e.Control ) )
@@ -1555,9 +1562,12 @@ namespace RetroDevStudio.Documents
         if ( !m_PasteKeyDown )
         {
           m_PasteKeyDown = true;
-          PasteElement( treeProject.SelectedNode );
-          e.Handled = true;
-          e.SuppressKeyPress = true;
+          if ( treeProject.SelectedNode != null )
+          {
+            PasteElement( treeProject.SelectedNode );
+          }
+          e.Handled           = true;
+          e.SuppressKeyPress  = true;
         }
       }
     }

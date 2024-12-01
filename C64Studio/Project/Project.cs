@@ -34,7 +34,10 @@ namespace RetroDevStudio
 
     public void SetModified()
     {
-      m_Modified = true;
+      if ( !m_Modified )
+      {
+        m_Modified = true;
+      }
     }
 
 

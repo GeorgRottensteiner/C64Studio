@@ -1,5 +1,4 @@
-﻿using GR.Memory;
-using RetroDevStudio;
+﻿using RetroDevStudio;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
@@ -16,7 +15,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ExportGraphicScreenAsAssembly : ExportGraphicScreenFormBase
+  public partial class ExportGraphicScreenAsBASICData : ExportGraphicScreenFormBase
   {
     private enum ExportType
     {
@@ -56,23 +55,22 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ExportGraphicScreenAsAssembly() :
+    public ExportGraphicScreenAsBASICData() :
       base( null )
     { 
     }
 
 
 
-    public ExportGraphicScreenAsAssembly( StudioCore Core ) :
+    public ExportGraphicScreenAsBASICData( StudioCore Core ) :
       base( Core )
     {
       InitializeComponent();
-
       UtilForms.FillComboWithEnumDescription( comboExportType, typeof( ExportType ) );
       UtilForms.FillComboWithEnumDescription( comboExportContent, typeof( ExportContent ) );
 
-      comboExportType.SelectedIndex     = 0;
-      comboExportContent.SelectedIndex  = 0;
+      comboExportType.SelectedIndex = 0;
+      comboExportContent.SelectedIndex = 0;
     }
 
 
@@ -84,8 +82,48 @@ namespace RetroDevStudio.Controls
 
 
 
+    private int GetExportWrapCount()
+    {
+      if ( checkExportToDataWrap.Checked )
+      {
+        return GR.Convert.ToI32( editWrapByteCount.Text );
+      }
+      return 0;
+    }
+
+
+
+    private int GetExportCharCount()
+    {
+      if ( checkWrapAtMaxChars.Checked )
+      {
+        return GR.Convert.ToI32( editWrapCharCount.Text );
+      }
+      return 80;
+    }
+
+
+
     public override bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
+      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      if ( ( startLine < 0 )
+      ||   ( startLine > 63999 ) )
+      {
+        startLine = 10;
+      }
+      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      if ( ( lineOffset < 0 )
+      ||   ( lineOffset > 63999 ) )
+      {
+        lineOffset = 10;
+      }
+
+      int wrapByteCount = GetExportWrapCount();
+      bool asHex = checkExportHex.Checked;
+      bool insertSpaces = checkInsertSpaces.Checked;
+      int wrapCharCount = GetExportCharCount();
+
       var exportType = (ExportType)comboExportType.SelectedIndex;
       var exportContent = (ExportContent)comboExportContent.SelectedIndex;
 
@@ -94,12 +132,13 @@ namespace RetroDevStudio.Controls
       GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
+      var exportedData = new GR.Memory.ByteBuffer();
 
       switch ( exportType )
       {
         case ExportType.HIRES_BITMAP:
-          Info.Project.ImageToHiresBitmapData( Info.Project.ColorMapping, null, null, 
-                                               0, 0, Info.BlockWidth, Info.BlockHeight, 
+          Info.Project.ImageToHiresBitmapData( Info.Project.ColorMapping, null, null,
+                                               0, 0, Info.BlockWidth, Info.BlockHeight,
                                                out bitmapData, out screenChar, out screenColor );
           break;
         case ExportType.MULTICOLOR_BITMAP:
@@ -121,8 +160,7 @@ namespace RetroDevStudio.Controls
               MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
               return false;
             }
-            var charData = charsetProject.CharacterData();
-            sb.AppendLine( Util.ToASMData( charData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+            exportedData = charsetProject.CharacterData();
           }
           break;
         case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
@@ -139,79 +177,41 @@ namespace RetroDevStudio.Controls
               MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
               return false;
             }
-            var charData = charsetProject.CharacterData();
-            sb.AppendLine( Util.ToASMData( charData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+            exportedData = charsetProject.CharacterData();
           }
           break;
       }
 
-
-      string bitmapAssembly = Util.ToASMData( bitmapData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
-      string screenAssembly = Util.ToASMData( screenChar, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
-      string colorAssembly  = Util.ToASMData( screenColor, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
-
-      /*
-      sb.Append( ";size " );
-      sb.Append( Info.Area.Width );
-      sb.Append( "," );
-      sb.Append( Info.Area.Height );
-      sb.AppendLine();*/
-
       switch ( exportContent )
       {
         case ExportContent.BITMAP:
-          sb.AppendLine( ";bitmap data" );
-          sb.AppendLine( bitmapAssembly );
+          exportedData = bitmapData;
           break;
         case ExportContent.BITMAP_COLOR:
-          sb.AppendLine( ";bitmap data" );
-          sb.AppendLine( bitmapAssembly );
-          sb.AppendLine( ";color data" );
-          sb.AppendLine( colorAssembly );
+          exportedData = bitmapData + screenColor;
           break;
         case ExportContent.BITMAP_COLOR_SCREEN:
-          sb.AppendLine( ";bitmap data" );
-          sb.AppendLine( bitmapAssembly );
-          sb.AppendLine( ";color data" );
-          sb.AppendLine( colorAssembly );
-          sb.AppendLine( ";screen data" );
-          sb.AppendLine( screenAssembly );
+          exportedData = bitmapData + screenColor + screenChar;
           break;
         case ExportContent.BITMAP_SCREEN:
-          sb.AppendLine( ";bitmap data" );
-          sb.AppendLine( bitmapAssembly );
-          sb.AppendLine( ";screen data" );
-          sb.AppendLine( screenAssembly );
+          exportedData = bitmapData + screenChar;
           break;
         case ExportContent.BITMAP_SCREEN_COLOR:
-          sb.AppendLine( ";bitmap data" );
-          sb.AppendLine( bitmapAssembly );
-          sb.AppendLine( ";screen data" );
-          sb.AppendLine( screenAssembly );
-          sb.AppendLine( ";color data" );
-          sb.AppendLine( colorAssembly );
+          exportedData = bitmapData + screenChar + screenColor;
           break;
         case ExportContent.COLOR:
-          sb.AppendLine( ";color data" );
-          sb.AppendLine( colorAssembly );
+          exportedData = screenColor;
           break;
         case ExportContent.SCREEN:
-          sb.AppendLine( ";screen data" );
-          sb.AppendLine( screenAssembly );
+          exportedData = screenChar;
           break;
-        default:
-          return false;
       }
 
+      sb.AppendLine( Util.ToBASICData( exportedData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, asHex ) );
+
+      EditOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
       EditOutput.Text = sb.ToString();
       return true;
-    }
-
-
-
-    private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
-    {
-      editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
     }
 
 

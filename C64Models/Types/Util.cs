@@ -322,6 +322,17 @@ namespace RetroDevStudio
 
 
 
+    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces, bool AsHex )
+    {
+      if ( AsHex )
+      {
+        return ToBASICHexData( Data, StartLine, LineOffset, WrapByteCount, WrapCharCount, InsertSpaces );
+      }
+      return ToBASICData( Data, StartLine, LineOffset, WrapByteCount, WrapCharCount, InsertSpaces );
+    }
+
+
+
     internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces )
     {
       StringBuilder   sb = new StringBuilder();
