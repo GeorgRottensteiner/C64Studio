@@ -892,18 +892,12 @@ namespace GR.Forms
 
     public System.Drawing.Rectangle ItemRect( int ItemIndex )
     {
-      System.Drawing.Rectangle  trueRect = InternalItemRect( ItemIndex );
+      var trueRect = InternalItemRect( ItemIndex );
 
-      //if ( ClientRectangle.Width != m_DisplayPage.Width )
-      {
-        float     factorX = (float)ClientRectangle.Width / m_DisplayPage.Width;
-        float     factorY = (float)ClientRectangle.Height / m_DisplayPage.Height;
-
-        trueRect.X = (int)( trueRect.X * factorX );
-        trueRect.Y = (int)( trueRect.Y * factorY );
-        trueRect.Width = (int)( trueRect.Width * factorX );
-        trueRect.Height = (int)( trueRect.Height * factorY );
-      }
+      trueRect.X      = (int)( trueRect.X * (float)ClientRectangle.Width / m_DisplayPage.Width + 0.5f );
+      trueRect.Y      = (int)( trueRect.Y * (float)ClientRectangle.Height / m_DisplayPage.Height + 0.5f );
+      trueRect.Width  = (int)( trueRect.Width * (float)ClientRectangle.Width / m_DisplayPage.Width + 0.5f );
+      trueRect.Height = (int)( trueRect.Height * (float)ClientRectangle.Height / m_DisplayPage.Height + 0.5f );
 
       return trueRect;
     }
@@ -935,12 +929,12 @@ namespace GR.Forms
         return;
       }
 
-      System.Drawing.SolidBrush hottrackBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( HottrackColor ) );
+      var hottrackBrush = new SolidBrush( GR.Color.Helper.FromARGB( HottrackColor ) );
 
       int     itemIndex = m_Offset * m_ItemsPerLine;
       int     itemInLine = 0;
       bool    hasNativeImages = false;
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( 0, 0, ClientSize.Width, 1 );
+      var     itemRect = new System.Drawing.Rectangle( 0, 0, ClientSize.Width, 1 );
       while ( itemIndex < Items.Count )
       {
         if ( itemIndex < 0 )
@@ -1004,6 +998,11 @@ namespace GR.Forms
 
           continue;
         }
+
+        int     xoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) % m_ItemsPerLine;
+        int     yoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
+        itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
+
         if ( Items[itemIndex].Highlighted )
         {
           System.Drawing.SolidBrush highlightColorBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( m_HighlightColors[Items[itemIndex].HighlightGroup % m_HighlightColors.Count] ) );
