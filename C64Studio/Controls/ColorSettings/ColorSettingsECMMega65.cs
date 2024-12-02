@@ -68,6 +68,8 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
+      _AvailableColors.Add( ColorType.BACKGROUND );
+      _AvailableColors.Add( ColorType.CUSTOM_COLOR );
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {
         if ( i < 32 )
@@ -79,11 +81,11 @@ namespace RetroDevStudio.Controls
         comboMulticolor2.Items.Add( i.ToString( "d2" ) );
         comboBGColor4.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex = Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = Colors.MultiColor2;
-      comboBGColor4.SelectedIndex = Colors.BGColor4;
-      comboCharColor.SelectedIndex = CustomColor;
+      comboBackground.SelectedIndex   = Colors.BackgroundColor;
+      comboMulticolor1.SelectedIndex  = Colors.MultiColor1;
+      comboMulticolor2.SelectedIndex  = Colors.MultiColor2;
+      comboBGColor4.SelectedIndex     = Colors.BGColor4;
+      comboCharColor.SelectedIndex    = CustomColor;
 
       radioCharColor.Checked = true;
     }

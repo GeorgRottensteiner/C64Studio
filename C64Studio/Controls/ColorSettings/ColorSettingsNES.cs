@@ -60,6 +60,8 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
+      _AvailableColors.Add( ColorType.CUSTOM_COLOR );
+
       _Palettes.Add( picPalette1 );
       _Palettes.Add( picPalette2 );
       _Palettes.Add( picPalette3 );

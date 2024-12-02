@@ -76,6 +76,8 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
+      _AvailableColors.Add( ColorType.CUSTOM_COLOR );
+
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {
         comboCharColor.Items.Add( i.ToString( "d2" ) );

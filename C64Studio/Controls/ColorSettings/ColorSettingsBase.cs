@@ -20,6 +20,8 @@ namespace RetroDevStudio.Controls
     protected byte                      _CustomColor = 1;
     protected byte                      _SelectedCustomColor = 1;
 
+    protected readonly List<ColorType>  _AvailableColors = new List<ColorType>();
+
     public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor, List<int> PaletteIndexMapping );
     public delegate void PaletteSelectedHandler( ColorSettings Colors );
     public delegate void PaletteMappingModifiedHandler( ColorSettings Colors );
@@ -234,6 +236,18 @@ namespace RetroDevStudio.Controls
 
     public virtual void PalettesChanged()
     {
+    }
+
+
+
+    public void ToggleSelectedColor()
+    {
+      if ( _AvailableColors.Count <= 1 )
+      {
+        return;
+      }
+      int   index = _AvailableColors.IndexOf( _CurrentColorType );
+      SelectedColor = _AvailableColors[( index + 1 ) % _AvailableColors.Count ];
     }
 
 

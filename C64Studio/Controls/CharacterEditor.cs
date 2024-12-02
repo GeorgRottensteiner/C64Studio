@@ -11,6 +11,7 @@ using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 using GR.Forms;
+using GR.Forms;
 using GR.Generic;
 using GR.Collections;
 using GR.Memory;
@@ -1084,6 +1085,12 @@ namespace RetroDevStudio.Controls
         Buttons = MouseButtons.Left;
         newColor.first  = ColorType.BACKGROUND;
         newColor.second = 0;
+      }
+
+      if ( ( Buttons & MouseButtons.Middle ) != 0 )
+      {
+        // middle button toggles selected color
+        _ColorSettingsDlg.ToggleSelectedColor();
       }
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )

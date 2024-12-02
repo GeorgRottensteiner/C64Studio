@@ -92,6 +92,9 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
+      _AvailableColors.Add( ColorType.BACKGROUND );
+      _AvailableColors.Add( ColorType.CUSTOM_COLOR );
+
       // we only use 16 colors of the full palette! TODO - offset!
       for ( int i = 0; i < 16; ++i )
       {

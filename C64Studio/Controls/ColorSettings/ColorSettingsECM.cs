@@ -58,7 +58,7 @@ namespace RetroDevStudio.Controls
     
     public ColorSettingsECM() :
       base( null, null, 0 )
-    { 
+    {
     }
 
 
@@ -67,6 +67,9 @@ namespace RetroDevStudio.Controls
       base( Core, Colors, CustomColor )
     {
       InitializeComponent();
+
+      _AvailableColors.Add( ColorType.BACKGROUND );
+      _AvailableColors.Add( ColorType.CUSTOM_COLOR );
 
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {

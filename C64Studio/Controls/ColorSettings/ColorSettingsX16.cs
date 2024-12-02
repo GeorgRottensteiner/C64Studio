@@ -82,6 +82,9 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
+      _AvailableColors.Add( ColorType.BACKGROUND );
+      _AvailableColors.Add( ColorType.CUSTOM_COLOR );
+
       // we only use the first 16 colors of the full palette!
       for ( int i = 0; i < 16; ++i )
       {
