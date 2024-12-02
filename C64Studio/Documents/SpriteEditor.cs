@@ -441,6 +441,21 @@ namespace RetroDevStudio.Documents
         newColor.second = 0;
       }
 
+      if ( ( ( Buttons & MouseButtons.Middle ) != 0 )
+      ||   ( ( ( Buttons & MouseButtons.Left ) != 0 )
+      &&     ( ( Control.ModifierKeys & Keys.Shift ) != 0 ) ) )
+      {
+        Buttons &= ~MouseButtons.Left;
+
+        if ( m_ButtonReleased )
+        {
+          // middle button toggles selected color
+          _ColorSettingsDlg.ToggleSelectedColor();
+          m_ButtonReleased = false;
+        }
+        return;
+      }
+
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
         Undo.UndoTask undo = null;

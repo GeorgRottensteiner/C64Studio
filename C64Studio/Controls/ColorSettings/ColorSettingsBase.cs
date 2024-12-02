@@ -247,7 +247,10 @@ namespace RetroDevStudio.Controls
         return;
       }
       int   index = _AvailableColors.IndexOf( _CurrentColorType );
-      SelectedColor = _AvailableColors[( index + 1 ) % _AvailableColors.Count ];
+      var newColor = _AvailableColors[( index + 1 ) % _AvailableColors.Count];
+      Debug.Log( $"choose from {_AvailableColors.Count} colors" );
+      SelectedColor = newColor;
+      Debug.Log( $"selected color is now {SelectedColor}" );
     }
 
 

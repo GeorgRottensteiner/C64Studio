@@ -91,8 +91,6 @@ namespace RetroDevStudio.Controls
       InitializeComponent();
 
       _AvailableColors.Add( ColorType.BACKGROUND );
-      _AvailableColors.Add( ColorType.MULTICOLOR_1 );
-      _AvailableColors.Add( ColorType.MULTICOLOR_2 );
       _AvailableColors.Add( ColorType.CUSTOM_COLOR );
 
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
@@ -184,6 +182,11 @@ namespace RetroDevStudio.Controls
 
     private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
     {
+      if ( !checkMulticolor.Checked )
+      {
+        radioCustomColor.Checked = true;
+        return;
+      }
       _CurrentColorType = ColorType.MULTICOLOR_1;
       RaiseColorSelectedEvent();
     }
@@ -192,6 +195,11 @@ namespace RetroDevStudio.Controls
 
     private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
     {
+      if ( !checkMulticolor.Checked )
+      {
+        radioCustomColor.Checked = true;
+        return;
+      }
       _CurrentColorType = ColorType.MULTICOLOR_2;
       RaiseColorSelectedEvent();
     }
@@ -275,11 +283,18 @@ namespace RetroDevStudio.Controls
       radioMultiColor2.Enabled = checkMulticolor.Checked;
       if ( !checkMulticolor.Checked )
       {
+        _AvailableColors.Remove( ColorType.MULTICOLOR_1 );
+        _AvailableColors.Remove( ColorType.MULTICOLOR_2 );
         if ( ( radioMultiColor1.Checked )
         ||   ( radioMultiColor2.Checked ) )
         {
           radioCustomColor.Checked = true;
         }
+      }
+      else
+      {
+        _AvailableColors.Insert( 1, ColorType.MULTICOLOR_2 );
+        _AvailableColors.Insert( 1, ColorType.MULTICOLOR_1 );
       }
       RaiseMulticolorFlagChanged();
     }

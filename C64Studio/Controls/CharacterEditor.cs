@@ -11,7 +11,6 @@ using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 using GR.Forms;
-using GR.Forms;
 using GR.Generic;
 using GR.Collections;
 using GR.Memory;
@@ -1087,10 +1086,19 @@ namespace RetroDevStudio.Controls
         newColor.second = 0;
       }
 
-      if ( ( Buttons & MouseButtons.Middle ) != 0 )
+      if ( ( ( Buttons & MouseButtons.Middle ) != 0 )
+      ||   ( ( ( Buttons & MouseButtons.Left ) != 0 )
+      &&     ( ( Control.ModifierKeys & Keys.Shift ) != 0 ) ) )
       {
-        // middle button toggles selected color
-        _ColorSettingsDlg.ToggleSelectedColor();
+        Buttons &= ~MouseButtons.Left;
+
+        if ( m_ButtonReleased )
+        {
+          // middle button toggles selected color
+          _ColorSettingsDlg.ToggleSelectedColor();
+          m_ButtonReleased = false;
+        }
+        return;
       }
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
