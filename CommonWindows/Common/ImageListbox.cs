@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+
+
+
 #if NET5_0_OR_GREATER
 using System.Runtime.Versioning;
 #endif
@@ -200,6 +202,7 @@ namespace GR.Forms
     private ToolTip               m_ToolTip = new ToolTip();
     private List<uint>            m_HighlightColors = new List<uint>();
     private List<int>             m_SelectedIndices = new List<int>();
+    private Size                  m_ActiveClientSize = new Size();
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -437,6 +440,20 @@ namespace GR.Forms
       if ( KeyPressed != null )
       {
         KeyPressed( this, e );
+      }
+    }
+
+
+
+    public void SetActiveClientSize( int Width, int Height )
+    {
+      if ( ( m_ActiveClientSize.Width != Width )
+      ||   ( m_ActiveClientSize.Height != Height ) )
+      {
+        m_ActiveClientSize.Width  = Width;
+        m_ActiveClientSize.Height = Height;
+
+        Invalidate();
       }
     }
 
@@ -894,10 +911,15 @@ namespace GR.Forms
     {
       var trueRect = InternalItemRect( ItemIndex );
 
-      trueRect.X      = (int)( trueRect.X * (float)ClientRectangle.Width / m_DisplayPage.Width + 0.5f );
-      trueRect.Y      = (int)( trueRect.Y * (float)ClientRectangle.Height / m_DisplayPage.Height + 0.5f );
-      trueRect.Width  = (int)( trueRect.Width * (float)ClientRectangle.Width / m_DisplayPage.Width + 0.5f );
-      trueRect.Height = (int)( trueRect.Height * (float)ClientRectangle.Height / m_DisplayPage.Height + 0.5f );
+      var x1 = (int)( ( trueRect.X * ClientRectangle.Width ) / m_DisplayPage.Width );
+      var y1 = (int)( ( trueRect.Y * ClientRectangle.Height ) / m_DisplayPage.Height );
+      var x2 = (int)( ( ( trueRect.X + trueRect.Width ) * ClientRectangle.Width ) / m_DisplayPage.Width );
+      var y2 = (int)( ( ( trueRect.Y + trueRect.Height ) * ClientRectangle.Height ) / m_DisplayPage.Height );
+
+      trueRect.X = x1;
+      trueRect.Y = y1;
+      trueRect.Width = x2 - x1;
+      trueRect.Height = y2 - y1; 
 
       return trueRect;
     }
@@ -978,7 +1000,15 @@ namespace GR.Forms
       if ( !hasNativeImages )
       {
         IntPtr hdcPage = e.Graphics.GetHdc();
-        m_DisplayPage.DrawToHDC( hdcPage, ClientRectangle );
+        if ( ( m_ActiveClientSize.Width > 0 )
+        &&   ( m_ActiveClientSize.Height > 0 ) )
+        {
+          m_DisplayPage.DrawToHDC( hdcPage, new Rectangle( 0, 0, m_ActiveClientSize.Width, m_ActiveClientSize.Height ) );
+        }
+        else
+        {
+          m_DisplayPage.DrawToHDC( hdcPage, ClientRectangle );
+        }
         e.Graphics.ReleaseHdc( hdcPage );
       }
 

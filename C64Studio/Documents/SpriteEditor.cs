@@ -183,6 +183,7 @@ namespace RetroDevStudio.Documents
       RefreshDisplayOptions();
 
       m_AnimTimer.Tick += animTimer_Tick;
+      AdjustSpriteSizes();
       UpdateSpriteSelectionInfo();
       ResumeLayout();
     }
@@ -2699,7 +2700,12 @@ namespace RetroDevStudio.Documents
 
     private void panelSprites_Resize( object sender, EventArgs e )
     {
-      panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
+      int   newWidth = ( panelSprites.ClientSize.Width / 2 ) * 2;
+      int   newHeight = ( panelSprites.ClientSize.Height / 2 ) * 2;
+
+      // we use active client size, since we want to avoid distorted display (e.g. odd client size can't map *2 factors nicely)
+      panelSprites.SetDisplaySize( newWidth / 2, newHeight / 2 );
+      panelSprites.SetActiveClientSize( newWidth, newHeight );
     }
 
 
@@ -3083,7 +3089,18 @@ namespace RetroDevStudio.Documents
 
       panelSprites.ItemWidth = m_SpriteWidth;
       panelSprites.ItemHeight = m_SpriteHeight;
-      panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
+      int   newWidth = ( panelSprites.ClientSize.Width / 2 ) * 2;
+      int   newHeight = ( panelSprites.ClientSize.Height / 2 ) * 2;
+      if ( ( newWidth != panelSprites.ClientSize.Width )
+      ||   ( newHeight != panelSprites.ClientSize.Height ) )
+      {
+        panelSprites.ClientSize = new Size( newWidth, newHeight );
+        panelSprites.SetDisplaySize( newWidth / 2, newHeight / 2 );
+      }
+      else
+      {
+        panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
+      }
     }
 
 
