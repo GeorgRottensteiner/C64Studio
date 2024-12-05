@@ -13,7 +13,7 @@ namespace RetroDevStudio.Parser
       ReplacementLines = null;
       lineSizeInBytes = 0;
 
-      ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<Types.TokenInfo>> paramTokens );
+      ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, !Binary, out List<List<Types.TokenInfo>> paramTokens );
 
       if ( ( paramTokens.Count > 7 )
       ||   ( paramTokens.Count < 2 ) )
@@ -57,15 +57,18 @@ namespace RetroDevStudio.Parser
           return false;
         }
         // label prefix 
-        if ( ( paramTokens[1].Count != 1 )
-        ||   ( ( paramTokens[1][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        if ( ( paramTokens[1].Count > 1 )
+        ||   ( ( paramTokens[1].Count == 1 )
+        &&     ( paramTokens[1][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
         &&     ( paramTokens[1][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected proper global or local label prefix" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected proper global or local label prefix, or empty for no prefix" );
           return false;
         }
-        labelPrefix = paramTokens[1][0].Content;
-
+        if ( paramTokens[1].Count == 1 )
+        {
+          labelPrefix = paramTokens[1][0].Content;
+        }
         paramTokens.RemoveAt( 1 );
       }
 
@@ -1010,7 +1013,7 @@ namespace RetroDevStudio.Parser
             return false;
           }
           if ( ( offsetBytes + numBytes > spriteData.Length )
-          || ( numBytes <= 0 ) )
+          ||   ( numBytes <= 0 ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid data size " + numBytes );
             return false;
@@ -1219,7 +1222,7 @@ namespace RetroDevStudio.Parser
           {
             if ( !Binary )
             {
-              textToInclude = labelPrefix + "_CHARS" + System.Environment.NewLine;
+              textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
@@ -1234,7 +1237,7 @@ namespace RetroDevStudio.Parser
           {
             if ( !Binary )
             {
-              textToInclude = labelPrefix + "_COLOR" + System.Environment.NewLine;
+              textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             }
@@ -1248,9 +1251,9 @@ namespace RetroDevStudio.Parser
           {
             if ( !Binary )
             {
-              textToInclude = labelPrefix + "_CHARS" + System.Environment.NewLine;
+              textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
-              textToInclude += labelPrefix + "_COLOR" + System.Environment.NewLine;
+              textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
@@ -1272,7 +1275,7 @@ namespace RetroDevStudio.Parser
 
             if ( !Binary )
             {
-              textToInclude = labelPrefix + "_DATA" + System.Environment.NewLine;
+              textToInclude = OptionalPrefix( labelPrefix, "_", "DATA" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( interleavedBuffer, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
 
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
@@ -1287,9 +1290,9 @@ namespace RetroDevStudio.Parser
           {
             if ( !Binary )
             {
-              textToInclude = labelPrefix + "_COLOR" + System.Environment.NewLine;
+              textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
-              textToInclude += labelPrefix + "_CHARS" + System.Environment.NewLine;
+              textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
               textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             }
@@ -1433,7 +1436,7 @@ namespace RetroDevStudio.Parser
         {
           if ( !Binary )
           {
-            textToInclude += labelPrefix + "_BITMAP_DATA" + System.Environment.NewLine;
+            textToInclude += OptionalPrefix( labelPrefix, "_", "BITMAP_DATA" ) + System.Environment.NewLine;
             textToInclude += Util.ToASMData( bitmapClipped, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
           }
           else
@@ -1445,7 +1448,7 @@ namespace RetroDevStudio.Parser
         {
           if ( !Binary )
           {
-            textToInclude += labelPrefix + "_SCREEN_DATA" + System.Environment.NewLine;
+            textToInclude += OptionalPrefix( labelPrefix, "_", "SCREEN_DATA" ) + System.Environment.NewLine;
             textToInclude += Util.ToASMData( screenClipped, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
           }
           else
@@ -1457,7 +1460,7 @@ namespace RetroDevStudio.Parser
         {
           if ( !Binary )
           {
-            textToInclude += labelPrefix + "_COLOR_DATA" + System.Environment.NewLine;
+            textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR_DATA" ) + System.Environment.NewLine;
             textToInclude += Util.ToASMData( colorClipped, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
           }
           else
@@ -1651,6 +1654,14 @@ namespace RetroDevStudio.Parser
 
 
 
+    private string OptionalPrefix( string Prefix, string Separator, string Content )
+    {
+      if ( string.IsNullOrEmpty( Prefix ) )
+      {
+        return Content;
+      }
+      return Prefix + Separator + Content;
+    }
 
 
 

@@ -9283,7 +9283,6 @@ namespace RetroDevStudio.Parser
 
 
 
-    // TODO - add expression parsing (parenthesis)
     public bool ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, bool AllowEmptyParams, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
