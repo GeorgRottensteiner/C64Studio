@@ -2634,14 +2634,15 @@ namespace RetroDevStudio.Documents
       {
         text = MakeUpperCase( text, Core.Settings.BASICUseNonC64Font );
       }
+
+      m_LowerCaseMode = newMode;
+
       editSource.Text = text;
 
       editSource.VerticalScroll.Value = topLine;
       editSource.UpdateScrollbars();
 
       DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoBASICCaseToggle( this ) );
-
-      m_LowerCaseMode = newMode;
 
       UpdateCaseButtonCaption();
       m_InsideToggleCaseHandler = false;
@@ -3078,6 +3079,8 @@ namespace RetroDevStudio.Documents
     {
       m_LowerCaseMode                 = !m_LowerCaseMode;
       UpdateCaseButtonCaption();
+
+      editSource.OnSyntaxHighlight( new TextChangedEventArgs( editSource.Range ) );
     }
 
 
