@@ -566,6 +566,16 @@ namespace RetroDevStudio
           element.Document.Show();
         }
       }
+
+      // do it after loading all elements (project node might auto-expand)
+      if ( Core.Navigating.Solution.IsNodeExpanded( this ) )
+      {
+        Node.Expand();
+      }
+      else
+      {
+        Node.Collapse();
+      }
       m_Modified = false;
       return true;
     }
