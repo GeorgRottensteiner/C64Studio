@@ -1478,7 +1478,8 @@ namespace RetroDevStudio.Documents
     {
       tokenTypeBelow = TokenInfo.TokenType.UNKNOWN;
       tokenBelow = null;
-      lineTokens = Parser.PrepareLineTokens( editSource.Lines[lineNumber], new Map<byte, byte>() );
+      string currentLine = editSource.ReTabifyLine( editSource.Lines[lineNumber], editSource.TabLength );
+      lineTokens = Parser.PrepareLineTokens( currentLine, new Map<byte, byte>() );
       if ( lineTokens != null )
       {
         tokenBelow = lineTokens.FirstOrDefault( t => ( t.StartPos <= charPos ) && ( t.EndPos >= charPos ) );
