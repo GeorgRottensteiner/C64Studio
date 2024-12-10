@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
       this.panelMain = new WeifenLuo.WinFormsUI.Docking.DockPanel();
       this.mainMenu = new System.Windows.Forms.MenuStrip();
@@ -156,6 +157,7 @@
       this.mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.spriteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.valueTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.paletteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
       this.bookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.calculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -228,7 +230,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.paletteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.timerAutoSave = new System.Windows.Forms.Timer(this.components);
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -1263,6 +1265,12 @@
       this.valueTableEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.valueTableEditorToolStripMenuItem.Text = "Value Table Editor";
       // 
+      // paletteEditorToolStripMenuItem
+      // 
+      this.paletteEditorToolStripMenuItem.Name = "paletteEditorToolStripMenuItem";
+      this.paletteEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.paletteEditorToolStripMenuItem.Text = "Palette Editor";
+      // 
       // toolStripSeparator13
       // 
       this.toolStripSeparator13.Name = "toolStripSeparator13";
@@ -1916,11 +1924,10 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // paletteEditorToolStripMenuItem
+      // timerAutoSave
       // 
-      this.paletteEditorToolStripMenuItem.Name = "paletteEditorToolStripMenuItem";
-      this.paletteEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.paletteEditorToolStripMenuItem.Text = "Palette Editor";
+      this.timerAutoSave.Interval = 300000;
+      this.timerAutoSave.Tick += new System.EventHandler(this.timerAutoSave_Tick);
       // 
       // MainForm
       // 
@@ -2156,6 +2163,7 @@
     private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dumpBreakpointsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem paletteEditorToolStripMenuItem;
+    private System.Windows.Forms.Timer timerAutoSave;
   }
 }
 

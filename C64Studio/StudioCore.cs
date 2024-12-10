@@ -36,7 +36,7 @@ namespace RetroDevStudio
 
     delegate void AddToOutputCallback( string Text );
     delegate void MessageBoxCallback( string Text, string Caption );
-    delegate void delSetStatus( string Text, bool ProgressVisible, int ProgressValue );
+    delegate void delSetStatus( string Text, bool ProgressVisible );
 
 
     public StudioCore()
@@ -293,37 +293,23 @@ namespace RetroDevStudio
 
 
 
-    public void SetStatus( string Text, bool ProgressVisible, int ProgressValue )
+    public void SetStatus( string Text, bool ProgressVisible = false )
     {
       try
       {
         if ( MainForm.InvokeRequired )
         {
-          MainForm.Invoke( new delSetStatus( SetStatus ), new object[] { Text, ProgressVisible, ProgressValue } );
+          MainForm.Invoke( new delSetStatus( SetStatus ), new object[] { Text, ProgressVisible } );
         }
         else
         {
           MainForm.statusProgress.Visible = ProgressVisible;
-          MainForm.statusProgress.Value = ProgressValue;
-          MainForm.statusLabelInfo.Text = Text;
+          MainForm.statusProgress.Value   = 100;
+          MainForm.statusLabelInfo.Text   = Text;
         }
       }
       catch ( Exception )
       {
-      }
-    }
-
-
-
-    public void SetStatus( string Text )
-    {
-      if ( MainForm.InvokeRequired )
-      {
-        MainForm.Invoke( new delSetStatus( SetStatus ), new object[] { Text, false, 0 } );
-      }
-      else
-      {
-        MainForm.statusLabelInfo.Text = Text;
       }
     }
 

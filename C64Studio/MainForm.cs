@@ -833,6 +833,9 @@ namespace RetroDevStudio
       }
 
       IdleQueue.Add( new IdleRequest() { CloseSplashScreen = splash } );
+
+      timerAutoSave.Enabled = true;
+      timerAutoSave.Start();
     }
 
 
@@ -1302,6 +1305,12 @@ namespace RetroDevStudio
         else if ( request.CloseSplashScreen != null )
         {
           request.CloseSplashScreen.Close();
+        }
+        else if ( request.AutoSaveSettings )
+        {
+          StudioCore.SetStatus( "Autosaving settings..." );
+          SaveSettings();
+          StudioCore.SetStatus( "Ready" );
         }
       }
     }
@@ -3935,7 +3944,7 @@ namespace RetroDevStudio
 
 
 
-    private void SaveSettings()
+    public void SaveSettings()
     {
       StudioCore.Settings.MainWindowPlacement = GR.Forms.WindowStateManager.GeometryToString( this );
 
@@ -3946,12 +3955,22 @@ namespace RetroDevStudio
       string settingFilename = SettingsPath();
 
       System.IO.Directory.CreateDirectory( System.IO.Directory.GetParent( settingFilename ).FullName );
-      if ( !GR.IO.File.WriteAllBytes( settingFilename, SettingsData ) )
+      if ( !GR.IO.File.WriteAllBytes( settingFilename + ".tmp", SettingsData ) )
       {
         StudioCore.AddToOutput( "Failed to write settings to file" + System.Environment.NewLine );
       }
-
-      CloseSolution();
+      else
+      {
+        try
+        {
+          System.IO.File.Delete( settingFilename );
+          System.IO.File.Move( settingFilename + ".tmp", settingFilename );
+        }
+        catch ( Exception ex )
+        {
+          MessageBox.Show( $"An error occurred while replacing the old setting file: {ex.Message}\r\nYour new settings have been saved as {settingFilename + ".tmp"}. Please replace the actual setting file {settingFilename} with it.\r\nSorry for the inconvenience!", "Error saving settings!" );
+        }
+      }
     }
 
 
@@ -4225,7 +4244,7 @@ namespace RetroDevStudio
             }
 
             AppState = Types.StudioState.NORMAL;
-            StudioCore.SetStatus( "Ready", false, 0 );
+            StudioCore.SetStatus( "Ready" );
 
             SetGUIForDebugging( false );
             SetGUIForWaitOnExternalTool( false );
@@ -4301,7 +4320,7 @@ namespace RetroDevStudio
             StudioCore.Debugging.RemoveVirtualBreakpoints();
           }
           AppState = Types.StudioState.NORMAL;
-          StudioCore.SetStatus( "Ready", false, 0 );
+          StudioCore.SetStatus( "Ready" );
 
           SetGUIForDebugging( false );
           SetGUIForWaitOnExternalTool( false );
@@ -5907,6 +5926,7 @@ namespace RetroDevStudio
       {
         // changes are saved as restart data
         SaveSettings();
+        CloseSolution();
         StudioCore.ShuttingDown = true;
         return;
       }
@@ -5997,6 +6017,7 @@ namespace RetroDevStudio
       e.Cancel = false;
       StudioCore.ShuttingDown = true;
       SaveSettings();
+      CloseSolution();
     }
 
 
@@ -6572,7 +6593,7 @@ namespace RetroDevStudio
           break;
       }
 
-      StudioCore.SetStatus( "Ready", false, 0 );
+      StudioCore.SetStatus( "Ready" );
 
       StartNextTask();
     }
@@ -6597,7 +6618,7 @@ namespace RetroDevStudio
           //Debug.Log( "Running threaded task" );
           System.Threading.Thread workerThread = new System.Threading.Thread( new System.Threading.ThreadStart( m_CurrentTask.RunTask ) );
 
-          StudioCore.SetStatus( m_CurrentTask.Description, true, 0 );
+          StudioCore.SetStatus( m_CurrentTask.Description, true );
 
           workerThread.Start();
         }
@@ -8005,9 +8026,13 @@ namespace RetroDevStudio
 
     private void preferencesToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      timerAutoSave.Stop();
       var prefDlg = new FormPreferences( StudioCore );
 
       prefDlg.ShowDialog();
+      SaveSettings();
+
+      timerAutoSave.Start();
     }
 
 
@@ -8050,6 +8075,13 @@ namespace RetroDevStudio
           Debug.Log( $"  Line {bp.LineIndex}/{bp.Address}" );
         }
       }
+    }
+
+
+
+    private void timerAutoSave_Tick( object sender, EventArgs e )
+    {
+      IdleQueue.Add( new IdleRequest() { AutoSaveSettings = true } );
     }
 
 

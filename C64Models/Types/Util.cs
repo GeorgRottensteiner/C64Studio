@@ -368,6 +368,7 @@ namespace RetroDevStudio
 
         bool    firstByte = true;
         int     numBytesInLine = 0;
+        int     numByteValuesInLine = 0;
 
         if ( WrapCharCount > 0 )
         {
@@ -379,6 +380,7 @@ namespace RetroDevStudio
           numBytesInLine = StartLine.ToString().Length + 4;
 
           while ( ( numBytesInLine < WrapCharCount )
+          &&      ( numByteValuesInLine < WrapByteCount )
           &&      ( dataPos < Data.Length ) )
           {
             int   numCharsToAdd = Data.ByteAt( dataPos ).ToString().Length;
@@ -399,6 +401,7 @@ namespace RetroDevStudio
             sb.Append( Data.ByteAt( dataPos ) );
             ++dataPos;
             numBytesInLine += numCharsToAdd;
+            ++numByteValuesInLine;
           }
         }
         else

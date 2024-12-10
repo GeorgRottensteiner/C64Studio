@@ -319,6 +319,8 @@ namespace RetroDevStudio.Documents
       var prefDlg = new FormPreferences( Core, "Warnings" );
 
       prefDlg.ShowDialog();
+
+      Core.MainForm.SaveSettings();
     }
 
 

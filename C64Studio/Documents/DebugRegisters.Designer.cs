@@ -56,6 +56,11 @@
       this.editXBin = new System.Windows.Forms.TextBox();
       this.editYBin = new System.Windows.Forms.TextBox();
       this.editABin = new System.Windows.Forms.TextBox();
+      this.label11 = new System.Windows.Forms.Label();
+      this.label12 = new System.Windows.Forms.Label();
+      this.label13 = new System.Windows.Forms.Label();
+      this.label14 = new System.Windows.Forms.Label();
+      this.label15 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.SuspendLayout();
       // 
@@ -331,6 +336,51 @@
       this.editABin.TabIndex = 1;
       this.editABin.TextChanged += new System.EventHandler(this.editABin_TextChanged);
       // 
+      // label11
+      // 
+      this.label11.AutoSize = true;
+      this.label11.Location = new System.Drawing.Point(41, 10);
+      this.label11.Name = "label11";
+      this.label11.Size = new System.Drawing.Size(13, 13);
+      this.label11.TabIndex = 0;
+      this.label11.Text = "$";
+      // 
+      // label12
+      // 
+      this.label12.AutoSize = true;
+      this.label12.Location = new System.Drawing.Point(41, 36);
+      this.label12.Name = "label12";
+      this.label12.Size = new System.Drawing.Size(13, 13);
+      this.label12.TabIndex = 0;
+      this.label12.Text = "$";
+      // 
+      // label13
+      // 
+      this.label13.AutoSize = true;
+      this.label13.Location = new System.Drawing.Point(41, 62);
+      this.label13.Name = "label13";
+      this.label13.Size = new System.Drawing.Size(13, 13);
+      this.label13.TabIndex = 0;
+      this.label13.Text = "$";
+      // 
+      // label14
+      // 
+      this.label14.AutoSize = true;
+      this.label14.Location = new System.Drawing.Point(41, 87);
+      this.label14.Name = "label14";
+      this.label14.Size = new System.Drawing.Size(13, 13);
+      this.label14.TabIndex = 0;
+      this.label14.Text = "$";
+      // 
+      // label15
+      // 
+      this.label15.AutoSize = true;
+      this.label15.Location = new System.Drawing.Point(41, 113);
+      this.label15.Name = "label15";
+      this.label15.Size = new System.Drawing.Size(13, 13);
+      this.label15.TabIndex = 0;
+      this.label15.Text = "$";
+      // 
       // DebugRegisters
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -361,6 +411,11 @@
       this.Controls.Add(this.editXDec);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.editX);
+      this.Controls.Add(this.label15);
+      this.Controls.Add(this.label14);
+      this.Controls.Add(this.label13);
+      this.Controls.Add(this.label12);
+      this.Controls.Add(this.label11);
       this.Controls.Add(this.label1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "DebugRegisters";
@@ -400,5 +455,10 @@
     public System.Windows.Forms.TextBox editXBin;
     public System.Windows.Forms.TextBox editYBin;
     public System.Windows.Forms.TextBox editABin;
+    private System.Windows.Forms.Label label11;
+    private System.Windows.Forms.Label label12;
+    private System.Windows.Forms.Label label13;
+    private System.Windows.Forms.Label label14;
+    private System.Windows.Forms.Label label15;
   }
 }
