@@ -1842,6 +1842,15 @@ namespace RetroDevStudio
       }
 
       SanitizePalettes();
+
+      while ( ReplaceArguments.Count >= 50 )
+      {
+        ReplaceArguments.RemoveAt( ReplaceArguments.Count - 1 );
+      }
+      while ( FindArguments.Count >= 50 )
+      {
+        FindArguments.RemoveAt( FindArguments.Count - 1 );
+      }
     }
 
 

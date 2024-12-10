@@ -329,7 +329,7 @@ namespace RetroDevStudio.Dialogs
       }
       if ( !foundInHistory )
       {
-        if ( comboSearchText.Items.Count >= 50 )
+        while ( comboSearchText.Items.Count >= 50 )
         {
           comboSearchText.Items.RemoveAt( comboSearchText.Items.Count - 1 );
         }
@@ -347,7 +347,7 @@ namespace RetroDevStudio.Dialogs
       }
       if ( !foundInHistory )
       {
-        if ( comboReplaceSearchText.Items.Count >= 50 )
+        while ( comboReplaceSearchText.Items.Count >= 50 )
         {
           comboReplaceSearchText.Items.RemoveAt( comboReplaceSearchText.Items.Count - 1 );
         }
@@ -370,7 +370,7 @@ namespace RetroDevStudio.Dialogs
       }
       if ( !foundInHistory )
       {
-        if ( comboReplaceWith.Items.Count >= 50 )
+        while ( comboReplaceWith.Items.Count >= 50 )
         {
           comboReplaceWith.Items.RemoveAt( comboReplaceWith.Items.Count - 1 );
         }
@@ -1397,11 +1397,11 @@ namespace RetroDevStudio.Dialogs
       {
         Settings.FindArguments.Add( (string)obj );
       }
+      Settings.ReplaceArguments.Clear();
       foreach ( object obj in comboReplaceSearchText.Items )
       {
         Settings.ReplaceArguments.Add( (string)obj );
       }
-      //Settings.ReplaceArguments = comboReplaceSearchText.Items;
       Settings.ReplaceWithArguments.Clear();
       foreach ( object obj in comboReplaceWith.Items )
       {
