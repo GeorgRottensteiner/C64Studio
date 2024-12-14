@@ -169,14 +169,23 @@ namespace RetroDevStudio
     }
 
 
+    private static Dictionary<string,int>     _SetASMFileInfoStack = new Dictionary<string, int>();
 
     public void SetASMFileInfo( Types.ASM.FileInfo FileInfo )
     {
-      /*
-      if ( ASMFileInfo == FileInfo )
+      if ( ( _SetASMFileInfoStack.TryGetValue( FullPath, out int stackCount ) )
+      &&   ( stackCount > 0 ) )
       {
         return;
-      }*/
+      }
+      if ( !_SetASMFileInfoStack.ContainsKey( FullPath ) )
+      {
+        _SetASMFileInfoStack.Add( FullPath, 1 );
+      }
+      else
+      {
+        ++_SetASMFileInfoStack[FullPath];
+      }
 
       SourceASMEx   asm = null;
 
@@ -282,6 +291,12 @@ namespace RetroDevStudio
       if ( asm != null )
       {
         asm.DoNotFollowZoneSelectors = false;
+      }
+
+      --_SetASMFileInfoStack[FullPath];
+      if ( _SetASMFileInfoStack[FullPath] == 0 )
+      {
+        _SetASMFileInfoStack.Remove( FullPath );
       }
     }
 

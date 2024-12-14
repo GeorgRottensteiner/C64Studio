@@ -10898,20 +10898,7 @@ namespace RetroDevStudio.Parser
 
                 if ( currentAddress - fileStartAddress + newBytes > result.Length )
                 {
-                  /*
-                  //if ( memoryBlockActualDataLength > 0 )
-                  {
-                    var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress );
-                    entry.Description = lastAddressSourceDesc;
-                    memoryMap.InsertEntry( entry );
-                    lastAddressSourceDesc = "";
-                  }*/
-
                   result.Append( new GR.Memory.ByteBuffer( (uint)( currentAddress - fileStartAddress + newBytes - result.Length ) ) );
-
-                  //memoryBlockStartAddress = line.AddressStart;
-                  //memoryBlockLength = 0;
-                  //memoryBlockActualDataLength = 0;
                 }
                 // went forward in memory
                 if ( ( builtSegments.Count > 0 )
@@ -11197,7 +11184,6 @@ namespace RetroDevStudio.Parser
         lowestStart = 0;
         highestEnd = 0;
       }
-
 
       //Assembly = result;
       AssembledOutput = new AssemblyOutput();

@@ -137,13 +137,6 @@ namespace RetroDevStudio.Parser
         m_AlreadyIncludedSingleIncludeFiles.Add( subFilename );
       }
 
-      if ( m_LoadedFiles[ParentFilename].Any( lf => ( lf.first == subFilename ) ) )
-      {
-        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilename}, was already included by {ParentFilename}" );
-        return ParseLineResult.RETURN_NULL;
-      }
-      m_LoadedFiles[ParentFilename].Add( new GR.Generic.Tupel<string,int>( subFilename, lineIndex ) );
-
       string[]  subFile = null;
       string    subFilenameFull = subFilename;
       bool      foundAFile = false;
@@ -184,6 +177,34 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilenameFull}, trying to include itself" );
         return ParseLineResult.RETURN_NULL;
       }
+
+      if ( m_LoadedFiles[ParentFilename].Any( lf => ( lf.first == subFilenameFull ) ) )
+      {
+        if ( ( m_LoadedFiles.ContainsKey( subFilenameFull ) )
+        &&   ( m_LoadedFiles[subFilenameFull].Any( lf => ( lf.first == ParentFilename ) ) ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilename}, was already included by {ParentFilename}",
+                    lineTokenInfos[0].StartPos,
+                    lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
+          return ParseLineResult.RETURN_NULL;
+        }
+        else
+        {
+          AddWarning( lineIndex, Types.ErrorCode.E1402_DUPLICATE_INCLUSION, $"Duplicate inclusion of {subFilename}, was already included by {ParentFilename}",
+                      lineTokenInfos[0].StartPos,
+                      lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
+        }
+      }
+      if ( ( m_LoadedFiles.ContainsKey( subFilenameFull ) )
+      &&   ( m_LoadedFiles[subFilenameFull].Any( lf => ( lf.first == ParentFilename ) ) ) )
+      {
+        AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilename}, was already included by {ParentFilename}",
+                  lineTokenInfos[0].StartPos,
+                  lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
+        return ParseLineResult.RETURN_NULL;
+      }
+
+      m_LoadedFiles[ParentFilename].Add( new GR.Generic.Tupel<string,int>( subFilenameFull, lineIndex ) );
 
       ExternallyIncludedFiles.Add( subFilenameFull );
       //Debug.Log( "Read subfile " + subFilename );

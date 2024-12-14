@@ -264,6 +264,7 @@ namespace RetroDevStudio.Types
 
     E1400_CIRCULAR_INCLUSION                = 0x1400,
     E1401_INTERNAL_ERROR                    = 0x1401,
+    E1402_DUPLICATE_INCLUSION               = 0x1402,
 
     E2000_FILE_OPEN_ERROR                   = 0x2000,
     E2001_FILE_READ_ERROR                   = 0x2001,

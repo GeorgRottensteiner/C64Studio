@@ -850,6 +850,7 @@ namespace RetroDevStudio.Tasks
                                                   Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, Doc.Project );
             }
+
             if ( Core.Settings.ShowCompilerMessagesAfterBuild )
             {
               Core.ShowDocument( Core.MainForm.m_CompileResult, false );
