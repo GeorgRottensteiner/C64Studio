@@ -17,6 +17,79 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+15.12.2024 - 8.0:         Fix: Map Editor - undo not updating tile count
+                          Fix: Autocomplete borking if a line with enabled tabs had a comment Add: Map editor: Tile count/usage display
+                               Differ between circular and duplicate inclusion
+                          Fix stupid memory accumulation bug from autosaving settings
+                          Add: Autosaving settings on closing preferences and every 5 minutes Add: Debug registers, display $ in front of hex values Add: BASIC Data export, honor wrap at x bytes even with wrap at chars count set as well
+                          Fix: Tooltip displayed at wrong offset of label (tabs again)
+                          Fix: properly restore project expand/collapse state
+                          Fix: BASIC case toggle (and undo of it) did not update syntax coloring
+                          Add: !media src, label prefix may be empty
+                          Hopefully fix scaling issue in sprite editor listbox
+                          Add: Sprite/Charset editor, shift/middle click to toggle color type
+                          Potential middle click for char editor
+                          Fix: partially offset highlight in image list box (used in various editors)
+                          Upd: Graphic Screen Editor uses modular import/export sub dialogs Add: Walrus BASIC 8 dialect file (thanks to Goodwell)
+                          Add: Map Editor Adding/Cloning tile with existing name adds auto-incing index WIP: Graphic Screen Editor rebuild Fix: Solution Explorer Renaming item doesn't provoke ding sound
+                          WIP #7293: Charset screen/Graphic screen export of VIC20 8x16 mode
+                          Update to .net8.0
+                          Fix: Broken highlighting in BASIC/ASM editors
+                          Add: Assembler editor, label and macro with the same name, go to declaration and tool tip go to the respective source
+                          Add: Label Explorer/Outline listing BASIC text labels
+                          Fix: BASIC label mode toggling could after THEN followed by token could result in additional comma WIP: More VIC20 8x16
+                          Fix: Asm - intellisense borked in opcode,x/y lines with tabs in  front
+                          Add: SourceASM open Autocomplete after Cut
+                          Merge pull request #129 from GeorgRottensteiner/BASIC-undo
+                          Add: BASIC proper Undo for all settings and mode toggles
+                          Fix: Color Settings for ECM only allow bg and custom color as selectable Fix: Broken link in docs
+                          Add: SpriteEditor Move Sprites
+                          Fix: Chareditor: Pasting images toggling between MC/HiRes didn't also set the tiles mode accordingly
+                          Fix: Assembling issue with forced dependency, when original file was used several times and collected label info from different childs causing duplicate symbol errors
+                          Add: Autofix borked added files with full path although it should be relative Fix: tooltip in autocomplete not rebuild if text is the same
+                          Add: VIC20 8x16 support in charset editor and graphic screen editor
+                          Add: Charscreen editor -> Import of charset now uses image instead of binary data -> works now properly for all modes WIP: Graphic Screen Imports Add: BASIC Dialect for Commander X16 -> added new tokens BANK/POINTER
+                          Fix: Breakpoints: "Del" now deletes all selected
+                          WIP: Graphic Screen Editor: VC20 charset WIP: Graphic Screen Editor: lots of changes Fix: BASIC copy/paste warning now also works properly in lower case mode (does not pop up all the time)
+                          Fix: File manager - opening BASIC dialect with lower case properly sets lower case mode in BASIC editor
+                          Fix: assembly interference between defines and text macros
+                          Merge branch 'feature/NESCharScreen'
+                          Add: NES char screen support Fix: Text mapping via !ct got lost after a define
+                          Upd: Char screen editor: Replace fixed color selector with sub dialogs WIP
+                          Work over CharsetScreenEditor
+                          Add: NES Char Screen WIP
+                          Fix: Duplicate labels with the same value are treated as a single label (allows forward usage)
+                          Fix: Assembler Map Editor export of tile names/tile assembly: Avoid duplicate labels by adding indices
+                          Fix: BASIC dialects now open in lower case mode when extracted from media image (TSB, Lightning and Laser) Fix: Changing compile target types/file names/build chains marks documents as dirty
+                          Fix: assembler detection assumed PDS if a label named irequ was used (EQU keyword)
+                          Rename exported tile name labels, normalize diacritics
+                          Next potential build chain crash fix
+                          Add: !mediasrc returns labels for tile numbers from tile names
+                          Fix: Potential crash with changes in unknown configuration for pre/post build chain
+                          Fix: Potential window size mismatch after restoring (for floating windows)
+                          WIP: CharEditor more NESsy
+                          Add: NES support for chareditor part #2
+                          Fix: Debug Watches now properly conserved when switching documents/projects, even during debugging
+                          Add: Char-Editor, NES support WIP #1
+                          Fix: MapEditor - Painting on tile combines Undo steps WIP: NES cartridge target
+                          Fix: FastColoredTextBox - dragging and drag copying text highlights the source text
+                          Fix: Text editor: Allow copying of text snippet at begin/end of current selection
+                          Fix: BASIC paste detection didn't like line breaks
+                          Fix: BASIC compiler skipped $ and % as direct tokens, were gone in renumber
+                          Fix: Mapeditor copy to next/inced buttons were not disabled if a new tile was selected from the list (and thus no selected tile char existed)
+                          Fix: Assembler defaulted to .prg, overridden only by preset type
+                          Fix: Map Editor undo/redo of char shifting missed char list and tile detail list
+                          Fix: Docs - !to duplicate Fix: Assembling .t64 files had the load address two times
+                          Fix: Map Editor - shifting characters in tiles were not properly restored with undo
+                          Add: BASIC paste options for invalid characters
+                          Fix: BASIC label mode now also works with LIST
+                          Fix: BASIC renumber also works with GO TO
+                          Fix for nameless bug
+                          Fix PDS issues Upd: Tooltip timeout for assembly set to 30 seconds instead of 5
+                          Fix: PDS examples (sample project 10) wouldn't work after PDS modifications Add: Pressing go to next message now also updates the compile result message view Fix: Marking of unused/unevaluated labels in code was off if a label was in front of the line
+                          Fix: Broken existing file opening Fix: Folder renaming duplicates name Fix: DASM issues
+                          Fix: Crash when creating/adding new element
+
 16.09.2024 - 7.9:         Add: Breakpoints now following project or single file
                           Fix: ASM - zone info of local labels set with !set was empty
                           Add: Dialog editor: import palette from binary file now adds new palettes if more were in the file
