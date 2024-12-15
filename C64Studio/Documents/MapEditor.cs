@@ -3159,6 +3159,7 @@ namespace RetroDevStudio.Documents
                                                               Width * m_CurrentMap.TileSpacingY * 8,
                                                               Height * m_CurrentMap.TileSpacingY * 8 ) );
       RedrawMap();
+      RecalcTileUsageInCurrentMap();
     }
 
 
