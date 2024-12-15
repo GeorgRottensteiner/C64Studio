@@ -68,6 +68,8 @@ namespace RetroDevStudio.Documents
     private ExportMapFormBase           m_ExportForm = null;
     private ImportMapFormBase           m_ImportForm = null;
 
+    private List<int>                   _TileUsage = new List<int>();
+
 
 
     public override DocumentInfo DocumentInfo
@@ -675,6 +677,7 @@ namespace RetroDevStudio.Documents
         }
       }
       m_FloatingSelection = null;
+      RecalcTileUsageInCurrentMap();
       Redraw();
       Modified = true;
     }
@@ -866,6 +869,7 @@ namespace RetroDevStudio.Documents
                                                 ( p1.X - m_CurEditorOffsetX ) * m_CurrentMap.TileSpacingX, ( p1.Y - m_CurEditorOffsetY ) * m_CurrentMap.TileSpacingY,
                                                 ( p2.X - p1.X + 1 ) * m_CurrentMap.TileSpacingX, ( p2.Y - p1.Y + 1 ) * m_CurrentMap.TileSpacingY );
               pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * m_CurrentMap.TileSpacingX, p1.Y * m_CurrentMap.TileSpacingY, ( p2.X - p1.X + 1 ) * m_CurrentMap.TileSpacingX, ( p2.Y - p1.Y + 1 ) * m_CurrentMap.TileSpacingY ) );
+              RecalcTileUsageInCurrentMap();
               Modified = true;
             }
             break;
@@ -941,6 +945,7 @@ namespace RetroDevStudio.Documents
                 }
                 m_CurrentMap.Tiles[trueX + offsetX, trueY + offsetY] = m_CurrentEditorTile.Index;
                 SetModified();
+                RecalcTileUsageInCurrentMap();
 
                 DrawTile( trueX, trueY, m_CurrentEditorTile.Index );
                 // copy to image cache
@@ -965,6 +970,7 @@ namespace RetroDevStudio.Documents
               m_MouseButtonReleased = false;
 
               FillContent( trueX + m_CurEditorOffsetX, trueY + m_CurEditorOffsetY );
+              RecalcTileUsageInCurrentMap();
             }
             break;
           case ToolMode.RECTANGLE:
@@ -1343,6 +1349,7 @@ namespace RetroDevStudio.Documents
         listTileInfo.Items.Add( item );
       }
 
+      comboTiles.DropDownHeight = comboTiles.DropDownHeight;
       int index = 0;
       foreach ( var map in m_MapProject.Maps )
       {
@@ -2082,8 +2089,32 @@ namespace RetroDevStudio.Documents
       comboMapBGColor.SelectedIndex = m_CurrentMap.AlternativeBackgroundColor + 1;
       comboMapAlternativeMode.SelectedIndex = (int)m_CurrentMap.AlternativeMode + 1;
 
+      RecalcTileUsageInCurrentMap();
+
       AdjustScrollbars();
       RedrawMap();
+    }
+
+
+
+    private void RecalcTileUsageInCurrentMap()
+    {
+      _TileUsage.Clear();
+      for ( int i = 0; i < m_MapProject.Tiles.Count; ++i )
+      {
+        _TileUsage.Add( 0 );
+      }
+      if ( m_CurrentMap != null )
+      {
+        for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+        {
+          for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+          {
+            ++_TileUsage[m_CurrentMap.Tiles[i, j]];
+          }
+        }
+      }
+      comboTiles.Invalidate();
     }
 
 
@@ -2407,6 +2438,7 @@ namespace RetroDevStudio.Documents
         }
         ++index;
       }
+      RecalcTileUsageInCurrentMap();
       AdjustScrollbars();
       RedrawMap();
       SetModified();
@@ -2475,12 +2507,21 @@ namespace RetroDevStudio.Documents
       if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
         e.Graphics.DrawString( e.Index.ToString() + ":" + comboTiles.Items[e.Index].ToString(), comboTiles.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
+        if ( ( e.Index >= 0 )
+        &&   ( e.Index < _TileUsage.Count ) )
+        {
+          e.Graphics.DrawString( $"used {_TileUsage[e.Index].ToString()} times", comboTiles.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + comboTiles.Font.Height + 2.0f );
+        }
       }
       else
       {
         e.Graphics.DrawString( e.Index.ToString() + ":" + comboTiles.Items[e.Index].ToString(), comboTiles.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
+        if ( ( e.Index >= 0 )
+        &&   ( e.Index < _TileUsage.Count ) )
+        {
+          e.Graphics.DrawString( $"used {_TileUsage[e.Index].ToString()} times", comboTiles.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + comboTiles.Font.Height + 2.0f );
+        }
       }
-
       e.DrawFocusRectangle();
     }
 

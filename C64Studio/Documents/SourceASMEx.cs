@@ -401,7 +401,7 @@ namespace RetroDevStudio.Documents
       }
 
       // no autocomplete on comments
-      string    line = editSource.Lines[sourceLineIndex];
+      string    line = editSource.ReTabifyLine( editSource.Lines[sourceLineIndex], editSource.TabLength );
       var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
 
       if ( tokens != null )
