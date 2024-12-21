@@ -17,7 +17,7 @@ namespace RetroDevStudio
 
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
 
-    private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
+    private MachineType               m_ConnectedMachine = MachineType.ANY;
 
 
 

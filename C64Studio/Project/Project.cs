@@ -393,7 +393,7 @@ namespace RetroDevStudio
             activeElement         = memChunk.ReadString();
             memChunk.ReadUInt32();    // flags (all free)
             PreferredMachineType  = (MachineType)memChunk.ReadUInt32();
-            if ( PreferredMachineType == MachineType.UNKNOWN )
+            if ( PreferredMachineType == MachineType.ANY )
             {
               PreferredMachineType = MachineType.C64;
             }

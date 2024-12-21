@@ -163,12 +163,15 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       bool  emulatorAffected = ( tool.Type == ( ToolInfo.ToolType.EMULATOR ) );
 
-      tool.Name = editToolName.Text;
-      alistTools.SelectedItem.Text = tool.Name;
-
-      if ( emulatorAffected )
+      if ( tool.Name != editToolName.Text )
       {
-        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+        tool.Name = editToolName.Text;
+        alistTools.SelectedItem.Text = tool.Name;
+
+        if ( emulatorAffected )
+        {
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+        }
       }
     }
 

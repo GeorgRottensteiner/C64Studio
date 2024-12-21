@@ -5,7 +5,7 @@ namespace RetroDevStudio
   public enum MachineType
   {
     [Description( "Unknown" )]
-    UNKNOWN,
+    ANY,
     [Description( "Commodore 64" )]
     C64,
     [Description( "VIC 20" )]

@@ -11,7 +11,7 @@ namespace RetroDevStudio.Undo
     public CharsetScreenEditor    Editor = null;
 
 
-    public MachineType          Machine = MachineType.UNKNOWN;
+    public MachineType          Machine = MachineType.ANY;
     public int                  BackgroundColor = 0;
     public int                  Multicolor1 = 0;
     public int                  Multicolor2 = 0;

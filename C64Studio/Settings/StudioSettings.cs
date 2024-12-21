@@ -1211,7 +1211,7 @@ namespace RetroDevStudio
 
               DefaultProjectBasePath  = binIn.ReadString();
               PreferredMachineType    = (MachineType)binIn.ReadUInt32();
-              if ( PreferredMachineType == MachineType.UNKNOWN )
+              if ( PreferredMachineType == MachineType.ANY )
               {
                 PreferredMachineType = MachineType.C64;
               }

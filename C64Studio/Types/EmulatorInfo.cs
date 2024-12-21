@@ -214,7 +214,7 @@ namespace RetroDevStudio.Types
       {
         return MachineType.MEGA65;
       }
-      return MachineType.UNKNOWN;
+      return MachineType.ANY;
     }
 
 
