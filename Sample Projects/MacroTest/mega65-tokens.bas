@@ -1,0 +1,3 @@
+#RetroDevStudio.MetaData.BASIC:2049,BASIC 65,uppercase,10,10
+10PRINT1<<3
+20PRINT128>>3 
