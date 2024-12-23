@@ -229,6 +229,8 @@ WINDOW;fe1a;
 WPEEK;ce10;
 WPOKE;fe1d;
 XOR;e9;
+<<;fe52;
+>>;fe53;
 +;AA;
 -;AB;
 *;AC;
