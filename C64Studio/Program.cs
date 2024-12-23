@@ -19,7 +19,6 @@ namespace RetroDevStudio
     static void Main( string[] args )
     {
       // Forum64 checksummer attempt
-      /*
       int x = 0;
       int fd = 0;
       byte quoteFlag = 0;
@@ -57,7 +56,7 @@ namespace RetroDevStudio
         for ( int y = 8; y > 0; y-- )
         {
           fd <<= 1;
-          fd |= (byte)( ( fb & 0x80 ) >> 7 );
+          fd |= ( ( fb & 0x80 ) >> 7 );
           fb <<= 1;
           fb |= (byte)( ( fc & 0x80 ) >> 7 );
           fc <<= 1;
@@ -68,7 +67,6 @@ namespace RetroDevStudio
         }
         x++;
       }
-      */
             /*
             CPCDSK  disk = new CPCDSK();
 
