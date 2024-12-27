@@ -4525,7 +4525,8 @@ namespace RetroDevStudio.Parser
           continue;
         }
         // normal chars are passed on (also tabs, cr, lf)
-        if ( CustomMapping.ContainsKey( (byte)curChar ) )
+        if ( ( CustomMapping != null )
+        &&   ( CustomMapping.ContainsKey( (byte)curChar ) ) )
         {
           sb.Append( (char)CustomMapping[(byte)curChar] );
         }

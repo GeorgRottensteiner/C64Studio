@@ -3879,6 +3879,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetShiftSprites( this, m_SpriteProject, spriteMapNewToOld, spriteMapOldToNew ) );
 
       ShiftSprites( spriteMapOldToNew, spriteMapNewToOld );
+      Modified = true;
     }
 
 

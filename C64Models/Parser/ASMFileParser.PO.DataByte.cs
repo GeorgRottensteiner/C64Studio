@@ -90,6 +90,7 @@ namespace RetroDevStudio.Parser
         else if ( AllowNeededExpression )
         {
           info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
+          info.LineCodeMapping = _ParseContext.CurrentTextMapping;
         }
         else
         {

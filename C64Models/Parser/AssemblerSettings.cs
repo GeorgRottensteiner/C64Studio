@@ -740,6 +740,8 @@ namespace RetroDevStudio.Parser
 
           AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.BYTE );
           AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( ".INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( ".BINARY", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
 
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( "=" );
