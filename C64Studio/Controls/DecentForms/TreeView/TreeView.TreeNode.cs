@@ -286,7 +286,6 @@ namespace DecentForms
 
 
 
-
       public Font NodeFont
       {
         get

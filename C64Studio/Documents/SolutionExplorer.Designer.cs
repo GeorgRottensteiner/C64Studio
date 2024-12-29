@@ -84,6 +84,7 @@
       this.treeProject.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeProject_DragDrop);
       this.treeProject.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeProject_DragEnter);
       this.treeProject.DragOver += new System.Windows.Forms.DragEventHandler(this.treeProject_DragOver);
+      this.treeProject.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.treeProject_QueryContinueDrag);
       this.treeProject.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeProject_KeyDown);
       this.treeProject.KeyUp += new System.Windows.Forms.KeyEventHandler(this.treeProject_KeyUp);
       // 

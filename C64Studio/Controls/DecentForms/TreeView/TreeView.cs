@@ -30,6 +30,7 @@ namespace DecentForms
     private TreeNode      _SelectedNode = null;
     private TreeNode      _MouseOverNode = null;
     private TreeNode      _MouseOverToggleButtonNode = null;
+    private bool          _MouseButtonReleased = false;
 
     private TreeNode      _EditedNode = null;
     private TextBox       _PopupEditControl = null;
@@ -146,6 +147,13 @@ namespace DecentForms
     {
       _DisplayOffsetX = _ScrollBarH.Value;
       Invalidate();
+    }
+
+
+
+    public void ScrollBy( int Delta )
+    {
+      _ScrollBar.ScrollBy( Delta );
     }
 
 
@@ -703,6 +711,10 @@ namespace DecentForms
           break;
         case ControlEvent.EventType.MOUSE_UPDATE:
           {
+            if ( ( Event.MouseButtons & 1 ) == 0 )
+            {
+              _MouseButtonReleased = true;
+            }
             var hitArea = HitTest( Event.MouseX, Event.MouseY );
             if ( ( hitArea.Location & TreeViewHitTestLocations.ONITEM ) != 0 )
             {
@@ -772,6 +784,7 @@ namespace DecentForms
           break;
         case ControlEvent.EventType.MOUSE_UP:
           Capture = false;
+          _MouseButtonReleased = true;
           if ( _SelectedNode == _MouseOverNode )
           {
             var hitAreaDC2 = HitTest( Event.MouseX, Event.MouseY );
@@ -1040,6 +1053,11 @@ namespace DecentForms
 
     private void OnItemDrag( ItemDragEventArgs e )
     {
+      if ( !_MouseButtonReleased )
+      {
+        return;
+      }
+      _MouseButtonReleased = false;
       if ( ItemDrag != null )
       {
         ItemDrag( this, e );

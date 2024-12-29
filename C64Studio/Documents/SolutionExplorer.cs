@@ -26,7 +26,6 @@ namespace RetroDevStudio.Documents
 
     private DecentForms.TreeView.TreeNode     m_MouseOverNode = null;
     private int                               m_MouseOverNodeTicks = 0;
-
     private bool                              m_PasteKeyDown = false;
 
 
@@ -1584,7 +1583,7 @@ namespace RetroDevStudio.Documents
       }
       timerDragDrop.Interval = 100;
       timerDragDrop.Start();
-      DoDragDrop( e.Item, DragDropEffects.Move );
+      treeProject.DoDragDrop( e.Item, DragDropEffects.Move );
 
       // drag drop done either way, remove drop indicator if still present
       Refresh();
@@ -2140,7 +2139,7 @@ namespace RetroDevStudio.Documents
     void timerDragDrop_Tick( object sender, EventArgs e )
     {
       // get node at mouse position
-      Point pt = PointToClient( MousePosition );
+      Point pt = treeProject.PointToClient( MousePosition );
       DecentForms.TreeView.TreeNode node = treeProject.GetNodeAt( pt );
 
       if ( m_MouseOverNode != node )
@@ -2152,56 +2151,26 @@ namespace RetroDevStudio.Documents
       {
         ++m_MouseOverNodeTicks;
       }
-      if ( node == null )
-      {
-        return;
-      }
 
-      // if mouse is near to the top, scroll up
-      if ( pt.Y < 30 )
+      if ( node != null )
       {
-        // set actual node to the upper one
-        if ( node.PrevVisibleNode != null )
+        if ( node.Nodes.Count > 0 )
         {
-          node = node.PrevVisibleNode;
-
-          // check if scroll still required
-          if ( !node.IsVisible )
+          // 10 ticks equals 1 second
+          if ( m_MouseOverNodeTicks == 10 )
           {
-            // hide drag image
-            //DragHelper.ImageList_DragShowNolock( false );
-            // scroll and refresh
-            node.EnsureVisible();
-            treeProject.Refresh();
-            // show drag image
-            //DragHelper.ImageList_DragShowNolock( true );
-          }
-        }
-      }
-      // if mouse is near to the bottom, scroll down
-      else if ( pt.Y > treeProject.Size.Height - 30 )
-      {
-        if ( node.NextVisibleNode != null )
-        {
-          node = node.NextVisibleNode;
-
-          if ( !node.IsVisible )
-          {
-            //DragHelper.ImageList_DragShowNolock( false );
-            node.EnsureVisible();
-            treeProject.Refresh();
-            //DragHelper.ImageList_DragShowNolock( true );
+            node.Expand();
           }
         }
       }
 
-      if ( node.Nodes.Count > 0 )
+      if ( pt.Y < treeProject.ItemHeight / 2 )
       {
-        // 10 ticks equals 1 second
-        if ( m_MouseOverNodeTicks == 10 )
-        {
-          node.Expand();
-        }
+        treeProject.ScrollBy( -1 );
+      }
+      if ( pt.Y > treeProject.ClientSize.Height - treeProject.ItemHeight / 2 )
+      {
+        treeProject.ScrollBy( 1 );
       }
     }
 
@@ -2712,6 +2681,15 @@ namespace RetroDevStudio.Documents
       }
     }
 
+
+
+    private void treeProject_QueryContinueDrag( object sender, QueryContinueDragEventArgs e )
+    {
+      if ( e.EscapePressed )
+      {
+        e.Action = DragAction.Cancel;
+      }
+    }
 
 
   }
