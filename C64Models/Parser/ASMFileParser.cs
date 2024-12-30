@@ -6619,9 +6619,10 @@ namespace RetroDevStudio.Parser
                 return Lines;
               }
             }
-            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY )
+            else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM ) )
             {
-              var result = POIncludeBinary( lineTokenInfos, lineIndex, info, out lineSizeInBytes );
+              var result = POIncludeBinary( pseudoOp.Type, lineTokenInfos, lineIndex, info, out lineSizeInBytes );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 continue;
@@ -7741,9 +7742,10 @@ namespace RetroDevStudio.Parser
               return Lines;
             }
           }
-          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY )
+          else if ( ( macroInfo.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY )
+          ||        ( macroInfo.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM ) )
           {
-            var result = POIncludeBinary( lineTokenInfos, lineIndex, info, out lineSizeInBytes );
+            var result = POIncludeBinary( macroInfo.Type, lineTokenInfos, lineIndex, info, out lineSizeInBytes );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;

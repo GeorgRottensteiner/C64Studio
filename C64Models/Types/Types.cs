@@ -40,7 +40,8 @@ namespace RetroDevStudio.Types
       PSEUDO_PC,
       REAL_PC,
       BANK,
-      INCLUDE_BINARY,
+      INCLUDE_BINARY,               // filename[,length[,skip]]
+      INCLUDE_BINARY_TASM,          // filename[,skip]
       INCLUDE_SOURCE,
       COMPILE_TARGET,
       ZONE,
@@ -92,7 +93,7 @@ namespace RetroDevStudio.Types
       ASSUME_8BIT_REGISTERS_65816,
       SKIP,                             // basically a * = * + x
       WHILE,                            // ACME: !WHILE
-      JUMP_TABLE                         // !jumplist Label
+      JUMP_TABLE                        // !jumplist Label
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;

@@ -10,7 +10,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POIncludeBinary( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, out int lineSizeInBytes )
+    private ParseLineResult POIncludeBinary( MacroInfo.PseudoOpType OpType, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, out int lineSizeInBytes )
     {
       lineSizeInBytes = 0;
 
@@ -18,15 +18,29 @@ namespace RetroDevStudio.Parser
       List<Types.TokenInfo> paramsSize = new List<Types.TokenInfo>();
       List<Types.TokenInfo> paramsSkip = new List<Types.TokenInfo>();
 
+      int maxParams = 3;
+      if ( OpType == MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
+      {
+        // TASM only has optional skip param
+        maxParams = 2;
+      }
+
       if ( !m_AssemblerSettings.IncludeHasOnlyFilename )
       {
         ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, true, out List<List<TokenInfo>> paramList );
 
-        if ( ( paramList.Count > 3 )
+        if ( ( paramList.Count > maxParams )
         ||   ( paramList.Count < 1 )
         ||   ( paramList[0].Count != 1 ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>,<Size>,<Skip>" );
+          if ( OpType == MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>[,<Skip>]" );
+          }
+          else
+          {
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>[,<Size>[,<Skip>]]" );
+          }
           return ParseLineResult.RETURN_NULL;
         }
         paramsFile = paramList[0];
@@ -34,7 +48,8 @@ namespace RetroDevStudio.Parser
         {
           paramsSize = paramList[1];
         }
-        if ( paramList.Count >= 3 )
+        if ( ( OpType != MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
+        &&   ( paramList.Count >= 3 ) )
         {
           paramsSkip = paramList[2];
         }
@@ -70,11 +85,19 @@ namespace RetroDevStudio.Parser
       bool    fileSizeValid = EvaluateTokens( lineIndex, paramsSize, out SymbolInfo fileSizeSymbol );
       bool    fileSkipValid = EvaluateTokens( lineIndex, paramsSkip, out SymbolInfo fileSkipSymbol );
 
-      if ( ( paramsSize.Count > 0 )
-      &&   ( !fileSizeValid ) )
+      if ( OpType != MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Cannot evaluate size argument" );
-        return ParseLineResult.RETURN_NULL;
+        if ( ( paramsSize.Count > 0 )
+        &&   ( !fileSizeValid ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Cannot evaluate size argument" );
+          return ParseLineResult.RETURN_NULL;
+        }
+      }
+      else
+      {
+        fileSizeValid = false;
+        fileSize      = -1;
       }
       if ( ( paramsSkip.Count > 0 )
       &&   ( !fileSkipValid ) )
@@ -82,9 +105,12 @@ namespace RetroDevStudio.Parser
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Cannot evaluate skip argument" );
         return ParseLineResult.RETURN_NULL;
       }
-      if ( fileSizeValid )
+      if ( OpType != MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
       {
-        fileSize = fileSizeSymbol.ToInt32();
+        if ( fileSizeValid )
+        {
+          fileSize = fileSizeSymbol.ToInt32();
+        }
       }
       if ( fileSkipValid )
       {

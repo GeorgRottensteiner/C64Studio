@@ -536,6 +536,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( ".ENDM", Types.MacroInfo.PseudoOpType.END );
           AddPseudoOp( ".O", Types.MacroInfo.PseudoOpType.END );
           AddPseudoOp( ".INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( ".BINARY", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM );
           AddPseudoOp( ".TEXT", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( ".FILL", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( ".ENC", Types.MacroInfo.PseudoOpType.CONVERSION_TAB_TASS );
