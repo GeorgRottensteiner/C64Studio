@@ -177,6 +177,7 @@ namespace RetroDevStudio.Parser
             macroFunction.Symbol.DocumentFilename = OuterFilename;
             macroFunction.Symbol.Zone             = Zone;
             macroFunction.Symbol.NumArguments     = param.Count;
+            macroFunction.Symbol.LineIndex        = _ParseContext.LineIndex;
 
             if ( !_ParseContext.DoNotAddReferences )
             {
