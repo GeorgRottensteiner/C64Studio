@@ -12,6 +12,7 @@ using System.Drawing;
 using GR.Generic;
 using GR.Image;
 using GR.Collections;
+using System.Linq;
 
 namespace RetroDevStudio.Documents
 {
@@ -3897,6 +3898,8 @@ namespace RetroDevStudio.Documents
         origListItems.Add( panelSprites.Items[i] );
       }
 
+      bool currentSpriteModified = NewToOld.Contains( m_CurrentSprite );
+
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
         m_SpriteProject.Sprites[i]  = origSpriteData[NewToOld[i]];
@@ -3912,6 +3915,10 @@ namespace RetroDevStudio.Documents
       comboSprite.SelectedIndex = OldToNew[comboSprite.SelectedIndex];
       panelSprites.Invalidate();
 
+      if ( currentSpriteModified )
+      {
+        SpriteChanged( m_CurrentSprite );
+      }
       RedrawPreviewLayer();
       pictureEditor.Invalidate();
     }
