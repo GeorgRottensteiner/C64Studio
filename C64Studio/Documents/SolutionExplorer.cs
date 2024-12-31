@@ -1355,16 +1355,28 @@ namespace RetroDevStudio.Documents
     void openFolderClick( object sender, EventArgs e )
     {
       Project project = ProjectFromNode( m_ContextMenuNode, false );
+      var element     = ElementFromNode( m_ContextMenuNode );
+
+      if ( ( element != null )
+      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT )
+      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
+      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+      {
+        // a real file, select
+        string argument = "/select, \"" + element.DocumentInfo.FullPath +"\"";
+
+        Process.Start( "explorer.exe", argument );
+        return;
+      }
+
       string    openFolderPath = "";
       if ( project != null )
       {
         // project folder
         openFolderPath = project.Settings.BasePath;
       }
-      else
+      else if ( element != null )
       {
-        ProjectElement element = ElementFromNode( m_ContextMenuNode );
-
         if ( element.Document == null )
         {
           openFolderPath = element.Filename;
