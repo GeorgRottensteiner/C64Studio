@@ -195,6 +195,9 @@ namespace RetroDevStudio
         case MediaFilenameType.AMIGA:
           filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
           break;
+        case MediaFilenameType.SPECTRUM:
+          filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
+          break;
         default:
           throw new Exception( $"Unsupported Filenametype {FilenameType}" );
       }

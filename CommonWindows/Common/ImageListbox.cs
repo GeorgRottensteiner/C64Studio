@@ -481,7 +481,7 @@ namespace GR.Forms
         m_ItemsPerLine = 1;
       }
 
-      AdjustScrollbars();
+      //AdjustScrollbars();
     }
 
 
@@ -490,7 +490,8 @@ namespace GR.Forms
     {
       base.OnSizeChanged( e );
 
-      if ( m_DisplayWidth == -1 )
+      if ( ( m_DisplayWidth == -1 )
+      ||   ( m_DisplayPage.Width == 0 ) )
       {
         m_DisplayPage.Create( ClientRectangle.Width, ClientRectangle.Height, m_PixelFormat );
       }
@@ -517,18 +518,17 @@ namespace GR.Forms
       {
         actualWidth = m_DisplayWidth;
       }
+      /*
       if ( VisibleAutoScrollVertical )
       {
         actualWidth -= System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
-      }
+      }*/
 
       if ( m_ItemWidth == -1 )
       {
         m_ItemWidth = ClientRectangle.Width;
       }
       m_ItemsPerLine = actualWidth / m_ItemWidth;
-
-      //m_ItemsPerLine = ClientRectangle.Width / itemWidth;
       if ( m_ItemsPerLine == 0 )
       {
         m_ItemsPerLine = 1;

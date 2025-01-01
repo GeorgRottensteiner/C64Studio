@@ -9,6 +9,7 @@
     <Import_RootNamespace>C64Models</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\DefaultFileExtensionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\AdditionalArgumentCount.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
@@ -36,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor6510.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportGraphicScreenInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\AmigaDisk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\TZX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Define.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Macro.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Zone.cs" />
@@ -156,7 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Emulator\Interfaces\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Formats\Media\" />
     <Folder Include="$(MSBuildThisFileDirectory)Processors\" />
     <Folder Include="$(MSBuildThisFileDirectory)Version\" />
   </ItemGroup>

@@ -2699,18 +2699,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void panelSprites_Resize( object sender, EventArgs e )
-    {
-      int   newWidth = ( panelSprites.ClientSize.Width / 2 ) * 2;
-      int   newHeight = ( panelSprites.ClientSize.Height / 2 ) * 2;
-
-      // we use active client size, since we want to avoid distorted display (e.g. odd client size can't map *2 factors nicely)
-      panelSprites.SetDisplaySize( newWidth / 2, newHeight / 2 );
-      panelSprites.SetActiveClientSize( newWidth, newHeight );
-    }
-
-
-
     public void ImportFromData( ByteBuffer SpriteData )
     {
       if ( SpriteData == null )
@@ -3921,6 +3909,20 @@ namespace RetroDevStudio.Documents
       }
       RedrawPreviewLayer();
       pictureEditor.Invalidate();
+    }
+
+
+
+    private void panelSprites_ClientSizeChanged( object sender, EventArgs e )
+    {
+      var size = panelSprites.ClientSize;
+
+      int   newWidth = ( size.Width / 2 ) * 2;
+      int   newHeight = ( size.Height / 2 ) * 2;
+
+      // we use active client size, since we want to avoid distorted display (e.g. odd client size can't map *2 factors nicely)
+      panelSprites.SetDisplaySize( newWidth / 2, newHeight / 2 );
+      panelSprites.SetActiveClientSize( newWidth, newHeight );
     }
 
 

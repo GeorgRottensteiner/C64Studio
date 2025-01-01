@@ -38,6 +38,8 @@ namespace RetroDevStudio.Documents
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
+      this.btnMoveSelectionToTarget = new DecentForms.Button();
       this.labelSelectionInfo = new System.Windows.Forms.Label();
       this.btnHighlightDuplicates = new DecentForms.Button();
       this.btnChangeMode = new DecentForms.MenuButton();
@@ -155,8 +157,6 @@ namespace RetroDevStudio.Documents
       this.x16_16x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.x16_32x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.x16_64x64x256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnMoveSelectionToTarget = new DecentForms.Button();
-      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -218,6 +218,27 @@ namespace RetroDevStudio.Documents
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Sprite";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // editMoveTargetIndex
+      // 
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(396, 570);
+      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
+      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
+      this.editMoveTargetIndex.TabIndex = 0;
+      // 
+      // btnMoveSelectionToTarget
+      // 
+      this.btnMoveSelectionToTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveSelectionToTarget.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMoveSelectionToTarget.Image = null;
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(269, 568);
+      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
+      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(121, 23);
+      this.btnMoveSelectionToTarget.TabIndex = 1;
+      this.btnMoveSelectionToTarget.Text = "Move to Index";
+      this.btnMoveSelectionToTarget.Click += new DecentForms.EventHandler(this.btnMoveSelectionToTarget_Click);
       // 
       // labelSelectionInfo
       // 
@@ -351,7 +372,7 @@ namespace RetroDevStudio.Documents
       this.panelSprites.VisibleAutoScrollVertical = false;
       this.panelSprites.SelectedIndexChanged += new System.EventHandler(this.panelSprites_SelectedIndexChanged);
       this.panelSprites.SelectionChanged += new System.EventHandler(this.panelSprites_SelectionChanged);
-      this.panelSprites.Resize += new System.EventHandler(this.panelSprites_Resize);
+      this.panelSprites.ClientSizeChanged += new System.EventHandler(this.panelSprites_ClientSizeChanged);
       // 
       // tabPage2
       // 
@@ -1416,27 +1437,6 @@ namespace RetroDevStudio.Documents
       this.x16_64x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
       this.x16_64x64x256ToolStripMenuItem.Text = "64x64";
       this.x16_64x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
-      // 
-      // btnMoveSelectionToTarget
-      // 
-      this.btnMoveSelectionToTarget.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMoveSelectionToTarget.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMoveSelectionToTarget.Image = null;
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(269, 568);
-      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
-      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(121, 23);
-      this.btnMoveSelectionToTarget.TabIndex = 1;
-      this.btnMoveSelectionToTarget.Text = "Move to Index";
-      this.btnMoveSelectionToTarget.Click += new DecentForms.EventHandler(this.btnMoveSelectionToTarget_Click);
-      // 
-      // editMoveTargetIndex
-      // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(396, 570);
-      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
-      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
-      this.editMoveTargetIndex.TabIndex = 0;
       // 
       // SpriteEditor
       // 

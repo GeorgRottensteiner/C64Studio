@@ -132,6 +132,10 @@ namespace RetroDevStudio.Documents
         // prg file
         m_Media = new RetroDevStudio.Formats.PRG();
       }
+      else if ( upperName.EndsWith( ".TZX" ) )
+      {
+        m_Media = new RetroDevStudio.Formats.TZX();
+      }
       else
       {
         System.Windows.Forms.MessageBox.Show( "The file " + m_Filename + " cannot be read, unknown format" );
