@@ -286,30 +286,7 @@ namespace RetroDevStudio.Documents
 
           if ( !file.NotClosed )
           {
-            switch ( file.Type )
-            {
-              case Types.FileType.DEL:
-                fileType = "DEL";
-                break;
-              case Types.FileType.PRG:
-                fileType = "PRG";
-                break;
-              case Types.FileType.REL:
-                fileType = "REL";
-                break;
-              case Types.FileType.SEQ:
-                fileType = "SEQ";
-                break;
-              case Types.FileType.USR:
-                fileType = "USR";
-                break;
-              case Types.FileType.DIR:
-                fileType = "DIR";
-                break;
-              default:
-                fileType = "???";
-                break;
-            }
+            fileType = GR.EnumHelper.GetDescription( file.Type );
           }
 
           
@@ -434,7 +411,7 @@ namespace RetroDevStudio.Documents
           saveDlg.Title = "Select target file name for " + readableFilename;
           saveDlg.Filter = "All Files|*.*";
           saveDlg.FileName = readableFilename;
-          if ( fileToExport.Type == RetroDevStudio.Types.FileType.PRG )
+          if ( fileToExport.NativeType == FileTypeNative.COMMODORE_PRG )
           {
             saveDlg.FileName += ".prg";
           }
@@ -568,7 +545,7 @@ namespace RetroDevStudio.Documents
         {
           if ( m_Media != null )
           {
-            if ( !m_Media.WriteFile( file.Filename, fileInfo.Data, file.Type ) )
+            if ( !m_Media.WriteFile( file.Filename, fileInfo.Data, file.NativeType ) )
             {
               MessageBox.Show( $"The file {file.Filename} could not be imported, too big or invalid filename", "Error importing file" );
               return;
@@ -616,7 +593,8 @@ namespace RetroDevStudio.Documents
         }
         if ( m_Media != null )
         {
-          if ( m_Media.WriteFile( fileName, fileData, RetroDevStudio.Types.FileType.PRG ) )
+          // TODO - use valid type for media!
+          if ( m_Media.WriteFile( fileName, fileData, FileTypeNative.COMMODORE_PRG ) )
           {
             RefreshFileView();
             UpdateStatusInfo();
@@ -696,7 +674,7 @@ namespace RetroDevStudio.Documents
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
-        if ( fileInfo.Type != RetroDevStudio.Types.FileType.PRG )
+        if ( fileInfo.NativeType != FileTypeNative.COMMODORE_PRG )
         {
           exportToBasicPossible = false;
         }
@@ -724,31 +702,31 @@ namespace RetroDevStudio.Documents
 
       item = new System.Windows.Forms.ToolStripMenuItem( "Change File Type" );
       item.Tag = 2;
-      //item.Click += new EventHandler( itemChangeType_Click );
       contextMenu.Items.Add( item );
 
+      // TODO - only list valid options!
       var subItem = new ToolStripMenuItem( "PRG" );
-      subItem.Tag = FileType.PRG;
+      subItem.Tag = FileTypeNative.COMMODORE_PRG;
       subItem.Click += new EventHandler( itemChangeType_Click );
       item.DropDownItems.Add( subItem );
 
       subItem = new ToolStripMenuItem( "DEL" );
-      subItem.Tag = FileType.DEL;
+      subItem.Tag = FileTypeNative.COMMODORE_DEL;
       subItem.Click += new EventHandler( itemChangeType_Click );
       item.DropDownItems.Add( subItem );
 
       subItem = new ToolStripMenuItem( "USR" );
-      subItem.Tag = FileType.USR;
+      subItem.Tag = FileTypeNative.COMMODORE_USR;
       subItem.Click += new EventHandler( itemChangeType_Click );
       item.DropDownItems.Add( subItem );
 
       subItem = new ToolStripMenuItem( "REL" );
-      subItem.Tag = FileType.REL;
+      subItem.Tag = FileTypeNative.COMMODORE_REL;
       subItem.Click += new EventHandler( itemChangeType_Click );
       item.DropDownItems.Add( subItem );
 
       subItem = new ToolStripMenuItem( "SEQ" );
-      subItem.Tag = FileType.SEQ;
+      subItem.Tag = FileTypeNative.COMMODORE_SEQ;
       subItem.Click += new EventHandler( itemChangeType_Click );
       item.DropDownItems.Add( subItem );
 
@@ -769,19 +747,19 @@ namespace RetroDevStudio.Documents
 
     private void itemChangeType_Click( object sender, EventArgs e )
     {
-      var fileType = (FileType)( (ToolStripMenuItem)sender ).Tag;
+      var fileType = (FileTypeNative)( (ToolStripMenuItem)sender ).Tag;
       ChangeFileType( fileType );
     }
 
 
 
-    private void ChangeFileType( FileType NewFileType )
+    private void ChangeFileType( FileTypeNative NewFileType )
     {
       bool changedType = false;
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo fileToChange = (RetroDevStudio.Types.FileInfo)item.Tag;
-        if ( fileToChange.Type != NewFileType )
+        if ( fileToChange.NativeType != NewFileType )
         {
           m_Media.ChangeFileType( fileToChange, NewFileType );
           changedType = true;
@@ -1111,7 +1089,7 @@ namespace RetroDevStudio.Documents
         foreach ( ListViewItem listItem in listFiles.SelectedItems )
         {
           RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
-          if ( fileInfo.Type != RetroDevStudio.Types.FileType.PRG )
+          if ( fileInfo.NativeType != FileTypeNative.COMMODORE_PRG )
           {
             exportToBasicPossible = false;
             break;
@@ -1306,7 +1284,8 @@ namespace RetroDevStudio.Documents
       {
         var emptyFile = new ByteBuffer();
         var fileName = Util.ToFilename( m_Media.FilenameType, "new file" );
-        if ( m_Media.WriteFile( fileName, emptyFile, RetroDevStudio.Types.FileType.PRG ) )
+        // TODO - only valid types!
+        if ( m_Media.WriteFile( fileName, emptyFile, FileTypeNative.COMMODORE_PRG ) )
         {
           RefreshFileView();
           UpdateStatusInfo();
@@ -1371,7 +1350,7 @@ namespace RetroDevStudio.Documents
 
           fileName.AppendU8( ConstantData.ScreenCodeToChar[scrCode].PetSCIIValue );
         }
-        if ( m_Media.WriteFile( fileName, emptyFile, RetroDevStudio.Types.FileType.USR ) )
+        if ( m_Media.WriteFile( fileName, emptyFile, FileTypeNative.COMMODORE_USR ) )
         {
           changed = true;
         }
@@ -1408,7 +1387,7 @@ namespace RetroDevStudio.Documents
         return;
       }
       var fileInfo = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
-      if ( fileInfo.Type == FileType.DIR )
+      if ( fileInfo.Type == FileType.DIRECTORY )
       {
         if ( m_Media.ChangeDirectory( fileInfo.Filename ) )
         {

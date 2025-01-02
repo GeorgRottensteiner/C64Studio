@@ -172,9 +172,10 @@ namespace RetroDevStudio.Formats
 
       var info = new Types.FileInfo()
       {
-        Data      = new ByteBuffer( (uint)fileSize ),
-        Filename  = Filename,
-        Type      = FileType.PRG
+        Data        = new ByteBuffer( (uint)fileSize ),
+        Filename    = Filename,
+        Type        = FileType.FILE,
+        NativeType  = FileTypeNative.ADF_FILE
       };
 
       while ( true )
@@ -233,7 +234,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "file too large";
       return false;
@@ -441,11 +442,13 @@ namespace RetroDevStudio.Formats
           {
             case 0xfffffffd:
               // file header -3
-              info.Type = FileType.PRG;
+              info.Type = FileType.FILE;
+              info.NativeType = FileTypeNative.ADF_FILE;
               break;
             case 2:
               // directory
-              info.Type = FileType.DIR;
+              info.Type = FileType.DIRECTORY;
+              info.NativeType = FileTypeNative.ADF_DIR;
               break;
             default:
               Debug.Log( $"Unsupported file type in block! {fileType.ToString( "X" )}" );

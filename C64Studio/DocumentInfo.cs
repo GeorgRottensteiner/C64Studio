@@ -169,6 +169,39 @@ namespace RetroDevStudio
     }
 
 
+
+    public bool HasCustomBuild
+    {
+      get
+      {
+        // main document set and has custom build?
+        if ( ( Project != null )
+        &&   ( Project.Settings.CurrentConfig != null )
+        &&   ( Project.Settings.MainDocument != null ) )
+        {
+          var mainElement = Project.GetElementByFilename( Project.Settings.MainDocument );
+          if ( ( mainElement != null )
+          &&   ( mainElement != Element )
+          &&   ( !string.IsNullOrEmpty( Element.Settings[Project.Settings.CurrentConfig.Name].CustomBuild ) ) )
+          {
+            return true;
+          }
+        }
+
+        // has custom build?
+        if ( ( Project != null )
+        &&   ( Project.Settings.CurrentConfig != null )
+        &&   ( Element != null )
+        &&   ( !string.IsNullOrEmpty( Element.Settings[Project.Settings.CurrentConfig.Name].CustomBuild ) ) )
+        {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
+
     private static Dictionary<string,int>     _SetASMFileInfoStack = new Dictionary<string, int>();
 
     public void SetASMFileInfo( Types.ASM.FileInfo FileInfo )
@@ -216,54 +249,58 @@ namespace RetroDevStudio
       if ( compilableDoc != null )
       {
         compilableDoc.RemoveAllErrorMarkings();
-        foreach ( var msg in ASMFileInfo.Messages )
+
+        if ( !HasCustomBuild )
         {
-          int lineIndex = msg.Key;
-          Parser.ParserBase.ParseMessage message = msg.Value;
-
-          var msgType = message.Type;
-
-          if ( compilableDoc.Core.Settings.IgnoredWarnings.ContainsValue( message.Code ) )
+          foreach ( var msg in ASMFileInfo.Messages )
           {
-            // ignore warning
-            continue;
-          }
+            int lineIndex = msg.Key;
+            Parser.ParserBase.ParseMessage message = msg.Value;
 
-          string documentFile = "";
-          int documentLine = -1;
+            var msgType = message.Type;
 
-          ASMFileInfo.FindTrueLineSource( lineIndex, out documentFile, out documentLine );
-          if ( message.AlternativeFile == null )
-          {
-            message.AlternativeFile = documentFile;
-            message.AlternativeLineIndex = documentLine;
-          }
-
-          if ( message.CharIndex != -1 )
-          {
-            CompilableDocument    compilableDocToUse = null;
-            if ( Project == null )
+            if ( compilableDoc.Core.Settings.IgnoredWarnings.ContainsValue( message.Code ) )
             {
-              var sourceDocInfo = compilableDoc.Core.MainForm.DetermineDocumentByFileName( documentFile );
-              if ( sourceDocInfo != null )
-              {
-                compilableDocToUse = sourceDocInfo.CompilableDocument;
-              }
+              // ignore warning
+              continue;
             }
-            else
+
+            string documentFile = "";
+            int documentLine = -1;
+
+            ASMFileInfo.FindTrueLineSource( lineIndex, out documentFile, out documentLine );
+            if ( message.AlternativeFile == null )
             {
-              var  sourceElement = Project.GetElementByFilename( documentFile );
-              if ( sourceElement != null )
+              message.AlternativeFile = documentFile;
+              message.AlternativeLineIndex = documentLine;
+            }
+
+            if ( message.CharIndex != -1 )
+            {
+              CompilableDocument    compilableDocToUse = null;
+              if ( Project == null )
               {
-                if ( sourceElement.Document != null )
+                var sourceDocInfo = compilableDoc.Core.MainForm.DetermineDocumentByFileName( documentFile );
+                if ( sourceDocInfo != null )
                 {
-                  compilableDocToUse = sourceElement.DocumentInfo.CompilableDocument;
+                  compilableDocToUse = sourceDocInfo.CompilableDocument;
                 }
               }
-            }
-            if ( compilableDocToUse == compilableDoc )
-            {
-              compilableDoc.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+              else
+              {
+                var  sourceElement = Project.GetElementByFilename( documentFile );
+                if ( sourceElement != null )
+                {
+                  if ( sourceElement.Document != null )
+                  {
+                    compilableDocToUse = sourceElement.DocumentInfo.CompilableDocument;
+                  }
+                }
+              }
+              if ( compilableDocToUse == compilableDoc )
+              {
+                compilableDoc.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+              }
             }
           }
         }

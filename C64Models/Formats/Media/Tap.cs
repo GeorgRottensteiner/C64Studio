@@ -340,12 +340,15 @@ namespace RetroDevStudio.Formats
 
       foreach ( FileEntry file in TapFiles )
       {
-        var info = new Types.FileInfo();
+        var info = new Types.FileInfo()
+        {
+          Filename      = new GR.Memory.ByteBuffer( file.Filename ),
+          Blocks        = (int)( file.Data.Length + 253 ) / 254,
+          Type          = Types.FileType.FILE,
+          NativeType    = Types.FileTypeNative.COMMODORE_PRG,
+          DirEntryIndex = dirEntryIndex
+        };
 
-        info.Filename = new GR.Memory.ByteBuffer( file.Filename );
-        info.Blocks = (int)( file.Data.Length + 253 ) / 254;
-        info.Type = Types.FileType.PRG;
-        info.DirEntryIndex = dirEntryIndex;
         ++dirEntryIndex;
 
         files.Add( info );
@@ -380,9 +383,10 @@ namespace RetroDevStudio.Formats
       {
         if ( file.Filename.Compare( Filename ) == 0 )
         {
-          fileInfo.Filename = new GR.Memory.ByteBuffer( file.Filename );
-          fileInfo.Data = file.Data;
-          fileInfo.Type = Types.FileType.PRG;
+          fileInfo.Filename   = new GR.Memory.ByteBuffer( file.Filename );
+          fileInfo.Data       = file.Data;
+          fileInfo.Type       = Types.FileType.FILE;
+          fileInfo.NativeType = Types.FileTypeNative.COMMODORE_PRG;
           return fileInfo;
         }
       }
@@ -392,14 +396,14 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "";
       FileEntry   file = new FileEntry();
 
       file.Filename     = new GR.Memory.ByteBuffer( Filename );
       file.Data         = new GR.Memory.ByteBuffer( Content );
-      if ( Type == Types.FileType.PRG )
+      if ( Type == Types.FileTypeNative.COMMODORE_PRG )
       {
         if ( Content.Length >= 2 )
         {

@@ -1,5 +1,6 @@
 ﻿using GR.Memory;
 using RetroDevStudio;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,18 +57,20 @@ namespace RetroDevStudio.Formats
         var info = new RetroDevStudio.Types.FileInfo()
         {
           Size          = (int)block.Length,
-          Type          = Types.FileType.PRG,
+          Type          = Types.FileType.FILE,
           DirEntryIndex = 0
         };
         fileList.Add( info );
 
-        if ( block.ByteAt( 0 ) == 0x10 )
+        info.NativeType = (FileTypeNative)block.ByteAt( 0 );
+
+        if ( (FileTypeNative)block.ByteAt( 0 ) == FileTypeNative.TZX_STANDARD_SPEED_DATA_BLOCK )
         {
           if ( ( block.ByteAt( 1 + 0 ) == 0 )
           &&   ( block.ByteAt( 1 + 1 ) == 0 ) )
           {
             fileList.Last().Filename = block.SubBuffer( 1 + 2, 10 );
-            fileList.Last().Type     = Types.FileType.PRG;
+            fileList.Last().Type     = Types.FileType.FILE;
           }
         }
       }
@@ -114,11 +117,10 @@ namespace RetroDevStudio.Formats
       reader.Skip( 10 );
       while ( reader.DataAvailable )
       {
-        var blockID = reader.ReadUInt8();
+        var blockID = (FileTypeNative)reader.ReadUInt8();
         switch ( blockID )
         {
-          case 0x10:
-            // standard speed data block
+          case FileTypeNative.TZX_STANDARD_SPEED_DATA_BLOCK:
             {
               ushort  pause       = reader.ReadUInt16();
               ushort  dataLength  = reader.ReadUInt16();
@@ -146,8 +148,7 @@ namespace RetroDevStudio.Formats
                       lastDataLength    = binData.UInt16At( 12 );
                       lastAutostartLine = binData.UInt16At( 14 );
                       lastProgramLength = binData.UInt16At( 16 );
-                      //Debug.Log( $"File {lastFilename} found" );
-                      binData.Insert( 0, blockID, 1 );
+                      binData.Insert( 0, (byte)blockID, 1 );
                       _Blocks.Add( binData );
                       break;
                     default:
@@ -162,10 +163,8 @@ namespace RetroDevStudio.Formats
                   {
                     return false;
                   }
-                  binData.Insert( 0, blockID, 1 );
+                  binData.Insert( 0, (byte)blockID, 1 );
                   _Blocks.Add( binData );
-                  //Debug.Log( $"-data block with {binData.Length - 2} bytes found" );
-                  //Debug.Log( binData.ToString() );
                 }
                 else
                 {
@@ -175,91 +174,70 @@ namespace RetroDevStudio.Formats
               }
             }
             break;
-          case 0x11:
-            // turbo speed datablock
+          case FileTypeNative.TZX_TURBO_SPEED_DATA_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x12:
-            // pure tone
+          case FileTypeNative.TZX_PURE_TONE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x13:
-            // pulse sequence
+          case FileTypeNative.TZX_PULSE_SEQUENCE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x14:
-            // pure data block
+          case FileTypeNative.TZX_PURE_DATA_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x15:
-            // direct recording block
+          case FileTypeNative.TZX_DIRECT_RECORDING_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x16:
-            // C64 ROM block (deprecated)
+          case FileTypeNative.TZX_C64_ROM_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x17:
-            // C64 turbo block (deprecated)
+          case FileTypeNative.TZX_C64_TURBO_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x18:
-            // CSW recording block v1.20
+          case FileTypeNative.TZX_CSW_RECORDING_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x19:
-            // generalized data block v1.20
+          case FileTypeNative.TZX_GENERALIZED_DATA_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x20:
-            // pause or stop the tape
+          case FileTypeNative.TZX_PAUSE_OR_STOP_TAPE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x21:
-            // group start
+          case FileTypeNative.TZX_GROUP_START:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x22:
-            // group end
+          case FileTypeNative.TZX_GROUP_END:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x23:
-            // jump to block
+          case FileTypeNative.TZX_JUMP_TO_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x24:
-            // loop start
+          case FileTypeNative.TZX_LOOP_START:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x25:
-            // loop end
+          case FileTypeNative.TZX_LOOP_END:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x26:
-            // call sequence
+          case FileTypeNative.TZX_CALL_SEQUENCE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x27:
-            // return from sequence
+          case FileTypeNative.TZX_RETURN_FROM_SEQUENCE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x28:
-            // select block
+          case FileTypeNative.TZX_SELECT_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x2A:
-            // stop tape in 48k mode
+          case FileTypeNative.TZX_STOP_TAPE_48K:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x2B:
-            // set signal level v1.20
+          case FileTypeNative.TZX_SET_SIGNAL:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x30:
-            // text description
+          case FileTypeNative.TZX_TEXT_DESCRIPTION:
             {
               var totalBlock = new ByteBuffer();
-              totalBlock.AppendU8( blockID );
+              totalBlock.AppendU8( (byte)blockID );
 
               uint   length = reader.ReadUInt8();
 
@@ -271,32 +249,25 @@ namespace RetroDevStudio.Formats
               _Blocks.Add( totalBlock );
             }
             break;
-          case 0x31:
-            // message
+          case FileTypeNative.TZX_MESSAGE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x32:
-            // archive info
+          case FileTypeNative.TZX_ARCHIVE_INFO:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x33:
-            // hardware type
+          case FileTypeNative.TZX_HARDWARE_TYPE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x34:
-            // emulation info (deprecated)
+          case FileTypeNative.TZX_EMULATION_INFO:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x35:
-            // custom info
+          case FileTypeNative.TZX_CUSTOM_INFO:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x40:
-            // screen$ block (deprecated)
+          case FileTypeNative.TZX_SCREEN_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case 0x5A:
-            // skip (glue) block
+          case FileTypeNative.TZX_SKIP_GLUE_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
           default:
@@ -304,8 +275,6 @@ namespace RetroDevStudio.Formats
             return false;
         }
       }
-
-      //this.Filename = new GR.Memory.ByteBuffer( Encoding.UTF8.GetBytes( GR.Path.GetFileNameWithoutExtension( Filename ).ToUpper() ) );
       return true;
     }
 
@@ -350,7 +319,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "";
       /*

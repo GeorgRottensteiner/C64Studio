@@ -351,7 +351,10 @@ namespace RetroDevStudio
     {
       if ( Document.DocumentInfo.Project != null )
       {
-        Core.TaskManager.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
+        if ( !Document.DocumentInfo.HasCustomBuild )
+        {
+          Core.TaskManager.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
+        }
       }
       else
       {

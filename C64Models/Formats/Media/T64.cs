@@ -67,7 +67,7 @@ namespace RetroDevStudio.Formats
     public class FileRecord
     {
       public byte     EntryType = 0;
-      public Types.FileType C64FileType = Types.FileType.SCRATCHED;
+      public Types.FileTypeNative FileTypeNative =  Types.FileTypeNative.COMMODORE_SCRATCHED;
       public ushort   StartAddress = 0;
       public ushort   EndAddress = 0;
       public ushort   Filler = 0;
@@ -207,7 +207,7 @@ namespace RetroDevStudio.Formats
         else
         {
           result.AppendU8( (byte)FileRecords[i].EntryType );
-          result.AppendU8( (byte)FileRecords[i].C64FileType );
+          result.AppendU8( (byte)FileRecords[i].FileTypeNative );
           result.AppendU16( FileRecords[i].StartAddress );
           result.AppendU16( (ushort)( FileRecords[i].StartAddress + FileDatas[i].Length ) );
           result.AppendU16( 0 );
@@ -256,9 +256,10 @@ namespace RetroDevStudio.Formats
 
           info.Filename   = file.Filename;
           info.Blocks     = ( file.EndAddress - file.StartAddress ) / 254 + 1;
-          info.Type       = (Types.FileType)( (int)file.C64FileType & 0x3f );
-          info.ReadOnly   = ( file.C64FileType & Types.FileType.LOCKED ) != 0;
-          info.NotClosed  = ( file.C64FileType & Types.FileType.CLOSED ) == 0;
+          info.Type       = Types.FileType.FILE;
+          info.NativeType = Types.FileTypeNative.COMMODORE_PRG;
+          info.ReadOnly   = ( file.FileTypeNative & Types.FileTypeNative.COMMODORE_LOCKED ) != 0;
+          info.NotClosed  = ( file.FileTypeNative & Types.FileTypeNative.COMMODORE_CLOSED ) == 0;
           info.DirEntryIndex = dirEntryIndex;
           ++dirEntryIndex;
 
@@ -359,10 +360,10 @@ namespace RetroDevStudio.Formats
           entryPos += 32;
           continue;
         }
-        file.C64FileType = (Types.FileType)data.ByteAt( entryPos + 1 );
-        file.StartAddress = data.UInt16At( entryPos + 2 );
-        file.EndAddress   = data.UInt16At( entryPos + 4 );
-        file.FileOffset   = data.UInt32At( entryPos + 8 );
+        file.FileTypeNative = (Types.FileTypeNative)data.ByteAt( entryPos + 1 );
+        file.StartAddress   = data.UInt16At( entryPos + 2 );
+        file.EndAddress     = data.UInt16At( entryPos + 4 );
+        file.FileOffset     = data.UInt32At( entryPos + 8 );
         for ( int j = 0; j < 16; ++j )
         {
           file.Filename.AppendU8( data.ByteAt( entryPos + 16 + j ) );
@@ -400,9 +401,10 @@ namespace RetroDevStudio.Formats
             exportData.AppendU16( file.StartAddress );
             exportData.Append( FileDatas[fileIndex] );
 
-            fileInfo.Data = exportData;
-            fileInfo.Filename = new GR.Memory.ByteBuffer( file.Filename );
-            fileInfo.Type = Types.FileType.PRG;
+            fileInfo.Data       = exportData;
+            fileInfo.Filename   = new GR.Memory.ByteBuffer( file.Filename );
+            fileInfo.Type       = Types.FileType.FILE;
+            fileInfo.NativeType = Types.FileTypeNative.COMMODORE_PRG;
             return fileInfo;
           }
         }
@@ -414,7 +416,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "";
 
@@ -424,24 +426,16 @@ namespace RetroDevStudio.Formats
         if ( file.EntryType == 0 )
         {
           // free slot found
-          file.EntryType    = 1;
-          file.C64FileType  = Type;
-          if ( Type == Types.FileType.PRG )
+          file.EntryType      = 1;
+          file.FileTypeNative = Type;
+          file.StartAddress   = Content.UInt16At( 0 );
+          if ( Content.Length < 2 )
           {
-            file.StartAddress = Content.UInt16At( 0 );
-            if ( Content.Length < 2 )
-            {
-              FileDatas[fileIndex] = new GR.Memory.ByteBuffer();
-            }
-            else
-            {
-              FileDatas[fileIndex] = Content.SubBuffer( 2 );
-            }
+            FileDatas[fileIndex] = new GR.Memory.ByteBuffer();
           }
           else
           {
-            file.StartAddress = 0x0801;
-            FileDatas[fileIndex] = new GR.Memory.ByteBuffer( Content );
+            FileDatas[fileIndex] = Content.SubBuffer( 2 );
           }
           file.EndAddress = (ushort)( file.StartAddress + Content.Length );
           file.FileOffset = 0;
@@ -488,11 +482,11 @@ namespace RetroDevStudio.Formats
         {
           if ( file.Filename == Filename )
           {
-            file.EntryType = 0;
-            file.C64FileType = Types.FileType.SCRATCHED;
-            file.StartAddress = 0;
-            file.EndAddress = 0;
-            file.FileOffset = 0;
+            file.EntryType      = 0;
+            file.FileTypeNative = Types.FileTypeNative.COMMODORE_SCRATCHED;
+            file.StartAddress   = 0;
+            file.EndAddress     = 0;
+            file.FileOffset     = 0;
 
             FileDatas[fileIndex] = new GR.Memory.ByteBuffer();
             return true;

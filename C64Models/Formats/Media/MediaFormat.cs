@@ -15,7 +15,7 @@ namespace RetroDevStudio.Formats
     public abstract bool Save( string Filename );
 
     public abstract Types.FileInfo LoadFile( GR.Memory.ByteBuffer Filename );
-    public abstract bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, RetroDevStudio.Types.FileType Type );
+    public abstract bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, FileTypeNative Type );
     public abstract bool DeleteFile( GR.Memory.ByteBuffer Filename, bool CompleteDelete = true );
     public abstract bool RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename );
 
@@ -125,9 +125,9 @@ namespace RetroDevStudio.Formats
 
 
 
-    public virtual void ChangeFileType( FileInfo FileToChange, FileType NewFileType )
+    public virtual void ChangeFileType( FileInfo FileToChange, FileTypeNative NewFileType )
     {
-      FileToChange.Type = NewFileType;
+      FileToChange.NativeType = NewFileType;
     }
 
   }

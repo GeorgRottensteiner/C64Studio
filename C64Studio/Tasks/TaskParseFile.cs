@@ -30,6 +30,11 @@ namespace RetroDevStudio.Tasks
         return true;
       }
 
+      if ( m_Document.HasCustomBuild )
+      {
+        return true;
+      }
+
       if ( m_Document.Type == ProjectElement.ElementType.ASM_SOURCE )
       {
         Parser.ASMFileParser parser = new Parser.ASMFileParser();

@@ -2799,7 +2799,7 @@ namespace RetroDevStudio.Parser
         d64.CreateEmptyMedia();
 
         GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, outputPureFilename );
-        d64.WriteFile( bufName, AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
+        d64.WriteFile( bufName, AssembledOutput.Assembly, FileTypeNative.COMMODORE_PRG );
 
         AssembledOutput.Assembly = d64.Compile();
       }
@@ -2810,7 +2810,7 @@ namespace RetroDevStudio.Parser
         d81.CreateEmptyMedia();
 
         GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, outputPureFilename );
-        d81.WriteFile( bufName, AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
+        d81.WriteFile( bufName, AssembledOutput.Assembly, FileTypeNative.COMMODORE_PRG );
 
         AssembledOutput.Assembly = d81.Compile();
       }
@@ -2818,7 +2818,7 @@ namespace RetroDevStudio.Parser
       {
         Formats.Tap tap = new RetroDevStudio.Formats.Tap();
 
-        tap.WriteFile( Util.ToFilename( Formats.MediaFilenameType.COMMODORE, outputPureFilename ), AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
+        tap.WriteFile( Util.ToFilename( Formats.MediaFilenameType.COMMODORE, outputPureFilename ), AssembledOutput.Assembly, FileTypeNative.COMMODORE_PRG );
         AssembledOutput.Assembly = tap.Compile();
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )

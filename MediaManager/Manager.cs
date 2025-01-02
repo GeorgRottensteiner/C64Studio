@@ -35,7 +35,7 @@ namespace MediaManager
       string  expectingParameterName = "";
       string  methodToUse = "";
       bool    verboseLog = true;
-      RetroDevStudio.Types.FileType fileType = RetroDevStudio.Types.FileType.PRG;
+      var fileType = RetroDevStudio.Types.FileTypeNative.COMMODORE_PRG;
 
       GR.Collections.Map<string,string>   paramMap = new GR.Collections.Map<string,string>();
 
@@ -48,22 +48,23 @@ namespace MediaManager
 
           if ( expectingParameterName == "-FILETYPE" )
           { 
+            // TODO - add all types!
             switch ( args[i].ToUpper() )
             {
               case "PRG":
-                fileType = RetroDevStudio.Types.FileType.PRG;
+                fileType = RetroDevStudio.Types.FileTypeNative.COMMODORE_PRG;
                 break;
               case "SEQ":
-                fileType = RetroDevStudio.Types.FileType.SEQ;
+                fileType = RetroDevStudio.Types.FileTypeNative.COMMODORE_SEQ;
                 break;
               case "REL":
-                fileType = RetroDevStudio.Types.FileType.REL;
+                fileType = RetroDevStudio.Types.FileTypeNative.COMMODORE_REL;
                 break;
               case "USR":
-                fileType = RetroDevStudio.Types.FileType.USR;
+                fileType = RetroDevStudio.Types.FileTypeNative.COMMODORE_USR;
                 break;
               case "DEL":
-                fileType = RetroDevStudio.Types.FileType.DEL;
+                fileType = RetroDevStudio.Types.FileTypeNative.COMMODORE_DEL;
                 break;
               default:
                 System.Console.Error.WriteLine( "Unsupported file type " + args[i] );

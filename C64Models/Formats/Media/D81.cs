@@ -394,7 +394,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileType Type )
+    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
     {
       _LastError = "";
       Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
@@ -410,7 +410,7 @@ namespace RetroDevStudio.Formats
             // scratched (empty) entry
 
             // default set PRG
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileType.CLOSED ) );
+            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileTypeNative.COMMODORE_CLOSED ) );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
 

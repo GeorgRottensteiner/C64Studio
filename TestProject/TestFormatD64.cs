@@ -26,7 +26,7 @@ namespace TestProject
       d64.CreateEmptyMedia();
 
       var emptyDisk = d64.Compile();
-      d64.WriteFile( filename, fileContent, FileType.PRG );
+      d64.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
 
       var diskWithFile = d64.Compile();
       d64.DeleteFile( filename, true );
@@ -46,7 +46,7 @@ namespace TestProject
       var d64 = new D64();
       d64.CreateEmptyMedia();
 
-      d64.WriteFile( filename, fileContent, FileType.PRG );
+      d64.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
       var file = d64.LoadFile( filename );
       Assert.IsNotNull( file, "File was not found on disk!" );
       Assert.AreEqual( filename + new ByteBuffer( 13, 0xa0 ), file.Filename );

@@ -23,7 +23,10 @@ namespace RetroDevStudio.Tasks
       {
         return false;
       }
-
+      if ( Doc.DocumentInfo.HasCustomBuild )
+      {
+        return true;
+      }
       Doc.OnKnownKeywordsChanged();
 
       if ( Doc.InvokeRequired )

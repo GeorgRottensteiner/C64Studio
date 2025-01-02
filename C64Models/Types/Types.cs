@@ -580,28 +580,6 @@ namespace RetroDevStudio.Types
     COMMODORE
   }
 
-  public enum FileType
-  {
-    [Description( "SCR" )]
-    SCRATCHED = 0x00,
-    [Description( "DEL" )]
-    DEL = 0x00,
-    [Description( "SEQ" )]
-    SEQ = 0x01,
-    [Description( "PRG" )]
-    PRG = 0x02,
-    [Description( "USR" )]
-    USR = 0x03,
-    [Description( "REL" )]
-    REL = 0x04,
-    [Description( "DIR" )]
-    DIR = 0x05,
-
-    // Commodore specific!
-    LOCKED = 0x40,
-    CLOSED = 0x80
-  }
-
   public class FileInfo
   {
     public GR.Memory.ByteBuffer Filename = new GR.Memory.ByteBuffer( 16 );
@@ -627,7 +605,8 @@ namespace RetroDevStudio.Types
        Bit   7: Closed flag  (Not  set  produces  "*", or "splat"
                   files)
      */
-    public FileType Type = FileType.SCRATCHED;
+    public FileType Type              = FileType.NONE;
+    public FileTypeNative NativeType  = FileTypeNative.NONE;
 
     public bool ReadOnly = false;     // Bit 6 for Commodore DOS, flag for CPC DSK
     public bool NotClosed = false;    // Bit 7 for Commodore DOS (*, splat)

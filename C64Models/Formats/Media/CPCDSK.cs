@@ -279,6 +279,9 @@ namespace RetroDevStudio.Formats
       int startSectorID = _Tracks[0][0].Sectors[0].SectorID;
 
       file.Filename   = Filename;
+      file.Type       = FileType.FILE;
+      file.NativeType = FileTypeNative.CPC_FILE;
+
 
       bool  complete = false;
       int   fileEntryIndex = 0;
@@ -463,7 +466,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "";
       if ( LoadFile( Filename ) != null )
@@ -1185,7 +1188,8 @@ namespace RetroDevStudio.Formats
           var file = new FileInfo()
           {
             Filename    = dirEntry.SubBuffer( 1, 8 ),
-            Type        = FileType.PRG
+            Type        = FileType.FILE,
+            NativeType  = FileTypeNative.CPC_FILE
           };
 
           byte userLevel = dirEntry.ByteAt( dirEntryPos );
@@ -1202,7 +1206,8 @@ namespace RetroDevStudio.Formats
           // deleted entry?
           if ( userLevel == 0xe5 )
           {
-            file.Type = FileType.SCRATCHED;
+            file.Type       = FileType.NONE;
+            file.NativeType = FileTypeNative.CPC_SCRATCHED;
           }
           // records
           file.Size = dirEntry.ByteAt( 0x0f ) * 128;

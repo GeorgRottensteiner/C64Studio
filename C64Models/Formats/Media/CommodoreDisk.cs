@@ -480,7 +480,7 @@ namespace RetroDevStudio.Formats
           if ( fileTrack != 0 )
           {
             // valid entry?
-            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
+            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
             {
               GR.Memory.ByteBuffer filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
               if ( Filename.Compare( filename ) == 0 )
@@ -514,7 +514,8 @@ namespace RetroDevStudio.Formats
     {
       FileInfo.StartTrack   = StartTrack;
       FileInfo.StartSector  = StartSector;
-      FileInfo.Type         = (Types.FileType)( FileType & 0x07 );
+      FileInfo.NativeType   = (FileTypeNative)( FileType & 0x07 );
+      FileInfo.Type         = Types.FileType.FILE;
       FileInfo.Blocks       = NumBlocks;
 
       FileInfo.ReadOnly     = ( FileType & 64 ) != 0;
@@ -679,7 +680,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileType Type )
+    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
     {
       _LastError = "";
       Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
@@ -704,7 +705,7 @@ namespace RetroDevStudio.Formats
               sect.Data.SetU8At( 0, 0 );
               sect.Data.SetU8At( 1, 0 );
             }
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileType.CLOSED ) );
+            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileTypeNative.COMMODORE_CLOSED ) );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
 
@@ -932,7 +933,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "";
       GR.Memory.ByteBuffer    dataToWrite = new GR.Memory.ByteBuffer( Content );
@@ -1202,7 +1203,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
           {
             // valid entry?
             var info = new Types.FileInfo();
@@ -1238,7 +1239,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
           int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
-          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
           {
             // valid entry?
             if ( ( fileTrack == Track )
@@ -1274,7 +1275,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
           {
             // valid entry?
             if ( DirEntryIndex == entryIndex )
@@ -1423,7 +1424,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override void ChangeFileType( FileInfo FileToChange, FileType NewFileType )
+    public override void ChangeFileType( FileInfo FileToChange, FileTypeNative NewFileType )
     {
       base.ChangeFileType( FileToChange, NewFileType );
 
@@ -1435,7 +1436,7 @@ namespace RetroDevStudio.Formats
 
       Sector secOrig = Tracks[dirEntry.Track - 1].Sectors[dirEntry.Sector];
 
-      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)( NewFileType | FileType.CLOSED ) );
+      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)( NewFileType | FileTypeNative.COMMODORE_CLOSED ) );
     }
 
 
@@ -1474,7 +1475,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
           {
             // valid entry?
             Types.FileInfo info = new Types.FileInfo();

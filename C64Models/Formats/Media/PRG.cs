@@ -53,11 +53,14 @@ namespace RetroDevStudio.Formats
       _LastError = "";
       var  fileList = new List<RetroDevStudio.Types.FileInfo>();
 
-      var info = new RetroDevStudio.Types.FileInfo();
-      info.Filename = Filename;
-      info.Blocks   = (int)Data.Length / 254;
-      info.Type     = Types.FileType.PRG;
-      info.DirEntryIndex = 0;
+      var info        = new RetroDevStudio.Types.FileInfo()
+      {
+        Filename      = Filename,
+        Blocks        = (int)Data.Length / 254,
+        Type          = Types.FileType.FILE,
+        NativeType    = Types.FileTypeNative.COMMODORE_PRG,
+        DirEntryIndex = 0
+      };
 
       fileList.Add( info );
       return fileList;
@@ -105,21 +108,24 @@ namespace RetroDevStudio.Formats
         _LastError = "file not found";
         return null;
       }
-      var fileInfo = new Types.FileInfo();
-      fileInfo.Type = Types.FileType.PRG;
-      fileInfo.Data = new GR.Memory.ByteBuffer( Data );
-      fileInfo.Filename = new GR.Memory.ByteBuffer( Filename );
+      var fileInfo = new Types.FileInfo()
+      {
+        Type        = Types.FileType.FILE,
+        NativeType  = Types.FileTypeNative.COMMODORE_PRG,
+        Data        = new GR.Memory.ByteBuffer( Data ),
+        Filename    = new GR.Memory.ByteBuffer( Filename )
+      };
 
       return fileInfo;
     }
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
     {
       _LastError = "";
       if ( ( Data.Length > 0 )
-      ||   ( Type != Types.FileType.PRG ) )
+      ||   ( Type != Types.FileTypeNative.COMMODORE_PRG ) )
       {
         _LastError = "invalid file type";
         return false;

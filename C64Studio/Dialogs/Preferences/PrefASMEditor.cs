@@ -46,8 +46,14 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       foreach ( var encoding in allEncodings )
       {
-        comboASMEncoding.Items.Add( new GR.Generic.Tupel<string, Encoding>( encoding.DisplayName + "      Codepage " + encoding.CodePage, encoding.GetEncoding() ) );
-        if ( encoding.Name == Core.Settings.SourceFileEncoding.WebName )
+        var encodingToSet = encoding.GetEncoding();
+        if ( encodingToSet.WebName.ToUpper() == "UTF-8" )
+        {
+          encodingToSet = new System.Text.UTF8Encoding( false );
+        }
+
+        comboASMEncoding.Items.Add( new GR.Generic.Tupel<string, Encoding>( encodingToSet.EncodingName + "      Codepage " + encodingToSet.CodePage, encodingToSet ) );
+        if ( encodingToSet.WebName == Core.Settings.SourceFileEncoding.WebName )
         {
           comboASMEncoding.SelectedIndex = comboASMEncoding.Items.Count - 1;
         }
@@ -306,7 +312,6 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void comboASMEncoding_SelectedIndexChanged( object sender, EventArgs e )
     {
       var  newEncoding = (GR.Generic.Tupel<string, Encoding>)comboASMEncoding.SelectedItem;
-
       Core.Settings.SourceFileEncoding = newEncoding.second;
     }
 
