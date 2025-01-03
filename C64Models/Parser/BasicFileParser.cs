@@ -2467,6 +2467,10 @@ namespace RetroDevStudio.Parser
         var pureInfo = PureTokenizeLine( line );
         pureInfo.LineNumber = lastLineNumber;
         pureInfo.LineIndex  = lineIndex;
+        if ( LabelMode )
+        {
+          pureInfo.ReferencedLineNumbers.Clear();
+        }
 
         // remember last line source if a line number was present
         if ( ( pureInfo.Tokens.Count > 0 )
