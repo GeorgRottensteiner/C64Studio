@@ -1274,7 +1274,8 @@ namespace RetroDevStudio.Formats
             {
             }
           }
-             
+
+          file.Info = $"Track {file.StartTrack}, Sector {file.StartSector}";
           files.Add( file );
           //Debug.Log( "File is " + file.Data.ToString() );
 

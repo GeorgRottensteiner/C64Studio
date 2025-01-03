@@ -73,6 +73,18 @@ namespace GR
 
       public static bool operator ==( Tupel<T1, T2> Obj1, Tupel<T1, T2> Obj2 )
       {
+        if ( object.ReferenceEquals( Obj1, null ) )
+        {
+          if ( object.ReferenceEquals( Obj2, null ) )
+          {
+            return true;
+          }
+          return false;
+        }
+        if ( object.ReferenceEquals( Obj2, null ) )
+        {
+          return false;
+        }
         return Obj1.Equals( Obj2 );
       }
 

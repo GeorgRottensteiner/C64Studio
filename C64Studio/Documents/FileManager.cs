@@ -281,7 +281,7 @@ namespace RetroDevStudio.Documents
           string filename = Util.FilenameToUnicode( m_Media.FilenameType, displayFilename );
 
           ListViewItem item = new ListViewItem( filename );
-          item.SubItems.Add( file.Blocks.ToString() );
+          item.SubItems.Add( file.Size.ToString() );
           string     fileType = "";
 
           if ( !file.NotClosed )
@@ -299,8 +299,7 @@ namespace RetroDevStudio.Documents
             fileType += "<";
           }
           item.SubItems.Add( fileType );
-          item.SubItems.Add( file.StartTrack.ToString() );
-          item.SubItems.Add( file.StartSector.ToString() );
+          item.SubItems.Add( file.Info );
           item.Tag = file;
 
           listFiles.Items.Add( item );

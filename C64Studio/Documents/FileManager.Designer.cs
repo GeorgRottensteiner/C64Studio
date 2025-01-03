@@ -51,12 +51,13 @@
       this.importDirArtFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.dumpBAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.listFiles = new RetroDevStudio.Controls.MeasurableListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.statusMedia = new System.Windows.Forms.StatusStrip();
       this.statusFileManager = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -73,8 +74,6 @@
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
       this.labelFolder = new System.Windows.Forms.Label();
       this.btnUp = new DecentForms.Button();
-      this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.dumpBAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -164,46 +163,46 @@
       // d64ToolStripMenuItem
       // 
       this.d64ToolStripMenuItem.Name = "d64ToolStripMenuItem";
-      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d64ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d64ToolStripMenuItem.Text = "D64";
       this.d64ToolStripMenuItem.Click += new System.EventHandler(this.d64ToolStripMenuItem_Click);
       // 
       // d64With40TracksToolStripMenuItem
       // 
       this.d64With40TracksToolStripMenuItem.Name = "d64With40TracksToolStripMenuItem";
-      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
       this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
       // 
       // d71ToolStripMenuItem
       // 
       this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
-      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d71ToolStripMenuItem.Text = "D71";
       this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
       // 
       // d81ToolStripMenuItem
       // 
       this.d81ToolStripMenuItem.Name = "d81ToolStripMenuItem";
-      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.d81ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.d81ToolStripMenuItem.Text = "D81";
       this.d81ToolStripMenuItem.Click += new System.EventHandler(this.d81ToolStripMenuItem_Click);
       // 
       // toolStripSeparator7
       // 
       this.toolStripSeparator7.Name = "toolStripSeparator7";
-      this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
+      this.toolStripSeparator7.Size = new System.Drawing.Size(170, 6);
       // 
       // cPCDSKToolStripMenuItem
       // 
       this.cPCDSKToolStripMenuItem.Name = "cPCDSKToolStripMenuItem";
-      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.cPCDSKToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.cPCDSKToolStripMenuItem.Text = "CPC DSK";
       // 
       // cPCDSKExtendedToolStripMenuItem
       // 
       this.cPCDSKExtendedToolStripMenuItem.Name = "cPCDSKExtendedToolStripMenuItem";
-      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.cPCDSKExtendedToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.cPCDSKExtendedToolStripMenuItem.Text = "CPC DSK extended";
       this.cPCDSKExtendedToolStripMenuItem.Click += new System.EventHandler(this.cPCDSKExtendedToolStripMenuItem_Click);
       // 
@@ -251,6 +250,21 @@
       this.closeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.closeToolStripMenuItem.Text = "&Close";
       // 
+      // debugToolStripMenuItem
+      // 
+      this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dumpBAMToolStripMenuItem});
+      this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+      this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+      this.debugToolStripMenuItem.Text = "Debug";
+      // 
+      // dumpBAMToolStripMenuItem
+      // 
+      this.dumpBAMToolStripMenuItem.Name = "dumpBAMToolStripMenuItem";
+      this.dumpBAMToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+      this.dumpBAMToolStripMenuItem.Text = "Dump BAM";
+      this.dumpBAMToolStripMenuItem.Click += new System.EventHandler(this.dumpBAMToolStripMenuItem_Click);
+      // 
       // listFiles
       // 
       this.listFiles.AllowDrop = true;
@@ -261,8 +275,7 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5});
+            this.columnHeader4});
       this.listFiles.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.listFiles.FullRowSelect = true;
       this.listFiles.HideSelection = false;
@@ -289,7 +302,7 @@
       // 
       // columnHeader2
       // 
-      this.columnHeader2.Text = "Blocks";
+      this.columnHeader2.Text = "Size";
       this.columnHeader2.Width = 96;
       // 
       // columnHeader3
@@ -298,13 +311,8 @@
       // 
       // columnHeader4
       // 
-      this.columnHeader4.Text = "Track";
-      this.columnHeader4.Width = 40;
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "Sector";
-      this.columnHeader5.Width = 49;
+      this.columnHeader4.Text = "Add. Info";
+      this.columnHeader4.Width = 140;
       // 
       // statusMedia
       // 
@@ -486,21 +494,6 @@
       this.btnUp.Text = "Up";
       this.btnUp.Click += new DecentForms.EventHandler(this.btnUp_Click);
       // 
-      // debugToolStripMenuItem
-      // 
-      this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.dumpBAMToolStripMenuItem});
-      this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-      this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-      this.debugToolStripMenuItem.Text = "Debug";
-      // 
-      // dumpBAMToolStripMenuItem
-      // 
-      this.dumpBAMToolStripMenuItem.Name = "dumpBAMToolStripMenuItem";
-      this.dumpBAMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-      this.dumpBAMToolStripMenuItem.Text = "Dump BAM";
-      this.dumpBAMToolStripMenuItem.Click += new System.EventHandler(this.dumpBAMToolStripMenuItem_Click);
-      // 
       // FileManager
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -549,7 +542,6 @@
     private System.Windows.Forms.ToolStripButton toolStripBtnMoveFileUp;
     private System.Windows.Forms.ToolStripButton toolStripBtnMoveFileDown;
     private System.Windows.Forms.ColumnHeader columnHeader4;
-    private System.Windows.Forms.ColumnHeader columnHeader5;
     private System.Windows.Forms.ToolStripMenuItem importFileToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ToolStripMenuItem saveasToolStripMenuItem;

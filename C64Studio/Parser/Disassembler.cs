@@ -423,14 +423,21 @@ namespace RetroDevStudio.Parser
       int     localLineIndex = 1;
       while ( trueAddress < DataStartAddress + m_SourceData.Length )
       {
-        if ( disassembly.ContainsKey( (ushort)trueAddress ) )
+        if ( ( disassembly.ContainsKey( (ushort)trueAddress ) )
+        ||   ( NamedLabels.Any( nl => nl.Key == trueAddress ) ) )
         {
           if ( hadBytes )
           {
             sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
             hadBytes = false;
           }
-          GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = disassembly[(ushort)trueAddress];
+          GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = null;
+
+          if ( disassembly.ContainsKey( (ushort)trueAddress ) )
+          {
+            instruction = disassembly[(ushort)trueAddress];
+          }
+
           if ( Settings.AddLineAddresses )
           {
             sb.Append( "$" );
@@ -478,13 +485,15 @@ namespace RetroDevStudio.Parser
             }
 
             sb.AppendLine( NamedLabels[trueAddress] );
-            if ( Settings.AddLineAddresses )
+            if ( ( instruction != null )
+            &&   ( Settings.AddLineAddresses ) )
             {
               sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
-          if ( instruction.first.OpcodeSize > 0 )
+          if ( ( instruction != null )
+          &&   ( instruction.first.OpcodeSize > 0 ) )
           {
             // is there a label jumping in the middle of the next opcode?
             var  namedLabelInside = NamedLabels.Where( l => ( l.Key > trueAddress ) && ( l.Key < trueAddress + 1 + instruction.first.OpcodeSize ) );
@@ -530,7 +539,8 @@ namespace RetroDevStudio.Parser
             }
           }
 
-          if ( Settings.AddAssembledBytes )
+          if ( ( Settings.AddAssembledBytes )
+          &&   ( instruction != null ) )
           {
             sb.Append( " " );
             sb.Append( instruction.first.ByteValue.ToString( "X2" ) );
@@ -553,9 +563,21 @@ namespace RetroDevStudio.Parser
                 break;
             }
           }
-          sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
-          sb.Append( "\r\n" );
-          trueAddress += instruction.first.OpcodeSize + 1;
+          if ( instruction != null )
+          {
+            sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
+            sb.Append( "\r\n" );
+            trueAddress += instruction.first.OpcodeSize + 1;
+          }
+          else
+          {
+            if ( !hadBytes )
+            {
+              hadBytes = true;
+              hadBytesStart = trueAddress;
+            }
+            ++trueAddress;
+          }
         }
         else
         {

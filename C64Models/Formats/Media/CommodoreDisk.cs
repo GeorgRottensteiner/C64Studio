@@ -520,6 +520,8 @@ namespace RetroDevStudio.Formats
 
       FileInfo.ReadOnly     = ( FileType & 64 ) != 0;
       FileInfo.NotClosed    = ( FileType & 128 ) == 0;
+
+      FileInfo.Info         = $"Blocks {NumBlocks}, Track {StartTrack}, Sector {StartSector}";
     }
 
 
@@ -554,6 +556,7 @@ namespace RetroDevStudio.Formats
         result.Append( sec.Data.SubBuffer( 2 ) );
       }
       fileInfo.Data = result;
+      fileInfo.Size = (int)result.Length;
       return fileInfo;
     }
 

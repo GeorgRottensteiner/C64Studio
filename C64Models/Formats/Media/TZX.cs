@@ -63,6 +63,7 @@ namespace RetroDevStudio.Formats
         fileList.Add( info );
 
         info.NativeType = (FileTypeNative)block.ByteAt( 0 );
+        info.Info       = GR.EnumHelper.GetDescription( info.NativeType );
 
         if ( (FileTypeNative)block.ByteAt( 0 ) == FileTypeNative.TZX_STANDARD_SPEED_DATA_BLOCK )
         {

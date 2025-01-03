@@ -584,10 +584,9 @@ namespace RetroDevStudio.Types
   {
     public GR.Memory.ByteBuffer Filename = new GR.Memory.ByteBuffer( 16 );
     public GR.Memory.ByteBuffer Data = new GR.Memory.ByteBuffer();
-    public int StartTrack = -1;
-    public int StartSector = -1;
-    public int Blocks = 0;
     public int Size = 0;
+
+    public string Info = "";
 
     /* Bit 0-3: The actual filetype
                           000 (0) - DEL
@@ -608,15 +607,18 @@ namespace RetroDevStudio.Types
     public FileType Type              = FileType.NONE;
     public FileTypeNative NativeType  = FileTypeNative.NONE;
 
+    // Commodore specific
     public bool ReadOnly = false;     // Bit 6 for Commodore DOS, flag for CPC DSK
     public bool NotClosed = false;    // Bit 7 for Commodore DOS (*, splat)
+
+    public int StartTrack = -1;
+    public int StartSector = -1;
+    public int Blocks = 0;
 
     // flags for CPC DSK format
     public bool Hidden = false;
 
     public int DirEntryIndex = -1;
-
-    
   }
 
 
