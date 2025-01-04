@@ -136,6 +136,10 @@ namespace RetroDevStudio.Parser
         {
           addressPlacement = NamedLabels[targetAddress];
         }
+        else if ( NamedLabels.ContainsKey( targetAddress - 1 ) )
+        {
+          addressPlacement = NamedLabels[targetAddress - 1] + "+1";
+        }
       }
       switch ( opcode.Addressing )
       {
@@ -189,14 +193,16 @@ namespace RetroDevStudio.Parser
       StringBuilder sb = new StringBuilder();
 
       int wrapSize = 8;
+      bool firstLine = true;
 
       while ( Length >= wrapSize )
       {
-        if ( Settings.AddLineAddresses )
+        if ( !firstLine )
         {
-          sb.Append( "$" );
-          sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
+          AddLineAddress( Settings, sb, ExportStartAddress );
         }
+        firstLine = false;
+
         sb.Append( "!byte " );
         for ( int i = 0; i < wrapSize; ++i )
         {
@@ -212,10 +218,9 @@ namespace RetroDevStudio.Parser
       }
       if ( Length > 0 )
       {
-        if ( Settings.AddLineAddresses )
+        if ( !firstLine )
         {
-          sb.Append( "$" );
-          sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
+          AddLineAddress( Settings, sb, ExportStartAddress );
         }
         sb.Append( "!byte " );
         for ( int i = 0; i < Length; ++i )
@@ -278,6 +283,16 @@ namespace RetroDevStudio.Parser
       return false;
     }
 
+
+
+    private void AddLineAddress( DisassemblerSettings Settings, StringBuilder sb, int trueAddress )
+    {
+      if ( Settings.AddLineAddresses )
+      {
+        sb.Append( "$" );
+        sb.Append( trueAddress.ToString( "X4" ) + ": " );
+      }
+    }
 
 
     public bool Disassemble( int DataStartAddress, GR.Collections.Set<int> JumpedAtAddresses, GR.Collections.Map<int,string> NamedLabels, DisassemblerSettings Settings, out string Disassembly, out int FirstLineWithOpcode )
@@ -402,46 +417,63 @@ namespace RetroDevStudio.Parser
       sb.Append( "* = $" );
       sb.AppendLine( DataStartAddress.ToString( "x4" ) );
 
-      if ( !Settings.AddLineAddresses )
+      var appearingLabels = new GR.Collections.Set<string>();
+      var appearingLabelsPlusOne = new GR.Collections.Set<string>();
+      int     trueAddress = DataStartAddress;
+      while ( trueAddress < DataStartAddress + m_SourceData.Length )
       {
-        // TODO - skip labels that are set inside the disassembly below
-        foreach ( var namedLabel in NamedLabels )
-        {
-          sb.Append( namedLabel.Value );
-          sb.Append( " = $" );
-          sb.AppendLine( namedLabel.Key.ToString( "X4" ) );
-        }
-        if ( NamedLabels.Count > 0 )
-        {
-          sb.AppendLine();
-        }
+        var namedLabels = NamedLabels.Where( nl => nl.Key == trueAddress );
+        appearingLabels.AddRange( namedLabels.Select( nl => nl.Value ) );
+
+        // special, allow + 1
+        namedLabels = NamedLabels.Where( nl => nl.Key == trueAddress + 1 );
+        appearingLabelsPlusOne.AddRange( namedLabels.Select( nl => nl.Value ) );
+
+        ++trueAddress;
       }
 
-      int     trueAddress = DataStartAddress;
+      // TODO - skip labels that are set inside the disassembly below
+      bool addedNamedLabel = false;
+      foreach ( var namedLabel in NamedLabels )
+      {
+        if ( ( appearingLabels.ContainsValue( namedLabel.Value ) )
+        ||   ( appearingLabelsPlusOne.ContainsValue( namedLabel.Value ) ) )
+        {
+          continue;
+        }
+        addedNamedLabel = true;
+        sb.Append( namedLabel.Value );
+        sb.Append( " = $" );
+        sb.AppendLine( namedLabel.Key.ToString( "X4" ) );
+      }
+      if ( addedNamedLabel )
+      {
+        sb.AppendLine();
+      }
+
+      trueAddress = DataStartAddress;
       bool    hadBytes = false;
       int     hadBytesStart = 0;
       int     localLineIndex = 1;
       while ( trueAddress < DataStartAddress + m_SourceData.Length )
       {
         if ( ( disassembly.ContainsKey( (ushort)trueAddress ) )
-        ||   ( NamedLabels.Any( nl => nl.Key == trueAddress ) ) )
+        ||   ( NamedLabels.Any( nl => nl.Key == trueAddress ) )
+        ||   ( NamedLabels.Any( nl => nl.Key == trueAddress + 1 ) ) )
         {
           if ( hadBytes )
           {
+            AddLineAddress( Settings, sb, trueAddress );
+
             sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
             hadBytes = false;
           }
+
           GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = null;
 
           if ( disassembly.ContainsKey( (ushort)trueAddress ) )
           {
             instruction = disassembly[(ushort)trueAddress];
-          }
-
-          if ( Settings.AddLineAddresses )
-          {
-            sb.Append( "$" );
-            sb.Append( trueAddress.ToString( "X4" ) + ": " );
           }
 
           if ( DataStartAddress == trueAddress )
@@ -452,46 +484,42 @@ namespace RetroDevStudio.Parser
 
           if ( accessedAddresses.ContainsValue( (ushort)trueAddress ) )
           {
+            AddLineAddress( Settings, sb, trueAddress );
+
             // line break in front of named label
             sb.AppendLine();
-            if ( Settings.AddLineAddresses )
-            {
-              sb.Append( "$" );
-              sb.Append( trueAddress.ToString( "X4" ) + ": " );
-            }
+            AddLineAddress( Settings, sb, trueAddress );
 
             if ( NamedLabels.ContainsKey( trueAddress ) )
             {
               sb.AppendLine( NamedLabels[trueAddress] );
             }
+            else if ( NamedLabels.ContainsKey( trueAddress - 1 ) )
+            {
+              sb.Append( NamedLabels[trueAddress - 1] );
+              sb.AppendLine( "+1" );
+            }
             else
             {
               sb.AppendLine( "label_" + trueAddress.ToString( "x4" ) );
             }
-            if ( Settings.AddLineAddresses )
-            {
-              sb.Append( "$" );
-              sb.Append( trueAddress.ToString( "X4" ) + ": " );
-            }
           }
           else if ( NamedLabels.ContainsKey( trueAddress ) )
           {
+            AddLineAddress( Settings, sb, trueAddress );
+
             // line break in front of named label
             sb.AppendLine();
-            if ( Settings.AddLineAddresses )
-            {
-              sb.Append( "$" );
-              sb.Append( trueAddress.ToString( "X4" ) + ": " );
-            }
+            AddLineAddress( Settings, sb, trueAddress );
 
             sb.AppendLine( NamedLabels[trueAddress] );
-            if ( ( instruction != null )
-            &&   ( Settings.AddLineAddresses ) )
-            {
-              sb.Append( "$" );
-              sb.Append( trueAddress.ToString( "X4" ) + ": " );
-            }
           }
+
+          if ( instruction != null )
+          {
+            AddLineAddress( Settings, sb, trueAddress );
+          }
+
           if ( ( instruction != null )
           &&   ( instruction.first.OpcodeSize > 0 ) )
           {
@@ -500,42 +528,24 @@ namespace RetroDevStudio.Parser
             foreach ( var addressInside in namedLabelInside )
             {
               sb.AppendLine();
-              if ( Settings.AddLineAddresses )
-              {
-                sb.Append( "$" );
-                sb.Append( trueAddress.ToString( "X4" ) + ": " );
-              }
+              AddLineAddress( Settings, sb, trueAddress );
 
               sb.Append( addressInside.Value );
               sb.Append( " = * + " );
               sb.Append( addressInside.Key - trueAddress );
               sb.AppendLine();
-              if ( Settings.AddLineAddresses )
-              {
-                sb.Append( "$" );
-                sb.Append( trueAddress.ToString( "X4" ) + ": " );
-              }
             }
 
             var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.OpcodeSize ) );
             foreach ( var addressInside in addressesInside )
             {
               sb.AppendLine();
-              if ( Settings.AddLineAddresses )
-              {
-                sb.Append( "$" );
-                sb.Append( trueAddress.ToString( "X4" ) + ": " );
-              }
+              AddLineAddress( Settings, sb, trueAddress );
 
               sb.Append( "label_" + addressInside.ToString( "x4" ) );
               sb.Append( " = * + " );
               sb.Append( addressInside - trueAddress );
               sb.AppendLine();
-              if ( Settings.AddLineAddresses )
-              {
-                sb.Append( "$" );
-                sb.Append( trueAddress.ToString( "X4" ) + ": " );
-              }
             }
           }
 
@@ -591,6 +601,7 @@ namespace RetroDevStudio.Parser
       }
       if ( hadBytes )
       {
+        AddLineAddress( Settings, sb, hadBytesStart );
         sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
         hadBytes = false;
       }
