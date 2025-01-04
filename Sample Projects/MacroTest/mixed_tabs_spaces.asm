@@ -1,14 +1,16 @@
-﻿* = $0801
+* = $0801
 
 White = 1
 
 					lda #2  ;change color
 
+					!scr "hu:;<",0
+
 
 c = 1
 b = 2
 a = 3
-      !byte 1,2,3  ;tab, space tab
+	  	!byte 1,2,3  ;tab, space tab
       !byte 4,5,6   ;tab,tab,tab
       !byte 7,8,9   ;space * 6
       !byte a,b,c   ;space, tab, space

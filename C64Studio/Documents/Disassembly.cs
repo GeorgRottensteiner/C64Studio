@@ -29,7 +29,8 @@ namespace RetroDevStudio.Documents
       m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( pseudoOps, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
 
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
-      m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
+      // only ; outside of double quotes
+      m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";(?=(?:[^""]*""[^""]*"")*[^""]*$).*" );
 
       RefreshDisplayOptions();
     }
