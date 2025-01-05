@@ -2490,6 +2490,7 @@ namespace RetroDevStudio
     {
       if ( AppState != Types.StudioState.NORMAL )
       {
+        StudioCore.Notification.BuildFailure();
         return;
       }
 
@@ -2516,6 +2517,7 @@ namespace RetroDevStudio
     {
       if ( AppState != Types.StudioState.NORMAL )
       {
+        StudioCore.Notification.BuildFailure();
         return;
       }
       if ( CreateRelocationFile )
@@ -3608,6 +3610,7 @@ namespace RetroDevStudio
     {
       if ( AppState != Types.StudioState.NORMAL )
       {
+        StudioCore.Notification.BuildFailure();
         return;
       }
       AppState = Types.StudioState.BUILD_AND_RUN;
@@ -4089,6 +4092,7 @@ namespace RetroDevStudio
     {
       if ( AppState != Types.StudioState.NORMAL )
       {
+        StudioCore.Notification.BuildFailure();
         return;
       }
       AppState = Types.StudioState.BUILD_AND_DEBUG;

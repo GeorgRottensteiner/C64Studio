@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Types;
+﻿using GR.Memory;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,10 +15,10 @@ namespace RetroDevStudio.Formats
     public abstract bool Load( string Filename );
     public abstract bool Save( string Filename );
 
-    public abstract Types.FileInfo LoadFile( GR.Memory.ByteBuffer Filename );
-    public abstract bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, FileTypeNative Type );
-    public abstract bool DeleteFile( GR.Memory.ByteBuffer Filename, bool CompleteDelete = true );
-    public abstract bool RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename );
+    public abstract FileInfo  LoadFile( GR.Memory.ByteBuffer Filename );
+    public abstract bool      WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, FileTypeNative Type );
+    public abstract bool      DeleteFile( GR.Memory.ByteBuffer Filename, bool CompleteDelete = true );
+    public abstract bool      RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename );
 
 
 
@@ -121,6 +122,29 @@ namespace RetroDevStudio.Formats
     public bool SupportsRenamingTitle 
     { 
       get; internal set; 
+    }
+
+
+
+    public virtual int FindFileIndex( ByteBuffer Filename )
+    {
+      var files = Files();
+
+      return files.FindIndex( fi => fi.Filename == Filename );
+    }
+
+
+
+    public virtual FileInfo LoadFile( int FileIndex )
+    {
+      var files = Files();
+
+      if ( ( FileIndex < 0 )
+      || ( FileIndex >= files.Count ) )
+      {
+        return null;
+      }
+      return files[FileIndex];
     }
 
 

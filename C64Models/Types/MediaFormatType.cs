@@ -46,7 +46,11 @@ namespace RetroDevStudio
     [Description( "TZX" )]
     [MediaType( MediaType.TAPE )]
     [DefaultFileExtension( ".tzx" )]
-    TZX
+    TZX,
+    [Description( "P" )]
+    [MediaType( MediaType.TAPE )]
+    [DefaultFileExtension( ".p" )]
+    P
   }
 
 }

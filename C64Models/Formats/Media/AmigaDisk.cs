@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using GR.Memory;
 using System.ComponentModel;
+using System.Linq;
 
 namespace RetroDevStudio.Formats
 {

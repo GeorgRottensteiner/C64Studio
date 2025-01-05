@@ -11,9 +11,9 @@ using System.Xml.Schema;
 namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.TAPE )]
-  [MediaFormat( MediaFormatType.TZX )]
+  [MediaFormat( MediaFormatType.P )]
   [Category( "Spectrum" )]
-  public class TZX : MediaFormat
+  public class SpectrumP : MediaFormat
   {
     string                      _LastError = "";
     List<ByteBuffer>            _Blocks = new List<ByteBuffer>();
@@ -95,34 +95,29 @@ namespace RetroDevStudio.Formats
         _LastError = "could not open/read file";
         return false;
       }
-      if ( data.Length < 10 )
-      {
-        _LastError = "file size is too small";
-        return false;
-      }
-
-      // header
-      if ( ( Encoding.UTF8.GetString( data.Data(), 0, 7 ) != "ZXTape!" )
-      ||   ( data.ByteAt( 7 ) != 26 )       // EOF
-      ||   ( data.ByteAt( 8 ) != 1 ) )      // major version
-        /*
-      ||   ( ( data.ByteAt( 9 ) != 13 )     // minor version
-      &&     ( data.ByteAt( 9 ) != 20 ) ) ) */
-      {
-        _LastError = "Malformed 'ZXTape!' header";
-        return false;
-      }
-
       string lastFilename = "";
       ushort lastDataLength = 0;
       ushort lastAutostartLine = 0;
       ushort lastProgramLength = 0;
 
       var reader = data.MemoryReader();
-      reader.Skip( 10 );
       while ( reader.DataAvailable )
       {
-        var blockID = (FileTypeNative)reader.ReadUInt8();
+        if ( reader.Position + 2 > reader.Size )
+        {
+          _LastError = "Not enough data left for block size";
+          return false;
+        }
+        ushort blockSize = reader.ReadUInt16();
+        if ( reader.Position + blockSize > reader.Size )
+        {
+          _LastError = "Not enough data left for block data";
+          return false;
+        }
+        var block = new ByteBuffer();
+        reader.ReadBlock( block, blockSize );
+
+        /*
         switch ( blockID )
         {
           case FileTypeNative.TZX_STANDARD_SPEED_DATA_BLOCK:
@@ -278,7 +273,7 @@ namespace RetroDevStudio.Formats
           default:
             _LastError = $"Unsupported block ID {blockID}";
             return false;
-        }
+        }*/
       }
       return true;
     }

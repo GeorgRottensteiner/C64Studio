@@ -114,6 +114,12 @@ namespace RetroDevStudio.Controls
         e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Window, e.Bounds );
       }
 
+      var format = new StringFormat
+        {
+          FormatFlags = StringFormatFlags.NoWrap,
+          Trimming = StringTrimming.None
+        };
+
       for ( int i = 0; i < Columns.Count; ++i )
       {
         Font  fontToUse = Font;
@@ -125,11 +131,11 @@ namespace RetroDevStudio.Controls
 
         if ( Items[e.Index].Selected )
         {
-          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.HighlightText, Items[e.Index].SubItems[i].Bounds );
+          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.HighlightText, Items[e.Index].SubItems[i].Bounds, format );
         }
         else
         {
-          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.WindowText, Items[e.Index].SubItems[i].Bounds );
+          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.WindowText, Items[e.Index].SubItems[i].Bounds, format );
         }
       }      
 

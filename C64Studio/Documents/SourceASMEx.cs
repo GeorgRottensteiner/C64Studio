@@ -1718,7 +1718,7 @@ namespace RetroDevStudio.Documents
       var sb = new StringBuilder();
 
       sb.Append( @"\b(" );
-      sb.Append( string.Join( "|", DocumentInfo.ASMFileInfo.Processor.Opcodes.Keys.ToArray() ) );
+      sb.Append( string.Join( "|(?<!\\S)", DocumentInfo.ASMFileInfo.Processor.Opcodes.Keys.ToArray() ) );
       sb.Append( @")\b" );
 
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );

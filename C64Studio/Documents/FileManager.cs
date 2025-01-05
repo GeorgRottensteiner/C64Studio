@@ -136,6 +136,10 @@ namespace RetroDevStudio.Documents
       {
         m_Media = new RetroDevStudio.Formats.TZX();
       }
+      else if ( upperName.EndsWith( ".P" ) )
+      {
+        m_Media = new RetroDevStudio.Formats.SpectrumP();
+      }
       else
       {
         System.Windows.Forms.MessageBox.Show( "The file " + m_Filename + " cannot be read, unknown format" );
@@ -788,7 +792,7 @@ namespace RetroDevStudio.Documents
 
       if ( m_Media != null )
       {
-        fileInfo = m_Media.LoadFile( FileToImport.Filename );
+        fileInfo = m_Media.LoadFile( FileToImport.DirEntryIndex );
       }
       if ( fileInfo != null )
       {

@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\AmigaDisk.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\FileTypeNative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\FileType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\SpectrumP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\TZX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Define.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.PO.Macro.cs" />
