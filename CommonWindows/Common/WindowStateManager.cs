@@ -11,7 +11,15 @@ namespace GR
       {
         Rectangle rect = new Rectangle( Position, Size );
 
-        return ( Screen.FromRectangle( rect ) == null ) ? false : true;
+        foreach ( var screen in Screen.AllScreens )
+        {
+          if ( screen.WorkingArea.IntersectsWith( new Rectangle( Position, Size ) ) )
+          {
+            return true;
+          }
+        }
+
+        return false;
       }
 
 

@@ -844,13 +844,23 @@ namespace RetroDevStudio
     {
       foreach ( var tool in StudioCore.Settings.Tools.Values )
       {
-        if ( ( tool.Document != null )
-        &&   ( tool.Document.Visible )
-        &&   ( !GR.Forms.WindowStateManager.GeometryLocationIsGood( tool.Document.Location, tool.Document.Size ) ) )
+        EnsureVisibleToolIsOnScreenArea( tool );
+      }
+    }
+
+
+
+    private void EnsureVisibleToolIsOnScreenArea( ToolWindow tool )
+    {
+      if ( ( tool.Document != null )
+      &&   ( tool.Document.Visible )
+      &&   ( !GR.Forms.WindowStateManager.GeometryLocationIsGood( tool.Document.PointToScreen( tool.Document.Location ), tool.Document.Size ) ) )
+      {
+        // tool is visible, but off screen?? -> move it to top/left
+        if ( ( tool.Document.IsFloat )
+        &&   ( tool.Document.Pane != null ) )
         {
-          // tool is visible, but off screen?? -> move it to top/left
-          Debug.Log( $"Tool {tool.Type} is offscreen, moving to 0,0!" );
-          tool.Document.Location = new Point();
+          tool.Document.Pane.FloatAt( new Rectangle( new Point(), tool.Document.Pane.Size ) );
         }
       }
     }
@@ -1815,6 +1825,21 @@ namespace RetroDevStudio
       BaseDocument baseDoc = (BaseDocument)sender;
       if ( !baseDoc.IsHidden )
       {
+        foreach ( ToolWindow tool in StudioCore.Settings.Tools.Values )
+        {
+          if ( tool.Document == sender )
+          {
+            if ( tool.MenuItem.Checked != !tool.Document.IsHidden )
+            {
+              tool.MenuItem.Checked = !tool.Document.IsHidden;
+            }
+            if ( tool.Visible[m_ActivePerspective] != !tool.Document.IsHidden )
+            {
+              tool.Visible[m_ActivePerspective] = !tool.Document.IsHidden;
+            }
+            break;
+          }
+        }
         return;
       }
       if ( m_ChangingToolWindows )
@@ -1826,8 +1851,14 @@ namespace RetroDevStudio
       {
         if ( tool.Document == sender )
         {
-          tool.MenuItem.Checked = !tool.Document.IsHidden;
-          tool.Visible[m_ActivePerspective] = !tool.Document.IsHidden;
+          if ( tool.MenuItem.Checked != !tool.Document.IsHidden )
+          {
+            tool.MenuItem.Checked = !tool.Document.IsHidden;
+          }
+          if ( tool.Visible[m_ActivePerspective] != !tool.Document.IsHidden )
+          {
+            tool.Visible[m_ActivePerspective] = !tool.Document.IsHidden;
+          }
           break;
         }
       }
@@ -4995,6 +5026,7 @@ namespace RetroDevStudio
           {
             m_FindReplace.Show( panelMain );
           }
+          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
           m_FindReplace.comboSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
 
@@ -5017,6 +5049,7 @@ namespace RetroDevStudio
           {
             m_FindReplace.Show( panelMain );
           }
+          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
           m_FindReplace.comboSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 0;
@@ -5037,6 +5070,7 @@ namespace RetroDevStudio
           {
             m_FindReplace.Show( panelMain );
           }
+          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
           m_FindReplace.comboReplaceSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
@@ -5053,6 +5087,7 @@ namespace RetroDevStudio
           {
             m_FindReplace.Show( panelMain );
           }
+          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
           m_FindReplace.comboReplaceSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
