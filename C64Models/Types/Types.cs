@@ -298,6 +298,8 @@ namespace RetroDevStudio.Types
     W0006_LABEL_DUMP_FILE_ALREADY_GIVEN     = 0x8005,
     [Description( "W0007: Potential problem detected" )]
     W0007_POTENTIAL_PROBLEM                 = 0x8006,
+    [Description( "W0008: Opcode used as a label" )]
+    W0008_OPCODE_USED_AS_LABEL              = 0x8007,
     [Description( "W1000: Unused label" )]
     W1000_UNUSED_LABEL                      = 0x9003,
     [Description( "W1001: BASIC line is too long for manual entry" )]

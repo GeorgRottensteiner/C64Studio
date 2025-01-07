@@ -56,11 +56,14 @@ namespace RetroDevStudio.Formats
       var info        = new RetroDevStudio.Types.FileInfo()
       {
         Filename      = Filename,
-        Blocks        = (int)Data.Length / 254,
+        Blocks        = (int)( 253 + Data.Length ) / 254,
         Type          = Types.FileType.FILE,
         NativeType    = Types.FileTypeNative.COMMODORE_PRG,
+        Data          = Data,
+        Size          = (int)Data.Length,
         DirEntryIndex = 0
       };
+      info.Info = $"PRG, {info.Blocks} blocks";
 
       fileList.Add( info );
       return fileList;

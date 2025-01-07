@@ -521,7 +521,43 @@ namespace RetroDevStudio.Formats
       FileInfo.ReadOnly     = ( FileType & 64 ) != 0;
       FileInfo.NotClosed    = ( FileType & 128 ) == 0;
 
-      FileInfo.Info         = $"Blocks {NumBlocks}, Track {StartTrack}, Sector {StartSector}";
+      FileInfo.Info         = $"{NativeDesc( FileType )} {NumBlocks} blocks, Track {StartTrack}, Sector {StartSector}";
+    }
+
+
+
+    private string NativeDesc( byte fileType )
+    {
+      string  baseType = "???";
+
+      switch ( fileType & 0x07 )
+      {
+        case (int)FileTypeNative.COMMODORE_DEL:
+          baseType = "DEL";
+          break;
+        case (int)FileTypeNative.COMMODORE_SEQ:
+          baseType = "SEQ";
+          break;
+        case (int)FileTypeNative.COMMODORE_PRG:
+          baseType = "PRG";
+          break;
+        case (int)FileTypeNative.COMMODORE_USR:
+          baseType = "USR";
+          break;
+        case (int)FileTypeNative.COMMODORE_REL:
+          baseType = "REL";
+          break;
+      }
+      if ( ( fileType & (int)FileTypeNative.COMMODORE_LOCKED ) != 0 )
+      {
+        baseType += "<";
+      }
+      if ( ( fileType & (int)FileTypeNative.COMMODORE_CLOSED ) == 0 )
+      {
+        // "SPLAT"
+        baseType += "*";
+      }
+      return baseType;
     }
 
 
@@ -1481,15 +1517,7 @@ namespace RetroDevStudio.Formats
           if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
           {
             // valid entry?
-            Types.FileInfo info = new Types.FileInfo();
-
-            info.Filename       = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
-
-            SetFileInfo( info, 
-                         fileTrack, fileSector, 
-                         sec.Data.ByteAt( 0x20 * i + 2 ), 
-                         sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 ) );
-
+            var info = LoadFile( sec.Data.SubBuffer( 0x20 * i + 5, 16 ) );
             info.DirEntryIndex  = dirEntryIndex;
             ++dirEntryIndex;
             files.Add( info );

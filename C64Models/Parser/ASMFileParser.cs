@@ -5730,9 +5730,9 @@ namespace RetroDevStudio.Parser
               if ( programStepPos != -1 )
               {
                 // only add if we know the start address!
-                //AddLabel( upToken, programStepPos, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
                 tokenInFront = lineTokenInfos[0];
                 labelInFront = tokenInFront.Content;
+                AddWarning( lineIndex, ErrorCode.W0008_OPCODE_USED_AS_LABEL, $"Opcode {labelInFront} is used as a label, is this intended?", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
                 lineTokenInfos.RemoveAt( 0 );
                 if ( lineTokenInfos.Count > 0 )
                 {
@@ -5751,6 +5751,7 @@ namespace RetroDevStudio.Parser
                 else
                 {
                   AddLabel( upToken, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+                  AddWarning( lineIndex, ErrorCode.W0008_OPCODE_USED_AS_LABEL, $"Opcode {upToken} is used as a label, is this intended?", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
                   lineTokenInfos.RemoveAt( 0 );
                 }
               }
