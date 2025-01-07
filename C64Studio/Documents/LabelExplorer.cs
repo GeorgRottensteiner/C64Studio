@@ -42,6 +42,10 @@ namespace RetroDevStudio.Documents
 
       checkShowLocalLabels.Image    = Core.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
       checkShowShortCutLabels.Image = Core.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+
+      checkSortBySource.Enabled       = true;
+      checkSortAlphabetically.Enabled = false;
+      checkSortByType.Enabled         = true;
     }
 
 
@@ -253,44 +257,59 @@ namespace RetroDevStudio.Documents
       IList<SymbolInfo>     sortedTokens = null;
 
       // sort by line number
-      if ( Core.Settings.LabelExplorerSortByIndex )
+      switch ( Core.Settings.LabelExplorerSorting )
       {
-        GR.Collections.MultiMap<int, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
-        foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
-        {
-          if ( !string.IsNullOrEmpty( Core.Settings.LabelExplorerFilter ) )
+        case SortBy.INDEX:
           {
-            if ( token.Key.ToUpper().Contains( Core.Settings.LabelExplorerFilter.ToUpper() ) )
+            var sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
+            foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
             {
-              sortedTokensInner.Add( token.Value.LineIndex, token.Value );
+              if ( !string.IsNullOrEmpty( Core.Settings.LabelExplorerFilter ) )
+              {
+                if ( token.Key.ToUpper().Contains( Core.Settings.LabelExplorerFilter.ToUpper() ) )
+                {
+                  sortedTokensInner.Add( token.Value.LineIndex, token.Value );
+                }
+              }
+              else
+              {
+                sortedTokensInner.Add( token.Value.LineIndex, token.Value );
+              }
+
             }
+            sortedTokens = sortedTokensInner.Values;
           }
-          else
+          break;
+        case SortBy.ALPHABET:
           {
-            sortedTokensInner.Add( token.Value.LineIndex, token.Value );
-          }
-          
-        }
-        sortedTokens = sortedTokensInner.Values;
-      }
-      else
-      {
-        GR.Collections.MultiMap<string, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<string, SymbolInfo>();
-        foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
-        {
-          if ( !string.IsNullOrEmpty( Core.Settings.LabelExplorerFilter ) )
-          {
-            if ( token.Key.ToUpper().Contains( Core.Settings.LabelExplorerFilter.ToUpper() ) )
+            var sortedTokensInner = new GR.Collections.MultiMap<string, SymbolInfo>();
+            foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
             {
-              sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+              if ( !string.IsNullOrEmpty( Core.Settings.LabelExplorerFilter ) )
+              {
+                if ( token.Key.ToUpper().Contains( Core.Settings.LabelExplorerFilter.ToUpper() ) )
+                {
+                  sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+                }
+              }
+              else
+              {
+                sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+              }
             }
+            sortedTokens = sortedTokensInner.Values;
           }
-          else
+          break;
+        case SortBy.TYPE:
           {
-            sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+            var sortedTokensInner = new GR.Collections.MultiMap<SymbolInfo.Types, SymbolInfo>();
+            foreach ( KeyValuePair<string, SymbolInfo> token in LabelExplorerTokens )
+            {
+              sortedTokensInner.Add( token.Value.Type, token.Value );
+            }
+            sortedTokens = sortedTokensInner.Values;
           }
-        }
-        sortedTokens = sortedTokensInner.Values;
+          break;
       }
 
       string curZone = "";
@@ -557,11 +576,11 @@ namespace RetroDevStudio.Documents
 
     private void checkSortBySource_Click( object sender, EventArgs e )
     {
-      Core.Settings.LabelExplorerSortByIndex    = true;
-      Core.Settings.LabelExplorerSortByAlphabet = false;
+      Core.Settings.LabelExplorerSorting = SortBy.INDEX;
 
       checkSortAlphabetically.Enabled = true;
       checkSortBySource.Enabled       = false;
+      checkSortByType.Enabled         = true;
 
       StoreOpenNodes();
       RefreshNodes();
@@ -571,11 +590,11 @@ namespace RetroDevStudio.Documents
 
     private void checkSortAlphabetically_Click( object sender, EventArgs e )
     {
-      Core.Settings.LabelExplorerSortByIndex = false;
-      Core.Settings.LabelExplorerSortByAlphabet = true;
+      Core.Settings.LabelExplorerSorting = SortBy.ALPHABET;
 
-      checkSortBySource.Enabled = true;
+      checkSortBySource.Enabled       = true;
       checkSortAlphabetically.Enabled = false;
+      checkSortByType.Enabled         = true;
 
       StoreOpenNodes();
       RefreshNodes();
@@ -671,6 +690,20 @@ namespace RetroDevStudio.Documents
         doc.SetCursorToLine( lineNo, startPos, false );
         doc.HighlightOccurrences( lineNo, startPos, length, occurrences );
       }
+    }
+
+
+
+    private void checkSortByType_Click( object sender, EventArgs e )
+    {
+      Core.Settings.LabelExplorerSorting = SortBy.TYPE;
+
+      checkSortBySource.Enabled       = true;
+      checkSortAlphabetically.Enabled = true;
+      checkSortByType.Enabled         = false;
+
+      StoreOpenNodes();
+      RefreshNodes();
     }
 
 

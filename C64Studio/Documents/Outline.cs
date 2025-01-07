@@ -192,65 +192,87 @@ namespace RetroDevStudio.Documents
       IList<SymbolInfo>     sortedTokens = null;
 
       // sort by line number
-      if ( Core.Settings.OutlineSortByIndex )
+      switch ( Core.Settings.OutlineSorting )
       {
-        GR.Collections.MultiMap<int, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
-        foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
-        {
-          if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+        case SortBy.INDEX:
           {
-            if ( token.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+            GR.Collections.MultiMap<int, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
+            foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
             {
-              sortedTokensInner.Add( token.Value.LineIndex, token.Value );
+              if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+              {
+                if ( token.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+                {
+                  sortedTokensInner.Add( token.Value.LineIndex, token.Value );
+                }
+              }
+              else
+              {
+                sortedTokensInner.Add( token.Value.LineIndex, token.Value );
+              }
             }
-          }
-          else
-          {
-            sortedTokensInner.Add( token.Value.LineIndex, token.Value );
-          }
-        }
-        foreach ( var macro in ActiveASMFileInfo.Macros )
-        {
-          if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
-          {
-            sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
-          }
-          else if ( macro.Key.first.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
-          {
-            sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
-          }
-        }
-        sortedTokens = sortedTokensInner.Values;
-      }
-      else
-      {
-        GR.Collections.MultiMap<string, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<string, SymbolInfo>();
-        foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
-        {
-          if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
-          {
-            if ( token.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+            foreach ( var macro in ActiveASMFileInfo.Macros )
             {
-              sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+              if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+              {
+                sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
+              }
+              else if ( macro.Key.first.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+              {
+                sortedTokensInner.Add( macro.Value.LineIndex, macro.Value.Symbol );
+              }
             }
+            sortedTokens = sortedTokensInner.Values;
           }
-          else
+          break;
+        case SortBy.ALPHABET:
           {
-            sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+            GR.Collections.MultiMap<string, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<string, SymbolInfo>();
+            foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
+            {
+              if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+              {
+                if ( token.Key.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+                {
+                  sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+                }
+              }
+              else
+              {
+                sortedTokensInner.Add( token.Key.ToUpper(), token.Value );
+              }
+            }
+            foreach ( var macro in ActiveASMFileInfo.Macros )
+            {
+              if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+              {
+                sortedTokensInner.Add( macro.Key.first.ToUpper(), macro.Value.Symbol );
+              }
+              else if ( macro.Key.first.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
+              {
+                sortedTokensInner.Add( macro.Key.first.ToUpper(), macro.Value.Symbol );
+              }
+            }
+            sortedTokens = sortedTokensInner.Values;
           }
-        }
-        foreach ( var macro in ActiveASMFileInfo.Macros )
-        {
-          if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+          break;
+        case SortBy.TYPE:
           {
-            sortedTokensInner.Add( macro.Key.first.ToUpper(), macro.Value.Symbol );
+            var sortedTokensInner = new GR.Collections.MultiMap<SymbolInfo.Types, SymbolInfo>();
+            foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
+            {
+              sortedTokensInner.Add( token.Value.Type, token.Value );
+            }
+            foreach ( var macro in ActiveASMFileInfo.Macros )
+            {
+              if ( string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
+              {
+                sortedTokensInner.Add( SymbolInfo.Types.MACRO, macro.Value.Symbol );
+              }
+            }
+            sortedTokens = sortedTokensInner.Values;
           }
-          else if ( macro.Key.first.ToUpper().Contains( Core.Settings.OutlineFilter.ToUpper() ) )
-          {
-            sortedTokensInner.Add( macro.Key.first.ToUpper(), macro.Value.Symbol );
-          }
-        }
-        sortedTokens = sortedTokensInner.Values;
+          break;
       }
 
       string curZone = "";
@@ -464,11 +486,11 @@ namespace RetroDevStudio.Documents
 
     private void checkSortBySource_Click( object sender, EventArgs e )
     {
-      Core.Settings.OutlineSortByIndex    = true;
-      Core.Settings.OutlineSortByAlphabet = false;
+      Core.Settings.OutlineSorting = SortBy.INDEX;
 
       checkSortAlphabetically.Enabled = true;
-      checkSortBySource.Enabled = false;
+      checkSortBySource.Enabled       = false;
+      checkSortByType.Enabled         = true;
 
       StoreOpenNodes();
       RefreshNodes();
@@ -478,11 +500,11 @@ namespace RetroDevStudio.Documents
 
     private void checkSortAlphabetically_Click( object sender, EventArgs e )
     {
-      Core.Settings.OutlineSortByIndex = false;
-      Core.Settings.OutlineSortByAlphabet = true;
+      Core.Settings.OutlineSorting = SortBy.ALPHABET;
 
-      checkSortBySource.Enabled = true;
+      checkSortBySource.Enabled       = true;
       checkSortAlphabetically.Enabled = false;
+      checkSortByType.Enabled         = true;
 
       StoreOpenNodes();
       RefreshNodes();
@@ -514,7 +536,20 @@ namespace RetroDevStudio.Documents
       {
         doc.HighlightText( tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
       }
+    }
 
+
+
+    private void checkSortByType_Click( object sender, EventArgs e )
+    {
+      Core.Settings.OutlineSorting = SortBy.TYPE;
+
+      checkSortBySource.Enabled       = true;
+      checkSortAlphabetically.Enabled = true;
+      checkSortByType.Enabled         = false;
+
+      StoreOpenNodes();
+      RefreshNodes();
     }
 
 

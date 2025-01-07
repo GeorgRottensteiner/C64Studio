@@ -747,14 +747,16 @@ namespace RetroDevStudio
       StudioCore.Compiling.ParserBasic.Settings.StripREM    = StudioCore.Settings.BASICStripREM;
       m_Outline.checkShowLocalLabels.Image          = StudioCore.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
       m_Outline.checkShowShortCutLabels.Image       = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
-      m_Outline.checkSortAlphabetically.Enabled     = StudioCore.Settings.OutlineSortByIndex;
-      m_Outline.checkSortBySource.Enabled           = !StudioCore.Settings.OutlineSortByIndex;
+      m_Outline.checkSortAlphabetically.Enabled     = ( StudioCore.Settings.OutlineSorting != SortBy.ALPHABET );
+      m_Outline.checkSortBySource.Enabled           = ( StudioCore.Settings.OutlineSorting != SortBy.INDEX );
+      m_Outline.checkSortByType.Enabled             = ( StudioCore.Settings.OutlineSorting != SortBy.TYPE );
       m_Outline.editOutlineFilter.Text              = StudioCore.Settings.OutlineFilter;
 
       m_LabelExplorer.checkShowLocalLabels.Image      = StudioCore.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
       m_LabelExplorer.checkShowShortCutLabels.Image   = StudioCore.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
-      m_LabelExplorer.checkSortAlphabetically.Enabled = StudioCore.Settings.LabelExplorerSortByIndex;
-      m_LabelExplorer.checkSortBySource.Enabled       = !StudioCore.Settings.LabelExplorerSortByIndex;
+      m_LabelExplorer.checkSortAlphabetically.Enabled = StudioCore.Settings.LabelExplorerSorting != SortBy.ALPHABET;
+      m_LabelExplorer.checkSortBySource.Enabled       = StudioCore.Settings.LabelExplorerSorting != SortBy.INDEX;
+      m_LabelExplorer.checkSortByType.Enabled         = StudioCore.Settings.LabelExplorerSorting != SortBy.TYPE;
       m_LabelExplorer.editLabelExplorerFilter.Text    = StudioCore.Settings.LabelExplorerFilter;
 
       EmulatorListUpdated();

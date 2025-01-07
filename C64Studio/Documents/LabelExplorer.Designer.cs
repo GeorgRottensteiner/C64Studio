@@ -40,19 +40,25 @@
       this.checkSortAlphabetically = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.editLabelExplorerFilter = new System.Windows.Forms.ToolStripTextBox();
+      this.checkSortByType = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStripOutline.SuspendLayout();
       this.SuspendLayout();
       // 
       // treeProject
       // 
+      this.treeProject.AllowDrag = false;
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.treeProject.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.treeProject.ImageList = this.m_ImageListOutline;
+      this.treeProject.LabelEdit = false;
       this.treeProject.Location = new System.Drawing.Point(0, 28);
       this.treeProject.Name = "treeProject";
+      this.treeProject.ScrollAlwaysVisible = false;
+      this.treeProject.SelectedNode = null;
+      this.treeProject.SelectionMode = DecentForms.SelectionMode.NONE;
       this.treeProject.Size = new System.Drawing.Size(534, 364);
       this.treeProject.TabIndex = 0;
       this.treeProject.Text = "NoDblClkTreeView";
@@ -76,6 +82,7 @@
             this.toolStripSeparator1,
             this.checkSortBySource,
             this.checkSortAlphabetically,
+            this.checkSortByType,
             this.toolStripSeparator2,
             this.editLabelExplorerFilter});
       this.toolStripOutline.Location = new System.Drawing.Point(0, 0);
@@ -140,10 +147,22 @@
       // 
       this.editLabelExplorerFilter.AutoSize = false;
       this.editLabelExplorerFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.editLabelExplorerFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.editLabelExplorerFilter.Name = "editLabelExplorerFilter";
       this.editLabelExplorerFilter.Size = new System.Drawing.Size(200, 23);
       this.editLabelExplorerFilter.ToolTipText = "Label Filter";
       this.editLabelExplorerFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
+      // 
+      // checkSortByType
+      // 
+      this.checkSortByType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.checkSortByType.Enabled = false;
+      this.checkSortByType.Image = ((System.Drawing.Image)(resources.GetObject("checkSortByType.Image")));
+      this.checkSortByType.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.checkSortByType.Name = "checkSortByType";
+      this.checkSortByType.Size = new System.Drawing.Size(23, 22);
+      this.checkSortByType.Text = "Sort by type";
+      this.checkSortByType.Click += new System.EventHandler(this.checkSortByType_Click);
       // 
       // LabelExplorer
       // 
@@ -173,5 +192,6 @@
     public System.Windows.Forms.ToolStripTextBox editLabelExplorerFilter;
     public System.Windows.Forms.ToolStripButton checkSortBySource;
     public System.Windows.Forms.ToolStripButton checkSortAlphabetically;
+    public System.Windows.Forms.ToolStripButton checkSortByType;
   }
 }

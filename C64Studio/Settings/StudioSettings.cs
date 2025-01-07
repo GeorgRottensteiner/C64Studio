@@ -116,6 +116,12 @@ namespace RetroDevStudio
     public int      DebugMemoryNumBytesPerLine = 8;
   };
 
+  public enum SortBy
+  {
+    INDEX = 0,
+    ALPHABET,
+    TYPE
+  }
 
   public class StudioSettings
   {
@@ -162,14 +168,12 @@ namespace RetroDevStudio
 
     public bool                                 OutlineShowLocalLabels = true;
     public bool                                 OutlineShowShortCutLabels = true;
-    public bool                                 OutlineSortByIndex = true;
-    public bool                                 OutlineSortByAlphabet = false;
+    public SortBy                               OutlineSorting = SortBy.INDEX;
     public string                               OutlineFilter = "";
 
     public bool                                 LabelExplorerShowLocalLabels = true;
     public bool                                 LabelExplorerShowShortCutLabels = true;
-    public bool                                 LabelExplorerSortByIndex = true;
-    public bool                                 LabelExplorerSortByAlphabet = true;
+    public SortBy                               LabelExplorerSorting = SortBy.INDEX;
     public string                               LabelExplorerFilter = "";
 
     public bool                                 ToolbarActiveMain = true;
@@ -807,7 +811,7 @@ namespace RetroDevStudio
       GR.IO.FileChunk chunkOutline = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_OUTLINE );
       chunkOutline.AppendU8( (byte)( !OutlineShowLocalLabels ? 1 : 0 ) );
       chunkOutline.AppendU8( (byte)( !OutlineShowShortCutLabels ? 1 : 0 ) );
-      chunkOutline.AppendU8( (byte)( !OutlineSortByIndex ? 1 : 0 ) );
+      chunkOutline.AppendU8( (byte)( OutlineSorting ) );
       chunkOutline.AppendString( OutlineFilter );
       SettingsData.Append( chunkOutline.ToBuffer() );
 
@@ -815,7 +819,7 @@ namespace RetroDevStudio
       GR.IO.FileChunk chunkLabelExplorer = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_LABEL_EXPLORER );
       chunkLabelExplorer.AppendU8( (byte)( !LabelExplorerShowLocalLabels ? 1 : 0 ) );
       chunkLabelExplorer.AppendU8( (byte)( !LabelExplorerShowShortCutLabels ? 1 : 0 ) );
-      chunkLabelExplorer.AppendU8( (byte)( !LabelExplorerSortByIndex ? 1 : 0 ) );
+      chunkLabelExplorer.AppendU8( (byte)( LabelExplorerSorting ) );
       chunkLabelExplorer.AppendString( LabelExplorerFilter );
       SettingsData.Append( chunkLabelExplorer.ToBuffer() );
 
@@ -1223,9 +1227,8 @@ namespace RetroDevStudio
 
               OutlineShowLocalLabels    = ( binIn.ReadUInt8() == 0 );
               OutlineShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
-              OutlineSortByIndex        = ( binIn.ReadUInt8() == 0 );
+              OutlineSorting            = (SortBy)binIn.ReadUInt8();
               OutlineFilter             = binIn.ReadString();
-              OutlineSortByAlphabet     = !OutlineSortByIndex;
             }
             break;
           case FileChunkConstants.SETTINGS_LABEL_EXPLORER:
@@ -1234,9 +1237,8 @@ namespace RetroDevStudio
 
               LabelExplorerShowLocalLabels    = ( binIn.ReadUInt8() == 0 );
               LabelExplorerShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
-              LabelExplorerSortByIndex        = ( binIn.ReadUInt8() == 0 );
+              LabelExplorerSorting            = (SortBy)binIn.ReadUInt8();
               LabelExplorerFilter             = binIn.ReadString();
-              LabelExplorerSortByAlphabet     = !LabelExplorerSortByIndex;
             }
             break;
           case FileChunkConstants.SETTINGS_FIND_REPLACE:

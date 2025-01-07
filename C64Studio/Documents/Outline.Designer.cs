@@ -40,17 +40,20 @@
       this.checkSortAlphabetically = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.editOutlineFilter = new System.Windows.Forms.ToolStripTextBox();
+      this.checkSortByType = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStripOutline.SuspendLayout();
       this.SuspendLayout();
       // 
       // treeProject
       // 
+      this.treeProject.AllowDrag = false;
       this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.treeProject.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.treeProject.ImageList = this.m_ImageListOutline;
+      this.treeProject.LabelEdit = false;
       this.treeProject.Location = new System.Drawing.Point(0, 28);
       this.treeProject.Name = "treeProject";
       this.treeProject.ScrollAlwaysVisible = false;
@@ -81,6 +84,7 @@
             this.toolStripSeparator1,
             this.checkSortBySource,
             this.checkSortAlphabetically,
+            this.checkSortByType,
             this.toolStripSeparator2,
             this.editOutlineFilter});
       this.toolStripOutline.Location = new System.Drawing.Point(0, 0);
@@ -151,6 +155,16 @@
       this.editOutlineFilter.ToolTipText = "Label Filter";
       this.editOutlineFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
       // 
+      // checkSortByType
+      // 
+      this.checkSortByType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.checkSortByType.Image = ((System.Drawing.Image)(resources.GetObject("checkSortByType.Image")));
+      this.checkSortByType.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.checkSortByType.Name = "checkSortByType";
+      this.checkSortByType.Size = new System.Drawing.Size(23, 22);
+      this.checkSortByType.Text = "Sort by type";
+      this.checkSortByType.Click += new System.EventHandler(this.checkSortByType_Click);
+      // 
       // Outline
       // 
       this.ClientSize = new System.Drawing.Size(534, 390);
@@ -179,5 +193,6 @@
     public System.Windows.Forms.ToolStripTextBox editOutlineFilter;
     public System.Windows.Forms.ToolStripButton checkSortBySource;
     public System.Windows.Forms.ToolStripButton checkSortAlphabetically;
+    public System.Windows.Forms.ToolStripButton checkSortByType;
   }
 }
