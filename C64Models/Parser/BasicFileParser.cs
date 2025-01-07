@@ -1684,6 +1684,7 @@ namespace RetroDevStudio.Parser
         Token token = info.Tokens[i];
 
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.Opcodes.ContainsKey( token.Content ) )
         &&   ( Settings.BASICDialect.Opcodes[token.Content].AllowsSeveralLineNumbers ) )
         {
           // e.g. GOTO, GOSUB
@@ -1711,6 +1712,7 @@ namespace RetroDevStudio.Parser
           }
         }
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.Opcodes.ContainsKey( token.Content ) )
         &&   ( Settings.BASICDialect.Opcodes[token.Content].GoTokenToMayFollow ) )
         {
           int nextTokenIndex = FindNextToken( info.Tokens, i );
@@ -1730,6 +1732,7 @@ namespace RetroDevStudio.Parser
         }
 
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.Opcodes.ContainsKey( token.Content ) )
         &&   ( Settings.BASICDialect.Opcodes[token.Content].LineListRange ) )
         {
           int   nextTokenIndex =  FindNextToken( info.Tokens, i );
@@ -1777,6 +1780,7 @@ namespace RetroDevStudio.Parser
         }
 
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.Opcodes.ContainsKey( token.Content ) )
         &&   ( Settings.BASICDialect.Opcodes[token.Content].ArgumentIndexOfExpectedLineNumber >= 0 ) )
         {
           // only one line number
