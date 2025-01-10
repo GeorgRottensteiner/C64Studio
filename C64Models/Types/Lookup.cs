@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Formats;
+﻿using RetroDevStudio.CheckSummer;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -101,6 +102,34 @@ namespace RetroDevStudio
           MediaFormatCategories.Add( mediaFormat, new GR.Generic.Tupel<MediaType, string>( mediaTypeAtt, categoryOfEnum ) );
         }
       }
+    }
+
+
+
+    public static List<string> EnumerateBASICCheckSummer()
+    {
+      var list = new List<string>();
+      var types = Assembly.GetExecutingAssembly().GetTypes()
+              .Where( t => String.Equals( t.Namespace, "RetroDevStudio.CheckSummer", StringComparison.Ordinal ) );
+      foreach ( var type in types )
+      {
+        if ( type.Name == "ICheckSummer" )
+        {
+          continue;
+        }
+        object[] attrs = type.GetCustomAttributes( typeof( DescriptionAttribute ), false );
+
+        if ( ( attrs != null )
+        &&   ( attrs.Length > 0 ) )
+        {
+          list.Add( ( (DescriptionAttribute)attrs[0] ).Description );
+        }
+        else
+        {
+          list.Add( type.Name );
+        }
+      }
+      return list;
     }
 
 

@@ -15,6 +15,7 @@ using RetroDevStudio.Dialogs;
 using FastColoredTextBoxNS;
 using GR.Memory;
 using RetroDevStudio.Parser;
+using System.Drawing;
 
 namespace RetroDevStudio.Documents
 {
@@ -99,7 +100,7 @@ namespace RetroDevStudio.Documents
       InitializeComponent();
 
       // high DPI adjusting of controls in toolbar
-      var controls = new List<Control>{ btnToggleLabelMode, btnToggleStringEntryMode, btnToggleSymbolMode, btnToggleUpperLowerCase, labelStartAddress, editBASICStartAddress, labelBASICVersion, comboBASICVersion };
+      var controls = new List<Control>{ btnToggleLabelMode, btnToggleStringEntryMode, btnToggleSymbolMode, btnToggleUpperLowerCase, labelStartAddress, editBASICStartAddress, labelBASICVersion, comboBASICVersion, labelCheckSummer, comboCheckSummer };
 
       int   curX = btnToggleLabelMode.Left;
       for ( int i = 1; i < controls.Count; ++i )
@@ -116,6 +117,13 @@ namespace RetroDevStudio.Documents
       foreach ( var dialect in Core.Compiling.BASICDialects )
       {
         comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, Dialect>( dialect.Key, dialect.Value ) );
+      }
+
+      var types = Lookup.EnumerateBASICCheckSummer();
+      comboCheckSummer.Items.Add( "None" );
+      foreach ( var checkSummer in types )
+      {
+        comboCheckSummer.Items.Add( checkSummer );
       }
       editSource.SyntaxHighlighter = new BASICSyntaxHighlighter( this );
       comboBASICVersion.SelectedIndex = 0;
@@ -3081,6 +3089,45 @@ namespace RetroDevStudio.Documents
       UpdateCaseButtonCaption();
 
       editSource.OnSyntaxHighlight( new TextChangedEventArgs( editSource.Range ) );
+    }
+
+
+
+    private void comboCheckSummer_SelectedIndexChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    public void SetLineInfos( Dictionary<int, Types.ASM.LineInfo> lineInfo )
+    {
+    }
+
+
+
+    Types.ASM.LineInfo FetchLineInfo( int LineIndex )
+    {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= m_LineInfos.Count ) )
+      {
+        return null;
+      }
+      return m_LineInfos[LineIndex];
+    }
+
+
+
+    private void editSource_PaintLine( object sender, PaintLineEventArgs e )
+    {
+      var textBrush = new SolidBrush( editSource.ForeColor );
+
+      var lineInfo = FetchLineInfo( e.LineIndex );
+      if ( ( lineInfo != null )
+      &&   ( lineInfo.CheckSum != -1 ) )
+      {
+        e.Graphics.DrawString( lineInfo.CheckSum.ToString(), editSource.Font, textBrush, 20, e.LineRect.Top );
+      }
     }
 
 

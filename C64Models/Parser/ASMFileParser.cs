@@ -5843,9 +5843,21 @@ namespace RetroDevStudio.Parser
                 {
                   startIndex        += info.Opcode.StartingTokenCount;
                   count             -= info.Opcode.StartingTokenCount + info.Opcode.TrailingTokenCount;
-                  tokensToEvaluate  = lineTokenInfos.GetRange( startIndex, count );
-                  startIndex        = 0;
-                  count             = tokensToEvaluate.Count;
+                  if ( ( startIndex >= lineTokenInfos.Count )
+                  ||   ( count < 0 )
+                  ||   ( startIndex + count < 0 ) )
+                  {
+                    tokensToEvaluate = new List<TokenInfo>();
+
+                    startIndex  = 0;
+                    count       = 0;
+                  }
+                  else
+                  {
+                    tokensToEvaluate  = lineTokenInfos.GetRange( startIndex, count );
+                    startIndex        = 0;
+                    count             = tokensToEvaluate.Count;
+                  }
                 }
 
                 if ( EvaluateTokens( lineIndex, tokensToEvaluate, startIndex, count, out SymbolInfo byteValueSymbol ) )
@@ -6387,9 +6399,14 @@ namespace RetroDevStudio.Parser
                   break;
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z:
                   // in case of case Opcode.AddressingType.INDIRECT_Z the brackets are parsed out already!
-                  if ( ( info.NeededParsedExpression.Count < 2 )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
-                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Z" ) )
+                  if ( info.NeededParsedExpression.Count < 2 )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
+                              "Expected trailing ,z or [,] brackets" );
+                  }
+                  else  if ( ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
+                  ||         ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Z" ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,

@@ -3558,6 +3558,7 @@ namespace RetroDevStudio
             }
             ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false, out Types.ASM.FileInfo asmFileInfo );
             updatedFiles.Add( element.DocumentInfo.FullPath );
+            element.DocumentInfo.SetASMFileInfo( asmFileInfo );
 
             StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
           }

@@ -10,6 +10,7 @@ using System.Linq;
 using RetroDevStudio.Types;
 using static RetroDevStudio.Parser.BasicFileParser;
 using System.Diagnostics;
+using RetroDevStudio.CheckSummer;
 
 
 
@@ -138,6 +139,7 @@ namespace RetroDevStudio.Parser
     {
       public int                      LineIndex = 0;
       public int                      LineNumber = -1;
+      public string                   CheckSum = "";
       public GR.Memory.ByteBuffer     LineData = new GR.Memory.ByteBuffer();
       public GR.Collections.Set<int>  ReferencedLineNumbers = new GR.Collections.Set<int>();
       public string                   Line = "";
@@ -2446,6 +2448,8 @@ namespace RetroDevStudio.Parser
       int lineIndex                   = -1;
       int lastLineNumber              = -1;
 
+      var checkSummer = new CheckSummerForum64();
+
       while ( lineIndex + 1 < _Lines.Length )
       {
         ++lineIndex;
@@ -2671,6 +2675,18 @@ namespace RetroDevStudio.Parser
         else
         {
           m_LineInfos[info.LineIndex] = info;
+        }
+
+        if ( info.LineNumber != -1 )
+        {
+          var bb = new ByteBuffer();
+          bb.AppendU16( (ushort)info.LineNumber );
+          bb += m_LineInfos[info.LineIndex].LineData;
+
+          int checkSum = checkSummer.CheckSum( bb );
+          Debug.Log( $"CheckSum for {info.LineNumber} = {checkSum}/{checkSum.ToString( "X4" )}" );
+
+          m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, CheckSum = checkSum } );
         }
       }
 

@@ -63,6 +63,8 @@ namespace RetroDevStudio.Documents
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
+      this.labelCheckSummer = new System.Windows.Forms.Label();
+      this.comboCheckSummer = new System.Windows.Forms.ComboBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -101,10 +103,11 @@ namespace RetroDevStudio.Documents
       this.editSource.Paddings = new System.Windows.Forms.Padding(0);
       this.editSource.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
       this.editSource.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editSource.ServiceColors")));
-      this.editSource.Size = new System.Drawing.Size(698, 532);
+      this.editSource.Size = new System.Drawing.Size(858, 532);
       this.editSource.TabIndex = 0;
       this.editSource.Zoom = 100;
       this.editSource.LineVisited += new System.EventHandler<FastColoredTextBoxNS.LineVisitedArgs>(this.editSource_LineVisited);
+      this.editSource.PaintLine += new System.EventHandler<FastColoredTextBoxNS.PaintLineEventArgs>(this.editSource_PaintLine);
       this.editSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.editSource_DragDrop);
       this.editSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.editSource_DragEnter);
       // 
@@ -269,7 +272,7 @@ namespace RetroDevStudio.Documents
             this.bASICToolStripMenuItem});
       this.menuBASIC.Location = new System.Drawing.Point(0, 0);
       this.menuBASIC.Name = "menuBASIC";
-      this.menuBASIC.Size = new System.Drawing.Size(698, 24);
+      this.menuBASIC.Size = new System.Drawing.Size(858, 24);
       this.menuBASIC.TabIndex = 3;
       this.menuBASIC.Text = "menuStrip1";
       // 
@@ -304,7 +307,10 @@ namespace RetroDevStudio.Documents
       // 
       // btnToggleUpperLowerCase
       // 
+      this.btnToggleUpperLowerCase.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnToggleUpperLowerCase.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToggleUpperLowerCase.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnToggleUpperLowerCase.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
       this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(164, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
@@ -332,7 +338,7 @@ namespace RetroDevStudio.Documents
       this.editBASICStartAddress.Location = new System.Drawing.Point(307, 29);
       this.editBASICStartAddress.MaxLength = 7;
       this.editBASICStartAddress.Name = "editBASICStartAddress";
-      this.editBASICStartAddress.Size = new System.Drawing.Size(65, 20);
+      this.editBASICStartAddress.Size = new System.Drawing.Size(47, 20);
       this.editBASICStartAddress.TabIndex = 4;
       this.editBASICStartAddress.Text = "2049";
       this.editBASICStartAddress.TextChanged += new System.EventHandler(this.editBASICStartAddress_TextChanged);
@@ -349,7 +355,7 @@ namespace RetroDevStudio.Documents
       // labelBASICVersion
       // 
       this.labelBASICVersion.AutoSize = true;
-      this.labelBASICVersion.Location = new System.Drawing.Point(390, 32);
+      this.labelBASICVersion.Location = new System.Drawing.Point(369, 32);
       this.labelBASICVersion.Name = "labelBASICVersion";
       this.labelBASICVersion.Size = new System.Drawing.Size(79, 13);
       this.labelBASICVersion.TabIndex = 5;
@@ -359,17 +365,38 @@ namespace RetroDevStudio.Documents
       // 
       this.comboBASICVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBASICVersion.FormattingEnabled = true;
-      this.comboBASICVersion.Location = new System.Drawing.Point(475, 28);
+      this.comboBASICVersion.Location = new System.Drawing.Point(454, 28);
       this.comboBASICVersion.Name = "comboBASICVersion";
       this.comboBASICVersion.Size = new System.Drawing.Size(150, 21);
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
+      // labelCheckSummer
+      // 
+      this.labelCheckSummer.AutoSize = true;
+      this.labelCheckSummer.Location = new System.Drawing.Point(610, 32);
+      this.labelCheckSummer.Name = "labelCheckSummer";
+      this.labelCheckSummer.Size = new System.Drawing.Size(79, 13);
+      this.labelCheckSummer.TabIndex = 5;
+      this.labelCheckSummer.Text = "CheckSummer:";
+      // 
+      // comboCheckSummer
+      // 
+      this.comboCheckSummer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboCheckSummer.FormattingEnabled = true;
+      this.comboCheckSummer.Location = new System.Drawing.Point(695, 28);
+      this.comboCheckSummer.Name = "comboCheckSummer";
+      this.comboCheckSummer.Size = new System.Drawing.Size(134, 21);
+      this.comboCheckSummer.TabIndex = 6;
+      this.comboCheckSummer.SelectedIndexChanged += new System.EventHandler(this.comboCheckSummer_SelectedIndexChanged);
+      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
-      this.ClientSize = new System.Drawing.Size(698, 588);
+      this.ClientSize = new System.Drawing.Size(858, 588);
+      this.Controls.Add(this.comboCheckSummer);
       this.Controls.Add(this.comboBASICVersion);
+      this.Controls.Add(this.labelCheckSummer);
       this.Controls.Add(this.labelBASICVersion);
       this.Controls.Add(this.labelStartAddress);
       this.Controls.Add(this.editBASICStartAddress);
@@ -426,5 +453,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem addBookmarkHereToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem removeBookmarkToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem removeAllBookmarksOfThisFileToolStripMenuItem;
+    private System.Windows.Forms.Label labelCheckSummer;
+    private System.Windows.Forms.ComboBox comboCheckSummer;
   }
 }

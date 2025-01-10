@@ -65,6 +65,7 @@ namespace RetroDevStudio.Types.ASM
     public Tiny64.Opcode          Opcode = null;
     public GR.Memory.ByteBuffer   LineData = null;
     public LineFlags              Flags = 0;
+    public int                    CheckSum = -1;
 
 
 

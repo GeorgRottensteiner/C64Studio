@@ -95,10 +95,11 @@ namespace RetroDevStudio.Formats
         _LastError = "could not open/read file";
         return false;
       }
+      /*
       string lastFilename = "";
       ushort lastDataLength = 0;
       ushort lastAutostartLine = 0;
-      ushort lastProgramLength = 0;
+      ushort lastProgramLength = 0;*/
 
       var reader = data.MemoryReader();
       while ( reader.DataAvailable )
