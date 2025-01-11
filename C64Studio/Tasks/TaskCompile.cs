@@ -819,12 +819,14 @@ namespace RetroDevStudio.Tasks
             config = Doc.Project.Settings.Configuration( ConfigSetting );
           }
 
-          int   startAddress = -1;
+          int     startAddress = -1;
+          string  checkSummerClass = "";
           if ( ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
           &&   ( Doc.BaseDoc != null ) )
           {
             // BASIC files bring a start address
-            startAddress = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
+            startAddress     = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
+            checkSummerClass = ( (SourceBasicEx)Doc.BaseDoc ).CheckSummerClass;
             ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
           }
 
@@ -835,6 +837,7 @@ namespace RetroDevStudio.Tasks
                                           OutputFile = Core.DetermineTargetFilename( Doc, parser ),
                                           AutoTruncateLiteralValues = Core.Settings.ASMAutoTruncateLiteralValues,
                                           StartAddress = startAddress,
+                                          CheckSummerClass = checkSummerClass,
                                           EnabledHacks = Core.Settings.EnabledC64StudioHacks,
                                           Encoding = Core.Settings.SourceFileEncoding
                                         } ) )

@@ -106,9 +106,9 @@ namespace RetroDevStudio
 
 
 
-    public static List<string> EnumerateBASICCheckSummer()
+    public static List<ComboItem> EnumerateBASICCheckSummer()
     {
-      var list = new List<string>();
+      var list = new List<ComboItem>();
       var types = Assembly.GetExecutingAssembly().GetTypes()
               .Where( t => String.Equals( t.Namespace, "RetroDevStudio.CheckSummer", StringComparison.Ordinal ) );
       foreach ( var type in types )
@@ -122,11 +122,11 @@ namespace RetroDevStudio
         if ( ( attrs != null )
         &&   ( attrs.Length > 0 ) )
         {
-          list.Add( ( (DescriptionAttribute)attrs[0] ).Description );
+          list.Add( new ComboItem( ( (DescriptionAttribute)attrs[0] ).Description, type.FullName ) );
         }
         else
         {
-          list.Add( type.Name );
+          list.Add( new ComboItem( type.Name, type.FullName ) );
         }
       }
       return list;

@@ -95,6 +95,11 @@ namespace RetroDevStudio.Tasks
         }
 
         parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null, null, out Types.ASM.FileInfo asmFileInfo );
+
+        if ( m_Document.BaseDoc != null )
+        {
+          ( (SourceBasicEx)m_Document.BaseDoc ).SetLineInfos( asmFileInfo );
+        }
       }
 
       var task = new Tasks.TaskUpdateKeywords( m_Document.BaseDoc );

@@ -650,11 +650,11 @@ namespace RetroDevStudio.Documents
 
       var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
       if ( ( item == null )
-      ||   (item.second == null ) )
+      ||   ( item.second == null ) )
       {
         return;
       }
-      m_ExportForm = (ExportCharsetFormBase)Activator.CreateInstance(item.second, new object[] { Core });
+      m_ExportForm = (ExportCharsetFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
       m_ExportForm.Parent = panelExport;
       m_ExportForm.CreateControl();
     }

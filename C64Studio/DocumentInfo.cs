@@ -221,6 +221,7 @@ namespace RetroDevStudio
       }
 
       SourceASMEx   asm = null;
+      SourceBasicEx basic = null;
 
       var clonedInfo = FileInfo;
 
@@ -234,6 +235,15 @@ namespace RetroDevStudio
         asm.DoNotFollowZoneSelectors = true;
 
         asm.SetLineInfos( clonedInfo );
+      }
+      if ( ( BaseDoc != null )
+      &&   ( Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+      {
+        basic = BaseDoc as SourceBasicEx;
+      }
+      if ( basic != null )
+      {
+        basic.SetLineInfos( clonedInfo );
       }
 
       //Debug.Log( $"      doc {FullPath} getting file info with spriteinitbytemsb {clonedInfo.Labels.ContainsKey( "spriteinitbytemsb" )}" );

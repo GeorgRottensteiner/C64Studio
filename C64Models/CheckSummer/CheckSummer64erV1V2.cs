@@ -7,7 +7,7 @@ namespace RetroDevStudio.CheckSummer
   [Description( "64er V1/V2" )]
   public class CheckSummer64erV1V2 : ICheckSummer
   {
-    public int CheckSum( ByteBuffer data )
+    public string CheckSum( ByteBuffer data )
     {
       int checkSum = 0;
 
@@ -20,7 +20,7 @@ namespace RetroDevStudio.CheckSummer
         }
         checkSum = ( checkSum + b ) & 0xff;
       }
-      return checkSum;
+      return checkSum.ToString();
     }
 
 

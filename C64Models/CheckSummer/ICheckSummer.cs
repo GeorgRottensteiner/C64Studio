@@ -5,7 +5,7 @@ namespace RetroDevStudio.CheckSummer
 {
   public interface ICheckSummer
   {
-    int CheckSum( ByteBuffer data );
+    string CheckSum( ByteBuffer data );
   }
 
 

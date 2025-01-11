@@ -11,6 +11,7 @@ using RetroDevStudio.Types;
 using static RetroDevStudio.Parser.BasicFileParser;
 using System.Diagnostics;
 using RetroDevStudio.CheckSummer;
+using System.Reflection;
 
 
 
@@ -2448,250 +2449,278 @@ namespace RetroDevStudio.Parser
       int lineIndex                   = -1;
       int lastLineNumber              = -1;
 
-      var checkSummer = new CheckSummerForum64();
-
       while ( lineIndex + 1 < _Lines.Length )
       {
         ++lineIndex;
 
         string    lineArg = _Lines[lineIndex];
-        if ( lineArg.Length == 0 )
-        {
-          continue;
-        }
-        string line = lineArg.Trim();
-        if ( line.Length == 0 )
-        {
-          continue;
-        }
 
-        if ( !Settings.UpperCaseMode )
-        {
-          line = MakeUpperCase( line, !Settings.UseC64Font );
-        }
-
-        var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
-
-        var pureInfo = PureTokenizeLine( line );
-        pureInfo.LineNumber = lastLineNumber;
-        pureInfo.LineIndex  = lineIndex;
-        if ( LabelMode )
-        {
-          pureInfo.ReferencedLineNumbers.Clear();
-        }
-
-        // remember last line source if a line number was present
-        if ( ( pureInfo.Tokens.Count > 0 )
-        &&   ( pureInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
-        {
-          if ( LabelMode )
-          {
-            AddError( lineIndex, ErrorCode.E3008_BASIC_DOES_NOT_MATCH_LABEL_MODE, "The code contains line numbers, but label mode was expected" );
-            return;
-          }
-          m_ASMFileInfo.FindTrueLineSource( lineIndex, out _LastLineNumberDocument, out _LastLineNumberDocLineIndex );
-        }
-
-        if ( ( pureInfo.Tokens.Count == 1 )
-        &&   ( pureInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
-        {
-          if ( !ProcessMetaData( lineIndex, pureInfo.Tokens[0].Content.Substring( 1 ) ) )
-          {
-            //return hardInfo;
-          }
-        }
-
-        int   tokenIndex = 0;
-        bool  insideDataStatement = false;
-        bool  insideStringLiteral = false;
-        foreach ( var variable in pureInfo.Tokens )
-        {
-          if ( ( variable.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( Settings.BASICDialect.OpcodesFromByte[(ushort)variable.ByteValue].Command == "DATA" ) )
-          {
-            insideDataStatement = true;
-          }
-          else if ( variable.Content == ":" )
-          {
-            if ( !insideStringLiteral )
-            {
-              insideDataStatement = false;
-            }
-          }
-          else if ( variable.Content == "\"" )
-          {
-            insideStringLiteral = !insideStringLiteral;
-          }
-
-          if ( variable.TokenType == Token.Type.VARIABLE )
-          {
-            var     symbolType = SymbolInfo.Types.VARIABLE_NUMBER;
-            string  varName = variable.Content;
-            string  origName = varName;
-
-            m_ASMFileInfo.OriginalVariables.Add( varName );
-
-            // verify next token
-            bool varNameCutShort = false;
-
-            if ( variable.Content.EndsWith( "$" ) )
-            {
-              symbolType = SymbolInfo.Types.VARIABLE_STRING;
-              if ( varName.Length > 3 )
-              {
-                // cut to signifact characters
-                varName = varName.Substring( 0, 2 ) + "$";
-                varNameCutShort = true;
-              }
-            }
-            else if ( variable.Content.EndsWith( "%" ) )
-            {
-              symbolType = SymbolInfo.Types.VARIABLE_INTEGER;
-              if ( varName.Length > 3 )
-              {
-                // cut to signifact characters
-                varName = varName.Substring( 0, 2 ) + "%";
-                varNameCutShort = true;
-              }
-            }
-            else if ( ( tokenIndex + 1 < pureInfo.Tokens.Count )
-            &&        ( variable.StartIndex + variable.Content.Length == pureInfo.Tokens[tokenIndex + 1].StartIndex ) )
-            {
-              var nextToken = pureInfo.Tokens[tokenIndex + 1];
-              if ( nextToken.Content == "(" )
-              {
-                symbolType = SymbolInfo.Types.VARIABLE_ARRAY;
-                if ( varName.Length > 3 )
-                {
-                  // cut to signifact characters
-                  varName = varName.Substring( 0, 2 );
-                  varNameCutShort = true;
-                }
-                varName += "(";
-              }
-              else if ( varName.Length > 2 )
-              {
-                // cut to signifact characters
-                varName = varName.Substring( 0, 2 );
-                varNameCutShort = true;
-              }
-            }
-            else
-            {
-              if ( varName.Length > 2 )
-              {
-                // cut to signifact characters
-                varName = varName.Substring( 0, 2 );
-                varNameCutShort = true;
-              }
-            }
-
-            if ( ( origName != varName )
-            &&   ( varNameCutShort )
-            &&   ( !insideDataStatement ) )
-            {
-              if ( !m_ASMFileInfo.MappedVariables.ContainsKey( varName ) )
-              {
-                m_ASMFileInfo.MappedVariables.Add( varName, new List<SymbolInfo>() );
-              }
-              // name is cut short
-              if ( !m_ASMFileInfo.Labels.ContainsKey( origName ) )
-              {
-                var symbolInfo              = new SymbolInfo();
-                symbolInfo.AddressOrValue   = 0;
-                symbolInfo.CharIndex        = variable.StartIndex;
-                symbolInfo.Name             = varName;
-                symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
-                symbolInfo.Length           = origName.Length;
-                symbolInfo.LineIndex        = lineIndex;
-                symbolInfo.LocalLineIndex   = lineIndex;
-                symbolInfo.Type             = symbolType;
-                symbolInfo.String           = origName;
-
-                if ( !m_ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
-                {
-                  m_ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
-                }
-              }
-            }
-
-            if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
-            {
-              var symbolInfo              = new SymbolInfo();
-              symbolInfo.AddressOrValue   = 0;
-              symbolInfo.CharIndex        = variable.StartIndex;
-              symbolInfo.Name             = varName;
-              symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
-              symbolInfo.Length           = varName.Length;
-              symbolInfo.LineIndex        = lineIndex;
-              symbolInfo.LocalLineIndex   = lineIndex;
-              symbolInfo.Type             = symbolType;
-
-              m_ASMFileInfo.Labels.Add( varName, symbolInfo );
-            }
-            var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
-            existingSymbolInfo.References.Add( lineIndex,
-              new SymbolReference()
-              {
-                GlobalLineIndex = lineIndex,
-                TokenInfo = new TokenInfo() { StartPos = variable.StartIndex, Length = variable.Content.Length, OriginatingString = info.Line }
-              } );
-            
-          }
-          else if ( variable.TokenType == Token.Type.TEXT_LABEL )
-          {
-            // PROC/EXEC labels
-            var varName = variable.Content;
-            if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
-            {
-              var symbolInfo              = new SymbolInfo();
-              symbolInfo.AddressOrValue   = 0;
-              symbolInfo.CharIndex        = variable.StartIndex;
-              symbolInfo.Name             = varName;
-              symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
-              symbolInfo.Length           = varName.Length;
-              symbolInfo.LineIndex        = lineIndex;
-              symbolInfo.LocalLineIndex   = lineIndex;
-              symbolInfo.Type             = SymbolInfo.Types.TEXT_LABEL;
-
-              m_ASMFileInfo.Labels.Add( varName, symbolInfo );
-            }
-            var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
-            existingSymbolInfo.References.Add( lineIndex,
-              new SymbolReference()
-              {
-                GlobalLineIndex = lineIndex,
-                TokenInfo = new TokenInfo() { StartPos = variable.StartIndex, Length = variable.Content.Length, OriginatingString = info.Line }
-              } );
-          }
-
-          ++tokenIndex;
-        }
-
-        if ( m_CompileConfig.DoNotExpandStringLiterals )
-        {
-          m_LineInfos[info.LineIndex] = pureInfo;
-        }
-        else
-        {
-          m_LineInfos[info.LineIndex] = info;
-        }
-
-        if ( info.LineNumber != -1 )
-        {
-          var bb = new ByteBuffer();
-          bb.AppendU16( (ushort)info.LineNumber );
-          bb += m_LineInfos[info.LineIndex].LineData;
-
-          int checkSum = checkSummer.CheckSum( bb );
-          Debug.Log( $"CheckSum for {info.LineNumber} = {checkSum}/{checkSum.ToString( "X4" )}" );
-
-          m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, CheckSum = checkSum } );
-        }
+        ProcessLine( lineIndex, lineArg, ref lastLineNumber );
       }
 
       CheckForAmbigiousVariables();
       CheckForMissingReferencedLineNumbers();
+    }
+
+
+
+    private void ProcessLine( int lineIndex, string lineArg, ref int lastLineNumber )
+    {
+      if ( lineArg.Length == 0 )
+      {
+        return;
+      }
+      string line = lineArg.Trim();
+      if ( line.Length == 0 )
+      {
+        return;
+      }
+
+      if ( !Settings.UpperCaseMode )
+      {
+        line = MakeUpperCase( line, !Settings.UseC64Font );
+      }
+
+      var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
+
+      var pureInfo = PureTokenizeLine( line );
+      pureInfo.LineNumber = lastLineNumber;
+      pureInfo.LineIndex  = lineIndex;
+      if ( LabelMode )
+      {
+        pureInfo.ReferencedLineNumbers.Clear();
+      }
+
+      // remember last line source if a line number was present
+      if ( ( pureInfo.Tokens.Count > 0 )
+      &&   ( pureInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
+      {
+        if ( LabelMode )
+        {
+          AddError( lineIndex, ErrorCode.E3008_BASIC_DOES_NOT_MATCH_LABEL_MODE, "The code contains line numbers, but label mode was expected" );
+          return;
+        }
+        m_ASMFileInfo.FindTrueLineSource( lineIndex, out _LastLineNumberDocument, out _LastLineNumberDocLineIndex );
+      }
+
+      if ( ( pureInfo.Tokens.Count == 1 )
+      &&   ( pureInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+      {
+        if ( !ProcessMetaData( lineIndex, pureInfo.Tokens[0].Content.Substring( 1 ) ) )
+        {
+          //return hardInfo;
+        }
+      }
+
+      int   tokenIndex = 0;
+      bool  insideDataStatement = false;
+      bool  insideStringLiteral = false;
+      foreach ( var variable in pureInfo.Tokens )
+      {
+        if ( ( variable.TokenType == Token.Type.BASIC_TOKEN )
+        &&   ( Settings.BASICDialect.OpcodesFromByte[(ushort)variable.ByteValue].Command == "DATA" ) )
+        {
+          insideDataStatement = true;
+        }
+        else if ( variable.Content == ":" )
+        {
+          if ( !insideStringLiteral )
+          {
+            insideDataStatement = false;
+          }
+        }
+        else if ( variable.Content == "\"" )
+        {
+          insideStringLiteral = !insideStringLiteral;
+        }
+
+        if ( variable.TokenType == Token.Type.VARIABLE )
+        {
+          var     symbolType = SymbolInfo.Types.VARIABLE_NUMBER;
+          string  varName = variable.Content;
+          string  origName = varName;
+
+          m_ASMFileInfo.OriginalVariables.Add( varName );
+
+          // verify next token
+          bool varNameCutShort = false;
+
+          if ( variable.Content.EndsWith( "$" ) )
+          {
+            symbolType = SymbolInfo.Types.VARIABLE_STRING;
+            if ( varName.Length > 3 )
+            {
+              // cut to signifact characters
+              varName = varName.Substring( 0, 2 ) + "$";
+              varNameCutShort = true;
+            }
+          }
+          else if ( variable.Content.EndsWith( "%" ) )
+          {
+            symbolType = SymbolInfo.Types.VARIABLE_INTEGER;
+            if ( varName.Length > 3 )
+            {
+              // cut to signifact characters
+              varName = varName.Substring( 0, 2 ) + "%";
+              varNameCutShort = true;
+            }
+          }
+          else if ( ( tokenIndex + 1 < pureInfo.Tokens.Count )
+          &&        ( variable.StartIndex + variable.Content.Length == pureInfo.Tokens[tokenIndex + 1].StartIndex ) )
+          {
+            var nextToken = pureInfo.Tokens[tokenIndex + 1];
+            if ( nextToken.Content == "(" )
+            {
+              symbolType = SymbolInfo.Types.VARIABLE_ARRAY;
+              if ( varName.Length > 3 )
+              {
+                // cut to signifact characters
+                varName = varName.Substring( 0, 2 );
+                varNameCutShort = true;
+              }
+              varName += "(";
+            }
+            else if ( varName.Length > 2 )
+            {
+              // cut to signifact characters
+              varName = varName.Substring( 0, 2 );
+              varNameCutShort = true;
+            }
+          }
+          else
+          {
+            if ( varName.Length > 2 )
+            {
+              // cut to signifact characters
+              varName = varName.Substring( 0, 2 );
+              varNameCutShort = true;
+            }
+          }
+
+          if ( ( origName != varName )
+          &&   ( varNameCutShort )
+          &&   ( !insideDataStatement ) )
+          {
+            if ( !m_ASMFileInfo.MappedVariables.ContainsKey( varName ) )
+            {
+              m_ASMFileInfo.MappedVariables.Add( varName, new List<SymbolInfo>() );
+            }
+            // name is cut short
+            if ( !m_ASMFileInfo.Labels.ContainsKey( origName ) )
+            {
+              var symbolInfo              = new SymbolInfo();
+              symbolInfo.AddressOrValue   = 0;
+              symbolInfo.CharIndex        = variable.StartIndex;
+              symbolInfo.Name             = varName;
+              symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
+              symbolInfo.Length           = origName.Length;
+              symbolInfo.LineIndex        = lineIndex;
+              symbolInfo.LocalLineIndex   = lineIndex;
+              symbolInfo.Type             = symbolType;
+              symbolInfo.String           = origName;
+
+              if ( !m_ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
+              {
+                m_ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
+              }
+            }
+          }
+
+          if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
+          {
+            var symbolInfo              = new SymbolInfo();
+            symbolInfo.AddressOrValue   = 0;
+            symbolInfo.CharIndex        = variable.StartIndex;
+            symbolInfo.Name             = varName;
+            symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
+            symbolInfo.Length           = varName.Length;
+            symbolInfo.LineIndex        = lineIndex;
+            symbolInfo.LocalLineIndex   = lineIndex;
+            symbolInfo.Type             = symbolType;
+
+            m_ASMFileInfo.Labels.Add( varName, symbolInfo );
+          }
+          var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
+          existingSymbolInfo.References.Add( lineIndex,
+            new SymbolReference()
+            {
+              GlobalLineIndex = lineIndex,
+              TokenInfo = new TokenInfo() { StartPos = variable.StartIndex, Length = variable.Content.Length, OriginatingString = info.Line }
+            } );
+            
+        }
+        else if ( variable.TokenType == Token.Type.TEXT_LABEL )
+        {
+          // PROC/EXEC labels
+          var varName = variable.Content;
+          if ( !m_ASMFileInfo.Labels.ContainsKey( varName ) )
+          {
+            var symbolInfo              = new SymbolInfo();
+            symbolInfo.AddressOrValue   = 0;
+            symbolInfo.CharIndex        = variable.StartIndex;
+            symbolInfo.Name             = varName;
+            symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
+            symbolInfo.Length           = varName.Length;
+            symbolInfo.LineIndex        = lineIndex;
+            symbolInfo.LocalLineIndex   = lineIndex;
+            symbolInfo.Type             = SymbolInfo.Types.TEXT_LABEL;
+
+            m_ASMFileInfo.Labels.Add( varName, symbolInfo );
+          }
+          var existingSymbolInfo = m_ASMFileInfo.Labels[varName];
+          existingSymbolInfo.References.Add( lineIndex,
+            new SymbolReference()
+            {
+              GlobalLineIndex = lineIndex,
+              TokenInfo = new TokenInfo() { StartPos = variable.StartIndex, Length = variable.Content.Length, OriginatingString = info.Line }
+            } );
+        }
+
+        ++tokenIndex;
+      }
+
+      if ( m_CompileConfig.DoNotExpandStringLiterals )
+      {
+        m_LineInfos[info.LineIndex] = pureInfo;
+      }
+      else
+      {
+        m_LineInfos[info.LineIndex] = info;
+      }
+    }
+
+
+
+    public string RecalcCheckSum( string line, bool labelMode, string checkSummerClass )
+    {
+      ICheckSummer checkSummer = null;
+      if ( string.IsNullOrEmpty( checkSummerClass ) )
+      {
+        return "";
+      }
+      checkSummer = (ICheckSummer)( Activator.CreateInstance( Assembly.GetExecutingAssembly().FullName, checkSummerClass ) ).Unwrap();
+
+      int lastLineNumber = -1;
+      ProcessLine( -1, line, ref lastLineNumber );
+
+      if ( !m_LineInfos.ContainsKey( -1 ) )
+      {
+        return "";
+      }
+      var info = m_LineInfos[-1];
+
+      if ( info.LineNumber == -1 )
+      {
+        return "";
+      }
+      var bb = new ByteBuffer();
+      bb.AppendU16( (ushort)info.LineNumber );
+      bb += m_LineInfos[info.LineIndex].LineData;
+
+      var checkSum = checkSummer.CheckSum( bb );
+      //Debug.Log( $"CheckSum for {info.LineNumber} = {checkSum}" );
+
+      return checkSum;
     }
 
 
@@ -2748,6 +2777,12 @@ namespace RetroDevStudio.Parser
         startAddress = 0x0801;
       }
 
+      ICheckSummer checkSummer = null;
+      if ( !string.IsNullOrEmpty( Config.CheckSummerClass ) )
+      {
+        checkSummer = (ICheckSummer)( Activator.CreateInstance( Assembly.GetExecutingAssembly().FullName, Config.CheckSummerClass ) ).Unwrap();
+      }
+
       result.AppendU16( (ushort)startAddress );
 
       int     curAddress = startAddress;
@@ -2778,6 +2813,21 @@ namespace RetroDevStudio.Parser
           result.AppendU8( 0 );
 
           curAddress += (int)info.LineData.Length + 5;
+        }
+
+        // build check sum
+        if ( info.LineNumber != -1 )
+        {
+          var bb = new ByteBuffer();
+          bb.AppendU16( (ushort)info.LineNumber );
+          bb += m_LineInfos[info.LineIndex].LineData;
+
+          var checkSum = "";
+          if ( checkSummer != null )
+          {
+            checkSum = checkSummer.CheckSum( bb );
+          }
+          m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, CheckSum = checkSum } );
         }
       }
       result.AppendU16( 0 );

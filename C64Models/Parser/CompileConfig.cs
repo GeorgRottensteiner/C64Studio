@@ -13,6 +13,7 @@ namespace RetroDevStudio.Parser
     public string                                 OutputFile = null;
     public LabelDumpSettings                      LabelDumpSettings = new LabelDumpSettings();
     public int                                    StartAddress = -1;
+    public string                                 CheckSummerClass = "";
     public RetroDevStudio.Types.CompileTargetType TargetType = RetroDevStudio.Types.CompileTargetType.NONE;
     public Types.AssemblerType                    Assembler = Types.AssemblerType.AUTO;
     public bool                                   AutoTruncateLiteralValues = false;

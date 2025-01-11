@@ -16,6 +16,7 @@ using FastColoredTextBoxNS;
 using GR.Memory;
 using RetroDevStudio.Parser;
 using System.Drawing;
+using RetroDevStudio.Tasks;
 
 namespace RetroDevStudio.Documents
 {
@@ -52,6 +53,8 @@ namespace RetroDevStudio.Documents
 
     public string                             m_LastLabelAutoRenumberStartLine  = "10";
     public string                             m_LastLabelAutoRenumberLineStep   = "10";
+
+    public string                             _currentCheckSummer = "None";
 
 
 
@@ -120,11 +123,13 @@ namespace RetroDevStudio.Documents
       }
 
       var types = Lookup.EnumerateBASICCheckSummer();
-      comboCheckSummer.Items.Add( "None" );
+      comboCheckSummer.Items.Add( new ComboItem( "None", "" ) );
       foreach ( var checkSummer in types )
       {
         comboCheckSummer.Items.Add( checkSummer );
       }
+      comboCheckSummer.SelectedIndex = 0;
+
       editSource.SyntaxHighlighter = new BASICSyntaxHighlighter( this );
       comboBASICVersion.SelectedIndex = 0;
 
@@ -490,6 +495,20 @@ namespace RetroDevStudio.Documents
       }
       m_StartAddress              = StartAddress;
       editBASICStartAddress.Text  = StartAddress;
+    }
+
+
+
+    public string CheckSummerClass
+    {
+      get
+      {
+        if ( _currentCheckSummer == "None" )
+        {
+          return "";
+        }
+        return _currentCheckSummer;
+      }
     }
 
 
@@ -3095,13 +3114,91 @@ namespace RetroDevStudio.Documents
 
     private void comboCheckSummer_SelectedIndexChanged( object sender, EventArgs e )
     {
+      var  checkSummerClass = (string)( (ComboItem)comboCheckSummer.SelectedItem ).Tag;
+      if ( checkSummerClass != _currentCheckSummer )
+      {
+        _currentCheckSummer = checkSummerClass;
 
+        // force recalc of checksums for the full file
+        if ( !string.IsNullOrEmpty( DocumentInfo.FullPath ) )
+        {
+          if ( ( Core.MainForm.ParseFile( Core.Compiling.ParserBasic, DocumentInfo, null, null, false, false, false, out Types.ASM.FileInfo asmFileInfo ) )
+          &&   ( Core.Compiling.ParserBasic.Assemble( new CompileConfig() { CheckSummerClass = checkSummerClass } ) ) )
+          {
+            if ( asmFileInfo != null )
+            {
+              DocumentInfo.SetASMFileInfo( asmFileInfo );
+              Invalidate();
+            }
+          }
+        }
+      }
     }
 
 
 
-    public void SetLineInfos( Dictionary<int, Types.ASM.LineInfo> lineInfo )
+    public void SetLineInfos( Types.ASM.FileInfo FileInfo )
     {
+      try
+      {
+        GR.Collections.Set<int>   setLines = new GR.Collections.Set<int>();
+        string                    myFullPath = DocumentInfo.FullPath;
+
+        foreach ( var lineInfo in FileInfo.LineInfo )
+        {
+          FileInfo.FindTrueLineSource( lineInfo.Key, out string filename, out int localLineIndex );
+
+          // Windows filenames don't care for case (as the gods intended)
+          if ( string.Compare( filename, myFullPath, true ) == 0 )
+          {
+            var newInfo = lineInfo.Value;
+
+            if ( !setLines.ContainsValue( localLineIndex ) )
+            {
+              while ( localLineIndex >= m_LineInfos.Count )
+              {
+                m_LineInfos.Add( new Types.ASM.LineInfo() );
+              }
+              if ( newInfo != null )
+              {
+                m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+                {
+                  CheckSum  = newInfo.CheckSum
+                };
+              }
+              else
+              {
+                m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
+                {
+                  LineIndex = localLineIndex
+                };
+              }
+
+              setLines.Add( localLineIndex );
+            }
+            else
+            {
+              while ( localLineIndex >= m_LineInfos.Count )
+              {
+                m_LineInfos.Add( new Types.ASM.LineInfo() );
+              }
+
+              /*
+              // accumulate values!
+              var curInfo = m_LineInfos[localLineIndex];
+
+              curInfo.NumBytes += newInfo.NumBytes;
+
+              // TODO - cycles!
+              curInfo.HasCollapsedContent = true;*/
+            }
+          }
+        }
+      }
+      catch ( InvalidOperationException )
+      {
+        // HACK - this one may happen if another thread parses and we try to use the collection at the same time
+      }
     }
 
 
@@ -3124,10 +3221,34 @@ namespace RetroDevStudio.Documents
 
       var lineInfo = FetchLineInfo( e.LineIndex );
       if ( ( lineInfo != null )
-      &&   ( lineInfo.CheckSum != -1 ) )
+      &&   ( lineInfo.CheckSum != "" ) )
       {
-        e.Graphics.DrawString( lineInfo.CheckSum.ToString(), editSource.Font, textBrush, 20, e.LineRect.Top );
+        e.Graphics.DrawString( lineInfo.CheckSum, Font, textBrush, 2, e.LineRect.Top );
       }
+    }
+
+
+
+    private void editSource_TextChangedDelayed( object sender, TextChangedEventArgs e )
+    {
+      int   line1 = e.ChangedRange.Start.iLine;
+      int   line2 = e.ChangedRange.End.iLine;
+
+      if ( line2 < line1 )
+      {
+        line2 = e.ChangedRange.Start.iLine;
+        line1 = e.ChangedRange.End.iLine;
+      }
+
+      for ( int i = line1; i <= line2; ++i )
+      {
+        while ( i >= m_LineInfos.Count )
+        {
+          m_LineInfos.Add( new Types.ASM.LineInfo() { LineIndex = m_LineInfos.Count } );
+        }
+        m_LineInfos[i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[i], m_LabelMode, _currentCheckSummer );
+      }
+      editSource.Invalidate();
     }
 
 

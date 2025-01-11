@@ -106,6 +106,7 @@ namespace RetroDevStudio.Documents
       this.editSource.Size = new System.Drawing.Size(858, 532);
       this.editSource.TabIndex = 0;
       this.editSource.Zoom = 100;
+      this.editSource.TextChangedDelayed += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.editSource_TextChangedDelayed);
       this.editSource.LineVisited += new System.EventHandler<FastColoredTextBoxNS.LineVisitedArgs>(this.editSource_LineVisited);
       this.editSource.PaintLine += new System.EventHandler<FastColoredTextBoxNS.PaintLineEventArgs>(this.editSource_PaintLine);
       this.editSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.editSource_DragDrop);

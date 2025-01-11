@@ -7,7 +7,7 @@ namespace RetroDevStudio.CheckSummer
   [Description( "Forum 64 Summer" )]
   public class CheckSummerForum64 : ICheckSummer
   {
-    public int CheckSum( ByteBuffer data )
+    public string CheckSum( ByteBuffer data )
     {
       ushort checkSum = data.UInt16At( 0 );
       bool insideQuotes = false;
@@ -106,7 +106,7 @@ namespace RetroDevStudio.CheckSummer
         }
         checkSum = (ushort)( ( lfsr1 << 8 ) | lfsr );
       }
-      return checkSum;
+      return checkSum.ToString( "X4" );
     }
 
 
