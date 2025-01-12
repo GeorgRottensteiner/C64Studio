@@ -616,7 +616,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
       // for NES style filling to work we need to remember the original positions and replant later
-      var changedChars = new List<System.Drawing.Point>();
+      var changedChars = new GR.Collections.Set<System.Drawing.Point>();
 
       while ( pointsToCheck.Count != 0 )
       {
@@ -1283,6 +1283,7 @@ namespace RetroDevStudio.Documents
 
     private void RedrawFullScreen()
     {
+      Debug.Log( "RedrawFullScreen" );
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
       int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
@@ -1392,6 +1393,7 @@ namespace RetroDevStudio.Documents
 
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
+      SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
 
       SetupColorChooserDialog();
       OnCharsetScreenModeChanged();
@@ -2683,8 +2685,10 @@ namespace RetroDevStudio.Documents
 
     private void comboCharsetMode_SelectedIndexChanged( object sender, EventArgs e )
     {
+      bool changedMode = false;
       if ( m_CharsetScreen.Mode != (TextMode)comboCharsetMode.SelectedIndex )
       {
+        changedMode = true;
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
         m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
         if ( m_CharsetScreen.Mode != TextMode.NES )
@@ -2700,10 +2704,13 @@ namespace RetroDevStudio.Documents
       m_CharsHeight = Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode );
 
       SetupColorChooserDialog();
-      OnCharsetScreenModeChanged();
-      SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
-      RedrawFullScreen();
-      AdjustScrollbars();
+      if ( changedMode )
+      {
+        OnCharsetScreenModeChanged();
+        SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+        RedrawFullScreen();
+        AdjustScrollbars();
+      }
     }
 
 
@@ -2767,12 +2774,13 @@ namespace RetroDevStudio.Documents
           displaySize = new Size( 256, 240 );
           break;
         case TextMode.X16_20_X_15:
+        case TextMode.X16_80_X_60:
         case TextMode.X16_20_X_30:
         case TextMode.X16_40_X_15:
         case TextMode.X16_40_X_30:
         case TextMode.X16_40_X_60:
         case TextMode.X16_80_X_30:
-        case TextMode.X16_80_X_60:
+          clientSize = new Size( 640, 480 );
           // these modes adapt aspect ratio!
           displaySize = new Size( Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode ) * 8, Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode ) * 8 );
           break;
