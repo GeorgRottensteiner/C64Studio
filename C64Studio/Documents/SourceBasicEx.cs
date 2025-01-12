@@ -2398,12 +2398,20 @@ namespace RetroDevStudio.Documents
           ///editSource.FindReplace.ShowReplace();
           break;
         case RetroDevStudio.Types.Function.PRINT:
-          editSource.Print( new FastColoredTextBoxNS.PrintDialogSettings
           {
-            ShowPageSetupDialog = true,
-            ShowPrintDialog = true,
-            ShowPrintPreviewDialog = true
-          } );
+            var settings = new FastColoredTextBoxNS.PrintDialogSettings
+            {
+              ShowPageSetupDialog = true,
+              ShowPrintDialog = true,
+              ShowPrintPreviewDialog = true
+            };
+
+            if ( !string.IsNullOrEmpty( _currentCheckSummer ) )
+            {
+              settings.PostProcessPrintedText = AppendCheckSumsForPrinting;  
+            }
+            editSource.Print( settings );
+          }
           return true;
         case Function.JUMP_TO_LINE:
           JumpToLine();
@@ -2427,6 +2435,13 @@ namespace RetroDevStudio.Documents
           return true;
       }
       return false;
+    }
+
+
+
+    private string AppendCheckSumsForPrinting( string text )
+    {
+      return text;
     }
 
 
