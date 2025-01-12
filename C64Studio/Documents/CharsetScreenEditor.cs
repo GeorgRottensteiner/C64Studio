@@ -1283,7 +1283,6 @@ namespace RetroDevStudio.Documents
 
     private void RedrawFullScreen()
     {
-      Debug.Log( "RedrawFullScreen" );
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
       int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
