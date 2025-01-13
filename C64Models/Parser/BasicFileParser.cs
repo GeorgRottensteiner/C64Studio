@@ -4408,7 +4408,7 @@ namespace RetroDevStudio.Parser
               int     numCharsToReplace = 1;
               int     testPos = i;
               while ( ( testPos + 1 < BasicText.Length )
-              &&      ( BasicText[testPos + 1] == chartoCheck ) )
+              && ( BasicText[testPos + 1] == chartoCheck ) )
               {
                 ++testPos;
               }
@@ -4423,7 +4423,7 @@ namespace RetroDevStudio.Parser
 
               // special case, do not insert {SPACE} for single chars
               if ( ( chartoCheck == ' ' )
-              &&   ( numCharsToReplace == 1 ) )
+              && ( numCharsToReplace == 1 ) )
               {
                 continue;
               }
@@ -4433,8 +4433,13 @@ namespace RetroDevStudio.Parser
                 replacement = replacement.ToLower();
               }
               BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + numCharsToReplace );
-              i += replacement.Length - numCharsToReplace;
+              i += 2 + replacement.Length - 1;
             }
+          }
+          else if ( ( chartoCheck < 'A' )
+          ||        ( chartoCheck > 'Z' ) )
+          {
+            Debug.Log( $"FindC64KeyByUnicode found no key for {chartoCheck}/{(ushort)chartoCheck}" );
           }
         }
       }

@@ -95,11 +95,14 @@ namespace RetroDevStudio.Controls
         int y = unchecked( (short)( (ulong)m.LParam >> 16 ) );
 
         Control c = Control.FromHandle( m.HWnd );
-        var p = c.PointToScreen( new Point( x, y ) );
-        p = this.PointToClient( p );
-        if ( Clicked != null )
+        if ( c != null )
         {
-          Clicked( p.X, p.Y );
+          var p = c.PointToScreen( new Point( x, y ) );
+          p = this.PointToClient( p );
+          if ( Clicked != null )
+          {
+            Clicked( p.X, p.Y );
+          }
         }
         Dispose();
         return false;
