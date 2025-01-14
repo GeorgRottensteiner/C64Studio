@@ -674,20 +674,27 @@ namespace RetroDevStudio.Documents
       contextMenu.Items.Add( item );
 
       bool  exportToBasicPossible = true;
+      bool  isKoalaPic = true;
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
         if ( fileInfo.NativeType != FileTypeNative.COMMODORE_PRG )
         {
           exportToBasicPossible = false;
+          isKoalaPic = false;
+        }
+        if ( ( fileInfo.Size != 10003 )
+        ||   ( fileInfo.Data.UInt16At( 0 ) != 0x6000 )
+        ||   ( fileInfo.Filename.ByteAt( 0 ) != 0x81 ) )
+        {
+          isKoalaPic = false;
         }
       }
       if ( exportToBasicPossible )
       {
-        System.Windows.Forms.ToolStripMenuItem itemBASICOpen = new System.Windows.Forms.ToolStripMenuItem( "Open as" );
+        var itemBASICOpen = new System.Windows.Forms.ToolStripMenuItem( "Open as" );
         itemBASICOpen.Tag = 0;
         contextMenu.Items.Add( itemBASICOpen );
-
         foreach ( var dialect in Core.Compiling.BASICDialects )
         {
           var itemDialect = new System.Windows.Forms.ToolStripMenuItem( dialect.Key );
@@ -695,6 +702,12 @@ namespace RetroDevStudio.Documents
           itemDialect.Click += new EventHandler( itemExportToBasic_Click );
           itemBASICOpen.DropDownItems.Add( itemDialect );
         }
+      }
+      if ( isKoalaPic )
+      {
+        var itemKoala = new System.Windows.Forms.ToolStripMenuItem( "View as Koala Picture" );
+        itemKoala.Click += new EventHandler( itemOpenAsKoala_Click );
+        contextMenu.Items.Add( itemKoala );
       }
 
       // view in Hex display
@@ -744,6 +757,36 @@ namespace RetroDevStudio.Documents
       contextMenu.Items.Add( item );
 
       contextMenu.Show( listFiles.PointToScreen( e.Location ) );
+    }
+
+
+
+    private void itemOpenAsKoala_Click( object sender, EventArgs e )
+    {
+      OpenSelectedItemsAsKoalaPicture();
+    }
+
+
+
+    void OpenSelectedItemsAsKoalaPicture()
+    {
+      foreach ( ListViewItem item in listFiles.SelectedItems )
+      {
+        RetroDevStudio.Types.FileInfo fileToExport = (RetroDevStudio.Types.FileInfo)item.Tag;
+
+        OpenAsKoalaPicture( fileToExport );
+      }
+    }
+
+
+
+    void OpenAsKoalaPicture( Types.FileInfo fileToImport )
+    {
+      var graphicEditor = new GraphicScreenEditor( Core );
+
+      graphicEditor.ImportKoalaPicture( fileToImport.Data );
+
+      graphicEditor.Show( Core.MainForm.panelMain, DockState.Document );
     }
 
 
