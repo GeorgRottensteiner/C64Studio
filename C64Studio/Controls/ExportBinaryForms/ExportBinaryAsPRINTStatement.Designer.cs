@@ -37,6 +37,8 @@ namespace RetroDevStudio.Controls
       this.editWrapCharCount = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.editTextOutput = new System.Windows.Forms.TextBox();
+      this.checkPlaceAddress = new System.Windows.Forms.CheckBox();
+      this.editStartAddress = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
       // 
       // editExportBASICLineOffset
@@ -115,6 +117,26 @@ namespace RetroDevStudio.Controls
       this.editTextOutput.Size = new System.Drawing.Size(380, 398);
       this.editTextOutput.TabIndex = 39;
       // 
+      // checkPlaceAddress
+      // 
+      this.checkPlaceAddress.AutoSize = true;
+      this.checkPlaceAddress.Location = new System.Drawing.Point(3, 84);
+      this.checkPlaceAddress.Name = "checkPlaceAddress";
+      this.checkPlaceAddress.Size = new System.Drawing.Size(64, 17);
+      this.checkPlaceAddress.TabIndex = 29;
+      this.checkPlaceAddress.Text = "Address";
+      this.checkPlaceAddress.UseVisualStyleBackColor = true;
+      this.checkPlaceAddress.CheckedChanged += new System.EventHandler(this.checkPlaceAddress_CheckedChanged);
+      // 
+      // editStartAddress
+      // 
+      this.editStartAddress.Enabled = false;
+      this.editStartAddress.Location = new System.Drawing.Point(73, 82);
+      this.editStartAddress.Name = "editStartAddress";
+      this.editStartAddress.Size = new System.Drawing.Size(73, 20);
+      this.editStartAddress.TabIndex = 30;
+      this.editStartAddress.Text = "$c000";
+      // 
       // ExportBinaryAsPRINTStatement
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -124,7 +146,9 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.editExportBASICLineNo);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label4);
+      this.Controls.Add(this.checkPlaceAddress);
       this.Controls.Add(this.checkWrapAtMaxChars);
+      this.Controls.Add(this.editStartAddress);
       this.Controls.Add(this.editWrapCharCount);
       this.Controls.Add(this.label1);
       this.Name = "ExportBinaryAsPRINTStatement";
@@ -143,5 +167,7 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.TextBox editWrapCharCount;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox editTextOutput;
+    private System.Windows.Forms.CheckBox checkPlaceAddress;
+    private System.Windows.Forms.TextBox editStartAddress;
   }
 }

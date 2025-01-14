@@ -59,12 +59,35 @@ namespace RetroDevStudio.Controls
         lineOffset = 10;
       }
 
-      int wrapCharCount = GetExportCharCount();
-
+      int     wrapCharCount = GetExportCharCount();
+      bool    useAddress = checkPlaceAddress.Checked;
       bool    isReverse = false;
       int     startLength = sb.Length;
+      int     address = ParseValue( editStartAddress.Text );
 
       List<char>  charsToAppend = new List<char>();
+      if ( useAddress )
+      {
+        sb.Append( startLine );
+        sb.Append( "POKE648," );
+        sb.Append( address / 256 );
+        sb.Append( ":PRINT\"" );
+        sb.Append( ConstantData.PetSCIIToChar[19].CharValue );
+        sb.Append( "\"" );
+        if ( ( address % 256 ) != 0 )
+        {
+          int   delta = address % 256;
+
+          sb.Append( "SPC(" );
+          sb.Append( delta );
+          sb.AppendLine( ");" );
+        }
+        else
+        {
+          sb.AppendLine( "," );
+        }
+        startLine += lineOffset;
+      }
       for ( int i = 0; i < (int)info.Data.Length; ++i )
       {
         byte newByte = info.Data.ByteAt( i );
@@ -76,22 +99,6 @@ namespace RetroDevStudio.Controls
             isReverse = true;
             charsToAppend.Add( ConstantData.PetSCIIToChar[18].CharValue );
           }
-          if ( newByte == 128 + 34 )
-          {
-            string replacement = "\"CHR$(34)CHR$(34)\"" + ConstantData.PetSCIIToChar[157].CharValue;
-            for ( int t = 0; t < replacement.Length; ++t )
-            {
-              charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
-            }
-          }
-          else
-          {
-            var key = ConstantData.AllPhysicalKeyInfos.FirstOrDefault( pk => pk.HasScreenCode && pk.ScreenCodeValue == ( newByte - 128 ) );
-            if ( key != null )
-            {
-              charsToAppend.Add( key.CharValue );
-            }
-          }
         }
         else
         {
@@ -100,22 +107,27 @@ namespace RetroDevStudio.Controls
             isReverse = false;
             charsToAppend.Add( ConstantData.PetSCIIToChar[146].CharValue );
           }
-          
-          if ( newByte == 34 )
+        }
+        newByte &= 0x7f;
+        if ( newByte == 34 )
+        {
+          string replacement = "\"CHR$(34)CHR$(34)\"" + ConstantData.PetSCIIToChar[157].CharValue;
+          // if " is the last char we don't need to place a second
+          if ( i + 1 == info.Data.Length )
           {
-            string replacement = "\"CHR$(34)CHR$(34)\"" + ConstantData.PetSCIIToChar[157].CharValue;
-            for ( int t = 0; t < replacement.Length; ++t )
-            {
-              charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
-            }
+            replacement = "\"CHR$(34)";
           }
-          else
+          for ( int t = 0; t < replacement.Length; ++t )
           {
-            var key = ConstantData.AllPhysicalKeyInfos.FirstOrDefault( pk => pk.HasScreenCode && pk.ScreenCodeValue == newByte );
-            if ( key != null )
-            {
-              charsToAppend.Add( key.CharValue );
-            }
+            charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
+          }
+        }
+        else
+        {
+          var key = ConstantData.AllPhysicalKeyInfos.FirstOrDefault( pk => pk.HasScreenCode && pk.ScreenCodeValue == newByte );
+          if ( key != null )
+          {
+            charsToAppend.Add( key.CharValue );
           }
         }
       }
@@ -154,9 +166,37 @@ namespace RetroDevStudio.Controls
         sb.Append( "\n" );
       }
 
+      if ( useAddress )
+      {
+        sb.Append( startLine );
+        sb.AppendLine( "POKE648,4" );
+      }
+
       editTextOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
       editTextOutput.Text = sb.ToString().Replace( "\n", "\r\n" );
       return true;
+    }
+
+
+
+    private int ParseValue( string text )
+    {
+      if ( text.StartsWith( "$" ) )
+      {
+        return GR.Convert.ToI32( text.Substring( 1 ), 16 );
+      }
+      else if ( text.StartsWith( "0x" ) )
+      {
+        return GR.Convert.ToI32( text.Substring( 2 ), 16 );
+      }
+      return GR.Convert.ToI32( text );
+    }
+
+
+
+    private void checkPlaceAddress_CheckedChanged( object sender, EventArgs e )
+    {
+      editStartAddress.Enabled = checkPlaceAddress.Checked;
     }
 
 
