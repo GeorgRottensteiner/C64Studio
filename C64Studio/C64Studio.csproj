@@ -56,6 +56,24 @@
     <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsPRINTStatement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsBASICData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsHex.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsCharsetFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -75,6 +93,21 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportBinaryForms\ImportBinaryFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportBinaryForms\ImportBinaryFromFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportBinaryForms\ImportBinaryFromASM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportBinaryForms\ImportBinaryFromHex.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ImportBinaryForms\ImportBinaryFromBASICDATA.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ImportGraphicScreenForms\ImportGraphicScreenFromMiniPaint.cs">

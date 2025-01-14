@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using GR.Image;
 using GR.Memory;
+using RetroDevStudio.Controls;
 using RetroDevStudio.Dialogs;
+using RetroDevStudio.Formats;
 
 
 
@@ -14,10 +16,16 @@ namespace RetroDevStudio.Documents
   {
     private ToolStripMenuItem m_MenuItemChangeOffset;
 
+    private ExportBinaryFormBase        _ExportForm = null;
+    private ImportBinaryFormBase        _ImportForm = null;
+
+
+
     public BinaryDisplay( StudioCore Core, GR.Memory.ByteBuffer WorkData, bool AllowEditing, bool FixedWidth )
     {
       this.Core = Core;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
+      AutoScaleMode = AutoScaleMode.None;
       InitializeComponent();
 
       DPIHandler.ResizeControlsForDPI( this );
@@ -41,6 +49,19 @@ namespace RetroDevStudio.Documents
       m_MenuItemChangeOffset = new ToolStripMenuItem( "Offset Displayed Address" );
       m_MenuItemChangeOffset.Click += OnMenuItemChangeOffsetClick;
       hexView.ContextMenuStrip.Items.Add( m_MenuItemChangeOffset );
+
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportBinaryAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as hex", typeof( ExportBinaryAsHex ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC DATA statements", typeof( ExportBinaryAsBASICData ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC PRINT", typeof( ExportBinaryAsPRINTStatement ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to file", typeof( ExportBinaryAsFile ) ) );
+      comboExportMethod.SelectedIndex = 0;
+
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from file", typeof( ImportBinaryFromFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportBinaryFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from hex", typeof( ImportBinaryFromHex ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC DATA statements", typeof( ImportBinaryFromBASICDATA ) ) );
+      comboImportMethod.SelectedIndex = 0;
     }
 
 
@@ -181,40 +202,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToText_Click( DecentForms.ControlBase Sender )
-    {
-      GR.Memory.ByteBuffer data = DataFromHex();
-
-      int     wrapCount = GR.Convert.ToI32( editWrapCount.Text );
-      if ( wrapCount <= 0 )
-      {
-        wrapCount = 40;
-      }
-
-      textBinaryData.Text = Util.ToASMData( data, wrapCount > 0, wrapCount, "!byte " );
-    }
-
-
-
-    private void btnFromASM_Click( DecentForms.ControlBase Sender )
-    {
-      Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
-
-      Parser.CompileConfig    config = new Parser.CompileConfig();
-      config.TargetType = Types.CompileTargetType.PLAIN;
-      config.OutputFile = "temp.bin";
-      config.Assembler  = Types.AssemblerType.C64_STUDIO;
-
-      string    temp = "* = $0801\n" + textBinaryData.Text;
-      if ( ( asmParser.Parse( temp, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
-      &&   ( asmParser.Assemble( config ) ) )
-      {
-        SetHexData( asmParser.AssembledOutput.Assembly );
-      }
-    }
-
-
-
     private void exportToFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
       Export();
@@ -244,27 +231,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnToBASIC_Click( DecentForms.ControlBase Sender )
-    {
-      GR.Memory.ByteBuffer data = DataFromHex();
-      bool insertSpaces = checkInsertSpaces.Checked;
-
-      int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
-      if ( lineDelta <= 0 )
-      {
-        lineDelta = 1;
-      }
-
-      int         curLineNumber = GR.Convert.ToI32( editToBASICStartLine.Text );
-      if ( curLineNumber < 0 )
-      {
-        curLineNumber = 0;
-      }
-      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ), insertSpaces );
-    }
-
-
-
     private void interleaveToolStripMenuItem_Click( object sender, EventArgs e )
     {
       DlgInterleaveData   dlgInterleave = new DlgInterleaveData( Core, DataFromHex() );
@@ -285,39 +251,6 @@ namespace RetroDevStudio.Documents
         SetHexData( dlgInterleave.InterleavedData );
         SetModified();
       }
-    }
-
-
-
-    private void btnImport_Click( DecentForms.ControlBase Sender )
-    {
-      Import();
-    }
-
-
-
-    private void btnExport_Click( DecentForms.ControlBase Sender )
-    {
-      Export();
-    }
-
-
-
-    private void btnToHex_Click( DecentForms.ControlBase Sender )
-    {
-      GR.Memory.ByteBuffer data = DataFromHex();
-
-      textBinaryData.Text = data.ToString();
-    }
-
-
-
-    private void btnFromHex_Click( DecentForms.ControlBase Sender )
-    {
-      string    binaryText = textBinaryData.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
-
-      GR.Memory.ByteBuffer    data = new GR.Memory.ByteBuffer( binaryText );
-      SetHexData( data );
     }
 
 
@@ -390,72 +323,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void btnFromBASIC_Click( DecentForms.ControlBase Sender )
-    {
-      string[]  lines = textBinaryData.Text.Split( new char[] { '\n' } );
-
-      GR.Memory.ByteBuffer    resultData = new GR.Memory.ByteBuffer();
-
-      for ( int i = 0; i < lines.Length; ++i )
-      {
-        string    cleanLine = lines[i].Trim().ToUpper();
-
-        int   dataPos = cleanLine.IndexOf( "DATA" );
-        if ( dataPos != -1 )
-        {
-          int     commaPos = -1;
-          int     byteStartPos = dataPos + 4;
-
-          do
-          {
-            commaPos = cleanLine.IndexOf( ',', byteStartPos );
-            if ( commaPos == -1 )
-            {
-              commaPos = cleanLine.Length;
-            }
-            int     value = GR.Convert.ToI32( cleanLine.Substring( byteStartPos, commaPos - byteStartPos ).Trim() );
-            resultData.AppendU8( (byte)value );
-
-            byteStartPos = commaPos + 1;
-          }
-          while ( commaPos < cleanLine.Length );
-        }
-      }
-
-      SetHexData( resultData );
-    }
-
-
-
-    private void btnToBASICHex_Click( DecentForms.ControlBase Sender )
-    {
-      GR.Memory.ByteBuffer data = DataFromHex();
-      bool insertSpaces = checkInsertSpaces.Checked;
-
-      int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
-      if ( lineDelta <= 0 )
-      {
-        lineDelta = 1;
-      }
-
-      int         curLineNumber = GR.Convert.ToI32( editToBASICStartLine.Text );
-      if ( curLineNumber < 0 )
-      {
-        curLineNumber = 0;
-      }
-
-      textBinaryData.Text = Util.ToBASICHexData( data, curLineNumber, lineDelta, GR.Convert.ToI32( editWrapCount.Text ), GR.Convert.ToI32( editWrapCharsCount.Text ), insertSpaces );
-    }
-
-
-
-    private void btnFromBASICHex_Click( DecentForms.ControlBase Sender )
-    {
-      SetHexData( Util.FromBASICHex( textBinaryData.Text ) );
-    }
-
-
-
     private void btnUpsize_Click( DecentForms.ControlBase Sender )
     {
       var data = DataFromHex();
@@ -469,16 +336,6 @@ namespace RetroDevStudio.Documents
         newData.SetU16At( i * 2, value );
       }
       SetHexData( newData );
-    }
-
-
-
-    private void textBinaryData_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
-    {
-      if ( e.KeyData == ( Keys.A | Keys.Control ) )
-      {
-        textBinaryData.SelectAll();
-      }
     }
 
 
@@ -562,6 +419,81 @@ namespace RetroDevStudio.Documents
         newData.SetU8At( i, (byte)( value / divisor ) );
       }
       SetHexData( newData );
+    }
+
+
+
+    private void comboExportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( _ExportForm != null )
+      {
+        _ExportForm.Dispose();
+        _ExportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
+      {
+        return;
+      }
+      _ExportForm = (ExportBinaryFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      _ExportForm.AutoScaleMode = AutoScaleMode.None;
+      _ExportForm.Dock          = DockStyle.Fill;
+      _ExportForm.Parent        = panelExport;
+      _ExportForm.CreateControl();
+    }
+
+
+
+    private void btnExport_Click_1( DecentForms.ControlBase Sender )
+    {
+      var exportInfo = new ExportBinaryInfo()
+      {
+        Data = DataFromHex()
+      };
+
+      _ExportForm.HandleExport( exportInfo, DocumentInfo );
+    }
+
+
+
+    private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( _ImportForm != null )
+      {
+        _ImportForm.Dispose();
+        _ImportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
+      {
+        return;
+      }
+      _ImportForm = (ImportBinaryFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      _ImportForm.AutoScaleMode = AutoScaleMode.None;
+      _ImportForm.Dock          = DockStyle.Fill;
+      _ImportForm.Parent        = panelImport;
+      _ImportForm.CreateControl();
+    }
+
+
+
+    private void btnImport_Click( DecentForms.ControlBase Sender )
+    {
+      //var undo1 = new Undo.UndoCharacterEditorCharChange( characterEditor, m_Charset, 0, m_Charset.TotalNumberOfCharacters );
+      //var undo2 = new Undo.UndoCharacterEditorValuesChange( characterEditor, m_Charset );
+
+      if ( _ImportForm.HandleImport( DocumentInfo, this, out ByteBuffer data ) )
+      {
+        //DocumentInfo.UndoManager.StartUndoGroup();
+        //DocumentInfo.UndoManager.AddUndoTask( undo1, false );
+        //DocumentInfo.UndoManager.AddUndoTask( undo2, false );
+        SetHexData( data );
+        SetModified();
+      }
     }
 
 

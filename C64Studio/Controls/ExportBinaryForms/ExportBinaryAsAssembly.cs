@@ -14,16 +14,16 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ExportCharsetAsAssembly : ExportCharsetFormBase
+  public partial class ExportBinaryAsAssembly : ExportBinaryFormBase
   {
-    public ExportCharsetAsAssembly() :
+    public ExportBinaryAsAssembly() :
       base( null )
     { 
     }
 
 
 
-    public ExportCharsetAsAssembly( StudioCore Core ) :
+    public ExportBinaryAsAssembly( StudioCore Core ) :
       base( Core )
     {
       InitializeComponent();
@@ -54,36 +54,17 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleExport( ExportCharsetInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public override bool HandleExport( ExportBinaryInfo info, DocumentInfo DocInfo )
     {
       int wrapByteCount = GetExportWrapCount();
       string prefix = editPrefix.Text;
 
-      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-      foreach ( int index in Info.ExportIndices )
-      {
-        charSet.Append( Info.Charset.Characters[index].Tile.Data );
-      }
-
       bool wrapData = checkExportToDataWrap.Checked;
       bool prefixRes = checkExportToDataIncludeRes.Checked;
 
-      string resultText = "CHARS" + System.Environment.NewLine;
-      resultText += Util.ToASMData( charSet, wrapData, wrapByteCount, prefixRes ? prefix : "", checkExportHex.Checked );
+      string resultText = Util.ToASMData( info.Data, wrapData, wrapByteCount, prefixRes ? prefix : "", checkExportHex.Checked );
 
-      if ( checkIncludeColor.Checked )
-      {
-        resultText += System.Environment.NewLine + "COLORS" + System.Environment.NewLine;
-
-        GR.Memory.ByteBuffer colorData = new GR.Memory.ByteBuffer();
-        foreach ( int index in Info.ExportIndices )
-        {
-          colorData.AppendU8( (byte)Info.Charset.Characters[index].Tile.CustomColor );
-        }
-        resultText += Util.ToASMData( colorData, wrapData, wrapByteCount, prefixRes ? prefix : "", checkExportHex.Checked );
-      }
-
-      EditOutput.Text = resultText;
+      editTextOutput.Text = resultText;
       return true;
     }
 

@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor6510.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportBinaryInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportGraphicScreenInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\AmigaDisk.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\FileTypeNative.cs" />
