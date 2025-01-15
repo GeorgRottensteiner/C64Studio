@@ -64,12 +64,13 @@ namespace RetroDevStudio.Controls
       bool    isReverse = false;
       int     startLength = sb.Length;
       int     address = ParseValue( editStartAddress.Text );
+      int     writtenBytes = 0;
 
       List<char>  charsToAppend = new List<char>();
       if ( useAddress )
       {
         sb.Append( startLine );
-        sb.Append( "POKE648," );
+        sb.Append( " POKE648," );
         sb.Append( address / 256 );
         sb.Append( ":PRINT\"" );
         sb.Append( ConstantData.PetSCIIToChar[19].CharValue );
@@ -84,7 +85,7 @@ namespace RetroDevStudio.Controls
         }
         else
         {
-          sb.AppendLine( "," );
+          sb.AppendLine( ";" );
         }
         startLine += lineOffset;
       }
@@ -150,7 +151,36 @@ namespace RetroDevStudio.Controls
           if ( sb.Length - startLength + 3 >= wrapCharCount - 1 )
           {
             // we need to break and start a new line
-            sb.Append( "\";\n" );
+            sb.AppendLine( "\";" );
+
+            // hit a page boundary?
+            if ( ( useAddress )
+            &&   ( writtenBytes >= 256 ) )
+            {
+              address += writtenBytes;
+
+              sb.Append( startLine );
+              sb.Append( " POKE648," );
+              sb.Append( address / 256 );
+              sb.Append( ":PRINT\"" );
+              sb.Append( ConstantData.PetSCIIToChar[19].CharValue );
+              sb.Append( "\"" );
+              if ( ( address % 256 ) != 0 )
+              {
+                int   delta = address % 256;
+
+                sb.Append( "SPC(" );
+                sb.Append( delta );
+                sb.AppendLine( ");" );
+              }
+              else
+              {
+                sb.AppendLine( ";" );
+              }
+              startLine += lineOffset;
+              writtenBytes = 0;
+            }
+
             startLength = sb.Length;
             sb.Append( startLine );
             startLine += lineOffset;
@@ -161,15 +191,15 @@ namespace RetroDevStudio.Controls
           {
             sb.Append( c );
           }
+          ++writtenBytes;
         }
-        sb.Append( "\"" );
-        sb.Append( "\n" );
+        sb.AppendLine( "\"" );
       }
 
       if ( useAddress )
       {
         sb.Append( startLine );
-        sb.AppendLine( "POKE648,4" );
+        sb.AppendLine( " POKE648,4" );
       }
 
       editTextOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
