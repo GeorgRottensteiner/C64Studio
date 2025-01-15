@@ -675,13 +675,15 @@ namespace RetroDevStudio.Documents
 
       bool  exportToBasicPossible = true;
       bool  isKoalaPic = true;
+      bool  isIFF = true;
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
         if ( fileInfo.NativeType != FileTypeNative.COMMODORE_PRG )
         {
           exportToBasicPossible = false;
-          isKoalaPic = false;
+          isKoalaPic            = false;
+          isIFF                 = false;
         }
         if ( ( fileInfo.Size != 10003 )
         ||   ( fileInfo.Data.UInt16At( 0 ) != 0x6000 )
@@ -689,9 +691,15 @@ namespace RetroDevStudio.Documents
         {
           isKoalaPic = false;
         }
+        if ( ( fileInfo.Size < 4 )
+        ||   ( fileInfo.Data.UInt32At( 0 ) != 0x4D524F46 ) )    // FORM
+        {
+          isIFF = false;
+        }
       }
       if ( exportToBasicPossible )
       {
+        contextMenu.Items.Add( "-" );
         var itemBASICOpen = new System.Windows.Forms.ToolStripMenuItem( "Open as" );
         itemBASICOpen.Tag = 0;
         contextMenu.Items.Add( itemBASICOpen );
@@ -705,17 +713,27 @@ namespace RetroDevStudio.Documents
       }
       if ( isKoalaPic )
       {
-        var itemKoala = new System.Windows.Forms.ToolStripMenuItem( "View as Koala Picture" );
+        contextMenu.Items.Add( "-" );
+        var itemKoala = new System.Windows.Forms.ToolStripMenuItem( "View Picture" );
         itemKoala.Click += new EventHandler( itemOpenAsKoala_Click );
         contextMenu.Items.Add( itemKoala );
       }
+      if ( isIFF )
+      {
+        contextMenu.Items.Add( "-" );
+        var itemPicture = new System.Windows.Forms.ToolStripMenuItem( "View Picture" );
+        itemPicture.Click += new EventHandler( itemOpenAsIFF_Click );
+        contextMenu.Items.Add( itemPicture );
+      }
 
       // view in Hex display
+      contextMenu.Items.Add( "-" );
       item = new System.Windows.Forms.ToolStripMenuItem( "View in Hex Editor" );
       item.Tag = 2;
       item.Click += new EventHandler( itemViewInHexEditor_Click );
       contextMenu.Items.Add( item );
 
+      contextMenu.Items.Add( "-" );
       item = new System.Windows.Forms.ToolStripMenuItem( "Change File Type" );
       item.Tag = 2;
       contextMenu.Items.Add( item );
@@ -785,6 +803,36 @@ namespace RetroDevStudio.Documents
       var graphicEditor = new GraphicScreenEditor( Core );
 
       graphicEditor.ImportKoalaPicture( fileToImport.Data );
+
+      graphicEditor.Show( Core.MainForm.panelMain, DockState.Document );
+    }
+
+
+
+    private void itemOpenAsIFF_Click( object sender, EventArgs e )
+    {
+      OpenSelectedItemsAsIFFPicture();
+    }
+
+
+
+    void OpenSelectedItemsAsIFFPicture()
+    {
+      foreach ( ListViewItem item in listFiles.SelectedItems )
+      {
+        RetroDevStudio.Types.FileInfo fileToExport = (RetroDevStudio.Types.FileInfo)item.Tag;
+
+        OpenAsIFFPicture( fileToExport );
+      }
+    }
+
+
+
+    void OpenAsIFFPicture( Types.FileInfo fileToImport )
+    {
+      var graphicEditor = new GraphicScreenEditor( Core );
+
+      graphicEditor.ImportIFFPicture( fileToImport.Data );
 
       graphicEditor.Show( Core.MainForm.panelMain, DockState.Document );
     }

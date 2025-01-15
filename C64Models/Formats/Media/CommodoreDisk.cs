@@ -1518,9 +1518,23 @@ namespace RetroDevStudio.Formats
           {
             // valid entry?
             var info = LoadFile( sec.Data.SubBuffer( 0x20 * i + 5, 16 ) );
-            info.DirEntryIndex  = dirEntryIndex;
-            ++dirEntryIndex;
-            files.Add( info );
+            if ( info != null )
+            {
+              info.DirEntryIndex = dirEntryIndex;
+              ++dirEntryIndex;
+              files.Add( info );
+            }
+            else
+            {
+              info = new FileInfo()
+              {
+                DirEntryIndex = dirEntryIndex,
+                Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 )
+              };
+              SetFileInfo( info, fileTrack, fileSector, sec.Data.ByteAt( 0x20 * i + 2 ), 0 );
+              ++dirEntryIndex;
+              files.Add( info );
+            }
           }
         }
 
