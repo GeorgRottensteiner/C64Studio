@@ -66,7 +66,7 @@ namespace RetroDevStudio.Controls
       int     address = ParseValue( editStartAddress.Text );
       int     writtenBytes = 0;
 
-      List<char>  charsToAppend = new List<char>();
+      var charsToAppend = new List<string>();
       if ( useAddress )
       {
         sb.Append( startLine );
@@ -98,7 +98,7 @@ namespace RetroDevStudio.Controls
           if ( !isReverse )
           {
             isReverse = true;
-            charsToAppend.Add( ConstantData.PetSCIIToChar[18].CharValue );
+            charsToAppend.Add( "" + ConstantData.PetSCIIToChar[18].CharValue );
           }
         }
         else
@@ -106,7 +106,7 @@ namespace RetroDevStudio.Controls
           if ( isReverse )
           {
             isReverse = false;
-            charsToAppend.Add( ConstantData.PetSCIIToChar[146].CharValue );
+            charsToAppend.Add( "" + ConstantData.PetSCIIToChar[146].CharValue );
           }
         }
         newByte &= 0x7f;
@@ -118,17 +118,14 @@ namespace RetroDevStudio.Controls
           {
             replacement = "\"CHR$(34)";
           }
-          for ( int t = 0; t < replacement.Length; ++t )
-          {
-            charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
-          }
+          charsToAppend.Add( replacement );
         }
         else
         {
           var key = ConstantData.AllPhysicalKeyInfos.FirstOrDefault( pk => pk.HasScreenCode && pk.ScreenCodeValue == newByte );
           if ( key != null )
           {
-            charsToAppend.Add( key.CharValue );
+            charsToAppend.Add( "" + key.CharValue );
           }
         }
       }
@@ -136,7 +133,7 @@ namespace RetroDevStudio.Controls
       if ( charsToAppend.Any() )
       {
         bool    lineStarted = false;
-        foreach ( var c in charsToAppend )
+        foreach ( var s in charsToAppend )
         {
           if ( !lineStarted )
           {
@@ -148,7 +145,7 @@ namespace RetroDevStudio.Controls
           }
 
           // don't make lines too long!
-          if ( sb.Length - startLength + 3 >= wrapCharCount - 1 )
+          if ( sb.Length - startLength + s.Length >= wrapCharCount - 1 )
           {
             // we need to break and start a new line
             sb.AppendLine( "\";" );
@@ -185,9 +182,9 @@ namespace RetroDevStudio.Controls
             sb.Append( startLine );
             startLine += lineOffset;
             sb.Append( " PRINT\"" );
-            sb.Append( c );
           }
-          else
+
+          foreach ( var c in s )
           {
             sb.Append( c );
           }
