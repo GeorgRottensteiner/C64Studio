@@ -41,7 +41,11 @@
       // 
       // btnOK
       // 
+      this.btnOK.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnOK.Image = null;
       this.btnOK.Location = new System.Drawing.Point(248, 351);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
@@ -65,7 +69,8 @@
       this.labelInfo.Name = "labelInfo";
       this.labelInfo.Size = new System.Drawing.Size(351, 96);
       this.labelInfo.TabIndex = 2;
-      this.labelInfo.Text = "C64 Studio <v>\r\n\r\nWritten by Georg Rottensteiner 2011-2024\r\n\r\nBased on WinVICE\r\n";
+      this.labelInfo.Text = "C64 Studio <v>\r\n\r\nWritten by Georg Rottensteiner 2011-2025\r\n\r\nDebugging support b" +
+    "ased on VICE\r\n";
       this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
       // pictureBox1
