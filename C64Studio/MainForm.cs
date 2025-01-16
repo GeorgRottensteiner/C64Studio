@@ -6330,7 +6330,10 @@ namespace RetroDevStudio
         document = new CharsetScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
-      else if ( extension == ".GRAPHICSCREEN" )
+      else if ( ( extension == ".GRAPHICSCREEN" )
+      ||        ( extension == ".IFF" )
+      ||        ( extension == ".KOA" )
+      ||        ( extension == ".KLA" ) )
       {
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6373,14 +6376,30 @@ namespace RetroDevStudio
       document.Core = StudioCore;
       if ( openDirectFile )
       {
-        document.SetDocumentFilename( Filename );
-        document.Text = GR.Path.GetFileName( Filename );
-        if ( !document.LoadDocument() )
+        if ( extension == ".IFF" )
         {
-          document.ToolTipText = "";
-          return null;
+          var editor = (GraphicScreenEditor)document;
+
+          editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
-        document.ToolTipText = document.DocumentInfo.FullPath;
+        else if ( ( extension == ".KLA" )
+        ||        ( extension == ".KOA" ) )
+        {
+          var editor = (GraphicScreenEditor)document;
+
+          editor.ImportKoalaPicture( GR.IO.File.ReadAllBytes( Filename ) );
+        }
+        else
+        {
+          document.SetDocumentFilename( Filename );
+          document.Text = GR.Path.GetFileName( Filename );
+          if ( !document.LoadDocument() )
+          {
+            document.ToolTipText = "";
+            return null;
+          }
+          document.ToolTipText = document.DocumentInfo.FullPath;
+        }
       }
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
@@ -7295,6 +7314,14 @@ namespace RetroDevStudio
       }
 
       MappedImage = null;
+      // no mapping necessary - is always valid
+      if ( ImportType == GraphicType.BITMAP_8BIT )
+      {
+        MappedImage   = IncomingImage;
+        NewMCSettings = MCSettings;
+        return true;
+      }
+
       if ( IncomingImage.PixelFormat == GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         // match palette

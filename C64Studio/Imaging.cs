@@ -38,6 +38,15 @@ namespace RetroDevStudio
 
         bitmap.Dispose();
       }
+      else if ( extension == ".IFF" )
+      {
+        var iffImage = RetroDevStudio.Converter.IFFToBitmap.BitmapFromIFF( Filename );
+        var bitmap = iffImage.GetAsBitmap();
+
+        newImage = GR.Image.FastImage.FromImage( bitmap );
+
+        bitmap.Dispose();
+      }
       else
       {
         System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( Filename );

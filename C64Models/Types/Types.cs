@@ -320,22 +320,24 @@ namespace RetroDevStudio.Types
     SPRITES = 0,
     [Description( "Characters" )]
     CHARACTERS,
-    [Description( "HiRes Characters" )]
+    [Description( "Commodore HiRes Characters" )]
     CHARACTERS_HIRES,
-    [Description( "Multicolor Characters" )]
+    [Description( "Commodore Multicolor Characters" )]
     CHARACTERS_MULTICOLOR,
     [Description( "FCM Characters" )]
     CHARACTERS_FCM,
-    [Description( "Bitmap" )]
+    [Description( "Commodore Bitmap" )]
     BITMAP,
-    [Description( "HiRes Bitmap" )]
+    [Description( "Commodore HiRes Bitmap" )]
     BITMAP_HIRES,
-    [Description( "Multicolor Bitmap" )]
+    [Description( "Commodore Multicolor Bitmap" )]
     BITMAP_MULTICOLOR,
     [Description( "Sprites 16 color" )]
     SPRITES_16_COLORS,
     [Description( "Sprites 256 color" )]
-    SPRITES_256_COLORS
+    SPRITES_256_COLORS,
+    [Description( "8bit Bitmap" )]
+    BITMAP_8BIT
   };
 
 
@@ -482,7 +484,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas;*.a;*.b|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";
     public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81;*.dsk;*.tzx|";
-    public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|";
+    public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif;*.koa;*.kla;*.iff|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|IFF Files|*.iff|";
     public static string FILEFILTER_TAPE = "Tape Files|*.t64,*.prg|";
     public static string FILEFILTER_DISK = "Disk Files|*.d64;*.d71;*.d81;*.dsk;*.adf|";
     public static string FILEFILTER_VALUE_TABLE_PROJECT = "Value Table Project Files|*.valuetableproject|";

@@ -315,6 +315,17 @@ namespace GR
 
 
 
+      public void SetPosition( long position )
+      {
+        if ( ( position >= 0 )
+        &&   ( position < m_Buffer.Length ) )
+        {
+          m_Position = (int)position;
+        }
+      }
+
+
+
       public override void Skip( int BytesToSkip )
       {
         if ( m_Position + BytesToSkip > Size )

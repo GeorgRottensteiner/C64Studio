@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GR.Image;
 
 
 
@@ -90,6 +91,8 @@ namespace RetroDevStudio.Dialogs
       m_CurPalette        = MCSettings.Palette;
       MultiColorSettings  = MCSettings;
 
+      DetermineImportPalette( IncomingImage );
+
       InitializeComponent();
 
       // TODO - adjust to used machine type!!
@@ -110,11 +113,19 @@ namespace RetroDevStudio.Dialogs
       if ( ( ImportType == Types.GraphicType.SPRITES_16_COLORS )
       ||   ( ImportType == Types.GraphicType.SPRITES_256_COLORS )
       ||   ( ImportType == Types.GraphicType.CHARACTERS_FCM )
-      ||   ( ImportType == Types.GraphicType.BITMAP ) )
+      ||   ( ImportType == Types.GraphicType.BITMAP )
+      ||   ( ImportType == Types.GraphicType.BITMAP_8BIT ) )
       {
         comboTargetPalette.Items.Add( "Use incoming palette" );
       }
-      comboTargetPalette.SelectedIndex = 0;
+      if ( ImportType == Types.GraphicType.BITMAP_8BIT )
+      {
+        comboTargetPalette.SelectedIndex = 1;
+      }
+      else
+      {
+        comboTargetPalette.SelectedIndex = 0;
+      }
 
       picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
       picOriginal.MouseWheel += Preview_MouseWheel;
@@ -130,9 +141,18 @@ namespace RetroDevStudio.Dialogs
       switch ( ImportType )
       {
         case RetroDevStudio.Types.GraphicType.BITMAP:
+        case RetroDevStudio.Types.GraphicType.BITMAP_8BIT:
           comboImportType.Items.Add( new GR.Generic.Tupel<string,RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.BITMAP_HIRES ), RetroDevStudio.Types.GraphicType.BITMAP_HIRES ) );
           comboImportType.Items.Add( new GR.Generic.Tupel<string,RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.BITMAP_MULTICOLOR ), RetroDevStudio.Types.GraphicType.BITMAP_MULTICOLOR ) );
-          comboImportType.SelectedIndex = 1;
+          comboImportType.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.BITMAP_8BIT ), RetroDevStudio.Types.GraphicType.BITMAP_8BIT ) );
+          if ( ImportType == RetroDevStudio.Types.GraphicType.BITMAP_8BIT )
+          {
+            comboImportType.SelectedIndex = 2;
+          }
+          else
+          {
+            comboImportType.SelectedIndex = 1;
+          }
           break;
         case RetroDevStudio.Types.GraphicType.CHARACTERS:
           comboImportType.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.CHARACTERS_HIRES ), RetroDevStudio.Types.GraphicType.CHARACTERS_HIRES ) );
@@ -246,6 +266,43 @@ namespace RetroDevStudio.Dialogs
       m_OriginalImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
       m_ImportImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, GR.Drawing.PixelFormat.Format8bppIndexed );
 
+      DetermineImportPalette( newImage );
+      newImage.DrawTo( m_OriginalImage, 0, 0 );
+      newImage.Dispose();
+
+      if ( m_OriginalImage.PixelFormat != picOriginal.DisplayPage.PixelFormat )
+      {
+        picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, m_OriginalImage.PixelFormat );
+
+        if ( m_ImportPalette != null )
+        {
+          PaletteManager.ApplyPalette( picOriginal.DisplayPage, m_ImportPalette );
+        }
+      }
+      picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
+
+      // determine optimal zoom size
+      m_Zoom = 1024;
+      while ( ( m_OriginalImage.Width * 1024 / m_Zoom < 64 )
+      &&      ( m_OriginalImage.Height * 1024 / m_Zoom < 64 ) )
+      {
+        m_Zoom /= 2;
+      }
+      picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
+      picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
+
+      picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
+
+      m_OrigSize.Width  = m_OriginalImage.Width;
+      m_OrigSize.Height = m_OriginalImage.Height;
+
+      RecalcImport();
+    }
+
+
+
+    private void DetermineImportPalette( IImage newImage )
+    {
       m_ImportPalette = null;
       if ( newImage.BitsPerPixel <= 8 )
       {
@@ -278,36 +335,6 @@ namespace RetroDevStudio.Dialogs
         m_ImportPalette.CreateBrushes();
         PaletteManager.ApplyPalette( m_OriginalImage, m_ImportPalette );
       }
-      newImage.DrawTo( m_OriginalImage, 0, 0 );
-      newImage.Dispose();
-
-      if ( m_OriginalImage.PixelFormat != picOriginal.DisplayPage.PixelFormat )
-      {
-        picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, m_OriginalImage.PixelFormat );
-
-        if ( m_ImportPalette != null )
-        {
-          PaletteManager.ApplyPalette( picOriginal.DisplayPage, m_ImportPalette );
-        }
-      }
-      picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
-
-      // determine optimal zoom size
-      m_Zoom = 1024;
-      while ( ( m_OriginalImage.Width * 1024 / m_Zoom < 64 )
-      &&      ( m_OriginalImage.Height * 1024 / m_Zoom < 64 ) )
-      {
-        m_Zoom /= 2;
-      }
-      picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
-      picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
-
-      picOriginal.DisplayPage.DrawImage( m_OriginalImage, m_ImageDisplayOffset.X, m_ImageDisplayOffset.Y );
-
-      m_OrigSize.Width  = m_OriginalImage.Width;
-      m_OrigSize.Height = m_OriginalImage.Height;
-
-      RecalcImport();
     }
 
 

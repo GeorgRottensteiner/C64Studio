@@ -75,7 +75,16 @@ namespace RetroDevStudio.Controls
         {
           MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
         }
-        return false;
+        return true;
+      }
+      else if ( extension == ".IFF" )
+      {
+        var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( Info.Project.Image );
+        if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, imageData ) )
+        {
+          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+        }
+        return true;
       }
       if ( extension == ".BMP" )
       {

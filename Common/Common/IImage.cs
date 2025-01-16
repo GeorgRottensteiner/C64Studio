@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 
 
 
@@ -50,6 +51,13 @@ namespace GR.Image
 
 
     int BytesPerLine
+    {
+      get;
+    }
+
+
+
+    Palette Palette
     {
       get;
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using RetroDevStudio;
 #if NET5_0_OR_GREATER
 using System.Runtime.Versioning;
 #endif
@@ -1352,6 +1353,22 @@ namespace GR.Image
           return 0;
         }
         return (int)m_PaletteData.Length / 3;
+      }
+    }
+
+
+
+    public Palette Palette
+    {
+      get
+      {
+        var pal = new Palette( (int)m_PaletteData.Length / 3 );
+
+        for ( int i = 0; i < m_PaletteData.Length / 3; ++i )
+        {
+          pal.ColorValues[i] = PaletteColor( i );
+        }
+        return pal;
       }
     }
 

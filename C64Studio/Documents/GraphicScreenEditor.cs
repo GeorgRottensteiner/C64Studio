@@ -9,6 +9,9 @@ using System.Drawing;
 using RetroDevStudio.Formats;
 using GR.Memory;
 using System.Linq;
+using System.IO;
+using GR.Image;
+using RetroDevStudio.Converter;
 
 
 
@@ -176,15 +179,15 @@ namespace RetroDevStudio.Documents
         case Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
           _ColorChooserDlg = new ColorChooserCommodoreVIC20( Core, m_GraphicScreenProject.Colors );
           break;
-        /*
-      case Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
-      case Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
-        _ColorChooserDlg = new ColorChooserMega65( Core, m_GraphicScreenProject.Colors );
-        break;
-*/
+        case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
+        case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+        case GraphicScreenProject.CheckType.MEGA65_BITMAP:
+          _ColorChooserDlg = new ColorChooserBase( Core, m_GraphicScreenProject.Colors );
+          break;
         default:
           Debug.Log( "ChangeColorSettingsDialog unsupported Mode " + m_GraphicScreenProject.SelectedCheckType );
-          return;
+          _ColorChooserDlg = new ColorChooserBase( Core, m_GraphicScreenProject.Colors );
+          break;
       }
       panelColorSettings.Controls.Add( _ColorChooserDlg );
 
@@ -762,6 +765,11 @@ namespace RetroDevStudio.Documents
       {
         importType = GraphicType.CHARACTERS_MULTICOLOR;
       }
+      else if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MEGA65_BITMAP )
+      {
+        importType = GraphicType.BITMAP_8BIT;
+        mcSettings.Palette = IncomingImage.Palette;
+      }
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
                                        CheckBlockWidth, CheckBlockHeight, 
                                        out GR.Image.IImage mappedImage, out mcSettings, out pasteAsBlock, out importType ) )
@@ -1126,63 +1134,16 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void ImportIFFPicture( ByteBuffer imageData )
+    public bool ImportIFFPicture( ByteBuffer imageData )
     {
-      // 0000 - 1F3F : Bitmap 8000 Bytes
-      // 1F40 - 2327 : Bildschirmspeicher 1000 Bytes
-      // 2328 - 270F : Farb-RAM 1000 Bytes
-      // 2710        : Hintergrundfarbe 1 Byte
-      if ( imageData.Length == 10003 )
+      var image = IFFToBitmap.BitmapFromIFF( imageData );
+      if ( image == null )
       {
-        // could be a Koala painter image
-        if ( imageData.UInt16At( 0 ) == 0x6000 )
-        {
-          // background color
-          _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, imageData.ByteAt( 10002 ) % 16 );
-
-          for ( int i = 0; i < BlockWidth * BlockHeight; ++i )
-          {
-            byte screenByte = imageData.ByteAt( 2 + 8000 + i );
-            byte colorByte = imageData.ByteAt( 2 + 8000 + 1000 + i );
-            for ( int j = 0; j < 8; ++j )
-            {
-              byte pixelData = imageData.ByteAt( 2 + i * 8 + j );
-
-              byte pixelMask = 0xc0;
-              for ( int k = 0; k < 4; ++k )
-              {
-                byte byteValue = (byte)( pixelData & pixelMask );
-
-                byteValue >>= 6 - 2 * k;
-
-                int     colorIndex = m_GraphicScreenProject.Colors.BackgroundColor;
-
-                switch ( byteValue )
-                {
-                  case 0:
-                    // background
-                    break;
-                  case 0x01:
-                    colorIndex = ( screenByte >> 4 );
-                    break;
-                  case 0x02:
-                    colorIndex = screenByte & 0x0f;
-                    break;
-                  case 0x03:
-                    colorIndex = colorByte % 16;
-                    break;
-                }
-                m_GraphicScreenProject.Image.SetPixel( ( i % BlockWidth ) * 8 + k * 2, ( i / BlockWidth ) * 8 + j, (uint)colorIndex );
-                m_GraphicScreenProject.Image.SetPixel( ( i % BlockWidth ) * 8 + k * 2 + 1, ( i / BlockWidth ) * 8 + j, (uint)colorIndex );
-                pixelMask >>= 2;
-              }
-            }
-          }
-          Redraw();
-          SetModified();
-          pictureEditor.Invalidate();
-        }
+        return false;
       }
+
+      comboCheckType.SelectedIndex = (int)GraphicScreenProject.CheckType.MEGA65_BITMAP;
+      return ImportImage( null, image, ImageInsertionMode.AS_FULL_SCREEN );
     }
 
 
@@ -2259,6 +2220,10 @@ namespace RetroDevStudio.Documents
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
           allGood = CheckForVIC20CharsetErrors();
           break;
+        case GraphicScreenProject.CheckType.MEGA65_BITMAP:
+          // always fine
+          allGood = true;
+          break;
         default:
           Debug.Log( "Unsupported CheckType: " + (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex );
           break;
@@ -2981,6 +2946,15 @@ namespace RetroDevStudio.Documents
         var koalaData = RetroDevStudio.Converter.KoalaToBitmap.KoalaFromBitmap( bitmapData, screenChar, screenColor, (byte)m_GraphicScreenProject.Colors.BackgroundColor );
 
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, koalaData ) )
+        {
+          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+        }
+        return;
+      }
+      else if ( extension == ".IFF" )
+      {
+        var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( m_GraphicScreenProject.Image );
+        if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, imageData ) )
         {
           MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
         }

@@ -13,6 +13,8 @@ namespace RetroDevStudio.Formats
       HIRES_BITMAP,
       [Description( "Multicolor Bitmap" )]
       MULTICOLOR_BITMAP,
+      [Description( "Mega65 Bitmap" )]
+      MEGA65_BITMAP,
       [Description( "Hires Charset" )]
       HIRES_CHARSET,
       [Description( "Multicolor Charset" )]

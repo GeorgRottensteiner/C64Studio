@@ -1,4 +1,5 @@
 ﻿using GR.Memory;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -699,6 +700,22 @@ namespace GR.Image
 
 
 
+    public Palette Palette
+    {
+      get
+      {
+        var pal = new Palette( (int)m_PaletteData.Length / 3 );
+
+        for ( int i = 0; i < m_PaletteData.Length / 3; ++i )
+        {
+          pal.ColorValues[i] = PaletteColor( i );
+        }
+        return pal;
+      }
+    }
+
+
+
     public byte PaletteRed( int Index )
     {
       if ( m_PaletteData == null )
@@ -706,7 +723,7 @@ namespace GR.Image
         return 0;
       }
       if ( ( Index < 0 )
-      || ( Index >= (int)m_PaletteData.Length / 3 ) )
+      ||   ( Index >= (int)m_PaletteData.Length / 3 ) )
       {
         return 0;
       }

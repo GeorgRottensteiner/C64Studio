@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheckSummer\CheckSummer64erV3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckSummer\CheckSummer64erV1V2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)checksummer\ICheckSummer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\IFFToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\ColorSystem.cs" />
