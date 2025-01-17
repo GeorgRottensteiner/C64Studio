@@ -7,6 +7,11 @@ White = 1
 					!scr "hu:;<",0
 
 
+ .Difficulty
+	!byte 1
+
+
+
 c = 1
 b = 2
 a = 3

@@ -8573,14 +8573,29 @@ namespace FastColoredTextBoxNS
         {
           continue;
         }
+
+        string detabbedLine = ReTabifyLine( TextSource[i].Text, TabLength );
+        int offset = 0;
+
+        if ( ( spaces + 1 < detabbedLine.Length )
+        && ( detabbedLine[spaces] == '\t' ) )
+        {
+          while ( ( spaces + offset + 1 < detabbedLine.Length )
+          &&      ( detabbedLine[spaces + offset] == '\t' )
+          &&      ( ( ( spaces + offset ) % TabLength ) != 0 ) )
+          {
+            // inside a tab!
+            ++offset;
+          }
+        }
         if ( ( i == from )
-        &&   ( spaces < startOffset ) )
+        &&   ( spaces + offset < startOffset ) )
         {
           Selection.Start = new Place( startOffset, i );
         }
         else
         {
-          Selection.Start = new Place( spaces, i );
+          Selection.Start = new Place( spaces + offset, i );
         }
 
         lines.Manager.ExecuteCommand( new InsertTextCommand( TextSource, prefix ) );
