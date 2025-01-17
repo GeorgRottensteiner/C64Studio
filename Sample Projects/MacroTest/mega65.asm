@@ -4,12 +4,12 @@
     lda #$41
     sta $00   ;40 Mhz mode
 !end
-  
+
 !macro enableVIC3Registers {
     lda #$00
-    tax 
-    tay 
-    taz 
+    tax
+    tay
+    taz
     map
     eom
 
@@ -21,9 +21,9 @@
 
 !macro enableVIC4Registers {
     lda #$00
-    tax 
-    tay 
-    taz 
+    tax
+    tay
+    taz
     map
     eom
 
@@ -32,7 +32,7 @@
     lda #$53
     sta $d02f
 }
-  
+
 ;#import "../_include/m65macros.s"
 
 SCREEN_RAM  = $10000
@@ -52,8 +52,8 @@ COLOR_RAM   = $ff80000
 !basic
 
 Entry
-    jsr SetupSystem 
-        
+    jsr SetupSystem
+
     jsr ScreenClear80
 
     jsr SetupScreenVector
@@ -62,31 +62,31 @@ Entry
     ;$d060-$d063
     lda #<SCREEN_RAM
     sta $d060
-    lda #>SCREEN_RAM 
+    lda #>SCREEN_RAM
     sta $d061
     lda #[SCREEN_RAM >> 16]
     sta $d062
 
     ;Relocate charset (Only for hires and MCM)
-    ;$d068-$d06a 
+    ;$d068-$d06a
     ; lda #<CHARROM
-    ; sta $d068 
+    ; sta $d068
     ; lda #>CHARROM
     ; sta $d069
     ; lda #[CHARROM >> 16]
     ; sta $d06a
 
-    
 
-    ;Disable hot register so VIC2 registers 
-    ;turn off bit 7 
-    lda #$80    
+
+    ;Disable hot register so VIC2 registers
+    ;turn off bit 7
+    lda #$80
     trb $d05d   ;wont destroy VIC4 values (bit 7)
 
     ; Set VIC to use 40 column mode display
-    ;turn off bit 7 
-    lda #$80    
-    trb $d031 
+    ;turn off bit 7
+    lda #$80
+    trb $d031
 
     ;Turn on MCM (same as C64)
     ; lda #$10
@@ -118,33 +118,33 @@ Entry
     ; jsr ColorClear32bitAddr
 
 
-    
+
 
     jsr SetPalette
     ;Set a 16 bit char on screen
     ldz #$00
     lda #$00
-    sta [ZP.Screen], z 
+    sta [ZP.Screen], z
     lda #$01
-    inz 
-    sta [ZP.Screen], z 
+    inz
+    sta [ZP.Screen], z
     lda #$00
-    inz 
-    sta [ZP.Screen], z 
+    inz
+    sta [ZP.Screen], z
 
     ;change the 16 bit extended atrributes
     ldz #$00
     lda #%10000000 ;Set bit 7 = Vertical flip
-    sta [ZP.Color], z 
+    sta [ZP.Color], z
     lda #$00000000
-    inz 
-    sta [ZP.Color], z 
+    inz
+    sta [ZP.Color], z
 
     lda #%10000000 ;Set bit 7 = Vertical flip
-    inz 
-    ;sta [ZP.Color], z     
+    inz
+    ;sta [ZP.Color], z
     jmp *
-    
+
 
 SetPalette:
     ;Bit 6-7 = Mapped Palette
@@ -165,7 +165,7 @@ SetPalette:
 
     rts
 
-    
+
 PaletteData:
 ; #4CAF50
 
@@ -189,9 +189,9 @@ ColorClear32bitAddr
     ldz #$00
 -
     sta ((ZP.Color)), z
-    inz 
+    inz
     bne -
-    dex 
+    dex
     beq +
     inc ZP.Color + 1
     bra .Outerloop
@@ -206,9 +206,9 @@ ScreenClear32bitAddr
     ldz #$00
 -
     sta [ZP.Screen], z
-    inz 
+    inz
     bne -
-    dex 
+    dex
     beq +
     inc ZP.Screen + 1
     bra --
@@ -220,45 +220,45 @@ ScreenClear32bitAddr
 SetupScreenVector
     lda #<SCREEN_RAM
     sta ZP.Screen + 0
-    lda #>SCREEN_RAM 
+    lda #>SCREEN_RAM
     sta ZP.Screen + 1
     lda #[SCREEN_RAM >> 16]
     sta ZP.Screen + 2
     lda #$00
     sta ZP.Screen + 3
-    rts 
+    rts
 
 SetupColorVector
     lda #<COLOR_RAM
     sta ZP.Color + 0
-    lda #>COLOR_RAM 
+    lda #>COLOR_RAM
     sta ZP.Color + 1
     lda #[[COLOR_RAM >> 16] & $ff]
     sta ZP.Color + 2
     lda #[[COLOR_RAM >> 24] & $ff]
     sta ZP.Color + 3
-    rts 
+    rts
 
 ScreenClear80
     ;DEFAULT SCREEN CLEAR
     lda #$20
     ldx #$00
 -
-    sta $0800, x 
-    sta $0900, x 
-    sta $0a00, x 
-    sta $0b00, x 
-    sta $0c00, x 
-    sta $0d00, x 
-    sta $0e00, x 
-    sta $0f00, x 
-    inx 
+    sta $0800, x
+    sta $0900, x
+    sta $0a00, x
+    sta $0b00, x
+    sta $0c00, x
+    sta $0d00, x
+    sta $0e00, x
+    sta $0f00, x
+    inx
     bne -
     rts
 
 
 SetupSystem
-    sei 
+    sei
     ; Set memory layout (c64??)
     lda #$35
     sta $01
@@ -275,7 +275,7 @@ SetupSystem
     lda #$00
     sta $d01a
 
-    
+
     ;Disable C65 rom write protection
     ;$20000 - $3ffff
     lda #$70

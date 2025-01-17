@@ -969,6 +969,12 @@ namespace RetroDevStudio
         {
           return element;
         }
+        if ( ( element.DocumentInfo != null )
+        &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
+        &&   ( element.Name == Filename ) ) 
+        {
+          return element;
+        }
         if ( element.Filename == Filename )
         {
           return element;

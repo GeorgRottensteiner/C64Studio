@@ -62,35 +62,49 @@ namespace RetroDevStudio.Documents
           treeProject.Nodes.Clear();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
-          // apply node expansions
-          foreach ( var expandedNode in Core.Navigating.Solution.ExpandedNodes )
           {
-            string[]    parts = expandedNode.Split( '*' );
+            // apply node expansions
+            var nodesToRemove = new List<string>();
+            foreach ( var expandedNode in Core.Navigating.Solution.ExpandedNodes )
+            {
+              string[]    parts = expandedNode.Split( '*' );
+              bool        nodeFound = false;
 
-            if ( ( parts.Length == 2 )
-            &&   ( parts[0] == "Project" ) )
-            {
-              var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
-              if ( project != null )
+              if ( ( parts.Length == 2 )
+              &&   ( parts[0] == "Project" ) )
               {
-                project.Node.Expand();
-              }
-            }
-            else if ( ( parts.Length == 3 )
-            &&        ( parts[0] == "Element" ) )
-            {
-              var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
-              if ( project != null )
-              {
-                var element = project.GetElementByFilename( parts[2] );
-                if ( element != null )
+                var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
+                if ( project != null )
                 {
-                  element.Node.Expand();
+                  project.Node.Expand();
+                  nodeFound = true;
                 }
               }
+              else if ( ( parts.Length == 3 )
+              &&        ( parts[0] == "Element" ) )
+              {
+                var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
+                if ( project != null )
+                {
+                  var element = project.GetElementByFilename( parts[2] );
+                  if ( element != null )
+                  {
+                    element.Node.Expand();
+                    nodeFound = true;
+                  }
+                }
+              }
+              if ( !nodeFound )
+              {
+                // a node is marked as expanded that does not even exist (yeah, that shouldn't happen, but unfortunately it does)
+                nodesToRemove.Add( expandedNode );
+              }
+            }
+            foreach ( var node in nodesToRemove )
+            {
+              Core.Navigating.Solution.ExpandedNodes.Remove( node );
             }
           }
-
           if ( Core.Navigating.Solution.ActiveProject != "" )
           {
             var project = Core.Navigating.Solution.GetProjectByName( Core.Navigating.Solution.ActiveProject );
@@ -2305,7 +2319,7 @@ namespace RetroDevStudio.Documents
     {
       if ( e.Node.Tag != null )
       {
-        var project = ProjectFromNode( e.Node );
+        var project = ProjectFromNode( e.Node, false );
         if ( project != null )
         {
           Core.Navigating.Solution.CollapseNode( project );
