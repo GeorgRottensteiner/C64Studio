@@ -81,6 +81,7 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( foundInfo.FoundInDocument.DocumentFilename );
           item.Tag = foundInfo.FoundInDocument;
         }
+        item.SubItems.Add( foundInfo.AdditionalInfo );
         item.SubItems.Add( foundInfo.FoundLine );
         ++i;
       }
@@ -137,6 +138,8 @@ namespace RetroDevStudio.Documents
         sb.Append( item.SubItems[3].Text );
         sb.Append( ';' );
         sb.Append( item.SubItems[4].Text );
+        sb.Append( ';' );
+        sb.Append( item.SubItems[5].Text );
         sb.AppendLine();
       }
       System.Windows.Forms.Clipboard.SetText( sb.ToString() );
@@ -233,6 +236,7 @@ namespace RetroDevStudio.Documents
       var item = new ListViewItem( GlobalLineIndex.ToString() );
       item.SubItems.Add( "" );
       item.SubItems.Add( "" );
+      item.SubItems.Add( "" );
 
       if ( ASMInfo.FindTrueLineSource( GlobalLineIndex, out string filename, out int localLineIndex, out Types.ASM.SourceInfo SourceInfo ) )
       {
@@ -244,6 +248,10 @@ namespace RetroDevStudio.Documents
         }*/
         item.SubItems[0].Text = ( localLineIndex + 1 ).ToString();
         item.SubItems[1].Text = filename;
+        if ( ASMInfo.FindZoneInfoFromDocumentLine( filename, localLineIndex, out string zone, out string cheapLabelZone ) )
+        {
+          item.SubItems[2].Text = "zone " + zone;
+        }
 
         string    lineContent = "";
 
@@ -306,7 +314,7 @@ namespace RetroDevStudio.Documents
           }
         }
 
-        item.SubItems[2].Text = lineContent.Replace( "\t", "  " );
+        item.SubItems[3].Text = lineContent.Replace( "\t", "  " );
       }
       listResults.Items.Add( item );
     }

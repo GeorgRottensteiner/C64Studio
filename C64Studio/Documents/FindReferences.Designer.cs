@@ -33,6 +33,7 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.SuspendLayout();
       // 
@@ -41,6 +42,7 @@
       this.listResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2,
             this.columnHeader3,
+            this.columnHeader1,
             this.columnHeader4});
       this.listResults.Dock = System.Windows.Forms.DockStyle.Fill;
       this.listResults.FullRowSelect = true;
@@ -69,6 +71,11 @@
       this.columnHeader4.Text = "Text";
       this.columnHeader4.Width = 400;
       // 
+      // columnHeader1
+      // 
+      this.columnHeader1.Text = "Add. Info";
+      this.columnHeader1.Width = 100;
+      // 
       // FindReferences
       // 
       this.ClientSize = new System.Drawing.Size(678, 200);
@@ -87,8 +94,6 @@
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
     private System.Windows.Forms.ColumnHeader columnHeader4;
-
-
-
+    private System.Windows.Forms.ColumnHeader columnHeader1;
   }
 }

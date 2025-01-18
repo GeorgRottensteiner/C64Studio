@@ -20,7 +20,7 @@ namespace RetroDevStudio.CheckSummer
         }
         checkSum = ( checkSum + b ) & 0xff;
       }
-      return checkSum.ToString();
+      return checkSum.ToString( "D3" );
     }
 
 
