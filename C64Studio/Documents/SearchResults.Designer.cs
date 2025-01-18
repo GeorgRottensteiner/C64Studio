@@ -28,30 +28,33 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( SearchResults ) );
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchResults));
       this.listResults = new System.Windows.Forms.ListView();
-      this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).BeginInit();
+      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.SuspendLayout();
       // 
       // listResults
       // 
-      this.listResults.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] {
+      this.listResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2,
             this.columnHeader3,
-            this.columnHeader4} );
+            this.columnHeader1,
+            this.columnHeader4});
       this.listResults.Dock = System.Windows.Forms.DockStyle.Fill;
       this.listResults.FullRowSelect = true;
-      this.listResults.Location = new System.Drawing.Point( 0, 0 );
+      this.listResults.HideSelection = false;
+      this.listResults.Location = new System.Drawing.Point(0, 0);
       this.listResults.Name = "listResults";
-      this.listResults.Size = new System.Drawing.Size( 678, 200 );
+      this.listResults.Size = new System.Drawing.Size(678, 200);
       this.listResults.TabIndex = 0;
       this.listResults.UseCompatibleStateImageBehavior = false;
       this.listResults.View = System.Windows.Forms.View.Details;
-      this.listResults.ItemActivate += new System.EventHandler( this.listResults_ItemActivate );
-      this.listResults.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler( this.listMessages_ColumnClick );
+      this.listResults.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listMessages_ColumnClick);
+      this.listResults.ItemActivate += new System.EventHandler(this.listResults_ItemActivate);
       // 
       // columnHeader2
       // 
@@ -68,16 +71,20 @@
       this.columnHeader4.Text = "Text";
       this.columnHeader4.Width = 400;
       // 
+      // columnHeader1
+      // 
+      this.columnHeader1.Text = "Add. Info";
+      this.columnHeader1.Width = 120;
+      // 
       // SearchResults
       // 
-      this.ClientSize = new System.Drawing.Size( 678, 200 );
-      this.Controls.Add( this.listResults );
-      this.Font = new System.Drawing.Font( "Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ) );
-      this.Icon = ( (System.Drawing.Icon)( resources.GetObject( "$this.Icon" ) ) );
+      this.ClientSize = new System.Drawing.Size(678, 200);
+      this.Controls.Add(this.listResults);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "SearchResults";
       this.Text = "Search Results";
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).EndInit();
-      this.ResumeLayout( false );
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
+      this.ResumeLayout(false);
 
     }
 
@@ -87,8 +94,6 @@
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
     private System.Windows.Forms.ColumnHeader columnHeader4;
-
-
-
+    private System.Windows.Forms.ColumnHeader columnHeader1;
   }
 }

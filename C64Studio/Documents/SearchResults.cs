@@ -85,6 +85,7 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( foundInfo.FoundInDocument.DocumentFilename );
           item.Tag = foundInfo.FoundInDocument;
         }
+        item.SubItems.Add( foundInfo.AdditionalInfo );
         item.SubItems.Add( foundInfo.FoundLine );
         ++i;
       }
@@ -140,6 +141,8 @@ namespace RetroDevStudio.Documents
         sb.Append( item.SubItems[3].Text );
         sb.Append( ';' );
         sb.Append( item.SubItems[4].Text );
+        sb.Append( ';' );
+        sb.Append( item.SubItems[5].Text );
         sb.AppendLine();
       }
       System.Windows.Forms.Clipboard.SetText( sb.ToString() );
