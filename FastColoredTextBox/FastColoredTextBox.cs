@@ -6642,8 +6642,8 @@ namespace FastColoredTextBoxNS
       for ( int i = 0; i < delta; ++i )
       {
         if ( ( CharPos > 0 )
-        && ( ( CharPos - 1 >= this[Line].Count )
-        || ( this[Line][CharPos - 1].c == '\t' ) ) )
+        &&   ( ( CharPos - 1 >= this[Line].Count )
+        ||     ( this[Line][CharPos - 1].c == '\t' ) ) )
         {
           --CharPos;
         }
@@ -9545,6 +9545,12 @@ window.status = ""#print"";
         Point p = PointToClient( new Point( e.X, e.Y ) );
         var text = e.Data.GetData( DataFormats.Text ).ToString();
         var place = PointToPlace( p );
+
+        if ( ( place.iChar % TabLength ) != 0 )
+        {
+          place.iChar = AdjustXPosForTabs( place.iLine, place.iChar );
+        }
+
         DoDragDrop( place, text );
         IsDragDrop = false;
 

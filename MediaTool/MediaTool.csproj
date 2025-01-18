@@ -36,6 +36,6 @@
       if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
       if exist "$(TargetDir)MediaTool.deps.json" copy "$(TargetDir)MediaTool.deps.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)"
       if exist "$(TargetDir)runtimes" xcopy /S /Y /I "$(TargetDir)runtimes" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(Platform)\runtimes"
-    </PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

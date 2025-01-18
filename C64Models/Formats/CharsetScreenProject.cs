@@ -160,7 +160,7 @@ namespace RetroDevStudio.Formats
       ||   ( X >= ScreenWidth )
       ||   ( Y < 0 )
       ||   ( Y >= ScreenHeight )
-      ||   ( Mode == TextMode.NES ) )
+      ||   ( Mode != TextMode.NES ) )
       {
         return 0;
       }

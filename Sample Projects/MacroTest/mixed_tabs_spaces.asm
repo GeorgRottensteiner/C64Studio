@@ -21,6 +21,8 @@ a = 3
       !byte a,b,c   ;space, tab, space
 
 
+	!byte abc		;single tab
+
 .gnu
       !byte 1,2,3
       !byte 1,2,3

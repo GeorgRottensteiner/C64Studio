@@ -739,6 +739,7 @@ namespace RetroDevStudio.Documents
 
         ChangeColorSettingsDialog();
         OnPaletteChanged();
+        RedrawPreviewLayer();
 
         editSpriteFrom.Text = "0";
         editSpriteCount.Text  = numSprites.ToString();
@@ -869,6 +870,7 @@ namespace RetroDevStudio.Documents
       saveSpriteProjectToolStripMenuItem.Enabled = true;
       closeCharsetProjectToolStripMenuItem.Enabled = true;
       comboSprite.SelectedIndex = 0;
+      RedrawPreviewLayer();
       EnableFileWatcher();
       return true;
     }

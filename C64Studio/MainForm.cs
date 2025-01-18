@@ -2286,8 +2286,13 @@ namespace RetroDevStudio
       {
         result = result.Replace( "$(SolutionPath)", GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) );
       }
+#if DEBUG
+      result = result.Replace( "$(MediaManager)", "\"" + MakeDebugPath( Application.StartupPath, "MediaManager", "MediaManager.exe" ) + "\"" );
+      result = result.Replace( "$(MediaTool)", "\"" + MakeDebugPath( Application.StartupPath, "MediaTool", "Mediatool.exe" ) + "\"" );
+#else
       result = result.Replace( "$(MediaManager)", "\"" + GR.Path.Append( Application.StartupPath, "mediamanager.exe" ) + "\"" );
       result = result.Replace( "$(MediaTool)", "\"" + GR.Path.Append( Application.StartupPath, "mediatool.exe" ) + "\"" );
+#endif
 
       int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
       {
@@ -2357,6 +2362,26 @@ namespace RetroDevStudio
       }
       return result;
     }
+
+
+
+#if DEBUG
+    private string MakeDebugPath( string startupPath, string subFolder, string executable )
+    {
+      var configPath = GR.Path.GetDirectoryName( startupPath );
+      var configPath2 = GR.Path.GetDirectoryName( configPath );
+      var configPath3 = GR.Path.GetDirectoryName( configPath2 );
+      var configPath4 = GR.Path.GetDirectoryName( configPath3 );
+
+      var solutionPath = configPath4;
+      var subFolders = startupPath.Substring( configPath3.Length );
+      solutionPath = GR.Path.Append( solutionPath, subFolder );
+      solutionPath = GR.Path.Append( solutionPath, subFolders );
+      solutionPath = GR.Path.Append( solutionPath, executable );
+
+      return solutionPath;
+    }
+#endif
 
 
 
