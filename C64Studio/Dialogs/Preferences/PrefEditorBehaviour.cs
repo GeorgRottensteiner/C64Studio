@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Editors" )]
   public partial class PrefEditorBehaviour : PrefBase
   {
     public PrefEditorBehaviour()
@@ -24,23 +25,10 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefEditorBehaviour( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "editor", "paint", "draw" } );
+
       InitializeComponent();
 
       checkRightClickIsBGColor.Checked = Core.Settings.BehaviourRightClickIsBGColorPaint;
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

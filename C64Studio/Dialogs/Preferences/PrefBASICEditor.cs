@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "BASIC.Appearance" )]
   public partial class PrefBASICEditor : PrefBase
   {
     public PrefBASICEditor()
@@ -40,20 +41,6 @@ namespace RetroDevStudio.Dialogs.Preferences
       editBASICC64FontSize.Text = ( (int)Core.Settings.BASICSourceFontSize ).ToString();
       editMaxLineLengthIndicatorColumn.Text = Core.Settings.BASICShowMaxLineLengthIndicatorLength.ToString();
       checkBASICEditorShowMaxLineLengthIndicator.Checked = ( Core.Settings.BASICShowMaxLineLengthIndicatorLength != 0 );
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

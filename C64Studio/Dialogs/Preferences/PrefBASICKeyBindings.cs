@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "BASIC.Key Binding" )]
   public partial class PrefBASICKeyBindings : PrefBase
   {
     private System.Windows.Forms.Keys       m_PressedKeyMapKey = Keys.None;
@@ -27,23 +28,10 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefBASICKeyBindings( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "keys", "binding", "hotkey", "basic" } );
+
       InitializeComponent();
 
       RefillBASICKeyMappingList();
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

@@ -28,9 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.alistTools = new RetroDevStudio.Controls.ArrangedItemList();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -57,70 +54,20 @@
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // btnExportSettings
-      // 
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 376);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 12;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 376);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 13;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.alistTools);
-      this.groupBox1.Controls.Add(this.checkPassLabelsToEmulator);
-      this.groupBox1.Controls.Add(this.groupBox2);
-      this.groupBox1.Controls.Add(this.comboToolType);
-      this.groupBox1.Controls.Add(this.editToolName);
-      this.groupBox1.Controls.Add(this.editWorkPath);
-      this.groupBox1.Controls.Add(this.btnBrowseToolWorkPath);
-      this.groupBox1.Controls.Add(this.btnBrowseTool);
-      this.groupBox1.Controls.Add(this.label7);
-      this.groupBox1.Controls.Add(this.labelToolPath);
-      this.groupBox1.Controls.Add(this.label6);
-      this.groupBox1.Controls.Add(this.label8);
-      this.groupBox1.Controls.Add(this.label3);
-      this.groupBox1.Controls.Add(this.label2);
-      this.groupBox1.Controls.Add(this.label1);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 405);
-      this.groupBox1.TabIndex = 18;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Emulators/Tools";
       // 
       // alistTools
       // 
       this.alistTools.AddButtonEnabled = true;
       this.alistTools.AllowClone = true;
+      this.alistTools.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
       this.alistTools.DeleteButtonEnabled = false;
       this.alistTools.HasOwnerDrawColumn = true;
       this.alistTools.HighlightColor = System.Drawing.SystemColors.HotTrack;
       this.alistTools.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      this.alistTools.Location = new System.Drawing.Point(6, 40);
+      this.alistTools.Location = new System.Drawing.Point(3, 25);
       this.alistTools.MoveDownButtonEnabled = false;
       this.alistTools.MoveUpButtonEnabled = false;
       this.alistTools.MustHaveOneElement = false;
@@ -140,7 +87,7 @@
       // checkPassLabelsToEmulator
       // 
       this.checkPassLabelsToEmulator.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkPassLabelsToEmulator.Location = new System.Drawing.Point(275, 349);
+      this.checkPassLabelsToEmulator.Location = new System.Drawing.Point(272, 334);
       this.checkPassLabelsToEmulator.Name = "checkPassLabelsToEmulator";
       this.checkPassLabelsToEmulator.Size = new System.Drawing.Size(155, 24);
       this.checkPassLabelsToEmulator.TabIndex = 27;
@@ -150,6 +97,8 @@
       // 
       // groupBox2
       // 
+      this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox2.Controls.Add(this.btnMacros);
       this.groupBox2.Controls.Add(this.editToolCartArguments);
       this.groupBox2.Controls.Add(this.label4);
@@ -161,17 +110,20 @@
       this.groupBox2.Controls.Add(this.editToolDebugArguments);
       this.groupBox2.Controls.Add(this.label5);
       this.groupBox2.Controls.Add(this.editToolPRGArguments);
-      this.groupBox2.Location = new System.Drawing.Point(274, 151);
+      this.groupBox2.Location = new System.Drawing.Point(271, 136);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(539, 192);
+      this.groupBox2.Size = new System.Drawing.Size(380, 192);
       this.groupBox2.TabIndex = 24;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Runtime Arguments";
       // 
       // btnMacros
       // 
+      this.btnMacros.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnMacros.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnMacros.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMacros.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMacros.Image = null;
       this.btnMacros.Location = new System.Drawing.Point(16, 152);
       this.btnMacros.Name = "btnMacros";
       this.btnMacros.Size = new System.Drawing.Size(75, 23);
@@ -185,7 +137,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editToolCartArguments.Location = new System.Drawing.Point(83, 45);
       this.editToolCartArguments.Name = "editToolCartArguments";
-      this.editToolCartArguments.Size = new System.Drawing.Size(450, 20);
+      this.editToolCartArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolCartArguments.TabIndex = 1;
       this.editToolCartArguments.TextChanged += new System.EventHandler(this.editToolCartArguments_TextChanged);
       // 
@@ -213,7 +165,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editToolTrueDriveOffArguments.Location = new System.Drawing.Point(83, 123);
       this.editToolTrueDriveOffArguments.Name = "editToolTrueDriveOffArguments";
-      this.editToolTrueDriveOffArguments.Size = new System.Drawing.Size(450, 20);
+      this.editToolTrueDriveOffArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolTrueDriveOffArguments.TabIndex = 4;
       this.editToolTrueDriveOffArguments.TextChanged += new System.EventHandler(this.editToolTrueDriveOffArguments_TextChanged);
       // 
@@ -232,7 +184,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editToolTrueDriveOnArguments.Location = new System.Drawing.Point(83, 97);
       this.editToolTrueDriveOnArguments.Name = "editToolTrueDriveOnArguments";
-      this.editToolTrueDriveOnArguments.Size = new System.Drawing.Size(450, 20);
+      this.editToolTrueDriveOnArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolTrueDriveOnArguments.TabIndex = 3;
       this.editToolTrueDriveOnArguments.TextChanged += new System.EventHandler(this.editToolTrueDriveOnArguments_TextChanged);
       // 
@@ -251,7 +203,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editToolDebugArguments.Location = new System.Drawing.Point(83, 71);
       this.editToolDebugArguments.Name = "editToolDebugArguments";
-      this.editToolDebugArguments.Size = new System.Drawing.Size(450, 20);
+      this.editToolDebugArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolDebugArguments.TabIndex = 2;
       this.editToolDebugArguments.TextChanged += new System.EventHandler(this.editToolDebugArguments_TextChanged);
       // 
@@ -270,31 +222,35 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editToolPRGArguments.Location = new System.Drawing.Point(83, 19);
       this.editToolPRGArguments.Name = "editToolPRGArguments";
-      this.editToolPRGArguments.Size = new System.Drawing.Size(450, 20);
+      this.editToolPRGArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolPRGArguments.TabIndex = 0;
       this.editToolPRGArguments.TextChanged += new System.EventHandler(this.editToolPRGArguments_TextChanged);
       // 
       // comboToolType
       // 
+      this.comboToolType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.comboToolType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboToolType.FormattingEnabled = true;
-      this.comboToolType.Location = new System.Drawing.Point(357, 69);
+      this.comboToolType.Location = new System.Drawing.Point(354, 54);
       this.comboToolType.Name = "comboToolType";
-      this.comboToolType.Size = new System.Drawing.Size(450, 21);
+      this.comboToolType.Size = new System.Drawing.Size(291, 21);
       this.comboToolType.TabIndex = 23;
       this.comboToolType.SelectedIndexChanged += new System.EventHandler(this.comboToolType_SelectedIndexChanged);
       // 
       // editToolName
       // 
-      this.editToolName.Location = new System.Drawing.Point(357, 40);
+      this.editToolName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editToolName.Location = new System.Drawing.Point(354, 25);
       this.editToolName.Name = "editToolName";
-      this.editToolName.Size = new System.Drawing.Size(450, 20);
+      this.editToolName.Size = new System.Drawing.Size(291, 20);
       this.editToolName.TabIndex = 22;
       this.editToolName.TextChanged += new System.EventHandler(this.editToolName_TextChanged);
       // 
       // editWorkPath
       // 
-      this.editWorkPath.Location = new System.Drawing.Point(357, 125);
+      this.editWorkPath.Location = new System.Drawing.Point(354, 110);
       this.editWorkPath.Name = "editWorkPath";
       this.editWorkPath.Size = new System.Drawing.Size(266, 20);
       this.editWorkPath.TabIndex = 26;
@@ -302,9 +258,12 @@
       // 
       // btnBrowseToolWorkPath
       // 
+      this.btnBrowseToolWorkPath.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnBrowseToolWorkPath.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnBrowseToolWorkPath.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnBrowseToolWorkPath.Location = new System.Drawing.Point(629, 123);
+      this.btnBrowseToolWorkPath.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnBrowseToolWorkPath.Image = null;
+      this.btnBrowseToolWorkPath.Location = new System.Drawing.Point(626, 108);
       this.btnBrowseToolWorkPath.Name = "btnBrowseToolWorkPath";
       this.btnBrowseToolWorkPath.Size = new System.Drawing.Size(24, 23);
       this.btnBrowseToolWorkPath.TabIndex = 20;
@@ -313,9 +272,12 @@
       // 
       // btnBrowseTool
       // 
+      this.btnBrowseTool.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnBrowseTool.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnBrowseTool.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnBrowseTool.Location = new System.Drawing.Point(629, 95);
+      this.btnBrowseTool.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnBrowseTool.Image = null;
+      this.btnBrowseTool.Location = new System.Drawing.Point(626, 80);
       this.btnBrowseTool.Name = "btnBrowseTool";
       this.btnBrowseTool.Size = new System.Drawing.Size(24, 23);
       this.btnBrowseTool.TabIndex = 21;
@@ -325,7 +287,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(271, 43);
+      this.label7.Location = new System.Drawing.Point(268, 28);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(38, 13);
       this.label7.TabIndex = 16;
@@ -334,7 +296,7 @@
       // labelToolPath
       // 
       this.labelToolPath.AutoEllipsis = true;
-      this.labelToolPath.Location = new System.Drawing.Point(354, 100);
+      this.labelToolPath.Location = new System.Drawing.Point(351, 85);
       this.labelToolPath.Name = "labelToolPath";
       this.labelToolPath.Size = new System.Drawing.Size(269, 23);
       this.labelToolPath.TabIndex = 25;
@@ -343,7 +305,7 @@
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(271, 72);
+      this.label6.Location = new System.Drawing.Point(268, 57);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(34, 13);
       this.label6.TabIndex = 17;
@@ -352,7 +314,7 @@
       // label8
       // 
       this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(271, 128);
+      this.label8.Location = new System.Drawing.Point(268, 113);
       this.label8.Name = "label8";
       this.label8.Size = new System.Drawing.Size(75, 13);
       this.label8.TabIndex = 18;
@@ -361,7 +323,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(271, 100);
+      this.label3.Location = new System.Drawing.Point(268, 85);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(63, 13);
       this.label3.TabIndex = 19;
@@ -370,7 +332,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(269, 18);
+      this.label2.Location = new System.Drawing.Point(266, 3);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(72, 13);
       this.label2.TabIndex = 14;
@@ -379,7 +341,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(6, 18);
+      this.label1.Location = new System.Drawing.Point(3, 3);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(82, 13);
       this.label1.TabIndex = 15;
@@ -389,22 +351,31 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.alistTools);
+      this.Controls.Add(this.checkPassLabelsToEmulator);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.groupBox2);
+      this.Controls.Add(this.label2);
+      this.Controls.Add(this.comboToolType);
+      this.Controls.Add(this.label3);
+      this.Controls.Add(this.editToolName);
+      this.Controls.Add(this.label8);
+      this.Controls.Add(this.editWorkPath);
+      this.Controls.Add(this.label6);
+      this.Controls.Add(this.btnBrowseToolWorkPath);
+      this.Controls.Add(this.labelToolPath);
+      this.Controls.Add(this.btnBrowseTool);
+      this.Controls.Add(this.label7);
       this.Name = "PrefTools";
-      this.Size = new System.Drawing.Size(900, 405);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(676, 393);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private Controls.ArrangedItemList alistTools;
         private System.Windows.Forms.CheckBox checkPassLabelsToEmulator;
         private System.Windows.Forms.GroupBox groupBox2;

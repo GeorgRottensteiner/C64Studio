@@ -64,6 +64,19 @@ namespace RetroDevStudio
 
 
 
+    public static string GetDescription( Type type )
+    {
+      object[] attrs = type.GetCustomAttributes( typeof( DescriptionAttribute ), false );
+
+      if ( attrs != null && attrs.Length > 0 )
+      {
+        return ( (DescriptionAttribute)attrs[0] ).Description;
+      }
+      return type.ToString();
+    }
+
+
+
     private static void EnumerateMediaTypes()
     {
       var mediaTypes = Assembly.GetExecutingAssembly().GetTypes()

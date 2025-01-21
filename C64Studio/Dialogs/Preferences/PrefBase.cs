@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "Base.Base" )]
   public partial class PrefBase : UserControl
   {
     protected StudioCore      Core = null;

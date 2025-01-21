@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "Assembler.Appearance" )]
   public partial class PrefASMEditor : PrefBase
   {
     public PrefASMEditor()
@@ -58,20 +59,6 @@ namespace RetroDevStudio.Dialogs.Preferences
           comboASMEncoding.SelectedIndex = comboASMEncoding.Items.Count - 1;
         }
       }
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

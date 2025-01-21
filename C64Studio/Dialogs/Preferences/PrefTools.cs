@@ -14,6 +14,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Emulators" )]
   public partial class PrefTools : PrefBase
   {
     public PrefTools()
@@ -34,20 +35,6 @@ namespace RetroDevStudio.Dialogs.Preferences
       comboToolType.Items.Add( "Emulator" );
 
       RefillToolInfoList();
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

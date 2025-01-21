@@ -19,7 +19,6 @@ namespace RetroDevStudio.Dialogs
     private StudioCore            Core = null;
 
     private List<PrefBase>        _PreferencePanes = new List<PrefBase>();
-    private List<PrefBase>        _VisiblePanes = new List<PrefBase>();
 
 
 
@@ -39,37 +38,31 @@ namespace RetroDevStudio.Dialogs
       _PreferencePanes.Add( new PrefEditorBehaviour( Core ) );
       _PreferencePanes.Add( new PrefASMEditor( Core ) );
       _PreferencePanes.Add( new PrefAssembler( Core ) );
+      _PreferencePanes.Add( new PrefLibraryPaths( Core ) );
       _PreferencePanes.Add( new PrefBASICEditor( Core ) );
       _PreferencePanes.Add( new PrefBASICKeyBindings( Core ) );
       _PreferencePanes.Add( new PrefBASICParser( Core ) );
       _PreferencePanes.Add( new PrefSourceControl( Core ) );
 
-
-      int   curY = 0;
       foreach ( var entry in _PreferencePanes )
       {
-        entry.Location = new Point( 0, curY );
-        entry.Width = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
-        curY += entry.Height;
-        panelPreferences.Controls.Add( entry );
-
         DPIHandler.ResizeControlsForDPI( entry );
       }
-      panelPreferences.SizeChanged += PanelPreferences_SizeChanged;
-      _VisiblePanes = _PreferencePanes;
 
       Core.Theming.ApplyTheme( this );
 
       editPreferencesFilter.Text = Key;
-    }
+      ApplyPreferencesFilter();
 
-
-
-    private void PanelPreferences_SizeChanged( object sender, EventArgs e )
-    {
-      foreach ( var entry in _PreferencePanes )
-      {
-        entry.Width = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+      var baseNode = treePreferences.Nodes.First();
+      if ( baseNode != null )
+      { 
+        var firstVisiblePrefNode = baseNode.NextVisibleNode;
+        if ( ( firstVisiblePrefNode != null )
+        &&   ( firstVisiblePrefNode.Tag != null ))
+        {
+          treePreferences.SelectedNode = firstVisiblePrefNode;
+        }
       }
     }
 
@@ -154,68 +147,56 @@ namespace RetroDevStudio.Dialogs
 
     private void editPreferencesFilter_TextChanged( object sender, EventArgs e )
     {
+      ApplyPreferencesFilter();
+    }
+
+
+
+    private void ApplyPreferencesFilter()
+    {
       string[]    keyWords = editPreferencesFilter.Text.Split( ' ' );
       var         matchingPreferences = new List<PrefBase>();
-      int         curY = 0;
-      bool        changed = false;
+      var         visiblePreferences = new List<PrefBase>();
 
       foreach ( var entry in _PreferencePanes )
       {
-        bool    matches = false;
         foreach ( var keyword in keyWords )
         {
           if ( entry.MatchesKeyword( keyword ) )
           {
-            matches = true;
+            visiblePreferences.Add( entry );
             break;
           }
         }
-
-        if ( matches )
-        {
-          entry.Location  = new Point( 0, curY );
-          entry.Width     = panelPreferences.ClientSize.Width - 2 * System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
-          curY            += entry.Height;
-          if ( !_VisiblePanes.Contains( entry ) )
-          {
-            changed = true;
-          }
-          matchingPreferences.Add( entry );
-        }
-        else if ( _VisiblePanes.Contains( entry ) )
-        {
-          changed = true;
-        }
       }
 
-      if ( changed )
+      treePreferences.BeginUpdate();
+      treePreferences.Nodes.Clear();
+
+      var categories = new Dictionary<string, DecentForms.TreeView.TreeNode>();
+
+      foreach ( var entry in visiblePreferences )
       {
-        const int WM_SETREDRAW = 11;
+        string  desc = Lookup.GetDescription( entry.GetType() );
+        int dotPos = desc.IndexOf( '.' );
+        string  category  = desc.Substring( 0, dotPos );
+        string  name      = desc.Substring( dotPos + 1 );
 
-        SendMessage( panelPreferences.Handle, WM_SETREDRAW, false, 0 );
-        foreach ( var match in matchingPreferences )
+        if ( !categories.ContainsKey( category ) )
         {
-          if ( !panelPreferences.Controls.Contains( match ) )
-          {
-            panelPreferences.Controls.Add( match );
-          }
+          var nodeC = new DecentForms.TreeView.TreeNode( category );
+          treePreferences.Nodes.Add( nodeC );
+          nodeC.Expand();
+          categories.Add( category, nodeC );
         }
-        var toRemove = new List<PrefBase>();
-        foreach ( PrefBase pref in panelPreferences.Controls )
-        {
-          if ( !matchingPreferences.Contains( pref ) )
-          {
-            toRemove.Add( pref );
-          }
-        }
-        foreach ( var remove in toRemove )
-        {
-          panelPreferences.Controls.Remove( remove );
-        }
-        _VisiblePanes = matchingPreferences;
-        SendMessage( panelPreferences.Handle, WM_SETREDRAW, true, 0 );
-        panelPreferences.Refresh();
+
+        var catNode = categories[category];
+
+        var node = new DecentForms.TreeView.TreeNode( name );
+        node.Tag = entry;
+        catNode.Nodes.Add( node );
       }
+      treePreferences.EndUpdate();
     }
 
 
@@ -234,6 +215,63 @@ namespace RetroDevStudio.Dialogs
 
     [DllImport( "user32.dll" )]
     public static extern int SendMessage( IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam );
+
+
+
+    private void treePreferences_AfterSelect( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeViewEventArgs e )
+    {
+      if ( ( e.Node == null )
+      ||   ( e.Node.Tag == null ) )
+      {
+        panelPreferences.Controls.Clear();
+        btnExportHere.Enabled = false;
+        btnImportHere.Enabled = false;
+        return;
+      }
+      var prefBase = e.Node.Tag as PrefBase;
+      prefBase.Location = new Point( 0, 0 );
+      prefBase.Size     = panelPreferences.ClientSize;
+
+      foreach ( Control control in panelPreferences.Controls )
+      {
+        control.Visible = false;
+      }
+      panelPreferences.Controls.Clear();
+      panelPreferences.Controls.Add( prefBase );
+      prefBase.Visible = true;
+      btnExportHere.Enabled = true;
+      btnImportHere.Enabled = true;
+    }
+
+
+
+    private void btnExportCurrentSettings_Click( DecentForms.ControlBase Sender )
+    {
+      if ( ( treePreferences.SelectedNode == null )
+      ||   ( treePreferences.SelectedNode.Tag == null ) )
+      {
+        return;
+      }
+      var prefBase = treePreferences.SelectedNode.Tag as PrefBase;
+
+      prefBase.SaveLocalSettings();
+    }
+
+
+
+    private void btnImportCurrentSettings_Click( DecentForms.ControlBase Sender )
+    {
+      if ( ( treePreferences.SelectedNode == null )
+      ||   ( treePreferences.SelectedNode.Tag == null ) )
+      {
+        return;
+      }
+      var prefBase = treePreferences.SelectedNode.Tag as PrefBase;
+
+      prefBase.ImportLocalSettings();
+    }
+
+
 
   }
 }

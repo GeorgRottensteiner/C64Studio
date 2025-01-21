@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "BASIC.Behaviour" )]
   public partial class PrefBASICParser : PrefBase
   {
     public PrefBASICParser()
@@ -24,6 +25,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefBASICParser( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "basic", "parser" } );
+
       InitializeComponent();
 
       checkBASICStripSpaces.Checked                   = Core.Settings.BASICStripSpaces;
@@ -31,20 +33,6 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkBASICAutoToggleEntryMode.Checked           = Core.Settings.BASICAutoToggleEntryMode;
       checkBASICStripREM.Checked                      = Core.Settings.BASICStripREM;
       checkBASICAutoToggleEntryModeOnPosition.Checked = Core.Settings.BASICAutoToggleEntryModeOnPosition;
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

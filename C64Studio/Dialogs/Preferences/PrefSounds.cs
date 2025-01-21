@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Sounds" )]
   public partial class PrefSounds : PrefBase
   {
     public PrefSounds()
@@ -24,25 +25,12 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefSounds( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "sound", "play" } );
+
       InitializeComponent();
 
       checkPlaySoundCompileSuccessful.Checked   = Core.Settings.PlaySoundOnSuccessfulBuild;
       checkPlaySoundCompileFail.Checked         = Core.Settings.PlaySoundOnBuildFailure;
       checkPlaySoundSearchTextNotFound.Checked  = Core.Settings.PlaySoundOnSearchFoundNoItem;
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

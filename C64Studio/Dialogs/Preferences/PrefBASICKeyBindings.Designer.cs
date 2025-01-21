@@ -28,9 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnUnbindBASICKeyMapBinding = new DecentForms.Button();
       this.btnBindBASICKeyMapBinding = new DecentForms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
@@ -40,50 +37,18 @@
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // btnExportSettings
-      // 
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 371);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 12;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 371);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 13;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.btnUnbindBASICKeyMapBinding);
-      this.groupBox1.Controls.Add(this.btnBindBASICKeyMapBinding);
-      this.groupBox1.Controls.Add(this.editBASICKeyMapBinding);
-      this.groupBox1.Controls.Add(this.label25);
-      this.groupBox1.Controls.Add(this.listBASICKeyMap);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 400);
-      this.groupBox1.TabIndex = 18;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "BASIC Key Map";
       // 
       // btnUnbindBASICKeyMapBinding
       // 
+      this.btnUnbindBASICKeyMapBinding.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnUnbindBASICKeyMapBinding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnUnbindBASICKeyMapBinding.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnUnbindBASICKeyMapBinding.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnUnbindBASICKeyMapBinding.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnUnbindBASICKeyMapBinding.Enabled = false;
-      this.btnUnbindBASICKeyMapBinding.Location = new System.Drawing.Point(369, 371);
+      this.btnUnbindBASICKeyMapBinding.Image = null;
+      this.btnUnbindBASICKeyMapBinding.Location = new System.Drawing.Point(583, 355);
       this.btnUnbindBASICKeyMapBinding.Name = "btnUnbindBASICKeyMapBinding";
       this.btnUnbindBASICKeyMapBinding.Size = new System.Drawing.Size(72, 23);
       this.btnUnbindBASICKeyMapBinding.TabIndex = 17;
@@ -92,7 +57,13 @@
       // 
       // btnBindBASICKeyMapBinding
       // 
-      this.btnBindBASICKeyMapBinding.Location = new System.Drawing.Point(288, 371);
+      this.btnBindBASICKeyMapBinding.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnBindBASICKeyMapBinding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnBindBASICKeyMapBinding.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnBindBASICKeyMapBinding.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnBindBASICKeyMapBinding.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnBindBASICKeyMapBinding.Image = null;
+      this.btnBindBASICKeyMapBinding.Location = new System.Drawing.Point(502, 355);
       this.btnBindBASICKeyMapBinding.Name = "btnBindBASICKeyMapBinding";
       this.btnBindBASICKeyMapBinding.Size = new System.Drawing.Size(72, 23);
       this.btnBindBASICKeyMapBinding.TabIndex = 18;
@@ -101,18 +72,21 @@
       // 
       // editBASICKeyMapBinding
       // 
-      this.editBASICKeyMapBinding.Location = new System.Drawing.Point(78, 373);
+      this.editBASICKeyMapBinding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editBASICKeyMapBinding.Location = new System.Drawing.Point(75, 357);
       this.editBASICKeyMapBinding.Name = "editBASICKeyMapBinding";
       this.editBASICKeyMapBinding.ReadOnly = true;
-      this.editBASICKeyMapBinding.Size = new System.Drawing.Size(201, 20);
+      this.editBASICKeyMapBinding.Size = new System.Drawing.Size(421, 20);
       this.editBASICKeyMapBinding.TabIndex = 16;
       this.editBASICKeyMapBinding.Text = "Press Key here";
       this.editBASICKeyMapBinding.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editBASICKeyMapBinding_PreviewKeyDown);
       // 
       // label25
       // 
+      this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label25.AutoSize = true;
-      this.label25.Location = new System.Drawing.Point(6, 376);
+      this.label25.Location = new System.Drawing.Point(3, 360);
       this.label25.Name = "label25";
       this.label25.Size = new System.Drawing.Size(66, 13);
       this.label25.TabIndex = 15;
@@ -121,6 +95,9 @@
       // listBASICKeyMap
       // 
       this.listBASICKeyMap.AllowDrop = true;
+      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader5,
             this.columnHeader6,
@@ -130,7 +107,7 @@
       this.listBASICKeyMap.FullRowSelect = true;
       this.listBASICKeyMap.HideSelection = false;
       this.listBASICKeyMap.ItemHeight = 14;
-      this.listBASICKeyMap.Location = new System.Drawing.Point(6, 19);
+      this.listBASICKeyMap.Location = new System.Drawing.Point(3, 3);
       this.listBASICKeyMap.MultiSelect = false;
       this.listBASICKeyMap.Name = "listBASICKeyMap";
       this.listBASICKeyMap.Size = new System.Drawing.Size(652, 348);
@@ -152,31 +129,30 @@
       // columnHeader7
       // 
       this.columnHeader7.Text = "PC Key";
-      this.columnHeader7.Width = 309;
+      this.columnHeader7.Width = 277;
       // 
       // columnHeader10
       // 
       this.columnHeader10.Text = "Display";
-      this.columnHeader10.Width = 108;
+      this.columnHeader10.Width = 138;
       // 
       // PrefBASICKeyBindings
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.btnUnbindBASICKeyMapBinding);
+      this.Controls.Add(this.btnBindBASICKeyMapBinding);
+      this.Controls.Add(this.listBASICKeyMap);
+      this.Controls.Add(this.editBASICKeyMapBinding);
+      this.Controls.Add(this.label25);
       this.Name = "PrefBASICKeyBindings";
-      this.Size = new System.Drawing.Size(900, 400);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(675, 387);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private DecentForms.Button btnUnbindBASICKeyMapBinding;
         private DecentForms.Button btnBindBASICKeyMapBinding;
         private System.Windows.Forms.TextBox editBASICKeyMapBinding;

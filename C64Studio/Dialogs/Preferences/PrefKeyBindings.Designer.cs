@@ -28,9 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnSetDefaultsKeyBinding = new DecentForms.Button();
       this.btnUnbindKey = new DecentForms.Button();
       this.btnBindKeySecondary = new DecentForms.Button();
@@ -42,61 +39,33 @@
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // btnExportSettings
-      // 
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 455);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 12;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 455);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 13;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.btnSetDefaultsKeyBinding);
-      this.groupBox1.Controls.Add(this.btnUnbindKey);
-      this.groupBox1.Controls.Add(this.btnBindKeySecondary);
-      this.groupBox1.Controls.Add(this.btnBindKey);
-      this.groupBox1.Controls.Add(this.editKeyBinding);
-      this.groupBox1.Controls.Add(this.label10);
-      this.groupBox1.Controls.Add(this.listFunctions);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 484);
-      this.groupBox1.TabIndex = 18;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Hot Keys/Key Binding";
       // 
       // btnSetDefaultsKeyBinding
       // 
-      this.btnSetDefaultsKeyBinding.Location = new System.Drawing.Point(557, 408);
+      this.btnSetDefaultsKeyBinding.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnSetDefaultsKeyBinding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnSetDefaultsKeyBinding.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSetDefaultsKeyBinding.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSetDefaultsKeyBinding.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSetDefaultsKeyBinding.Image = null;
+      this.btnSetDefaultsKeyBinding.Location = new System.Drawing.Point(548, 394);
       this.btnSetDefaultsKeyBinding.Name = "btnSetDefaultsKeyBinding";
-      this.btnSetDefaultsKeyBinding.Size = new System.Drawing.Size(124, 23);
+      this.btnSetDefaultsKeyBinding.Size = new System.Drawing.Size(75, 23);
       this.btnSetDefaultsKeyBinding.TabIndex = 18;
       this.btnSetDefaultsKeyBinding.Text = "Set Defaults";
       this.btnSetDefaultsKeyBinding.Click += new DecentForms.EventHandler(this.btnSetDefaultsKeyBinding_Click);
       // 
       // btnUnbindKey
       // 
+      this.btnUnbindKey.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnUnbindKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnUnbindKey.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnUnbindKey.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnUnbindKey.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnUnbindKey.Enabled = false;
-      this.btnUnbindKey.Location = new System.Drawing.Point(464, 408);
+      this.btnUnbindKey.Image = null;
+      this.btnUnbindKey.Location = new System.Drawing.Point(467, 394);
       this.btnUnbindKey.Name = "btnUnbindKey";
       this.btnUnbindKey.Size = new System.Drawing.Size(75, 23);
       this.btnUnbindKey.TabIndex = 19;
@@ -105,7 +74,13 @@
       // 
       // btnBindKeySecondary
       // 
-      this.btnBindKeySecondary.Location = new System.Drawing.Point(369, 408);
+      this.btnBindKeySecondary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnBindKeySecondary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnBindKeySecondary.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnBindKeySecondary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnBindKeySecondary.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnBindKeySecondary.Image = null;
+      this.btnBindKeySecondary.Location = new System.Drawing.Point(386, 394);
       this.btnBindKeySecondary.Name = "btnBindKeySecondary";
       this.btnBindKeySecondary.Size = new System.Drawing.Size(75, 23);
       this.btnBindKeySecondary.TabIndex = 20;
@@ -114,7 +89,13 @@
       // 
       // btnBindKey
       // 
-      this.btnBindKey.Location = new System.Drawing.Point(288, 408);
+      this.btnBindKey.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnBindKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnBindKey.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnBindKey.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnBindKey.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnBindKey.Image = null;
+      this.btnBindKey.Location = new System.Drawing.Point(305, 394);
       this.btnBindKey.Name = "btnBindKey";
       this.btnBindKey.Size = new System.Drawing.Size(75, 23);
       this.btnBindKey.TabIndex = 21;
@@ -123,18 +104,21 @@
       // 
       // editKeyBinding
       // 
-      this.editKeyBinding.Location = new System.Drawing.Point(78, 410);
+      this.editKeyBinding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editKeyBinding.Location = new System.Drawing.Point(72, 396);
       this.editKeyBinding.Name = "editKeyBinding";
       this.editKeyBinding.ReadOnly = true;
-      this.editKeyBinding.Size = new System.Drawing.Size(204, 20);
+      this.editKeyBinding.Size = new System.Drawing.Size(227, 20);
       this.editKeyBinding.TabIndex = 17;
       this.editKeyBinding.Text = "Press Key here";
       this.editKeyBinding.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editKeyBinding_PreviewKeyDown);
       // 
       // label10
       // 
+      this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 413);
+      this.label10.Location = new System.Drawing.Point(0, 399);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(66, 13);
       this.label10.TabIndex = 16;
@@ -142,6 +126,9 @@
       // 
       // listFunctions
       // 
+      this.listFunctions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.listFunctions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader1,
@@ -149,10 +136,10 @@
             this.columnHeader8});
       this.listFunctions.FullRowSelect = true;
       this.listFunctions.HideSelection = false;
-      this.listFunctions.Location = new System.Drawing.Point(9, 19);
+      this.listFunctions.Location = new System.Drawing.Point(3, 5);
       this.listFunctions.MultiSelect = false;
       this.listFunctions.Name = "listFunctions";
-      this.listFunctions.Size = new System.Drawing.Size(773, 383);
+      this.listFunctions.Size = new System.Drawing.Size(620, 383);
       this.listFunctions.Sorting = System.Windows.Forms.SortOrder.Ascending;
       this.listFunctions.TabIndex = 15;
       this.listFunctions.UseCompatibleStateImageBehavior = false;
@@ -167,7 +154,7 @@
       // columnHeader1
       // 
       this.columnHeader1.Text = "Function";
-      this.columnHeader1.Width = 304;
+      this.columnHeader1.Width = 222;
       // 
       // columnHeader2
       // 
@@ -183,20 +170,21 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.btnSetDefaultsKeyBinding);
+      this.Controls.Add(this.btnUnbindKey);
+      this.Controls.Add(this.listFunctions);
+      this.Controls.Add(this.btnBindKeySecondary);
+      this.Controls.Add(this.label10);
+      this.Controls.Add(this.btnBindKey);
+      this.Controls.Add(this.editKeyBinding);
       this.Name = "PrefKeyBindings";
-      this.Size = new System.Drawing.Size(900, 484);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(645, 436);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private DecentForms.Button btnSetDefaultsKeyBinding;
         private DecentForms.Button btnUnbindKey;
         private DecentForms.Button btnBindKeySecondary;

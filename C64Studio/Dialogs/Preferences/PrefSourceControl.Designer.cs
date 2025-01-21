@@ -28,70 +28,29 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.checkGenerateProjectRepository = new System.Windows.Forms.CheckBox();
       this.checkGenerateSolutionRepository = new System.Windows.Forms.CheckBox();
       this.editCommitterEmail = new System.Windows.Forms.TextBox();
       this.editCommitAuthor = new System.Windows.Forms.TextBox();
       this.label32 = new System.Windows.Forms.Label();
       this.label31 = new System.Windows.Forms.Label();
-      this.checkGenerateProjectRepository = new System.Windows.Forms.CheckBox();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
-      // btnExportSettings
+      // checkGenerateProjectRepository
       // 
-      this.btnExportSettings.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportSettings.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportSettings.Image = null;
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 100);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 12;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportSettings.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportSettings.Image = null;
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 100);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 13;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.checkGenerateProjectRepository);
-      this.groupBox1.Controls.Add(this.checkGenerateSolutionRepository);
-      this.groupBox1.Controls.Add(this.editCommitterEmail);
-      this.groupBox1.Controls.Add(this.editCommitAuthor);
-      this.groupBox1.Controls.Add(this.label32);
-      this.groupBox1.Controls.Add(this.label31);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 129);
-      this.groupBox1.TabIndex = 16;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Source Control";
+      this.checkGenerateProjectRepository.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkGenerateProjectRepository.Location = new System.Drawing.Point(3, 91);
+      this.checkGenerateProjectRepository.Name = "checkGenerateProjectRepository";
+      this.checkGenerateProjectRepository.Size = new System.Drawing.Size(232, 17);
+      this.checkGenerateProjectRepository.TabIndex = 22;
+      this.checkGenerateProjectRepository.Text = "Generate Project Repository";
+      this.checkGenerateProjectRepository.UseVisualStyleBackColor = true;
+      this.checkGenerateProjectRepository.CheckedChanged += new System.EventHandler(this.checkGenerateProjectRepository_CheckedChanged);
       // 
       // checkGenerateSolutionRepository
       // 
       this.checkGenerateSolutionRepository.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkGenerateSolutionRepository.Location = new System.Drawing.Point(7, 74);
+      this.checkGenerateSolutionRepository.Location = new System.Drawing.Point(3, 65);
       this.checkGenerateSolutionRepository.Name = "checkGenerateSolutionRepository";
       this.checkGenerateSolutionRepository.Size = new System.Drawing.Size(232, 17);
       this.checkGenerateSolutionRepository.TabIndex = 22;
@@ -101,7 +60,7 @@
       // 
       // editCommitterEmail
       // 
-      this.editCommitterEmail.Location = new System.Drawing.Point(225, 45);
+      this.editCommitterEmail.Location = new System.Drawing.Point(221, 36);
       this.editCommitterEmail.Name = "editCommitterEmail";
       this.editCommitterEmail.Size = new System.Drawing.Size(322, 20);
       this.editCommitterEmail.TabIndex = 17;
@@ -109,7 +68,7 @@
       // 
       // editCommitAuthor
       // 
-      this.editCommitAuthor.Location = new System.Drawing.Point(225, 19);
+      this.editCommitAuthor.Location = new System.Drawing.Point(221, 10);
       this.editCommitAuthor.MaxLength = 2;
       this.editCommitAuthor.Name = "editCommitAuthor";
       this.editCommitAuthor.Size = new System.Drawing.Size(322, 20);
@@ -119,7 +78,7 @@
       // label32
       // 
       this.label32.AutoSize = true;
-      this.label32.Location = new System.Drawing.Point(9, 22);
+      this.label32.Location = new System.Drawing.Point(5, 13);
       this.label32.Name = "label32";
       this.label32.Size = new System.Drawing.Size(78, 13);
       this.label32.TabIndex = 19;
@@ -128,41 +87,30 @@
       // label31
       // 
       this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(9, 48);
+      this.label31.Location = new System.Drawing.Point(5, 39);
       this.label31.Name = "label31";
       this.label31.Size = new System.Drawing.Size(84, 13);
       this.label31.TabIndex = 20;
       this.label31.Text = "Committer Email:";
       // 
-      // checkGenerateProjectRepository
-      // 
-      this.checkGenerateProjectRepository.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkGenerateProjectRepository.Location = new System.Drawing.Point(7, 100);
-      this.checkGenerateProjectRepository.Name = "checkGenerateProjectRepository";
-      this.checkGenerateProjectRepository.Size = new System.Drawing.Size(232, 17);
-      this.checkGenerateProjectRepository.TabIndex = 22;
-      this.checkGenerateProjectRepository.Text = "Generate Project Repository";
-      this.checkGenerateProjectRepository.UseVisualStyleBackColor = true;
-      this.checkGenerateProjectRepository.CheckedChanged += new System.EventHandler(this.checkGenerateProjectRepository_CheckedChanged);
-      // 
       // PrefSourceControl
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.checkGenerateProjectRepository);
+      this.Controls.Add(this.checkGenerateSolutionRepository);
+      this.Controls.Add(this.editCommitterEmail);
+      this.Controls.Add(this.label31);
+      this.Controls.Add(this.editCommitAuthor);
+      this.Controls.Add(this.label32);
       this.Name = "PrefSourceControl";
-      this.Size = new System.Drawing.Size(900, 129);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(577, 174);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-    private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TextBox editCommitterEmail;
     private System.Windows.Forms.TextBox editCommitAuthor;
     private System.Windows.Forms.Label label32;

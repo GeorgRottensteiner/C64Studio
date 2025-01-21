@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Application" )]
   public partial class PrefApplication : PrefBase
   {
     public PrefApplication()
@@ -41,20 +42,6 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void comboAppMode_SelectedIndexChanged( object sender, EventArgs e )
     {
       Core.Settings.StudioAppMode = (AppMode)comboAppMode.SelectedIndex;
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

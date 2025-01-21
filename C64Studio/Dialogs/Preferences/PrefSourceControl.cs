@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "Source Control.GIT" )]
   public partial class PrefSourceControl : PrefBase
   {
     public PrefSourceControl()
@@ -30,20 +31,6 @@ namespace RetroDevStudio.Dialogs.Preferences
 
       checkGenerateSolutionRepository.Checked = Core.Settings.SourceControlInfo.CreateSolutionRepository;
       checkGenerateProjectRepository.Checked  = Core.Settings.SourceControlInfo.CreateProjectRepository;
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

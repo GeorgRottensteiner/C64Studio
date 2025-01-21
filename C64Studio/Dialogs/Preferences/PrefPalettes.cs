@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Palettes" )]
   public partial class PrefPalettes : PrefBase
   {
     public PrefPalettes()
@@ -26,23 +27,10 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefPalettes( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "colors", "palette" } );
+
       InitializeComponent();
 
       RefillPaletteList();
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

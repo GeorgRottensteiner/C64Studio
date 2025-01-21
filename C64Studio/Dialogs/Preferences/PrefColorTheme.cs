@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Color Theme" )]
   public partial class PrefColorTheme : PrefBase
   {
     public PrefColorTheme()
@@ -25,6 +26,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefColorTheme( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "colors", "display", "theme" } );
+
       InitializeComponent();
 
       RefillColorList();
@@ -42,20 +44,6 @@ namespace RetroDevStudio.Dialogs.Preferences
       AddColor( "Dark Green", 0xff008000 );
       AddColor( "Dark Red", 0xff800000 );
       AddColor( "Dark Blue", 0xff000080 );
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

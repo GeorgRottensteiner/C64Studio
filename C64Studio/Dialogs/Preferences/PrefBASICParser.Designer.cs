@@ -28,58 +28,28 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.checkBASICAutoToggleEntryModeOnPosition = new System.Windows.Forms.CheckBox();
       this.checkBASICAutoToggleEntryMode = new System.Windows.Forms.CheckBox();
       this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
       this.checkBASICStripREM = new System.Windows.Forms.CheckBox();
       this.checkBASICStripSpaces = new System.Windows.Forms.CheckBox();
-      this.checkBASICAutoToggleEntryModeOnPosition = new System.Windows.Forms.CheckBox();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
-      // btnExportSettings
+      // checkBASICAutoToggleEntryModeOnPosition
       // 
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 178);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 12;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 178);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 13;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.checkBASICAutoToggleEntryModeOnPosition);
-      this.groupBox1.Controls.Add(this.checkBASICAutoToggleEntryMode);
-      this.groupBox1.Controls.Add(this.checkBASICShowControlCodes);
-      this.groupBox1.Controls.Add(this.checkBASICStripREM);
-      this.groupBox1.Controls.Add(this.checkBASICStripSpaces);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 207);
-      this.groupBox1.TabIndex = 18;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "BASIC Compiler";
+      this.checkBASICAutoToggleEntryModeOnPosition.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkBASICAutoToggleEntryModeOnPosition.Location = new System.Drawing.Point(3, 126);
+      this.checkBASICAutoToggleEntryModeOnPosition.Name = "checkBASICAutoToggleEntryModeOnPosition";
+      this.checkBASICAutoToggleEntryModeOnPosition.Size = new System.Drawing.Size(266, 24);
+      this.checkBASICAutoToggleEntryModeOnPosition.TabIndex = 14;
+      this.checkBASICAutoToggleEntryModeOnPosition.Text = "Auto toggle entry mode on position";
+      this.checkBASICAutoToggleEntryModeOnPosition.UseVisualStyleBackColor = true;
+      this.checkBASICAutoToggleEntryModeOnPosition.CheckedChanged += new System.EventHandler(this.checkBASICAutoToggleEntryModeOnPosition_CheckedChanged);
       // 
       // checkBASICAutoToggleEntryMode
       // 
       this.checkBASICAutoToggleEntryMode.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICAutoToggleEntryMode.Location = new System.Drawing.Point(6, 109);
+      this.checkBASICAutoToggleEntryMode.Location = new System.Drawing.Point(3, 96);
       this.checkBASICAutoToggleEntryMode.Name = "checkBASICAutoToggleEntryMode";
       this.checkBASICAutoToggleEntryMode.Size = new System.Drawing.Size(266, 24);
       this.checkBASICAutoToggleEntryMode.TabIndex = 14;
@@ -90,7 +60,7 @@
       // checkBASICShowControlCodes
       // 
       this.checkBASICShowControlCodes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICShowControlCodes.Location = new System.Drawing.Point(6, 79);
+      this.checkBASICShowControlCodes.Location = new System.Drawing.Point(3, 66);
       this.checkBASICShowControlCodes.Name = "checkBASICShowControlCodes";
       this.checkBASICShowControlCodes.Size = new System.Drawing.Size(266, 24);
       this.checkBASICShowControlCodes.TabIndex = 15;
@@ -101,7 +71,7 @@
       // checkBASICStripREM
       // 
       this.checkBASICStripREM.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICStripREM.Location = new System.Drawing.Point(6, 49);
+      this.checkBASICStripREM.Location = new System.Drawing.Point(3, 36);
       this.checkBASICStripREM.Name = "checkBASICStripREM";
       this.checkBASICStripREM.Size = new System.Drawing.Size(266, 24);
       this.checkBASICStripREM.TabIndex = 16;
@@ -112,7 +82,7 @@
       // checkBASICStripSpaces
       // 
       this.checkBASICStripSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICStripSpaces.Location = new System.Drawing.Point(6, 19);
+      this.checkBASICStripSpaces.Location = new System.Drawing.Point(3, 6);
       this.checkBASICStripSpaces.Name = "checkBASICStripSpaces";
       this.checkBASICStripSpaces.Size = new System.Drawing.Size(266, 24);
       this.checkBASICStripSpaces.TabIndex = 17;
@@ -120,34 +90,22 @@
       this.checkBASICStripSpaces.UseVisualStyleBackColor = true;
       this.checkBASICStripSpaces.CheckedChanged += new System.EventHandler(this.checkBASICStripSpaces_CheckedChanged);
       // 
-      // checkBASICAutoToggleEntryModeOnPosition
-      // 
-      this.checkBASICAutoToggleEntryModeOnPosition.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICAutoToggleEntryModeOnPosition.Location = new System.Drawing.Point(6, 139);
-      this.checkBASICAutoToggleEntryModeOnPosition.Name = "checkBASICAutoToggleEntryModeOnPosition";
-      this.checkBASICAutoToggleEntryModeOnPosition.Size = new System.Drawing.Size(266, 24);
-      this.checkBASICAutoToggleEntryModeOnPosition.TabIndex = 14;
-      this.checkBASICAutoToggleEntryModeOnPosition.Text = "Auto toggle entry mode on position";
-      this.checkBASICAutoToggleEntryModeOnPosition.UseVisualStyleBackColor = true;
-      this.checkBASICAutoToggleEntryModeOnPosition.CheckedChanged += new System.EventHandler(this.checkBASICAutoToggleEntryModeOnPosition_CheckedChanged);
-      // 
       // PrefBASICParser
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.checkBASICAutoToggleEntryModeOnPosition);
+      this.Controls.Add(this.checkBASICAutoToggleEntryMode);
+      this.Controls.Add(this.checkBASICStripSpaces);
+      this.Controls.Add(this.checkBASICShowControlCodes);
+      this.Controls.Add(this.checkBASICStripREM);
       this.Name = "PrefBASICParser";
-      this.Size = new System.Drawing.Size(900, 207);
-      this.groupBox1.ResumeLayout(false);
+      this.Size = new System.Drawing.Size(304, 171);
       this.ResumeLayout(false);
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBASICAutoToggleEntryMode;
         private System.Windows.Forms.CheckBox checkBASICShowControlCodes;
         private System.Windows.Forms.CheckBox checkBASICStripREM;

@@ -14,6 +14,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "Assembler.Warnings" )]
   public partial class PrefAssembler : PrefBase
   {
     public PrefAssembler()
@@ -25,7 +26,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public PrefAssembler( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "asm", "assembler", "warnings", "hack" } );
+      _Keywords.AddRange( new string[] { "asm", "assembler", "warnings", "hack", "ignore", "label" } );
 
       InitializeComponent();
 
@@ -33,26 +34,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       RefillWarningsAsErrorList();
       RefillC64StudioHackList();
 
-      foreach ( var libPath in Core.Settings.ASMLibraryPaths )
-      {
-        asmLibraryPathList.Items.Add( libPath );
-      }
       checkASMAutoTruncateLiteralValues.Checked   = Core.Settings.ASMAutoTruncateLiteralValues;
       checkLabelFileSkipAssemblerIDLabels.Checked = Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels;
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 
@@ -90,14 +73,6 @@ namespace RetroDevStudio.Dialogs.Preferences
         xmlHack.AddAttribute( "Type", hack.ToString() );
 
         xmlSettingRoot.AddChild( xmlHack );
-      }
-
-      xmlSettingRoot = new GR.Strings.XMLElement( "LibraryPaths" );
-      SettingsRoot.AddChild( xmlSettingRoot );
-
-      foreach ( var path in Core.Settings.ASMLibraryPaths )
-      {
-        xmlSettingRoot.AddChild( "Path", path );
       }
 
       SettingsRoot.AddChild( "AutoTruncateLiterals" ).AddAttribute( "Enabled", Core.Settings.ASMAutoTruncateLiteralValues ? "yes" : "no" );
@@ -186,31 +161,6 @@ namespace RetroDevStudio.Dialogs.Preferences
         Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels = IsSettingTrue( xmlIgnoreAssemblerIDLabels.Attribute( "Enabled" ) );
         checkLabelFileSkipAssemblerIDLabels.Checked = Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels;
       }
-
-      xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "LibraryPaths" );
-      if ( xmlSettingRoot != null )
-      {
-        asmLibraryPathList.Items.Clear();
-        foreach ( var xmlKey in xmlSettingRoot.ChildElements )
-        {
-          if ( xmlKey.Type == "Path" )
-          {
-            asmLibraryPathList.Items.Add( xmlKey.Content );
-          }
-        }
-        ApplyLibraryPathsFromList();
-      }
-    }
-
-
-
-    private void ApplyLibraryPathsFromList()
-    {
-      Core.Settings.ASMLibraryPaths.Clear();
-      foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
-      {
-        Core.Settings.ASMLibraryPaths.Add( entry.Text );
-      }
     }
 
 
@@ -277,48 +227,6 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void checkASMAutoTruncateLiteralValues_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.ASMAutoTruncateLiteralValues = checkASMAutoTruncateLiteralValues.Checked;
-    }
-
-
-
-    private Controls.ArrangedItemEntry asmLibraryPathList_AddingItem( object sender )
-    {
-      var newEntry = new ArrangedItemEntry( editASMLibraryPath.Text );
-      return newEntry;
-    }
-
-
-
-    private void asmLibraryPathList_ItemAdded( object sender, ArrangedItemEntry Item )
-    {
-      ApplyLibraryPathsFromList();
-    }
-
-
-
-    private void asmLibraryPathList_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
-    {
-      ApplyLibraryPathsFromList();
-    }
-
-
-
-    private void asmLibraryPathList_ItemRemoved( object sender, ArrangedItemEntry Item )
-    {
-      ApplyLibraryPathsFromList();
-    }
-
-
-
-    private void btmASMLibraryPathBrowse_Click( DecentForms.ControlBase Sender )
-    {
-      FolderBrowserDialog dlg = new FolderBrowserDialog();
-
-      dlg.Description = "Choose Library Folder";
-      if ( dlg.ShowDialog() == DialogResult.OK )
-      {
-        editASMLibraryPath.Text = dlg.SelectedPath;
-      }
     }
 
 

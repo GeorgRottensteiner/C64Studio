@@ -364,6 +364,9 @@
     <Compile Update="Dialogs\FormRenumberBASICLabelMode.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\PrefLibraryPaths.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\PrefPalettes.cs">
       <SubType>UserControl</SubType>
     </Compile>

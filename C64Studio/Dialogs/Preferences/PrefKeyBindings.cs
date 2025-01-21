@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
+  [Description( "General.Key Binding" )]
   public partial class PrefKeyBindings : PrefBase
   {
     private System.Windows.Forms.Keys       m_PressedKey = Keys.None;
@@ -28,23 +29,10 @@ namespace RetroDevStudio.Dialogs.Preferences
     public PrefKeyBindings( StudioCore Core ) : base( Core )
     {
       _Keywords.AddRange( new string[] { "keys", "binding", "hotkey" } );
+
       InitializeComponent();
 
       RefillAcceleratorList();
-    }
-
-
-
-    private void btnImportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      ImportLocalSettings();
-    }
-
-
-
-    private void btnExportSettings_Click( DecentForms.ControlBase Sender )
-    {
-      SaveLocalSettings();
     }
 
 

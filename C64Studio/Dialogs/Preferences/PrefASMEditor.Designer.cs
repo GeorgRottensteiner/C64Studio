@@ -28,9 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.checkEditorShowMaxLineLengthIndicator = new System.Windows.Forms.CheckBox();
       this.editMaxLineLengthIndicatorColumn = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
@@ -45,73 +42,19 @@
       this.btnSetDefaultsFont = new DecentForms.Button();
       this.btnChooseFont = new DecentForms.Button();
       this.labelFontPreview = new System.Windows.Forms.Label();
+      this.editCaretWidth = new System.Windows.Forms.TextBox();
       this.editTabSize = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       this.label14 = new System.Windows.Forms.Label();
       this.checkStripTrailingSpaces = new System.Windows.Forms.CheckBox();
       this.checkConvertTabsToSpaces = new System.Windows.Forms.CheckBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.editCaretWidth = new System.Windows.Forms.TextBox();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // btnExportSettings
-      // 
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 469);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 16;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 469);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 15;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.checkEditorShowMaxLineLengthIndicator);
-      this.groupBox1.Controls.Add(this.editMaxLineLengthIndicatorColumn);
-      this.groupBox1.Controls.Add(this.label2);
-      this.groupBox1.Controls.Add(this.comboASMEncoding);
-      this.groupBox1.Controls.Add(this.label35);
-      this.groupBox1.Controls.Add(this.checkASMShowAddress);
-      this.groupBox1.Controls.Add(this.checkASMShowAutoComplete);
-      this.groupBox1.Controls.Add(this.checkASMShowMiniMap);
-      this.groupBox1.Controls.Add(this.checkASMShowSizes);
-      this.groupBox1.Controls.Add(this.checkASMShowCycles);
-      this.groupBox1.Controls.Add(this.checkASMShowLineNumbers);
-      this.groupBox1.Controls.Add(this.btnSetDefaultsFont);
-      this.groupBox1.Controls.Add(this.btnChooseFont);
-      this.groupBox1.Controls.Add(this.labelFontPreview);
-      this.groupBox1.Controls.Add(this.editCaretWidth);
-      this.groupBox1.Controls.Add(this.editTabSize);
-      this.groupBox1.Controls.Add(this.label3);
-      this.groupBox1.Controls.Add(this.label1);
-      this.groupBox1.Controls.Add(this.label14);
-      this.groupBox1.Controls.Add(this.checkStripTrailingSpaces);
-      this.groupBox1.Controls.Add(this.checkConvertTabsToSpaces);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 498);
-      this.groupBox1.TabIndex = 18;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "ASM Editor";
       // 
       // checkEditorShowMaxLineLengthIndicator
       // 
       this.checkEditorShowMaxLineLengthIndicator.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkEditorShowMaxLineLengthIndicator.Location = new System.Drawing.Point(16, 369);
+      this.checkEditorShowMaxLineLengthIndicator.Location = new System.Drawing.Point(3, 350);
       this.checkEditorShowMaxLineLengthIndicator.Name = "checkEditorShowMaxLineLengthIndicator";
       this.checkEditorShowMaxLineLengthIndicator.Size = new System.Drawing.Size(279, 17);
       this.checkEditorShowMaxLineLengthIndicator.TabIndex = 12;
@@ -122,7 +65,7 @@
       // editMaxLineLengthIndicatorColumn
       // 
       this.editMaxLineLengthIndicatorColumn.Enabled = false;
-      this.editMaxLineLengthIndicatorColumn.Location = new System.Drawing.Point(369, 366);
+      this.editMaxLineLengthIndicatorColumn.Location = new System.Drawing.Point(356, 347);
       this.editMaxLineLengthIndicatorColumn.MaxLength = 3;
       this.editMaxLineLengthIndicatorColumn.Name = "editMaxLineLengthIndicatorColumn";
       this.editMaxLineLengthIndicatorColumn.Size = new System.Drawing.Size(96, 20);
@@ -133,7 +76,7 @@
       // 
       this.label2.AutoSize = true;
       this.label2.Enabled = false;
-      this.label2.Location = new System.Drawing.Point(318, 369);
+      this.label2.Location = new System.Drawing.Point(305, 350);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(45, 13);
       this.label2.TabIndex = 33;
@@ -143,16 +86,16 @@
       // 
       this.comboASMEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboASMEncoding.FormattingEnabled = true;
-      this.comboASMEncoding.Location = new System.Drawing.Point(171, 396);
+      this.comboASMEncoding.Location = new System.Drawing.Point(158, 377);
       this.comboASMEncoding.Name = "comboASMEncoding";
-      this.comboASMEncoding.Size = new System.Drawing.Size(555, 21);
+      this.comboASMEncoding.Size = new System.Drawing.Size(294, 21);
       this.comboASMEncoding.TabIndex = 14;
       this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
       // 
       // label35
       // 
       this.label35.AutoSize = true;
-      this.label35.Location = new System.Drawing.Point(16, 399);
+      this.label35.Location = new System.Drawing.Point(3, 380);
       this.label35.Name = "label35";
       this.label35.Size = new System.Drawing.Size(55, 13);
       this.label35.TabIndex = 32;
@@ -161,7 +104,7 @@
       // checkASMShowAddress
       // 
       this.checkASMShowAddress.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowAddress.Location = new System.Drawing.Point(16, 339);
+      this.checkASMShowAddress.Location = new System.Drawing.Point(3, 320);
       this.checkASMShowAddress.Name = "checkASMShowAddress";
       this.checkASMShowAddress.Size = new System.Drawing.Size(279, 24);
       this.checkASMShowAddress.TabIndex = 11;
@@ -172,7 +115,7 @@
       // checkASMShowAutoComplete
       // 
       this.checkASMShowAutoComplete.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowAutoComplete.Location = new System.Drawing.Point(16, 309);
+      this.checkASMShowAutoComplete.Location = new System.Drawing.Point(3, 290);
       this.checkASMShowAutoComplete.Name = "checkASMShowAutoComplete";
       this.checkASMShowAutoComplete.Size = new System.Drawing.Size(279, 24);
       this.checkASMShowAutoComplete.TabIndex = 10;
@@ -183,7 +126,7 @@
       // checkASMShowMiniMap
       // 
       this.checkASMShowMiniMap.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowMiniMap.Location = new System.Drawing.Point(16, 279);
+      this.checkASMShowMiniMap.Location = new System.Drawing.Point(3, 260);
       this.checkASMShowMiniMap.Name = "checkASMShowMiniMap";
       this.checkASMShowMiniMap.Size = new System.Drawing.Size(279, 24);
       this.checkASMShowMiniMap.TabIndex = 9;
@@ -194,7 +137,7 @@
       // checkASMShowSizes
       // 
       this.checkASMShowSizes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowSizes.Location = new System.Drawing.Point(16, 249);
+      this.checkASMShowSizes.Location = new System.Drawing.Point(3, 230);
       this.checkASMShowSizes.Name = "checkASMShowSizes";
       this.checkASMShowSizes.Size = new System.Drawing.Size(279, 24);
       this.checkASMShowSizes.TabIndex = 8;
@@ -205,7 +148,7 @@
       // checkASMShowCycles
       // 
       this.checkASMShowCycles.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowCycles.Location = new System.Drawing.Point(16, 219);
+      this.checkASMShowCycles.Location = new System.Drawing.Point(3, 200);
       this.checkASMShowCycles.Name = "checkASMShowCycles";
       this.checkASMShowCycles.Size = new System.Drawing.Size(279, 24);
       this.checkASMShowCycles.TabIndex = 7;
@@ -216,7 +159,7 @@
       // checkASMShowLineNumbers
       // 
       this.checkASMShowLineNumbers.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowLineNumbers.Location = new System.Drawing.Point(16, 189);
+      this.checkASMShowLineNumbers.Location = new System.Drawing.Point(3, 170);
       this.checkASMShowLineNumbers.Name = "checkASMShowLineNumbers";
       this.checkASMShowLineNumbers.Size = new System.Drawing.Size(279, 24);
       this.checkASMShowLineNumbers.TabIndex = 6;
@@ -226,7 +169,12 @@
       // 
       // btnSetDefaultsFont
       // 
-      this.btnSetDefaultsFont.Location = new System.Drawing.Point(171, 160);
+      this.btnSetDefaultsFont.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnSetDefaultsFont.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSetDefaultsFont.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSetDefaultsFont.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSetDefaultsFont.Image = null;
+      this.btnSetDefaultsFont.Location = new System.Drawing.Point(158, 141);
       this.btnSetDefaultsFont.Name = "btnSetDefaultsFont";
       this.btnSetDefaultsFont.Size = new System.Drawing.Size(124, 23);
       this.btnSetDefaultsFont.TabIndex = 5;
@@ -235,7 +183,12 @@
       // 
       // btnChooseFont
       // 
-      this.btnChooseFont.Location = new System.Drawing.Point(171, 131);
+      this.btnChooseFont.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnChooseFont.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnChooseFont.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnChooseFont.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnChooseFont.Image = null;
+      this.btnChooseFont.Location = new System.Drawing.Point(158, 112);
       this.btnChooseFont.Name = "btnChooseFont";
       this.btnChooseFont.Size = new System.Drawing.Size(124, 23);
       this.btnChooseFont.TabIndex = 4;
@@ -244,25 +197,43 @@
       // 
       // labelFontPreview
       // 
-      this.labelFontPreview.Location = new System.Drawing.Point(318, 136);
+      this.labelFontPreview.Location = new System.Drawing.Point(305, 117);
       this.labelFontPreview.Name = "labelFontPreview";
       this.labelFontPreview.Size = new System.Drawing.Size(210, 44);
       this.labelFontPreview.TabIndex = 18;
       this.labelFontPreview.Text = "Font Preview";
       // 
+      // editCaretWidth
+      // 
+      this.editCaretWidth.Location = new System.Drawing.Point(158, 86);
+      this.editCaretWidth.MaxLength = 2;
+      this.editCaretWidth.Name = "editCaretWidth";
+      this.editCaretWidth.Size = new System.Drawing.Size(124, 20);
+      this.editCaretWidth.TabIndex = 3;
+      this.editCaretWidth.TextChanged += new System.EventHandler(this.editCaretWidth_TextChanged);
+      // 
       // editTabSize
       // 
-      this.editTabSize.Location = new System.Drawing.Point(171, 49);
+      this.editTabSize.Location = new System.Drawing.Point(158, 30);
       this.editTabSize.MaxLength = 2;
       this.editTabSize.Name = "editTabSize";
       this.editTabSize.Size = new System.Drawing.Size(124, 20);
       this.editTabSize.TabIndex = 1;
       this.editTabSize.TextChanged += new System.EventHandler(this.editTabSize_TextChanged);
       // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(3, 89);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(71, 13);
+      this.label3.TabIndex = 14;
+      this.label3.Text = "Cursor Width:";
+      // 
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(16, 136);
+      this.label1.Location = new System.Drawing.Point(3, 117);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(31, 13);
       this.label1.TabIndex = 14;
@@ -271,7 +242,7 @@
       // label14
       // 
       this.label14.AutoSize = true;
-      this.label14.Location = new System.Drawing.Point(16, 52);
+      this.label14.Location = new System.Drawing.Point(3, 33);
       this.label14.Name = "label14";
       this.label14.Size = new System.Drawing.Size(52, 13);
       this.label14.TabIndex = 14;
@@ -280,7 +251,7 @@
       // checkStripTrailingSpaces
       // 
       this.checkStripTrailingSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkStripTrailingSpaces.Location = new System.Drawing.Point(16, 75);
+      this.checkStripTrailingSpaces.Location = new System.Drawing.Point(3, 56);
       this.checkStripTrailingSpaces.Name = "checkStripTrailingSpaces";
       this.checkStripTrailingSpaces.Size = new System.Drawing.Size(279, 24);
       this.checkStripTrailingSpaces.TabIndex = 2;
@@ -291,7 +262,7 @@
       // checkConvertTabsToSpaces
       // 
       this.checkConvertTabsToSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkConvertTabsToSpaces.Location = new System.Drawing.Point(16, 22);
+      this.checkConvertTabsToSpaces.Location = new System.Drawing.Point(3, 3);
       this.checkConvertTabsToSpaces.Name = "checkConvertTabsToSpaces";
       this.checkConvertTabsToSpaces.Size = new System.Drawing.Size(279, 24);
       this.checkConvertTabsToSpaces.TabIndex = 0;
@@ -299,42 +270,39 @@
       this.checkConvertTabsToSpaces.UseVisualStyleBackColor = true;
       this.checkConvertTabsToSpaces.CheckedChanged += new System.EventHandler(this.checkConvertTabsToSpaces_CheckedChanged);
       // 
-      // label3
-      // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(16, 108);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(71, 13);
-      this.label3.TabIndex = 14;
-      this.label3.Text = "Cursor Width:";
-      // 
-      // editCaretWidth
-      // 
-      this.editCaretWidth.Location = new System.Drawing.Point(171, 105);
-      this.editCaretWidth.MaxLength = 2;
-      this.editCaretWidth.Name = "editCaretWidth";
-      this.editCaretWidth.Size = new System.Drawing.Size(124, 20);
-      this.editCaretWidth.TabIndex = 3;
-      this.editCaretWidth.TextChanged += new System.EventHandler(this.editCaretWidth_TextChanged);
-      // 
       // PrefASMEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.checkEditorShowMaxLineLengthIndicator);
+      this.Controls.Add(this.editMaxLineLengthIndicatorColumn);
+      this.Controls.Add(this.checkConvertTabsToSpaces);
+      this.Controls.Add(this.label2);
+      this.Controls.Add(this.checkStripTrailingSpaces);
+      this.Controls.Add(this.comboASMEncoding);
+      this.Controls.Add(this.label14);
+      this.Controls.Add(this.label35);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.checkASMShowAddress);
+      this.Controls.Add(this.label3);
+      this.Controls.Add(this.checkASMShowAutoComplete);
+      this.Controls.Add(this.editTabSize);
+      this.Controls.Add(this.checkASMShowMiniMap);
+      this.Controls.Add(this.editCaretWidth);
+      this.Controls.Add(this.checkASMShowSizes);
+      this.Controls.Add(this.labelFontPreview);
+      this.Controls.Add(this.checkASMShowCycles);
+      this.Controls.Add(this.btnChooseFont);
+      this.Controls.Add(this.checkASMShowLineNumbers);
+      this.Controls.Add(this.btnSetDefaultsFont);
       this.Name = "PrefASMEditor";
-      this.Size = new System.Drawing.Size(900, 498);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(528, 418);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox editTabSize;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox checkStripTrailingSpaces;

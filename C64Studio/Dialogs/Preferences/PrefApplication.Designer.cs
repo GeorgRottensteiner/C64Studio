@@ -28,52 +28,18 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
       this.comboAppMode = new System.Windows.Forms.ComboBox();
       this.label29 = new System.Windows.Forms.Label();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnBrowseDefaultOpenSolutionPath = new DecentForms.Button();
       this.editDefaultOpenSolutionPath = new System.Windows.Forms.TextBox();
       this.editMaxMRUEntries = new System.Windows.Forms.TextBox();
       this.label32 = new System.Windows.Forms.Label();
       this.label31 = new System.Windows.Forms.Label();
+      this.checkForUpdate = new System.Windows.Forms.CheckBox();
       this.checkShowOutputDisplayAfterBuild = new System.Windows.Forms.CheckBox();
       this.checkShowCompilerMessagesAfterBuild = new System.Windows.Forms.CheckBox();
       this.checkAutoOpenLastSolution = new System.Windows.Forms.CheckBox();
-      this.checkForUpdate = new System.Windows.Forms.CheckBox();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // btnExportSettings
-      // 
-      this.btnExportSettings.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportSettings.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportSettings.Image = null;
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 216);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 8;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportSettings.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportSettings.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportSettings.Image = null;
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 216);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 7;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
       // 
       // comboAppMode
       // 
@@ -83,7 +49,7 @@
             "Undecided",
             "Normal (settings in UserAppData)",
             "Portable Mode (settings local)"});
-      this.comboAppMode.Location = new System.Drawing.Point(225, 19);
+      this.comboAppMode.Location = new System.Drawing.Point(219, 7);
       this.comboAppMode.Name = "comboAppMode";
       this.comboAppMode.Size = new System.Drawing.Size(322, 21);
       this.comboAppMode.TabIndex = 0;
@@ -92,34 +58,11 @@
       // label29
       // 
       this.label29.AutoSize = true;
-      this.label29.Location = new System.Drawing.Point(9, 22);
+      this.label29.Location = new System.Drawing.Point(3, 10);
       this.label29.Name = "label29";
       this.label29.Size = new System.Drawing.Size(92, 13);
       this.label29.TabIndex = 14;
       this.label29.Text = "Application Mode:";
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.btnBrowseDefaultOpenSolutionPath);
-      this.groupBox1.Controls.Add(this.editDefaultOpenSolutionPath);
-      this.groupBox1.Controls.Add(this.editMaxMRUEntries);
-      this.groupBox1.Controls.Add(this.label32);
-      this.groupBox1.Controls.Add(this.label31);
-      this.groupBox1.Controls.Add(this.checkForUpdate);
-      this.groupBox1.Controls.Add(this.checkShowOutputDisplayAfterBuild);
-      this.groupBox1.Controls.Add(this.checkShowCompilerMessagesAfterBuild);
-      this.groupBox1.Controls.Add(this.checkAutoOpenLastSolution);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.comboAppMode);
-      this.groupBox1.Controls.Add(this.label29);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 245);
-      this.groupBox1.TabIndex = 0;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Environment";
       // 
       // btnBrowseDefaultOpenSolutionPath
       // 
@@ -128,7 +71,7 @@
       this.btnBrowseDefaultOpenSolutionPath.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnBrowseDefaultOpenSolutionPath.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnBrowseDefaultOpenSolutionPath.Image = null;
-      this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(524, 99);
+      this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(518, 87);
       this.btnBrowseDefaultOpenSolutionPath.Name = "btnBrowseDefaultOpenSolutionPath";
       this.btnBrowseDefaultOpenSolutionPath.Size = new System.Drawing.Size(23, 20);
       this.btnBrowseDefaultOpenSolutionPath.TabIndex = 4;
@@ -137,7 +80,7 @@
       // 
       // editDefaultOpenSolutionPath
       // 
-      this.editDefaultOpenSolutionPath.Location = new System.Drawing.Point(225, 99);
+      this.editDefaultOpenSolutionPath.Location = new System.Drawing.Point(219, 87);
       this.editDefaultOpenSolutionPath.Name = "editDefaultOpenSolutionPath";
       this.editDefaultOpenSolutionPath.Size = new System.Drawing.Size(293, 20);
       this.editDefaultOpenSolutionPath.TabIndex = 3;
@@ -145,7 +88,7 @@
       // 
       // editMaxMRUEntries
       // 
-      this.editMaxMRUEntries.Location = new System.Drawing.Point(225, 46);
+      this.editMaxMRUEntries.Location = new System.Drawing.Point(219, 34);
       this.editMaxMRUEntries.MaxLength = 2;
       this.editMaxMRUEntries.Name = "editMaxMRUEntries";
       this.editMaxMRUEntries.Size = new System.Drawing.Size(322, 20);
@@ -155,7 +98,7 @@
       // label32
       // 
       this.label32.AutoSize = true;
-      this.label32.Location = new System.Drawing.Point(9, 49);
+      this.label32.Location = new System.Drawing.Point(3, 37);
       this.label32.Name = "label32";
       this.label32.Size = new System.Drawing.Size(95, 13);
       this.label32.TabIndex = 19;
@@ -164,18 +107,31 @@
       // label31
       // 
       this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(9, 102);
+      this.label31.Location = new System.Drawing.Point(3, 90);
       this.label31.Name = "label31";
       this.label31.Size = new System.Drawing.Size(139, 13);
       this.label31.TabIndex = 20;
       this.label31.Text = "Default Solution Open Path:";
+      // 
+      // checkForUpdate
+      // 
+      this.checkForUpdate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkForUpdate.Checked = true;
+      this.checkForUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkForUpdate.Location = new System.Drawing.Point(3, 173);
+      this.checkForUpdate.Name = "checkForUpdate";
+      this.checkForUpdate.Size = new System.Drawing.Size(230, 24);
+      this.checkForUpdate.TabIndex = 6;
+      this.checkForUpdate.Text = "Check for update on startup";
+      this.checkForUpdate.UseVisualStyleBackColor = true;
+      this.checkForUpdate.CheckedChanged += new System.EventHandler(this.checkForUpdate_CheckedChanged);
       // 
       // checkShowOutputDisplayAfterBuild
       // 
       this.checkShowOutputDisplayAfterBuild.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
       this.checkShowOutputDisplayAfterBuild.Checked = true;
       this.checkShowOutputDisplayAfterBuild.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkShowOutputDisplayAfterBuild.Location = new System.Drawing.Point(9, 155);
+      this.checkShowOutputDisplayAfterBuild.Location = new System.Drawing.Point(3, 143);
       this.checkShowOutputDisplayAfterBuild.Name = "checkShowOutputDisplayAfterBuild";
       this.checkShowOutputDisplayAfterBuild.Size = new System.Drawing.Size(230, 24);
       this.checkShowOutputDisplayAfterBuild.TabIndex = 5;
@@ -188,7 +144,7 @@
       this.checkShowCompilerMessagesAfterBuild.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
       this.checkShowCompilerMessagesAfterBuild.Checked = true;
       this.checkShowCompilerMessagesAfterBuild.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkShowCompilerMessagesAfterBuild.Location = new System.Drawing.Point(9, 125);
+      this.checkShowCompilerMessagesAfterBuild.Location = new System.Drawing.Point(3, 113);
       this.checkShowCompilerMessagesAfterBuild.Name = "checkShowCompilerMessagesAfterBuild";
       this.checkShowCompilerMessagesAfterBuild.Size = new System.Drawing.Size(230, 24);
       this.checkShowCompilerMessagesAfterBuild.TabIndex = 4;
@@ -199,7 +155,7 @@
       // checkAutoOpenLastSolution
       // 
       this.checkAutoOpenLastSolution.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(9, 72);
+      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(3, 60);
       this.checkAutoOpenLastSolution.Name = "checkAutoOpenLastSolution";
       this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(230, 24);
       this.checkAutoOpenLastSolution.TabIndex = 2;
@@ -207,39 +163,31 @@
       this.checkAutoOpenLastSolution.UseVisualStyleBackColor = true;
       this.checkAutoOpenLastSolution.CheckedChanged += new System.EventHandler(this.checkAutoOpenLastSolution_CheckedChanged);
       // 
-      // checkForUpdate
-      // 
-      this.checkForUpdate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkForUpdate.Checked = true;
-      this.checkForUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkForUpdate.Location = new System.Drawing.Point(9, 185);
-      this.checkForUpdate.Name = "checkForUpdate";
-      this.checkForUpdate.Size = new System.Drawing.Size(230, 24);
-      this.checkForUpdate.TabIndex = 6;
-      this.checkForUpdate.Text = "Check for update on startup";
-      this.checkForUpdate.UseVisualStyleBackColor = true;
-      this.checkForUpdate.CheckedChanged += new System.EventHandler(this.checkForUpdate_CheckedChanged);
-      // 
       // PrefApplication
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.btnBrowseDefaultOpenSolutionPath);
+      this.Controls.Add(this.comboAppMode);
+      this.Controls.Add(this.checkShowOutputDisplayAfterBuild);
+      this.Controls.Add(this.label32);
+      this.Controls.Add(this.editDefaultOpenSolutionPath);
+      this.Controls.Add(this.checkAutoOpenLastSolution);
+      this.Controls.Add(this.checkForUpdate);
+      this.Controls.Add(this.label29);
+      this.Controls.Add(this.checkShowCompilerMessagesAfterBuild);
+      this.Controls.Add(this.label31);
+      this.Controls.Add(this.editMaxMRUEntries);
       this.Name = "PrefApplication";
-      this.Size = new System.Drawing.Size(900, 245);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(579, 232);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
         private System.Windows.Forms.ComboBox comboAppMode;
         private System.Windows.Forms.Label label29;
-    private System.Windows.Forms.GroupBox groupBox1;
     private DecentForms.Button btnBrowseDefaultOpenSolutionPath;
     private System.Windows.Forms.TextBox editDefaultOpenSolutionPath;
     private System.Windows.Forms.TextBox editMaxMRUEntries;

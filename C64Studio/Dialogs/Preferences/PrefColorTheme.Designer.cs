@@ -28,9 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnExportSettings = new DecentForms.Button();
-      this.btnImportSettings = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnSetDefaultsColors = new DecentForms.Button();
       this.btnChooseBG = new DecentForms.Button();
       this.btnChooseFG = new DecentForms.Button();
@@ -44,56 +41,16 @@
       this.listColoring = new System.Windows.Forms.ListView();
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label16 = new System.Windows.Forms.Label();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // btnExportSettings
-      // 
-      this.btnExportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportSettings.Location = new System.Drawing.Point(819, 422);
-      this.btnExportSettings.Name = "btnExportSettings";
-      this.btnExportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnExportSettings.TabIndex = 12;
-      this.btnExportSettings.Text = "Export here";
-      this.btnExportSettings.Click += new DecentForms.EventHandler(this.btnExportSettings_Click);
-      // 
-      // btnImportSettings
-      // 
-      this.btnImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnImportSettings.Location = new System.Drawing.Point(738, 422);
-      this.btnImportSettings.Name = "btnImportSettings";
-      this.btnImportSettings.Size = new System.Drawing.Size(75, 23);
-      this.btnImportSettings.TabIndex = 13;
-      this.btnImportSettings.Text = "Import here";
-      this.btnImportSettings.Click += new DecentForms.EventHandler(this.btnImportSettings_Click);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.btnSetDefaultsColors);
-      this.groupBox1.Controls.Add(this.btnChooseBG);
-      this.groupBox1.Controls.Add(this.btnChooseFG);
-      this.groupBox1.Controls.Add(this.panelElementPreview);
-      this.groupBox1.Controls.Add(this.comboElementBG);
-      this.groupBox1.Controls.Add(this.comboElementFG);
-      this.groupBox1.Controls.Add(this.label27);
-      this.groupBox1.Controls.Add(this.label19);
-      this.groupBox1.Controls.Add(this.label18);
-      this.groupBox1.Controls.Add(this.label17);
-      this.groupBox1.Controls.Add(this.listColoring);
-      this.groupBox1.Controls.Add(this.label16);
-      this.groupBox1.Controls.Add(this.btnExportSettings);
-      this.groupBox1.Controls.Add(this.btnImportSettings);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(900, 451);
-      this.groupBox1.TabIndex = 18;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Colors/Theme";
       // 
       // btnSetDefaultsColors
       // 
-      this.btnSetDefaultsColors.Location = new System.Drawing.Point(559, 422);
+      this.btnSetDefaultsColors.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnSetDefaultsColors.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnSetDefaultsColors.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnSetDefaultsColors.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSetDefaultsColors.Image = null;
+      this.btnSetDefaultsColors.Location = new System.Drawing.Point(267, 405);
       this.btnSetDefaultsColors.Name = "btnSetDefaultsColors";
       this.btnSetDefaultsColors.Size = new System.Drawing.Size(124, 23);
       this.btnSetDefaultsColors.TabIndex = 25;
@@ -102,7 +59,12 @@
       // 
       // btnChooseBG
       // 
-      this.btnChooseBG.Location = new System.Drawing.Point(518, 76);
+      this.btnChooseBG.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnChooseBG.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnChooseBG.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnChooseBG.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnChooseBG.Image = null;
+      this.btnChooseBG.Location = new System.Drawing.Point(516, 63);
       this.btnChooseBG.Name = "btnChooseBG";
       this.btnChooseBG.Size = new System.Drawing.Size(75, 23);
       this.btnChooseBG.TabIndex = 23;
@@ -111,7 +73,12 @@
       // 
       // btnChooseFG
       // 
-      this.btnChooseFG.Location = new System.Drawing.Point(518, 30);
+      this.btnChooseFG.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnChooseFG.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnChooseFG.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnChooseFG.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnChooseFG.Image = null;
+      this.btnChooseFG.Location = new System.Drawing.Point(516, 17);
       this.btnChooseFG.Name = "btnChooseFG";
       this.btnChooseFG.Size = new System.Drawing.Size(75, 23);
       this.btnChooseFG.TabIndex = 24;
@@ -121,7 +88,7 @@
       // panelElementPreview
       // 
       this.panelElementPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.panelElementPreview.Location = new System.Drawing.Point(269, 159);
+      this.panelElementPreview.Location = new System.Drawing.Point(267, 146);
       this.panelElementPreview.Name = "panelElementPreview";
       this.panelElementPreview.Size = new System.Drawing.Size(414, 190);
       this.panelElementPreview.TabIndex = 22;
@@ -132,7 +99,7 @@
       this.comboElementBG.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboElementBG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboElementBG.FormattingEnabled = true;
-      this.comboElementBG.Location = new System.Drawing.Point(269, 78);
+      this.comboElementBG.Location = new System.Drawing.Point(267, 65);
       this.comboElementBG.Name = "comboElementBG";
       this.comboElementBG.Size = new System.Drawing.Size(243, 21);
       this.comboElementBG.TabIndex = 20;
@@ -144,7 +111,7 @@
       this.comboElementFG.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboElementFG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboElementFG.FormattingEnabled = true;
-      this.comboElementFG.Location = new System.Drawing.Point(269, 32);
+      this.comboElementFG.Location = new System.Drawing.Point(267, 19);
       this.comboElementFG.Name = "comboElementFG";
       this.comboElementFG.Size = new System.Drawing.Size(243, 21);
       this.comboElementFG.TabIndex = 21;
@@ -154,7 +121,7 @@
       // label27
       // 
       this.label27.AutoSize = true;
-      this.label27.Location = new System.Drawing.Point(266, 102);
+      this.label27.Location = new System.Drawing.Point(264, 89);
       this.label27.Name = "label27";
       this.label27.Size = new System.Drawing.Size(281, 13);
       this.label27.TabIndex = 16;
@@ -163,7 +130,7 @@
       // label19
       // 
       this.label19.AutoSize = true;
-      this.label19.Location = new System.Drawing.Point(266, 143);
+      this.label19.Location = new System.Drawing.Point(264, 130);
       this.label19.Name = "label19";
       this.label19.Size = new System.Drawing.Size(48, 13);
       this.label19.TabIndex = 17;
@@ -172,7 +139,7 @@
       // label18
       // 
       this.label18.AutoSize = true;
-      this.label18.Location = new System.Drawing.Point(266, 62);
+      this.label18.Location = new System.Drawing.Point(264, 49);
       this.label18.Name = "label18";
       this.label18.Size = new System.Drawing.Size(109, 13);
       this.label18.TabIndex = 18;
@@ -181,7 +148,7 @@
       // label17
       // 
       this.label17.AutoSize = true;
-      this.label17.Location = new System.Drawing.Point(266, 16);
+      this.label17.Location = new System.Drawing.Point(264, 3);
       this.label17.Name = "label17";
       this.label17.Size = new System.Drawing.Size(105, 13);
       this.label17.TabIndex = 19;
@@ -193,7 +160,7 @@
             this.columnHeader3});
       this.listColoring.FullRowSelect = true;
       this.listColoring.HideSelection = false;
-      this.listColoring.Location = new System.Drawing.Point(8, 32);
+      this.listColoring.Location = new System.Drawing.Point(6, 19);
       this.listColoring.Name = "listColoring";
       this.listColoring.Size = new System.Drawing.Size(252, 409);
       this.listColoring.TabIndex = 15;
@@ -209,7 +176,7 @@
       // label16
       // 
       this.label16.AutoSize = true;
-      this.label16.Location = new System.Drawing.Point(5, 16);
+      this.label16.Location = new System.Drawing.Point(3, 3);
       this.label16.Name = "label16";
       this.label16.Size = new System.Drawing.Size(39, 13);
       this.label16.TabIndex = 14;
@@ -219,20 +186,26 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.btnSetDefaultsColors);
+      this.Controls.Add(this.btnChooseBG);
+      this.Controls.Add(this.label16);
+      this.Controls.Add(this.btnChooseFG);
+      this.Controls.Add(this.listColoring);
+      this.Controls.Add(this.panelElementPreview);
+      this.Controls.Add(this.label17);
+      this.Controls.Add(this.comboElementBG);
+      this.Controls.Add(this.label18);
+      this.Controls.Add(this.comboElementFG);
+      this.Controls.Add(this.label19);
+      this.Controls.Add(this.label27);
       this.Name = "PrefColorTheme";
-      this.Size = new System.Drawing.Size(900, 451);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.Size = new System.Drawing.Size(695, 447);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
         #endregion
-
-        private DecentForms.Button btnExportSettings;
-        private DecentForms.Button btnImportSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private DecentForms.Button btnSetDefaultsColors;
         private DecentForms.Button btnChooseBG;
         private DecentForms.Button btnChooseFG;
