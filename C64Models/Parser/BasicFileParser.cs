@@ -2701,6 +2701,13 @@ namespace RetroDevStudio.Parser
       checkSummer = (ICheckSummer)( Activator.CreateInstance( Assembly.GetExecutingAssembly().FullName, checkSummerClass ) ).Unwrap();
 
       int lastLineNumber = -1;
+      if ( m_LineInfos.ContainsKey( -1 ) )
+      {
+        m_LineInfos[-1].Line = line;
+        m_LineInfos[-1].LineNumber = -1;
+        m_LineInfos[-1].LineData.Clear();
+      }
+
       ProcessLine( -1, line, ref lastLineNumber );
 
       if ( !m_LineInfos.ContainsKey( -1 ) )

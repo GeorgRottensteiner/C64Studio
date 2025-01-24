@@ -337,6 +337,20 @@ namespace RetroDevStudio.Documents
         DocumentInfo.Bookmarks.Add( bm.LineIndex );
       }
       RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
+
+      int     firstLine = e.Index - 1;
+      int     count = e.Count;
+      if ( count == 0 )
+      {
+        return;
+      }
+      Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
+
+      if ( ( firstLine >= 0 )
+      &&   ( firstLine + count <= m_LineInfos.Count ) )
+      {
+        m_LineInfos.RemoveRange( firstLine, count );
+      }
     }
 
 
@@ -347,6 +361,45 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
+
+      int     firstLine = e.Index - 1;
+      int     count = e.Count;
+      if ( count == 0 )
+      {
+        return;
+      }
+
+
+      // special case, if we insert an empty line, insert "below"
+      if ( !m_InsertingText )
+      {
+        Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
+      }
+
+      for ( int i = 0; i < count; ++i )
+      {
+        var info = new Types.ASM.LineInfo();
+        if ( ( firstLine > 0 )
+        &&   ( firstLine - 1 < m_LineInfos.Count ) )
+        {
+          info.AddressStart = m_LineInfos[firstLine - 1].AddressStart;
+        }
+        while ( firstLine >= m_LineInfos.Count )
+        {
+          m_LineInfos.Add( new Types.ASM.LineInfo() );
+        }
+        m_LineInfos.Insert( firstLine, info );
+        
+      }
+      for ( int i = 0; i <= count; ++i )
+      {
+        if ( ( firstLine + i < m_LineInfos.Count )
+        &&   ( firstLine + i < editSource.LinesCount ) )
+        {
+          m_LineInfos[firstLine + i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[firstLine + i], m_LabelMode, _currentCheckSummer );
+        }
+      }
+      
 
       DocumentInfo.Bookmarks.Clear();
       foreach ( var bm in editSource.Bookmarks )
