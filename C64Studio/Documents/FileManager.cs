@@ -10,6 +10,7 @@ using RetroDevStudio.Dialogs;
 using System.Reflection;
 using System.Linq;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Parser.BASIC;
 
 
 
@@ -47,8 +48,8 @@ namespace RetroDevStudio.Documents
 
       oldFont = listFiles.Font;
 
-      listFiles.ItemFonts.Add( new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ) );
-      statusFileManager.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 8, System.Drawing.GraphicsUnit.Pixel );
+      listFiles.ItemFonts.Add( Core.Imaging.FontFromMachine( MachineType.C64 ) );
+      statusFileManager.Font = Core.Imaging.FontFromMachine( MachineType.C64, 8 );
       labelMediaTitle.Font = statusFileManager.Font;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
@@ -917,13 +918,13 @@ namespace RetroDevStudio.Documents
     {
       var menuItem = (ToolStripMenuItem)sender;
 
-      var dialect = (C64Models.BASIC.Dialect)menuItem.Tag;
+      var dialect = (Parser.BASIC.Dialect)menuItem.Tag;
       ExportSelectedItemsToBASIC( dialect );
     }
 
 
 
-    void ExportSelectedItemsToBASIC( C64Models.BASIC.Dialect Dialect )
+    void ExportSelectedItemsToBASIC( Dialect Dialect )
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
@@ -935,7 +936,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void ExportToBASIC( Types.FileInfo fileToExport, C64Models.BASIC.Dialect Dialect )
+    private void ExportToBASIC( Types.FileInfo fileToExport, Dialect Dialect )
     {
       RetroDevStudio.Types.FileInfo  fileInfo = null;
 
@@ -954,7 +955,7 @@ namespace RetroDevStudio.Documents
             List<string>    lines;
 
             // trunc load address
-            var parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
+            var parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
             parser.SetBasicDialect( Dialect );
             if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
             {

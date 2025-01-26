@@ -1,6 +1,7 @@
 ﻿using GR.Memory;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Parser.BASIC;
 using RetroDevStudio.Types;
 using RetroDevStudio.Types.ASM;
 using System;

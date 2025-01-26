@@ -28,9 +28,9 @@ namespace RetroDevStudio.Dialogs
       InitializeComponent();
 
       editDiskName.Text = Util.FilenameToUnicode( _FilenameType, DiskName );
-      editDiskName.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+      editDiskName.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
       editDiskID.Text = Util.FilenameToUnicode( _FilenameType, DiskID );
-      editDiskID.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+      editDiskID.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
 
       _DefaultFont = listPETSCII.Font;
 
@@ -39,7 +39,7 @@ namespace RetroDevStudio.Dialogs
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
       listPETSCII.DisplayPage.Create( 120, 120, GR.Drawing.PixelFormat.Format24bppRgb );
       listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
-      listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      listPETSCII.Font        = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       foreach ( Types.C64Character character in ConstantData.PetSCIIToChar.Values )
       {

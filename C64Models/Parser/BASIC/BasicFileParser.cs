@@ -2,50 +2,21 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-using C64Models.BASIC;
 using RetroDevStudio.Parser;
 using GR.Memory;
 using RetroDevStudio;
 using System.Linq;
 using RetroDevStudio.Types;
-using static RetroDevStudio.Parser.BasicFileParser;
 using System.Diagnostics;
 using RetroDevStudio.CheckSummer;
 using System.Reflection;
 
 
 
-namespace RetroDevStudio.Parser
+namespace RetroDevStudio.Parser.BASIC
 {
   public partial class BasicFileParser : ParserBase
   {
-    public enum ObsoleteBasicVersion
-    {
-      [Description( "BASIC V2" )]
-      C64_BASIC_V2 = 0, //  Anpassung des VIC BASIC V2 für VC10, C64, C128 (C64-Modus), SX64, PET 64.
-      V1_0,             // Version 1.0	Noch recht fehlerbehaftet, erste Versionen im PET 2001
-      V2_0,             // August  Version 2.0	Fehlerkorrekturen, eingebaut in weitere Versionen des PET
-      V3_0,             // Version 3.0	Leichte Fehlerkorrekturen und Integration des Maschinensprachemonitors TIM, schnelle Garbage Collection. CBM 3000 Serie (Standard) und PET 2001 (angezeigte Versionsnummer dort ist allerdings noch 2).
-      V4_0,             // Version 4.0	Neue Befehle für leichtere Handhabung für Diskettenlaufwerke für CBM 4000. Auch durch ROM-Austausch für CBM 3000 Serie und PET 2001 verfügbar.
-      V4_1,             // Version 4.1	Fehlerkorrigierte Fassung der Version 4.0 mit erweiterter Bildschirmeditor für CBM 8000. Auch durch ROM-Austausch für CBM 3000/4000 Serie verfügbar.
-      V4_2,             // Version 4.2	Geänderte und ergänzte Befehle für den CBM 8096.
-      VIC_BASIC_V2,     // Funktionsumfang von V 2.0 mit Korrekturen aus der Version-4-Linie. Einsatz im VC20.
-      V4_PLUS,          // (intern bis 4.75)	Neue Befehle und RAM-Unterstützung bis 256 KByte für CBM-II-Serie (CBM 500, 6x0, 7x0). Fortsetzung und Ende der Version-4-Linie.
-      [Description( "BASIC V3.5" )]
-      V3_5,             // Version 3.5	Neue Befehle für die Heimcomputer C16/116 und Plus/4. Zusammenführung aus C64 BASIC V2 und Version-4-Linie.
-      V3_6,             // Version 3.6	Neue Befehle für LCD-Prototypen.
-      [Description( "BASIC V7.0" )]
-      V7_0,             // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
-      V10_0,            // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
-      [Description( "BASIC Lightning" )]
-      BASIC_LIGHTNING,  // BASIC extension
-      [Description( "Laser BASIC" )]
-      LASER_BASIC,      // BASIC extension
-      [Description( "Simon's BASIC" )]
-      SIMONS_BASIC,     // Simons Basic
-      SIMONS_BASIC_2    // Simons Basic Extended (SBX)
-    }
-
     public class ParserSettings
     {
       public bool         StripSpaces = true;
@@ -4488,7 +4459,7 @@ namespace RetroDevStudio.Parser
             string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
             int macroCount = 1;
 
-            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
+            macro = BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
             foreach ( var key in ConstantData.AllPhysicalKeyInfos )
@@ -4554,7 +4525,7 @@ namespace RetroDevStudio.Parser
             string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
             int macroCount = 1;
 
-            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
+            macro = DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
             foreach ( var key in ConstantData.AllPhysicalKeyInfos )

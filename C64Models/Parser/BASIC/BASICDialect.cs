@@ -1,11 +1,10 @@
 ﻿using RetroDevStudio.Parser;
-using System;
+using RetroDevStudio.Parser.BASIC;
 using System.Collections.Generic;
-using System.Text;
 
 
 
-namespace C64Models.BASIC
+namespace RetroDevStudio.Parser.BASIC
 {
   public class Opcode
   {
@@ -51,6 +50,7 @@ namespace C64Models.BASIC
     public bool                             ExtendedTokensRecognizedInsideComment = false;
     public int                              MaxLineNumber = 63999;
     public bool                             LowerCase = false;
+    public List<MachineType>                MachineTypes = new List<MachineType>();
 
     public static Dialect                   BASICV2;
 
@@ -144,6 +144,9 @@ namespace C64Models.BASIC
 
       // C64Studio extension
       BASICV2.AddExOpcode( "LABEL", 0xF0 );
+
+      BASICV2.MachineTypes.Add( MachineType.C64 );
+      BASICV2.MachineTypes.Add( MachineType.VIC20 );
     }
 
 
@@ -232,6 +235,23 @@ namespace C64Models.BASIC
           else if ( line.StartsWith( "MaxLineNumber=" ) )
           {
             dialect.MaxLineNumber = GR.Convert.ToI32( line.Substring( 14 ) );
+            continue;
+          }
+          else if ( line.StartsWith( "Machines=" ) )
+          {
+            var machines = line.Substring( 9 ).Split( ',' );
+            foreach ( var machine in machines )
+            {
+              if ( GR.EnumHelper.TryParse( typeof( MachineType ), machine, out MachineType machineType ) )
+              {
+                dialect.MachineTypes.Add( machineType );
+              }
+              else
+              {
+                ErrorMessage = $"Invalid BASIC format file '{File}', unknown machine type {machine} encountered in line {lineIndex}";
+                return null;
+              }
+            }
             continue;
           }
           else if ( line.StartsWith( "HexPrefix=" ) )

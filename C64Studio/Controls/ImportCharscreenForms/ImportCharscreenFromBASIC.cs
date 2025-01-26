@@ -3,6 +3,7 @@ using RetroDevStudio.Types;
 using System;
 using System.Windows.Forms;
 using RetroDevStudio.Documents;
+using RetroDevStudio.Parser.BASIC;
 
 
 
@@ -22,19 +23,19 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
-      editInput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+      editInput.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
     }
 
 
 
     public override bool HandleImport( CharsetScreenProject CharScreen, CharsetScreenEditor Editor )
     {
-      var settings = new RetroDevStudio.Parser.BasicFileParser.ParserSettings();
+      var settings = new BasicFileParser.ParserSettings();
       settings.StripREM = true;
       settings.StripSpaces = true;
-      settings.BASICDialect = C64Models.BASIC.Dialect.BASICV2;
+      settings.BASICDialect = Dialect.BASICV2;
 
-      var parser = new RetroDevStudio.Parser.BasicFileParser( settings );
+      var parser = new BasicFileParser( settings );
 
       string[] lines = editInput.Text.Split( new char[]{ '\n' }, StringSplitOptions.RemoveEmptyEntries );
       int lastLineNumber = -1;
@@ -54,7 +55,7 @@ namespace RetroDevStudio.Controls
         {
           var token = lineInfo.Tokens[i];
 
-          if ( ( token.TokenType == Parser.BasicFileParser.Token.Type.BASIC_TOKEN )
+          if ( ( token.TokenType == BasicFileParser.Token.Type.BASIC_TOKEN )
           &&   ( token.ByteValue == 0x99 ) )
           {
             // a PRINT statement
@@ -66,11 +67,11 @@ namespace RetroDevStudio.Controls
 
               var nextToken = lineInfo.Tokens[i];
 
-              if ( nextToken.TokenType == Parser.BasicFileParser.Token.Type.STRING_LITERAL )
+              if ( nextToken.TokenType == BasicFileParser.Token.Type.STRING_LITERAL )
               {
                 // handle incoming PETSCII plus control codes!
                 bool hadError = false;
-                var  actualString = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( nextToken.Content.Substring( 1, nextToken.Content.Length - 2 ), out hadError );
+                var  actualString = BasicFileParser.ReplaceAllMacrosBySymbols( nextToken.Content.Substring( 1, nextToken.Content.Length - 2 ), out hadError );
                 foreach ( var singleChar in actualString )
                 {
                   var key = ConstantData.AllPhysicalKeyInfos.Find( x => x.CharValue == singleChar );

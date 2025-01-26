@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Parser.BASIC;
 
 
 
@@ -75,10 +76,10 @@ namespace RetroDevStudio.Tasks
       {
         Parser.ParserBase parser = Core.DetermineParser( m_Document );
 
-        ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (Parser.BasicFileParser)parser ).Settings.BASICDialect );
+        ( (BasicFileParser)parser ).SetBasicDialect( ( (BasicFileParser)parser ).Settings.BASICDialect );
         if ( m_Document.BaseDoc != null )
         {
-          ( (Parser.BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)m_Document.BaseDoc ).m_LowerCaseMode;
+          ( (BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)m_Document.BaseDoc ).m_LowerCaseMode;
         }
 
         var compileConfig = new RetroDevStudio.Parser.CompileConfig();

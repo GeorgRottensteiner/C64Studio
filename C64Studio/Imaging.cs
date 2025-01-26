@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Text;
 using GR.Image;
@@ -13,6 +14,8 @@ namespace RetroDevStudio
   public class Imaging
   {
     StudioCore        Core;
+
+    private Dictionary<MachineType,System.Drawing.Text.PrivateFontCollection>  _FontCollectionCache = new Dictionary<MachineType, System.Drawing.Text.PrivateFontCollection>();
 
 
 
@@ -219,6 +222,35 @@ namespace RetroDevStudio
 
 
 
+    public Font FontFromMachine( MachineType machine, float fontSize = 16, FontStyle style = FontStyle.Regular )
+    {
+      var machineToLookFor = machine;
+
+      switch ( machine )
+      {
+        case MachineType.C64:
+        case MachineType.C128:
+        case MachineType.MEGA65:
+        case MachineType.VIC20:
+        case MachineType.COMMANDER_X16:
+          machineToLookFor = MachineType.C64;
+          break;
+        default:
+          machineToLookFor = MachineType.C64;
+          break;
+      }
+
+      if ( !_FontCollectionCache.TryGetValue( machineToLookFor, out var fontCollection ) )
+      {
+        Debug.Log( $"No font found for {machineToLookFor}!" );
+        return null;
+      }
+
+      return new System.Drawing.Font( fontCollection.Families[0], fontSize, style, System.Drawing.GraphicsUnit.Point );
+    }
+
+
+
     public void ApplyPalette( PaletteType PalType, PaletteType OriginalType, ColorSettings Colors )
     {
       // only modify if applicable
@@ -236,6 +268,59 @@ namespace RetroDevStudio
         }
         pal.CreateBrushes();
       }
+    }
+
+
+
+    internal void Initialize()
+    {
+      LoadFont( MachineType.C64, "C64_Pro_Mono_v1.0-STYLE.ttf" );
+      LoadFont( MachineType.ZX81, "zx81.ttf" );
+    }
+
+
+
+    internal void LoadFont( MachineType machine, string fontFilename )
+    {
+      var fontCollectionCommodore = new System.Drawing.Text.PrivateFontCollection();
+      try
+      {
+        string basePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+        if ( basePath.ToUpper().StartsWith( "FILE:///" ) )
+        {
+          basePath = basePath.Substring( 8 );
+        }
+        if ( basePath.ToUpper().StartsWith( @"FILE:\\" ) )
+        {
+          basePath = basePath.Substring( 7 );
+        }
+        string fontPath = GR.Path.Append( GR.Path.GetDirectoryName( basePath ) + "/Fonts", fontFilename );
+
+        fontCollectionCommodore.AddFontFile( fontPath );
+      }
+      catch ( Exception )
+      {
+        // fallback to straight path
+        try
+        {
+          string fontPath = @"Fonts/{fontFilename}";
+
+          fontCollectionCommodore.AddFontFile( fontPath );
+        }
+        catch ( Exception ex2 )
+        {
+          System.Windows.Forms.MessageBox.Show( $"C64Studio can't find or open the C64 true type font file {fontFilename}.\r\nMake sure it's in the Fonts sub folder of RetroDevStudio.exe.\r\n\r\n" + ex2.Message, "Can't load font" );
+          throw new Exception( $"Missing font file '{fontFilename}'" );
+        }
+      }
+      if ( fontCollectionCommodore.Families.Length == 0 )
+      {
+        System.Windows.Forms.MessageBox.Show( $"C64Studio loaded the true type font file {fontFilename}, but it does not properly work.\r\nMake sure it's in the Fonts sub folder of RetroDevStudio.exe.\r\n", "Can't load font" );
+        throw new Exception( $"Failed to load font file '{fontFilename}'" );
+      }
+
+      _FontCollectionCache.Add( machine, fontCollectionCommodore );
     }
 
 

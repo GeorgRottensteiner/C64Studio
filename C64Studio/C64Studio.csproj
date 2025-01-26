@@ -343,9 +343,6 @@
     </Compile>
     <Compile Update="Controls\NoDblClkTreeView.cs" />
     <Compile Update="Controls\HexPanel.cs" />
-    <EmbeddedResource Include="C64_Pro_Mono_v1.0-STYLE.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <Compile Update="Controls\ZoomBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -473,6 +470,8 @@
     <None Remove="BASIC Dialects\Tuned Simons' BASIC.txt" />
     <None Remove="BASIC Dialects\Walrus BASIC 8.txt" />
     <None Remove="BASIC Dialects\XC=Basic.txt" />
+    <None Remove="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf" />
+    <None Remove="Fonts\zx81.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BASIC Dialects\BASIC 65.txt">
@@ -514,6 +513,14 @@
     <Content Include="BASIC Dialects\XC=Basic.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fonts\zx81.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DockPanelSuite" Version="3.1.1" />

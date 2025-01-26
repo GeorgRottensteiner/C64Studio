@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.Remoting;
 using System.Security.Policy;
 
-namespace RetroDevStudio.Parser
+namespace RetroDevStudio.Parser.BASIC
 {
   public partial class BasicFileParser : ParserBase
   {

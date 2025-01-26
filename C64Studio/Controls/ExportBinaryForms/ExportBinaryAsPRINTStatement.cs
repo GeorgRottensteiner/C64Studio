@@ -199,7 +199,7 @@ namespace RetroDevStudio.Controls
         sb.AppendLine( " POKE648,4" );
       }
 
-      editTextOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+      editTextOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
       editTextOutput.Text = sb.ToString().Replace( "\n", "\r\n" );
       return true;
     }

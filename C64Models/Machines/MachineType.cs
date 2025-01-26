@@ -27,7 +27,13 @@ namespace RetroDevStudio
     [Description( "Commander X16" )]
     COMMANDER_X16,
     [Description( "Amstrad CPC" )]
-    CPC
+    CPC,
+    [Description( "Sinclair ZX80" )]
+    ZX80,
+    [Description( "Sinclair ZX81" )]
+    ZX81,
+    [Description( "Sinclair ZX Spectrum" )]
+    ZX_SPECTRUM
   }
 
 

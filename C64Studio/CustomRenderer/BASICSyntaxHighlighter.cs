@@ -1,6 +1,7 @@
 ﻿using FastColoredTextBoxNS;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Parser.BASIC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,11 @@ namespace RetroDevStudio.CustomRenderer
 {
   class BASICSyntaxHighlighter : FastColoredTextBoxNS.SyntaxHighlighter
   {
-    static Parser.BasicFileParser     _Parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
-    static C64Models.BASIC.Dialect    _Dialect = null;
+    static BasicFileParser    _Parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
+    static Dialect            _Dialect = null;
 
 
-    private SourceBasicEx             _SourceDoc = null;
+    private SourceBasicEx     _SourceDoc = null;
 
 
 
@@ -27,9 +28,9 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-    public void SetBASICDialect( C64Models.BASIC.Dialect Dialect )
+    public void SetBASICDialect( Dialect dialect )
     {
-      _Parser.Settings.BASICDialect = Dialect;
+      _Parser.Settings.BASICDialect = dialect;
     }
 
 
@@ -38,7 +39,7 @@ namespace RetroDevStudio.CustomRenderer
     {
       if ( _Parser.Settings.BASICDialect == null )
       {
-        _Dialect = C64Models.BASIC.Dialect.BASICV2;
+        _Dialect = Dialect.BASICV2;
         // _Parser.Settings.BASICDialect = _Dialect;
         _Parser.SetBasicDialect( _Dialect );
       }
@@ -83,36 +84,36 @@ namespace RetroDevStudio.CustomRenderer
           }
           switch ( token.TokenType )
           {
-            case Parser.BasicFileParser.Token.Type.BASIC_TOKEN:
+            case BasicFileParser.Token.Type.BASIC_TOKEN:
               subRange.SetStyle( StyleIndex.Style8 );
               if (  _Parser.IsComment( token ) )
               {
                 hadREM = true;
               }
               break;
-            case Parser.BasicFileParser.Token.Type.DIRECT_TOKEN:
+            case BasicFileParser.Token.Type.DIRECT_TOKEN:
               subRange.SetStyle( StyleIndex.Style6 );
               break;
-            case Parser.BasicFileParser.Token.Type.EX_BASIC_TOKEN:
+            case BasicFileParser.Token.Type.EX_BASIC_TOKEN:
               subRange.SetStyle( StyleIndex.Style2 );
               break;
-            case Parser.BasicFileParser.Token.Type.LINE_NUMBER:
+            case BasicFileParser.Token.Type.LINE_NUMBER:
               subRange.SetStyle( StyleIndex.Style5 );
               break;
-            case Parser.BasicFileParser.Token.Type.NUMERIC_LITERAL:
+            case BasicFileParser.Token.Type.NUMERIC_LITERAL:
               subRange.SetStyle( StyleIndex.Style5 );
               break;
-            case Parser.BasicFileParser.Token.Type.STRING_LITERAL:
+            case BasicFileParser.Token.Type.STRING_LITERAL:
               subRange.SetStyle( StyleIndex.Style4 );
               break;
-            case Parser.BasicFileParser.Token.Type.COMMENT:
-            case Parser.BasicFileParser.Token.Type.HARD_COMMENT:
+            case BasicFileParser.Token.Type.COMMENT:
+            case BasicFileParser.Token.Type.HARD_COMMENT:
               subRange.SetStyle( StyleIndex.Style3 );
               break;
-            case Parser.BasicFileParser.Token.Type.MACRO:
+            case BasicFileParser.Token.Type.MACRO:
               subRange.SetStyle( StyleIndex.Style7 );
               break;
-            case Parser.BasicFileParser.Token.Type.VARIABLE:
+            case BasicFileParser.Token.Type.VARIABLE:
               subRange.SetStyle( StyleIndex.Style9 );
               break;
           }

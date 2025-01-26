@@ -3,7 +3,7 @@ using System.Linq;
 
 
 
-namespace RetroDevStudio.Parser
+namespace RetroDevStudio.Parser.BASIC
 {
   public partial class BasicFileParser : ParserBase
   {

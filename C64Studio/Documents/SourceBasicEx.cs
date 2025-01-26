@@ -6,10 +6,8 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using static RetroDevStudio.Parser.BasicFileParser;
 using GR.IO;
 using System.Linq;
-using C64Models.BASIC;
 using GR.Image;
 using RetroDevStudio.Dialogs;
 using FastColoredTextBoxNS;
@@ -17,6 +15,9 @@ using GR.Memory;
 using RetroDevStudio.Parser;
 using System.Drawing;
 using RetroDevStudio.Tasks;
+using RetroDevStudio.Parser.BASIC;
+
+
 
 namespace RetroDevStudio.Documents
 {
@@ -45,7 +46,7 @@ namespace RetroDevStudio.Documents
     private string                            m_BASICDialectName = null;
     private Dialect                           m_BASICDialect = null;
 
-    private Parser.BasicFileParser            m_Parser = null;
+    private BasicFileParser                   m_Parser = null;
     private bool                              m_InsideLoad = false;
     private bool                              m_InsideToggleSymbolHandler = false;
     private bool                              m_InsideToggleCaseHandler = false;
@@ -151,7 +152,7 @@ namespace RetroDevStudio.Documents
 
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+        editSource.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
       else
       {
@@ -289,12 +290,12 @@ namespace RetroDevStudio.Documents
           if ( m_LowerCaseMode )
           {
             // the pasted text has no lower case letters
-            TextToPaste = MakeLowerCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
+            TextToPaste = BasicFileParser.MakeLowerCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
           }
           else
           {
             // the pasted text has lower case letters, but we're in regular mode
-            TextToPaste = MakeUpperCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
+            TextToPaste = BasicFileParser.MakeUpperCase( TextToPaste, Core.Settings.BASICUseNonC64Font );
           }
         }
         var sb = new StringBuilder();
@@ -457,7 +458,7 @@ namespace RetroDevStudio.Documents
       string  leftText = editSource.GetLineText( CursorLine );
       if ( m_LowerCaseMode )
       {
-        leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+        leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
       }
 
       var tokens = m_Parser.PureTokenizeLine( leftText );
@@ -474,7 +475,7 @@ namespace RetroDevStudio.Documents
       }
 
       var stringLiteral = tokens.Tokens.FirstOrDefault( t => ( t.StartIndex < editSource.Selection.Start.iChar )
-                              && ( t.TokenType == Token.Type.STRING_LITERAL )
+                              && ( t.TokenType == BasicFileParser.Token.Type.STRING_LITERAL )
                               && ( editSource.Selection.Start.iChar <= t.StartIndex + t.Content.Length ) );
       if ( stringLiteral != null )
       {
@@ -598,7 +599,7 @@ namespace RetroDevStudio.Documents
       string    content = editSource.Lines[e.Place.iLine];
       if ( m_LowerCaseMode )
       {
-        content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
+        content = BasicFileParser.MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
 
       var info = Core.Compiling.ParserBasic.PureTokenizeLine( content );
@@ -711,7 +712,7 @@ namespace RetroDevStudio.Documents
 
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+        editSource.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
       else
       {
@@ -1073,7 +1074,7 @@ namespace RetroDevStudio.Documents
       string    content = editSource.Text;
       if ( m_LowerCaseMode )
       {
-        content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
+        content = BasicFileParser.MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
 
       return content;
@@ -1161,12 +1162,12 @@ namespace RetroDevStudio.Documents
             if ( m_LowerCaseMode )
             {
               // the pasted text has no lower case letters
-              basicText = MakeLowerCase( basicText, Core.Settings.BASICUseNonC64Font );
+              basicText = BasicFileParser.MakeLowerCase( basicText, Core.Settings.BASICUseNonC64Font );
             }
             else
             {
               // the pasted text has lower case letters, but we're in regular mode
-              basicText = MakeUpperCase( basicText, Core.Settings.BASICUseNonC64Font );
+              basicText = BasicFileParser.MakeUpperCase( basicText, Core.Settings.BASICUseNonC64Font );
               m_LowerCaseMode = true;
               UpdateCaseButtonCaption();
             }
@@ -1185,7 +1186,7 @@ namespace RetroDevStudio.Documents
           // BASIC text has macros set!
           if ( m_SymbolMode )
           {
-            basicText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( basicText, out hadError );
+            basicText = BasicFileParser.ReplaceAllMacrosBySymbols( basicText, out hadError );
           }
         }
 
@@ -1240,7 +1241,7 @@ namespace RetroDevStudio.Documents
 
         if ( m_LowerCaseMode )
         {
-          basicText = MakeLowerCase( basicText, Core.Settings.BASICUseNonC64Font );
+          basicText = BasicFileParser.MakeLowerCase( basicText, Core.Settings.BASICUseNonC64Font );
         }
 
         m_InsertingText = true;
@@ -1289,9 +1290,9 @@ namespace RetroDevStudio.Documents
     private string ReplacePetCatCompatibilityChars( string BasicText, out bool HadError )
     {
       HadError = false;
-      string arrowUp      = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out HadError );
-      string shiftArrowUp = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out HadError );
-      string pound        = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out HadError );
+      string arrowUp      = BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out HadError );
+      string shiftArrowUp = BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out HadError );
+      string pound        = BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out HadError );
 
       BasicText = BasicText.Replace( "~", shiftArrowUp );
       BasicText = BasicText.Replace( "\\", pound );
@@ -1804,7 +1805,7 @@ namespace RetroDevStudio.Documents
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
               if ( m_LowerCaseMode )
               {
-                leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+                leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
               }
 
               var tokens = m_Parser.PureTokenizeLine( leftText );
@@ -1826,7 +1827,7 @@ namespace RetroDevStudio.Documents
                 }
 
                 var stringLiteral = tokens.Tokens.FirstOrDefault( t => ( t.StartIndex < editSource.Selection.Start.iChar )
-                              && ( t.TokenType == Token.Type.STRING_LITERAL )
+                              && ( t.TokenType == BasicFileParser.Token.Type.STRING_LITERAL )
                               && ( editSource.Selection.Start.iChar <= t.StartIndex + t.Content.Length ) );
                 if ( stringLiteral != null )
                 {
@@ -1853,7 +1854,7 @@ namespace RetroDevStudio.Documents
                 }
                 if ( m_LowerCaseMode )
                 {
-                  editSource.SelectedText = MakeLowerCase( "PRINT", Core.Settings.BASICUseNonC64Font );
+                  editSource.SelectedText = BasicFileParser.MakeLowerCase( "PRINT", Core.Settings.BASICUseNonC64Font );
                 }
                 else
                 {
@@ -1877,7 +1878,7 @@ namespace RetroDevStudio.Documents
                   {
                     if ( m_LowerCaseMode )
                     {
-                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
+                      editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
                     }
                     else
                     {
@@ -1991,7 +1992,7 @@ namespace RetroDevStudio.Documents
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
               if ( m_LowerCaseMode )
               {
-                leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+                leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
               }
 
               if ( ( leftText.Length >= 1 )
@@ -2008,7 +2009,7 @@ namespace RetroDevStudio.Documents
                     // TODO - case!
                     if ( m_LowerCaseMode )
                     {
-                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
+                      editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
                     }
                     else
                     {
@@ -2107,9 +2108,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool IsTokenComment( Token Token )
+    private bool IsTokenComment( BasicFileParser.Token Token )
     {
-      if ( Token.TokenType == Token.Type.HARD_COMMENT )
+      if ( Token.TokenType == BasicFileParser.Token.Type.HARD_COMMENT )
       {
         return true;
       }
@@ -2307,12 +2308,12 @@ namespace RetroDevStudio.Documents
 
       bool labelMode = !m_LabelMode;
 
-      var settings = new Parser.BasicFileParser.ParserSettings();
+      var settings = new BasicFileParser.ParserSettings();
       settings.StripSpaces  = false;
       settings.StripREM     = false;
       settings.BASICDialect = m_BASICDialect;
 
-      Parser.BasicFileParser parser = new RetroDevStudio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
+      BasicFileParser parser = new BasicFileParser( settings, DocumentInfo.FullPath );
       parser.LabelMode = m_LabelMode;
 
       var compilerConfig = new RetroDevStudio.Parser.CompileConfig() { Assembler = RetroDevStudio.Types.AssemblerType.AUTO };
@@ -2325,7 +2326,7 @@ namespace RetroDevStudio.Documents
 
       if ( m_LowerCaseMode )
       {
-        basicSource = Parser.BasicFileParser.MakeUpperCase( basicSource, !Core.Settings.BASICUseNonC64Font );
+        basicSource = BasicFileParser.MakeUpperCase( basicSource, !Core.Settings.BASICUseNonC64Font );
       }
 
       if ( !parser.Parse( basicSource, null, compilerConfig, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) )
@@ -2368,7 +2369,7 @@ namespace RetroDevStudio.Documents
 
       if ( m_LowerCaseMode )
       {
-        Result = Parser.BasicFileParser.MakeLowerCase( Result, !Core.Settings.BASICUseNonC64Font );
+        Result = BasicFileParser.MakeLowerCase( Result, !Core.Settings.BASICUseNonC64Font );
       }
       return true;
     }
@@ -2379,7 +2380,7 @@ namespace RetroDevStudio.Documents
     {
       if ( m_LowerCaseMode )
       {
-        Text = MakeLowerCase( Text, Core.Settings.BASICUseNonC64Font );
+        Text = BasicFileParser.MakeLowerCase( Text, Core.Settings.BASICUseNonC64Font );
       }
 
       Text = ReplacePetCatCompatibilityChars( Text, out bool hadError );
@@ -2557,7 +2558,7 @@ namespace RetroDevStudio.Documents
           var lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[firstLine], 0, ref prevLine );
           if ( ( lineInfo != null )
           &&   ( lineInfo.Tokens.Count > 0 )
-          &&   ( lineInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
+          &&   ( lineInfo.Tokens[0].TokenType == BasicFileParser.Token.Type.LINE_NUMBER ) )
           {
             firstLineNumber = GR.Convert.ToI32( lineInfo.Tokens[0].Content );
             break;
@@ -2570,7 +2571,7 @@ namespace RetroDevStudio.Documents
           var lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[lastLine], 0, ref prevLine );
           if ( ( lineInfo != null )
           &&   ( lineInfo.Tokens.Count > 0 )
-          &&   ( lineInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
+          &&   ( lineInfo.Tokens[0].TokenType == BasicFileParser.Token.Type.LINE_NUMBER ) )
           {
             lastLineNumber = GR.Convert.ToI32( lineInfo.Tokens[0].Content );
             break;
@@ -2607,12 +2608,12 @@ namespace RetroDevStudio.Documents
 
       if ( m_LowerCaseMode )
       {
-        newText = Parser.BasicFileParser.MakeUpperCase( newText, Core.Settings.BASICUseNonC64Font );
+        newText = BasicFileParser.MakeUpperCase( newText, Core.Settings.BASICUseNonC64Font );
       }
 
       if ( newSymbolMode )
       {
-        newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
+        newText = BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
       }
       else
       {
@@ -2631,7 +2632,7 @@ namespace RetroDevStudio.Documents
 
       if ( m_LowerCaseMode )
       {
-        newText = Parser.BasicFileParser.MakeLowerCase( newText, Core.Settings.BASICUseNonC64Font );
+        newText = BasicFileParser.MakeLowerCase( newText, Core.Settings.BASICUseNonC64Font );
       }
 
       editSource.Text = newText;
@@ -2723,11 +2724,11 @@ namespace RetroDevStudio.Documents
 
       if ( newMode )
       {
-        text = MakeLowerCase( text, Core.Settings.BASICUseNonC64Font );
+        text = BasicFileParser.MakeLowerCase( text, Core.Settings.BASICUseNonC64Font );
       }
       else
       {
-        text = MakeUpperCase( text, Core.Settings.BASICUseNonC64Font );
+        text = BasicFileParser.MakeUpperCase( text, Core.Settings.BASICUseNonC64Font );
       }
 
       m_LowerCaseMode = newMode;
@@ -2839,7 +2840,7 @@ namespace RetroDevStudio.Documents
         SetModified();
       }
 
-      var settings = new Parser.BasicFileParser.ParserSettings();
+      var settings = new BasicFileParser.ParserSettings();
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
 
       Core.Compiling.ParserBasic.Settings.StripSpaces   = Core.Settings.BASICStripSpaces;
@@ -2850,7 +2851,7 @@ namespace RetroDevStudio.Documents
       m_BASICDialectName  = basicDialect.Name;
       m_BASICDialect      = basicDialect;
 
-      m_Parser = new Parser.BasicFileParser( settings, "" );
+      m_Parser = new BasicFileParser( settings, "" );
       m_Parser.SetBasicDialect( basicDialect );
       ( (BASICSyntaxHighlighter)editSource.SyntaxHighlighter ).SetBASICDialect( basicDialect );
 

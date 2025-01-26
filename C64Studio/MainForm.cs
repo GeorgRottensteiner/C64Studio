@@ -87,8 +87,6 @@ namespace RetroDevStudio
 
     private GR.Collections.Set<BaseDocument> m_ExternallyChangedDocuments = new GR.Collections.Set<BaseDocument>();
 
-    public System.Drawing.Text.PrivateFontCollection m_FontC64 = new System.Drawing.Text.PrivateFontCollection();
-
 
 
     delegate void AddToOutputAndShowCallback( string Text );
@@ -426,42 +424,7 @@ namespace RetroDevStudio
 
       s_MainForm = this;
 
-      try
-      {
-        string basePath = System.Reflection.Assembly.GetExecutingAssembly().Location; //.CodeBase;
-      
-        if ( basePath.ToUpper().StartsWith( "FILE:///" ) )
-        {
-          basePath = basePath.Substring( 8 );
-        }
-        if ( basePath.ToUpper().StartsWith( @"FILE:\\" ) )
-        {
-          basePath = basePath.Substring( 7 );
-        }
-        string fontPath = GR.Path.Append( GR.Path.GetDirectoryName( basePath ), @"C64_Pro_Mono_v1.0-STYLE.ttf" );
-
-        m_FontC64.AddFontFile( fontPath );
-      }
-      catch ( Exception )
-      {
-        // fallback to straight path
-        try
-        {
-          string fontPath = @"C64_Pro_Mono_v1.0-STYLE.ttf";
-
-          m_FontC64.AddFontFile( fontPath );
-        }
-        catch ( Exception ex2 )
-        {
-          MessageBox.Show( "C64Studio can't find or open the C64 true type font file C64_Pro_Mono_v1.0-STYLE.ttf.\r\nMake sure it's in the path of RetroDevStudio.exe.\r\n\r\n" + ex2.Message, "Can't load font" );
-          throw new Exception( "Missing font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
-        }
-      }
-      if ( m_FontC64.Families.Length == 0 )
-      {
-        MessageBox.Show( "C64Studio loaded the true type font file C64_Pro_Mono_v1.0-STYLE.ttf, but it does not properly work.\r\nMake sure it's in the path of RetroDevStudio.exe.\r\n", "Can't load font" );
-        throw new Exception( "Failed to load font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
-      }
+      StudioCore.Imaging.Initialize();
 
       /*
       // TASM - decompile from project file
@@ -675,7 +638,7 @@ namespace RetroDevStudio
       ApplicationEvent += m_GraphicScreenEditor.OnApplicationEvent;
       ApplicationEvent += m_SpriteEditor.OnApplicationEvent;
 
-      m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
+      m_DebugMemory.hexView.TextFont = StudioCore.Imaging.FontFromMachine( MachineType.C64, 9 );
       m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();
 
       AddMediaFormatSubMenus( mediaToolStripMenuItem );

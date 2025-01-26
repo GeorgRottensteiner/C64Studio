@@ -1,10 +1,12 @@
-﻿using C64Models.BASIC;
-using RetroDevStudio.Documents;
+﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Parser.BASIC;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
+
+
 
 namespace RetroDevStudio
 {
@@ -23,7 +25,7 @@ namespace RetroDevStudio
 
 
     public Parser.ASMFileParser       ParserASM = new RetroDevStudio.Parser.ASMFileParser();
-    public Parser.BasicFileParser     ParserBasic = new RetroDevStudio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
+    public BasicFileParser            ParserBasic = new BasicFileParser( new BasicFileParser.ParserSettings() );
     public Types.ASM.FileInfo         ASMFileInfo = new Types.ASM.FileInfo();
 
     public Dictionary<string,Dialect> BASICDialects = new Dictionary<string, Dialect>();

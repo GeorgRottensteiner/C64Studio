@@ -30,7 +30,7 @@ namespace RetroDevStudio.Documents
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
       listPETSCII.DisplayPage.Create( 120, 120, GR.Drawing.PixelFormat.Format24bppRgb );
       listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
-      listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      listPETSCII.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       foreach ( Types.C64Character character in ConstantData.PetSCIIToChar.Values )
       {

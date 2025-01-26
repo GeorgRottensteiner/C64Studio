@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using RetroDevStudio.Documents;
 using GR.Memory;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Parser.BASIC;
 
 namespace RetroDevStudio.Tasks
 {
@@ -774,14 +775,14 @@ namespace RetroDevStudio.Tasks
           }
           additionalPredefines = AdditionalPredefines;
         }
-        else if ( parser is Parser.BasicFileParser )
+        else if ( parser is BasicFileParser )
         {
           // BASIC may receive symbols from assembly
           parser.InitialFileInfo = combinedFileInfo;
-          ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (Parser.BasicFileParser)parser ).Settings.BASICDialect );
+          ( (BasicFileParser)parser ).SetBasicDialect( ( (BasicFileParser)parser ).Settings.BASICDialect );
           if ( Doc.BaseDoc != null )
           {
-            ( (Parser.BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)Doc.BaseDoc ).m_LowerCaseMode;
+            ( (BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)Doc.BaseDoc ).m_LowerCaseMode;
           }
           Doc.ASMFileInfo = combinedFileInfo;
         }
@@ -827,7 +828,7 @@ namespace RetroDevStudio.Tasks
             // BASIC files bring a start address
             startAddress     = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
             checkSummerClass = ( (SourceBasicEx)Doc.BaseDoc ).CheckSummerClass;
-            ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
+            ( (BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
           }
 
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile, CreateRelocationFile, out asmFileInfo ) )

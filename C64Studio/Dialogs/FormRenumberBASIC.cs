@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Parser.BASIC;
 using RetroDevStudio.Tasks;
 using System;
 using System.Windows.Forms;
@@ -74,18 +75,18 @@ namespace RetroDevStudio.Dialogs
         return;
       }
 
-      Parser.BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
+      BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
       switch ( res )
       {
-        case RetroDevStudio.Parser.BasicFileParser.RenumberResult.OK:
+        case BasicFileParser.RenumberResult.OK:
           labelRenumberInfo.Text = "Press OK to renumber current listing";
           btnOK.Enabled = true;
           break;
-        case RetroDevStudio.Parser.BasicFileParser.RenumberResult.TOO_MANY_LINES:
+        case BasicFileParser.RenumberResult.TOO_MANY_LINES:
           labelRenumberInfo.Text = $"Last line number is higher than {m_Basic.BASICDialect.MaxLineNumber}, reduce step value";
           btnOK.Enabled = false;
           break;
-        case RetroDevStudio.Parser.BasicFileParser.RenumberResult.NOTHING_TO_DO:
+        case BasicFileParser.RenumberResult.NOTHING_TO_DO:
           labelRenumberInfo.Text = "Nothing to do (Maybe parsing was not completed yet, try to rebuild manually)";
           btnOK.Enabled = false;
           break;
@@ -104,7 +105,7 @@ namespace RetroDevStudio.Dialogs
       string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
       if ( m_Basic.m_LowerCaseMode )
       {
-        newText = Parser.BasicFileParser.MakeLowerCase( newText, !m_Core.Settings.BASICUseNonC64Font );
+        newText = BasicFileParser.MakeLowerCase( newText, !m_Core.Settings.BASICUseNonC64Font );
       }
 
       m_Basic.FillContent( newText, true, true );

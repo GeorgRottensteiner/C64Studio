@@ -24,6 +24,25 @@ namespace GR
 
       return en.ToString();
     }
+
+
+
+    public static bool TryParse<T>( Type type, string machine, out T machineType ) where T: Enum
+    {
+      foreach ( var member in Enum.GetValues( type ) )
+      {
+        if ( string.Compare( machine, member.ToString(), true ) == 0 )
+        {
+          machineType = (T)member;
+          return true;
+        }
+      }
+      machineType = default;
+      return false;
+    }
+
+
+
   }
 
   namespace Generic

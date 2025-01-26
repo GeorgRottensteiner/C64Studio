@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Runtime.Intrinsics.Arm;
-using C64Models.BASIC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Parser.BASIC;
 
 namespace TestProject
 {
   [TestClass]
   public class BASIC
   {
-    private RetroDevStudio.Parser.BasicFileParser CreateParser( string BASICDialectName )
+    private BasicFileParser CreateParser( string BASICDialectName )
     {
-      var parser = new RetroDevStudio.Parser.BasicFileParser( new RetroDevStudio.Parser.BasicFileParser.ParserSettings() );
+      var parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
 
       parser.Settings.StripSpaces = false;
       parser.Settings.StripREM = false;

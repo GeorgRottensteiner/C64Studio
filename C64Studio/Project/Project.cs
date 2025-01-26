@@ -1,12 +1,14 @@
-﻿using RetroDevStudio.Types;
+﻿using RetroDevStudio;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WeifenLuo.WinFormsUI.Docking;
-using static RetroDevStudio.Parser.BasicFileParser;
 using RetroDevStudio.Documents;
 using SourceControl;
 using GR.IO;
+
+
 
 namespace RetroDevStudio
 {
@@ -733,7 +735,7 @@ namespace RetroDevStudio
         element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", dependency, true, false ) );
       }
 
-      var obsoleteBasicVersion = (ObsoleteBasicVersion)memChunk.ReadUInt32();
+      uint obsoleteBasicVersion = memChunk.ReadUInt32();
 
       // dependency - project
       dependencyCount = memChunk.ReadInt32();
@@ -746,27 +748,7 @@ namespace RetroDevStudio
       if ( string.IsNullOrEmpty( element.BASICDialect ) )
       {
         // old version, find dialect from obsoleteBasicVersion
-        string  dialectKey = "BASIC V2";
-        switch ( obsoleteBasicVersion )
-        {
-          case ObsoleteBasicVersion.C64_BASIC_V2:
-            break;
-          case ObsoleteBasicVersion.BASIC_LIGHTNING:
-            dialectKey = "BASIC Lightning";
-            break;
-          case ObsoleteBasicVersion.LASER_BASIC:
-            dialectKey = "Laser BASIC";
-            break;
-          case ObsoleteBasicVersion.SIMONS_BASIC:
-            dialectKey = "Simon's BASIC";
-            break;
-          case ObsoleteBasicVersion.V3_5:
-            dialectKey = "BASIC V3.5";
-            break;
-          case ObsoleteBasicVersion.V7_0:
-            dialectKey = "BASIC V7.0";
-            break;
-        }
+        var dialectKey = BackwardCompatibility.BASICDialectMapper.BASICDialectKeyFromObsoleteEnum( obsoleteBasicVersion );
         if ( Core.Compiling.BASICDialects.ContainsKey( dialectKey ) )
         {
           element.BASICDialect = dialectKey;

@@ -21,7 +21,7 @@ namespace RetroDevStudio.Controls
     {
       InitializeComponent();
 
-      editInput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+      editInput.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
     }
 
 

@@ -406,7 +406,7 @@ namespace RetroDevStudio.Controls
       {
         if ( comboItem.Desc == "To output" )
         {
-          EditOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+          EditOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
           EditOutput.Text = sb.ToString().Replace( "\n", "\r\n" );
         }
         else

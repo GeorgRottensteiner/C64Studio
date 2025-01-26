@@ -32,7 +32,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       editBASICC64FontSize.Enabled = !Core.Settings.BASICUseNonC64Font;
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        labelBASICFontPreview.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize );
       }
       else
       {
@@ -63,7 +63,7 @@ namespace RetroDevStudio.Dialogs.Preferences
             editBASICC64FontSize.Enabled = !Core.Settings.BASICUseNonC64Font;
             if ( !Core.Settings.BASICUseNonC64Font )
             {
-              labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+              labelBASICFontPreview.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize );
             }
             else
             {
@@ -108,7 +108,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
         if ( !Core.Settings.BASICUseNonC64Font )
         {
-          labelBASICFontPreview.Font    = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+          labelBASICFontPreview.Font    = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize );
           btnChangeBASICFont.Enabled    = false;
           labelBASICC64FontSize.Enabled = true;
           editBASICC64FontSize.Enabled  = true;
@@ -161,7 +161,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       if ( fontSize != Core.Settings.BASICSourceFontSize )
       {
         Core.Settings.BASICSourceFontSize = fontSize;
-        labelBASICFontPreview.Font = new Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        labelBASICFontPreview.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize );
         RefreshDisplayOnDocuments();
       }
     }
