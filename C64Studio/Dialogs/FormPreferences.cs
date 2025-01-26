@@ -18,7 +18,7 @@ namespace RetroDevStudio.Dialogs
   {
     private StudioCore            Core = null;
 
-    private List<PrefBase>        _PreferencePanes = new List<PrefBase>();
+    private List<DlgPrefBase>        _PreferencePanes = new List<DlgPrefBase>();
 
 
 
@@ -29,24 +29,26 @@ namespace RetroDevStudio.Dialogs
 
       DPIHandler.ResizeControlsForDPI( this );
 
-      _PreferencePanes.Add( new PrefTools( Core ) );
-      _PreferencePanes.Add( new PrefKeyBindings( Core ) );
-      _PreferencePanes.Add( new PrefColorTheme( Core ) );
-      _PreferencePanes.Add( new PrefPalettes( Core ) );
-      _PreferencePanes.Add( new PrefApplication( Core ) );
-      _PreferencePanes.Add( new PrefSounds( Core ) );
-      _PreferencePanes.Add( new PrefEditorBehaviour( Core ) );
-      _PreferencePanes.Add( new PrefASMEditor( Core ) );
-      _PreferencePanes.Add( new PrefAssembler( Core ) );
-      _PreferencePanes.Add( new PrefLibraryPaths( Core ) );
-      _PreferencePanes.Add( new PrefBASICEditor( Core ) );
-      _PreferencePanes.Add( new PrefBASICKeyBindings( Core ) );
-      _PreferencePanes.Add( new PrefBASICParser( Core ) );
-      _PreferencePanes.Add( new PrefSourceControl( Core ) );
+      _PreferencePanes.Add( new DlgPrefTools( Core ) );
+      _PreferencePanes.Add( new DlgPrefKeyBindings( Core ) );
+      _PreferencePanes.Add( new DlgPrefColorTheme( Core ) );
+      _PreferencePanes.Add( new DlgPrefPalettes( Core ) );
+      _PreferencePanes.Add( new DlgPrefApplication( Core ) );
+      _PreferencePanes.Add( new DlgPrefSounds( Core ) );
+      _PreferencePanes.Add( new DlgPrefEditorBehaviour( Core ) );
+      _PreferencePanes.Add( new DlgPrefASMEditor( Core ) );
+      _PreferencePanes.Add( new DlgPrefAssembler( Core ) );
+      _PreferencePanes.Add( new DlgPrefLibraryPaths( Core ) );
+      _PreferencePanes.Add( new DlgPrefBASICEditor( Core ) );
+      _PreferencePanes.Add( new DlgPrefBASICKeyBindings( Core ) );
+      _PreferencePanes.Add( new DlgPrefBASICParser( Core ) );
+      _PreferencePanes.Add( new DlgPrefSourceControl( Core ) );
 
       foreach ( var entry in _PreferencePanes )
       {
         DPIHandler.ResizeControlsForDPI( entry );
+
+        entry.ApplySettingsToControls();
       }
 
       Core.Theming.ApplyTheme( this );
@@ -155,8 +157,8 @@ namespace RetroDevStudio.Dialogs
     private void ApplyPreferencesFilter()
     {
       string[]    keyWords = editPreferencesFilter.Text.Split( ' ' );
-      var         matchingPreferences = new List<PrefBase>();
-      var         visiblePreferences = new List<PrefBase>();
+      var         matchingPreferences = new List<DlgPrefBase>();
+      var         visiblePreferences = new List<DlgPrefBase>();
 
       foreach ( var entry in _PreferencePanes )
       {
@@ -228,7 +230,7 @@ namespace RetroDevStudio.Dialogs
         btnImportHere.Enabled = false;
         return;
       }
-      var prefBase = e.Node.Tag as PrefBase;
+      var prefBase = e.Node.Tag as DlgPrefBase;
       prefBase.Location = new Point( 0, 0 );
       prefBase.Size     = panelPreferences.ClientSize;
 
@@ -252,7 +254,7 @@ namespace RetroDevStudio.Dialogs
       {
         return;
       }
-      var prefBase = treePreferences.SelectedNode.Tag as PrefBase;
+      var prefBase = treePreferences.SelectedNode.Tag as DlgPrefBase;
 
       prefBase.SaveLocalSettings();
     }
@@ -266,7 +268,7 @@ namespace RetroDevStudio.Dialogs
       {
         return;
       }
-      var prefBase = treePreferences.SelectedNode.Tag as PrefBase;
+      var prefBase = treePreferences.SelectedNode.Tag as DlgPrefBase;
 
       prefBase.ImportLocalSettings();
     }

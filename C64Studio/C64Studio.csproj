@@ -9,6 +9,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
     <Platforms>AnyCPU;ARM64</Platforms>
+    <ApplicationIcon>c64.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsWindows)'=='true'">
 	<DefineConstants>OS_WINDOWS</DefineConstants>
@@ -361,46 +362,46 @@
     <Compile Update="Dialogs\FormRenumberBASICLabelMode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefLibraryPaths.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefLibraryPaths.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefPalettes.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefPalettes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefSourceControl.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefSourceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefAssembler.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefAssembler.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefBASICKeyBindings.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefBASICKeyBindings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefKeyBindings.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefKeyBindings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefColorTheme.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefColorTheme.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefBASICParser.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefBASICParser.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefEditorBehaviour.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefEditorBehaviour.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefTools.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefTools.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefBASICEditor.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefBASICEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefASMEditor.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefASMEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefSounds.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefSounds.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\PrefBase.cs">
+    <Compile Update="Dialogs\Preferences\DlgPrefBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Documents\Bookmarks.cs">
@@ -513,6 +514,8 @@
     <Content Include="BASIC Dialects\XC=Basic.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icons\retrodevstudio.ico" />
+    <Content Include="c64.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf">
@@ -543,6 +546,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Icons\retrodevstudio-project.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Icons\retrodevstudio.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
