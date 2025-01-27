@@ -72,7 +72,7 @@ Line2
 
 Line2Text
                 !byte $F9,$D4                    ; RAND USR
-                !byte $1D,$22,$21,$1D,$20        ; 16514       ZX81'd value of Program
+                !byte $1D,$22,$21,$1D,$20        ; 16514       ZX81'd value of label 'Program'
                 !byte $7E                        ; Number
                 !byte $8F,$01,$04,$00,$00        ; Numeric encoding
                 !byte $76                        ; Newline

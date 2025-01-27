@@ -1,1 +1,2 @@
-#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
+#RetroDevStudio.MetaData.BASIC:16359,ZX81 BASIC,uppercase,10,10
+10PRINT"HALLO"

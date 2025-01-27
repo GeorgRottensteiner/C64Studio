@@ -235,6 +235,10 @@ namespace RetroDevStudio
         case MachineType.COMMANDER_X16:
           machineToLookFor = MachineType.C64;
           break;
+        case MachineType.ZX81:
+        case MachineType.ZX80:
+          machineToLookFor = MachineType.ZX81;
+          break;
         default:
           machineToLookFor = MachineType.C64;
           break;

@@ -12,6 +12,10 @@
 #StartAddress=xxxx      > sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
 #HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+#Machines=<machine1>[,...]  list machines that use this BASIC dialect
+#                           valid values C64,VIC20,C128,PLUS4,PET,CBM,ATARI2600,MEGA65,NES,COMMANDER_X16,CPC,ZX80,ZX81,ZX_SPECTRUM
+
+Machines=C64
 
 Token;ByteValues;Abbreviation
 END;80;eN

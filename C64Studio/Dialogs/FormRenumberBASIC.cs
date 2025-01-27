@@ -75,19 +75,15 @@ namespace RetroDevStudio.Dialogs
         return;
       }
 
-      BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
+      BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber, out string errorMessage );
       switch ( res )
       {
         case BasicFileParser.RenumberResult.OK:
           labelRenumberInfo.Text = "Press OK to renumber current listing";
           btnOK.Enabled = true;
           break;
-        case BasicFileParser.RenumberResult.TOO_MANY_LINES:
-          labelRenumberInfo.Text = $"Last line number is higher than {m_Basic.BASICDialect.MaxLineNumber}, reduce step value";
-          btnOK.Enabled = false;
-          break;
-        case BasicFileParser.RenumberResult.NOTHING_TO_DO:
-          labelRenumberInfo.Text = "Nothing to do (Maybe parsing was not completed yet, try to rebuild manually)";
+        default:
+          labelRenumberInfo.Text = errorMessage;
           btnOK.Enabled = false;
           break;
       }

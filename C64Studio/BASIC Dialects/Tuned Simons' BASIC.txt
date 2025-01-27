@@ -14,6 +14,8 @@
 #SafeLineLength=xxxx    = sets the max. number of characters before a warning appears
 #HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
 #Lowercase              = starts in lower case
+#Machines=<machine1>[,...]  list machines that use this BASIC dialect
+#                           valid values C64,VIC20,C128,PLUS4,PET,CBM,ATARI2600,MEGA65,NES,COMMANDER_X16,CPC,ZX80,ZX81,ZX_SPECTRUM
 
 StartAddress=2049
 SafeLineLength=80
@@ -22,6 +24,7 @@ ExtendedTokensRecognizedInsideComment
 HexPrefix=$
 BinPrefix=%
 Lowercase
+Machines=C64,VIC20
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;

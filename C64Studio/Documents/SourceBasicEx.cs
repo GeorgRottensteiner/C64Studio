@@ -712,7 +712,19 @@ namespace RetroDevStudio.Documents
 
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        editSource.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+        Font newFont = null;
+        foreach ( var machine in m_BASICDialect.MachineTypes )
+        {
+          newFont = Core.Imaging.FontFromMachine( machine, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+          if ( newFont != null )
+          {
+            break;
+          }
+        }
+        if ( editSource.Font.Name != newFont.Name )
+        {
+          editSource.Font = newFont;
+        }
       }
       else
       {
@@ -2850,6 +2862,20 @@ namespace RetroDevStudio.Documents
 
       m_BASICDialectName  = basicDialect.Name;
       m_BASICDialect      = basicDialect;
+
+      Font newFont = null;
+      foreach ( var machine in m_BASICDialect.MachineTypes )
+      {
+        newFont = Core.Imaging.FontFromMachine( machine, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+        if ( newFont != null )
+        {
+          break;
+        }
+      }
+      if ( editSource.Font.Name != newFont.Name )
+      {
+        editSource.Font = newFont;
+      }
 
       m_Parser = new BasicFileParser( settings, "" );
       m_Parser.SetBasicDialect( basicDialect );

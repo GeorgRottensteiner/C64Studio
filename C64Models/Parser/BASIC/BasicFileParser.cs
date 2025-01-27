@@ -74,7 +74,9 @@ namespace RetroDevStudio.Parser.BASIC
       OK = 0,
       TOO_MANY_LINES,
       NOTHING_TO_DO,
-      INVALID_VALUES
+      INVALID_VALUES,
+      OVERLAP_AT_START,
+      OVERLAP_AT_END
     };
 
     public class ActionToken
@@ -522,6 +524,13 @@ namespace RetroDevStudio.Parser.BASIC
       ASMFileInfo   = m_ASMFileInfo;
 
       m_CompileConfig = Config;
+
+      if ( m_CompileConfig.TargetType == CompileTargetType.NONE )
+      {
+        m_CompileConfig.TargetType = Settings.BASICDialect.CompileType;
+      }
+      m_CompileTarget.Type = m_CompileConfig.TargetType;
+
       m_LineInfos.Clear();
 
       if ( !Settings.UpperCaseMode )
@@ -4046,24 +4055,88 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public RenumberResult CanRenumber( int LineStart, int LineStep, int FirstLineNumber, int LastLineNumber )
+    public RenumberResult CanRenumber( int LineStart, int LineStep, int firstLineNumber, int lastLineNumber, out string errorMessage )
     {
+      errorMessage = "";
       if ( m_LineInfos.Count == 0 )
       {
         return RenumberResult.NOTHING_TO_DO;
       }
-      if ( LineStart + LineStep * ( m_LineInfos.Count - 1 ) > Settings.BASICDialect.MaxLineNumber )
-      {
-        return RenumberResult.TOO_MANY_LINES;
-      }
       if ( ( LineStart < 0 )
       ||   ( LineStart > Settings.BASICDialect.MaxLineNumber )
-      ||   ( FirstLineNumber < 0 )
-      ||   ( FirstLineNumber > Settings.BASICDialect.MaxLineNumber )
-      ||   ( LastLineNumber < 0 )
-      ||   ( LastLineNumber > Settings.BASICDialect.MaxLineNumber ) )
+      ||   ( firstLineNumber < 0 )
+      ||   ( firstLineNumber > Settings.BASICDialect.MaxLineNumber )
+      ||   ( lastLineNumber < 0 )
+      ||   ( lastLineNumber > Settings.BASICDialect.MaxLineNumber ) )
       {
+        errorMessage = $"Invalid line numbers provided, must be >= and <= {Settings.BASICDialect.MaxLineNumber}";
         return RenumberResult.INVALID_VALUES;
+      }
+
+      var firstLine = m_LineInfos.FirstOrDefault( li => li.Value.LineNumber >= firstLineNumber );
+      var lastLine = m_LineInfos.LastOrDefault( li => li.Value.LineNumber <= lastLineNumber );
+      if ( ( firstLine.Value == null )
+      ||   ( lastLine.Value == null ) )
+      {
+        if ( ( firstLineNumber == 0 )
+        &&   ( lastLineNumber == Settings.BASICDialect.MaxLineNumber ) )
+        {
+          // no lines
+          return RenumberResult.OK;
+        }
+        errorMessage = $"Invalid line number range ({firstLineNumber} to {lastLineNumber}) provided, no relevant lines found";
+        return RenumberResult.INVALID_VALUES;
+      }
+
+      int  trueNumberOfLines = 0;
+      for ( int i = firstLine.Key; i <= lastLine.Key; ++i )
+      {
+        if ( m_LineInfos[i].LineNumber != -1 )
+        {
+          ++trueNumberOfLines;
+        }
+      }
+
+      if ( firstLine.Key > 0 )
+      {
+        // find previous line
+        int   prevIndex = firstLine.Key - 1;
+        while ( ( prevIndex >= 0 )
+        &&      ( ( !m_LineInfos.ContainsKey( prevIndex ) )
+        ||        ( m_LineInfos[prevIndex].LineNumber == -1 ) ) )
+        {
+          --prevIndex;
+        }
+        if ( prevIndex != -1 )
+        {
+          if ( m_LineInfos[prevIndex].LineNumber >= LineStart )
+          {
+            errorMessage = $"First line number {LineStart} is smaller or equal than a previous line {m_LineInfos[prevIndex].LineNumber}";
+            return RenumberResult.OVERLAP_AT_START;
+          }
+        }
+      }
+      // find next line
+      int   nextIndex = lastLine.Key + 1;
+      while ( ( nextIndex < m_LineInfos.Count )
+      &&      ( ( !m_LineInfos.ContainsKey( nextIndex ) )
+      ||        ( m_LineInfos[nextIndex].LineNumber == -1 ) ) )
+      {
+        ++nextIndex;
+      }
+      if ( nextIndex != m_LineInfos.Count )
+      {
+        if ( m_LineInfos[nextIndex].LineNumber <= LineStart + ( trueNumberOfLines - 1 ) * LineStep )
+        {
+          errorMessage = $"Last determined line number {LineStart + ( trueNumberOfLines - 1 ) * LineStep} is higher or equal than the next line {m_LineInfos[nextIndex].LineNumber}";
+          return RenumberResult.OVERLAP_AT_END;
+        }
+      }
+
+      if ( LineStart + LineStep * ( trueNumberOfLines - 1 ) > Settings.BASICDialect.MaxLineNumber )
+      {
+        errorMessage = $"The final line number {LineStart + LineStep * ( trueNumberOfLines - 1 )} would result in a value greater than the maximum possible line number {Settings.BASICDialect.MaxLineNumber}";
+        return RenumberResult.TOO_MANY_LINES;
       }
       return RenumberResult.OK;
     }

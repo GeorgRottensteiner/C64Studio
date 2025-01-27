@@ -16,13 +16,13 @@
 
           ;if so, then jump to end
           jp z, .DisplayComplete
-		      rst $10
-
-		      inc hl
+          rst $10
+P_ZX81
+          inc hl
           jr .DisplayChar
 
 .DisplayComplete
-      		ret
+          ret
 
 
 DISPLAY_TEXT

@@ -78,7 +78,9 @@ namespace RetroDevStudio.Types
     DSK,
     [Description( "NES Cartridge (iNES)" )]
     [AdditionalArgumentCount( 4 )]
-    CARTRIDGE_NES
+    CARTRIDGE_NES,
+    [Description( "P (ZX81)" )]
+    P_ZX81
   }
 
 

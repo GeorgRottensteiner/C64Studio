@@ -1,0 +1,93 @@
+#C64 Studio BASIC declaration file
+#Comments start with #
+#CSV Format 
+#Token        = actual name of command
+#ByteValues   = one or more byte values (hex)
+#Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#OptionalInfo = a list of strings, separated by comma, these are defined
+#               comment             : Opcode marks everything for the rest of the line is a comment
+#               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
+#               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
+#
+#StartAddress=xxxx      > sets the default BASIC start address
+#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
+#HasTextLabels          = Can use text labels of varying length, as either simple call, or following a BASIC token (e.g. EXEC, PROC)
+#Machines=<machine1>[,...]  list machines that use this BASIC dialect
+#                           valid values C64,VIC20,C128,PLUS4,PET,CBM,ATARI2600,MEGA65,NES,COMMANDER_X16,CPC,ZX80,ZX81,ZX_SPECTRUM
+#CompileType=PRG or PLAIN
+#
+
+Machines=ZX81
+CompileType=P_ZX81
+
+StartAddress=16359
+
+Token;ByteValues;Abbreviation[;OptionalInfo]
+"";C0;
+AT;C1;
+TAB;C2;
+CODE;C4;
+VAL;C5;
+LEN;C6;
+SIN;C7;
+COS;C8;
+TAN;C9;
+ASN;CA;
+ACS;CB;
+ATN;CC;
+LN;CD;
+EXP;CE;
+INT;CF;
+SQR;D0;
+SGN;D1;
+ABS;D2;
+PEEK;D3;
+USR;D4;
+STR$;D5;
+CHR$;D6;
+NOT;D7;
+OR;D9;
+AND;DA;
+<=;DB;
+>=;DC;
+<>;DD;
+THEN;DE;
+TO;DF;
+STEP;E0;
+LPRINT;E1;
+LLIST;E2;
+STOP;E3;
+SLOW;E4;
+FAST;E5;
+NEW;E6;
+SCROLL;E7;
+CONT;E8;
+DIM;E9;
+REM;EA;
+FOR;EB;
+GOTO;EC;
+GOSUB;ED;
+INPUT;EE;
+LOAD;EF;
+LIST;F0;
+LET;F1;
+PAUSE;F2;
+NEXT;F3;
+POKE;F4;
+PRINT;F5;
+PLOT;F6;
+RUN;F7;
+SAVE;F8;
+RAND;F9;
+IF;FA;
+CLS;FB;
+UNPLOT;FC;
+CLEAR;FD;
+RETURN;FE;
+COPY;FF;
+
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
+#C64 Studio extension
+LABEL;F0;
+

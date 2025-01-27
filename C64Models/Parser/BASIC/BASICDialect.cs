@@ -1,5 +1,6 @@
 ﻿using RetroDevStudio.Parser;
 using RetroDevStudio.Parser.BASIC;
+using RetroDevStudio.Types;
 using System.Collections.Generic;
 
 
@@ -51,6 +52,7 @@ namespace RetroDevStudio.Parser.BASIC
     public int                              MaxLineNumber = 63999;
     public bool                             LowerCase = false;
     public List<MachineType>                MachineTypes = new List<MachineType>();
+    public CompileTargetType                CompileType = CompileTargetType.PRG; 
 
     public static Dialect                   BASICV2;
 
@@ -235,6 +237,15 @@ namespace RetroDevStudio.Parser.BASIC
           else if ( line.StartsWith( "MaxLineNumber=" ) )
           {
             dialect.MaxLineNumber = GR.Convert.ToI32( line.Substring( 14 ) );
+            continue;
+          }
+          else if ( line.StartsWith( "CompileType=" ) )
+          {
+            if ( !GR.EnumHelper.TryParse( typeof( CompileTargetType ), line.Substring( 12 ), out dialect.CompileType ) )
+            {
+              ErrorMessage = $"Invalid BASIC format file '{File}', unknown CompileType type {line.Substring( 12 )} encountered in line {lineIndex}";
+              return null;
+            }
             continue;
           }
           else if ( line.StartsWith( "Machines=" ) )
