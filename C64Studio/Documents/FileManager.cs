@@ -48,7 +48,7 @@ namespace RetroDevStudio.Documents
 
       oldFont = listFiles.Font;
 
-      listFiles.ItemFonts.Add( Core.Imaging.FontFromMachine( MachineType.C64 ) );
+      listFiles.ItemFonts.Add( Core.Imaging.FontFromMachine( MachineType.C64, 12 ) );
       statusFileManager.Font = Core.Imaging.FontFromMachine( MachineType.C64, 8 );
       labelMediaTitle.Font = statusFileManager.Font;
 

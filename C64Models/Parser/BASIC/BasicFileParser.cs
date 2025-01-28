@@ -2755,7 +2755,7 @@ namespace RetroDevStudio.Parser.BASIC
 
     public override bool Assemble( CompileConfig Config )
     {
-      GR.Memory.ByteBuffer result = new GR.Memory.ByteBuffer();
+      var result = new GR.Memory.ByteBuffer();
 
       int     startAddress = Config.StartAddress;
       if ( startAddress == -1 )
@@ -2770,7 +2770,7 @@ namespace RetroDevStudio.Parser.BASIC
         checkSummer = (ICheckSummer)( Activator.CreateInstance( Assembly.GetExecutingAssembly().FullName, Config.CheckSummerClass ) ).Unwrap();
       }
 
-      result.AppendU16( (ushort)startAddress );
+      AssembleHeader( Config.TargetType, result, startAddress );
 
       int     curAddress = startAddress;
       foreach ( LineInfo info in m_LineInfos.Values )
@@ -2792,14 +2792,7 @@ namespace RetroDevStudio.Parser.BASIC
         if ( info.LineData.Length > 0 )
         {
           // pointer to next line
-          result.AppendU16( (ushort)( curAddress + info.LineData.Length + 5 ) );
-          result.AppendU16( (ushort)info.LineNumber );
-          result.Append( info.LineData );
-
-          // end of line
-          result.AppendU8( 0 );
-
-          curAddress += (int)info.LineData.Length + 5;
+          AssembleLine( Config.TargetType, result, ref curAddress, info );
         }
 
         // build check sum
@@ -2817,12 +2810,9 @@ namespace RetroDevStudio.Parser.BASIC
           m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, CheckSum = checkSum } );
         }
       }
-      result.AppendU16( 0 );
+      AssembleTrailer( Config.TargetType, result );
 
       int     originalSize = (int)result.Length - 2;
-
-
-      //Debug.Log( "Compiled: " + result.ToString() );
 
       string    outputPureFilename = "HURZ";
       try

@@ -25,7 +25,7 @@ namespace RetroDevStudio.Dialogs
       InitializeComponent();
 
       editFilename.Text = Util.FilenameToUnicode( _FilenameType, OrigFilename );
-      editFilename.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
+      editFilename.Font = Core.Imaging.FontFromMachine( MachineType.C64, 12 );
 
       _DefaultFont = listPETSCII.Font;
 

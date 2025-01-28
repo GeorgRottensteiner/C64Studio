@@ -56,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.DataDWord.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.DataWord.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.DataByte.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\BASIC\BasicFileParser.Assemble.Commodore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\LabelDumpSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\DumpLabelFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.While.cs" />
@@ -170,7 +171,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Emulator\Interfaces\" />
     <Folder Include="$(MSBuildThisFileDirectory)BackwardCompatiblity\" />
     <Folder Include="$(MSBuildThisFileDirectory)Parser\Assembler\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Parser\BASIC\" />
     <Folder Include="$(MSBuildThisFileDirectory)Processors\" />
     <Folder Include="$(MSBuildThisFileDirectory)Version\" />
   </ItemGroup>
