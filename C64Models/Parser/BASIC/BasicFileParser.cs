@@ -24,7 +24,17 @@ namespace RetroDevStudio.Parser.BASIC
       public bool         UpperCaseMode = true;
       public bool         UseC64Font = true;
       public Dialect      BASICDialect = null;
-    };
+    }
+
+
+
+    public class ParseContext
+    {
+      public ParserSettings     Settings = new ParserSettings();
+      public CompileTargetType  TargetType = CompileTargetType.NONE;
+    }
+
+
 
     public enum TokenValue
     {
@@ -137,6 +147,8 @@ namespace RetroDevStudio.Parser.BASIC
     private int                                       _LastLineNumberDocLineIndex  = -1;
 
     public Dictionary<int, int>                       LabelLineMapping = new Dictionary<int, int>();
+
+    private ParseContext                              _ParseContext = null;
 
 
 
@@ -531,6 +543,16 @@ namespace RetroDevStudio.Parser.BASIC
       }
       m_CompileTarget.Type = m_CompileConfig.TargetType;
 
+      switch ( m_CompileTarget.Type )
+      {
+        case CompileTargetType.P_ZX81:
+          m_DefaultTargetExtension = ".p";
+          break;
+        default:
+          m_DefaultTargetExtension = ".prg";
+          break;
+      }
+
       m_LineInfos.Clear();
 
       if ( !Settings.UpperCaseMode )
@@ -558,6 +580,12 @@ namespace RetroDevStudio.Parser.BASIC
 
       m_ASMFileInfo.SourceInfo.Clear();
       m_ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
+
+      _ParseContext = new ParseContext()
+      {
+        Settings    = Settings,
+        TargetType  = Config.TargetType
+      };
 
       ProcessLines( lines, LabelMode );
 
@@ -682,7 +710,7 @@ namespace RetroDevStudio.Parser.BASIC
       if ( ( TokenValue >= 0x30 )
       &&   ( TokenValue <= 0x39 ) )
       {
-        // numeric, maybe attach with token before?
+        // numeric, maybe combine with token before?
         if ( ( Info.Tokens.Count > 0 )
         &&   ( Info.Tokens[Info.Tokens.Count - 1].TokenType == Token.Type.NUMERIC_LITERAL )
         &&   ( Info.Tokens[Info.Tokens.Count - 1].ByteValue >= 0x30 )
@@ -692,7 +720,7 @@ namespace RetroDevStudio.Parser.BASIC
           Info.Tokens[Info.Tokens.Count - 1].Content += ConstantData.PetSCIIToChar[TokenValue].CharValue;
           Info.Tokens[Info.Tokens.Count - 1].TokenType = Token.Type.NUMERIC_LITERAL;
 
-          Info.LineData.AppendU8( TokenValue );
+          Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
           return;
         }
         Token numericToken = new Token();
@@ -702,7 +730,7 @@ namespace RetroDevStudio.Parser.BASIC
         numericToken.StartIndex = StartIndex;
         Info.Tokens.Add( numericToken );
 
-        Info.LineData.AppendU8( TokenValue );
+        Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
         return;
       }
       Token basicToken = new Token();
@@ -712,7 +740,7 @@ namespace RetroDevStudio.Parser.BASIC
       basicToken.StartIndex = StartIndex;
       Info.Tokens.Add( basicToken );
 
-      Info.LineData.AppendU8( TokenValue );
+      Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
     }
 
 
@@ -1432,7 +1460,7 @@ namespace RetroDevStudio.Parser.BASIC
                   stringLiteral += ConstantData.PetSCIIToChar[nextByte].CharValue;
                 }
               }
-              info.LineData.AppendU8( nextByte );
+              info.LineData.AppendU8( MapTokenToByteValue( nextByte ) );
               ++bytePos;
               if ( bytePos < tempData.Length )
               {
@@ -1444,7 +1472,7 @@ namespace RetroDevStudio.Parser.BASIC
             if ( nextByte == 34 )
             {
               stringLiteral += ConstantData.PetSCIIToChar[nextByte].CharValue;
-              info.LineData.AppendU8( nextByte );
+              info.LineData.AppendU8( MapTokenToByteValue( nextByte ) );
             }
             Token basicToken = new Token();
             basicToken.TokenType = Token.Type.STRING_LITERAL;
@@ -2757,6 +2785,8 @@ namespace RetroDevStudio.Parser.BASIC
     {
       var result = new GR.Memory.ByteBuffer();
 
+      _ParseContext.TargetType = Config.TargetType;
+
       int     startAddress = Config.StartAddress;
       if ( startAddress == -1 )
       {
@@ -2770,7 +2800,7 @@ namespace RetroDevStudio.Parser.BASIC
         checkSummer = (ICheckSummer)( Activator.CreateInstance( Assembly.GetExecutingAssembly().FullName, Config.CheckSummerClass ) ).Unwrap();
       }
 
-      AssembleHeader( Config.TargetType, result, startAddress );
+      AssembleHeader( result, startAddress );
 
       int     curAddress = startAddress;
       foreach ( LineInfo info in m_LineInfos.Values )
@@ -2792,7 +2822,7 @@ namespace RetroDevStudio.Parser.BASIC
         if ( info.LineData.Length > 0 )
         {
           // pointer to next line
-          AssembleLine( Config.TargetType, result, ref curAddress, info );
+          AssembleLine( result, ref curAddress, info );
         }
 
         // build check sum
@@ -2810,7 +2840,7 @@ namespace RetroDevStudio.Parser.BASIC
           m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, CheckSum = checkSum } );
         }
       }
-      AssembleTrailer( Config.TargetType, result );
+      AssembleTrailer( result );
 
       int     originalSize = (int)result.Length - 2;
 

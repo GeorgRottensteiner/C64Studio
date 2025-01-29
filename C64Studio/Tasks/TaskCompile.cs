@@ -880,15 +880,7 @@ namespace RetroDevStudio.Tasks
             return false;
           }
 
-          /*
-          Doc.ASMFileInfo.LabelModeReferences = Doc.LabelModeReferences;
-          if ( ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
-          &&   ( Doc.LabelModeReferences.Count > 0 ) )
-          {
-            // TODO - Test, does this work?
-            Doc.ASMFileInfo.Labels = Doc.LabelModeReferences;
-          }*/
-          FileInfo                            = Doc.ASMFileInfo;
+          FileInfo = Doc.ASMFileInfo;
 
           Core.MainForm.AddOutputMessages( asmFileInfo );
 
