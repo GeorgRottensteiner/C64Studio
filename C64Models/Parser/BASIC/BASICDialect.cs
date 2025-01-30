@@ -45,6 +45,7 @@ namespace RetroDevStudio.Parser.BASIC
     public Dictionary<string, Opcode>       ExOpcodes = new Dictionary<string, Opcode>();
     public string                           DefaultStartAddress = "2049";
     public int                              SafeLineLength = 80;
+    public int                              MaxLineLength = 250;
     public string                           HexPrefix = "";
     public string                           BinPrefix = "";
     public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
@@ -232,6 +233,11 @@ namespace RetroDevStudio.Parser.BASIC
           else if ( line.StartsWith( "SafeLineLength=" ) )
           {
             dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
+            continue;
+          }
+          else if ( line.StartsWith( "MaxLineLength=" ) )
+          {
+            dialect.MaxLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
             continue;
           }
           else if ( line.StartsWith( "MaxLineNumber=" ) )

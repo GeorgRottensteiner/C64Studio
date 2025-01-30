@@ -17,6 +17,7 @@
 
 StartAddress=8193
 SafeLineLength=160
+MaxLineLength=250
 Machines=MEGA65
 
 Token;ByteValues;Abbreviation[;OptionalInfo]

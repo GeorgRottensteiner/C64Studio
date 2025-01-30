@@ -17,6 +17,7 @@
 
 StartAddress=2049
 SafeLineLength=80
+MaxLineLength=250
 HasTextLabels
 ExtendedTokensRecognizedInsideComment
 Machines=C64

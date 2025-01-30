@@ -21,6 +21,7 @@ Machines=COMMANDER_X16
 
 StartAddress=2049
 SafeLineLength=80
+MaxLineLength=250
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;eN

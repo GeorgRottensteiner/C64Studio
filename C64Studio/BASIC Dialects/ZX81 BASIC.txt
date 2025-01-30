@@ -19,6 +19,7 @@
 
 Machines=ZX81
 CompileType=P_ZX81
+MaxLineLength=65535
 
 StartAddress=16359
 

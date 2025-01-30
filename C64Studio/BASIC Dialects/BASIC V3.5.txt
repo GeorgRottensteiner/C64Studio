@@ -17,6 +17,7 @@
 
 StartAddress=4097
 SafeLineLength=80
+MaxLineLength=250
 Machines=PLUS4
 
 Token;ByteValues;Abbreviation[;OptionalInfo]

@@ -733,6 +733,12 @@ namespace RetroDevStudio.Parser.BASIC
         Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
         return;
       }
+
+      if ( Info.Tokens.Count > 0 )
+      {
+        AssembleTokenCompleted( Info );
+      }
+
       Token basicToken = new Token();
       basicToken.TokenType = Token.Type.DIRECT_TOKEN;
       basicToken.ByteValue = TokenValue;
@@ -1401,6 +1407,10 @@ namespace RetroDevStudio.Parser.BASIC
               &&   ( potentialOpcode.InsertionValue > 255 ) )
               {
                 // it's an extended token!
+                if ( info.Tokens.Count > 0 )
+                {
+                  AssembleTokenCompleted( info );
+                }
                 info.LineData.AppendU16NetworkOrder( (ushort)potentialOpcode.InsertionValue );
 
                 Token basicToken = new Token();
@@ -1437,6 +1447,11 @@ namespace RetroDevStudio.Parser.BASIC
           }
           if ( nextByte == 34 )
           {
+            if ( info.Tokens.Count > 0 )
+            {
+              AssembleTokenCompleted( info );
+            }
+
             // Anführungszeichen, abschliessendes Anführungszeichen suchen
             string stringLiteral = "";
             int     startIndex = bytePos;
@@ -1503,8 +1518,14 @@ namespace RetroDevStudio.Parser.BASIC
             ++bytePos;
             continue;
           }
+          // TODO - that is commodore special!
           if ( nextByte == 0x3f )
           {
+            if ( info.Tokens.Count > 0 )
+            {
+              AssembleTokenCompleted( info );
+            }
+
             // ? durch PRINT ersetzen
             nextByte = 0x99;
             info.LineData.AppendU8( nextByte );
@@ -1536,6 +1557,12 @@ namespace RetroDevStudio.Parser.BASIC
                 // break out so we update references
                 break;
               }
+
+              if ( info.Tokens.Count > 0 )
+              {
+                AssembleTokenCompleted( info );
+              }
+
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.COMMENT;
               basicToken.StartIndex = bytePos;
@@ -1577,6 +1604,11 @@ namespace RetroDevStudio.Parser.BASIC
               Opcode foundOpcode;
               if ( FindOpcodeRightAligned( tempData, ref bytePos, forwardPos, info, ref insideDataStatement, ref insideREMStatement, out foundToken, out foundOpcode ) )
               {
+                if ( info.Tokens.Count > 0 )
+                {
+                  AssembleTokenCompleted( info );
+                }
+
                 // inserted a new opcode, but maybe we need direct tokens in between?
                 // TODO
                 if ( info.Tokens[info.Tokens.Count - 1].StartIndex > bytePos )
@@ -1670,9 +1702,9 @@ namespace RetroDevStudio.Parser.BASIC
         }
       }
 
-      if ( info.LineData.Length > 250 )
+      if ( info.LineData.Length > _ParseContext.Settings.BASICDialect.MaxLineLength )
       {
-        AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
+        AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, $"Line is too long, max. {_ParseContext.Settings.BASICDialect.MaxLineLength} bytes possible" );
       }
 
       UpdateLineNumberReferences( info );

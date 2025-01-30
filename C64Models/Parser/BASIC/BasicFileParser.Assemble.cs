@@ -82,6 +82,8 @@ namespace RetroDevStudio.Parser.BASIC
       switch ( _ParseContext.TargetType )
       {
         case CompileTargetType.P_ZX81:
+          AssembleTokenCompleted( info );
+
           result.AppendU16NetworkOrder( (ushort)info.LineNumber );
           result.AppendU16( (ushort)( info.LineData.Length + 1 ) );
           result.Append( info.LineData );
@@ -200,7 +202,28 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private void AssembleZX81NumberToBytes( int value, ByteBuffer result )
+    private void AssembleTokenCompleted( LineInfo info )
+    {
+      switch ( _ParseContext.TargetType )
+      {
+        case CompileTargetType.P_ZX81:
+          // if the last token is a number ZX81 add's a number byte plus a float (tf!)
+          if ( ( info.Tokens.Count >= 1 )
+          &&   ( info.Tokens.Last().TokenType == Token.Type.NUMERIC_LITERAL ) )
+          {
+            if ( float.TryParse( info.Tokens.Last().Content, out float number ) )
+            {
+              info.LineData.AppendU8( 0x7e );
+              AssembleZX81NumberToBytes( number, info.LineData );
+            }
+          }
+          break;
+      }
+    }
+
+
+
+    private void AssembleZX81NumberToBytes( float value, ByteBuffer result )
     {
       byte  sign = 0;
       uint  mantissa = 0;

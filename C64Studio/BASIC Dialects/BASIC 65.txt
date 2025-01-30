@@ -17,6 +17,7 @@
 
 StartAddress=8193
 SafeLineLength=160
+MaxLineLength=250
 HexPrefix=$
 Machines=MEGA65
 

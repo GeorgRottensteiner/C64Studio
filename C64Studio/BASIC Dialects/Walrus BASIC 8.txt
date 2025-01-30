@@ -17,6 +17,7 @@
 
 StartAddress=7169
 SafeLineLength=160
+MaxLineLength=250
 Machines=C64
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
