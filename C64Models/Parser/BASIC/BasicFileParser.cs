@@ -880,7 +880,7 @@ namespace RetroDevStudio.Parser.BASIC
         {
           // BASIC tokens are always searched forward
           if ( ( !insideDataStatement )
-          && ( IsBASICTokenStartingHere( Line, posInLine, out string Token, out int tokenValue ) ) )
+          &&   ( IsBASICTokenStartingHere( Line, posInLine, out string Token, out int tokenValue ) ) )
           {
             if ( currentToken != null )
             {
@@ -937,9 +937,9 @@ namespace RetroDevStudio.Parser.BASIC
               continue;
             }
             if ( ( currentToken.TokenType == BasicFileParser.Token.Type.NUMERIC_LITERAL )
-            && ( Line.Substring( currentToken.StartIndex, posInLine - currentToken.StartIndex ).Contains( "." ) )
-            && ( nextByte >= 'A' )
-            && ( nextByte <= 'F' ) )
+            &&   ( Line.Substring( currentToken.StartIndex, posInLine - currentToken.StartIndex ).Contains( "." ) )
+            &&   ( nextByte >= 'A' )
+            &&   ( nextByte <= 'F' ) )
             {
               // in case of hex literals they are not allowed after a dot!
             }
@@ -1972,7 +1972,7 @@ namespace RetroDevStudio.Parser.BASIC
                 {
                   for ( int i = 0; i < macroCount; ++i )
                   {
-                    tempData.AppendU8( key.PetSCIIValue );
+                    tempData.AppendU8( key.NativeValue );
                   }
                   foundMacro = true;
                   break;
@@ -2094,7 +2094,7 @@ namespace RetroDevStudio.Parser.BASIC
         if ( ConstantData.LowerCaseCharTo64Char.ContainsKey( curChar ) )
         {
           var foundKey = ConstantData.LowerCaseCharTo64Char[curChar];
-          if ( !foundKey.HasPetSCII )
+          if ( !foundKey.HasNative )
           {
             AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered",
                       posInLine, 1 );
@@ -2107,7 +2107,7 @@ namespace RetroDevStudio.Parser.BASIC
               // strip spaces after line numbers
 
               // TODO - lower case petscii!
-              tempData.AppendU8( foundKey.LowerCasePETSCII );
+              tempData.AppendU8( foundKey.LowerCaseNative );
             }
             else
             {
@@ -2118,13 +2118,13 @@ namespace RetroDevStudio.Parser.BASIC
         }
       }
       if ( ( !ConstantData.CharToC64Char.ContainsKey( curChar ) )
-      ||   ( !ConstantData.CharToC64Char[curChar].HasPetSCII ) )
+      ||   ( !ConstantData.CharToC64Char[curChar].HasNative ) )
       {
         AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered", posInLine, 1 );
       }
       else
       {
-        byte    petsciiValue = ConstantData.CharToC64Char[curChar].PetSCIIValue;
+        byte    petsciiValue = ConstantData.CharToC64Char[curChar].NativeValue;
 
         if ( ( petsciiValue >= 224 )
         &&   ( petsciiValue <= 254 ) )
@@ -2160,11 +2160,11 @@ namespace RetroDevStudio.Parser.BASIC
         // lower case mode
         if ( ConstantData.LowerCaseCharTo64Char.ContainsKey( Character ) )
         {
-          return ConstantData.LowerCaseCharTo64Char[Character].HasPetSCII;
+          return ConstantData.LowerCaseCharTo64Char[Character].HasNative;
         }
       }
       if ( ( !ConstantData.CharToC64Char.ContainsKey( Character ) )
-      ||   ( !ConstantData.CharToC64Char[Character].HasPetSCII ) )
+      ||   ( !ConstantData.CharToC64Char[Character].HasNative ) )
       {
         return false;
       }
@@ -4659,7 +4659,7 @@ namespace RetroDevStudio.Parser.BASIC
               {
                 for ( int i = 0; i < macroCount; ++i )
                 {
-                  sb.Append( (char)key.PetSCIIValue );
+                  sb.Append( (char)key.NativeValue );
                 }
                 foundMacro = true;
                 break;

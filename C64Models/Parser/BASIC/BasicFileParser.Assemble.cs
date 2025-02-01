@@ -184,6 +184,8 @@ namespace RetroDevStudio.Parser.BASIC
               return 0x1b;
             case '0':
               return 0x1c;
+            case ' ':
+              return 0;
           }
           if ( ( tokenValue >= '0' )
           &&   ( tokenValue <= '9') )
@@ -228,13 +230,14 @@ namespace RetroDevStudio.Parser.BASIC
       byte  sign = 0;
       uint  mantissa = 0;
       int   exp = 0;
-      int   newVal = 0;
+      //int   newVal = 0;
 
       // If it's a small integer, then store as such, else it's the 5 byte float.
 
+      /*
       if ( ( value >= -65535 ) 
-      &&   ( value < 65536 ) )
-      // && ( Value = Round( Value ) )
+      &&   ( value < 65536 ) 
+      &&   ( value == Math.Round( value ) ) )
       {
         result.AppendU8( 0 );
         if ( value >= 0 )
@@ -252,7 +255,7 @@ namespace RetroDevStudio.Parser.BASIC
         result.AppendU8( (byte)( newVal >> 8 ) );
         result.AppendU8( 0 );
       }
-      else
+      else*/
       {
         // 5 byte floating point.
 

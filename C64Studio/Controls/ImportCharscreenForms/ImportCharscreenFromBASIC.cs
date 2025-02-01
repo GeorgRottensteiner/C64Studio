@@ -97,7 +97,7 @@ namespace RetroDevStudio.Controls
                     }
                     else if ( key.Type == KeyType.CONTROL_CODE )
                     {
-                      switch ( key.PetSCIIValue )
+                      switch ( key.NativeValue )
                       {
                         case 5:
                           curColor = 1;

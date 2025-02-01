@@ -276,7 +276,7 @@ namespace RetroDevStudio.Documents
             }
             if ( c64Char != null )
             {
-              displayFilename.SetU8At( i, c64Char.PetSCIIValue );
+              displayFilename.SetU8At( i, c64Char.NativeValue );
             }
             else
             {
@@ -1438,12 +1438,12 @@ namespace RetroDevStudio.Documents
         for ( int i = 0; i < sourceName.Length; ++i )
         {
           byte scrCode = sourceName.ByteAt( i );
-          if ( !ConstantData.ScreenCodeToChar[scrCode].HasPetSCII )
+          if ( !ConstantData.ScreenCodeToChar[scrCode].HasNative )
           {
             Debug.Log( "Missing PETSCII!! for " + scrCode );
           }
 
-          fileName.AppendU8( ConstantData.ScreenCodeToChar[scrCode].PetSCIIValue );
+          fileName.AppendU8( ConstantData.ScreenCodeToChar[scrCode].NativeValue );
         }
         if ( m_Media.WriteFile( fileName, emptyFile, FileTypeNative.COMMODORE_USR ) )
         {

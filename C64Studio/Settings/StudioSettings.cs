@@ -105,7 +105,7 @@ namespace RetroDevStudio
 
   public class KeymapEntry
   {
-    public Types.KeyboardKey  KeyboardKey = RetroDevStudio.Types.KeyboardKey.UNDEFINED;
+    public Types.PhysicalKey  KeyboardKey = RetroDevStudio.Types.PhysicalKey.UNDEFINED;
     public System.Windows.Forms.Keys Key = System.Windows.Forms.Keys.None;
   };
 
@@ -1347,7 +1347,7 @@ namespace RetroDevStudio
               for ( int i = 0; i < numEntries; ++i )
               {
                 Keys  key                 = (Keys)binIn.ReadUInt32();
-                Types.KeyboardKey  cmdKey = (RetroDevStudio.Types.KeyboardKey)binIn.ReadInt32();
+                Types.PhysicalKey  cmdKey = (RetroDevStudio.Types.PhysicalKey)binIn.ReadInt32();
 
                 var keyMapEntry = new KeymapEntry();
 
@@ -1360,8 +1360,8 @@ namespace RetroDevStudio
                   }
                 }
                 // add simulated keys manually
-                if ( ( cmdKey == KeyboardKey.KEY_SIM_CURSOR_LEFT )
-                ||   ( cmdKey == KeyboardKey.KEY_SIM_CURSOR_UP ) )
+                if ( ( cmdKey == PhysicalKey.KEY_SIM_CURSOR_LEFT )
+                ||   ( cmdKey == PhysicalKey.KEY_SIM_CURSOR_UP ) )
                 {
                   BASICKeyMap.Keymap[key] = new KeymapEntry() { Key = key, KeyboardKey = cmdKey };
                 }

@@ -36,7 +36,7 @@ namespace RetroDevStudio.Dialogs
       listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
       listPETSCII.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
-      foreach ( Types.C64Character character in ConstantData.PetSCIIToChar.Values )
+      foreach ( Types.SingleKeyInfo character in ConstantData.PetSCIIToChar.Values )
       {
         if ( character.HasChar )
         {
@@ -49,7 +49,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private GR.Forms.ImageListbox.ImageListItem CreateItem( C64Character character )
+    private GR.Forms.ImageListbox.ImageListItem CreateItem( SingleKeyInfo character )
     {
       var item = new GR.Forms.ImageListbox.ImageListItem( listPETSCII );
 
@@ -61,7 +61,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private System.Drawing.Image CreateImageForCharacter( C64Character character )
+    private System.Drawing.Image CreateImageForCharacter( SingleKeyInfo character )
     {
       var bitmap = new System.Drawing.Bitmap( 80, 40, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
       var g = System.Drawing.Graphics.FromImage( bitmap );
@@ -75,7 +75,7 @@ namespace RetroDevStudio.Dialogs
       System.Drawing.Brush  brush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
       g.DrawString( "" + character.CharValue, listPETSCII.Font, brush, new System.Drawing.PointF( 2, 4 ) );
-      g.DrawString( character.PetSCIIValue.ToString( "X02" ), _DefaultFont, brush, new System.Drawing.PointF( 40, 4 ) );
+      g.DrawString( character.NativeValue.ToString( "X02" ), _DefaultFont, brush, new System.Drawing.PointF( 40, 4 ) );
       g.DrawString( character.Desc, _DefaultFont, brush, new System.Drawing.PointF( 0, 24 ) );
 
       g.Dispose();
@@ -112,7 +112,7 @@ namespace RetroDevStudio.Dialogs
       {
         return;
       }
-      Types.C64Character character = (Types.C64Character)listPETSCII.Items[listPETSCII.SelectedIndex].Value;
+      Types.SingleKeyInfo character = (Types.SingleKeyInfo)listPETSCII.Items[listPETSCII.SelectedIndex].Value;
 
       editFilename.CurrentChar = character.CharValue;
       ++editFilename.CursorPos;

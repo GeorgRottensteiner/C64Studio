@@ -59,7 +59,7 @@ namespace RetroDevStudio.Dialogs.Preferences
           try
           {
             Keys key = (Keys)Enum.Parse( typeof( Keys ), xmlKey.Attribute( "FormsKey" ), true );
-            Types.KeyboardKey c64Key = (Types.KeyboardKey)Enum.Parse( typeof( Types.KeyboardKey ), xmlKey.Attribute( "C64Key" ), true );
+            Types.PhysicalKey c64Key = (Types.PhysicalKey)Enum.Parse( typeof( Types.PhysicalKey ), xmlKey.Attribute( "C64Key" ), true );
 
             Core.Settings.BASICKeyMap.Keymap.Add( key, new KeymapEntry() { Key = key, KeyboardKey = c64Key } );
           }
@@ -93,7 +93,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void RefillBASICKeyMappingList()
     {
       listBASICKeyMap.Items.Clear();
-      foreach ( RetroDevStudio.Types.KeyboardKey realKey in Enum.GetValues( typeof( RetroDevStudio.Types.KeyboardKey ) ) )
+      foreach ( RetroDevStudio.Types.PhysicalKey realKey in Enum.GetValues( typeof( RetroDevStudio.Types.PhysicalKey ) ) )
       {
         if ( !IsKeyMappable( realKey ) )
         {
@@ -106,15 +106,15 @@ namespace RetroDevStudio.Dialogs.Preferences
         {
           var charInfo = ConstantData.PhysicalKeyInfo[realKey];
 
-          item.Text = charInfo.Normal.Desc;
-          item.SubItems.Add( charInfo.Normal.PetSCIIValue.ToString( "X02" ) );
+          item.Text = charInfo.Keys[Types.KeyModifier.NORMAL].Desc;
+          item.SubItems.Add( charInfo.Keys[Types.KeyModifier.NORMAL].NativeValue.ToString( "X02" ) );
         }
-        else if ( realKey == Types.KeyboardKey.KEY_SIM_CURSOR_LEFT )
+        else if ( realKey == Types.PhysicalKey.KEY_SIM_CURSOR_LEFT )
         {
           item.Text = "CURSOR LEFT (simulated)";
           item.SubItems.Add( "??" );
         }
-        else if ( realKey == Types.KeyboardKey.KEY_SIM_CURSOR_UP )
+        else if ( realKey == Types.PhysicalKey.KEY_SIM_CURSOR_UP )
         {
           item.Text = "CURSOR UP (simulated)";
           item.SubItems.Add( "??" );
@@ -143,16 +143,16 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private bool IsKeyMappable( Types.KeyboardKey Key )
+    private bool IsKeyMappable( Types.PhysicalKey Key )
     {
-      if ( ( Key == RetroDevStudio.Types.KeyboardKey.UNDEFINED )
-      || ( Key == Types.KeyboardKey.LAST_ENTRY )
-      || ( Key == Types.KeyboardKey.KEY_RESTORE )
-      || ( Key == Types.KeyboardKey.KEY_SHIFT_LOCK )
-      || ( Key == Types.KeyboardKey.KEY_COMMODORE )
-      || ( Key == Types.KeyboardKey.KEY_SHIFT_LEFT )
-      || ( Key == Types.KeyboardKey.KEY_SHIFT_RIGHT )
-      || ( Key == Types.KeyboardKey.KEY_CTRL ) )
+      if ( ( Key == RetroDevStudio.Types.PhysicalKey.UNDEFINED )
+      || ( Key == Types.PhysicalKey.LAST_ENTRY )
+      || ( Key == Types.PhysicalKey.KEY_RESTORE )
+      || ( Key == Types.PhysicalKey.KEY_SHIFT_LOCK )
+      || ( Key == Types.PhysicalKey.KEY_COMMODORE )
+      || ( Key == Types.PhysicalKey.KEY_SHIFT_LEFT )
+      || ( Key == Types.PhysicalKey.KEY_SHIFT_RIGHT )
+      || ( Key == Types.PhysicalKey.KEY_CTRL ) )
       {
         return false;
       }
@@ -161,7 +161,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private KeymapEntry FindBASICKeyMapEntry( Types.KeyboardKey RealKey )
+    private KeymapEntry FindBASICKeyMapEntry( Types.PhysicalKey RealKey )
     {
       foreach ( var entry in Core.Settings.BASICKeyMap.Keymap )
       {
@@ -190,7 +190,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         return;
       }
-      var   realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
+      var   realKey = (Types.PhysicalKey)listBASICKeyMap.SelectedItems[0].Tag;
       var   keyMapEntry = FindBASICKeyMapEntry( realKey );
 
       if ( ( m_PressedKeyMapKey != Keys.None )
@@ -237,7 +237,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         return;
       }
-      var    realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
+      var    realKey = (Types.PhysicalKey)listBASICKeyMap.SelectedItems[0].Tag;
 
       restart:;
       foreach ( var keyInfo in Core.Settings.BASICKeyMap.Keymap )
@@ -267,7 +267,7 @@ namespace RetroDevStudio.Dialogs.Preferences
         btnBindBASICKeyMapBinding.Enabled = false;
         return;
       }
-      var    realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
+      var    realKey = (Types.PhysicalKey)listBASICKeyMap.SelectedItems[0].Tag;
 
       var keyMapEntry = FindBASICKeyMapEntry( realKey );
       btnUnbindBASICKeyMapBinding.Enabled = ( keyMapEntry != null );

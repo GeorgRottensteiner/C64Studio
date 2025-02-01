@@ -47,7 +47,7 @@ namespace RetroDevStudio
               var potChar = ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == c );
               if ( potChar != null )
               {
-                bufName.AppendU8( potChar.PetSCIIValue );
+                bufName.AppendU8( potChar.NativeValue );
               }
               else
               {

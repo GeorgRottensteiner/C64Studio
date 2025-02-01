@@ -1923,13 +1923,13 @@ namespace RetroDevStudio.Documents
         // hard coded mapping from ^ to arrow up (power)
         if ( mappedKey == "^" )
         {
-          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].Normal.CharValue );
+          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.NORMAL].CharValue );
           return true;
         }
         // PI
         if ( mappedKey == "~" )
         {
-          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue );
+          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.SHIFT].CharValue );
           return true;
         }
         if ( ( (int)bareKey >= 0x30 )
@@ -1957,19 +1957,19 @@ namespace RetroDevStudio.Documents
         //Debug.Log( "KeyData " + bareKey );
 
         var           key       = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
-        KeyboardKey   lookupKey = key.KeyboardKey;
+        PhysicalKey   lookupKey = key.KeyboardKey;
 
         if ( !ConstantData.PhysicalKeyInfo.ContainsKey( lookupKey ) )
         {
           // simulated keys
-          if ( lookupKey == KeyboardKey.KEY_SIM_CURSOR_LEFT )
+          if ( lookupKey == PhysicalKey.KEY_SIM_CURSOR_LEFT )
           {
-            lookupKey = KeyboardKey.KEY_CURSOR_LEFT_RIGHT;
+            lookupKey = PhysicalKey.KEY_CURSOR_LEFT_RIGHT;
             shiftPushed = true;
           }
-          else if ( lookupKey == KeyboardKey.KEY_SIM_CURSOR_UP )
+          else if ( lookupKey == PhysicalKey.KEY_SIM_CURSOR_UP )
           {
-            lookupKey = KeyboardKey.KEY_CURSOR_UP_DOWN;
+            lookupKey = PhysicalKey.KEY_CURSOR_UP_DOWN;
             shiftPushed = true;
           }
           else
@@ -1979,13 +1979,12 @@ namespace RetroDevStudio.Documents
         }
         var physKey = ConstantData.PhysicalKeyInfo[lookupKey];
 
-        C64Character    c64Key = physKey.Normal;
+        SingleKeyInfo    c64Key = physKey.Keys[KeyModifier.NORMAL];
         if ( shiftPushed )
         {
-          c64Key = physKey.WithShift;
-          if ( c64Key == null )
+          if ( physKey.Keys.ContainsKey( KeyModifier.SHIFT ) )
           {
-            c64Key = physKey.Normal;
+            c64Key = physKey.Keys[KeyModifier.SHIFT];
           }
 
           if ( c64Key.CharValue == '\"' )
@@ -1995,7 +1994,7 @@ namespace RetroDevStudio.Documents
           if ( !m_StringEnterMode )
           {
             // BASIC short cut?
-            if ( CanKeyTriggerShortCut( physKey.Normal.CharValue, shiftPushed ) )
+            if ( CanKeyTriggerShortCut( physKey.Keys[KeyModifier.NORMAL].CharValue, shiftPushed ) )
               /*
             if ( ( physKey.Normal.CharValue >= 'A' )
             &&   ( physKey.Normal.CharValue <= 'Z' ) )*/
@@ -2011,7 +2010,7 @@ namespace RetroDevStudio.Documents
               &&   ( leftText[leftText.Length - 1] >= 'A' )
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
               {
-                leftText = leftText.ToLower() + physKey.Normal.CharValue;
+                leftText = leftText.ToLower() + physKey.Keys[KeyModifier.NORMAL].CharValue;
                 foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
                 {
                   if ( ( opcode.ShortCut != null )
@@ -2034,27 +2033,21 @@ namespace RetroDevStudio.Documents
             }
           }
         }
-        if ( controlPushed )
+        if ( ( controlPushed )
+        &&   ( physKey.Keys.TryGetValue( KeyModifier.CONTROL, out var modKey ) ) )
         {
-          c64Key = physKey.WithControl;
-          if ( c64Key == null )
-          {
-            c64Key = physKey.Normal;
-          }
+          c64Key = modKey;
         }
-        if ( commodorePushed )
+        if ( ( commodorePushed )
+        &&   ( physKey.Keys.TryGetValue( KeyModifier.COMMODORE, out modKey ) ) )
         {
-          c64Key = physKey.WithCommodore;
-          if ( c64Key == null )
-          {
-            c64Key = physKey.Normal;
-          }
+          c64Key = modKey;
         }
 
         if ( c64Key != null )
         {
           if ( ( m_StringEnterMode )
-          &&   ( c64Key.PetSCIIValue == 13 ) )
+          &&   ( c64Key.NativeValue == 13 ) )
           {
             // real enter breaks out of string mode
             ToggleStringEntryMode();
@@ -2199,45 +2192,6 @@ namespace RetroDevStudio.Documents
       }
 
       return true;
-    }
-
-
-
-    private C64Character FindPhysicalKey( KeymapEntry Key, KeyModifier Modifier, char UnicodeChar )
-    {
-      if ( !ConstantData.PhysicalKeyInfo.ContainsKey( Key.KeyboardKey ) )
-      {
-        return null;
-      }
-      var key = ConstantData.PhysicalKeyInfo[Key.KeyboardKey];
-      if ( Modifier == KeyModifier.NORMAL )
-      {
-        return key.Normal;
-      }
-      if ( Modifier == KeyModifier.SHIFT )
-      {
-        return key.WithShift;
-      }
-      if ( Modifier == KeyModifier.COMMODORE )
-      {
-        return key.WithCommodore;
-      }
-      if ( Modifier == KeyModifier.CONTROL )
-      {
-        return key.WithControl;
-      }
-
-      return null;
-      /*
-      foreach ( var key in ConstantData.AllPhysicalKeyInfos )
-      {
-        if ( ( key.Modifier == Modifier )
-        &&   ( key.CharValue == UnicodeChar ) )
-        {
-          return key;
-        }
-      }
-      return null;*/
     }
 
 

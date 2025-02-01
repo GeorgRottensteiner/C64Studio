@@ -585,7 +585,11 @@ namespace RetroDevStudio.Formats
         fileLocation = sec.NextLocation;
         if ( fileLocation == null )
         {
-          result.Append( sec.Data.SubBuffer( 2, sec.Data.ByteAt( 1 ) - 1 ) );
+          byte  restLength = sec.Data.ByteAt( 1 );
+          if ( restLength > 0 )
+          {
+            result.Append( sec.Data.SubBuffer( 2, restLength - 1 ) );
+          }
           endFound = true;
           break;
         }
@@ -593,6 +597,12 @@ namespace RetroDevStudio.Formats
       }
       fileInfo.Data = result;
       fileInfo.Size = (int)result.Length;
+      fileInfo.Blocks = ( fileInfo.Size + 254 - 1 ) / 254;
+      if ( fileInfo.Blocks == 0 )
+      {
+        fileInfo.Blocks = 1;
+      }
+      fileInfo.Info = fileInfo.Info.Replace( "0 blocks", $"{fileInfo.Blocks} blocks" );
       return fileInfo;
     }
 
@@ -1526,12 +1536,13 @@ namespace RetroDevStudio.Formats
             }
             else
             {
+              // an invalid file, still occupies a block
               info = new FileInfo()
               {
                 DirEntryIndex = dirEntryIndex,
                 Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 )
               };
-              SetFileInfo( info, fileTrack, fileSector, sec.Data.ByteAt( 0x20 * i + 2 ), 0 );
+              SetFileInfo( info, fileTrack, fileSector, sec.Data.ByteAt( 0x20 * i + 2 ), 1 );
               ++dirEntryIndex;
               files.Add( info );
             }

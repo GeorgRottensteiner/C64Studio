@@ -84,7 +84,7 @@ namespace RetroDevStudio.Controls
             {
               charToAdd -= 128;
             }
-            if ( ( ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
+            if ( ( ConstantData.ScreenCodeToChar[newChar].HasNative )
             &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
             {
               if ( x > Info.Area.Left )

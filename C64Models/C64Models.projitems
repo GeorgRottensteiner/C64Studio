@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DefaultFileExtensionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\AdditionalArgumentCount.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\MachineAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)backwardcompatiblity\BASICDialectMapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckSummer\CheckSummerForum64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckSummer\CheckSummer64erV3.cs" />

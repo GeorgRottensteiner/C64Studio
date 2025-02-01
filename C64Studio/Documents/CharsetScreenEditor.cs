@@ -2402,7 +2402,7 @@ namespace RetroDevStudio.Documents
         if ( Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) )
         {
           var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
-          C64Character    c64Key = null;
+          SingleKeyInfo    c64Key = null;
           if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
           {
             Debug.Log( "No physical key info for " + key.KeyboardKey );
@@ -2411,30 +2411,21 @@ namespace RetroDevStudio.Documents
           {
             var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
 
-            c64Key = physKey.Normal;
-            if ( shiftPushed )
+            c64Key = physKey.Keys[Types.KeyModifier.NORMAL];
+            if ( ( shiftPushed )
+            &&   ( physKey.Keys.ContainsKey( KeyModifier.SHIFT ) ) )
             {
-              c64Key = physKey.WithShift;
-              if ( c64Key == null )
-              {
-                c64Key = physKey.Normal;
-              }
+              c64Key = physKey.Keys[KeyModifier.SHIFT];
             }
-            if ( controlPushed )
+            if ( ( controlPushed )
+            &&   ( physKey.Keys.ContainsKey( KeyModifier.CONTROL ) ) )
             {
-              c64Key = physKey.WithControl;
-              if ( c64Key == null )
-              {
-                c64Key = physKey.Normal;
-              }
+              c64Key = physKey.Keys[KeyModifier.CONTROL];
             }
-            if ( commodorePushed )
+            if ( ( commodorePushed )
+            &&   ( physKey.Keys.ContainsKey( KeyModifier.COMMODORE ) ) )
             {
-              c64Key = physKey.WithCommodore;
-              if ( c64Key == null )
-              {
-                c64Key = physKey.Normal;
-              }
+              c64Key = physKey.Keys[KeyModifier.COMMODORE];
             }
           }
 
