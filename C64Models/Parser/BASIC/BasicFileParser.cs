@@ -4143,7 +4143,8 @@ namespace RetroDevStudio.Parser.BASIC
       int  trueNumberOfLines = 0;
       for ( int i = firstLine.Key; i <= lastLine.Key; ++i )
       {
-        if ( m_LineInfos[i].LineNumber != -1 )
+        if ( ( m_LineInfos.ContainsKey( i ) )
+        &&   ( m_LineInfos[i].LineNumber != -1 ) )
         {
           ++trueNumberOfLines;
         }
@@ -4176,13 +4177,12 @@ namespace RetroDevStudio.Parser.BASIC
       {
         ++nextIndex;
       }
-      if ( nextIndex != m_LineInfos.Count )
+      if ( ( nextIndex != m_LineInfos.Count )
+      &&   ( m_LineInfos.ContainsKey( nextIndex ) )
+      &&   ( m_LineInfos[nextIndex].LineNumber <= LineStart + ( trueNumberOfLines - 1 ) * LineStep ) )
       {
-        if ( m_LineInfos[nextIndex].LineNumber <= LineStart + ( trueNumberOfLines - 1 ) * LineStep )
-        {
-          errorMessage = $"Last determined line number {LineStart + ( trueNumberOfLines - 1 ) * LineStep} is higher or equal than the next line {m_LineInfos[nextIndex].LineNumber}";
-          return RenumberResult.OVERLAP_AT_END;
-        }
+        errorMessage = $"Last determined line number {LineStart + ( trueNumberOfLines - 1 ) * LineStep} is higher or equal than the next line {m_LineInfos[nextIndex].LineNumber}";
+        return RenumberResult.OVERLAP_AT_END;
       }
 
       if ( LineStart + LineStep * ( trueNumberOfLines - 1 ) > Settings.BASICDialect.MaxLineNumber )

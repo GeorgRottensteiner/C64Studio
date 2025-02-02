@@ -2826,6 +2826,10 @@ namespace RetroDevStudio.Documents
           break;
         }
       }
+      if ( newFont == null )
+      {
+        newFont = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+      }
       if ( editSource.Font.Name != newFont.Name )
       {
         editSource.Font = newFont;
