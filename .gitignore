@@ -289,3 +289,5 @@
 /Sample Projects/MacroTest/zx81-helloworld.prg
 *.p
 /Sample Projects/MacroTest/lowercaseletters.prg
+/Sample Projects/MacroTest/renumbertestlabels.prg
+/Sample Projects/MacroTest/disk.d81

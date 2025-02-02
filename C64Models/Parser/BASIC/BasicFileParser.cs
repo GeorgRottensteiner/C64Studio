@@ -194,6 +194,12 @@ namespace RetroDevStudio.Parser.BASIC
       SetBasicDialect( Settings.BASICDialect );
 
       m_CompileConfig = new CompileConfig();
+
+      _ParseContext = new ParseContext()
+      {
+        Settings    = Settings,
+        TargetType  = CompileTargetType.PRG
+      };
     }
 
 
@@ -216,20 +222,23 @@ namespace RetroDevStudio.Parser.BASIC
       ActionTokens[Token.ToUpper()] = token;
       ActionTokenByByteValue[ByteValue] = token;
       ActionTokenByValue[Value] = token;
-
-      /*
-      if ( PETSCII.ContainsKey( (char)ByteValue ) )
-      {
-        Debug.Log( "!!AddActionToken overrides entry for " + ByteValue );
-      }
-      PETSCII[(char)ByteValue] = ByteValue;*/
     }
 
 
 
     public void SetBasicDialect( Dialect Dialect )
     {
+      if ( Dialect == null )
+      {
+        Dialect = Dialect.BASICV2;
+      }
       Settings.BASICDialect = Dialect;
+
+      _ParseContext = new ParseContext()
+      {
+        Settings    = Settings,
+        TargetType  = Dialect.CompileType
+      };
 
       var emptyOpcode = new Opcode( "", -1 );
 
