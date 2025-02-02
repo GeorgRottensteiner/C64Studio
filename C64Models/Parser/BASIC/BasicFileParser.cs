@@ -4723,6 +4723,55 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
+    // make sure any non-ascii letters (native true type unicode) are mapped to their ASCII counterpart
+    public static string NormalizeText( string BASICText, bool NonC64Font )
+    {
+      if ( NonC64Font )
+      {
+        return BASICText;
+      }
+
+      StringBuilder   sb = new StringBuilder( BASICText.Length );
+
+      foreach ( var singleChar in BASICText )
+      {
+        if ( ( singleChar & 0xff00 ) == 0xef00 )
+        {
+          if ( ( singleChar >= 0xef41 )
+          &&   ( singleChar <= 0xef41 + 25 ) )
+          {
+            // lower case A-Z
+            sb.Append( (char)( singleChar - 0xef41 + (int)'a' ) );
+            continue;
+          }
+          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
+          if ( ( newChar >= 0xee01 )
+          &&   ( newChar <= 0xee01 + 25 ) )
+          {
+            // upper case A-Z
+            sb.Append( (char)( newChar - 0xee01 + 'A' ) );
+          }
+          else if ( ( newChar >= 0xee41 )
+          &&        ( newChar <= 0xee41 + 25 ) )
+          {
+            // lower case A-Z
+            sb.Append( (char)( newChar - 0xee41 + 'a' ) );
+          }
+          else
+          {
+            sb.Append( newChar );
+          }
+        }
+        else
+        {
+          sb.Append( singleChar );
+        }
+      }
+      return sb.ToString();
+    }
+
+
+
     public static string MakeUpperCase( string BASICText, bool NonC64Font )
     {
       StringBuilder   sb = new StringBuilder( BASICText.Length );

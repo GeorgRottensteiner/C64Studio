@@ -400,7 +400,9 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private SearchLocation FindNextOccurrence( string SearchSource, string SearchString, bool RegularExpression, bool WholeWords, bool IgnoreCase, bool Upwards, int LastPosition )
+    private SearchLocation FindNextOccurrence( string SearchSource,
+                                               string SearchString, 
+                                               bool RegularExpression, bool WholeWords, bool IgnoreCase, bool Upwards, int LastPosition )
     {
       _LastErrorMessage = "";
       if ( string.IsNullOrEmpty( SearchString ) )
@@ -961,7 +963,7 @@ namespace RetroDevStudio.Dialogs
         {
           if ( activeDocument.DocumentInfo.BaseDoc != null )
           {
-            textFromElement = activeDocument.DocumentInfo.BaseDoc.GetContent();
+            textFromElement = ( (SourceBasicEx)activeDocument.DocumentInfo.BaseDoc ).GetContentForSearch();
           }
         }
 
@@ -1080,7 +1082,7 @@ namespace RetroDevStudio.Dialogs
         {
           if ( activeDocument.DocumentInfo.BaseDoc != null )
           {
-            textFromElement = activeDocument.DocumentInfo.BaseDoc.GetContent();
+            textFromElement = ( (SourceBasicEx)activeDocument.DocumentInfo.BaseDoc ).GetContentForSearch();
           }
         }
 
@@ -1134,6 +1136,13 @@ namespace RetroDevStudio.Dialogs
             edit.AllowTabs = true; //Core.Settings.AllowTabs;
             edit.TabLength = Core.Settings.TabSize;
             textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
+            if ( elementToSearch.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+            {
+              if ( elementToSearch.DocumentInfo.BaseDoc != null )
+              {
+                textFromElement = ( (SourceBasicEx)elementToSearch.DocumentInfo.BaseDoc ).GetContentForSearch();
+              }
+            }
             edit.Text = textFromElement;
             createdDummyEdit = true;
           }
@@ -1143,6 +1152,14 @@ namespace RetroDevStudio.Dialogs
         retry_search:
         ;
         textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
+        if ( elementToSearch.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          if ( elementToSearch.DocumentInfo.BaseDoc != null )
+          {
+            textFromElement = ( (SourceBasicEx)elementToSearch.DocumentInfo.BaseDoc ).GetContentForSearch();
+          }
+        }
+
         newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
         newLocation.FoundInDocument = elementToSearch.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
@@ -1204,6 +1221,13 @@ namespace RetroDevStudio.Dialogs
             edit.TabLength = Core.Settings.TabSize;
 
             textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
+            if ( elementToSearch.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+            {
+              if ( elementToSearch.DocumentInfo.BaseDoc != null )
+              {
+                textFromElement = ( (SourceBasicEx)elementToSearch.DocumentInfo.BaseDoc ).GetContentForSearch();
+              }
+            }
             edit.Text = textFromElement;
             createdDummyEdit = true;
           }
@@ -1213,6 +1237,14 @@ namespace RetroDevStudio.Dialogs
         retry_search:
         ;
         textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
+        if ( elementToSearch.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          if ( elementToSearch.DocumentInfo.BaseDoc != null )
+          {
+            textFromElement = ( (SourceBasicEx)elementToSearch.DocumentInfo.BaseDoc ).GetContentForSearch();
+          }
+        }
+
         newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
         newLocation.FoundInDocument = elementToSearch.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
@@ -1892,7 +1924,7 @@ namespace RetroDevStudio.Dialogs
 
 
     private string ReplaceTextInString( DocumentInfo DocInfo, 
-                                        string TextToSearchIn, 
+                                        string TextToSearchIn,
                                         string StringToFind, 
                                         string StringToReplaceWith, 
                                         bool RegexAllowed, 

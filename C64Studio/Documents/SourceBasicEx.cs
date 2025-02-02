@@ -1094,6 +1094,18 @@ namespace RetroDevStudio.Documents
 
 
 
+    public string GetContentForSearch()
+    {
+      string    content = editSource.Text;
+      if ( m_LowerCaseMode )
+      {
+        content = BasicFileParser.NormalizeText( content, Core.Settings.BASICUseNonC64Font );
+      }
+      return content;
+    }
+
+
+
     public override bool LoadDocument()
     {
       if ( DocumentInfo.DocumentFilename == null )
