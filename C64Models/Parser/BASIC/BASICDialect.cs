@@ -237,7 +237,7 @@ namespace RetroDevStudio.Parser.BASIC
           }
           else if ( line.StartsWith( "MaxLineLength=" ) )
           {
-            dialect.MaxLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
+            dialect.MaxLineLength = GR.Convert.ToI32( line.Substring( 14 ) );
             continue;
           }
           else if ( line.StartsWith( "MaxLineNumber=" ) )
