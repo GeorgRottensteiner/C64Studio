@@ -102,9 +102,9 @@ namespace RetroDevStudio.Dialogs.Preferences
 
         ListViewItem    item = new ListViewItem( realKey.ToString() );
 
-        if ( ConstantData.PhysicalKeyInfo.ContainsKey( realKey ) )
+        if ( ConstantData.PhysicalKeyInfo[MachineType.C64].ContainsKey( realKey ) )
         {
-          var charInfo = ConstantData.PhysicalKeyInfo[realKey];
+          var charInfo = ConstantData.PhysicalKeyInfo[MachineType.C64][realKey];
 
           item.Text = charInfo.Keys[Types.KeyModifier.NORMAL].Desc;
           item.SubItems.Add( charInfo.Keys[Types.KeyModifier.NORMAL].NativeValue.ToString( "X02" ) );

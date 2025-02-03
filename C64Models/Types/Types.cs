@@ -876,8 +876,8 @@ namespace RetroDevStudio
     public static GR.Collections.Map<char, SingleKeyInfo>    CharToC64Char = new GR.Collections.Map<char,SingleKeyInfo>();
     public static GR.Collections.Map<char, SingleKeyInfo>    LowerCaseCharTo64Char = new GR.Collections.Map<char, SingleKeyInfo>();
     public static GR.Collections.Map<byte, byte>             ColorToPetSCIIChar = new GR.Collections.Map<byte, byte>();
-    public static GR.Collections.Map<PhysicalKey, KeyInfo>   PhysicalKeyInfo = new GR.Collections.Map<PhysicalKey,KeyInfo>();
-    public static List<SingleKeyInfo>                        AllPhysicalKeyInfos = new List<SingleKeyInfo>();
+    public static Map<MachineType,Map<PhysicalKey, KeyInfo>>   PhysicalKeyInfo = new Map<MachineType, Map<PhysicalKey, KeyInfo>>();
+    public static Dictionary<MachineType,List<SingleKeyInfo>>   AllPhysicalKeyInfos = new Dictionary<MachineType, List<SingleKeyInfo>>();
 
 
 
@@ -1463,28 +1463,39 @@ namespace RetroDevStudio
         }
       }
 
-      AllPhysicalKeyInfos.Add( c64Char );
-
-      if ( !PhysicalKeyInfo.ContainsKey( Key ) )
+      if ( !AllPhysicalKeyInfos.ContainsKey( MachineType.C64 ) )
       {
-        PhysicalKeyInfo.Add( Key, new KeyInfo() );
+        AllPhysicalKeyInfos.Add( MachineType.C64, new List<SingleKeyInfo>() );
+      }
+      var allC64keys = AllPhysicalKeyInfos[MachineType.C64];
+      allC64keys.Add( c64Char );
+
+      if ( !PhysicalKeyInfo.ContainsKey( MachineType.C64 ) )
+      {
+        PhysicalKeyInfo.Add( MachineType.C64, new Map<PhysicalKey, KeyInfo>() );
+      }
+      var c64keys = PhysicalKeyInfo[MachineType.C64];
+
+      if ( !c64keys.ContainsKey( Key ) )
+      {
+        c64keys.Add( Key, new KeyInfo() );
       }
 
       if ( Modifier == KeyModifier.NORMAL )
       {
-        PhysicalKeyInfo[Key].Keys[KeyModifier.NORMAL] = c64Char;
+        c64keys[Key].Keys[KeyModifier.NORMAL] = c64Char;
       }
       if ( Modifier == KeyModifier.SHIFT )
       {
-        PhysicalKeyInfo[Key].Keys[KeyModifier.SHIFT] = c64Char;
+        c64keys[Key].Keys[KeyModifier.SHIFT] = c64Char;
       }
       if ( Modifier == KeyModifier.COMMODORE )
       {
-        PhysicalKeyInfo[Key].Keys[KeyModifier.COMMODORE] = c64Char;
+        c64keys[Key].Keys[KeyModifier.COMMODORE] = c64Char;
       }
       if ( Modifier == KeyModifier.CONTROL )
       {
-        PhysicalKeyInfo[Key].Keys[KeyModifier.CONTROL] = c64Char;
+        c64keys[Key].Keys[KeyModifier.CONTROL] = c64Char;
       }
 
 
@@ -1529,7 +1540,7 @@ namespace RetroDevStudio
 
     public static SingleKeyInfo FindC64KeyByUnicode( char UnicodeValue )
     {
-      foreach ( var c64Key in ConstantData.PhysicalKeyInfo )
+      foreach ( var c64Key in ConstantData.PhysicalKeyInfo[MachineType.C64] )
       {
         if ( ( c64Key.Value.Keys.ContainsKey( KeyModifier.SHIFT ) )
         &&   ( c64Key.Value.Keys[KeyModifier.SHIFT].CharValue == UnicodeValue ) )
@@ -1573,7 +1584,7 @@ namespace RetroDevStudio
       {
         PETSCIIValue = 126;
       }
-      foreach ( var c64Key in ConstantData.AllPhysicalKeyInfos )
+      foreach ( var c64Key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
       {
         if ( c64Key.NativeValue == PETSCIIValue )
         {

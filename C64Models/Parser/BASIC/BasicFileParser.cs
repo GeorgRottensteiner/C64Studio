@@ -1975,7 +1975,7 @@ namespace RetroDevStudio.Parser.BASIC
             }
             if ( !foundMacro )
             {
-              foreach ( var key in ConstantData.AllPhysicalKeyInfos )
+              foreach ( var key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
               {
                 if ( key.Replacements.Contains( macro ) )
                 {
@@ -4596,7 +4596,7 @@ namespace RetroDevStudio.Parser.BASIC
             macro = BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in ConstantData.AllPhysicalKeyInfos )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
             {
               if ( key.Replacements.Contains( macro ) )
               {
@@ -4662,7 +4662,7 @@ namespace RetroDevStudio.Parser.BASIC
             macro = DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in ConstantData.AllPhysicalKeyInfos )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
             {
               if ( key.Replacements.Contains( macro ) )
               {

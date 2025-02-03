@@ -122,7 +122,7 @@ namespace RetroDevStudio.Controls
         }
         else
         {
-          var key = ConstantData.AllPhysicalKeyInfos.FirstOrDefault( pk => pk.HasScreenCode && pk.ScreenCodeValue == newByte );
+          var key = ConstantData.AllPhysicalKeyInfos[MachineType.C64].FirstOrDefault( pk => pk.HasScreenCode && pk.ScreenCodeValue == newByte );
           if ( key != null )
           {
             charsToAppend.Add( "" + key.CharValue );

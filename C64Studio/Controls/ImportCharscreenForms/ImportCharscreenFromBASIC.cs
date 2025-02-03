@@ -74,7 +74,7 @@ namespace RetroDevStudio.Controls
                 var  actualString = BasicFileParser.ReplaceAllMacrosBySymbols( nextToken.Content.Substring( 1, nextToken.Content.Length - 2 ), out hadError );
                 foreach ( var singleChar in actualString )
                 {
-                  var key = ConstantData.AllPhysicalKeyInfos.Find( x => x.CharValue == singleChar );
+                  var key = ConstantData.AllPhysicalKeyInfos[MachineType.C64].Find( x => x.CharValue == singleChar );
                   if ( key != null )
                   {
                     if ( ( key.Type == KeyType.GRAPHIC_SYMBOL )

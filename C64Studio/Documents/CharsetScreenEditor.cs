@@ -2403,13 +2403,13 @@ namespace RetroDevStudio.Documents
         {
           var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
           SingleKeyInfo    c64Key = null;
-          if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
+          if ( !ConstantData.PhysicalKeyInfo[MachineType.C64].ContainsKey( key.KeyboardKey ) )
           {
             Debug.Log( "No physical key info for " + key.KeyboardKey );
           }
           else
           {
-            var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
+            var physKey = ConstantData.PhysicalKeyInfo[MachineType.C64][key.KeyboardKey];
 
             c64Key = physKey.Keys[Types.KeyModifier.NORMAL];
             if ( ( shiftPushed )

@@ -35,10 +35,13 @@ namespace RetroDevStudio.Controls
       // 
       // editPrefixLoadAddress
       // 
+      this.editPrefixLoadAddress.Enabled = false;
       this.editPrefixLoadAddress.Location = new System.Drawing.Point(155, 1);
+      this.editPrefixLoadAddress.MaxLength = 4;
       this.editPrefixLoadAddress.Name = "editPrefixLoadAddress";
       this.editPrefixLoadAddress.Size = new System.Drawing.Size(66, 20);
       this.editPrefixLoadAddress.TabIndex = 1;
+      this.editPrefixLoadAddress.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editPrefixLoadAddress_KeyPress);
       // 
       // checkPrefixLoadAddress
       // 

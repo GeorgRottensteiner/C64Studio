@@ -1935,13 +1935,13 @@ namespace RetroDevStudio.Documents
         // hard coded mapping from ^ to arrow up (power)
         if ( mappedKey == "^" )
         {
-          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.NORMAL].CharValue );
+          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[MachineType.C64][PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.NORMAL].CharValue );
           return true;
         }
         // PI
         if ( mappedKey == "~" )
         {
-          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.SHIFT].CharValue );
+          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[MachineType.C64][PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.SHIFT].CharValue );
           return true;
         }
         if ( ( (int)bareKey >= 0x30 )
@@ -1971,7 +1971,7 @@ namespace RetroDevStudio.Documents
         var           key       = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
         PhysicalKey   lookupKey = key.KeyboardKey;
 
-        if ( !ConstantData.PhysicalKeyInfo.ContainsKey( lookupKey ) )
+        if ( !ConstantData.PhysicalKeyInfo[MachineType.C64].ContainsKey( lookupKey ) )
         {
           // simulated keys
           if ( lookupKey == PhysicalKey.KEY_SIM_CURSOR_LEFT )
@@ -1989,7 +1989,7 @@ namespace RetroDevStudio.Documents
             Debug.Log( "No physical key info for " + lookupKey );
           }
         }
-        var physKey = ConstantData.PhysicalKeyInfo[lookupKey];
+        var physKey = ConstantData.PhysicalKeyInfo[MachineType.C64][lookupKey];
 
         SingleKeyInfo    c64Key = physKey.Keys[KeyModifier.NORMAL];
         if ( shiftPushed )
