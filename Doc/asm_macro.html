@@ -2844,7 +2844,7 @@ Sequence
           CARTNES
         </td>
         <td>
-          4
+          4 (mandatory)
         </td>
         <td>
           Four numbers which are set in the iNES file header<br />
@@ -2854,12 +2854,25 @@ Sequence
           4: Mirroring nibble (0 to 15)<br />
         </td>
       </tr>
+      <tr>
+        <td>
+          D64,D81
+        </td>
+        <td>
+          2 (optional)
+        </td>
+        <td>
+          1: Internal Filename<br />
+          2: Disk Name<br />
+        </td>
+      </tr>
     </table>
     <br />
     <br />
     <div id="code">
       <br />      !to "jmain.prg",cbm
       !to "cart64banks.crt.bin", magicdeskcrt
+      !to "disk.d64",d64,"filename","disk name"
     </div>
     <br />
     <br />

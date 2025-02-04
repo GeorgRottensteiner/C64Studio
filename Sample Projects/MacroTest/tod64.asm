@@ -1,4 +1,4 @@
-!to "tod64.d64",d64
+!to "tod64.d64",d64,"abc","disk name"
 
 * = $0801
           !basic

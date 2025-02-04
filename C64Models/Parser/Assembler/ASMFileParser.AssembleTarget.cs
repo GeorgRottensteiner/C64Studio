@@ -51,7 +51,16 @@ namespace RetroDevStudio.Parser
 
             d64.CreateEmptyMedia();
 
-            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
+            if ( !string.IsNullOrEmpty( m_CompileTarget.ContainerName ) )
+            {
+              d64.DiskName = Util.ToFilename( MediaFilenameType.COMMODORE, m_CompileTarget.ContainerName );
+            }
+
+            var bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
+            if ( !string.IsNullOrEmpty( m_CompileTarget.InternalFilename ) )
+            {
+              bufName = Util.ToFilename( MediaFilenameType.COMMODORE, m_CompileTarget.InternalFilename );
+            }
             d64.WriteFile( bufName, Assembly, FileTypeNative.COMMODORE_PRG );
 
             return d64.Compile();
@@ -72,8 +81,16 @@ namespace RetroDevStudio.Parser
             Formats.D81 d81 = new RetroDevStudio.Formats.D81();
 
             d81.CreateEmptyMedia();
+            if ( !string.IsNullOrEmpty( m_CompileTarget.ContainerName ) )
+            {
+              d81.DiskName = Util.ToFilename( MediaFilenameType.COMMODORE, m_CompileTarget.ContainerName );
+            }
 
-            GR.Memory.ByteBuffer    bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
+            var bufName = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
+            if ( !string.IsNullOrEmpty( m_CompileTarget.InternalFilename ) )
+            {
+              bufName = Util.ToFilename( MediaFilenameType.COMMODORE, m_CompileTarget.InternalFilename );
+            }
             d81.WriteFile( bufName, Assembly, FileTypeNative.COMMODORE_PRG );
 
             return d81.Compile();

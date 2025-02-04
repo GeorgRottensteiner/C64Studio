@@ -7,8 +7,11 @@ namespace RetroDevStudio.Types
     // default
     public CompileTargetType  Type  = CompileTargetType.PRG;
 
-    // for tape/disk images
+    // for tape/disk images (file name inside disk)
     public string             InternalFilename = "";
+
+    // for disk images (disk name)
+    public string             ContainerName = "";
 
     // for iNES-Header
     public byte               NESPrgROMUnits16k = 0;

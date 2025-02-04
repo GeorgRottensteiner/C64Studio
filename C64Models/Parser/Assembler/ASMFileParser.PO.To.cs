@@ -77,7 +77,8 @@ namespace RetroDevStudio.Parser
 
         m_CompileTarget.Type = Lookup.CompileTargetModeToKeyword.Where( c => c.Value == targetType ).Select( c => c.Key ).First();
 
-        int numExtraArgs = 0;
+        int numOptionalExtraArgs = 0;
+        int numMandatoryExtraArgs = 0;
 
         var memberInfo = typeof( CompileTargetType ).GetMember( m_CompileTarget.Type.ToString() ).FirstOrDefault();
         if ( memberInfo != null )
@@ -85,20 +86,32 @@ namespace RetroDevStudio.Parser
           var att = (AdditionalArgumentCountAttribute)memberInfo.GetCustomAttributes( typeof( AdditionalArgumentCountAttribute ), false ).FirstOrDefault();
           if ( att != null )
           {
-            numExtraArgs = att.NumArguments;
+            numMandatoryExtraArgs = att.NumMandatoryArguments;
+            numOptionalExtraArgs  = att.NumOptionalArguments;
           }
         }
 
-        if ( parms.Count != 2 + numExtraArgs )
+        if ( ( numMandatoryExtraArgs != 0 )
+        &&   ( parms.Count != 2 + numMandatoryExtraArgs ) )
         {
           AddError( _ParseContext.LineIndex,
                     Types.ErrorCode.E1302_MALFORMED_MACRO,
-                    $"Expected {numExtraArgs} additional parameters, but found {parms.Count - 2}" );
+                    $"Expected {numMandatoryExtraArgs} additional parameters, but found {parms.Count - 2}" );
           return ParseLineResult.ERROR_ABORT;
         }
-        if ( numExtraArgs != 0 )
+        if ( ( numOptionalExtraArgs != 0 )
+        &&   ( ( parms.Count < 2 )
+        ||     ( parms.Count > 2 + numOptionalExtraArgs ) ) )
         {
-          if ( !POToHandleExtraArguments( parms, numExtraArgs ) )
+          AddError( _ParseContext.LineIndex,
+                    Types.ErrorCode.E1302_MALFORMED_MACRO,
+                    $"Expected up to {numOptionalExtraArgs} additional parameters, but found {parms.Count - 2}" );
+          return ParseLineResult.ERROR_ABORT;
+        }
+        if ( ( numMandatoryExtraArgs != 0 )
+        ||   ( numOptionalExtraArgs != 0 ) )
+        {
+          if ( !POToHandleExtraArguments( parms, numOptionalExtraArgs, numMandatoryExtraArgs ) )
           {
             return ParseLineResult.ERROR_ABORT;
           }
@@ -109,11 +122,45 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool POToHandleExtraArguments( List<List<TokenInfo>> LineParams, int NumExtraArgs )
+    private bool POToHandleExtraArguments( List<List<TokenInfo>> LineParams, int numOptionalExtraArgs, int numMandatoryExtraArgs )
     {
       switch ( m_CompileTarget.Type )
       {
+        case CompileTargetType.D64:
+        case CompileTargetType.D81:
+          if ( LineParams.Count >= 3 )
+          {
+            // a file name was given
+            if ( !EvaluateTokens( _ParseContext.LineIndex, LineParams[2], out SymbolInfo fileName ) )
+            {
+              AddError( _ParseContext.LineIndex,
+                        Types.ErrorCode.E1302_MALFORMED_MACRO,
+                        $"Failed to evaluate inner file name for {m_CompileTarget.Type}" );
+              return false;
+            }
+            m_CompileTarget.InternalFilename = fileName.ToString();
+          }
+          if ( LineParams.Count >= 4 )
+          {
+            // a disk name was given
+            if ( !EvaluateTokens( _ParseContext.LineIndex, LineParams[3], out SymbolInfo diskName ) )
+            {
+              AddError( _ParseContext.LineIndex,
+                        Types.ErrorCode.E1302_MALFORMED_MACRO,
+                        $"Failed to evaluate disk name for {m_CompileTarget.Type}" );
+              return false;
+            }
+            m_CompileTarget.ContainerName = diskName.ToString();
+          }
+          return true;
         case CompileTargetType.CARTRIDGE_NES:
+          if ( LineParams.Count < 6 )
+          {
+            AddError( _ParseContext.LineIndex,
+                      Types.ErrorCode.E1302_MALFORMED_MACRO,
+                      $"Invalid number of arguments" );
+            return false;
+          }
           if ( ( !EvaluateTokens( _ParseContext.LineIndex, LineParams[2], out SymbolInfo nesPRGUnits ) )
           ||   ( !EvaluateTokens( _ParseContext.LineIndex, LineParams[3], out SymbolInfo nesChrUnits ) )
           ||   ( !EvaluateTokens( _ParseContext.LineIndex, LineParams[4], out SymbolInfo nesMapper ) )

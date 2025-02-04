@@ -1,18 +1,21 @@
 ﻿using System;
-using System.ComponentModel;
+
+
 
 namespace RetroDevStudio
 {
-  [AttributeUsageAttribute( AttributeTargets.Field | AttributeTargets.Class )]
+  [AttributeUsage( AttributeTargets.Field | AttributeTargets.Class )]
   public class AdditionalArgumentCountAttribute : Attribute
   {
-    public int NumArguments = 0;
+    public int NumOptionalArguments = 0;
+    public int NumMandatoryArguments = 0;
 
 
 
-    public AdditionalArgumentCountAttribute( int NumArguments )
+    public AdditionalArgumentCountAttribute( int numOptionalArguments, int numMandatoryArguments )
     {
-      this.NumArguments = NumArguments;
+      NumOptionalArguments  = numOptionalArguments;
+      NumMandatoryArguments = numMandatoryArguments;
     }
 
 

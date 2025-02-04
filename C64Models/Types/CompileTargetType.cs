@@ -21,6 +21,7 @@ namespace RetroDevStudio.Types
     [Description( "16k Cartridge CRT" )]
     CARTRIDGE_16K_CRT,
     [Description( "D64 Disk Image" )]
+    [AdditionalArgumentCount( 2, 0 )]
     D64,
     [Description( "Magic Desk Cartridge 64k Binary" )]
     CARTRIDGE_MAGICDESK_BIN_64K,
@@ -41,6 +42,7 @@ namespace RetroDevStudio.Types
     [Description( "GMOD2 Cartridge CRT" )]
     CARTRIDGE_GMOD2_CRT,
     [Description( "D81 Disk Image" )]
+    [AdditionalArgumentCount( 2, 0 )]
     D81,
     [Description( "Ultimax Cartridge 4k Binary" )]
     CARTRIDGE_ULTIMAX_4K_BIN,
@@ -77,7 +79,7 @@ namespace RetroDevStudio.Types
     [Description( "CPC DSK Disk Image" )]
     DSK,
     [Description( "NES Cartridge (iNES)" )]
-    [AdditionalArgumentCount( 4 )]
+    [AdditionalArgumentCount( 0, 4 )]
     CARTRIDGE_NES,
     [Description( "P (ZX81)" )]
     P_ZX81
