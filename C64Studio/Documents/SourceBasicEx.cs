@@ -1210,7 +1210,7 @@ namespace RetroDevStudio.Documents
           // BASIC text has macros set!
           if ( m_SymbolMode )
           {
-            basicText = BasicFileParser.ReplaceAllMacrosBySymbols( basicText, out hadError );
+            basicText = BasicFileParser.ReplaceAllMacrosBySymbols( basicText, BasicFileParser.FindBestKeyboardMachineType( BASICDialect ), out hadError );
           }
         }
 
@@ -1314,9 +1314,9 @@ namespace RetroDevStudio.Documents
     private string ReplacePetCatCompatibilityChars( string BasicText, out bool HadError )
     {
       HadError = false;
-      string arrowUp      = BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", out HadError );
-      string shiftArrowUp = BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", out HadError );
-      string pound        = BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", out HadError );
+      string arrowUp      = BasicFileParser.ReplaceAllMacrosBySymbols( "{ARROW UP}", MachineType.C64, out HadError );
+      string shiftArrowUp = BasicFileParser.ReplaceAllMacrosBySymbols( "{SHIFT-ARROW UP}", MachineType.C64, out HadError );
+      string pound        = BasicFileParser.ReplaceAllMacrosBySymbols( "{POUND}", MachineType.C64, out HadError );
 
       BasicText = BasicText.Replace( "~", shiftArrowUp );
       BasicText = BasicText.Replace( "\\", pound );
@@ -1970,8 +1970,9 @@ namespace RetroDevStudio.Documents
 
         var           key       = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
         PhysicalKey   lookupKey = key.KeyboardKey;
+        var           bestMachine = BasicFileParser.FindBestKeyboardMachineType( BASICDialect );
 
-        if ( !ConstantData.PhysicalKeyInfo[MachineType.C64].ContainsKey( lookupKey ) )
+        if ( !ConstantData.PhysicalKeyInfo[bestMachine].ContainsKey( lookupKey ) )
         {
           // simulated keys
           if ( lookupKey == PhysicalKey.KEY_SIM_CURSOR_LEFT )
@@ -1989,7 +1990,7 @@ namespace RetroDevStudio.Documents
             Debug.Log( "No physical key info for " + lookupKey );
           }
         }
-        var physKey = ConstantData.PhysicalKeyInfo[MachineType.C64][lookupKey];
+        var physKey = ConstantData.PhysicalKeyInfo[bestMachine][lookupKey];
 
         SingleKeyInfo    c64Key = physKey.Keys[KeyModifier.NORMAL];
         if ( shiftPushed )
@@ -2074,13 +2075,13 @@ namespace RetroDevStudio.Documents
             return base.ProcessCmdKey( ref msg, keyData );
           }
           if ( ( m_SymbolMode )
-          || ( c64Key.Replacements.Count == 0 ) )
+          ||   ( c64Key.Replacements.Count == 0 ) )
           {
             //Debug.Log( "Trying to map unknown token: " + key.ToString() );
             if ( m_LowerCaseMode )
             {
               if ( ( c64Key.LowerCaseDisplayChar >= 0xe041 )
-              && ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
+              &&   ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
               {
                 InsertOrReplaceChar( (char)( ( c64Key.LowerCaseDisplayChar & 0xff ) + 0x20 ) );
               }
@@ -2092,7 +2093,7 @@ namespace RetroDevStudio.Documents
             else
             {
               if ( ( c64Key.CharValue >= 0xe041 )
-              && ( c64Key.CharValue <= 0xe05a ) )
+              &&   ( c64Key.CharValue <= 0xe05a ) )
               {
                 InsertOrReplaceChar( (char)( c64Key.CharValue & 0xff ) );
               }
@@ -2591,7 +2592,7 @@ namespace RetroDevStudio.Documents
 
       if ( newSymbolMode )
       {
-        newText = BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
+        newText = BasicFileParser.ReplaceAllMacrosBySymbols( newText, BasicFileParser.FindBestKeyboardMachineType( BASICDialect ), out hadError );
       }
       else
       {

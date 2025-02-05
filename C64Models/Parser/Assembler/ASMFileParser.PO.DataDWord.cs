@@ -49,7 +49,7 @@ namespace RetroDevStudio.Parser
           {
             string    textLiteral = wordValueSymbol.ToString();
 
-            textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, out bool hadError );
+            textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, info.LineCodeMapping, MachineType.C64, out bool hadError );
             if ( hadError )
             {
               AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );

@@ -32,6 +32,7 @@ namespace RetroDevStudio.Parser.BASIC
     {
       public ParserSettings     Settings = new ParserSettings();
       public CompileTargetType  TargetType = CompileTargetType.NONE;
+      public MachineType        KeyboardMachineType = MachineType.C64;      
     }
 
 
@@ -592,8 +593,9 @@ namespace RetroDevStudio.Parser.BASIC
 
       _ParseContext = new ParseContext()
       {
-        Settings    = Settings,
-        TargetType  = Config.TargetType
+        Settings            = Settings,
+        TargetType          = Config.TargetType,
+        KeyboardMachineType = FindBestKeyboardMachineType( Settings.BASICDialect )
       };
 
       ProcessLines( lines, LabelMode );
@@ -611,6 +613,21 @@ namespace RetroDevStudio.Parser.BASIC
       }
 
       return true;
+    }
+
+
+
+    public static MachineType FindBestKeyboardMachineType( Dialect dialect )
+    {
+      foreach ( var machine in dialect.MachineTypes )
+      {
+        if ( ConstantData.AllPhysicalKeyInfos.ContainsKey( machine ) )
+        {
+          return machine;
+        }
+      }
+      // fallback
+      return MachineType.C64;
     }
 
 
@@ -1975,7 +1992,7 @@ namespace RetroDevStudio.Parser.BASIC
             }
             if ( !foundMacro )
             {
-              foreach ( var key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
+              foreach ( var key in ConstantData.AllPhysicalKeyInfos[_ParseContext.KeyboardMachineType] )
               {
                 if ( key.Replacements.Contains( macro ) )
                 {
@@ -4560,7 +4577,7 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public static string ReplaceAllMacrosBySymbols( string BasicText, out bool HadError )
+    public static string ReplaceAllMacrosBySymbols( string BasicText, MachineType machine, out bool HadError )
     {
       StringBuilder     sb = new StringBuilder();
 
@@ -4596,7 +4613,7 @@ namespace RetroDevStudio.Parser.BASIC
             macro = BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos[machine] )
             {
               if ( key.Replacements.Contains( macro ) )
               {
@@ -4637,7 +4654,7 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public static string ReplaceAllMacrosByPETSCIICode( string BasicText, GR.Collections.Map<byte, byte> CustomMapping, out bool HadError )
+    public static string ReplaceAllMacrosByPETSCIICode( string BasicText, GR.Collections.Map<byte, byte> CustomMapping, MachineType machine, out bool HadError )
     {
       StringBuilder     sb = new StringBuilder();
 
@@ -4662,7 +4679,7 @@ namespace RetroDevStudio.Parser.BASIC
             macro = DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in ConstantData.AllPhysicalKeyInfos[MachineType.C64] )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos[machine] )
             {
               if ( key.Replacements.Contains( macro ) )
               {

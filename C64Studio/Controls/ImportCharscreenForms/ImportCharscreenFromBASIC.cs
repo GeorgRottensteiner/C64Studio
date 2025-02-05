@@ -71,7 +71,7 @@ namespace RetroDevStudio.Controls
               {
                 // handle incoming PETSCII plus control codes!
                 bool hadError = false;
-                var  actualString = BasicFileParser.ReplaceAllMacrosBySymbols( nextToken.Content.Substring( 1, nextToken.Content.Length - 2 ), out hadError );
+                var  actualString = BasicFileParser.ReplaceAllMacrosBySymbols( nextToken.Content.Substring( 1, nextToken.Content.Length - 2 ), MachineType.C64, out hadError );
                 foreach ( var singleChar in actualString )
                 {
                   var key = ConstantData.AllPhysicalKeyInfos[MachineType.C64].Find( x => x.CharValue == singleChar );

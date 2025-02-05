@@ -1778,7 +1778,7 @@ namespace RetroDevStudio.Parser
               symbol.LineIndex = LineIndex;
               NumBytesGiven = Tokens[StartIndex].Length;
 
-              symbol.String = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, _ParseContext.CurrentTextMapping, out bool hadError );
+              symbol.String = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, _ParseContext.CurrentTextMapping, MachineType.C64, out bool hadError );
               if ( hadError )
               {
                 AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
@@ -2435,7 +2435,7 @@ namespace RetroDevStudio.Parser
             {
               string    textLiteral = lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 );
 
-              textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, out bool hadError );
+              textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, MachineType.C64, out bool hadError );
               if ( ( hadError )
               &&   ( AddErrors ) )
               {
@@ -2493,7 +2493,7 @@ namespace RetroDevStudio.Parser
               {
                 string    textLiteral = lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 );
 
-                textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, out bool hadError );
+                textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, MachineType.C64, out bool hadError );
                 if ( ( hadError )
                 &&   ( AddErrors ) )
                 {
