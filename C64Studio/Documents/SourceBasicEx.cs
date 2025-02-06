@@ -1990,129 +1990,130 @@ namespace RetroDevStudio.Documents
             Debug.Log( "No physical key info for " + lookupKey );
           }
         }
-        var physKey = ConstantData.PhysicalKeyInfo[bestMachine][lookupKey];
-
-        SingleKeyInfo    c64Key = physKey.Keys[KeyModifier.NORMAL];
-        if ( shiftPushed )
+        if ( ConstantData.PhysicalKeyInfo[bestMachine].TryGetValue( lookupKey, out var physKey ) )
         {
-          if ( physKey.Keys.ContainsKey( KeyModifier.SHIFT ) )
+          SingleKeyInfo    c64Key = physKey.Keys[KeyModifier.NORMAL];
+          if ( shiftPushed )
           {
-            c64Key = physKey.Keys[KeyModifier.SHIFT];
-          }
-
-          if ( c64Key.CharValue == '\"' )
-          {
-            ToggleStringEntryMode();
-          }
-          if ( !m_StringEnterMode )
-          {
-            // BASIC short cut?
-            if ( CanKeyTriggerShortCut( physKey.Keys[KeyModifier.NORMAL].CharValue, shiftPushed ) )
-              /*
-            if ( ( physKey.Normal.CharValue >= 'A' )
-            &&   ( physKey.Normal.CharValue <= 'Z' ) )*/
+            if ( physKey.Keys.ContainsKey( KeyModifier.SHIFT ) )
             {
-              // could be a token
-              string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
-              if ( m_LowerCaseMode )
-              {
-                leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
-              }
+              c64Key = physKey.Keys[KeyModifier.SHIFT];
+            }
 
-              if ( ( leftText.Length >= 1 )
-              &&   ( leftText[leftText.Length - 1] >= 'A' )
-              &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
+            if ( c64Key.CharValue == '\"' )
+            {
+              ToggleStringEntryMode();
+            }
+            if ( !m_StringEnterMode )
+            {
+              // BASIC short cut?
+              if ( CanKeyTriggerShortCut( physKey.Keys[KeyModifier.NORMAL].CharValue, shiftPushed ) )
+              /*
+              if ( ( physKey.Normal.CharValue >= 'A' )
+              &&   ( physKey.Normal.CharValue <= 'Z' ) )*/
               {
-                leftText = leftText.ToLower() + physKey.Keys[KeyModifier.NORMAL].CharValue;
-                foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
+                // could be a token
+                string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
+                if ( m_LowerCaseMode )
                 {
-                  if ( ( opcode.ShortCut != null )
-                  &&   ( opcode.ShortCut.Length <= leftText.Length )
-                  &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
+                  leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+                }
+
+                if ( ( leftText.Length >= 1 )
+                && ( leftText[leftText.Length - 1] >= 'A' )
+                && ( leftText[leftText.Length - 1] <= 'Z' ) )
+                {
+                  leftText = leftText.ToLower() + physKey.Keys[KeyModifier.NORMAL].CharValue;
+                  foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
                   {
-                    // TODO - case!
-                    if ( m_LowerCaseMode )
+                    if ( ( !string.IsNullOrEmpty( opcode.ShortCut ) )
+                    &&   ( opcode.ShortCut.Length <= leftText.Length )
+                    &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
                     {
-                      editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
+                      // TODO - case!
+                      if ( m_LowerCaseMode )
+                      {
+                        editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
+                      }
+                      else
+                      {
+                        editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
+                      }
+                      return true;
                     }
-                    else
-                    {
-                      editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
-                    }
-                    return true;
                   }
                 }
               }
             }
           }
-        }
-        if ( ( controlPushed )
-        &&   ( physKey.Keys.TryGetValue( KeyModifier.CONTROL, out var modKey ) ) )
-        {
-          c64Key = modKey;
-        }
-        if ( ( commodorePushed )
-        &&   ( physKey.Keys.TryGetValue( KeyModifier.COMMODORE, out modKey ) ) )
-        {
-          c64Key = modKey;
-        }
-
-        if ( c64Key != null )
-        {
-          if ( ( m_StringEnterMode )
-          &&   ( c64Key.NativeValue == 13 ) )
+          if ( ( controlPushed )
+          &&   ( physKey.Keys.TryGetValue( KeyModifier.CONTROL, out var modKey ) ) )
           {
-            // real enter breaks out of string mode
-            ToggleStringEntryMode();
-            InsertOrReplaceChar( (char)13 );
-            return true;
+            c64Key = modKey;
           }
-          if ( ( ( !m_StringEnterMode )
-          &&     ( ( c64Key.Type == KeyType.GRAPHIC_SYMBOL )
-          ||       ( c64Key.Type == KeyType.CONTROL_CODE ) ) )
-          ||   ( c64Key.Type == KeyType.EDITOR_CONTROL_CODE ) )
+          if ( ( commodorePushed )
+          &&   ( physKey.Keys.TryGetValue( KeyModifier.COMMODORE, out modKey ) ) )
           {
-            return base.ProcessCmdKey( ref msg, keyData );
+            c64Key = modKey;
           }
-          if ( ( m_SymbolMode )
-          ||   ( c64Key.Replacements.Count == 0 ) )
+          if ( c64Key != null )
           {
-            //Debug.Log( "Trying to map unknown token: " + key.ToString() );
-            if ( m_LowerCaseMode )
+            if ( ( m_StringEnterMode )
+            &&   ( c64Key.NativeValue == 13 ) )
             {
-              if ( ( c64Key.LowerCaseDisplayChar >= 0xe041 )
-              &&   ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
+              // real enter breaks out of string mode
+              ToggleStringEntryMode();
+              InsertOrReplaceChar( (char)13 );
+              return true;
+            }
+            if ( ( ( !m_StringEnterMode )
+            &&     ( ( c64Key.Type == KeyType.GRAPHIC_SYMBOL )
+            ||       ( c64Key.Type == KeyType.CONTROL_CODE ) ) )
+            ||   ( c64Key.Type == KeyType.EDITOR_CONTROL_CODE ) )
+            {
+              return base.ProcessCmdKey( ref msg, keyData );
+            }
+            if ( ( m_SymbolMode )
+            ||   ( c64Key.Replacements.Count == 0 ) )
+            {
+              //Debug.Log( "Trying to map unknown token: " + key.ToString() );
+              if ( m_LowerCaseMode )
               {
-                InsertOrReplaceChar( (char)( ( c64Key.LowerCaseDisplayChar & 0xff ) + 0x20 ) );
+                if ( ( c64Key.LowerCaseDisplayChar >= 0xe041 )
+                &&   ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
+                {
+                  InsertOrReplaceChar( (char)( ( c64Key.LowerCaseDisplayChar & 0xff ) + 0x20 ) );
+                }
+                else
+                {
+                  InsertOrReplaceChar( c64Key.LowerCaseDisplayChar );
+                }
               }
               else
               {
-                InsertOrReplaceChar( c64Key.LowerCaseDisplayChar );
+                if ( ( c64Key.CharValue >= 0xe041 )
+                &&   ( c64Key.CharValue <= 0xe05a ) )
+                {
+                  InsertOrReplaceChar( (char)( c64Key.CharValue & 0xff ) );
+                }
+                else
+                {
+                  InsertOrReplaceChar( c64Key.CharValue );
+                }
               }
+            }
+            else if ( c64Key.CharValue == ' ' )
+            {
+              // do not replace single space
+              editSource.SelectedText = " ";
             }
             else
             {
-              if ( ( c64Key.CharValue >= 0xe041 )
-              &&   ( c64Key.CharValue <= 0xe05a ) )
-              {
-                InsertOrReplaceChar( (char)( c64Key.CharValue & 0xff ) );
-              }
-              else
-              {
-                InsertOrReplaceChar( c64Key.CharValue );
-              }
+              editSource.SelectedText = "{" + c64Key.Replacements[0] + "}";
             }
+            return true;
           }
-          else if ( c64Key.CharValue == ' ' )
-          {
-            // do not replace single space
-            editSource.SelectedText = " ";
-          }
-          else
-          {
-            editSource.SelectedText = "{" + c64Key.Replacements[0] + "}";
-          }
-          return true;
+
         }
         return base.ProcessCmdKey( ref msg, keyData );
       }

@@ -5956,6 +5956,13 @@ namespace FastColoredTextBoxNS
 #endif
       visibleMarkers.Clear();
       e.Graphics.SmoothingMode = SmoothingMode.None;
+
+      int charWidth = CharWidth;
+      if ( charWidth == 0 )
+      {
+        charWidth = 16;
+      }
+
       //
       var servicePen = new Pen( ServiceLinesColor );
       Brush changedLineBrush = new SolidBrush( ChangedLineColor );
@@ -5987,17 +5994,17 @@ namespace FastColoredTextBoxNS
       if ( PreferredLineWidth > 0 )
         e.Graphics.DrawLine( servicePen,
                             new Point(
-                                LeftIndent + Paddings.Left + PreferredLineWidth * CharWidth -
+                                LeftIndent + Paddings.Left + PreferredLineWidth * charWidth -
                                 HorizontalScroll.Value + 1, textAreaRect.Top + 1 ),
                             new Point(
-                                LeftIndent + Paddings.Left + PreferredLineWidth * CharWidth -
+                                LeftIndent + Paddings.Left + PreferredLineWidth * charWidth -
                                 HorizontalScroll.Value + 1, textAreaRect.Bottom - 1 ) );
 
       //draw text area border
       DrawTextAreaBorder( e.Graphics );
       //
-      int firstChar = ( Math.Max( 0, HorizontalScroll.Value - Paddings.Left ) ) / CharWidth;
-      int lastChar = ( HorizontalScroll.Value + ClientSize.Width ) / CharWidth;
+      int firstChar = ( Math.Max( 0, HorizontalScroll.Value - Paddings.Left ) ) / charWidth;
+      int lastChar = ( HorizontalScroll.Value + ClientSize.Width ) / charWidth;
       //
       var x = LeftIndent + Paddings.Left - HorizontalScroll.Value;
       if ( x < LeftIndent )
@@ -6150,7 +6157,7 @@ namespace FastColoredTextBoxNS
 
       if ( ( Focused || IsDragDrop ) && car.X >= LeftIndent && CaretVisible )
       {
-        int carWidth = ( IsReplaceMode || WideCaret ) ? CharWidth : _CaretWidth;
+        int carWidth = ( IsReplaceMode || WideCaret ) ? charWidth : _CaretWidth;
         if ( WideCaret )
         {
           using ( var brush = new SolidBrush( CaretColor ) )

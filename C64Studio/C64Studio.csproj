@@ -473,6 +473,8 @@
     <None Remove="BASIC Dialects\XC=Basic.txt" />
     <None Remove="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf" />
     <None Remove="Fonts\zx81.ttf" />
+    <None Remove="Fonts\Zx81_modified2.ttf" />
+    <None Remove="Fonts\Zx81_Riched_V3.3[XavSnap].ttf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BASIC Dialects\BASIC 65.txt">
@@ -525,6 +527,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Fonts\zx81.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fonts\Zx81_modified2.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fonts\Zx81_Riched_V3.3[XavSnap].ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

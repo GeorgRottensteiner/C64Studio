@@ -1463,11 +1463,23 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x3e, true, 'Y', true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x3f, true, 'Z', true );
 
-      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_1, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x01, true, (char)0x0131, true );
-      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_2, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x02, true, (char)0x0c5, true );
-      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_3, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x87, true, (char)0x0ce, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_1, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x01, true, (char)0x0131, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_2, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x02, true, (char)0x0c5, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_3, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x87, true, (char)0x0ce, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_4, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x04, true, (char)0x0d3, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_5, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x05, true, (char)0x0d4, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_6, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x83, true, (char)0x0d2, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_7, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x03, true, (char)0x0c7, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_8, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x85, true, (char)0x2030, true );
 
-      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_4, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x04, true, (char)0x0d3, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Q, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x81, true, (char)0x02dc, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_W, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x82, true, (char)0x02c6, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_E, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x07, true, (char)0xf000, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_R, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x84, true, (char)0x0cc, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_T, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x06, true, (char)0x0c8, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Y, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x86, true, (char)0x0cf, true );
+
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_A, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x08, true, (char)0xff, true );
 
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_P, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x0b, true, '"', true );
     }
