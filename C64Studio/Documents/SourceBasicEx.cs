@@ -213,13 +213,8 @@ namespace RetroDevStudio.Documents
     {
       if ( e.Action == UndoRedoEventArgs.UndoRedoAction.UNDO_ADDED )
       {
-        /*
-        if ( DocumentInfo.UndoManager.InsideUndoRedo )
-        {
-          return;
-        }*/
         // undo was added
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoBASICCodeChange( editSource, true ) );
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoBASICCodeChange( DocumentInfo, editSource, true ) );
         SetModified();
       }
       else if ( e.Action == UndoRedoEventArgs.UndoRedoAction.UNDO_REDO_CLEARED )
@@ -1741,6 +1736,8 @@ namespace RetroDevStudio.Documents
         return true;
       }
 
+      string  mappedKey = KeyCodeToUnicode( keyData );
+
       if ( !m_StringEnterMode )
       {
         if ( keyData == ( Keys.Control | Keys.A ) )
@@ -1761,7 +1758,12 @@ namespace RetroDevStudio.Documents
         // no Commodore combinations outside of string mode
         if ( ( keyData & Keys.Control ) == Keys.Control )
         {
-          return Core.MainForm.HandleCmdKey( ref msg, keyData );
+          bool    hasAccelerator = Core.MainForm.HandleCmdKey( ref msg, keyData );
+          if ( hasAccelerator )
+          {
+            return true;
+          }
+          return IsValidKey( mappedKey );
         }
       }
 
@@ -1818,10 +1820,9 @@ namespace RetroDevStudio.Documents
         if ( ( !commodorePushed )
         &&   ( !altPushed ) )
         {
-          string  actualChar = KeyCodeToUnicode( keyData );
           if ( ( ( (char)keyData >= 'A' )
           &&     ( (char)keyData <= 'Z' ) )
-          ||   ( actualChar == "?" ) )
+          ||   ( mappedKey == "?" ) )
           {
             if ( shiftPushed )
             {
@@ -1835,14 +1836,14 @@ namespace RetroDevStudio.Documents
               var tokens = m_Parser.PureTokenizeLine( leftText );
               bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) );
 
-              if ( ( actualChar != "?" )
+              if ( ( mappedKey != "?" )
               &&   ( isInsideComment ) )
               {
-                editSource.SelectedText = actualChar;
+                editSource.SelectedText = mappedKey;
                 return true;
               }
 
-              if ( actualChar == "?" )
+              if ( mappedKey == "?" )
               {
                 if ( isInsideComment )
                 {
@@ -1916,9 +1917,9 @@ namespace RetroDevStudio.Documents
 
             if ( m_LowerCaseMode )
             {
-              if ( actualChar.Length == 1 )
+              if ( mappedKey.Length == 1 )
               {
-                InsertOrReplaceChar( actualChar[0] );
+                InsertOrReplaceChar( mappedKey[0] );
               }
             }
             else
@@ -1928,8 +1929,6 @@ namespace RetroDevStudio.Documents
             return true;
           }
         }
-
-        var mappedKey = KeyCodeToUnicode( keyData );
 
         //Debug.Log( "Barekey=" + bareKey + "/keyData = " + keyData + "/(char)keyData=" + (char)keyData + "/(int)bareKey=" + (int)bareKey + "/mappedKey=" + mappedKey );
         // hard coded mapping from ^ to arrow up (power)
@@ -1987,7 +1986,11 @@ namespace RetroDevStudio.Documents
           }
           else
           {
-            Debug.Log( "No physical key info for " + lookupKey );
+            //Debug.Log( "No physical key info for " + lookupKey );
+            if ( !IsValidKey( mappedKey ) )
+            {
+              return true;
+            }
           }
         }
         if ( ConstantData.PhysicalKeyInfo[bestMachine].TryGetValue( lookupKey, out var physKey ) )
@@ -2020,8 +2023,8 @@ namespace RetroDevStudio.Documents
                 }
 
                 if ( ( leftText.Length >= 1 )
-                && ( leftText[leftText.Length - 1] >= 'A' )
-                && ( leftText[leftText.Length - 1] <= 'Z' ) )
+                &&   ( leftText[leftText.Length - 1] >= 'A' )
+                &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
                 {
                   leftText = leftText.ToLower() + physKey.Keys[KeyModifier.NORMAL].CharValue;
                   foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
@@ -2117,10 +2120,11 @@ namespace RetroDevStudio.Documents
         }
         return base.ProcessCmdKey( ref msg, keyData );
       }
-      else
+      if ( !IsValidKey( mappedKey ) )
       {
-        //Debug.Log( "-no keymapping found" );
+        return true;
       }
+      //Debug.Log( $"-no keymapping found for {keyData}" );
       // swallow unmapped keys that would produce text (or disallowed characters, e.g. small letters)
       return base.ProcessCmdKey( ref msg, keyData );
     }
@@ -2528,14 +2532,15 @@ namespace RetroDevStudio.Documents
         if ( firstLine > lastLine )
         {
           int dummy   = firstLine;
-          firstLine   = lastLine;
-          lastLine    = dummy;
+          firstLine = lastLine;
+          lastLine = dummy;
         }
 
         int prevLine = -1;
-        while ( firstLine < lastLine )
+        int tempFirstLine = firstLine;
+        while ( tempFirstLine <= lastLine )
         {
-          var lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[firstLine], 0, ref prevLine );
+          var lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[tempFirstLine], 0, ref prevLine );
           if ( ( lineInfo != null )
           &&   ( lineInfo.Tokens.Count > 0 )
           &&   ( lineInfo.Tokens[0].TokenType == BasicFileParser.Token.Type.LINE_NUMBER ) )
@@ -2543,10 +2548,10 @@ namespace RetroDevStudio.Documents
             firstLineNumber = GR.Convert.ToI32( lineInfo.Tokens[0].Content );
             break;
           }
-          ++firstLine;
+          ++tempFirstLine;
         }
 
-        while ( lastLine > firstLine )
+        while ( lastLine >= firstLine )
         {
           var lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[lastLine], 0, ref prevLine );
           if ( ( lineInfo != null )

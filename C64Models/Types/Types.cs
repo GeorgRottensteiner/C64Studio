@@ -1479,7 +1479,12 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_T, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x06, true, (char)0x0c8, true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Y, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x86, true, (char)0x0cf, true );
 
-      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_A, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x08, true, (char)0xff, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_A, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x08, true, (char)0xa0, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_S, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x0a, true, (char)0xa1, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_D, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x09, true, (char)0xa2, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_F, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x8a, true, (char)0xa6, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_G, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x89, true, (char)0xa7, true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_H, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x88, true, (char)0xa5, true );
 
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_P, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x0b, true, '"', true );
     }
@@ -1513,6 +1518,7 @@ namespace RetroDevStudio
       c64Char.Modifier = Modifier;
       c64Char.Type = Type;
       c64Char.LowerCaseNative = LowerCasePETSCII;
+
       if ( c64Char.HasChar )
       {
         if ( ( c64Char.CharValue & 0xff00 ) == 0xee00 )

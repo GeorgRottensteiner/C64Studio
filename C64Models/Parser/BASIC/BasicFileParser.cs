@@ -189,8 +189,11 @@ namespace RetroDevStudio.Parser.BASIC
 
       AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@";
 
+      // TODO - these are C64 specific!
       // 0xeee1 = arrow up
-      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#$%" + (char)0xee1e;
+      // 0xee5e = PI
+      // 0xee1f = arrow left
+      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#$%" + (char)0xee1e + (char)0xee5e + (char)0xee1f;
 
       SetBasicDialect( Settings.BASICDialect );
 
@@ -883,7 +886,7 @@ namespace RetroDevStudio.Parser.BASIC
         if ( nextByte == 34 )
         {
           if ( ( currentToken != null )
-          && ( currentToken.TokenType != Token.Type.STRING_LITERAL ) )
+          &&   ( currentToken.TokenType != Token.Type.STRING_LITERAL ) )
           {
             // end of previous token
             currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
@@ -1077,14 +1080,18 @@ namespace RetroDevStudio.Parser.BASIC
       &&   ( lineInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL ) )
       {
         lineInfo.Tokens[0].TokenType = Token.Type.LINE_NUMBER;
-        if ( lineInfo.Tokens[0].Content.Contains( "." ) )
+        // line numbers are only decimal numbers, split non integer parts off
+        for ( int pos = 0; pos < lineInfo.Tokens[0].Content.Length; ++pos )
         {
-          int   dotPos = lineInfo.Tokens[0].Content.IndexOf( "." );
-          var otherToken              = new Token() { TokenType = Token.Type.DIRECT_TOKEN };
-          otherToken.Content          = lineInfo.Tokens[0].Content.Substring( dotPos );
-          otherToken.StartIndex       = lineInfo.Tokens[0].StartIndex + dotPos;
-          lineInfo.Tokens[0].Content  = lineInfo.Tokens[0].Content.Substring( 0, dotPos );
-          lineInfo.Tokens.Insert( 1, otherToken );
+          if ( !char.IsNumber( lineInfo.Tokens[0].Content[pos] ) )
+          {
+            var otherToken              = new Token() { TokenType = Token.Type.DIRECT_TOKEN };
+            otherToken.Content          = lineInfo.Tokens[0].Content.Substring( pos );
+            otherToken.StartIndex       = lineInfo.Tokens[0].StartIndex + pos;
+            lineInfo.Tokens[0].Content  = lineInfo.Tokens[0].Content.Substring( 0, pos );
+            lineInfo.Tokens.Insert( 1, otherToken );
+            break;
+          }
         }
       }
 

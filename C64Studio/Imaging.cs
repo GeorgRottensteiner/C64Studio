@@ -279,7 +279,8 @@ namespace RetroDevStudio
     internal void Initialize()
     {
       LoadFont( MachineType.C64, "C64_Pro_Mono_v1.0-STYLE.ttf" );
-      LoadFont( MachineType.ZX81, "zx81.ttf" );
+      //LoadFont( MachineType.ZX81, "zx81.ttf" );
+      LoadFont( MachineType.ZX81, "ZX81-Regular.otf" );
       //LoadFont( MachineType.ZX81, "Zx81_Riched_V3.3[XavSnap].ttf" );
     }
 

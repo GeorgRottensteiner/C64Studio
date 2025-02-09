@@ -9,14 +9,16 @@ namespace RetroDevStudio.Undo
   public class UndoBASICCodeChange : UndoTask
   {
     private FastColoredTextBox  Edit = null;
+    private DocumentInfo        _affectedDocument = null;
     private bool                IsUndo = true;
 
 
 
-    public UndoBASICCodeChange( FastColoredTextBox Edit, bool Undo )
+    public UndoBASICCodeChange( DocumentInfo doc, FastColoredTextBox Edit, bool Undo )
     {
-      this.Edit = Edit;
-      IsUndo = Undo;
+      this.Edit         = Edit;
+      IsUndo            = Undo;
+      _affectedDocument = doc;
     }
 
 
@@ -33,7 +35,7 @@ namespace RetroDevStudio.Undo
 
     public override UndoTask CreateComplementaryTask()
     {
-      return new UndoBASICCodeChange( Edit, !IsUndo );
+      return new UndoBASICCodeChange( _affectedDocument, Edit, !IsUndo );
     }
 
 
@@ -48,6 +50,7 @@ namespace RetroDevStudio.Undo
       {
         Edit.Redo();
       }
+      _affectedDocument.MarkAsDirty();
     }
 
 
