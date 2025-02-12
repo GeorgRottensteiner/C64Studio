@@ -840,7 +840,10 @@ namespace RetroDevStudio.Tasks
                                           StartAddress = startAddress,
                                           CheckSummerClass = checkSummerClass,
                                           EnabledHacks = Core.Settings.EnabledC64StudioHacks,
-                                          Encoding = Core.Settings.SourceFileEncoding
+                                          Encoding = Core.Settings.SourceFileEncoding,
+                                          CreatePreProcesseFile = CreatePreProcessedFile,
+                                          CreateRelocationFile = CreateRelocationFile,
+                                          InputFile = Doc.DocumentFilename
                                         } ) )
           ||   ( parser.Errors > 0 ) )
           {

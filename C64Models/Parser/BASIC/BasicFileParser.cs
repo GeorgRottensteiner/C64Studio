@@ -605,11 +605,6 @@ namespace RetroDevStudio.Parser.BASIC
 
       DumpSourceInfos();
 
-      if ( Config.CreatePreProcesseFile )
-      {
-        CreatePreProcessedFile( Config.InputFile, _Lines, m_ASMFileInfo );
-      }
-
       if ( m_ErrorMessages > 0 )
       {
         return false;
@@ -1478,6 +1473,40 @@ namespace RetroDevStudio.Parser.BASIC
             ++bytePos;
             continue;
           }
+
+          // is there a token now?
+          if ( ( !insideDataStatement )
+          &&   ( FindOpcode( tempData, ref bytePos, info, ref insideDataStatement, ref insideREMStatement ) ) )
+          {
+            if ( insideREMStatement )
+            {
+              if ( Settings.StripREM )
+              {
+                // break out so we update references
+                break;
+              }
+
+              if ( info.Tokens.Count > 0 )
+              {
+                AssembleTokenCompleted( info );
+              }
+
+              Token basicToken = new Token();
+              basicToken.TokenType = Token.Type.COMMENT;
+              basicToken.StartIndex = bytePos;
+
+              while ( bytePos < tempData.Length )
+              {
+                basicToken.Content += ConstantData.PetSCIIToChar[tempData.ByteAt( bytePos )].CharValue;
+                info.LineData.AppendU8( tempData.ByteAt( bytePos ) );
+
+                ++bytePos;
+              }
+
+              info.Tokens.Add( basicToken );
+            }
+            continue;
+          }
           if ( nextByte == 34 )
           {
             if ( info.Tokens.Count > 0 )
@@ -1580,38 +1609,7 @@ namespace RetroDevStudio.Parser.BASIC
             ++bytePos;
             continue;
           }
-          // is there a token now?
-          if ( FindOpcode( tempData, ref bytePos, info, ref insideDataStatement, ref insideREMStatement ) )
-          {
-            if ( insideREMStatement )
-            {
-              if ( Settings.StripREM )
-              {
-                // break out so we update references
-                break;
-              }
-
-              if ( info.Tokens.Count > 0 )
-              {
-                AssembleTokenCompleted( info );
-              }
-
-              Token basicToken = new Token();
-              basicToken.TokenType = Token.Type.COMMENT;
-              basicToken.StartIndex = bytePos;
-
-              while ( bytePos < tempData.Length )
-              {
-                basicToken.Content += ConstantData.PetSCIIToChar[tempData.ByteAt( bytePos )].CharValue;
-                info.LineData.AppendU8( tempData.ByteAt( bytePos ) );
-
-                ++bytePos;
-              }
-
-              info.Tokens.Add( basicToken );
-            }
-            continue;
-          }
+          
 
           // not a token, add directly
           AddDirectToken( info, nextByte, bytePos );
@@ -2870,6 +2868,8 @@ namespace RetroDevStudio.Parser.BASIC
       int     curAddress = startAddress;
       foreach ( LineInfo info in m_LineInfos.Values )
       {
+        m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, AddressStart = curAddress } );
+
         if ( info.LineData.Length == 0 )
         {
           // could be a line with stripped REM, so only the line number is left
@@ -2887,7 +2887,14 @@ namespace RetroDevStudio.Parser.BASIC
         if ( info.LineData.Length > 0 )
         {
           // pointer to next line
+          m_ASMFileInfo.LineInfo[info.LineIndex].AddressStart = curAddress;
+
+          uint   prevSize = result.Length;
           AssembleLine( result, ref curAddress, info );
+
+          m_ASMFileInfo.LineInfo[info.LineIndex].LineData = result.SubBuffer( (int)prevSize );
+
+          curAddress += (int)( result.Length - prevSize );
         }
 
         // build check sum
@@ -2902,7 +2909,7 @@ namespace RetroDevStudio.Parser.BASIC
           {
             checkSum = checkSummer.CheckSum( bb );
           }
-          m_ASMFileInfo.LineInfo.Add( info.LineIndex, new Types.ASM.LineInfo() { LineIndex = info.LineIndex, CheckSum = checkSum } );
+          m_ASMFileInfo.LineInfo[info.LineIndex].CheckSum = checkSum;
         }
       }
       AssembleTrailer( result );
@@ -3037,6 +3044,11 @@ namespace RetroDevStudio.Parser.BASIC
       }
       AssembledOutput.OriginalAssemblyStartAddress  = startAddress;
       AssembledOutput.OriginalAssemblySize          = originalSize;
+
+      if ( Config.CreatePreProcesseFile )
+      {
+        CreatePreProcessedFile( Config.InputFile, _Lines, m_ASMFileInfo );
+      }
       return true;
     }
 
@@ -4158,8 +4170,8 @@ namespace RetroDevStudio.Parser.BASIC
         return RenumberResult.INVALID_VALUES;
       }
 
-      var firstLine = m_LineInfos.FirstOrDefault( li => li.Value.LineNumber >= firstLineNumber );
-      var lastLine = m_LineInfos.LastOrDefault( li => li.Value.LineNumber <= lastLineNumber );
+      var firstLine = m_LineInfos.FirstOrDefault( li => ( li.Value.LineNumber >= firstLineNumber ) && ( li.Value.LineNumber != -1 ) );
+      var lastLine = m_LineInfos.LastOrDefault( li => ( li.Value.LineNumber <= lastLineNumber ) && ( li.Value.LineNumber != -1 ) );
       if ( ( firstLine.Value == null )
       ||   ( lastLine.Value == null ) )
       {

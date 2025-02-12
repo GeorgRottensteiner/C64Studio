@@ -1,4 +1,5 @@
 #RetroDevStudio.MetaData.BASIC:16359,ZX81 BASIC,uppercase,10,10
+5PRINT""
 10PRINT"HALLOıÅÎÓÔÒ""ıÅÎÓÔÒÇ‰˜ˆÌÈÏÏSÏ2"
 15LETB=5
 18PRINT"B=";B
