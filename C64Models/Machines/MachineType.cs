@@ -33,7 +33,9 @@ namespace RetroDevStudio
     [Description( "Sinclair ZX81" )]
     ZX81,
     [Description( "Sinclair ZX Spectrum" )]
-    ZX_SPECTRUM
+    ZX_SPECTRUM,
+    [Description( "Commodore Amiga" )]
+    AMIGA
   }
 
 

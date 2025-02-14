@@ -8,6 +8,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.TAPE )]
   [MediaFormat( MediaFormatType.PRG )]
+  [DefaultFileExtension( ".prg" )]
   [Category( "Commodore" )]
   public class PRG : MediaFormat
   {

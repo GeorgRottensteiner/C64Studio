@@ -11,6 +11,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.DISK )]
   [MediaFormat( MediaFormatType.D81 )]
+  [DefaultFileExtension( ".d81" )]
   [Category( "Commodore" )]
   public class D81 : CommodoreDisk
   {

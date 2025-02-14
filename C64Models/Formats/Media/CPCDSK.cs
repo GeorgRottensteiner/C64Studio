@@ -13,6 +13,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.DISK )]
   [MediaFormat( MediaFormatType.DSK )]
+  [DefaultFileExtension( ".dsk" )]
   [Category( "CPC" )]
   public class CPCDSK : MediaFormat
   {

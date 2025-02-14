@@ -15,8 +15,8 @@ namespace RetroDevStudio
   {
     internal static Dictionary<CompileTargetType,string>  CompileTargetModeToKeyword = new Dictionary<CompileTargetType, string>();
 
-    internal static Dictionary<MediaFormatType,Type>      MediaFormatToType = new Dictionary<MediaFormatType, Type>();
-    internal static Dictionary<MediaFormatType,GR.Generic.Tupel<MediaType, string>>    MediaFormatCategories = new Dictionary<MediaFormatType, GR.Generic.Tupel<MediaType, string>>();
+    internal static Dictionary<MediaFormatType,GR.Generic.Tupel<Type,string>>         MediaFormatToTypeAndExtension = new Dictionary<MediaFormatType, GR.Generic.Tupel<Type, string>>();
+    internal static Dictionary<MediaFormatType,GR.Generic.Tupel<MediaType, string>>   MediaFormatCategories = new Dictionary<MediaFormatType, GR.Generic.Tupel<MediaType, string>>();
 
 
 
@@ -89,6 +89,8 @@ namespace RetroDevStudio
         string categoryOfEnum = "";
 
         MediaType         mediaTypeAtt = MediaType.UNKNOWN;
+        MediaFormatType   formatType = MediaFormatType.UNKNOWN;
+        string            extension = "";
         var mediaFormats = new List<MediaFormatType>();
 
         foreach ( var attribute in allAttributes )
@@ -97,7 +99,11 @@ namespace RetroDevStudio
           {
             var mediaTypeOfType = attribute as MediaFormatAttribute;
             mediaFormats.Add( mediaTypeOfType.Type );
-            MediaFormatToType.Add( mediaTypeOfType.Type, mediaType );
+            formatType = mediaTypeOfType.Type;
+          }
+          if ( attribute is DefaultFileExtensionAttribute )
+          {
+            extension = ( (DefaultFileExtensionAttribute)attribute ).Extension;
           }
           if ( attribute is MediaTypeAttribute )
           {
@@ -110,6 +116,17 @@ namespace RetroDevStudio
             categoryOfEnum = category.Category;
           }
         }
+
+        if ( formatType != MediaFormatType.UNKNOWN )
+        {
+          if ( !MediaFormatToTypeAndExtension.ContainsKey( formatType ) )
+          {
+            MediaFormatToTypeAndExtension.Add( formatType, new GR.Generic.Tupel<Type, string>() );
+          }
+          MediaFormatToTypeAndExtension[formatType].first = mediaType;
+          MediaFormatToTypeAndExtension[formatType].second = extension;
+        }
+
         foreach ( var mediaFormat in mediaFormats )
         {
           MediaFormatCategories.Add( mediaFormat, new GR.Generic.Tupel<MediaType, string>( mediaTypeAtt, categoryOfEnum ) );
@@ -1361,6 +1378,30 @@ namespace RetroDevStudio
           return PaletteType.COMMANDER_X16;
       }
       return PaletteType.C64;
+    }
+
+
+
+    internal static MediaFormatType MediaFormatFromExtension( string extension )
+    {
+      var media = MediaFormatToTypeAndExtension.FirstOrDefault( m => string.Compare( m.Value.second, extension, true ) == 0 );
+      if ( media.Key != MediaFormatType.UNKNOWN )
+      {
+        return media.Key;
+      }
+      return MediaFormatType.UNKNOWN;
+    }
+
+
+
+    internal static MachineType MachineFromMediaFormatType( MediaFormatType mediaFormatType )
+    {
+      var attribute = GR.EnumHelper.GetAttributeOfType<MachineTypeAttribute>( mediaFormatType );
+      if ( attribute == null )
+      {
+        return MachineType.C64;
+      }
+      return attribute.MachineType;
     }
 
 

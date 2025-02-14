@@ -13,6 +13,7 @@ namespace RetroDevStudio.Formats
   [MediaType( MediaType.DISK )]
   [MediaFormat( MediaFormatType.D64 )]
   [MediaFormat( MediaFormatType.D64_40 )]
+  [DefaultFileExtension( ".d64" )]
   [Category( "Commodore" )] 
   public class D64 : CommodoreDisk
   {

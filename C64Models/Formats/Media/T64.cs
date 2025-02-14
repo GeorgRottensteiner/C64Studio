@@ -7,6 +7,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.TAPE )]
   [MediaFormat( MediaFormatType.T64 )]
+  [DefaultFileExtension( ".t64" )]
   [Category( "Commodore" )]
   public class T64 : MediaFormat
   {

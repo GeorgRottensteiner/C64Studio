@@ -14,6 +14,14 @@ namespace RetroDevStudio.Types
     [Description( "SEQ" )]
     COMMODORE_SEQ = 0x01,
     [Description( "PRG" )]
+    [MachineType( MachineType.CBM )]
+    [MachineType( MachineType.C128 )]
+    [MachineType( MachineType.C64 )]
+    [MachineType( MachineType.COMMANDER_X16 )]
+    [MachineType( MachineType.MEGA65 )]
+    [MachineType( MachineType.PET )]
+    [MachineType( MachineType.PLUS4 )]
+    [MachineType( MachineType.VIC20 )]
     COMMODORE_PRG = 0x02,
     [Description( "USR" )]
     COMMODORE_USR = 0x03,
@@ -27,12 +35,14 @@ namespace RetroDevStudio.Types
 
     // ADF format
     [Description( "FIL" )]
+    [MachineType( MachineType.AMIGA )]
     ADF_FILE          = 1,
     [Description( "DIR" )]
     ADF_DIR           = 2,
 
     // DSK format
     [Description( "FIL" )]
+    [MachineType( MachineType.CPC )]
     CPC_FILE          = 1,
     [Description( "SCR" )]
     CPC_SCRATCHED     = 2,
@@ -97,8 +107,13 @@ namespace RetroDevStudio.Types
     [Description( "Skip (Glue) Block" )]
     TZX_SKIP_GLUE_BLOCK           = 0x5A,
 
-    /*
     // P format
+    [Description( "Spectrum P" )]
+    [MachineType( MachineType.ZX80 )]
+    [MachineType( MachineType.ZX81 )]
+    [MachineType( MachineType.ZX_SPECTRUM )]
+    SPECTRUM_P                    = 0x10
+    /*
     [Description( "Program Header" )]
     P_PROGRAM_HEADER              = 0x10,
     [Description( "Turbo Speed Data Block" )]

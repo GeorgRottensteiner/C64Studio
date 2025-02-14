@@ -140,7 +140,7 @@ namespace RetroDevStudio.Formats
       var files = Files();
 
       if ( ( FileIndex < 0 )
-      || ( FileIndex >= files.Count ) )
+      ||   ( FileIndex >= files.Count ) )
       {
         return null;
       }

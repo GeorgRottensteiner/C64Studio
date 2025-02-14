@@ -166,6 +166,20 @@ namespace GR
 
 
 
+      public byte this[int Index]
+      {
+        get
+        {
+          return ByteAt( Index );
+        }
+        set
+        {
+          SetU8At( Index, value );
+        }
+      }
+
+
+
       public byte[] Data()
       {
         if ( m_Data == null )

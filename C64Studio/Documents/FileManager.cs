@@ -29,7 +29,7 @@ namespace RetroDevStudio.Documents
 
     Formats.MediaFormat m_Media = null;
 
-    System.Drawing.Font     oldFont = null;
+    System.Drawing.Font     _originalFont = null;
 
 
     public FileManager( StudioCore Core, string Filename )
@@ -46,11 +46,9 @@ namespace RetroDevStudio.Documents
       debugToolStripMenuItem.Visible = false;
 #endif
 
-      oldFont = listFiles.Font;
+      _originalFont = listFiles.Font;
 
-      listFiles.ItemFonts.Add( Core.Imaging.FontFromMachine( MachineType.C64, 12 ) );
-      statusFileManager.Font = Core.Imaging.FontFromMachine( MachineType.C64, 8 );
-      labelMediaTitle.Font = statusFileManager.Font;
+      SetFontFromMachine( MachineType.C64 );
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
@@ -60,6 +58,16 @@ namespace RetroDevStudio.Documents
       }
       RefreshFileView();
       UpdateStatusInfo();
+    }
+
+
+
+    private void SetFontFromMachine( MachineType machine )
+    {
+      listFiles.ItemFonts.Clear();
+      listFiles.ItemFonts.Add( Core.Imaging.FontFromMachine( machine, 12 ) );
+      statusFileManager.Font = Core.Imaging.FontFromMachine( machine, 8 );
+      labelMediaTitle.Font = statusFileManager.Font;
     }
 
 
@@ -98,55 +106,14 @@ namespace RetroDevStudio.Documents
       string upperName = m_Filename.ToUpper();
       validateMediumToolStripMenuItem.Enabled = false;
 
-      if ( upperName.EndsWith( ".D64" ) )
-      {
-        // disk file
-        m_Media = new RetroDevStudio.Formats.D64();
-      }
-      else if ( upperName.EndsWith( ".D71" ) )
-      {
-        // disk file
-        m_Media = new RetroDevStudio.Formats.D71();
-      }
-      else if ( upperName.EndsWith( ".D81" ) )
-      {
-        // disk file
-        m_Media = new RetroDevStudio.Formats.D81();
-      }
-      else if ( upperName.EndsWith( ".DSK" ) )
-      {
-        // CPC disk file
-        m_Media = new RetroDevStudio.Formats.CPCDSK();
-      }
-      else if ( upperName.EndsWith( ".ADF" ) )
-      {
-        // Amiga disk file
-        m_Media = new RetroDevStudio.Formats.AmigaDisk();
-      }
-      else if ( upperName.EndsWith( ".T64" ) )
-      {
-        // tape file
-        m_Media = new RetroDevStudio.Formats.T64();
-      }
-      else if ( upperName.EndsWith( ".PRG" ) )
-      {
-        // prg file
-        m_Media = new RetroDevStudio.Formats.PRG();
-      }
-      else if ( upperName.EndsWith( ".TZX" ) )
-      {
-        m_Media = new RetroDevStudio.Formats.TZX();
-      }
-      else if ( upperName.EndsWith( ".P" ) )
-      {
-        m_Media = new RetroDevStudio.Formats.SpectrumP();
-      }
-      else
+      var mediaType = Lookup.MediaFormatFromExtension( GR.Path.GetExtension( upperName ) );
+      if ( mediaType == MediaFormatType.UNKNOWN )
       {
         System.Windows.Forms.MessageBox.Show( "The file " + m_Filename + " cannot be read, unknown format" );
         return false;
       }
 
+      CreateEmptyMedia( mediaType );
       if ( !m_Media.Load( m_Filename ) )
       {
         System.Windows.Forms.MessageBox.Show( "The file " + m_Filename + " cannot be properly be read, maybe corrupted?" );
@@ -260,6 +227,7 @@ namespace RetroDevStudio.Documents
           ByteBuffer  displayFilename = new ByteBuffer( file.Filename );
 
           // map to PETSCII range
+          /*
           byte    previousByte = 0;
           for ( int i = 0; i < displayFilename.Length; ++i )
           {
@@ -282,7 +250,7 @@ namespace RetroDevStudio.Documents
             {
               Debug.Log( "Unsupported PETSCII value " + singleByte );
             }
-          }
+          }*/
           string filename = Util.FilenameToUnicode( m_Media.FilenameType, displayFilename );
 
           ListViewItem item = new ListViewItem( filename );
@@ -680,7 +648,13 @@ namespace RetroDevStudio.Documents
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
-        if ( fileInfo.NativeType != FileTypeNative.COMMODORE_PRG )
+        if ( fileInfo.NativeType == FileTypeNative.SPECTRUM_P )
+        {
+          exportToBasicPossible = true;
+          isKoalaPic            = false;
+          isIFF                 = false;
+        }
+        else if ( fileInfo.NativeType != FileTypeNative.COMMODORE_PRG )
         {
           exportToBasicPossible = false;
           isKoalaPic            = false;
@@ -1507,35 +1481,11 @@ namespace RetroDevStudio.Documents
     {
       CloseMedia();
 
-      /*
-      Type typeOfMedia = null;
-      var mediaTypes = Assembly.GetExecutingAssembly().GetTypes()
-              .Where( t => t.IsSubclassOf( typeof( MediaFormat ) ) )
-              .Where( t => String.Equals( t.Namespace, "RetroDevStudio.Formats", StringComparison.Ordinal ) );
-      foreach ( var mediaType in mediaTypes )
-      {
-        var allAttributes = mediaType.GetCustomAttributes( false );
-
-        foreach ( var attribute in allAttributes )
-        {
-          if ( attribute is MediaFormatAttribute )
-          {
-            var mediaTypeOfType = attribute as MediaFormatAttribute;
-            if ( mediaTypeOfType.Type == MediaType )
-            {
-              typeOfMedia = mediaType;
-              break;
-            }
-          }
-        }
-        if ( typeOfMedia != null )
-        {
-          break;
-        }
-      }*/
-
-      m_Media = (MediaFormat)Activator.CreateInstance( Lookup.MediaFormatToType[MediaType] );
+      m_Media = (MediaFormat)Activator.CreateInstance( Lookup.MediaFormatToTypeAndExtension[MediaType].first );
       m_Media.CreateEmptyMedia();
+
+      SetFontFromMachine( Lookup.MachineFromMediaFormatType( MediaType ) );
+
       SetUnmodified();
       RefreshFileView();
       UpdateStatusInfo();

@@ -7,6 +7,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.TAPE )]
   [MediaFormat( MediaFormatType.TAP )]
+  [DefaultFileExtension( ".tap" )]
   [Category( "Commodore" )]
   public class Tap : MediaFormat
   {

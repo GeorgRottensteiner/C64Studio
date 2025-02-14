@@ -783,8 +783,9 @@ namespace RetroDevStudio.Controls
         }
         int     otherColorIndex = 16;
         if ( ( !hasSinglePixel )
-        &&   ( numColors == 2 )
-        &&   ( usedBackgroundColor ) )
+        &&   ( ( ( numColors == 2 )
+        &&       ( usedBackgroundColor ) )
+        ||     ( numColors == 1 ) ) )
         {
           for ( int i = 0; i < 16; ++i )
           {
@@ -797,11 +798,16 @@ namespace RetroDevStudio.Controls
           }
         }
         if ( ( !ForceMulticolor )
-        &&   ( ( hasSinglePixel )
-        ||     ( ( numColors == 2 )
-        &&   ( usedBackgroundColor )
-        &&   ( otherColorIndex < 8 ) ) ) )
-        //||   ( numColors == 2 ) )
+        // single pixel, and uses bg and one custom color
+        &&   ( ( ( hasSinglePixel )
+        ||       ( ( numColors == 2 )
+        &&         ( usedBackgroundColor )
+        &&         ( otherColorIndex < 8 ) ) )
+        // not a single pixel, but only one color < 8 (e.g. full block)
+        ||     ( ( !hasSinglePixel )
+        &&       ( numColors == 1 )
+        &&       ( !usedBackgroundColor )
+        &&       ( otherColorIndex < 8 ) ) ) )
         {
           // eligible for single color
           int usedFreeColor = -1;

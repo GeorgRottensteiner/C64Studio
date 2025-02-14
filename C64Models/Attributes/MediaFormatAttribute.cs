@@ -3,14 +3,14 @@ using System.ComponentModel;
 
 namespace RetroDevStudio
 {
-  [AttributeUsageAttribute( AttributeTargets.Class, AllowMultiple = true )]
+  [AttributeUsage( AttributeTargets.Class, AllowMultiple = true )]
   public class MediaFormatAttribute : Attribute
   {
-    public MediaFormatType Type = MediaFormatType.UNKNOWN;
+    public Formats.MediaFormatType Type = Formats.MediaFormatType.UNKNOWN;
 
 
 
-    public MediaFormatAttribute( MediaFormatType Type )
+    public MediaFormatAttribute( Formats.MediaFormatType Type )
     {
       this.Type = Type;
     }

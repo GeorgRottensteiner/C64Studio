@@ -12,6 +12,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.TAPE )]
   [MediaFormat( MediaFormatType.TZX )]
+  [DefaultFileExtension( ".tzx" )]
   [Category( "Spectrum" )]
   public class TZX : MediaFormat
   {

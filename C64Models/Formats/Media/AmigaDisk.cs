@@ -11,6 +11,7 @@ namespace RetroDevStudio.Formats
 {
   [MediaType( MediaType.DISK )]
   [MediaFormat( MediaFormatType.ADF )]
+  [DefaultFileExtension( ".adf" )]
   [Category( "Commodore" )]
   public class AmigaDisk : MediaFormat
   {

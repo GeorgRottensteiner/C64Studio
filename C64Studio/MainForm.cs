@@ -946,7 +946,7 @@ namespace RetroDevStudio
 
     private void NewMediaItem_Click( object sender, EventArgs e )
     {
-      var mediaTypeToCreate = (MediaFormatType)( ( (ToolStripMenuItem)sender ).Tag );
+      var mediaTypeToCreate = (Formats.MediaFormatType)( ( (ToolStripMenuItem)sender ).Tag );
 
       FileManager doc = new FileManager( StudioCore, "" );
       doc.ShowHint  = DockState.Float;
@@ -6278,14 +6278,8 @@ namespace RetroDevStudio
 
       bool    openDirectFile = true;
 
-      if ( ( extension == ".D64" )
-      ||   ( extension == ".D71" )
-      ||   ( extension == ".D81" )
-      ||   ( extension == ".T64" )
-      ||   ( extension == ".DSK" )
-      ||   ( extension == ".ADF" )
-      ||   ( extension == ".TZX" )
-      ||   ( extension == ".PRG" ) )
+      var anyMedia = Lookup.MediaFormatFromExtension( extension );
+      if ( anyMedia != Formats.MediaFormatType.UNKNOWN )
       {
         document = new FileManager( StudioCore, Filename );
         document.ShowHint = DockState.Float;

@@ -35,6 +35,22 @@ namespace RetroDevStudio
 
       switch ( Type )
       {
+        case MediaFilenameType.SPECTRUM:
+          for ( int i = 0; i < Name.Length; ++i )
+          {
+            char     c = char.ToUpperInvariant( Name[i] );
+
+            var key = ConstantData.AllPhysicalKeyInfos[MachineType.ZX81].FirstOrDefault( k => k.CharValue == c );
+            if ( key != default( SingleKeyInfo ) )
+            {
+              bufName.AppendU8( key.NativeValue );
+            }
+            else
+            {
+              bufName.AppendU8( (byte)c );
+            }
+          }
+          break;
         case MediaFilenameType.COMMODORE:
           for ( int i = 0; i < 16; ++i )
           {
@@ -196,7 +212,22 @@ namespace RetroDevStudio
           filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
           break;
         case MediaFilenameType.SPECTRUM:
-          filename = ASCIIEncoding.ASCII.GetString( Filename.Data() );
+          {
+            for ( int i = 0; i < Filename.Length; ++i )
+            {
+              byte c = Filename[i];
+
+              var key = ConstantData.AllPhysicalKeyInfos[MachineType.ZX81].FirstOrDefault( k => k.NativeValue == c );
+              if ( key != default( SingleKeyInfo ) )
+              {
+                filename += key.CharValue;
+              }
+              else
+              {
+                filename += (char)c;
+              }
+            }
+          }
           break;
         default:
           throw new Exception( $"Unsupported Filenametype {FilenameType}" );
@@ -669,13 +700,6 @@ namespace RetroDevStudio
         return asmParser.AssembledOutput.Assembly;
       }
       return null;
-    }
-
-
-
-    internal static ByteBuffer ToFilename( object filenameType, string origFilename )
-    {
-      throw new NotImplementedException();
     }
 
 

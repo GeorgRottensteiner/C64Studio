@@ -1486,7 +1486,22 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_G, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x89, true, (char)0xa7, true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_H, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x88, true, (char)0xa5, true );
 
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_U, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x0d, true, '$', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_I, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x10, true, '(', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_O, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x11, true, ')', true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_P, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x0b, true, '"', true );
+
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_J, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x16, true, '-', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_K, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x15, true, '+', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_L, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x14, true, '=', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Z, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x0e, true, ':', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_X, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x19, true, ';', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_C, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x0f, true, '?', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_V, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x18, true, '/', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_B, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x17, true, '*', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_N, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x13, true, '<', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_M, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x12, true, '>', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_DOT, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x1a, true, ',', true );
     }
 
 
