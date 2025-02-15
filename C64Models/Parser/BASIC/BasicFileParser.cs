@@ -3956,7 +3956,11 @@ namespace RetroDevStudio.Parser.BASIC
         return false;
       }
       
+      // ZX81:
+      // Zeile = 
+      //  ..
 
+      // Commodore:
       // Zeile =
       //  2 Bytes pointer auf nächste Zeile
       //  2 Bytes Zeilennummer

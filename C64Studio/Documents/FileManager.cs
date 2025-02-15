@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Linq;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Parser.BASIC;
+using GR.Collections;
 
 
 
@@ -645,6 +646,8 @@ namespace RetroDevStudio.Documents
       bool  exportToBasicPossible = true;
       bool  isKoalaPic = true;
       bool  isIFF = true;
+      var potentialBASICMachineTypes = new Set<MachineType>();
+
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
@@ -671,6 +674,12 @@ namespace RetroDevStudio.Documents
         {
           isIFF = false;
         }
+        if ( exportToBasicPossible )
+        {
+          var machines = GR.EnumHelper.GetAttributesOfType<MachineTypeAttribute>( fileInfo.NativeType );
+
+          potentialBASICMachineTypes.AddRange( machines.Select( m => m.MachineType ) );
+        }
       }
       if ( exportToBasicPossible )
       {
@@ -680,10 +689,13 @@ namespace RetroDevStudio.Documents
         contextMenu.Items.Add( itemBASICOpen );
         foreach ( var dialect in Core.Compiling.BASICDialects )
         {
-          var itemDialect = new System.Windows.Forms.ToolStripMenuItem( dialect.Key );
-          itemDialect.Tag = dialect.Value;
-          itemDialect.Click += new EventHandler( itemExportToBasic_Click );
-          itemBASICOpen.DropDownItems.Add( itemDialect );
+          if ( potentialBASICMachineTypes.Intersect( dialect.Value.MachineTypes ).Any() )
+          {
+            var itemDialect = new System.Windows.Forms.ToolStripMenuItem( dialect.Key );
+            itemDialect.Tag = dialect.Value;
+            itemDialect.Click += new EventHandler( itemExportToBasic_Click );
+            itemBASICOpen.DropDownItems.Add( itemDialect );
+          }
         }
       }
       if ( isKoalaPic )
@@ -920,38 +932,37 @@ namespace RetroDevStudio.Documents
       }
       if ( fileInfo != null )
       {
-        if ( fileInfo.Data.Length >= 2 )
+        if ( Dialect.MachineTypes.Contains( MachineType.ZX81 ) )
         {
-          //if ( startAddress == 0x0801 )
+        }
+        else if ( fileInfo.Data.Length >= 2 )
+        {
+          // the generic Commodore way
+          List<string>    lines;
+
+          // trunc load address
+          var parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
+          parser.SetBasicDialect( Dialect );
+          if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
           {
-            // can only load from that address
+            var document = new SourceBasicEx( Core );
+            document.ShowHint = DockState.Document;
 
-            List<string>    lines;
+            document.Core = Core;
+            document.Show( Core.MainForm.panelMain );
+            document.SetBASICDialect( Dialect );
 
-            // trunc load address
-            var parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
-            parser.SetBasicDialect( Dialect );
-            if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
+            StringBuilder sb = new StringBuilder();
+            foreach ( string line in lines )
             {
-              var document = new SourceBasicEx( Core );
-              document.ShowHint = DockState.Document;
-
-              document.Core = Core;
-              document.Show( Core.MainForm.panelMain );
-              document.SetBASICDialect( Dialect );
-
-              StringBuilder sb = new StringBuilder();
-              foreach ( string line in lines )
-              {
-                sb.AppendLine( line );
-              }
-              string  insertText = sb.ToString();
-              document.FillContent( insertText, false, false );
-              if ( Dialect.LowerCase )
-              {
-                //insertText = BasicFileParser.MakeLowerCase( insertText, Core.Settings.BASICUseNonC64Font );
-                document.SetLowerCase();
-              }
+              sb.AppendLine( line );
+            }
+            string  insertText = sb.ToString();
+            document.FillContent( insertText, false, false );
+            if ( Dialect.LowerCase )
+            {
+              //insertText = BasicFileParser.MakeLowerCase( insertText, Core.Settings.BASICUseNonC64Font );
+              document.SetLowerCase();
             }
           }
         }

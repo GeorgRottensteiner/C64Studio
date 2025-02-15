@@ -90,16 +90,6 @@ namespace GR.Collections
 
 
 
-    public void AddRange( ICollection<TValue> Collection )
-    {
-      foreach ( TValue key in Collection )
-      {
-        Add( key );
-      }
-    }
-
-
-
     public void AddRange( IEnumerable<TValue> Collection )
     {
       foreach ( TValue key in Collection )
