@@ -564,19 +564,6 @@ namespace RetroDevStudio.Documents
           // need to rename file in project (dependencies, etc.)
           string  newName = DocumentInfo.FullPath;
 
-          DisableFileWatcher();
-          try
-          {
-            System.IO.File.Delete( oldName );
-          }
-          catch ( System.IO.FileNotFoundException )
-          {
-            // ignore this specific error, go on renaming
-          }
-          catch ( System.Exception ex )
-          {
-            System.Windows.Forms.MessageBox.Show( "An error occurred while deleting old file\r\n" + ex.Message, "Error while renaming" );
-          }
           if ( Core.Navigating.Solution != null )
           {
             Core.Navigating.Solution.RenameElement( DocumentInfo.Element, oldName, newName );
