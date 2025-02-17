@@ -77,7 +77,7 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private void AssembleLine( ByteBuffer result, ref int curAddress, LineInfo info )
+    private void AssembleLine( ByteBuffer result, int curAddress, LineInfo info )
     {
       switch ( _ParseContext.TargetType )
       {
@@ -98,7 +98,7 @@ namespace RetroDevStudio.Parser.BASIC
           // end of line
           result.AppendU8( 0 );
 
-          curAddress += (int)info.LineData.Length + 5;
+          //curAddress += (int)info.LineData.Length + 5;
           break;
       }
     }
@@ -143,63 +143,7 @@ namespace RetroDevStudio.Parser.BASIC
 
     private byte MapTokenToByteValue( byte tokenValue )
     {
-      switch ( _ParseContext.TargetType )
-      {
-        case CompileTargetType.P_ZX81:
-          switch ( (char)tokenValue )
-          {
-            case '"':
-              return 0x0b;
-            case '£':
-              return 0x0c;
-            case '$':
-              return 0x0d;
-            case ':':
-              return 0x0e;
-            case '?':
-              return 0x0f;
-            case '(':
-              return 0x10;
-            case ')':
-              return 0x11;
-            case '>':
-              return 0x12;
-            case '<':
-              return 0x13;
-            case '=':
-              return 0x14;
-            case '+':
-              return 0x15;
-            case '-':
-              return 0x16;
-            case '*':
-              return 0x17;
-            case '/':
-              return 0x18;
-            case ';':
-              return 0x19;
-            case ',':
-              return 0x1a;
-            case '.':
-              return 0x1b;
-            case '0':
-              return 0x1c;
-            case ' ':
-              return 0;
-          }
-          if ( ( tokenValue >= '0' )
-          &&   ( tokenValue <= '9') )
-          {
-            return (byte)( 0x1c + tokenValue - '0' );
-          }
-          if ( ( tokenValue >= 'A' )
-          &&   ( tokenValue <= 'Z') )
-          {
-            return (byte)( 0x26 + tokenValue - 'A' );
-          }
-          return tokenValue;
-      }
-      return tokenValue;
+      return MapCharToNativeByte( (char)tokenValue, _ParseContext.TargetType );
     }
 
 

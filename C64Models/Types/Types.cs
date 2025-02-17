@@ -1658,15 +1658,18 @@ namespace RetroDevStudio
 
     public static SingleKeyInfo FindC64KeyByPETSCII( byte PETSCIIValue )
     {
+      // Codes 192-223 map to Codes  96-127
+      // Codes 224-254 map to Codes 160-190
+      // Code  255     map to Code  126
       if ( ( PETSCIIValue >= 192 )
       &&   ( PETSCIIValue <= 223 ) )
       {
-        PETSCIIValue -= 96;
+        PETSCIIValue -= 192 - 96;
       }
       else if ( ( PETSCIIValue >= 224 )
       &&        ( PETSCIIValue <= 254 ) )
       {
-        PETSCIIValue -= 64;
+        PETSCIIValue -= 224 - 160;
       }
       else if ( PETSCIIValue == 255 )
       {

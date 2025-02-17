@@ -8,6 +8,7 @@
 #               comment             : Opcode marks everything for the rest of the line is a comment
 #               linenumberat:<x>    : a line number is in argument <x>  (e.g. THEN;;;linenumberat:0)
 #               listoflinenumbers   : a dynamic list of line numbers, separated by comma (e.g. GOSUB;;;listoflinenumbers)
+#               reverseonly         : this opcode is only used for disassembling
 #
 #StartAddress=xxxx      > sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
@@ -24,7 +25,10 @@ MaxLineLength=65535
 StartAddress=16359
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
-"";C0;
+RND;40;
+INKEY$;41;
+PI;42;
+"";C0;;reverseonly
 AT;C1;
 TAB;C2;
 CODE;C4;

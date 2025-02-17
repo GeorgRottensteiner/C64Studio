@@ -395,58 +395,6 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
-    {
-      _LastError = "";
-      Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
-      byte    dirTrackIndex = (byte)TRACK_DIRECTORY;
-
-      for ( int sector = SECTOR_DIRECTORY; sector < dirTrack.Sectors.Count; ++sector )
-      {
-        Sector sect = dirTrack.Sectors[sector];
-        for ( int i = 0; i < 8; ++i )
-        {
-          if ( sect.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) == 0 )
-          {
-            // scratched (empty) entry
-
-            // default set PRG
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileTypeNative.COMMODORE_CLOSED ) );
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
-
-            for ( int j = 0; j < 16; ++j )
-            {
-              sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 5 + j, Filename.ByteAt( j ) );
-            }
-            sect.Data.SetU16At( BYTES_PER_DIR_ENTRY * i + 30, (UInt16)SectorsWritten );
-            return true;
-          }
-        }
-        // do we need to alloc next dir sector?
-        if ( sector + 1 == dirTrack.Sectors.Count )
-        {
-          // disk full!! (or continue on next track?)
-          _LastError = "disk is full";
-          return false;
-        }
-        if ( sect.Data.ByteAt( 0 ) == 0 )
-        {
-          // current sector was last dir sector
-          sect.Data.SetU8At( 0, dirTrackIndex );
-          sect.Data.SetU8At( 1, (byte)( sector + 1 ) );
-          AllocSector( dirTrackIndex, sector + 1 );
-
-          dirTrack.Sectors[sector + 1].Data.SetU8At( 0, 0 );
-          dirTrack.Sectors[sector + 1].Data.SetU8At( 1, 0xff );
-        }
-      }
-      _LastError = "disk is full";
-      return false;
-    }
-
-
-
     public override string FileFilter
     {
       get

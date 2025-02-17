@@ -29,6 +29,8 @@ namespace RetroDevStudio.Formats
 
       TRACK_DIRECTORY = 18;
       SECTOR_DIRECTORY  = 1;
+
+      DIRECTORY_INTERLEAVE = 3;
     }
 
 
@@ -375,13 +377,11 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
+    protected override bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
     {
       _LastError = "";
       Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
       byte    dirTrackIndex = (byte)TRACK_DIRECTORY;
-
-      int     directoryInterleave = 3;
 
       int     sector = 1;
       do
@@ -408,7 +408,7 @@ namespace RetroDevStudio.Formats
         // do we need to alloc next dir sector?
         do
         {
-          sector = ( sector + directoryInterleave ) % dirTrack.Sectors.Count;
+          sector = ( sector + DIRECTORY_INTERLEAVE ) % dirTrack.Sectors.Count;
 
           // do NOT write into BAM
         }

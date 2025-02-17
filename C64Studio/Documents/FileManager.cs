@@ -932,38 +932,29 @@ namespace RetroDevStudio.Documents
       }
       if ( fileInfo != null )
       {
-        if ( Dialect.MachineTypes.Contains( MachineType.ZX81 ) )
-        {
-        }
-        else if ( fileInfo.Data.Length >= 2 )
-        {
-          // the generic Commodore way
-          List<string>    lines;
+        var parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
+        parser.SetBasicDialect( Dialect );
 
-          // trunc load address
-          var parser = new BasicFileParser( new BasicFileParser.ParserSettings() );
-          parser.SetBasicDialect( Dialect );
-          if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
+        // two bytes are the load address!!
+        if ( parser.Disassemble( fileToExport.NativeType, fileInfo.Data, out var lines ) )
+        {
+          var document = new SourceBasicEx( Core );
+          document.ShowHint = DockState.Document;
+
+          document.Core = Core;
+          document.Show( Core.MainForm.panelMain );
+          document.SetBASICDialect( Dialect );
+
+          StringBuilder sb = new StringBuilder();
+          foreach ( string line in lines )
           {
-            var document = new SourceBasicEx( Core );
-            document.ShowHint = DockState.Document;
-
-            document.Core = Core;
-            document.Show( Core.MainForm.panelMain );
-            document.SetBASICDialect( Dialect );
-
-            StringBuilder sb = new StringBuilder();
-            foreach ( string line in lines )
-            {
-              sb.AppendLine( line );
-            }
-            string  insertText = sb.ToString();
-            document.FillContent( insertText, false, false );
-            if ( Dialect.LowerCase )
-            {
-              //insertText = BasicFileParser.MakeLowerCase( insertText, Core.Settings.BASICUseNonC64Font );
-              document.SetLowerCase();
-            }
+            sb.AppendLine( line );
+          }
+          string  insertText = sb.ToString();
+          document.FillContent( insertText, false, false );
+          if ( Dialect.LowerCase )
+          {
+            document.SetLowerCase();
           }
         }
       }

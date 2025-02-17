@@ -374,68 +374,6 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
-    {
-      _LastError = "";
-      Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
-      byte    dirTrackIndex = (byte)TRACK_DIRECTORY;
-
-      int     directoryInterleave = 3;
-
-      int     sector = 1;
-      do
-      {
-        Sector sect = dirTrack.Sectors[sector];
-        for ( int i = 0; i < 8; ++i )
-        {
-          if ( sect.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) == 0 )
-          {
-            // scratched (empty) entry
-            // default set PRG
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileTypeNative.COMMODORE_CLOSED ) );
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
-
-            for ( int j = 0; j < 16; ++j )
-            {
-              sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 5 + j, Filename.ByteAt( j ) );
-            }
-            sect.Data.SetU16At( BYTES_PER_DIR_ENTRY * i + 30, (UInt16)SectorsWritten );
-            return true;
-          }
-        }
-        // do we need to alloc next dir sector?
-        do
-        {
-          sector = ( sector + directoryInterleave ) % dirTrack.Sectors.Count;
-
-          // do NOT write into BAM
-        }
-        while ( sector == SECTOR_BAM );
-
-        if ( sector == 1 )
-        {
-          // arrived at starting sector, disk full!
-          break;
-        }
-        if ( sect.Data.ByteAt( 0 ) == 0 )
-        {
-          // current sector was last dir sector
-          sect.Data.SetU8At( 0, dirTrackIndex );
-          sect.Data.SetU8At( 1, (byte)( sector ) );
-          AllocSector( dirTrackIndex, sector );
-
-          dirTrack.Sectors[sector].Data.SetU8At( 0, 0 );
-          dirTrack.Sectors[sector].Data.SetU8At( 1, 0xff );
-        }
-      }
-      while ( true );
-      _LastError = "disk is full";
-      return false;
-    }
-
-
-
     public override string FileFilter
     {
       get

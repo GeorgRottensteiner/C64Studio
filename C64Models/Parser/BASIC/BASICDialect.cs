@@ -17,6 +17,7 @@ namespace RetroDevStudio.Parser.BASIC
     public int            ArgumentIndexOfExpectedLineNumber = -1;   // 0 for THEN, GOTO, GOSUB, RUN, 1 for COLLISION (V7), etc.
     public bool           AllowsSeveralLineNumbers = false;         // true for (ON xxx) GOTO, GOSUB ..,..,..
     public bool           LineListRange = false;                    // LIST <from> or LIST <from>-<to> or LIST -<to>
+    public bool           ReverseOnly = false;                      // Token is not chosen when assembling, only for disassembling (e.g. ZX81 0xc0 = "")
     public bool           GoTokenToMayFollow = false;               // special case Commodore GO TO, can only do 1 line number!
 
 
@@ -343,6 +344,10 @@ namespace RetroDevStudio.Parser.BASIC
                 else if ( string.Compare( extraInfo[i], "LINELISTRANGE", true ) == 0 )
                 {
                   opCode.LineListRange = true;
+                }
+                else if ( string.Compare( extraInfo[i], "REVERSEONLY", true ) == 0 )
+                {
+                  opCode.ReverseOnly = true;
                 }
                 else if ( string.Compare( extraInfo[i], "PRELABELTOKEN", true ) == 0 )
                 {

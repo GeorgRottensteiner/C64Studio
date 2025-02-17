@@ -1610,6 +1610,7 @@ namespace RetroDevStudio.Documents
       timerDragDrop.Interval = 100;
       timerDragDrop.Start();
       treeProject.DoDragDrop( e.Item, DragDropEffects.Move );
+      timerDragDrop.Stop();
 
       // drag drop done either way, remove drop indicator if still present
       Refresh();

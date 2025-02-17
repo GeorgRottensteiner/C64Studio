@@ -17,6 +17,13 @@ namespace RetroDevStudio.Parser.BASIC
 {
   public partial class BasicFileParser : ParserBase
   {
+    public enum ExtractLineResult
+    {
+      OK = 0,
+      END_OF_CODE,
+      ERROR
+    }
+
     public class ParserSettings
     {
       public bool         StripSpaces = true;
@@ -860,7 +867,7 @@ namespace RetroDevStudio.Parser.BASIC
         {
           insideMacro = true;
           if ( ( currentToken != null )
-          && ( currentToken.TokenType != Token.Type.MACRO ) )
+          &&   ( currentToken.TokenType != Token.Type.MACRO ) )
           {
             // end of previous token
             currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
@@ -1202,7 +1209,8 @@ namespace RetroDevStudio.Parser.BASIC
       TokenValue = -1;
       foreach ( var token in Settings.BASICDialect.Opcodes.Keys )
       {
-        if ( ( PosInLine + token.Length <= Line.Length )
+        if ( ( !Settings.BASICDialect.Opcodes[token].ReverseOnly )
+        &&   ( PosInLine + token.Length <= Line.Length )
         &&   ( string.Compare( Line, PosInLine, token, 0, token.Length ) == 0 ) )
         {
           Token = token;
@@ -2395,6 +2403,10 @@ namespace RetroDevStudio.Parser.BASIC
       foreach ( var opcodeEntry in Settings.BASICDialect.Opcodes )
       {
         Opcode  opcode = opcodeEntry.Value;
+        if ( opcode.ReverseOnly )
+        {
+          continue;
+        }
 
         entryFound = true;
         for ( int i = 0; i < opcode.Command.Length; ++i )
@@ -2890,7 +2902,7 @@ namespace RetroDevStudio.Parser.BASIC
           m_ASMFileInfo.LineInfo[info.LineIndex].AddressStart = curAddress;
 
           uint   prevSize = result.Length;
-          AssembleLine( result, ref curAddress, info );
+          AssembleLine( result, curAddress, info );
 
           m_ASMFileInfo.LineInfo[info.LineIndex].LineData = result.SubBuffer( (int)prevSize );
 
@@ -3947,15 +3959,20 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public bool Disassemble( GR.Memory.ByteBuffer Data, out List<string> Lines  )
+    public bool Disassemble( FileTypeNative nativeType, GR.Memory.ByteBuffer fullFileData, out List<string> Lines  )
     {
       Lines = new List<string>();
-      if ( ( Data == null )
-      ||   ( Data.Length == 0 ) )
+      if ( ( fullFileData == null )
+      ||   ( fullFileData.Length == 0 ) )
       {
         return false;
       }
-      
+
+      if ( !ExtractMachineSpecificData( fullFileData, nativeType, out var Data ) )
+      {
+        return false;
+      }
+
       // ZX81:
       // Zeile = 
       //  ..
@@ -3973,6 +3990,17 @@ namespace RetroDevStudio.Parser.BASIC
       while ( dataPos < Data.Length )
       {
         // pointer to next line
+        var extractresult = ExtractLine( Data, ref dataPos, out var lineData, out int lineNumber );
+        if ( extractresult == ExtractLineResult.ERROR )
+        {
+          return false;
+        }
+        if ( extractresult == ExtractLineResult.END_OF_CODE )
+        {
+          return true;
+        }
+
+        /*
         if ( dataPos + 2 > Data.Length )
         {
           Debug.Log( "no space for pointer" );
@@ -3996,15 +4024,18 @@ namespace RetroDevStudio.Parser.BASIC
         ushort lineNumber = Data.UInt16At( dataPos );
 
         dataPos += 2;
+        */
 
         string    lineContent = lineNumber.ToString() + " ";
         bool      insideStringLiteral = false;
         bool      encounteredREM = false;
 
-        while ( ( dataPos < Data.Length )
-        &&      ( Data.ByteAt( dataPos ) != 0 ) )
+        int       lineDataPos = 0;
+        while ( lineDataPos < lineData.Length )
         {
-          byte    byteValue = Data.ByteAt( dataPos );
+          byte    byteValue = lineData.ByteAt( lineDataPos );
+
+          byteValue = MapNativeByteValueToChar( Settings.BASICDialect, byteValue );
 
           if ( byteValue == 34 )
           {
@@ -4033,13 +4064,13 @@ namespace RetroDevStudio.Parser.BASIC
             // Simons' BASIC/TSB can store extended tokens inside REMs (argh!)
             if ( Settings.BASICDialect.ExtendedTokensRecognizedInsideComment )
             {
-              byte    nextValue = Data.ByteAt( dataPos + 1 );
+              byte    nextValue = lineData.ByteAt( lineDataPos + 1 );
               ushort  extendedToken = (ushort)( ( byteValue << 8 ) + nextValue );
 
               if ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( extendedToken ) )
               {
                 lineContent += Settings.BASICDialect.OpcodesFromByte[extendedToken].Command;
-                dataPos += 2;
+                lineDataPos += 2;
                 continue;
               }
             }
@@ -4054,30 +4085,12 @@ namespace RetroDevStudio.Parser.BASIC
               char charToUse = ConstantData.PETSCIIToUnicode[byteValue];
               lineContent += charToUse;
             }
-            ++dataPos;
+            ++lineDataPos;
             continue;
           }
 
           if ( insideStringLiteral )
           {
-            // Codes 192-223 wie Codes  96-127
-            // Codes 224-254 wie Codes 160-190
-            // Code  255     wie Code  126
-            if ( ( byteValue >= 192 )
-            &&   ( byteValue <= 223 ) )
-            {
-              byteValue -= 192 - 96;
-            }
-            if ( ( byteValue >= 224 )
-            &&   ( byteValue <= 254 ) )
-            {
-              byteValue -= 224 - 160;
-            }
-            if ( byteValue == 255 )
-            {
-              byteValue = 126;
-            }
-
             var c64Key = ConstantData.FindC64KeyByPETSCII( byteValue );
             if ( c64Key != null )
             {
@@ -4094,16 +4107,16 @@ namespace RetroDevStudio.Parser.BASIC
             if ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
             {
               // could be a two byte token?
-              if ( ( dataPos + 1 < Data.Length )
-              &&   ( Data.ByteAt( dataPos + 1 ) != 0 ) )
+              if ( ( lineDataPos + 1 < lineData.Length )
+              &&   ( lineData.ByteAt( lineDataPos + 1 ) != 0 ) )
               {
-                byte    byteValue2 = Data.ByteAt( dataPos + 1 );
+                byte    byteValue2 = lineData.ByteAt( lineDataPos + 1 );
 
                 ushort tokenValue = (ushort)( byteValue2 | ( byteValue << 8 ) );
 
                 if ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( tokenValue ) )
                 {
-                  ++dataPos;
+                  ++lineDataPos;
                   lineContent += Settings.BASICDialect.OpcodesFromByte[tokenValue].Command;
                   foundTwoByteToken = true;
                 }
@@ -4137,7 +4150,7 @@ namespace RetroDevStudio.Parser.BASIC
               }
             }
           }
-          ++dataPos;
+          ++lineDataPos;
         }
 
         if ( dataPos >= Data.Length )
@@ -4148,10 +4161,178 @@ namespace RetroDevStudio.Parser.BASIC
         }
         //Debug.Log( "Line:" + lineContent );
         Lines.Add( lineContent );
-        ++dataPos;
+        //++dataPos;
       }
 
       return false;
+    }
+
+
+
+    private byte MapCharToNativeByte( char character, CompileTargetType targetType )
+    {
+      switch ( targetType )
+      {
+        case CompileTargetType.P_ZX81:
+          {
+            var key = ConstantData.AllPhysicalKeyInfos[MachineType.ZX81].FirstOrDefault( ki => ki.CharValue == character );
+            if ( key != default( SingleKeyInfo ) )
+            {
+              return key.NativeValue;
+            }
+            /*
+            switch ( character )
+            {
+              case '"':
+                return 0x0b;
+              case '£':
+                return 0x0c;
+              case '$':
+                return 0x0d;
+              case ':':
+                return 0x0e;
+              case '?':
+                return 0x0f;
+              case '(':
+                return 0x10;
+              case ')':
+                return 0x11;
+              case '>':
+                return 0x12;
+              case '<':
+                return 0x13;
+              case '=':
+                return 0x14;
+              case '+':
+                return 0x15;
+              case '-':
+                return 0x16;
+              case '*':
+                return 0x17;
+              case '/':
+                return 0x18;
+              case ';':
+                return 0x19;
+              case ',':
+                return 0x1a;
+              case '.':
+                return 0x1b;
+              case '0':
+                return 0x1c;
+              case ' ':
+                return 0;
+            }
+            if ( ( character >= '0' )
+            && ( character <= '9' ) )
+            {
+              return (byte)( 0x1c + character - '0' );
+            }
+            if ( ( character >= 'A' )
+            && ( character <= 'Z' ) )
+            {
+              return (byte)( 0x26 + character - 'A' );
+            }*/
+          }
+          return (byte)character;
+      }
+      return (byte)character;
+    }
+
+
+
+    private byte MapNativeByteValueToChar( Dialect dialect, byte byteValue )
+    {
+      return byteValue;
+    }
+
+
+
+    private ExtractLineResult ExtractLine( ByteBuffer data, ref int dataPos, out ByteBuffer lineData, out int lineNumber )
+    {
+      lineData    = null;
+      lineNumber  = -1;
+
+      switch ( Settings.BASICDialect.MachineTypes[0] )
+      {
+        case MachineType.ZX81:
+          {
+            if ( dataPos + 5 > data.Length )
+            {
+              return ExtractLineResult.ERROR;
+            }
+            lineNumber = data.UInt16NetworkOrderAt( dataPos );
+
+            int   length = data.UInt16At( dataPos + 2 );
+
+            if ( dataPos + 4 + length > data.Length )
+            {
+              return ExtractLineResult.ERROR;
+            }
+            lineData = data.SubBuffer( dataPos + 4, length - 1 );
+            dataPos += 4 + length;
+
+            return ExtractLineResult.OK;
+          }
+        case MachineType.CBM:
+        case MachineType.C128:
+        case MachineType.C64:
+        case MachineType.COMMANDER_X16:
+        case MachineType.MEGA65:
+        case MachineType.PET:
+        case MachineType.PLUS4:
+        case MachineType.VIC20:
+          if ( dataPos + 2 > data.Length )
+          {
+            return ExtractLineResult.ERROR;
+          }
+          if ( data.UInt16At( dataPos ) == 0 )
+          {
+            // end
+            return ExtractLineResult.END_OF_CODE;
+          }
+
+          // TODO - check pointer?
+          dataPos += 2;
+
+          // line number
+          if ( dataPos + 2 > data.Length )
+          {
+            // no space for line number
+            return ExtractLineResult.ERROR;
+          }
+          lineNumber = data.UInt16At( dataPos );
+
+          {
+            int endPos = data.Find( 0, dataPos + 2 );
+            if ( endPos == -1 )
+            {
+              return ExtractLineResult.ERROR;
+            }
+            lineData = data.SubBuffer( dataPos + 2, endPos - dataPos - 2 );
+            dataPos = endPos + 1;
+          }
+          return ExtractLineResult.OK;
+      }
+      lineData = null;
+      return ExtractLineResult.ERROR;
+    }
+
+
+
+    private bool ExtractMachineSpecificData( ByteBuffer fullFileData, FileTypeNative nativeType, out ByteBuffer data )
+    {
+      switch ( nativeType )
+      {
+        case FileTypeNative.COMMODORE_PRG:
+          data = fullFileData.SubBuffer( 2 );
+          return true;
+        case FileTypeNative.SPECTRUM_P:
+          // strip off header/trailer
+          data = fullFileData.SubBuffer( 116 );
+          return true;
+      }
+      data = fullFileData;
+      return true;
     }
 
 

@@ -23,6 +23,8 @@ namespace RetroDevStudio.Formats
     protected int TRACK_DIRECTORY = -1;
     protected int SECTOR_DIRECTORY = -1;
 
+    protected int DIRECTORY_INTERLEAVE = 3;
+
 
 
     public class Location
@@ -729,15 +731,13 @@ namespace RetroDevStudio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
+    protected virtual bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileTypeNative Type )
     {
       _LastError = "";
       Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
       byte    dirTrackIndex = (byte)TRACK_DIRECTORY;
 
-      int     directoryInterleave = 3;
-
-      int     sector = 1;
+      int     sector = SECTOR_DIRECTORY;
       do
       {
         Sector sect = dirTrack.Sectors[sector];
@@ -767,8 +767,8 @@ namespace RetroDevStudio.Formats
           }
         }
         // do we need to alloc next dir sector?
-        sector = ( sector + directoryInterleave ) % dirTrack.Sectors.Count;
-        if ( sector == 1 )
+        sector = ( sector + DIRECTORY_INTERLEAVE ) % dirTrack.Sectors.Count;
+        if ( sector == SECTOR_DIRECTORY )
         {
           // disk full!!
           break;

@@ -20,6 +20,51 @@ namespace RetroDevStudio.Controls
       public IntPtr itemData;
     }
 
+    public enum ScrollBarConstants
+    {
+      /// <summary>
+      /// The horizontal scroll bar of the specified window
+      /// </summary>
+      SB_HORZ = 0,
+      /// <summary>
+      /// The vertical scroll bar of the specified window
+      /// </summary>
+      SB_VERT = 1,
+      /// <summary>
+      /// A scroll bar control
+      /// </summary>
+      SB_CTL = 2,
+      /// <summary>
+      /// The horizontal and vertical scroll bars of the specified window
+      /// </summary>
+      SB_BOTH = 3
+    }
+
+    public enum ScrollInfoMask : uint
+    {
+      SIF_RANGE = 0x1,
+      SIF_PAGE = 0x2,
+      SIF_POS = 0x4,
+      SIF_DISABLENOSCROLL = 0x8,
+      SIF_TRACKPOS = 0x10,
+      SIF_ALL = (SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS),
+    }
+
+    [StructLayout( LayoutKind.Sequential )]
+    public struct SCROLLINFO
+    {
+      public uint cbSize;
+      public uint fMask;
+      public int nMin;
+      public int nMax;
+      public uint nPage;
+      public int nPos;
+      public int nTrackPos;
+    }
+
+    [DllImport( "user32.dll", SetLastError = true )]
+    public static extern bool GetScrollInfo( IntPtr hwnd, int nBar, ref SCROLLINFO lpsi );
+
     [StructLayout( LayoutKind.Sequential )]
     public struct RECT
     {
@@ -117,9 +162,14 @@ namespace RetroDevStudio.Controls
       var format = new StringFormat
         {
           FormatFlags = StringFormatFlags.NoWrap,
-          Trimming = StringTrimming.None
+          Trimming = StringTrimming.EllipsisCharacter
         };
 
+      var info = new SCROLLINFO();
+      info.fMask  = (uint)ScrollInfoMask.SIF_ALL;
+      info.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf( info );
+      GetScrollInfo( this.Handle, (int)ScrollBarConstants.SB_HORZ, ref info );
+      int x = -info.nTrackPos;
       for ( int i = 0; i < Columns.Count; ++i )
       {
         Font  fontToUse = Font;
@@ -129,13 +179,18 @@ namespace RetroDevStudio.Controls
           fontToUse = ItemFonts[i];
         }
 
+        var subItemBounds = Items[e.Index].SubItems[i].Bounds;
+        subItemBounds.X = x;
+        subItemBounds.Width = Columns[i].Width;
+        x += subItemBounds.Width;
+        e.Graphics.Clip = new Region( subItemBounds );
         if ( Items[e.Index].Selected )
         {
-          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.HighlightText, Items[e.Index].SubItems[i].Bounds, format );
+          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.HighlightText, subItemBounds, format );
         }
         else
         {
-          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.WindowText, Items[e.Index].SubItems[i].Bounds, format );
+          e.Graphics.DrawString( Items[e.Index].SubItems[i].Text, fontToUse, System.Drawing.SystemBrushes.WindowText, subItemBounds, format );
         }
       }      
 
