@@ -482,7 +482,7 @@ namespace RetroDevStudio.Formats
           if ( fileTrack != 0 )
           {
             // valid entry?
-            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
+            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)CommodoreFileTypeNative.SCRATCHED )
             {
               GR.Memory.ByteBuffer filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
               if ( Filename.Compare( filename ) == 0 )
@@ -514,52 +514,37 @@ namespace RetroDevStudio.Formats
 
     private void SetFileInfo( FileInfo FileInfo, int StartTrack, int StartSector, byte FileType, int NumBlocks )
     {
+      string  baseType = "???";
+
+
       FileInfo.StartTrack   = StartTrack;
       FileInfo.StartSector  = StartSector;
-      FileInfo.NativeType   = (FileTypeNative)( FileType & 0x07 );
+
+      var cbmType = (CommodoreFileTypeNative)( FileType & 0x07 );
+
+      var attr = GR.EnumHelper.GetAttributeOfType<FileTypeNativeAttribute>( cbmType );
+      if ( attr != null )
+      {
+        FileInfo.NativeType = attr.Type;
+        baseType = GR.EnumHelper.GetDescription( cbmType );
+      }
       FileInfo.Type         = Types.FileType.FILE;
       FileInfo.Blocks       = NumBlocks;
 
       FileInfo.ReadOnly     = ( FileType & 64 ) != 0;
       FileInfo.NotClosed    = ( FileType & 128 ) == 0;
 
-      FileInfo.Info         = $"{NativeDesc( FileType )} {NumBlocks} blocks, Track {StartTrack}, Sector {StartSector}";
-    }
-
-
-
-    private string NativeDesc( byte fileType )
-    {
-      string  baseType = "???";
-
-      switch ( fileType & 0x07 )
-      {
-        case (int)FileTypeNative.COMMODORE_DEL:
-          baseType = "DEL";
-          break;
-        case (int)FileTypeNative.COMMODORE_SEQ:
-          baseType = "SEQ";
-          break;
-        case (int)FileTypeNative.COMMODORE_PRG:
-          baseType = "PRG";
-          break;
-        case (int)FileTypeNative.COMMODORE_USR:
-          baseType = "USR";
-          break;
-        case (int)FileTypeNative.COMMODORE_REL:
-          baseType = "REL";
-          break;
-      }
-      if ( ( fileType & (int)FileTypeNative.COMMODORE_LOCKED ) != 0 )
+      if ( FileInfo.ReadOnly )
       {
         baseType += "<";
       }
-      if ( ( fileType & (int)FileTypeNative.COMMODORE_CLOSED ) == 0 )
+      if ( FileInfo.NotClosed )
       {
         // "SPLAT"
         baseType += "*";
       }
-      return baseType;
+
+      FileInfo.Info = $"{baseType} {NumBlocks} blocks, Track {StartTrack}, Sector {StartSector}";
     }
 
 
@@ -754,7 +739,7 @@ namespace RetroDevStudio.Formats
               sect.Data.SetU8At( 0, 0 );
               sect.Data.SetU8At( 1, 0 );
             }
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileTypeNative.COMMODORE_CLOSED ) );
+            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( MapperCommodore.Map( Type ) | CommodoreFileTypeNative.CLOSED ) );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
 
@@ -1252,7 +1237,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)CommodoreFileTypeNative.SCRATCHED )
           {
             // valid entry?
             var info = new Types.FileInfo();
@@ -1276,40 +1261,6 @@ namespace RetroDevStudio.Formats
 
 
 
-    private DirEntryLocation LocateDirEntry( int Track, int Sector )
-    {
-      Location  curLoc = new Location( TRACK_DIRECTORY, SECTOR_DIRECTORY );
-
-      while ( true )
-      {
-        Sector sec = Tracks[curLoc.Track - 1].Sectors[curLoc.Sector];
-
-        for ( int i = 0; i < 8; ++i )
-        {
-          int fileTrack  = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
-          int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
-          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
-          {
-            // valid entry?
-            if ( ( fileTrack == Track )
-            &&   ( fileSector == Sector ) )
-            {
-              return new DirEntryLocation( curLoc.Track, curLoc.Sector, i );
-            }
-          }
-        }
-        curLoc = sec.NextLocation;
-        if ( curLoc == null )
-        {
-          // track = 0 marks last directory entry
-          break;
-        }
-      }
-      return null;
-    }
-
-
-
     private DirEntryLocation LocateDirEntry( int DirEntryIndex )
     {
       Location  curLoc = new Location( TRACK_DIRECTORY, SECTOR_DIRECTORY );
@@ -1324,7 +1275,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)CommodoreFileTypeNative.SCRATCHED )
           {
             // valid entry?
             if ( DirEntryIndex == entryIndex )
@@ -1342,56 +1293,6 @@ namespace RetroDevStudio.Formats
         }
       }
       return null;
-    }
-
-
-
-    private bool FindPreviousDirEntry( DirEntryLocation DirEntry, out DirEntryLocation ResultDirEntry )
-    {
-      ResultDirEntry = null;
-
-      if ( DirEntry.DirEntry > 0 )
-      {
-        ResultDirEntry = new DirEntryLocation( DirEntry.Track, DirEntry.Sector, DirEntry.DirEntry - 1 );
-        return true;
-      }
-      int curTrack = DirEntry.Track;
-      foreach ( Sector sec in Tracks[curTrack - 1].Sectors )
-      {
-        if ( sec.NextLocation == null )
-        {
-          continue;
-        }
-        if ( ( sec.NextLocation.Track == DirEntry.Track )
-        &&   ( sec.NextLocation.Sector == DirEntry.Sector ) )
-        {
-          // this sector points at me
-          ResultDirEntry = new DirEntryLocation( sec.TrackNo, sec.SectorNo, 7 );
-          return true;
-        }
-      }
-      return false;
-    }
-
-
-
-    private bool FindNextDirEntry( DirEntryLocation DirEntry, out DirEntryLocation ResultDirEntry )
-    {
-      ResultDirEntry = null;
-
-      if ( DirEntry.DirEntry < 7 )
-      {
-        ResultDirEntry = new DirEntryLocation( DirEntry.Track, DirEntry.Sector, DirEntry.DirEntry + 1 );
-        return true;
-      }
-      Location    nextSector = Tracks[DirEntry.Track - 1].Sectors[DirEntry.Sector].NextLocation;
-      if ( nextSector == null )
-      {
-        return false;
-      }
-      Sector sec = Tracks[nextSector.Track - 1].Sectors[nextSector.Sector];
-      ResultDirEntry = new DirEntryLocation( sec.TrackNo, sec.SectorNo, 0 );
-      return true;
     }
 
 
@@ -1473,11 +1374,11 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override void ChangeFileType( FileInfo FileToChange, FileTypeNative NewFileType )
+    public override void ChangeFileType( FileInfo fileToChange, FileTypeNative newFileType )
     {
-      base.ChangeFileType( FileToChange, NewFileType );
+      base.ChangeFileType( fileToChange, newFileType );
 
-      var dirEntry = LocateDirEntry( FileToChange.DirEntryIndex );
+      var dirEntry = LocateDirEntry( fileToChange.DirEntryIndex );
       if ( dirEntry == null )
       {
         return; 
@@ -1485,7 +1386,7 @@ namespace RetroDevStudio.Formats
 
       Sector secOrig = Tracks[dirEntry.Track - 1].Sectors[dirEntry.Sector];
 
-      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)( NewFileType | FileTypeNative.COMMODORE_CLOSED ) );
+      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)( MapperCommodore.Map( newFileType ) | CommodoreFileTypeNative.CLOSED ) );
     }
 
 
@@ -1524,7 +1425,7 @@ namespace RetroDevStudio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileTypeNative.COMMODORE_SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)CommodoreFileTypeNative.SCRATCHED )
           {
             // valid entry?
             var info = LoadFile( sec.Data.SubBuffer( 0x20 * i + 5, 16 ) );

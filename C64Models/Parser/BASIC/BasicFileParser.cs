@@ -3959,16 +3959,17 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public bool Disassemble( FileTypeNative nativeType, GR.Memory.ByteBuffer fullFileData, out List<string> Lines  )
+    public bool Disassemble( FileTypeNative nativeType, GR.Memory.ByteBuffer fullFileData, out List<string> Lines, out int startAddress  )
     {
-      Lines = new List<string>();
+      Lines         = new List<string>();
+      startAddress  = -1;
       if ( ( fullFileData == null )
       ||   ( fullFileData.Length == 0 ) )
       {
         return false;
       }
 
-      if ( !ExtractMachineSpecificData( fullFileData, nativeType, out var Data ) )
+      if ( !ExtractMachineSpecificData( fullFileData, nativeType, out var Data, out startAddress ) )
       {
         return false;
       }
@@ -4319,16 +4320,19 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private bool ExtractMachineSpecificData( ByteBuffer fullFileData, FileTypeNative nativeType, out ByteBuffer data )
+    private bool ExtractMachineSpecificData( ByteBuffer fullFileData, FileTypeNative nativeType, out ByteBuffer data, out int startAddress )
     {
+      startAddress = -1;
       switch ( nativeType )
       {
         case FileTypeNative.COMMODORE_PRG:
-          data = fullFileData.SubBuffer( 2 );
+          data          = fullFileData.SubBuffer( 2 );
+          startAddress  = fullFileData.UInt16At( 0 );
           return true;
         case FileTypeNative.SPECTRUM_P:
           // strip off header/trailer
-          data = fullFileData.SubBuffer( 116 );
+          data          = fullFileData.SubBuffer( 116 );
+          // for ZX81 leave as is so the dialect default is used
           return true;
       }
       data = fullFileData;

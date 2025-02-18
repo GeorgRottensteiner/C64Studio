@@ -436,18 +436,18 @@ namespace RetroDevStudio.Formats
           info.Filename       = _DiskImage.SubBuffer( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 79 ), filenameLength );
           info.Size           = (int)_DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 188 ) );
 
-          uint fileType = _DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 4 ) );
+          var fileType = (AmigaFileTypeNative)_DiskImage.UInt32NetworkOrderAt( (int)( hashEntry * BLOCK_SIZE + BLOCK_SIZE - 4 ) );
 
           Debug.Log( $"HashEntry #{i}, hash value {hashEntry}, has entry {info.Filename.ToAsciiString()}, type {fileType}" );
 
           switch ( fileType )
           {
-            case 0xfffffffd:
+            case AmigaFileTypeNative.FILE:
               // file header -3
               info.Type = FileType.FILE;
               info.NativeType = FileTypeNative.ADF_FILE;
               break;
-            case 2:
+            case AmigaFileTypeNative.DIR:
               // directory
               info.Type = FileType.DIRECTORY;
               info.NativeType = FileTypeNative.ADF_DIR;

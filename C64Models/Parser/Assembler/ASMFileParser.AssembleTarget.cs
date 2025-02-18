@@ -28,7 +28,7 @@ namespace RetroDevStudio.Parser
 
             record.Filename       = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, OutputPureFilename );
             record.StartAddress   = (ushort)FileStartAddress;
-            record.FileTypeNative = FileTypeNative.COMMODORE_PRG;
+            record.FileTypeNative = CommodoreFileTypeNative.PRG;
             record.EntryType      = 1;
 
             t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";

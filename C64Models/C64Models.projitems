@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DefaultFileExtensionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\FileTypeNativeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MapperCommdore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MachineFileTypes.cs" />
     <Compile Include="..\C64Models\Attributes\MachineTypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\AdditionalArgumentCount.cs" />

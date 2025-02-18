@@ -693,7 +693,7 @@ namespace RetroDevStudio.Documents
           {
             var itemDialect = new System.Windows.Forms.ToolStripMenuItem( dialect.Key );
             itemDialect.Tag = dialect.Value;
-            itemDialect.Click += new EventHandler( itemExportToBasic_Click );
+            itemDialect.Click += new EventHandler( itemOpenAsBASIC_Click );
             itemBASICOpen.DropDownItems.Add( itemDialect );
           }
         }
@@ -900,29 +900,29 @@ namespace RetroDevStudio.Documents
 
 
 
-    void itemExportToBasic_Click( object sender, EventArgs e )
+    void itemOpenAsBASIC_Click( object sender, EventArgs e )
     {
       var menuItem = (ToolStripMenuItem)sender;
 
       var dialect = (Parser.BASIC.Dialect)menuItem.Tag;
-      ExportSelectedItemsToBASIC( dialect );
+      OpenSelectedItemsAsBASIC( dialect );
     }
 
 
 
-    void ExportSelectedItemsToBASIC( Dialect Dialect )
+    void OpenSelectedItemsAsBASIC( Dialect Dialect )
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
         RetroDevStudio.Types.FileInfo  fileToExport = (RetroDevStudio.Types.FileInfo)item.Tag;
 
-        ExportToBASIC( fileToExport, Dialect );
+        OpenAsBASIC( fileToExport, Dialect );
       }
     }
 
 
 
-    private void ExportToBASIC( Types.FileInfo fileToExport, Dialect Dialect )
+    private void OpenAsBASIC( Types.FileInfo fileToExport, Dialect Dialect )
     {
       RetroDevStudio.Types.FileInfo  fileInfo = null;
 
@@ -936,8 +936,13 @@ namespace RetroDevStudio.Documents
         parser.SetBasicDialect( Dialect );
 
         // two bytes are the load address!!
-        if ( parser.Disassemble( fileToExport.NativeType, fileInfo.Data, out var lines ) )
+        if ( parser.Disassemble( fileToExport.NativeType, fileInfo.Data, out var lines, out int startAddress ) )
         {
+          if ( startAddress == -1 )
+          {
+            startAddress = GR.Convert.ToI32( Dialect.DefaultStartAddress );
+          }
+
           var document = new SourceBasicEx( Core );
           document.ShowHint = DockState.Document;
 
@@ -952,6 +957,7 @@ namespace RetroDevStudio.Documents
           }
           string  insertText = sb.ToString();
           document.FillContent( insertText, false, false );
+          document.SetStartAddress( startAddress.ToString() );
           if ( Dialect.LowerCase )
           {
             document.SetLowerCase();
@@ -1174,7 +1180,7 @@ namespace RetroDevStudio.Documents
           {
             var subItem = new System.Windows.Forms.ToolStripMenuItem( "Open with " + dialect.Key );
             subItem.Tag = dialect.Value;
-            subItem.Click += new EventHandler( itemExportToBasic_Click );
+            subItem.Click += new EventHandler( itemOpenAsBASIC_Click );
             toolStripBtnOpenBASIC.DropDownItems.Add( subItem );
           }
         }
@@ -1185,7 +1191,6 @@ namespace RetroDevStudio.Documents
       {
         toolStripBtnMoveFileDown.Enabled = false;
         toolStripBtnMoveFileUp.Enabled = false;
-
         return;
       }
       toolStripBtnMoveFileUp.Enabled = ( listFiles.SelectedIndices[0] > 0 );

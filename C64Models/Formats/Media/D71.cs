@@ -393,7 +393,7 @@ namespace RetroDevStudio.Formats
           {
             // scratched (empty) entry
             // default set PRG
-            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( Type | FileTypeNative.COMMODORE_CLOSED ) );
+            sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( MapperCommodore.Map( Type ) | CommodoreFileTypeNative.CLOSED ) );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
 

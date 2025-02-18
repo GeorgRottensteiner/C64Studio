@@ -1,6 +1,8 @@
-﻿using System;
+﻿using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 namespace RetroDevStudio.Formats
@@ -68,7 +70,7 @@ namespace RetroDevStudio.Formats
     public class FileRecord
     {
       public byte     EntryType = 0;
-      public Types.FileTypeNative FileTypeNative =  Types.FileTypeNative.COMMODORE_SCRATCHED;
+      public CommodoreFileTypeNative FileTypeNative = CommodoreFileTypeNative.SCRATCHED;
       public ushort   StartAddress = 0;
       public ushort   EndAddress = 0;
       public ushort   Filler = 0;
@@ -258,9 +260,9 @@ namespace RetroDevStudio.Formats
           info.Filename   = file.Filename;
           info.Blocks     = ( file.EndAddress - file.StartAddress ) / 254 + 1;
           info.Type       = Types.FileType.FILE;
-          info.NativeType = Types.FileTypeNative.COMMODORE_PRG;
-          info.ReadOnly   = ( file.FileTypeNative & Types.FileTypeNative.COMMODORE_LOCKED ) != 0;
-          info.NotClosed  = ( file.FileTypeNative & Types.FileTypeNative.COMMODORE_CLOSED ) == 0;
+          info.NativeType = FileTypeNative.COMMODORE_PRG;
+          info.ReadOnly   = ( file.FileTypeNative & CommodoreFileTypeNative.LOCKED ) != 0;
+          info.NotClosed  = ( file.FileTypeNative & CommodoreFileTypeNative.CLOSED ) == 0;
           info.DirEntryIndex = dirEntryIndex;
           ++dirEntryIndex;
 
@@ -361,7 +363,8 @@ namespace RetroDevStudio.Formats
           entryPos += 32;
           continue;
         }
-        file.FileTypeNative = (Types.FileTypeNative)data.ByteAt( entryPos + 1 );
+
+        file.FileTypeNative = (CommodoreFileTypeNative)data.ByteAt( entryPos + 1 );
         file.StartAddress   = data.UInt16At( entryPos + 2 );
         file.EndAddress     = data.UInt16At( entryPos + 4 );
         file.FileOffset     = data.UInt32At( entryPos + 8 );
@@ -417,7 +420,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileTypeNative Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, FileTypeNative Type )
     {
       _LastError = "";
 
@@ -427,8 +430,9 @@ namespace RetroDevStudio.Formats
         if ( file.EntryType == 0 )
         {
           // free slot found
+          file.FileTypeNative = MapperCommodore.Map( Type );
+          
           file.EntryType      = 1;
-          file.FileTypeNative = Type;
           file.StartAddress   = Content.UInt16At( 0 );
           if ( Content.Length < 2 )
           {
@@ -484,7 +488,7 @@ namespace RetroDevStudio.Formats
           if ( file.Filename == Filename )
           {
             file.EntryType      = 0;
-            file.FileTypeNative = Types.FileTypeNative.COMMODORE_SCRATCHED;
+            file.FileTypeNative = CommodoreFileTypeNative.SCRATCHED;
             file.StartAddress   = 0;
             file.EndAddress     = 0;
             file.FileOffset     = 0;

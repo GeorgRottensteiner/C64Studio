@@ -67,10 +67,10 @@ namespace RetroDevStudio.Formats
         ++entryIndex;
         fileList.Add( info );
 
-        info.NativeType = (FileTypeNative)block.ByteAt( 0 );
+        info.NativeType = FileTypeNative.TZX_FILE;
         info.Info       = GR.EnumHelper.GetDescription( info.NativeType );
 
-        if ( (FileTypeNative)block.ByteAt( 0 ) == FileTypeNative.TZX_STANDARD_SPEED_DATA_BLOCK )
+        if ( (TZXFileTypeNative)block.ByteAt( 0 ) == TZXFileTypeNative.STANDARD_SPEED_DATA_BLOCK )
         {
           if ( ( block.ByteAt( 1 + 0 ) == 0 )
           &&   ( block.ByteAt( 1 + 1 ) == 0 ) )
@@ -123,10 +123,10 @@ namespace RetroDevStudio.Formats
       reader.Skip( 10 );
       while ( reader.DataAvailable )
       {
-        var blockID = (FileTypeNative)reader.ReadUInt8();
+        var blockID = (TZXFileTypeNative)reader.ReadUInt8();
         switch ( blockID )
         {
-          case FileTypeNative.TZX_STANDARD_SPEED_DATA_BLOCK:
+          case TZXFileTypeNative.STANDARD_SPEED_DATA_BLOCK:
             {
               ushort  pause       = reader.ReadUInt16();
               ushort  dataLength  = reader.ReadUInt16();
@@ -180,67 +180,67 @@ namespace RetroDevStudio.Formats
               }
             }
             break;
-          case FileTypeNative.TZX_TURBO_SPEED_DATA_BLOCK:
+          case TZXFileTypeNative.TURBO_SPEED_DATA_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_PURE_TONE:
+          case TZXFileTypeNative.PURE_TONE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_PULSE_SEQUENCE:
+          case TZXFileTypeNative.PULSE_SEQUENCE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_PURE_DATA_BLOCK:
+          case TZXFileTypeNative.PURE_DATA_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_DIRECT_RECORDING_BLOCK:
+          case TZXFileTypeNative.DIRECT_RECORDING_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_C64_ROM_BLOCK:
+          case TZXFileTypeNative.C64_ROM_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_C64_TURBO_BLOCK:
+          case TZXFileTypeNative.C64_TURBO_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_CSW_RECORDING_BLOCK:
+          case TZXFileTypeNative.CSW_RECORDING_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_GENERALIZED_DATA_BLOCK:
+          case TZXFileTypeNative.GENERALIZED_DATA_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_PAUSE_OR_STOP_TAPE:
+          case TZXFileTypeNative.PAUSE_OR_STOP_TAPE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_GROUP_START:
+          case TZXFileTypeNative.GROUP_START:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_GROUP_END:
+          case TZXFileTypeNative.GROUP_END:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_JUMP_TO_BLOCK:
+          case TZXFileTypeNative.JUMP_TO_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_LOOP_START:
+          case TZXFileTypeNative.LOOP_START:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_LOOP_END:
+          case TZXFileTypeNative.LOOP_END:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_CALL_SEQUENCE:
+          case TZXFileTypeNative.CALL_SEQUENCE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_RETURN_FROM_SEQUENCE:
+          case TZXFileTypeNative.RETURN_FROM_SEQUENCE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_SELECT_BLOCK:
+          case TZXFileTypeNative.SELECT_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_STOP_TAPE_48K:
+          case TZXFileTypeNative.STOP_TAPE_48K:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_SET_SIGNAL:
+          case TZXFileTypeNative.SET_SIGNAL:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_TEXT_DESCRIPTION:
+          case TZXFileTypeNative.TEXT_DESCRIPTION:
             {
               var totalBlock = new ByteBuffer();
               totalBlock.AppendU8( (byte)blockID );
@@ -255,25 +255,25 @@ namespace RetroDevStudio.Formats
               _Blocks.Add( totalBlock );
             }
             break;
-          case FileTypeNative.TZX_MESSAGE:
+          case TZXFileTypeNative.MESSAGE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_ARCHIVE_INFO:
+          case TZXFileTypeNative.ARCHIVE_INFO:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_HARDWARE_TYPE:
+          case TZXFileTypeNative.HARDWARE_TYPE:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_EMULATION_INFO:
+          case TZXFileTypeNative.EMULATION_INFO:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_CUSTOM_INFO:
+          case TZXFileTypeNative.CUSTOM_INFO:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_SCREEN_BLOCK:
+          case TZXFileTypeNative.SCREEN_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
-          case FileTypeNative.TZX_SKIP_GLUE_BLOCK:
+          case TZXFileTypeNative.SKIP_GLUE_BLOCK:
             _LastError = $"block type {blockID} currently not supported";
             return false;
           default:
