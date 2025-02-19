@@ -153,7 +153,7 @@ namespace RetroDevStudio.Parser.BASIC
       switch ( _ParseContext.TargetType )
       {
         case CompileTargetType.P_ZX81:
-          // if the last token is a number ZX81 add's a number byte plus a float (tf!)
+          // if the last token is a number ZX81 adds a number byte plus a float (tf!)
           if ( ( info.Tokens.Count >= 1 )
           &&   ( info.Tokens.Last().TokenType == Token.Type.NUMERIC_LITERAL ) )
           {
