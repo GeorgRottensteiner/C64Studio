@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace GR
 {
@@ -25,7 +26,7 @@ namespace GR
     {
       float     dummy = 0;
 
-      float.TryParse( Value, out dummy );
+      float.TryParse( Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out dummy );
 
       return dummy;
     }

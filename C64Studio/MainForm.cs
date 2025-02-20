@@ -6192,13 +6192,13 @@ namespace RetroDevStudio
       StudioCore.Settings.LastSolutionWasEmpty = false;
 
       StudioCore.Navigating.Solution.Modified   = false;
-      StudioCore.Navigating.Solution.DuringLoad = false;
       solutionToolStripMenuItemTop.Visible      = true;
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
       // resend doc activate event, since only now all settings are known (breakpoints)
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED, ActiveDocumentInfo ) );
 
+      StudioCore.Navigating.Solution.DuringLoad = false;
 
       if ( ( StudioCore.Navigating.Project == null )
       &&   ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )

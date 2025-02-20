@@ -738,8 +738,9 @@ namespace RetroDevStudio.Parser.BASIC
 
     private void AddDirectToken( LineInfo Info, byte TokenValue, int StartIndex )
     {
-      if ( ( TokenValue >= 0x30 )
-      &&   ( TokenValue <= 0x39 ) )
+      if ( ( ( TokenValue >= 0x30 )
+      &&     ( TokenValue <= 0x39 ) )
+      ||   ( TokenValue == '.' ) )
       {
         // numeric, maybe combine with token before?
         if ( ( Info.Tokens.Count > 0 )
@@ -747,18 +748,26 @@ namespace RetroDevStudio.Parser.BASIC
         &&   ( Info.Tokens[Info.Tokens.Count - 1].ByteValue >= 0x30 )
         &&   ( Info.Tokens[Info.Tokens.Count - 1].ByteValue <= 0x39 ) )
         {
-          // attach to previous token
-          Info.Tokens[Info.Tokens.Count - 1].Content += ConstantData.PetSCIIToChar[TokenValue].CharValue;
-          Info.Tokens[Info.Tokens.Count - 1].TokenType = Token.Type.NUMERIC_LITERAL;
+          if ( ( ( TokenValue == '.' )
+          &&     ( Info.Tokens[Info.Tokens.Count - 1].Content.IndexOf( '.' ) == -1 ) )
+          ||   ( TokenValue != '.' ) )
+          {
+            // attach to previous token
+            Info.Tokens[Info.Tokens.Count - 1].Content += ConstantData.PetSCIIToChar[TokenValue].CharValue;
+            Info.Tokens[Info.Tokens.Count - 1].TokenType = Token.Type.NUMERIC_LITERAL;
 
-          Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
-          return;
+            Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
+            return;
+          }
         }
-        Token numericToken = new Token();
-        numericToken.TokenType = Token.Type.NUMERIC_LITERAL;
-        numericToken.ByteValue = TokenValue;
-        numericToken.Content = "" + ConstantData.PetSCIIToChar[TokenValue].CharValue;
-        numericToken.StartIndex = StartIndex;
+        Token numericToken = new Token()
+        {
+          TokenType  = Token.Type.NUMERIC_LITERAL,
+          ByteValue  = TokenValue,
+          Content    = "" + ConstantData.PetSCIIToChar[TokenValue].CharValue,
+          StartIndex = StartIndex
+        };
+
         Info.Tokens.Add( numericToken );
 
         Info.LineData.AppendU8( MapTokenToByteValue( TokenValue ) );
@@ -1533,7 +1542,7 @@ namespace RetroDevStudio.Parser.BASIC
               }
               else
               {
-                var c64Key = ConstantData.FindC64KeyByPETSCII( nextByte );
+                var c64Key = FindKeyByCharacter( nextByte );
                 if ( ( c64Key != null )
                 &&   ( nextByte != 32 )   // do not replace for Space
                 &&   ( c64Key.Replacements.Count > 0 ) )
@@ -1728,6 +1737,12 @@ namespace RetroDevStudio.Parser.BASIC
           continue;
         }
       }
+
+      if ( info.Tokens.Count > 0 )
+      {
+        AssembleTokenCompleted( info );
+      }
+
       // DATA - last entry trims spaces at end
       if ( ( Settings.StripSpaces )
       &&   ( insideDataStatement ) )
@@ -4092,7 +4107,7 @@ namespace RetroDevStudio.Parser.BASIC
 
           if ( insideStringLiteral )
           {
-            var c64Key = ConstantData.FindC64KeyByPETSCII( byteValue );
+            var c64Key = FindKeyByCharacter( byteValue );
             if ( c64Key != null )
             {
               lineContent += c64Key.CharValue;
@@ -4166,6 +4181,45 @@ namespace RetroDevStudio.Parser.BASIC
       }
 
       return false;
+    }
+
+
+
+    private SingleKeyInfo FindKeyByCharacter( byte byteValue )
+    {
+      switch ( _ParseContext.KeyboardMachineType )
+      {
+        case MachineType.ZX81:
+          break;
+      }
+      if ( ( _ParseContext.KeyboardMachineType == MachineType.C64 )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.C128 )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.CBM )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.COMMANDER_X16 )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.MEGA65 )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.PET )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.PLUS4 )
+      ||   ( _ParseContext.KeyboardMachineType == MachineType.VIC20 ) )
+      {
+        // Codes 192-223 map to Codes  96-127
+        // Codes 224-254 map to Codes 160-190
+        // Code  255     map to Code  126
+        if ( ( byteValue >= 192 )
+        &&   ( byteValue <= 223 ) )
+        {
+          byteValue -= 192 - 96;
+        }
+        else if ( ( byteValue >= 224 )
+        &&        ( byteValue <= 254 ) )
+        {
+          byteValue -= 224 - 160;
+        }
+        else if ( byteValue == 255 )
+        {
+          byteValue = 126;
+        }
+      }
+      return ConstantData.AllPhysicalKeyInfos[_ParseContext.KeyboardMachineType].FirstOrDefault( k => k.NativeValue == byteValue );
     }
 
 

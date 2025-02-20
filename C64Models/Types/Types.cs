@@ -1462,6 +1462,8 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x3d, true, 'X', true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x3e, true, 'Y', true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x3f, true, 'Z', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_SPACE, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x00, true, ' ', true );
+      AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_DOT, KeyModifier.NORMAL, KeyType.NORMAL, 0, false, 0x1b, true, '.', true );
 
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_1, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x01, true, (char)0x0131, true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_2, KeyModifier.CONTROL, KeyType.NORMAL, 0, false, 0x02, true, (char)0x0c5, true );

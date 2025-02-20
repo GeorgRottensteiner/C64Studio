@@ -157,11 +157,9 @@ namespace RetroDevStudio.Parser.BASIC
           if ( ( info.Tokens.Count >= 1 )
           &&   ( info.Tokens.Last().TokenType == Token.Type.NUMERIC_LITERAL ) )
           {
-            if ( float.TryParse( info.Tokens.Last().Content, out float number ) )
-            {
-              info.LineData.AppendU8( 0x7e );
-              AssembleZX81NumberToBytes( number, info.LineData );
-            }
+            float number = GR.Convert.ToF32( info.Tokens.Last().Content );
+            info.LineData.AppendU8( 0x7e );
+            AssembleZX81NumberToBytes( number, info.LineData );
           }
           break;
       }
