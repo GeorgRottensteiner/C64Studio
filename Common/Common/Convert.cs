@@ -24,9 +24,10 @@ namespace GR
 
     public static float ToF32( string Value )
     {
-      float     dummy = 0;
-
-      float.TryParse( Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out dummy );
+      if ( !float.TryParse( Value, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out float dummy ) )
+      {
+        return 0.0f;
+      }
 
       return dummy;
     }

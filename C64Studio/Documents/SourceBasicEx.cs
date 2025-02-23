@@ -2870,6 +2870,9 @@ namespace RetroDevStudio.Documents
         {
           continue;
         }
+        // replace regex wildcard chars
+        token = token.Replace( "*", @"\*" );
+
         if ( token.EndsWith( "(" ) )
         {
           opCodes += token.Substring( 0, token.Length - 1 );

@@ -16,6 +16,7 @@
 #Lowercase              = starts in lower case
 #Machines=<machine1>[,...]  list machines that use this BASIC dialect
 #                           valid values C64,VIC20,C128,PLUS4,PET,CBM,ATARI2600,MEGA65,NES,COMMANDER_X16,CPC,ZX80,ZX81,ZX_SPECTRUM
+#VariableRelevantLength     number of characters of a variable that are relevant (e.g. for Commodore this is 2, others have no limit)
 
 StartAddress=2049
 SafeLineLength=80
@@ -26,6 +27,7 @@ HexPrefix=$
 BinPrefix=%
 Lowercase
 Machines=C64,VIC20
+VariableRelevantLength=2
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
 END;80;

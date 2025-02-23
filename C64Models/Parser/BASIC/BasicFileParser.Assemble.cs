@@ -82,8 +82,6 @@ namespace RetroDevStudio.Parser.BASIC
       switch ( _ParseContext.TargetType )
       {
         case CompileTargetType.P_ZX81:
-          AssembleTokenCompleted( info );
-
           result.AppendU16NetworkOrder( (ushort)info.LineNumber );
           result.AppendU16( (ushort)( info.LineData.Length + 1 ) );
           result.Append( info.LineData );
@@ -176,6 +174,14 @@ namespace RetroDevStudio.Parser.BASIC
 
       // If it's a small integer, then store as such, else it's the 5 byte float.
 
+      if ( value == 0 )
+      {
+        result.AppendU8( 0 );
+        result.AppendU8( 0 );
+        result.AppendU8( 0 );
+        result.AppendU8( 0 );
+        result.AppendU8( 0 );
+      }
       /*
       if ( ( value >= -65535 ) 
       &&   ( value < 65536 ) 
@@ -192,12 +198,12 @@ namespace RetroDevStudio.Parser.BASIC
           value += 65536;
         }
         // would be round if float
-        newVal = (int)value;
+        int newVal = (int)value;
         result.AppendU8( (byte)( newVal & 0xff ) );
         result.AppendU8( (byte)( newVal >> 8 ) );
         result.AppendU8( 0 );
-      }
-      else*/
+      }*/
+      else
       {
         // 5 byte floating point.
 

@@ -52,6 +52,7 @@ namespace RetroDevStudio.Parser.BASIC
     public bool                             HasTextLabels = false;  // e.g. PROC names for TSB 
     public bool                             ExtendedTokensRecognizedInsideComment = false;
     public int                              MaxLineNumber = 63999;
+    public int                              VariableRelevantLength = -1;
     public bool                             LowerCase = false;
     public List<MachineType>                MachineTypes = new List<MachineType>();
     public CompileTargetType                CompileType = CompileTargetType.PRG; 
@@ -151,6 +152,8 @@ namespace RetroDevStudio.Parser.BASIC
 
       BASICV2.MachineTypes.Add( MachineType.C64 );
       BASICV2.MachineTypes.Add( MachineType.VIC20 );
+
+      BASICV2.VariableRelevantLength = 2;
     }
 
 
@@ -244,6 +247,11 @@ namespace RetroDevStudio.Parser.BASIC
           else if ( line.StartsWith( "MaxLineNumber=" ) )
           {
             dialect.MaxLineNumber = GR.Convert.ToI32( line.Substring( 14 ) );
+            continue;
+          }
+          else if ( line.StartsWith( "VariableRelevantLength=" ) )
+          {
+            dialect.VariableRelevantLength = GR.Convert.ToI32( line.Substring( "VariableRelevantLength=".Length ) );
             continue;
           }
           else if ( line.StartsWith( "CompileType=" ) )

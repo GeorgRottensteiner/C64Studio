@@ -463,7 +463,7 @@ namespace RetroDevStudio.Parser
         {
           if ( hadBytes )
           {
-            AddLineAddress( Settings, sb, trueAddress );
+            AddLineAddress( Settings, sb, hadBytesStart );
 
             sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
             hadBytes = false;

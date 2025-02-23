@@ -6,6 +6,16 @@
   Operation:  A - M                                     N V - B D I Z C
                                                         / . . . . . / /
 
+
+    ;less than compare value?
+    cmp [Compare Value]
+    bcc .LessThan
+
+    ;greater or equal than compare value?
+    cmp [Compare Value]
+    bcs .GreaterOrEqual
+
+
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+

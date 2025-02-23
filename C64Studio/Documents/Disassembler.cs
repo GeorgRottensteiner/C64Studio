@@ -81,6 +81,42 @@ namespace RetroDevStudio.Documents
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LABEL )], m_TextRegExp[(int)Types.ColorableElement.LABEL] );
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.COMMENT )], m_TextRegExp[(int)Types.ColorableElement.COMMENT] );
+
+      // manually recolor byte values
+      if ( checkShowHexData.Checked )
+      {
+        int line1 = e.ChangedRange.FromLine;
+        int line2 = e.ChangedRange.ToLine;
+
+        if ( line2 < line1 )
+        {
+          line1 = line2;
+          line2 = e.ChangedRange.FromLine;
+        }
+
+        int   offset = 0;
+        if ( checkShowLineAddresses.Checked )
+        {
+          offset += 7;
+        }
+
+        for ( int i = line1; i <= line2; ++i )
+        {
+          int hexByteLength = 0;
+          var line = editDisassembly.Lines[i];
+          while ( ( offset + hexByteLength + 3 < line.Length )
+          &&      ( line[offset + hexByteLength] == ' ' )
+          &&      ( IsHexChar( line[offset + hexByteLength + 1] ) )
+          &&      ( IsHexChar( line[offset + hexByteLength + 2] ) ) )
+          {
+            hexByteLength += 3;
+          }
+
+          var hexByteRange = new FastColoredTextBoxNS.Range( editDisassembly, offset, i, offset + hexByteLength, i );
+          hexByteRange.ClearStyle( m_TextStyles );
+          hexByteRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_NUMBER )] );
+        }
+      }
     }
 
 

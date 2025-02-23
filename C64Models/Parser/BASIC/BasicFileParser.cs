@@ -2317,6 +2317,11 @@ namespace RetroDevStudio.Parser.BASIC
       bool entryFound = DeterminePotentialTokenAtLocation( TempData, BytePos, out Opcode potentialOpcode );
       if ( potentialOpcode != null )
       {
+        if ( Info.Tokens.Count > 0 )
+        {
+          AssembleTokenCompleted( Info );
+        }
+
         Token basicToken = new Token();
         basicToken.TokenType = Token.Type.BASIC_TOKEN;
         basicToken.ByteValue = potentialOpcode.InsertionValue;
@@ -2384,6 +2389,11 @@ namespace RetroDevStudio.Parser.BASIC
         }
         if ( entryFound )
         {
+          if ( Info.Tokens.Count > 0 )
+          {
+            AssembleTokenCompleted( Info );
+          }
+
           Token basicToken = new Token();
           basicToken.TokenType = Token.Type.EX_BASIC_TOKEN;
           basicToken.ByteValue = opcode.InsertionValue;
@@ -2847,6 +2857,11 @@ namespace RetroDevStudio.Parser.BASIC
 
     private void CheckForAmbigiousVariables()
     {
+      if ( Settings.BASICDialect.VariableRelevantLength == -1 )
+      {
+        return;
+      }
+
       GR.Collections.Set<string>   notifiedMappings = new GR.Collections.Set<string>();
       foreach ( var mappedVars in m_ASMFileInfo.MappedVariables )
       {
@@ -2860,7 +2875,7 @@ namespace RetroDevStudio.Parser.BASIC
               if ( !notifiedMappings.ContainsValue( entry.Name + "_" + dist ) )
               {
                 notifiedMappings.Add( entry.Name + "_" + dist );
-                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to two characters is ambigious ({dist})",
+                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to {Settings.BASICDialect.VariableRelevantLength} characters is ambigious ({dist})",
                                           entry.CharIndex, entry.String.Length );
               }
             }
