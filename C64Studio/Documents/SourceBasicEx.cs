@@ -744,6 +744,10 @@ namespace RetroDevStudio.Documents
       BackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
       editSource.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CODE ) );
 
+      labelBASICVersion.BackColor = BackColor;
+      labelStartAddress.BackColor = BackColor;
+      labelCheckSummer.BackColor  = BackColor;
+
       ApplySyntaxColoring( Types.ColorableElement.EMPTY_SPACE );
       ApplySyntaxColoring( Types.ColorableElement.COMMENT );
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_NUMBER );

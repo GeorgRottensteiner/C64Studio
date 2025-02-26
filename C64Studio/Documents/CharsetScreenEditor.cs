@@ -2725,6 +2725,13 @@ namespace RetroDevStudio.Documents
         case TextCharMode.VIC20_8X16:
           _ColorChooserDlg = new ColorPickerCommodoreVIC20X16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
+        case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.MEGA65_NCM:
+        case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_ECM:
+        case TextCharMode.MEGA65_FCM_16BIT:
+          _ColorChooserDlg = new ColorPickerMega65_32( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          break;
         default:
           _ColorChooserDlg = new ColorPickerCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
@@ -2781,6 +2788,14 @@ namespace RetroDevStudio.Documents
         case TextMode.COMMODORE_VIC20_8_X_16:
           displaySize = new Size( 160, 192 );
           clientSize = new Size( displaySize.Width * 4, displaySize.Height * 2 );
+          break;
+        case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+        case TextMode.MEGA65_80_X_25_NCM:
+          displaySize = new Size( Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode ) * 8, Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode ) * 8 );
           break;
         default:
           // all others use 16:10 (do they?)
