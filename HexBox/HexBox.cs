@@ -2316,10 +2316,38 @@ namespace Be.Windows.Forms
 			Invalidate();
 		}
 
-		/// <summary>
-		/// Copies the current selection in the hex box to the Clipboard in hex format.
-		/// </summary>
-		public void CopyHex()
+
+
+    public string AsHex( bool selectionOnly )
+    {
+      long offset = 0;
+      long length = _byteProvider.Length;
+      if ( selectionOnly )
+      {
+        offset = _bytePos;
+        length = _selectionLength;
+      }
+
+      // put bytes into buffer
+      byte[] buffer = new byte[length];
+      int id = -1;
+      for ( long i = offset; i < offset + length; i++ )
+      {
+        id++;
+
+        buffer[id] = _byteProvider.ReadByte( i );
+      }
+
+      // set string buffer clipbard data
+      return ConvertBytesToHex( buffer );
+    }
+
+
+
+    /// <summary>
+    /// Copies the current selection in the hex box to the Clipboard in hex format.
+    /// </summary>
+    public void CopyHex()
 		{
 			if (!CanCopy()) return;
 

@@ -943,27 +943,32 @@ namespace RetroDevStudio.Dialogs
         }
         docInfoToSearch = activeDocument.DocumentInfo;
         edit = EditFromDocumentEx( activeDocument.DocumentInfo );
-        if ( edit == null )
+        if ( edit != null )
         {
-          LastFound.Clear();
-          return false;
-        }
-        if ( DirectlyFromSourceFile != null )
-        {
-          lastPosition = CharacterPosFromPosition( edit, edit.Selection.Start );
-        }
-        else if ( lastPosition != -1 )
-        {
-          // virtualize pos
-          lastPosition = edit.PositionToVirtualPosition( lastPosition );
-        }
-
-        textFromElement = edit.Text;
-        if ( activeDocument.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-        {
-          if ( activeDocument.DocumentInfo.BaseDoc != null )
+          if ( DirectlyFromSourceFile != null )
           {
-            textFromElement = ( (SourceBasicEx)activeDocument.DocumentInfo.BaseDoc ).GetContentForSearch();
+            lastPosition = CharacterPosFromPosition( edit, edit.Selection.Start );
+          }
+          else if ( lastPosition != -1 )
+          {
+            // virtualize pos
+            lastPosition = edit.PositionToVirtualPosition( lastPosition );
+          }
+
+          textFromElement = edit.Text;
+        }
+        else
+        {
+          if ( activeDocument.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+          {
+            if ( activeDocument.DocumentInfo.BaseDoc != null )
+            {
+              textFromElement = ( (SourceBasicEx)activeDocument.DocumentInfo.BaseDoc ).GetContentForSearch();
+            }
+          }
+          else
+          {
+            textFromElement = activeDocument.GetContent();
           }
         }
 

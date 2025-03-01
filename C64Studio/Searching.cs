@@ -76,15 +76,11 @@ namespace RetroDevStudio
           PreviousSearchedFileContent = ( (SourceASMEx)DocInfo.BaseDoc ).editSource.Text;
           return PreviousSearchedFileContent;
         }
-        else if ( DocInfo.BaseDoc is SourceBasicEx )
+        else if ( ( DocInfo.BaseDoc is SourceBasicEx )
+        ||        ( DocInfo.BaseDoc is Disassembler ) )
         {
           PreviousSearchedFile = elementPath;
           return DocInfo.BaseDoc.GetContent();
-        }
-        else if ( DocInfo.BaseDoc is Disassembler )
-        {
-          PreviousSearchedFile = elementPath;
-          return ( (Disassembler)DocInfo.BaseDoc ).editDisassembly.Text;
         }
         return "";
       }

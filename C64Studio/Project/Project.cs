@@ -377,6 +377,7 @@ namespace RetroDevStudio
       while ( chunk.ReadFromStream( memIn ) )
       {
         GR.IO.MemoryReader      memChunk = chunk.MemoryReader();
+
         switch ( chunk.Type )
         {
           case FileChunkConstants.PROJECT:
@@ -481,6 +482,8 @@ namespace RetroDevStudio
 
               config.Load( memChunk );
 
+              Debug.Log( $"Config {config.Name} found" );
+
               if ( string.IsNullOrEmpty( config.DebugStartAddressLabel ) )
               {
                 config.DebugStartAddressLabel = origDebugStartAddress.ToString();
@@ -537,6 +540,19 @@ namespace RetroDevStudio
       }
       foreach ( ProjectElement element in Elements )
       {
+        // sometimes configs get missing in the project?
+        foreach ( var elementSetting in element.Settings )
+        {
+          if ( Settings.GetConfigurationByName( elementSetting.Key ) == null )
+          {
+            Debug.Log( $"Readd missing config entry: {elementSetting.Key}" );
+            var config = new ProjectConfig()
+            {
+              Name = elementSetting.Key
+            };
+            Settings.Configuration( config.Name, config );
+          }
+        }
         if ( element.Settings.Count == 0 )
         {
           foreach ( var configName in Settings.GetConfigurationNames() )

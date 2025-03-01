@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Formats;
+﻿using FastColoredTextBoxNS;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using System;
 using System.Collections.Generic;
@@ -25,16 +26,6 @@ namespace RetroDevStudio.Documents
     private int                         m_ContextMenuOpeningInLineIndex = -1;
     private int                         m_ContextMenuCharPos = -1;
 
-
-
-
-    public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
-    {
-      get
-      {
-        return editDisassembly;
-      }
-    }
 
 
 
@@ -65,6 +56,31 @@ namespace RetroDevStudio.Documents
       editDisassembly.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editDisassembly_TextChanged );
 
       RefreshDisplayOptions();
+    }
+
+
+
+    public override FastColoredTextBox SourceControl
+    {
+      get
+      {
+        if ( tabContent.SelectedIndex == 0 )
+        {
+          return editDisassembly;
+        }
+        return null;
+      }
+    }
+
+
+
+    public override string GetContent()
+    {
+      if ( tabContent.SelectedIndex == 0 )
+      {
+        return editDisassembly.Text;
+      }
+      return hexView.AsHex( false );
     }
 
 
