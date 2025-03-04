@@ -767,6 +767,62 @@ namespace RetroDevStudio.Parser
 
 
 
+    public void AddPreprocessorConstant( string Name, double Value, int SourceLine )
+    {
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
+      {
+        SymbolInfo token = new SymbolInfo();
+        token.Type      = SymbolInfo.Types.PREPROCESSOR_CONSTANT_NUMBER;
+        token.RealValue = Value;
+        token.Name      = Name;
+        token.LineIndex = SourceLine;
+
+        if ( !_ParseContext.DoNotAddReferences )
+        {
+          token.AddReference( SourceLine, new TokenInfo() { StartPos = 0, Length = Name.Length } );
+        }
+        m_ASMFileInfo.Labels.Add( Name, token );
+      }
+      else
+      {
+        if ( m_ASMFileInfo.Labels[Name].RealValue != Value )
+        {
+          AddError( SourceLine, Types.ErrorCode.E1203_REDEFINITION_OF_CONSTANT, "Redefinition of constant " + Name );
+        }
+        m_ASMFileInfo.Labels[Name].RealValue = Value;
+      }
+    }
+
+
+
+    public void AddPreprocessorConstant( string Name, string Value, int SourceLine )
+    {
+      if ( !m_ASMFileInfo.Labels.ContainsKey( Name ) )
+      {
+        SymbolInfo token = new SymbolInfo();
+        token.Type = SymbolInfo.Types.PREPROCESSOR_CONSTANT_STRING;
+        token.String = Value;
+        token.Name = Name;
+        token.LineIndex = SourceLine;
+
+        if ( !_ParseContext.DoNotAddReferences )
+        {
+          token.AddReference( SourceLine, new TokenInfo() { StartPos = 0, Length = Name.Length } );
+        }
+        m_ASMFileInfo.Labels.Add( Name, token );
+      }
+      else
+      {
+        if ( m_ASMFileInfo.Labels[Name].String != Value )
+        {
+          AddError( SourceLine, Types.ErrorCode.E1203_REDEFINITION_OF_CONSTANT, "Redefinition of constant " + Name );
+        }
+        m_ASMFileInfo.Labels[Name].String = Value;
+      }
+    }
+
+
+
     public Types.ASM.UnparsedEvalInfo AddUnparsedLabel( string Name, string Value, int SourceLine )
     {
       if ( !m_ASMFileInfo.UnparsedLabels.ContainsKey( Name ) )
@@ -1105,11 +1161,11 @@ namespace RetroDevStudio.Parser
         return false;
       }
 
-      if ( m_ASMFileInfo.Labels[tokenValue].Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      if ( m_ASMFileInfo.Labels[tokenValue].IsNumber() )
       {
         ResultingSymbol = CreateNumberSymbol( m_ASMFileInfo.Labels[tokenValue].RealValue );
       }
-      else if ( m_ASMFileInfo.Labels[tokenValue].Type == SymbolInfo.Types.CONSTANT_STRING )
+      else if ( m_ASMFileInfo.Labels[tokenValue].IsString() )
       {
         ResultingSymbol = CreateStringSymbol( m_ASMFileInfo.Labels[tokenValue].String );
       }
@@ -10415,7 +10471,18 @@ namespace RetroDevStudio.Parser
           else
           {
             // TODO - allow real numbers
-            AddPreprocessorConstant( defineName, address.ToInteger(), -1 );
+            if ( address.IsNumber() )
+            {
+              AddPreprocessorConstant( defineName, address.ToNumber(), -1 );
+            }
+            else if ( address.IsString() )
+            {
+              AddPreprocessorConstant( defineName, address.ToString(), -1 );
+            }
+            else
+            {
+              AddPreprocessorConstant( defineName, address.ToInteger(), -1 );
+            }
           }
         }
       }

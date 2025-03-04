@@ -14,6 +14,8 @@ namespace RetroDevStudio
       PREPROCESSOR_LABEL,
       PREPROCESSOR_CONSTANT_1,
       PREPROCESSOR_CONSTANT_2,
+      PREPROCESSOR_CONSTANT_NUMBER,
+      PREPROCESSOR_CONSTANT_STRING,
       CONSTANT_1,
       CONSTANT_2,
       ZONE,
@@ -103,6 +105,32 @@ namespace RetroDevStudio
       ||   ( Type == Types.LABEL )
       ||   ( Type == Types.PREPROCESSOR_CONSTANT_1 )
       ||   ( Type == Types.PREPROCESSOR_CONSTANT_2 ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public bool IsNumber()
+    {
+      if ( ( Type == Types.CONSTANT_REAL_NUMBER )
+      ||   ( Type == Types.PREPROCESSOR_CONSTANT_NUMBER )
+      ||   ( Type == Types.VARIABLE_NUMBER ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public bool IsString()
+    {
+      if ( ( Type == Types.CONSTANT_STRING )
+      ||   ( Type == Types.PREPROCESSOR_CONSTANT_STRING )
+      ||   ( Type == Types.VARIABLE_STRING ) )
       {
         return true;
       }

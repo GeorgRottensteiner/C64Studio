@@ -482,8 +482,6 @@ namespace RetroDevStudio
 
               config.Load( memChunk );
 
-              Debug.Log( $"Config {config.Name} found" );
-
               if ( string.IsNullOrEmpty( config.DebugStartAddressLabel ) )
               {
                 config.DebugStartAddressLabel = origDebugStartAddress.ToString();
@@ -545,7 +543,6 @@ namespace RetroDevStudio
         {
           if ( Settings.GetConfigurationByName( elementSetting.Key ) == null )
           {
-            Debug.Log( $"Readd missing config entry: {elementSetting.Key}" );
             var config = new ProjectConfig()
             {
               Name = elementSetting.Key
