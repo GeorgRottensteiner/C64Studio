@@ -1,3 +1,4 @@
-#C64Studio.MetaData.BASIC:2049,BASIC V2
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
 5REM PRINT""
 10PRINT""
+648624""

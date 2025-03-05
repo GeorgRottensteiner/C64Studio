@@ -685,6 +685,7 @@ namespace RetroDevStudio
 
           perConfigSetting.PostBuildChain.Active = ( memSubChunk.ReadInt32() == 1 );
           numEntries = memSubChunk.ReadInt32();
+          //Debug.Log( $"PostBuildChain entries {numEntries} for {element.Name} for config {config}" );
           for ( int j = 0; j < numEntries; ++j )
           {
             var entry = new BuildChainEntry();

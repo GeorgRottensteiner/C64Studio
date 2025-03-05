@@ -1741,6 +1741,7 @@ namespace RetroDevStudio.Documents
       }
 
       string  mappedKey = KeyCodeToUnicode( keyData );
+      System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
 
       if ( !m_StringEnterMode )
       {
@@ -1767,11 +1768,9 @@ namespace RetroDevStudio.Documents
           {
             return true;
           }
-          return IsValidKey( mappedKey );
+          return IsValidKey( bareKey, mappedKey );
         }
       }
-
-      System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
 
       bareKey = keyData;
 
@@ -1948,7 +1947,7 @@ namespace RetroDevStudio.Documents
           return true;
         }
         if ( ( (int)bareKey >= 0x30 )
-        &&   ( !IsValidKey( mappedKey ) )
+        &&   ( !IsValidKey( bareKey, mappedKey ) )
         &&   ( !Core.Settings.Accelerators.ContainsKey( keyData ) ) )
         {
           // swallow invalid keys
@@ -1991,7 +1990,7 @@ namespace RetroDevStudio.Documents
           else
           {
             //Debug.Log( "No physical key info for " + lookupKey );
-            if ( !IsValidKey( mappedKey ) )
+            if ( !IsValidKey( bareKey, mappedKey ) )
             {
               return true;
             }
@@ -2124,7 +2123,7 @@ namespace RetroDevStudio.Documents
         }
         return base.ProcessCmdKey( ref msg, keyData );
       }
-      if ( !IsValidKey( mappedKey ) )
+      if ( !IsValidKey( bareKey, mappedKey ) )
       {
         return true;
       }
@@ -2194,10 +2193,18 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool IsValidKey( string MappedKey )
+    private bool IsValidKey( Keys bareKey, string MappedKey )
     {
       if ( string.IsNullOrEmpty( MappedKey ) )
       {
+        // allow cursor keys (TODO is there more than these?)
+        if ( ( bareKey == Keys.Left )
+        ||   ( bareKey == Keys.Right )
+        ||   ( bareKey == Keys.Up )
+        ||   ( bareKey == Keys.Down ) )
+        {
+          return true;
+        }
         return false;
       }
       // check all keys!

@@ -41,7 +41,7 @@ namespace RetroDevStudio
         {
           var item = new ArrangedItemEntry();
 
-          item.Text = entry.ProjectName + " - " + entry.Config;
+          item.Text = entry.ProjectName + " - " + entry.Config + " - " + entry.DocumentFilename;
           item.Tag = entry;
 
           listBuildChainProjects.Items.Add( item );
@@ -97,7 +97,7 @@ namespace RetroDevStudio
       
       var item = new ArrangedItemEntry();
 
-      item.Text = entry.ProjectName + " - " + entry.Config;
+      item.Text = entry.ProjectName + " - " + entry.Config + " -" + entry.DocumentFilename;
       item.Tag = entry;
 
       return item;
@@ -204,7 +204,7 @@ namespace RetroDevStudio
         {
           buildChainEntry.ProjectName = projectName;
 
-          listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
+          listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config + " - " + buildChainEntry.DocumentFilename;
           Element.DocumentInfo.Project.SetModified();
           Element.DocumentInfo.MarkAsDirty();
           listBuildChainProjects.Update();
@@ -228,7 +228,7 @@ namespace RetroDevStudio
       {
         buildChainEntry.Config = newConfig;
 
-        listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
+        listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config + " - " + buildChainEntry.DocumentFilename;
 
         Element.DocumentInfo.Project.SetModified();
         Element.DocumentInfo.MarkAsDirty();
@@ -298,7 +298,7 @@ namespace RetroDevStudio
 
       var item = new ArrangedItemEntry();
 
-      item.Text = entry.ProjectName + " - " + entry.Config;
+      item.Text = entry.ProjectName + " - " + entry.Config + " - " + entry.DocumentFilename;
       item.Tag = entry;
 
       return item;
