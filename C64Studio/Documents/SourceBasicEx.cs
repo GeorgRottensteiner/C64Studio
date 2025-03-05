@@ -2201,7 +2201,13 @@ namespace RetroDevStudio.Documents
         if ( ( bareKey == Keys.Left )
         ||   ( bareKey == Keys.Right )
         ||   ( bareKey == Keys.Up )
-        ||   ( bareKey == Keys.Down ) )
+        ||   ( bareKey == Keys.Down )
+        ||   ( bareKey == Keys.PageDown )
+        ||   ( bareKey == Keys.PageUp )
+        ||   ( bareKey == Keys.Home )
+        ||   ( bareKey == Keys.End )
+        ||   ( bareKey == Keys.Return )
+        ||   ( bareKey == Keys.Enter ) )
         {
           return true;
         }
