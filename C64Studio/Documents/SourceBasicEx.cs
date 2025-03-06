@@ -2206,6 +2206,7 @@ namespace RetroDevStudio.Documents
         ||   ( bareKey == Keys.PageUp )
         ||   ( bareKey == Keys.Home )
         ||   ( bareKey == Keys.Delete )
+        ||   ( bareKey == Keys.Insert )
         ||   ( bareKey == Keys.Back )
         ||   ( bareKey == Keys.End )
         ||   ( bareKey == Keys.Return )
