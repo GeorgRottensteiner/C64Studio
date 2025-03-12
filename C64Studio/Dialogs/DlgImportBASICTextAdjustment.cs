@@ -55,6 +55,7 @@ namespace RetroDevStudio.Dialogs
         if ( HasLowerCase )
         {
           checkAdjustCasing.Enabled = true;
+          checkAdjustCasing.Checked = true;
         }
       }
       else if ( LowercaseInvalidChars )
@@ -68,6 +69,7 @@ namespace RetroDevStudio.Dialogs
         if ( HasUpperCase )
         {
           checkAdjustCasing.Enabled = true;
+          checkAdjustCasing.Checked = true;
         }
       }
       else

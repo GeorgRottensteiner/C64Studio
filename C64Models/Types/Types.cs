@@ -1001,62 +1001,62 @@ namespace RetroDevStudio
       //   0- 31 $00-$1F    +128 $80        128-159 $80-$9F  
       // TODO - Screencodes!!
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128, true, 0, false, (char)0xee80, true, "REVERSE @" ).Replacements.Add( "CTRL-@" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 129, true, 1, true, (char)0xee81, true, "REVERSE A" ).Replacements.Add( "CTRL-A" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 130, true, 2, true, (char)0xee82, true, "REVERSE B" ).Replacements.Add( "CTRL-B" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 129, true, 1, true, (char)0xee81, (char)0xef81, 1, true, "REVERSE A", "" ).Replacements.Add( "CTRL-A" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 130, true, 2, true, (char)0xee82, (char)0xef82, 2, true, "REVERSE B", "" ).Replacements.Add( "CTRL-B" );
 
       ;   // run stop
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_RUN_STOP, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 131, true, 3, true, (char)0xee83, true, "RUN STOP" ).Replacements.Add( "CTRL-C" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 131, true, 3, true, (char)0xee83, true, "REVERSE C" ).Replacements.Add( "CTRL-C" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 131, true, 3, true, (char)0xee83, (char)0xef83, 3, true, "REVERSE C", "" ).Replacements.Add( "CTRL-C" );
       
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 132, true, 4, true, (char)0xee84, true, "REVERSE D" ).Replacements.Add( "CTRL-D" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 132, true, 4, true, (char)0xee84, (char)0xef84, 4, true, "REVERSE D", "" ).Replacements.Add( "CTRL-D" );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_2, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 133, true, 5, true, (char)0xee85, -1, 0, true, "WHITE", "WHI" ).Replacements.AddRange( new string[] { "WHITE", "WHT" } );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 133, true, 5, true, (char)0xee85, true, "REVERSE E" ).Replacements.AddRange( new string[] { "CTRL-E" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 133, true, 5, true, (char)0xee85, (char)0xef85, 5, true, "REVERSE E", "" ).Replacements.AddRange( new string[] { "CTRL-E" } );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 134, true, 6, true, (char)0xee86, true, "REVERSE F" ).Replacements.Add( "CTRL-F" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 135, true, 7, true, (char)0xee87, true, "REVERSE G" ).Replacements.Add( "CTRL-G" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 134, true, 6, true, (char)0xee86, (char)0xef86, 6, true, "REVERSE F", "" ).Replacements.Add( "CTRL-F" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 135, true, 7, true, (char)0xee87, (char)0xef87, 7, true, "REVERSE G", "" ).Replacements.Add( "CTRL-G" );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 136, true, 8, true, (char)0xee88, -1, 0, true, "SHIFT C= OFF", "SH C= OFF" ).Replacements.AddRange( new string[] { "CTRL-H", "DISH" } );   // Shift-C= aus
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 137, true, 9, true, (char)0xee89, -1, 0, true, "SHIFT C= ON", "SH C= ON" ).Replacements.AddRange( new string[] { "CTRL-I", "ENSH" } );   // Shift-C= an
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 136, true, 8, true, (char)0xee88, (char)0xef88, 8, true, "SHIFT C= OFF", "SH C= OFF" ).Replacements.AddRange( new string[] { "CTRL-H", "DISH" } );   // Shift-C= aus
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 137, true, 9, true, (char)0xee89, (char)0xef89, 9, true, "SHIFT C= ON", "SH C= ON" ).Replacements.AddRange( new string[] { "CTRL-I", "ENSH" } );   // Shift-C= an
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 138, true, 10, true, (char)0xee8a, true, "REVERSE J" ).Replacements.Add( "CTRL-J" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 139, true, 11, true, (char)0xee8b, true, "REVERSE K" ).Replacements.Add( "CTRL-K" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 140, true, 12, true, (char)0xee8c, true, "REVERSE L" ).Replacements.Add( "CTRL-L" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 138, true, 10, true, (char)0xee8a, (char)0xef8a, 10, true, "REVERSE J", "" ).Replacements.Add( "CTRL-J" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 139, true, 11, true, (char)0xee8b, (char)0xef8b, 11, true, "REVERSE K", "" ).Replacements.Add( "CTRL-K" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 140, true, 12, true, (char)0xee8c, (char)0xef8c, 12, true, "REVERSE L", "" ).Replacements.Add( "CTRL-L" );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, -1, 0, true, "RETURN", "RET" ).Replacements.AddRange( new string[] { "CTRL-M", "RETURN" } );  // return
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, true, "REVERSE M" ).Replacements.Add( "CTRL-M" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, (char)0xef8d, 13, true, "REVERSE M", "" ).Replacements.Add( "CTRL-M" );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 142, true, 14, true, (char)0xee8e, -1, 0, true, "SHIFT C=", "SH C=" ).Replacements.AddRange( new string[] { "SWLC" } );  // toggle upper/lower
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 142, true, 14, true, (char)0xee8e, true, "REVERSE N" ).Replacements.AddRange( new string[] { "CTRL-N" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 142, true, 14, true, (char)0xee8e, (char)0xef8e, 14, true, "REVERSE N", "" ).Replacements.AddRange( new string[] { "CTRL-N" } );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 143, true, 15, true, (char)0xee8f, true, "REVERSE O" ).Replacements.Add( "CTRL-O" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, true, (char)0xee90, true, "REVERSE P" ).Replacements.Add( "CTRL-P" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 143, true, 15, true, (char)0xee8f, (char)0xef8f, 15, true, "REVERSE O", "" ).Replacements.Add( "CTRL-O" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, true, (char)0xee90, (char)0xef90, 16, true, "REVERSE P", "" ).Replacements.Add( "CTRL-P" );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CURSOR_UP_DOWN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, -1, 0, true, "CURSOR DOWN", "CUR DOWN" ).Replacements.Add( "DOWN" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, true, "REVERSE Q" ).Replacements.AddRange( new string[] { "DOWN", "CTRL-Q" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, (char)0xef91, 17, true, "REVERSE Q", "DOWN" ).Replacements.AddRange( new string[] { "DOWN", "CTRL-Q" } );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_9, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, -1, 0, true, "REVERSE ON", "RVS ON" ).Replacements.AddRange( new string[] { "RVSON", "RVON", "RVS", "REVERSE ON" } );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, true, "REVERSE R" ).Replacements.AddRange( new string[] { "CTRL-R" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, (char)0xef92, 18, true, "REVERSE R", "" ).Replacements.AddRange( new string[] { "CTRL-R" } );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CLR_HOME, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 19, true, 19, true, (char)0xee93, -1, 0, true, "HOME", "HOM" ).Replacements.AddRange( new string[] { "HOME", "HOM" } );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 19, true, 19, true, (char)0xee93, true, "REVERSE S" ).Replacements.AddRange( new string[] { "CTRL-S" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 19, true, 19, true, (char)0xee93, (char)0xef93, 19, true, "REVERSE S", "" ).Replacements.AddRange( new string[] { "CTRL-S" } );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_INST_DEL, KeyModifier.NORMAL, KeyType.EDITOR_CONTROL_CODE, 128 + 20, true, 20, true, (char)0xee94, true, "DEL" ).Replacements.AddRange( new string[] { "DEL", "DELETE" } );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 20, true, 20, true, (char)0xee94, true, "REVERSE T" ).Replacements.AddRange( new string[] { "CTRL-T" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 20, true, 20, true, (char)0xee94, (char)0xef94, 20, true, "REVERSE T", "" ).Replacements.AddRange( new string[] { "CTRL-T" } );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 149, true, 21, true, (char)0xee95, true, "REVERSE U" ).Replacements.Add( "CTRL-U" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 150, true, 22, true, (char)0xee96, true, "REVERSE V" ).Replacements.Add( "CTRL-V" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 151, true, 23, true, (char)0xee97, true, "REVERSE W" ).Replacements.Add( "CTRL-W" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 152, true, 24, true, (char)0xee98, true, "REVERSE X" ).Replacements.Add( "CTRL-X" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 153, true, 25, true, (char)0xee99, true, "REVERSE Y" ).Replacements.Add( "CTRL-Y" );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 154, true, 26, true, (char)0xee9a, true, "REVERSE Z" ).Replacements.Add( "CTRL-Z" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 149, true, 21, true, (char)0xee95, (char)0xef95, 21, true, "REVERSE U", "" ).Replacements.Add( "CTRL-U" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 150, true, 22, true, (char)0xee96, (char)0xef96, 22, true, "REVERSE V", "" ).Replacements.Add( "CTRL-V" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 151, true, 23, true, (char)0xee97, (char)0xef97, 23, true, "REVERSE W", "" ).Replacements.Add( "CTRL-W" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 152, true, 24, true, (char)0xee98, (char)0xef98, 24, true, "REVERSE X", "" ).Replacements.Add( "CTRL-X" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 153, true, 25, true, (char)0xee99, (char)0xef99, 25, true, "REVERSE Y", "" ).Replacements.Add( "CTRL-Y" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 154, true, 26, true, (char)0xee9a, (char)0xef9a, 26, true, "REVERSE Z", "" ).Replacements.Add( "CTRL-Z" );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 155, true, 27, true, (char)0xee9b, true, "REVERSE [" );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_3, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 28, true, 28, true, (char)0xee9c, true, "RED" ).Replacements.Add( "RED" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_3, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 28, true, 28, true, (char)0xee9c, (char)0xef9c, 28, true, "RED", "" ).Replacements.Add( "RED" );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CURSOR_LEFT_RIGHT, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 29, true, 29, true, (char)0xee9d, -1, 0, true, "CURSOR RIGHT", "CUR RIGHT" ).Replacements.AddRange( new string[] { "RIGHT", "RGHT" } );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_6, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 30, true, 30, true, (char)0xee9e, -1, 0, true, "GREEN", "GRN" ).Replacements.AddRange( new string[] { "GREEN", "GRN" } );
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_7, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 31, true, 31, true, (char)0xee9f, -1, 0, true, "BLUE", "BLU" ).Replacements.AddRange( new string[] { "BLUE", "BLU" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_6, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 30, true, 30, true, (char)0xee9e, (char)0xef9e, 30, true, "GREEN", "GRN" ).Replacements.AddRange( new string[] { "GREEN", "GRN" } );
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_7, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 31, true, 31, true, (char)0xee9f, (char)0xef9f, 31, true, "BLUE", "BLU" ).Replacements.AddRange( new string[] { "BLUE", "BLU" } );
       //  32- 63 $20-$3F       0 $00         32- 63 $20-$3F  
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_SPACE, KeyModifier.NORMAL, KeyType.NORMAL, 32, true, 32, true, ' ', -1, 0, true, "SPACE", "SPC" ).Replacements.AddRange( new string[] { "SPACE", "SPACES" } );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_1, KeyModifier.SHIFT, KeyType.NORMAL, 33, true, 33, true, '!', true );
@@ -1190,7 +1190,7 @@ namespace RetroDevStudio
       // 128-159 $80-$9F     +64 $40        192-223 $C0-$DF  
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 192, true, (char)0xeec0, true, "REVERSE SHIFT @" ).Replacements.Add( "REVERSE SHIFT-@" );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_1, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 129 + 64, true, 129, true, (char)0xeec1, -1, 0, true, "ORANGE", "ORN" ).Replacements.AddRange( new string[] { "ORANGE", "ORN", "ORNG" } );   // orange
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_1, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 129 + 64, true, 129, true, (char)0xeec1, (char)0xefc1, 129, true, "ORANGE", "ORN" ).Replacements.AddRange( new string[] { "ORANGE", "ORN", "ORNG" } );   // orange
 
       //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0, false, 130, true, (char)0, false, "130" );
 
@@ -1215,22 +1215,22 @@ namespace RetroDevStudio
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 207, true, 0, false, (char)0xeecf, true, "REVERSE SHIFT O" );
 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_1, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144 + 64, true, 144, true, (char)0xeed0, -1, 0, true, "BLACK", "BLK" ).Replacements.AddRange( new string[] { "BLACK", "BLK" } );   // black
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CURSOR_UP_DOWN, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 145 + 64, true, 145, true, (char)0xeed1, -1, 0, true, "CURSOR UP", "CUR UP" ).Replacements.Add( "UP" );   // TODO cursor up
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_0, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 146 + 64, true, 146, true, (char)0xeed2, -1, 0, true, "REVERSE OFF", "RVS OFF" ).Replacements.AddRange( new string[] { "RVSOFF", "RVOF", "OFF", "REVERSE OFF" } );   // TODO rvs off
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CLR_HOME, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 147 + 64, true, 147, true, (char)0xeed3, -1, 0, true, "CLEAR", "CLR" ).Replacements.AddRange( new string[] { "CLR", "CLEAR" } );   // clr (with shift)
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CLR_HOME, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 147 + 64, true, 147, true, (char)0xeed3, -1, 0, true, "CLEAR", "CLR" ).Replacements.AddRange( new string[] { "CLR", "CLEAR" } );   // clr (with commodore)
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_2, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 149 + 64, true, 149, true, (char)0xeed5, -1, 0, true, "BROWN", "BRN" ).Replacements.AddRange( new string[] { "BROWN", "BRN" } );   // brown
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_3, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 150 + 64, true, 150, true, (char)0xeed6, -1, 0, true, "LIGHT RED", "LRD" ).Replacements.AddRange( new string[] { "LIGHT RED", "PINK", "LRED" } );   // light red
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_4, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 151 + 64, true, 151, true, (char)0xeed7, -1, 0, true, "GREY 1", "GR1" ).Replacements.AddRange( new string[] { "GREY 1", "GRAY 1", "DARK GRAY", "DARK GREY", "GRY1" } );      // grey 1
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_5, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 152 + 64, true, 152, true, (char)0xeed8, -1, 0, true, "GREY 2", "GR2" ).Replacements.AddRange( new string[] { "GREY 2", "GRAY 2", "GRY2", "GRAY", "GREY" } );      // grey 2
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_6, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 153 + 64, true, 153, true, (char)0xeed9, -1, 0, true, "LIGHT GREEN", "LGR" ).Replacements.AddRange( new string[] { "LIGHT GREEN", "LGRN" } ); // light green
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_7, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 154 + 64, true, 154, true, (char)0xeeda, -1, 0, true, "LIGHT BLUE", "LBL" ).Replacements.AddRange( new string[] { "LIGHT BLUE", "LBL", "LBLU" } );  // light blue
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_8, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 155 + 64, true, 155, true, (char)0xeedb, -1, 0, true, "GREY 3", "GR3" ).Replacements.AddRange( new string[] { "GREY 3", "GRAY 3", "LIGHT GREY", "LIGHT GRAY", "GRY3" } );      // grey 3
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_5, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 156 + 64, true, 156, true, (char)0xeedc, -1, 0, true, "PURPLE", "PUR" ).Replacements.AddRange( new string[] { "PURPLE", "PUR" } );      // purple
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CURSOR_LEFT_RIGHT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 157 + 64, true, 157, true, (char)0xeedd, -1, 0, true, "CURSOR LEFT", "CUR LEFT" ).Replacements.Add( "LEFT" );   // TODO cursor left
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_8, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 158 + 64, true, 158, true, (char)0xeede, -1, 0, true, "YELLOW", "YEL" ).Replacements.AddRange( new string[] { "YELLOW", "YEL" } );    // yellow
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_4, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 159 + 64, true, 159, true, (char)0xeedf, -1, 0, true, "CYAN", "CYN" ).Replacements.AddRange( new string[] { "CYAN", "CYN" } );      // TODO cyan
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_1, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144 + 64, true, 144, true, (char)0xeed0, (char)0xefd0, 144, true, "BLACK", "BLK" ).Replacements.AddRange( new string[] { "BLACK", "BLK" } );   // black
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CURSOR_UP_DOWN, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 145 + 64, true, 145, true, (char)0xeed1, (char)0xefd1, 0, true, "CURSOR UP", "CUR UP" ).Replacements.Add( "UP" );   // TODO cursor up
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_0, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 146 + 64, true, 146, true, (char)0xeed2, (char)0xefd2, 0, true, "REVERSE OFF", "RVS OFF" ).Replacements.AddRange( new string[] { "RVSOFF", "RVOF", "OFF", "REVERSE OFF" } );   // TODO rvs off
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CLR_HOME, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 147 + 64, true, 147, true, (char)0xeed3, (char)0xefd3, 0, true, "CLEAR", "CLR" ).Replacements.AddRange( new string[] { "CLR", "CLEAR" } );   // clr (with shift)
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CLR_HOME, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 147 + 64, true, 147, true, (char)0xeed3, (char)0xefd3, 0, true, "CLEAR", "CLR" ).Replacements.AddRange( new string[] { "CLR", "CLEAR" } );   // clr (with commodore)
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_2, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 149 + 64, true, 149, true, (char)0xeed5, (char)0xefd5, 0, true, "BROWN", "BRN" ).Replacements.AddRange( new string[] { "BROWN", "BRN" } );   // brown
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_3, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 150 + 64, true, 150, true, (char)0xeed6, (char)0xefd6, 0, true, "LIGHT RED", "LRD" ).Replacements.AddRange( new string[] { "LIGHT RED", "PINK", "LRED" } );   // light red
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_4, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 151 + 64, true, 151, true, (char)0xeed7, (char)0xefd7, 0, true, "GREY 1", "GR1" ).Replacements.AddRange( new string[] { "GREY 1", "GRAY 1", "DARK GRAY", "DARK GREY", "GRY1" } );      // grey 1
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_5, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 152 + 64, true, 152, true, (char)0xeed8, (char)0xefd8, 0, true, "GREY 2", "GR2" ).Replacements.AddRange( new string[] { "GREY 2", "GRAY 2", "GRY2", "GRAY", "GREY" } );      // grey 2
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_6, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 153 + 64, true, 153, true, (char)0xeed9, (char)0xefd9, 0, true, "LIGHT GREEN", "LGR" ).Replacements.AddRange( new string[] { "LIGHT GREEN", "LGRN" } ); // light green
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_7, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 154 + 64, true, 154, true, (char)0xeeda, (char)0xefda, 0, true, "LIGHT BLUE", "LBL" ).Replacements.AddRange( new string[] { "LIGHT BLUE", "LBL", "LBLU" } );  // light blue
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_8, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 155 + 64, true, 155, true, (char)0xeedb, (char)0xefdb, 0, true, "GREY 3", "GR3" ).Replacements.AddRange( new string[] { "GREY 3", "GRAY 3", "LIGHT GREY", "LIGHT GRAY", "GRY3" } );      // grey 3
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_5, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 156 + 64, true, 156, true, (char)0xeedc, (char)0xefdc, 0, true, "PURPLE", "PUR" ).Replacements.AddRange( new string[] { "PURPLE", "PUR" } );      // purple
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_CURSOR_LEFT_RIGHT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 157 + 64, true, 157, true, (char)0xeedd, (char)0xefdd, 0, true, "CURSOR LEFT", "CUR LEFT" ).Replacements.Add( "LEFT" );   // TODO cursor left
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_8, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 158 + 64, true, 158, true, (char)0xeede, (char)0xefde, 0, true, "YELLOW", "YEL" ).Replacements.AddRange( new string[] { "YELLOW", "YEL" } );    // yellow
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_4, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 159 + 64, true, 159, true, (char)0xeedf, (char)0xefdf, 0, true, "CYAN", "CYN" ).Replacements.AddRange( new string[] { "CYAN", "CYN" } );      // TODO cyan
 
       // 160-191 $A0-$BF     -64 $C0         96-127 $60-$7F  
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 160 - 64, true, 160, true, (char)0xee60, true, "SHIFT SPACE" ).Replacements.AddRange( new string[] { "SHIFT-SPACE", "SH SPACE" } );   // shift-space

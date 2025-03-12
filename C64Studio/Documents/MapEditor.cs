@@ -298,7 +298,8 @@ namespace RetroDevStudio.Documents
             }
             break;
           case Function.PASTE:
-            if ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) )
+            if ( ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) )
+            ||   ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabTiles, FocusSupport.FocusControlReason.COPY_PASTE ) ) )
             {
               PasteFromClipboard();
               return true;
@@ -328,6 +329,7 @@ namespace RetroDevStudio.Documents
       get
       {
         return ( ( characterEditor.EditorFocused )
+        ||       ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabTiles, FocusSupport.FocusControlReason.COPY_PASTE ) )
         ||       ( !FocusSupport.IsFocusOnChildOfAndCouldAffectReason( tabEditor, FocusSupport.FocusControlReason.COPY_PASTE ) ) );
       }
     }
@@ -1692,6 +1694,72 @@ namespace RetroDevStudio.Documents
         Redraw();
         pictureEditor.Invalidate();
         return;
+      }
+      else if ( dataObj.GetDataPresent( "RetroDevStudio.CharacterScreenSelection" ) )
+      {
+        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.CharacterScreenSelection" );
+
+        GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( (uint)ms.Length );
+
+        ms.Read( data.Data(), 0, (int)ms.Length );
+
+        GR.IO.MemoryReader memIn = data.MemoryReader();
+
+        int   selectionWidth  = memIn.ReadInt32();
+        int   selectionHeight = memIn.ReadInt32();
+
+        var copyData = new List<GR.Generic.Tupel<bool, uint>>();
+        var copyDataSize = new System.Drawing.Size( selectionWidth, selectionHeight );
+
+        for ( int y = 0; y < selectionHeight; ++y )
+        {
+          for ( int x = 0; x < selectionWidth; ++x )
+          {
+            bool  isCharSet = ( memIn.ReadUInt8() != 0 );
+            if ( isCharSet )
+            {
+              copyData.Add( new GR.Generic.Tupel<bool, uint>( true, memIn.ReadUInt32() ) );
+            }
+            else
+            {
+              copyData.Add( new GR.Generic.Tupel<bool, uint>( false, 0 ) );
+            }
+          }
+        }
+        if ( tabMapEditor.SelectedTab == tabTiles )
+        {
+          bool modified = false;
+          if ( listTileInfo.SelectedIndices.Count > 0 )
+          {
+            for ( int y = 0; y < selectionHeight; ++y )
+            {
+              for ( int x = 0; x < selectionWidth; ++x )
+              {
+                if ( copyData[x + y * selectionWidth].first )
+                {
+                  if ( ( x < m_CurrentEditedTile.Chars.Width )
+                  &&   ( y < m_CurrentEditedTile.Chars.Height ) )
+                  {
+                    if ( !modified )
+                    {
+                      modified = true;
+                      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, listTileInfo.SelectedIndices[0] ) );
+                    }
+
+                    m_CurrentEditedTile.Chars[x, y].Character = (byte)( copyData[x + y * selectionWidth].second & 0xff );
+                    m_CurrentEditedTile.Chars[x, y].Color     = (byte)( ( copyData[x + y * selectionWidth].second >> 16 ) & 0xff );
+                  }
+                }
+              }
+            }
+            if ( modified )
+            {
+              RedrawTile();
+              RedrawMap();
+              SetModified();
+            }
+          }
+        }
       }
     }
 

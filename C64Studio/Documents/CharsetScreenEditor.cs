@@ -2338,6 +2338,11 @@ namespace RetroDevStudio.Documents
       if ( dataObj.GetDataPresent( "RetroDevStudio.CharacterScreenSelection" ) )
       {
         System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.CharacterScreenSelection" );
+        if ( ms == null )
+        {
+          MessageBox.Show( "The clipboard is empty" );
+          return;
+        }
 
         GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( (uint)ms.Length );
 

@@ -246,6 +246,9 @@ namespace RetroDevStudio.Documents
       bool  hasUppercase = false;
       bool  hasInvalidCharsInLowercase = false;
       bool  hasInvalidCharsInUppercase = false;
+
+      TextToPaste = ReplacePetCatCompatibilityChars( TextToPaste, out bool hadError );
+
       foreach ( var c in TextToPaste )
       {
         if ( ( c == '\n' )
@@ -256,6 +259,21 @@ namespace RetroDevStudio.Documents
         }
         hasLowercase |= char.IsLower( c );
         hasUppercase |= char.IsUpper( c );
+
+        if ( BasicFileParser.FindBestKeyboardMachineType( BASICDialect ) == MachineType.C64 )
+        {
+          // C64 true type has special unicode chars
+          if ( ( c >= 0xee00 )
+          &&   ( c <= 0xeeff ) )
+          {
+            hasUppercase = true;
+          }
+          if ( ( c >= 0xef00 )
+          &&   ( c <= 0xefff ) )
+          {
+            hasLowercase = true;
+          }
+        }
 
         // custom macro characters (or label chars) must be allowed, even if they're not valid PETSCII
         if ( "{}_".IndexOf( c ) != -1 )
