@@ -2544,6 +2544,12 @@ namespace FastColoredTextBoxNS
     internal event EventHandler BindingTextChanged;
 
     /// <summary>
+    /// Occurs when users copy text to clipboard
+    /// </summary>
+    [Description( "Occurs when users copy text to clipboard" )]
+    public event EventHandler<TextCopyingEventArgs> Copying;
+
+    /// <summary>
     /// Occurs when user paste text from clipboard
     /// </summary>
     [Description( "Occurs when user paste text from clipboard" )]
@@ -3268,16 +3274,18 @@ namespace FastColoredTextBoxNS
       if ( !Selection.IsEmpty )
       {
         var data = new DataObject();
-        OnCreateClipboardData( data );
-        //
-        var thread = new Thread( () => SetClipboard( data ) );
-        thread.SetApartmentState( ApartmentState.STA );
-        thread.Start();
-        thread.Join();
+        if ( OnCreateClipboardData( data ) )
+        {
+          //
+          var thread = new Thread( () => SetClipboard( data ) );
+          thread.SetApartmentState( ApartmentState.STA );
+          thread.Start();
+          thread.Join();
+        }
       }
     }
 
-    protected virtual void OnCreateClipboardData( DataObject data )
+    protected virtual bool OnCreateClipboardData( DataObject data )
     {
       var exp = new ExportToHTML();
       exp.UseBr = false;
@@ -3293,6 +3301,24 @@ namespace FastColoredTextBoxNS
         // adding this format allows several editors to handle this as an Alt-block of text
         data.SetData( "MSDEVColumnSelect", new byte[] { 1, 0 } );
       }
+
+      if ( Copying != null )
+      {
+        // sometimes clipboard blocks and returns null!
+        var args = new TextCopyingEventArgs
+        {
+          Cancel                = false,
+          CopiedText            = Selection.Text,
+          ClipboardData         = data
+        };
+        Copying( this, args );
+
+        if ( args.Cancel )
+        {
+          return false;
+        }
+      }
+      return true;
     }
 
 
@@ -10353,6 +10379,30 @@ window.status = ""#print"";
     } = false;
 
     public string InsertingText
+    {
+      get;
+      set;
+    }
+
+    /// <summary>
+    /// Set to true if you want to cancel text inserting
+    /// </summary>
+    public bool Cancel
+    {
+      get;
+      set;
+    }
+  }
+
+  public class TextCopyingEventArgs : EventArgs
+  {
+    public DataObject ClipboardData
+    {
+      get;
+      set;
+    }
+
+    public string CopiedText
     {
       get;
       set;

@@ -4789,7 +4789,7 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public string ReplaceAllSymbolsByMacros( string BasicText, bool LowerCaseMode )
+    public static string ReplaceAllSymbolsByMacros( string BasicText, bool LowerCaseMode )
     {
       bool    insideQuotes = false;
       for ( int i = 0; i < BasicText.Length; ++i )

@@ -184,6 +184,7 @@ namespace RetroDevStudio.Documents
       editSource.SelectionChanged += EditSource_SelectionChanged;
       editSource.LineInserted += EditSource_LineInserted;
       editSource.LineRemoved += EditSource_LineRemoved;
+      editSource.Copying += EditSource_Copying;
       editSource.Pasting += EditSource_Pasting;
       editSource.UndoRedoStateChanged += EditSource_UndoRedoStateChanged;
 
@@ -209,6 +210,29 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void EditSource_Copying( object sender, TextCopyingEventArgs e )
+    {
+      // add current mode of copied text
+      if ( m_LowerCaseMode )
+      {
+        e.ClipboardData.SetData( "RetroDevStudio.BASICText.LowerCase", new byte[] { 1, 0 } );
+      }
+      else
+      {
+        e.ClipboardData.SetData( "RetroDevStudio.BASICText.UpperCase", new byte[] { 1, 0 } );
+      }
+      if ( m_SymbolMode )
+      {
+        e.ClipboardData.SetData( "RetroDevStudio.BASICText.SymbolMode", new byte[] { 1, 0 } );
+      }
+      else
+      {
+        e.ClipboardData.SetData( "RetroDevStudio.BASICText.MacroMode", new byte[] { 1, 0 } );
+      }
+    }
+
+
+
     private void EditSource_UndoRedoStateChanged( object sender, UndoRedoEventArgs e )
     {
       if ( e.Action == UndoRedoEventArgs.UndoRedoAction.UNDO_ADDED )
@@ -227,6 +251,48 @@ namespace RetroDevStudio.Documents
     private void EditSource_Pasting( object sender, TextPastingEventArgs e )
     {
       string    textToPaste = e.InsertingText;
+
+      bool  isUpperCase   = Clipboard.ContainsData( "RetroDevStudio.BASICText.UpperCase" );
+      bool  isLowerCase   = Clipboard.ContainsData( "RetroDevStudio.BASICText.LowerCase" );
+      bool  isSymbolMode  = Clipboard.ContainsData( "RetroDevStudio.BASICText.SymbolMode" );
+      bool  isMacroMode   = Clipboard.ContainsData( "RetroDevStudio.BASICText.MacroMode" );
+
+      if ( ( isUpperCase )
+      &&   ( m_LowerCaseMode ) )
+      {
+        textToPaste = BasicFileParser.MakeLowerCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+      }
+      if ( ( isLowerCase )
+      &&   ( !m_LowerCaseMode ) )
+      {
+        textToPaste = BasicFileParser.MakeUpperCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+      }
+      if ( ( isSymbolMode )
+      &&   ( !m_SymbolMode ) )
+      {
+        if ( m_LowerCaseMode )
+        {
+          textToPaste = BasicFileParser.MakeUpperCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+        }
+        textToPaste = BasicFileParser.ReplaceAllSymbolsByMacros( textToPaste, m_LowerCaseMode );
+        if ( m_LowerCaseMode )
+        {
+          textToPaste = BasicFileParser.MakeLowerCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+        }
+      }
+      if ( ( isMacroMode )
+      &&   ( m_SymbolMode ) )
+      {
+        if ( m_LowerCaseMode )
+        {
+          textToPaste = BasicFileParser.MakeUpperCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+        }
+        textToPaste = BasicFileParser.ReplaceAllMacrosBySymbols( textToPaste, BasicFileParser.FindBestKeyboardMachineType( BASICDialect ), out bool hadError1 );
+        if ( m_LowerCaseMode )
+        {
+          textToPaste = BasicFileParser.MakeLowerCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+        }
+      }
 
       textToPaste = DetectAndAdaptCaseMode( textToPaste, false );
       if ( textToPaste == null )
@@ -1239,7 +1305,7 @@ namespace RetroDevStudio.Documents
 
         if ( !m_SymbolMode )
         {
-          basicText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( basicText, false );
+          basicText = BasicFileParser.ReplaceAllSymbolsByMacros( basicText, false );
         }
 
         if ( DocumentInfo.Element != null )
@@ -2640,7 +2706,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText, false );
+        newText = BasicFileParser.ReplaceAllSymbolsByMacros( newText, false );
       }
       if ( hadError )
       {
