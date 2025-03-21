@@ -53,7 +53,8 @@ namespace RetroDevStudio.Parser.BASIC
     public bool                             ExtendedTokensRecognizedInsideComment = false;
     public int                              MaxLineNumber = 63999;
     public int                              VariableRelevantLength = -1;
-    public bool                             LowerCase = false;
+    public bool                             DefaultToLowerCase = false;
+    public bool                             AllowCaseToggle = true;
     public List<MachineType>                MachineTypes = new List<MachineType>();
     public CompileTargetType                CompileType = CompileTargetType.PRG; 
 
@@ -295,9 +296,14 @@ namespace RetroDevStudio.Parser.BASIC
             dialect.HasTextLabels = true;
             continue;
           }
+          else if ( line == "NoCaseToggle" )
+          {
+            dialect.AllowCaseToggle = false;
+            continue;
+          }
           else if ( line == "Lowercase" )
           {
-            dialect.LowerCase = true;
+            dialect.DefaultToLowerCase = true;
             continue;
           }
           else if ( line == "ExtendedTokensRecognizedInsideComment" )

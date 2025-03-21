@@ -93,7 +93,7 @@ namespace RetroDevStudio.Controls
       var exportType = (ExportType)comboExportType.SelectedIndex;
       var exportContent = (ExportContent)comboExportContent.SelectedIndex;
 
-      GR.Memory.ByteBuffer finalData = null;
+      var finalData = new ByteBuffer();
       var screenData   = new GR.Memory.ByteBuffer();
       var colorData  = new GR.Memory.ByteBuffer();
       var bitmapData   = new GR.Memory.ByteBuffer();

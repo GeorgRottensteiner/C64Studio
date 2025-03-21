@@ -958,7 +958,7 @@ namespace RetroDevStudio.Documents
           string  insertText = sb.ToString();
           document.FillContent( insertText, false, false );
           document.SetStartAddress( startAddress.ToString() );
-          if ( Dialect.LowerCase )
+          if ( Dialect.DefaultToLowerCase )
           {
             document.SetLowerCase();
           }

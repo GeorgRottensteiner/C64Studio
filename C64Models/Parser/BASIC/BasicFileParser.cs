@@ -4326,6 +4326,14 @@ namespace RetroDevStudio.Parser.BASIC
       {
         case MachineType.ZX81:
           {
+            if ( dataPos >= data.Length )
+            {
+              return ExtractLineResult.ERROR;
+            }
+            if ( data[dataPos] == 0x76 )
+            {
+              return ExtractLineResult.END_OF_CODE;
+            }
             if ( dataPos + 5 > data.Length )
             {
               return ExtractLineResult.ERROR;
@@ -4338,7 +4346,19 @@ namespace RetroDevStudio.Parser.BASIC
             {
               return ExtractLineResult.ERROR;
             }
-            lineData = data.SubBuffer( dataPos + 4, length - 1 );
+            if ( length == 0 )
+            {
+              lineData = new ByteBuffer();
+            }
+            else
+            {
+              lineData = data.SubBuffer( dataPos + 4, length - 1 );
+            }
+            // expect an EOL
+            if ( data[dataPos + 4 + length - 1] != 0x76 )
+            {
+              return ExtractLineResult.ERROR;
+            }
             dataPos += 4 + length;
 
             return ExtractLineResult.OK;

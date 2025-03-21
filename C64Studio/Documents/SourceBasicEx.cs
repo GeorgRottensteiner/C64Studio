@@ -2940,6 +2940,8 @@ namespace RetroDevStudio.Documents
       m_BASICDialectName  = basicDialect.Name;
       m_BASICDialect      = basicDialect;
 
+      btnToggleUpperLowerCase.Enabled = basicDialect.AllowCaseToggle;
+
       Font newFont = null;
       foreach ( var machine in m_BASICDialect.MachineTypes )
       {
