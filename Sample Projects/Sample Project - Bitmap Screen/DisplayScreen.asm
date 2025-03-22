@@ -1,4 +1,4 @@
-﻿;USE_HIRES = 1   ;comment out this line to use multicolor
+USE_HIRES = 1   ;comment out this line to use multicolor
 
 * = $0801
 

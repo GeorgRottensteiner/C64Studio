@@ -350,15 +350,19 @@ namespace RetroDevStudio.Formats
               int colorTarget = 0;
               List<byte> keys = new List<byte>( usedColors.Keys );
 
-              /*
               // only one color, that means, the other was background -> force the same bit pattern
               if ( ( usedColors.Count == 1 )
               &&   ( usedColors[0] != Colors.BackgroundColor ) )
               {
                 colorTarget = 1;
                 firstColorIndex = Colors.BackgroundColor;
-              }*/
-
+              }
+              // only one color, and was background? -> force the same bit pattern
+              if ( ( usedColors.Count == 1 )
+              &&   ( usedColors[0] == Colors.BackgroundColor ) )
+              {
+                colorTarget     = 1;
+              }
               // check for overlaps - two colors are used that would map to the same target pattern?
               Dictionary<int,ColorMappingTarget>       recommendedPattern = new Dictionary<int, ColorMappingTarget>();
 

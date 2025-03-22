@@ -2625,6 +2625,7 @@ namespace RetroDevStudio.Documents
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenSizeChange( m_GraphicScreenProject, this, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
         SetScreenSize( newWidth, newHeight );
+        SetModified();
         Redraw();
       }
     }
