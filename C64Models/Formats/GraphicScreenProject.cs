@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 
@@ -43,9 +44,9 @@ namespace RetroDevStudio.Formats
       ANY = 4,
 
       // HiRes
-      [Description( "0 (Color 1)" )]
+      [Description( "1 (set bit)" )]
       COLOR_1 = 5,
-      [Description( "1 (Color 2)" )]
+      [Description( "0 (clear bit)" )]
       COLOR_2 = 6
     };
 
@@ -293,7 +294,9 @@ namespace RetroDevStudio.Formats
       screenColor = new GR.Memory.ByteBuffer( (uint)( WidthChars * HeightChars ) );
       bitmapData  = new GR.Memory.ByteBuffer( (uint)( 8 * WidthChars * HeightChars ) );
 
-      GR.Collections.Map<byte, byte> usedColors = new GR.Collections.Map<byte, byte>();
+      var usedColors = new GR.Collections.Map<byte, byte>();
+      var completeColorMapping = new GR.Collections.Map<byte, byte>();
+
 
       for ( int y = CharY; y < HeightChars; ++y )
       {
@@ -322,11 +325,8 @@ namespace RetroDevStudio.Formats
                 }
                 ++numErrors;
               }
-              //if ( colorIndex != Colors.BackgroundColor )
-              {
-                // remember used color
-                usedColors.Add( colorIndex, 0 );
-              }
+              // remember used color
+              usedColors.Add( colorIndex, 0 );
             }
           }
           // more than 2 colors?
@@ -351,6 +351,7 @@ namespace RetroDevStudio.Formats
               List<byte> keys = new List<byte>( usedColors.Keys );
 
               // only one color, that means, the other was background -> force the same bit pattern
+              /*
               if ( ( usedColors.Count == 1 )
               &&   ( usedColors[0] != Colors.BackgroundColor ) )
               {
@@ -363,13 +364,39 @@ namespace RetroDevStudio.Formats
               {
                 colorTarget     = 1;
               }
+              // one color is the background -> force the same bit pattern
+              if ( ( usedColors.Count == 1 )
+              &&   ( usedColors[0] == Colors.BackgroundColor ) )
+              {
+                colorTarget = 1;
+              }
+              */
               // check for overlaps - two colors are used that would map to the same target pattern?
               Dictionary<int,ColorMappingTarget>       recommendedPattern = new Dictionary<int, ColorMappingTarget>();
 
-              numErrors += DetermineBestMapping( keys, x, y, ForceBitPattern, recommendedPattern, ErrornousBlocks );
+              var currentColorMapping = new GR.Collections.Map<byte, byte>();
+
+              var adaptedForcePattern = new Dictionary<int, List<ColorMappingTarget>>();
+              foreach ( var forced in ForceBitPattern )
+              {
+                adaptedForcePattern.Add( forced.Key, new List<ColorMappingTarget>( forced.Value ) );
+              }
 
               foreach ( byte colorIndex in keys )
               {
+                if ( completeColorMapping.ContainsKey( colorIndex ) )
+                {
+                  // try to use previous pattern
+                  var entry = (ColorMappingTarget)( ColorMappingTarget.COLOR_1 + completeColorMapping[colorIndex] );
+                  adaptedForcePattern[colorIndex].Insert( adaptedForcePattern[colorIndex].Count - 1, entry );
+                }
+              }
+
+              numErrors += DetermineBestMapping( keys, x, y, adaptedForcePattern, recommendedPattern, ErrornousBlocks );
+
+              foreach ( byte colorIndex in keys )
+              {
+                colorTarget = ( colorTarget % 2 );
                 if ( recommendedPattern.ContainsKey( colorIndex ) )
                 {
                   if ( recommendedPattern[colorIndex] == ColorMappingTarget.COLOR_1 )
@@ -381,6 +408,16 @@ namespace RetroDevStudio.Formats
                     colorTarget = 1;
                   }
                 }
+                else
+                {
+                  if ( keys.Count == 1 )
+                  {
+                    // prefer zero byte for single color
+                    colorTarget = 1;
+                  }
+                }
+
+                currentColorMapping.Add( colorIndex, (byte)colorTarget );
 
                 if ( colorTarget == 0 )
                 {
@@ -406,13 +443,20 @@ namespace RetroDevStudio.Formats
 
                 if ( recommendedPattern.ContainsKey( colorIndex ) )
                 {
-                  if ( recommendedPattern[colorIndex] == ColorMappingTarget.COLOR_2 )
+                  if ( recommendedPattern[colorIndex] == ColorMappingTarget.COLOR_1 )
                   {
                     firstColorIndex = colorIndex;
                   }
                 }
 
                 ++colorTarget;
+              }
+              foreach ( var entry in currentColorMapping )
+              {
+                if ( !completeColorMapping.ContainsKey( entry.Key ) )
+                {
+                  completeColorMapping.Add( entry.Key, entry.Value );
+                }
               }
             }
             // write out bits
@@ -680,7 +724,8 @@ namespace RetroDevStudio.Formats
 
 
 
-    private int DetermineBestMapping( List<byte> keys, int x, int y, Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, Dictionary<int, ColorMappingTarget> RecommendedPattern, bool[,] ErrornousBlocks )
+    private int DetermineBestMapping( List<byte> keys, int x, int y, Dictionary<int, List<ColorMappingTarget>> ForceBitPattern,
+                                      Dictionary<int, ColorMappingTarget> RecommendedPattern, bool[,] ErrornousBlocks )
     {
       int   numErrors = 0;
       Dictionary<int,ColorMappingTarget>    potentialMapping = new Dictionary<int, ColorMappingTarget>();

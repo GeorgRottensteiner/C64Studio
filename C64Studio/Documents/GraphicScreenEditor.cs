@@ -106,10 +106,7 @@ namespace RetroDevStudio.Documents
       PaletteManager.ApplyPalette( charEditor.DisplayPage );
       PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
 
-      foreach ( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
-      {
-        comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
-      }
+      UpdateColorMappingOptions();
 
       for ( int i = 0; i < 16; ++i )
       {
@@ -168,7 +165,6 @@ namespace RetroDevStudio.Documents
       switch ( m_GraphicScreenProject.SelectedCheckType )
       {
         case Formats.GraphicScreenProject.CheckType.HIRES_CHARSET:
-        case Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
           _ColorChooserDlg = new ColorChooserCommodoreHiRes( Core, m_GraphicScreenProject.Colors );
           break;
         case Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
@@ -182,6 +178,7 @@ namespace RetroDevStudio.Documents
         case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
         case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
         case GraphicScreenProject.CheckType.MEGA65_BITMAP:
+        case Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
           _ColorChooserDlg = new ColorChooserBase( Core, m_GraphicScreenProject.Colors );
           break;
         default:
@@ -2497,6 +2494,7 @@ namespace RetroDevStudio.Documents
       ChangeColorChooserDialog();
       SetCharCheckList();
       RedrawColorSelector();
+      UpdateColorMappingOptions();
 
       int     numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
       if ( ( m_Chars.Count > 0 )
@@ -2512,6 +2510,30 @@ namespace RetroDevStudio.Documents
       PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
 
       pictureEditor.Invalidate();
+    }
+
+
+
+    private void UpdateColorMappingOptions()
+    {
+      comboColorMappingTargets.BeginUpdate();
+      comboColorMappingTargets.Items.Clear();
+      switch ( m_GraphicScreenProject.SelectedCheckType )
+      {
+        case GraphicScreenProject.CheckType.HIRES_BITMAP:
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.COLOR_1 ) );
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.COLOR_2 ) );
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.ANY ) );
+          break;
+        case GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.BITS_00 ) );
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.BITS_01 ) );
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.BITS_10 ) );
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.BITS_11 ) );
+          comboColorMappingTargets.Items.Add( UtilForms.ComboItem( GraphicScreenProject.ColorMappingTarget.ANY ) );
+          break;
+      }
+      comboColorMappingTargets.EndUpdate();
     }
 
 
@@ -2773,7 +2795,7 @@ namespace RetroDevStudio.Documents
 
     private ArrangedItemEntry listColorMappingTargets_AddingItem( object sender )
     {
-      RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
+      RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget)( (ComboItem)comboColorMappingTargets.SelectedItem ).Tag;
 
       int     sourceColor = listColorMappingColors.SelectedIndex;
       if ( sourceColor == -1 )

@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,11 @@ namespace RetroDevStudio
         }
       }
 
+    }
+
+    internal static ComboItem ComboItem( Enum value )
+    {
+      return new ComboItem( GR.EnumHelper.GetDescription( value ), value );
     }
 
 
