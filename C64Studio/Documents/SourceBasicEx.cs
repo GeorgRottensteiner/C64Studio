@@ -1845,7 +1845,8 @@ namespace RetroDevStudio.Documents
           return true;
         }
         // no Commodore combinations outside of string mode
-        if ( ( keyData & Keys.Control ) == Keys.Control )
+        if ( ( ( keyData & Keys.Control ) == Keys.Control )
+        &&   ( mappedKey != "@" ) )
         {
           bool    hasAccelerator = Core.MainForm.HandleCmdKey( ref msg, keyData );
           if ( hasAccelerator )

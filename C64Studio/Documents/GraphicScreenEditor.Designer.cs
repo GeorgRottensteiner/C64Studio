@@ -29,10 +29,10 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -237,7 +237,7 @@
       // 
       this.colorSelector.AutoResize = false;
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage4;
+      this.colorSelector.DisplayPage = fastImage1;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(677, 272);
       this.colorSelector.Name = "colorSelector";
@@ -251,7 +251,7 @@
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage5;
+      this.charEditor.DisplayPage = fastImage2;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(677, 6);
       this.charEditor.Name = "charEditor";
@@ -385,6 +385,7 @@
       this.btnToolLineDrag.Name = "btnToolLineDrag";
       this.btnToolLineDrag.Size = new System.Drawing.Size(24, 24);
       this.btnToolLineDrag.TabIndex = 1;
+      this.toolTip1.SetToolTip(this.btnToolLineDrag, "Line");
       this.btnToolLineDrag.CheckedChanged += new DecentForms.EventHandler(this.btnToolLineDrag_CheckedChanged);
       // 
       // btnToolLine
@@ -398,7 +399,7 @@
       this.btnToolLine.Name = "btnToolLine";
       this.btnToolLine.Size = new System.Drawing.Size(24, 24);
       this.btnToolLine.TabIndex = 1;
-      this.toolTip1.SetToolTip(this.btnToolLine, "Line");
+      this.toolTip1.SetToolTip(this.btnToolLine, "Free Line");
       this.btnToolLine.CheckedChanged += new DecentForms.EventHandler(this.btnToolLine_CheckedChanged);
       // 
       // btnToolPaint
@@ -639,7 +640,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
