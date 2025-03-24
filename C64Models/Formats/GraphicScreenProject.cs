@@ -820,5 +820,282 @@ namespace RetroDevStudio.Formats
       return numErrors;
     }
 
+
+
+    public bool CheckCharBox( Formats.CharData cd, int X, int Y, int checkBlockWidth, int checkBlockHeight, bool CheckForMC )
+    {
+      // Match image data
+      int chosenCharColor = -1;
+
+      cd.Replacement = null;
+      cd.Index = 0;
+
+      bool  isMultiColor = false;
+
+      {
+        // determine single/multi color
+        bool[] usedColor = new bool[16];
+        int numColors = 0;
+        bool hasSinglePixel = false;
+        bool usedBackgroundColor = false;
+
+        for ( int y = 0; y < checkBlockHeight; ++y )
+        {
+          for ( int x = 0; x < checkBlockWidth; ++x )
+          {
+            int colorIndex = (int)Image.GetPixel( X + x, Y + y ) % 16;
+            if ( colorIndex >= 16 )
+            {
+              cd.Error = "Color index >= 16";
+              return false;
+            }
+            if ( ( x % 2 ) == 0 )
+            {
+              if ( colorIndex != (int)Image.GetPixel( X + x + 1, Y + y ) % 16 )
+              {
+                // not a double pixel, must be single color then
+                hasSinglePixel = true;
+              }
+            }
+
+            if ( !usedColor[colorIndex] )
+            {
+              if ( colorIndex == Colors.BackgroundColor )
+              {
+                usedBackgroundColor = true;
+              }
+              usedColor[colorIndex] = true;
+              numColors++;
+            }
+          }
+        }
+        if ( ( hasSinglePixel )
+        &&   ( numColors > 2 ) )
+        {
+          cd.Error = "Has single pixel, but more than 2 colors";
+          return false;
+        }
+        if ( numColors > 2 )
+        {
+          isMultiColor = true;
+        }
+        if ( ( !CheckForMC )
+        &&   ( numColors > 2 ) )
+        {
+          cd.Error = "Has too many colors";
+          return false;
+        }
+        if ( ( !CheckForMC )
+        &&   ( numColors == 2 )
+        &&   ( !usedBackgroundColor ) )
+        {
+          cd.Error = "Uses two colors different from background color";
+          return false;
+        }
+        if ( ( hasSinglePixel )
+        &&   ( numColors == 2 )
+        &&   ( !usedBackgroundColor ) )
+        {
+          cd.Error = "Has single pixel, but more than 2 colors different from background color";
+          return false;
+        }
+        if ( ( CheckForMC )
+        &&   ( !hasSinglePixel )
+        &&   ( numColors > 4 ) )
+        {
+          cd.Error = "Has more than 4 colors";
+          return false;
+        }
+        if ( ( !hasSinglePixel )
+        &&   ( numColors == 4 )
+        &&   ( !usedBackgroundColor ) )
+        {
+          cd.Error = "Has more than 4 colors different from background color";
+          return false;
+        }
+        int otherColorIndex = 16;
+        if ( ( !hasSinglePixel )
+        &&   ( numColors == 2 )
+        &&   ( usedBackgroundColor ) )
+        {
+          for ( int i = 0; i < 16; ++i )
+          {
+            if ( ( usedColor[i] )
+            &&   ( i != Colors.BackgroundColor ) )
+            {
+              otherColorIndex = i;
+              break;
+            }
+          }
+        }
+        if ( ( hasSinglePixel )
+        ||   ( !CheckForMC )
+        ||   ( ( numColors == 2 )
+        &&     ( usedBackgroundColor )
+        &&     ( otherColorIndex < 8 ) ) )
+        {
+          // eligible for single color
+          isMultiColor = false;
+          int usedFreeColor = -1;
+          for ( int i = 0; i < 16; ++i )
+          {
+            if ( usedColor[i] )
+            {
+              if ( i != Colors.BackgroundColor )
+              {
+                if ( usedFreeColor != -1 )
+                {
+                  cd.Error = "More than 1 free color";
+                  return false;
+                }
+                usedFreeColor = i;
+              }
+            }
+          }
+
+          if ( ( hasSinglePixel )
+          &&   ( CheckForMC )
+          &&   ( numColors == 2 )
+          &&   ( usedFreeColor >= 8 ) )
+          {
+            cd.Error = "Hires char cannot use free color with index " + usedFreeColor;
+            return false;
+          }
+
+          cd.Tile = new GraphicTile( checkBlockWidth, checkBlockHeight, Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( SelectedCheckType ), 0 ), Colors );
+          cd.Tile.Data.Fill( 0, (int)cd.Tile.Data.Length, 0 );
+
+          for ( int y = 0; y < checkBlockHeight; ++y )
+          {
+            for ( int x = 0; x < checkBlockWidth; ++x )
+            {
+              int ColorIndex = (int)Image.GetPixel( X + x, Y + y ) % 16;
+
+              int BitPattern = 0;
+
+              if ( ColorIndex != Colors.BackgroundColor )
+              {
+                BitPattern = 1;
+              }
+
+              // noch nicht verwendete Farbe
+              if ( BitPattern == 1 )
+              {
+                chosenCharColor = ColorIndex;
+              }
+              cd.Tile.Data.SetU8At( y + x / 8, (byte)( cd.Tile.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
+            }
+          }
+          if ( chosenCharColor != -1 )
+          {
+            cd.Tile.CustomColor = (byte)chosenCharColor;
+          }
+        }
+        else
+        {
+          // multi color
+          isMultiColor = true;
+          int usedMultiColors = 0;
+          int usedFreeColor = -1;
+          for ( int i = 0; i < 16; ++i )
+          {
+            if ( usedColor[i] )
+            {
+              if ( ( i == Colors.MultiColor1 )
+              ||   ( i == Colors.MultiColor2 )
+              ||   ( i == Colors.BackgroundColor ) )
+              {
+                ++usedMultiColors;
+              }
+              else
+              {
+                usedFreeColor = i;
+              }
+            }
+          }
+          if ( numColors - usedMultiColors > 1 )
+          {
+            // only one free color allowed
+            cd.Error = "More than 1 free color";
+            return false;
+          }
+          if ( usedFreeColor >= 8 )
+          {
+            cd.Error = "Free color must be of index < 8";
+            return false;
+          }
+          cd.Tile = new GraphicTile( checkBlockWidth, checkBlockHeight, Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( SelectedCheckType ), 8 ), Colors );
+          cd.Tile.Data.Fill( 0, (int)cd.Tile.Data.Length, 0 );
+
+          for ( int y = 0; y < checkBlockHeight; ++y )
+          {
+            for ( int x = 0; x < checkBlockWidth / 2; ++x )
+            {
+              int ColorIndex = (int)Image.GetPixel( X + 2 * x, Y + y ) % 16;
+
+              byte BitPattern = 0;
+
+              if ( ColorIndex == Colors.BackgroundColor )
+              {
+                BitPattern = 0x00;
+              }
+              else if ( ColorIndex == Colors.MultiColor1 )
+              {
+                BitPattern = 0x01;
+              }
+              else if ( ColorIndex == Colors.MultiColor2 )
+              {
+                if ( ( SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                ||   ( SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
+                {
+                  BitPattern = 0x03;
+                }
+                else
+                {
+                  BitPattern = 0x02;
+                }
+              }
+              else
+              {
+                // noch nicht verwendete Farbe
+                chosenCharColor = usedFreeColor;
+                if ( ( SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
+                ||   ( SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
+                {
+                  BitPattern = 0x02;
+                }
+                else
+                {
+                  BitPattern = 0x03;
+                }
+              }
+              cd.Tile.Data.SetU8At( y + x / 4, (byte)( cd.Tile.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
+            }
+          }
+          if ( usedFreeColor == -1 )
+          {
+            // only the two multi colors were used, we need to force multi color index though
+            chosenCharColor = 8;
+          }
+          cd.Tile.CustomColor = (byte)chosenCharColor;
+        }
+      }
+      if ( chosenCharColor == -1 )
+      {
+        chosenCharColor = 0;
+      }
+      byte  customColor = (byte)chosenCharColor;
+      if ( ( isMultiColor )
+      &&   ( chosenCharColor < 8 ) )
+      {
+        customColor         = (byte)( chosenCharColor + 8 );
+        cd.Tile.CustomColor = customColor;
+      }
+      return true;
+    }
+
+
+
+
   }
 }

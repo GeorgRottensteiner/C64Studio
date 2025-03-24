@@ -1403,280 +1403,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private bool CheckCharBox( Formats.CharData cd, int X, int Y, bool CheckForMC )
-    {
-      // Match image data
-      int chosenCharColor = -1;
-
-      cd.Replacement = null;
-      cd.Index = 0;
-
-      bool  isMultiColor = false;
-
-      {
-        // determine single/multi color
-        bool[] usedColor = new bool[16];
-        int numColors = 0;
-        bool hasSinglePixel = false;
-        bool usedBackgroundColor = false;
-
-        for ( int y = 0; y < CheckBlockHeight; ++y )
-        {
-          for ( int x = 0; x < CheckBlockWidth; ++x )
-          {
-            int colorIndex = (int)m_GraphicScreenProject.Image.GetPixel( X + x, Y + y ) % 16;
-            if ( colorIndex >= 16 )
-            {
-              cd.Error = "Color index >= 16";
-              return false;
-            }
-            if ( ( x % 2 ) == 0 )
-            {
-              if ( colorIndex != (int)m_GraphicScreenProject.Image.GetPixel( X + x + 1, Y + y ) % 16 )
-              {
-                // not a double pixel, must be single color then
-                hasSinglePixel = true;
-              }
-            }
-
-            if ( !usedColor[colorIndex] )
-            {
-              if ( colorIndex == m_GraphicScreenProject.Colors.BackgroundColor )
-              {
-                usedBackgroundColor = true;
-              }
-              usedColor[colorIndex] = true;
-              numColors++;
-            }
-          }
-        }
-        if ( ( hasSinglePixel )
-        &&   ( numColors > 2 ) )
-        {
-          cd.Error = "Has single pixel, but more than 2 colors";
-          return false;
-        }
-        if ( numColors > 2 )
-        {
-          isMultiColor = true;
-        }
-        if ( ( !CheckForMC )
-        &&   ( numColors > 2 ) )
-        {
-          cd.Error = "Has too many colors";
-          return false;
-        }
-        if ( ( !CheckForMC )
-        &&   ( numColors == 2 )
-        &&   ( !usedBackgroundColor ) )
-        {
-          cd.Error = "Uses two colors different from background color";
-          return false;
-        }
-        if ( ( hasSinglePixel )
-        &&   ( numColors == 2 )
-        &&   ( !usedBackgroundColor ) )
-        {
-          cd.Error = "Has single pixel, but more than 2 colors different from background color";
-          return false;
-        }
-        if ( ( CheckForMC )
-        &&   ( !hasSinglePixel )
-        &&   ( numColors > 4 ) )
-        {
-          cd.Error = "Has more than 4 colors";
-          return false;
-        }
-        if ( ( !hasSinglePixel )
-        &&   ( numColors == 4 )
-        &&   ( !usedBackgroundColor ) )
-        {
-          cd.Error = "Has more than 4 colors different from background color";
-          return false;
-        }
-        int otherColorIndex = 16;
-        if ( ( !hasSinglePixel )
-        &&   ( numColors == 2 )
-        &&   ( usedBackgroundColor ) )
-        {
-          for ( int i = 0; i < 16; ++i )
-          {
-            if ( ( usedColor[i] )
-            &&   ( i != m_GraphicScreenProject.Colors.BackgroundColor ) )
-            {
-              otherColorIndex = i;
-              break;
-            }
-          }
-        }
-        if ( ( hasSinglePixel )
-        ||   ( !CheckForMC )
-        ||   ( ( numColors == 2 )
-        &&     ( usedBackgroundColor )
-        &&     ( otherColorIndex < 8 ) ) )
-        {
-          // eligible for single color
-          isMultiColor = false;
-          int usedFreeColor = -1;
-          for ( int i = 0; i < 16; ++i )
-          {
-            if ( usedColor[i] )
-            {
-              if ( i != m_GraphicScreenProject.Colors.BackgroundColor )
-              {
-                if ( usedFreeColor != -1 )
-                {
-                  cd.Error = "More than 1 free color";
-                  return false;
-                }
-                usedFreeColor = i;
-              }
-            }
-          }
-
-          if ( ( hasSinglePixel )
-          &&   ( CheckForMC )
-          &&   ( numColors == 2 )
-          &&   ( usedFreeColor >= 8 ) )
-          {
-            cd.Error = "Hires char cannot use free color with index " + usedFreeColor;
-            return false;
-          }
-
-          cd.Tile = new GraphicTile( CheckBlockWidth, CheckBlockHeight, Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ), 0 ), m_GraphicScreenProject.Colors );
-          cd.Tile.Data.Fill( 0, (int)cd.Tile.Data.Length, 0 );
-
-          for ( int y = 0; y < CheckBlockHeight; ++y )
-          {
-            for ( int x = 0; x < CheckBlockWidth; ++x )
-            {
-              int ColorIndex = (int)m_GraphicScreenProject.Image.GetPixel( X + x, Y + y ) % 16;
-
-              int BitPattern = 0;
-
-              if ( ColorIndex != m_GraphicScreenProject.Colors.BackgroundColor )
-              {
-                BitPattern = 1;
-              }
-
-              // noch nicht verwendete Farbe
-              if ( BitPattern == 1 )
-              {
-                chosenCharColor = ColorIndex;
-              }
-              cd.Tile.Data.SetU8At( y + x / 8, (byte)( cd.Tile.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
-            }
-          }
-          if ( chosenCharColor != -1 )
-          {
-            cd.Tile.CustomColor = (byte)chosenCharColor;
-          }
-        }
-        else
-        {
-          // multi color
-          isMultiColor = true;
-          int usedMultiColors = 0;
-          int usedFreeColor = -1;
-          for ( int i = 0; i < 16; ++i )
-          {
-            if ( usedColor[i] )
-            {
-              if ( ( i == m_GraphicScreenProject.Colors.MultiColor1 )
-              ||   ( i == m_GraphicScreenProject.Colors.MultiColor2 )
-              ||   ( i == m_GraphicScreenProject.Colors.BackgroundColor ) )
-              {
-                ++usedMultiColors;
-              }
-              else
-              {
-                usedFreeColor = i;
-              }
-            }
-          }
-          if ( numColors - usedMultiColors > 1 )
-          {
-            // only one free color allowed
-            cd.Error = "More than 1 free color";
-            return false;
-          }
-          if ( usedFreeColor >= 8 )
-          {
-            cd.Error = "Free color must be of index < 8";
-            return false;
-          }
-          cd.Tile = new GraphicTile( CheckBlockWidth, CheckBlockHeight, Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ), 8 ), m_GraphicScreenProject.Colors );
-          cd.Tile.Data.Fill( 0, (int)cd.Tile.Data.Length, 0 );
-
-          for ( int y = 0; y < CheckBlockHeight; ++y )
-          {
-            for ( int x = 0; x < CheckBlockWidth / 2; ++x )
-            {
-              int ColorIndex = (int)m_GraphicScreenProject.Image.GetPixel( X + 2 * x, Y + y ) % 16;
-
-              byte BitPattern = 0;
-
-              if ( ColorIndex == m_GraphicScreenProject.Colors.BackgroundColor )
-              {
-                BitPattern = 0x00;
-              }
-              else if ( ColorIndex == m_GraphicScreenProject.Colors.MultiColor1 )
-              {
-                BitPattern = 0x01;
-              }
-              else if ( ColorIndex == m_GraphicScreenProject.Colors.MultiColor2 )
-              {
-                if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
-                ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
-                {
-                  BitPattern = 0x03;
-                }
-                else
-                {
-                  BitPattern = 0x02;
-                }
-              }
-              else
-              {
-                // noch nicht verwendete Farbe
-                chosenCharColor = usedFreeColor;
-                if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET )
-                ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16 ) )
-                {
-                  BitPattern = 0x02;
-                }
-                else
-                {
-                  BitPattern = 0x03;
-                }
-              }
-              cd.Tile.Data.SetU8At( y + x / 4, (byte)( cd.Tile.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
-            }
-          }
-          if ( usedFreeColor == -1 )
-          {
-            // only the two multi colors were used, we need to force multi color index though
-            chosenCharColor = 8;
-          }
-          cd.Tile.CustomColor = (byte)chosenCharColor;
-        }
-      }
-      if ( chosenCharColor == -1 )
-      {
-        chosenCharColor = 0;
-      }
-      byte  customColor = (byte)chosenCharColor;
-      if ( ( isMultiColor )
-      &&   ( chosenCharColor < 8 ) )
-      {
-        customColor         = (byte)( chosenCharColor + 8 );
-        cd.Tile.CustomColor = customColor;
-      }
-      return true;
-    }
-
-
-
     private bool CheckForMCCharsetErrors()
     {
       bool      foundError = false;
@@ -1684,7 +1410,10 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * CheckBlockWidth, j * CheckBlockHeight, true );
+          m_GraphicScreenProject.CheckCharBox( m_Chars[i + j * BlockWidth], 
+                                               i * CheckBlockWidth, j * CheckBlockHeight, 
+                                               CheckBlockWidth, CheckBlockHeight,
+                                               true );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;
@@ -1753,7 +1482,10 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * CheckBlockWidth, j * CheckBlockHeight, true );
+          m_GraphicScreenProject.CheckCharBox( m_Chars[i + j * BlockWidth], 
+                                               i * CheckBlockWidth, j * CheckBlockHeight,
+                                               CheckBlockWidth, CheckBlockHeight,
+                                               true );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;
@@ -1822,7 +1554,10 @@ namespace RetroDevStudio.Documents
       {
         for ( int i = 0; i < BlockWidth; ++i )
         {
-          CheckCharBox( m_Chars[i + j * BlockWidth], i * CheckBlockWidth, j * CheckBlockHeight, false );
+          m_GraphicScreenProject.CheckCharBox( m_Chars[i + j * BlockWidth], 
+                                               i * CheckBlockWidth, j * CheckBlockHeight,
+                                               CheckBlockWidth, CheckBlockHeight, 
+                                               false );
           if ( m_Chars[i + j * BlockWidth].Error.Length > 0 )
           {
             m_ErrornousChars[i, j] = true;
@@ -3374,17 +3109,19 @@ namespace RetroDevStudio.Documents
               if ( m_ErrornousChars[i, j] )
               {
                 int sx1 = ToScreenX( i * CheckBlockWidth );
-                int sx2 = ToScreenX( ( i + 1 ) * CheckBlockWidth );
+                int sx2 = ToScreenX( ( i + 1 ) * CheckBlockWidth ) - 1;
                 int sy1 = ToScreenY( j * CheckBlockHeight );
-                int sy2 = ToScreenY( ( j + 1 ) * CheckBlockHeight );
+                int sy2 = ToScreenY( ( j + 1 ) * CheckBlockHeight ) - 1;
 
                 for ( int x = sx1; x <= sx2; ++x )
                 {
                   TargetBuffer.SetPixel( x, sy1, (uint)( ( x & 1 ) * selColor ) );
+                  TargetBuffer.SetPixel( x, sy2, (uint)( ( x & 1 ) * selColor ) );
                 }
                 for ( int y = sy1; y <= sy2; ++y )
                 {
                   TargetBuffer.SetPixel( sx1, y, (uint)( ( y & 1 ) * selColor ) );
+                  TargetBuffer.SetPixel( sx2, y, (uint)( ( y & 1 ) * selColor ) );
                 }
               }
             }
@@ -3757,6 +3494,7 @@ namespace RetroDevStudio.Documents
         BlockHeight       = BlockHeight,
         CheckBlockWidth   = CheckBlockWidth,
         CheckBlockHeight  = CheckBlockHeight,
+        Image             = m_GraphicScreenProject.Image,
         Chars             = m_Chars
       };
 
