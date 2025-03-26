@@ -15,5 +15,6 @@ namespace RetroDevStudio.Formats
     public int                        CheckBlockHeight;
 
     public List<Formats.CharData>     Chars;
+    public bool[,]                    ErrornousChars;
   }
 }

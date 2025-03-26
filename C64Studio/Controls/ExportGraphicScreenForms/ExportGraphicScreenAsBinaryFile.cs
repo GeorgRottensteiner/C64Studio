@@ -93,10 +93,12 @@ namespace RetroDevStudio.Controls
       var exportType = (ExportType)comboExportType.SelectedIndex;
       var exportContent = (ExportContent)comboExportContent.SelectedIndex;
 
-      var finalData = new ByteBuffer();
-      var screenData   = new GR.Memory.ByteBuffer();
-      var colorData  = new GR.Memory.ByteBuffer();
-      var bitmapData   = new GR.Memory.ByteBuffer();
+      var finalData       = new ByteBuffer();
+      var screenData      = new GR.Memory.ByteBuffer();
+      var colorData       = new GR.Memory.ByteBuffer();
+      var bitmapData      = new GR.Memory.ByteBuffer();
+      var charScreenData  = new List<uint>();
+      var charsetData     = new ByteBuffer();
 
       switch ( exportType )
       {
@@ -110,18 +112,20 @@ namespace RetroDevStudio.Controls
                                             0, 0, Info.BlockWidth, Info.BlockHeight,
                                             out bitmapData, out screenData, out colorData );
           break;
-          /*
-        case 2:
-          // hires charset
+        case ExportType.HIRES_CHARSET:
+        case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
+          if ( !ApplyCharsetChecks( Info, false, out charScreenData, out charsetData ) )
+          {
+            return false;
+          }
           break;
-        case 3:
-          // MC charset
-          //ExportMCCharset( false );
+        case ExportType.MULTICOLOR_CHARSET:
+        case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
+          if ( !ApplyCharsetChecks( Info, true, out charScreenData, out charsetData ) )
+          {
+            return false;
+          }
           break;
-        case 4:
-          // MC charset and screen assembly
-          //ExportMCCharset( true );
-          break;*/
       }
 
       switch ( exportContent )

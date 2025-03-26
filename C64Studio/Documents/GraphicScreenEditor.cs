@@ -3495,12 +3495,17 @@ namespace RetroDevStudio.Documents
         CheckBlockWidth   = CheckBlockWidth,
         CheckBlockHeight  = CheckBlockHeight,
         Image             = m_GraphicScreenProject.Image,
-        Chars             = m_Chars
+        Chars             = m_Chars,
+        ErrornousChars    = m_ErrornousChars
       };
 
       editExportOutput.Text = "";
       editExportOutput.Font = m_DefaultOutputFont;
-      _ExportForm.HandleExport( exportInfo, editExportOutput, DocumentInfo );
+      if ( !_ExportForm.HandleExport( exportInfo, editExportOutput, DocumentInfo ) )
+      {
+        // if export as charset was chosen and failed with checks, redraw
+        Redraw();
+      }
     }
 
 

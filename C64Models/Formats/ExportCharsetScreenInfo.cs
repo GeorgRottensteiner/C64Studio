@@ -23,7 +23,7 @@ namespace RetroDevStudio.Formats
     public GR.Memory.ByteBuffer       CharsetData;
     public GR.Math.Rectangle          Area;
     public GR.Image.MemoryImage       Image;
-    public List<int >                 SelectedCharactersInCharset = new List<int>();
+    public List<int>                  SelectedCharactersInCharset = new List<int>();
     public ExportData                 Data = ExportData.CHAR_THEN_COLOR;
     public bool                       RowByRow = true;
   }

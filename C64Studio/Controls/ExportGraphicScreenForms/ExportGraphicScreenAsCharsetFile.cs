@@ -53,79 +53,8 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
-      int   x = 0;
-      int   y = 0;
-      switch ( comboExportCharsetType.SelectedIndex )
+      if ( !ApplyCharsetChecks( Info, comboExportCharsetType.SelectedIndex == 1, out var charScreenData, out var charsetData ) )
       {
-        case 0:
-          foreach ( var c in Info.Chars )
-          {
-            Info.Project.CheckCharBox( c, x, y, Info.CheckBlockWidth, Info.CheckBlockHeight, false );
-            x += Info.CheckBlockWidth;
-            if ( x >= Info.Image.Width )
-            {
-              x = 0;
-              y += Info.CheckBlockHeight;
-            }
-          }
-          break;
-        case 1:
-          foreach ( var c in Info.Chars )
-          {
-            Info.Project.CheckCharBox( c, x, y, Info.CheckBlockWidth, Info.CheckBlockHeight, true );
-            x += Info.CheckBlockWidth;
-            if ( x >= Info.Image.Width )
-            {
-              x = 0;
-              y += Info.CheckBlockHeight;
-            }
-          }
-          break;
-      }
-
-      // automatic check
-      if ( Info.Chars.Any( c => !string.IsNullOrEmpty( c.Error ) ) )
-      {
-        MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
-        return false;
-      }
-
-      // check for duplicates
-      int items = Info.Chars.Count;
-      int foldedItems = 0;
-      int curIndex = 0;
-
-      for ( int index1 = 0; index1 < Info.Chars.Count; ++index1 )
-      {
-        bool wasFolded = false;
-        for ( int index2 = 0; index2 < index1; ++index2 )
-        {
-          if ( Info.Chars[index1].Tile.Data.Compare( Info.Chars[index2].Tile.Data ) == 0 )
-          {
-            // same data
-            if ( Info.Chars[index2].Replacement != null )
-            {
-              Info.Chars[index1].Replacement = Info.Chars[index2].Replacement;
-            }
-            else
-            {
-              Info.Chars[index1].Replacement = Info.Chars[index2];
-            }
-            ++foldedItems;
-            wasFolded = true;
-            break;
-          }
-        }
-        if ( !wasFolded )
-        {
-          // item was not folded
-          Info.Chars[index1].Index = curIndex;
-          ++curIndex;
-        }
-      }
-      if ( items - foldedItems > 256 )
-      {
-        MessageBox.Show( "Cannot export to charset, more than 256 unique characters found!", "Cannot export to charset" );
         return false;
       }
 
@@ -202,19 +131,11 @@ namespace RetroDevStudio.Controls
         charset.Colors.PaletteIndexMapping = project.CharSet.Colors.PaletteIndexMapping;
         charset.Colors.PaletteMappingIndex = project.CharSet.Colors.PaletteMappingIndex;
 
-        for ( int i = 0; i < Info.Chars.Count; ++i )
+        project.Chars = charScreenData;
+        for ( int i = 0; i < charset.TotalNumberOfCharacters; ++i )
         {
-          project.Chars[i] = (uint)( ( Info.Chars[i].Index & 0xffff ) | ( Info.Chars[i].Tile.CustomColor << 16 ) );
-          if ( Info.Chars[i].Replacement == null )
-          {
-            charset.Characters[Info.Chars[i].Index].Tile.Data = Info.Chars[i].Tile.Data;
-          }
-          else
-          {
-            project.Chars[i] = (uint)( ( Info.Chars[i].Replacement.Index & 0xffff ) | ( Info.Chars[i].Tile.CustomColor << 16 ) );
-          }
+          charsetData.CopyTo( charset.Characters[i].Tile.Data, i * Lookup.NumBytesOfSingleCharacterBitmap( charset.Mode ), Lookup.NumBytesOfSingleCharacterBitmap( charset.Mode ) );
         }
-
         charScreen.InjectProjects( project, charset );
         charScreen.SetModified();
       }

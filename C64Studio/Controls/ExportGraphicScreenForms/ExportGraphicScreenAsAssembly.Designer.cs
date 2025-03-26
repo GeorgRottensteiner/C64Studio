@@ -121,6 +121,7 @@ namespace RetroDevStudio.Controls
       this.comboExportType.Name = "comboExportType";
       this.comboExportType.Size = new System.Drawing.Size(239, 21);
       this.comboExportType.TabIndex = 7;
+      this.comboExportType.SelectedIndexChanged += new System.EventHandler(this.comboExportType_SelectedIndexChanged);
       // 
       // label1
       // 

@@ -91,9 +91,11 @@ namespace RetroDevStudio.Controls
 
       var             sb = new StringBuilder();
 
-      GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
-      GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
-      GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
+      var screenChar        = new GR.Memory.ByteBuffer();
+      var screenColor       = new GR.Memory.ByteBuffer();
+      var bitmapData        = new GR.Memory.ByteBuffer();
+      var charsetScreenData = new List<uint>();
+      var charsetData       = new GR.Memory.ByteBuffer();
 
       switch ( exportType )
       {
@@ -109,38 +111,16 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.HIRES_CHARSET:
         case ExportType.MULTICOLOR_CHARSET:
-          if ( Info.Chars.Count == 0 )
+          if ( !ApplyCharsetChecks( Info, exportType == ExportType.MULTICOLOR_CHARSET, out charsetScreenData, out charsetData ) )
           {
-            MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
             return false;
-          }
-          {
-            var charsetProject = GraphicScreenEditor.ExportToCharset( Info.Project, Info.Chars );
-            if ( charsetProject == null )
-            {
-              MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
-              return false;
-            }
-            var charData = charsetProject.CharacterData();
-            sb.AppendLine( Util.ToASMData( charData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
           }
           break;
         case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
         case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          if ( Info.Chars.Count == 0 )
+          if ( !ApplyCharsetChecks( Info, exportType == ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY, out charsetScreenData, out charsetData ) )
           {
-            MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
             return false;
-          }
-          {
-            var charsetProject = GraphicScreenEditor.ExportToCharset( Info.Project, Info.Chars );
-            if ( charsetProject == null )
-            {
-              MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
-              return false;
-            }
-            var charData = charsetProject.CharacterData();
-            sb.AppendLine( Util.ToASMData( charData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
           }
           break;
       }
@@ -150,12 +130,36 @@ namespace RetroDevStudio.Controls
       string screenAssembly = Util.ToASMData( screenChar, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
       string colorAssembly  = Util.ToASMData( screenColor, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
 
-      /*
-      sb.Append( ";size " );
-      sb.Append( Info.Area.Width );
-      sb.Append( "," );
-      sb.Append( Info.Area.Height );
-      sb.AppendLine();*/
+      switch ( exportType )
+      {
+        case ExportType.HIRES_CHARSET:
+        case ExportType.MULTICOLOR_CHARSET:
+          sb.AppendLine( ";charset data" );
+          sb.AppendLine( Util.ToASMData( charsetData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+          EditOutput.Text = sb.ToString();
+          return true;
+        case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
+        case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
+          sb.AppendLine( ";charset data" );
+          sb.AppendLine( Util.ToASMData( charsetData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+
+          {
+            var dataChars = new ByteBuffer( (uint)charsetScreenData.Count );
+            var dataColors = new ByteBuffer( (uint)charsetScreenData.Count );
+            for ( int i = 0; i < charsetScreenData.Count; ++i )
+            {
+              dataChars.SetU8At( i, (byte)( charsetScreenData[i] & 0x00ff ) );
+              dataColors.SetU8At( i, (byte)( ( charsetScreenData[i] >> 16 ) & 0x00ff ) );
+            }
+            sb.AppendLine( ";screen data" );
+            sb.AppendLine( Util.ToASMData( dataChars, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+            sb.AppendLine( ";color data" );
+            sb.AppendLine( Util.ToASMData( dataColors, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked ) );
+          }
+
+          EditOutput.Text = sb.ToString();
+          return true;
+      }
 
       switch ( exportContent )
       {
@@ -212,6 +216,25 @@ namespace RetroDevStudio.Controls
     private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
     {
       editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
+    }
+
+
+
+    private void comboExportType_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      var exportType = (ExportType)comboExportType.SelectedIndex;
+
+      if ( ( exportType == ExportType.HIRES_CHARSET )
+      ||   ( exportType == ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY )
+      ||   ( exportType == ExportType.MULTICOLOR_CHARSET )
+      ||   ( exportType == ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY ) )
+      {
+        comboExportContent.Enabled = false;
+      }
+      else
+      {
+        comboExportContent.Enabled = true;
+      }
     }
 
 
