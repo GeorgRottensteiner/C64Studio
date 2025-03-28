@@ -102,7 +102,7 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.HIRES_CHARSET:
         case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, false, out charScreenChars, out charsetData ) )
+          if ( !ApplyCharsetChecks( Info, false, true, out charScreenChars, out charsetData ) )
           {
             return false;
           }
@@ -123,7 +123,7 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.MULTICOLOR_CHARSET:
         case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, true, out charScreenChars, out charsetData ) )
+          if ( !ApplyCharsetChecks( Info, true, true, out charScreenChars, out charsetData ) )
           {
             return false;
           }

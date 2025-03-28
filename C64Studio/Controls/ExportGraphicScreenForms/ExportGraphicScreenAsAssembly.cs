@@ -111,14 +111,14 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.HIRES_CHARSET:
         case ExportType.MULTICOLOR_CHARSET:
-          if ( !ApplyCharsetChecks( Info, exportType == ExportType.MULTICOLOR_CHARSET, out charsetScreenData, out charsetData ) )
+          if ( !ApplyCharsetChecks( Info, exportType == ExportType.MULTICOLOR_CHARSET, true, out charsetScreenData, out charsetData ) )
           {
             return false;
           }
           break;
         case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
         case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, exportType == ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY, out charsetScreenData, out charsetData ) )
+          if ( !ApplyCharsetChecks( Info, exportType == ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY, true, out charsetScreenData, out charsetData ) )
           {
             return false;
           }

@@ -42,7 +42,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    protected bool ApplyCharsetChecks( ExportGraphicScreenInfo Info, bool charsetIsMultiColor, 
+    protected bool ApplyCharsetChecks( ExportGraphicScreenInfo Info, bool charsetIsMultiColor, bool stripUnusedChars,
                                        out List<uint> screenData,
                                        out ByteBuffer charsetData )
     {
@@ -109,7 +109,14 @@ namespace RetroDevStudio.Controls
       }
 
       // BOO TODO!
-      charsetData.Resize( 256 * 8 );
+      if ( stripUnusedChars )
+      {
+        charsetData.Resize( (uint)( 8 * ( items - foldedItems ) ) );
+      }
+      else
+      {
+        charsetData.Resize( 256 * 8 );
+      }
       screenData = new List<uint>( Info.Chars.Count );
 
       for ( int i = 0; i < Info.Chars.Count; ++i )

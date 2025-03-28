@@ -53,7 +53,7 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
-      if ( !ApplyCharsetChecks( Info, comboExportCharsetType.SelectedIndex == 1, out var charScreenData, out var charsetData ) )
+      if ( !ApplyCharsetChecks( Info, comboExportCharsetType.SelectedIndex == 1, false, out var charScreenData, out var charsetData ) )
       {
         return false;
       }
