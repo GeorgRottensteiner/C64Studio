@@ -93,6 +93,7 @@ namespace RetroDevStudio.Controls
       this.comboExportType.Name = "comboExportType";
       this.comboExportType.Size = new System.Drawing.Size(222, 21);
       this.comboExportType.TabIndex = 11;
+      this.comboExportType.SelectedIndexChanged += new System.EventHandler(this.comboExportType_SelectedIndexChanged);
       // 
       // ExportGraphicScreenAsBinaryFile
       // 

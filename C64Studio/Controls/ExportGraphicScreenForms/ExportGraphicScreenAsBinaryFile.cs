@@ -76,19 +76,6 @@ namespace RetroDevStudio.Controls
 
     public override bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save data as";
-      saveDlg.Filter = "Binary Data|*.bin|All Files|*.*";
-      if ( DocInfo.Project != null )
-      {
-        saveDlg.InitialDirectory = DocInfo.Project.Settings.BasePath;
-      }
-      if ( saveDlg.ShowDialog() != DialogResult.OK )
-      {
-        return false;
-      }
-
       // prepare data
       var exportType = (ExportType)comboExportType.SelectedIndex;
       var exportContent = (ExportContent)comboExportContent.SelectedIndex;
@@ -97,7 +84,8 @@ namespace RetroDevStudio.Controls
       var screenData      = new GR.Memory.ByteBuffer();
       var colorData       = new GR.Memory.ByteBuffer();
       var bitmapData      = new GR.Memory.ByteBuffer();
-      var charScreenData  = new List<uint>();
+      var charScreenChars = new List<uint>();
+      var charScreenData  = new ByteBuffer();
       var charsetData     = new ByteBuffer();
 
       switch ( exportType )
@@ -114,18 +102,58 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.HIRES_CHARSET:
         case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, false, out charScreenData, out charsetData ) )
+          if ( !ApplyCharsetChecks( Info, false, out charScreenChars, out charsetData ) )
           {
             return false;
+          }
+          finalData.Append( charsetData );
+          if ( exportType == ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY )
+          {
+            var dataChars = new ByteBuffer( (uint)charScreenChars.Count );
+            var dataColors = new ByteBuffer( (uint)charScreenChars.Count );
+            for ( int i = 0; i < charScreenChars.Count; ++i )
+            {
+              dataChars.SetU8At( i, (byte)( charScreenChars[i] & 0x00ff ) );
+              dataColors.SetU8At( i, (byte)( ( charScreenChars[i] >> 16 ) & 0x00ff ) );
+            }
+
+            finalData.Append( dataChars );
+            finalData.Append( dataColors );
           }
           break;
         case ExportType.MULTICOLOR_CHARSET:
         case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, true, out charScreenData, out charsetData ) )
+          if ( !ApplyCharsetChecks( Info, true, out charScreenChars, out charsetData ) )
           {
             return false;
           }
+          finalData.Append( charsetData );
+          if ( exportType == ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY )
+          {
+            var dataChars = new ByteBuffer( (uint)charScreenChars.Count );
+            var dataColors = new ByteBuffer( (uint)charScreenChars.Count );
+            for ( int i = 0; i < charScreenChars.Count; ++i )
+            {
+              dataChars.SetU8At( i, (byte)( charScreenChars[i] & 0x00ff ) );
+              dataColors.SetU8At( i, (byte)( ( charScreenChars[i] >> 16 ) & 0x00ff ) );
+            }
+            finalData.Append( dataChars );
+            finalData.Append( dataColors );
+          }
           break;
+      }
+
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save data as";
+      saveDlg.Filter = "Binary Data|*.bin|All Files|*.*";
+      if ( DocInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
+      {
+        return false;
       }
 
       switch ( exportContent )
@@ -158,10 +186,14 @@ namespace RetroDevStudio.Controls
           finalData.Append( screenData );
           break;
         default:
-          return false;
+          if ( finalData.Length == 0 )
+          {
+            return false;
+          }
+          break;
       }
 
-      if ( finalData != null )
+      if ( finalData.Length != 0 )
       {
         if ( checkPrefixLoadAddress.Checked )
         {
@@ -198,6 +230,25 @@ namespace RetroDevStudio.Controls
       else
       {
         e.Handled = true;
+      }
+    }
+
+
+
+    private void comboExportType_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      var exportType = (ExportType)comboExportType.SelectedIndex;
+
+      if ( ( exportType == ExportType.HIRES_CHARSET )
+      ||   ( exportType == ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY )
+      ||   ( exportType == ExportType.MULTICOLOR_CHARSET )
+      ||   ( exportType == ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY ) )
+      {
+        comboExportContent.Enabled = false;
+      }
+      else
+      {
+        comboExportContent.Enabled = true;
       }
     }
 
