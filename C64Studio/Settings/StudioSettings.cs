@@ -1751,7 +1751,15 @@ namespace RetroDevStudio
       {
         if ( !SyntaxColoring.ContainsKey( element ) )
         {
-          SyntaxColoring.Add( element, new ColorSetting( GR.EnumHelper.GetDescription( element ), 0xff000000, 0xffffffff ) );
+          if ( element == ColorableElement.MINI_MAP )
+          {
+            // was FG red per default
+            SyntaxColoring.Add( element, new ColorSetting( GR.EnumHelper.GetDescription( element ), 0xffff0000, 0xffffffff ) );
+          }
+          else
+          {
+            SyntaxColoring.Add( element, new ColorSetting( GR.EnumHelper.GetDescription( element ), 0xff000000, 0xffffffff ) );
+          }
         }
       }
 

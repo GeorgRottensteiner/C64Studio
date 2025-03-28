@@ -3199,7 +3199,7 @@ namespace RetroDevStudio.Documents
 
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
 
-      miniMap.ForeColor = GR.Color.Helper.FromARGB( 0xffff0000 );
+      miniMap.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.MINI_MAP ) );
       miniMap.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.EMPTY_SPACE ) );
     }
 

@@ -393,6 +393,9 @@ namespace RetroDevStudio.Types
     [Description( "Line Numbers" )]
     LINE_NUMBERS,
 
+    [Description( "Mini Map Overlay" )]
+    MINI_MAP,
+
     LAST_ENTRY
   }
 
