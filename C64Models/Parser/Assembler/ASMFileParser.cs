@@ -5102,6 +5102,7 @@ namespace RetroDevStudio.Parser
       string cheapLabelParent = "";
       int   intermediateLineOffset = 0;
       bool  hadCommentInLine = false;
+      bool  previousLineHadTokens = false;
       bool hadPseudoOp = false;
       bool hideInPreprocessedOutput = false;
       m_CurrentZoneName = "";
@@ -5118,6 +5119,14 @@ namespace RetroDevStudio.Parser
         {
           parseLine = Lines[lineIndex].TrimEnd();
         }
+
+        // previous line had a comment, but also other statements
+        if ( ( hadCommentInLine )
+        &&   ( previousLineHadTokens ) )
+        {
+          m_CurrentCommentSB = new StringBuilder();
+        }
+
 
         lineSizeInBytes = 0;
         hadCommentInLine = false;
@@ -5172,6 +5181,7 @@ namespace RetroDevStudio.Parser
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error at position " + ( m_LastErrorInfo.Pos + 1 ).ToString() + " (" + parseLine[m_LastErrorInfo.Pos] + ")" );
           continue;
         }
+        previousLineHadTokens = ( lineTokenInfos.Count > 0 );
 
         recheck_line:
         ;
@@ -5193,6 +5203,7 @@ namespace RetroDevStudio.Parser
           continue;
         }
 
+        // empty line restarts combined comment
         if ( lineTokenInfos.Count == 0 )
         {
           if ( !hadCommentInLine )
