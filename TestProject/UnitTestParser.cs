@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RetroDevStudio.Parser;
 
@@ -1602,11 +1603,7 @@ namespace TestProject
 
       Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
 
-      foreach ( var entry in asmFileInfo.Messages.Values )
-      {
-        code = entry.Code;
-        break;
-      }
+      code = asmFileInfo.Messages.Values.FirstOrDefault( m => m.Type == ParserBase.ParseMessage.LineType.ERROR ).Code;
 
       Assert.AreEqual( 4, parser.Errors );
       Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1105_INVALID_OPCODE, code );

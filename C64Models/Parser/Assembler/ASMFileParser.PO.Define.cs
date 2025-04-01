@@ -109,6 +109,7 @@ namespace RetroDevStudio.Parser
           }
 
           resultingValue.Zone = m_CurrentZoneName;
+          _ParseContext.DoNotAddReferences = true;
           if ( resultingValue.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
           {
             AddConstantF( defineName, resultingValue, _ParseContext.LineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
@@ -121,6 +122,7 @@ namespace RetroDevStudio.Parser
           {
             AddConstant( defineName, resultingValue, _ParseContext.LineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           }
+          _ParseContext.DoNotAddReferences = false;
         }
       }
       m_CurrentCommentSB = new StringBuilder();

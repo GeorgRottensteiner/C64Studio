@@ -7,6 +7,15 @@
                                                         / . . . . . / /
 
 
+    ;less than compare value?
+    cmpq [Compare Value]
+    bcc .LessThan
+
+    ;greater or equal than compare value?
+    cmpq [Compare Value]
+    bcs .GreaterOrEqual
+
+
  4510 Versions:
 
   +----------------+-----------------------+---------------+---------+----------+

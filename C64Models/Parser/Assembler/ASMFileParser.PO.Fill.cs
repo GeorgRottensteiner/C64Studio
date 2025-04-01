@@ -90,10 +90,33 @@ namespace RetroDevStudio.Parser
           }
           m_TemporaryFillLoopPos = -1;
         }
+        else if ( IsStartToEndNumericRange( lineParams[1], out bool hadError, out var symbolStart, out var symbolEnd ) )
+        {
+          if ( hadError )
+          {
+            return ParseLineResult.ERROR_ABORT;
+          }
+          lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+
+          long startValue = symbolStart.ToInteger();
+          long endValue   = symbolEnd.ToInteger();
+
+          if ( numBytes == 1 )
+          {
+            lineData.SetU8At( 0, (byte)startValue );
+          }
+          else
+          {
+            for ( int i = 0; i < numBytes; ++i )
+            {
+              lineData.SetU8At( i, (byte)( startValue + i * ( endValue - startValue ) / ( numBytes - 1 ) ) );
+            }
+          }
+        }
         else
         {
           lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
-          
+
           for ( int i = 0; i < numBytes; ++i )
           {
             m_TemporaryFillLoopPos = i;

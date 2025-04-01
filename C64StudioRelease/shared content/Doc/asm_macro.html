@@ -368,12 +368,14 @@
   <a name="fill"></a><a name="fi"></a>
   <H2>
     !FILL, !FI &lt;count&gt;[,&lt;value&gt;]<br />
-    !FILL, !FI &lt;count&gt;,[expression (list)]
+    !FILL, !FI &lt;count&gt;,[expression (list)]<br />
+    !FILL, !FI &lt;count&gt;,[expression] to [expression]
   </H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br />
     The expression form can be a list, several expressions are separated by comma. !fill uses every element of a list after each other, and restarts at the first element if required.
     The calculation is evaluated for every byte. The expression inside the brackets uses the label "i" as index, counting the usage of the full list. Any global "i" label is suspended inside the brackets and restored afterwards.<br />
+    The other variant is a range with a from expression to a target expression. The value is calculated linearly from the first to the last entry.<br>
     <br />
     <b>Example #1 - simple fill</b><br />
     <br />
@@ -409,6 +411,26 @@
     </div>
     <br />
     Fills 4 * 2 bytes, with values 0, 0, 0, 1, 0, 2 0, 3.<br />
+    <br />
+    <br />
+
+    <b>Example #5 - fill with to range</b><br />
+    <br />
+    <div id="code">
+      <br />      !fill 4, 12 to 40
+    </div>
+    <br />
+    Fills 4 bytes, with values 12, 31, 30 and 40.<br />
+    <br />
+    <br />
+
+    <b>Example #6 - fill with reverse range</b><br />
+    <br />
+    <div id="code">
+      <br />      !fill 6, 255 to 128
+    </div>
+    <br />
+    Fills 6 bytes, with values 255, 230, 205, 179, 154 and 128.<br />
     <br />
     <br />
   </div>
