@@ -10666,11 +10666,25 @@ namespace RetroDevStudio.Parser
             // generated labels are auto-self-referencing -> do not show up as unused
             if ( token.SourceInfo.Source != SourceInfo.SourceInfoSource.MEDIA_INCLUDE )
             {
-              AddWarning( token.LineIndex,
-                          Types.ErrorCode.W1000_UNUSED_LABEL,
-                          "Unused label " + token.Name,
-                          token.CharIndex,
-                          token.Length );
+              if ( ( token.Type == SymbolInfo.Types.CONSTANT_1 )
+              ||   ( token.Type == SymbolInfo.Types.CONSTANT_2 )
+              ||   ( token.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+              ||   ( token.Type == SymbolInfo.Types.CONSTANT_STRING ) )
+              {
+                AddWarning( token.LineIndex,
+                            Types.ErrorCode.W1004_UNUSED_CONSTANT,
+                            "Unused constant " + token.Name,
+                            token.CharIndex,
+                            token.Length );
+              }
+              else
+              {
+                AddWarning( token.LineIndex,
+                            Types.ErrorCode.W1000_UNUSED_LABEL,
+                            "Unused label " + token.Name,
+                            token.CharIndex,
+                            token.Length );
+              }
             }
           }
         }

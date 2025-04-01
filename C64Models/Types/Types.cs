@@ -308,6 +308,8 @@ namespace RetroDevStudio.Types
     W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS = 0x9005,
     [Description( "W1003: BASIC referenced line number is missing" )]
     W1003_BASIC_REFERENCED_LINE_NUMBER_NOT_FOUND,
+    [Description( "W1004: Unused Constant" )]
+    W1004_UNUSED_CONSTANT,
 
     WARNING_LAST_PLUS_ONE
   };
