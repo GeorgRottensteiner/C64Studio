@@ -1038,7 +1038,6 @@ namespace RetroDevStudio.Tasks
             {
               if ( clonedInfo.ContainsFile( document.FullPath ) )
               {
-                //Debug.Log( $"  Post build of {Doc.FullPath}, pass spriteinitbytemsb {clonedInfo.Labels.ContainsKey( "spriteinitbytemsb" )} to file info {document.FullPath}" );
                 document.SetASMFileInfo( clonedInfo );
               }
             }
