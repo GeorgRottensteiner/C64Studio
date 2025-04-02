@@ -17,6 +17,86 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+02.04.2025 - 8.1:         Fix: Crash in charset export as BASIC data Add: Make unused constant warning different to allow ignoring
+                          Add: !Fill <from> to <to> option Fix: Assembler, showing unused label warning for LABEL = ..expressions
+                          Fix: Assembler combined comments are cleared if after a line of actual code Add: New S-BASIC tokens FCALC, RFCALC, replaces RESET
+                          Add: GraphicScreenEditor - export as charset strips away unused chars
+                          Add: Theming - Color setting for mini map overlay color
+                          Add: Graphic Screen editor - proper export of hires/multicolor charsets for assembly, binary file and charsetfile with proper viability checks
+                          Add: Graphic Screen editor - Error border now uses a full rectangle, export as charset enforces validity check (previously could result in 0 byte exports)
+                          Fix: Graphic screen editor, several GUI issues Fix: BASIC editor, @ was not possible outside of quotes
+                          Fix: Graphic Screen Editor - Color mapping for hires
+                          Fix: Graphic screen editor, hires export tries to optimize same pattern for a color
+                          Fix: graphic screen editor, export to binary crashed
+                          Add: BASIC copy/paste remember source mode, auto-convert to current mode
+                          Fix: BASIC copy/paste keeps control chars intact
+                          Fix: BASIC editor, re-allow cursor keys inside string literals, if string entry mode by position is active, and direct cursor keys are not mapped (phew)
+                          Fix: predefines were only interpreted as integers
+                          Fix: Project would sometimes not save all configs, re-add missing configs from elements on load
+                          Fix: Charset screen editor: Mega65 color chooser, scaling for 80x modes Fix: BASIC editor, theme coloring of label background
+                          Fix: Disassembly - syntax coloring of hex bytes, plus wrong line adress between last opcode and byte list
+                          Fix several ZX81 BASIC mapping issues
+                          Fix: Save as no longer deleting original file name
+                          Fix: D81 not accepting new file
+                          Fix: Character editor, pasting image with full block eligible for single color if color < 8 WIP: Spectrum P format, ZX81 BASIC support
+                          Add: BASIC preprocessed file enabled
+                          Fix: BASIC renumber could kill PI chars, broken on lines looking like hex literals (e.g. 1000e) Upd: Replace ZX81 font with self modified for missing graphic characters
+                          More ZX81 graphic chars
+                          WIP: BASIC - ZX81 entry
+                          Add: Assembler, !to Pseudo Op, allow internal file name and disk name for d64,d81
+                          Fix: Dialect file parsing bug, maxlength was cut off
+                          Upd: Lift Undo limit of FastColoredTextBox to 10000 Fix: Map Editor export to binary, limit field for prefix load address WIP #12345: Key infos per machine
+                          Fix: BASIC Renumber crash on unlucky timing when opening file
+                          Fix: BASIC Search with ignore case in lower case didn't find uppercase letters
+                          Fix: BASIC renumber crashes on empty lines
+                          Fix: File manager, empty file caused crashes
+                          WIP: ZX81 BASIC number encoding working
+                          WIP: ZX81 BASIC, need to add numeric floats (urgh)
+                          Fix: File manager, font size issues WIP: ZX81 #3
+                          Move font where it's supposed to be
+                          Fix: BASIC renumber now properly checks for overlaps, even if only a selection is renumbered Add: Machine type to BASIC dialect WIP: BASIC for ZX81
+                          WIP: Refactor preferences Attempt to register file types
+                          Upd: Rework the preferences dialog
+                          Add: Sample for displaying a map from Charpad exports
+                          Add: Find References - also show zone Fix: 64er Checksummer V1/V2, use 3 digit checksum output
+                          Fix: Source ASM Drag/Drop inside a tab would mess up the text Fix: Charset export of color data of non NES had wrong values
+                          Add: Search results, display zone info with search result if possible
+                          Fix: Solution Explorer: Closing a nested node would also forget the project node expansion state
+                          Fix: Source code commenting half inside a tab would actually not comment it properly
+                          Add: IFF support in File Manager and graphic screen editor
+                          Fix: File Manager broken when loading non-prg file WIP: IFF support for File Manager and graphic screen editor
+                          Fix: binary to BASIC PRINT do not break CHR$
+                          Fix: binary export to BASIC print statements, page boundaries
+                          Add: Binary Editor export to PRINT statements, allow setting an address
+                          Add: File Manager - detect and give option to show koala image in graphic editor
+                          Add: Binary Editor - Export as PRINT statements (to use PRINT to write in memory)
+                          Fix: Crash issue with SingleActionPopupControl Fix: BAISC Symbol to macro toggle could really screw up and skip parts of lines Fix: S-BASIC 65 dialect file, token for ERR is actually ERR$
+                          Fix: SBASIC - Token for ERR is ERR$
+                          Fix: Charscreen editor bugs (scaling in Commander X16 modes, fill broken since NES)
+                          Upd: BASIC checksummer
+                          Add: BASIC checksummers
+                          Fix: Assembler 4502, missing brackets could lead to a crash (e.g. lda $02,z) WIP: CheckSummer for BASIC
+                          Add: Outline/Label Explorer - option to sort by type
+                          Fix: BASIC potential crash with weird BASIC tokens that do not exist in dialect, but are marked as token (tf?)
+                          Fix: Filemanager issues after WIPping about Add: Assembler - Warning, if opcode is used as label
+                          Fix: Dialog/Window check for being on screen
+                          Fix: Assembler editor, syntax color: Only assume opcodes without dot in front WIP: ZX81 base library file
+                          Fix: Assembler Editor, comment char inside string literals would mark the rest of the line as comment (i hate regex)
+                          Add: Disassembler, allow label replacing with +1
+                          Fix: BASIC: Potential issue when toggling from label mode to non label mode
+                          Fix: Disassembler, named labels are now also inserted inside undisassembled bytes WIP: File Manager
+                          Fix: Source file encoding UTF-8 could be set to use BOM after opening preferences dialog WIP: TZX support Fix: Disable error markings on custom build steps
+                          Next attempt at fixing sizing issues in ImageListBox WIP: TZX support in File Manager for Spectrum
+                          Add: Solution Explorer - open in explorer selects the chosen file
+                          Fix: SpriteEditor Undo Shift to target did not repaint editor view
+                          Fix: ASM find all references on macro returned first line of file as well
+                          Add: TASM, add ".binary ", 64ASM, add ".binary/.incbin"
+                          Fix: Crash when parsing string literal with late evaluation in !byte/!text
+                          Fix: Solution Explorer Drag&Drop was off, and not scrolling
+                          Add: BASIC65 dialect, << and >> tokens
+                          Add: BASIC65 dialect file new tokens for >> and <<
+
+
 15.12.2024 - 8.0:         Fix: Map Editor - undo not updating tile count
                           Fix: Autocomplete borking if a line with enabled tabs had a comment Add: Map editor: Tile count/usage display
                                Differ between circular and duplicate inclusion
