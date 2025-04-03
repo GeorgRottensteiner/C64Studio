@@ -21,6 +21,7 @@ namespace RetroDevStudio.Types.ASM
     {
       CODE_DIRECT = 0,
       CODE_INCLUDE,
+      CODE_INCLUDE_BASELIB,
       MEDIA_INCLUDE,
       MACRO
     }

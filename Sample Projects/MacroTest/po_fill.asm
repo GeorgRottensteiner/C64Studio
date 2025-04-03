@@ -1,3 +1,6 @@
+;!src "../../C64Studio/Baselib/c64.asm"
+!src <c64.asm>
+
 * = $0801
 
 !fill 1000

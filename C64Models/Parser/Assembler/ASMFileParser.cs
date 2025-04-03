@@ -4968,7 +4968,7 @@ namespace RetroDevStudio.Parser
           fullBasePath = System.IO.Path.GetFullPath( libFile );
 #endif
         }
-        if ( System.IO.File.Exists(GR.Path.Append( fullBasePath, subFilename ) ) )
+        if ( System.IO.File.Exists( GR.Path.Append( fullBasePath, subFilename ) ) )
         {
           return GR.Path.Append( fullBasePath, subFilename );
         }
@@ -10671,11 +10671,14 @@ namespace RetroDevStudio.Parser
               ||   ( token.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
               ||   ( token.Type == SymbolInfo.Types.CONSTANT_STRING ) )
               {
-                AddWarning( token.LineIndex,
-                            Types.ErrorCode.W1004_UNUSED_CONSTANT,
-                            "Unused constant " + token.Name,
-                            token.CharIndex,
-                            token.Length );
+                if ( token.SourceInfo.Source != SourceInfo.SourceInfoSource.CODE_INCLUDE_BASELIB )
+                {
+                  AddWarning( token.LineIndex,
+                              Types.ErrorCode.W1004_UNUSED_CONSTANT,
+                              "Unused constant " + token.Name,
+                              token.CharIndex,
+                              token.Length );
+                }
               }
               else
               {

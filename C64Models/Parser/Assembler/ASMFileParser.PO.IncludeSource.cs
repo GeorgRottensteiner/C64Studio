@@ -2,6 +2,7 @@
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
+using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace RetroDevStudio.Parser
       string          subFilename = "";
       PathResolving   resolving = PathResolving.FROM_FILE;
       bool            singleInclude = false;
+      SourceInfo.SourceInfoSource source = SourceInfo.SourceInfoSource.CODE_INCLUDE;
 
       if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> parms ) )
       {
@@ -81,6 +83,7 @@ namespace RetroDevStudio.Parser
           return ParseLineResult.RETURN_NULL;
         }
         singleInclude = ( parms.Count == 2 );
+        source = SourceInfo.SourceInfoSource.CODE_INCLUDE_BASELIB;
       }
       else
       {
@@ -170,6 +173,10 @@ namespace RetroDevStudio.Parser
           AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file for '" + subFilename + "' in line " + ( lineIndex + 1 ) );
           return ParseLineResult.RETURN_NULL;
         }
+        else
+        {
+          source = SourceInfo.SourceInfoSource.CODE_INCLUDE_BASELIB;
+        }
       }
 
       if ( GR.Path.IsPathEqual( ParentFilename, subFilenameFull ) )
@@ -226,11 +233,12 @@ namespace RetroDevStudio.Parser
       }
 
       Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-      sourceInfo.Filename = subFilenameFull;
-      sourceInfo.FullPath = subFilenameFull;
-      sourceInfo.GlobalStartLine = lineIndex;
-      sourceInfo.LineCount = subFile.Length;
-      sourceInfo.FilenameParent = ParentFilename;
+      sourceInfo.Filename         = subFilenameFull;
+      sourceInfo.FullPath         = subFilenameFull;
+      sourceInfo.GlobalStartLine  = lineIndex;
+      sourceInfo.LineCount        = subFile.Length;
+      sourceInfo.FilenameParent   = ParentFilename;
+      sourceInfo.Source           = source;
 
       SourceInfoLog( "-include at global index " + lineIndex );
       SourceInfoLog( "-has " + subFile.Length + " lines" );
