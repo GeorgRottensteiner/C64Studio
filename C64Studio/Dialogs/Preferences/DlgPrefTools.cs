@@ -17,6 +17,10 @@ namespace RetroDevStudio.Dialogs.Preferences
   [Description( "General.Emulators" )]
   public partial class DlgPrefTools : DlgPrefBase
   {
+    TextBox   _lastFocusedEdit = null;
+
+
+
     public DlgPrefTools()
     {
       InitializeComponent();
@@ -456,7 +460,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       var Document = Core.MainForm.ActiveDocumentInfo;
 
-      var formMacros = new FormMacros( Core, Document, null, true, "Macros.Tools" );
+      var formMacros = new FormMacros( Core, Document, _lastFocusedEdit, true, "Macros.Tools" );
       formMacros.ShowDialog();
     }
 
@@ -492,6 +496,13 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         editWorkPath.Text = dlgTool.SelectedPath;
       }
+    }
+
+
+
+    private void editGotFocus( object sender, EventArgs e )
+    {
+      _lastFocusedEdit = sender as TextBox;
     }
 
 

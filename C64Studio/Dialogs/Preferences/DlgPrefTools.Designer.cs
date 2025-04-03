@@ -140,6 +140,7 @@
       this.editToolCartArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolCartArguments.TabIndex = 1;
       this.editToolCartArguments.TextChanged += new System.EventHandler(this.editToolCartArguments_TextChanged);
+      this.editToolCartArguments.Enter += new System.EventHandler(this.editGotFocus);
       // 
       // label4
       // 
@@ -187,6 +188,7 @@
       this.editToolTrueDriveOnArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolTrueDriveOnArguments.TabIndex = 3;
       this.editToolTrueDriveOnArguments.TextChanged += new System.EventHandler(this.editToolTrueDriveOnArguments_TextChanged);
+      this.editToolTrueDriveOnArguments.Enter += new System.EventHandler(this.editGotFocus);
       // 
       // label23
       // 
@@ -206,6 +208,7 @@
       this.editToolDebugArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolDebugArguments.TabIndex = 2;
       this.editToolDebugArguments.TextChanged += new System.EventHandler(this.editToolDebugArguments_TextChanged);
+      this.editToolDebugArguments.Enter += new System.EventHandler(this.editGotFocus);
       // 
       // label5
       // 
@@ -225,6 +228,7 @@
       this.editToolPRGArguments.Size = new System.Drawing.Size(291, 20);
       this.editToolPRGArguments.TabIndex = 0;
       this.editToolPRGArguments.TextChanged += new System.EventHandler(this.editToolPRGArguments_TextChanged);
+      this.editToolPRGArguments.Enter += new System.EventHandler(this.editGotFocus);
       // 
       // comboToolType
       // 
@@ -255,6 +259,7 @@
       this.editWorkPath.Size = new System.Drawing.Size(266, 20);
       this.editWorkPath.TabIndex = 26;
       this.editWorkPath.TextChanged += new System.EventHandler(this.editWorkPath_TextChanged);
+      this.editWorkPath.Enter += new System.EventHandler(this.editGotFocus);
       // 
       // btnBrowseToolWorkPath
       // 
@@ -347,7 +352,7 @@
       this.label1.TabIndex = 15;
       this.label1.Text = "Available Tools:";
       // 
-      // PrefTools
+      // DlgPrefTools
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -366,7 +371,7 @@
       this.Controls.Add(this.labelToolPath);
       this.Controls.Add(this.btnBrowseTool);
       this.Controls.Add(this.label7);
-      this.Name = "PrefTools";
+      this.Name = "DlgPrefTools";
       this.Size = new System.Drawing.Size(676, 393);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
