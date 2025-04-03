@@ -83,6 +83,10 @@ namespace RetroDevStudio.Dialogs
 
     private void InsertMacro()
     {
+      if ( m_Edit == null )
+      {
+        return;
+      }
       int     caretPos = m_Edit.SelectionStart;
       m_Edit.Text = m_Edit.Text.Insert( m_Edit.SelectionStart, listMacros.SelectedItems[0].SubItems[0].Text );
       m_Edit.SelectionStart   = caretPos + listMacros.SelectedItems[0].SubItems[0].Text.Length;
