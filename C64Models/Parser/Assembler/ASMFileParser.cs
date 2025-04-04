@@ -5340,8 +5340,7 @@ namespace RetroDevStudio.Parser
               _ParseContext.Scopes.Add( scope );
               OnScopeAdded( scope );
             }
-            else if ( ( TokenStartsScope( lineTokenInfos, tokenOffset, out detectedScopeType ) )
-            &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
+            else if ( TokenStartsScope( lineTokenInfos, tokenOffset, out detectedScopeType ) )
             {
               // ACME style other scopes with bracket
               Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( detectedScopeType );
@@ -5351,9 +5350,11 @@ namespace RetroDevStudio.Parser
               if ( detectedScopeType == ScopeInfo.ScopeType.MACRO_FUNCTION )
               {
                 scope.Macro = new MacroFunctionInfo();
-                scope.Macro.UsesBracket = true;
+                if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
+                {
+                  scope.Macro.UsesBracket = true;
+                }
               }
-
               _ParseContext.Scopes.Add( scope );
               OnScopeAdded( scope );
             }
@@ -6908,7 +6909,7 @@ namespace RetroDevStudio.Parser
                     scope.IfChainHadActiveEntry = true;
                   }
                   _ParseContext.Scopes.Add( scope );
-                  //Debug.Log( "Add Scope ifdefa " + lineIndex );
+                  OnScopeAdded( scope );
                 }
               }
             }
@@ -9496,14 +9497,15 @@ namespace RetroDevStudio.Parser
           Type = ScopeInfo.ScopeType.ADDRESS;
           return true;
         }
-        if ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.ZONE ) )
+        // zone only opens a scope if it's using a {
+        if ( ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.ZONE ) )
+        &&   ( Tokens.Last().Content == "{" ) )
         {
           Type = ScopeInfo.ScopeType.ZONE;
           return true;
         }
-        // a ACME style !macro with opening bracket
-        if ( ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.MACRO ) )
-        &&   ( Tokens[Tokens.Count - 1].Content == "{" ) )
+        // a ACME style !macro can have an opening bracket
+        if ( MatchesMacroByType( Tokens[StartTokenIndex].Content, MacroInfo.PseudoOpType.MACRO ) )
         {
           Type = ScopeInfo.ScopeType.MACRO_FUNCTION;
           return true;
@@ -9722,12 +9724,13 @@ namespace RetroDevStudio.Parser
     void OnScopeRemoved( int LineIndex )
     {
       /*
-      var scope = Scopes[Scopes.Count - 1];
+      var scope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
       string  doc;
       int       localLine = -1;
 
-      ASMFileInfo.FindTrueLineSource( LineIndex, out doc, out localLine );
-      Debug.Log( "Scope " + scope.Type + " removed in " + doc + " at " + ( localLine + 1 ) );*/
+      m_ASMFileInfo.FindTrueLineSource( LineIndex, out doc, out localLine );
+      Debug.Log( "Scope " + scope.Type + " removed in " + doc + " at " + ( localLine + 1 ) );
+      */
     }
 
 
@@ -9738,8 +9741,9 @@ namespace RetroDevStudio.Parser
       string  doc;
       int       localLine = -1;
 
-      ASMFileInfo.FindTrueLineSource( scope.StartIndex, out doc, out localLine );
-      Debug.Log( "Scope " + scope.Type + " added in " + doc + " at " + ( localLine + 1 ) );*/
+      m_ASMFileInfo.FindTrueLineSource( scope.StartIndex, out doc, out localLine );
+      Debug.Log( "Scope " + scope.Type + " added in " + doc + " at " + ( localLine + 1 ) );
+      */
     }
 
 

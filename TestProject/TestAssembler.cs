@@ -566,8 +566,8 @@ namespace TestProject
       var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
 
       Assert.AreEqual( 5, messages.Count );
-      Assert.AreEqual( "Unused label mathlib.FALSE", messages.Values[0].Message );
-      Assert.AreEqual( "Unused label mathlib.UNKNOWN", messages.Values[1].Message );
+      Assert.AreEqual( "Unused constant mathlib.FALSE", messages.Values[0].Message );
+      Assert.AreEqual( "Unused constant mathlib.UNKNOWN", messages.Values[1].Message );
       Assert.AreEqual( "DEBUG.C_is_set = 255/$FF", messages.Values[2].Message );
       Assert.AreEqual( "DEBUG .TRUE=255/$FF", messages.Values[3].Message );
       Assert.AreEqual( ".C_is_set is TRUE", messages.Values[4].Message );

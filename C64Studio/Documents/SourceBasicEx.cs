@@ -1853,7 +1853,12 @@ namespace RetroDevStudio.Documents
           {
             return true;
           }
-          return IsValidKey( bareKey, mappedKey );
+          if ( !IsValidKey( bareKey, mappedKey ) )
+          {
+            return false;
+          }
+          // allow processing of regular textbox (ctrl-home, etc.)
+          return base.ProcessCmdKey( ref msg, keyData );
         }
       }
 
