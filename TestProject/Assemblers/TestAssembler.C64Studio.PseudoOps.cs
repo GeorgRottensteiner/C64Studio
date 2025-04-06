@@ -265,6 +265,29 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPOFillToTimes()
+    {
+      string      source = @"* = $2000
+                             !fill 6, 5 to 12, 3";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      Assert.AreEqual( 20, (int)parser.AssembledOutput.Assembly.Length );
+      Assert.AreEqual( "0020050607090A0C050607090A0C050607090A0C", parser.AssembledOutput.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestHex()
     {
       string      source = @"  * = $c000

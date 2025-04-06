@@ -4559,31 +4559,44 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool IsStartToEndNumericRange( List<TokenInfo> Tokens, out bool hadError, out SymbolInfo symbolStart, out SymbolInfo symbolEnd )
+    private bool IsStartToEndNumericRange( List<List<TokenInfo>> Tokens, 
+                                           out bool hadError, 
+                                           out SymbolInfo symbolStart, 
+                                           out SymbolInfo symbolEnd,
+                                           out SymbolInfo symbolTimes )
     {
       symbolStart = null;
       symbolEnd   = null;
+      symbolTimes = null;
       hadError    = false;
 
-      if ( Tokens.Count < 3 )
+      if ( Tokens.Count < 2 )
       {
         return false;
       }
-      int toIndex = Tokens.FindIndex( t => t.Content.ToUpper() == "TO" );
+      int toIndex = Tokens[1].FindIndex( t => t.Content.ToUpper() == "TO" );
       if ( toIndex == -1 )
       {
         return false;
       }
 
-      if ( !EvaluateTokens( _ParseContext.LineIndex, Tokens, 0, toIndex, out symbolStart ) )
+      if ( !EvaluateTokens( _ParseContext.LineIndex, Tokens[1], 0, toIndex, out symbolStart ) )
       {
         AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, $"Could not evaluate expression for start value" );
         hadError = true;
       }
-      if ( !EvaluateTokens( _ParseContext.LineIndex, Tokens, toIndex + 1, Tokens.Count - toIndex - 1, out symbolEnd ) )
+      if ( !EvaluateTokens( _ParseContext.LineIndex, Tokens[1], toIndex + 1, Tokens[1].Count - toIndex - 1, out symbolEnd ) )
       {
         AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, $"Could not evaluate expression for start value" );
         hadError = true;
+      }
+      if ( Tokens.Count == 3 )
+      {
+        if ( !EvaluateTokens( _ParseContext.LineIndex, Tokens[2], out symbolTimes ) )
+        {
+          AddError( _ParseContext.LineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, $"Could not evaluate expression for count value" );
+          hadError = true;
+        }
       }
       return true;
     }

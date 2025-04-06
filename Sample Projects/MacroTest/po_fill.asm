@@ -25,6 +25,8 @@ RANGE
 RANGE2
 !fill 6, 255 to 128
 
+RANGE3
+!fill 4, 12 to 40, 10
 
 
 * = $2000

@@ -21,9 +21,9 @@ namespace RetroDevStudio.Parser
         return ParseLineResult.ERROR_ABORT;
       }
       if ( ( lineParams.Count < 1 )
-      ||   ( lineParams.Count > 2 ) )
+      ||   ( lineParams.Count > 3 ) )
       {
-        AddError( lineIndex, ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, expect " + lineTokenInfos[0].Content + " <Count>[,<Value>]" );
+        AddError( lineIndex, ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, expect " + lineTokenInfos[0].Content + " <Count>[,<Value>], or " + lineTokenInfos[0].Content + " <Count>,<From> to <To>[,<Times>]" );
         return ParseLineResult.ERROR_ABORT;
       }
 
@@ -46,9 +46,10 @@ namespace RetroDevStudio.Parser
       int fillValue = 0;
       GR.Memory.ByteBuffer lineData = null;
 
-      if ( lineParams.Count == 2 )
+      if ( ( lineParams.Count >= 2 )
+      &&   ( IsList( lineParams[1] ) ) )
       {
-        if ( IsList( lineParams[1] ) )
+        if ( lineParams.Count == 2 )
         {
           List<List<TokenInfo>>   listParams;
 
@@ -90,53 +91,68 @@ namespace RetroDevStudio.Parser
           }
           m_TemporaryFillLoopPos = -1;
         }
-        else if ( IsStartToEndNumericRange( lineParams[1], out bool hadError, out var symbolStart, out var symbolEnd ) )
+      }
+      else if ( IsStartToEndNumericRange( lineParams, out bool hadError, out var symbolStart, out var symbolEnd, out var symbolTimes ) )
+      {
+        if ( hadError )
         {
-          if ( hadError )
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        long startValue = symbolStart.ToInteger();
+        long endValue   = symbolEnd.ToInteger();
+        long numTimes = 1;
+        if ( symbolTimes != null )
+        {
+          numTimes = symbolTimes.ToInteger();
+          if ( numTimes <= 0 )
           {
-            return ParseLineResult.ERROR_ABORT;
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Count value must not be zero or negative!" + TokensToExpression( lineParams[1] ) );
+            return ParseLineResult.RETURN_NULL;
           }
-          lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+        }
 
-          long startValue = symbolStart.ToInteger();
-          long endValue   = symbolEnd.ToInteger();
+        lineData = new GR.Memory.ByteBuffer( (uint)( numBytes * numTimes ) );
+        info.NumBytes = (int)( numBytes * numTimes );
 
+        for ( long j = 0; j < numTimes; ++j )
+        {
           if ( numBytes == 1 )
           {
-            lineData.SetU8At( 0, (byte)startValue );
+            lineData.SetU8At( (int)j, (byte)startValue );
           }
           else
           {
             for ( int i = 0; i < numBytes; ++i )
             {
-              lineData.SetU8At( i, (byte)( startValue + i * ( endValue - startValue ) / ( numBytes - 1 ) ) );
+              lineData.SetU8At( (int)( j * numBytes + i ), (byte)( startValue + i * ( endValue - startValue ) / ( numBytes - 1 ) ) );
             }
           }
         }
-        else
+      }
+      else if ( lineParams.Count == 2 )
+      {
+        lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+
+        for ( int i = 0; i < numBytes; ++i )
         {
-          lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+          m_TemporaryFillLoopPos = i;
 
-          for ( int i = 0; i < numBytes; ++i )
+          int expressionResult = 0;
+          if ( !EvaluateTokens( lineIndex, lineParams[1], out SymbolInfo expressionResultSymbol ) )
           {
-            m_TemporaryFillLoopPos = i;
-
-            int expressionResult = 0;
-            if ( !EvaluateTokens( lineIndex, lineParams[1], out SymbolInfo expressionResultSymbol ) )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( lineParams[1] ) );
-              return ParseLineResult.RETURN_NULL;
-            }
-            expressionResult = expressionResultSymbol.ToInt32();
-            if ( !ValidByteValue( expressionResult ) )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
-              return ParseLineResult.RETURN_NULL;
-            }
-            lineData.SetU8At( i, (byte)expressionResult );
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( lineParams[1] ) );
+            return ParseLineResult.RETURN_NULL;
           }
-          m_TemporaryFillLoopPos = -1;
+          expressionResult = expressionResultSymbol.ToInt32();
+          if ( !ValidByteValue( expressionResult ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
+            return ParseLineResult.RETURN_NULL;
+          }
+          lineData.SetU8At( i, (byte)expressionResult );
         }
+        m_TemporaryFillLoopPos = -1;
       }
 
       if ( !m_CurrentSegmentIsVirtual )
