@@ -4520,8 +4520,10 @@ namespace RetroDevStudio.Parser
         if ( isMacroIndex != -1 )
         {
           Types.MacroInfo macro = m_AssemblerSettings.PseudoOps[lineTokenInfos[isMacroIndex].Content.ToUpper()];
-          
-          if ( macro.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.LOOP_END )
+
+          // allow end and loop end to both close a loop
+          if ( ( macro.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.END )
+          ||   ( macro.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.LOOP_END ) )
           {
             --loopCount;
             if ( loopCount == 0 )
@@ -7511,6 +7513,19 @@ namespace RetroDevStudio.Parser
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.JUMP_TABLE )
             {
               var result = POJumpTable( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOOP_START )
+            {
+              var result = POLoopStart( lineTokenInfos, lineIndex, info, ref Lines, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;

@@ -276,6 +276,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!RS", Types.MacroInfo.PseudoOpType.ASSUME_8BIT_REGISTERS_65816 );
           AddPseudoOp( "!SKIP", Types.MacroInfo.PseudoOpType.SKIP );
           AddPseudoOp( "!WHILE", Types.MacroInfo.PseudoOpType.WHILE );
+          AddPseudoOp( "!REPEAT", Types.MacroInfo.PseudoOpType.LOOP_START );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );

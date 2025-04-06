@@ -41,6 +41,7 @@
       <li><a href="#pseudopc">!PSEUDOPC</a></li>
       <li><a href="#realign">!REALIGN</a></li>
       <li><a href="#realpc">!REALPC</a></li>
+      <li><a href="#repeat">!REPEAT</a></li>
       <li><a href="#scrxor">!SCRXOR</a></li>
       <li><a href="#set">!SET</a></li>
       <li><a href="#skip">!SKIP</a></li>
@@ -2683,6 +2684,21 @@ Sequence
       <br />      !PSEUDOPC $0400
       ...
       !REALPC
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="repeat"></a>
+  <H2>!REPEAT&lt;Expression&gt; {</H2>
+  <div id="mybody">
+    This pseudo op repeats the following statements until the next closing statement (!end) <Expression> times.<br />
+    <br />
+    <br />
+    <div id="code">
+
+      !repeat 10
+        nop
+      !end
     </div>
     <br />
     <br />
