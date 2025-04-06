@@ -10,6 +10,7 @@ using RetroDevStudio.Types;
 using System.Diagnostics;
 using RetroDevStudio.CheckSummer;
 using System.Reflection;
+using System.Net;
 
 
 
@@ -575,10 +576,6 @@ namespace RetroDevStudio.Parser.BASIC
 
       m_LineInfos.Clear();
 
-      if ( !Settings.UpperCaseMode )
-      {
-        Content = MakeUpperCase( Content, Settings.UseC64Font );
-      }
       if ( Settings.BASICDialect.Opcodes.Count == 0 )
       {
         AddError( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "An unsupported BASIC version '" + Settings.BASICDialect.Name + "' was chosen" );
@@ -1919,11 +1916,12 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private bool ProcessMetaData( int LineIndex, string MetaData )
+    private bool ProcessMetaData( int LineIndex, string MetaData, LineInfo lineInfo, out bool hadError )
     {
       int     sepPos = MetaData.IndexOf( ':' );
       string  metaDataType;
       string  metaDataParams = "";
+      hadError = false;
       if ( sepPos == -1 )
       {
         metaDataType = MetaData;
@@ -1939,6 +1937,11 @@ namespace RetroDevStudio.Parser.BASIC
         metaDataType = metaDataType.Substring( 0, sepPos );
       }
 
+      if ( m_CompileConfig.DoNotExpandStringLiterals )
+      {
+        return true;
+      }
+
       switch ( metaDataType.ToUpper() )
       {
         case "RETRODEVSTUDIO.METADATA.BASIC":
@@ -1946,13 +1949,31 @@ namespace RetroDevStudio.Parser.BASIC
           // ok, but nothing to do here
           return true;
         case "INCLUDE":
-          return MetaDataInclude( LineIndex, MetaData, metaDataParams );
+          if ( !MetaDataInclude( LineIndex, MetaData, metaDataParams ) )
+          {
+            hadError = true;
+          }
+          // include ends up with an empty line
+          lineInfo.Tokens.Clear();
+          return true;
         case "BINDATA":
-          return MetaDataBinaryData( LineIndex, MetaData, metaDataParams );
+          if ( !MetaDataBinaryData( LineIndex, MetaData, metaDataParams ) )
+          {
+            hadError = true;
+          }
+          return true;
         case "SPRITEDATA":
-          return MetaDataSpriteData( LineIndex, MetaData, metaDataParams );
+          if ( !MetaDataSpriteData( LineIndex, MetaData, metaDataParams ) )
+          {
+            hadError = true;
+          }
+          return true;
         case "CHARDATA":
-          return MetaDataCharData( LineIndex, MetaData, metaDataParams );
+          if ( !MetaDataCharData( LineIndex, MetaData, metaDataParams ) )
+          {
+            hadError = true;
+          }
+          return true;
       }
       return false;
     }
@@ -2614,9 +2635,16 @@ namespace RetroDevStudio.Parser.BASIC
       if ( ( pureInfo.Tokens.Count == 1 )
       &&   ( pureInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
       {
-        if ( !ProcessMetaData( lineIndex, pureInfo.Tokens[0].Content.Substring( 1 ) ) )
+        if ( ProcessMetaData( lineIndex, pureInfo.Tokens[0].Content.Substring( 1 ), pureInfo, out bool hadError ) )
         {
-          //return hardInfo;
+          if ( hadError )
+          {
+            return;
+          }
+          if ( pureInfo.Tokens.Count == 0 )
+          {
+            return;
+          }
         }
       }
 

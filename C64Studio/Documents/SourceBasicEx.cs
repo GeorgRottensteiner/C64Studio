@@ -2295,6 +2295,7 @@ namespace RetroDevStudio.Documents
         ||   ( bareKey == Keys.PageDown )
         ||   ( bareKey == Keys.PageUp )
         ||   ( bareKey == Keys.Home )
+        ||   ( bareKey == Keys.Tab )
         ||   ( bareKey == Keys.Delete )
         ||   ( bareKey == Keys.Insert )
         ||   ( bareKey == Keys.Back )
@@ -2428,10 +2429,11 @@ namespace RetroDevStudio.Documents
         Core.MainForm.m_CompileResult.UpdateFromMessages( asmFileInfo, DocumentInfo.Project );
         Core.Navigating.UpdateFromMessages( asmFileInfo,
                                             DocumentInfo.Project );
+        Core.TaskManager.AddTask( new Tasks.TaskUpdateCompileResult( asmFileInfo, DocumentInfo ) );
         Core.ShowDocument( Core.MainForm.m_CompileResult, false );
         return false;
       }
-      if ( labelMode )
+      if ( !parser.LabelMode )
       {
         Result = parser.EncodeToLabels();
 
@@ -2445,7 +2447,9 @@ namespace RetroDevStudio.Documents
         DocumentInfo.ASMFileInfoOriginal = parser.GetASMFileInfo();
 
         // this one must work or we screwed up
+        parser.LabelMode = false;
         parser.Parse( Result, null, compilerConfig, null, out DocumentInfo.ASMFileInfo );
+        parser.LabelMode = true;
       }
 
       DocumentInfo.KnownKeywords  = DocumentInfo.ASMFileInfo.KnownTokens();

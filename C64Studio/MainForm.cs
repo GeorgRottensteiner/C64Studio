@@ -16,6 +16,7 @@ using System.Linq;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
 using System.IO;
 using System.ComponentModel;
+using RetroDevStudio.Parser.BASIC;
 
 
 
@@ -5725,6 +5726,7 @@ namespace RetroDevStudio
           {
             return false;
           }
+          ( (BasicFileParser)Parser ).LabelMode = false;
         }
       }
 

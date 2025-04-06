@@ -216,7 +216,8 @@ namespace RetroDevStudio.Documents
 
       if ( _FileInfoPerFileCache.TryGetValue( Doc.DocumentInfo.FullPath, out Types.ASM.FileInfo cachedASMFileInfo ) )
       {
-        if ( cachedASMFileInfo != Doc.DocumentInfo.ASMFileInfo )
+        if ( ( cachedASMFileInfo != Doc.DocumentInfo.ASMFileInfo )
+        &&   ( cachedASMFileInfo != null ) )
         {
           _ExpandedNodesPerProject.Remove( cachedASMFileInfo );
         }
