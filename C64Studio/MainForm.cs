@@ -2740,14 +2740,14 @@ namespace RetroDevStudio
         &&   ( Document.ASMFileInfo != null )
         &&   ( toolRun.PassLabelsToEmulator ) )
         {
-          string labelInfo = Document.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
+          string labelInfo = Document.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
           if ( labelInfo.Length > 0 )
           {
             try
             {
               StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
 
-              switch ( EmulatorInfo.LabelFormat( toolRun ) )
+              switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
               {
                 case Types.ASM.LabelFileFormat.C64DEBUGGER:
                   runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" "
@@ -4195,40 +4195,9 @@ namespace RetroDevStudio
 
 
 
-    private void DebugGo()
-    {
-      if ( ( m_CurrentActiveTool != null )
-      &&   ( !EmulatorInfo.SupportsDebugging( m_CurrentActiveTool ) ) )
-      {
-        return;
-      }
-
-      if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      {
-        m_DebugMemory.InvalidateAllMemory();
-        StudioCore.Debugging.Debugger.Run();
-
-        if ( StudioCore.Debugging.MarkedDocument != null )
-        {
-          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
-          StudioCore.Debugging.MarkedDocument = null;
-        }
-
-        StudioCore.Executing.BringToForeground();
-        m_DebugRegisters.EnableRegisterOverrides( false );
-
-        AppState = Types.StudioState.DEBUGGING_RUN;
-        StudioCore.Debugging.FirstActionAfterBreak = false;
-        mainDebugGo.Enabled = false;
-        mainDebugBreak.Enabled = true;
-      }
-    }
-
-
-
     private void mainDebugGo_Click( object sender, EventArgs e )
     {
-      DebugGo();
+      StudioCore.Debugging.DebugGo();
     }
 
 
@@ -4256,8 +4225,7 @@ namespace RetroDevStudio
       {
         try
         {
-          if ( ( m_CurrentActiveTool != null )
-          &&   ( !EmulatorInfo.SupportsDebugging( m_CurrentActiveTool ) ) )
+          if ( StudioCore.Debugging.CurrentToolSupportsDebugging() )
           {
             if ( StudioCore.Executing.RunProcess != null )
             {
@@ -5159,7 +5127,7 @@ namespace RetroDevStudio
           StopDebugging();
           return true;
         case RetroDevStudio.Types.Function.DEBUG_GO:
-          DebugGo();
+          StudioCore.Debugging.DebugGo();
           return true;
         case RetroDevStudio.Types.Function.DEBUG_BREAK:
           StudioCore.Debugging.DebugBreak();
@@ -5390,7 +5358,7 @@ namespace RetroDevStudio
           }
           else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
           {
-            DebugGo();
+            StudioCore.Debugging.DebugGo();
             return true;
           }
           break;
@@ -6104,7 +6072,7 @@ namespace RetroDevStudio
 
         toolEmulator.Filename = wizard.editPathEmulator.Text;
 
-        EmulatorInfo.SetDefaultRunArguments( toolEmulator );
+        ToolInfo.SetDefaultRunArguments( toolEmulator );
 
         StudioCore.Settings.ToolInfos.Add( toolEmulator );
         RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );

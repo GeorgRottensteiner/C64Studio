@@ -1,25 +1,25 @@
 ﻿using RetroDevStudio.Types.ASM;
-using RetroDevStudio;
 using System;
 using GR.Memory;
-using System.Text;
 
-namespace RetroDevStudio.Types
+
+
+namespace RetroDevStudio.Emulators
 {
   public static class EmulatorInfo
   {
-    public static bool IsMega65Family( ToolInfo Tool )
+    public static bool IsMega65Family( string emulatorFilename )
     {
-      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
 
       return uppercaseFilename.StartsWith( "XMEGA65" );
     }
 
 
 
-    public static bool IsVICEFamily( ToolInfo Tool )
+    public static bool IsVICEFamily( string emulatorFilename )
     {
-      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
 
       return ( ( uppercaseFilename.StartsWith( "X64" ) )
             || ( uppercaseFilename.StartsWith( "XSCPU64" ) )
@@ -32,16 +32,11 @@ namespace RetroDevStudio.Types
 
 
 
-    public static bool SupportsDebugging( ToolInfo Tool )
+    public static bool SupportsDebugging( string emulatorFilename )
     {
-      if ( Tool.IsInternal )
-      {
-        return true;
-      }
-
       // currently only the VICE family is supported
-      if ( ( IsVICEFamily( Tool ) )
-      ||   ( IsMega65Family( Tool ) ) )
+      if ( ( IsVICEFamily( emulatorFilename ) )
+      ||   ( IsMega65Family( emulatorFilename ) ) )
       {
         return true;
       }
@@ -50,70 +45,11 @@ namespace RetroDevStudio.Types
 
 
 
-    public static void SetDefaultRunArguments( ToolInfo Tool )
-    {
-      Tool.WorkPath               = "\"$(RunPath)\"";
-      Tool.Type                   = ToolInfo.ToolType.EMULATOR;
-      Tool.PRGArguments           = "\"$(RunFilename)\"";
-      Tool.CartArguments          = "";
-      Tool.DebugArguments         = "";
-      Tool.TrueDriveOnArguments   = "";
-      Tool.TrueDriveOffArguments  = "";
-      Tool.PassLabelsToEmulator   = false;
-
-      string upperCaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
-
-      if ( IsVICEFamily( Tool ) )
-      {
-        // VICE
-        Tool.Name                   = "WinVICE";
-        Tool.PRGArguments           = "\"$(RunFilename)\"";
-        Tool.CartArguments          = "-cartcrt \"$(RunFilename)\"";
-        Tool.DebugArguments         = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
-        Tool.PassLabelsToEmulator   = true;
-
-        if ( IsVICEVersionOldTrueDrive( Tool ) )
-        {
-          Tool.TrueDriveOnArguments   = "-truedrive +virtualdev";
-          Tool.TrueDriveOffArguments  = "+truedrive -virtualdev";
-        }
-        else
-        {
-          Tool.TrueDriveOnArguments   = "-drive8truedrive +virtualdev8";
-          Tool.TrueDriveOffArguments  = "+drive8truedrive -virtualdev8";
-        }
-      }
-      else if ( upperCaseFilename.StartsWith( "CCS64" ) )
-      {
-        // CCS64
-        Tool.Name                 = "CCS64";
-        Tool.PassLabelsToEmulator = false;
-      }
-      else if ( IsMega65Family( Tool ) )
-      {
-        // XMEGA65
-        Tool.Name         = "XMEGA65";
-        Tool.PRGArguments = "-prg \"$(RunFilename)\"";
-      }
-      else if ( upperCaseFilename.StartsWith( "STELLA" ) )
-      {
-        // Atari Stella
-        Tool.Name         = "Stella";
-      }
-      else
-      {
-        // fallback
-        Tool.Name   = upperCaseFilename;
-      }
-    }
-
-
-
-    private static bool IsVICEVersionOldTrueDrive( ToolInfo Tool )
+    public static bool IsVICEVersionOldTrueDrive( string emulatorFilename )
     {
       try
       {
-        var executable = GR.IO.File.ReadAllBytes( Tool.Filename );
+        var executable = GR.IO.File.ReadAllBytes( emulatorFilename );
 
         // look for "vice-logo-black.svg00About VICE00"
         var searchKey = new ByteBuffer( "766963652d6c6f676f2d626c61636b2e7376670041626f7574205649434500" );
@@ -162,9 +98,9 @@ namespace RetroDevStudio.Types
 
 
 
-    public static LabelFileFormat LabelFormat( ToolInfo Tool )
+    public static LabelFileFormat LabelFormat( string emulatorFilename )
     {
-      string upperCaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string upperCaseFilename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
 
       if ( upperCaseFilename.StartsWith( "C64DEBUGGER" ) )
       {
@@ -175,9 +111,9 @@ namespace RetroDevStudio.Types
 
 
 
-    public static MachineType DetectMachineType( ToolInfo Tool )
+    public static MachineType DetectMachineType( string emulatorFilename )
     {
-      string    filename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+      string    filename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
 
       if ( ( filename.StartsWith( "X64" ) )
       ||   ( filename.StartsWith( "XSCPU64" ) )

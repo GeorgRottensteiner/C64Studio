@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Emulators
 {
   [AttributeUsage( AttributeTargets.All, AllowMultiple = true )]
   internal class UsedForAttribute : Attribute

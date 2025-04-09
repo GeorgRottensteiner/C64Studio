@@ -4,6 +4,8 @@ using System.Text;
 using RetroDevStudio.Types.ASM;
 using RetroDevStudio;
 using System.ComponentModel;
+using RetroDevStudio.Types;
+using RetroDevStudio.Emulators;
 
 namespace RetroDevStudio
 {
@@ -14,72 +16,6 @@ namespace RetroDevStudio
       UNKNOWN,
       ASSEMBLER,
       EMULATOR
-    }
-
-    public enum DynamicArgument
-    {
-      [Description( "General Arguments" )]
-      [UsedFor( MachineType.ANY )]
-      GENERAL,
-      [Description( "Single File/Tape" )]
-      [UsedFor( MachineType.C64 )]
-      [UsedFor( MachineType.VIC20 )]
-      [UsedFor( MachineType.PET )]
-      [UsedFor( MachineType.PLUS4 )]
-      [UsedFor( MachineType.C128 )]
-      [UsedFor( MachineType.CBM )]
-      CALL_SINGLE_FILE_TAPE,
-      [Description( "Disk" )]
-      [UsedFor( MachineType.C64 )]
-      [UsedFor( MachineType.VIC20 )]
-      [UsedFor( MachineType.PET )]
-      [UsedFor( MachineType.PLUS4 )]
-      [UsedFor( MachineType.C128 )]
-      [UsedFor( MachineType.CBM )]
-      [UsedFor( MachineType.MEGA65 )]
-      [UsedFor( MachineType.COMMANDER_X16 )]
-      CALL_SINGLE_FILE_DISK,
-      [UsedFor( MachineType.C64 )]
-      [UsedFor( MachineType.VIC20 )]
-      [UsedFor( MachineType.PET )]
-      [UsedFor( MachineType.PLUS4 )]
-      [UsedFor( MachineType.C128 )]
-      [UsedFor( MachineType.CBM )]
-      [UsedFor( MachineType.MEGA65 )]
-      [UsedFor( MachineType.ATARI2600 )]
-      [UsedFor( MachineType.NES )]
-      [Description( "Cartridge/ROM" )]
-      CALL_CARTRIDGE_ROM,
-      [UsedFor( MachineType.C64 )]
-      [UsedFor( MachineType.VIC20 )]
-      [UsedFor( MachineType.PET )]
-      [UsedFor( MachineType.PLUS4 )]
-      [UsedFor( MachineType.C128 )]
-      [UsedFor( MachineType.CBM )]
-      [Description( "Debug" )]
-      CALL_DEBUG,
-      [UsedFor( MachineType.C64 )]
-      [UsedFor( MachineType.VIC20 )]
-      [UsedFor( MachineType.PET )]
-      [UsedFor( MachineType.PLUS4 )]
-      [UsedFor( MachineType.C128 )]
-      [UsedFor( MachineType.CBM )]
-      [Description( "True Drive On" )]
-      CALL_VICE_TRUE_DRIVE_ON,
-      [UsedFor( MachineType.C64 )]
-      [UsedFor( MachineType.VIC20 )]
-      [UsedFor( MachineType.PET )]
-      [UsedFor( MachineType.PLUS4 )]
-      [UsedFor( MachineType.C128 )]
-      [UsedFor( MachineType.CBM )]
-      [Description( "True Drive Off" )]
-      CALL_VICE_TRUE_DRIVE_OFF,
-      [Description( "Full Screen" )]
-      [UsedFor( MachineType.ANY )]
-      EXPLICIT_FULL_SCREEN,
-      [Description( "Windowed" )]
-      [UsedFor( MachineType.ANY )]
-      EXPLICIT_WINDOW
     }
 
     public ToolType         Type = ToolType.UNKNOWN;
@@ -192,6 +128,66 @@ namespace RetroDevStudio
     {
       return Name;
     }
+
+
+
+    public static void SetDefaultRunArguments( ToolInfo Tool )
+    {
+      Tool.WorkPath = "\"$(RunPath)\"";
+      Tool.Type = ToolInfo.ToolType.EMULATOR;
+      Tool.PRGArguments = "\"$(RunFilename)\"";
+      Tool.CartArguments = "";
+      Tool.DebugArguments = "";
+      Tool.TrueDriveOnArguments = "";
+      Tool.TrueDriveOffArguments = "";
+      Tool.PassLabelsToEmulator = false;
+
+      string upperCaseFilename = GR.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+
+      if ( Emulators.EmulatorInfo.IsVICEFamily( Tool.Filename ) )
+      {
+        // VICE
+        Tool.Name = "WinVICE";
+        Tool.PRGArguments = "\"$(RunFilename)\"";
+        Tool.CartArguments = "-cartcrt \"$(RunFilename)\"";
+        Tool.DebugArguments = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
+        Tool.PassLabelsToEmulator = true;
+
+        if ( Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( Tool.Filename ) )
+        {
+          Tool.TrueDriveOnArguments = "-truedrive +virtualdev";
+          Tool.TrueDriveOffArguments = "+truedrive -virtualdev";
+        }
+        else
+        {
+          Tool.TrueDriveOnArguments = "-drive8truedrive +virtualdev8";
+          Tool.TrueDriveOffArguments = "+drive8truedrive -virtualdev8";
+        }
+      }
+      else if ( upperCaseFilename.StartsWith( "CCS64" ) )
+      {
+        // CCS64
+        Tool.Name = "CCS64";
+        Tool.PassLabelsToEmulator = false;
+      }
+      else if ( Emulators.EmulatorInfo.IsMega65Family( Tool.Filename ) )
+      {
+        // XMEGA65
+        Tool.Name = "XMEGA65";
+        Tool.PRGArguments = "-prg \"$(RunFilename)\"";
+      }
+      else if ( upperCaseFilename.StartsWith( "STELLA" ) )
+      {
+        // Atari Stella
+        Tool.Name = "Stella";
+      }
+      else
+      {
+        // fallback
+        Tool.Name = upperCaseFilename;
+      }
+    }
+
 
 
 

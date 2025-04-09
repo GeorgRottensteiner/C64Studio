@@ -569,8 +569,7 @@ namespace RetroDevStudio
         return;
       }
 
-      if ( ( Core.MainForm.m_CurrentActiveTool != null )
-      &&   ( !EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      if ( !CurrentToolSupportsDebugging() )
       {
         return;
       }
@@ -599,6 +598,10 @@ namespace RetroDevStudio
 
     internal void DebugStepInto()
     {
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
       if ( ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK ) )
       &&   ( Core.Debugging.FirstActionAfterBreak ) )
       {
@@ -618,8 +621,7 @@ namespace RetroDevStudio
         return;
       }
 
-      if ( ( Core.MainForm.m_CurrentActiveTool != null )
-      &&   ( !EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      if ( !CurrentToolSupportsDebugging() )
       {
         return;
       }
@@ -653,6 +655,10 @@ namespace RetroDevStudio
 
     internal void DebugStepOver()
     {
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
       if ( ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK ) )
       &&   ( Core.Debugging.FirstActionAfterBreak ) )
       {
@@ -660,6 +666,49 @@ namespace RetroDevStudio
         StepOver();
       }
       StepOver();
+    }
+
+
+
+    public bool CurrentToolSupportsDebugging()
+    {
+      if ( ( Core.MainForm.m_CurrentActiveTool != null )
+      &&   ( ( Core.MainForm.m_CurrentActiveTool.IsInternal )
+      ||     ( Emulators.EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool.Filename ) ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public void DebugGo()
+    {
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
+
+      if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.Run();
+
+        if ( MarkedDocument != null )
+        {
+          MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo, -1 );
+          MarkedDocument = null;
+        }
+
+        Core.Executing.BringToForeground();
+        Core.MainForm.m_DebugRegisters.EnableRegisterOverrides( false );
+
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
+        FirstActionAfterBreak = false;
+
+        Core.MainForm.SetGUIForDebugging( true );
+      }
     }
 
 
@@ -672,8 +721,7 @@ namespace RetroDevStudio
         return;
       }
 
-      if ( ( Core.MainForm.m_CurrentActiveTool != null )
-      &&   ( !EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      if ( !CurrentToolSupportsDebugging() )
       {
         return;
       }
@@ -755,6 +803,11 @@ namespace RetroDevStudio
         Core.AddToOutput( "No debugger attached" );
         return;
       }
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
+
       if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
       ||   ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN ) )
       {

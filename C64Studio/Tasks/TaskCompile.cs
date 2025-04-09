@@ -136,9 +136,9 @@ namespace RetroDevStudio.Tasks
       if ( ( toolRun.PassLabelsToEmulator )
       &&   ( Core.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
       {
-        symbolFile += Core.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
+        symbolFile += Core.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
       }
-      if ( ( EmulatorInfo.LabelFormat( toolRun ) == Types.ASM.LabelFileFormat.C64DEBUGGER )
+      if ( ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) == Types.ASM.LabelFileFormat.C64DEBUGGER )
       &&   ( Core.Debugging.DebuggedASMBase.ASMFileInfo != null )
       &&   ( Core.Debugging.BreakPoints.Count > 0 ) )
       {
@@ -151,7 +151,7 @@ namespace RetroDevStudio.Tasks
         {
           Core.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
           System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, symbolFile );
-          switch ( EmulatorInfo.LabelFormat( toolRun ) )
+          switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
           {
             case Types.ASM.LabelFileFormat.VICE:
               command += " -moncommands \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
@@ -175,7 +175,7 @@ namespace RetroDevStudio.Tasks
         {
           Core.Debugging.TempDebuggerBreakpointFilename = System.IO.Path.GetTempFileName();
           System.IO.File.WriteAllText( Core.Debugging.TempDebuggerBreakpointFilename, breakPointFile );
-          switch ( EmulatorInfo.LabelFormat( toolRun ) )
+          switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
           {
             case Types.ASM.LabelFileFormat.C64DEBUGGER:
               command += " -breakpoints \"" + Core.Debugging.TempDebuggerBreakpointFilename + "\"";
@@ -336,7 +336,8 @@ namespace RetroDevStudio.Tasks
           }
         }
 
-        if ( EmulatorInfo.SupportsDebugging( toolRun ) )
+        if ( ( toolRun.IsInternal )
+        ||   ( Emulators.EmulatorInfo.SupportsDebugging( toolRun.Filename ) ) )
         {
           for ( int i = 0; i < numConnectionAttempts; ++i )
           {

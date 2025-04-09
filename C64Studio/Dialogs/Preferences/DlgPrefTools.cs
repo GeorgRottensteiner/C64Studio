@@ -240,12 +240,12 @@ namespace RetroDevStudio.Dialogs.Preferences
 
           // auto-fill initial entries if nothing is set
           if ( ( string.IsNullOrEmpty( tool.PRGArguments ) )
-          && ( string.IsNullOrEmpty( tool.DebugArguments ) )
-          && ( string.IsNullOrEmpty( tool.CartArguments ) )
-          && ( string.IsNullOrEmpty( tool.TrueDriveOffArguments ) )
-          && ( string.IsNullOrEmpty( tool.TrueDriveOnArguments ) ) )
+          &&   ( string.IsNullOrEmpty( tool.DebugArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.CartArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.TrueDriveOffArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.TrueDriveOnArguments ) ) )
           {
-            EmulatorInfo.SetDefaultRunArguments( tool );
+            ToolInfo.SetDefaultRunArguments( tool );
             alistTools_SelectedIndexChanged( null, null );
           }
         }

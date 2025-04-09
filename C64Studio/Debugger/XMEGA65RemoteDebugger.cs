@@ -1593,7 +1593,7 @@ namespace RetroDevStudio
       }
 
       // find machine type from executable
-      m_ConnectedMachine = EmulatorInfo.DetectMachineType( ToolRun );
+      m_ConnectedMachine = Emulators.EmulatorInfo.DetectMachineType( ToolRun.Filename );
 
       return true;
     }
