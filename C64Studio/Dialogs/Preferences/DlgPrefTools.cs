@@ -311,6 +311,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.ToolInfos.Add( (ToolInfo)item.Tag );
       }
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
     }
 
 
