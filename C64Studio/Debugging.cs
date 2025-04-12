@@ -43,7 +43,10 @@ namespace RetroDevStudio
     public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<RetroDevStudio.Types.Breakpoint>();
 
     public CompileTargetType    DebugType = CompileTargetType.NONE;
+
     internal bool               InitialBreakpointIsTemporary;
+
+
 
     public delegate void MarkLineCallback( Project MarkProject, DocumentInfo Document, int Line );
 
@@ -929,6 +932,109 @@ namespace RetroDevStudio
         return true;
       }
       return Core.MainForm.CurrentProject == DebuggedProject;
+    }
+
+
+
+    public void DebugStop()
+    {
+      Debugger?.SetShuttingDown();
+      /*
+      if ( CurrentToolSupportsDebugging() )
+      {
+
+        if ( Core.Executing.RunProcess != null )
+        {
+          try
+          {
+            Core.Executing.RunProcess.Kill();
+          }
+          catch ( Exception )
+          {
+          }
+          Core.Executing.RunProcess = null;
+        }
+
+        Core.MainForm.AppState = Types.StudioState.NORMAL;
+        Core.SetStatus( "Ready" );
+
+        Core.MainForm.SetGUIForDebugging( false );
+        Core.MainForm.SetGUIForWaitOnExternalTool( false );
+        Core.Executing.BringStudioToForeground();
+        return;
+      }*/
+
+      if ( Core.Executing.RunProcess != null )
+      {
+        Core.Executing.RunProcess.Exited -= Core.MainForm.runProcess_Exited;
+        try
+        {
+          Core.Executing.RunProcess.Kill();
+        }
+        catch ( Exception )
+        {
+        }
+        Core.Executing.RunProcess = null;
+      }
+
+      if ( TempDebuggerStartupFilename.Length > 0 )
+      {
+        try
+        {
+          System.IO.File.Delete( TempDebuggerStartupFilename );
+        }
+        catch ( Exception ex )
+        {
+          Core.AddToOutput( "Failed to delete temporary file " + TempDebuggerStartupFilename + ", " + ex.Message + Environment.NewLine );
+        }
+        TempDebuggerStartupFilename = "";
+      }
+      if ( TempDebuggerStartupFilename.Length > 0 )
+      {
+        try
+        {
+          System.IO.File.Delete( TempDebuggerBreakpointFilename );
+        }
+        catch ( Exception ex )
+        {
+          Core.AddToOutput( "Failed to delete temporary file " + TempDebuggerBreakpointFilename + ", " + ex.Message + Environment.NewLine );
+        }
+        TempDebuggerBreakpointFilename = "";
+      }
+
+      if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      ||   ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN ) )
+      {
+        // send any command to break into the monitor again
+        Debugger?.Quit();
+        Debugger?.DisconnectFromEmulator();
+
+        if ( MarkedDocument != null )
+        {
+          MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo, -1 );
+          MarkedDocument = null;
+        }
+        if ( DebugDisassembly != null )
+        {
+          Core.AddToOutputLine( "Closing Disassembly window" );
+          DebugDisassembly.Close();
+          DebugDisassembly = null;
+        }
+        CurrentCodePosition = -1;
+
+        DebuggedProject = null;
+        Debugger = null;
+        FirstActionAfterBreak = false;
+        Core.MainForm.m_CurrentActiveTool = null;
+
+        RemoveVirtualBreakpoints();
+      }
+      Core.MainForm.AppState = Types.StudioState.NORMAL;
+      Core.SetStatus( "Ready" );
+
+      Core.MainForm.SetGUIForDebugging( false );
+      Core.MainForm.SetGUIForWaitOnExternalTool( false );
+      Core.Executing.BringStudioToForeground();
     }
 
 

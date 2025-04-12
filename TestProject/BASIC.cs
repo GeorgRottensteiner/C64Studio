@@ -340,6 +340,7 @@ GOTO LABEL10
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.DoNotExpandStringLiterals = true;
 
+      // set lower case manually! During proper builds the parser receives upper cases code directly
       parser.Settings.UpperCaseMode = false;
 
       bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
@@ -394,6 +395,7 @@ GOTO LABEL10
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       config.DoNotExpandStringLiterals = true;
 
+      // set lower case manually! During proper builds the parser receives upper cases code directly
       parser.Settings.UpperCaseMode = false;
 
       bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );

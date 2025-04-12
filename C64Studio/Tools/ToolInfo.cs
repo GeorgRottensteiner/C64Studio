@@ -18,17 +18,18 @@ namespace RetroDevStudio
       EMULATOR
     }
 
-    public ToolType         Type = ToolType.UNKNOWN;
-    public string           Name = "";
-    public string           Filename = "";
-    public string           WorkPath = "";
-    public string           PRGArguments = "";
-    public string           CartArguments = "";
-    public string           DebugArguments = "";
-    public string           TrueDriveOnArguments = "";
-    public string           TrueDriveOffArguments = "";
-    public bool             PassLabelsToEmulator = true;
-    public bool             IsInternal = false;
+    public ToolType                             Type = ToolType.UNKNOWN;
+    public string                               Name = "";
+    public string                               Filename = "";
+    public string                               WorkPath = "";
+    public string                               PRGArguments = "";
+    public string                               CartArguments = "";
+    public string                               DebugArguments = "";
+    public string                               TrueDriveOnArguments = "";
+    public string                               TrueDriveOffArguments = "";
+    public bool                                 PassLabelsToEmulator = true;
+    public bool                                 IsInternal = false;
+    public List<DynamicArgument>                ArgumentOrder = new List<DynamicArgument>();   
     public Dictionary<DynamicArgument,string>   DynamicArguments = new Dictionary<DynamicArgument, string>();
 
 
@@ -51,6 +52,11 @@ namespace RetroDevStudio
       {
         chunk.AppendI32( (int)dynArg.Key );
         chunk.AppendString( dynArg.Value );
+      }
+      chunk.AppendI32( ArgumentOrder.Count );
+      foreach ( var dynArg in ArgumentOrder )
+      {
+        chunk.AppendI32( (int)dynArg );
       }
 
       return chunk;
@@ -93,6 +99,17 @@ namespace RetroDevStudio
         {
           DynamicArguments[dynArg] = arg;
         }
+      }
+      int   countArgOrder = reader.ReadInt32();
+      for ( int i = 0; i < countArgOrder; ++i )
+      {
+        DynamicArgument   dynArg = (DynamicArgument)reader.ReadInt32();
+        ArgumentOrder.Add( dynArg );
+      }
+      if ( countArgOrder == 0 )
+      {
+        // is that a good idea?
+        ArgumentOrder.AddRange( DynamicArguments.Keys );
       }
 
       MoveArgument( PRGArguments, DynamicArgument.CALL_SINGLE_FILE_TAPE );

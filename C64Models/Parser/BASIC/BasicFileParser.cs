@@ -4350,7 +4350,13 @@ namespace RetroDevStudio.Parser.BASIC
       lineData    = null;
       lineNumber  = -1;
 
-      switch ( Settings.BASICDialect.MachineTypes[0] )
+      var machineType = MachineType.C64;
+      if ( Settings.BASICDialect.MachineTypes.Count > 0 )
+      {
+        machineType = Settings.BASICDialect.MachineTypes[0];
+      }
+
+      switch ( machineType )
       {
         case MachineType.ZX81:
           {

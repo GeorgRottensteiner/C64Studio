@@ -15,5 +15,7 @@ namespace RetroDevStudio.Emulators
 
     public Dictionary<DynamicArgument,string>   DefaultArguments = new Dictionary<DynamicArgument, string>();
 
+
+
   }
 }

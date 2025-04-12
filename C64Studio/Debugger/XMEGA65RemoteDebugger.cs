@@ -117,7 +117,6 @@ namespace RetroDevStudio
     private MachineType               m_ConnectedMachine = MachineType.ANY;
 
     private bool                      m_HandlingInitialBreakpoint = false;
-    private bool                      m_ShuttingDown = false;
 
     private int                       m_LastRequestID = 0;
 
@@ -1665,16 +1664,6 @@ namespace RetroDevStudio
 
 
 
-    public bool ShuttingDown
-    {
-      get
-      {
-        return m_ShuttingDown;
-      }
-    }
-
-
-
     public void RefreshMemorySections()
     {
       foreach ( var section in m_LastRefreshSections )
@@ -1708,6 +1697,13 @@ namespace RetroDevStudio
       // TODO
 
       return new List<WatchEntry>();
+    }
+
+
+
+    public void SetShuttingDown()
+    {
+      m_ShuttingDown = true;
     }
 
 

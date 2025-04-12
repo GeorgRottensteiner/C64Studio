@@ -98,8 +98,6 @@ namespace RetroDevStudio
 
     private MachineType               m_ConnectedMachine = MachineType.ANY;
 
-    private bool                      m_ShuttingDown = false;
-
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
 
 
@@ -158,7 +156,7 @@ namespace RetroDevStudio
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        Core.AddToOutput( "RemoteDebugger.Connect Exception:" + se.ToString() );
+        Core.AddToOutputLine( "RemoteDebugger.Connect Exception:" + se.ToString() );
         return false;
       }
       while ( !connectResultReceived )
@@ -447,18 +445,21 @@ namespace RetroDevStudio
           m_Request.Type = DebugRequestType.NONE;
           DisconnectFromEmulator();
 
-          Core.AddToOutputLine( "Attempt reconnect" );
-          if ( !ConnectToEmulator( m_IsCartridge ) )
+          if ( !ShuttingDown )
           {
-            Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
-            DebugEvent( new DebugEventData()
+            Core.AddToOutputLine( "Attempt reconnect" );
+            if ( !ConnectToEmulator( m_IsCartridge ) )
             {
-              Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
-            } );
-          }
-          else
-          {
-            Core.AddToOutputLine( "Reconnect successful" );
+              Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
+              DebugEvent( new DebugEventData()
+              {
+                Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
+              } );
+            }
+            else
+            {
+              Core.AddToOutputLine( "Reconnect successful" );
+            }
           }
         }
       }
@@ -1821,8 +1822,6 @@ namespace RetroDevStudio
 
     public void Run()
     {
-      // technically not correct to set paused here (only good for binary interface?
-      //m_State = DebuggerState.PAUSED;
       QueueRequest( DebugRequestType.EXIT );
     }
 
@@ -1834,11 +1833,6 @@ namespace RetroDevStudio
       RefreshRegistersAndWatches();
       RefreshMemorySections();
       m_State = DebuggerState.PAUSED;
-      /*
-      if ( SendCommand( "break" ) )
-      {
-        m_State = DebuggerState.PAUSED;
-      }*/
     }
 
 
@@ -2008,16 +2002,6 @@ namespace RetroDevStudio
 
 
 
-    public bool ShuttingDown
-    {
-      get
-      {
-        return m_ShuttingDown;
-      }
-    }
-
-
-
     public void RefreshMemorySections()
     {
       foreach ( var section in m_LastRefreshSections )
@@ -2049,6 +2033,13 @@ namespace RetroDevStudio
     List<WatchEntry> IDebugger.CurrentWatches()
     {
       return m_WatchEntries;
+    }
+
+
+
+    public void SetShuttingDown()
+    {
+      m_ShuttingDown = true;
     }
 
 

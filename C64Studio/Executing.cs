@@ -113,7 +113,21 @@ namespace RetroDevStudio
 
     internal void BringStudioToForeground()
     {
-      SetForegroundWindow( Core.MainForm.Handle );
+      if ( Core.MainForm.InvokeRequired )
+      {
+        try
+        {
+          Core.MainForm.Invoke( new Action( BringStudioToForeground ) );
+        }
+        catch ( System.ObjectDisposedException )
+        {
+          return;
+        }
+      }
+      else
+      {
+        SetForegroundWindow( Core.MainForm.Handle );
+      }
     }
 
 

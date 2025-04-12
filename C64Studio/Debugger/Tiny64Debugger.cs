@@ -680,16 +680,6 @@ namespace RetroDevStudio
 
 
 
-    public bool ShuttingDown
-    {
-      get
-      {
-        return false;
-      }
-    }
-
-    
-
     public void Reset()
     {
       m_Emulator.Reset();
@@ -713,6 +703,10 @@ namespace RetroDevStudio
 
 
 
+    public void SetShuttingDown()
+    {
+      m_ShuttingDown = true;
+    }
 
 
 

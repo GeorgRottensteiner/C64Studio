@@ -464,6 +464,7 @@
     <None Remove="BASIC Dialects\BASIC V2 - X16.txt" />
     <None Remove="BASIC Dialects\BASIC V3.5.txt" />
     <None Remove="BASIC Dialects\BASIC V4.5.txt" />
+    <None Remove="BASIC Dialects\BASIC V7.0 VDC.txt" />
     <None Remove="BASIC Dialects\BASIC V7.0.txt" />
     <None Remove="BASIC Dialects\Laser BASIC.txt" />
     <None Remove="BASIC Dialects\S-BASIC 65.txt" />

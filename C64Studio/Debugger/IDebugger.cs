@@ -126,7 +126,6 @@ namespace RetroDevStudio
     public string             Text = null;
   };
 
-  //public delegate void DebugEventHandler( DebugEvent EventType, DebugEventData Event ); 
   public delegate void DebugEventHandler( DebugEventData Event );
 
 
@@ -207,14 +206,14 @@ namespace RetroDevStudio
     void Run();
 
     void Break();
-
+    void SetShuttingDown();
 
     void ForceEmulatorRefresh();
 
 
 
     void SetRegister( string Register, int Value );
-
+    
   }
 
 

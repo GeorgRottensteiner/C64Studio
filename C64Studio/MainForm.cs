@@ -4211,122 +4211,7 @@ namespace RetroDevStudio
 
     public void StopDebugging()
     {
-      if ( InvokeRequired )
-      {
-        try
-        {
-          Invoke( new ParameterLessCallback( StopDebugging ) );
-        }
-        catch ( ObjectDisposedException )
-        {
-        }
-      }
-      else
-      {
-        try
-        {
-          if ( StudioCore.Debugging.CurrentToolSupportsDebugging() )
-          {
-            if ( StudioCore.Executing.RunProcess != null )
-            {
-              try
-              {
-                StudioCore.Executing.RunProcess.Kill();
-              }
-              catch ( Exception )
-              {
-              }
-              StudioCore.Executing.RunProcess = null;
-            }
-
-            AppState = Types.StudioState.NORMAL;
-            StudioCore.SetStatus( "Ready" );
-
-            SetGUIForDebugging( false );
-            SetGUIForWaitOnExternalTool( false );
-            StudioCore.Executing.BringStudioToForeground();
-            return;
-          }
-
-          if ( StudioCore.Executing.RunProcess != null )
-          {
-            StudioCore.Executing.RunProcess.Exited -= runProcess_Exited;
-            try
-            {
-              StudioCore.Executing.RunProcess.Kill();
-            }
-            catch ( Exception )
-            {
-            }
-            StudioCore.Executing.RunProcess = null;
-          }
-
-          if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
-          {
-            try
-            {
-              System.IO.File.Delete( StudioCore.Debugging.TempDebuggerStartupFilename );
-            }
-            catch ( Exception ex )
-            {
-              StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerStartupFilename + ", " + ex.Message + Environment.NewLine );
-            }
-            StudioCore.Debugging.TempDebuggerStartupFilename = "";
-          }
-          if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
-          {
-            try
-            {
-              System.IO.File.Delete( StudioCore.Debugging.TempDebuggerBreakpointFilename );
-            }
-            catch ( Exception ex )
-            {
-              StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerBreakpointFilename + ", " + ex.Message + Environment.NewLine );
-            }
-            StudioCore.Debugging.TempDebuggerBreakpointFilename = "";
-          }
-
-          if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-          ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
-          {
-            // send any command to break into the monitor again
-            StudioCore.Debugging.Debugger?.Quit();
-            StudioCore.Debugging.Debugger?.DisconnectFromEmulator();
-
-            if ( StudioCore.Debugging.MarkedDocument != null )
-            {
-              StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
-              StudioCore.Debugging.MarkedDocument = null;
-            }
-            if ( StudioCore.Debugging.DebugDisassembly != null )
-            {
-              StudioCore.AddToOutput( "Closing Disassembly window" );
-              StudioCore.Debugging.DebugDisassembly.Close();
-              StudioCore.Debugging.DebugDisassembly = null;
-            }
-            StudioCore.Debugging.CurrentCodePosition = -1;
-
-            StudioCore.Debugging.DebuggedProject = null;
-            StudioCore.Debugging.Debugger = null;
-            StudioCore.Debugging.FirstActionAfterBreak = false;
-            mainDebugGo.Enabled = false;
-            mainDebugBreak.Enabled = false;
-            m_CurrentActiveTool = null;
-
-            StudioCore.Debugging.RemoveVirtualBreakpoints();
-          }
-          AppState = Types.StudioState.NORMAL;
-          StudioCore.SetStatus( "Ready" );
-
-          SetGUIForDebugging( false );
-          SetGUIForWaitOnExternalTool( false );
-          StudioCore.Executing.BringStudioToForeground();
-        }
-        catch ( System.Exception ex )
-        {
-          Debug.Log( ex.ToString() );
-        }
-      }
+      StudioCore.Debugging.DebugStop();
     }
 
 
@@ -4474,8 +4359,8 @@ namespace RetroDevStudio
           if ( doc.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
           {
             if ( ( StudioCore.Debugging.MarkedDocument == null )
-            || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-            || ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
+            ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+            ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
             {
               foundMatches.Add( doc );
             }
@@ -4504,7 +4389,7 @@ namespace RetroDevStudio
         }
       }
       if ( ( currentMarkedFile != null )
-      && ( currentMarkedFile != activeFile ) )
+      &&   ( currentMarkedFile != activeFile ) )
       {
         //Debug.Log( "Try with activefile first" );
         if ( currentMarkedFile.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
@@ -4518,7 +4403,7 @@ namespace RetroDevStudio
 
       // if any left use the first one
       if ( ( foundMatches.Count > 0 )
-      && ( foundMatches[0].ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) ) )
+      &&   ( foundMatches[0].ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) ) )
       {
         //Debug.Log( "use first of left overs: " + foundMatches[0].FullPath );
         var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );

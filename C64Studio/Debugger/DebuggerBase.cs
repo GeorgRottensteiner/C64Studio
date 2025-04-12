@@ -15,6 +15,18 @@ namespace RetroDevStudio
 
     protected StudioCore                  Core = null;
 
+    protected volatile bool               m_ShuttingDown = false;
+
+
+
+    public bool ShuttingDown
+    {
+      get
+      {
+        return m_ShuttingDown;
+      }
+    }
+
 
 
     public DebuggerBase( StudioCore Core )
@@ -29,17 +41,6 @@ namespace RetroDevStudio
     {
       m_LastRefreshSections = Sections;
     }
-
-
-
-    /*
-    public void RefreshMemorySections()
-    {
-      foreach ( var section in m_LastRefreshSections )
-      {
-        RefreshMemory( section.StartAddress, section.Size, section.Source );
-      }
-    }*/
 
 
 
