@@ -781,6 +781,7 @@ namespace RetroDevStudio.Tasks
           // BASIC may receive symbols from assembly
           parser.InitialFileInfo = combinedFileInfo;
           ( (BasicFileParser)parser ).SetBasicDialect( ( (BasicFileParser)parser ).Settings.BASICDialect );
+          ( (BasicFileParser)parser ).Settings.UpperCaseMode = true;
           Doc.ASMFileInfo = combinedFileInfo;
         }
 

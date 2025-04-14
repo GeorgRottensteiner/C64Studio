@@ -1370,7 +1370,15 @@ namespace RetroDevStudio.Dialogs
       }
       else
       {
-        LastFound.FoundLine = TextToSearch.Substring( lastPos + 1 );
+        int   nextLineBreak = TextToSearch.IndexOf( '\n', lastPos + 1 );
+        if ( nextLineBreak == -1 )
+        {
+          LastFound.FoundLine = TextToSearch.Substring( lastPos + 1 );
+        }
+        else
+        {
+          LastFound.FoundLine = TextToSearch.Substring( lastPos + 1, nextLineBreak - lastPos - 1 ).TrimEnd();
+        }
       }
     }
 
@@ -1996,7 +2004,6 @@ namespace RetroDevStudio.Dialogs
       Core.AddToOutput( "Searching for " + comboSearchText.Text + System.Environment.NewLine );
       while ( true )
       {
-        // TODO - das gibt noch eine Endlosschleife!
         if ( !FindNextNew( comboSearchText.Text,
                            radioSearchDirDown.Checked,
                            checkSearchRegExp.Checked,
@@ -2043,7 +2050,6 @@ namespace RetroDevStudio.Dialogs
           }
           return;
         }
-        //Debug.Log( "Found in " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
 
         ++occurrences;
 

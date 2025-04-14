@@ -5580,6 +5580,7 @@ namespace RetroDevStudio
             return false;
           }
           ( (BasicFileParser)Parser ).LabelMode = false;
+          ( (BasicFileParser)Parser ).Settings.UpperCaseMode = true;
         }
       }
 
