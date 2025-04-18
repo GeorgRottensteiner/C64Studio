@@ -1,5 +1,4 @@
-#RetroDevStudio.MetaData.BASIC:2049,BASIC V2
-
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
 LABEL10
 ?"HALLO, PRESS G TO WIN"
 
@@ -12,8 +11,8 @@ IFA$="G"THEN LABEL50
 
 LABEL50
 ?"YOU WIN!"
-P=(A$="")*-1+(A$="")
-PRINT"^      NOT A SPACE !!!           ^"
+P=(A$="")*-1+(A$="")
+PRINT"      NOT A SPACE !!!           "
 ONXGOSUBLABEL10,LABEL20,LABEL30
 
 LABEL90

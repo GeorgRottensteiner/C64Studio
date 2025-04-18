@@ -70,7 +70,8 @@ namespace RetroDevStudio.Documents
     private System.Drawing.Point        m_SelectionFloatingPos = new System.Drawing.Point( 0, 0 );
 
     private int                         m_ZoomFactor = 1;
-    private bool                        m_DragViewModeActive = false;
+    private bool                        m_DragViewModeActiveBySpace = false;
+    private bool                        m_DragViewModeActiveByPressedWheel = false;
     private bool                        m_DragView = false;
     private System.Drawing.Point        m_DragPoint = new System.Drawing.Point();
 
@@ -346,84 +347,34 @@ namespace RetroDevStudio.Documents
         pixelY = m_GraphicScreenProject.ScreenHeight - 1;
       }
 
+      if ( ( Buttons & MouseButtons.Middle ) != 0 )
+      {
+        if ( !m_DragViewModeActiveByPressedWheel )
+        {
+          m_DragViewModeActiveByPressedWheel = true;
+          m_DragView = true;
+          m_DragPoint = pictureEditor.PointToClient( MousePosition );
+          pictureEditor.Cursor = Core.MainForm.CursorGrab;
+        }
+        HandleViewDragging( X, Y );
+        return;
+      }
+      else
+      {
+        if ( m_DragViewModeActiveByPressedWheel )
+        {
+          m_DragViewModeActiveByPressedWheel = false;
+          m_DragView = false;
+          pictureEditor.Cursor = Cursors.Default;
+          return;
+        }
+      }
+
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        if ( m_DragViewModeActive )
+        if ( m_DragViewModeActiveBySpace )
         {
-          if ( !m_DragView )
-          {
-            m_DragView = true;
-            m_DragPoint = pictureEditor.PointToClient( MousePosition );
-            pictureEditor.Cursor = Core.MainForm.CursorGrab;
-          }
-          else
-          {
-            int   deltaX = X - m_DragPoint.X;
-            int   deltaY = Y - m_DragPoint.Y;
-            int   requiredDelta = 16;
-
-            if ( ( deltaX != 0 )
-            ||   ( deltaY != 0 ) )
-            {
-              int   actDX = 0;
-              int   actDY = 0;
-              while ( deltaX >= requiredDelta )
-              {
-                deltaX -= requiredDelta;
-                --actDX;
-              }
-              while ( deltaX <= -requiredDelta )
-              {
-                deltaX += requiredDelta;
-                ++actDX;
-              }
-              while ( deltaY >= requiredDelta )
-              {
-                deltaY -= requiredDelta;
-                --actDY;
-              }
-              while ( deltaY <= -requiredDelta )
-              {
-                deltaY += requiredDelta;
-                ++actDY;
-              }
-
-              if ( ( actDX != 0 )
-              ||   ( actDY != 0 ) )
-              {
-                int tempDX = actDX;
-                int tempDY = actDY;
-
-                while ( ( actDX < 0 )
-                &&      ( screenHScroll.Value > 0 ) )
-                {
-                  --screenHScroll.Value;
-                  ++actDX;
-                }
-                while ( ( actDX > 0 )
-                &&      ( screenHScroll.Value < screenHScroll.Maximum ) )
-                {
-                  ++screenHScroll.Value;
-                  --actDX;
-                }
-                while ( ( actDY < 0 )
-                &&      ( screenVScroll.Value > 0 ) )
-                {
-                  --screenVScroll.Value;
-                  ++actDY;
-                }
-                while ( ( actDY > 0 )
-                &&      ( screenVScroll.Value < screenVScroll.Maximum ) )
-                {
-                  ++screenVScroll.Value;
-                  --actDY;
-                }
-                m_DragPoint.Offset( -tempDX * requiredDelta, -tempDY * requiredDelta );
-                screenHScroll_Scroll( screenHScroll );
-                screenVScroll_Scroll( screenVScroll );
-              }
-            }
-          }
+          HandleViewDragging( X, Y );
           return;
         }
 
@@ -671,7 +622,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        if ( ( m_DragViewModeActive )
+        if ( ( m_DragViewModeActiveBySpace )
         &&   ( m_DragView ) )
         {
           m_DragView = false;
@@ -706,6 +657,86 @@ namespace RetroDevStudio.Documents
       if ( mouseMoved )
       {
         UpdateCursorInfo();
+      }
+    }
+
+
+
+    private void HandleViewDragging( int x, int y )
+    {
+      if ( !m_DragView )
+      {
+        m_DragView = true;
+        m_DragPoint = pictureEditor.PointToClient( MousePosition );
+        pictureEditor.Cursor = Core.MainForm.CursorGrab;
+      }
+      else
+      {
+        int   deltaX = x - m_DragPoint.X;
+        int   deltaY = y - m_DragPoint.Y;
+        int   requiredDelta = 2; // y tho?
+
+        if ( ( deltaX != 0 )
+        ||   ( deltaY != 0 ) )
+        {
+          int   actDX = 0;
+          int   actDY = 0;
+          while ( deltaX >= requiredDelta )
+          {
+            deltaX -= requiredDelta;
+            --actDX;
+          }
+          while ( deltaX <= -requiredDelta )
+          {
+            deltaX += requiredDelta;
+            ++actDX;
+          }
+          while ( deltaY >= requiredDelta )
+          {
+            deltaY -= requiredDelta;
+            --actDY;
+          }
+          while ( deltaY <= -requiredDelta )
+          {
+            deltaY += requiredDelta;
+            ++actDY;
+          }
+
+          if ( ( actDX != 0 )
+          ||   ( actDY != 0 ) )
+          {
+            int tempDX = actDX;
+            int tempDY = actDY;
+
+            while ( ( actDX < 0 )
+            &&      ( screenHScroll.Value > 0 ) )
+            {
+              --screenHScroll.Value;
+              ++actDX;
+            }
+            while ( ( actDX > 0 )
+            &&      ( screenHScroll.Value < screenHScroll.Maximum ) )
+            {
+              ++screenHScroll.Value;
+              --actDX;
+            }
+            while ( ( actDY < 0 )
+            &&      ( screenVScroll.Value > 0 ) )
+            {
+              --screenVScroll.Value;
+              ++actDY;
+            }
+            while ( ( actDY > 0 )
+            &&      ( screenVScroll.Value < screenVScroll.Maximum ) )
+            {
+              ++screenVScroll.Value;
+              --actDY;
+            }
+            m_DragPoint.Offset( -tempDX * requiredDelta, -tempDY * requiredDelta );
+            screenHScroll_Scroll( screenHScroll );
+            screenVScroll_Scroll( screenVScroll );
+          }
+        }
       }
     }
 
@@ -3343,9 +3374,9 @@ namespace RetroDevStudio.Documents
     {
       if ( e.KeyData == Keys.Space )
       {
-        if ( !m_DragViewModeActive )
+        if ( !m_DragViewModeActiveBySpace )
         {
-          m_DragViewModeActive = true;
+          m_DragViewModeActiveBySpace = true;
           pictureEditor.Cursor = Core.MainForm.CursorHand;
         }
       }
@@ -3356,9 +3387,9 @@ namespace RetroDevStudio.Documents
     private void PictureEditor_KeyUp( object sender, KeyEventArgs e )
     {
       if ( ( e.KeyData == Keys.Space )
-      &&   ( m_DragViewModeActive ) )
+      &&   ( m_DragViewModeActiveBySpace ) )
       {
-        m_DragViewModeActive = false;
+        m_DragViewModeActiveBySpace = false;
         pictureEditor.Cursor = Cursors.Default;
       }
     }
@@ -3367,9 +3398,9 @@ namespace RetroDevStudio.Documents
 
     private void PictureEditor_LostFocus( object sender, EventArgs e )
     {
-      if ( m_DragViewModeActive )
+      if ( m_DragViewModeActiveBySpace )
       {
-        m_DragViewModeActive = false;
+        m_DragViewModeActiveBySpace = false;
         pictureEditor.Cursor = Cursors.Default;
       }
     }
