@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Drawing;
+using RetroDevStudio.Controls;
+using System.Linq;
 
 namespace RetroDevStudio.Documents
 {
@@ -96,13 +98,20 @@ namespace RetroDevStudio.Documents
     private ToolStripMenuItem closeAllButThisToolStripMenuItem;
     private ToolStripMenuItem closeAllToolStripMenuItem;
 
-
     protected System.IO.FileSystemWatcher     m_FileWatcher = new System.IO.FileSystemWatcher();
 
 
     public delegate           void DocumentEventHandler( DocEvent Event );
 
     public event              DocumentEventHandler DocumentEvent;
+
+
+
+    private PopupContainer    _MacroPopup = null;
+    private DecentForms.ListBox           _PopupList = null;
+    private Control           _PopupControlSource = null;
+    private int               _PopupMacroStartPos = -1;
+
 
 
     public BaseDocument()
@@ -1179,6 +1188,228 @@ namespace RetroDevStudio.Documents
         return Core.Settings.PreferredMachineType;
       }
     }
+
+
+
+    public void DetectTextChange( TextBox Edit, List<string> completeItems )
+    {
+      Edit.PreviewKeyDown += Edit_PreviewKeyDown;
+      var existingEntries = completeItems.Where( ci => ci.ToUpper().StartsWith( Edit.Text.ToUpper() ) );
+      if ( !existingEntries.Any() )
+      {
+        ClosePopup();
+        return;
+      }
+
+      _PopupControlSource = Edit;
+
+      int   textPos = Edit.SelectionStart;
+      if ( ( textPos == Edit.TextLength )
+      &&   ( textPos > 0 ) )
+      {
+        --textPos;
+      }
+      bool  editCreatedNew = false;
+      var   newLocation = Edit.Parent.PointToScreen( Edit.Location );
+      newLocation = new Point( newLocation.X, newLocation.Y + Edit.Height );
+      if ( _MacroPopup == null )
+      {
+        _PopupList = new DecentForms.ListBox();
+        _PopupList.BorderStyle = DecentForms.BorderStyle.NONE;
+        _PopupList.Width = Edit.Width;
+        _PopupList.Height = 160;
+
+        foreach ( var item in existingEntries )
+        {
+          _PopupList.Items.Add( item );
+        }
+
+        _PopupList.MouseClick += _PopupList_MouseClick;
+        ResizeListBoxToContent();
+
+        _MacroPopup = new PopupContainer( _PopupList );
+        _MacroPopup.Location = newLocation;
+        _MacroPopup.CreateControl();
+
+        editCreatedNew = true;
+      }
+      else
+      {
+        _PopupList.BeginUpdate();
+        _PopupList.Items.Clear();
+        foreach ( var item in existingEntries )
+        {
+          _PopupList.Items.Add( item );
+        }
+        ResizeListBoxToContent();
+        _PopupList.EndUpdate();
+        _MacroPopup.Location = newLocation;
+      }
+      Edit.Focus();
+
+      if ( editCreatedNew )
+      {
+        Edit.LostFocus += Edit_LostFocus;
+        Edit.HandleDestroyed += Edit_HandleDestroyed;
+        Edit.KeyDown += Edit_KeyDown;
+      }
+    }
+
+
+
+    private void Edit_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Enter )
+      {
+        if ( _PopupList != null )
+        {
+          e.IsInputKey = true;
+        }
+      }
+      if ( e.KeyCode == Keys.Escape )
+      {
+        if ( _PopupList != null )
+        {
+          ClosePopup();
+        }
+      }
+    }
+
+
+
+    private void _PopupList_MouseClick( object sender, MouseEventArgs e )
+    {
+      var itemIndex = _PopupList.ItemIndexFromPosition( e.Location.X, e.Location.Y );
+      if ( itemIndex != -1 )
+      {
+        if ( _PopupControlSource is TextBoxBase )
+        {
+          string    fullMacro = _PopupList.Items[itemIndex].Text;
+
+          TextBoxBase  edit = _PopupControlSource as TextBoxBase;
+
+          edit.Text = fullMacro;
+          edit.SelectionStart = fullMacro.Length;
+          ClosePopup();
+        }
+      }
+    }
+
+
+
+    private void Edit_KeyDown( object sender, KeyEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Down )
+      {
+        if ( _PopupList.Items.Count == 0 )
+        {
+          return;
+        }
+        int   newIndex = ( _PopupList.SelectedIndex + 1 ) % _PopupList.Items.Count;
+        _PopupList.SelectedIndex = newIndex;
+        e.Handled = true;
+      }
+      else if ( e.KeyCode == Keys.Up )
+      {
+        if ( _PopupList.SelectedIndex > 0 )
+        {
+          --_PopupList.SelectedIndex;
+          e.Handled = true;
+        }
+      }
+      else if ( e.KeyCode == Keys.Enter )
+      {
+        if ( _PopupList.SelectedIndex != -1 )
+        {
+          string    fullMacro = _PopupList.Items[_PopupList.SelectedIndex].Text;
+
+          TextBoxBase  edit = _PopupControlSource as TextBoxBase;
+
+          edit.Text = fullMacro;
+          edit.SelectionStart = fullMacro.Length;
+          ClosePopup();
+          e.Handled = true;
+          e.SuppressKeyPress = true;
+        }
+      }
+    }
+
+
+
+    private void ResizeListBoxToContent()
+    {
+      var g = _PopupList.CreateGraphics();
+
+      int     maxWidth = 0;
+      int     maxHeight = _PopupList.Items.Count * _PopupList.Font.Height;
+
+      var currentScreen = Screen.FromHandle( _PopupList.Handle );
+      if ( maxHeight > currentScreen.Bounds.Height )
+      {
+        maxHeight = currentScreen.Bounds.Height;
+      }
+      if ( maxHeight > 160 )
+      {
+        maxHeight = 160;
+      }
+
+      foreach ( var item in _PopupList.Items )
+      {
+        int   itemWidth = (int)g.MeasureString( item.Text, _PopupList.Font ).Width;
+
+        if ( itemWidth > maxWidth )
+        {
+          maxWidth = itemWidth;
+        }
+      }
+
+      _PopupList.ClientSize = new Size( _PopupList.ClientSize.Width, maxHeight );
+    }
+
+
+
+    private void Edit_HandleDestroyed( object sender, EventArgs e )
+    {
+      ClosePopup();
+    }
+
+
+
+    private void Edit_LostFocus( object sender, EventArgs e )
+    {
+      if ( ( _MacroPopup.Focused )
+      ||   ( _PopupList.Focused ) )
+      {
+        return;
+      }
+      ClosePopup();
+    }
+
+
+
+    private void ClosePopup()
+    {
+      if ( _PopupControlSource != null )
+      {
+        _PopupControlSource.PreviewKeyDown -= Edit_PreviewKeyDown;
+        _PopupControlSource.LostFocus -= Edit_LostFocus;
+        _PopupControlSource.HandleDestroyed -= Edit_HandleDestroyed;
+        _PopupControlSource.KeyDown -= Edit_KeyDown;
+        _PopupControlSource = null;
+      }
+
+      if ( _PopupList != null )
+      {
+        _PopupList.Dispose();
+        _PopupList = null;
+      }
+      if ( _MacroPopup != null )
+      {
+        _MacroPopup.Dispose();
+        _MacroPopup = null;
+      }
+    }
+
 
 
 

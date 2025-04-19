@@ -20,6 +20,9 @@ namespace DecentForms
     // cache max item width (since that's resource heavy, -1 means required to recalc)
     private int           _CachedMaxItemWidth = -1;
 
+    private bool          _UpdateLocked = false;
+    private bool          _RedrawRequired= false;
+
     public event EventHandler       SelectedIndexChanged;
 
 
@@ -292,6 +295,34 @@ namespace DecentForms
 
 
 
+    public new void Invalidate()
+    {
+      if ( _UpdateLocked )
+      {
+        _RedrawRequired = true;
+      }
+      else
+      {
+        base.Invalidate();
+      }
+    }
+
+
+
+    public new void Invalidate( Rectangle rect )
+    {
+      if ( _UpdateLocked )
+      {
+        _RedrawRequired = true;
+      }
+      else
+      {
+        base.Invalidate( rect );
+      }
+    }
+
+
+
     public int SelectedIndex 
     {
       get
@@ -546,7 +577,7 @@ namespace DecentForms
 
 
 
-    private int ItemIndexFromPosition( int X, int Y )
+    public int ItemIndexFromPosition( int X, int Y )
     {
       if ( ( X < 0 )
       ||   ( X >= UsableItemWidth )
@@ -661,6 +692,28 @@ namespace DecentForms
       _CachedMaxItemWidth = -1;
       UpdateScrollbarState();
       Invalidate();
+    }
+
+
+
+    public void BeginUpdate()
+    {
+      _UpdateLocked = true;
+      _RedrawRequired = false;
+    }
+
+
+
+    public void EndUpdate()
+    {
+      if ( _UpdateLocked )
+      {
+        _UpdateLocked = false;
+        if ( _RedrawRequired )
+        {
+          Invalidate();
+        }
+      }
     }
 
 

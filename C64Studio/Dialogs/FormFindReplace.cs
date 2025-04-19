@@ -363,7 +363,7 @@ namespace RetroDevStudio.Dialogs
     private void HistoriseReplaceString( string ReplaceString )
     {
       bool foundInHistory = false;
-      foreach ( string obj in comboReplaceWith.Items )
+      foreach ( string obj in Core.Settings.ReplaceWithArguments )
       {
         if ( obj == ReplaceString )
         {
@@ -373,11 +373,11 @@ namespace RetroDevStudio.Dialogs
       }
       if ( !foundInHistory )
       {
-        while ( comboReplaceWith.Items.Count >= 50 )
+        while ( Core.Settings.ReplaceWithArguments.Count >= 50 )
         {
-          comboReplaceWith.Items.RemoveAt( comboReplaceWith.Items.Count - 1 );
+          Core.Settings.ReplaceWithArguments.RemoveAt( Core.Settings.ReplaceWithArguments.Count - 1 );
         }
-        comboReplaceWith.Items.Insert( 0, ReplaceString );
+        Core.Settings.ReplaceWithArguments.Insert( 0, ReplaceString );
       }
     }
 
@@ -1438,11 +1438,6 @@ namespace RetroDevStudio.Dialogs
       comboSearchText.Items.AddRange( Settings.FindArguments.ToArray() );
       comboReplaceSearchText.Items.Clear();
       comboReplaceSearchText.Items.AddRange( Settings.ReplaceArguments.ToArray() );
-      comboReplaceWith.Items.Clear();
-      foreach ( var replaceArg in Settings.ReplaceWithArguments )
-      {
-        comboReplaceWith.Items.Add( replaceArg );
-      }
     }
 
 
@@ -1464,11 +1459,6 @@ namespace RetroDevStudio.Dialogs
       foreach ( object obj in comboReplaceSearchText.Items )
       {
         Settings.ReplaceArguments.Add( (string)obj );
-      }
-      Settings.ReplaceWithArguments.Clear();
-      foreach ( object obj in comboReplaceWith.Items )
-      {
-        Settings.ReplaceWithArguments.Add( (string)obj );
       }
     }
 
@@ -1704,7 +1694,7 @@ namespace RetroDevStudio.Dialogs
       }
 
       HistoriseSearchString( comboReplaceSearchText.Text );
-      HistoriseReplaceString( comboReplaceWith.Text );
+      HistoriseReplaceString( editReplaceWith.Text );
 
       if ( FindNextNew( comboReplaceSearchText.Text,
                         radioReplaceSearchDown.Checked,
@@ -1729,13 +1719,13 @@ namespace RetroDevStudio.Dialogs
           int oldEnd = edit.PlaceToPosition( oldSelectionEnd );
 
           edit.Selection = replaceFound;
-          edit.SelectedText = comboReplaceWith.Text;
+          edit.SelectedText = editReplaceWith.Text;
 
           // set location to after replaced text to avoid recursion
-          LastReplaceFound.StartPosition += comboReplaceWith.Text.Length;
+          LastReplaceFound.StartPosition += editReplaceWith.Text.Length;
 
           // restore old selection
-          int newEnd = oldEnd + comboReplaceWith.Text.Length - comboReplaceSearchText.Text.Length;
+          int newEnd = oldEnd + editReplaceWith.Text.Length - comboReplaceSearchText.Text.Length;
           var newPlace = edit.PositionToPlace( newEnd );
 
           edit.Selection.Start = oldSelectionStart;
@@ -1758,7 +1748,7 @@ namespace RetroDevStudio.Dialogs
       FindTarget    replaceTarget = (FindTarget)comboReplaceTarget.SelectedIndex;
 
       HistoriseSearchString( comboReplaceSearchText.Text );
-      HistoriseReplaceString( comboReplaceWith.Text );
+      HistoriseReplaceString( editReplaceWith.Text );
 
       if ( replaceTarget == FindTarget.CURRENT_SELECTION )
       {
@@ -1790,7 +1780,7 @@ namespace RetroDevStudio.Dialogs
           string    replacedText = ReplaceTextInString( docToReplaceIn.DocumentInfo,
                                                         replacement,
                                                         comboReplaceSearchText.Text,
-                                                        comboReplaceWith.Text,
+                                                        editReplaceWith.Text,
                                                         checkReplaceRegexp.Checked,
                                                         checkReplaceWholeWords.Checked,
                                                         checkReplaceIgnoreCase.Checked,
@@ -1799,7 +1789,7 @@ namespace RetroDevStudio.Dialogs
           edit.SelectedText = replacedText;
 
           // restore old selection
-          int newEnd = oldEnd + ( comboReplaceWith.Text.Length - comboReplaceSearchText.Text.Length ) * occurrences;
+          int newEnd = oldEnd + ( editReplaceWith.Text.Length - comboReplaceSearchText.Text.Length ) * occurrences;
           var newPlace = edit.PositionToPlace( newEnd );
 
           edit.Selection.Start = oldSelectionStart;
@@ -1886,7 +1876,7 @@ namespace RetroDevStudio.Dialogs
         string    replacedText = ReplaceTextInString( doc.Key,
                                                       replacement,
                                                       comboReplaceSearchText.Text,
-                                                      comboReplaceWith.Text,
+                                                      editReplaceWith.Text,
                                                       checkReplaceRegexp.Checked,
                                                       checkReplaceWholeWords.Checked,
                                                       checkReplaceIgnoreCase.Checked,
@@ -1898,7 +1888,7 @@ namespace RetroDevStudio.Dialogs
           {
             Core.AddToOutput( "Replaced text was empty!!!!" );
             Core.AddToOutput( "  Replacing '" + comboReplaceSearchText.Text + "'" );
-            Core.AddToOutput( "  with '" + comboReplaceWith.Text + "'" );
+            Core.AddToOutput( "  with '" + editReplaceWith.Text + "'" );
             Core.AddToOutput( "  RegEx " + checkReplaceRegexp.Checked + ", checkReplaceWholeWords.Checked " + checkReplaceWholeWords.Checked + ", checkReplaceIgnoreCase.Checked " + checkReplaceIgnoreCase.Checked );
             Core.AddToOutput( "Original Text was '" + replacement + "'" );
             Core.AddToOutput( "Replaced text was empty!!!!" );
@@ -2080,6 +2070,13 @@ namespace RetroDevStudio.Dialogs
       LastSearchFound.FoundInDocument = Doc;
       LastSearchFound.LineNumber = LineNumber;
       LastSearchFound.StartPosition = CharPos;
+    }
+
+
+
+    private void editReplaceTarget_TextChanged( object sender, EventArgs e )
+    {
+      DetectTextChange( editReplaceWith, Core.Settings.ReplaceWithArguments );
     }
 
 

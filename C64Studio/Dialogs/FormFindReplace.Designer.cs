@@ -47,6 +47,7 @@ namespace RetroDevStudio.Dialogs
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       this.tabReplace = new System.Windows.Forms.TabPage();
+      this.editReplaceWith = new System.Windows.Forms.TextBox();
       this.btnReplaceAll = new DecentForms.Button();
       this.btnReplaceFindNext = new DecentForms.Button();
       this.btnReplaceNext = new DecentForms.Button();
@@ -58,7 +59,6 @@ namespace RetroDevStudio.Dialogs
       this.checkReplaceWholeWords = new System.Windows.Forms.CheckBox();
       this.checkReplaceIgnoreCase = new System.Windows.Forms.CheckBox();
       this.comboReplaceTarget = new System.Windows.Forms.ComboBox();
-      this.comboReplaceWith = new System.Windows.Forms.ComboBox();
       this.comboReplaceSearchText = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
@@ -103,10 +103,12 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnSearchBookmark
       // 
+      this.btnSearchBookmark.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnSearchBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnSearchBookmark.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnSearchBookmark.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnSearchBookmark.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSearchBookmark.Image = null;
       this.btnSearchBookmark.Location = new System.Drawing.Point(257, 198);
       this.btnSearchBookmark.Name = "btnSearchBookmark";
       this.btnSearchBookmark.Size = new System.Drawing.Size(75, 23);
@@ -116,10 +118,12 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnFindNext
       // 
+      this.btnFindNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnFindNext.Image = null;
       this.btnFindNext.Location = new System.Drawing.Point(95, 198);
       this.btnFindNext.Name = "btnFindNext";
       this.btnFindNext.Size = new System.Drawing.Size(75, 23);
@@ -129,10 +133,12 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnFindAll
       // 
+      this.btnFindAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnFindAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnFindAll.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnFindAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnFindAll.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnFindAll.Image = null;
       this.btnFindAll.Location = new System.Drawing.Point(176, 198);
       this.btnFindAll.Name = "btnFindAll";
       this.btnFindAll.Size = new System.Drawing.Size(75, 23);
@@ -274,12 +280,12 @@ namespace RetroDevStudio.Dialogs
       // 
       // tabReplace
       // 
+      this.tabReplace.Controls.Add(this.editReplaceWith);
       this.tabReplace.Controls.Add(this.btnReplaceAll);
       this.tabReplace.Controls.Add(this.btnReplaceFindNext);
       this.tabReplace.Controls.Add(this.btnReplaceNext);
       this.tabReplace.Controls.Add(this.groupBox2);
       this.tabReplace.Controls.Add(this.comboReplaceTarget);
-      this.tabReplace.Controls.Add(this.comboReplaceWith);
       this.tabReplace.Controls.Add(this.comboReplaceSearchText);
       this.tabReplace.Controls.Add(this.label3);
       this.tabReplace.Controls.Add(this.label5);
@@ -292,12 +298,25 @@ namespace RetroDevStudio.Dialogs
       this.tabReplace.Text = "Replace";
       this.tabReplace.UseVisualStyleBackColor = true;
       // 
+      // editReplaceWith
+      // 
+      this.editReplaceWith.AcceptsReturn = true;
+      this.editReplaceWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editReplaceWith.Location = new System.Drawing.Point(6, 60);
+      this.editReplaceWith.Name = "editReplaceWith";
+      this.editReplaceWith.Size = new System.Drawing.Size(328, 20);
+      this.editReplaceWith.TabIndex = 1;
+      this.editReplaceWith.TextChanged += new System.EventHandler(this.editReplaceTarget_TextChanged);
+      // 
       // btnReplaceAll
       // 
+      this.btnReplaceAll.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReplaceAll.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnReplaceAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnReplaceAll.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnReplaceAll.Image = null;
       this.btnReplaceAll.Location = new System.Drawing.Point(257, 238);
       this.btnReplaceAll.Name = "btnReplaceAll";
       this.btnReplaceAll.Size = new System.Drawing.Size(75, 23);
@@ -307,10 +326,12 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnReplaceFindNext
       // 
+      this.btnReplaceFindNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnReplaceFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReplaceFindNext.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnReplaceFindNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnReplaceFindNext.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnReplaceFindNext.Image = null;
       this.btnReplaceFindNext.Location = new System.Drawing.Point(93, 238);
       this.btnReplaceFindNext.Name = "btnReplaceFindNext";
       this.btnReplaceFindNext.Size = new System.Drawing.Size(75, 23);
@@ -320,10 +341,12 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnReplaceNext
       // 
+      this.btnReplaceNext.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnReplaceNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReplaceNext.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnReplaceNext.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnReplaceNext.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnReplaceNext.Image = null;
       this.btnReplaceNext.Location = new System.Drawing.Point(174, 238);
       this.btnReplaceNext.Name = "btnReplaceNext";
       this.btnReplaceNext.Size = new System.Drawing.Size(75, 23);
@@ -355,7 +378,7 @@ namespace RetroDevStudio.Dialogs
       this.radioReplaceSearchDown.Location = new System.Drawing.Point(159, 39);
       this.radioReplaceSearchDown.Name = "radioReplaceSearchDown";
       this.radioReplaceSearchDown.Size = new System.Drawing.Size(118, 17);
-      this.radioReplaceSearchDown.TabIndex = 5;
+      this.radioReplaceSearchDown.TabIndex = 3;
       this.radioReplaceSearchDown.TabStop = true;
       this.radioReplaceSearchDown.Text = "Search Downwards";
       this.radioReplaceSearchDown.UseVisualStyleBackColor = true;
@@ -368,7 +391,7 @@ namespace RetroDevStudio.Dialogs
       this.radioReplaceSearchUp.Location = new System.Drawing.Point(159, 19);
       this.radioReplaceSearchUp.Name = "radioReplaceSearchUp";
       this.radioReplaceSearchUp.Size = new System.Drawing.Size(104, 17);
-      this.radioReplaceSearchUp.TabIndex = 4;
+      this.radioReplaceSearchUp.TabIndex = 1;
       this.radioReplaceSearchUp.TabStop = true;
       this.radioReplaceSearchUp.Text = "Search Upwards";
       this.radioReplaceSearchUp.UseVisualStyleBackColor = true;
@@ -383,7 +406,7 @@ namespace RetroDevStudio.Dialogs
       this.checkReplaceWrap.Location = new System.Drawing.Point(6, 83);
       this.checkReplaceWrap.Name = "checkReplaceWrap";
       this.checkReplaceWrap.Size = new System.Drawing.Size(52, 17);
-      this.checkReplaceWrap.TabIndex = 3;
+      this.checkReplaceWrap.TabIndex = 5;
       this.checkReplaceWrap.Text = "Wrap";
       this.checkReplaceWrap.UseVisualStyleBackColor = true;
       this.checkReplaceWrap.CheckedChanged += new System.EventHandler(this.checkReplaceWrap_CheckedChanged);
@@ -394,7 +417,7 @@ namespace RetroDevStudio.Dialogs
       this.checkReplaceRegexp.Location = new System.Drawing.Point(6, 61);
       this.checkReplaceRegexp.Name = "checkReplaceRegexp";
       this.checkReplaceRegexp.Size = new System.Drawing.Size(117, 17);
-      this.checkReplaceRegexp.TabIndex = 2;
+      this.checkReplaceRegexp.TabIndex = 4;
       this.checkReplaceRegexp.Text = "Regular Expression";
       this.checkReplaceRegexp.UseVisualStyleBackColor = true;
       this.checkReplaceRegexp.CheckedChanged += new System.EventHandler(this.checkReplaceRegexp_CheckedChanged);
@@ -405,7 +428,7 @@ namespace RetroDevStudio.Dialogs
       this.checkReplaceWholeWords.Location = new System.Drawing.Point(6, 40);
       this.checkReplaceWholeWords.Name = "checkReplaceWholeWords";
       this.checkReplaceWholeWords.Size = new System.Drawing.Size(95, 17);
-      this.checkReplaceWholeWords.TabIndex = 1;
+      this.checkReplaceWholeWords.TabIndex = 2;
       this.checkReplaceWholeWords.Text = "Full words only";
       this.checkReplaceWholeWords.UseVisualStyleBackColor = true;
       this.checkReplaceWholeWords.CheckedChanged += new System.EventHandler(this.checkReplaceWholeWords_CheckedChanged);
@@ -434,18 +457,6 @@ namespace RetroDevStudio.Dialogs
       this.comboReplaceTarget.Size = new System.Drawing.Size(328, 21);
       this.comboReplaceTarget.TabIndex = 2;
       this.comboReplaceTarget.SelectedIndexChanged += new System.EventHandler(this.comboReplaceTarget_SelectedIndexChanged);
-      // 
-      // comboReplaceWith
-      // 
-      this.comboReplaceWith.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboReplaceWith.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-      this.comboReplaceWith.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-      this.comboReplaceWith.FormattingEnabled = true;
-      this.comboReplaceWith.Location = new System.Drawing.Point(6, 59);
-      this.comboReplaceWith.Name = "comboReplaceWith";
-      this.comboReplaceWith.Size = new System.Drawing.Size(328, 21);
-      this.comboReplaceWith.TabIndex = 1;
       // 
       // comboReplaceSearchText
       // 
@@ -534,7 +545,6 @@ namespace RetroDevStudio.Dialogs
     private System.Windows.Forms.CheckBox checkReplaceRegexp;
     private System.Windows.Forms.CheckBox checkReplaceWholeWords;
     private System.Windows.Forms.CheckBox checkReplaceIgnoreCase;
-    private System.Windows.Forms.ComboBox comboReplaceWith;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Label label4;
@@ -546,5 +556,6 @@ namespace RetroDevStudio.Dialogs
     public DecentForms.Button btnFindAll;
     public System.Windows.Forms.ComboBox comboReplaceSearchText;
     public System.Windows.Forms.ComboBox comboSearchText;
+    private System.Windows.Forms.TextBox editReplaceWith;
   }
 }

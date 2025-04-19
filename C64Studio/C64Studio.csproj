@@ -205,6 +205,9 @@
     <Compile Update="Controls\ImportMapForms\ImportMapFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\PopupContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\SingleActionPopupControl.cs">
       <SubType>Component</SubType>
     </Compile>
