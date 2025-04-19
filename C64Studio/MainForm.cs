@@ -638,6 +638,7 @@ namespace RetroDevStudio
       ApplicationEvent += m_DebugMemory.OnApplicationEvent;
       ApplicationEvent += m_GraphicScreenEditor.OnApplicationEvent;
       ApplicationEvent += m_SpriteEditor.OnApplicationEvent;
+      ApplicationEvent += m_FindReplace.OnApplicationEvent;
 
       m_DebugMemory.hexView.TextFont = StudioCore.Imaging.FontFromMachine( MachineType.C64, 9 );
       m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();

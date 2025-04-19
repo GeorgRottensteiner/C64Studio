@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -2077,6 +2078,24 @@ namespace RetroDevStudio.Dialogs
     private void editReplaceTarget_TextChanged( object sender, EventArgs e )
     {
       DetectTextChange( editReplaceWith, Core.Settings.ReplaceWithArguments );
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.SEARCH_HISTORY_UPDATED:
+          comboSearchText.Items.Clear();
+          comboSearchText.Items.AddRange( Core.Settings.FindArguments.ToArray() );
+          break;
+          case ApplicationEvent.Type.REPLACE_SEARCH_HISTORY_UPDATED:
+          comboReplaceSearchText.Items.Clear();
+          comboReplaceSearchText.Items.AddRange( Core.Settings.ReplaceArguments.ToArray() );
+          break;
+      }
+      base.OnApplicationEvent( Event );
     }
 
 

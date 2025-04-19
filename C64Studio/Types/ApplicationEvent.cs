@@ -38,7 +38,10 @@ namespace RetroDevStudio.Types
       SHUTTING_DOWN,
       DEFAULT_PALETTE_CHANGED,  // Originalvalue = name of palettetype
                                 //               = empty > all palettes have changed
-      MARK_ALL_ASSEMBLIES_AS_DIRTY    // raised e.g. when hack preferences are modified
+      MARK_ALL_ASSEMBLIES_AS_DIRTY,   // raised e.g. when hack preferences are modified
+      SEARCH_HISTORY_UPDATED,
+      REPLACE_SEARCH_HISTORY_UPDATED,
+      REPLACE_WITH_HISTORY_UPDATED
     }
 
     public Type             EventType = Type.NONE;

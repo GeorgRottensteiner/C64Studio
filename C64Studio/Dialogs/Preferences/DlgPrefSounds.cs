@@ -24,7 +24,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public DlgPrefSounds( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "sound", "play" } );
+      _Keywords.AddRange( new string[] { "sound", "play", "notification" } );
 
       InitializeComponent();
     }

@@ -110,7 +110,6 @@ namespace RetroDevStudio.Documents
     private PopupContainer    _MacroPopup = null;
     private DecentForms.ListBox           _PopupList = null;
     private Control           _PopupControlSource = null;
-    private int               _PopupMacroStartPos = -1;
 
 
 

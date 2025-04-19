@@ -36,6 +36,7 @@ namespace RetroDevStudio.Dialogs
       _PreferencePanes.Add( new DlgPrefApplication( Core ) );
       _PreferencePanes.Add( new DlgPrefSounds( Core ) );
       _PreferencePanes.Add( new DlgPrefEditorBehaviour( Core ) );
+      _PreferencePanes.Add( new DlgPrefCachedData( Core ) );
       _PreferencePanes.Add( new DlgPrefASMEditor( Core ) );
       _PreferencePanes.Add( new DlgPrefAssembler( Core ) );
       _PreferencePanes.Add( new DlgPrefLibraryPaths( Core ) );

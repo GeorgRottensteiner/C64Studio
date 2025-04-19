@@ -71,7 +71,7 @@ namespace RetroDevStudio.Documents
 
     private int                         m_ZoomFactor = 1;
     private bool                        m_DragViewModeActiveBySpace = false;
-    private bool                        m_DragViewModeActiveByPressedWheel = false;
+    private bool                        m_DragViewModeActiveByPressedMiddleButton = false;
     private bool                        m_DragView = false;
     private System.Drawing.Point        m_DragPoint = new System.Drawing.Point();
 
@@ -147,9 +147,24 @@ namespace RetroDevStudio.Documents
 
       pictureEditor.KeyUp += PictureEditor_KeyUp;
       pictureEditor.LostFocus += PictureEditor_LostFocus;
+      pictureEditor.MouseWheel += PictureEditor_MouseWheel;
       ChangeColorChooserDialog();
 
       UpdateCursorInfo();
+    }
+
+
+
+    private void PictureEditor_MouseWheel( object sender, MouseEventArgs e )
+    {
+      if ( e.Delta > 0 )
+      {
+        ZoomIn();
+      }
+      else
+      {
+        ZoomOut();
+      }
     }
 
 
@@ -349,9 +364,9 @@ namespace RetroDevStudio.Documents
 
       if ( ( Buttons & MouseButtons.Middle ) != 0 )
       {
-        if ( !m_DragViewModeActiveByPressedWheel )
+        if ( !m_DragViewModeActiveByPressedMiddleButton )
         {
-          m_DragViewModeActiveByPressedWheel = true;
+          m_DragViewModeActiveByPressedMiddleButton = true;
           m_DragView = true;
           m_DragPoint = pictureEditor.PointToClient( MousePosition );
           pictureEditor.Cursor = Core.MainForm.CursorGrab;
@@ -361,9 +376,9 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        if ( m_DragViewModeActiveByPressedWheel )
+        if ( m_DragViewModeActiveByPressedMiddleButton )
         {
-          m_DragViewModeActiveByPressedWheel = false;
+          m_DragViewModeActiveByPressedMiddleButton = false;
           m_DragView = false;
           pictureEditor.Cursor = Cursors.Default;
           return;
@@ -3315,6 +3330,13 @@ namespace RetroDevStudio.Documents
 
     private void btnZoomIn_Click( DecentForms.ControlBase Sender )
     {
+      ZoomIn();
+    }
+
+
+
+    private void ZoomIn()
+    {
       if ( m_ZoomFactor < 8 )
       {
         int   totalWidth = Math.Max( 320, m_GraphicScreenProject.ScreenWidth );
@@ -3354,6 +3376,13 @@ namespace RetroDevStudio.Documents
 
 
     private void btnZoomOut_Click( DecentForms.ControlBase Sender )
+    {
+      ZoomOut();
+    }
+
+
+
+    private void ZoomOut()
     {
       if ( m_ZoomFactor > 1 )
       {
