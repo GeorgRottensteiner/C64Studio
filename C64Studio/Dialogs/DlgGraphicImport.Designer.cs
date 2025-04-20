@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DlgGraphicImport));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabImportSettings = new System.Windows.Forms.TabControl();
       this.tabSettings = new System.Windows.Forms.TabPage();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -368,6 +368,7 @@
       // 
       // btnCancel
       // 
+      this.btnCancel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -382,6 +383,7 @@
       // 
       // btnOK
       // 
+      this.btnOK.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -455,6 +457,7 @@
       // 
       // btnZoomIn
       // 
+      this.btnZoomIn.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnZoomIn.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnZoomIn.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -469,6 +472,7 @@
       // 
       // btnZoomOut
       // 
+      this.btnZoomOut.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnZoomOut.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnZoomOut.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -483,6 +487,7 @@
       // 
       // btnReload
       // 
+      this.btnReload.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReload.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnReload.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -660,7 +665,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.picPreview.AutoResize = false;
       this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picPreview.DisplayPage = fastImage3;
+      this.picPreview.DisplayPage = fastImage1;
       this.picPreview.Image = null;
       this.picPreview.Location = new System.Drawing.Point(0, 439);
       this.picPreview.Name = "picPreview";
@@ -678,7 +683,7 @@
       this.picOriginal.AutoResize = false;
       this.picOriginal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picOriginal.ContextMenuStrip = this.contextMenuOrigPic;
-      this.picOriginal.DisplayPage = fastImage4;
+      this.picOriginal.DisplayPage = fastImage2;
       this.picOriginal.Image = null;
       this.picOriginal.Location = new System.Drawing.Point(0, 29);
       this.picOriginal.Name = "picOriginal";
@@ -713,7 +718,7 @@
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-      this.Text = "Import Graphic";
+      this.Text = "Import Graphics";
       this.ResizeEnd += new System.EventHandler(this.DlgGraphicImport_ResizeEnd);
       this.SizeChanged += new System.EventHandler(this.DlgGraphicImport_SizeChanged);
       this.tabImportSettings.ResumeLayout(false);

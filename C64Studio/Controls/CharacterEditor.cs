@@ -553,6 +553,14 @@ namespace RetroDevStudio.Controls
       {
         importType = Types.GraphicType.CHARACTERS_FCM;
       }
+      else if ( ( m_Project.Mode == TextCharMode.X16_HIRES )
+      ||        ( m_Project.Mode == TextCharMode.COMMODORE_128_VDC_HIRES )
+      ||        ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
+      ||        ( m_Project.Mode == TextCharMode.COMMODORE_HIRES )
+      ||        ( m_Project.Mode == TextCharMode.MEGA65_HIRES ) )
+      {
+        importType = Types.GraphicType.CHARACTERS_HIRES;
+      }
       if ( !Core.MainForm.ImportImage( FromFile, Image, importType, mcSettings, m_CharacterWidth, m_CharacterHeight, out GR.Image.IImage mappedImage, out mcSettings, out pasteAsBlock, out Types.GraphicType importAsType ) )
       {
         Image.Dispose();
@@ -645,11 +653,6 @@ namespace RetroDevStudio.Controls
           if ( currentTargetChar == m_CurrentChar )
           {
             byte  newCustomColor = (byte)m_Project.Characters[m_CurrentChar].Tile.CustomColor;
-            if ( ( importAsType == GraphicType.CHARACTERS_HIRES )
-            &&   ( newCustomColor >= 8 ) )
-            {
-              newCustomColor %= 8;
-            }
             if ( ( importAsType == GraphicType.CHARACTERS_MULTICOLOR )
             &&   ( newCustomColor < 8 ) )
             {
@@ -1056,7 +1059,10 @@ namespace RetroDevStudio.Controls
         catch ( Exception ex )
         {
           Debug.Log( "Exception during drawing char " + ex.ToString() );
-          Core.AddToOutput( "Exception during drawing char " + ex.ToString() );
+          if ( !DesignMode )
+          {
+            Core.AddToOutput( "Exception during drawing char " + ex.ToString() );
+          }
         }
       }
     }
