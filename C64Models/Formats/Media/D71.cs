@@ -293,7 +293,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    private void AllocSector( int Track, int Sector )
+    protected override void AllocSector( int Track, int Sector )
     {
       _LastError = "";
       if ( ( Track < 1 )
@@ -335,7 +335,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    private void FreeSector( int Track, int Sector )
+    protected override void FreeSector( int Track, int Sector )
     {
       _LastError = "";
       if ( ( Track < 1 )

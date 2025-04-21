@@ -256,12 +256,12 @@ namespace MediaManager
         if ( addAddress )
         {
           GR.Memory.ByteBuffer    newData = new GR.Memory.ByteBuffer( 2 + data.Length );
+          newData.Resize( 2 + data.Length );
 
           newData.SetU16At( 0, startAddress );
           data.CopyTo( newData, 0, (int)data.Length, 2 );
           data = newData;
         }
-
         if ( paramMap.ContainsKey( "-RENAMETO" ) )
         {
           filenameImport = paramMap["-RENAMETO"];

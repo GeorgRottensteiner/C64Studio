@@ -23,6 +23,7 @@ namespace RetroDevStudio.Formats
     protected int TRACK_DIRECTORY = -1;
     protected int SECTOR_DIRECTORY = -1;
 
+    protected int FILE_INTERLEAVE = 10;
     protected int DIRECTORY_INTERLEAVE = 3;
 
 
@@ -568,6 +569,7 @@ namespace RetroDevStudio.Formats
 
       while ( !endFound )
       {
+        Debug.Log( $"Read track {fileLocation.Track}, Sector {fileLocation.Sector}" );
         Sector  sec       = Tracks[fileLocation.Track - 1].Sectors[fileLocation.Sector];
         fileLocation = sec.NextLocation;
         if ( fileLocation == null )
@@ -625,7 +627,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    private void AllocSector( int Track, int Sector )
+    protected virtual void AllocSector( int Track, int Sector )
     {
       _LastError = "";
       if ( ( Track < 1 )
@@ -660,7 +662,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    private void FreeSector( int Track, int Sector )
+    protected virtual void FreeSector( int Track, int Sector )
     {
       _LastError = "";
       if ( ( Track < 1 )
@@ -982,8 +984,8 @@ namespace RetroDevStudio.Formats
       Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
 
       int trackIndex = 1;
-      int prevSector = 0;
-      int fileInterleave = 10;
+      int fileInterleave = FILE_INTERLEAVE;
+      int prevSector = -FILE_INTERLEAVE;
       int bytesToWrite = (int)dataToWrite.Length;
       int writeOffset = 0;
       Sector previousSector = null;
@@ -1031,7 +1033,6 @@ namespace RetroDevStudio.Formats
             previousSector = track.Sectors[searchSector];
             if ( bytesToWrite > 254 )
             {
-              //Debug.Log( "Write to T/S " + trackIndex + "," + searchSector );
               dataToWrite.CopyTo( previousSector.Data, writeOffset, 254, 2 );
               previousSector.Free = false;
               writeOffset += 254;
@@ -1041,7 +1042,6 @@ namespace RetroDevStudio.Formats
               goto write_next_sector;
             }
             // last sector
-            //Debug.Log( "Write to T/S " + trackIndex + "," + searchSector );
             previousSector.Free = false;
             previousSector.Data.SetU8At( 0, 0 );
             previousSector.Data.SetU8At( 1, (byte)( 1 + bytesToWrite ) );
