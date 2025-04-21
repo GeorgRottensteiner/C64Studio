@@ -2213,6 +2213,12 @@ namespace RetroDevStudio.Documents
         }
         return base.ProcessCmdKey( ref msg, keyData );
       }
+      var foundAccelerator = Core.Settings.FindAccelerator( keyData );
+      if ( foundAccelerator != null )
+      {
+        return base.ProcessCmdKey( ref msg, keyData );
+      }
+
       if ( !IsValidKey( bareKey, mappedKey ) )
       {
         return true;
