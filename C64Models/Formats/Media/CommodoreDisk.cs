@@ -569,7 +569,6 @@ namespace RetroDevStudio.Formats
 
       while ( !endFound )
       {
-        Debug.Log( $"Read track {fileLocation.Track}, Sector {fileLocation.Sector}" );
         Sector  sec       = Tracks[fileLocation.Track - 1].Sectors[fileLocation.Sector];
         fileLocation = sec.NextLocation;
         if ( fileLocation == null )
