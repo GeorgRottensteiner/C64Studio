@@ -133,16 +133,19 @@ namespace RetroDevStudio.Tasks
         command = command.Replace( "-initbreak 0x$(DebugStartAddressHex) ", "" );
       }
 
+      var labelFormat = Emulators.EmulatorInfo.LabelFormat( toolRun.Filename );
+
       if ( ( toolRun.PassLabelsToEmulator )
       &&   ( Core.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
       {
-        symbolFile += Core.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
+        symbolFile += Core.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( labelFormat );
       }
-      if ( ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) == Types.ASM.LabelFileFormat.C64DEBUGGER )
+      if ( ( ( labelFormat == Types.ASM.LabelFileFormat.C64DEBUGGER )
+      ||     ( labelFormat == Types.ASM.LabelFileFormat.RETRODEBUGGER ) )
       &&   ( Core.Debugging.DebuggedASMBase.ASMFileInfo != null )
       &&   ( Core.Debugging.BreakPoints.Count > 0 ) )
       {
-        breakPointFile = Core.Debugging.BreakpointsToFile();
+        breakPointFile = Core.Debugging.BreakpointsToFile( labelFormat );
       }
 
       if ( symbolFile.Length > 0 )
@@ -150,13 +153,15 @@ namespace RetroDevStudio.Tasks
         try
         {
           Core.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
+
           System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, symbolFile );
-          switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
+          switch ( labelFormat )
           {
             case Types.ASM.LabelFileFormat.VICE:
               command += " -moncommands \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
               break;
             case Types.ASM.LabelFileFormat.C64DEBUGGER:
+            case Types.ASM.LabelFileFormat.RETRODEBUGGER:
               command += " -vicesymbols \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
               break;
           }
@@ -174,10 +179,17 @@ namespace RetroDevStudio.Tasks
         try
         {
           Core.Debugging.TempDebuggerBreakpointFilename = System.IO.Path.GetTempFileName();
+
+          if ( labelFormat == Types.ASM.LabelFileFormat.RETRODEBUGGER )
+          {
+            Core.Debugging.TempDebuggerBreakpointFilename += ".breakpoints";
+          }
+
           System.IO.File.WriteAllText( Core.Debugging.TempDebuggerBreakpointFilename, breakPointFile );
-          switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
+          switch ( labelFormat )
           {
             case Types.ASM.LabelFileFormat.C64DEBUGGER:
+            case Types.ASM.LabelFileFormat.RETRODEBUGGER:
               command += " -breakpoints \"" + Core.Debugging.TempDebuggerBreakpointFilename + "\"";
               break;
           }

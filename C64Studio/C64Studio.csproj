@@ -491,6 +491,9 @@
     <Content Include="BASIC Dialects\BASIC V10.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="BASIC Dialects\BASIC V7.0 VDC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="BASIC Dialects\ZX81 BASIC.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

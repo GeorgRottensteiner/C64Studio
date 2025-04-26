@@ -106,6 +106,10 @@ namespace RetroDevStudio.Emulators
       {
         return LabelFileFormat.C64DEBUGGER;
       }
+      if ( upperCaseFilename.StartsWith( "RETRODEBUGGER" ) )
+      {
+        return LabelFileFormat.RETRODEBUGGER;
+      }
       return LabelFileFormat.VICE;
     }
 
@@ -118,7 +122,8 @@ namespace RetroDevStudio.Emulators
       if ( ( filename.StartsWith( "X64" ) )
       ||   ( filename.StartsWith( "XSCPU64" ) )
       ||   ( filename.StartsWith( "CCS64" ) )
-      ||   ( filename.StartsWith( "C64DEBUGGER" ) ) )
+      ||   ( filename.StartsWith( "C64DEBUGGER" ) )
+      ||   ( filename.StartsWith( "RETRODEBUGGER" ) ) )
       {
         return MachineType.C64;
       }

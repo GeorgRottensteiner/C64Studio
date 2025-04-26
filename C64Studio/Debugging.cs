@@ -858,29 +858,56 @@ namespace RetroDevStudio
 
 
     // C64Debugger format - doesn't support different breakpoint types?
-    internal string BreakpointsToFile()
+    internal string BreakpointsToFile( Types.ASM.LabelFileFormat labelFileFormat )
     {
       StringBuilder   sb = new StringBuilder();
 
-      foreach ( var bpFiles in Core.Debugging.BreakPoints )
+      switch ( labelFileFormat )
       {
-        foreach ( var bp in bpFiles.Value )
-        {
-          //if ( bp.Value.Any( x => x.TriggerOnExec ) )
+        case Types.ASM.LabelFileFormat.C64DEBUGGER:
+        case Types.ASM.LabelFileFormat.RETRODEBUGGER:
+          foreach ( var bpFiles in Core.Debugging.BreakPoints )
           {
-            sb.Append( "break " );
-            sb.Append( bp.Address.ToString( "X" ) );
-            sb.AppendLine();
+            foreach ( var bp in bpFiles.Value )
+            {
+              sb.Append( "break " );
+              sb.Append( bp.Address.ToString( "X" ) );
+              sb.AppendLine();
+            }
           }
+          break;
           /*
-          if ( ( bp.Value.Any( x => x.TriggerOnLoad ) )
-          ||   ( bp.Value.Any( x => x.TriggerOnStore ) ) )
+        case Types.ASM.LabelFileFormat.RETRODEBUGGER:
+          sb.Append( "{\r\n  Version: \"1\"\r\n  Segments: [\r\n    {\r\n      Name: Default\r\n      Breakpoints: [\r\n" );
+          foreach ( var bpFiles in Core.Debugging.BreakPoints )
           {
-            sb.Append( "breakmemory " );
-            sb.Append( bp.Value[0].Address );
-            sb.AppendLine();
-          }*/
-        }
+            foreach ( var bp in bpFiles.Value )
+            {
+              sb.AppendLine( "        {" );
+              sb.AppendLine( "          Type: CpuPC" );
+              sb.AppendLine( "          Items: [" );
+              sb.AppendLine( "            {" );
+              sb.AppendLine( "              IsActive: true" );
+              sb.Append(     "              Addr: " );
+              sb.AppendLine( bp.Address.ToString() );
+              sb.AppendLine( "              Actions: 2" );
+              sb.AppendLine( "              Data: 0" );
+              sb.AppendLine( "            }" );
+            }
+          }
+          sb.AppendLine( "          ]" );
+          sb.AppendLine( "        }" );
+          sb.AppendLine( "        {" );
+          sb.AppendLine( "          Type: Memory" );
+          sb.AppendLine( "        }" );
+          sb.AppendLine( "        {" );
+          sb.AppendLine( "          Type: RasterLine" );
+          sb.AppendLine( "        }" );
+          sb.AppendLine( "      ]" );
+          sb.AppendLine( "    }" );
+          sb.AppendLine( "  ]" );
+          sb.AppendLine( "}" );
+          break;*/
       }
 
       return sb.ToString();

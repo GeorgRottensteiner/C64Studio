@@ -2751,8 +2751,8 @@ namespace RetroDevStudio
               switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
               {
                 case Types.ASM.LabelFileFormat.C64DEBUGGER:
-                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" "
-                      + runArguments;
+                case Types.ASM.LabelFileFormat.RETRODEBUGGER:
+                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
                   break;
                 case Types.ASM.LabelFileFormat.VICE:
                 default:

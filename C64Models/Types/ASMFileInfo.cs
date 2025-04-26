@@ -12,7 +12,8 @@ namespace RetroDevStudio.Types.ASM
   public enum LabelFileFormat
   {
     VICE          = 0,
-    C64DEBUGGER   = 1
+    C64DEBUGGER   = 1,
+    RETRODEBUGGER = 2
   };
 
   public class SourceInfo
@@ -1019,6 +1020,7 @@ namespace RetroDevStudio.Types.ASM
               }
               break;
             case LabelFileFormat.C64DEBUGGER:
+            case LabelFileFormat.RETRODEBUGGER: 
               sb.Append( "al C:" );
               sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
               sb.Append( " ." );

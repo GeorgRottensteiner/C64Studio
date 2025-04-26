@@ -4528,13 +4528,13 @@ namespace RetroDevStudio.Parser.BASIC
       }
       // find next line
       int   nextIndex = lastLine.Key + 1;
-      while ( ( nextIndex < m_LineInfos.Count )
+      while ( ( nextIndex < m_LineInfos.Last().Key )
       &&      ( ( !m_LineInfos.ContainsKey( nextIndex ) )
       ||        ( m_LineInfos[nextIndex].LineNumber == -1 ) ) )
       {
         ++nextIndex;
       }
-      if ( ( nextIndex != m_LineInfos.Count )
+      if ( ( nextIndex <= m_LineInfos.Last().Key )
       &&   ( m_LineInfos.ContainsKey( nextIndex ) )
       &&   ( m_LineInfos[nextIndex].LineNumber <= LineStart + ( trueNumberOfLines - 1 ) * LineStep ) )
       {
@@ -4570,8 +4570,7 @@ namespace RetroDevStudio.Parser.BASIC
       int curLine = LineStart;
       foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
       {
-        int   dummyLineNum = curLine;
-        var tokenLineInfo = TokenizeLine( lineInfo.Value.Line, 0, ref dummyLineNum );
+        int   dummyLineNum = curLine;        var tokenLineInfo = TokenizeLine( lineInfo.Value.Line, 0, ref dummyLineNum );
         // skip hard comments
         if ( ( tokenLineInfo.Tokens.Count == 1 )
         &&   ( tokenLineInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
