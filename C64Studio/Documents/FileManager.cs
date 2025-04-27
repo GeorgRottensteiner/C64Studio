@@ -947,6 +947,7 @@ namespace RetroDevStudio.Documents
           document.ShowHint = DockState.Document;
 
           document.Core = Core;
+          document.RefreshDisplayOptions();
           document.Show( Core.MainForm.panelMain );
           document.SetBASICDialect( Dialect );
 

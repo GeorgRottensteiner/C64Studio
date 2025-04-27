@@ -6238,6 +6238,7 @@ namespace RetroDevStudio
           document.ToolTipText = document.DocumentInfo.FullPath;
         }
       }
+      document.RefreshDisplayOptions();
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
       document.DocumentInfo.UndoManager.MainForm = this;
