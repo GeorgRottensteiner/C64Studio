@@ -133,7 +133,6 @@ namespace RetroDevStudio.Dialogs
       comboReplaceTarget.SelectedIndex = (int)FindTarget.ACTIVE_DOCUMENT;
       comboSearchText.Focus();
       AcceptButton = btnFindNext;
-      RefreshDisplayOptions();
     }
 
 

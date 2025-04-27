@@ -452,10 +452,6 @@ namespace RetroDevStudio
                   element.Document.ShowHint = DockState.Document;
                 }
               }
-              if ( element.Document != null )
-              {
-                element.Document.RefreshDisplayOptions();
-              }
             }
             break;
           case FileChunkConstants.PROJECT_ELEMENT_DISPLAY_DATA:

@@ -166,8 +166,6 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = "#";
       //editSource.CommentPrefix = "REM";
 
-      RefreshDisplayOptions();
-
       editSource.LeftPadding = 40;   // space for marker symbol on left side
       editSource.AllowDrop = true;
 

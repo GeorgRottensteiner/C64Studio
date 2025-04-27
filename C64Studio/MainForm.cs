@@ -750,7 +750,6 @@ namespace RetroDevStudio
       debugTools.Left = mainTools.Right;
       debugTools.Top = mainTools.Top;
 
-      m_FindReplace.RefreshDisplayOptions();
       StudioCore.Settings.RefreshDisplayOnAllDocuments( StudioCore );
 
       SetGUIForWaitOnExternalTool( false );
@@ -761,8 +760,6 @@ namespace RetroDevStudio
       panelMain.AllowDrop = true;
       panelMain.DragEnter += new DragEventHandler( MainForm_DragEnter );
       panelMain.DragDrop += new DragEventHandler( MainForm_DragDrop );
-
-      m_Disassembler.RefreshDisplayOptions();
 
 #if DEBUG
       showLineinfosToolStripMenuItem.Visible = true;
@@ -6340,6 +6337,7 @@ namespace RetroDevStudio
         newDoc.ShowHint = DockState.Document;
         newDoc.Core = StudioCore;
         newDoc.Text = "*";
+        newDoc.RefreshDisplayOptions();
         newDoc.Show( panelMain );
         newDoc.DocumentInfo.Project = Project;
         newDoc.Icon = IconFromType( newDoc.DocumentInfo );

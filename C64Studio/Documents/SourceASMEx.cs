@@ -227,8 +227,6 @@ namespace RetroDevStudio.Documents
       UpdatePseudoOpSyntaxColoringSource();
       UpdateOpcodeSyntaxColoringSource();
 
-      RefreshDisplayOptions();
-
       editSource.AllowDrop = true;
       editSource.MouseEnter += new EventHandler( editSource_MouseEnter );
       editSource.MouseLeave += new EventHandler(editSource_MouseLeave);

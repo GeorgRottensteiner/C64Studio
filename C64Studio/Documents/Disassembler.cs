@@ -54,8 +54,6 @@ namespace RetroDevStudio.Documents
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
       editDisassembly.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editDisassembly_TextChanged );
-
-      RefreshDisplayOptions();
     }
 
 

@@ -94,6 +94,7 @@ namespace RetroDevStudio.Dialogs.Preferences
           }
         }
       }
+      RefreshDisplayOnDocuments();
     }
 
 

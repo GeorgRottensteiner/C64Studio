@@ -44,8 +44,6 @@ namespace RetroDevStudio.Documents
       m_Project.ValueTable.Formula = "x*2";
       m_Project.ValueTable.EndValue = "10";
 
-      RefreshDisplayOptions();
-
       GenerateValues();
     }
 

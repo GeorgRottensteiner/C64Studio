@@ -181,8 +181,6 @@ namespace RetroDevStudio.Documents
 
       panelSprites_SelectedIndexChanged( null, null );
 
-      RefreshDisplayOptions();
-
       m_AnimTimer.Tick += animTimer_Tick;
       AdjustSpriteSizes();
       UpdateSpriteSelectionInfo();
