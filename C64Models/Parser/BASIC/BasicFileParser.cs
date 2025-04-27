@@ -3007,11 +3007,11 @@ namespace RetroDevStudio.Parser.BASIC
 
         record.Filename = Util.ToFilename( Formats.MediaFilenameType.COMMODORE, outputPureFilename );
         record.StartAddress = (ushort)fileStartAddress;
+        record.Data = result;
 
         t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
         t64.TapeInfo.UserDescription = "USERDESC";
         t64.FileRecords.Add( record );
-        t64.FileDatas.Add( result );
 
         AssembledOutput.Assembly = t64.Compile();
       }

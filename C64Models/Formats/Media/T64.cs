@@ -77,11 +77,11 @@ namespace RetroDevStudio.Formats
       public UInt32   FileOffset = 0;
       public UInt32   Filler2 = 0;
       public GR.Memory.ByteBuffer Filename = new GR.Memory.ByteBuffer();
+      public GR.Memory.ByteBuffer Data = new GR.Memory.ByteBuffer();
     };
 
     public TapeRecord                   TapeInfo = new TapeRecord();
     public List<FileRecord>             FileRecords = new List<FileRecord>();
-    public List<GR.Memory.ByteBuffer>   FileDatas = new List<GR.Memory.ByteBuffer>();
     private string                      _LastError = "";
 
 
@@ -139,7 +139,6 @@ namespace RetroDevStudio.Formats
       for ( int i = 0; i < 30; ++i )
       {
         FileRecords.Add( new FileRecord() );
-        FileDatas.Add( new GR.Memory.ByteBuffer() );
       }
     }
 
@@ -212,18 +211,18 @@ namespace RetroDevStudio.Formats
           result.AppendU8( (byte)FileRecords[i].EntryType );
           result.AppendU8( (byte)FileRecords[i].FileTypeNative );
           result.AppendU16( FileRecords[i].StartAddress );
-          result.AppendU16( (ushort)( FileRecords[i].StartAddress + FileDatas[i].Length ) );
+          result.AppendU16( (ushort)( FileRecords[i].StartAddress + FileRecords[i].Data.Length ) );
           result.AppendU16( 0 );
           result.AppendU32( (uint)completeOffset );
           result.AppendU32( 0 );
           result.Append( PadString( FileRecords[i].Filename, 16, 0x20 ) );
 
-          completeOffset += (int)FileDatas[i].Length;
+          completeOffset += (int)FileRecords[i].Data.Length;
         }
       }
       for ( int i = 0; i < FileRecords.Count; ++i )
       {
-        result.Append( FileDatas[i] );
+        result.Append( FileRecords[i].Data );
       }
       return result;
     }
@@ -264,6 +263,8 @@ namespace RetroDevStudio.Formats
           info.ReadOnly   = ( file.FileTypeNative & CommodoreFileTypeNative.LOCKED ) != 0;
           info.NotClosed  = ( file.FileTypeNative & CommodoreFileTypeNative.CLOSED ) == 0;
           info.DirEntryIndex = dirEntryIndex;
+          info.Size       = file.EndAddress - file.StartAddress;
+          info.Data       = file.Data;    
           ++dirEntryIndex;
 
           files.Add( info );
@@ -358,7 +359,6 @@ namespace RetroDevStudio.Formats
         if ( file.EntryType == 0 )
         {
           FileRecords.Add( file );
-          FileDatas.Add( new GR.Memory.ByteBuffer() );
 
           entryPos += 32;
           continue;
@@ -372,8 +372,8 @@ namespace RetroDevStudio.Formats
         {
           file.Filename.AppendU8( data.ByteAt( entryPos + 16 + j ) );
         }
+        file.Data = data.SubBuffer( (int)file.FileOffset, (int)( file.EndAddress - file.StartAddress ) );
         FileRecords.Add( file );
-        FileDatas.Add( data.SubBuffer( (int)file.FileOffset, (int)( file.EndAddress - file.StartAddress ) ) );
         entryPos += 32;
       }
       return true;
@@ -403,7 +403,7 @@ namespace RetroDevStudio.Formats
           {
             GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
             exportData.AppendU16( file.StartAddress );
-            exportData.Append( FileDatas[fileIndex] );
+            exportData.Append( file.Data );
 
             fileInfo.Data       = exportData;
             fileInfo.Filename   = new GR.Memory.ByteBuffer( file.Filename );
@@ -436,11 +436,11 @@ namespace RetroDevStudio.Formats
           file.StartAddress   = Content.UInt16At( 0 );
           if ( Content.Length < 2 )
           {
-            FileDatas[fileIndex] = new GR.Memory.ByteBuffer();
+            file.Data = new GR.Memory.ByteBuffer();
           }
           else
           {
-            FileDatas[fileIndex] = Content.SubBuffer( 2 );
+            file.Data = Content.SubBuffer( 2 );
           }
           file.EndAddress = (ushort)( file.StartAddress + Content.Length );
           file.FileOffset = 0;
@@ -492,8 +492,7 @@ namespace RetroDevStudio.Formats
             file.StartAddress   = 0;
             file.EndAddress     = 0;
             file.FileOffset     = 0;
-
-            FileDatas[fileIndex] = new GR.Memory.ByteBuffer();
+            file.Data           = new GR.Memory.ByteBuffer();
             return true;
           }
         }
