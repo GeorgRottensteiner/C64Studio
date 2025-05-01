@@ -218,11 +218,16 @@ namespace RetroDevStudio.Controls
 
       foreach ( int index in selectedImages )
       {
+        int   indexToUse = index;
+        if ( Lookup.IsECMMode( m_Project.Mode ) )
+        {
+          indexToUse %= 64;
+        }
         var entry = new ClipboardImageList.Entry();
-        var character = m_Project.Characters[index];
+        var character = m_Project.Characters[indexToUse];
 
         entry.Tile        = character.Tile;
-        entry.Index       = index;
+        entry.Index       = indexToUse;
 
         clipList.Entries.Add( entry );
       }
@@ -250,13 +255,17 @@ namespace RetroDevStudio.Controls
           int indexGap =  entry.Index;
           pastePos += indexGap;
 
+          if ( Lookup.IsECMMode( m_Project.Mode ) )
+          {
+            pastePos %= 64;
+          }
+
           if ( pastePos >= m_Project.Characters.Count )
           {
             break;
           }
 
           modifiedChars.Add( pastePos );
-
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), firstEntry );
           firstEntry = false;
 
@@ -274,6 +283,7 @@ namespace RetroDevStudio.Controls
           int copyWidth = Math.Max( 8, entry.Tile.Width );
           int copyHeight = Math.Max( 8, entry.Tile.Height );
 
+          
           for ( int x = 0; x < copyWidth; x += Lookup.PixelWidth( targetTile.Mode ) )
           {
             for ( int y = 0; y < copyHeight; ++y )
@@ -283,8 +293,19 @@ namespace RetroDevStudio.Controls
           }
           targetTile.CustomColor = entry.Tile.CustomColor;
 
-          RebuildCharImage( pastePos );
-          panelCharacters.InvalidateItemRect( pastePos );
+          if ( Lookup.IsECMMode( m_Project.Mode ) )
+          {
+            for ( int i = 0; i < 4; ++i )
+            {
+              RebuildCharImage( pastePos + i * 64 );
+              panelCharacters.InvalidateItemRect( pastePos + i * 64 );
+            }
+          }
+          else
+          {
+            RebuildCharImage( pastePos );
+            panelCharacters.InvalidateItemRect( pastePos );
+          }
 
           if ( pastePos == m_CurrentChar )
           {
@@ -675,6 +696,8 @@ namespace RetroDevStudio.Controls
 
     private void panelCharacters_SelectionChanged( object sender, EventArgs e )
     {
+      ValidateMoveToTarget();
+
       int newChar = panelCharacters.SelectedIndex;
       if ( ( newChar != -1 )
       &&   ( panelCharacters.SelectedIndices.Count == 1 ) )
@@ -697,6 +720,45 @@ namespace RetroDevStudio.Controls
 
         SelectCategory( m_Project.Characters[m_CurrentChar].Category );
         RedrawColorPicker();
+      }
+    }
+
+
+
+    private void ValidateMoveToTarget()
+    {
+      if ( Lookup.IsECMMode( m_Project.Mode ) )
+      {
+        bool enable = true;
+        int targetIndex = GR.Convert.ToI32( editMoveTargetIndex.Text );
+        foreach ( var index in panelCharacters.SelectedIndices )
+        {
+          // all selected characters must be in the same 64 character block
+          for ( int j = 0; j < panelCharacters.SelectedIndices.Count; ++j )
+          {
+            if ( ( panelCharacters.SelectedIndices[j] / 64 ) != ( index / 64 ) )
+            {
+              enable = false;
+              break;
+            }
+          }
+          if ( !enable )
+          {
+            break;
+          }
+          // target must be in same 64 character block
+          if ( ( index / 64 ) != ( targetIndex / 64 ) )
+          {
+            enable = false;
+            break;
+          }
+          ++targetIndex;
+        }
+        btnMoveSelectionToTarget.Enabled = enable;
+      }
+      else
+      {
+        btnMoveSelectionToTarget.Enabled = true;
       }
     }
 
@@ -2330,6 +2392,11 @@ namespace RetroDevStudio.Controls
         return;
       }
 
+      int numChars = m_Project.TotalNumberOfCharacters;
+      if ( Lookup.IsECMMode( m_Project.Mode ) )
+      {
+        numChars = 64;
+      }
       int[]   charMapNewToOld = new int[m_Project.TotalNumberOfCharacters];
       int[]   charMapOldToNew = new int[m_Project.TotalNumberOfCharacters];
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
@@ -2341,15 +2408,26 @@ namespace RetroDevStudio.Controls
       int     insertIndex = targetIndex;
       foreach ( var entry in selection )
       {
-        charMapNewToOld[insertIndex] = entry;
-        charMapOldToNew[entry] = insertIndex;
+        if ( Lookup.IsECMMode( m_Project.Mode ) )
+        {
+          for ( int i = 0; i < 4; ++i )
+          {
+            charMapNewToOld[i * 64 + insertIndex % 64]  = i * 64 + entry % 64;
+            charMapOldToNew[i * 64 + entry % 64]        = i * 64 + insertIndex % 64;
+          }
+        }
+        else
+        {
+          charMapNewToOld[insertIndex] = entry;
+          charMapOldToNew[entry] = insertIndex;
+        }
         ++insertIndex;
       }
 
       // now fill all other entries
       byte    insertCharIndex = 0;
       int     charPos = 0;
-      while ( charPos < 256 )
+      while ( charPos < numChars )
       {
         // already inserted, skip
         if ( charMapNewToOld[charPos] != -1 )
@@ -2361,8 +2439,19 @@ namespace RetroDevStudio.Controls
         {
           ++insertCharIndex;
         }
-        charMapNewToOld[charPos] = insertCharIndex;
-        charMapOldToNew[insertCharIndex] = charPos;
+        if ( Lookup.IsECMMode( m_Project.Mode ) )
+        {
+          for ( int i = 0; i < 4; ++i )
+          {
+            charMapNewToOld[i * 64 + charPos]         = i * 64 + insertCharIndex;
+            charMapOldToNew[i * 64 + insertCharIndex] = i * 64 + charPos;
+          }
+        }
+        else
+        {
+          charMapNewToOld[charPos] = insertCharIndex;
+          charMapOldToNew[insertCharIndex] = charPos;
+        }
         ++charPos;
         ++insertCharIndex;
       }
@@ -2942,6 +3031,13 @@ namespace RetroDevStudio.Controls
         }
       }
       panelCharacters.EndUpdate();
+    }
+
+
+
+    private void editMoveTargetIndex_TextChanged( object sender, EventArgs e )
+    {
+      ValidateMoveToTarget();
     }
 
 

@@ -1406,6 +1406,19 @@ namespace RetroDevStudio
 
 
 
+    internal static bool IsECMMode( TextCharMode mode )
+    {
+      switch ( mode )
+      {
+        case TextCharMode.COMMODORE_ECM:
+        case TextCharMode.MEGA65_ECM:
+          return true;
+      }
+      return false;
+    }
+
+
+
   }
 
 }

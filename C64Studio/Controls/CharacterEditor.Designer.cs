@@ -185,6 +185,7 @@
       this.editMoveTargetIndex.Name = "editMoveTargetIndex";
       this.editMoveTargetIndex.Size = new System.Drawing.Size(93, 20);
       this.editMoveTargetIndex.TabIndex = 0;
+      this.editMoveTargetIndex.TextChanged += new System.EventHandler(this.editMoveTargetIndex_TextChanged);
       // 
       // btnPaste
       // 
