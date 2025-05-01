@@ -293,19 +293,7 @@ namespace RetroDevStudio.Controls
           }
           targetTile.CustomColor = entry.Tile.CustomColor;
 
-          if ( Lookup.IsECMMode( m_Project.Mode ) )
-          {
-            for ( int i = 0; i < 4; ++i )
-            {
-              RebuildCharImage( pastePos + i * 64 );
-              panelCharacters.InvalidateItemRect( pastePos + i * 64 );
-            }
-          }
-          else
-          {
-            RebuildCharImage( pastePos );
-            panelCharacters.InvalidateItemRect( pastePos );
-          }
+          RebuildAffectedChar( pastePos );
 
           if ( pastePos == m_CurrentChar )
           {
@@ -410,7 +398,7 @@ namespace RetroDevStudio.Controls
               }
             }
             else if ( ( width == 24 )
-            && ( height == 21 ) )
+            &&        ( height == 21 ) )
             {
               // upper left cell of sprite into char (C64)
               for ( int j = 0; j < 8; ++j )
@@ -426,8 +414,7 @@ namespace RetroDevStudio.Controls
 
             int index = memIn.ReadInt32();
 
-            RebuildCharImage( pastePos );
-            panelCharacters.InvalidateItemRect( pastePos );
+            RebuildAffectedChar( pastePos );
 
             if ( pastePos == m_CurrentChar )
             {
@@ -486,24 +473,10 @@ namespace RetroDevStudio.Controls
 
       for ( int charIndex = CharIndex; charIndex < CharIndex + Count; ++charIndex )
       {
-        if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
+        RebuildAffectedChar( charIndex );
+        if ( m_CurrentChar == charIndex )
         {
-          for ( int i = 0; i < 4; ++i )
-          {
-            RebuildCharImage( ( charIndex + i * 64 ) % 256 );
-            panelCharacters.InvalidateItemRect( ( charIndex + i * 64 ) % 256 );
-
-            if ( m_CurrentChar == charIndex )
-            {
-              currentCharChanged = true;
-            }
-          }
-        }
-        else
-        {
-          RebuildCharImage( charIndex );
-          panelCharacters.InvalidateItemRect( charIndex );
-          currentCharChanged = ( m_CurrentChar == charIndex );
+          currentCharChanged = true;
         }
       }
 
@@ -1006,7 +979,8 @@ namespace RetroDevStudio.Controls
           m_Project.Characters[CharIndex].Tile.Mode = GraphicTileMode.COMMODORE_HIRES_8X16;
         }
       }
-      RebuildCharImage( CharIndex );
+
+      RebuildAffectedChar( CharIndex );
       return true;
     }
 
@@ -1188,19 +1162,7 @@ namespace RetroDevStudio.Controls
             m_ButtonReleased = false;
           }
           RaiseModifiedEvent( new List<int>() { affectedCharIndex } );
-          if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
-          {
-            for ( int i = 0; i < 4; ++i )
-            {
-              RebuildCharImage( affectedCharIndex + i * 64 );
-              panelCharacters.InvalidateItemRect( affectedCharIndex + i * 64 );
-            }
-          }
-          else
-          {
-            RebuildCharImage( affectedCharIndex );
-            panelCharacters.InvalidateItemRect( affectedCharIndex );
-          }
+          RebuildAffectedChar( affectedCharIndex );
           canvasEditor.Invalidate();
         }
       }
@@ -1422,7 +1384,7 @@ namespace RetroDevStudio.Controls
 
     public void Invert()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1434,11 +1396,30 @@ namespace RetroDevStudio.Controls
           byte result = (byte)( ~m_Project.Characters[index].Tile.Data.ByteAt( y ) );
           m_Project.Characters[index].Tile.Data.SetU8At( y, result );
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
+    }
+
+
+
+    private void RebuildAffectedChar( int index )
+    {
+      if ( Lookup.IsECMMode( m_Project.Mode ) )
+      {
+        for ( int i = 0; i < 4; ++i )
+        {
+          RebuildCharImage( i * 64 + index % 64 );
+          panelCharacters.InvalidateItemRect( i * 64 + index % 64 );
+        }
+      }
+      else
+      {
+        RebuildCharImage( index );
+        panelCharacters.InvalidateItemRect( index );
+      }
     }
 
 
@@ -1521,7 +1502,7 @@ namespace RetroDevStudio.Controls
 
     public void MirrorX()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1540,8 +1521,7 @@ namespace RetroDevStudio.Controls
             tile.SetPixel( tile.Width - 1 - x, y, temp );
           }
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1551,7 +1531,7 @@ namespace RetroDevStudio.Controls
 
     public void MirrorY()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1568,8 +1548,7 @@ namespace RetroDevStudio.Controls
             tile.SetPixel( x, tile.Height - 1 - y, temp );
           }
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1586,7 +1565,7 @@ namespace RetroDevStudio.Controls
 
     public void RotateLeft()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1610,8 +1589,7 @@ namespace RetroDevStudio.Controls
           }
         }
         resultTile.Data.CopyTo( tile.Data );
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1628,7 +1606,7 @@ namespace RetroDevStudio.Controls
 
     public void RotateRight()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1653,8 +1631,7 @@ namespace RetroDevStudio.Controls
           }
         }
         resultTile.Data.CopyTo( tile.Data );
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1671,7 +1648,7 @@ namespace RetroDevStudio.Controls
 
     public void ShiftDown()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1688,8 +1665,7 @@ namespace RetroDevStudio.Controls
           }
           tile.SetPixel( x, 0, pixel );
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1720,7 +1696,7 @@ namespace RetroDevStudio.Controls
 
     public void ShiftUp()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1737,8 +1713,7 @@ namespace RetroDevStudio.Controls
           }
           tile.SetPixel( x, tile.Height - 1, pixel );
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1748,7 +1723,7 @@ namespace RetroDevStudio.Controls
 
     public void ShiftLeft()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1765,8 +1740,7 @@ namespace RetroDevStudio.Controls
           }
           tile.SetPixel( tile.Width - 1, y, temp );
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -1774,9 +1748,25 @@ namespace RetroDevStudio.Controls
 
 
 
+    private List<int> Uniquify( List<int> selectedIndices )
+    {
+      if ( !Lookup.IsECMMode( m_Project.Mode ) )
+      {
+        return selectedIndices;
+      }
+      var uniqueIndices = new HashSet<int>();
+      foreach ( var index in selectedIndices )
+      {
+        uniqueIndices.Add( index % 64 );
+      }
+      return uniqueIndices.ToList();
+    }
+
+
+
     public void ShiftRight()
     {
-      List<int>     selectedChars = panelCharacters.SelectedIndices;
+      List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
@@ -1793,8 +1783,7 @@ namespace RetroDevStudio.Controls
           }
           tile.SetPixel( 0, y, temp );
         }
-        RebuildCharImage( index );
-        panelCharacters.InvalidateItemRect( index );
+        RebuildAffectedChar( index );
       }
       canvasEditor.Invalidate();
       RaiseModifiedEvent( selectedChars );
@@ -2189,8 +2178,6 @@ namespace RetroDevStudio.Controls
               {
                 if ( m_Project.Characters[selChar].Tile.CustomColor != CustomColor )
                 {
-                  //if ( ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
-                  //||   ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.MEGA65_NCM_CHARACTERS ) )
                   {
                     UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), modified == false );
 
@@ -2364,8 +2351,7 @@ namespace RetroDevStudio.Controls
         {
           m_Project.Characters[i].Tile.Data.SetU8At( j, 0 );
         }
-        RebuildCharImage( i );
-        panelCharacters.InvalidateItemRect( i );
+        RebuildAffectedChar( i );
       }
       if ( wasModified )
       {
