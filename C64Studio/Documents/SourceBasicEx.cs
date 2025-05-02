@@ -312,7 +312,6 @@ namespace RetroDevStudio.Documents
       bool  hasInvalidCharsInUppercase = false;
 
       TextToPaste = ReplacePetCatCompatibilityChars( TextToPaste, out bool hadError );
-
       foreach ( var c in TextToPaste )
       {
         if ( ( c == '\n' )

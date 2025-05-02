@@ -1152,6 +1152,38 @@ namespace RetroDevStudio
       AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, (char)0xe059, (char)0xe159, 0x59 );
       AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, (char)0xe05a, (char)0xe15a, 0x5a );
 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 161 - 64, true, 161, true, (char)0xee61, (char)0xef61, 161 ).Replacements.Add( "CBM-K" );   // C= K
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 162 - 64, true, 162, true, (char)0xee62, (char)0xef62, 162 ).Replacements.Add( "CBM-I" );   // C= I
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 163 - 64, true, 163, true, (char)0xee63, (char)0xef63, 163 ).Replacements.Add( "CBM-T" );   // C= T
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 164 - 64, true, 164, true, (char)0xee64, (char)0xef64, 164 ).Replacements.Add( "CBM-@" );   // C= @
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 165 - 64, true, 165, true, (char)0xee65, (char)0xef65, 165 ).Replacements.Add( "CBM-G" );   // C= G
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 166 - 64, true, 166, true, (char)0xee66, (char)0xef66, 166 ).Replacements.Add( "CBM-+" );   // C= +
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 167 - 64, true, 167, true, (char)0xee67, (char)0xef67, 167 ).Replacements.Add( "CBM-N" );   // C= N
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 168 - 64, true, 168, true, (char)0xee68, (char)0xef68, 168 ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 169 - 64, true, 169, true, (char)0xee69, (char)0xef69, 169 ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 170 - 64, true, 170, true, (char)0xee6a, (char)0xef6a, 170 ).Replacements.Add( "CBM-M" );   // C= M
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 171 - 64, true, 171, true, (char)0xee6b, (char)0xef6b, 171 ).Replacements.Add( "CBM-Q" );   // C= Q
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 172 - 64, true, 172, true, (char)0xee6c, (char)0xef6c, 172 ).Replacements.Add( "CBM-D" );   // C= D
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 173 - 64, true, 173, true, (char)0xee6d, (char)0xef6d, 173 ).Replacements.Add( "CBM-Z" );   // C= Y
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 174 - 64, true, 174, true, (char)0xee6e, (char)0xef6e, 174 ).Replacements.Add( "CBM-S" );   // C= S
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 175 - 64, true, 175, true, (char)0xee6f, (char)0xef6f, 175 ).Replacements.Add( "CBM-P" );   // C= P
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 176 - 64, true, 176, true, (char)0xee70, (char)0xef70, 176 ).Replacements.Add( "CBM-A" );   // C= A 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 177 - 64, true, 177, true, (char)0xee71, (char)0xef71, 177 ).Replacements.Add( "CBM-E" );   // C= E
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 178 - 64, true, 178, true, (char)0xee72, (char)0xef72, 178 ).Replacements.Add( "CBM-R" );   // C= R
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 179 - 64, true, 179, true, (char)0xee73, (char)0xef73, 179 ).Replacements.Add( "CBM-W" );   // C= W
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 180 - 64, true, 180, true, (char)0xee74, (char)0xef74, 180 ).Replacements.Add( "CBM-H" );   // C= H
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 181 - 64, true, 181, true, (char)0xee75, (char)0xef75, 181 ).Replacements.Add( "CBM-J" );   // C= J
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 182 - 64, true, 182, true, (char)0xee76, (char)0xef76, 182 ).Replacements.Add( "CBM-L" );   // C= L
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 183 - 64, true, 183, true, (char)0xee77, (char)0xef77, 183 ).Replacements.Add( "CBM-Y" );   // C= Z
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 184 - 64, true, 184, true, (char)0xee78, (char)0xef78, 184 ).Replacements.Add( "CBM-U" );   // C= U
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 185 - 64, true, 185, true, (char)0xee79, (char)0xef79, 185 ).Replacements.Add( "CBM-O" );   // C= O
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 186 - 64, true, 186, true, (char)0xee7a, (char)0xef7a, 186 ).Replacements.Add( "SHIFT-@" );   // Shift @
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 187 - 64, true, 187, true, (char)0xee7b, (char)0xef7b, 187 ).Replacements.Add( "CBM-F" );   // C= F
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 188 - 64, true, 188, true, (char)0xee7c, (char)0xef7c, 188 ).Replacements.Add( "CBM-C" );   // C= C
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 189 - 64, true, 189, true, (char)0xee7d, (char)0xef7d, 189 ).Replacements.Add( "CBM-X" );   // C= X
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 190 - 64, true, 190, true, (char)0xee7e, (char)0xef7e, 190 ).Replacements.Add( "CBM-V" );   // C= V
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 191 - 64, true, 191, true, (char)0xee7f, (char)0xef7f, 191 ).Replacements.Add( "CBM-B" );   // C= B
+
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 91 - 64, true, 91, true, '[', true );//(char)0xee1b, true );//'[', true );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.NORMAL, KeyType.NORMAL, 92 - 64, true, 92, true, '£', true ).Replacements.Add( "POUND" );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_SEMI_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 93 - 64, true, 93, true, ']', true );//(char)0xee1d, true );// ']', true );

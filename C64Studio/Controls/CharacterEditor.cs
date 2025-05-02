@@ -279,6 +279,12 @@ namespace RetroDevStudio.Controls
             // can copy mode
             targetTile.Mode = entry.Tile.Mode;
           }
+          if ( ( entry.Tile.Mode == GraphicTileMode.COMMODORE_ECM )
+          &&   ( ( targetTile.Mode == GraphicTileMode.COMMODORE_HIRES )
+          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR_CHARACTERS ) ) )
+          {
+            entry.Tile.Mode = GraphicTileMode.COMMODORE_HIRES;
+          }
 
           int copyWidth = Math.Max( 8, entry.Tile.Width );
           int copyHeight = Math.Max( 8, entry.Tile.Height );
