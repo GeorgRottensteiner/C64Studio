@@ -2021,6 +2021,7 @@ namespace RetroDevStudio.Documents
         }
 
         //Debug.Log( "Barekey=" + bareKey + "/keyData = " + keyData + "/(char)keyData=" + (char)keyData + "/(int)bareKey=" + (int)bareKey + "/mappedKey=" + mappedKey );
+
         // hard coded mapping from ^ to arrow up (power)
         if ( mappedKey == "^" )
         {
@@ -2028,7 +2029,8 @@ namespace RetroDevStudio.Documents
           return true;
         }
         // PI
-        if ( mappedKey == "~" )
+        if ( ( mappedKey == "~" )
+        ||   ( mappedKey == "°" ) )
         {
           InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[MachineType.C64][PhysicalKey.KEY_ARROW_UP].Keys[KeyModifier.SHIFT].CharValue );
           return true;
