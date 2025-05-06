@@ -58,9 +58,7 @@ namespace RetroDevStudio.Parser
         &&   ( paramList.Count >= 4 ) )
         {
           paramsExpression = paramList[3];
-          if ( ( paramsExpression.Count < 2 )
-          ||   ( paramsExpression[0].Content != "[" )
-          ||   ( paramsExpression[paramsExpression.Count - 1].Content != "]" ) )
+          if ( !IsList( paramsExpression ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expression is malformed, expected [<Expression>]" );
             return ParseLineResult.RETURN_NULL;
@@ -184,9 +182,18 @@ namespace RetroDevStudio.Parser
 
       if ( paramsExpression.Count > 0 )
       {
+        // expression is actually a list of expressions
+        List<List<TokenInfo>>   listOfExpressions;
+
+        if ( !ParseLineInParameters( paramsExpression, 0, paramsExpression.Count, lineIndex, true, out listOfExpressions ) )
+        {
+          return ParseLineResult.ERROR_ABORT;
+        }
+
         // apply expression
         int     listLoopIndex = 0;
         int     numBytes = info.NumBytes;
+        int     expressionIndex = 0;
 
         for ( int i = 0; i < numBytes; ++i )
         {
@@ -195,12 +202,21 @@ namespace RetroDevStudio.Parser
           int expressionResult = 0;
 
           m_TemporaryFillLoopPos = info.LineData.ByteAt( i );
-          if ( !EvaluateTokens( lineIndex, paramsExpression, out SymbolInfo expressionResultSymbol ) )
+
+          var expressionToUse = listOfExpressions[( expressionIndex + i ) % listOfExpressions.Count];
+          if ( expressionToUse.Count == 0 )
           {
-            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( paramsExpression ) );
-            return ParseLineResult.RETURN_NULL;
+            expressionResult = m_TemporaryFillLoopPos;
           }
-          expressionResult = expressionResultSymbol.ToInt32();
+          else
+          {
+            if ( !EvaluateTokens( lineIndex, expressionToUse, out SymbolInfo expressionResultSymbol ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( expressionToUse ) );
+              return ParseLineResult.RETURN_NULL;
+            }
+            expressionResult = expressionResultSymbol.ToInt32();
+          }
           if ( !ValidByteValue( expressionResult ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );

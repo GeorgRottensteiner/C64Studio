@@ -206,7 +206,7 @@
     <br />
   </div>
   <a name="binary"></a><a name="bin"></a><a name="bi"></a>
-  <H2>!BINARY, !BIN, !BI &lt;file name&gt;[,&lt;size&gt;,[&lt;skip&gt;,[&lt;expression&gt;]]]</H2>
+  <H2>!BINARY, !BIN, !BI &lt;file name&gt;[,&lt;size&gt;,[&lt;skip&gt;,[&lt;expression&gt;,&lt;expression&gt;,...]]]</H2>
   <div id="mybody">
     This pseudo op inserts a file as binary data.<br />
     <br />
@@ -214,7 +214,8 @@
     <br />
     &lt;skip&gt; sets the number of bytes that are skipped from the start of the file. If it is not set no bytes are skipped.<br />
     <br />
-    [&lt;expression&gt;] affects every byte of the actual used data. The expression is evaluated for every single byte, with i being the value. The expression must be written between square brackets.<br />
+    [&lt;expression&gt;,&lt;expression&gt;,...] affects every byte of the actual used data. The expression list is evaluated for every single byte, with i being the value. The expression list must be written between square brackets.
+    If more than one expression is provided, the expression list is held against the data. An empty expression means to not affect the mapped bytes.<br />
     <br />
     <br />
     <div id="code">
@@ -226,6 +227,9 @@
 
       ;import all but the first 2 bytes of music.prg, and halves their value
       !binary "music.prg",,2,[i>>2]
+
+      ;import all but the first 2 bytes of music.prg, and halves every second byte
+      !binary "music.prg",,2,[,i>>2]
     </div>
     <br />
     <br />
