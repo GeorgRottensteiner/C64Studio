@@ -17,8 +17,9 @@ namespace RetroDevStudio.Parser
       List<Types.TokenInfo> paramsFile = new List<Types.TokenInfo>();
       List<Types.TokenInfo> paramsSize = new List<Types.TokenInfo>();
       List<Types.TokenInfo> paramsSkip = new List<Types.TokenInfo>();
+      List<Types.TokenInfo> paramsExpression = new List<Types.TokenInfo>();
 
-      int maxParams = 3;
+      int maxParams = 4;
       if ( OpType == MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
       {
         // TASM only has optional skip param
@@ -39,7 +40,7 @@ namespace RetroDevStudio.Parser
           }
           else
           {
-            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>[,<Size>[,<Skip>]]" );
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.PseudoOpType.INCLUDE_BINARY ) + " <Filename>[,<Size>[,<Skip>[,[Modification Expression]]]" );
           }
           return ParseLineResult.RETURN_NULL;
         }
@@ -52,6 +53,19 @@ namespace RetroDevStudio.Parser
         &&   ( paramList.Count >= 3 ) )
         {
           paramsSkip = paramList[2];
+        }
+        if ( ( OpType != MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM )
+        &&   ( paramList.Count >= 4 ) )
+        {
+          paramsExpression = paramList[3];
+          if ( ( paramsExpression.Count < 2 )
+          ||   ( paramsExpression[0].Content != "[" )
+          ||   ( paramsExpression[paramsExpression.Count - 1].Content != "]" ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expression is malformed, expected [<Expression>]" );
+            return ParseLineResult.RETURN_NULL;
+          }
+          paramsExpression = paramsExpression.Skip( 1 ).Take( paramsExpression.Count - 2 ).ToList();
         }
       }
       else
@@ -167,6 +181,34 @@ namespace RetroDevStudio.Parser
       info.LineData = subFile.SubBuffer( fileSkip, fileSize );
       info.NumBytes = (int)info.LineData.Length;
       lineSizeInBytes = fileSize;
+
+      if ( paramsExpression.Count > 0 )
+      {
+        // apply expression
+        int     listLoopIndex = 0;
+        int     numBytes = info.NumBytes;
+
+        for ( int i = 0; i < numBytes; ++i )
+        {
+          m_TemporaryFillLoopPos = listLoopIndex; // was i;
+
+          int expressionResult = 0;
+
+          m_TemporaryFillLoopPos = info.LineData.ByteAt( i );
+          if ( !EvaluateTokens( lineIndex, paramsExpression, out SymbolInfo expressionResultSymbol ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( paramsExpression ) );
+            return ParseLineResult.RETURN_NULL;
+          }
+          expressionResult = expressionResultSymbol.ToInt32();
+          if ( !ValidByteValue( expressionResult ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
+            return ParseLineResult.RETURN_NULL;
+          }
+          info.LineData.SetU8At( i, (byte)expressionResult );
+        }
+      }
 
       return ParseLineResult.OK;
     }
