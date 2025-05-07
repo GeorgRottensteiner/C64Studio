@@ -67,6 +67,7 @@
       this.btnShiftRight = new DecentForms.Button();
       this.btnShiftLeft = new DecentForms.Button();
       this.btnClearScreen = new DecentForms.Button();
+      this.checkHighlightUsedChars = new DecentForms.CheckBox();
       this.checkShowGrid = new DecentForms.CheckBox();
       this.checkReverse = new DecentForms.CheckBox();
       this.checkAutoCenter = new DecentForms.CheckBox();
@@ -380,6 +381,7 @@
       this.tabEditor.Controls.Add(this.btnShiftRight);
       this.tabEditor.Controls.Add(this.btnShiftLeft);
       this.tabEditor.Controls.Add(this.btnClearScreen);
+      this.tabEditor.Controls.Add(this.checkHighlightUsedChars);
       this.tabEditor.Controls.Add(this.checkShowGrid);
       this.tabEditor.Controls.Add(this.checkReverse);
       this.tabEditor.Controls.Add(this.checkAutoCenter);
@@ -477,7 +479,7 @@
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
       this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
       this.btnShiftDown.Name = "btnShiftDown";
-      this.btnShiftDown.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftDown.Size = new System.Drawing.Size(24, 24);
       this.btnShiftDown.TabIndex = 14;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
@@ -491,7 +493,7 @@
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
       this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
       this.btnShiftUp.Name = "btnShiftUp";
-      this.btnShiftUp.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftUp.Size = new System.Drawing.Size(24, 24);
       this.btnShiftUp.TabIndex = 13;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
       this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
@@ -505,7 +507,7 @@
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
       this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
       this.btnShiftRight.Name = "btnShiftRight";
-      this.btnShiftRight.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftRight.Size = new System.Drawing.Size(24, 24);
       this.btnShiftRight.TabIndex = 12;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
       this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
@@ -519,7 +521,7 @@
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
       this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
       this.btnShiftLeft.Name = "btnShiftLeft";
-      this.btnShiftLeft.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftLeft.Size = new System.Drawing.Size(24, 24);
       this.btnShiftLeft.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
       this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
@@ -533,23 +535,37 @@
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
       this.btnClearScreen.Location = new System.Drawing.Point(8, 460);
       this.btnClearScreen.Name = "btnClearScreen";
-      this.btnClearScreen.Size = new System.Drawing.Size(24, 23);
+      this.btnClearScreen.Size = new System.Drawing.Size(24, 24);
       this.btnClearScreen.TabIndex = 10;
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
       this.btnClearScreen.Click += new DecentForms.EventHandler(this.btnClearScreen_Click);
       // 
+      // checkHighlightUsedChars
+      // 
+      this.checkHighlightUsedChars.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkHighlightUsedChars.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkHighlightUsedChars.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.checkHighlightUsedChars.Checked = false;
+      this.checkHighlightUsedChars.Image = ((System.Drawing.Image)(resources.GetObject("checkHighlightUsedChars.Image")));
+      this.checkHighlightUsedChars.Location = new System.Drawing.Point(258, 460);
+      this.checkHighlightUsedChars.Name = "checkHighlightUsedChars";
+      this.checkHighlightUsedChars.Size = new System.Drawing.Size(24, 24);
+      this.checkHighlightUsedChars.TabIndex = 15;
+      this.toolTip1.SetToolTip(this.checkHighlightUsedChars, "Highlight selected char on screen");
+      this.checkHighlightUsedChars.CheckedChanged += new DecentForms.EventHandler(this.checkHighlightUsedChars_CheckedChanged);
+      // 
       // checkShowGrid
       // 
-      this.checkShowGrid.Appearance = System.Windows.Forms.Appearance.Normal;
+      this.checkShowGrid.Appearance = System.Windows.Forms.Appearance.Button;
       this.checkShowGrid.BorderStyle = DecentForms.BorderStyle.NONE;
       this.checkShowGrid.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
       this.checkShowGrid.Checked = false;
-      this.checkShowGrid.Image = null;
-      this.checkShowGrid.Location = new System.Drawing.Point(258, 462);
+      this.checkShowGrid.Image = ((System.Drawing.Image)(resources.GetObject("checkShowGrid.Image")));
+      this.checkShowGrid.Location = new System.Drawing.Point(228, 460);
       this.checkShowGrid.Name = "checkShowGrid";
-      this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
+      this.checkShowGrid.Size = new System.Drawing.Size(24, 24);
       this.checkShowGrid.TabIndex = 15;
-      this.checkShowGrid.Text = "Show Grid";
+      this.toolTip1.SetToolTip(this.checkShowGrid, "Show Grid");
       this.checkShowGrid.CheckedChanged += new DecentForms.EventHandler(this.checkShowGrid_CheckedChanged);
       // 
       // checkReverse
@@ -1037,5 +1053,6 @@
         private System.Windows.Forms.ComboBox comboCharlistLayout;
         private System.Windows.Forms.Label labelCharPanelLayout;
     private System.Windows.Forms.Panel panelColorChooser;
+    private DecentForms.CheckBox checkHighlightUsedChars;
   }
 }

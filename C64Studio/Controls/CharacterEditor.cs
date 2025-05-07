@@ -1090,6 +1090,10 @@ namespace RetroDevStudio.Controls
       {
         try
         {
+          if ( DesignMode )
+          {
+            return;
+          }
           if ( Core.Imaging != null )
           {
             int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;

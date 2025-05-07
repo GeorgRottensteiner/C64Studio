@@ -199,6 +199,46 @@ namespace RetroDevStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon charscreen_grid_off {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_grid_off", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon charscreen_grid_on {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_grid_on", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon charscreen_highlightusedchars_off {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_highlightusedchars_off", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon charscreen_highlightusedchars_on {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_highlightusedchars_on", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap charscreen_reverse_off {

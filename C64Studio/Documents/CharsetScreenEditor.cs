@@ -69,7 +69,8 @@ namespace RetroDevStudio.Documents
     private bool                        m_MouseButtonReleased = false;
     private System.Drawing.Point        m_MousePos;
 
-    private bool                        m_ShowGrid = false;
+    private bool                        _ShowGrid = false;
+    private bool                        _HighlightUsedChars = false;
 
     private bool                        m_IsDragging = false;
     private System.Drawing.Point        m_DragStartPos = new System.Drawing.Point();
@@ -239,7 +240,38 @@ namespace RetroDevStudio.Documents
 
     private void pictureEditor_PostPaint( FastImage TargetBuffer )
     {
-      if ( m_ShowGrid )
+      // visible chars
+      int     x1 = m_CharsetScreen.ScreenOffsetX;
+      int     y1 = m_CharsetScreen.ScreenOffsetY;
+      int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
+      int     y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
+
+      if ( x1 < 0 )
+      {
+        x1 = 0;
+      }
+      if ( x2 >= m_CharsetScreen.ScreenWidth )
+      {
+        x2 = m_CharsetScreen.ScreenWidth - 1;
+      }
+      if ( x2 - x1 > m_CharsWidth )
+      {
+        x2 = x1 + m_CharsWidth - 1;
+      }
+      if ( y1 < 0 )
+      {
+        y1 = 0;
+      }
+      if ( y2 >= m_CharsetScreen.ScreenHeight )
+      {
+        y2 = m_CharsetScreen.ScreenHeight - 1;
+      }
+      if ( y2 - y1 > m_CharsHeight )
+      {
+        y2 = y1 + m_CharsHeight - 1;
+      }
+
+      if ( _ShowGrid )
       {
         for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
         {
@@ -253,6 +285,26 @@ namespace RetroDevStudio.Documents
           for ( int j = 0; j < TargetBuffer.Width; ++j )
           {
             TargetBuffer.SetPixel( j, i * pictureEditor.ClientRectangle.Height / m_CharsHeight, 0xffc0c0c0 );
+          }
+        }
+      }
+      if ( _HighlightUsedChars )
+      {
+        uint  highlightColor = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+
+        for ( int x = x1; x <= x2; ++x )
+        {
+          for ( int y = y1; y <= y2; ++y )
+          {
+            if ( m_CharsetScreen.CharacterAt( x, y ) == m_CurrentChar )
+            {
+              int  sx1 = ( ( x - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
+              int  sx2 = ( ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
+              int  sy1 = ( ( y - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight;
+              int  sy2 = ( ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_CharsHeight - 1;
+
+              TargetBuffer.BoxAlpha( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, highlightColor );
+            }
           }
         }
       }
@@ -338,36 +390,6 @@ namespace RetroDevStudio.Documents
       }
 
       // draw selection
-      int     x1 = m_CharsetScreen.ScreenOffsetX;
-      int     y1 = m_CharsetScreen.ScreenOffsetY;
-      int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
-      int     y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
-
-      if ( x1 < 0 )
-      {
-        x1 = 0;
-      }
-      if ( x2 >= m_CharsetScreen.ScreenWidth )
-      {
-        x2 = m_CharsetScreen.ScreenWidth - 1;
-      }
-      if ( x2 - x1 > m_CharsWidth )
-      {
-        x2 = x1 + m_CharsWidth - 1;
-      }
-      if ( y1 < 0 )
-      {
-        y1 = 0;
-      }
-      if ( y2 >= m_CharsetScreen.ScreenHeight )
-      {
-        y2 = m_CharsetScreen.ScreenHeight - 1;
-      }
-      if ( y2 - y1 > m_CharsHeight )
-      {
-        y2 = y1 + m_CharsHeight - 1;
-      }
-
       for ( int x = x1; x <= x2; ++x )
       {
         for ( int y = y1; y <= y2; ++y )
@@ -1791,6 +1813,11 @@ namespace RetroDevStudio.Documents
 
       RedrawColorChooser();
       labelInfo.Text = InfoText();
+
+      if ( _HighlightUsedChars )
+      {
+        pictureEditor.Invalidate();
+      }
     }
 
 
@@ -2983,7 +3010,8 @@ namespace RetroDevStudio.Documents
 
     private void checkShowGrid_CheckedChanged( DecentForms.ControlBase Sender )
     {
-      m_ShowGrid = checkShowGrid.Checked;
+      _ShowGrid = checkShowGrid.Checked;
+      checkShowGrid.Image = _ShowGrid ? Properties.Resources.charscreen_grid_on.ToBitmap() : Properties.Resources.charscreen_grid_off.ToBitmap();
       pictureEditor.Invalidate();
     }
 
@@ -3657,6 +3685,15 @@ namespace RetroDevStudio.Documents
       }
       RedrawFullScreen();
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+    }
+
+
+
+    private void checkHighlightUsedChars_CheckedChanged( DecentForms.ControlBase Sender )
+    {
+      _HighlightUsedChars = checkHighlightUsedChars.Checked;
+      checkHighlightUsedChars.Image = _HighlightUsedChars ? Properties.Resources.charscreen_highlightusedchars_on.ToBitmap() : Properties.Resources.charscreen_highlightusedchars_off.ToBitmap();
+      pictureEditor.Invalidate();
     }
 
 

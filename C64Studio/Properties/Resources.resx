@@ -136,6 +136,9 @@
   <data name="binary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\binary.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="flag_green_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\flag_green_on.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="tool_freehand_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_freehand_line.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -217,6 +220,9 @@
   <data name="se_sc_uptodate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\se_sc_uptodate.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="toolbar_basic_string_mode_active" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbar_basic_string_mode_active.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="tool_select" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_select.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -233,6 +239,12 @@
         9KhYm7+rG7HEeBMCfajwJgQgMtynQLnuYXsz3KfAjw/EQCyASX8D60uqNf1AI4th0gGOm6JvHGOFmtkD
         nFdhBEMgayQAAAAASUVORK5CYII=
 </value>
+  </data>
+  <data name="charscreen_grid_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charscreen_grid_on.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="charscreen_grid_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charscreen_grid_off.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ToolRebuild" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -269,9 +281,6 @@
   <data name="tool_none" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_none.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="charsetscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\charsetscreen.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -307,11 +316,33 @@
   <data name="tool_fill" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_fill.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="uncommentselection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\uncommentselection.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="edit_copy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit_copy.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="grab1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\grab1.cur;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ToolRedo" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAAjpJREFUOE+9kW9PUmEchtn6HLTK0ul0LiuRmZgxZRphZoTBCGJqGGnHf4CAYuLJ
+        RE0RRFFE/liWc+tUMyQxh8vajEGo1Xtf8h3a3SHPck3a8k3Xu3vPrvv3PM+P9V+RLV7XixfFx5h4dCQ+
+        4Xat54qbiYdpiijZmncKQv1WHmygpEkVJcHtpRuQLdRAEhCh9U0THrxshNDBH2OUAzSrKq46pKDITSOc
+        sRH4dqbw9Ksb/l0X5rYnMfvFAVfcBkd0BHefK8AfLO5nVHryipKdksejj/HiuxfeHScCuzN0iQuehBMz
+        cTtcsTFM0LJtywpVQAYeybEyOoulXpET/ZsGLHzz/Jo6HR+HdqUZYq8QNe5KiCYrUDV+GfXP5LgTkIJn
+        4dgZdZ/6ZWnQHrViNmHHdMyGOn/VHi2PMse/KSOLt3mWwjkmHqCi6pLuhIO+7gTMYS1qPZWH5BQX+zhG
+        sTjNGmVLouQU/cbUJxlCbbjmEqQt+CvS+ergwIYZY1sDGP5IospWtid4cunfS276rhLEazXsn4fokkGQ
+        kR4o/bdQShahuPcCiowFOK/Lx9n2XOS1ZCNHkwlG3afaU8EWOcsp7XILhj6RMEf0ePTBjL4NE3ojXehZ
+        18Gw1gH9Whs6VwlkNWb8WZBCMMrnlg/zKCW9JuLVPZjCnehe18P0XosuWtaFW9FBy+2hZpxWnThckKLE
+        UsIueVhIcLvPBQvbc5IFpXk/8okc5N7PQnbTGWQ2nEIGLZ9UHE9fcHRYrJ/9eS1bFO3p4wAAAABJRU5E
+        rkJggg==
+</value>
+  </data>
+  <data name="commentselection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\commentselection.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="charscreen_autocenter_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\charscreen_autocenter_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -382,6 +413,9 @@
   <data name="icon_memory_ram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_memory_ram.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="toolbar_basic_string_mode_inactive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbar_basic_string_mode_inactive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -405,8 +439,8 @@
   <data name="grab2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\grab2.cur;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="flag_green_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\flag_green_on.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\folder.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -425,9 +459,6 @@
   </data>
   <data name="flag_blue_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\flag_blue_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="charscreen_chars_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\charscreen_chars_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ToolPrint" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -449,21 +480,8 @@
   <data name="tool_validate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_validate.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ToolRedo" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAjpJREFUOE+9kW9PUmEchtn6HLTK0ul0LiuRmZgxZRphZoTBCGJqGGnHf4CAYuLJ
-        RE0RRFFE/liWc+tUMyQxh8vajEGo1Xtf8h3a3SHPck3a8k3Xu3vPrvv3PM+P9V+RLV7XixfFx5h4dCQ+
-        4Xat54qbiYdpiijZmncKQv1WHmygpEkVJcHtpRuQLdRAEhCh9U0THrxshNDBH2OUAzSrKq46pKDITSOc
-        sRH4dqbw9Ksb/l0X5rYnMfvFAVfcBkd0BHefK8AfLO5nVHryipKdksejj/HiuxfeHScCuzN0iQuehBMz
-        cTtcsTFM0LJtywpVQAYeybEyOoulXpET/ZsGLHzz/Jo6HR+HdqUZYq8QNe5KiCYrUDV+GfXP5LgTkIJn
-        4dgZdZ/6ZWnQHrViNmHHdMyGOn/VHi2PMse/KSOLt3mWwjkmHqCi6pLuhIO+7gTMYS1qPZWH5BQX+zhG
-        sTjNGmVLouQU/cbUJxlCbbjmEqQt+CvS+ergwIYZY1sDGP5IospWtid4cunfS276rhLEazXsn4fokkGQ
-        kR4o/bdQShahuPcCiowFOK/Lx9n2XOS1ZCNHkwlG3afaU8EWOcsp7XILhj6RMEf0ePTBjL4NE3ojXehZ
-        18Gw1gH9Whs6VwlkNWb8WZBCMMrnlg/zKCW9JuLVPZjCnehe18P0XosuWtaFW9FBy+2hZpxWnThckKLE
-        UsIueVhIcLvPBQvbc5IFpXk/8okc5N7PQnbTGWQ2nEIGLZ9UHE9fcHRYrJ/9eS1bFO3p4wAAAABJRU5E
-        rkJggg==
-</value>
+  <data name="charscreen_chars_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charscreen_chars_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="tool_rect" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_rect.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -506,25 +524,19 @@
         AAAASUVORK5CYII=
 </value>
   </data>
+  <data name="tool_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tool_line1.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="tool_freehand_pixel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_freehand_pixel.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="toolbar_truedrive_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\toolbar_truedrive_disabled.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="tool_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tool_line1.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="charscreen_highlightusedchars_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charscreen_highlightusedchars_on.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="toolbar_basic_string_mode_active" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\toolbar_basic_string_mode_active.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="toolbar_basic_string_mode_inactive" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\toolbar_basic_string_mode_inactive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="commentselection" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\commentselection.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="uncommentselection" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\uncommentselection.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="charscreen_highlightusedchars_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charscreen_highlightusedchars_off.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

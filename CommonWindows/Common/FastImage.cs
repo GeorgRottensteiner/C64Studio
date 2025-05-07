@@ -2912,6 +2912,143 @@ namespace GR.Image
 
 
 
+    public void BoxAlpha( int X, int Y, int Width, int Height, uint Value )
+    {
+      if ( ( X + Width <= 0 )
+      ||   ( X >= m_Width )
+      ||   ( Y + Height <= 0 )
+      ||   ( Y >= m_Height ) )
+      {
+        return;
+      }
+      if ( X < 0 )
+      {
+        Width += X;
+        X = 0;
+      }
+      if ( X + Width >= m_Width )
+      {
+        Width = m_Width - X;
+      }
+      if ( Y < 0 )
+      {
+        Height += Y;
+        Y = 0;
+      }
+      if ( Y + Height >= m_Height )
+      {
+        Height = m_Height - Y;
+      }
+      if ( m_ImageData == IntPtr.Zero )
+      {
+        CreateBitmap();
+      }
+      switch ( BitsPerPixel )
+      {
+        /*
+        case 8:
+          unsafe
+          {
+            byte* pData = (byte*)m_ImageData;
+            pData += BytesPerLine * Y;
+
+            for ( int i = 0; i < Height; ++i )
+            {
+              pData += X;
+              for ( int j = 0; j < Width; ++j )
+              {
+                *pData = (byte)Value;
+                ++pData;
+              }
+              pData += ( BytesPerLine - Width - X );
+            }
+          }
+          break;
+        case 16:
+          unsafe
+          {
+            ushort* pData = (ushort*)m_ImageData;
+
+            pData += BytesPerLine / 2 * Y;
+
+            for ( int i = 0; i < Height; ++i )
+            {
+              pData += X;
+              for ( int j = 0; j < Width; ++j )
+              {
+                *pData = (ushort)Value;
+                ++pData;
+              }
+              pData += ( BytesPerLine / 2 - Width - X );
+            }
+          }
+          break;
+        case 24:
+          unsafe
+          {
+            byte* pData = (byte*)m_ImageData;
+            pData += BytesPerLine * Y;
+
+            for ( int i = 0; i < Height; ++i )
+            {
+              pData += X * 3;
+              for ( int j = 0; j < Width; ++j )
+              {
+                pData[0] = (byte)( Value & 0xff );
+                pData[1] = (byte)( ( Value & 0xff00 ) >> 8 );
+                pData[2] = (byte)( ( Value & 0xff0000 ) >> 16 );
+                pData += 3;
+              }
+              pData += ( BytesPerLine - 3 * ( Width + X ) );
+            }
+          }
+          break;*/
+        case 32:
+          unsafe
+          {
+            uint* pData = (uint*)m_ImageData;
+
+            pData += BytesPerLine / 4 * Y;
+
+            byte  r1 = (byte)( ( Value >> 16 ) & 0xff );
+            byte  g1 = (byte)( ( Value >> 8 ) & 0xff );
+            byte  b1 = (byte)(   Value & 0xff );
+
+            for ( int i = 0; i < Height; ++i )
+            {
+              pData += X;
+              for ( int j = 0; j < Width; ++j )
+              {
+                byte  r2 = (byte)( ( *pData >> 16 ) & 0xff );
+                byte  g2 = (byte)( ( *pData >> 8 ) & 0xff );
+                byte  b2 = (byte)(   *pData & 0xff );
+
+                *pData = unchecked( (uint)0xff000000 )
+                        | (uint)( ( ( r1 + r2 ) >> 1 ) << 16 )
+                        | (uint)( ( ( g1 + g2 ) >> 1 ) << 8 )
+                        | (uint)( ( ( b1 + b2 ) >> 1 ) );
+
+                ++pData;
+              }
+              pData += ( BytesPerLine / 4 - Width - X );
+            }
+          }
+          break;
+        default:
+          // defaul to safe but slow
+          for ( int i = 0; i < Height; ++i )
+          {
+            for ( int j = 0; j < Width; ++j )
+            {
+              SetPixelData( i, j, Value );
+            }
+          }
+          break;
+      }
+    }
+
+
+
     public void Rectangle( int X, int Y, int Width, int Height, uint Value )
     {
       for ( int i = 0; i < Width; ++i )
