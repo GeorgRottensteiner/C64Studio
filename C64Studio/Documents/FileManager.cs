@@ -110,14 +110,14 @@ namespace RetroDevStudio.Documents
       var mediaType = Lookup.MediaFormatFromExtension( GR.Path.GetExtension( upperName ) );
       if ( mediaType == MediaFormatType.UNKNOWN )
       {
-        System.Windows.Forms.MessageBox.Show( "The file " + m_Filename + " cannot be read, unknown format" );
+        Core.Notification.MessageBox( "Unknown format", "The file " + m_Filename + " cannot be read, unknown format" );
         return false;
       }
 
       CreateEmptyMedia( mediaType );
       if ( !m_Media.Load( m_Filename ) )
       {
-        System.Windows.Forms.MessageBox.Show( "The file " + m_Filename + " cannot be properly be read, maybe corrupted?" );
+        Core.Notification.MessageBox( "Failed to read file", "The file " + m_Filename + " cannot be properly be read, maybe corrupted?" );
         return false;
       }
 
@@ -177,7 +177,7 @@ namespace RetroDevStudio.Documents
       {
         if ( !GR.IO.File.WriteAllBytes( FullPath, mediaData ) )
         {
-          System.Windows.Forms.MessageBox.Show( "Could not save file " + FullPath + ".", "Could not save file" );
+          Core.Notification.MessageBox( "Could not save file", "Could not save file " + FullPath + "." );
           EnableFileWatcher();
           return false;
         }
@@ -330,7 +330,7 @@ namespace RetroDevStudio.Documents
     {
       if ( listFiles.SelectedItems.Count > 0 )
       {
-        if ( System.Windows.Forms.MessageBox.Show( "Do you really want to delete the selected files?", "Delete Files?", MessageBoxButtons.YesNo ) == DialogResult.Yes )
+        if ( Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_ALL, "Delete Files?", "Do you really want to delete the selected files?", "FileManagerDeleteSelectedFilesConfirmation" ) == DlgDeactivatableMessage.UserChoice.YES )
         {
           bool deletedFile = false;
           foreach ( ListViewItem item in listFiles.SelectedItems )
@@ -475,7 +475,7 @@ namespace RetroDevStudio.Documents
         {
           if ( !ImportFile( file ) )
           {
-            MessageBox.Show( $"The file {file} could not be imported, too big or invalid filename", "Error importing file" );
+            Core.Notification.MessageBox( "Error importing file", $"The file {file} could not be imported, too big or invalid filename" );
             return;
           }
           else
@@ -520,7 +520,7 @@ namespace RetroDevStudio.Documents
           {
             if ( !m_Media.WriteFile( file.Filename, fileInfo.Data, file.NativeType ) )
             {
-              MessageBox.Show( $"The file {file.Filename} could not be imported, too big or invalid filename", "Error importing file" );
+              Core.Notification.MessageBox( "Error importing file", $"The file {file.Filename} could not be imported, too big or invalid filename" );
               return;
             }
             else
@@ -1021,9 +1021,8 @@ namespace RetroDevStudio.Documents
     {
       if ( Modified )
       {
-        DialogResult saveRequestResult = CloseAfterModificationRequest();
-
-        if ( saveRequestResult == DialogResult.Cancel )
+        var saveRequestResult = CloseAfterModificationRequest();
+        if ( saveRequestResult == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return false;
         }
@@ -1209,7 +1208,7 @@ namespace RetroDevStudio.Documents
       {
         if ( !ImportFile( filename ) )
         {
-          MessageBox.Show( $"The file {filename} could not be imported, too big or invalid filename", "Error importing file" );
+          Core.Notification.MessageBox( "Error importing file", $"The file {filename} could not be imported, too big or invalid filename" );
           return;
         }
       }

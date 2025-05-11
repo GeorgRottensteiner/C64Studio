@@ -550,6 +550,7 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( ".IF", Types.MacroInfo.PseudoOpType.IF );
           AddPseudoOp( ".FI", Types.MacroInfo.PseudoOpType.END_IF );
           AddPseudoOp( ".ELSE", Types.MacroInfo.PseudoOpType.ELSE );
+          AddPseudoOp( ".END", Types.MacroInfo.PseudoOpType.END_OF_FILE );
 
           RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
           POPrefix = ".";

@@ -107,7 +107,7 @@ namespace RetroDevStudio.Controls
       var charsetProject = GraphicScreenEditor.ExportToCharset( Info.Project, Info.Chars );
       if ( charsetProject == null )
       {
-        MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
+        Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!" );
         return false;
       }
       GraphicScreenEditor.ExportToCharScreen( Info.Chars, Info.BlockWidth, Info.BlockHeight, out ByteBuffer screenCharData, out ByteBuffer screenColorData );

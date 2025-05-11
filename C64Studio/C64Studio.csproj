@@ -353,6 +353,9 @@
     <Compile Update="Dialogs\DlgImportBASICTextAdjustment.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\DlgDeactivatableMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\FormCommitChanges.cs">
       <SubType>Form</SubType>
     </Compile>

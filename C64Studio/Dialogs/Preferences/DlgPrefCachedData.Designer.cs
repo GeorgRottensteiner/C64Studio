@@ -37,6 +37,8 @@
       this.label3 = new System.Windows.Forms.Label();
       this.btnClearAll = new DecentForms.Button();
       this.label4 = new System.Windows.Forms.Label();
+      this.label5 = new System.Windows.Forms.Label();
+      this.btnClearDecisionCache = new DecentForms.Button();
       this.SuspendLayout();
       // 
       // label11
@@ -124,7 +126,7 @@
       this.btnClearAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnClearAll.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnClearAll.Image = null;
-      this.btnClearAll.Location = new System.Drawing.Point(258, 90);
+      this.btnClearAll.Location = new System.Drawing.Point(258, 142);
       this.btnClearAll.Name = "btnClearAll";
       this.btnClearAll.Size = new System.Drawing.Size(75, 20);
       this.btnClearAll.TabIndex = 18;
@@ -134,27 +136,52 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(13, 95);
+      this.label4.Location = new System.Drawing.Point(13, 147);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(44, 13);
       this.label4.TabIndex = 19;
       this.label4.Text = "Clear all";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(13, 92);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(86, 13);
+      this.label5.TabIndex = 19;
+      this.label5.Text = "Dialog Decisions";
+      // 
+      // btnClearDecisionCache
+      // 
+      this.btnClearDecisionCache.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnClearDecisionCache.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClearDecisionCache.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClearDecisionCache.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnClearDecisionCache.Image = null;
+      this.btnClearDecisionCache.Location = new System.Drawing.Point(258, 87);
+      this.btnClearDecisionCache.Name = "btnClearDecisionCache";
+      this.btnClearDecisionCache.Size = new System.Drawing.Size(75, 20);
+      this.btnClearDecisionCache.TabIndex = 18;
+      this.btnClearDecisionCache.Text = "Clear";
+      this.btnClearDecisionCache.Click += new DecentForms.EventHandler(this.btnClearDecisionCache_Click);
       // 
       // DlgPrefCachedData
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.label4);
+      this.Controls.Add(this.label5);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.btnClearAll);
+      this.Controls.Add(this.btnClearDecisionCache);
       this.Controls.Add(this.btnClearReplaceWithHistory);
       this.Controls.Add(this.btnClearReplaceSearchHistory);
       this.Controls.Add(this.btnClearSearchHistory);
       this.Controls.Add(this.label11);
       this.Name = "DlgPrefCachedData";
-      this.Size = new System.Drawing.Size(452, 119);
+      this.Size = new System.Drawing.Size(452, 249);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -170,5 +197,7 @@
     private System.Windows.Forms.Label label3;
     private DecentForms.Button btnClearAll;
     private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Label label5;
+    private DecentForms.Button btnClearDecisionCache;
   }
 }

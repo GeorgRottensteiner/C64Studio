@@ -831,7 +831,7 @@ namespace RetroDevStudio.Documents
       if ( mappedImage.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         mappedImage.Dispose();
-        System.Windows.Forms.MessageBox.Show( "Image format invalid!\nNeeds to be 8bit index" );
+        Core.Notification.MessageBox( "Unsupported image format", "Image format invalid!\nNeeds to be 8bit index" );
         return false;
       }
 
@@ -1022,7 +1022,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load graphic screen project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load graphic screen project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
       SetUnmodified();
@@ -1223,37 +1223,6 @@ namespace RetroDevStudio.Documents
       }
 
       ImportImage( null, imgClip, ImageInsertionMode.AS_FULL_SCREEN );
-      /*
-
-      GR.Image.FastImage mappedImage = null;
-
-      Types.MulticolorSettings   mcSettings = new Types.MulticolorSettings();
-      mcSettings.BackgroundColor  = m_GraphicScreenProject.BackgroundColor;
-      mcSettings.MultiColor1      = m_GraphicScreenProject.MultiColor1;
-      mcSettings.MultiColor2      = m_GraphicScreenProject.MultiColor2;
-
-      bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( "", imgClip, Types.GraphicType.CHARACTERS, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
-      {
-        imgClip.Dispose();
-        return;
-      }
-
-      if ( mappedImage.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
-      {
-        mappedImage.Dispose();
-        System.Windows.Forms.MessageBox.Show( "Image format invalid!\nNeeds to be 8bit index" );
-        return;
-      }
-
-      comboBackground.SelectedIndex   = mcSettings.BackgroundColor;
-      comboMulticolor1.SelectedIndex  = mcSettings.MultiColor1;
-      comboMulticolor2.SelectedIndex  = mcSettings.MultiColor2;
-
-      mappedImage.DrawTo( m_GraphicScreenProject.Image, 0, 0 );
-      Redraw();
-      pictureEditor.Invalidate();
-      Modified = true;*/
     }
 
 
@@ -2237,7 +2206,7 @@ namespace RetroDevStudio.Documents
         {
           if ( curCharIndex >= 256 )
           {
-            System.Windows.Forms.MessageBox.Show( "Too many characters!" );
+            Core.Notification.MessageBox( "Too many characters", "Too many characters found (more than 256)!" );
             return;
           }
           projectToExport.Characters[curCharIndex] = charData.Clone();
@@ -2747,7 +2716,7 @@ namespace RetroDevStudio.Documents
         if ( ( m_GraphicScreenProject.ScreenWidth != 320 )
         ||   ( m_GraphicScreenProject.ScreenHeight != 200 ) )
         {
-          MessageBox.Show( "A graphic can only be exported to Koala format if the size is 320x200!", "Can't export to Koala" );
+          Core.Notification.MessageBox( "Can't export to Koala", "A graphic can only be exported to Koala format if the size is 320x200!" );
           return;
         }
       }
@@ -2767,7 +2736,7 @@ namespace RetroDevStudio.Documents
 
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, koalaData ) )
         {
-          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+          Core.Notification.MessageBox( "Error writing to file", "Could not export to file " + saveDlg.FileName );
         }
         return;
       }
@@ -2776,7 +2745,7 @@ namespace RetroDevStudio.Documents
         var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( m_GraphicScreenProject.Image );
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, imageData ) )
         {
-          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+          Core.Notification.MessageBox( "Error writing to file", "Could not export to file " + saveDlg.FileName );
         }
         return;
       }
@@ -2794,7 +2763,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        MessageBox.Show( "Unsupported image file format " + extension + ". Please make sure to use the proper extension.", "Unsupported format" );
+        Core.Notification.MessageBox( "Unsupported format", "Unsupported image file format " + extension + ". Please make sure to use the proper extension." );
         return;
       }
 
@@ -2805,7 +2774,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( Exception ex )
       {
-        MessageBox.Show( "An error occurred while writing to file: " + ex.Message, "An Error occurred" );
+        Core.Notification.MessageBox( "An Error occurred", "An error occurred while writing to file: " + ex.Message );
       }
     }
 

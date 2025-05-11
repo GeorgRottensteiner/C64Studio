@@ -52,7 +52,7 @@ namespace RetroDevStudio.Controls
         if ( ( Info.Project.ScreenWidth != 320 )
         ||   ( Info.Project.ScreenHeight != 200 ) )
         {
-          MessageBox.Show( "A graphic can only be exported to Koala format if the size is 320x200!", "Can't export to Koala" );
+          Core.Notification.MessageBox( "Can't export to Koala", "A graphic can only be exported to Koala format if the size is 320x200!" );
           return false;
         }
 
@@ -73,7 +73,7 @@ namespace RetroDevStudio.Controls
 
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, koalaData ) )
         {
-          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+          Core.Notification.MessageBox( "Error writing to file", "Could not export to file " + saveDlg.FileName );
         }
         return true;
       }
@@ -82,7 +82,7 @@ namespace RetroDevStudio.Controls
         var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( Info.Project.Image );
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, imageData ) )
         {
-          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+          Core.Notification.MessageBox( "Error writing to file", "Could not export to file " + saveDlg.FileName );
         }
         return true;
       }
@@ -100,7 +100,7 @@ namespace RetroDevStudio.Controls
       }
       else
       {
-        MessageBox.Show( "Unsupported image file format " + extension + ". Please make sure to use the proper extension.", "Unsupported format" );
+        Core.Notification.MessageBox( "Unsupported format", "Unsupported image file format " + extension + ". Please make sure to use the proper extension." );
         return false;
       }
 
@@ -111,7 +111,7 @@ namespace RetroDevStudio.Controls
       }
       catch ( Exception ex )
       {
-        MessageBox.Show( "An error occurred while writing to file: " + ex.Message, "An Error occurred" );
+        Core.Notification.MessageBox( "An Error occurred", "An error occurred while writing to file: " + ex.Message );
       }
 
       return true;

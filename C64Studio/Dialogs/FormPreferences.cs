@@ -126,7 +126,7 @@ namespace RetroDevStudio.Dialogs
       GR.Strings.XMLParser      xml = new GR.Strings.XMLParser();
       if ( !xml.Parse( file ) )
       {
-        MessageBox.Show( "The settings file is malformed!", "Malformed file" );
+        Core.Notification.MessageBox( "Malformed file", "The settings file is malformed!" );
         return;
       }
 

@@ -3028,12 +3028,12 @@ namespace RetroDevStudio
     {
       if ( ParentProject != null )
       {
-        var dialogResult = System.Windows.Forms.MessageBox.Show( "Add the new document to the current project?\r\nIf you choose no, the document will not be created as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
-        if ( dialogResult == DialogResult.Cancel )
+        var dialogResult = StudioCore.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL_ALL, "Add to current project?", "Add the new document to the current project?\r\nIf you choose no, the document will not be created as part of the current project.", "ProjectAddNewFileToCurrent" );
+        if ( dialogResult == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return;
         }
-        if ( dialogResult == DialogResult.Yes )
+        if ( dialogResult == DlgDeactivatableMessage.UserChoice.YES )
         {
           AddNewElement( Type, Description, ParentProject, ParentNode );
           return;
@@ -3092,7 +3092,7 @@ namespace RetroDevStudio
       }
       catch ( System.Exception e )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not create project folder:" + System.Environment.NewLine + e.Message, "Could not create project folder" );
+        StudioCore.Notification.MessageBox( "Could not create project folder", "Could not create project folder:" + System.Environment.NewLine + e.Message );
         return null;
       }
 
@@ -3219,16 +3219,16 @@ namespace RetroDevStudio
       }
       if ( ProjectToClose.Modified )
       {
-        System.Windows.Forms.DialogResult saveResult = System.Windows.Forms.MessageBox.Show( "The project " + ProjectToClose.Settings.Name + " has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel );
+        var saveResult = StudioCore.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL, "Save Changes?", "The project " + ProjectToClose.Settings.Name + " has been modified. Do you want to save the changes now?" );
 
-        if ( saveResult == DialogResult.Yes )
+        if ( saveResult == DlgDeactivatableMessage.UserChoice.YES )
         {
           if ( !SaveProject( ProjectToClose ) )
           {
             return false;
           }
         }
-        else if ( saveResult == DialogResult.Cancel )
+        else if ( saveResult == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return false;
         }
@@ -3249,17 +3249,17 @@ namespace RetroDevStudio
 
       if ( changes )
       {
-        var endButtons = MessageBoxButtons.YesNoCancel;
+        var endButtons = DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL;
         if ( StudioCore.ShuttingDown )
         {
-          endButtons = MessageBoxButtons.YesNo;
+          endButtons = DlgDeactivatableMessage.MessageButtons.YES_NO;
         }
-        DialogResult res = System.Windows.Forms.MessageBox.Show( "There are changes in one or more items. Do you want to save them before closing?", "Unsaved changes, save now?", endButtons );
-        if ( res == DialogResult.Cancel )
+        var res = StudioCore.Notification.UserDecision( endButtons, "Unsaved changes, save now?", "There are changes in one or more items. Do you want to save them before closing?" );
+        if ( res == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return false;
         }
-        if ( res == DialogResult.Yes )
+        if ( res == DlgDeactivatableMessage.UserChoice.YES )
         {
           foreach ( ProjectElement element in ProjectToClose.Elements )
           {
@@ -3351,7 +3351,7 @@ namespace RetroDevStudio
       {
         if ( StudioCore.Navigating.Solution.Projects.Count == 1 )
         {
-          System.Windows.Forms.MessageBox.Show( "You can't remove the last project from a solution.", "Last Project!", MessageBoxButtons.OK );
+          StudioCore.Notification.MessageBox( "Last Project!", "You can't remove the last project from a solution." );
           return;
         }
         CloseProject( m_CurrentProject );
@@ -3412,7 +3412,7 @@ namespace RetroDevStudio
         {
           if ( GR.Path.IsPathEqual( Filename, project.Settings.Filename ) )
           {
-            System.Windows.Forms.MessageBox.Show( "The project " + Filename + " is already opened in this solution.", "Project already opened" );
+            StudioCore.Notification.MessageBox( "Project already opened", "The project " + Filename + " is already opened in this solution." );
             return null;
           }
         }
@@ -3779,23 +3779,24 @@ namespace RetroDevStudio
       if ( !GR.Path.IsSubPath( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), importFile ) )
       {
         // not a sub folder
-        DialogResult    doCopy = DialogResult.Cancel;
+        var    doCopy = DlgDeactivatableMessage.UserChoice.CANCEL;
 
         if ( CopyToProjectFolderWithoutAsking )
         {
-          doCopy = DialogResult.Yes;
+          doCopy = DlgDeactivatableMessage.UserChoice.YES;
         }
         else
         {
-          doCopy = System.Windows.Forms.MessageBox.Show( "The item is not inside the current project folder. Should a copy be created in the project folder?",
+          doCopy = StudioCore.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL_ALL,
                                                          "Create a local copy of the added file?",
-                                                         MessageBoxButtons.YesNoCancel );
+                                                         "The item is not inside the current project folder. Should a copy be created in the project folder?",
+                                                         "ProjectCreateLocalCopyOfAddFile" );
         }
-        if ( doCopy == DialogResult.Cancel )
+        if ( doCopy == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return;
         }
-        if ( doCopy == DialogResult.Yes )
+        if ( doCopy == DlgDeactivatableMessage.UserChoice.YES )
         {
           // create a copy
           string pureFileName = GR.Path.GetFileName( importFile );
@@ -3993,7 +3994,7 @@ namespace RetroDevStudio
         }
         catch ( Exception ex )
         {
-          MessageBox.Show( $"An error occurred while replacing the old setting file: {ex.Message}\r\nYour new settings have been saved as {settingFilename + ".tmp"}. Please replace the actual setting file {settingFilename} with it.\r\nSorry for the inconvenience!", "Error saving settings!" );
+          StudioCore.Notification.MessageBox( "Error saving settings", $"An error occurred while replacing the old setting file: {ex.Message}\r\nYour new settings have been saved as {settingFilename + ".tmp"}. Please replace the actual setting file {settingFilename} with it.\r\nSorry for the inconvenience!" );
         }
       }
     }
@@ -5830,8 +5831,8 @@ namespace RetroDevStudio
               BaseDocument doc = (BaseDocument)dock;
               if ( doc.Modified )
               {
-                DialogResult saveRequestResult = doc.CloseAfterModificationRequest();
-                if ( saveRequestResult == DialogResult.Cancel )
+                var saveRequestResult = doc.CloseAfterModificationRequest();
+                if ( saveRequestResult == DlgDeactivatableMessage.UserChoice.CANCEL )
                 {
                   e.Cancel = true;
                   return;
@@ -5891,8 +5892,8 @@ namespace RetroDevStudio
 
       if ( itemsWithChanges.Any() )
       {
-        DialogResult result = System.Windows.Forms.MessageBox.Show( "There are unsaved changes, Really shut down?\r\n\r\nChanges found in\r\n" + string.Join( "\r\n", itemsWithChanges.ToArray() ), "Unsaved changes! Shut down?", MessageBoxButtons.YesNo );
-        if ( result != DialogResult.Yes )
+        var result = StudioCore.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO, "Unsaved changes! Shut down?", "There are unsaved changes, Really shut down?\r\n\r\nChanges found in\r\n" + string.Join( "\r\n", itemsWithChanges.ToArray() ) );
+        if ( result != DlgDeactivatableMessage.UserChoice.YES )
         {
           e.Cancel = true;
           return;
@@ -5969,7 +5970,7 @@ namespace RetroDevStudio
     {
       if ( StudioCore.Settings.ToolInfos.Count == 0 )
       {
-        if ( System.Windows.Forms.MessageBox.Show( "There are currently no tools setup. Do you want to do this now?", "Setup Tools", MessageBoxButtons.YesNo ) == DialogResult.Yes )
+        if ( StudioCore.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO, "Setup Tools?", "There are currently no tools setup. Do you want to do this now?" ) == DlgDeactivatableMessage.UserChoice.YES )
         {
           fileSetupWizardToolStripMenuItem_Click( this, null );
         }
@@ -6419,15 +6420,15 @@ namespace RetroDevStudio
         {
           if ( GR.Path.IsPathEqual( newFilename, ParentProject.FullPath( projElement.Filename ) ) )
           {
-            System.Windows.Forms.MessageBox.Show( "File " + newFilename + " is already part of this project", "File already added" );
+            StudioCore.Notification.MessageBox( "File already added", "File " + newFilename + " is already part of this project" );
             return;
           }
         }
       }
       if ( System.IO.File.Exists( newFilename ) )
       {
-        var result = System.Windows.Forms.MessageBox.Show("There is already an existing file at " + newFilename + ".\r\nDo you want to overwrite it?", "Overwrite existing file?", MessageBoxButtons.YesNo);
-        if ( result == DialogResult.No )
+        var result = StudioCore.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO, "Overwrite existing file?", "There is already an existing file at " + newFilename + ".\r\nDo you want to overwrite it?" );
+        if ( result == DlgDeactivatableMessage.UserChoice.NO )
         {
           return;
         }
@@ -7054,7 +7055,7 @@ namespace RetroDevStudio
         }
         catch ( System.Exception ex )
         {
-          System.Windows.Forms.MessageBox.Show( "Could not create solution folder:" + System.Environment.NewLine + ex.Message, "Could not create solution folder" );
+          StudioCore.Notification.MessageBox( "Could not create solution folder", "Could not create solution folder:" + System.Environment.NewLine + ex.Message );
           return null;
         }
       }
@@ -7069,7 +7070,7 @@ namespace RetroDevStudio
       }
       catch ( System.Exception ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not create project folder:" + System.Environment.NewLine + ex.Message, "Could not create project folder" );
+        StudioCore.Notification.MessageBox( "Could not create project folder", "Could not create project folder:" + System.Environment.NewLine + ex.Message );
         return null;
       }
 

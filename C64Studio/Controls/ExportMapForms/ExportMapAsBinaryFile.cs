@@ -161,7 +161,7 @@ namespace RetroDevStudio.Controls
           }
           break;
         default:
-          MessageBox.Show( "The export type " + Info.ExportType + " is not supported for binary export.", "Export type not supported" );
+          Core.Notification.MessageBox( "Export type not supported", "The export type " + Info.ExportType + " is not supported for binary export." );
           return false;
       }
       if ( finalData != null )

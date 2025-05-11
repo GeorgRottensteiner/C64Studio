@@ -137,6 +137,8 @@ namespace RetroDevStudio
 
     public Dictionary<string,BaseDocument>      GenericTools = new Dictionary<string, BaseDocument>();
 
+    public Dictionary<string, Dialogs.DlgDeactivatableMessage.UserChoice>       StoredDialogResults = new Dictionary<string, Dialogs.DlgDeactivatableMessage.UserChoice>();
+
     public bool                                 PlaySoundOnSuccessfulBuild = true;
     public bool                                 PlaySoundOnBuildFailure = true;
     public bool                                 PlaySoundOnSearchFoundNoItem = true;
@@ -635,6 +637,15 @@ namespace RetroDevStudio
       chunkMainWindowPlacement.AppendString( MainWindowPlacement );
       SettingsData.Append( chunkMainWindowPlacement.ToBuffer() );
 
+      GR.IO.FileChunk   chunkStoredDialogResults = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DIALOG_DECISIONS );
+      chunkStoredDialogResults.AppendI32( StoredDialogResults.Count );
+      foreach ( var entry in StoredDialogResults )
+      {
+        chunkStoredDialogResults.AppendString( entry.Key );
+        chunkStoredDialogResults.AppendI32( (int)entry.Value );
+      }
+      SettingsData.Append( chunkStoredDialogResults.ToBuffer() );
+
       GR.IO.FileChunk chunkTabs = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_TEXT_EDITOR );
       chunkTabs.AppendI32( TabSize );
       chunkTabs.AppendU8( 1 );// (byte)( AllowTabs ? 1 : 0 ) );
@@ -1068,6 +1079,21 @@ namespace RetroDevStudio
               PlaySoundOnSuccessfulBuild    = ( binIn.ReadUInt8() != 0 );
               PlaySoundOnBuildFailure       = ( binIn.ReadUInt8() != 0 );
               PlaySoundOnSearchFoundNoItem  = ( binIn.ReadUInt8() != 0 );
+            }
+            break;
+          case FileChunkConstants.SETTINGS_DIALOG_DECISIONS:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              int numEntries = binIn.ReadInt32();
+
+              for ( int i = 0; i < numEntries; ++i )
+              {
+                string  key = binIn.ReadString();
+                Dialogs.DlgDeactivatableMessage.UserChoice choice = (Dialogs.DlgDeactivatableMessage.UserChoice)binIn.ReadInt32();
+
+                StoredDialogResults.Add( key, choice );
+              }
             }
             break;
           case FileChunkConstants.SETTINGS_WINDOW:

@@ -128,7 +128,7 @@ namespace RetroDevStudio.Dialogs
       taskCompile.RunTask();
       if ( !taskCompile.TaskSuccessful )
       {
-        System.Windows.Forms.MessageBox.Show( "Renumber is only possible on compilable code", "Cannot renumber" );
+        m_Core.Notification.MessageBox( "Cannot renumber", "Renumber is only possible on compilable code" );
         Close();
         return;
       }

@@ -166,7 +166,8 @@ namespace RetroDevStudio.Dialogs
       var existingConfig = m_Settings.Configuration( configName );
       if ( existingConfig != null )
       {
-        if ( MessageBox.Show( "Are you sure you want to delete configuration '" + configName + "'?", "Delete configuration?", MessageBoxButtons.YesNo ) == DialogResult.Yes )
+        if ( m_Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO, "Delete configuration?", 
+                                "Are you sure you want to delete configuration '" + configName + "'?" ) == DlgDeactivatableMessage.UserChoice.YES )
         {
           m_Settings.DeleteConfiguration( configName );
 

@@ -150,14 +150,14 @@ namespace RetroDevStudio.Controls
         case ExportType.MULTICOLOR_CHARSET:
           if ( Info.Chars.Count == 0 )
           {
-            MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
+            Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!" );
             return false;
           }
           {
             var charsetProject = GraphicScreenEditor.ExportToCharset( Info.Project, Info.Chars );
             if ( charsetProject == null )
             {
-              MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
+              Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!" );
               return false;
             }
             exportedData = charsetProject.CharacterData();
@@ -167,14 +167,14 @@ namespace RetroDevStudio.Controls
         case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
           if ( Info.Chars.Count == 0 )
           {
-            MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
+            Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!" );
             return false;
           }
           {
             var charsetProject = GraphicScreenEditor.ExportToCharset( Info.Project, Info.Chars );
             if ( charsetProject == null )
             {
-              MessageBox.Show( "Cannot export to charset, conversion had errors!", "Cannot export to charset" );
+              Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!" );
               return false;
             }
             exportedData = charsetProject.CharacterData();

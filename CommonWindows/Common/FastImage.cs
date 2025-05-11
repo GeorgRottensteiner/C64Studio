@@ -995,7 +995,6 @@ namespace GR.Image
       }
       else if ( m_PixelFormat != GR.Drawing.PixelFormat.Undefined )
       {
-        //System.Windows.Forms.MessageBox.Show( "Last error: " + Marshal.GetLastWin32Error() );
         if ( ( Width != 0 )
         &&   ( Height != 0 ) )
         {

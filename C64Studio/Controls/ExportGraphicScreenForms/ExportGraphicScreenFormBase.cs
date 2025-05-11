@@ -65,7 +65,7 @@ namespace RetroDevStudio.Controls
       // automatic check
       if ( Info.Chars.Any( c => !string.IsNullOrEmpty( c.Error ) ) )
       {
-        MessageBox.Show( "Cannot export to charset, conversion had errors!\r\nCheck the chosen colors for possible combinations!", "Cannot export to charset" );
+        Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!\r\nCheck the chosen colors for possible combinations!" );
         return false;
       }
 
@@ -104,7 +104,7 @@ namespace RetroDevStudio.Controls
       }
       if ( items - foldedItems > 256 )
       {
-        MessageBox.Show( "Cannot export to charset, more than 256 unique characters found!\r\nCheck the chosen colors for possible combinations!", "Cannot export to charset" );
+        Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, more than 256 unique characters found!\r\nCheck the chosen colors for possible combinations!" );
         return false;
       }
 

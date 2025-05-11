@@ -45,7 +45,7 @@ namespace RetroDevStudio.Controls
       {
         if ( Info.Map.Maps.Count == 0 )
         {
-          MessageBox.Show( "There is no map to export.", "Cannot export" );
+          Core.Notification.MessageBox( "Cannot export", "There is no map to export." );
           return false;
         }
         mapToExport = Info.Map.Maps[0];

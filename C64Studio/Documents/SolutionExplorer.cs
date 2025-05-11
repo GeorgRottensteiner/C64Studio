@@ -1058,7 +1058,7 @@ namespace RetroDevStudio.Documents
           }
           catch ( System.Exception ex )
           {
-            System.Windows.Forms.MessageBox.Show( "Could not create copy of the file!\r\n" + ex.Message, "Error creating copy" );
+            Core.Notification.MessageBox( "Could not create copy of the file!\r\n" + ex.Message, "Error creating copy" );
             return;
           }
 
@@ -1186,12 +1186,12 @@ namespace RetroDevStudio.Documents
         {
           if ( Core.Navigating.Solution.Projects.Count == 1 )
           {
-            System.Windows.Forms.MessageBox.Show( "You can't remove the last project from a solution.", "Last Project!", MessageBoxButtons.OK );
+            Core.Notification.MessageBox( "Last project!", "You can't remove the last project from a solution." );
             return;
           }
 
-          System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show( $"You chose to remove project {projectToRemove.Settings.Name}. Are you sure?", "Remove Project?", System.Windows.Forms.MessageBoxButtons.YesNo );
-          if ( result != System.Windows.Forms.DialogResult.Yes )
+          var result = Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO, "Remove Project?", $"You chose to remove project {projectToRemove.Settings.Name}. Are you sure?" );
+          if ( result != DlgDeactivatableMessage.UserChoice.YES )
           {
             return;
           }
@@ -1206,12 +1206,12 @@ namespace RetroDevStudio.Documents
 
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
       {
-        System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show( "You chose to remove the folder " + element.Name + ". Do you also want to delete the files of its childs?", "Delete files?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
-        if ( result == DialogResult.Cancel )
+        var result = Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL_ALL, "Delete Files?", "You chose to remove the folder " + element.Name + ". Do you also want to delete the files of its childs?", "SolutionExplorerDeleteFilesOfFoldeConfirmation" );
+        if ( result == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return;
         }
-        if ( result == DialogResult.No )
+        if ( result == DlgDeactivatableMessage.UserChoice.NO )
         {
           // simply remove all elements
           RemoveElement( element );
@@ -1240,13 +1240,13 @@ namespace RetroDevStudio.Documents
       else
       {
         // there is a file attached
-        System.Windows.Forms.DialogResult result = System.Windows.Forms.MessageBox.Show( "You chose to remove an element from the project. Do you also want to delete the file?", "Delete File?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
+        var result = Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL_ALL, "Delete File?", "You chose to remove an element from the project. Do you also want to delete the file?", "SolutionExplorerDeleteFileOfElementConfirmation" );
 
-        if ( result == System.Windows.Forms.DialogResult.Cancel )
+        if ( result == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return;
         }
-        if ( result == System.Windows.Forms.DialogResult.Yes )
+        if ( result == DlgDeactivatableMessage.UserChoice.YES )
         {
           RemoveAndDeleteElement( element );
         }
@@ -1502,7 +1502,7 @@ namespace RetroDevStudio.Documents
       if ( GR.Path.GetExtension( newFilename ).ToUpper() != GR.Path.GetExtension( oldFilename ).ToUpper() )
       {
         e.CancelEdit = true;
-        System.Windows.Forms.MessageBox.Show( "You can't change the extension of an included file!", "Renaming extension forbidden", MessageBoxButtons.OK );
+        Core.Notification.MessageBox( "Renaming extension forbidden", "You can't change the extension of an included file!" );
         return;
       }
 
@@ -1521,7 +1521,7 @@ namespace RetroDevStudio.Documents
       catch ( System.Exception ex )
       {
         e.CancelEdit = true;
-        System.Windows.Forms.MessageBox.Show( "An error occurred while renaming\r\n" + ex.Message, "Error while renaming" );
+        Core.Notification.MessageBox( "Error while renaming", "An error occurred while renaming\r\n" + ex.Message );
         if ( element.Document != null )
         {
           element.Document.EnableFileWatcher();

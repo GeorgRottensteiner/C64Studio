@@ -1493,7 +1493,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.IO.IOException ex )
       {
-        MessageBox.Show( "Could not load charset screen project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load charset screen project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
       SetUnmodified();
@@ -1602,8 +1602,8 @@ namespace RetroDevStudio.Documents
 
         if ( importProject.Mode != Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
         {
-          MessageBox.Show( $"The mode of the imported charset ({importProject.Mode}) is not compatible with the current screen mode ({Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode )})!",
-            "Character set modes are different!" );
+          Core.Notification.MessageBox( "Character set modes are different!",
+                                        $"The mode of the imported charset ({importProject.Mode}) is not compatible with the current screen mode ({Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode )})!" );
           return false;
         }
 
@@ -2359,7 +2359,7 @@ namespace RetroDevStudio.Documents
       IDataObject dataObj = Clipboard.GetDataObject();
       if ( dataObj == null )
       {
-        MessageBox.Show( "The clipboard is empty" );
+        Core.Notification.MessageBox( "Clipboard empty", "The clipboard is empty" );
         return;
       }
       if ( dataObj.GetDataPresent( "RetroDevStudio.CharacterScreenSelection" ) )
@@ -2367,7 +2367,7 @@ namespace RetroDevStudio.Documents
         System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.CharacterScreenSelection" );
         if ( ms == null )
         {
-          MessageBox.Show( "The clipboard is empty" );
+          Core.Notification.MessageBox( "Clipboard empty", "The clipboard is empty" );
           return;
         }
 

@@ -271,7 +271,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.Exception ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load binary file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load binary file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
       SetUnmodified();

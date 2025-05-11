@@ -383,7 +383,7 @@ namespace RetroDevStudio.Documents
         PasteFromClipboard();
         if ( m_ImportError.Length > 0 )
         {
-          System.Windows.Forms.MessageBox.Show( m_ImportError, "Error while converting" );
+          Core.Notification.MessageBox( "Error while converting", m_ImportError );
         }
       }
     }
@@ -912,7 +912,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load sprite project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load sprite project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
       SetUnmodified();
@@ -1075,7 +1075,7 @@ namespace RetroDevStudio.Documents
       PasteFromClipboard();
       if ( m_ImportError.Length > 0 )
       {
-        System.Windows.Forms.MessageBox.Show( m_ImportError, "Error while converting" );
+        Core.Notification.MessageBox( "Error while converting", m_ImportError );
       }
     }
 
@@ -1178,7 +1178,7 @@ namespace RetroDevStudio.Documents
       }
       if ( imgClip == null )
       {
-        System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
+        Core.Notification.MessageBox( "No image on clipboard", "No image on clipboard" );
         return;
       }
       var mcSettings = new ColorSettings( m_SpriteProject.Colors );
@@ -3062,7 +3062,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( Exception ex )
       {
-        MessageBox.Show( "An exception occurred during saving:\r\n" + ex.ToString(), "Error saving GIF file" );
+        Core.Notification.MessageBox( "Error saving GIF file", "An exception occurred during saving:\r\n" + ex.ToString() );
       }
     }
 
@@ -3824,7 +3824,7 @@ namespace RetroDevStudio.Documents
       }
       if ( targetIndex + selection.Count > m_SpriteProject.TotalNumberOfSprites )
       {
-        MessageBox.Show( "Not enough sprites for selection starting at the given index!", "Can't move selection" );
+        Core.Notification.MessageBox( "Can't move selection", "Not enough sprites for selection starting at the given index!" );
         return;
       }
 

@@ -793,7 +793,7 @@ namespace RetroDevStudio
         BaseDocument    document = Core.MainForm.CreateNewDocument( Element.DocumentInfo.Type, Element.DocumentInfo.Project );
         if ( document == null )
         {
-          System.Windows.Forms.MessageBox.Show( "Could not create document for " + Element.DocumentInfo.Type.ToString(), "Error creating document" );
+          Core.Notification.MessageBox( "Error creating document", "Could not create document for " + Element.DocumentInfo.Type.ToString() );
           return null;
         }
         Element.DocumentInfo.BaseDoc = document;

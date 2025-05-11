@@ -298,7 +298,7 @@ namespace RetroDevStudio
       {
         if ( GR.Path.IsPathEqual( BuildFullPath( Element.DocumentInfo.Project.Settings.BasePath, entry.Filename ), dlg.FileName ) )
         {
-          MessageBox.Show( "File " + dlg.FileName + " is already set as external dependency!", "Dependency already exists" );
+          Core.Notification.MessageBox( "Dependency already exists", "File " + dlg.FileName + " is already set as external dependency!" );
           return;
         }
       }

@@ -135,7 +135,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       }
       catch ( Exception ex )
       {
-        System.Windows.Forms.MessageBox.Show( $"The system returned the error {ex.Message}.\r\nPlease verify whether the chosen font is properly installed for all users.", "Error during selecting font" );
+        Core.Notification.MessageBox( "Error during selecting font", $"The system returned the error {ex.Message}.\r\nPlease verify whether the chosen font is properly installed for all users." );
       }
     }
   

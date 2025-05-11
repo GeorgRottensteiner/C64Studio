@@ -914,7 +914,7 @@ namespace RetroDevStudio.Documents
 
         if ( !parser.Parse( content, new ProjectConfig(), new CompileConfig() { Assembler = Types.AssemblerType.C64_STUDIO }, "", out Types.ASM.FileInfo fileInfo ) )
         {
-          MessageBox.Show( "The provided assembly could not be parsed properly!", "Malformed assembly!" );
+          Core.Notification.MessageBox( "Malformed assembly!", "The provided assembly could not be parsed properly!" );
           return;
         }
 

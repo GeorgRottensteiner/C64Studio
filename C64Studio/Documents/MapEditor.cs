@@ -1412,7 +1412,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load map project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load map project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
       SetUnmodified();
@@ -1656,7 +1656,7 @@ namespace RetroDevStudio.Documents
       IDataObject dataObj = Clipboard.GetDataObject();
       if ( dataObj == null )
       {
-        System.Windows.Forms.MessageBox.Show( "The clipboard is empty" );
+        Core.Notification.MessageBox( "Clipboard empty", "The clipboard is empty" );
         return;
       }
       if ( dataObj.GetDataPresent( "RetroDevStudio.MapEditorSelection" ) )
@@ -2038,7 +2038,7 @@ namespace RetroDevStudio.Documents
           }
           break;
         default:
-          MessageBox.Show( "The export type " + (MapExportType)comboExportData.SelectedIndex + " is not supported for binary export.", "Export type not supported" );
+          Core.Notification.MessageBox( "Export type not supported", "The export type " + (MapExportType)comboExportData.SelectedIndex + " is not supported for binary export." );
           return;
       }
       if ( finalData != null )

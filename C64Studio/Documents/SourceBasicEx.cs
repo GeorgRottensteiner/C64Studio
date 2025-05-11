@@ -1357,12 +1357,12 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load BASIC file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load BASIC file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
       catch ( System.UnauthorizedAccessException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load BASIC file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load BASIC file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
 
@@ -1505,7 +1505,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not save file " + FullPath + ".\r\n" + ex.ToString(), "Could not save file" );
+        Core.Notification.MessageBox( "Could not save file", "Could not save file " + FullPath + ".\r\n" + ex.ToString() );
         EnableFileWatcher();
         return false;
       }
@@ -2345,6 +2345,18 @@ namespace RetroDevStudio.Documents
 
     private bool ToggleLabelMode()
     {
+      if ( !m_LabelMode )
+      {
+        if ( Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_ALL, "Losing line numbers",
+                                             "Switching to Label Mode will remove all line numbers.\r\n" +
+                                             "Toggling back from label mode will NOT restore the exact line numbers as they are right now!\r\n" +
+                                             "Are you sure you want to do this?",
+                                             "LabelModeSwitch" ) == DlgDeactivatableMessage.UserChoice.NO )
+        {
+          return false;
+        }
+      }
+
       bool labelMode = !m_LabelMode;
 
       Core.MainForm.m_CompileResult.ClearMessages();

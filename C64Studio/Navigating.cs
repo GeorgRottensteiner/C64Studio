@@ -414,7 +414,7 @@ namespace RetroDevStudio
           return;
         }
       }
-      System.Windows.Forms.MessageBox.Show( "Could not determine item source" );
+      Core.Notification.MessageBox( "Recompile required?", "Could not determine item source" );
     }
 
 

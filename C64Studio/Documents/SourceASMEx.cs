@@ -2231,7 +2231,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.Exception ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load ASM file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        Core.Notification.MessageBox( "Could not load file", "Could not load ASM file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
 
@@ -2328,7 +2328,7 @@ namespace RetroDevStudio.Documents
       }
       catch ( System.Exception ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not save file " + FullPath + ".\r\n" + ex.ToString(), "Could not save file" );
+        Core.Notification.MessageBox( "Could not save file", "Could not save file " + FullPath + ".\r\n" + ex.ToString() );
         EnableFileWatcher();
         return false;
       }
@@ -2622,13 +2622,13 @@ namespace RetroDevStudio.Documents
             }
             else
             {
-              System.Windows.Forms.MessageBox.Show( "Could not determine watch item from selection" );
+              Core.Notification.MessageBox( "Internal Error", "Could not determine watch item from selection" );
               return;
             }
           }
           else
           {
-            System.Windows.Forms.MessageBox.Show( "Could not determine watch item from selection" );
+            Core.Notification.MessageBox( "Internal Error", "Could not determine watch item from selection" );
             return;
           }
         }
@@ -2637,7 +2637,7 @@ namespace RetroDevStudio.Documents
       Types.ASM.FileInfo debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( debugFileInfo == null )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not determine item address of " + wordBelow );
+        Core.Notification.MessageBox( "Recompile required?", "Could not determine item address of " + wordBelow + ". Please try again after a recompile" );
         return;
       }
 
@@ -2687,7 +2687,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        System.Windows.Forms.MessageBox.Show( "Could not determine item address of " + wordBelow );
+        Core.Notification.MessageBox( "Recompile required?", "Could not determine item address of " + wordBelow + ". Please try a recompile." );
       }
     }
 
@@ -2716,7 +2716,7 @@ namespace RetroDevStudio.Documents
         }
         else
         {
-          System.Windows.Forms.MessageBox.Show( "Could not determine item address of " + wordBelow );
+          Core.Notification.MessageBox( "Recompile required?", "Could not determine item address of " + wordBelow + ". Please try a recompile." );
         }
       }
     }
@@ -3663,7 +3663,7 @@ namespace RetroDevStudio.Documents
       Types.ASM.FileInfo debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( debugFileInfo == null )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not determine item address of " + wordBelow );
+        Core.Notification.MessageBox( "Recompile required?", "Could not determine item address of " + wordBelow + ". Please try a recompile." );
         return;
       }
 
@@ -3719,7 +3719,7 @@ namespace RetroDevStudio.Documents
         RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
         return;
       }
-      System.Windows.Forms.MessageBox.Show( "Could not determine item address of " + wordBelow );
+      Core.Notification.MessageBox( "Recompile required?", "Could not determine item address of " + wordBelow + ". Please try a recompile." );
     }
 
 
@@ -3997,7 +3997,7 @@ namespace RetroDevStudio.Documents
           }
           else
           {
-            System.Windows.Forms.MessageBox.Show( "Could not determine symbol from selection" );
+            Core.Notification.MessageBox( "Selection incomplete?", "Could not determine symbol from selection" );
             return false;
           }
         }
@@ -4006,7 +4006,7 @@ namespace RetroDevStudio.Documents
       FileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( FileInfo == null )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not determine symbol of " + wordBelow );
+        Core.Notification.MessageBox( "Recompile required?", "Could not determine symbol of " + wordBelow );
         return false;
       }
 
@@ -4018,7 +4018,7 @@ namespace RetroDevStudio.Documents
       FoundReferences = FileInfo.FindAllReferences( wordBelow, zone, cheapLabelParent, out Symbol );
       if ( FoundReferences.Count == 0 )
       {
-        System.Windows.Forms.MessageBox.Show( "Unrecognized symbol, a recompile may be required" );
+        Core.Notification.MessageBox( "Recompile required?", "Unrecognized symbol, a recompile may be required" );
         return false;
       }
 

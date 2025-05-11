@@ -315,7 +315,7 @@ namespace RetroDevStudio.Controls
         IDataObject dataObj = Clipboard.GetDataObject();
         if ( dataObj == null )
         {
-          System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
+          Core.Notification.MessageBox( "Clipboard is empty", "No expected image format found in the clipboard" );
           return;
         }
         if ( dataObj.GetDataPresent( "RetroDevStudio.ImageList" ) )
@@ -433,7 +433,7 @@ namespace RetroDevStudio.Controls
         }
         else if ( !Clipboard.ContainsImage() )
         {
-          System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
+          Core.Notification.MessageBox( "Clipboard is empty", "No expected image format found in the clipboard" );
           return;
         }
         GR.Image.FastImage imgClip = null;
@@ -448,7 +448,7 @@ namespace RetroDevStudio.Controls
         }
         if ( imgClip == null )
         {
-          System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
+          Core.Notification.MessageBox( "Clipboard is empty", "No expected image format found in the clipboard" );
           return;
         }
         PasteImage( "", imgClip, checkPasteMultiColor.Checked );
@@ -569,7 +569,8 @@ namespace RetroDevStudio.Controls
       if ( mappedImage.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         mappedImage.Dispose();
-        System.Windows.Forms.MessageBox.Show( "Image format invalid!\nNeeds to be 8bit index" );
+
+        Core.Notification.MessageBox( "Unsupported image format", "The image format needs to be 8bit indexed" );
         return;
       }
 
@@ -2384,7 +2385,7 @@ namespace RetroDevStudio.Controls
       }
       if ( targetIndex + selection.Count > m_Project.TotalNumberOfCharacters )
       {
-        MessageBox.Show( "Not enough chars for selection starting at the given index!", "Can't move selection" );
+        Core.Notification.MessageBox( "Can't move selection", "Cannot move the selected chars, not enough chars for selection starting at the given index!" );
         return;
       }
 

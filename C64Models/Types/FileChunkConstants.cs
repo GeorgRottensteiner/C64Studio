@@ -102,6 +102,7 @@
     public const ushort    SETTINGS_BREAKPOINT            = 0x2021;
     public const ushort    SETTINGS_DIALOG_APPEARANCE     = 0x2022;
     public const ushort    SETTINGS_PALETTE               = 0x2023;
+    public const ushort    SETTINGS_DIALOG_DECISIONS      = 0x2024;
   }
 
 }

@@ -57,7 +57,20 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void btnClearAll_Click( DecentForms.ControlBase Sender )
     {
+      Core.Settings.FindArguments.Clear();
+      Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.SEARCH_HISTORY_UPDATED ) );
+      Core.Settings.ReplaceArguments.Clear();
+      Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.REPLACE_SEARCH_HISTORY_UPDATED ) );
+      Core.Settings.ReplaceWithArguments.Clear();
+      Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.REPLACE_WITH_HISTORY_UPDATED ) );
+      Core.Settings.StoredDialogResults.Clear();
+    }
 
+
+
+    private void btnClearDecisionCache_Click( DecentForms.ControlBase Sender )
+    {
+      Core.Settings.StoredDialogResults.Clear();
     }
 
 

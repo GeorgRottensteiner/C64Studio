@@ -817,36 +817,36 @@ namespace RetroDevStudio.Documents
 
 
 
-    public virtual DialogResult CloseAfterModificationRequest()
+    public virtual Dialogs.DlgDeactivatableMessage.UserChoice CloseAfterModificationRequest()
     {
-      System.Windows.Forms.DialogResult saveResult = DialogResult.Cancel;
+      var saveResult = Dialogs.DlgDeactivatableMessage.UserChoice.CANCEL;
 
-      var endButtons = MessageBoxButtons.YesNoCancel;
+      var endButtons = Dialogs.DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL;
       if ( Core.ShuttingDown )
       {
-        endButtons = MessageBoxButtons.YesNo;
+        endButtons = Dialogs.DlgDeactivatableMessage.MessageButtons.YES_NO;
       }
       if ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
       {
-        saveResult = System.Windows.Forms.MessageBox.Show( $"The unnamed {DocumentInfo.Type} document has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
+        saveResult = Core.Notification.UserDecision( endButtons, "Save Changes?", $"The unnamed {DocumentInfo.Type} document has been modified. Do you want to save the changes now?" );
       }
       else
       {
-        saveResult = System.Windows.Forms.MessageBox.Show( "The item " + DocumentInfo.DocumentFilename + " has been modified. Do you want to save the changes now?", "Save Changes?", endButtons );
+        saveResult = Core.Notification.UserDecision( endButtons, "Save Changes?", "The item " + DocumentInfo.DocumentFilename + " has been modified. Do you want to save the changes now?" );
       }
       // remember decision for final modified item list
-      if ( saveResult == DialogResult.No )
+      if ( saveResult == Dialogs.DlgDeactivatableMessage.UserChoice.NO )
       {
         Core.ShuttingDownDeniedSave( this );
       }
-      if ( ( saveResult == DialogResult.Cancel )
-      ||   ( saveResult == DialogResult.No ) )
+      if ( ( saveResult == Dialogs.DlgDeactivatableMessage.UserChoice.CANCEL )
+      ||   ( saveResult == Dialogs.DlgDeactivatableMessage.UserChoice.NO ) )
       {
         return saveResult;
       }
       if ( !Save( SaveMethod.SAVE ) )
       {
-        saveResult = DialogResult.Cancel;
+        saveResult = Dialogs.DlgDeactivatableMessage.UserChoice.CANCEL;
       }
       return saveResult;
     }
@@ -863,14 +863,14 @@ namespace RetroDevStudio.Documents
       if ( ( Modified )
       &&   ( !m_ForceClose ) )
       {
-        DialogResult requestSaveResult = CloseAfterModificationRequest();
-        if ( requestSaveResult == DialogResult.Cancel )
+        var requestSaveResult = CloseAfterModificationRequest();
+        if ( requestSaveResult == Dialogs.DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           e.Cancel = true;
           return;
         }
         e.Cancel = false;
-        if ( requestSaveResult == DialogResult.No )
+        if ( requestSaveResult == Dialogs.DlgDeactivatableMessage.UserChoice.NO )
         {
           // avoid double request
           SetUnmodified();

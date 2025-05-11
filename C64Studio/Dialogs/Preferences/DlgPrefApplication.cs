@@ -220,7 +220,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       }
       catch ( Exception ex )
       {
-        MessageBox.Show( "Could not access registry keys:\r\n" + ex.Message, "Failed to register file type" );
+        Core.Notification.MessageBox( "Failed to register file type", "Could not access registry keys:\r\n" + ex.Message );
       }
     }
 

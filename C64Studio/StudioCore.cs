@@ -287,7 +287,7 @@ namespace RetroDevStudio
       }
       else
       {
-        System.Windows.Forms.MessageBox.Show( MainForm, Text, Caption );
+        Notification.MessageBox( Caption, Text );
       }
     }
 

@@ -38,7 +38,7 @@ namespace RetroDevStudio.Tasks
         }
         else
         {
-          System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
+          Core.Notification.MessageBox( "No reachable code detected", "No reachable code was detected in this line (or could not assemble)" );
         }
       }
       else if ( localDebugFileInfo.FindGlobalLineIndex( m_DocActive.BaseDoc.CurrentLineIndex, m_DocActive.FullPath, out lineIndex ) )
@@ -51,7 +51,7 @@ namespace RetroDevStudio.Tasks
         }
         else
         {
-          System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
+          Core.Notification.MessageBox( "No reachable code detected", "No reachable code was detected in this line (or could not assemble)" );
         }
       }
       else if ( localDebugFileInfo2.FindGlobalLineIndex( m_DocActive.BaseDoc.CurrentLineIndex, m_DocActive.FullPath, out lineIndex ) )
@@ -64,12 +64,12 @@ namespace RetroDevStudio.Tasks
         }
         else
         {
-          System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
+          Core.Notification.MessageBox( "No reachable code detected", "No reachable code was detected in this line (or could not assemble)" );
         }
       }
       else
       {
-        System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
+        Core.Notification.MessageBox( "No reachable code detected", "No reachable code was detected in this line (or could not assemble)" );
       }
       return true;
     }

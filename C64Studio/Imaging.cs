@@ -316,13 +316,13 @@ namespace RetroDevStudio
         }
         catch ( Exception ex2 )
         {
-          System.Windows.Forms.MessageBox.Show( $"C64Studio can't find or open the C64 true type font file {fontFilename}.\r\nMake sure it's in the Fonts sub folder of RetroDevStudio.exe.\r\n\r\n" + ex2.Message, "Can't load font" );
+          Core.Notification.MessageBox( "Can't load font", $"C64Studio can't find or open the C64 true type font file {fontFilename}.\r\nMake sure it's in the Fonts sub folder of RetroDevStudio.exe.\r\n\r\n" + ex2.Message );
           throw new Exception( $"Missing font file '{fontFilename}'" );
         }
       }
       if ( fontCollectionCommodore.Families.Length == 0 )
       {
-        System.Windows.Forms.MessageBox.Show( $"C64Studio loaded the true type font file {fontFilename}, but it does not properly work.\r\nMake sure it's in the Fonts sub folder of RetroDevStudio.exe.\r\n", "Can't load font" );
+        Core.Notification.MessageBox( "Can't load font", $"C64Studio loaded the true type font file {fontFilename}, but it does not properly work.\r\nMake sure it's in the Fonts sub folder of RetroDevStudio.exe.\r\n" );
         throw new Exception( $"Failed to load font file '{fontFilename}'" );
       }
 
