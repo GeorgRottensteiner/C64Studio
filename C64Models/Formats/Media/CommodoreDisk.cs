@@ -753,15 +753,24 @@ namespace RetroDevStudio.Formats
           }
         }
         // do we need to alloc next dir sector?
-        sector = ( sector + DIRECTORY_INTERLEAVE ) % dirTrack.Sectors.Count;
-        if ( sector == SECTOR_DIRECTORY )
+        if ( sect.Data.ByteAt( 0 ) != 0 )
         {
-          // disk full!!
-          break;
+          dirTrackIndex = sect.Data.ByteAt( 0 );
+          sector        = sect.Data.ByteAt( 1 );
+
+          dirTrack      = Tracks[dirTrackIndex - 1];
         }
         if ( sect.Data.ByteAt( 0 ) == 0 )
         {
           // current sector was last dir sector
+          sector = ( sector + DIRECTORY_INTERLEAVE ) % dirTrack.Sectors.Count;
+          if ( ( dirTrackIndex == TRACK_DIRECTORY )
+          &&   ( sector == SECTOR_DIRECTORY ) )
+          {
+            // disk full!!
+            break;
+          }
+
           sect.Data.SetU8At( 0, dirTrackIndex );
           sect.Data.SetU8At( 1, (byte)( sector ) );
           AllocSector( dirTrackIndex, sector );
@@ -1058,6 +1067,11 @@ namespace RetroDevStudio.Formats
             if ( searchSector >= sectorsPerTrack )
             {
               searchSector = 0;
+            }
+            if ( ( trackIndex == TRACK_DIRECTORY )
+            &&   ( searchSector == SECTOR_BAM ) )
+            {
+              ++searchSector;
             }
           }
         }

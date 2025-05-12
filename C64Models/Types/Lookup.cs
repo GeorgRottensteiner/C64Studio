@@ -89,17 +89,18 @@ namespace RetroDevStudio
         string categoryOfEnum = "";
 
         MediaType         mediaTypeAtt = MediaType.UNKNOWN;
-        MediaFormatType   formatType = MediaFormatType.UNKNOWN;
         string            extension = "";
         var mediaFormats = new List<MediaFormatType>();
 
+        var formatTypes = new List<MediaFormatType>();
         foreach ( var attribute in allAttributes )
         {
           if ( attribute is MediaFormatAttribute )
           {
             var mediaTypeOfType = attribute as MediaFormatAttribute;
             mediaFormats.Add( mediaTypeOfType.Type );
-            formatType = mediaTypeOfType.Type;
+
+            formatTypes.Add( mediaTypeOfType.Type );
           }
           if ( attribute is DefaultFileExtensionAttribute )
           {
@@ -117,14 +118,18 @@ namespace RetroDevStudio
           }
         }
 
-        if ( formatType != MediaFormatType.UNKNOWN )
+        foreach ( var formatType in formatTypes )
         {
-          if ( !MediaFormatToTypeAndExtension.ContainsKey( formatType ) )
+          if ( formatType != MediaFormatType.UNKNOWN )
           {
-            MediaFormatToTypeAndExtension.Add( formatType, new GR.Generic.Tupel<Type, string>() );
+            if ( !MediaFormatToTypeAndExtension.ContainsKey( formatType ) )
+            {
+              MediaFormatToTypeAndExtension.Add( formatType, new GR.Generic.Tupel<Type, string>() );
+            }
+            MediaFormatToTypeAndExtension[formatType].first = mediaType;
+            MediaFormatToTypeAndExtension[formatType].second = extension;
+            Debug.Log( $"Add format {formatType}, {extension}" );
           }
-          MediaFormatToTypeAndExtension[formatType].first = mediaType;
-          MediaFormatToTypeAndExtension[formatType].second = extension;
         }
 
         foreach ( var mediaFormat in mediaFormats )
