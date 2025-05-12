@@ -128,7 +128,6 @@ namespace RetroDevStudio
             }
             MediaFormatToTypeAndExtension[formatType].first = mediaType;
             MediaFormatToTypeAndExtension[formatType].second = extension;
-            Debug.Log( $"Add format {formatType}, {extension}" );
           }
         }
 
