@@ -208,6 +208,15 @@ namespace DecentForms
 
 
 
+    public new void Invalidate( System.Drawing.Rectangle rect )
+    {
+      rect.Offset( -_DisplayOffsetX, -_DisplayOffsetY );
+
+      base.Invalidate( rect );
+    }
+
+
+
     public int ActualWorkWidth
     {
       get

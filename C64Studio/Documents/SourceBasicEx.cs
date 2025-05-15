@@ -118,9 +118,16 @@ namespace RetroDevStudio.Documents
       editSource.Top = comboBASICVersion.Bottom + 5;
       editSource.Height = newHeight;
 
+      int maxWidth = 0;
       foreach ( var dialect in Core.Compiling.BASICDialects )
       {
+        int   itemWidth = TextRenderer.MeasureText( dialect.Key, comboBASICVersion.Font ).Width;
+        maxWidth = Math.Max( itemWidth, maxWidth );
         comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, Dialect>( dialect.Key, dialect.Value ) );
+      }
+      if ( maxWidth > comboBASICVersion.DropDownWidth )
+      {
+        comboBASICVersion.DropDownWidth = maxWidth;
       }
 
       var types = Lookup.EnumerateBASICCheckSummer();

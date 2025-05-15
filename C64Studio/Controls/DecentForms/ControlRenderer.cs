@@ -294,6 +294,9 @@ namespace DecentForms
     {
       var   fillBrush = new SolidBrush( Color.FromArgb( (int)BaseColor ) );
 
+      X -= _DisplayOffsetX;
+      Y -= _DisplayOffsetY;
+
       _G.FillRectangle( fillBrush, X, Y, Width, Height );
     }
 

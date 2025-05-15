@@ -564,8 +564,13 @@ namespace DecentForms
 
       while ( node != null )
       {
-        var textSize = System.Windows.Forms.TextRenderer.MeasureText( node.Text, Font );
-        curMaxWidth = Math.Max( textSize.Width, curMaxWidth );
+        // force recalc of cashed text size
+        node.Text = node.Text;
+        //var textSize = System.Windows.Forms.TextRenderer.MeasureText( node.Text, Font );
+        //curMaxWidth = Math.Max( textSize.Width, curMaxWidth );
+
+        var bounds = node.Bounds;
+        curMaxWidth = Math.Max( bounds.Right, curMaxWidth );
 
         node = GetNextVisibleNode( node );
       }
