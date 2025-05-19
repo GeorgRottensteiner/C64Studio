@@ -1508,8 +1508,6 @@ namespace RetroDevStudio
           {
             SetActiveProject( Event.Project );
           }
-          break;
-        case Types.ApplicationEvent.Type.PROJECT_RENAMED:
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_RENAMED:
@@ -1597,6 +1595,11 @@ namespace RetroDevStudio
           {
             StudioCore.Navigating.LastActiveCodeDocument = null;
           }
+          break;
+        case Types.ApplicationEvent.Type.DOCUMENT_OPENED:
+        case Types.ApplicationEvent.Type.ELEMENT_RENAMED:
+        case Types.ApplicationEvent.Type.PROJECT_RENAMED:
+          UpdateCaption();
           break;
       }
     }
@@ -3579,7 +3582,11 @@ namespace RetroDevStudio
       if ( ( CurrentProject != null )
       &&   ( StudioCore.Navigating.Solution != null ) )
       {
-        Text = "C64Studio - " + StudioCore.Navigating.Solution.Name + " - " + CurrentProject.Settings.Name;
+        Text = $"C64Studio - {StudioCore.Navigating.Solution.Name} ({CurrentProject.Settings.CurrentConfig.Name})";
+        if ( ActiveDocument != null )
+        {
+          Text += " - " + ActiveDocument.DocumentInfo.DocumentFilename;
+        }
       }
       else
       {
@@ -3667,6 +3674,7 @@ namespace RetroDevStudio
 
         baseDoc.DocumentInfo.HasBeenSuccessfullyBuilt = false;
       }
+      UpdateCaption();
     }
 
 

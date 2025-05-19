@@ -1486,10 +1486,19 @@ namespace RetroDevStudio.Documents
 
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
       {
+        string originalValue = element.Name;
         element.Name = newText;
         e.Node.Text = newText;
         AdjustElementHierarchy( element, e.Node );
         project.SetModified();
+
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_RENAMED )
+            {
+              OriginalValue = originalValue,
+              UpdatedValue  = newText,
+              Element       = element
+            }
+          );
         return;
       }
 
@@ -1540,6 +1549,14 @@ namespace RetroDevStudio.Documents
       }
 
       project.SetModified();
+
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_RENAMED )
+          {
+            OriginalValue = GR.Path.GetFileName( oldFilename ),
+            UpdatedValue  = GR.Path.GetFileName( newText ),
+            Element       = element
+          }
+        );
     }
 
 

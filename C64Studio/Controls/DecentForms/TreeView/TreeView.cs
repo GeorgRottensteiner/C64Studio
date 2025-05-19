@@ -276,7 +276,7 @@ namespace DecentForms
 
         float factor = ( ClientSize.Width - potentialVScrollWidth ) / (float)MaxItemWidth;
         _ScrollBarH.SetSliderSize( (int)( ( _ScrollBarH.Width - 2 * 17 ) * factor ) );
-
+        _ScrollBarH.LargeChange = ClientSize.Width - potentialVScrollWidth;
       }
       else
       {
