@@ -67,7 +67,13 @@ namespace RetroDevStudio.Emulators
     EXPLICIT_FULL_SCREEN,
     [Description( "Windowed" )]
     [UsedFor( MachineType.ANY )]
-    EXPLICIT_WINDOW
+    EXPLICIT_WINDOW,
+    [Description( "Very First Arguments" )]
+    [UsedFor( MachineType.ANY )]
+    FIRST_ARGUMENTS,
+    [Description( "Very Last Arguments" )]
+    [UsedFor( MachineType.ANY )]
+    LAST_ARGUMENTS
   }
 
 

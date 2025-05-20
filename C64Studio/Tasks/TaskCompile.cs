@@ -254,6 +254,10 @@ namespace RetroDevStudio.Tasks
       {
         bool error = false;
 
+        if ( !string.IsNullOrEmpty( toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) ) )
+        {
+          command = toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) + " " + command;
+        }
         Core.Executing.RunProcess.StartInfo.Arguments = Core.MainForm.FillParameters( command, DocumentToRun, true, out error );
         if ( error )
         {
@@ -268,6 +272,11 @@ namespace RetroDevStudio.Tasks
         {
           Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.PRGArguments, DocumentToRun, true, out error );
         }
+        if ( !string.IsNullOrEmpty( toolRun.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS ) ) )
+        {
+          Core.Executing.RunProcess.StartInfo.Arguments += " " + toolRun.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS );
+        }
+
         if ( error )
         {
           return false;

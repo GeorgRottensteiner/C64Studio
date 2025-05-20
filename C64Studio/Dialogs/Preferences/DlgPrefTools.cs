@@ -70,6 +70,8 @@ namespace RetroDevStudio.Dialogs.Preferences
         xmlTool.AddAttribute( "PRGArgs", tool.PRGArguments );
         xmlTool.AddAttribute( "TrueDriveOffArgs", tool.TrueDriveOffArguments );
         xmlTool.AddAttribute( "TrueDriveOnArgs", tool.TrueDriveOnArguments );
+        xmlTool.AddAttribute( "FirstArgs", tool.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) );
+        xmlTool.AddAttribute( "LastArgs", tool.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS ) );
         /*
         // new format with dynamic arguments?
         var xmlToolArg = xmlTool.AddChild( "Arguments" );
@@ -120,6 +122,10 @@ namespace RetroDevStudio.Dialogs.Preferences
           toolInfo.TrueDriveOffArguments  = xmlTool.Attribute( "TrueDriveOffArgs" );
           toolInfo.TrueDriveOnArguments   = xmlTool.Attribute( "TrueDriveOnArgs" );
           toolInfo.PassLabelsToEmulator   = IsSettingTrue( xmlTool.Attribute( "PassLabelsToEmulator" ) );
+
+          toolInfo.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS, xmlTool.Attribute( "FirstArgs" ) );
+          toolInfo.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS, xmlTool.Attribute( "LastArgs" ) );
+
 
           Core.Settings.ToolInfos.Add( toolInfo );
         }
@@ -338,6 +344,8 @@ namespace RetroDevStudio.Dialogs.Preferences
         editToolTrueDriveOffArguments.Enabled = false;
         btnBrowseTool.Enabled = false;
         checkPassLabelsToEmulator.Enabled = false;
+        editFirstArgs.Enabled = false;
+        editLastArgs.Enabled = false; 
         return;
       }
       editToolPRGArguments.Enabled = true;
@@ -347,6 +355,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       editToolTrueDriveOffArguments.Enabled = true;
       btnBrowseTool.Enabled = true;
       checkPassLabelsToEmulator.Enabled = true;
+      editFirstArgs.Enabled = true;
+      editLastArgs.Enabled = true;
 
       ToolInfo    tool = (ToolInfo)alistTools.Items[alistTools.SelectedIndex].Tag;
       if ( tool == null )
@@ -363,6 +373,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       editToolTrueDriveOnArguments.Text = tool.TrueDriveOnArguments;
       editToolTrueDriveOffArguments.Text = tool.TrueDriveOffArguments;
       checkPassLabelsToEmulator.Checked = tool.PassLabelsToEmulator;
+      editFirstArgs.Text          = tool.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS );
+      editLastArgs.Text           = tool.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS );
 
       switch ( tool.Type )
       {
@@ -504,6 +516,33 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void editGotFocus( object sender, EventArgs e )
     {
       _lastFocusedEdit = sender as TextBox;
+    }
+
+
+
+    private void editFirstArgs_TextChanged( object sender, EventArgs e )
+    {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
+        return;
+      }
+
+      tool.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS, editFirstArgs.Text );
+    }
+
+
+
+    private void editLastArgs_TextChanged( object sender, EventArgs e )
+    {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
+        return;
+      }
+
+      tool.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS, editLastArgs.Text );
+
     }
 
 

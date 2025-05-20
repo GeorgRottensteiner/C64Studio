@@ -2772,6 +2772,14 @@ namespace RetroDevStudio
           }
         }
         bool error = false;
+        if ( !string.IsNullOrEmpty( toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) ) )
+        {
+          runArguments = toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) + " " + runArguments;
+        }
+        if ( !string.IsNullOrEmpty( toolRun.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS ) ) )
+        {
+          runArguments += " " + toolRun.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS );
+        }
         StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, out error );
         if ( error )
         {

@@ -30,7 +30,7 @@ namespace RetroDevStudio
     public bool                                 PassLabelsToEmulator = true;
     public bool                                 IsInternal = false;
     public List<DynamicArgument>                ArgumentOrder = new List<DynamicArgument>();   
-    public Dictionary<DynamicArgument,string>   DynamicArguments = new Dictionary<DynamicArgument, string>();
+    private Dictionary<DynamicArgument,string>  _dynamicArguments = new Dictionary<DynamicArgument, string>();
 
 
     public GR.IO.FileChunk ToChunk()
@@ -47,8 +47,8 @@ namespace RetroDevStudio
       chunk.AppendString( TrueDriveOnArguments );
       chunk.AppendString( TrueDriveOffArguments );
       chunk.AppendU8( PassLabelsToEmulator ? (byte)0 : (byte)1 );
-      chunk.AppendI32( DynamicArguments.Count );
-      foreach ( var dynArg in DynamicArguments )
+      chunk.AppendI32( _dynamicArguments.Count );
+      foreach ( var dynArg in _dynamicArguments )
       {
         chunk.AppendI32( (int)dynArg.Key );
         chunk.AppendString( dynArg.Value );
@@ -84,20 +84,20 @@ namespace RetroDevStudio
       TrueDriveOffArguments = reader.ReadString();
       PassLabelsToEmulator = ( reader.ReadUInt8() == 0 );
 
-      DynamicArguments.Clear();
+      _dynamicArguments.Clear();
       int   numDynamicArgs = reader.ReadInt32();
       for ( int i = 0; i < numDynamicArgs; ++i )
       {
         DynamicArgument   dynArg = (DynamicArgument)reader.ReadInt32();
         string    arg = reader.ReadString();
 
-        if ( !DynamicArguments.ContainsKey( dynArg ) )
+        if ( !_dynamicArguments.ContainsKey( dynArg ) )
         {
-          DynamicArguments.Add( dynArg, arg );
+          _dynamicArguments.Add( dynArg, arg );
         }
         else
         {
-          DynamicArguments[dynArg] = arg;
+          _dynamicArguments[dynArg] = arg;
         }
       }
       int   countArgOrder = reader.ReadInt32();
@@ -109,7 +109,7 @@ namespace RetroDevStudio
       if ( countArgOrder == 0 )
       {
         // is that a good idea?
-        ArgumentOrder.AddRange( DynamicArguments.Keys );
+        ArgumentOrder.AddRange( _dynamicArguments.Keys );
       }
 
       MoveArgument( PRGArguments, DynamicArgument.CALL_SINGLE_FILE_TAPE );
@@ -123,19 +123,37 @@ namespace RetroDevStudio
 
 
 
+    public string Argument( DynamicArgument arg )
+    {
+      if ( _dynamicArguments.TryGetValue( arg, out string value ) )
+      {
+        return value;
+      }
+      return "";
+    }
+
+
+
+    public void Argument( DynamicArgument arg, string argValue )
+    {
+      _dynamicArguments[arg] = argValue;
+    }
+
+
+
     private void MoveArgument( string Arguments, DynamicArgument DynArg )
     {
       if ( string.IsNullOrEmpty( Arguments ) )
       {
         return;
       }
-      if ( !DynamicArguments.ContainsKey( DynArg ) )
+      if ( !_dynamicArguments.ContainsKey( DynArg ) )
       {
-        DynamicArguments.Add( DynArg, Arguments );
+        _dynamicArguments.Add( DynArg, Arguments );
       }
       else
       {
-        DynamicArguments[DynArg] = Arguments;
+        _dynamicArguments[DynArg] = Arguments;
       }
     }
 
@@ -204,8 +222,6 @@ namespace RetroDevStudio
         Tool.Name = upperCaseFilename;
       }
     }
-
-
 
 
   }
