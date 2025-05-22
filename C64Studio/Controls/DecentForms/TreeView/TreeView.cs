@@ -426,6 +426,20 @@ namespace DecentForms
 
 
 
+    public int UsableItemHeight
+    {
+      get
+      {
+        if ( !_ScrollBarH.Visible )
+        {
+          return ClientSize.Height;
+        }
+        return ClientSize.Height - _ScrollBarH.Height;
+      }
+    }
+
+
+
     public TreeNode MouseOverNode
     {
       get
@@ -1098,10 +1112,12 @@ namespace DecentForms
       TreeNode    node = null;
       var         loc = TreeViewHitTestLocations.NOWHERE;
 
+
+
       if ( ( X < 0 )
       ||   ( X >= UsableItemWidth )
       ||   ( Y < 0 )
-      ||   ( Y >= ClientSize.Height )
+      ||   ( Y >= UsableItemHeight )
       ||   ( Nodes.Count == 0 ) )
       {
         // nowhere

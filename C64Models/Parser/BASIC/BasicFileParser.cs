@@ -201,7 +201,7 @@ namespace RetroDevStudio.Parser.BASIC
       // 0xeee1 = arrow up
       // 0xee5e = PI
       // 0xee1f = arrow left
-      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#$%" + (char)0xee1e + (char)0xee5e + (char)0xee1f;
+      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}*#$%[]" + (char)0xee1e + (char)0xee5e + (char)0xee1f;
 
       SetBasicDialect( Settings.BASICDialect );
 
