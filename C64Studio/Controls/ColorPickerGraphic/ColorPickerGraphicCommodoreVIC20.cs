@@ -12,39 +12,31 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorPickerMega65_32 : ColorPickerBase
+  public partial class ColorPickerGraphicCommodoreVIC20 : ColorPickerGraphicBase
   {
-    public ColorPickerMega65_32() :
-      base( null, null, 0, 1 )
+    public ColorPickerGraphicCommodoreVIC20() :
+      base( null, 1 )
     { 
     }
 
 
 
-    public ColorPickerMega65_32( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
-      base( Core, Charset, CurrentChar, CustomColor )
+    public ColorPickerGraphicCommodoreVIC20( StudioCore Core, byte CustomColor ) :
+      base( Core, CustomColor )
     {
-      _Charset = Charset;
-
       InitializeComponent();
 
-      panelCharColors.AutoResize = false;
-      panelCharColors.DisplayPage.Create( 256, 8, GR.Drawing.PixelFormat.Format32bppRgb );
-      panelCharColors.SetImageSize( 256, 8 );
+      _Colors.Palette = Core.Imaging.PaletteFromMachine( MachineType.VIC20 );
+      panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
     }
 
 
 
     public override void Redraw()
     {
-      if ( _Charset == null )
+      for ( byte i = 0; i < 16; ++i )
       {
-        return;
-      }
-
-      for ( byte i = 0; i < 32; ++i )
-      {
-        Displayer.CharacterDisplayer.DisplayChar( _Charset, SelectedChar, panelCharColors.DisplayPage, i * 8, 0, i );
+        panelCharColors.DisplayPage.Box( i * 8, 0, 8, 8, _Colors.Palette.ColorValues[i] );
       }
       panelCharColors.Invalidate();
     }
@@ -53,8 +45,8 @@ namespace RetroDevStudio.Controls
 
     private void panelCharColors_PostPaint( GR.Image.FastImage TargetBuffer )
     {
-      int     x1 = SelectedColor * TargetBuffer.Width / 32;
-      int     x2 = ( SelectedColor + 1 ) * TargetBuffer.Width / 32;
+      int     x1 = SelectedColor * TargetBuffer.Width / 16;
+      int     x2 = ( SelectedColor + 1 ) * TargetBuffer.Width / 16;
 
       if ( Core != null )
       {
@@ -90,11 +82,19 @@ namespace RetroDevStudio.Controls
 
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
-        int colorIndex = (int)( ( 32 * X ) / panelCharColors.ClientSize.Width );
+        int colorIndex = (int)( ( 16 * X ) / panelCharColors.ClientSize.Width );
         SelectedColor = (byte)colorIndex;
         Redraw();
         RaiseColorSelectedEvent();
       }
+    }
+
+
+
+    public override void UpdatePalette( Palette palette )
+    {
+      _Colors.Palette = palette;
+      Redraw();
     }
 
 

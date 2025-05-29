@@ -40,6 +40,12 @@ namespace RetroDevStudio.Controls
         return false;
       }
       importedData = GR.IO.File.ReadAllBytes( filename );
+
+      if ( checkAutoProcessFileTypes.Checked )
+      {
+        AutoHandleDataByExtension( GR.Path.GetExtension( filename ).ToUpper(), ref bytesToSkip );
+      }
+
       if ( bytesToSkip >= importedData.Length )
       {
         importedData.Clear();
@@ -47,6 +53,18 @@ namespace RetroDevStudio.Controls
       }
       importedData.TruncateFront( bytesToSkip );
       return true;
+    }
+
+
+
+    private void AutoHandleDataByExtension( string extension, ref int bytesToSkip )
+    {
+      switch ( extension )
+      {
+        case ".PRG":
+          bytesToSkip += 2;
+          break;
+      }
     }
 
 

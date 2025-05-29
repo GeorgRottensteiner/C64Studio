@@ -30,20 +30,19 @@
     {
       this.components = new System.ComponentModel.Container();
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.panelColorChooser = new System.Windows.Forms.Panel();
       this.comboCheckType = new System.Windows.Forms.ComboBox();
       this.btnCheck = new DecentForms.Button();
       this.labelCharInfo = new System.Windows.Forms.Label();
       this.panelColorSettings = new System.Windows.Forms.Panel();
-      this.colorSelector = new GR.Forms.FastPictureBox();
       this.charEditor = new GR.Forms.FastPictureBox();
       this.btnZoomOut = new DecentForms.Button();
       this.btnZoomIn = new DecentForms.Button();
@@ -96,7 +95,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabEditor.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.charEditor)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
       this.tabGraphicScreenEditor.SuspendLayout();
@@ -151,11 +149,11 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.panelColorChooser);
       this.tabEditor.Controls.Add(this.comboCheckType);
       this.tabEditor.Controls.Add(this.btnCheck);
       this.tabEditor.Controls.Add(this.labelCharInfo);
       this.tabEditor.Controls.Add(this.panelColorSettings);
-      this.tabEditor.Controls.Add(this.colorSelector);
       this.tabEditor.Controls.Add(this.charEditor);
       this.tabEditor.Controls.Add(this.btnZoomOut);
       this.tabEditor.Controls.Add(this.btnZoomIn);
@@ -189,10 +187,17 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(980, 534);
+      this.tabEditor.Size = new System.Drawing.Size(980, 557);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // panelColorChooser
+      // 
+      this.panelColorChooser.Location = new System.Drawing.Point(677, 272);
+      this.panelColorChooser.Name = "panelColorChooser";
+      this.panelColorChooser.Size = new System.Drawing.Size(295, 120);
+      this.panelColorChooser.TabIndex = 51;
       // 
       // comboCheckType
       // 
@@ -228,30 +233,16 @@
       // 
       // panelColorSettings
       // 
-      this.panelColorSettings.Location = new System.Drawing.Point(677, 303);
+      this.panelColorSettings.Location = new System.Drawing.Point(677, 398);
       this.panelColorSettings.Name = "panelColorSettings";
-      this.panelColorSettings.Size = new System.Drawing.Size(231, 186);
+      this.panelColorSettings.Size = new System.Drawing.Size(295, 126);
       this.panelColorSettings.TabIndex = 42;
-      // 
-      // colorSelector
-      // 
-      this.colorSelector.AutoResize = false;
-      this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage1;
-      this.colorSelector.Image = null;
-      this.colorSelector.Location = new System.Drawing.Point(677, 272);
-      this.colorSelector.Name = "colorSelector";
-      this.colorSelector.Size = new System.Drawing.Size(260, 19);
-      this.colorSelector.TabIndex = 14;
-      this.colorSelector.TabStop = false;
-      this.colorSelector.SizeChanged += new System.EventHandler(this.colorSelector_SizeChanged);
-      this.colorSelector.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSelector_MouseDown);
       // 
       // charEditor
       // 
       this.charEditor.AutoResize = false;
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage2;
+      this.charEditor.DisplayPage = fastImage1;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(677, 6);
       this.charEditor.Name = "charEditor";
@@ -640,7 +631,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -664,7 +655,7 @@
       this.tabGraphicScreenEditor.Location = new System.Drawing.Point(0, 24);
       this.tabGraphicScreenEditor.Name = "tabGraphicScreenEditor";
       this.tabGraphicScreenEditor.SelectedIndex = 0;
-      this.tabGraphicScreenEditor.Size = new System.Drawing.Size(988, 560);
+      this.tabGraphicScreenEditor.Size = new System.Drawing.Size(988, 583);
       this.tabGraphicScreenEditor.TabIndex = 0;
       // 
       // tabColorMapping
@@ -673,7 +664,7 @@
       this.tabColorMapping.Location = new System.Drawing.Point(4, 22);
       this.tabColorMapping.Name = "tabColorMapping";
       this.tabColorMapping.Padding = new System.Windows.Forms.Padding(3);
-      this.tabColorMapping.Size = new System.Drawing.Size(980, 534);
+      this.tabColorMapping.Size = new System.Drawing.Size(980, 557);
       this.tabColorMapping.TabIndex = 2;
       this.tabColorMapping.Text = "Color Mapping";
       this.tabColorMapping.UseVisualStyleBackColor = true;
@@ -689,7 +680,7 @@
       this.groupColorMapping.Controls.Add(this.listColorMappingColors);
       this.groupColorMapping.Location = new System.Drawing.Point(6, 6);
       this.groupColorMapping.Name = "groupColorMapping";
-      this.groupColorMapping.Size = new System.Drawing.Size(966, 520);
+      this.groupColorMapping.Size = new System.Drawing.Size(966, 543);
       this.groupColorMapping.TabIndex = 0;
       this.groupColorMapping.TabStop = false;
       this.groupColorMapping.Text = "Map Colors";
@@ -759,7 +750,7 @@
       this.tabImport.Location = new System.Drawing.Point(4, 22);
       this.tabImport.Name = "tabImport";
       this.tabImport.Padding = new System.Windows.Forms.Padding(3);
-      this.tabImport.Size = new System.Drawing.Size(980, 534);
+      this.tabImport.Size = new System.Drawing.Size(980, 557);
       this.tabImport.TabIndex = 3;
       this.tabImport.Text = "Import";
       this.tabImport.UseVisualStyleBackColor = true;
@@ -771,7 +762,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.panelImport.Location = new System.Drawing.Point(8, 33);
       this.panelImport.Name = "panelImport";
-      this.panelImport.Size = new System.Drawing.Size(964, 493);
+      this.panelImport.Size = new System.Drawing.Size(964, 516);
       this.panelImport.TabIndex = 36;
       // 
       // btnImport
@@ -817,7 +808,7 @@
       this.tabExport.Location = new System.Drawing.Point(4, 22);
       this.tabExport.Name = "tabExport";
       this.tabExport.Padding = new System.Windows.Forms.Padding(3);
-      this.tabExport.Size = new System.Drawing.Size(980, 534);
+      this.tabExport.Size = new System.Drawing.Size(980, 557);
       this.tabExport.TabIndex = 4;
       this.tabExport.Text = "Export";
       this.tabExport.UseVisualStyleBackColor = true;
@@ -831,7 +822,7 @@
       this.editExportOutput.Multiline = true;
       this.editExportOutput.Name = "editExportOutput";
       this.editExportOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editExportOutput.Size = new System.Drawing.Size(552, 521);
+      this.editExportOutput.Size = new System.Drawing.Size(552, 544);
       this.editExportOutput.TabIndex = 41;
       this.editExportOutput.WordWrap = false;
       this.editExportOutput.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editExportOutput_PreviewKeyDown);
@@ -842,7 +833,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
       this.panelExport.Location = new System.Drawing.Point(8, 34);
       this.panelExport.Name = "panelExport";
-      this.panelExport.Size = new System.Drawing.Size(408, 493);
+      this.panelExport.Size = new System.Drawing.Size(408, 516);
       this.panelExport.TabIndex = 40;
       // 
       // btnExport
@@ -880,7 +871,7 @@
       // 
       // GraphicScreenEditor
       // 
-      this.ClientSize = new System.Drawing.Size(988, 584);
+      this.ClientSize = new System.Drawing.Size(988, 607);
       this.Controls.Add(this.tabGraphicScreenEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -891,7 +882,6 @@
       this.menuStrip1.PerformLayout();
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.charEditor)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabGraphicScreenEditor.ResumeLayout(false);
@@ -942,7 +932,6 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ListBox listColorMappingColors;
     private Controls.ArrangedItemList listColorMappingTargets;
-    private GR.Forms.FastPictureBox colorSelector;
     private DecentForms.Button btnFullCopy;
     private DecentForms.RadioButton btnToolValidate;
     private DecentForms.RadioButton btnToolSelect;
@@ -969,5 +958,6 @@
     private System.Windows.Forms.ComboBox comboExportMethod;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.TextBox editExportOutput;
+    private System.Windows.Forms.Panel panelColorChooser;
   }
 }

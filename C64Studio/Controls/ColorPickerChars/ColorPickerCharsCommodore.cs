@@ -12,23 +12,23 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorPickerCommodoreVIC20X16 : ColorPickerBase
+  public partial class ColorPickerCharsCommodore : ColorPickerCharsBase
   {
-    public ColorPickerCommodoreVIC20X16() :
+    public ColorPickerCharsCommodore() :
       base( null, null, 0, 1 )
     { 
     }
 
 
 
-    public ColorPickerCommodoreVIC20X16( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
+    public ColorPickerCharsCommodore( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
       base( Core, Charset, CurrentChar, CustomColor )
     {
       _Charset = Charset;
 
       InitializeComponent();
 
-      panelCharColors.DisplayPage.Create( 128, 16, GR.Drawing.PixelFormat.Format32bppRgb );
+      panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
     }
 
 

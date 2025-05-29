@@ -79,7 +79,7 @@ namespace RetroDevStudio.Tasks
       {
         Core.SetStatus( "Malformed update check reply: " + ResponseText );
       }
-      Core.AddToOutput( ResponseText );
+      Core.AddToOutput( ResponseText.Replace( "<br>", "\r\n" ) );
     }
 
 

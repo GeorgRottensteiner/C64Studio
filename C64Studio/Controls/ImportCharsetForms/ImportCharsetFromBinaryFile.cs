@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using RetroDevStudio.Documents;
+using System;
 
 
 
@@ -94,9 +95,9 @@ namespace RetroDevStudio.Controls
         // treat as binary .chr file
         GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( filename );
 
-        if ( GR.Path.GetExtension( filename ).ToUpper() == ".PRG" )
+        if ( checkAutoProcessFileTypes.Checked )
         {
-          bytesToSkip += 2;
+          AutoHandleDataByExtension( GR.Path.GetExtension( filename ).ToUpper(), ref bytesToSkip );
         }
 
         if ( ( bytesToSkip > 0 )
@@ -108,6 +109,18 @@ namespace RetroDevStudio.Controls
         Editor.ImportFromData( charData );
       }
       return true;
+    }
+
+
+
+    private void AutoHandleDataByExtension( string extension, ref int bytesToSkip )
+    {
+      switch ( extension )
+      {
+        case ".PRG":
+          bytesToSkip += 2;
+          break;
+      }
     }
 
 

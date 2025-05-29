@@ -16,20 +16,20 @@ using GR.Image;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorPickerX16 : ColorPickerBase
+  public partial class ColorPickerCharsX16 : ColorPickerCharsBase
   {
     private bool                        m_ColorChooserPopupActive = false;
 
 
 
-    public ColorPickerX16() :
+    public ColorPickerCharsX16() :
       base( null, null, 0, 1 )
     { 
     }
 
 
 
-    public ColorPickerX16( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
+    public ColorPickerCharsX16( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
       base( Core, Charset, CurrentChar, CustomColor )
     {
       _Charset = Charset;

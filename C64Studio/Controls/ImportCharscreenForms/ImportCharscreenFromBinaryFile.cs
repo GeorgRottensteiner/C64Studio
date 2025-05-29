@@ -240,9 +240,9 @@ namespace RetroDevStudio.Controls
         {
           GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
 
-          if ( GR.Path.GetExtension( filename ).ToUpper() == ".PRG" )
+          if ( checkAutoProcessFileTypes.Checked )
           {
-            bytesToSkip += 2;
+            AutoHandleDataByExtension( GR.Path.GetExtension( filename ).ToUpper(), ref bytesToSkip );
           }
 
           if ( ( bytesToSkip > 0 )
@@ -256,6 +256,18 @@ namespace RetroDevStudio.Controls
       }
 
       return true;
+    }
+
+
+
+    private void AutoHandleDataByExtension( string extension, ref int bytesToSkip )
+    {
+      switch ( extension )
+      {
+        case ".PRG":
+          bytesToSkip += 2;
+          break;
+      }
     }
 
 

@@ -94,7 +94,7 @@ namespace RetroDevStudio.Documents
     private ExportCharscreenFormBase    m_ExportForm = null;
     private ImportCharscreenFormBase    m_ImportForm = null;
 
-    private ColorPickerBase            _ColorChooserDlg = null;
+    private ColorPickerCharsBase             _colorPickerDlg = null;
 
     private Dictionary<Control,int>     m_ControlsToTheRight = new Dictionary<Control, int>();
     private Dictionary<Control,int>     m_ControlsBelow = new Dictionary<Control, int>();
@@ -188,7 +188,7 @@ namespace RetroDevStudio.Documents
         panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-      SetupColorChooserDialog();
+      SetupColorPickerDialog();
       ResumeLayout();
 
       // remember controls to the right and below the editor
@@ -1146,9 +1146,9 @@ namespace RetroDevStudio.Documents
             break;
           }
         }
-        _ColorChooserDlg.SelectedColor          = m_CurrentColor;
-        _ColorChooserDlg.SelectedChar           = m_CurrentChar;
-        _ColorChooserDlg.SelectedPaletteMapping = m_CurrentPaletteMapping;
+        _colorPickerDlg.SelectedColor          = m_CurrentColor;
+        _colorPickerDlg.SelectedChar           = m_CurrentChar;
+        _colorPickerDlg.SelectedPaletteMapping = m_CurrentPaletteMapping;
         labelInfo.Text = InfoText();
         RedrawColorChooser();
       }
@@ -1410,13 +1410,13 @@ namespace RetroDevStudio.Documents
       }
 
       ApplyPalette();
-      SetupColorChooserDialog();
+      SetupColorPickerDialog();
 
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
 
-      SetupColorChooserDialog();
+      SetupColorPickerDialog();
       OnCharsetScreenModeChanged();
 
       panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_CharsetScreen.CharSet.Mode, 0 ) );
@@ -1809,7 +1809,7 @@ namespace RetroDevStudio.Documents
     private void panelCharacters_SelectedIndexChanged( object sender, EventArgs e )
     {
       m_CurrentChar = (ushort)m_CharlistLayout[(ushort)panelCharacters.SelectedIndex];
-      _ColorChooserDlg.SelectedChar = m_CurrentChar;
+      _colorPickerDlg.SelectedChar = m_CurrentChar;
 
       RedrawColorChooser();
       labelInfo.Text = InfoText();
@@ -1824,7 +1824,7 @@ namespace RetroDevStudio.Documents
 
     private void RedrawColorChooser()
     {
-      _ColorChooserDlg.Redraw();
+      _colorPickerDlg.Redraw();
     }
 
 
@@ -2181,7 +2181,7 @@ namespace RetroDevStudio.Documents
       }
       pictureEditor.Invalidate();
 
-      SetupColorChooserDialog();
+      SetupColorPickerDialog();
       Modified = true;
     }
 
@@ -2725,7 +2725,7 @@ namespace RetroDevStudio.Documents
       m_CharsWidth = Lookup.ScreenWidthInCharacters( m_CharsetScreen.Mode );
       m_CharsHeight = Lookup.ScreenHeightInCharacters( m_CharsetScreen.Mode );
 
-      SetupColorChooserDialog();
+      SetupColorPickerDialog();
       if ( changedMode )
       {
         OnCharsetScreenModeChanged();
@@ -2737,41 +2737,41 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void SetupColorChooserDialog()
+    private void SetupColorPickerDialog()
     {
-      if ( _ColorChooserDlg != null )
+      if ( _colorPickerDlg != null )
       {
-        panelColorChooser.Controls.Remove( _ColorChooserDlg );
-        _ColorChooserDlg.Dispose();
-        _ColorChooserDlg = null;
+        panelColorChooser.Controls.Remove( _colorPickerDlg );
+        _colorPickerDlg.Dispose();
+        _colorPickerDlg = null;
       }
 
       switch ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
       {
         case TextCharMode.X16_HIRES:
-          _ColorChooserDlg = new ColorPickerX16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _colorPickerDlg = new ColorPickerCharsX16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.NES:
-          _ColorChooserDlg = new ColorPickerNES( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _colorPickerDlg = new ColorPickerCharsNES( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.VIC20_8X16:
-          _ColorChooserDlg = new ColorPickerCommodoreVIC20X16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _colorPickerDlg = new ColorPickerCharsCommodoreVIC20X16( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_NCM:
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_ECM:
         case TextCharMode.MEGA65_FCM_16BIT:
-          _ColorChooserDlg = new ColorPickerMega65_32( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _colorPickerDlg = new ColorPickerCharsMega65_32( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
         default:
-          _ColorChooserDlg = new ColorPickerCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
+          _colorPickerDlg = new ColorPickerCharsCommodore( Core, m_CharsetScreen.CharSet, m_CurrentChar, (byte)m_CurrentColor );
           break;
       }
-      _ColorChooserDlg.SelectedColorChanged += _ColorChooserDlg_SelectedColorChanged;
-      _ColorChooserDlg.PaletteMappingSelected += _ColorChooserDlg_PaletteMappingSelected;
-      _ColorChooserDlg.Redraw();
-      panelColorChooser.Controls.Add( _ColorChooserDlg );
+      _colorPickerDlg.SelectedColorChanged += _ColorChooserDlg_SelectedColorChanged;
+      _colorPickerDlg.PaletteMappingSelected += _ColorChooserDlg_PaletteMappingSelected;
+      _colorPickerDlg.Redraw();
+      panelColorChooser.Controls.Add( _colorPickerDlg );
     }
 
 

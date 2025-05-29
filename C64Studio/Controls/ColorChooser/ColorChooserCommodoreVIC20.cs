@@ -34,9 +34,9 @@ namespace RetroDevStudio.Controls
         }
         comboAuxColor.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex   = Colors.BackgroundColor;
-      comboBorderColor.SelectedIndex  = Colors.MultiColor1;
-      comboAuxColor.SelectedIndex     = Colors.MultiColor2;
+      comboBackground.SelectedIndex   = Colors.BackgroundColor % comboBackground.Items.Count;
+      comboBorderColor.SelectedIndex  = Colors.MultiColor1 % comboBorderColor.Items.Count;
+      comboAuxColor.SelectedIndex     = Colors.MultiColor2 % comboAuxColor.Items.Count;
     }
 
 

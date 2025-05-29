@@ -30,22 +30,31 @@
     <Compile Update="Controls\ColorChooser\ColorChooserCommodoreMultiColor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorPicker\ColorPickerBase.cs">
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorPicker\ColorPickerMega65_32.cs">
+    <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorPicker\ColorPickerCommodoreVIC20X16.cs">
+    <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicCommodoreVIC20.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorPicker\ColorPickerNES.cs">
+    <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicCommodore.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorPicker\ColorPickerX16.cs">
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsMega65_32.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ColorPicker\ColorPickerCommodore.cs">
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsCommodoreVIC20X16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsNES.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsX16.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorPickerChars\ColorPickerCharsCommodore.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">

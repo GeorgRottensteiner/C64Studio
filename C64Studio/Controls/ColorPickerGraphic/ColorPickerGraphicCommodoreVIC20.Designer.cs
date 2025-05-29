@@ -1,7 +1,7 @@
 ﻿
 namespace RetroDevStudio.Controls
 {
-  partial class ColorPickerCommodore
+  partial class ColorPickerGraphicCommodoreVIC20
   {
     /// <summary> 
     /// Required designer variable.
@@ -49,12 +49,13 @@ namespace RetroDevStudio.Controls
       this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseDown);
       this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseMove);
       // 
-      // ColorChooserCommodore
+      // ColorPickerGraphicCommodoreVIC20
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.panelCharColors);
-      this.Name = "ColorChooserCommodore";
+      this.Name = "ColorPickerGraphicCommodoreVIC20";
+      this.Size = new System.Drawing.Size(266, 31);
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       this.ResumeLayout(false);
 

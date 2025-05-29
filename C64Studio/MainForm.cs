@@ -1591,10 +1591,7 @@ namespace RetroDevStudio
           {
             LastSearchableDocumentInfo = null;
           }
-          if ( StudioCore.Navigating.LastActiveCodeDocument == Event.Doc )
-          {
-            StudioCore.Navigating.LastActiveCodeDocument = null;
-          }
+          StudioCore.Navigating.DocumentClosed( Event.Doc );
           break;
         case Types.ApplicationEvent.Type.DOCUMENT_OPENED:
         case Types.ApplicationEvent.Type.ELEMENT_RENAMED:

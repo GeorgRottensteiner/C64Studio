@@ -586,5 +586,16 @@ namespace RetroDevStudio
 
 
 
+    internal void DocumentClosed( DocumentInfo doc )
+    {
+      if ( LastActiveCodeDocument == doc )
+      {
+        LastActiveCodeDocument = null;
+      }
+      doc.BaseDoc = null;
+    }
+
+
+
   }
 }

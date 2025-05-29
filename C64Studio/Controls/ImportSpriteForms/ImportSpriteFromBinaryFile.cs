@@ -35,11 +35,23 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
-      if ( GR.Path.GetExtension( filename ).ToUpper() == ".PRG" )
+      if ( checkAutoProcessFileTypes.Checked )
       {
-        bytesToSkip += 2;
+        AutoHandleDataByExtension( GR.Path.GetExtension( filename ).ToUpper(), ref bytesToSkip );
       }
       return Editor.ImportSprites( filename, true, true, bytesToSkip, checkImportExpectPadding.Checked );
+    }
+
+
+
+    private void AutoHandleDataByExtension( string extension, ref int bytesToSkip )
+    {
+      switch ( extension )
+      {
+        case ".PRG":
+          bytesToSkip += 2;
+          break;
+      }
     }
 
 

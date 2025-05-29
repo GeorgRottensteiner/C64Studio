@@ -12,22 +12,21 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorPickerCommodore : ColorPickerBase
+  public partial class ColorPickerGraphicCommodore : ColorPickerGraphicBase
   {
-    public ColorPickerCommodore() :
-      base( null, null, 0, 1 )
+    public ColorPickerGraphicCommodore() :
+      base( null, 1 )
     { 
     }
 
 
 
-    public ColorPickerCommodore( StudioCore Core, CharsetProject Charset, ushort CurrentChar, byte CustomColor ) :
-      base( Core, Charset, CurrentChar, CustomColor )
+    public ColorPickerGraphicCommodore( StudioCore Core, byte CustomColor ) :
+      base( Core, CustomColor )
     {
-      _Charset = Charset;
-
       InitializeComponent();
 
+      _Colors.Palette = Core.Imaging.PaletteFromMachine( MachineType.C64 );
       panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
     }
 
@@ -35,14 +34,9 @@ namespace RetroDevStudio.Controls
 
     public override void Redraw()
     {
-      if ( _Charset == null )
-      {
-        return;
-      }
-
       for ( byte i = 0; i < 16; ++i )
       {
-        Displayer.CharacterDisplayer.DisplayChar( _Charset, SelectedChar, panelCharColors.DisplayPage, i * 8, 0, i );
+        panelCharColors.DisplayPage.Box( i * 8, 0, 8, 8, _Colors.Palette.ColorValues[i] );
       }
       panelCharColors.Invalidate();
     }
@@ -93,6 +87,14 @@ namespace RetroDevStudio.Controls
         Redraw();
         RaiseColorSelectedEvent();
       }
+    }
+
+
+
+    public override void UpdatePalette( Palette palette )
+    {
+      _Colors.Palette = palette;
+      Redraw();
     }
 
 

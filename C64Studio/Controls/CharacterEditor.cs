@@ -43,7 +43,7 @@ namespace RetroDevStudio.Controls
     private bool                        _AllowModeChange = true;
 
     private ColorSettingsBase           _ColorSettingsDlg = null;
-    private ColorPickerBase             _ColorPickerDlg = null;
+    private ColorPickerCharsBase             _ColorPickerDlg = null;
 
     private int                         _NumColorsInColorSelector = 16;
 
@@ -1206,16 +1206,16 @@ namespace RetroDevStudio.Controls
       switch ( m_Project.Mode )
       {
         case TextCharMode.X16_HIRES:
-          _ColorPickerDlg = new ColorPickerX16( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
+          _ColorPickerDlg = new ColorPickerCharsX16( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.VIC20_8X16:
-          _ColorPickerDlg = new ColorPickerCommodoreVIC20X16( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
+          _ColorPickerDlg = new ColorPickerCharsCommodoreVIC20X16( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.NES:
-          _ColorPickerDlg = new ColorPickerNES( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
+          _ColorPickerDlg = new ColorPickerCharsNES( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.MEGA65_HIRES:
-          _ColorPickerDlg = new ColorPickerMega65_32( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
+          _ColorPickerDlg = new ColorPickerCharsMega65_32( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           break;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -1224,7 +1224,7 @@ namespace RetroDevStudio.Controls
           //_ColorPickerDlg = new ColorPickerMega65_32( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           //break;
         default:
-          _ColorPickerDlg = new ColorPickerCommodore( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
+          _ColorPickerDlg = new ColorPickerCharsCommodore( Core, m_Project, (ushort)m_CurrentChar, (byte)m_CurrentColor );
           break;
       }
       _ColorPickerDlg.SelectedColorChanged += _ColorChooserDlg_SelectedColorChanged;

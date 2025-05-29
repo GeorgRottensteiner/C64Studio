@@ -33,6 +33,7 @@ namespace RetroDevStudio.Controls
       this.editImportSkipBytes = new System.Windows.Forms.TextBox();
       this.checkImportExpectPadding = new System.Windows.Forms.CheckBox();
       this.label2 = new System.Windows.Forms.Label();
+      this.checkAutoProcessFileTypes = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // label1
@@ -49,7 +50,7 @@ namespace RetroDevStudio.Controls
       this.editImportSkipBytes.Location = new System.Drawing.Point(68, 3);
       this.editImportSkipBytes.Name = "editImportSkipBytes";
       this.editImportSkipBytes.Size = new System.Drawing.Size(179, 20);
-      this.editImportSkipBytes.TabIndex = 1;
+      this.editImportSkipBytes.TabIndex = 0;
       this.editImportSkipBytes.Text = "0";
       // 
       // checkImportExpectPadding
@@ -58,7 +59,7 @@ namespace RetroDevStudio.Controls
       this.checkImportExpectPadding.Location = new System.Drawing.Point(6, 29);
       this.checkImportExpectPadding.Name = "checkImportExpectPadding";
       this.checkImportExpectPadding.Size = new System.Drawing.Size(138, 17);
-      this.checkImportExpectPadding.TabIndex = 6;
+      this.checkImportExpectPadding.TabIndex = 1;
       this.checkImportExpectPadding.Text = "Data has padding bytes";
       this.checkImportExpectPadding.UseVisualStyleBackColor = true;
       // 
@@ -66,17 +67,30 @@ namespace RetroDevStudio.Controls
       // 
       this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.label2.Location = new System.Drawing.Point(3, 64);
+      this.label2.Location = new System.Drawing.Point(23, 72);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(291, 45);
-      this.label2.TabIndex = 0;
+      this.label2.Size = new System.Drawing.Size(281, 45);
+      this.label2.TabIndex = 3;
       this.label2.Text = "If a file extension is \".prg\", 2 bytes are automatically skipped from the beginni" +
     "ng";
+      // 
+      // checkAutoProcessFileTypes
+      // 
+      this.checkAutoProcessFileTypes.AutoSize = true;
+      this.checkAutoProcessFileTypes.Checked = true;
+      this.checkAutoProcessFileTypes.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkAutoProcessFileTypes.Location = new System.Drawing.Point(6, 52);
+      this.checkAutoProcessFileTypes.Name = "checkAutoProcessFileTypes";
+      this.checkAutoProcessFileTypes.Size = new System.Drawing.Size(189, 17);
+      this.checkAutoProcessFileTypes.TabIndex = 2;
+      this.checkAutoProcessFileTypes.Text = "Auto handle file types by extension";
+      this.checkAutoProcessFileTypes.UseVisualStyleBackColor = true;
       // 
       // ImportSpriteFromBinaryFile
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkAutoProcessFileTypes);
       this.Controls.Add(this.checkImportExpectPadding);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
@@ -94,5 +108,6 @@ namespace RetroDevStudio.Controls
         private System.Windows.Forms.TextBox editImportSkipBytes;
     private System.Windows.Forms.CheckBox checkImportExpectPadding;
     private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.CheckBox checkAutoProcessFileTypes;
   }
 }

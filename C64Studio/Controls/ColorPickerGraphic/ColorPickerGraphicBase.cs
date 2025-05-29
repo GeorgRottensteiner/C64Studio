@@ -14,22 +14,19 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
-  public partial class ColorPickerBase : UserControl
+  public partial class ColorPickerGraphicBase : UserControl
   {
     public StudioCore                   Core = null;
 
     private ushort                      _SelectedColor = 1;
-    private ushort                      _SelectedChar = 0;
     private int                         _SelectedPaletteMapping = 0;
 
-    protected CharsetProject            _Charset = null;
+    protected ColorSettings             _Colors = new ColorSettings();
 
 
 
-    public delegate void PaletteMappingSelectedHandler( int PaletteMapping );
     public delegate void ColorSelectedHandler( ushort Color );
 
-    public event PaletteMappingSelectedHandler  PaletteMappingSelected;
     public event ColorSelectedHandler           SelectedColorChanged;
 
 
@@ -56,21 +53,6 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ushort SelectedChar
-    {
-      get
-      {
-        return _SelectedChar;
-      }
-      set
-      {
-        _SelectedChar = value;
-        Redraw();
-      }
-    }
-
-
-
     public int SelectedPaletteMapping
     {
       get
@@ -86,19 +68,17 @@ namespace RetroDevStudio.Controls
 
 
 
-    public ColorPickerBase()
+    public ColorPickerGraphicBase()
     {
       InitializeComponent();
     }
 
 
 
-    public ColorPickerBase( StudioCore Core, CharsetProject Charset, ushort SelectedChar, byte SelectedColor )
+    public ColorPickerGraphicBase( StudioCore Core, byte SelectedColor )
     {
       this.Core         = Core;
-      _Charset          = Charset;  
       _SelectedColor    = SelectedColor;
-      _SelectedChar     = SelectedChar;
 
       InitializeComponent();
     }
@@ -115,17 +95,13 @@ namespace RetroDevStudio.Controls
 
 
 
-    protected void RaisePaletteMappingSelectedEvent()
+    public virtual void Redraw()
     {
-      if ( PaletteMappingSelected != null )
-      {
-        PaletteMappingSelected( _SelectedPaletteMapping );
-      }
     }
 
 
 
-    public virtual void Redraw()
+    public virtual void UpdatePalette( Palette palette )
     {
     }
 

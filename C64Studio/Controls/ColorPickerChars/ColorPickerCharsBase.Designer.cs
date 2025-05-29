@@ -1,7 +1,7 @@
 ﻿
 namespace RetroDevStudio.Controls
 {
-  partial class ColorPickerBase
+  partial class ColorPickerCharsBase
   {
     /// <summary> 
     /// Required designer variable.

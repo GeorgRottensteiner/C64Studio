@@ -373,7 +373,7 @@ namespace RetroDevStudio.Documents
         {
           System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
-          string readableFilename = Util.FilenameToReadableUnicode( fileToExport.Filename ).TrimEnd();
+          string readableFilename = Util.FilenameToReadableUnicode( fileToExport.Filename ).TrimEnd().ToLower();
 
           char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
           foreach ( char invChar in invalidChars )

@@ -11,22 +11,31 @@ namespace RetroDevStudio.Formats
     public enum CheckType
     {
       [Description( "Hires Bitmap" )]
+      [PaletteType( PaletteType.C64 )]
       HIRES_BITMAP,
       [Description( "Multicolor Bitmap" )]
+      [PaletteType( PaletteType.C64 )]
       MULTICOLOR_BITMAP,
       [Description( "Mega65 Bitmap" )]
+      [PaletteType( PaletteType.MEGA65 )]
       MEGA65_BITMAP,
       [Description( "Hires Charset" )]
+      [PaletteType( PaletteType.C64 )]
       HIRES_CHARSET,
       [Description( "Multicolor Charset" )]
+      [PaletteType( PaletteType.C64 )]
       MULTICOLOR_CHARSET,
       [Description( "Mega65 FCM Charset" )]
+      [PaletteType( PaletteType.MEGA65 )]
       MEGA65_FCM_CHARSET,
       [Description( "Mega65 FCM 16bit Charset" )]
+      [PaletteType( PaletteType.MEGA65 )]
       MEGA65_FCM_CHARSET_16BIT,
       [Description( "VIC20 Charset" )]
+      [PaletteType( PaletteType.VIC20 )]
       VIC20_CHARSET,
       [Description( "VIC20 Charset 8x16" )]
+      [PaletteType( PaletteType.VIC20 )]
       VIC20_CHARSET_8X16
     };
 

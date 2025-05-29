@@ -40,7 +40,7 @@ namespace RetroDevStudio.Controls
         if ( imageData.Length == 10003 )
         {
           // could be a Koala painter image
-          if ( imageData.UInt16At( 0 ) == 0x6000 )
+          //if ( imageData.UInt16At( 0 ) == 0x6000 )
           {
             // background color
             Project.Colors.BackgroundColor = imageData.ByteAt( 10002 ) % 16;
