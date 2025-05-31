@@ -729,10 +729,12 @@ namespace RetroDevStudio
       if ( StudioCore.Settings.TrueDriveEnabled )
       {
         mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_enabled;
+        mainToolToggleTrueDrive.Text = "Toggle True Drive\r\nCurrently enabled";
       }
       else
       {
         mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_disabled;
+        mainToolToggleTrueDrive.Text = "Toggle True Drive\r\nCurrently disabled";
       }
 
       // place all toolbars
@@ -2140,151 +2142,16 @@ namespace RetroDevStudio
     public string FillParameters( string Mask, DocumentInfo Document, bool FillForRunning, out bool Error )
     {
       Error = false;
-      if ( Document == null )
-      {
-        return Mask;
-      }
-      string fullDocPath = Document.FullPath;
-      if ( fullDocPath == null )
-      {
-        return Mask;
-      }
-      string result = Mask.Replace( "$(Filename)", fullDocPath );
-      result = result.Replace( "$(File)", GR.Path.GetFileName( fullDocPath ) );
-      result = result.Replace( "$(FilenameWithoutExtension)", GR.Path.GetFileNameWithoutExtension( fullDocPath ) );
-      result = result.Replace( "$(FilePath)", GR.Path.GetDirectoryName( fullDocPath ) );
 
-      string targetFilename = "";
-
-      if ( Document.Element == null )
-      {
-        if ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) )
-        {
-          targetFilename = lastBuildInfoOfThisFile.TargetFile;
-        }
-      }
-      else
-      {
-        targetFilename = Document.Element.TargetFilename;
-        if ( !string.IsNullOrEmpty( Document.Element.CompileTargetFile ) )
-        {
-          targetFilename = Document.Element.CompileTargetFile;
-        }
-        if ( ( string.IsNullOrEmpty( targetFilename ) )
-        &&   ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
-        {
-          targetFilename = GR.Path.RenameExtension( fullDocPath, ".prg" );
-        }
-      }
-      string targetPath = "";
-      if ( !string.IsNullOrEmpty( targetFilename ) )
-      {
-        targetPath = GR.Path.GetDirectoryName( targetFilename );
-      }
-      if ( string.IsNullOrEmpty( targetPath ) )
-      {
-        targetPath = Document.Project.Settings.BasePath;
-      }
-      targetFilename = GR.Path.GetFileName( targetFilename );
-      string targetFilenameWithoutPath = GR.Path.GetFileName( targetFilename );
-      string targetFilenameWithoutExtension = GR.Path.GetFileNameWithoutExtension( targetFilename );
-      string fullTargetFilename = GR.Path.Append( targetPath, targetFilename );
-      string fullTargetFilenameWithoutPath = GR.Path.GetFileName( fullTargetFilename );
-      string fullTargetFilenameWithoutExtension = GR.Path.Append( targetPath, GR.Path.GetFileNameWithoutExtension( fullTargetFilename ) );
-
-      string runFilename = GR.Path.GetFileName( fullTargetFilename );
-      string fullRunFilename = fullTargetFilename;
-      string runPath = GR.Path.GetDirectoryName( fullRunFilename );
-
-      // alternative run file name
-      if ( ( FillForRunning )
-      &&   ( Document.Element != null ) )
-      {
-        ProjectElement.PerConfigSettings configSettingRun = Document.Element.Settings[Document.Project.Settings.CurrentConfig.Name];
-        if ( !string.IsNullOrEmpty( configSettingRun.DebugFile ) )
-        {
-          if ( configSettingRun.DebugFile.Contains( "$(Run" ) )
-          {
-            Error = true;
-            StudioCore.AddToOutput( "Alternative run file name contains forbidden macro $(RunPath), $(RunFilename) or $(RunFilenameWithoutExtension)" + System.Environment.NewLine );
-            return "";
-          }
-          fullRunFilename = FillParameters( configSettingRun.DebugFile, Document, false, out Error );
-          if ( Error )
-          {
-            return "";
-          }
-          if ( !GR.Path.IsPathRooted( fullRunFilename ) )
-          {
-            // prepend build target path to filename
-            fullRunFilename = GR.Path.Append( targetPath, fullRunFilename );
-          }
-          runPath = GR.Path.GetDirectoryName( fullRunFilename );
-          runFilename = GR.Path.GetFileName( fullRunFilename );
-        }
-      }
-      string runFilenameWithoutExtension      = GR.Path.GetFileNameWithoutExtension(runFilename);
-      string runFilenameWithoutPath           = GR.Path.GetFileName(runFilename);
-      string fullRunFilenameWithoutExtension  = GR.Path.GetFileNameWithoutExtension(fullRunFilename);
-
-
-
-      result = result.Replace( "$(BuildTargetPath)", targetPath );
-      result = result.Replace( "$(BuildTargetFilename)", fullTargetFilename );
-      result = result.Replace( "$(BuildTargetFilenameWithoutExtension)", fullTargetFilenameWithoutExtension );
-      result = result.Replace( "$(BuildTargetFile)", targetFilename );
-      result = result.Replace( "$(BuildTargetFileWithoutExtension)", targetFilenameWithoutExtension );
-      result = result.Replace( "$(RunPath)", runPath );
-      result = result.Replace( "$(RunFilename)", fullRunFilename );
-      result = result.Replace( "$(RunFile)", runFilenameWithoutPath );
-      result = result.Replace( "$(RunFilenameWithoutExtension)", fullRunFilenameWithoutExtension );
-
-      if ( Document.Project != null )
-      {
-        result = result.Replace( "$(ConfigName)", Document.Project.Settings.CurrentConfig.Name );
-        result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
-      }
-      if ( ( StudioCore.Navigating.Solution != null )
-      &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
-      {
-        result = result.Replace( "$(SolutionPath)", GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) );
-      }
-#if DEBUG
-      result = result.Replace( "$(MediaManager)", "\"" + MakeDebugPath( Application.StartupPath, "MediaManager", "MediaManager.exe" ) + "\"" );
-      result = result.Replace( "$(MediaTool)", "\"" + MakeDebugPath( Application.StartupPath, "MediaTool", "Mediatool.exe" ) + "\"" );
-#else
-      result = result.Replace( "$(MediaManager)", "\"" + GR.Path.Append( Application.StartupPath, "mediamanager.exe" ) + "\"" );
-      result = result.Replace( "$(MediaTool)", "\"" + GR.Path.Append( Application.StartupPath, "mediatool.exe" ) + "\"" );
-#endif
-
-      int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
-      {
-        if ( ( Document.Project != null )
-        &&   ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
-        {
-          int   dummy = -1;
-          if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out dummy ) )
-          {
-            Error = true;
-            StudioCore.AddToOutput( "Cannot determine value for debug start address from '" + Document.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
-            return "";
-          }
-          if ( dummy != 0 )
-          {
-            debugStartAddress = dummy;
-          }
-        }
-      }
-      result = result.Replace( "$(DebugStartAddress)", debugStartAddress.ToString() );
-      result = result.Replace( "$(DebugStartAddressHex)", debugStartAddress.ToString( "x" ) );
+      string result = Mask;
 
       // replace symbols
       var parser = new ASMFileParser();
 
-      int dollarPos = result.IndexOf("$(");
+      int dollarPos = result.IndexOf( "$(" );
       while ( dollarPos != -1 )
       {
-        int macroEndPos = result.IndexOf(')', dollarPos);
+        int macroEndPos = result.IndexOf( ')', dollarPos );
 
         if ( macroEndPos == -1 )
         {
@@ -2293,6 +2160,7 @@ namespace RetroDevStudio
           return "";
         }
         string macroName = result.Substring( dollarPos + 2, macroEndPos - dollarPos - 2 );
+        string valueToInsert = "$(" + macroName + ")";
         bool asHex = false;
         if ( macroName.StartsWith( "0x" ) )
         {
@@ -2300,28 +2168,224 @@ namespace RetroDevStudio
           macroName = macroName.Substring( 2 );
         }
 
-        // TODO - was raw!
-        var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length );
-        parser.InjectASMFileInfo( Document.ASMFileInfo );
-        if ( !parser.EvaluateTokens( 0, tokens, out SymbolInfo macroValueSymbol ) )
+        bool  foundUsage = false;
         {
-          Error = true;
-          StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );
-          return "";
+          string fullDocPath = Document?.FullPath ?? "";
+          string targetFilename = "";
+
+          if ( Document?.Element == null )
+          {
+            if ( ( StudioCore.Compiling.m_LastBuildInfo != null )
+            &&   ( Document != null )
+            &&   ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
+            {
+              targetFilename = lastBuildInfoOfThisFile.TargetFile;
+            }
+          }
+          else
+          {
+            targetFilename = Document?.Element.TargetFilename;
+            if ( !string.IsNullOrEmpty( Document?.Element.CompileTargetFile ) )
+            {
+              targetFilename = Document?.Element.CompileTargetFile;
+            }
+            if ( ( string.IsNullOrEmpty( targetFilename ) )
+            &&   ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+            {
+              targetFilename = GR.Path.RenameExtension( fullDocPath, ".prg" );
+            }
+          }
+          string targetPath = "";
+          if ( !string.IsNullOrEmpty( targetFilename ) )
+          {
+            targetPath = GR.Path.GetDirectoryName( targetFilename );
+          }
+          if ( ( string.IsNullOrEmpty( targetPath ) )
+          &&   ( Document?.Project != null ) )
+          {
+            targetPath = Document.Project.Settings.BasePath;
+          }
+          targetFilename = GR.Path.GetFileName( targetFilename );
+          string targetFilenameWithoutPath = GR.Path.GetFileName( targetFilename );
+          string targetFilenameWithoutExtension = GR.Path.GetFileNameWithoutExtension( targetFilename );
+          string fullTargetFilename = GR.Path.Append( targetPath, targetFilename );
+          string fullTargetFilenameWithoutPath = GR.Path.GetFileName( fullTargetFilename );
+          string fullTargetFilenameWithoutExtension = GR.Path.Append( targetPath, GR.Path.GetFileNameWithoutExtension( fullTargetFilename ) );
+
+          string runFilename = GR.Path.GetFileName( fullTargetFilename );
+          string fullRunFilename = fullTargetFilename;
+          string runPath = GR.Path.GetDirectoryName( fullRunFilename );
+
+          // alternative run file name
+          if ( ( FillForRunning )
+          &&   ( Document?.Element != null ) )
+          {
+            ProjectElement.PerConfigSettings configSettingRun = Document.Element.Settings[Document.Project.Settings.CurrentConfig.Name];
+            if ( !string.IsNullOrEmpty( configSettingRun.DebugFile ) )
+            {
+              if ( configSettingRun.DebugFile.Contains( "$(Run" ) )
+              {
+                Error = true;
+                StudioCore.AddToOutput( "Alternative run file name contains forbidden macro $(RunPath), $(RunFilename) or $(RunFilenameWithoutExtension)" + System.Environment.NewLine );
+                return "";
+              }
+              fullRunFilename = FillParameters( configSettingRun.DebugFile, Document, false, out Error );
+              if ( Error )
+              {
+                return "";
+              }
+              if ( !GR.Path.IsPathRooted( fullRunFilename ) )
+              {
+                // prepend build target path to filename
+                fullRunFilename = GR.Path.Append( targetPath, fullRunFilename );
+              }
+              runPath = GR.Path.GetDirectoryName( fullRunFilename );
+              runFilename = GR.Path.GetFileName( fullRunFilename );
+            }
+          }
+          string runFilenameWithoutExtension      = GR.Path.GetFileNameWithoutExtension(runFilename);
+          string runFilenameWithoutPath           = GR.Path.GetFileName(runFilename);
+          string fullRunFilenameWithoutExtension  = GR.Path.GetFileNameWithoutExtension(fullRunFilename);
+
+          int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
+          {
+            if ( ( Document?.Project != null )
+            &&   ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+            {
+              int   dummy = -1;
+              if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out dummy ) )
+              {
+                Error = true;
+                StudioCore.AddToOutput( "Cannot determine value for debug start address from '" + Document.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
+                return "";
+              }
+              if ( dummy != 0 )
+              {
+                debugStartAddress = dummy;
+              }
+            }
+          }
+
+          foundUsage = true;
+          switch ( macroName )
+          {
+            case "Filename":
+              valueToInsert = fullDocPath;
+              break;
+            case "File":
+              valueToInsert = GR.Path.GetFileName( fullDocPath );
+              break;
+            case "FilenameWithoutExtension":
+              valueToInsert = GR.Path.GetFileNameWithoutExtension( fullDocPath );
+              break;
+            case "FilePath":
+              valueToInsert = GR.Path.GetDirectoryName( fullDocPath );
+              break;
+            case "BuildTargetPath":
+              valueToInsert = targetPath;
+              break;
+            case "BuildTargetFilename":
+              valueToInsert = fullTargetFilename;
+              break;
+            case "BuildTargetFilenameWithoutExtension":
+              valueToInsert = fullTargetFilenameWithoutExtension;
+              break;
+            case "BuildTargetFile":
+              valueToInsert = targetFilename;
+              break;
+            case "BuildTargetFileWithoutExtension":
+              valueToInsert = targetFilenameWithoutExtension;
+              break;
+            case "RunPath":
+              valueToInsert = runPath;
+              break;
+            case "RunFilename":
+              valueToInsert = fullRunFilename;
+              break;
+            case "RunFile":
+              valueToInsert = runFilenameWithoutPath;
+              break;
+            case "RunFilenameWithoutExtension":
+              valueToInsert = fullRunFilenameWithoutExtension;
+              break;
+            case "ConfigName":
+              if ( Document?.Project != null )
+              {
+                valueToInsert = Document.Project.Settings.CurrentConfig.Name;
+              }
+              break;
+            case "ProjectPath":
+              if ( Document?.Project != null )
+              {
+                valueToInsert = Document.Project.Settings.BasePath;
+              }
+              break;
+            case "SolutionPath":
+              if ( ( StudioCore.Navigating.Solution != null )
+              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              {
+                valueToInsert = GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename );
+              }
+              break;
+            case "DebugStartAddress":
+              valueToInsert = debugStartAddress.ToString();
+              break;
+            case "DebugStartAddressHex":
+              valueToInsert = debugStartAddress.ToString( "x" );
+              break;
+            case "MediaManager":
+#if DEBUG
+              valueToInsert = "\"" + MakeDebugPath( Application.StartupPath, "MediaManager", "MediaManager.exe" ) + "\"";
+#else
+              valueToInsert = "\"" + GR.Path.Append( Application.StartupPath, "mediamanager.exe" ) + "\"";
+#endif
+              break;
+            case "MediaTool":
+#if DEBUG
+              valueToInsert = "\"" + MakeDebugPath( Application.StartupPath, "MediaTool", "Mediatool.exe" ) + "\"";
+#else
+              valueToInsert = "\"" + GR.Path.Append( Application.StartupPath, "mediatool.exe" ) + "\"";
+#endif
+              break;
+            default:
+              foundUsage = false;
+              break;
+          }
         }
-        long macroValue = macroValueSymbol.ToInteger( );
-        string valueToInsert = "";
-        if ( asHex )
+
+        if ( !foundUsage )
         {
-          valueToInsert = macroValue.ToString( "X" );
+          // none of the default macros
+          var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length );
+          if ( Document != null )
+          {
+            parser.InjectASMFileInfo( Document.ASMFileInfo );
+          }
+          if ( !parser.EvaluateTokens( 0, tokens, out SymbolInfo macroValueSymbol ) )
+          {
+            Error = true;
+            StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );
+            return "";
+          }
+          long macroValue = macroValueSymbol.ToInteger( );
+          if ( asHex )
+          {
+            valueToInsert = macroValue.ToString( "X" );
+          }
+          else
+          {
+            valueToInsert = macroValue.ToString();
+          }
         }
-        else
+
+        if ( string.IsNullOrEmpty( valueToInsert ) )
         {
-          valueToInsert = macroValue.ToString();
+          valueToInsert = "$(" + macroName + ")";
         }
+
         result = result.Substring( 0, dollarPos ) + valueToInsert + result.Substring( macroEndPos + 1 );
         macroEndPos = dollarPos + valueToInsert.Length;
-        dollarPos = result.IndexOf( "$(", dollarPos );
+        dollarPos = result.IndexOf( "$(", macroEndPos );
       }
       return result;
     }
@@ -7489,11 +7553,14 @@ namespace RetroDevStudio
       if ( StudioCore.Settings.TrueDriveEnabled )
       {
         mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_enabled;
+        mainToolToggleTrueDrive.Text = "Toggle True Drive\r\nCurrently enabled";
       }
       else
       {
         mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_disabled;
+        mainToolToggleTrueDrive.Text = "Toggle True Drive\r\nCurrently disabled";
       }
+
     }
 
 

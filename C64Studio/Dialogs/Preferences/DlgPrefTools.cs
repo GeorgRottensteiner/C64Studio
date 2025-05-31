@@ -24,6 +24,8 @@ namespace RetroDevStudio.Dialogs.Preferences
     public DlgPrefTools()
     {
       InitializeComponent();
+
+      _lastFocusedEdit = editToolPRGArguments;
     }
 
 
@@ -33,6 +35,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       _Keywords.AddRange( new string[] { "tools", "emulator" }  );
 
       InitializeComponent();
+
+      _lastFocusedEdit = editToolPRGArguments;
     }
 
 

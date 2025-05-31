@@ -63,8 +63,15 @@ namespace RetroDevStudio.Dialogs
       bool    error = false;
 
       ListViewItem    item = new ListViewItem( Macro );
-      item.SubItems.Add( Core.MainForm.FillParameters( Macro, m_Doc, false, out error ) );
-
+      var filledParam = Core.MainForm.FillParameters( Macro, m_Doc, false, out error );
+      if ( filledParam == Macro )
+      {
+        item.SubItems.Add( "No valid build info found, recompile is required or not applicable" );
+      }
+      else
+      {
+        item.SubItems.Add( filledParam );
+      }
       listMacros.Items.Add( item );
     }
 
