@@ -2177,6 +2177,7 @@ namespace RetroDevStudio
           {
             if ( ( StudioCore.Compiling.m_LastBuildInfo != null )
             &&   ( Document != null )
+            &&   ( Document.FullPath != null )
             &&   ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
             {
               targetFilename = lastBuildInfoOfThisFile.TargetFile;
