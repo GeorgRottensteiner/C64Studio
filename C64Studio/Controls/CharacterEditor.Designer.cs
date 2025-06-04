@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.btnClearChars = new DecentForms.Button();
       this.comboCategories = new System.Windows.Forms.ComboBox();
       this.btnPasteFromClipboard = new DecentForms.Button();
@@ -79,6 +79,7 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
+      this.btnRemoveDuplicates = new DecentForms.Button();
       this.tabCharacterEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
@@ -95,7 +96,7 @@
       this.btnClearChars.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnClearChars.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnClearChars.Image = null;
-      this.btnClearChars.Location = new System.Drawing.Point(514, 301);
+      this.btnClearChars.Location = new System.Drawing.Point(681, 269);
       this.btnClearChars.Name = "btnClearChars";
       this.btnClearChars.Size = new System.Drawing.Size(58, 26);
       this.btnClearChars.TabIndex = 0;
@@ -172,7 +173,7 @@
       this.btnMoveSelectionToTarget.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnMoveSelectionToTarget.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnMoveSelectionToTarget.Image = null;
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(578, 301);
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(514, 301);
       this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
       this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(97, 26);
       this.btnMoveSelectionToTarget.TabIndex = 1;
@@ -181,7 +182,7 @@
       // 
       // editMoveTargetIndex
       // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(681, 305);
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(617, 304);
       this.editMoveTargetIndex.Name = "editMoveTargetIndex";
       this.editMoveTargetIndex.Size = new System.Drawing.Size(93, 20);
       this.editMoveTargetIndex.TabIndex = 0;
@@ -358,6 +359,7 @@
       this.tabEditor.Controls.Add(this.panelColorChooser);
       this.tabEditor.Controls.Add(this.editMoveTargetIndex);
       this.tabEditor.Controls.Add(this.btnClearChars);
+      this.tabEditor.Controls.Add(this.btnRemoveDuplicates);
       this.tabEditor.Controls.Add(this.btnHighlightDuplicates);
       this.tabEditor.Controls.Add(this.panelColorSettings);
       this.tabEditor.Controls.Add(this.canvasEditor);
@@ -404,11 +406,12 @@
       this.btnHighlightDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnHighlightDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnHighlightDuplicates.Image = null;
-      this.btnHighlightDuplicates.Location = new System.Drawing.Point(681, 269);
+      this.btnHighlightDuplicates.Location = new System.Drawing.Point(514, 333);
       this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
-      this.btnHighlightDuplicates.Size = new System.Drawing.Size(93, 26);
+      this.btnHighlightDuplicates.Size = new System.Drawing.Size(97, 26);
       this.btnHighlightDuplicates.TabIndex = 18;
       this.btnHighlightDuplicates.Text = "Duplicates";
+      this.toolTip1.SetToolTip(this.btnHighlightDuplicates, "Highlight duplicates");
       this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
       // 
       // panelColorSettings
@@ -434,7 +437,7 @@
       // 
       this.comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCharsetMode.FormattingEnabled = true;
-      this.comboCharsetMode.Location = new System.Drawing.Point(322, 322);
+      this.comboCharsetMode.Location = new System.Drawing.Point(320, 301);
       this.comboCharsetMode.Name = "comboCharsetMode";
       this.comboCharsetMode.Size = new System.Drawing.Size(169, 21);
       this.comboCharsetMode.TabIndex = 13;
@@ -443,7 +446,7 @@
       // labelCharsetMode
       // 
       this.labelCharsetMode.AutoSize = true;
-      this.labelCharsetMode.Location = new System.Drawing.Point(279, 325);
+      this.labelCharsetMode.Location = new System.Drawing.Point(277, 304);
       this.labelCharsetMode.Name = "labelCharsetMode";
       this.labelCharsetMode.Size = new System.Drawing.Size(37, 13);
       this.labelCharsetMode.TabIndex = 17;
@@ -453,7 +456,7 @@
       // 
       this.picturePlayground.AutoResize = false;
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage1;
+      this.picturePlayground.DisplayPage = fastImage2;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(780, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -695,6 +698,20 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
+      // btnRemoveDuplicates
+      // 
+      this.btnRemoveDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnRemoveDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnRemoveDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnRemoveDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnRemoveDuplicates.Image = null;
+      this.btnRemoveDuplicates.Location = new System.Drawing.Point(617, 333);
+      this.btnRemoveDuplicates.Name = "btnRemoveDuplicates";
+      this.btnRemoveDuplicates.Size = new System.Drawing.Size(122, 26);
+      this.btnRemoveDuplicates.TabIndex = 18;
+      this.btnRemoveDuplicates.Text = "Remove Duplicates";
+      this.btnRemoveDuplicates.Click += new DecentForms.EventHandler(this.btnRemoveDuplicates_Click);
+      // 
       // CharacterEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -764,5 +781,6 @@
     private System.Windows.Forms.Panel panelColorSettings;
     private DecentForms.Button btnHighlightDuplicates;
     private System.Windows.Forms.Panel panelColorChooser;
+    private DecentForms.Button btnRemoveDuplicates;
   }
 }

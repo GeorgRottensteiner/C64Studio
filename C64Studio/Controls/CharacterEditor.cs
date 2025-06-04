@@ -3039,5 +3039,183 @@ namespace RetroDevStudio.Controls
 
 
 
+    private void btnRemoveDuplicates_Click( DecentForms.ControlBase Sender )
+    {
+      var duplicateGroups = new Map<ByteBuffer,int>();
+      var itemGroup       = new Map<int,int>();
+
+      bool hasDuplicates = false;
+
+      int numChars = m_Project.TotalNumberOfCharacters;
+      if ( Lookup.IsECMMode( m_Project.Mode ) )
+      {
+        numChars = 64;
+      }
+
+      int[]   charMapOldToNew = new int[numChars];
+      int[]   charMapNewToOld = new int[numChars];
+      for ( int i = 0; i < numChars - 1; ++i )
+      {
+        charMapOldToNew[i] = -1;
+        charMapNewToOld[i] = -1;
+      }
+      int     targetIndex = 0;
+      for ( int i = 0; i < numChars - 1; ++i )
+      {
+        bool foundDuplicate = false;
+        int  duplicateSourceIndex = -1;
+        for ( int j = i + 1; j < numChars; ++j )
+        {
+          if ( m_Project.Characters[i].Tile.Data == m_Project.Characters[j].Tile.Data )
+          {
+            if ( charMapOldToNew[i] == -1 )
+            {
+              charMapOldToNew[i] = targetIndex;
+              duplicateSourceIndex = targetIndex;
+              ++targetIndex;
+            }
+            else
+            {
+              duplicateSourceIndex = charMapOldToNew[i];
+            }
+            if ( charMapOldToNew[j] == -1 )
+            {
+              charMapOldToNew[j] = duplicateSourceIndex;
+            }
+
+            foundDuplicate = true;
+            hasDuplicates = true;
+            int duplicateGroup = -1;
+            if ( duplicateGroups.TryGetValue( m_Project.Characters[i].Tile.Data, out duplicateGroup ) )
+            {
+              itemGroup.Add( i, duplicateGroup );
+              itemGroup.Add( j, duplicateGroup );
+            }
+            else
+            {
+              duplicateGroup = duplicateGroups.Count;
+              itemGroup.Add( i, duplicateGroup );
+              itemGroup.Add( j, duplicateGroup );
+              duplicateGroups.Add( m_Project.Characters[i].Tile.Data, duplicateGroup );
+            }
+          }
+        }
+        if ( !foundDuplicate )
+        {
+          if ( charMapOldToNew[i] == -1 )
+          {
+            charMapOldToNew[i] = targetIndex;
+            ++targetIndex;
+          }
+        }
+      }
+      if ( !hasDuplicates )
+      {
+        return;
+      }
+
+      /*
+      targetIndex = 0;
+      for ( int j = 0; j < numChars; ++j )
+      {
+        if ( Lookup.IsECMMode( m_Project.Mode ) )
+        {
+          for ( int i = 0; i < 4; ++i )
+          {
+            charMapNewToOld[i * 64 + targetIndex % 64] = i * 64 + j % 64;
+            charMapOldToNew[i * 64 + j % 64] = i * 64 + targetIndex % 64;
+          }
+        }
+        else
+        {
+          charMapNewToOld[targetIndex] = j;
+          charMapOldToNew[j] = targetIndex;
+        }
+        ++targetIndex;
+      }*/
+
+      /*
+      // now fill all other entries
+      byte    insertCharIndex = 0;
+      int     charPos = 0;
+      while ( charPos < numChars )
+      {
+        // already inserted, skip
+        if ( charMapNewToOld[charPos] != -1 )
+        {
+          ++charPos;
+          continue;
+        }
+        while ( selection.Contains( insertCharIndex ) )
+        {
+          ++insertCharIndex;
+        }
+        if ( Lookup.IsECMMode( m_Project.Mode ) )
+        {
+          for ( int i = 0; i < 4; ++i )
+          {
+            charMapNewToOld[i * 64 + charPos] = i * 64 + insertCharIndex;
+            charMapOldToNew[i * 64 + insertCharIndex] = i * 64 + charPos;
+          }
+        }
+        else
+        {
+          charMapNewToOld[charPos] = insertCharIndex;
+          charMapOldToNew[insertCharIndex] = charPos;
+        }
+        ++charPos;
+        ++insertCharIndex;
+      }*/
+
+      while ( targetIndex < numChars )
+      {
+        charMapOldToNew[targetIndex] = targetIndex;
+
+        m_Project.Characters[targetIndex].Tile.Data.Fill( 0, (int)m_Project.Characters[targetIndex].Tile.Data.Length, 0 );
+        ++targetIndex;
+      }
+
+
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+
+      // ..and charset
+      List<CharData>    origCharData = new List<CharData>();
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems = new List<GR.Forms.ImageListbox.ImageListItem>();
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems2 = new List<GR.Forms.ImageListbox.ImageListItem>();
+
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        origCharData.Add( m_Project.Characters[i] );
+        origListItems.Add( panelCharacters.Items[i] );
+      }
+
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        m_Project.Characters[charMapOldToNew[i]]  = origCharData[i].Clone();
+        panelCharacters.Items[charMapOldToNew[i]] = new ImageListbox.ImageListItem( panelCharacters )
+        {
+          MemoryImage  = new MemoryImage( origListItems[i].MemoryImage ),
+          Value        = origListItems[i].Value
+        };
+        RebuildCharImage( i );
+      }
+      panelCharacters.Invalidate();
+
+      RedrawPlayground();
+      canvasEditor.Invalidate();
+      RedrawColorPicker();
+
+      RaiseCharactersShiftedEvent( charMapOldToNew, charMapNewToOld );
+
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+      RaiseModifiedEvent( modifiedChars );
+    }
+
+
+
   }
 }
