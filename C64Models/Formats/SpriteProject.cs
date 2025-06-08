@@ -11,7 +11,7 @@ namespace RetroDevStudio.Formats
   {
     public enum SpriteProjectMode
     {
-      [Description( "Commodore 24x21" )]
+      [Description( "C64/Mega65 24x21" )]
       COMMODORE_24_X_21_HIRES_OR_MC,
       [Description( "Mega65 64x21" )]
       MEGA65_64_X_21_HIRES_OR_MC,

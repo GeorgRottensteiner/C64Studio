@@ -15,19 +15,19 @@ using System.Windows.Forms;
 
 namespace RetroDevStudio.Dialogs.Preferences
 {
-  [Description( "Assembler.Warnings" )]
-  public partial class DlgPrefAssembler : DlgPrefBase
+  [Description( "BASIC.Warnings" )]
+  public partial class DlgPrefBASICWarnings : DlgPrefBase
   {
-    public DlgPrefAssembler()
+    public DlgPrefBASICWarnings()
     {
       InitializeComponent();
     }
 
 
 
-    public DlgPrefAssembler( StudioCore Core ) : base( Core )
+    public DlgPrefBASICWarnings( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "asm", "assembler", "warnings", "hack", "ignore", "label" } );
+      _Keywords.AddRange( new string[] { "basic", "warnings", "ignore" } );
 
       InitializeComponent();
     }
@@ -38,10 +38,6 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       RefillIgnoredMessageList();
       RefillWarningsAsErrorList();
-      RefillC64StudioHackList();
-
-      checkASMAutoTruncateLiteralValues.Checked   = Core.Settings.ASMAutoTruncateLiteralValues;
-      checkLabelFileSkipAssemblerIDLabels.Checked = Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels;
     }
 
 
@@ -51,11 +47,12 @@ namespace RetroDevStudio.Dialogs.Preferences
       GR.Strings.XMLElement     xmlSettingRoot = AddOrFind( SettingsRoot, "IgnoredMessages" );
       foreach ( Types.ErrorCode element in Core.Settings.IgnoredWarnings )
       {
-        if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( element ) != null )
+        if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( element ) == null )
         {
-          // don't export BASIC warnings
+          // only export BASIC warnings
           continue;
         }
+
         var xmlColor = new GR.Strings.XMLElement( "Message" );
         xmlColor.AddAttribute( "Index", ( (int)element ).ToString() );
 
@@ -65,28 +62,17 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlSettingRoot = AddOrFind( SettingsRoot, "WarningsAsErrors" );
       foreach ( Types.ErrorCode element in Core.Settings.TreatWarningsAsErrors )
       {
-        if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( element ) != null )
+        if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( element ) == null )
         {
-          // don't export BASIC warnings
+          // only export BASIC warnings
           continue;
         }
 
         var xmlColor = new GR.Strings.XMLElement( "Message" );
         xmlColor.AddAttribute( "Index", ( (int)element ).ToString() );
+
         xmlSettingRoot.AddChild( xmlColor );
       }
-
-      xmlSettingRoot = AddOrFind( SettingsRoot, "AssemblerHacks" );
-      foreach ( var hack in Core.Settings.EnabledC64StudioHacks )
-      {
-        var xmlHack = new GR.Strings.XMLElement( "Hack" );
-        xmlHack.AddAttribute( "Type", hack.ToString() );
-
-        xmlSettingRoot.AddChild( xmlHack );
-      }
-
-      SettingsRoot.AddChild( "AutoTruncateLiterals" ).AddAttribute( "Enabled", Core.Settings.ASMAutoTruncateLiteralValues ? "yes" : "no" );
-      SettingsRoot.AddChild( "LabelFileIgnoreAssemblerIDLabels" ).AddAttribute( "Enabled", Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels ? "yes" : "no" );
     }
 
 
@@ -111,9 +97,10 @@ namespace RetroDevStudio.Dialogs.Preferences
             try
             {
               Types.ErrorCode   message = (Types.ErrorCode)GR.Convert.ToI32( xmlKey.Attribute( "Index" ) );
-              if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( message ) != null )
+
+              if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( message ) == null )
               {
-                // only import non-BASIC warnings
+                // only import BASIC warnings
                 continue;
               }
               Core.Settings.IgnoredWarnings.Add( message );
@@ -144,9 +131,9 @@ namespace RetroDevStudio.Dialogs.Preferences
             try
             {
               Types.ErrorCode   message = (Types.ErrorCode)GR.Convert.ToI32( xmlKey.Attribute( "Index" ) );
-              if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( message ) != null )
+              if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( message ) == null )
               {
-                // only import non-BASIC warnings
+                // only import BASIC warnings
                 continue;
               }
               Core.Settings.TreatWarningsAsErrors.Add( message );
@@ -158,55 +145,6 @@ namespace RetroDevStudio.Dialogs.Preferences
           }
         }
       }
-
-      xmlSettingRoot = SettingsRoot.FindByTypeRecursive( "AssemblerHacks" );
-      if ( xmlSettingRoot != null )
-      {
-        Core.Settings.EnabledC64StudioHacks.Clear();
-        foreach ( var xmlKey in xmlSettingRoot.ChildElements )
-        {
-          if ( xmlKey.Type == "Hack" )
-          {
-            try
-            {
-              var hack = (AssemblerSettings.Hacks)Enum.Parse( typeof( AssemblerSettings.Hacks ), xmlKey.Attribute( "Type" ) );
-              Core.Settings.EnabledC64StudioHacks.Add( hack );
-            }
-            catch ( Exception ex )
-            {
-              Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
-            }
-          }
-        }
-      }
-
-      var xmlAutoTruncateLiterals = SettingsRoot.FindByTypeRecursive( "AutoTruncateLiterals" );
-      if ( xmlAutoTruncateLiterals != null )
-      {
-        Core.Settings.ASMAutoTruncateLiteralValues = IsSettingTrue( xmlAutoTruncateLiterals.Attribute( "Enabled" ) );
-      }
-      var xmlIgnoreAssemblerIDLabels = SettingsRoot.FindByTypeRecursive( "LabelFileIgnoreAssemblerIDLabels" );
-      if ( xmlIgnoreAssemblerIDLabels != null )
-      {
-        Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels = IsSettingTrue( xmlIgnoreAssemblerIDLabels.Attribute( "Enabled" ) );
-      }
-    }
-
-
-
-    private void RefillC64StudioHackList()
-    {
-      listHacks.Items.Clear();
-      listHacks.BeginUpdate();
-      foreach ( AssemblerSettings.Hacks hack in Enum.GetValues( typeof( AssemblerSettings.Hacks ) ) )
-      {
-        int itemIndex = listHacks.Items.Add( new GR.Generic.Tupel<string, AssemblerSettings.Hacks>( GR.EnumHelper.GetDescription( hack ), hack ) );
-        if ( Core.Settings.EnabledC64StudioHacks.ContainsValue( hack ) )
-        {
-          listHacks.SetItemChecked( itemIndex, true );
-        }
-      }
-      listHacks.EndUpdate();
     }
 
 
@@ -220,9 +158,9 @@ namespace RetroDevStudio.Dialogs.Preferences
         if ( ( code > Types.ErrorCode.WARNING_START )
         &&   ( code < Types.ErrorCode.WARNING_LAST_PLUS_ONE ) )
         {
-          if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( code ) != null )
+          if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( code ) == null )
           {
-            // only import non-BASIC warnings
+            // only import BASIC warnings
             continue;
           }
 
@@ -247,9 +185,9 @@ namespace RetroDevStudio.Dialogs.Preferences
         if ( ( code > Types.ErrorCode.WARNING_START )
         &&   ( code < Types.ErrorCode.WARNING_LAST_PLUS_ONE ) )
         {
-          if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( code ) != null )
+          if ( GR.EnumHelper.GetAttributeOfType<UsedForBASICAttribute>( code ) == null )
           {
-            // only import non-BASIC warnings
+            // only import BASIC warnings
             continue;
           }
 
@@ -261,13 +199,6 @@ namespace RetroDevStudio.Dialogs.Preferences
         }
       }
       listWarningsAsErrors.EndUpdate();
-    }
-
-
-
-    private void checkASMAutoTruncateLiteralValues_CheckedChanged( object sender, EventArgs e )
-    {
-      Core.Settings.ASMAutoTruncateLiteralValues = checkASMAutoTruncateLiteralValues.Checked;
     }
 
 
@@ -300,30 +231,6 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.TreatWarningsAsErrors.Add( item.second );
       }
-    }
-
-
-
-    private void listHacks_ItemCheck( object sender, ItemCheckEventArgs e )
-    {
-      GR.Generic.Tupel<string, Parser.AssemblerSettings.Hacks> item = (GR.Generic.Tupel<string, Parser.AssemblerSettings.Hacks>)listHacks.Items[e.Index];
-
-      if ( e.NewValue != CheckState.Checked )
-      {
-        Core.Settings.EnabledC64StudioHacks.Remove( item.second );
-      }
-      else
-      {
-        Core.Settings.EnabledC64StudioHacks.Add( item.second );
-      }
-      Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.MARK_ALL_ASSEMBLIES_AS_DIRTY ) );
-    }
-
-
-
-    private void checkLabelFileSkipAssemblerIDLabels_CheckedChanged( object sender, EventArgs e )
-    {
-      Core.Settings.ASMLabelFileIgnoreAssemblerIDLabels = checkLabelFileSkipAssemblerIDLabels.Checked;
     }
 
 

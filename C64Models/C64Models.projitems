@@ -15,9 +15,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulators\DynamicArgument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)emulators\EmulatorDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulators\EmulatorInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Emulators\UsedForAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\UsedForBASICAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\UsedForAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MapperCommdore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MachineFileTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\ErrorCode.cs" />
     <Compile Include="..\C64Models\Attributes\MachineTypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\AdditionalArgumentCount.cs" />

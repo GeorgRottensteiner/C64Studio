@@ -39,7 +39,9 @@
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(292, 87);
       this.label1.TabIndex = 11;
-      this.label1.Text = resources.GetString("label1.Text");
+      this.label1.Text = @"If checked a temporary file is written to <Filename>.bas.temp without the meta data lines (just as if only the real BASIC code would exist)
+
+Useful for custom build steps where the external compiler does not know about C64Studio specific enhancements.";
       // 
       // checkBASICWriteTempFileWithoutMetaData
       // 

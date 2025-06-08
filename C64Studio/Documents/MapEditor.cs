@@ -1376,7 +1376,10 @@ namespace RetroDevStudio.Documents
       RedrawColorChooser();
       characterEditor.CharsetUpdated( m_MapProject.Charset );
       Modified = false;
-      DocumentInfo.DocumentFilename = File;
+      if ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
+      {
+        DocumentInfo.DocumentFilename = File;
+      }
 
       if ( ( comboMaps.Items.Count > 0 )
       &&   ( comboMaps.SelectedIndex == -1 ) )

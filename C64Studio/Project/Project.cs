@@ -622,6 +622,14 @@ namespace RetroDevStudio
         element.Filename = GR.Path.RelativePathTo( element.Filename, false, Settings.BasePath, true );
       }
       element.DocumentInfo.DocumentFilename = element.Filename;
+      // DocumentFilename is supposed to be relative to the project base path if it's inside its folder
+      if ( GR.Path.IsPathRooted( element.DocumentInfo.DocumentFilename ) )
+      {
+        if ( GR.Path.CommonPrefix( element.DocumentInfo.DocumentFilename, Settings.BasePath ) == Settings.BasePath )
+        {
+          element.DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( element.DocumentInfo.DocumentFilename, false, Settings.BasePath, true );
+        }
+      }
       if ( element.Document != null )
       {
         if ( !element.Document.ReadFromReader( subChunk.MemoryReader() ) )
@@ -790,6 +798,7 @@ namespace RetroDevStudio
       }
       if ( Element.Document == null )
       {
+        string origFilename = Element.DocumentInfo.DocumentFilename;
         BaseDocument    document = Core.MainForm.CreateNewDocument( Element.DocumentInfo.Type, Element.DocumentInfo.Project );
         if ( document == null )
         {
@@ -818,6 +827,7 @@ namespace RetroDevStudio
         }
         else if ( document.LoadDocument() )
         {
+          document.DocumentInfo.DocumentFilename = origFilename;
           document.ToolTipText = document.DocumentInfo.FullPath;
           Element.Name = document.Text;
             //Element.Name;

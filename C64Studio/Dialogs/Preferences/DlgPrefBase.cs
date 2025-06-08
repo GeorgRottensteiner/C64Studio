@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Strings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -29,6 +30,26 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       this.Core = Core;
       InitializeComponent();
+    }
+
+
+
+    protected XMLElement AddOrFind( XMLElement parent, string childName )
+    {
+      if ( parent == null )
+      {
+        return null;
+      }
+      var existingChild = parent.FindByType( childName );
+      if ( existingChild != null )
+      {
+        return existingChild;
+      }
+      var newChild = new XMLElement( childName );
+
+      parent.AddChild( newChild );
+
+      return newChild;
     }
 
 

@@ -3059,31 +3059,12 @@ namespace RetroDevStudio.Controls
         charMapOldToNew[i] = -1;
         charMapNewToOld[i] = -1;
       }
-      int     targetIndex = 0;
       for ( int i = 0; i < numChars - 1; ++i )
       {
-        bool foundDuplicate = false;
-        int  duplicateSourceIndex = -1;
         for ( int j = i + 1; j < numChars; ++j )
         {
           if ( m_Project.Characters[i].Tile.Data == m_Project.Characters[j].Tile.Data )
           {
-            if ( charMapOldToNew[i] == -1 )
-            {
-              charMapOldToNew[i] = targetIndex;
-              duplicateSourceIndex = targetIndex;
-              ++targetIndex;
-            }
-            else
-            {
-              duplicateSourceIndex = charMapOldToNew[i];
-            }
-            if ( charMapOldToNew[j] == -1 )
-            {
-              charMapOldToNew[j] = duplicateSourceIndex;
-            }
-
-            foundDuplicate = true;
             hasDuplicates = true;
             int duplicateGroup = -1;
             if ( duplicateGroups.TryGetValue( m_Project.Characters[i].Tile.Data, out duplicateGroup ) )
@@ -3100,78 +3081,46 @@ namespace RetroDevStudio.Controls
             }
           }
         }
-        if ( !foundDuplicate )
-        {
-          if ( charMapOldToNew[i] == -1 )
-          {
-            charMapOldToNew[i] = targetIndex;
-            ++targetIndex;
-          }
-        }
       }
       if ( !hasDuplicates )
       {
         return;
       }
 
-      /*
-      targetIndex = 0;
+      int targetIndex = 0;
+      var placedTargets = new Dictionary<int,int>();
       for ( int j = 0; j < numChars; ++j )
       {
-        if ( Lookup.IsECMMode( m_Project.Mode ) )
-        {
-          for ( int i = 0; i < 4; ++i )
-          {
-            charMapNewToOld[i * 64 + targetIndex % 64] = i * 64 + j % 64;
-            charMapOldToNew[i * 64 + j % 64] = i * 64 + targetIndex % 64;
-          }
-        }
-        else
+        if ( !itemGroup.TryGetValue( j, out int group ) )
         {
           charMapNewToOld[targetIndex] = j;
           charMapOldToNew[j] = targetIndex;
-        }
-        ++targetIndex;
-      }*/
-
-      /*
-      // now fill all other entries
-      byte    insertCharIndex = 0;
-      int     charPos = 0;
-      while ( charPos < numChars )
-      {
-        // already inserted, skip
-        if ( charMapNewToOld[charPos] != -1 )
-        {
-          ++charPos;
-          continue;
-        }
-        while ( selection.Contains( insertCharIndex ) )
-        {
-          ++insertCharIndex;
-        }
-        if ( Lookup.IsECMMode( m_Project.Mode ) )
-        {
-          for ( int i = 0; i < 4; ++i )
-          {
-            charMapNewToOld[i * 64 + charPos] = i * 64 + insertCharIndex;
-            charMapOldToNew[i * 64 + insertCharIndex] = i * 64 + charPos;
-          }
+          ++targetIndex;
         }
         else
         {
-          charMapNewToOld[charPos] = insertCharIndex;
-          charMapOldToNew[insertCharIndex] = charPos;
+          if ( placedTargets.TryGetValue( group, out int groupTarget ) )
+          {
+            charMapNewToOld[groupTarget] = j;
+            charMapOldToNew[j] = groupTarget;
+          }
+          else
+          {
+            placedTargets[group]          = targetIndex;
+            charMapNewToOld[targetIndex]  = j;
+            charMapOldToNew[j]            = targetIndex;
+            ++targetIndex;
+          }
         }
-        ++charPos;
-        ++insertCharIndex;
-      }*/
+      }
 
+      int firstEmpty = targetIndex;
       while ( targetIndex < numChars )
       {
-        charMapOldToNew[targetIndex] = targetIndex;
+        charMapNewToOld[targetIndex] = firstEmpty;
+        charMapOldToNew[firstEmpty]  = targetIndex;
 
-        m_Project.Characters[targetIndex].Tile.Data.Fill( 0, (int)m_Project.Characters[targetIndex].Tile.Data.Length, 0 );
+        //m_Project.Characters[targetIndex].Tile.Data.Fill( 0, (int)m_Project.Characters[targetIndex].Tile.Data.Length, 0 );
         ++targetIndex;
       }
 
@@ -3191,11 +3140,18 @@ namespace RetroDevStudio.Controls
 
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
-        m_Project.Characters[charMapOldToNew[i]]  = origCharData[i].Clone();
-        panelCharacters.Items[charMapOldToNew[i]] = new ImageListbox.ImageListItem( panelCharacters )
+        if ( i >= firstEmpty )
         {
-          MemoryImage  = new MemoryImage( origListItems[i].MemoryImage ),
-          Value        = origListItems[i].Value
+          m_Project.Characters[i].Tile.Data.Fill( 0, (int)m_Project.Characters[i].Tile.Data.Length, 0 );
+        }
+        else
+        {
+          m_Project.Characters[i] = origCharData[charMapNewToOld[i]].Clone();
+        }
+        panelCharacters.Items[i] = new ImageListbox.ImageListItem( panelCharacters )
+        {
+          MemoryImage = new MemoryImage( origListItems[charMapNewToOld[i]].MemoryImage ),
+          Value       = origListItems[charMapNewToOld[i]].Value
         };
         RebuildCharImage( i );
       }

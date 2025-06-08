@@ -38,11 +38,12 @@ namespace RetroDevStudio.Dialogs
       _PreferencePanes.Add( new DlgPrefEditorBehaviour( Core ) );
       _PreferencePanes.Add( new DlgPrefCachedData( Core ) );
       _PreferencePanes.Add( new DlgPrefASMEditor( Core ) );
-      _PreferencePanes.Add( new DlgPrefAssembler( Core ) );
       _PreferencePanes.Add( new DlgPrefLibraryPaths( Core ) );
+      _PreferencePanes.Add( new DlgPrefAssembler( Core ) );
       _PreferencePanes.Add( new DlgPrefBASICEditor( Core ) );
       _PreferencePanes.Add( new DlgPrefBASICKeyBindings( Core ) );
       _PreferencePanes.Add( new DlgPrefBASICParser( Core ) );
+      _PreferencePanes.Add( new DlgPrefBASICWarnings( Core ) );
       _PreferencePanes.Add( new DlgPrefSourceControl( Core ) );
 
       foreach ( var entry in _PreferencePanes )
