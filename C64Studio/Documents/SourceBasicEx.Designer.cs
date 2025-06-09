@@ -59,6 +59,7 @@ namespace RetroDevStudio.Documents
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.btnToggleUpperLowerCase = new DecentForms.Button();
       this.btnToggleStringEntryMode = new DecentForms.CheckBox();
+      this.btnToggleCollapsedTokensMode = new DecentForms.CheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
@@ -104,7 +105,7 @@ namespace RetroDevStudio.Documents
       this.editSource.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
       this.editSource.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editSource.ServiceColors")));
       this.editSource.Size = new System.Drawing.Size(858, 532);
-      this.editSource.TabIndex = 0;
+      this.editSource.TabIndex = 11;
       this.editSource.Zoom = 100;
       this.editSource.TextChangedDelayed += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.editSource_TextChangedDelayed);
       this.editSource.LineVisited += new System.EventHandler<FastColoredTextBoxNS.LineVisitedArgs>(this.editSource_LineVisited);
@@ -222,7 +223,7 @@ namespace RetroDevStudio.Documents
       this.btnToggleLabelMode.ShowDropDownArrow = false;
       this.btnToggleLabelMode.ShowSplitBar = true;
       this.btnToggleLabelMode.Size = new System.Drawing.Size(130, 23);
-      this.btnToggleLabelMode.TabIndex = 2;
+      this.btnToggleLabelMode.TabIndex = 0;
       this.btnToggleLabelMode.Text = "To Label Mode";
       this.toolTip1.SetToolTip(this.btnToggleLabelMode, "To Label Mode (Line Number Mode is active)");
       this.btnToggleLabelMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleLabelMode_CheckedChanged);
@@ -302,7 +303,7 @@ namespace RetroDevStudio.Documents
       this.btnToggleSymbolMode.Location = new System.Drawing.Point(136, 27);
       this.btnToggleSymbolMode.Name = "btnToggleSymbolMode";
       this.btnToggleSymbolMode.Size = new System.Drawing.Size(22, 22);
-      this.btnToggleSymbolMode.TabIndex = 2;
+      this.btnToggleSymbolMode.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnToggleSymbolMode, "Toggle Symbol/Macro");
       this.btnToggleSymbolMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleSymbolMode_CheckedChanged);
       // 
@@ -330,24 +331,38 @@ namespace RetroDevStudio.Documents
       this.btnToggleStringEntryMode.Location = new System.Drawing.Point(192, 27);
       this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
       this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
-      this.btnToggleStringEntryMode.TabIndex = 2;
+      this.btnToggleStringEntryMode.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)");
       this.btnToggleStringEntryMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleStringEntryMode_CheckedChanged);
       // 
+      // btnToggleCollapsedTokensMode
+      // 
+      this.btnToggleCollapsedTokensMode.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToggleCollapsedTokensMode.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.btnToggleCollapsedTokensMode.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.btnToggleCollapsedTokensMode.Checked = false;
+      this.btnToggleCollapsedTokensMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleCollapsedTokensMode.Image")));
+      this.btnToggleCollapsedTokensMode.Location = new System.Drawing.Point(220, 27);
+      this.btnToggleCollapsedTokensMode.Name = "btnToggleCollapsedTokensMode";
+      this.btnToggleCollapsedTokensMode.Size = new System.Drawing.Size(22, 22);
+      this.btnToggleCollapsedTokensMode.TabIndex = 4;
+      this.toolTip1.SetToolTip(this.btnToggleCollapsedTokensMode, "Toggle collapsed token mode (currently inactive)");
+      this.btnToggleCollapsedTokensMode.CheckedChanged += new DecentForms.EventHandler(this.btnToggleCollapsedTokensMode_CheckedChanged);
+      // 
       // editBASICStartAddress
       // 
-      this.editBASICStartAddress.Location = new System.Drawing.Point(307, 29);
+      this.editBASICStartAddress.Location = new System.Drawing.Point(326, 29);
       this.editBASICStartAddress.MaxLength = 7;
       this.editBASICStartAddress.Name = "editBASICStartAddress";
       this.editBASICStartAddress.Size = new System.Drawing.Size(47, 20);
-      this.editBASICStartAddress.TabIndex = 4;
+      this.editBASICStartAddress.TabIndex = 6;
       this.editBASICStartAddress.Text = "2049";
       this.editBASICStartAddress.TextChanged += new System.EventHandler(this.editBASICStartAddress_TextChanged);
       // 
       // labelStartAddress
       // 
       this.labelStartAddress.AutoSize = true;
-      this.labelStartAddress.Location = new System.Drawing.Point(228, 32);
+      this.labelStartAddress.Location = new System.Drawing.Point(247, 32);
       this.labelStartAddress.Name = "labelStartAddress";
       this.labelStartAddress.Size = new System.Drawing.Size(73, 13);
       this.labelStartAddress.TabIndex = 5;
@@ -356,39 +371,39 @@ namespace RetroDevStudio.Documents
       // labelBASICVersion
       // 
       this.labelBASICVersion.AutoSize = true;
-      this.labelBASICVersion.Location = new System.Drawing.Point(369, 32);
+      this.labelBASICVersion.Location = new System.Drawing.Point(388, 32);
       this.labelBASICVersion.Name = "labelBASICVersion";
       this.labelBASICVersion.Size = new System.Drawing.Size(79, 13);
-      this.labelBASICVersion.TabIndex = 5;
+      this.labelBASICVersion.TabIndex = 7;
       this.labelBASICVersion.Text = "BASIC Version:";
       // 
       // comboBASICVersion
       // 
       this.comboBASICVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBASICVersion.FormattingEnabled = true;
-      this.comboBASICVersion.Location = new System.Drawing.Point(454, 28);
+      this.comboBASICVersion.Location = new System.Drawing.Point(473, 28);
       this.comboBASICVersion.Name = "comboBASICVersion";
       this.comboBASICVersion.Size = new System.Drawing.Size(150, 21);
-      this.comboBASICVersion.TabIndex = 6;
+      this.comboBASICVersion.TabIndex = 8;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
       // labelCheckSummer
       // 
       this.labelCheckSummer.AutoSize = true;
-      this.labelCheckSummer.Location = new System.Drawing.Point(610, 32);
+      this.labelCheckSummer.Location = new System.Drawing.Point(629, 32);
       this.labelCheckSummer.Name = "labelCheckSummer";
       this.labelCheckSummer.Size = new System.Drawing.Size(79, 13);
-      this.labelCheckSummer.TabIndex = 5;
+      this.labelCheckSummer.TabIndex = 9;
       this.labelCheckSummer.Text = "CheckSummer:";
       // 
       // comboCheckSummer
       // 
       this.comboCheckSummer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCheckSummer.FormattingEnabled = true;
-      this.comboCheckSummer.Location = new System.Drawing.Point(695, 28);
+      this.comboCheckSummer.Location = new System.Drawing.Point(714, 28);
       this.comboCheckSummer.Name = "comboCheckSummer";
       this.comboCheckSummer.Size = new System.Drawing.Size(134, 21);
-      this.comboCheckSummer.TabIndex = 6;
+      this.comboCheckSummer.TabIndex = 10;
       this.comboCheckSummer.SelectedIndexChanged += new System.EventHandler(this.comboCheckSummer_SelectedIndexChanged);
       // 
       // SourceBasicEx
@@ -403,6 +418,7 @@ namespace RetroDevStudio.Documents
       this.Controls.Add(this.editBASICStartAddress);
       this.Controls.Add(this.menuBASIC);
       this.Controls.Add(this.editSource);
+      this.Controls.Add(this.btnToggleCollapsedTokensMode);
       this.Controls.Add(this.btnToggleStringEntryMode);
       this.Controls.Add(this.btnToggleUpperLowerCase);
       this.Controls.Add(this.btnToggleSymbolMode);
@@ -456,5 +472,6 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ToolStripMenuItem removeAllBookmarksOfThisFileToolStripMenuItem;
     private System.Windows.Forms.Label labelCheckSummer;
     private System.Windows.Forms.ComboBox comboCheckSummer;
+    private DecentForms.CheckBox btnToggleCollapsedTokensMode;
   }
 }

@@ -94,8 +94,8 @@ namespace RetroDevStudio.Parser.BASIC
       BASICV2.AddOpcode( "DEF", 0x96, "dE" );
       BASICV2.AddOpcode( "POKE", 0x97, "pO" );
       BASICV2.AddOpcode( "PRINT#", 0x98, "pR" );
-      BASICV2.AddOpcode( "PRINT", 0x99 );
-      BASICV2.AddOpcode( "?", 0x99 );
+      BASICV2.AddOpcode( "PRINT", 0x99, "?" );
+      //BASICV2.AddOpcode( "?", 0x99 );
       BASICV2.AddOpcode( "CONT", 0x9A, "cO" );
       BASICV2.AddOpcode( "LIST", 0x9B, "lI" ).LineListRange = true;
       BASICV2.AddOpcode( "CLR", 0x9C, "cL" );

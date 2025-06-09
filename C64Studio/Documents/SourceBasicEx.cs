@@ -30,6 +30,7 @@ namespace RetroDevStudio.Documents
     System.Windows.Forms.ToolTip              m_ToolTip = new System.Windows.Forms.ToolTip();
     System.Drawing.Point                      m_LastTooltipPos = new System.Drawing.Point();
     bool                                      m_StringEnterMode = false;
+    bool                                      m_CollapsedTokenMode = false;
     bool                                      m_LabelMode = false;
     bool                                      m_SymbolMode = false;
     public bool                               m_LowerCaseMode = false;
@@ -50,7 +51,8 @@ namespace RetroDevStudio.Documents
     private bool                              m_InsideLoad = false;
     private bool                              m_InsideToggleSymbolHandler = false;
     private bool                              m_InsideToggleCaseHandler = false;
-    bool                                      m_InsertingText = false;
+    private bool                              _insideToggleTokenModeHandler = false;
+    private bool                              m_InsertingText = false;
 
     public string                             m_LastLabelAutoRenumberStartLine  = "10";
     public string                             m_LastLabelAutoRenumberLineStep   = "10";
@@ -104,7 +106,7 @@ namespace RetroDevStudio.Documents
       InitializeComponent();
 
       // high DPI adjusting of controls in toolbar
-      var controls = new List<Control>{ btnToggleLabelMode, btnToggleStringEntryMode, btnToggleSymbolMode, btnToggleUpperLowerCase, labelStartAddress, editBASICStartAddress, labelBASICVersion, comboBASICVersion, labelCheckSummer, comboCheckSummer };
+      var controls = new List<Control>{ btnToggleLabelMode, btnToggleStringEntryMode, btnToggleSymbolMode, btnToggleUpperLowerCase, btnToggleCollapsedTokensMode, labelStartAddress, editBASICStartAddress, labelBASICVersion, comboBASICVersion, labelCheckSummer, comboCheckSummer };
 
       int   curX = btnToggleLabelMode.Left;
       for ( int i = 1; i < controls.Count; ++i )
@@ -234,6 +236,14 @@ namespace RetroDevStudio.Documents
       {
         e.ClipboardData.SetData( "RetroDevStudio.BASICText.MacroMode", new byte[] { 1, 0 } );
       }
+      if ( m_CollapsedTokenMode )
+      {
+        e.ClipboardData.SetData( "RetroDevStudio.BASICText.TokenMode.Collapsed", new byte[] { 1, 0 } );
+      }
+      else
+      {
+        e.ClipboardData.SetData( "RetroDevStudio.BASICText.TokenMode.Expanded", new byte[] { 1, 0 } );
+      }
     }
 
 
@@ -257,10 +267,11 @@ namespace RetroDevStudio.Documents
     {
       string    textToPaste = e.InsertingText;
 
-      bool  isUpperCase   = Clipboard.ContainsData( "RetroDevStudio.BASICText.UpperCase" );
-      bool  isLowerCase   = Clipboard.ContainsData( "RetroDevStudio.BASICText.LowerCase" );
-      bool  isSymbolMode  = Clipboard.ContainsData( "RetroDevStudio.BASICText.SymbolMode" );
-      bool  isMacroMode   = Clipboard.ContainsData( "RetroDevStudio.BASICText.MacroMode" );
+      bool  isUpperCase           = Clipboard.ContainsData( "RetroDevStudio.BASICText.UpperCase" );
+      bool  isLowerCase           = Clipboard.ContainsData( "RetroDevStudio.BASICText.LowerCase" );
+      bool  isSymbolMode          = Clipboard.ContainsData( "RetroDevStudio.BASICText.SymbolMode" );
+      bool  isMacroMode           = Clipboard.ContainsData( "RetroDevStudio.BASICText.MacroMode" );
+      bool  isCollapsedTokenMode  = Clipboard.ContainsData( "RetroDevStudio.BASICText.TokenMode.Collapsed" );
 
       if ( ( isUpperCase )
       &&   ( m_LowerCaseMode ) )
@@ -271,6 +282,16 @@ namespace RetroDevStudio.Documents
       &&   ( !m_LowerCaseMode ) )
       {
         textToPaste = BasicFileParser.MakeUpperCase( textToPaste, Core.Settings.BASICUseNonC64Font );
+      }
+      if ( ( isCollapsedTokenMode )
+      &&   ( !m_CollapsedTokenMode ) )
+      {
+        textToPaste = BasicFileParser.ExpandTokens( textToPaste, BASICDialect, Core.Settings.BASICUseNonC64Font );
+      }
+      if ( ( !isCollapsedTokenMode )
+      &&   ( m_CollapsedTokenMode ) )
+      {
+        textToPaste = BasicFileParser.CollapseTokens( textToPaste, BASICDialect, Core.Settings.BASICUseNonC64Font );
       }
       if ( ( isSymbolMode )
       &&   ( !m_SymbolMode ) )
@@ -1175,6 +1196,10 @@ namespace RetroDevStudio.Documents
       {
         content = BasicFileParser.MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
+      if ( m_CollapsedTokenMode )
+      {
+        content = BasicFileParser.ExpandTokens( content, BASICDialect, Core.Settings.BASICUseNonC64Font );
+      }
 
       return content;
     }
@@ -1269,7 +1294,7 @@ namespace RetroDevStudio.Documents
 
           if ( m_LowerCaseMode != hasLowercase )
           {
-            // case mode does not
+            // case mode does not match
             if ( m_LowerCaseMode )
             {
               // the pasted text has no lower case letters
@@ -1310,6 +1335,10 @@ namespace RetroDevStudio.Documents
         if ( !m_SymbolMode )
         {
           basicText = BasicFileParser.ReplaceAllSymbolsByMacros( basicText, false );
+        }
+        if ( m_CollapsedTokenMode )
+        {
+          basicText = BasicFileParser.CollapseTokens( basicText, BASICDialect, Core.Settings.BASICUseNonC64Font );
         }
 
         if ( DocumentInfo.Element != null )
@@ -1984,8 +2013,7 @@ namespace RetroDevStudio.Documents
                 }
                 return true;
               }
-              // could be a token
-
+              // auto-expand could be a token
               if ( ( leftText.Length >= 1 )
               &&   ( leftText[leftText.Length - 1] >= 'A' )
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
@@ -1998,7 +2026,21 @@ namespace RetroDevStudio.Documents
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
                   &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
                   {
-                    if ( m_LowerCaseMode )
+                    if ( m_CollapsedTokenMode )
+                    {
+                      if ( m_LowerCaseMode )
+                      {
+                        if ( mappedKey.Length == 1 )
+                        {
+                          InsertOrReplaceChar( mappedKey[0] );
+                        }
+                      }
+                      else
+                      {
+                        InsertOrReplaceChar( BasicFileParser.MakeUpperCase( "" + char.ToUpper( (char)keyData ), Core.Settings.BASICUseNonC64Font )[0] );
+                      }
+                    }
+                    else if ( m_LowerCaseMode )
                     {
                       editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
                     }
@@ -2703,7 +2745,7 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, firstLineNumber, lastLineNumber );
+      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, m_CollapsedTokenMode, firstLineNumber, lastLineNumber );
 
       formRenum.ShowDialog();
     }
@@ -2874,12 +2916,28 @@ namespace RetroDevStudio.Documents
       if ( m_LowerCaseMode )
       {
         btnToggleUpperLowerCase.Image = Properties.Resources.toolbar_basic_toggle_upperlowercase_up;
-        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle Upper/Lower Case( Currently Lower Case )" );
+        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle Upper/Lower Case (Currently Lower Case)" );
       }
       else
       {
         btnToggleUpperLowerCase.Image = Properties.Resources.toolbar_basic_toggle_upperlowercase_down;
-        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle Upper/Lower Case( Currently Upper Case )" );
+        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle Upper/Lower Case (Currently Upper Case)" );
+      }
+    }
+
+
+
+    private void UpdateToggleCollapsedTokenModeButtonCaption()
+    {
+      if ( m_CollapsedTokenMode )
+      {
+        btnToggleCollapsedTokensMode.Image = Properties.Resources.toolbar_basic_collapsed_token_mode_active ;
+        toolTip1.SetToolTip( btnToggleCollapsedTokensMode, "Toggle collapsed token mode (currently active)" );
+      }
+      else
+      {
+        btnToggleCollapsedTokensMode.Image = Properties.Resources.toolbar_basic_collapsed_token_mode_inactive;
+        toolTip1.SetToolTip( btnToggleCollapsedTokensMode, "Toggle collapsed token mode (currently inactive)" );
       }
     }
 
@@ -3317,6 +3375,16 @@ namespace RetroDevStudio.Documents
 
 
 
+    public void CollapsedTokenModeToggled()
+    {
+      m_CollapsedTokenMode                  = !m_CollapsedTokenMode;
+      btnToggleCollapsedTokensMode.Checked  = m_CollapsedTokenMode;
+
+      UpdateToggleCollapsedTokenModeButtonCaption();
+    }
+
+
+
     public void CaseToggled()
     {
       m_LowerCaseMode                 = !m_LowerCaseMode;
@@ -3464,6 +3532,68 @@ namespace RetroDevStudio.Documents
         m_LineInfos[i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[i], m_LabelMode, _currentCheckSummer );
       }
       editSource.Invalidate();
+    }
+
+
+
+    private void btnToggleCollapsedTokensMode_CheckedChanged( DecentForms.ControlBase Sender )
+    {
+      if ( _insideToggleTokenModeHandler )
+      {
+        return;
+      }
+
+      bool  newCollapsedTokenMode = btnToggleCollapsedTokensMode.Checked;
+      if ( newCollapsedTokenMode == m_CollapsedTokenMode )
+      {
+        return;
+      }
+
+      _insideToggleTokenModeHandler = true;
+      m_CollapsedTokenMode = newCollapsedTokenMode;
+      UpdateToggleCollapsedTokenModeButtonCaption();
+
+      bool    hadError = false;
+      string  newText = editSource.Text;
+
+      if ( m_LowerCaseMode )
+      {
+        newText = BasicFileParser.MakeUpperCase( newText, Core.Settings.BASICUseNonC64Font );
+      }
+
+      if ( newCollapsedTokenMode )
+      {
+        newText = BasicFileParser.CollapseTokens( newText, BASICDialect, Core.Settings.BASICUseNonC64Font );
+      }
+      else
+      {
+        newText = BasicFileParser.ExpandTokens( newText, BASICDialect, Core.Settings.BASICUseNonC64Font );
+      }
+
+      if ( hadError )
+      {
+        m_CollapsedTokenMode = !newCollapsedTokenMode;
+        UpdateToggleCollapsedTokenModeButtonCaption();
+
+        _insideToggleTokenModeHandler = false;
+        return;
+      }
+      int     offset = editSource.VerticalScroll.Value;
+
+      if ( m_LowerCaseMode )
+      {
+        newText = BasicFileParser.MakeLowerCase( newText, Core.Settings.BASICUseNonC64Font );
+      }
+
+      bool addAsGroup = ( editSource.Text != newText );
+
+      editSource.Text = newText;
+      editSource.VerticalScroll.Value = offset;
+      editSource.UpdateScrollbars();
+
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoBASICCollapsedTokenModeToggle( this ), !addAsGroup );
+
+      _insideToggleTokenModeHandler = false;
     }
 
 

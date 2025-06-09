@@ -1425,8 +1425,9 @@ namespace RetroDevStudio.Parser.BASIC
 
       int numCharsSkipped = TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
 
-      
-      if ( tempData.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
+      string collapsedText = CollapseTokens( Line, Settings.BASICDialect, !Settings.UseC64Font );
+      if ( collapsedText.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
+      //if ( tempData.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
       {
         AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line " + LastLineNumber + " is too long for manual entry", 0, info.Line.Length );
       }
@@ -5072,6 +5073,113 @@ namespace RetroDevStudio.Parser.BASIC
         {
           sb.Append( curChar );
         }
+        ++posInLine;
+      }
+      return sb.ToString();
+    }
+
+
+
+    public static string CollapseTokens( string BasicText, BASIC.Dialect dialect, bool nonC64Font )
+    {
+      StringBuilder     sb = new StringBuilder();
+
+      int               posInLine = 0;
+      bool              insideStringLiteral = false;
+
+      while ( posInLine < BasicText.Length )
+      {
+        char    curChar = BasicText[posInLine];
+        if ( !insideStringLiteral )
+        {
+          if ( curChar == '\n' )
+          {
+            // the macro was not closed
+            insideStringLiteral = false;
+          }
+          // TODO - check for BASIC tokens
+          if ( ( curChar >= 'A' )
+          &&   ( curChar <= 'Z' ) )
+          {
+            bool foundOpcode = false;
+            foreach ( var opcode in dialect.Opcodes.Values )
+            {
+              if ( ( opcode.ShortCut != null )
+              &&   ( opcode.ShortCut.Length > 0 )
+              &&   ( string.Compare( opcode.Command, 0, BasicText, posInLine, opcode.Command.Length ) == 0 ) )
+              {
+                sb.Append( MakeUpperCase( opcode.ShortCut, nonC64Font ) );
+                posInLine += opcode.Command.Length;
+                foundOpcode = true;
+                break;
+              }
+            }
+            if ( foundOpcode )
+            {
+              continue;
+            }
+          }
+        }
+        if ( curChar == '"' )
+        {
+          insideStringLiteral = !insideStringLiteral;
+        }
+        // normal chars are passed on (also tabs, cr, lf)
+        sb.Append( curChar );
+        ++posInLine;
+      }
+      return sb.ToString();
+    }
+
+
+
+    public static string ExpandTokens( string BasicText, BASIC.Dialect dialect, bool nonC64Font )
+    {
+      StringBuilder     sb = new StringBuilder();
+
+      int               posInLine = 0;
+      bool              insideStringLiteral = false;
+
+      while ( posInLine < BasicText.Length )
+      {
+        char    curChar = BasicText[posInLine];
+        if ( !insideStringLiteral )
+        {
+          if ( curChar == '\n' )
+          {
+            // the macro was not closed
+            insideStringLiteral = false;
+          }
+          // check for BASIC tokens
+          if ( ( ( curChar >= 'A' )
+          &&     ( curChar <= 'Z' ) )
+          ||   ( curChar == '?' ) )
+          {
+            bool foundOpcode = false;
+            foreach ( var opcode in dialect.Opcodes.Values )
+            {
+              if ( ( opcode.ShortCut != null )
+              &&   ( opcode.ShortCut.Length > 0 )
+              &&   ( string.Compare( MakeUpperCase( opcode.ShortCut, nonC64Font ), 0, BasicText, posInLine, opcode.ShortCut.Length ) == 0 ) )
+              {
+                sb.Append( opcode.Command );
+                posInLine += opcode.ShortCut.Length;
+                foundOpcode = true;
+                break;
+              }
+            }
+            if ( foundOpcode )
+            {
+              continue;
+            }
+          }
+        }
+        if ( curChar == '"' )
+        {
+          insideStringLiteral = !insideStringLiteral;
+        }
+        // normal chars are passed on (also tabs, cr, lf)
+        sb.Append( curChar );
         ++posInLine;
       }
       return sb.ToString();

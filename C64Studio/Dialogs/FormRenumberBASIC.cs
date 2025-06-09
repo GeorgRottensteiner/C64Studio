@@ -13,14 +13,16 @@ namespace RetroDevStudio.Dialogs
     SourceBasicEx m_Basic = null;
     StudioCore    m_Core = null;
     bool          m_SymbolMode = false;
+    bool          _collapsedTokenMode = false;
 
 
 
-    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode, int FirstLineNumber, int LastLineNumber )
+    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode, bool collapsedTokenMode, int FirstLineNumber, int LastLineNumber )
     {
-      m_Basic = Basic;
-      m_Core  = Core;
-      m_SymbolMode = SymbolMode;
+      m_Basic             = Basic;
+      m_Core              = Core;
+      m_SymbolMode        = SymbolMode;
+      _collapsedTokenMode = collapsedTokenMode;
 
       InitializeComponent();
 
