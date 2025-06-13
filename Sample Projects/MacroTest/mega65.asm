@@ -1,3 +1,5 @@
+!src <mega65.asm>
+
 !cpu m65
 
 !macro enable40Mhz
@@ -64,7 +66,7 @@ Entry
     sta $d060
     lda #>SCREEN_RAM
     sta $d061
-    lda #[SCREEN_RAM >> 16]
+    lda #( SCREEN_RAM >> 16 )
     sta $d062
 
     ;Relocate charset (Only for hires and MCM)

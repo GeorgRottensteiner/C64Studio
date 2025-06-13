@@ -16,6 +16,7 @@ using GR.Image;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Dialogs;
 using GR.Collections;
+using RetroDevStudio.CustomRenderer;
 
 
 
@@ -85,7 +86,7 @@ namespace RetroDevStudio.Documents
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
 
     private FastColoredTextBoxNS.Style[]  m_TextStyles = new FastColoredTextBoxNS.Style[(int)Types.ColorableElement.LAST_ENTRY];
-    private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
+    //private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
     private  List<FastColoredTextBoxNS.AutocompleteItem> m_CurrentAutoCompleteSource = null;
 
 
@@ -134,6 +135,7 @@ namespace RetroDevStudio.Documents
       DocumentInfo.Type = ProjectElement.ElementType.ASM_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
+      /*
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] = new System.Text.RegularExpressions.Regex( @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\B\$[a-fA-F\d]+\b|\b0x[a-fA-F\d]+\b" );
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] = new System.Text.RegularExpressions.Regex( @"""""|''|"".*?[^\\]""|'.*?[^\\]'" );
 
@@ -143,7 +145,7 @@ namespace RetroDevStudio.Documents
 
       m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#%]" );
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
-
+      */
       m_IsSaveable = true;
 
       InitializeComponent();
@@ -221,6 +223,7 @@ namespace RetroDevStudio.Documents
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
       editSource.PreferredLineWidth = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
       editSource.ToolTipDisplayDuration = 30000;
+      editSource.SyntaxHighlighter = new ASMSyntaxHighlighter( this );
 
       btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
@@ -592,6 +595,7 @@ namespace RetroDevStudio.Documents
       Range.ClearStyle( indexMask );
 
       // apply all styles
+      /*
       Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_NUMBER )], m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] );
       Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_STRING )], m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] );
       Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
@@ -616,7 +620,7 @@ namespace RetroDevStudio.Documents
         regex = regex.Replace( @"[", @"\[" );
 
         Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS )], regex );
-      }
+      }*/
     }
 
 
@@ -891,7 +895,8 @@ namespace RetroDevStudio.Documents
         ResetAllStyles( editSource.GetLine( e.ChangedRange.Start.iLine ) );
       }
 
-      ResetAllStyles( e.ChangedRange );
+      //ResetAllStyles( e.ChangedRange );
+      editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( e.ChangedRange ) );
 
       if ( UndoPossible )
       {
@@ -916,6 +921,7 @@ namespace RetroDevStudio.Documents
         editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
         return;
       }
+
       System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = editSource.Font.Style;
@@ -1663,10 +1669,9 @@ namespace RetroDevStudio.Documents
               m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )],
               m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )]
             };
-          fullRange.ClearStyle( styles );
-          fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
-          fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
-
+          //fullRange.ClearStyle( styles );
+          //fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
+          //fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
           editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
         }
       }
@@ -1694,25 +1699,28 @@ namespace RetroDevStudio.Documents
 
     private void UpdatePseudoOpSyntaxColoringSource()
     {
-      var sb = new StringBuilder();
-
       if ( DocumentInfo.ASMFileInfo.AssemblerSettings == null )
       {
         DocumentInfo.ASMFileInfo.AssemblerSettings = new AssemblerSettings();
         DocumentInfo.ASMFileInfo.AssemblerSettings.SetAssemblerType( AssemblerType.C64_STUDIO );
       }
 
+      /*
+      var sb = new StringBuilder();
+
       sb.Append( @"(" );
       sb.Append( string.Join( "|", DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.Keys.ToArray() ) );
       sb.Append( @")\b" );
 
       m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
+      */
     }
 
 
 
     private void UpdateOpcodeSyntaxColoringSource()
     {
+      /*
       var sb = new StringBuilder();
 
       sb.Append( @"\b(" );
@@ -1720,6 +1728,7 @@ namespace RetroDevStudio.Documents
       sb.Append( @")\b" );
 
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
+      */
     }
 
 
@@ -2265,6 +2274,7 @@ namespace RetroDevStudio.Documents
         }
         editSource.Bookmarks.Add( lineIndex );
       }
+      editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
       m_InsertingText = false;
 
 

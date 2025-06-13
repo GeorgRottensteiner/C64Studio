@@ -38,7 +38,7 @@ namespace RetroDevStudio.Documents
     System.Windows.Forms.Keys m_CommodoreKeyReplacement = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.ControlKey;
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
     private FastColoredTextBoxNS.Style[]      m_TextStyles = new FastColoredTextBoxNS.Style[(int)Types.ColorableElement.LAST_ENTRY];
-    private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
+    //private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
     private string                            m_CurrentHighlightText = null;
     private List<TextLocation>                m_CurrentHighlightLocations = new List<TextLocation>();
@@ -3058,6 +3058,7 @@ namespace RetroDevStudio.Documents
 
       editSource.PreferredLineWidth = basicDialect.SafeLineLength;
 
+      /*
       string opCodes = @"\b(";
 
       foreach ( var tokenInfo in m_Parser.Settings.BASICDialect.Opcodes )
@@ -3084,6 +3085,7 @@ namespace RetroDevStudio.Documents
       opCodes = opCodes.Substring( 0, opCodes.Length - 1 ) + ")\b";
 
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
+      */
     }
 
 
