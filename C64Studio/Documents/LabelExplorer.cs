@@ -436,11 +436,11 @@ namespace RetroDevStudio.Documents
           {
             if ( reference.Value.TokenInfo != null )
             {
-              subNode.Text = $"{GR.Path.GetFileName( filename )}({localLine + 1}), ({reference.Value.TokenInfo.StartPos}:{reference.Value.TokenInfo.StartPos + reference.Value.TokenInfo.Length})";
+              subNode.Text = $"{GR.Path.GetFileName( filename )}({localLine + 1}), ({reference.Value.TokenInfo.StartPos}:{reference.Value.TokenInfo.StartPos + reference.Value.TokenInfo.Length - 1})";
             }
             else
             {
-              subNode.Text = $"{GR.Path.GetFileName( filename )}({localLine + 1}), ({token.CharIndex}:{token.CharIndex + token.Length})";
+              subNode.Text = $"{GR.Path.GetFileName( filename )}({localLine + 1}), ({token.CharIndex}:{token.CharIndex + token.Length - 1})";
             }
           }
           else if ( reference.Key == -1 )

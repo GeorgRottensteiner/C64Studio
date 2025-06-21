@@ -2610,10 +2610,8 @@ namespace RetroDevStudio.Documents
           }
           break;
         case RetroDevStudio.Types.Function.FIND:
-          ///editSource.FindReplace.ShowFind();
           break;
         case RetroDevStudio.Types.Function.FIND_REPLACE:
-          ///editSource.FindReplace.ShowReplace();
           break;
         case RetroDevStudio.Types.Function.PRINT:
           {

@@ -410,8 +410,8 @@ namespace RetroDevStudio.Dialogs
         return new SearchLocation();
       }
 
-      int     startPos = LastPosition + 1;
-      if ( LastPosition == 0 )
+      int     startPos = LastPosition;
+      if ( LastPosition <= 0 )
       {
         startPos = 0;
       }

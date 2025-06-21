@@ -4537,6 +4537,7 @@ namespace RetroDevStudio.Parser.BASIC
       }
       if ( ( nextIndex <= m_LineInfos.Last().Key )
       &&   ( m_LineInfos.ContainsKey( nextIndex ) )
+      &&   ( m_LineInfos[nextIndex].LineNumber != -1 )
       &&   ( m_LineInfos[nextIndex].LineNumber <= LineStart + ( trueNumberOfLines - 1 ) * LineStep ) )
       {
         errorMessage = $"Last determined line number {LineStart + ( trueNumberOfLines - 1 ) * LineStep} is higher or equal than the next line {m_LineInfos[nextIndex].LineNumber}";
