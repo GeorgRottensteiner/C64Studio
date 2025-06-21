@@ -3112,6 +3112,7 @@ namespace RetroDevStudio.Documents
 
       m_InsertingText = false;
       SetModified();
+      RefreshDisplayOptions();
     }
 
 
