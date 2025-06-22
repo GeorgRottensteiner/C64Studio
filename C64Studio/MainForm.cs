@@ -8077,5 +8077,8 @@ namespace RetroDevStudio
 
 
 
+    private void dumpLineAddressesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+    }
   }
 }
