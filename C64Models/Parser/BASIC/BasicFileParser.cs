@@ -4844,6 +4844,81 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
+    /// <summary>
+    /// renumbers only the actual line numbers in front
+    /// </summary>
+    /// <param name="lineStart"></param>
+    /// <param name="lineStep"></param>
+    /// <param name="firstLineNumber"></param>
+    /// <param name="lastLineNumber"></param>
+    /// <returns></returns>
+    public string RenumberLineNumbers( int lineStart, int lineStep, int firstLineNumber, int lastLineNumber )
+    {
+      StringBuilder sb = new StringBuilder();
+
+      if ( m_LineInfos.Count == 0 )
+      {
+        return "";
+      }
+
+      int curLine = lineStart;
+      int curLineIndex = m_LineInfos.First().Key;
+      foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
+      {
+        // empty lines
+        while ( curLineIndex < lineInfo.Key )
+        {
+          sb.AppendLine();
+          ++curLineIndex;
+        }
+        ++curLineIndex;
+        if ( ( lineInfo.Key < firstLineNumber )
+        ||   ( lineInfo.Key > lastLineNumber ) )
+        {
+          sb.AppendLine( lineInfo.Value.Line );
+          continue;
+        }
+        
+        int   dummyLineNum = curLine;        
+        var tokenLineInfo = TokenizeLine( lineInfo.Value.Line, 0, ref dummyLineNum );
+
+        // skip hard comments
+        if ( ( tokenLineInfo.Tokens.Count == 1 )
+        &&   ( tokenLineInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+        {
+          sb.AppendLine( lineInfo.Value.Line );
+          continue;
+        }
+
+        if ( ( tokenLineInfo.Tokens.Count >= 1 )
+        &&   ( tokenLineInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
+        {
+          sb.Append( curLine.ToString() );
+          curLine += lineStep;
+
+          if ( tokenLineInfo.Tokens.Count > 1 )
+          {
+            int numSpaces = tokenLineInfo.Tokens[1].StartIndex - ( tokenLineInfo.Tokens[0].StartIndex + tokenLineInfo.Tokens[0].Content.Length );
+
+            sb.Append( ' ', numSpaces );
+          }
+          sb.AppendLine( TokensToExpression( tokenLineInfo.Tokens, 1, tokenLineInfo.Tokens.Count - 1 ) );
+        }
+        else
+        {
+          sb.AppendLine( lineInfo.Value.Line );
+        }
+      }
+      // strip last line break
+      if ( m_LineInfos.Count > 0 )
+      {
+        sb.Remove( sb.Length - 2, 2 );
+      }
+      return sb.ToString();
+    }
+
+
+
     public static string ReplaceAllSymbolsByMacros( string BasicText, bool LowerCaseMode )
     {
       bool    insideQuotes = false;

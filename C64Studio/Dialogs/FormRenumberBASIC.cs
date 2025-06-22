@@ -14,22 +14,29 @@ namespace RetroDevStudio.Dialogs
     StudioCore    m_Core = null;
     bool          m_SymbolMode = false;
     bool          _collapsedTokenMode = false;
+    int           _firstLineIndex = 0;
+    int           _lastLineIndex = -1;
 
 
 
-    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode, bool collapsedTokenMode, int FirstLineNumber, int LastLineNumber )
+    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode, bool collapsedTokenMode, int FirstLineNumber, int LastLineNumber, int firstLineIndex, int lastLineIndex )
     {
       m_Basic             = Basic;
       m_Core              = Core;
       m_SymbolMode        = SymbolMode;
       _collapsedTokenMode = collapsedTokenMode;
+      _firstLineIndex     = firstLineIndex;
+      _lastLineIndex      = lastLineIndex;
 
       InitializeComponent();
 
-      editStartLine.Text = "10";
-      editLineStep.Text = "10";
-      editFirstLineNumber.Text = FirstLineNumber.ToString();
-      editLastLineNumber.Text = LastLineNumber.ToString();
+      editStartLine.Text        = "10";
+      editLineStep.Text         = "10";
+      editFirstLineNumber.Text  = FirstLineNumber.ToString();
+      editLastLineNumber.Text   = LastLineNumber.ToString();
+
+      labelFirstLineIndex.Text  = $"First Line: {_firstLineIndex + 1}";
+      labelLastLineIndex.Text   = $"Larst Line: {_lastLineIndex + 1}";
 
       Core.Theming.ApplyTheme( this );
     }
@@ -52,10 +59,12 @@ namespace RetroDevStudio.Dialogs
 
     private void CheckRenumbering()
     {
-      int     lineStart       = GR.Convert.ToI32( editStartLine.Text );
-      int     lineStep        = GR.Convert.ToI32( editLineStep.Text );
-      int     firstLineNumber = GR.Convert.ToI32( editFirstLineNumber.Text );
-      int     lastLineNumber  = GR.Convert.ToI32( editLastLineNumber.Text );
+      int     lineStart             = GR.Convert.ToI32( editStartLine.Text );
+      int     lineStep              = GR.Convert.ToI32( editLineStep.Text );
+      int     firstLineNumber       = GR.Convert.ToI32( editFirstLineNumber.Text );
+      int     lastLineNumber        = GR.Convert.ToI32( editLastLineNumber.Text );
+      bool    affectOnlyLineNumbers = checkAffectOnlyLineNumbers.Checked;
+      bool    verifyPlausibility    = checkVerifyPlausibility.Checked;
 
       if ( ( lineStart < 0 )
       ||   ( lineStart > m_Basic.BASICDialect.MaxLineNumber ) )
@@ -77,7 +86,12 @@ namespace RetroDevStudio.Dialogs
         return;
       }
 
-      BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber, out string errorMessage );
+      BasicFileParser.RenumberResult res = BasicFileParser.RenumberResult.OK;
+      string errorMessage = "";
+      if ( verifyPlausibility )
+      {
+        res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber, out errorMessage );
+      }
       switch ( res )
       {
         case BasicFileParser.RenumberResult.OK:
@@ -99,8 +113,18 @@ namespace RetroDevStudio.Dialogs
       int lineStep = GR.Convert.ToI32( editLineStep.Text );
       int     firstLineNumber = GR.Convert.ToI32( editFirstLineNumber.Text );
       int     lastLineNumber  = GR.Convert.ToI32( editLastLineNumber.Text );
+      bool    affectOnlyLineNumbers = checkAffectOnlyLineNumbers.Checked;
+      bool    verifyPlausibility    = checkVerifyPlausibility.Checked;
 
-      string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
+      string newText;
+      if ( affectOnlyLineNumbers )
+      {
+        newText = m_Core.Compiling.ParserBasic.RenumberLineNumbers( lineStart, lineStep, _firstLineIndex, _lastLineIndex );
+      }
+      else
+      {
+        newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
+      }
       if ( m_Basic.m_LowerCaseMode )
       {
         newText = BasicFileParser.MakeLowerCase( newText, !m_Core.Settings.BASICUseNonC64Font );
@@ -157,6 +181,20 @@ namespace RetroDevStudio.Dialogs
     {
       DialogResult = DialogResult.Cancel;
       Close();
+    }
+
+
+
+    private void checkAffectOnlyLineNumbers_CheckedChanged( object sender, EventArgs e )
+    {
+      CheckRenumbering();
+    }
+
+
+
+    private void checkVerifyPlausibility_CheckedChanged( object sender, EventArgs e )
+    {
+      CheckRenumbering();
     }
 
 

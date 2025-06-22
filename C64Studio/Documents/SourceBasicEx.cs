@@ -2700,6 +2700,8 @@ namespace RetroDevStudio.Documents
 
     private void renumberToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      int     firstLineIndex  = 0;
+      int     lastLineIndex   = editSource.LinesCount;
       int     firstLineNumber = 0;
       int     lastLineNumber  = BASICDialect.MaxLineNumber;
       if ( editSource.Selection.Start != editSource.Selection.End )
@@ -2713,6 +2715,9 @@ namespace RetroDevStudio.Documents
           firstLine = lastLine;
           lastLine = dummy;
         }
+
+        firstLineIndex  = firstLine;
+        lastLineIndex   = lastLine;
 
         int prevLine = -1;
         int tempFirstLine = firstLine;
@@ -2743,7 +2748,9 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, m_CollapsedTokenMode, firstLineNumber, lastLineNumber );
+      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, m_CollapsedTokenMode, 
+                                                               firstLineNumber, lastLineNumber,
+                                                               firstLineIndex, lastLineIndex );
 
       formRenum.ShowDialog();
     }
