@@ -869,8 +869,8 @@ namespace RetroDevStudio.Tasks
             Core.MainForm.AddOutputMessages( asmFileInfo );
 
             Core.AddToOutput( "Build failed, " + parser.Warnings.ToString() + " warnings, " + parser.Errors.ToString() + " errors encountered" + System.Environment.NewLine );
-            // always show messages if we fail!
-            //if ( OutputMessages )
+            // always show messages if we fail
+            if ( OutputMessages )
             {
               Core.Navigating.UpdateFromMessages( asmFileInfo,
                                                   Doc.Project );
