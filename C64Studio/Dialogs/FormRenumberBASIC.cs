@@ -14,6 +14,7 @@ namespace RetroDevStudio.Dialogs
     StudioCore    m_Core = null;
     bool          m_SymbolMode = false;
     bool          _collapsedTokenMode = false;
+    bool          _canCompile = false;  
     int           _firstLineIndex = 0;
     int           _lastLineIndex = -1;
 
@@ -66,6 +67,14 @@ namespace RetroDevStudio.Dialogs
       bool    affectOnlyLineNumbers = checkAffectOnlyLineNumbers.Checked;
       bool    verifyPlausibility    = checkVerifyPlausibility.Checked;
 
+      if ( !_canCompile )
+      {
+        checkVerifyPlausibility.Checked = false;
+        checkVerifyPlausibility.Enabled = false;
+        checkAffectOnlyLineNumbers.Checked = true;
+        checkAffectOnlyLineNumbers.Enabled = false;
+      }
+
       if ( ( lineStart < 0 )
       ||   ( lineStart > m_Basic.BASICDialect.MaxLineNumber ) )
       {
@@ -102,6 +111,10 @@ namespace RetroDevStudio.Dialogs
           labelRenumberInfo.Text = errorMessage;
           btnOK.Enabled = false;
           break;
+      }
+      if ( !_canCompile )
+      {
+        labelRenumberInfo.Text = "Some options have been disabled since the BASIC file cannot be compiled as is.\r\n" + labelRenumberInfo.Text;
       }
     }
 
@@ -152,12 +165,8 @@ namespace RetroDevStudio.Dialogs
       var taskCompile = new TaskCompile( m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Basic.DocumentInfo, m_Core.Navigating.Solution, false, false, false, false );
       taskCompile.Core = m_Core;
       taskCompile.RunTask();
-      if ( !taskCompile.TaskSuccessful )
-      {
-        m_Core.Notification.MessageBox( "Cannot renumber", "Renumber is only possible on compilable code" );
-        Close();
-        return;
-      }
+
+      _canCompile = taskCompile.TaskSuccessful;
       CheckRenumbering();
     }
 

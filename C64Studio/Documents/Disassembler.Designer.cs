@@ -77,6 +77,16 @@ namespace RetroDevStudio.Documents
       this.checkStopAtReturns = new System.Windows.Forms.CheckBox();
       this.checkShowHexData = new System.Windows.Forms.CheckBox();
       this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
+      this.groupBox6 = new System.Windows.Forms.GroupBox();
+      this.btnDeleteDataTable = new DecentForms.Button();
+      this.listDataTables = new System.Windows.Forms.ListView();
+      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.btnAddDataTable = new DecentForms.Button();
+      this.editDataTables = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.label6 = new System.Windows.Forms.Label();
+      this.editDataTableLength = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.contextMenuDisassembler.SuspendLayout();
@@ -89,6 +99,7 @@ namespace RetroDevStudio.Documents
       this.groupBox3.SuspendLayout();
       this.groupBox4.SuspendLayout();
       this.groupBox5.SuspendLayout();
+      this.groupBox6.SuspendLayout();
       this.SuspendLayout();
       // 
       // editDisassembly
@@ -121,7 +132,7 @@ namespace RetroDevStudio.Documents
       this.editDisassembly.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
       this.editDisassembly.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editDisassembly.ServiceColors")));
       this.editDisassembly.ShowLineNumbers = false;
-      this.editDisassembly.Size = new System.Drawing.Size(456, 536);
+      this.editDisassembly.Size = new System.Drawing.Size(456, 626);
       this.editDisassembly.TabIndex = 1;
       this.editDisassembly.TabLength = 2;
       this.editDisassembly.Zoom = 100;
@@ -157,7 +168,7 @@ namespace RetroDevStudio.Documents
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(3, 3);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(460, 540);
+      this.panel1.Size = new System.Drawing.Size(460, 630);
       this.panel1.TabIndex = 2;
       // 
       // btnOpenBinary
@@ -186,7 +197,7 @@ namespace RetroDevStudio.Documents
       this.groupBox1.Controls.Add(this.btnOpenBinary);
       this.groupBox1.Location = new System.Drawing.Point(492, 14);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(464, 80);
+      this.groupBox1.Size = new System.Drawing.Size(657, 80);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Data";
@@ -288,7 +299,7 @@ namespace RetroDevStudio.Documents
       this.btnAddJumpAddress.Image = null;
       this.btnAddJumpAddress.Location = new System.Drawing.Point(112, 19);
       this.btnAddJumpAddress.Name = "btnAddJumpAddress";
-      this.btnAddJumpAddress.Size = new System.Drawing.Size(64, 22);
+      this.btnAddJumpAddress.Size = new System.Drawing.Size(64, 20);
       this.btnAddJumpAddress.TabIndex = 1;
       this.btnAddJumpAddress.Text = "add";
       this.btnAddJumpAddress.Click += new DecentForms.EventHandler(this.btnAddJumpAddress_Click);
@@ -334,7 +345,7 @@ namespace RetroDevStudio.Documents
       this.tabContent.Location = new System.Drawing.Point(12, 14);
       this.tabContent.Name = "tabContent";
       this.tabContent.SelectedIndex = 0;
-      this.tabContent.Size = new System.Drawing.Size(474, 572);
+      this.tabContent.Size = new System.Drawing.Size(474, 662);
       this.tabContent.TabIndex = 0;
       // 
       // tabDisassembly
@@ -343,7 +354,7 @@ namespace RetroDevStudio.Documents
       this.tabDisassembly.Location = new System.Drawing.Point(4, 22);
       this.tabDisassembly.Name = "tabDisassembly";
       this.tabDisassembly.Padding = new System.Windows.Forms.Padding(3);
-      this.tabDisassembly.Size = new System.Drawing.Size(466, 546);
+      this.tabDisassembly.Size = new System.Drawing.Size(466, 636);
       this.tabDisassembly.TabIndex = 0;
       this.tabDisassembly.Text = "Disassembly";
       this.tabDisassembly.UseVisualStyleBackColor = true;
@@ -354,7 +365,7 @@ namespace RetroDevStudio.Documents
       this.tabBinary.Location = new System.Drawing.Point(4, 22);
       this.tabBinary.Name = "tabBinary";
       this.tabBinary.Padding = new System.Windows.Forms.Padding(3);
-      this.tabBinary.Size = new System.Drawing.Size(466, 546);
+      this.tabBinary.Size = new System.Drawing.Size(466, 636);
       this.tabBinary.TabIndex = 1;
       this.tabBinary.Text = "Binary";
       this.tabBinary.UseVisualStyleBackColor = true;
@@ -376,7 +387,7 @@ namespace RetroDevStudio.Documents
       this.hexView.NumDigitsMemorySize = 8;
       this.hexView.SelectedByteProvider = null;
       this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-      this.hexView.Size = new System.Drawing.Size(460, 540);
+      this.hexView.Size = new System.Drawing.Size(460, 630);
       this.hexView.StringViewVisible = true;
       this.hexView.TabIndex = 1;
       this.hexView.TextFont = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -385,15 +396,13 @@ namespace RetroDevStudio.Documents
       // 
       // groupBox3
       // 
-      this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox3.Controls.Add(this.btnSaveProject);
       this.groupBox3.Controls.Add(this.btnOpenProject);
       this.groupBox3.Controls.Add(this.editDisassemblyProjectName);
       this.groupBox3.Controls.Add(this.label2);
       this.groupBox3.Location = new System.Drawing.Point(492, 303);
       this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(464, 77);
+      this.groupBox3.Size = new System.Drawing.Size(385, 77);
       this.groupBox3.TabIndex = 6;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Disassembly Project";
@@ -430,7 +439,7 @@ namespace RetroDevStudio.Documents
       // 
       this.editDisassemblyProjectName.Location = new System.Drawing.Point(51, 19);
       this.editDisassemblyProjectName.Name = "editDisassemblyProjectName";
-      this.editDisassemblyProjectName.Size = new System.Drawing.Size(338, 20);
+      this.editDisassemblyProjectName.Size = new System.Drawing.Size(320, 20);
       this.editDisassemblyProjectName.TabIndex = 0;
       this.editDisassemblyProjectName.TextChanged += new System.EventHandler(this.editDisassemblyProjectName_TextChanged);
       // 
@@ -445,8 +454,6 @@ namespace RetroDevStudio.Documents
       // 
       // groupBox4
       // 
-      this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox4.Controls.Add(this.label4);
       this.groupBox4.Controls.Add(this.label3);
       this.groupBox4.Controls.Add(this.btnNamedLabelsImport);
@@ -456,9 +463,9 @@ namespace RetroDevStudio.Documents
       this.groupBox4.Controls.Add(this.editLabelAddress);
       this.groupBox4.Controls.Add(this.editLabelName);
       this.groupBox4.Controls.Add(this.listNamedLabels);
-      this.groupBox4.Location = new System.Drawing.Point(680, 100);
+      this.groupBox4.Location = new System.Drawing.Point(883, 100);
       this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(276, 197);
+      this.groupBox4.Size = new System.Drawing.Size(266, 197);
       this.groupBox4.TabIndex = 4;
       this.groupBox4.TabStop = false;
       this.groupBox4.Text = "Named Labels";
@@ -489,7 +496,7 @@ namespace RetroDevStudio.Documents
       this.btnNamedLabelsImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnNamedLabelsImport.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnNamedLabelsImport.Image = null;
-      this.btnNamedLabelsImport.Location = new System.Drawing.Point(137, 169);
+      this.btnNamedLabelsImport.Location = new System.Drawing.Point(127, 169);
       this.btnNamedLabelsImport.Name = "btnNamedLabelsImport";
       this.btnNamedLabelsImport.Size = new System.Drawing.Size(64, 22);
       this.btnNamedLabelsImport.TabIndex = 5;
@@ -504,7 +511,7 @@ namespace RetroDevStudio.Documents
       this.btnExportNamedLabels.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnExportNamedLabels.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnExportNamedLabels.Image = null;
-      this.btnExportNamedLabels.Location = new System.Drawing.Point(206, 169);
+      this.btnExportNamedLabels.Location = new System.Drawing.Point(196, 169);
       this.btnExportNamedLabels.Name = "btnExportNamedLabels";
       this.btnExportNamedLabels.Size = new System.Drawing.Size(64, 22);
       this.btnExportNamedLabels.TabIndex = 6;
@@ -529,14 +536,14 @@ namespace RetroDevStudio.Documents
       // btnAddNamedLabel
       // 
       this.btnAddNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnAddNamedLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
+      this.btnAddNamedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnAddNamedLabel.BackColor = System.Drawing.SystemColors.Control;
       this.btnAddNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnAddNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnAddNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnAddNamedLabel.Enabled = false;
       this.btnAddNamedLabel.Image = null;
-      this.btnAddNamedLabel.Location = new System.Drawing.Point(206, 42);
+      this.btnAddNamedLabel.Location = new System.Drawing.Point(196, 42);
       this.btnAddNamedLabel.Name = "btnAddNamedLabel";
       this.btnAddNamedLabel.Size = new System.Drawing.Size(64, 22);
       this.btnAddNamedLabel.TabIndex = 2;
@@ -545,9 +552,11 @@ namespace RetroDevStudio.Documents
       // 
       // editLabelAddress
       // 
+      this.editLabelAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.editLabelAddress.Location = new System.Drawing.Point(53, 44);
       this.editLabelAddress.Name = "editLabelAddress";
-      this.editLabelAddress.Size = new System.Drawing.Size(147, 20);
+      this.editLabelAddress.Size = new System.Drawing.Size(137, 20);
       this.editLabelAddress.TabIndex = 1;
       this.toolTip1.SetToolTip(this.editLabelAddress, "Label Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal");
       this.editLabelAddress.TextChanged += new System.EventHandler(this.editLabelAddress_TextChanged);
@@ -558,7 +567,7 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editLabelName.Location = new System.Drawing.Point(53, 19);
       this.editLabelName.Name = "editLabelName";
-      this.editLabelName.Size = new System.Drawing.Size(217, 20);
+      this.editLabelName.Size = new System.Drawing.Size(207, 20);
       this.editLabelName.TabIndex = 0;
       this.toolTip1.SetToolTip(this.editLabelName, "Label Name");
       this.editLabelName.TextChanged += new System.EventHandler(this.editLabelName_TextChanged);
@@ -574,7 +583,7 @@ namespace RetroDevStudio.Documents
       this.listNamedLabels.HideSelection = false;
       this.listNamedLabels.Location = new System.Drawing.Point(6, 70);
       this.listNamedLabels.Name = "listNamedLabels";
-      this.listNamedLabels.Size = new System.Drawing.Size(264, 93);
+      this.listNamedLabels.Size = new System.Drawing.Size(254, 93);
       this.listNamedLabels.TabIndex = 3;
       this.listNamedLabels.UseCompatibleStateImageBehavior = false;
       this.listNamedLabels.View = System.Windows.Forms.View.Details;
@@ -602,7 +611,7 @@ namespace RetroDevStudio.Documents
       this.groupBox5.Controls.Add(this.checkShowLineAddresses);
       this.groupBox5.Location = new System.Drawing.Point(492, 386);
       this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(464, 100);
+      this.groupBox5.Size = new System.Drawing.Size(385, 100);
       this.groupBox5.TabIndex = 7;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Options";
@@ -646,10 +655,117 @@ namespace RetroDevStudio.Documents
       this.checkShowLineAddresses.UseVisualStyleBackColor = true;
       this.checkShowLineAddresses.CheckedChanged += new System.EventHandler(this.checkShowLineAddresses_CheckedChanged);
       // 
+      // groupBox6
+      // 
+      this.groupBox6.Controls.Add(this.btnDeleteDataTable);
+      this.groupBox6.Controls.Add(this.label6);
+      this.groupBox6.Controls.Add(this.label5);
+      this.groupBox6.Controls.Add(this.listDataTables);
+      this.groupBox6.Controls.Add(this.btnAddDataTable);
+      this.groupBox6.Controls.Add(this.editDataTableLength);
+      this.groupBox6.Controls.Add(this.editDataTables);
+      this.groupBox6.Location = new System.Drawing.Point(680, 100);
+      this.groupBox6.Name = "groupBox6";
+      this.groupBox6.Size = new System.Drawing.Size(197, 197);
+      this.groupBox6.TabIndex = 8;
+      this.groupBox6.TabStop = false;
+      this.groupBox6.Text = "Data Tables";
+      // 
+      // btnDeleteDataTable
+      // 
+      this.btnDeleteDataTable.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnDeleteDataTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnDeleteDataTable.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnDeleteDataTable.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnDeleteDataTable.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnDeleteDataTable.Enabled = false;
+      this.btnDeleteDataTable.Image = null;
+      this.btnDeleteDataTable.Location = new System.Drawing.Point(6, 169);
+      this.btnDeleteDataTable.Name = "btnDeleteDataTable";
+      this.btnDeleteDataTable.Size = new System.Drawing.Size(64, 22);
+      this.btnDeleteDataTable.TabIndex = 3;
+      this.btnDeleteDataTable.Text = "Delete";
+      this.btnDeleteDataTable.Click += new DecentForms.EventHandler(this.btnDeleteDataTable_Click);
+      // 
+      // listDataTables
+      // 
+      this.listDataTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.listDataTables.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6});
+      this.listDataTables.HideSelection = false;
+      this.listDataTables.Location = new System.Drawing.Point(6, 70);
+      this.listDataTables.Name = "listDataTables";
+      this.listDataTables.Size = new System.Drawing.Size(177, 89);
+      this.listDataTables.TabIndex = 2;
+      this.listDataTables.UseCompatibleStateImageBehavior = false;
+      this.listDataTables.View = System.Windows.Forms.View.Details;
+      this.listDataTables.SelectedIndexChanged += new System.EventHandler(this.listDataTables_SelectedIndexChanged);
+      this.listDataTables.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listDataTables_KeyDown);
+      // 
+      // columnHeader5
+      // 
+      this.columnHeader5.Text = "Address";
+      this.columnHeader5.Width = 90;
+      // 
+      // columnHeader6
+      // 
+      this.columnHeader6.Text = "Length";
+      // 
+      // btnAddDataTable
+      // 
+      this.btnAddDataTable.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnAddDataTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnAddDataTable.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnAddDataTable.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnAddDataTable.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnAddDataTable.Image = null;
+      this.btnAddDataTable.Location = new System.Drawing.Point(119, 44);
+      this.btnAddDataTable.Name = "btnAddDataTable";
+      this.btnAddDataTable.Size = new System.Drawing.Size(64, 20);
+      this.btnAddDataTable.TabIndex = 1;
+      this.btnAddDataTable.Text = "add";
+      this.btnAddDataTable.Click += new DecentForms.EventHandler(this.btnAddDataTable_Click);
+      // 
+      // editDataTables
+      // 
+      this.editDataTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataTables.Location = new System.Drawing.Point(60, 19);
+      this.editDataTables.Name = "editDataTables";
+      this.editDataTables.Size = new System.Drawing.Size(123, 20);
+      this.editDataTables.TabIndex = 0;
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(6, 22);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(48, 13);
+      this.label5.TabIndex = 3;
+      this.label5.Text = "Address:";
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(6, 47);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(43, 13);
+      this.label6.TabIndex = 3;
+      this.label6.Text = "Length:";
+      // 
+      // editDataTableLength
+      // 
+      this.editDataTableLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataTableLength.Location = new System.Drawing.Point(60, 44);
+      this.editDataTableLength.Name = "editDataTableLength";
+      this.editDataTableLength.Size = new System.Drawing.Size(53, 20);
+      this.editDataTableLength.TabIndex = 0;
+      // 
       // Disassembler
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(968, 598);
+      this.ClientSize = new System.Drawing.Size(1159, 688);
+      this.Controls.Add(this.groupBox6);
       this.Controls.Add(this.groupBox5);
       this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.tabContent);
@@ -679,6 +795,8 @@ namespace RetroDevStudio.Documents
       this.groupBox4.PerformLayout();
       this.groupBox5.ResumeLayout(false);
       this.groupBox5.PerformLayout();
+      this.groupBox6.ResumeLayout(false);
+      this.groupBox6.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -730,5 +848,15 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.CheckBox checkStopAtReturns;
     private DecentForms.Button btnNamedLabelsImport;
     private DecentForms.Button btnExportNamedLabels;
+    private System.Windows.Forms.GroupBox groupBox6;
+    private DecentForms.Button btnDeleteDataTable;
+    private System.Windows.Forms.ListView listDataTables;
+    private System.Windows.Forms.ColumnHeader columnHeader5;
+    private System.Windows.Forms.ColumnHeader columnHeader6;
+    private DecentForms.Button btnAddDataTable;
+    private System.Windows.Forms.TextBox editDataTables;
+    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.TextBox editDataTableLength;
   }
 }
