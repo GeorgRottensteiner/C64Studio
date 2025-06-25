@@ -342,7 +342,6 @@ namespace RetroDevStudio.Parser
         addressesChecked.Add( progStepPos );
         while ( true )
         {
-          Debug.Log( $"progStepPos {progStepPos}" );
           if ( progStepPos < DataStartAddress )
           {
             break;
@@ -391,6 +390,10 @@ namespace RetroDevStudio.Parser
           }
 
           addressesChecked.Add( progStepPos );
+          for ( int i = 0; i < opcode.OpcodeSize; ++i )
+          {
+            addressesChecked.Add( progStepPos + 1 + i );
+          }
 
           if ( ( opcode.ByteValue == 0x4c )     // jmp
           ||   ( opcode.ByteValue == 0x20 ) )   // jsr

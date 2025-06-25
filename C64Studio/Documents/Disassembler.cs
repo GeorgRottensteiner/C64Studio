@@ -533,8 +533,8 @@ namespace RetroDevStudio.Documents
         listDataTables.Items.Clear();
         foreach ( var dataTable in m_DisassemblyProject.DataTableAddresses )
         {
-          ListViewItem  item = new ListViewItem( "$" + dataTable.Key.ToString( "X4" ) );
-          item.SubItems.Add( dataTable.Value.ToString() );
+          ListViewItem  item = new ListViewItem();
+          FillItemFromDataTable( item, dataTable.Key, dataTable.Value );
           listDataTables.Items.Add( item );
         }
 
@@ -548,13 +548,48 @@ namespace RetroDevStudio.Documents
 
         SetHexData( m_DisassemblyProject.Data );
         UpdateDisassembly();
+
+        SetDocumentFilename( FileName );
       }
+    }
+
+
+
+    protected override bool QueryFilename( string PreviousFilename, out string Filename )
+    {
+      Filename = "";
+
+      var saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Choose project file name";
+      saveDlg.Filter = "Disassembly Projects|*.disassembly|All Files|*.*";
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
+      }
+
+      Filename = saveDlg.FileName;
+      return true;
+    }
+
+
+
+    protected override bool PerformSave( string FullPath )
+    {
+      return GR.IO.File.WriteAllBytes( FullPath, m_DisassemblyProject.SaveToBuffer() );
     }
 
 
 
     private void btnSaveProject_Click( DecentForms.ControlBase Sender )
     {
+      Save( SaveMethod.SAVE );
+      /*
       SaveFileDialog    saveDialog = new SaveFileDialog();
 
       saveDialog.Title = "Choose project file name";
@@ -562,7 +597,7 @@ namespace RetroDevStudio.Documents
       if ( saveDialog.ShowDialog() == DialogResult.OK )
       {
         GR.IO.File.WriteAllBytes( saveDialog.FileName, m_DisassemblyProject.SaveToBuffer() );
-      }
+      }*/
     }
 
 
