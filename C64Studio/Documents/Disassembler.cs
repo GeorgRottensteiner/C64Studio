@@ -589,15 +589,6 @@ namespace RetroDevStudio.Documents
     private void btnSaveProject_Click( DecentForms.ControlBase Sender )
     {
       Save( SaveMethod.SAVE );
-      /*
-      SaveFileDialog    saveDialog = new SaveFileDialog();
-
-      saveDialog.Title = "Choose project file name";
-      saveDialog.Filter = "Disassembly Projects|*.disassembly|All Files|*.*";
-      if ( saveDialog.ShowDialog() == DialogResult.OK )
-      {
-        GR.IO.File.WriteAllBytes( saveDialog.FileName, m_DisassemblyProject.SaveToBuffer() );
-      }*/
     }
 
 
