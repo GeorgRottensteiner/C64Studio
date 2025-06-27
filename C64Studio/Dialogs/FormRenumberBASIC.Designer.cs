@@ -41,11 +41,11 @@
       this.editLastLineNumber = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.checkAffectOnlyLineNumbers = new System.Windows.Forms.CheckBox();
-      this.checkVerifyPlausibility = new System.Windows.Forms.CheckBox();
-      this.labelFirstLineIndex = new System.Windows.Forms.Label();
       this.labelLastLineIndex = new System.Windows.Forms.Label();
+      this.labelFirstLineIndex = new System.Windows.Forms.Label();
+      this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.checkVerifyPlausibility = new System.Windows.Forms.CheckBox();
+      this.checkAffectOnlyLineNumbers = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -187,6 +187,22 @@
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Renumber between";
       // 
+      // labelLastLineIndex
+      // 
+      this.labelLastLineIndex.Location = new System.Drawing.Point(259, 47);
+      this.labelLastLineIndex.Name = "labelLastLineIndex";
+      this.labelLastLineIndex.Size = new System.Drawing.Size(137, 23);
+      this.labelLastLineIndex.TabIndex = 2;
+      this.labelLastLineIndex.Text = "label5";
+      // 
+      // labelFirstLineIndex
+      // 
+      this.labelFirstLineIndex.Location = new System.Drawing.Point(259, 21);
+      this.labelFirstLineIndex.Name = "labelFirstLineIndex";
+      this.labelFirstLineIndex.Size = new System.Drawing.Size(137, 23);
+      this.labelFirstLineIndex.TabIndex = 2;
+      this.labelFirstLineIndex.Text = "label5";
+      // 
       // groupBox3
       // 
       this.groupBox3.Controls.Add(this.checkVerifyPlausibility);
@@ -198,6 +214,19 @@
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Renumber Options";
       // 
+      // checkVerifyPlausibility
+      // 
+      this.checkVerifyPlausibility.AutoSize = true;
+      this.checkVerifyPlausibility.Checked = true;
+      this.checkVerifyPlausibility.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkVerifyPlausibility.Location = new System.Drawing.Point(14, 42);
+      this.checkVerifyPlausibility.Name = "checkVerifyPlausibility";
+      this.checkVerifyPlausibility.Size = new System.Drawing.Size(150, 17);
+      this.checkVerifyPlausibility.TabIndex = 0;
+      this.checkVerifyPlausibility.Text = "Enforce valid line numbers";
+      this.checkVerifyPlausibility.UseVisualStyleBackColor = true;
+      this.checkVerifyPlausibility.CheckedChanged += new System.EventHandler(this.checkVerifyPlausibility_CheckedChanged);
+      // 
       // checkAffectOnlyLineNumbers
       // 
       this.checkAffectOnlyLineNumbers.AutoSize = true;
@@ -208,35 +237,6 @@
       this.checkAffectOnlyLineNumbers.Text = "Change only direct line numbers";
       this.checkAffectOnlyLineNumbers.UseVisualStyleBackColor = true;
       this.checkAffectOnlyLineNumbers.CheckedChanged += new System.EventHandler(this.checkAffectOnlyLineNumbers_CheckedChanged);
-      // 
-      // checkVerifyPlausibility
-      // 
-      this.checkVerifyPlausibility.AutoSize = true;
-      this.checkVerifyPlausibility.Checked = true;
-      this.checkVerifyPlausibility.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkVerifyPlausibility.Location = new System.Drawing.Point(14, 42);
-      this.checkVerifyPlausibility.Name = "checkVerifyPlausibility";
-      this.checkVerifyPlausibility.Size = new System.Drawing.Size(127, 17);
-      this.checkVerifyPlausibility.TabIndex = 0;
-      this.checkVerifyPlausibility.Text = "Verify all line numbers";
-      this.checkVerifyPlausibility.UseVisualStyleBackColor = true;
-      this.checkVerifyPlausibility.CheckedChanged += new System.EventHandler(this.checkVerifyPlausibility_CheckedChanged);
-      // 
-      // labelFirstLineIndex
-      // 
-      this.labelFirstLineIndex.Location = new System.Drawing.Point(259, 21);
-      this.labelFirstLineIndex.Name = "labelFirstLineIndex";
-      this.labelFirstLineIndex.Size = new System.Drawing.Size(137, 23);
-      this.labelFirstLineIndex.TabIndex = 2;
-      this.labelFirstLineIndex.Text = "label5";
-      // 
-      // labelLastLineIndex
-      // 
-      this.labelLastLineIndex.Location = new System.Drawing.Point(259, 47);
-      this.labelLastLineIndex.Name = "labelLastLineIndex";
-      this.labelLastLineIndex.Size = new System.Drawing.Size(137, 23);
-      this.labelLastLineIndex.TabIndex = 2;
-      this.labelLastLineIndex.Text = "label5";
       // 
       // FormRenumberBASIC
       // 

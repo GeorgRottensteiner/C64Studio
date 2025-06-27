@@ -74,6 +74,11 @@ namespace RetroDevStudio.Dialogs
         checkAffectOnlyLineNumbers.Checked = true;
         checkAffectOnlyLineNumbers.Enabled = false;
       }
+      else
+      {
+        checkVerifyPlausibility.Enabled = true;
+        checkAffectOnlyLineNumbers.Enabled = true;
+      }
 
       if ( ( lineStart < 0 )
       ||   ( lineStart > m_Basic.BASICDialect.MaxLineNumber ) )
@@ -168,6 +173,21 @@ namespace RetroDevStudio.Dialogs
 
       _canCompile = taskCompile.TaskSuccessful;
       CheckRenumbering();
+
+      if ( !_canCompile )
+      {
+        checkVerifyPlausibility.Checked = false;
+        checkVerifyPlausibility.Enabled = false;
+        checkAffectOnlyLineNumbers.Checked = true;
+        checkAffectOnlyLineNumbers.Enabled = false;
+      }
+      else
+      {
+        checkVerifyPlausibility.Enabled = true;
+        checkVerifyPlausibility.Checked = true;
+        checkAffectOnlyLineNumbers.Enabled = true;
+        checkAffectOnlyLineNumbers.Checked = false;
+      }
     }
 
 
