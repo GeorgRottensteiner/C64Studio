@@ -91,7 +91,7 @@ namespace RetroDevStudio.Controls
         sb.Append( Util.ToBASICData( info.Data, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
       }
 
-      editTextOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
+      editTextOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize * 0.8f );
       editTextOutput.Text = sb.ToString();
       return true;
     }

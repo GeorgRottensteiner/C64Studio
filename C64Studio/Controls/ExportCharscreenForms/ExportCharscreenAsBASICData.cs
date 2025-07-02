@@ -128,7 +128,7 @@ namespace RetroDevStudio.Controls
           return false;
       }
 
-      EditOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64 );
+      EditOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize * 0.8f );
       EditOutput.Text = sb.ToString();
       return true;
     }
