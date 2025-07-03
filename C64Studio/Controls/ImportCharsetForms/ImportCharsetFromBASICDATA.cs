@@ -26,7 +26,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( CharsetProject CharScreen, CharsetEditor Editor )
+    public override bool HandleImport( ImportCharsetInfo importInfo, CharsetEditor Editor )
     {
       ByteBuffer    data;
 
@@ -39,7 +39,7 @@ namespace RetroDevStudio.Controls
         data = Util.FromBASIC( editInput.Text );
       }
 
-      Editor.ImportFromData( data );
+      Editor.ImportFromData( data, importInfo.ImportIndices );
       return true;
     }
 

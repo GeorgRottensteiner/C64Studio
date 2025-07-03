@@ -2282,6 +2282,8 @@ namespace RetroDevStudio.Controls
 
     private void btnPasteFromClipboard_Click( DecentForms.ControlBase Sender )
     {
+      PasteClipboardImageToChar();
+      /*
       if ( !Clipboard.ContainsImage() )
       {
         return;
@@ -2304,6 +2306,7 @@ namespace RetroDevStudio.Controls
       }
 
       PasteImage( "", imgClip, checkPasteMultiColor.Checked );
+      */
     }
 
 
@@ -3169,6 +3172,25 @@ namespace RetroDevStudio.Controls
         modifiedChars.Add( i );
       }
       RaiseModifiedEvent( modifiedChars );
+    }
+
+
+
+    private void btnRestoreDefault_Click( DecentForms.ControlBase Sender )
+    {
+      var indices = SelectedIndices;
+      int numBytesOfChar = Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode );
+
+      var undo1 = new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters );
+
+      foreach ( var i in indices )
+      {
+        ConstantData.UpperCaseCharsetC64.CopyTo( m_Project.Characters[i].Tile.Data, i * numBytesOfChar, numBytesOfChar );
+        m_Project.Characters[i].Tile.CustomColor = 1;
+        RebuildCharImage( i );
+      }
+      UndoManager.AddUndoTask( undo1 );
+      RaiseModifiedEvent( indices );
     }
 
 

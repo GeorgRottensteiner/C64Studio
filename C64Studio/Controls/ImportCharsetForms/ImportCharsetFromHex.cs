@@ -23,25 +23,26 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( CharsetProject CharSet, CharsetEditor Editor )
+    public override bool HandleImport( ImportCharsetInfo importInfo, CharsetEditor Editor )
     {
       string    binaryText = editInput.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
 
-      GR.Memory.ByteBuffer    charData = new GR.Memory.ByteBuffer( binaryText );
+      var charData = new GR.Memory.ByteBuffer( binaryText );
       if ( charData == null )
       {
         return false;
       }
-      int charsToImport = (int)charData.Length / 8;
-      if ( charsToImport > CharSet.TotalNumberOfCharacters )
+      int numBytesOfChar = Lookup.NumBytesOfSingleCharacterBitmap( importInfo.Charset.Mode );
+      int charsToImport = (int)charData.Length / numBytesOfChar;
+      if ( charsToImport > importInfo.ImportIndices.Count )
       {
-        charsToImport = CharSet.TotalNumberOfCharacters;
+        charsToImport = importInfo.ImportIndices.Count;
       }
 
       for ( int i = 0; i < charsToImport; ++i )
       {
-        charData.CopyTo( CharSet.Characters[i].Tile.Data, i * 8, 8 );
-        Editor.CharacterChanged( i );
+        charData.CopyTo( importInfo.Charset.Characters[importInfo.ImportIndices[i]].Tile.Data, i * numBytesOfChar, numBytesOfChar );
+        Editor.CharacterChanged( importInfo.ImportIndices[i] );
       }
 
       return true;

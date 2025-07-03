@@ -82,6 +82,11 @@ namespace RetroDevStudio.Documents
       comboExportMethod.SelectedIndex = 0;
       m_DefaultOutputFont = editDataExport.Font;
 
+      comboImportRange.Items.Add( "All" );
+      comboImportRange.Items.Add( "Selection" );
+      comboImportRange.Items.Add( "Range" );
+      comboImportRange.SelectedIndex = 0;
+
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from character set/binary file", typeof( ImportCharsetFromBinaryFile ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image file", typeof( ImportCharsetFromImageFile ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportCharsetFromASM ) ) );
@@ -375,28 +380,91 @@ namespace RetroDevStudio.Documents
 
 
 
+    private List<int> ListOfImportIndices()
+    {
+      var listIndices = new List<int>();
+
+      switch ( comboImportRange.SelectedIndex )
+      {
+        case 0:
+          // all
+          for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
+          {
+            listIndices.Add( i );
+          }
+          break;
+        case 1:
+          // selection
+          listIndices.AddRange( characterEditor.SelectedIndices );
+          break;
+        case 2:
+          // range
+          {
+            int   startChar = GR.Convert.ToI32( editImportRangeStart.Text );
+            if ( ( startChar < 0 )
+            ||   ( startChar >= m_Charset.TotalNumberOfCharacters ) )
+            {
+              startChar = 0;
+            }
+            int   numChars = GR.Convert.ToI32( editImportRangeCount.Text );
+            if ( ( numChars <= 0 )
+            ||   ( numChars > m_Charset.TotalNumberOfCharacters ) )
+            {
+              numChars = m_Charset.TotalNumberOfCharacters - startChar;
+            }
+            for ( int i = 0; i < numChars; ++i )
+            {
+              listIndices.Add( startChar + i );
+            }
+          }
+          break;
+      }
+      return listIndices;
+    }
+
+
+
     public void ImportFromData( ByteBuffer CharData )
     {
-      int     numBytesPerChar = Lookup.NumBytesOfSingleCharacterBitmap( m_Charset.Mode );
+      var list = new List<int>();
+      for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
+      {
+        list.Add( i );
+      }
 
-      if ( CharData.Length == numBytesPerChar * m_Charset.TotalNumberOfCharacters + 2 )
+      ImportFromData( CharData, list );
+    }
+
+
+
+    public void ImportFromData( ByteBuffer CharData, List<int> importIndices )
+    {
+      int   numBytesPerChar = Lookup.NumBytesOfSingleCharacterBitmap( m_Charset.Mode );
+      int   numChars = Math.Min( m_Charset.TotalNumberOfCharacters, importIndices.Count );
+
+      if ( CharData.Length == numBytesPerChar * numChars + 2 )
       {
         // assume 2 bytes load address 
         CharData = CharData.SubBuffer( 2 );
       }
       int charsToImport = (int)CharData.Length / numBytesPerChar;
-      if ( charsToImport > m_Charset.TotalNumberOfCharacters )
+      if ( charsToImport > numChars )
       {
-        charsToImport = m_Charset.TotalNumberOfCharacters;
+        charsToImport = numChars;
       }
       // TODO - Format!
-      for ( int i = 0; i < charsToImport; ++i )
+      int charIndex = 0;
+      foreach ( var i in importIndices )
       {
+        if ( charIndex >= numChars )
+        {
+          break;
+        }
         for ( int j = 0; j < numBytesPerChar; ++j )
         {
-          m_Charset.Characters[i].Tile.Data.SetU8At( j, CharData.ByteAt( i * numBytesPerChar + j ) );
+          m_Charset.Characters[importIndices[i]].Tile.Data.SetU8At( j, CharData.ByteAt( i * numBytesPerChar + j ) );
         }
-        m_Charset.Characters[i].Tile.CustomColor = 1;
+        m_Charset.Characters[importIndices[i]].Tile.CustomColor = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
       SetModified();
@@ -668,13 +736,13 @@ namespace RetroDevStudio.Documents
       GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
       foreach ( int index in exportIndices )
       {
-        charSet.Append(m_Charset.Characters[index].Tile.Data);
+        charSet.Append( m_Charset.Characters[index].Tile.Data );
       }
 
       var exportInfo = new ExportCharsetInfo()
       {
         Charset         = m_Charset,
-        ExportIndices   = ListOfExportIndices()
+        ExportIndices   = exportIndices
       };
 
       editDataExport.Text = "";
@@ -708,10 +776,16 @@ namespace RetroDevStudio.Documents
 
     private void btnImport_Click( DecentForms.ControlBase Sender )
     {
+      var importInfo = new ImportCharsetInfo()
+      {
+        Charset         = m_Charset,
+        ImportIndices   = ListOfImportIndices()
+      };
+
       var undo1 = new Undo.UndoCharacterEditorCharChange( characterEditor, m_Charset, 0, m_Charset.TotalNumberOfCharacters );
       var undo2 = new Undo.UndoCharacterEditorValuesChange( characterEditor, m_Charset );
 
-      if ( m_ImportForm.HandleImport( m_Charset, this ) )
+      if ( m_ImportForm.HandleImport( importInfo, this ) )
       {
         DocumentInfo.UndoManager.StartUndoGroup();
         DocumentInfo.UndoManager.AddUndoTask( undo1, false );
@@ -768,6 +842,54 @@ namespace RetroDevStudio.Documents
             Modified = prevModified;
           }
           break;
+      }
+    }
+
+
+
+    private void comboImportRange_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      labelImportCharactersFrom.Enabled   = ( comboImportRange.SelectedIndex == 2 );
+      editImportRangeStart.Enabled        = ( comboImportRange.SelectedIndex == 2 );
+      labelImportCharactersCount.Enabled  = ( comboImportRange.SelectedIndex == 2 );
+      editImportRangeCount.Enabled        = ( comboImportRange.SelectedIndex == 2 );
+
+      if ( comboImportRange.SelectedIndex == 2 )
+      {
+        editImportRangeStart_TextChanged( sender, e );
+        editImportRangeCount_TextChanged( sender, e );
+      }
+    }
+
+
+
+    private void editImportRangeStart_TextChanged( object sender, EventArgs e )
+    {
+      int   startChar = GR.Convert.ToI32( editImportRangeStart.Text );
+      if ( ( startChar < 0 )
+      ||   ( startChar >= m_Charset.TotalNumberOfCharacters ) )
+      {
+        startChar = 0;
+        editImportRangeCount.Text = startChar.ToString();
+      }
+    }
+
+
+
+    private void editImportRangeCount_TextChanged( object sender, EventArgs e )
+    {
+      int   numChars = GR.Convert.ToI32( editImportRangeCount.Text );
+      if ( ( numChars <= 0 )
+      ||   ( numChars > m_Charset.TotalNumberOfCharacters ) )
+      {
+        int   startChar = GR.Convert.ToI32( editImportRangeStart.Text );
+        if ( ( startChar < 0 )
+        ||   ( startChar >= m_Charset.TotalNumberOfCharacters ) )
+        {
+          startChar = 0;
+        }
+        numChars = m_Charset.TotalNumberOfCharacters - startChar;
+        editImportRangeCount.Text = numChars.ToString();
       }
     }
 

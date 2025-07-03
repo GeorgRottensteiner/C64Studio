@@ -24,7 +24,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( CharsetProject Charset, CharsetEditor Editor )
+    public override bool HandleImport( ImportCharsetInfo importInfo, CharsetEditor Editor )
     {
       string filename;
 
@@ -46,14 +46,21 @@ namespace RetroDevStudio.Controls
           {
             return false;
           }
-          Charset.Colors = new ColorSettings( project.Colors );
-          Charset.ExportNumCharacters = project.ExportNumCharacters;
-          Charset.ShowGrid = project.ShowGrid;
+          importInfo.Charset.Colors = new ColorSettings( project.Colors );
+          importInfo.Charset.ExportNumCharacters = project.ExportNumCharacters;
+          importInfo.Charset.ShowGrid = project.ShowGrid;
 
-          for ( int i = 0; i < Charset.TotalNumberOfCharacters; ++i )
+          int numChars = Math.Min( importInfo.ImportIndices.Count, project.Characters.Count );
+          int charIndex = 0;
+          foreach ( var i in importInfo.ImportIndices )
           {
-            Charset.Characters[i].Tile.CustomColor = project.Characters[i].Tile.CustomColor;
-            Charset.Characters[i].Tile.Data = new GR.Memory.ByteBuffer( project.Characters[i].Tile.Data );
+            if ( charIndex >= numChars )
+            {
+              break;
+            }
+            importInfo.Charset.Characters[i].Tile.CustomColor = project.Characters[charIndex].Tile.CustomColor;
+            importInfo.Charset.Characters[i].Tile.Data = new GR.Memory.ByteBuffer( project.Characters[charIndex].Tile.Data );
+            ++charIndex;
           }
 
           Editor.CharsetWasImported();
@@ -72,19 +79,26 @@ namespace RetroDevStudio.Controls
             return false;
           }
 
-          Charset.Colors.BackgroundColor = cpProject.BackgroundColor;
-          Charset.Colors.MultiColor1 = cpProject.MultiColor1;
-          Charset.Colors.MultiColor2 = cpProject.MultiColor2;
+          importInfo.Charset.Colors.BackgroundColor = cpProject.BackgroundColor;
+          importInfo.Charset.Colors.MultiColor1 = cpProject.MultiColor1;
+          importInfo.Charset.Colors.MultiColor2 = cpProject.MultiColor2;
 
-          Charset.ExportNumCharacters = cpProject.NumChars;
-          if ( Charset.ExportNumCharacters > 256 )
+          importInfo.Charset.ExportNumCharacters = cpProject.NumChars;
+          if ( importInfo.Charset.ExportNumCharacters > 256 )
           {
-            Charset.ExportNumCharacters = 256;
+            importInfo.Charset.ExportNumCharacters = 256;
           }
-          for ( int charIndex = 0; charIndex < Charset.ExportNumCharacters; ++charIndex )
+          int charIndex = 0;
+          int numChars = Math.Min( importInfo.ImportIndices.Count, cpProject.NumChars );
+          foreach ( var i in importInfo.ImportIndices )
           {
-            Charset.Characters[charIndex].Tile.Data = cpProject.Characters[charIndex].Data;
-            Charset.Characters[charIndex].Tile.CustomColor = cpProject.Characters[charIndex].Color;
+            if ( charIndex >= numChars )
+            {
+              break;
+            }
+            importInfo.Charset.Characters[i].Tile.Data = cpProject.Characters[charIndex].Data;
+            importInfo.Charset.Characters[i].Tile.CustomColor = cpProject.Characters[charIndex].Color;
+            ++charIndex;
           }
 
           Editor.CharsetWasImported();
@@ -106,7 +120,7 @@ namespace RetroDevStudio.Controls
           charData = charData.SubBuffer( bytesToSkip );
         }
 
-        Editor.ImportFromData( charData );
+        Editor.ImportFromData( charData, importInfo.ImportIndices );
       }
       return true;
     }
