@@ -734,12 +734,13 @@ namespace RetroDevStudio.Formats
             // scratched (empty) entry
 
             // default set PRG
+            /*
             if ( i > 0 )
             {
               // set track/sector of next dir sector
               sect.Data.SetU8At( 0, 0 );
               sect.Data.SetU8At( 1, 0 );
-            }
+            }*/
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)( MapperCommodore.Map( Type ) | CommodoreFileTypeNative.CLOSED ) );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
