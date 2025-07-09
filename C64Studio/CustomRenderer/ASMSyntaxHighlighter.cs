@@ -42,7 +42,7 @@ namespace RetroDevStudio.CustomRenderer
       for ( int i = firstLine; i <= lastLine; ++i )
       {
         int     lastLineNo = i;
-        var     line = ChangedRange.tb.Lines[i];
+        var     line = ChangedRange.tb.ReTabifyLine( ChangedRange.tb.Lines[i], ChangedRange.tb.TabLength );
         if ( line.Length == 0 )
         {
           continue;
