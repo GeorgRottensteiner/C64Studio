@@ -14,7 +14,7 @@ using RetroDevStudio.Types;
 namespace TestProject
 {
   [TestClass]
-  public class TestFormatD64
+  public class TestFormatD81
   {
     [TestMethod]
     public void TestAddFileAndDelete()
@@ -22,16 +22,16 @@ namespace TestProject
       var filename = new ByteBuffer( "414243" );
       var fileContent = new ByteBuffer( "0123456789ABCDEF" );
 
-      var d64 = new D64();
-      d64.CreateEmptyMedia();
+      var disk = new D81();
+      disk.CreateEmptyMedia();
 
-      var emptyDisk = d64.Compile();
-      d64.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
+      var emptyDisk = disk.Compile();
+      disk.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
 
-      var diskWithFile = d64.Compile();
-      d64.DeleteFile( filename, true );
+      var diskWithFile = disk.Compile();
+      disk.DeleteFile( filename, true );
 
-      var diskWithDeletedFile = d64.Compile();
+      var diskWithDeletedFile = disk.Compile();
       BinaryCompare( emptyDisk, diskWithDeletedFile );
     }
 
@@ -47,7 +47,7 @@ namespace TestProject
       var fileContent2 = new ByteBuffer( "FFEEDDCCBBAA99887766554433221100" );
       var fileContent3 = new ByteBuffer( "CAFE" );
 
-      var disk = new D64();
+      var disk = new D81();
       disk.CreateEmptyMedia();
 
       var emptyDisk = disk.Compile();
@@ -72,11 +72,11 @@ namespace TestProject
       var filename = new ByteBuffer( "414243" );
       var fileContent = new ByteBuffer( "0123456789ABCDEF" );
 
-      var d64 = new D64();
-      d64.CreateEmptyMedia();
+      var disk = new D81();
+      disk.CreateEmptyMedia();
 
-      d64.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
-      var file = d64.LoadFile( filename );
+      disk.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
+      var file = disk.LoadFile( filename );
       Assert.IsNotNull( file, "File was not found on disk!" );
       Assert.AreEqual( filename + new ByteBuffer( 13, 0xa0 ), file.Filename );
       BinaryCompare( fileContent, file.Data );
@@ -155,9 +155,9 @@ namespace TestProject
       {
         sb.Append( "Difference at $" );
         sb.Append( ( diff & 0xffffffff ).ToString( "X8" ) );
-        sb.Append( ": $" );
+        sb.Append( ": Expected $" );
         sb.Append( ( ( diff >> 32 ) & 0xff ).ToString( "X2" ) );
-        sb.Append( " != $" );
+        sb.Append( " != got $" );
         sb.AppendLine( ( ( diff >> 40 ) & 0xff ).ToString( "X2" ) );
       }
       Assert.Fail( sb.ToString() );

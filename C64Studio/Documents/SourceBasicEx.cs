@@ -38,7 +38,7 @@ namespace RetroDevStudio.Documents
     System.Windows.Forms.Keys m_CommodoreKeyReplacement = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.ControlKey;
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
     private FastColoredTextBoxNS.Style[]      m_TextStyles = new FastColoredTextBoxNS.Style[(int)Types.ColorableElement.LAST_ENTRY];
-    private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
+    //private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
     private string                            m_CurrentHighlightText = null;
     private List<TextLocation>                m_CurrentHighlightLocations = new List<TextLocation>();
@@ -2610,10 +2610,8 @@ namespace RetroDevStudio.Documents
           }
           break;
         case RetroDevStudio.Types.Function.FIND:
-          ///editSource.FindReplace.ShowFind();
           break;
         case RetroDevStudio.Types.Function.FIND_REPLACE:
-          ///editSource.FindReplace.ShowReplace();
           break;
         case RetroDevStudio.Types.Function.PRINT:
           {
@@ -2702,6 +2700,8 @@ namespace RetroDevStudio.Documents
 
     private void renumberToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      int     firstLineIndex  = 0;
+      int     lastLineIndex   = editSource.LinesCount;
       int     firstLineNumber = 0;
       int     lastLineNumber  = BASICDialect.MaxLineNumber;
       if ( editSource.Selection.Start != editSource.Selection.End )
@@ -2715,6 +2715,9 @@ namespace RetroDevStudio.Documents
           firstLine = lastLine;
           lastLine = dummy;
         }
+
+        firstLineIndex  = firstLine;
+        lastLineIndex   = lastLine;
 
         int prevLine = -1;
         int tempFirstLine = firstLine;
@@ -2745,7 +2748,9 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, m_CollapsedTokenMode, firstLineNumber, lastLineNumber );
+      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, m_CollapsedTokenMode, 
+                                                               firstLineNumber, lastLineNumber,
+                                                               firstLineIndex, lastLineIndex );
 
       formRenum.ShowDialog();
     }
@@ -3058,6 +3063,7 @@ namespace RetroDevStudio.Documents
 
       editSource.PreferredLineWidth = basicDialect.SafeLineLength;
 
+      /*
       string opCodes = @"\b(";
 
       foreach ( var tokenInfo in m_Parser.Settings.BASICDialect.Opcodes )
@@ -3084,6 +3090,7 @@ namespace RetroDevStudio.Documents
       opCodes = opCodes.Substring( 0, opCodes.Length - 1 ) + ")\b";
 
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
+      */
     }
 
 

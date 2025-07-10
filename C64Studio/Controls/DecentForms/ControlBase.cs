@@ -5,13 +5,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Automation;
+using System.Windows.Automation.Provider;
 using System.Windows.Forms;
 
 
 
 namespace DecentForms
 {
-  public class ControlBase : Control
+  public class ControlBase : Control, IRawElementProviderSimple
   {
     private bool          _MouseOver = false;
     private bool          _MouseDown = false;
@@ -30,9 +32,9 @@ namespace DecentForms
 
     public ControlBase()
     {
-      TabStop         = true;
-      DoubleBuffered  = true;
-      AutoSize        = false;
+      TabStop = true;
+      DoubleBuffered = true;
+      AutoSize = false;
       this.SetStyle( ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true );
     }
 
@@ -128,14 +130,14 @@ namespace DecentForms
       DWLP_DLGPROC = 0x4
     }
 
-    public enum WindowStyleFlags : long 
+    public enum WindowStyleFlags : long
     {
-      WS_VISIBLE	  = 0x10000000L,
-      WS_BORDER	    = 0x00800000L,
+      WS_VISIBLE    = 0x10000000L,
+      WS_BORDER     = 0x00800000L,
       WS_CAPTION    = 0x00C00000L,
       WS_SYSMENU    = 0x00080000L,
       WM_CAPTION    = 0x00C00000L,
-      WS_DLGFRAME	  = 0x00400000L
+      WS_DLGFRAME   = 0x00400000L
     }
 
     public enum ExtendedWindowStyleFlags : long
@@ -248,9 +250,9 @@ namespace DecentForms
     public bool IsOutside( int X, int Y )
     {
       if ( ( X < 0 )
-      ||   ( X >= Width )
-      ||   ( Y < 0 )
-      ||   ( Y >= Height ) )
+      || ( X >= Width )
+      || ( Y < 0 )
+      || ( Y >= Height ) )
       {
         return true;
       }
@@ -498,8 +500,8 @@ namespace DecentForms
     protected override bool IsInputKey( Keys keyData )
     {
       if ( ( keyData == Keys.Tab )
-      ||   ( keyData == Keys.Escape )   // escape here, without that CancelButtons do not work!
-      ||   ( keyData == ( Keys.Shift | Keys.Tab ) ) )
+      || ( keyData == Keys.Escape )   // escape here, without that CancelButtons do not work!
+      || ( keyData == ( Keys.Shift | Keys.Tab ) ) )
       {
         return false;
       }
@@ -550,6 +552,117 @@ namespace DecentForms
         mask |= 4;
       }
       return mask;
+    }
+
+
+
+    // The NativeUIA class provides access to the native UIA provider functions and data.
+    public class NativeUIA
+    {
+      [DllImport( "UIAutomationCore.dll", EntryPoint = "UiaReturnRawElementProvider", CharSet = CharSet.Unicode )]
+      public static extern IntPtr UiaReturnRawElementProvider(
+          IntPtr hwnd, IntPtr wParam, IntPtr lParam, IRawElementProviderSimple el );
+
+      [DllImport( "UIAutomationCore.dll", EntryPoint = "UiaHostProviderFromHwnd", CharSet = CharSet.Unicode )]
+      public static extern int UiaHostProviderFromHwnd(
+          IntPtr hwnd,
+          [MarshalAs( UnmanagedType.Interface )] out IRawElementProviderSimple provider );
+
+      public const int WM_GETOBJECT = 0x003D;
+      public static IntPtr UiaRootObjectId = (IntPtr)(-25);
+    }
+
+    protected override void WndProc( ref Message m )
+    {
+      switch ( m.Msg )
+      {
+        case NativeUIA.WM_GETOBJECT:
+          {
+            // If the window is being asked for a UIA provider, return ourselves.
+            if ( m.LParam == NativeUIA.UiaRootObjectId )
+            {
+              m.Result = NativeUIA.UiaReturnRawElementProvider( this.Handle, m.WParam, m.LParam, this );
+
+              return;
+            }
+
+            break;
+          }
+      }
+
+      base.WndProc( ref m );
+    }
+
+
+
+    public IRawElementProviderSimple HostRawElementProvider
+    {
+      get
+      {
+        IRawElementProviderSimple result;
+
+        NativeUIA.UiaHostProviderFromHwnd( Handle, out result );
+
+        return result;
+        //return null;
+      }
+    }
+
+
+
+    public ProviderOptions ProviderOptions
+    {
+      get
+      {
+        var options = (ProviderOptions)( (int)ProviderOptions.ServerSideProvider | 32 ); //ProviderOptions.UseComThreading;
+
+        options |= ProviderOptions.OverrideProvider;
+
+        return options;
+      }
+    }
+
+
+
+    public object GetPatternProvider( int patternId )
+    {
+      //System.Windows.Automation.Provider.IInvokeProvider
+      /*
+      if ( ( patternId == GridItemPatternIdentifiers.Pattern.Id ) 
+      ||   ( patternId == TableItemPatternIdentifiers.Pattern.Id ) 
+      ||   ( patternId == ValuePatternIdentifiers.Pattern.Id ) )
+      {
+        return this;
+      }
+      if ( patternId == ValuePatternIdentifiers.Pattern.Id )
+      {
+        return this;
+      }*/
+
+      return null;
+    }
+
+
+
+    public object GetPropertyValue( int propertyId )
+    {
+      // By default, the element gets exposed through the Control view of the UIA tree,
+      // so we don't need to react to IsControlElementProperty here.
+
+      // For this demo, this element is not keyboard focusable. If it were, then it would
+      // need to return true for IsKeyboardFocusableProperty, and either true for 
+      // HasKeyboardFocusProperty if it has focus now.
+
+      if ( propertyId == AutomationElementIdentifiers.NameProperty.Id )
+      {
+        return this.Name;
+      }
+      else if ( propertyId == AutomationElementIdentifiers.LocalizedControlTypeProperty.Id )
+      {
+        return "Garden Thing";
+      }
+
+      return null;
     }
 
 

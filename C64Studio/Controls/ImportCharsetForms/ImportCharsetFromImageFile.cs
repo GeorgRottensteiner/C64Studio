@@ -22,7 +22,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( CharsetProject Charset, CharsetEditor Editor )
+    public override bool HandleImport( ImportCharsetInfo importInfo, CharsetEditor Editor )
     {
       string filename;
 

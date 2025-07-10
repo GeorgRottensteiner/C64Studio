@@ -383,14 +383,19 @@ namespace RetroDevStudio.Formats
       {
         return;
       }
-      Sector bam = Tracks[17].Sectors[0];
-
+      Sector bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
+      int     trackOffset = -1;
+      if ( Track >= 41 )
+      {
+        bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM + 1];
+        trackOffset = -41;
+      }
       // adjust free sectors
-      bam.Data.SetU8At( Track * 4, (byte)( bam.Data.ByteAt( Track * 4 ) + 1 ) );
+      bam.Data.SetU8At( 16 + ( Track + trackOffset ) * 6, (byte)( bam.Data.ByteAt( 16 + ( Track + trackOffset ) * 6 ) + 1 ) );
 
       // mask in sector
       byte mask = (byte)( 1 << ( Sector & 7 ) );
-      bam.Data.SetU8At( Track * 4 + Sector / 8 + 1, (byte)( bam.Data.ByteAt( Track * 4 + Sector / 8 + 1 ) | mask ) );
+      bam.Data.SetU8At( 16 + ( Track + trackOffset ) * 6 + Sector / 8 + 1, (byte)( bam.Data.ByteAt( 16 + ( Track + trackOffset ) * 6 + Sector / 8 + 1 ) | mask ) );
 
       Tracks[Track - 1].Sectors[Sector].Free = true;
     }

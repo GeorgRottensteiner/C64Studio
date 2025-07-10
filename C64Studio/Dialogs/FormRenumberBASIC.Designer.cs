@@ -41,8 +41,14 @@
       this.editLastLineNumber = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.labelLastLineIndex = new System.Windows.Forms.Label();
+      this.labelFirstLineIndex = new System.Windows.Forms.Label();
+      this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.checkVerifyPlausibility = new System.Windows.Forms.CheckBox();
+      this.checkAffectOnlyLineNumbers = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
+      this.groupBox3.SuspendLayout();
       this.SuspendLayout();
       // 
       // label1
@@ -82,19 +88,21 @@
       // labelRenumberInfo
       // 
       this.labelRenumberInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.labelRenumberInfo.Location = new System.Drawing.Point(7, 198);
+      this.labelRenumberInfo.Location = new System.Drawing.Point(10, 268);
       this.labelRenumberInfo.Name = "labelRenumberInfo";
-      this.labelRenumberInfo.Size = new System.Drawing.Size(401, 87);
+      this.labelRenumberInfo.Size = new System.Drawing.Size(402, 87);
       this.labelRenumberInfo.TabIndex = 2;
       this.labelRenumberInfo.Text = "label3";
       // 
       // btnCancel
       // 
+      this.btnCancel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnCancel.Image = null;
-      this.btnCancel.Location = new System.Drawing.Point(333, 308);
+      this.btnCancel.Location = new System.Drawing.Point(333, 358);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 3;
@@ -103,12 +111,14 @@
       // 
       // btnOK
       // 
+      this.btnOK.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnOK.Enabled = false;
       this.btnOK.Image = null;
-      this.btnOK.Location = new System.Drawing.Point(252, 308);
+      this.btnOK.Location = new System.Drawing.Point(252, 358);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 2;
@@ -164,6 +174,8 @@
       // 
       // groupBox2
       // 
+      this.groupBox2.Controls.Add(this.labelLastLineIndex);
+      this.groupBox2.Controls.Add(this.labelFirstLineIndex);
       this.groupBox2.Controls.Add(this.label3);
       this.groupBox2.Controls.Add(this.editFirstLineNumber);
       this.groupBox2.Controls.Add(this.label4);
@@ -175,13 +187,65 @@
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Renumber between";
       // 
+      // labelLastLineIndex
+      // 
+      this.labelLastLineIndex.Location = new System.Drawing.Point(259, 47);
+      this.labelLastLineIndex.Name = "labelLastLineIndex";
+      this.labelLastLineIndex.Size = new System.Drawing.Size(137, 23);
+      this.labelLastLineIndex.TabIndex = 2;
+      this.labelLastLineIndex.Text = "label5";
+      // 
+      // labelFirstLineIndex
+      // 
+      this.labelFirstLineIndex.Location = new System.Drawing.Point(259, 21);
+      this.labelFirstLineIndex.Name = "labelFirstLineIndex";
+      this.labelFirstLineIndex.Size = new System.Drawing.Size(137, 23);
+      this.labelFirstLineIndex.TabIndex = 2;
+      this.labelFirstLineIndex.Text = "label5";
+      // 
+      // groupBox3
+      // 
+      this.groupBox3.Controls.Add(this.checkVerifyPlausibility);
+      this.groupBox3.Controls.Add(this.checkAffectOnlyLineNumbers);
+      this.groupBox3.Location = new System.Drawing.Point(10, 185);
+      this.groupBox3.Name = "groupBox3";
+      this.groupBox3.Size = new System.Drawing.Size(402, 80);
+      this.groupBox3.TabIndex = 6;
+      this.groupBox3.TabStop = false;
+      this.groupBox3.Text = "Renumber Options";
+      // 
+      // checkVerifyPlausibility
+      // 
+      this.checkVerifyPlausibility.AutoSize = true;
+      this.checkVerifyPlausibility.Checked = true;
+      this.checkVerifyPlausibility.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkVerifyPlausibility.Location = new System.Drawing.Point(14, 42);
+      this.checkVerifyPlausibility.Name = "checkVerifyPlausibility";
+      this.checkVerifyPlausibility.Size = new System.Drawing.Size(150, 17);
+      this.checkVerifyPlausibility.TabIndex = 0;
+      this.checkVerifyPlausibility.Text = "Enforce valid line numbers";
+      this.checkVerifyPlausibility.UseVisualStyleBackColor = true;
+      this.checkVerifyPlausibility.CheckedChanged += new System.EventHandler(this.checkVerifyPlausibility_CheckedChanged);
+      // 
+      // checkAffectOnlyLineNumbers
+      // 
+      this.checkAffectOnlyLineNumbers.AutoSize = true;
+      this.checkAffectOnlyLineNumbers.Location = new System.Drawing.Point(14, 19);
+      this.checkAffectOnlyLineNumbers.Name = "checkAffectOnlyLineNumbers";
+      this.checkAffectOnlyLineNumbers.Size = new System.Drawing.Size(176, 17);
+      this.checkAffectOnlyLineNumbers.TabIndex = 0;
+      this.checkAffectOnlyLineNumbers.Text = "Change only direct line numbers";
+      this.checkAffectOnlyLineNumbers.UseVisualStyleBackColor = true;
+      this.checkAffectOnlyLineNumbers.CheckedChanged += new System.EventHandler(this.checkAffectOnlyLineNumbers_CheckedChanged);
+      // 
       // FormRenumberBASIC
       // 
       this.AcceptButton = this.btnOK;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(420, 343);
+      this.ClientSize = new System.Drawing.Size(420, 393);
+      this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.btnOK);
@@ -199,6 +263,8 @@
       this.groupBox1.PerformLayout();
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
+      this.groupBox3.ResumeLayout(false);
+      this.groupBox3.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -218,5 +284,10 @@
     private System.Windows.Forms.TextBox editLastLineNumber;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.CheckBox checkAffectOnlyLineNumbers;
+    private System.Windows.Forms.CheckBox checkVerifyPlausibility;
+    private System.Windows.Forms.Label labelLastLineIndex;
+    private System.Windows.Forms.Label labelFirstLineIndex;
   }
 }

@@ -186,6 +186,10 @@ namespace DecentForms
 
     public void PerformClick()
     {
+      if ( !Enabled )
+      {
+        return;
+      }
       Click?.Invoke( this );
     }
 

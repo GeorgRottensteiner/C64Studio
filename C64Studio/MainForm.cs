@@ -5570,10 +5570,17 @@ namespace RetroDevStudio
               GR.Collections.Set<int> jumpedAtAddresses = new GR.Collections.Set<int>();
               jumpedAtAddresses.Add( StudioCore.Debugging.CurrentCodePosition );
               GR.Collections.Map<int, string> namedLabels = new GR.Collections.Map<int, string>();
+              GR.Collections.Map<int, int> dataTables     = new GR.Collections.Map<int, int>();
 
               var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
 
-              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, jumpedAtAddresses, namedLabels, settings, out disassembly, out int firstLineIndexWithOpcode ) )
+              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, 
+                                             jumpedAtAddresses,
+                                             dataTables,
+                                             namedLabels, 
+                                             settings, 
+                                             out disassembly, 
+                                             out int firstLineIndexWithOpcode ) )
               {
                 StudioCore.Debugging.DebugDisassembly.SetText( disassembly );
                 StudioCore.Debugging.MarkedDocument?.SetLineMarked( StudioCore.Debugging.MarkedDocumentLine, false );
@@ -8077,5 +8084,8 @@ namespace RetroDevStudio
 
 
 
+    private void dumpLineAddressesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+    }
   }
 }

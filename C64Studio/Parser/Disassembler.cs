@@ -295,7 +295,13 @@ namespace RetroDevStudio.Parser
     }
 
 
-    public bool Disassemble( int DataStartAddress, GR.Collections.Set<int> JumpedAtAddresses, GR.Collections.Map<int,string> NamedLabels, DisassemblerSettings Settings, out string Disassembly, out int FirstLineWithOpcode )
+    public bool Disassemble( int DataStartAddress, 
+                             GR.Collections.Set<int> JumpedAtAddresses,
+                             GR.Collections.Map<int,int> dataTableAddresses,
+                             GR.Collections.Map<int,string> NamedLabels, 
+                             DisassemblerSettings Settings, 
+                             out string Disassembly, 
+                             out int FirstLineWithOpcode )
     {
       StringBuilder sb = new StringBuilder();
       Disassembly = "";
@@ -333,6 +339,7 @@ namespace RetroDevStudio.Parser
         {
           continue;
         }
+        addressesChecked.Add( progStepPos );
         while ( true )
         {
           if ( progStepPos < DataStartAddress )
@@ -346,7 +353,27 @@ namespace RetroDevStudio.Parser
           }
 
           Tiny64.Opcode  opcode = null;
-          bool              outsideData = false;
+          bool           outsideData = false;
+
+          var findTable = dataTableAddresses.FirstOrDefault( ( dt => ( progStepPos >= dt.Key ) && ( progStepPos < ( dt.Key + dt.Value ) ) ) );
+          if ( findTable.Value != 0 )
+          {
+            // skip disassembling
+
+            // mark whole block as checked
+            for ( int i = 0; i < findTable.Value; ++i )
+            {
+              addressesChecked.Add( i + findTable.Key );
+            }
+            progStepPos = findTable.Key + findTable.Value;
+            if ( progStepPos >= DataStartAddress + m_SourceData.Length )
+            {
+              // reached the end
+              outsideData = true;
+              break;
+            }
+          }
+
           if ( !DisassembleInstruction( m_SourceData, DataStartAddress, progStepPos, out opcode, out outsideData ) )
           {
             if ( !outsideData )
@@ -363,13 +390,20 @@ namespace RetroDevStudio.Parser
           }
 
           addressesChecked.Add( progStepPos );
+          for ( int i = 0; i < opcode.OpcodeSize; ++i )
+          {
+            addressesChecked.Add( progStepPos + 1 + i );
+          }
 
           if ( ( opcode.ByteValue == 0x4c )     // jmp
           ||   ( opcode.ByteValue == 0x20 ) )   // jsr
           {
             // absolute jump
-            accessedAddresses.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
-            addressesToCheck.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
+            if ( !accessedAddresses.Contains( (ushort)( progStepPos + 1 - DataStartAddress ) ) )
+            {
+              accessedAddresses.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
+              addressesToCheck.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
+            }
           }
           else if ( opcode.ByteValue == 0x6c )     // jmp indirect
           {
@@ -379,8 +413,11 @@ namespace RetroDevStudio.Parser
           {
             int targetAddress = (sbyte)m_SourceData.ByteAt( progStepPos + 1 - DataStartAddress ) + 2 + progStepPos;
             probableLabel.Add( (ushort)targetAddress );
-            addressesToCheck.Add( targetAddress );
-            accessedAddresses.Add( (ushort)targetAddress );
+            if ( !accessedAddresses.Contains( (ushort)targetAddress ) )
+            {
+              addressesToCheck.Add( targetAddress );
+              accessedAddresses.Add( (ushort)targetAddress );
+            }
           }
 
           disassembly[(ushort)progStepPos] = new GR.Generic.Tupel<Tiny64.Opcode, ushort>( opcode, m_SourceData.UInt16At( progStepPos + 1 ) );
@@ -534,6 +571,7 @@ namespace RetroDevStudio.Parser
               sb.Append( " = * + " );
               sb.Append( addressInside.Key - trueAddress );
               sb.AppendLine();
+              AddLineAddress( Settings, sb, trueAddress );
             }
 
             var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.OpcodeSize ) );
@@ -546,6 +584,7 @@ namespace RetroDevStudio.Parser
               sb.Append( " = * + " );
               sb.Append( addressInside - trueAddress );
               sb.AppendLine();
+              AddLineAddress( Settings, sb, trueAddress );
             }
           }
 

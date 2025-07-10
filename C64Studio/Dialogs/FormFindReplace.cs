@@ -411,7 +411,7 @@ namespace RetroDevStudio.Dialogs
       }
 
       int     startPos = LastPosition + 1;
-      if ( LastPosition == 0 )
+      if ( LastPosition <= 0 )
       {
         startPos = 0;
       }
@@ -1973,7 +1973,8 @@ namespace RetroDevStudio.Dialogs
 
         // offset start pos to new string
         LastReplaceFound.StartPosition = newLocation.StartPosition;
-        LastReplaceFound.StartPosition += StringToReplaceWith.Length;
+        // -1 because FindNextNew always does +1 to avoid re-finding the exact same entry
+        LastReplaceFound.StartPosition += StringToReplaceWith.Length - 1;
 
         ++NumOccurences;
       }

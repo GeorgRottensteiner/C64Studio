@@ -28,7 +28,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public virtual bool HandleImport( CharsetProject CharScreen, CharsetEditor Editor )
+    public virtual bool HandleImport( ImportCharsetInfo importInfo, CharsetEditor Editor )
     {
       return false;
     }

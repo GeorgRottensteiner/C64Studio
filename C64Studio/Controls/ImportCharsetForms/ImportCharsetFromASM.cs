@@ -23,7 +23,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleImport( CharsetProject CharSet, CharsetEditor Editor )
+    public override bool HandleImport( ImportCharsetInfo importInfo, CharsetEditor Editor )
     {
       Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
 
@@ -38,16 +38,16 @@ namespace RetroDevStudio.Controls
       {
         GR.Memory.ByteBuffer charData = asmParser.AssembledOutput.Assembly;
 
-        int charsToImport = (int)charData.Length / 8;
-        if ( charsToImport > CharSet.TotalNumberOfCharacters )
-        {
-          charsToImport = CharSet.TotalNumberOfCharacters;
-        }
+        int numBytesOfChar = Lookup.NumBytesOfSingleCharacterBitmap( importInfo.Charset.Mode );
+
+        int charsToImport = (int)charData.Length / numBytesOfChar;
+
+        charsToImport = System.Math.Min( charsToImport, importInfo.ImportIndices.Count );
 
         for ( int i = 0; i < charsToImport; ++i )
         {
-          charData.CopyTo( CharSet.Characters[i].Tile.Data, i * 8, 8 );
-          Editor.CharacterChanged( i );
+          charData.CopyTo( importInfo.Charset.Characters[importInfo.ImportIndices[i]].Tile.Data, i * numBytesOfChar, numBytesOfChar );
+          Editor.CharacterChanged( importInfo.ImportIndices[i] );
         }
 
         return true;

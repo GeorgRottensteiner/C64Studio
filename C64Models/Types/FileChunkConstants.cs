@@ -63,6 +63,7 @@
     public const ushort    DISASSEMBLY_DATA               = 0x1601;
     public const ushort    DISASSEMBLY_JUMP_ADDRESSES     = 0x1602;
     public const ushort    DISASSEMBLY_NAMED_LABELS       = 0x1603;
+    public const ushort    DISASSEMBLY_DATA_ADDRESSES     = 0x1604;
 
     public const ushort    BOOKMARKS                      = 0x1700;
 

@@ -50,9 +50,15 @@ namespace RetroDevStudio.Documents
       this.label4 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabImport = new System.Windows.Forms.TabPage();
+      this.comboImportRange = new System.Windows.Forms.ComboBox();
+      this.editImportRangeCount = new System.Windows.Forms.TextBox();
+      this.editImportRangeStart = new System.Windows.Forms.TextBox();
+      this.labelImportCharactersCount = new System.Windows.Forms.Label();
+      this.labelImportCharactersFrom = new System.Windows.Forms.Label();
       this.panelImport = new System.Windows.Forms.Panel();
       this.btnImport = new DecentForms.Button();
       this.comboImportMethod = new System.Windows.Forms.ComboBox();
+      this.label5 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.contextMenuDefaultCharsets = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.c64UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,7 +140,7 @@ namespace RetroDevStudio.Documents
       this.comboExportRange.Location = new System.Drawing.Point(90, 5);
       this.comboExportRange.Name = "comboExportRange";
       this.comboExportRange.Size = new System.Drawing.Size(88, 21);
-      this.comboExportRange.TabIndex = 44;
+      this.comboExportRange.TabIndex = 0;
       this.comboExportRange.SelectedIndexChanged += new System.EventHandler(this.comboExportRange_SelectedIndexChanged);
       // 
       // editCharactersCount
@@ -143,7 +149,7 @@ namespace RetroDevStudio.Documents
       this.editCharactersCount.Location = new System.Drawing.Point(328, 5);
       this.editCharactersCount.Name = "editCharactersCount";
       this.editCharactersCount.Size = new System.Drawing.Size(56, 20);
-      this.editCharactersCount.TabIndex = 42;
+      this.editCharactersCount.TabIndex = 2;
       this.editCharactersCount.TextChanged += new System.EventHandler(this.editUsedCharacters_TextChanged);
       // 
       // editCharactersFrom
@@ -152,7 +158,7 @@ namespace RetroDevStudio.Documents
       this.editCharactersFrom.Location = new System.Drawing.Point(223, 5);
       this.editCharactersFrom.Name = "editCharactersFrom";
       this.editCharactersFrom.Size = new System.Drawing.Size(56, 20);
-      this.editCharactersFrom.TabIndex = 43;
+      this.editCharactersFrom.TabIndex = 1;
       this.editCharactersFrom.TextChanged += new System.EventHandler(this.editStartCharacters_TextChanged);
       // 
       // labelCharactersTo
@@ -183,15 +189,20 @@ namespace RetroDevStudio.Documents
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
       this.editDataExport.Size = new System.Drawing.Size(597, 469);
-      this.editDataExport.TabIndex = 39;
+      this.editDataExport.TabIndex = 6;
       this.editDataExport.WordWrap = false;
       // 
       // btnExport
       // 
+      this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnExport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnExport.Image = null;
       this.btnExport.Location = new System.Drawing.Point(370, 36);
       this.btnExport.Name = "btnExport";
       this.btnExport.Size = new System.Drawing.Size(75, 21);
-      this.btnExport.TabIndex = 33;
+      this.btnExport.TabIndex = 4;
       this.btnExport.Text = "Export";
       this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
@@ -202,7 +213,7 @@ namespace RetroDevStudio.Documents
       this.panelExport.Location = new System.Drawing.Point(6, 63);
       this.panelExport.Name = "panelExport";
       this.panelExport.Size = new System.Drawing.Size(439, 409);
-      this.panelExport.TabIndex = 32;
+      this.panelExport.TabIndex = 5;
       // 
       // comboExportMethod
       // 
@@ -211,7 +222,7 @@ namespace RetroDevStudio.Documents
       this.comboExportMethod.Location = new System.Drawing.Point(90, 36);
       this.comboExportMethod.Name = "comboExportMethod";
       this.comboExportMethod.Size = new System.Drawing.Size(274, 21);
-      this.comboExportMethod.TabIndex = 30;
+      this.comboExportMethod.TabIndex = 3;
       this.comboExportMethod.SelectedIndexChanged += new System.EventHandler(this.comboExportMethod_SelectedIndexChanged);
       // 
       // label4
@@ -234,9 +245,15 @@ namespace RetroDevStudio.Documents
       // 
       // tabImport
       // 
+      this.tabImport.Controls.Add(this.comboImportRange);
+      this.tabImport.Controls.Add(this.editImportRangeCount);
+      this.tabImport.Controls.Add(this.editImportRangeStart);
+      this.tabImport.Controls.Add(this.labelImportCharactersCount);
+      this.tabImport.Controls.Add(this.labelImportCharactersFrom);
       this.tabImport.Controls.Add(this.panelImport);
       this.tabImport.Controls.Add(this.btnImport);
       this.tabImport.Controls.Add(this.comboImportMethod);
+      this.tabImport.Controls.Add(this.label5);
       this.tabImport.Controls.Add(this.label2);
       this.tabImport.Location = new System.Drawing.Point(4, 22);
       this.tabImport.Name = "tabImport";
@@ -246,6 +263,52 @@ namespace RetroDevStudio.Documents
       this.tabImport.Text = "Import";
       this.tabImport.UseVisualStyleBackColor = true;
       // 
+      // comboImportRange
+      // 
+      this.comboImportRange.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboImportRange.FormattingEnabled = true;
+      this.comboImportRange.Location = new System.Drawing.Point(472, 9);
+      this.comboImportRange.Name = "comboImportRange";
+      this.comboImportRange.Size = new System.Drawing.Size(88, 21);
+      this.comboImportRange.TabIndex = 2;
+      this.comboImportRange.SelectedIndexChanged += new System.EventHandler(this.comboImportRange_SelectedIndexChanged);
+      // 
+      // editImportRangeCount
+      // 
+      this.editImportRangeCount.Enabled = false;
+      this.editImportRangeCount.Location = new System.Drawing.Point(710, 9);
+      this.editImportRangeCount.Name = "editImportRangeCount";
+      this.editImportRangeCount.Size = new System.Drawing.Size(56, 20);
+      this.editImportRangeCount.TabIndex = 4;
+      this.editImportRangeCount.TextChanged += new System.EventHandler(this.editImportRangeCount_TextChanged);
+      // 
+      // editImportRangeStart
+      // 
+      this.editImportRangeStart.Enabled = false;
+      this.editImportRangeStart.Location = new System.Drawing.Point(605, 9);
+      this.editImportRangeStart.Name = "editImportRangeStart";
+      this.editImportRangeStart.Size = new System.Drawing.Size(56, 20);
+      this.editImportRangeStart.TabIndex = 3;
+      this.editImportRangeStart.TextChanged += new System.EventHandler(this.editImportRangeStart_TextChanged);
+      // 
+      // labelImportCharactersCount
+      // 
+      this.labelImportCharactersCount.AutoSize = true;
+      this.labelImportCharactersCount.Location = new System.Drawing.Point(667, 12);
+      this.labelImportCharactersCount.Name = "labelImportCharactersCount";
+      this.labelImportCharactersCount.Size = new System.Drawing.Size(37, 13);
+      this.labelImportCharactersCount.TabIndex = 45;
+      this.labelImportCharactersCount.Text = "count:";
+      // 
+      // labelImportCharactersFrom
+      // 
+      this.labelImportCharactersFrom.AutoSize = true;
+      this.labelImportCharactersFrom.Location = new System.Drawing.Point(569, 12);
+      this.labelImportCharactersFrom.Name = "labelImportCharactersFrom";
+      this.labelImportCharactersFrom.Size = new System.Drawing.Size(30, 13);
+      this.labelImportCharactersFrom.TabIndex = 46;
+      this.labelImportCharactersFrom.Text = "from:";
+      // 
       // panelImport
       // 
       this.panelImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -254,14 +317,19 @@ namespace RetroDevStudio.Documents
       this.panelImport.Location = new System.Drawing.Point(3, 36);
       this.panelImport.Name = "panelImport";
       this.panelImport.Size = new System.Drawing.Size(1050, 438);
-      this.panelImport.TabIndex = 37;
+      this.panelImport.TabIndex = 5;
       // 
       // btnImport
       // 
+      this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnImport.Image = null;
       this.btnImport.Location = new System.Drawing.Point(337, 8);
       this.btnImport.Name = "btnImport";
       this.btnImport.Size = new System.Drawing.Size(75, 21);
-      this.btnImport.TabIndex = 36;
+      this.btnImport.TabIndex = 1;
       this.btnImport.Text = "Import";
       this.btnImport.Click += new DecentForms.EventHandler(this.btnImport_Click);
       // 
@@ -272,8 +340,17 @@ namespace RetroDevStudio.Documents
       this.comboImportMethod.Location = new System.Drawing.Point(88, 9);
       this.comboImportMethod.Name = "comboImportMethod";
       this.comboImportMethod.Size = new System.Drawing.Size(243, 21);
-      this.comboImportMethod.TabIndex = 34;
+      this.comboImportMethod.TabIndex = 0;
       this.comboImportMethod.SelectedIndexChanged += new System.EventHandler(this.comboImportMethod_SelectedIndexChanged);
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(427, 12);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(39, 13);
+      this.label5.TabIndex = 35;
+      this.label5.Text = "Import:";
       // 
       // label2
       // 
@@ -423,5 +500,11 @@ namespace RetroDevStudio.Documents
     private DecentForms.Button btnImport;
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.ComboBox comboImportRange;
+    private System.Windows.Forms.TextBox editImportRangeCount;
+    private System.Windows.Forms.TextBox editImportRangeStart;
+    private System.Windows.Forms.Label labelImportCharactersCount;
+    private System.Windows.Forms.Label labelImportCharactersFrom;
+    private System.Windows.Forms.Label label5;
   }
 }

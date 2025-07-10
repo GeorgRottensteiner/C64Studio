@@ -334,7 +334,13 @@ namespace RetroDevStudio.Documents
         StopAtReturns     = checkStopAtReturns.Checked
       };
 
-      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out string disassembly, out int dummy ) )
+      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, 
+                                       m_DisassemblyProject.JumpedAtAddresses,
+                                       m_DisassemblyProject.DataTableAddresses,
+                                       m_DisassemblyProject.NamedLabels, 
+                                       settings, 
+                                       out string disassembly, 
+                                       out int dummy ) )
       {
         editDisassembly.Text = disassembly;
 
@@ -395,6 +401,15 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void FillItemFromDataTable( ListViewItem Item, int Address, int length )
+    {
+      Item.Text = "$" + Address.ToString( "X4" ) + "   " + Address;
+      Item.SubItems.Add( "$" + length.ToString( "X" ) + "   " + length );
+      Item.Tag  = Address;
+    }
+
+
+
     private void btnAddJumpAddress_Click( DecentForms.ControlBase Sender )
     {
       string    addressT = editJumpAddress.Text;
@@ -430,6 +445,22 @@ namespace RetroDevStudio.Documents
         ListViewItem    item = new ListViewItem();
         FillItemFromAddress( item, Address );
         listJumpedAtAddresses.Items.Add( item );
+
+        UpdateDisassembly();
+      }
+    }
+
+
+
+    private void AddDataTableAddress( ushort Address, int length )
+    {
+      if ( !m_DisassemblyProject.DataTableAddresses.ContainsValue( Address ) )
+      {
+        m_DisassemblyProject.DataTableAddresses.Add( Address, length );
+
+        ListViewItem    item = new ListViewItem();
+        FillItemFromDataTable( item, Address, length );
+        listDataTables.Items.Add( item );
 
         UpdateDisassembly();
       }
@@ -499,6 +530,14 @@ namespace RetroDevStudio.Documents
           listJumpedAtAddresses.Items.Add( item );
         }
 
+        listDataTables.Items.Clear();
+        foreach ( var dataTable in m_DisassemblyProject.DataTableAddresses )
+        {
+          ListViewItem  item = new ListViewItem();
+          FillItemFromDataTable( item, dataTable.Key, dataTable.Value );
+          listDataTables.Items.Add( item );
+        }
+
         listNamedLabels.Items.Clear();
         foreach ( var namedLabel in m_DisassemblyProject.NamedLabels )
         {
@@ -509,21 +548,47 @@ namespace RetroDevStudio.Documents
 
         SetHexData( m_DisassemblyProject.Data );
         UpdateDisassembly();
+
+        SetDocumentFilename( FileName );
       }
+    }
+
+
+
+    protected override bool QueryFilename( string PreviousFilename, out string Filename )
+    {
+      Filename = "";
+
+      var saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Choose project file name";
+      saveDlg.Filter = "Disassembly Projects|*.disassembly|All Files|*.*";
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
+      }
+
+      Filename = saveDlg.FileName;
+      return true;
+    }
+
+
+
+    protected override bool PerformSave( string FullPath )
+    {
+      return GR.IO.File.WriteAllBytes( FullPath, m_DisassemblyProject.SaveToBuffer() );
     }
 
 
 
     private void btnSaveProject_Click( DecentForms.ControlBase Sender )
     {
-      SaveFileDialog    saveDialog = new SaveFileDialog();
-
-      saveDialog.Title = "Choose project file name";
-      saveDialog.Filter = "Disassembly Projects|*.disassembly|All Files|*.*";
-      if ( saveDialog.ShowDialog() == DialogResult.OK )
-      {
-        GR.IO.File.WriteAllBytes( saveDialog.FileName, m_DisassemblyProject.SaveToBuffer() );
-      }
+      Save( SaveMethod.SAVE );
     }
 
 
@@ -544,7 +609,13 @@ namespace RetroDevStudio.Documents
         StopAtReturns     = checkStopAtReturns.Checked
       };
 
-      if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly, out int dummy ) )
+      if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, 
+                                        m_DisassemblyProject.JumpedAtAddresses,
+                                        m_DisassemblyProject.DataTableAddresses,
+                                        m_DisassemblyProject.NamedLabels, 
+                                        settings, 
+                                        out disassembly, 
+                                        out int dummy ) )
       {
         return;
       }
@@ -988,6 +1059,76 @@ namespace RetroDevStudio.Documents
         DeleteSelectedJumpedAtAddress();
       }
     }
+
+
+
+    private void btnAddDataTable_Click( DecentForms.ControlBase Sender )
+    {
+      string    addressT = editDataTables.Text;
+      int       address = 0;
+
+      if ( addressT.Length > 0 )
+      {
+        if ( addressT[0] == '$' )
+        {
+          address = GR.Convert.ToI32( addressT.Substring( 1 ), 16 );
+        }
+        else if ( addressT.StartsWith( "0x" ) )
+        {
+          address = GR.Convert.ToI32( addressT.Substring( 2 ), 16 );
+        }
+        else
+        {
+          address = GR.Convert.ToI32( addressT );
+        }
+        if ( ( int.TryParse( editDataTableLength.Text, out int length ) )
+        &&   ( length > 0 ) )
+        {
+          AddDataTableAddress( (ushort)address, length );
+        }
+      }
+    }
+
+
+
+    private void listDataTables_KeyDown( object sender, KeyEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Delete )
+      {
+        DeleteSelectedDataTableAddress();
+      }
+    }
+
+
+
+    private void listDataTables_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      btnDeleteDataTable.Enabled = ( listDataTables.SelectedItems.Count != 0 );
+    }
+
+
+
+    private void btnDeleteDataTable_Click( DecentForms.ControlBase Sender )
+    {
+      DeleteSelectedDataTableAddress();
+    }
+
+
+
+    private void DeleteSelectedDataTableAddress()
+    {
+      if ( listDataTables.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      int     address = (int)listDataTables.SelectedItems[0].Tag;
+
+      m_DisassemblyProject.DataTableAddresses.Remove( address );
+      listDataTables.Items.Remove( listDataTables.SelectedItems[0] );
+
+      UpdateDisassembly();
+    }
+
 
 
 

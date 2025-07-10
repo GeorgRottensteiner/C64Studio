@@ -11,6 +11,7 @@ namespace RetroDevStudio.Formats
     public int                              DataStartAddress = 0;
     public string                           Description = "";
     public GR.Collections.Set<int>          JumpedAtAddresses = new GR.Collections.Set<int>();
+    public GR.Collections.Map<int,int>      DataTableAddresses = new GR.Collections.Map<int, int>();
     public GR.Collections.Map<int,string>   NamedLabels = new GR.Collections.Map<int,string>();
 
 
@@ -43,6 +44,15 @@ namespace RetroDevStudio.Formats
         chunkJumpAddresses.AppendI32( jumpAddress );
       }
       projectFile.Append( chunkJumpAddresses.ToBuffer() );
+
+      GR.IO.FileChunk   chunkDataTableAddresses = new GR.IO.FileChunk( FileChunkConstants.DISASSEMBLY_DATA_ADDRESSES );
+      chunkDataTableAddresses.AppendI32( DataTableAddresses.Count );
+      foreach ( var entry in DataTableAddresses )
+      {
+        chunkDataTableAddresses.AppendI32( entry.Key );
+        chunkDataTableAddresses.AppendI32( entry.Value );
+      }
+      projectFile.Append( chunkDataTableAddresses.ToBuffer() );
 
       GR.IO.FileChunk   chunkNamedLabels = new GR.IO.FileChunk( FileChunkConstants.DISASSEMBLY_NAMED_LABELS );
       chunkNamedLabels.AppendI32( NamedLabels.Count );
@@ -97,6 +107,18 @@ namespace RetroDevStudio.Formats
               {
                 int value = chunkReader.ReadInt32();
                 JumpedAtAddresses.Add( value );
+              }
+            }
+            break;
+          case FileChunkConstants.DISASSEMBLY_DATA_ADDRESSES:
+            {
+              int     numEntries = chunkReader.ReadInt32();
+
+              for ( int i = 0; i < numEntries; ++i )
+              {
+                int address = chunkReader.ReadInt32();
+                int length  = chunkReader.ReadInt32();
+                DataTableAddresses.Add( address, length );
               }
             }
             break;

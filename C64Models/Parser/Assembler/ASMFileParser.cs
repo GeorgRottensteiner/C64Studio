@@ -3885,7 +3885,7 @@ namespace RetroDevStudio.Parser
             intermediateLineOffset -= lineIndex - repeatUntil.LineIndex - 1;
           }
 
-          SourceInfoLog( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
+          SourceInfoLog( "Add subfile #2 section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
 
           InsertSourceInfo( sourceInfo, true, false );
 
@@ -4004,7 +4004,7 @@ namespace RetroDevStudio.Parser
             intermediateLineOffset -= lineIndex - whileInfo.LineIndex - 1;
           }
 
-          SourceInfoLog( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
+          SourceInfoLog( "Add subfile #3 section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
 
           InsertSourceInfo( sourceInfo, true, false );
 
@@ -4107,8 +4107,6 @@ namespace RetroDevStudio.Parser
           // loop is done
           RemoveLabel( lastLoop.Label );
 
-          intermediateLineOffset = 0;
-
           OnScopeRemoved( lineIndex );
           _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
 
@@ -4137,7 +4135,6 @@ namespace RetroDevStudio.Parser
                         "" ).IsForVariable = true;
 
           int linesToCopy = loopBlockLength;
-          int lineLoopEndOffset = 0;
 
           // end reached now?
           if ( ( lastLoop.CurrentValue == lastLoop.EndValue )
@@ -4147,12 +4144,6 @@ namespace RetroDevStudio.Parser
           &&     ( lastLoop.CurrentValue + lastLoop.StepValue < lastLoop.EndValue ) ) )
           {
             endReached = true;
-          }
-
-          if ( endReached )
-          {
-            //++linesToCopy;
-            lineLoopEndOffset = 0;
           }
 
           string[] newLines = new string[Lines.Length + linesToCopy];
@@ -4165,7 +4156,7 @@ namespace RetroDevStudio.Parser
             newLines[lineIndex + j] = newLines[lineIndex + j] + "; loop with " + lastLoop.Label + "=" + lastLoop.CurrentValue;
           }
 
-          System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
+          System.Array.Copy( Lines, lineIndex, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex );
 
           // fix up internal labels
           lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, lineIndex );
@@ -4188,26 +4179,25 @@ namespace RetroDevStudio.Parser
           sourceInfo.FullPath = outerFilename;
           sourceInfo.GlobalStartLine = lineIndex;
           sourceInfo.LineCount = linesToCopy;
-          sourceInfo.LocalStartLine = outerLineIndex + 1 + intermediateLineOffset;
+          sourceInfo.LocalStartLine = outerLineIndex + 1;
 
-          if ( endReached )
-          {
-            intermediateLineOffset -= lineIndex - lastLoop.LineIndex - 1;
-          }
-
-          SourceInfoLog( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
+          SourceInfoLog( "Add subfile #1, loop content section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
 
           InsertSourceInfo( sourceInfo, true, false );
 
           // scheint die Ursache zu sein!!
-          DumpSourceInfos( OrigLines );
+          //DumpSourceInfos( OrigLines );
 
           // clone all source infos inside the loop
-          CloneSourceInfos( sourceInfo.LocalStartLine, linesToCopy, lineIndex );
+          //orig
+          //CloneSourceInfos( sourceInfo.LocalStartLine, linesToCopy, lineIndex );
+          //attempt
+          CloneSourceInfos( lastLoop.LineIndex + 1, linesToCopy, lineIndex );
+          //CloneSourceInfosLocal( outerLineIndex, lastLoop.LineIndex, linesToCopy, lineIndex );
 
           Lines = newLines;
 
-          DumpSourceInfos( OrigLines );
+          //DumpSourceInfos( OrigLines );
 
           return ParseLineResult.CALL_CONTINUE;
         }
@@ -10307,26 +10297,70 @@ namespace RetroDevStudio.Parser
 
 
 
-    private void CloneSourceInfos( int SourceIndex, int CopyLength, int TargetIndex )
+    private void CloneSourceInfos( int globalSourceIndex, int CopyLength, int TargetIndex )
     {
+      SourceInfoLog( $"-CloneSourceInfos 1 section from {globalSourceIndex}, {CopyLength} lines to {TargetIndex}" );
+
+      if ( ( globalSourceIndex == 5 )
+      &&   ( TargetIndex == 13 ) )
+      {
+        Debug.Log( "Must not end as 7,3!!!" );
+      }
+
       List<Types.ASM.SourceInfo>    infosToAdd = new List<RetroDevStudio.Types.ASM.SourceInfo>();
 
       foreach ( Types.ASM.SourceInfo oldInfo in m_ASMFileInfo.SourceInfo.Values )
       {
         if ( ( oldInfo.LineCount != -1 )
-        &&   ( oldInfo.GlobalStartLine >= SourceIndex )
+        &&   ( oldInfo.GlobalStartLine >= globalSourceIndex )
         //&&   ( oldInfo.GlobalStartLine + oldInfo.LineCount <= SourceIndex + CopyLength ) )
-        &&   ( oldInfo.GlobalStartLine + oldInfo.LineCount < SourceIndex + CopyLength ) )
+        &&   ( oldInfo.GlobalStartLine + oldInfo.LineCount < globalSourceIndex + CopyLength ) )
         {
           // fully inside source scope
           // need to copy!
+          SourceInfoLog( $"  -need to clone from {oldInfo.GlobalStartLine}, {oldInfo.LineCount} lines to {oldInfo.GlobalStartLine + TargetIndex - globalSourceIndex}" );
           Types.ASM.SourceInfo tempInfo = new RetroDevStudio.Types.ASM.SourceInfo();
 
           tempInfo.LineCount        = oldInfo.LineCount;
           tempInfo.LocalStartLine   = oldInfo.LocalStartLine;
           tempInfo.Filename         = oldInfo.Filename;
           tempInfo.FilenameParent   = oldInfo.FilenameParent;
-          tempInfo.GlobalStartLine  = oldInfo.GlobalStartLine + TargetIndex - SourceIndex;
+          tempInfo.GlobalStartLine  = oldInfo.GlobalStartLine + TargetIndex - globalSourceIndex;
+
+          infosToAdd.Add( tempInfo );
+        }
+      }
+
+      foreach ( var infoToAdd in infosToAdd )
+      {
+        InsertSourceInfo( infoToAdd, false, false );
+      }
+    }
+
+
+
+    private void CloneSourceInfosLocal( int globalSourceIndex, int localSourceIndex, int CopyLength, int TargetIndex )
+    {
+      SourceInfoLog( $"-CloneSourceInfosLocal 1 section from glob {globalSourceIndex}, local {localSourceIndex}, {CopyLength} lines to {TargetIndex}" );
+      List<Types.ASM.SourceInfo>    infosToAdd = new List<RetroDevStudio.Types.ASM.SourceInfo>();
+
+      foreach ( Types.ASM.SourceInfo oldInfo in m_ASMFileInfo.SourceInfo.Values )
+      {
+        if ( ( oldInfo.LineCount != -1 )
+        &&   ( oldInfo.LocalStartLine >= localSourceIndex )
+        //&&   ( oldInfo.GlobalStartLine + oldInfo.LineCount <= SourceIndex + CopyLength ) )
+        &&   ( oldInfo.LocalStartLine + oldInfo.LineCount < localSourceIndex + CopyLength ) )
+        {
+          // fully inside source scope
+          // need to copy!
+          SourceInfoLog( $"  -need to clone from {oldInfo.GlobalStartLine}, {oldInfo.LineCount} lines to {oldInfo.GlobalStartLine + TargetIndex - localSourceIndex}" );
+          Types.ASM.SourceInfo tempInfo = new RetroDevStudio.Types.ASM.SourceInfo();
+
+          tempInfo.LineCount        = oldInfo.LineCount;
+          tempInfo.LocalStartLine   = oldInfo.LocalStartLine;
+          tempInfo.Filename         = oldInfo.Filename;
+          tempInfo.FilenameParent   = oldInfo.FilenameParent;
+          tempInfo.GlobalStartLine  = oldInfo.GlobalStartLine + TargetIndex - globalSourceIndex;
 
           infosToAdd.Add( tempInfo );
         }
@@ -10488,7 +10522,7 @@ namespace RetroDevStudio.Parser
         foreach ( var pair in m_ASMFileInfo.SourceInfo )
         {
           var info = pair.Value;
-          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + GR.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
+          Debug.Log( $"From {info.GlobalStartLine + 1} to {info.GlobalStartLine + 1 + info.LineCount - 1}, {info.LineCount} lines, from file {GR.Path.GetFileNameWithoutExtension( info.Filename )} at offset {info.LocalStartLine + 1}" );
           fullLines += info.LineCount;
         }
         Debug.Log( "Total " + fullLines + " lines" );
@@ -10638,6 +10672,20 @@ namespace RetroDevStudio.Parser
 
 
 
+    private void DumpLineAddresses()
+    {
+      if ( !DoLogSourceInfo )
+      {
+        return;
+      }
+      foreach ( var entry in m_ASMFileInfo.AddressToLine )
+      {
+        Debug.Log( $"line {entry.Value} = {entry.Key:X}" );
+      }
+    }
+
+
+
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo  )
     {
       ASMFileInfo = null;
@@ -10742,6 +10790,7 @@ namespace RetroDevStudio.Parser
         return false;
       }
 
+      DumpLineAddresses();
       return true;
     }
 

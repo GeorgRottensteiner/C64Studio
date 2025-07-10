@@ -9621,6 +9621,8 @@ window.status = ""#print"";
         ||   ( ( draggedRange.Start != place )
         &&     ( draggedRange.End != place ) ) )
         {
+          // dragging at the same place or inside the dragged range, abort drag/drop operation
+          draggedRange.ClearStyle( SelectionStyle );
           return;
         }
       }
