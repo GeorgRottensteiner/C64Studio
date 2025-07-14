@@ -601,6 +601,7 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.HELP].MenuItem = helpToolStripMenuItem1;
       StudioCore.Settings.Functions[Function.COMMENT_SELECTION].ToolBarButton = mainToolCommentSelection;
       StudioCore.Settings.Functions[Function.UNCOMMENT_SELECTION].ToolBarButton = mainToolUncommentSelection;
+      StudioCore.Settings.Functions[Function.TOGGLE_SELECTION].ToolBarButton = mainToolToggleSelection;
       StudioCore.Settings.Functions[Function.SAVE_DOCUMENT].MenuItem = saveToolStripMenuItem;
       StudioCore.Settings.Functions[Function.SAVE_DOCUMENT].ToolBarButton = mainToolSave;
       StudioCore.Settings.Functions[Function.SAVE_ALL].MenuItem = saveAllToolStripMenuItem;
@@ -1614,6 +1615,7 @@ namespace RetroDevStudio
       mainToolFindReplace.Enabled = mainToolFind.Enabled;
       mainToolCommentSelection.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
       mainToolUncommentSelection.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
+      mainToolToggleSelection.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
 
       if ( IsSearchableDocument( docInfo ) )
       {
@@ -5019,6 +5021,7 @@ namespace RetroDevStudio
         case Function.PRINT:
         case Function.COMMENT_SELECTION:
         case Function.UNCOMMENT_SELECTION:
+        case Function.TOGGLE_SELECTION:
         case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
         case Function.EXPAND_ALL_FOLDING_BLOCKS:
         case Function.JUMP_TO_LINE:
@@ -8087,5 +8090,15 @@ namespace RetroDevStudio
     private void dumpLineAddressesToolStripMenuItem_Click( object sender, EventArgs e )
     {
     }
+
+
+
+    private void mainToolToggleSelection_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( RetroDevStudio.Types.Function.TOGGLE_SELECTION );
+    }
+
+
+
   }
 }

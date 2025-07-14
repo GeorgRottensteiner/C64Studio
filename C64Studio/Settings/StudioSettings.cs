@@ -262,6 +262,8 @@ namespace RetroDevStudio
     public SourceControlInfo                    SourceControlInfo = new SourceControlInfo();
     public DialogSettings                       DialogSettings = new DialogSettings();
 
+    private int                                 _functionIndex = 0;
+
 
 
     public StudioSettings()
@@ -286,10 +288,13 @@ namespace RetroDevStudio
       RegisterFunction( Function.FIND_IN_PROJECT, "Find in Project", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_NEXT, "Find Next", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_REPLACE, "Replace", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
+      RegisterFunction( Function.RENAME_ALL_REFERENCES, "Rename all references", FunctionStudioState.ANY );
+      RegisterFunction( Function.REPLACE_IN_PROJECT, "Replace in Project", FunctionStudioState.ANY );
+
       RegisterFunction( Function.GO_TO_DECLARATION, "Go To Declaration", FunctionStudioState.ANY );
       RegisterFunction( Function.HELP, "Help", FunctionStudioState.ANY );
       RegisterFunction( Function.PRINT, "Print", FunctionStudioState.ANY );
-      RegisterFunction( Function.REPLACE_IN_PROJECT, "Replace in Project", FunctionStudioState.ANY );
       RegisterFunction( Function.OPEN_FILES, "Open Files", FunctionStudioState.ANY );
       RegisterFunction( Function.SAVE_ALL, "Save All", FunctionStudioState.ANY );
       RegisterFunction( Function.SAVE_DOCUMENT, "Save Document", FunctionStudioState.ANY );
@@ -300,6 +305,7 @@ namespace RetroDevStudio
       RegisterFunction( Function.COPY_LINE_DOWN, "Copy Line Down", FunctionStudioState.ANY );
       RegisterFunction( Function.COMMENT_SELECTION, "Comment Selection", FunctionStudioState.ANY );
       RegisterFunction( Function.UNCOMMENT_SELECTION, "Uncomment Selection", FunctionStudioState.ANY );
+      RegisterFunction( Function.TOGGLE_SELECTION, "Toggle Selection", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_NEXT_MESSAGE, "Jump to next message", FunctionStudioState.ANY );
       RegisterFunction( Function.UNDO, "Undo", FunctionStudioState.ANY );
       RegisterFunction( Function.REDO, "Redo", FunctionStudioState.ANY );
@@ -309,8 +315,6 @@ namespace RetroDevStudio
       RegisterFunction( Function.PASTE, "Paste", Types.FunctionStudioState.ANY );
       RegisterFunction( Function.CUT, "Cut", Types.FunctionStudioState.ANY );
       RegisterFunction( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY );
-      RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
-      RegisterFunction( Function.RENAME_ALL_REFERENCES, "Rename all references", FunctionStudioState.ANY );
 
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_H, "Mirror Horizontal", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_V, "Mirror Vertical", FunctionStudioState.ANY );
@@ -366,7 +370,8 @@ namespace RetroDevStudio
 
     private void RegisterFunction( Function StudioFunction, string Description, FunctionStudioState StudioState )
     {
-      Functions.Add( StudioFunction, new FunctionInfo( StudioFunction, Description, StudioState ) );
+      Functions.Add( StudioFunction, new FunctionInfo( StudioFunction, Description, StudioState, _functionIndex ) );
+      ++_functionIndex;
     }
 
 

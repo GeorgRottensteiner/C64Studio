@@ -103,7 +103,8 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void RefillAcceleratorList()
     {
       listFunctions.Items.Clear();
-      foreach ( Types.Function function in Enum.GetValues( typeof( Types.Function ) ) )
+      //foreach ( Types.Function function in Enum.GetValues( typeof( Types.Function ) ) )
+      foreach ( Types.Function function in Core.Settings.Functions.OrderBy( fk => fk.Value.OrderIndex ).Select( fk => fk.Key ) )
       {
         if ( function == RetroDevStudio.Types.Function.NONE )
         {

@@ -3249,6 +3249,9 @@ namespace RetroDevStudio.Documents
         case Types.Function.UNCOMMENT_SELECTION:
           UncommentSelection();
           return true;
+        case Types.Function.TOGGLE_SELECTION:
+          ToggleSelectionComment();
+          return true;
         case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
           CollapseAllFoldingBlocks();
           return true;
@@ -3392,6 +3395,58 @@ namespace RetroDevStudio.Documents
       }
       editSource.RemoveLinePrefix( ";" );
       SetModified();
+    }
+
+
+
+    private void ToggleSelectionComment()
+    {
+      if ( editSource.Selection.IsEmpty )
+      {
+        return;
+      }
+      // determine whether to use uncomment or comment
+      int minLine = editSource.Selection.Start.iLine;
+      int minChar = editSource.Selection.Start.iChar;
+      int maxLine = editSource.Selection.End.iLine;
+
+      if ( minLine > maxLine )
+      {
+        int tmp = minLine;
+        minLine = maxLine;
+        maxLine = tmp;
+        minChar = editSource.Selection.End.iChar;
+      }
+      int     numLinesWithComment = 0;
+      int     numLinesWithoutComment = 0;
+      for ( int i = minLine; i <= maxLine; ++i )
+      {
+        string line = editSource.Lines[i].Trim();
+        if ( i == minLine )
+        {
+          line = editSource.Lines[i].Substring( minChar ).Trim();
+        }
+        if ( string.IsNullOrEmpty( line ) )
+        {
+          continue;
+        }
+        if ( line.StartsWith( ";" ) )
+        {
+          ++numLinesWithComment;
+        }
+        else
+        {
+          ++numLinesWithoutComment;
+        }
+      }
+      if ( numLinesWithComment > numLinesWithoutComment )
+      {
+        UncommentSelection();
+      }
+      else
+      {
+        CommentSelection();
+      }
     }
 
 
