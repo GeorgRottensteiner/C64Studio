@@ -2822,10 +2822,11 @@ namespace Tiny64
 
     private void OnExecAddress( ushort Address )
     {
+      /*
       if ( Address == 0xa871 )
       {
         Debug.Log( "BASIC start?" );
-      }
+      }*/
 
       if ( Address == 0xE5CD )
       {
@@ -3362,9 +3363,9 @@ namespace Tiny64
 
 
 
-    internal int AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    internal int AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute, bool temporary = false )
     {
-      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute, Index = CurrentBreakpointIndex } );
+      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute, Index = CurrentBreakpointIndex, Temporary = temporary } );
       ++CurrentBreakpointIndex;
       return CurrentBreakpointIndex;
     }

@@ -51,6 +51,7 @@ namespace RetroDevStudio.Dialogs
         DPIHandler.ResizeControlsForDPI( entry );
 
         entry.ApplySettingsToControls();
+        Core.Theming.RecolorControlsRecursive( entry.Controls );
       }
 
       Core.Theming.ApplyTheme( this );
@@ -67,6 +68,16 @@ namespace RetroDevStudio.Dialogs
         {
           treePreferences.SelectedNode = firstVisiblePrefNode;
         }
+      }
+    }
+
+
+
+    public void RefreshDisplayOptions()
+    {
+      foreach ( var entry in _PreferencePanes )
+      {
+        Core.Theming.RecolorControlsRecursive( entry.Controls );
       }
     }
 

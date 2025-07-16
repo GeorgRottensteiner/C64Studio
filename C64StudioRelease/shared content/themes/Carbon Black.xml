@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<RetroDevStudioSettings>
+  <EditorColors>
+    <Color Element="NONE" FGColor="FFE6DB74" BGColor="Auto"/>
+    <Color Element="CODE" FGColor="FF76EC00" BGColor="Auto"/>
+    <Color Element="LITERAL_STRING" FGColor="FF80FF80" BGColor="Auto"/>
+    <Color Element="LITERAL_NUMBER" FGColor="FF719BEA" BGColor="Auto"/>
+    <Color Element="LABEL" FGColor="FFEAEA00" BGColor="Auto"/>
+    <Color Element="COMMENT" FGColor="FFC0C0C0" BGColor="Auto"/>
+    <Color Element="PSEUDO_OP" FGColor="FF00BFBF" BGColor="Auto"/>
+    <Color Element="CURRENT_DEBUG_LINE" FGColor="FF000000" BGColor="FFFFFF00"/>
+    <Color Element="EMPTY_SPACE" FGColor="FFF8F8F2" BGColor="FF000000"/>
+    <Color Element="OPERATOR" FGColor="FF9981FF" BGColor="Auto"/>
+    <Color Element="HIGHLIGHTED_SEARCH_RESULTS" FGColor="FFC0C0C0" BGColor="Auto"/>
+    <Color Element="ERROR_UNDERLINE" FGColor="FFFF0000" BGColor="FFFFFFFF"/>
+    <Color Element="SELECTED_TEXT" FGColor="FFFF8000" BGColor="Auto"/>
+    <Color Element="CONTROL_TEXT" FGColor="FFC0C0C0" BGColor="FFFFFF00"/>
+    <Color Element="BACKGROUND_CONTROL" FGColor="FFC0C0C0" BGColor="Auto"/>
+    <Color Element="CHANGED_DEBUG_ELEMENT" FGColor="FFFF8080" BGColor="Auto"/>
+    <Color Element="SELECTION_FRAME" FGColor="FF000000" BGColor="FFFFFFFF"/>
+    <Color Element="BACKGROUND_BUTTON" FGColor="FFFFFFFF" BGColor="FF400000"/>
+    <Color Element="LINE_NUMBERS" FGColor="FF000000" BGColor="Auto"/>
+    <Color Element="MINI_MAP" FGColor="FF000000" BGColor="FFFFFFFF"/>
+  </EditorColors>
+</RetroDevStudioSettings>

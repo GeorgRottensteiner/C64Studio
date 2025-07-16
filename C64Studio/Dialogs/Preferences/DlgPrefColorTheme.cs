@@ -16,6 +16,10 @@ namespace RetroDevStudio.Dialogs.Preferences
   [Description( "General.Color Theme" )]
   public partial class DlgPrefColorTheme : DlgPrefBase
   {
+    private bool _insideColorRefresh = false;
+
+
+
     public DlgPrefColorTheme()
     {
       InitializeComponent();
@@ -257,7 +261,13 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void ColorsChanged( Types.ColorableElement Color )
     {
+      if ( _insideColorRefresh )
+      {
+        return;
+      }
+      _insideColorRefresh = true;
       RefreshDisplayOnDocuments();
+      _insideColorRefresh = false;
     }
 
 
@@ -317,7 +327,7 @@ namespace RetroDevStudio.Dialogs.Preferences
           color.BGColor = comboColor.FGColor;
         }
         panelElementPreview.Invalidate();
-        RefreshDisplayOnDocuments();
+        ColorsChanged( (Types.ColorableElement)listColoring.SelectedIndices[0] );
       }
     }
 

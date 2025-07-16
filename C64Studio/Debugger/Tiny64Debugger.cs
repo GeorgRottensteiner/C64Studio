@@ -3,6 +3,7 @@ using RetroDevStudio.Documents;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Tiny64;
 
 namespace RetroDevStudio
 {
@@ -27,6 +28,7 @@ namespace RetroDevStudio
     GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<RetroDevStudio.Types.Breakpoint>();
 
     private bool                      m_InitialBreakpointHit = false;
+    private bool                      _breakPointHit = false;
 
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
@@ -61,7 +63,7 @@ namespace RetroDevStudio
 
 
 
-    private void OnEmulatorBreakpointHit()
+    private void OnEmulatorBreakpointHit( Breakpoint breakpoint )
     {
       if ( !m_InitialBreakpointHit )
       {
@@ -71,7 +73,11 @@ namespace RetroDevStudio
         Core.Debugging.OnInitialBreakpointReached( m_Emulator.Machine.CPU.PC );
         return;
       }
-      //DebugEvent( new DebugEventData() { Type = RetroDevStudio.DebugEvent.UPDATE_BREAKPOINT );
+      _breakPointHit = true;
+      if ( breakpoint.Temporary )
+      {
+        RemoveBreakpoint( breakpoint.Index );
+      }
       RefreshRegistersAndWatches();
       RefreshMemorySections();
     }
@@ -393,7 +399,6 @@ namespace RetroDevStudio
           // there is already a breakpoint here
           breakPoint.Virtual.Add( BreakPoint );
           added = true;
-          Debug.Log( "Virtual bp!" );
           break;
         }
       }
@@ -401,7 +406,7 @@ namespace RetroDevStudio
       {
         m_BreakPoints.Add( BreakPoint );
       }
-      BreakPoint.RemoteIndex = m_Emulator.AddBreakpoint( (ushort)BreakPoint.Address, BreakPoint.TriggerOnLoad, BreakPoint.TriggerOnStore, BreakPoint.TriggerOnExec );
+      BreakPoint.RemoteIndex = m_Emulator.AddBreakpoint( (ushort)BreakPoint.Address, BreakPoint.TriggerOnLoad, BreakPoint.TriggerOnStore, BreakPoint.TriggerOnExec, BreakPoint.Temporary );
     }
 
 
@@ -566,6 +571,11 @@ namespace RetroDevStudio
 
     public void Run()
     {
+      if ( m_Emulator.State == Tiny64.EmulatorState.STOPPED )
+      {
+        m_Emulator.Machine.SkipNextBreakpointCheck = _breakPointHit;
+        _breakPointHit = false;
+      }
       m_Emulator.State  = Tiny64.EmulatorState.RUNNING;
       m_State           = DebuggerState.RUNNING;
     }
@@ -683,6 +693,7 @@ namespace RetroDevStudio
     public void Reset()
     {
       m_Emulator.Reset();
+      _breakPointHit = false;
     }
 
 

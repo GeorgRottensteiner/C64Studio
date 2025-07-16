@@ -14,7 +14,7 @@ namespace Tiny64
 
     public EmulatorState      State = EmulatorState.RUNNING;
 
-    public delegate void BreakpointHitHandler();
+    public delegate void BreakpointHitHandler( Breakpoint breakPoint );
 
     public event BreakpointHitHandler   BreakpointHit;
 
@@ -43,7 +43,7 @@ namespace Tiny64
         if ( Machine.TriggeredBreakpoints.Count > 0 )
         {
           State = EmulatorState.STOPPED;
-          BreakpointHit();
+          BreakpointHit( Machine.TriggeredBreakpoints[0] );
           Machine.TriggeredBreakpoints.Clear();
         }
 
@@ -87,11 +87,12 @@ namespace Tiny64
         int curCycles = Machine.RunCycle();
         if ( Machine.TriggeredBreakpoints.Count > 0 )
         {
-          Debug.Log( "Breakpoint triggered at $" + Machine.CPU.PC.ToString( "X4" ) );
+          //Debug.Log( "Breakpoint triggered at $" + Machine.CPU.PC.ToString( "X4" ) );
+          var bpHit = Machine.TriggeredBreakpoints[0];
           State = EmulatorState.PAUSED;
           Machine.TriggeredBreakpoints.RemoveAll( bp => bp.Temporary );
 
-          BreakpointHit();
+          BreakpointHit( bpHit );
           return;
         }
         usedCycles += curCycles;
@@ -165,9 +166,9 @@ namespace Tiny64
 
 
 
-    public int AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    public int AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute, bool temporary )
     {
-      return Machine.AddBreakpoint( Address, Read, Write, Execute );
+      return Machine.AddBreakpoint( Address, Read, Write, Execute, temporary );
     }
 
 

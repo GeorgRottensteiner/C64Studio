@@ -59,6 +59,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       if ( ParentForm != null )
       {
         Core.Theming.ApplyTheme( ParentForm );
+        ( (FormPreferences)ParentForm ).RefreshDisplayOptions();
       }
       Core.Settings.RefreshDisplayOnAllDocuments( Core );
     }

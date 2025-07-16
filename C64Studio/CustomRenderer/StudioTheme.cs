@@ -149,6 +149,12 @@ namespace RetroDevStudio.CustomRenderer
           combo.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
           combo.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
         }
+        if ( control is TextBox )
+        {
+          var edit = control as TextBox;
+
+          edit.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.CONTROL_TEXT ) );
+        }
         if ( control is Button )
         {
           var button = control as Button;
