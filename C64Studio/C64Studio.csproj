@@ -552,12 +552,12 @@
     <Content Include="c64.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Fonts\ZX81-Regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <Content Include="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ZX81-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DockPanelSuite" Version="3.1.1" />
