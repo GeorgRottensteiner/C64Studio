@@ -1066,6 +1066,7 @@ namespace RetroDevStudio
       {
         case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
         case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+        case GraphicScreenProject.CheckType.MEGA65_BITMAP:
           return 256;
         default:
           return 16;

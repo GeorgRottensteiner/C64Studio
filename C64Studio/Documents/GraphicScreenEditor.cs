@@ -928,6 +928,7 @@ namespace RetroDevStudio.Documents
         {
           mcSettings.Palette.ColorValues[i] = resultingImage.PaletteColor( i ) | 0xff000000;
         }
+        mcSettings.Palette.CreateBrushes();
         mappedImage = resultingImage;
       }
       /*
@@ -965,6 +966,7 @@ namespace RetroDevStudio.Documents
       }
 
       m_GraphicScreenProject.Colors.Palette = mcSettings.Palette;
+      m_GraphicScreenProject.SanitizePalettes();
       PaletteManager.ApplyPalette( m_GraphicScreenProject.Image, mcSettings.Palette );
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, mcSettings.Palette );
       PaletteManager.ApplyPalette( charEditor.DisplayPage, mcSettings.Palette );

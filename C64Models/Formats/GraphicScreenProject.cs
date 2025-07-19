@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using RetroDevStudio;
@@ -264,7 +265,10 @@ namespace RetroDevStudio.Formats
             }
             break;
           case FileChunkConstants.PALETTE:
-            Colors.Palettes.Add( Palette.Read( chunkReader ) );
+            {
+              var pal = Palette.Read( chunkReader );
+              Colors.Palettes.Add( pal );
+            }
             break;
         }
       }
@@ -274,9 +278,36 @@ namespace RetroDevStudio.Formats
       {
         Colors.Palettes.Add( ConstantData.DefaultPaletteC64() );
       }
+      SanitizePalettes();
       return true;
     }
 
+
+
+    public void SanitizePalettes()
+    {
+      for ( int palIndex = 0; palIndex < Colors.Palettes.Count; ++palIndex )
+      {
+        var pal = Colors.Palettes[palIndex];
+        int numExpectedColors = Lookup.NumberOfColorsInDisplayMode( SelectedCheckType );
+        if ( pal.NumColors < numExpectedColors )
+        {
+          var newPal = new Palette( numExpectedColors );
+
+          for ( int i = 0; i < pal.NumColors; ++i )
+          {
+            newPal.ColorValues[i] = pal.ColorValues[i] | 0xff000000;
+          }
+          Colors.Palettes[palIndex] = newPal;
+          pal = newPal;
+        }
+        for ( int i = 0; i < pal.NumColors; ++i )
+        {
+          pal.ColorValues[i] |= 0xff000000;
+        }
+        pal.CreateBrushes();
+      }
+    }
 
 
 
