@@ -1,17 +1,18 @@
-﻿using System;
+﻿using GR.Image;
+using GR.Memory;
+using RetroDevStudio.Controls;
+using RetroDevStudio.Converter;
+using RetroDevStudio.Formats;
+using RetroDevStudio.Properties;
+using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
-using RetroDevStudio.Types;
-using RetroDevStudio.Controls;
-using RetroDevStudio.Properties;
 using System.Drawing;
-using RetroDevStudio.Formats;
-using GR.Memory;
-using System.Linq;
 using System.IO;
-using GR.Image;
-using RetroDevStudio.Converter;
+using System.Linq;
+using System.Runtime;
+using System.Windows.Forms;
 
 
 
@@ -179,6 +180,10 @@ namespace RetroDevStudio.Documents
         case GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
           _colorPickerDlg = new ColorPickerGraphicCommodoreVIC20( Core, (byte)m_CurrentColor );
           break;
+        case GraphicScreenProject.CheckType.MEGA65_BITMAP:
+          _colorPickerDlg = new ColorPickerGraphicFullPalette( Core, (byte)m_CurrentColor );
+          _colorPickerDlg.UpdatePalette( m_GraphicScreenProject.Colors.Palette );
+          break;
 
         /*
                 case TextCharMode.X16_HIRES:
@@ -202,11 +207,26 @@ namespace RetroDevStudio.Documents
           break;
       }
       _colorPickerDlg.SelectedColorChanged    += _ColorChooserDlg_SelectedColorChanged;
+      _colorPickerDlg.PaletteModified         += _colorPickerDlg_PaletteModified;
       _colorPickerDlg.Redraw();
       panelColorChooser.Controls.Add( _colorPickerDlg );
       panelColorChooser.Size = _colorPickerDlg.Size;
 
       panelColorSettings.Top = panelColorChooser.Bottom + _distanceBetweenChooserAndPickerDialog;
+    }
+
+
+
+    private void _colorPickerDlg_PaletteModified( Palette palette )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
+
+      m_GraphicScreenProject.Colors.Palette = palette;
+      PaletteManager.ApplyPalette( m_GraphicScreenProject.Image, palette );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, palette );
+      PaletteManager.ApplyPalette( charEditor.DisplayPage, palette );
+      Redraw();
+      charEditor.Invalidate();
     }
 
 
@@ -882,7 +902,10 @@ namespace RetroDevStudio.Documents
       else if ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MEGA65_BITMAP )
       {
         importType = GraphicType.BITMAP_8BIT;
-        mcSettings.Palette = IncomingImage.Palette;
+        if ( IncomingImage != null )
+        {
+          mcSettings.Palette = IncomingImage.Palette;
+        }
       }
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings,
                                        CheckBlockWidth, CheckBlockHeight, 
@@ -891,12 +914,29 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
+      if ( ( mappedImage.PixelFormat & GR.Drawing.PixelFormat.Indexed ) == 0 )
+      {
+        // quantize to palette
+        var quant = new RetroDevStudio.Converter.ColorQuantizer( 256 );
+
+        quant.AddSourceToColorCube( mappedImage );
+        quant.Calculate();
+
+        var resultingImage = quant.Reduce( mappedImage );
+        mcSettings.Palette = new Palette( 1 << resultingImage.BitsPerPixel );
+        for ( int i = 0; i < mcSettings.Palette.NumColors; ++i )
+        {
+          mcSettings.Palette.ColorValues[i] = resultingImage.PaletteColor( i ) | 0xff000000;
+        }
+        mappedImage = resultingImage;
+      }
+      /*
       if ( mappedImage.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         mappedImage.Dispose();
         Core.Notification.MessageBox( "Unsupported image format", "Image format invalid!\nNeeds to be 8bit index" );
         return false;
-      }
+      }*/
 
       Dialogs.DlgImportImageResize.ImportBehaviour    behaviour = RetroDevStudio.Dialogs.DlgImportImageResize.ImportBehaviour.CLIP_IMAGE;
 
@@ -927,6 +967,7 @@ namespace RetroDevStudio.Documents
       m_GraphicScreenProject.Colors.Palette = mcSettings.Palette;
       PaletteManager.ApplyPalette( m_GraphicScreenProject.Image, mcSettings.Palette );
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, mcSettings.Palette );
+      PaletteManager.ApplyPalette( charEditor.DisplayPage, mcSettings.Palette );
 
       if ( InsertMode == ImageInsertionMode.AT_SELECTED_LOCATION )
       {
@@ -951,6 +992,7 @@ namespace RetroDevStudio.Documents
       _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, NormalizeColor( mcSettings.BackgroundColor ) );
       _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_1, NormalizeColor( mcSettings.MultiColor1 ) );
       _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_2, NormalizeColor( mcSettings.MultiColor2 ) );
+      _colorPickerDlg.UpdatePalette( m_GraphicScreenProject.Colors.Palette );
 
       btnCheck_Click( null );
       Redraw();
@@ -2323,6 +2365,10 @@ namespace RetroDevStudio.Documents
 
     private void comboCheckType_SelectedIndexChanged( object sender, EventArgs e )
     {
+      if ( m_GraphicScreenProject.SelectedCheckType == (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex )
+      {
+        return;
+      }
       m_GraphicScreenProject.SelectedCheckType  = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
       m_GraphicScreenProject.Colors.Palette     = PaletteManager.PaletteFromMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
 
@@ -3325,6 +3371,13 @@ namespace RetroDevStudio.Documents
       _ColorChooserDlg.ColorChanged( Types.ColorType.BACKGROUND, m_GraphicScreenProject.Colors.BackgroundColor );
       _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_1, m_GraphicScreenProject.Colors.MultiColor1 );
       _ColorChooserDlg.ColorChanged( Types.ColorType.MULTICOLOR_2, m_GraphicScreenProject.Colors.MultiColor2 );
+
+      PaletteManager.ApplyPalette( m_GraphicScreenProject.Image, m_GraphicScreenProject.Colors.Palette );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
+      PaletteManager.ApplyPalette( charEditor.DisplayPage, m_GraphicScreenProject.Colors.Palette );
+      _colorPickerDlg.UpdatePalette( m_GraphicScreenProject.Colors.Palette );
+
+      Redraw();
     }
 
 
@@ -3535,10 +3588,13 @@ namespace RetroDevStudio.Documents
     private void btnImport_Click( DecentForms.ControlBase Sender )
     {
       var undo = new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight );
+      var undo2 = new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this );
 
+      int numUndos = DocumentInfo.UndoManager.NumUndos;
       if ( _ImportForm.HandleImport( m_GraphicScreenProject, this ) )
       {
-        DocumentInfo.UndoManager.AddUndoTask( undo );
+        DocumentInfo.UndoManager.AddUndoTask( undo, numUndos == DocumentInfo.UndoManager.NumUndos );
+        DocumentInfo.UndoManager.AddGroupedUndoTask( undo2 );
         SetModified();
       }
     }

@@ -36,6 +36,9 @@
     <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicFullPalette.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ColorPickerGraphic\ColorPickerGraphicCommodoreVIC20.cs">
       <SubType>UserControl</SubType>
     </Compile>

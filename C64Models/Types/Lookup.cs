@@ -1078,6 +1078,8 @@ namespace RetroDevStudio
     {
       switch ( CheckType )
       {
+        case GraphicScreenProject.CheckType.MEGA65_BITMAP:
+          return TextCharMode.MEGA65_FCM;
         case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
           return TextCharMode.MEGA65_FCM;
         case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:

@@ -42,6 +42,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkShowCompilerMessagesAfterBuild.Checked = Core.Settings.ShowCompilerMessagesAfterBuild;
       checkShowOutputDisplayAfterBuild.Checked    = Core.Settings.ShowOutputDisplayAfterBuild;
       checkForUpdate.Checked                      = Core.Settings.CheckForUpdates;
+      checkAutoSaveSettings.Checked               = Core.Settings.AutoSaveSettings;
+      editAutoSaveDelay.Text                      = Core.Settings.AutoSaveSettingsDelayMilliSeconds.ToString();
     }
 
 
@@ -64,6 +66,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlEnvironment.AddAttribute( "ShowCompilerMessagesAfterBuild", Core.Settings.ShowCompilerMessagesAfterBuild ? "yes" : "no" );
       xmlEnvironment.AddAttribute( "ShowOutputDisplayAfterBuild", Core.Settings.ShowOutputDisplayAfterBuild ? "yes" : "no" );
       xmlEnvironment.AddAttribute( "CheckForUpdatesOnStartup", Core.Settings.CheckForUpdates ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "AutoSaveSettings", Core.Settings.AutoSaveSettings ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "AutoSaveSettingsDelayMS", Core.Settings.AutoSaveSettingsDelayMilliSeconds.ToString() );
     }
 
 
@@ -80,6 +84,8 @@ namespace RetroDevStudio.Dialogs.Preferences
         Core.Settings.ShowCompilerMessagesAfterBuild = IsSettingTrue( xmlEnvironment.Attribute( "ShowCompilerMessagesAfterBuild" ) );
         Core.Settings.ShowOutputDisplayAfterBuild   = IsSettingTrue( xmlEnvironment.Attribute( "ShowOutputDisplayAfterBuild" ) );
         Core.Settings.CheckForUpdates               = IsSettingTrue( xmlEnvironment.Attribute( "CheckForUpdatesOnStartup" ) );
+        Core.Settings.AutoSaveSettings              = IsSettingTrue( xmlEnvironment.Attribute( "AutoSaveSettings" ) );
+        Core.Settings.AutoSaveSettingsDelayMilliSeconds = GR.Convert.ToI32( xmlEnvironment.Attribute( "AutoSaveSettingsDelayMS" ) );
       }
     }
     
@@ -233,5 +239,32 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    private void checkAutoSaveSettings_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.AutoSaveSettings != checkAutoSaveSettings.Checked )
+      {
+        Core.Settings.AutoSaveSettings = checkAutoSaveSettings.Checked;
+        labelAutoSaveInfo1.Enabled = checkAutoSaveSettings.Checked;
+        labelAutoSaveInfo2.Enabled = checkAutoSaveSettings.Checked;
+        editAutoSaveDelay.Enabled = checkAutoSaveSettings.Checked;
+      }
+    }
+
+
+
+    private void editAutoSaveDelay_TextChanged( object sender, EventArgs e )
+    {
+      if ( int.TryParse( editAutoSaveDelay.Text, out int delayMS ) )
+      {
+        if ( delayMS <= 0 )
+        {
+          delayMS = 300000;
+        }
+        if ( delayMS != Core.Settings.AutoSaveSettingsDelayMilliSeconds )
+        {
+          Core.Settings.AutoSaveSettingsDelayMilliSeconds = delayMS;
+        }
+      }
+    }
   }
 }

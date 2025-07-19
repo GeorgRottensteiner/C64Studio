@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 
@@ -20,7 +21,7 @@ namespace RetroDevStudio.Types
     // index in Palettes list
     public int            ActivePalette   = 0;
     // several palettes (Mega65, etc.)
-    public List<Palette>  Palettes = new List<Palette>();
+    private List<Palette>  _palettes = new List<Palette>();
 
     // offset inside palette (e.g. 256 colors, 16 per sprite)
     public int            PaletteOffset   = 0;
@@ -30,6 +31,24 @@ namespace RetroDevStudio.Types
     // index in PaletteIndexMapping
     public int            PaletteMappingIndex = 0;
 
+
+
+
+    public List<Palette> Palettes
+    {
+      get
+      {
+        return _palettes;
+      }
+      set
+      {
+        _palettes = value;
+        if ( ActivePalette >= _palettes.Count )
+        {
+          ActivePalette = _palettes.Count - 1;
+        }
+      }
+    }
 
 
 

@@ -149,6 +149,8 @@ namespace RetroDevStudio
     public bool                                 LastSolutionWasEmpty = false;
     public bool                                 ShowCompilerMessagesAfterBuild = true;
     public bool                                 ShowOutputDisplayAfterBuild = true;
+    public bool                                 AutoSaveSettings    = true;
+    public int                                  AutoSaveSettingsDelayMilliSeconds = 300000;
 
     public int                                  TabSize             = 2;
     public int                                  CaretWidth          = 1;
@@ -870,6 +872,8 @@ namespace RetroDevStudio
       chunkEnvironment.AppendI32( (byte)LastUpdateCheck.Year );
       chunkEnvironment.AppendU8( (byte)( !ShowCompilerMessagesAfterBuild ? 1 : 0 ) );
       chunkEnvironment.AppendU8( (byte)( !ShowOutputDisplayAfterBuild ? 1 : 0 ) );
+      chunkEnvironment.AppendU8( (byte)( !AutoSaveSettings ? 1 : 0 ) );
+      chunkEnvironment.AppendI32( AutoSaveSettingsDelayMilliSeconds );
 
       SettingsData.Append( chunkEnvironment.ToBuffer() );
 
@@ -1464,6 +1468,8 @@ namespace RetroDevStudio
 
               ShowCompilerMessagesAfterBuild  = ( binIn.ReadUInt8() == 0 );
               ShowOutputDisplayAfterBuild     = ( binIn.ReadUInt8() == 0 );
+              AutoSaveSettings                = ( binIn.ReadUInt8() == 0 );
+              AutoSaveSettingsDelayMilliSeconds = binIn.ReadInt32();
             }
             break;
           case FileChunkConstants.SETTINGS_PERSPECTIVES:
@@ -1843,7 +1849,10 @@ namespace RetroDevStudio
         BASICSourceFontSize = 9.0f;
         BASICUseNonC64Font = true;
       }
-
+      if ( AutoSaveSettingsDelayMilliSeconds <= 10000 )
+      {
+        AutoSaveSettingsDelayMilliSeconds = 300000;
+      }
 
       // key bindings
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );

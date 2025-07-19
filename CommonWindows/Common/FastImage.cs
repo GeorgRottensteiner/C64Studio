@@ -1131,9 +1131,9 @@ namespace GR.Image
     public uint GetPixelData( int X, int Y )
     {
       if ( ( X < 0 )
-      || ( X >= m_Width )
-      || ( Y < 0 )
-      || ( Y >= m_Height ) )
+      ||   ( X >= m_Width )
+      ||   ( Y < 0 )
+      ||   ( Y >= m_Height ) )
       {
         return 0;
       }
@@ -1223,6 +1223,24 @@ namespace GR.Image
               }
             }
             break;
+          case GR.Drawing.PixelFormat.Format4bppIndexed:
+            unsafe
+            {
+              int   pitch = ( Width + 1 ) / 2;
+              byte* pData = (byte*)m_ImageData;
+
+              if ( ( X & 1 ) != 0 )
+              {
+                *pData &= 0xf0;
+                *pData |= (byte)( Color & 0x0f );
+              }
+              else
+              {
+                *pData &= 0x0f;
+                *pData |= (byte)( Color << 4 );
+              }
+            }
+            break;
           case GR.Drawing.PixelFormat.Format32bppRgb:
           case GR.Drawing.PixelFormat.Format32bppArgb:
             {
@@ -1236,6 +1254,14 @@ namespace GR.Image
               pData[Y * ( BytesPerLine / 2 ) + X] = (ushort)( ( ( ( Color & 0xff0000 ) >> 19 ) << 10 )
                                                + ( ( ( Color & 0x00ff00 ) >> 11 ) << 5 )
                                                + ( ( ( Color & 0x0000ff ) >> 3 ) ) );;
+            }
+            break;
+          case GR.Drawing.PixelFormat.Format16bppRgb565:
+            {
+              ushort* pData = (ushort*)m_ImageData;
+              pData[Y * ( BytesPerLine / 2 ) + X] = (ushort)( ( ( ( Color & 0xff0000 ) >> 19 ) << 10 )
+                                               + ( ( ( Color & 0x00ff00 ) >> 10 ) << 5 )
+                                               + ( ( ( Color & 0x0000ff ) >> 3 ) ) );
             }
             break;
           case GR.Drawing.PixelFormat.Format8bppIndexed:
@@ -1264,9 +1290,9 @@ namespace GR.Image
     public uint GetPixel( int X, int Y )
     {
       if ( ( X < 0 )
-      || ( X >= m_Width )
-      || ( Y < 0 )
-      || ( Y >= m_Height ) )
+      ||   ( X >= m_Width )
+      ||   ( Y < 0 )
+      ||   ( Y >= m_Height ) )
       {
         return 0;
       }

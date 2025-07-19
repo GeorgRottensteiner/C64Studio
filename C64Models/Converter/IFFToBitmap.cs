@@ -1,4 +1,6 @@
-﻿using RetroDevStudio;
+﻿using GR.Collections;
+using GR.Image;
+using RetroDevStudio;
 using System;
 
 
@@ -7,7 +9,7 @@ namespace RetroDevStudio.Converter
 {
   class IFFToBitmap
   {
-    public static GR.Memory.ByteBuffer IFFFromBitmap( GR.Image.IImage imageSource )
+    public static GR.Memory.ByteBuffer IFFFromBitmap( GR.Image.IImage imageSource, bool optimize = false )
     {
       const uint FORM = 0x4d524f46;
       const uint ILBM = 0x4d424c49;
@@ -19,6 +21,50 @@ namespace RetroDevStudio.Converter
       GR.Memory.ByteBuffer      result = new GR.Memory.ByteBuffer();
 
       int numPlanes = imageSource.BitsPerPixel;
+      if ( optimize )
+      {
+        if ( numPlanes > 8 )
+        {
+          // can't optimize
+        }
+        else
+        {
+          // determine number of used colors
+          var usedPixels = new Set<byte>();
+          for ( int i = 0; i < imageSource.Width; i++ )
+          {
+            for ( int j = 0; j < imageSource.Height; j++ )
+            {
+              usedPixels.Add( (byte)imageSource.GetPixel( i, j ) );
+            }
+          }
+          // can we save on number of planes?
+          int numRequiredPlanes = 0;
+          int requiredCount = usedPixels.Count;
+          while ( requiredCount > 0 )
+          {
+            ++numRequiredPlanes;
+            requiredCount /= 2;
+          }
+          --numRequiredPlanes;
+          if ( numRequiredPlanes < numPlanes )
+          {
+            // we can save, need to map image
+
+            // calculate a new palette
+            var quant = new RetroDevStudio.Converter.ColorQuantizer( 1 << numRequiredPlanes );
+
+            var tmpImage = new MemoryImage( imageSource.Width, imageSource.Height, GR.Drawing.PixelFormat.Format32bppArgb );
+            imageSource.DrawTo( tmpImage, 0, 0 );
+            quant.AddSourceToColorCube( tmpImage );
+            quant.Calculate();
+
+            var resultingImage = quant.Reduce( imageSource );
+            imageSource = resultingImage;
+            numPlanes = numRequiredPlanes;
+          }
+        }
+      }
 
       var totalChunk = new GR.Memory.ByteBuffer();
       totalChunk.AppendU32( FORM );
@@ -201,7 +247,36 @@ namespace RetroDevStudio.Converter
                       normalizedPlanes |= normalizedPlanes >> 16;
                       normalizedPlanes++;
 
-                      image = new GR.Image.MemoryImage( width, height, GR.Drawing.PixelFormat.Format8bppIndexed );
+
+                      var pixelFormat = GR.Drawing.PixelFormat.Indexed;
+                      switch ( normalizedPlanes )
+                      {
+                        case 1:
+                          pixelFormat = GR.Drawing.PixelFormat.Format1bppIndexed;
+                          break;
+                        case 2:
+                          //pixelFormat = GR.Drawing.PixelFormat.Format2bppIndexed;
+                          break;
+                        case 4:
+                          pixelFormat = GR.Drawing.PixelFormat.Format4bppIndexed;
+                          break;
+                        case 8:
+                          pixelFormat = GR.Drawing.PixelFormat.Format8bppIndexed;
+                          break;
+                        case 15:
+                          pixelFormat = GR.Drawing.PixelFormat.Format16bppRgb555;
+                          break;
+                        case 16:
+                          pixelFormat = GR.Drawing.PixelFormat.Format16bppRgb565;
+                          break;
+                        case 24:
+                          pixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
+                          break;
+                        case 32:
+                          pixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
+                          break;
+                      }
+                      image = new GR.Image.MemoryImage( width, height, pixelFormat );
                     }
                     break;
                   case CMAP:

@@ -227,7 +227,7 @@ namespace RetroDevStudio.Dialogs
         return;
       }
 
-      GR.Image.FastImage newImage = Core.Imaging.LoadImageFromFile( m_OrigFilename );
+      var newImage = Core.Imaging.LoadImageFromFile( m_OrigFilename );
 
       OpenImage( newImage );
     }
@@ -250,7 +250,7 @@ namespace RetroDevStudio.Dialogs
         return;
       }
 
-      GR.Image.FastImage newImage = Core.Imaging.LoadImageFromFile( openDlg.FileName );
+      var newImage = Core.Imaging.LoadImageFromFile( openDlg.FileName );
 
       OpenImage( newImage );
     }

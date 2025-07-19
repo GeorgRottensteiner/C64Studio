@@ -497,26 +497,26 @@ namespace RetroDevStudio
 
       Palettes.Add( defaultPalette.Name, defaultPalette );
 
-      m_SolutionExplorer    = new SolutionExplorer( StudioCore );
-      m_BinaryEditor        = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
-      m_CharsetEditor       = new CharsetEditor( StudioCore );
-      m_CompileResult       = new CompileResult( StudioCore );
-      m_SpriteEditor        = new SpriteEditor( StudioCore );
+      m_SolutionExplorer = new SolutionExplorer( StudioCore );
+      m_BinaryEditor = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
+      m_CharsetEditor = new CharsetEditor( StudioCore );
+      m_CompileResult = new CompileResult( StudioCore );
+      m_SpriteEditor = new SpriteEditor( StudioCore );
       m_GraphicScreenEditor = new GraphicScreenEditor( StudioCore );
-      m_CharScreenEditor    = new CharsetScreenEditor( StudioCore );
-      m_PetSCIITable        = new PetSCIITable( StudioCore );
-      m_Calculator          = new Calculator();
-      m_MapEditor           = new MapEditor( StudioCore );
-      m_Disassembler        = new Documents.Disassembler( StudioCore );
-      m_DebugMemory         = new DebugMemory( StudioCore );
-      m_DebugBreakpoints    = new DebugBreakpoints( StudioCore );
-      m_ValueTableEditor    = new ValueTableEditor( StudioCore );
-      m_PaletteEditor       = new PaletteEditor( StudioCore );
-      m_FindReplace         = new FormFindReplace( StudioCore );
-      m_Help                = new Documents.Help( StudioCore );
-      m_Bookmarks           = new Bookmarks( StudioCore );
-      m_Outline             = new Outline( StudioCore );
-      m_LabelExplorer       = new LabelExplorer( StudioCore );
+      m_CharScreenEditor = new CharsetScreenEditor( StudioCore );
+      m_PetSCIITable = new PetSCIITable( StudioCore );
+      m_Calculator = new Calculator();
+      m_MapEditor = new MapEditor( StudioCore );
+      m_Disassembler = new Documents.Disassembler( StudioCore );
+      m_DebugMemory = new DebugMemory( StudioCore );
+      m_DebugBreakpoints = new DebugBreakpoints( StudioCore );
+      m_ValueTableEditor = new ValueTableEditor( StudioCore );
+      m_PaletteEditor = new PaletteEditor( StudioCore );
+      m_FindReplace = new FormFindReplace( StudioCore );
+      m_Help = new Documents.Help( StudioCore );
+      m_Bookmarks = new Bookmarks( StudioCore );
+      m_Outline = new Outline( StudioCore );
+      m_LabelExplorer = new LabelExplorer( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -528,8 +528,8 @@ namespace RetroDevStudio
       m_ValueTableEditor.SetInternal();
 
       // butt ugly hack
-      StudioCore.Settings.ToolTiny64.Type       = ToolInfo.ToolType.EMULATOR;
-      StudioCore.Settings.ToolTiny64.Name       = "Tiny64 Internal Debugger";
+      StudioCore.Settings.ToolTiny64.Type = ToolInfo.ToolType.EMULATOR;
+      StudioCore.Settings.ToolTiny64.Name = "Tiny64 Internal Debugger";
       StudioCore.Settings.ToolTiny64.IsInternal = true;
 
       // build default panes
@@ -560,28 +560,28 @@ namespace RetroDevStudio
       AddToolWindow( ToolWindowType.BOOKMARKS, m_Bookmarks, DockState.DockBottom, bookmarksToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.LABEL_EXPLORER, m_LabelExplorer, DockState.DockRight, labelExplorerToolStripMenuItem, true, true );
 
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTLINE )]                = m_Outline;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SOLUTION_EXPLORER )]      = m_SolutionExplorer;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTPUT )]                 = m_Output;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.COMPILE_RESULT )]         = m_CompileResult;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_REGISTERS )]        = m_DebugRegisters;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_WATCH )]            = m_DebugWatch;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_MEMORY )]           = m_DebugMemory;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_BREAKPOINTS )]      = m_DebugBreakpoints;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DISASSEMBLER )]           = m_Disassembler;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CHARSET_EDITOR )]         = m_CharsetEditor;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SPRITE_EDITOR )]          = m_SpriteEditor;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CHAR_SCREEN_EDITOR )]     = m_CharScreenEditor;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.GRAPHIC_SCREEN_EDITOR )]  = m_GraphicScreenEditor;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.MAP_EDITOR )]             = m_MapEditor;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PETSCII_TABLE )]          = m_PetSCIITable;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CALCULATOR )]             = m_Calculator;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.HELP )]                   = m_Help;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REPLACE )]           = m_FindReplace;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SEARCH_RESULTS )]         = m_SearchResults;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REFERENCES )]        = m_FindReferences;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.LABEL_EXPLORER )]         = m_LabelExplorer;
-      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PALETTE_EDITOR )]         = m_PaletteEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTLINE )] = m_Outline;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SOLUTION_EXPLORER )] = m_SolutionExplorer;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTPUT )] = m_Output;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.COMPILE_RESULT )] = m_CompileResult;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_REGISTERS )] = m_DebugRegisters;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_WATCH )] = m_DebugWatch;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_MEMORY )] = m_DebugMemory;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_BREAKPOINTS )] = m_DebugBreakpoints;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DISASSEMBLER )] = m_Disassembler;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CHARSET_EDITOR )] = m_CharsetEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SPRITE_EDITOR )] = m_SpriteEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CHAR_SCREEN_EDITOR )] = m_CharScreenEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.GRAPHIC_SCREEN_EDITOR )] = m_GraphicScreenEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.MAP_EDITOR )] = m_MapEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PETSCII_TABLE )] = m_PetSCIITable;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CALCULATOR )] = m_Calculator;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.HELP )] = m_Help;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REPLACE )] = m_FindReplace;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SEARCH_RESULTS )] = m_SearchResults;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REFERENCES )] = m_FindReferences;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.LABEL_EXPLORER )] = m_LabelExplorer;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PALETTE_EDITOR )] = m_PaletteEditor;
 
 
       StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
@@ -710,20 +710,20 @@ namespace RetroDevStudio
       ApplyMenuShortCuts();
 
       StudioCore.Compiling.ParserBasic.Settings.StripSpaces = StudioCore.Settings.BASICStripSpaces;
-      StudioCore.Compiling.ParserBasic.Settings.StripREM    = StudioCore.Settings.BASICStripREM;
-      m_Outline.checkShowLocalLabels.Image          = StudioCore.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
-      m_Outline.checkShowShortCutLabels.Image       = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
-      m_Outline.checkSortAlphabetically.Enabled     = ( StudioCore.Settings.OutlineSorting != SortBy.ALPHABET );
-      m_Outline.checkSortBySource.Enabled           = ( StudioCore.Settings.OutlineSorting != SortBy.INDEX );
-      m_Outline.checkSortByType.Enabled             = ( StudioCore.Settings.OutlineSorting != SortBy.TYPE );
-      m_Outline.editOutlineFilter.Text              = StudioCore.Settings.OutlineFilter;
+      StudioCore.Compiling.ParserBasic.Settings.StripREM = StudioCore.Settings.BASICStripREM;
+      m_Outline.checkShowLocalLabels.Image = StudioCore.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
+      m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      m_Outline.checkSortAlphabetically.Enabled = ( StudioCore.Settings.OutlineSorting != SortBy.ALPHABET );
+      m_Outline.checkSortBySource.Enabled = ( StudioCore.Settings.OutlineSorting != SortBy.INDEX );
+      m_Outline.checkSortByType.Enabled = ( StudioCore.Settings.OutlineSorting != SortBy.TYPE );
+      m_Outline.editOutlineFilter.Text = StudioCore.Settings.OutlineFilter;
 
-      m_LabelExplorer.checkShowLocalLabels.Image      = StudioCore.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
-      m_LabelExplorer.checkShowShortCutLabels.Image   = StudioCore.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      m_LabelExplorer.checkShowLocalLabels.Image = StudioCore.Settings.LabelExplorerShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
+      m_LabelExplorer.checkShowShortCutLabels.Image = StudioCore.Settings.LabelExplorerShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
       m_LabelExplorer.checkSortAlphabetically.Enabled = StudioCore.Settings.LabelExplorerSorting != SortBy.ALPHABET;
-      m_LabelExplorer.checkSortBySource.Enabled       = StudioCore.Settings.LabelExplorerSorting != SortBy.INDEX;
-      m_LabelExplorer.checkSortByType.Enabled         = StudioCore.Settings.LabelExplorerSorting != SortBy.TYPE;
-      m_LabelExplorer.editLabelExplorerFilter.Text    = StudioCore.Settings.LabelExplorerFilter;
+      m_LabelExplorer.checkSortBySource.Enabled = StudioCore.Settings.LabelExplorerSorting != SortBy.INDEX;
+      m_LabelExplorer.checkSortByType.Enabled = StudioCore.Settings.LabelExplorerSorting != SortBy.TYPE;
+      m_LabelExplorer.editLabelExplorerFilter.Text = StudioCore.Settings.LabelExplorerFilter;
 
       EmulatorListUpdated();
 
@@ -757,8 +757,8 @@ namespace RetroDevStudio
 
       SetGUIForWaitOnExternalTool( false );
 
-      projectToolStripMenuItem.Visible      = false;
-      solutionToolStripMenuItemTop.Visible  = false;
+      projectToolStripMenuItem.Visible = false;
+      solutionToolStripMenuItemTop.Visible = false;
 
       panelMain.AllowDrop = true;
       panelMain.DragEnter += new DragEventHandler( MainForm_DragEnter );
@@ -802,8 +802,12 @@ namespace RetroDevStudio
 
       IdleQueue.Add( new IdleRequest() { CloseSplashScreen = splash } );
 
-      timerAutoSave.Enabled = true;
-      timerAutoSave.Start();
+      timerAutoSave.Interval = StudioCore.Settings.AutoSaveSettingsDelayMilliSeconds;
+      timerAutoSave.Enabled = StudioCore.Settings.AutoSaveSettings;
+      if ( StudioCore.Settings.AutoSaveSettings )
+      {
+        timerAutoSave.Start();
+      }
     }
 
 
@@ -7245,8 +7249,9 @@ namespace RetroDevStudio
       // no mapping necessary - is always valid
       if ( ImportType == GraphicType.BITMAP_8BIT )
       {
-        MappedImage   = IncomingImage;
-        NewMCSettings = MCSettings;
+        MappedImage           = IncomingImage;
+        NewMCSettings         = MCSettings;
+        NewMCSettings.Palette = IncomingImage.Palette;
         return true;
       }
 
@@ -8033,7 +8038,12 @@ namespace RetroDevStudio
       prefDlg.ShowDialog();
       SaveSettings();
 
-      timerAutoSave.Start();
+      timerAutoSave.Enabled = StudioCore.Settings.AutoSaveSettings;
+      if ( StudioCore.Settings.AutoSaveSettings )
+      {
+        timerAutoSave.Interval = StudioCore.Settings.AutoSaveSettingsDelayMilliSeconds;
+        timerAutoSave.Start();
+      }
     }
 
 

@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\FileTypeNativeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\OrderAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\PaletteTypeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\ColorQuantizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulators\DynamicArgument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)emulators\EmulatorDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulators\EmulatorInfo.cs" />

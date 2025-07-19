@@ -541,7 +541,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public void PasteImage( string FromFile, GR.Image.FastImage Image, bool ForceMulticolor )
+    public void PasteImage( string FromFile, GR.Image.IImage Image, bool ForceMulticolor )
     {
       var   mcSettings = new ColorSettings( m_Project.Colors );
 

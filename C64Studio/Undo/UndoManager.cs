@@ -130,6 +130,26 @@ namespace RetroDevStudio.Undo
 
 
 
+    public int NumUndos
+    {
+      get
+      {
+        return UndoTasks.Count;
+      }
+    }
+
+
+
+    public int NumRedos
+    {
+      get
+      {
+        return RedoTasks.Count;
+      }
+    }
+
+
+
     public void AddUndoTask( UndoTask Task )
     {
       AddUndoTask( Task, true );

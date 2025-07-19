@@ -26,8 +26,10 @@ namespace RetroDevStudio.Controls
 
 
     public delegate void ColorSelectedHandler( ushort Color );
+    public delegate void PaletteModifiedHandler( Palette palette );
 
     public event ColorSelectedHandler           SelectedColorChanged;
+    public event PaletteModifiedHandler         PaletteModified;
 
 
 
@@ -90,6 +92,16 @@ namespace RetroDevStudio.Controls
       if ( SelectedColorChanged != null )
       {
         SelectedColorChanged( _SelectedColor );
+      }
+    }
+
+
+
+    protected void RaisePaletteModifiedEvent( Palette palette )
+    {
+      if ( PaletteModified != null )
+      {
+        PaletteModified( palette );
       }
     }
 

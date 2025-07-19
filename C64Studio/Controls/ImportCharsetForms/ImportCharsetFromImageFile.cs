@@ -31,7 +31,7 @@ namespace RetroDevStudio.Controls
         return false;
       }
 
-      GR.Image.FastImage imgClip = Core.Imaging.LoadImageFromFile( filename );
+      var imgClip = Core.Imaging.LoadImageFromFile( filename );
 
       Editor.characterEditor.PasteImage( filename, imgClip, false );
       return true;

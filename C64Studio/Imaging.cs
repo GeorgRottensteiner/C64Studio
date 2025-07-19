@@ -26,7 +26,7 @@ namespace RetroDevStudio
 
 
 
-    internal GR.Image.FastImage LoadImageFromFile( string Filename )
+    internal GR.Image.MemoryImage LoadImageFromFile( string Filename )
     {
       string                extension = GR.Path.GetExtension( Filename ).ToUpper();
       GR.Image.FastImage    newImage;
@@ -34,30 +34,21 @@ namespace RetroDevStudio
       if ( ( extension == ".KOA" )
       ||   ( extension == ".KLA" ) )
       {
-        var koalaImage = RetroDevStudio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
-        var bitmap = koalaImage.GetAsBitmap();
-
-        newImage = GR.Image.FastImage.FromImage( bitmap );
-
-        bitmap.Dispose();
+        return RetroDevStudio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
       }
       else if ( extension == ".IFF" )
       {
-        var iffImage = RetroDevStudio.Converter.IFFToBitmap.BitmapFromIFF( Filename );
-        var bitmap = iffImage.GetAsBitmap();
-
-        newImage = GR.Image.FastImage.FromImage( bitmap );
-
-        bitmap.Dispose();
+        return RetroDevStudio.Converter.IFFToBitmap.BitmapFromIFF( Filename );
       }
-      else
-      {
-        System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( Filename );
-        newImage = GR.Image.FastImage.FromImage( bmpImage );
-        bmpImage.Dispose();
-      }
+      System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( Filename );
+      newImage = GR.Image.FastImage.FromImage( bmpImage );
+      bmpImage.Dispose();
 
-      return newImage;
+      var image = new MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
+
+      newImage.DrawTo( image, 0, 0 );
+      newImage.Dispose();
+      return image;
     }
 
 

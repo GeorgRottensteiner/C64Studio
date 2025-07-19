@@ -353,6 +353,7 @@ namespace GR.Image
           m_PaletteData = new GR.Memory.ByteBuffer( 256 * 3 );
           break;
         case GR.Drawing.PixelFormat.Format16bppRgb555:
+        case Drawing.PixelFormat.Format16bppRgb565:
         case GR.Drawing.PixelFormat.Format24bppRgb:
         case GR.Drawing.PixelFormat.Format32bppArgb:
         case GR.Drawing.PixelFormat.Format32bppRgb:
@@ -508,7 +509,7 @@ namespace GR.Image
       }
 
       if ( ( TargetImage.PixelFormat == PixelFormat )
-      &&   ( BitsPerPixel >= 8 ) )
+      && ( BitsPerPixel >= 8 ) )
       {
         unsafe
         {
@@ -530,7 +531,7 @@ namespace GR.Image
           UnpinData();
         }
       }
-      else
+      else if ( TargetImage.PixelFormat == PixelFormat )
       {
         // safe (but slow) copy
         for ( int i = 0; i < copyWidth; ++i )
@@ -538,6 +539,18 @@ namespace GR.Image
           for ( int j = 0; j < copyHeight; ++j )
           {
             TargetImage.SetPixel( X + i, Y + j, GetPixel( SourceX + i, SourceY + j ) );
+          }
+        }
+      }
+      else
+      {
+        // safe (but slow) copy
+        for ( int i = 0; i < copyWidth; ++i )
+        {
+          for ( int j = 0; j < copyHeight; ++j )
+          {
+            // TODO - should have SetPixelRGB!
+            TargetImage.SetPixel( X + i, Y + j, GetPixelRGB( SourceX + i, SourceY + j ) );
           }
         }
       }
@@ -779,6 +792,19 @@ namespace GR.Image
 
 
 
+    public uint GetPixelRGB( int X, int Y )
+    {
+      if ( ( PixelFormat & Drawing.PixelFormat.Indexed ) != 0 )
+      {
+        var pixel = GetPixel( X, Y );
+
+        return ( (uint)PaletteRed( (int)pixel ) << 16 ) + ( (uint)PaletteGreen( (int)pixel ) << 8 ) + PaletteBlue( (int)pixel ); 
+      }
+      return GetPixel( X, Y );
+    }
+
+
+
     public uint GetPixel( int X, int Y )
     {
       if ( ( X < 0 )
@@ -829,6 +855,15 @@ namespace GR.Image
               resultValue = pData[Y * m_Width + X];
               resultValue = (uint)( ( ( ( ( resultValue & 0x7c00 ) >> 10 ) * 255 / 31 ) << 16 )
                                   + ( ( ( ( resultValue & 0x03e0 ) >> 5 ) * 255 / 31 ) << 8 )
+                                  + ( ( ( ( resultValue & 0x001f ) ) * 255 / 31 ) ) );
+            }
+            break;
+          case GR.Drawing.PixelFormat.Format16bppRgb565:
+            {
+              ushort* pData = (ushort*)pDataSource;
+              resultValue = pData[Y * m_Width + X];
+              resultValue = (uint)( ( ( ( ( resultValue & 0xf800 ) >> 11 ) * 255 / 31 ) << 16 )
+                                  + ( ( ( ( resultValue & 0x07e0 ) >> 5 ) * 255 / 63 ) << 8 )
                                   + ( ( ( ( resultValue & 0x001f ) ) * 255 / 31 ) ) );
             }
             break;

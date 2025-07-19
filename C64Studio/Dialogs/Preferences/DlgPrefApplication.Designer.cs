@@ -42,6 +42,10 @@
       this.btnRegisterSolutionFileType = new DecentForms.Button();
       this.btnRegisterProjectFileType = new DecentForms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.checkAutoSaveSettings = new System.Windows.Forms.CheckBox();
+      this.editAutoSaveDelay = new System.Windows.Forms.TextBox();
+      this.labelAutoSaveInfo1 = new System.Windows.Forms.Label();
+      this.labelAutoSaveInfo2 = new System.Windows.Forms.Label();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -199,7 +203,7 @@
       // 
       this.groupBox1.Controls.Add(this.btnRegisterSolutionFileType);
       this.groupBox1.Controls.Add(this.btnRegisterProjectFileType);
-      this.groupBox1.Location = new System.Drawing.Point(6, 203);
+      this.groupBox1.Location = new System.Drawing.Point(6, 285);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(535, 72);
       this.groupBox1.TabIndex = 21;
@@ -207,10 +211,52 @@
       this.groupBox1.Text = "Register File Types with Explorer";
       this.groupBox1.Visible = false;
       // 
+      // checkAutoSaveSettings
+      // 
+      this.checkAutoSaveSettings.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkAutoSaveSettings.Checked = true;
+      this.checkAutoSaveSettings.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkAutoSaveSettings.Location = new System.Drawing.Point(3, 203);
+      this.checkAutoSaveSettings.Name = "checkAutoSaveSettings";
+      this.checkAutoSaveSettings.Size = new System.Drawing.Size(230, 24);
+      this.checkAutoSaveSettings.TabIndex = 6;
+      this.checkAutoSaveSettings.Text = "Auto-Save settings";
+      this.checkAutoSaveSettings.UseVisualStyleBackColor = true;
+      this.checkAutoSaveSettings.CheckedChanged += new System.EventHandler(this.checkAutoSaveSettings_CheckedChanged);
+      // 
+      // editAutoSaveDelay
+      // 
+      this.editAutoSaveDelay.Location = new System.Drawing.Point(329, 205);
+      this.editAutoSaveDelay.Name = "editAutoSaveDelay";
+      this.editAutoSaveDelay.Size = new System.Drawing.Size(119, 20);
+      this.editAutoSaveDelay.TabIndex = 22;
+      this.editAutoSaveDelay.TextChanged += new System.EventHandler(this.editAutoSaveDelay_TextChanged);
+      // 
+      // labelAutoSaveInfo1
+      // 
+      this.labelAutoSaveInfo1.AutoSize = true;
+      this.labelAutoSaveInfo1.Location = new System.Drawing.Point(264, 208);
+      this.labelAutoSaveInfo1.Name = "labelAutoSaveInfo1";
+      this.labelAutoSaveInfo1.Size = new System.Drawing.Size(59, 13);
+      this.labelAutoSaveInfo1.TabIndex = 23;
+      this.labelAutoSaveInfo1.Text = "save every";
+      // 
+      // labelAutoSaveInfo2
+      // 
+      this.labelAutoSaveInfo2.AutoSize = true;
+      this.labelAutoSaveInfo2.Location = new System.Drawing.Point(454, 208);
+      this.labelAutoSaveInfo2.Name = "labelAutoSaveInfo2";
+      this.labelAutoSaveInfo2.Size = new System.Drawing.Size(20, 13);
+      this.labelAutoSaveInfo2.TabIndex = 23;
+      this.labelAutoSaveInfo2.Text = "ms";
+      // 
       // DlgPrefApplication
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.labelAutoSaveInfo2);
+      this.Controls.Add(this.labelAutoSaveInfo1);
+      this.Controls.Add(this.editAutoSaveDelay);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.btnBrowseDefaultOpenSolutionPath);
       this.Controls.Add(this.comboAppMode);
@@ -218,13 +264,14 @@
       this.Controls.Add(this.label32);
       this.Controls.Add(this.editDefaultOpenSolutionPath);
       this.Controls.Add(this.checkAutoOpenLastSolution);
+      this.Controls.Add(this.checkAutoSaveSettings);
       this.Controls.Add(this.checkForUpdate);
       this.Controls.Add(this.label29);
       this.Controls.Add(this.checkShowCompilerMessagesAfterBuild);
       this.Controls.Add(this.label31);
       this.Controls.Add(this.editMaxMRUEntries);
       this.Name = "DlgPrefApplication";
-      this.Size = new System.Drawing.Size(579, 295);
+      this.Size = new System.Drawing.Size(579, 415);
       this.groupBox1.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
@@ -246,5 +293,9 @@
     private DecentForms.Button btnRegisterSolutionFileType;
     private DecentForms.Button btnRegisterProjectFileType;
     private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.CheckBox checkAutoSaveSettings;
+    private System.Windows.Forms.TextBox editAutoSaveDelay;
+    private System.Windows.Forms.Label labelAutoSaveInfo1;
+    private System.Windows.Forms.Label labelAutoSaveInfo2;
   }
 }

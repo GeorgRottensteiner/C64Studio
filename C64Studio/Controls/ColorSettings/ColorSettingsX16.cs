@@ -147,11 +147,6 @@ namespace RetroDevStudio.Controls
       if ( dlgPalette.ShowDialog() == DialogResult.OK )
       {
         Colors.Palettes = dlgPalette.Colors.Palettes;
-        if ( Colors.ActivePalette >= Colors.Palettes.Count )
-        {
-          Colors.ActivePalette = Colors.Palettes.Count - 1;
-        }
-
         RaisePaletteModifiedEvent( dlgPalette.PaletteMapping );
 
         comboActivePalette.BeginUpdate();
