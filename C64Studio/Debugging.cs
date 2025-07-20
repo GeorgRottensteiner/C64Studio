@@ -1044,7 +1044,7 @@ namespace RetroDevStudio
         if ( DebugDisassembly != null )
         {
           Core.AddToOutputLine( "Closing Disassembly window" );
-          DebugDisassembly.Close();
+          DebugDisassembly.Invoke( new Action( DebugDisassembly.Close ), new object[] { } );
           DebugDisassembly = null;
         }
         CurrentCodePosition = -1;

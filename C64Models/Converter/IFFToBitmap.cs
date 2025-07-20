@@ -1,5 +1,6 @@
 ﻿using GR.Collections;
 using GR.Image;
+using GR.Memory;
 using RetroDevStudio;
 using System;
 
@@ -9,7 +10,7 @@ namespace RetroDevStudio.Converter
 {
   class IFFToBitmap
   {
-    public static GR.Memory.ByteBuffer IFFFromBitmap( GR.Image.IImage imageSource, bool optimize = false )
+    public static GR.Memory.ByteBuffer IFFFromBitmap( GR.Image.IImage imageSource, bool optimizePalette = false, bool useCompression = false )
     {
       const uint FORM = 0x4d524f46;
       const uint ILBM = 0x4d424c49;
@@ -21,7 +22,7 @@ namespace RetroDevStudio.Converter
       GR.Memory.ByteBuffer      result = new GR.Memory.ByteBuffer();
 
       int numPlanes = imageSource.BitsPerPixel;
-      if ( optimize )
+      if ( optimizePalette )
       {
         if ( numPlanes > 8 )
         {
@@ -84,13 +85,13 @@ namespace RetroDevStudio.Converter
       chunkBMHD.AppendU16NetworkOrder( 0 );
       chunkBMHD.AppendU8( (byte)numPlanes );
       chunkBMHD.AppendU8( 0 );                // mask
-      chunkBMHD.AppendU8( 0 );                // compression
+      chunkBMHD.AppendU8( useCompression ? (byte)1 : (byte)0 );                // compression
       chunkBMHD.AppendU8( 0 );                // pad 1
       chunkBMHD.AppendU16NetworkOrder( 0 );   // Transparentcolor
-      chunkBMHD.AppendU8( 0 );                // x aspect
-      chunkBMHD.AppendU8( 0 );                // y aspect
-      chunkBMHD.AppendU16NetworkOrder( 0 );   // page width
-      chunkBMHD.AppendU16NetworkOrder( 0 );   // page height
+      chunkBMHD.AppendU8( 10 );                // x aspect
+      chunkBMHD.AppendU8( 10 );                // y aspect
+      chunkBMHD.AppendU16NetworkOrder( (ushort)imageSource.Width );   // page width
+      chunkBMHD.AppendU16NetworkOrder( (ushort)imageSource.Height );   // page height
 
       ilbmChunk.Append( chunkBMHD );
 
@@ -126,6 +127,7 @@ namespace RetroDevStudio.Converter
       {
         for ( int i = 0; i < numPlanes; ++i )
         {
+          var lineData = new ByteBuffer();
           for ( int b = 0; b < numMasksPerLine; ++b )
           {
             ushort   bitMask = 0;
@@ -136,8 +138,35 @@ namespace RetroDevStudio.Converter
                 bitMask |= (ushort)( 1 << ( 15 - x ) );
               }
             }
-            chunkBody.AppendU16NetworkOrder( bitMask );
+            lineData.AppendU16NetworkOrder( bitMask );
           }
+          if ( useCompression )
+          {
+            var compressedLine = new ByteBuffer();
+
+            // we don't really compress
+            int numBytesToAdd = (int)lineData.Length;
+            int offset = 0;
+            while ( numBytesToAdd > 0 )
+            {
+              if ( numBytesToAdd >= 128 )
+              {
+                compressedLine.AppendU8( 127 );
+                compressedLine.Append( lineData.Data(), offset, 128 );
+                offset += 128;
+                numBytesToAdd -= 128;
+              }
+              else
+              {
+                compressedLine.AppendU8( (byte)( numBytesToAdd - 1 ) );
+                compressedLine.Append( lineData.Data(), offset, numBytesToAdd );
+                offset += numBytesToAdd;
+                numBytesToAdd = 0;
+              }
+            }
+            lineData = compressedLine;
+          }
+          chunkBody.Append( lineData );
         }
       }
       ilbmChunk.Append( chunkBody );

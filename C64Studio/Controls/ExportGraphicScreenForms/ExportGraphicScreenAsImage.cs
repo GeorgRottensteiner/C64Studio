@@ -42,7 +42,8 @@ namespace RetroDevStudio.Controls
         return false;
       }
 
-      bool      optimized = checkOptimize.Checked;
+      bool      optimizePalette = checkOptimizePalette.Checked;
+      bool      useCompression = checkUseCompression.Checked; 
       string    extension = GR.Path.GetExtension( saveDlg.FileName ).ToUpper();
 
       System.Drawing.Imaging.ImageFormat formatToSave = System.Drawing.Imaging.ImageFormat.Png;
@@ -80,7 +81,7 @@ namespace RetroDevStudio.Controls
       }
       else if ( extension == ".IFF" )
       {
-        var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( Info.Project.Image, optimized );
+        var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( Info.Project.Image, optimizePalette, useCompression );
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, imageData ) )
         {
           Core.Notification.MessageBox( "Error writing to file", "Could not export to file " + saveDlg.FileName );

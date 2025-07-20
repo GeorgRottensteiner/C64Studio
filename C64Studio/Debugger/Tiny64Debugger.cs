@@ -36,7 +36,7 @@ namespace RetroDevStudio
 
 
 
-    public Tiny64Debugger( StudioCore Core ) : base( Core )
+    public Tiny64Debugger( StudioCore Core ) : base( Core, false, "" )
     {
       m_Emulator.BreakpointHit += OnEmulatorBreakpointHit;
 
@@ -94,7 +94,7 @@ namespace RetroDevStudio
 
 
 
-    public bool ConnectToEmulator( bool IsCartridge )
+    public bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen )
     {
       if ( State != DebuggerState.NOT_CONNECTED )
       {
@@ -619,17 +619,6 @@ namespace RetroDevStudio
       }
 
       return true;
-    }
-
-
-
-    public bool Start( ToolInfo toolRun )
-    {
-      if ( !CheckEmulatorVersion( toolRun ) )
-      {
-        return false;
-      }
-      throw new NotImplementedException();
     }
 
 

@@ -4039,7 +4039,7 @@ namespace RetroDevStudio
 
     private void debugConnectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      if ( !StudioCore.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( StudioCore.Debugging.DebugType ) ) )
+      if ( !StudioCore.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( StudioCore.Debugging.DebugType ), "" ) )
       {
         Debug.Log( "Connect failed" );
       }

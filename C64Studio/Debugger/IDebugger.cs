@@ -70,7 +70,8 @@ namespace RetroDevStudio
     TRACE_MEM_DUMP,
     RAM_MODE,
     RESET,
-    SET_REGISTER
+    SET_REGISTER,
+    OPEN_FILE
   };
 
   public enum RequestReason
@@ -155,12 +156,11 @@ namespace RetroDevStudio
 
     bool CheckEmulatorVersion( ToolInfo ToolRun );
 
-    bool Start( ToolInfo toolRun );
     void Quit();
 
     void ClearCaches();
 
-    bool ConnectToEmulator( bool IsCartridge );
+    bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen );
     void DisconnectFromEmulator();
 
 

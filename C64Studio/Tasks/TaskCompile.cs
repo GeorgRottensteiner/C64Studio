@@ -250,10 +250,13 @@ namespace RetroDevStudio.Tasks
         command = toolRun.TrueDriveOffArguments + " " + command;
       }
 
+      string targetFilename = Core.MainForm.FillParameters( "$(BuildTargetFilename)", DocumentToRun, true, out bool error );
+      if ( error )
+      {
+        return false;
+      }
       if ( !toolRun.IsInternal )
       {
-        bool error = false;
-
         if ( !string.IsNullOrEmpty( toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) ) )
         {
           command = toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) + " " + command;
@@ -290,12 +293,6 @@ namespace RetroDevStudio.Tasks
         Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart } );
 
         ByteBuffer injectFile;
-
-        string  targetFilename = Core.MainForm.FillParameters( "$(BuildTargetFilename)", DocumentToRun, true, out bool error );
-        if ( error )
-        {
-          return false;
-        }
 
         // determine file to inject
         switch ( targetType )
@@ -363,7 +360,8 @@ namespace RetroDevStudio.Tasks
           for ( int i = 0; i < numConnectionAttempts; ++i )
           {
             Core.AddToOutput( "Connection attempt " + ( i + 1 ).ToString() + Environment.NewLine );
-            if ( Core.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( targetType ) ) )
+            string runFilename = Core.MainForm.FillParameters( "$(RunFilename)", DocumentToRun, true, out error );
+            if ( Core.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( targetType ), runFilename ) )
             {
               Core.AddToOutput( " succeeded" + System.Environment.NewLine );
               Core.MainForm.m_CurrentActiveTool = toolRun;

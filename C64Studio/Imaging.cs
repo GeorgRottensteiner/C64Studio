@@ -46,6 +46,10 @@ namespace RetroDevStudio
 
       var image = new MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
 
+      for ( int i = 0; i < newImage.PaletteEntryCount; ++i )
+      {
+        image.SetPaletteColor( i, newImage.PaletteRed( i ), newImage.PaletteGreen( i ), newImage.PaletteBlue( i ) );
+      }
       newImage.DrawTo( image, 0, 0 );
       newImage.Dispose();
       return image;

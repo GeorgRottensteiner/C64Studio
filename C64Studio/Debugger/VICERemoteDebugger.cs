@@ -89,7 +89,6 @@ namespace RetroDevStudio
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
     private bool                      m_InitialBreakCompleted = false;
-    private bool                      m_IsCartridge = false;
     public WinViceVersion             m_ViceVersion = WinViceVersion.V_2_3;
     public bool                       m_BinaryMemDump = true;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
@@ -110,13 +109,13 @@ namespace RetroDevStudio
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
-    public VICERemoteDebugger( StudioCore Core ) : base( Core )
+    public VICERemoteDebugger( StudioCore Core ) : base( Core, false, "" )
     {
     }
 
 
 
-    public bool ConnectToEmulator( bool IsCartridge )
+    public bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen )
     {
       /*
       Register
@@ -136,7 +135,8 @@ namespace RetroDevStudio
       {
         return false;
       }
-      m_IsCartridge = IsCartridge;
+      _IsCartridge        = IsCartridge;
+      _ExternalFileToOpen = externalImageToOpen;
       try
       {
         m_InitialBreakCompleted = false;
@@ -168,7 +168,7 @@ namespace RetroDevStudio
         m_State = DebuggerState.RUNNING;
 
         // connected, force reset plus add break points now
-        if ( m_IsCartridge )
+        if ( _IsCartridge )
         {
           Debug.Log( "Connected - force break" );
           QueueRequest( DebugRequestType.STEP );
@@ -448,7 +448,7 @@ namespace RetroDevStudio
           if ( !ShuttingDown )
           {
             Core.AddToOutputLine( "Attempt reconnect" );
-            if ( !ConnectToEmulator( m_IsCartridge ) )
+            if ( !ConnectToEmulator( _IsCartridge, _ExternalFileToOpen ) )
             {
               Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
               DebugEvent( new DebugEventData()
@@ -550,7 +550,7 @@ namespace RetroDevStudio
       }
       if ( !client.Connected )
       {
-        if ( !ConnectToEmulator( Parser.ASMFileParser.IsCartridge( Core.Debugging.DebugType ) ) )
+        if ( !ConnectToEmulator( _IsCartridge, _ExternalFileToOpen ) )
         {
           return false;
         }
@@ -610,7 +610,7 @@ namespace RetroDevStudio
       }
       if ( !client.Connected )
       {
-        if ( !ConnectToEmulator( Parser.ASMFileParser.IsCartridge( Core.Debugging.DebugType ) ) )
+        if ( !ConnectToEmulator( _IsCartridge, _ExternalFileToOpen ) )
         {
           return false;
         }
@@ -1136,7 +1136,7 @@ namespace RetroDevStudio
 
       bool skipRefresh = false;
 
-      if ( ( !m_IsCartridge )
+      if ( ( !_IsCartridge )
       &&   ( m_BrokenAtBreakPoint == 1 ) )
       {
         if ( ( Core.Debugging.InitialBreakpointIsTemporary )
@@ -1921,17 +1921,6 @@ namespace RetroDevStudio
         m_BinaryMemDump = true;
       }
       return true;
-    }
-
-
-
-    public bool Start( ToolInfo toolRun )
-    {
-      if ( !CheckEmulatorVersion( toolRun ) )
-      {
-        return false;
-      }
-      throw new NotImplementedException();
     }
 
 

@@ -17,6 +17,8 @@ namespace RetroDevStudio
 
     protected volatile bool               m_ShuttingDown = false;
 
+    protected bool                        _IsCartridge = false;   
+    protected string                      _ExternalFileToOpen = null;
 
 
     public bool ShuttingDown
@@ -29,9 +31,11 @@ namespace RetroDevStudio
 
 
 
-    public DebuggerBase( StudioCore Core )
+    public DebuggerBase( StudioCore core, bool isCartridge, string externalFileToOpen )
     {
-      this.Core = Core;
+      Core                = core;
+      _IsCartridge        = isCartridge;
+      _ExternalFileToOpen = externalFileToOpen;
     }
 
 

@@ -108,7 +108,6 @@ namespace RetroDevStudio
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
-    private bool                      m_IsCartridge = false;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
     private BinaryMonitorBankID       m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
 
@@ -132,7 +131,7 @@ namespace RetroDevStudio
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
-    public XMEGA65RemoteDebugger( StudioCore Core ) : base( Core )
+    public XMEGA65RemoteDebugger( StudioCore Core ) : base( Core, false, "" )
     {
     }
 
@@ -146,7 +145,7 @@ namespace RetroDevStudio
 
 
 
-    public bool ConnectToEmulator( bool IsCartridge )
+    public bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen )
     {
       /*
       Register
@@ -166,7 +165,8 @@ namespace RetroDevStudio
       {
         return false;
       }
-      m_IsCartridge = IsCartridge;
+      _IsCartridge        = IsCartridge;
+      _ExternalFileToOpen = externalImageToOpen;
       try
       {
         m_InitialBreakpointRemoved = false;
@@ -542,7 +542,7 @@ namespace RetroDevStudio
         if ( !m_ShuttingDown )
         {
           Core.AddToOutputLine( "Attempt reconnect" );
-          if ( !ConnectToEmulator( m_IsCartridge ) )
+          if ( !ConnectToEmulator( _IsCartridge, _ExternalFileToOpen ) )
           {
             Core.AddToOutputLine( "Reconnect failed, stopping debug session" );
             DebugEvent( new DebugEventData()
@@ -637,7 +637,7 @@ namespace RetroDevStudio
       }
       if ( !client.Connected )
       {
-        if ( !ConnectToEmulator( Parser.ASMFileParser.IsCartridge( Core.Debugging.DebugType ) ) )
+        if ( !ConnectToEmulator( _IsCartridge, _ExternalFileToOpen ) )
         {
           return false;
         }
@@ -802,7 +802,7 @@ namespace RetroDevStudio
 
       bool skipRefresh = false;
 
-      if ( ( !m_IsCartridge )
+      if ( ( !_IsCartridge )
       &&   ( m_BrokenAtBreakPoint == 1 ) )
       {
         if ( ( Core.Debugging.InitialBreakpointIsTemporary )
@@ -1595,17 +1595,6 @@ namespace RetroDevStudio
       m_ConnectedMachine = Emulators.EmulatorInfo.DetectMachineType( ToolRun.Filename );
 
       return true;
-    }
-
-
-
-    public bool Start( ToolInfo toolRun )
-    {
-      if ( !CheckEmulatorVersion( toolRun ) )
-      {
-        return false;
-      }
-      throw new NotImplementedException();
     }
 
 
