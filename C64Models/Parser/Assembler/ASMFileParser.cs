@@ -2506,6 +2506,18 @@ namespace RetroDevStudio.Parser
                 lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
               }
             }
+            /*
+            else if ( ( IsTokenLabel( lineInfo.NeededParsedExpression[expressionStartIndex].Type ) )
+            &&        ( IsLabelString( lineInfo.NeededParsedExpression[expressionStartIndex] ) ) )
+            {
+              var evaluatedString = EvaluateAsText( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, 1, lineInfo.LineCodeMapping );
+              // a text
+              foreach ( char aChar in evaluatedString )
+              {
+                // map to PETSCII!
+                lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
+              }
+            }*/
             else
             {
               SymbolInfo value;
@@ -2564,6 +2576,18 @@ namespace RetroDevStudio.Parser
                   lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
                 }
               }
+              /*
+              else if ( ( IsTokenLabel( lineInfo.NeededParsedExpression[expressionStartIndex].Type ) )
+              &&        ( IsLabelString( lineInfo.NeededParsedExpression[expressionStartIndex] ) ) )
+              {
+                var evaluatedString = EvaluateAsText( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, 1, lineInfo.LineCodeMapping );
+                // a text
+                foreach ( char aChar in evaluatedString )
+                {
+                  // map to PETSCII!
+                  lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
+                }
+              }*/
               else
               {
                 SymbolInfo value;
@@ -3625,6 +3649,20 @@ namespace RetroDevStudio.Parser
         return true;
       }
       return false;
+    }
+
+
+
+    private bool IsLabelString( TokenInfo token )
+    {
+      // is label known, and if it is, is it a string?
+      var singleList = new List<TokenInfo>();
+      singleList.Add( token );
+      if ( !EvaluateTokens( _ParseContext.LineIndex, singleList, 0, 1, out var symbol ) )
+      {
+        return false;
+      }
+      return symbol.IsString();
     }
 
 

@@ -376,6 +376,26 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModeTextLabel()
+    {
+      // VERSION is fully expanded, LATE_VERSION is truncated to 1 byte
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $2000
+                                VERSION = ""1.8""
+                                byte_value = $1234
+                                      !text ""ABCabc123"",VERSION,LATE_VERSION
+                                      !byte $12
+                                LATE_VERSION = ""1.99""
+                                ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020414243616263313233312E383112", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModeText()
     {
       string      source = @"!to ""text-modes.prg"",cbm

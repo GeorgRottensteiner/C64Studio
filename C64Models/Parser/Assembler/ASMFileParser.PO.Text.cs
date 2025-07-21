@@ -23,30 +23,65 @@ namespace RetroDevStudio.Parser
       }
 
       int numBytes = 0;
-
+      int groupIndex = 0;
       foreach ( var paramGroup in lineParams )
       {
-        if ( paramGroup.Any( t => t.Type != TokenInfo.TokenType.LITERAL_STRING ) )
+        if ( ( groupIndex + 1 == lineParams.Count )
+        &&   ( !paramGroup.Any() ) )
+        {
+          continue;
+        }
+        bool  isPotentiallyExpandable = false;
+        if ( paramGroup.Any( t => ( t.Type == TokenInfo.TokenType.LITERAL_STRING ) ) )
+        {
+          isPotentiallyExpandable = true;
+        }
+        if ( paramGroup.Any( t => ( ( IsKnownLabel( t ) ) && ( IsTokenLabel( t.Type ) ) && ( IsLabelString( t ) ) ) ) )
+        {
+          isPotentiallyExpandable = true;
+        }
+        if ( !isPotentiallyExpandable )
         {
           // everything else is a expression resulting in a single byte
           ++numBytes;
         }
         else
         {
+          int tokenIndex = 0;
           foreach ( var token in paramGroup )
           {
             if ( token.Type == TokenInfo.TokenType.LITERAL_STRING )
             {
               numBytes += ActualTextTokenLength( token );
             }
+            else if ( IsTokenLabel( token.Type ) )
+            {
+              if ( ( IsKnownLabel( token ) )
+              &&   ( IsLabelString( token ) ) )
+              {
+                // replace directly
+                var evaluatedString = EvaluateAsText( _ParseContext.LineIndex, paramGroup, tokenIndex, 1, _ParseContext.CurrentTextMapping );
+                numBytes += evaluatedString.Length;
+
+                int origIndex = lineTokenInfos.IndexOf( token );
+                lineTokenInfos[origIndex].Type = TokenInfo.TokenType.LITERAL_STRING;
+                lineTokenInfos[origIndex].Content = '"' + evaluatedString + '"';
+                lineTokenInfos[origIndex].Length = evaluatedString.Length + 2;
+              }
+              else
+              {
+                ++numBytes;
+              }
+            }
             else
             {
               // everything else is a expression resulting in a single byte
               ++numBytes;
-              break;
             }
+            ++tokenIndex;
           }
         }
+        ++groupIndex;
       }
 
       info.NumBytes               = numBytes;
@@ -77,17 +112,32 @@ namespace RetroDevStudio.Parser
 
       foreach ( var paramGroup in lineParams )
       {
+        int tokenIndex = 0;
         foreach ( var token in paramGroup )
         {
           if ( token.Type == TokenInfo.TokenType.LITERAL_STRING )
           {
             numBytes += ActualTextTokenLength( token );
           }
+          else if ( IsTokenLabel( token.Type ) )
+          {
+            if ( IsLabelString( token ) )
+            {
+              var evaluatedString = EvaluateAsText( _ParseContext.LineIndex, paramGroup, tokenIndex, 1, _ParseContext.CurrentTextMapping );
+              numBytes += evaluatedString.Length;
+            }
+            else if ( !IsKnownLabel( token ) )
+            {
+              AddError( _ParseContext.LineIndex, ErrorCode.E1010_UNKNOWN_LABEL, $"Cannot evaluate {token.Content}, must be evaluable directly" );
+              return ParseLineResult.ERROR_ABORT;
+            }
+          }
           else
           {
             // everything else is a single char
             ++numBytes;
           }
+          ++tokenIndex;
         }
       }
 
