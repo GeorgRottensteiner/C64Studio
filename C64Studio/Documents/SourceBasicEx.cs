@@ -2228,6 +2228,12 @@ namespace RetroDevStudio.Documents
                 {
                   InsertOrReplaceChar( (char)( ( c64Key.LowerCaseDisplayChar & 0xff ) + 0x20 ) );
                 }
+                else if ( ( c64Key.LowerCaseDisplayChar >= 0xef41 )
+                &&        ( c64Key.LowerCaseDisplayChar <= 0xef5a ) )
+                {
+                  // upper case char inside string literal, use proper PETSCII value instead of Unicode version
+                  InsertOrReplaceChar( (char)( c64Key.LowerCaseDisplayChar & 0xff ) );
+                }
                 else
                 {
                   InsertOrReplaceChar( c64Key.LowerCaseDisplayChar );

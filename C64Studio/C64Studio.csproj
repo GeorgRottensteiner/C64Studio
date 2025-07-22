@@ -315,9 +315,7 @@
     <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromASM.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromASM.cs" />
     <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -419,9 +417,7 @@
     <Compile Update="Dialogs\Preferences\DlgPrefBASICEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Dialogs\Preferences\DlgPrefASMEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Dialogs\Preferences\DlgPrefASMEditor.cs" />
     <Compile Update="Dialogs\Preferences\DlgPrefCachedData.cs">
       <SubType>UserControl</SubType>
     </Compile>
