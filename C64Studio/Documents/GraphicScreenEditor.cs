@@ -2551,10 +2551,8 @@ namespace RetroDevStudio.Documents
       int     newWidth  = GR.Convert.ToI32( editScreenWidth.Text );
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
-      btnApplyScreenSize.Enabled = ( ( newWidth > 0 ) 
-                                &&   ( ( newWidth % CheckBlockWidth ) == 0 )
-                                &&   ( newHeight > 0 ) 
-                                &&   ( ( newHeight % CheckBlockHeight ) == 0 ) );
+      btnApplyScreenSize.Enabled = ( ( newWidth > 0 )
+                                && ( newHeight > 0 ) );
     }
 
 
@@ -2565,9 +2563,7 @@ namespace RetroDevStudio.Documents
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
       btnApplyScreenSize.Enabled = ( ( newWidth > 0 ) 
-                                &&   ( ( newWidth % CheckBlockWidth ) == 0 )
-                                &&   ( newHeight > 0 ) 
-                                &&   ( ( newHeight % CheckBlockHeight ) == 0 ) );
+                                &&   ( newHeight > 0 ) );
     }
 
 

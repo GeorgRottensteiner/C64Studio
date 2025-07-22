@@ -121,8 +121,9 @@ namespace RetroDevStudio.Converter
       int   numMasksPerLine = ( imageSource.Width + 15 ) / 16;
 
       chunkBody.AppendU32( BODY );
-      chunkBody.AppendU32NetworkOrder( (uint)( imageSource.Height * numMasksPerLine * 2 * numPlanes ) );
+      chunkBody.AppendU32NetworkOrder( 0 );
 
+      uint realSize = 0;
       for ( int y = 0; y < imageSource.Height; ++y )
       {
         for ( int i = 0; i < numPlanes; ++i )
@@ -167,8 +168,10 @@ namespace RetroDevStudio.Converter
             lineData = compressedLine;
           }
           chunkBody.Append( lineData );
+          realSize += lineData.Length;
         }
       }
+      chunkBody.SetU32NetworkOrderAt( 4, realSize );
       ilbmChunk.Append( chunkBody );
 
       totalChunk.AppendU32NetworkOrder( ilbmChunk.Length );
