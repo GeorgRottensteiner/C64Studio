@@ -11867,6 +11867,8 @@ namespace RetroDevStudio.Parser
       CollapsePreprocessorLabels( result );
 
       // if the last token is an internal label (+/-), and something useless is following, it is interpreted as operator
+      // why tf?
+      /*
       if ( ( result.Count >= 2 )
       &&   ( result[result.Count - 1].Type == TokenInfo.TokenType.COMMENT )
       &&   ( result[result.Count - 2].Type == TokenInfo.TokenType.OPERATOR )
@@ -11875,7 +11877,7 @@ namespace RetroDevStudio.Parser
       {
         result[result.Count - 1].Type = TokenInfo.TokenType.LABEL_INTERNAL;
         result.RemoveAt( result.Count - 1 );
-      }
+      }*/
 
       // expand two numbers after each other when the second is negative (which points to a minus operator instead)
       for ( int i = 0; i < result.Count - 1; ++i )
