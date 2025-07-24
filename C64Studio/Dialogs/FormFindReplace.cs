@@ -207,7 +207,7 @@ namespace RetroDevStudio.Dialogs
           }
         }
       }
-      FindNext( null, comboSearchText.Text );
+      FindNext( null, comboSearchText.Text, radioSearchDirDown.Checked );
     }
 
 
@@ -230,12 +230,35 @@ namespace RetroDevStudio.Dialogs
           }
         }
       }
-      FindNext( DirectlyFromSourceFile, comboSearchText.Text );
+      FindNext( DirectlyFromSourceFile, comboSearchText.Text, true );
     }
 
 
 
-    public void FindNext( BaseDocument DirectlyFromSourceFile, string SearchText )
+    public void FindPrevious( BaseDocument DirectlyFromSourceFile )
+    {
+      if ( Core.MainForm.ActiveDocumentInfo != null )
+      {
+        var edit = EditFromDocumentEx( Core.MainForm.ActiveDocumentInfo );
+
+        if ( edit != null )
+        {
+          bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
+          LastSearchFound.Clear();
+          LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
+          LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
+          if ( hadLastFind )
+          {
+            --LastSearchFound.StartPosition;
+          }
+        }
+      }
+      FindNext( DirectlyFromSourceFile, comboSearchText.Text, false );
+    }
+
+
+
+    public void FindNext( BaseDocument DirectlyFromSourceFile, string SearchText, bool searchForward )
     {
       Core.MainForm.WriteToLog( "FindNext " + SearchText + " with " + (FindTarget)comboSearchTarget.SelectedIndex );
       if ( ( LastSearchFound != null )
@@ -245,7 +268,7 @@ namespace RetroDevStudio.Dialogs
       }
 
       if ( FindNextNew( SearchText,
-                        radioSearchDirDown.Checked,
+                        searchForward,
                         checkSearchRegExp.Checked,
                         checkSearchFullWords.Checked,
                         checkSearchIgnoreCase.Checked,
@@ -411,6 +434,10 @@ namespace RetroDevStudio.Dialogs
       }
 
       int     startPos = LastPosition + 1;
+      if ( Upwards )
+      {
+        startPos = LastPosition - 1;
+      }
       if ( LastPosition <= 0 )
       {
         startPos = 0;
@@ -477,7 +504,7 @@ namespace RetroDevStudio.Dialogs
       {
         if ( Upwards )
         {
-          pos = SearchSource.LastIndexOf( SearchString, 0, startPos );
+          pos = SearchSource.LastIndexOf( SearchString, startPos, compareFlags );
         }
         else
         {

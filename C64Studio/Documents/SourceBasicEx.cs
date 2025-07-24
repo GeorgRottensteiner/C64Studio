@@ -894,6 +894,7 @@ namespace RetroDevStudio.Documents
       UpdateKeyBinding( RetroDevStudio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
 
       UpdateKeyBinding( RetroDevStudio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
+      //UpdateKeyBinding( RetroDevStudio.Types.Function.FIND_PREVIOUS, FastColoredTextBoxNS.FCTBAction.FindPrevious );
 
       UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
       UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );

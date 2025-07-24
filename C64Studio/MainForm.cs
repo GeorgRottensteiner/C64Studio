@@ -4942,6 +4942,9 @@ namespace RetroDevStudio
         case RetroDevStudio.Types.Function.FIND_NEXT:
           m_FindReplace.FindNext( ActiveDocument );
           return true;
+        case RetroDevStudio.Types.Function.FIND_PREVIOUS:
+          m_FindReplace.FindPrevious( ActiveDocument );
+          return true;
         case RetroDevStudio.Types.Function.FIND:
           if ( ActiveDocumentInfo != null )
           {

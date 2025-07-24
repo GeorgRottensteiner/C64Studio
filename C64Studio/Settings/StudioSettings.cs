@@ -289,6 +289,7 @@ namespace RetroDevStudio
       RegisterFunction( Function.FIND, "Find", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_IN_PROJECT, "Find in Project", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_NEXT, "Find Next", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_PREVIOUS, "Find Previous", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_REPLACE, "Replace", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
       RegisterFunction( Function.RENAME_ALL_REFERENCES, "Rename all references", FunctionStudioState.ANY );

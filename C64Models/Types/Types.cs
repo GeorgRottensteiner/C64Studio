@@ -174,7 +174,8 @@ namespace RetroDevStudio.Types
     SAVE_DOCUMENT_COPY_AS,
     BUILD_TO_RELOCATION_FILE,
     RENAME_ALL_REFERENCES,
-    TOGGLE_SELECTION
+    TOGGLE_SELECTION,
+    FIND_PREVIOUS
   }
 
   public enum StudioState
