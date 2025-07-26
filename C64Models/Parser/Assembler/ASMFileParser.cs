@@ -152,8 +152,10 @@ namespace RetroDevStudio.Parser
         }
         else if ( byteValue >= (byte)'`' )
         {
-          m_TextCodeMappingScr[byteValue] = (byte)64;
-          m_TextCodeMappingPet[byteValue] = (byte)64;
+          //m_TextCodeMappingScr[byteValue] = (byte)64;
+          //m_TextCodeMappingPet[byteValue] = (byte)64;
+          m_TextCodeMappingScr[byteValue] = byteValue;
+          m_TextCodeMappingPet[byteValue] = byteValue;
         }
         else if ( byteValue == (byte)'@' )
         {
@@ -1855,6 +1857,18 @@ namespace RetroDevStudio.Parser
               ResultingToken = symbol;
             }
             return true;
+          case TokenInfo.TokenType.LITERAL_DATA:
+            {
+              var symbol = new SymbolInfo();
+              symbol.AddressOrValue = 1;
+              symbol.Type = SymbolInfo.Types.CONSTANT_STRING;
+              symbol.String = Tokens[StartIndex].Content;
+              symbol.LineIndex = LineIndex;
+              NumBytesGiven = Tokens[StartIndex].Length;
+              symbol.String = Tokens[StartIndex].Content;
+              ResultingToken = symbol;
+            }
+            return true;
         }
 
         if ( !ParseValue( LineIndex, Tokens[StartIndex], out ResultingToken, out NumBytesGiven ) )
@@ -2561,7 +2575,12 @@ namespace RetroDevStudio.Parser
               {
                 string    textLiteral = lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 );
 
-                textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, MachineType.C64, out bool hadError );
+                var mappingToUse = lineInfo.LineCodeMapping;
+                /*if ( lineInfo.NeededParsedExpression[expressionStartIndex].Type == TokenInfo.TokenType.LITERAL_DATA )
+                {
+                  mappingToUse = new Map<byte, byte>();
+                }*/
+                textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, mappingToUse, MachineType.C64, out bool hadError );
                 if ( ( hadError )
                 &&   ( AddErrors ) )
                 {

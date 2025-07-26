@@ -5156,6 +5156,44 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
+    public static string ReplaceAllPETSCIICodeByMacros( string BasicText, GR.Collections.Map<byte, byte> CustomMapping, MachineType machine, out bool HadError )
+    {
+      StringBuilder     sb = new StringBuilder();
+      int               posInLine = 0;
+
+      HadError = false;
+
+      while ( posInLine < BasicText.Length )
+      {
+        char    curChar = BasicText[posInLine];
+
+        var physKey = ConstantData.AllPhysicalKeyInfos[machine].FirstOrDefault( pk => (char)pk.NativeValue == curChar );
+        if ( ( physKey != null )
+        &&   ( physKey.Replacements.Count > 0 ) )
+        {
+          sb.Append( "{" + physKey.Replacements[0] + "}" );
+          ++posInLine;
+          continue;
+        }
+
+        // normal chars are passed on (also tabs, cr, lf)
+        if ( ( CustomMapping != null )
+        &&   ( CustomMapping.ContainsValue( (byte)curChar ) ) )
+        {
+          var origChar = CustomMapping.FirstOrDefault( cm => cm.Value == (byte)curChar );
+          sb.Append( (char)origChar.Key );
+        }
+        else
+        {
+          sb.Append( curChar );
+        }
+        ++posInLine;
+      }
+      return sb.ToString();
+    }
+
+
+
     public static string CollapseTokens( string BasicText, BASIC.Dialect dialect, bool nonC64Font )
     {
       StringBuilder     sb = new StringBuilder();

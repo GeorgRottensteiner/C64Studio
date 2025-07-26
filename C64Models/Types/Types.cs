@@ -586,6 +586,7 @@ namespace RetroDevStudio.Types
       LITERAL_NUMBER,
       LITERAL_CHAR,
       LITERAL_STRING,
+      LITERAL_DATA,     // a "string" with direct bytes to insert
       COMMENT,
       PSEUDO_OP,
       SEPARATOR,

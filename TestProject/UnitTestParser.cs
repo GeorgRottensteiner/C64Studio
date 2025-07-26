@@ -442,6 +442,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModeTextWithStringLabel()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              VERSION = ""1.2345XY""
+                              * = $2000
+                                      A = 3
+                                      !text ""ABCabc123{clr}"",VERSION";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002041424361626331323393312E323334355859", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModePET()
     {
       string      source = @"!to ""text-modes.prg"",cbm
@@ -482,6 +498,22 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "003093C1C2C3414243313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestTextModePETWithStringLabel()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              VERSION = ""1.2345XY""
+                              * = $3000
+                                      A = 3
+                                      !pet ""{clr}ABCabc123"",VERSION ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "003093C1C2C3414243313233312E32333435D8D9", assembly.ToString() );
     }
 
 

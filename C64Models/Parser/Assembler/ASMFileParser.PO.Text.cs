@@ -1,7 +1,9 @@
 ﻿using GR.Collections;
 using GR.Memory;
+using RetroDevStudio.Converter;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Parser.BASIC;
 using RetroDevStudio.Types;
 using RetroDevStudio.Types.ASM;
 using System;
@@ -47,6 +49,29 @@ namespace RetroDevStudio.Parser
         }
         else
         {
+          var origMapping = _ParseContext.CurrentTextMapping;
+          _ParseContext.CurrentTextMapping = new Map<byte, byte>();
+          if ( EvaluateTokens( _ParseContext.LineIndex, paramGroup, out SymbolInfo symbol, out int numBytesString ) )
+          {
+            _ParseContext.CurrentTextMapping = origMapping;
+            if ( symbol.IsString() )
+            {
+              numBytes += symbol.String.Length - 2;
+
+              int origIndex = lineTokenInfos.IndexOf( paramGroup[0] );
+              lineTokenInfos.RemoveRange( origIndex, paramGroup.Count );
+
+              var replacementToken = new TokenInfo();
+              replacementToken.Type     = TokenInfo.TokenType.LITERAL_DATA;
+              replacementToken.Content  = symbol.String;
+              replacementToken.Length   = symbol.String.Length;
+
+              lineTokenInfos.Insert( origIndex, replacementToken );
+              continue;
+            }
+          }
+          _ParseContext.CurrentTextMapping = origMapping;
+
           int tokenIndex = 0;
           foreach ( var token in paramGroup )
           {
@@ -54,10 +79,12 @@ namespace RetroDevStudio.Parser
             {
               numBytes += ActualTextTokenLength( token );
             }
+            /*
             else if ( IsTokenLabel( token.Type ) )
             {
               if ( ( IsKnownLabel( token ) )
-              &&   ( IsLabelString( token ) ) )
+              &&   ( IsLabelString( token ) )
+              &&   ( paramGroup.Count == 1 ) )
               {
                 // replace directly
                 var evaluatedString = EvaluateAsText( _ParseContext.LineIndex, paramGroup, tokenIndex, 1, _ParseContext.CurrentTextMapping );
@@ -72,7 +99,7 @@ namespace RetroDevStudio.Parser
               {
                 ++numBytes;
               }
-            }
+            }*/
             else
             {
               // everything else is a expression resulting in a single byte

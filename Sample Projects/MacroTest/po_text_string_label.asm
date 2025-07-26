@@ -6,6 +6,8 @@ VERSION = "1.8"
 !BASIC
 -   jmp -
 
+        !pet "text", "!"+128
+
         lda #VERSION 
 
 
