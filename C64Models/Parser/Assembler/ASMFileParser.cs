@@ -2520,18 +2520,6 @@ namespace RetroDevStudio.Parser
                 lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
               }
             }
-            /*
-            else if ( ( IsTokenLabel( lineInfo.NeededParsedExpression[expressionStartIndex].Type ) )
-            &&        ( IsLabelString( lineInfo.NeededParsedExpression[expressionStartIndex] ) ) )
-            {
-              var evaluatedString = EvaluateAsText( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, 1, lineInfo.LineCodeMapping );
-              // a text
-              foreach ( char aChar in evaluatedString )
-              {
-                // map to PETSCII!
-                lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
-              }
-            }*/
             else
             {
               SymbolInfo value;
@@ -2575,12 +2563,7 @@ namespace RetroDevStudio.Parser
               {
                 string    textLiteral = lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 );
 
-                var mappingToUse = lineInfo.LineCodeMapping;
-                /*if ( lineInfo.NeededParsedExpression[expressionStartIndex].Type == TokenInfo.TokenType.LITERAL_DATA )
-                {
-                  mappingToUse = new Map<byte, byte>();
-                }*/
-                textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, mappingToUse, MachineType.C64, out bool hadError );
+                textLiteral = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, MachineType.C64, out bool hadError );
                 if ( ( hadError )
                 &&   ( AddErrors ) )
                 {
@@ -2595,18 +2578,6 @@ namespace RetroDevStudio.Parser
                   lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
                 }
               }
-              /*
-              else if ( ( IsTokenLabel( lineInfo.NeededParsedExpression[expressionStartIndex].Type ) )
-              &&        ( IsLabelString( lineInfo.NeededParsedExpression[expressionStartIndex] ) ) )
-              {
-                var evaluatedString = EvaluateAsText( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, 1, lineInfo.LineCodeMapping );
-                // a text
-                foreach ( char aChar in evaluatedString )
-                {
-                  // map to PETSCII!
-                  lineData.AppendU8( (byte)( (byte)aChar ^ xorValue ) );
-                }
-              }*/
               else
               {
                 SymbolInfo value;
