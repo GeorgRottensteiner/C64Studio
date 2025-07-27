@@ -37,7 +37,7 @@ namespace RetroDevStudio.Dialogs
       editLastLineNumber.Text   = LastLineNumber.ToString();
 
       labelFirstLineIndex.Text  = $"First Line: {_firstLineIndex + 1}";
-      labelLastLineIndex.Text   = $"Larst Line: {_lastLineIndex + 1}";
+      labelLastLineIndex.Text   = $"Last Line: {_lastLineIndex + 1}";
 
       Core.Theming.ApplyTheme( this );
     }
