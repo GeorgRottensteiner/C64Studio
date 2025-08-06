@@ -1,8 +1,3 @@
-* = $0801
-
-!bin "basic_inc.prg",,2
-
-
 * = 4096
 JUMP_ADDRESS
           inc $d020

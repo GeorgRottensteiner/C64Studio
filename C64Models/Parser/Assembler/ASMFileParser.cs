@@ -5054,6 +5054,8 @@ namespace RetroDevStudio.Parser
         {
           if ( ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_CONSTANT_1 )
           &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_CONSTANT_2 )
+          &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_CONSTANT_STRING )
+          &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_CONSTANT_NUMBER )
           &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_LABEL ) )
           {
             if ( ( entry.Value.Type == SymbolInfo.Types.LABEL )
@@ -5085,6 +5087,13 @@ namespace RetroDevStudio.Parser
             symbol.SourceInfo     = entry.Value.SourceInfo;
 
             m_ASMFileInfo.Labels.Add( entry.Key, symbol );
+          }
+        }
+        foreach ( var entry in InitialFileInfo.Macros )
+        {
+          if ( !m_ASMFileInfo.Macros.ContainsKey( entry.Key ) )
+          {
+            m_ASMFileInfo.Macros.Add( entry.Key, entry.Value );
           }
         }
       }
@@ -5120,6 +5129,8 @@ namespace RetroDevStudio.Parser
         Array.Copy( Lines, OrigLines[ParentFilename], Lines.Length );
       }
 
+      m_ASMFileInfo.Macros = new Map<GR.Generic.Tupel<string, int>, MacroFunctionInfo>();
+
       IncludePreviousSymbols();
 
       m_ASMFileInfo.UnparsedLabels.Clear();
@@ -5127,7 +5138,6 @@ namespace RetroDevStudio.Parser
       m_ASMFileInfo.LineInfo.Clear();
       m_ASMFileInfo.TempLabelInfo.Clear();
       m_ASMFileInfo.Processor = Tiny64.Processor.Create6510();
-      m_ASMFileInfo.Macros    = new Map<GR.Generic.Tupel<string, int>, MacroFunctionInfo>();
 
       m_ASMFileInfo.Messages.Clear();
       m_ASMFileInfo.LabelDumpSettings = m_CompileConfig.LabelDumpSettings;

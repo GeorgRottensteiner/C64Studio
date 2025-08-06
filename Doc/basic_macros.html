@@ -543,7 +543,7 @@
       </tr>
       <tr>
         <td>
-          CBM-*;
+          CBM-*
         </td>
         <td>
           127
@@ -834,6 +834,54 @@
         </td>
       </tr>
     </table>
+    <br>
+    <br>
+    <b>Included Symbol Value</b><br>
+    If assembly symbols are included as dependency on a BASIC file the label names are available. This requires a project, and the BASIC file having the assembly file set as depenency and to include its symbols.<br>
+    <br>
+    Example assembly:<br>
+    <div id="code"><br>      * = 4096
+JUMP_ADDRESS
+          inc $d020
+          rts
+          <br></div>
+    <br>
+    <br>
+    The BASIC file includes the symbols of the assembly file and can access the labels.<br>
+    <br>
+    <img src="images/basic_include_assembly_sample.png"><br>
+    <br>
+    <br>
+    <b>Literal Value</b><br>
+    Also literal values may be included. The values must be specified as hex with a $ prefix. Prefixing a number repeats the value:<br>
+    <br>
+    <table>
+      <tr>
+        <th>
+          Macro Content
+        </th>
+        <th>
+          Inserted Content
+        </th>
+      </tr>
+      <tr>
+        <td>
+          $3000
+        </td>
+        <td>
+          12288
+        </td>
+      </tr>
+      <tr>
+        <td>
+          5 $30
+        </td>
+        <td>
+          4848484848
+        </td>
+      </tr>
+    </table>
+    <br>
     <br>
   </div>
 </body>

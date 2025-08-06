@@ -213,6 +213,7 @@ namespace RetroDevStudio.Documents
       editBASICStartAddress.Text = "2049";
 
       UpdateLabelModeText();
+      UpdateSymbolModeButton();
     }
 
 
@@ -2778,7 +2779,6 @@ namespace RetroDevStudio.Documents
       }
 
       m_InsideToggleSymbolHandler = true;
-      btnToggleSymbolMode.Image = newSymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
 
       bool    hadError = false;
       string  newText = editSource.Text;
@@ -2800,7 +2800,8 @@ namespace RetroDevStudio.Documents
       {
         m_SymbolMode = !newSymbolMode;
         btnToggleSymbolMode.Checked = m_SymbolMode;
-        btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
+
+        UpdateSymbolModeButton();
 
         m_InsideToggleSymbolHandler = false;
         return;
@@ -2818,6 +2819,7 @@ namespace RetroDevStudio.Documents
 
       DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoBASICSymbolModeToggle( this ) );
       m_SymbolMode = newSymbolMode;
+      UpdateSymbolModeButton();
 
       m_InsideToggleSymbolHandler = false;
     }
@@ -3382,9 +3384,17 @@ namespace RetroDevStudio.Documents
 
     public void SymbolModeToggled()
     {
-      m_SymbolMode                = !m_SymbolMode;
+      m_SymbolMode = !m_SymbolMode;
+      UpdateSymbolModeButton();
+    }
+
+
+
+    private void UpdateSymbolModeButton()
+    {
       btnToggleSymbolMode.Checked = m_SymbolMode;
       btnToggleSymbolMode.Image   = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
+      toolTip1.SetToolTip( btnToggleSymbolMode, "Toggle Symbol/Macro (Currently " + ( m_SymbolMode ? "Symbol Mode" : "Macro Mode" ) + ")" );
     }
 
 

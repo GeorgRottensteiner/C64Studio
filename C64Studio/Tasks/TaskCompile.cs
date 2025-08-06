@@ -690,7 +690,7 @@ namespace RetroDevStudio.Tasks
               {
                 combinedFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
               }
-              // merge label info
+              // merge inheritable info
               if ( dependencyFileInfo != null )
               {
                 foreach ( var entry in dependencyFileInfo.Labels )
@@ -698,6 +698,13 @@ namespace RetroDevStudio.Tasks
                   if ( !combinedFileInfo.Labels.ContainsKey( entry.Key ) )
                   {
                     combinedFileInfo.Labels.Add( entry.Key, entry.Value );
+                  }
+                }
+                foreach ( var entry in dependencyFileInfo.Macros )
+                {
+                  if ( !combinedFileInfo.Macros.ContainsKey( entry.Key ) )
+                  {
+                    combinedFileInfo.Macros.Add( entry.Key, entry.Value );
                   }
                 }
                 //Debug.Log( $"Doc {Doc.FullPath} receives {dependencyFileInfo.Labels.Count} dependency labels from dependency {dependency.Filename}, has label spriteinitbytemsb {combinedFileInfo.Labels.ContainsKey( "spriteinitbytemsb" )}" );
