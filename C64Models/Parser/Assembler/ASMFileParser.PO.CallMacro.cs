@@ -161,6 +161,11 @@ namespace RetroDevStudio.Parser
         }
         else if ( !hadError )
         {
+          if ( functionInfo.LineEnd == -1 )
+          {
+            AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, $"The macro {functionInfo.Name} is not complete, cannot assemble further" );
+            return ParseLineResult.ERROR_ABORT;
+          }
           int lineIndexInMacro = -1;
           string[] replacementLines = RelabelLocalLabelsForMacro( Lines, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
           if ( replacementLines == null )

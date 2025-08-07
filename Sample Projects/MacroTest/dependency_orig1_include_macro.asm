@@ -3,3 +3,5 @@
           ldx #y
           ldy #z
 !end
+
+!macro callme2 xx,y,z {
