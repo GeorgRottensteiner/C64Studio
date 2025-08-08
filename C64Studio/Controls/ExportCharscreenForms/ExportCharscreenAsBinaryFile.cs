@@ -65,6 +65,21 @@ namespace RetroDevStudio.Controls
         case ExportCharsetScreenInfo.ExportData.CHARSET:
           finalData = Info.CharsetData;
           break;
+        case ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED:
+          {
+            ByteBuffer  interleavedBuffer = null;
+            if ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED )
+            {
+              interleavedBuffer = new ByteBuffer( Info.ScreenCharData.Length + Info.ScreenColorData.Length );
+              for ( int i = 0; i < Info.ScreenCharData.Length; ++i )
+              {
+                interleavedBuffer.SetU8At( i * 2, Info.ScreenCharData.ByteAt( i ) );
+                interleavedBuffer.SetU8At( i * 2 + 1, Info.ScreenColorData.ByteAt( i ) );
+              }
+            }
+            finalData = interleavedBuffer;
+          }
+          break;
         default:
           return false;
       }
