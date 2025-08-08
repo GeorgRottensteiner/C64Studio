@@ -10250,7 +10250,7 @@ namespace RetroDevStudio.Parser
         }
         else
         {
-          replacementLines[replacementLineIndex] = Lines[i];
+          replacementLines[replacementLineIndex] = functionInfo.Content[replacementLineIndex];
         }
         ++replacementLineIndex;
       }
