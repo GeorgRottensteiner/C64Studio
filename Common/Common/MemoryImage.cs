@@ -509,7 +509,7 @@ namespace GR.Image
       }
 
       if ( ( TargetImage.PixelFormat == PixelFormat )
-      && ( BitsPerPixel >= 8 ) )
+      &&   ( BitsPerPixel >= 8 ) )
       {
         unsafe
         {
@@ -531,7 +531,9 @@ namespace GR.Image
           UnpinData();
         }
       }
-      else if ( TargetImage.PixelFormat == PixelFormat )
+      else if ( ( TargetImage.PixelFormat == PixelFormat )
+      ||        ( ( TargetImage.BitsPerPixel <= 8 )
+      &&          ( BitsPerPixel <= 8 ) ) )
       {
         // safe (but slow) copy
         for ( int i = 0; i < copyWidth; ++i )

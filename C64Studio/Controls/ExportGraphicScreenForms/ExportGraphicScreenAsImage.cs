@@ -27,6 +27,18 @@ namespace RetroDevStudio.Controls
       base( Core )
     {
       InitializeComponent();
+
+      comboExportImageNumberOfColors.Items.Add( "Optimize" );
+      comboExportImageNumberOfColors.Items.Add( "2" );
+      comboExportImageNumberOfColors.Items.Add( "4" );
+      comboExportImageNumberOfColors.Items.Add( "8" );
+      comboExportImageNumberOfColors.Items.Add( "16" );
+      comboExportImageNumberOfColors.Items.Add( "32" );
+      comboExportImageNumberOfColors.Items.Add( "64" );
+      comboExportImageNumberOfColors.Items.Add( "128" );
+      comboExportImageNumberOfColors.Items.Add( "256" );
+
+      comboExportImageNumberOfColors.SelectedIndex = 0;
     }
 
 
@@ -42,7 +54,20 @@ namespace RetroDevStudio.Controls
         return false;
       }
 
-      bool      optimizePalette = checkOptimizePalette.Checked;
+      bool      optimizePalette = ( comboExportImageNumberOfColors.SelectedIndex == 0 );
+      int       numberOfColorsToExport = 0;
+      if ( !optimizePalette )
+      {
+        int numberOfColors = 1 << comboExportImageNumberOfColors.SelectedIndex;
+        if ( numberOfColors > numberOfColorsToExport )
+        {
+          if ( Core.Notification.UserDecision( Dialogs.DlgDeactivatableMessage.MessageButtons.YES_NO, "Truncate palette?", "The image has more colors than you chose to export.\r\nThe palette can be truncated but that might end with missing pixels.\r\nTruncate the palette?" ) == Dialogs.DlgDeactivatableMessage.UserChoice.NO )
+          {
+            return false;
+          }
+        }
+        numberOfColorsToExport = numberOfColors;
+      }
       bool      useCompression = checkUseCompression.Checked; 
       string    extension = GR.Path.GetExtension( saveDlg.FileName ).ToUpper();
 
@@ -81,7 +106,7 @@ namespace RetroDevStudio.Controls
       }
       else if ( extension == ".IFF" )
       {
-        var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( Info.Project.Image, optimizePalette, useCompression );
+        var imageData = RetroDevStudio.Converter.IFFToBitmap.IFFFromBitmap( Info.Project.Image, numberOfColorsToExport, useCompression );
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, imageData ) )
         {
           Core.Notification.MessageBox( "Error writing to file", "Could not export to file " + saveDlg.FileName );

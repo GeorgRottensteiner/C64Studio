@@ -10,7 +10,7 @@ namespace RetroDevStudio.Converter
 {
   class IFFToBitmap
   {
-    public static GR.Memory.ByteBuffer IFFFromBitmap( GR.Image.IImage imageSource, bool optimizePalette = false, bool useCompression = false )
+    public static GR.Memory.ByteBuffer IFFFromBitmap( GR.Image.IImage imageSource, int numberOfColorsToWrite = 0, bool useCompression = false )
     {
       const uint FORM = 0x4d524f46;
       const uint ILBM = 0x4d424c49;
@@ -22,7 +22,7 @@ namespace RetroDevStudio.Converter
       GR.Memory.ByteBuffer      result = new GR.Memory.ByteBuffer();
 
       int numPlanes = imageSource.BitsPerPixel;
-      if ( optimizePalette )
+      if ( numberOfColorsToWrite == 0 )
       {
         if ( numPlanes > 8 )
         {
@@ -65,6 +65,23 @@ namespace RetroDevStudio.Converter
             numPlanes = numRequiredPlanes;
           }
         }
+      }
+      else
+      {
+        int numRequiredPlanes = 0;
+        int requiredCount = numberOfColorsToWrite;
+        while ( requiredCount > 0 )
+        {
+          ++numRequiredPlanes;
+          requiredCount /= 2;
+        }
+        --numRequiredPlanes;
+        if ( numRequiredPlanes > numPlanes )
+        {
+          // won't work, we'll cut off colors!
+        }
+
+        numPlanes = numRequiredPlanes;
       }
 
       var totalChunk = new GR.Memory.ByteBuffer();
