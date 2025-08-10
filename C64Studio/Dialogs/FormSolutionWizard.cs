@@ -138,8 +138,6 @@ namespace RetroDevStudio.Dialogs
       labelSolutionSummary.Text = "The solution file will be created as " + solutionPath + "." + System.Environment.NewLine
                                 + "The project file will be created as " + projectFullFilename + "." + System.Environment.NewLine;
 
-      checkCreateRepository.Enabled             = true;
-      checkSeparateRepositoryForProject.Enabled = true;
       if ( checkCreateRepository.Checked )
       {
         var gitPath1 = GR.Path.Append( finalPath, ".git" );
