@@ -408,7 +408,8 @@ namespace RetroDevStudio
         }
         else
         {
-          Element.Filename = GR.Path.GetFileName( NewFilename );
+          // keep path intact!
+          Element.Filename = GR.Path.RelativePathTo( Element.DocumentInfo.Project.Settings.BasePath, true, NewFilename, false );
         }
       }
     }

@@ -502,7 +502,7 @@ namespace RetroDevStudio.Documents
         if ( ( firstLine + i < m_LineInfos.Count )
         &&   ( firstLine + i < editSource.LinesCount ) )
         {
-          m_LineInfos[firstLine + i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[firstLine + i], m_LabelMode, _currentCheckSummer );
+          m_LineInfos[firstLine + i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[firstLine + i], m_LabelMode, m_SymbolMode, _currentCheckSummer );
         }
       }
       
@@ -3553,7 +3553,7 @@ namespace RetroDevStudio.Documents
         {
           m_LineInfos.Add( new Types.ASM.LineInfo() { LineIndex = m_LineInfos.Count } );
         }
-        m_LineInfos[i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[i], m_LabelMode, _currentCheckSummer );
+        m_LineInfos[i].CheckSum = Core.Compiling.ParserBasic.RecalcCheckSum( editSource.Lines[i], m_LabelMode, m_SymbolMode, _currentCheckSummer );
       }
       editSource.Invalidate();
     }

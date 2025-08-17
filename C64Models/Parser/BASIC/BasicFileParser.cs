@@ -2828,7 +2828,7 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    public string RecalcCheckSum( string line, bool labelMode, string checkSummerClass )
+    public string RecalcCheckSum( string line, bool labelMode, bool symbolMode, string checkSummerClass )
     {
       ICheckSummer checkSummer = null;
       if ( string.IsNullOrEmpty( checkSummerClass ) )
@@ -2843,6 +2843,11 @@ namespace RetroDevStudio.Parser.BASIC
         m_LineInfos[-1].Line = line;
         m_LineInfos[-1].LineNumber = -1;
         m_LineInfos[-1].LineData.Clear();
+      }
+
+      if ( !symbolMode )
+      {
+        line = BasicFileParser.ReplaceAllMacrosBySymbols( line, BasicFileParser.FindBestKeyboardMachineType( Settings.BASICDialect ), out bool hadError1 );
       }
 
       ProcessLine( -1, line, ref lastLineNumber );

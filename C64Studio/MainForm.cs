@@ -3960,8 +3960,9 @@ namespace RetroDevStudio
       if ( InvokeRequired )
       {
         Invoke( new SetGUIForWaitOnExternalToolCallback( SetGUIForWaitOnExternalTool ), new object[] { Wait } );
+        return;
       }
-      else
+      try
       {
         // dockpanelsuite activates the first document, not the currently shown one if focus is set to it (by disabling the toolbar)
         BaseDocument    prevActiveDocument = ActiveDocument;
@@ -3993,6 +3994,9 @@ namespace RetroDevStudio
             subMenu.Enabled = !Wait;
           }
         }
+      }
+      catch ( ObjectDisposedException )
+      {
       }
     }
 

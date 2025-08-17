@@ -619,7 +619,7 @@ namespace RetroDevStudio
       if ( ( GR.Path.IsPathRooted( element.Filename ) )
       &&   ( GR.Path.CommonPrefix( element.Filename, Settings.BasePath ) == Settings.BasePath ) )
       {
-        element.Filename = GR.Path.RelativePathTo( element.Filename, false, Settings.BasePath, true );
+        element.Filename = GR.Path.RelativePathTo( Settings.BasePath, true, element.Filename, false );
       }
       element.DocumentInfo.DocumentFilename = element.Filename;
       // DocumentFilename is supposed to be relative to the project base path if it's inside its folder
@@ -627,7 +627,7 @@ namespace RetroDevStudio
       {
         if ( GR.Path.CommonPrefix( element.DocumentInfo.DocumentFilename, Settings.BasePath ) == Settings.BasePath )
         {
-          element.DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( element.DocumentInfo.DocumentFilename, false, Settings.BasePath, true );
+          element.DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( Settings.BasePath, true, element.DocumentInfo.DocumentFilename, false );
         }
       }
       if ( element.Document != null )
