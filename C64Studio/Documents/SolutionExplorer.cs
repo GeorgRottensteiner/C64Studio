@@ -19,6 +19,7 @@ namespace RetroDevStudio.Documents
   public partial class SolutionExplorer : BaseDocument
   {
     private DecentForms.TreeView.TreeNode     m_ContextMenuNode = null;
+    private bool                              _newFolderIsVirtual = true;
 
     private System.Drawing.Font               m_BoldFont = null;
 
@@ -228,9 +229,14 @@ namespace RetroDevStudio.Documents
 
               subItem.DropDownItems.Add( "-" );
             }
-            System.Windows.Forms.ToolStripMenuItem subItemNewFolder = new System.Windows.Forms.ToolStripMenuItem( "Folder" );
+            System.Windows.Forms.ToolStripMenuItem subItemNewFolder = new System.Windows.Forms.ToolStripMenuItem( "Virtual Folder" );
             subItemNewFolder.Click += new EventHandler( subItemNewFolder_Click );
             subItem.DropDownItems.Add( subItemNewFolder );
+
+            /*
+            var subItemNewRealFolder = new System.Windows.Forms.ToolStripMenuItem( "Folder" );
+            subItemNewRealFolder.Click += new EventHandler( subItemNewRealFolder_Click );
+            subItem.DropDownItems.Add( subItemNewRealFolder );*/
 
             System.Windows.Forms.ToolStripMenuItem subItemNewASM = new System.Windows.Forms.ToolStripMenuItem( "ASM File" );
             subItemNewASM.Click += new EventHandler( projectAddASMFile_Click );
@@ -726,20 +732,29 @@ namespace RetroDevStudio.Documents
 
     void subItemNewFolder_Click( object sender, EventArgs e )
     {
-      AddNewFolder( m_ContextMenuNode );
+      AddNewFolder( m_ContextMenuNode, true );
     }
 
 
 
-    void AddNewFolder( DecentForms.TreeView.TreeNode Node )
+    void subItemNewRealFolder_Click( object sender, EventArgs e )
+    {
+      AddNewFolder( m_ContextMenuNode, false );
+    }
+
+
+
+    void AddNewFolder( DecentForms.TreeView.TreeNode Node, bool virtualFolder )
     {
       if ( Node == null )
       {
         return;
       }
+      _newFolderIsVirtual = virtualFolder;
+
       Project         project = ProjectFromNode( Node );
       List<string>    hierarchy = GetElementHierarchy( Node );
-      ProjectElement element = Core.MainForm.CreateNewElement( ProjectElement.ElementType.FOLDER, "Folder", project, Node );
+      ProjectElement  element = Core.MainForm.CreateNewElement( ProjectElement.ElementType.FOLDER, "Folder", project, Node );
       if ( element != null )
       {
         treeProject.SelectedNode = element.Node;
@@ -1490,6 +1505,10 @@ namespace RetroDevStudio.Documents
         element.Name = newText;
         e.Node.Text = newText;
         AdjustElementHierarchy( element, e.Node );
+
+        if ( !_newFolderIsVirtual )
+        {
+        }
         project.SetModified();
 
         Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_RENAMED )
@@ -2222,7 +2241,7 @@ namespace RetroDevStudio.Documents
 
     private void seBtnAddNewFolder_Click( object sender, EventArgs e )
     {
-      AddNewFolder( treeProject.SelectedNode );
+      AddNewFolder( treeProject.SelectedNode, true );
     }
 
 

@@ -4514,5 +4514,12 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void goToLineToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      JumpToLine();
+    }
+
+
+
   }
 }

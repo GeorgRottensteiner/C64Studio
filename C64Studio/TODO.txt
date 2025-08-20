@@ -1,6 +1,6 @@
 ﻿* Any PO includes do not provide error message on non evaluable arguments (e.g. sprites, num sprites value)
 * No error if assembly is larger then the target allows (>$ffff)
-* BASIC - Undo/Redo -> try to get casing/label mode inside
+* Solution Explorer Folders, optionally also create real folder?
 * Map Editor:
   Wenn ich eine Char-Grafik mit meinen Bildbearbeitungsprogramm erstellt habe, kann ich Grafik nicht importieren für das Charset im Map-Editor.
   Ich bin statt dessen immer über den Char-Editor gegangen, den dort kann ich ja Grafiken importieren. Und von dort habe ich dann die Chars kopiert 

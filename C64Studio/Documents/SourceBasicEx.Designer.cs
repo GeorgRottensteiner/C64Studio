@@ -66,6 +66,8 @@ namespace RetroDevStudio.Documents
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
       this.labelCheckSummer = new System.Windows.Forms.Label();
       this.comboCheckSummer = new System.Windows.Forms.ComboBox();
+      this.jumpToLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -121,6 +123,8 @@ namespace RetroDevStudio.Documents
             this.cutToolStripMenuItem,
             this.pasteToolStripMenuItem,
             this.toolStripSeparator5,
+            this.jumpToLineToolStripMenuItem,
+            this.toolStripSeparator3,
             this.addBookmarkHereToolStripMenuItem,
             this.removeBookmarkToolStripMenuItem,
             this.removeAllBookmarksOfThisFileToolStripMenuItem,
@@ -130,7 +134,7 @@ namespace RetroDevStudio.Documents
             this.toolStripSeparator1,
             this.renumberToolStripMenuItem1});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(250, 220);
+      this.contextSource.Size = new System.Drawing.Size(250, 270);
       // 
       // copyToolStripMenuItem
       // 
@@ -406,6 +410,18 @@ namespace RetroDevStudio.Documents
       this.comboCheckSummer.TabIndex = 10;
       this.comboCheckSummer.SelectedIndexChanged += new System.EventHandler(this.comboCheckSummer_SelectedIndexChanged);
       // 
+      // jumpToLineToolStripMenuItem
+      // 
+      this.jumpToLineToolStripMenuItem.Name = "jumpToLineToolStripMenuItem";
+      this.jumpToLineToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.jumpToLineToolStripMenuItem.Text = "Jump to line...";
+      this.jumpToLineToolStripMenuItem.Click += new System.EventHandler(this.jumpToLineToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator3
+      // 
+      this.toolStripSeparator3.Name = "toolStripSeparator3";
+      this.toolStripSeparator3.Size = new System.Drawing.Size(246, 6);
+      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
@@ -473,5 +489,7 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.Label labelCheckSummer;
     private System.Windows.Forms.ComboBox comboCheckSummer;
     private DecentForms.CheckBox btnToggleCollapsedTokensMode;
+    private System.Windows.Forms.ToolStripMenuItem jumpToLineToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
   }
 }
