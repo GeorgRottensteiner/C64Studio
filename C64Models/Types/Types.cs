@@ -1085,39 +1085,39 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.AddRange( new string[] { "ARROW UP", "ARROWUP", "ARROW-UP", "^" } );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" ).Replacements.AddRange( new string[] { "ARROW LEFT", "ARROWLEFT", "ARROW-LEFT" } ); // arrow left
       //  96-127 $60-$7F     -32 $E0         64- 95 $40-$5F  
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96, true, (char)0xee40, true, "SHIFT *" ).Replacements.Add( "SHIFT-*" );   // Shift *
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 97 - 32, true, 97, true, (char)0xee41, true, "SHIFT A" ).Replacements.Add( "SHIFT-A" );   // Shift-A
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 98 - 32, true, 98, true, (char)0xee42, true, "SHIFT B" ).Replacements.Add( "SHIFT-B" );   // Shift-B
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 99 - 32, true, 99, true, (char)0xee43, true, "SHIFT C" ).Replacements.Add( "SHIFT-C" );   // Shift-C
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 100 - 32, true, 100, true, (char)0xee44, true, "SHIFT D" ).Replacements.Add( "SHIFT-D" );   // Shift-D
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 101 - 32, true, 101, true, (char)0xee45, true, "SHIFT E" ).Replacements.Add( "SHIFT-E" );   // Shift-E
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 102 - 32, true, 102, true, (char)0xee46, true, "SHIFT F" ).Replacements.Add( "SHIFT-F" );   // Shift-F
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 103 - 32, true, 103, true, (char)0xee47, true, "SHIFT G" ).Replacements.Add( "SHIFT-G" );   // Shift-G
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 104 - 32, true, 104, true, (char)0xee48, true, "SHIFT H" ).Replacements.Add( "SHIFT-H" );   // Shift-H
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 105 - 32, true, 105, true, (char)0xee49, true, "SHIFT I" ).Replacements.Add( "SHIFT-I" );   // Shift-I
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 106 - 32, true, 106, true, (char)0xee4a, true, "SHIFT J" ).Replacements.Add( "SHIFT-J" );   // Shift-J
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 107 - 32, true, 107, true, (char)0xee4b, true, "SHIFT K" ).Replacements.Add( "SHIFT-K" );   // Shift-K
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 108 - 32, true, 108, true, (char)0xee4c, true, "SHIFT L" ).Replacements.Add( "SHIFT-L" );   // Shift-L
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 109 - 32, true, 109, true, (char)0xee4d, true, "SHIFT M" ).Replacements.Add( "SHIFT-M" );   // Shift-M
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 110 - 32, true, 110, true, (char)0xee4e, true, "SHIFT N" ).Replacements.Add( "SHIFT-N" );   // Shift-N
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 111 - 32, true, 111, true, (char)0xee4f, true, "SHIFT O" ).Replacements.Add( "SHIFT-O" );   // Shift-O
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 112 - 32, true, 112, true, (char)0xee50, true, "SHIFT P" ).Replacements.Add( "SHIFT-P" );   // Shift-P
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 113 - 32, true, 113, true, (char)0xee51, true, "SHIFT Q" ).Replacements.Add( "SHIFT-Q" );   // Shift-Q
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 114 - 32, true, 114, true, (char)0xee52, true, "SHIFT R" ).Replacements.Add( "SHIFT-R" );   // Shift-R
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 115 - 32, true, 115, true, (char)0xee53, true, "SHIFT S" ).Replacements.Add( "SHIFT-S" );   // Shift-S
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 116 - 32, true, 116, true, (char)0xee54, true, "SHIFT T" ).Replacements.Add( "SHIFT-T" );   // Shift-T
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 117 - 32, true, 117, true, (char)0xee55, true, "SHIFT U" ).Replacements.Add( "SHIFT-U" );   // Shift-U
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 118 - 32, true, 118, true, (char)0xee56, true, "SHIFT V" ).Replacements.Add( "SHIFT-V" );   // Shift-V
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 119 - 32, true, 119, true, (char)0xee57, true, "SHIFT W" ).Replacements.Add( "SHIFT-W" );   // Shift-W
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 120 - 32, true, 120, true, (char)0xee58, true, "SHIFT X" ).Replacements.Add( "SHIFT-X" );   // Shift-X
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 121 - 32, true, 121, true, (char)0xee59, true, "SHIFT Y" ).Replacements.Add( "SHIFT-Y" );   // Shift-Y
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 122 - 32, true, 122, true, (char)0xee5a, true, "SHIFT Z" ).Replacements.Add( "SHIFT-Z" );   // Shift-Z
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96 + 96, true, (char)0xee40, true, "SHIFT *" ).Replacements.Add( "SHIFT-*" );   // Shift *
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 97 - 32, true, 97 + 96, true, (char)0xee41, true, "SHIFT A" ).Replacements.Add( "SHIFT-A" );   // Shift-A
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 98 - 32, true, 98 + 96, true, (char)0xee42, true, "SHIFT B" ).Replacements.Add( "SHIFT-B" );   // Shift-B
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 99 - 32, true, 99 + 96, true, (char)0xee43, true, "SHIFT C" ).Replacements.Add( "SHIFT-C" );   // Shift-C
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 100 - 32, true, 100 + 96, true, (char)0xee44, true, "SHIFT D" ).Replacements.Add( "SHIFT-D" );   // Shift-D
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 101 - 32, true, 101 + 96, true, (char)0xee45, true, "SHIFT E" ).Replacements.Add( "SHIFT-E" );   // Shift-E
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 102 - 32, true, 102 + 96, true, (char)0xee46, true, "SHIFT F" ).Replacements.Add( "SHIFT-F" );   // Shift-F
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 103 - 32, true, 103 + 96, true, (char)0xee47, true, "SHIFT G" ).Replacements.Add( "SHIFT-G" );   // Shift-G
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 104 - 32, true, 104 + 96, true, (char)0xee48, true, "SHIFT H" ).Replacements.Add( "SHIFT-H" );   // Shift-H
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 105 - 32, true, 105 + 96, true, (char)0xee49, true, "SHIFT I" ).Replacements.Add( "SHIFT-I" );   // Shift-I
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 106 - 32, true, 106 + 96, true, (char)0xee4a, true, "SHIFT J" ).Replacements.Add( "SHIFT-J" );   // Shift-J
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 107 - 32, true, 107 + 96, true, (char)0xee4b, true, "SHIFT K" ).Replacements.Add( "SHIFT-K" );   // Shift-K
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 108 - 32, true, 108 + 96, true, (char)0xee4c, true, "SHIFT L" ).Replacements.Add( "SHIFT-L" );   // Shift-L
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 109 - 32, true, 109 + 96, true, (char)0xee4d, true, "SHIFT M" ).Replacements.Add( "SHIFT-M" );   // Shift-M
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 110 - 32, true, 110 + 96, true, (char)0xee4e, true, "SHIFT N" ).Replacements.Add( "SHIFT-N" );   // Shift-N
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 111 - 32, true, 111 + 96, true, (char)0xee4f, true, "SHIFT O" ).Replacements.Add( "SHIFT-O" );   // Shift-O
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 112 - 32, true, 112 + 96, true, (char)0xee50, true, "SHIFT P" ).Replacements.Add( "SHIFT-P" );   // Shift-P
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 113 - 32, true, 113 + 96, true, (char)0xee51, true, "SHIFT Q" ).Replacements.Add( "SHIFT-Q" );   // Shift-Q
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 114 - 32, true, 114 + 96, true, (char)0xee52, true, "SHIFT R" ).Replacements.Add( "SHIFT-R" );   // Shift-R
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 115 - 32, true, 115 + 96, true, (char)0xee53, true, "SHIFT S" ).Replacements.Add( "SHIFT-S" );   // Shift-S
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 116 - 32, true, 116 + 96, true, (char)0xee54, true, "SHIFT T" ).Replacements.Add( "SHIFT-T" );   // Shift-T
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 117 - 32, true, 117 + 96, true, (char)0xee55, true, "SHIFT U" ).Replacements.Add( "SHIFT-U" );   // Shift-U
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 118 - 32, true, 118 + 96, true, (char)0xee56, true, "SHIFT V" ).Replacements.Add( "SHIFT-V" );   // Shift-V
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 119 - 32, true, 119 + 96, true, (char)0xee57, true, "SHIFT W" ).Replacements.Add( "SHIFT-W" );   // Shift-W
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 120 - 32, true, 120 + 96, true, (char)0xee58, true, "SHIFT X" ).Replacements.Add( "SHIFT-X" );   // Shift-X
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 121 - 32, true, 121 + 96, true, (char)0xee59, true, "SHIFT Y" ).Replacements.Add( "SHIFT-Y" );   // Shift-Y
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 122 - 32, true, 122 + 96, true, (char)0xee5a, true, "SHIFT Z" ).Replacements.Add( "SHIFT-Z" );   // Shift-Z
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_PLUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 123 - 32, true, 123, true, (char)0xee5b, true, "SHIFT +" ).Replacements.Add( "Shift-+" );   // Shift +
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_MINUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 124 - 32, true, 124, true, (char)0xee5c, true, "CBM -" ).Replacements.Add( "CBM--" );   // C= -
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_MINUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 125 - 32, true, 125, true, (char)0xee5d, true, "SHIFT -" ).Replacements.Add( "SHIFT--" );   // Shift -
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_MINUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 124 - 32, true, 124 + 96, true, (char)0xee5c, true, "CBM -" ).Replacements.Add( "CBM--" );   // C= -
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_MINUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 125 - 32, true, 125 + 96, true, (char)0xee5d, true, "SHIFT -" ).Replacements.Add( "SHIFT--" );   // Shift -
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 126, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127, true, (char)0xee5f, true, "CBM *" ).Replacements.Add( "CBM-*" );   // C= *
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127 + 96, true, (char)0xee5f, true, "CBM *" ).Replacements.Add( "CBM-*" );   // C= *
 
       // 128-159 $80-$9F     +64 $40        192-223 $C0-$DF  
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 192, true, (char)0xeec0, true, "REVERSE SHIFT @" ).Replacements.Add( "REVERSE SHIFT-@" );
@@ -1172,10 +1172,10 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 164 - 64, true, 164, true, (char)0xee64, true, "CBM @" ).Replacements.Add( "CBM-@" );   // C= @
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 165 - 64, true, 165, true, (char)0xee65, true, "CBM G" ).Replacements.Add( "CBM-G" );   // C= G
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 166 - 64, true, 166, true, (char)0xee66, true, "CBM +" ).Replacements.Add( "CBM-+" );   // C= +
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 167 - 64, true, 167, true, (char)0xee67, true, "CBM M" ).Replacements.Add( "CBM-M" );   // C= M
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 170 - 64, true, 170, true, (char)0xee67, true, "CBM M" ).Replacements.Add( "CBM-M" );   // C= M
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 168 - 64, true, 168, true, (char)0xee68, true, "CBM £" ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 169 - 64, true, 169, true, (char)0xee69, true, "SHIFT £" ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 170 - 64, true, 170, true, (char)0xee6a, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= N
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 167 - 64, true, 167, true, (char)0xee6a, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= N
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 171 - 64, true, 171, true, (char)0xee6b, true, "CBM Q" ).Replacements.Add( "CBM-Q" );   // C= Q
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 172 - 64, true, 172, true, (char)0xee6c, true, "CBM D" ).Replacements.Add( "CBM-D" );   // C= D
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 173 - 64, true, 173, true, (char)0xee6d, true, "CBM Z" ).Replacements.Add( "CBM-Z" );   // C= Y
@@ -1241,7 +1241,7 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 228 - 128, true, 228, true, (char)0xee64, true, "CBM @" ).Replacements.Add( "CBM-@" );   // C= @
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 229 - 128, true, 229, true, (char)0xee65, true, "CBM G" ).Replacements.Add( "CBM-G" );   // C= G
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 230 - 128, true, 230, true, (char)0xee66, true, "CBM +" ).Replacements.Add( "CBM-+" );   // C= +
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 231 - 128, true, 231, true, (char)0xee67, true, "CBM M" ).Replacements.Add( "CBM-M" );   // C= N
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 231 - 128, true, 234, true, (char)0xee67, true, "CBM M" ).Replacements.Add( "CBM-M" );   // C= N
 
       //AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 232 - 128, true, 232, true, (char)0xee68, true, "CBM £" ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
       //AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 233 - 128, true, 233, true, (char)0xee69, true, "SHIFT £" ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
@@ -1250,7 +1250,7 @@ namespace RetroDevStudio
       //AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 233 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );   // Shift Insert 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_INST_DEL, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 212, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );  // C= Insert 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_INST_DEL, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 212, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );   // Shift Insert 
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 234 - 128, true, 234, true, (char)0xee6a, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= M
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 234 - 128, true, 231, true, (char)0xee6a, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= M
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 235 - 128, true, 235, true, (char)0xee6b, true, "CBM Q" ).Replacements.Add( "CBM-Q" );   // C= Q
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 236 - 128, true, 236, true, (char)0xee6c, true, "CBM D" ).Replacements.Add( "CBM-D" );   // C= D
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 237 - 128, true, 237, true, (char)0xee6d, true, "CBM Z" ).Replacements.Add( "CBM-Z" );   // C= Y

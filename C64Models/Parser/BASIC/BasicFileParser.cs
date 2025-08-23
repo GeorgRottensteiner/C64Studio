@@ -341,7 +341,7 @@ namespace RetroDevStudio.Parser.BASIC
 
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-£}", 169 );
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-£}", 168 );
-      AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-*}", 127 );
+      AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-*}", 127 + 96 );
 
       AddActionToken( TokenValue.BLACK, "{black}", 144 );
       AddActionToken( TokenValue.BLACK, "{blk}", 144 );
@@ -551,6 +551,59 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
+    public void ParseAndAddPreDefines( string PreDefines )
+    {
+      string[]    makros = PreDefines.Split( '\n' );
+
+      foreach ( string makro in makros )
+      {
+        string singleMakro = makro.Trim();
+
+        var parts = singleMakro.Split( '=' );
+        if ( parts.Length == 1 )
+        {
+          m_ASMFileInfo.Labels.Add( parts[0].Trim(), new SymbolInfo()
+          {
+            Name             = parts[0].Trim(),
+            Type             = SymbolInfo.Types.PREPROCESSOR_LABEL,
+            AddressOrValue   = 1,
+            DocumentFilename = "<commandline>",
+            FromDependency   = true,
+            LocalLineIndex   = -1,
+            LineIndex        = -1,
+            CharIndex       = makro.IndexOf( parts[0] ),
+            Length          = parts[0].Trim().Length,
+            String          = parts[0].Trim()
+          } );
+        }
+        else if ( parts.Length == 2 )
+        {
+          if ( long.TryParse( parts[1].Trim(), out long value ) )
+          {
+            m_ASMFileInfo.Labels.Add( parts[0].Trim(), new SymbolInfo()
+            {
+              Name = parts[0].Trim(),
+              Type = SymbolInfo.Types.PREPROCESSOR_CONSTANT_NUMBER,
+              AddressOrValue = value,
+              FromDependency = false,
+              LocalLineIndex = -1,
+              LineIndex = -1,
+              CharIndex = makro.IndexOf( parts[0] ),
+              Length    = parts[0].Trim().Length,
+              String    = parts[0].Trim()
+            } );
+          }
+        }
+        else
+        {
+          AddError( -1, Types.ErrorCode.E1009_INVALID_VALUE, $"Invalid predefine syntax for {makro}" );
+          continue;
+        } 
+      }
+    }
+
+
+
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines, out Types.ASM.FileInfo ASMFileInfo )
     {
       m_ASMFileInfo = new Types.ASM.FileInfo();
@@ -588,6 +641,15 @@ namespace RetroDevStudio.Parser.BASIC
 
       m_ASMFileInfo.Clear();
       IncludePreviousSymbols();
+
+      if ( !string.IsNullOrEmpty( AdditionalPredefines ) )
+      {
+        ParseAndAddPreDefines( AdditionalPredefines );
+      }
+      if ( Configuration != null )
+      {
+        ParseAndAddPreDefines( Configuration.Defines );
+      }
 
       var sourceInfo = new Types.ASM.SourceInfo();
       sourceInfo.Filename         = m_CompileConfig.InputFile;
@@ -1425,7 +1487,8 @@ namespace RetroDevStudio.Parser.BASIC
 
       int numCharsSkipped = TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
 
-      string collapsedText = CollapseTokens( Line, Settings.BASICDialect, !Settings.UseC64Font );
+      var textToPaste = BasicFileParser.ReplaceAllMacrosBySymbols( Line, _ParseContext.KeyboardMachineType, out bool hadError );
+      string collapsedText = CollapseTokens( textToPaste, Settings.BASICDialect, !Settings.UseC64Font );
       if ( collapsedText.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
       //if ( tempData.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
       {
@@ -2027,8 +2090,13 @@ namespace RetroDevStudio.Parser.BASIC
             {
               // the macro was a pure number, replace with PETSCII char
               byte  petsciiValue = (byte)macroCount;
-              if ( ( petsciiValue >= 192 )
-              &&   ( petsciiValue <= 254 ) )
+              if ( ( petsciiValue >= 96 )
+              &&   ( petsciiValue <= 127 ) )
+              {
+                petsciiValue += 96;
+              }
+              else if ( ( petsciiValue >= 224 )
+              &&        ( petsciiValue <= 254 ) )
               {
                 petsciiValue -= 64;
               }
