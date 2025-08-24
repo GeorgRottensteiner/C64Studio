@@ -1344,6 +1344,10 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 254, true, 0, false, (char)0xeefe, true, "" );
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 255, true, 0, false, (char)0xeeff, true, "" );
 
+      // weird unused values
+      AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0, false, 143, true, (char)0xeeff, true, "" );
+      AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0, false, 128, true, (char)0xeeff, true, "" );
+
       // plus 4
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_FLASH, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0xc2, true, 0x82, true, (char)0xeec2, true, "FLASH ON" ).Replacements.Add( "FLASH ON" );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_FLASH, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 0xc4, true, 0x84, true, (char)0xeec4, true, "FLASH OFF" ).Replacements.Add( "FLASH OFF" );
@@ -1436,6 +1440,56 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_N, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x13, true, '<', true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_M, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x12, true, '>', true );
       AddKeyInfo( MachineType.ZX81, PhysicalKey.KEY_DOT, KeyModifier.SHIFT, KeyType.NORMAL, 0, false, 0x1a, true, ',', true );
+
+      // add duplicate PETSCII values
+      for ( char i = (char)192; i <= (char)223; ++i )
+      {
+        if ( ( !PETSCII.ContainsKey( i ) )
+        &&   ( PETSCII.ContainsKey( (char)( i + 96 - 192 ) ) ) )
+        {
+          ConstantData.PETSCII.Add( i, ConstantData.PETSCII[(char)( i + 96 - 192 )] );
+        }
+        if ( ( !PetSCIIToChar.ContainsKey( (byte)i ) )
+        &&   ( PetSCIIToChar.ContainsKey( (byte)( i + 96 - 192 ) ) ) )
+        {
+          PetSCIIToChar.Add( (byte)i, PetSCIIToChar[(byte)( i + 96 - 192 )] );
+        }
+        if ( ( !PetSCIIToChar.ContainsKey( (byte)( i + 96 - 192 ) ) )
+        &&   ( PetSCIIToChar.ContainsKey( (byte)( i ) ) ) )
+        {
+          PetSCIIToChar.Add( (byte)( i + 96 - 192 ), PetSCIIToChar[(byte)( i )] );
+        }
+      }
+      for ( char i = (char)224; i <= (char)254; ++i )
+      {
+        if ( ( !ConstantData.PETSCII.ContainsKey( i ) )
+        &&   ( ConstantData.PETSCII.ContainsKey( (char)( i + 160 - 224 ) ) ) )
+        {
+          ConstantData.PETSCII.Add( i, ConstantData.PETSCII[(char)( i + 160 - 224 )] );
+        }
+        if ( ( !PetSCIIToChar.ContainsKey( (byte)i ) )
+        &&   ( PetSCIIToChar.ContainsKey( (byte)( i + 160 - 224 ) ) ) )
+        {
+          PetSCIIToChar.Add( (byte)i, PetSCIIToChar[(byte)( i + 160 - 224 )] );
+        }
+      }
+      if ( ( !ConstantData.PETSCII.ContainsKey( (char)255 ) )
+      &&   ( ConstantData.PETSCII.ContainsKey( (char)126 ) ) )
+      {
+        ConstantData.PETSCII.Add( (char)255, ConstantData.PETSCII[(char)126] );
+      }
+      if ( ( !PetSCIIToChar.ContainsKey( (byte)255 ) )
+      &&   ( PetSCIIToChar.ContainsKey( (byte)126 ) ) )
+      {
+        PetSCIIToChar.Add( (byte)255, PetSCIIToChar[(byte)126] );
+      }
+      for ( int i = 0; i < 256; ++i )
+      {
+        if ( !PetSCIIToChar.ContainsKey( (byte)i ) )
+        {
+          Debug.Log( $"PetSCIIToChar missing {i}" );
+        }
+      }
     }
 
 
