@@ -1483,6 +1483,8 @@ namespace RetroDevStudio
       {
         PetSCIIToChar.Add( (byte)255, PetSCIIToChar[(byte)126] );
       }
+      // pseudo 0 entry
+      PetSCIIToChar.Add( (byte)0, new SingleKeyInfo( PhysicalKey.KEY_AT, 0, false, 0, false, ' ', false, "", "" ) ); 
       for ( int i = 0; i < 256; ++i )
       {
         if ( !PetSCIIToChar.ContainsKey( (byte)i ) )
@@ -1583,7 +1585,8 @@ namespace RetroDevStudio
           ScreenCodeToChar[ScreenCodeValue] = c64Char;
         }
       }
-      if ( HasPetSCII )
+      if ( ( HasPetSCII )
+      &&   ( machine == MachineType.C64 ) )
       {
         if ( !PetSCIIToChar.ContainsKey( PetSCIIValue ) )
         {
