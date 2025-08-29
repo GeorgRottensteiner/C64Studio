@@ -69,7 +69,6 @@
       // editCommitAuthor
       // 
       this.editCommitAuthor.Location = new System.Drawing.Point(221, 10);
-      this.editCommitAuthor.MaxLength = 2;
       this.editCommitAuthor.Name = "editCommitAuthor";
       this.editCommitAuthor.Size = new System.Drawing.Size(322, 20);
       this.editCommitAuthor.TabIndex = 21;
@@ -93,7 +92,7 @@
       this.label31.TabIndex = 20;
       this.label31.Text = "Committer Email:";
       // 
-      // PrefSourceControl
+      // DlgPrefSourceControl
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -103,7 +102,7 @@
       this.Controls.Add(this.label31);
       this.Controls.Add(this.editCommitAuthor);
       this.Controls.Add(this.label32);
-      this.Name = "PrefSourceControl";
+      this.Name = "DlgPrefSourceControl";
       this.Size = new System.Drawing.Size(577, 174);
       this.ResumeLayout(false);
       this.PerformLayout();
