@@ -373,7 +373,7 @@ namespace TestProject
 
                              jmp (JUMP_ADDRESS )";
 
-      var assembly = TestAssembleC64Studio( source, CompileTargetType.NONE, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      var assembly = TestAssembleC64Studio( source, CompileTargetType.NONE, null, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
 
       Assert.AreEqual( 1, Messages.Count );
       Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, asmFileInfo.Messages.Values[0].Type );

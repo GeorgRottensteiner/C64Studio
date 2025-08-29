@@ -763,6 +763,42 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPseudoOpWarningW0001()
+    {
+      string      source = @"* = $2000
+                          !fill 20
+                          * = $2002";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( 1, messages.Count );
+      Assert.AreEqual( "Segment starts inside another one, overwriting it", messages.Values.First().Message );
+      Assert.AreEqual( ErrorCode.W0001_SEGMENT_OVERLAP, messages.Values.First().Code );
+
+      Assert.AreEqual( "00200000000000000000000000000000000000000000", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestPseudoOpNoWarn()
+    {
+      string      source = @"* = $2000
+                          !fill 20
+                          * = $2002";
+
+      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+
+      Assert.AreEqual( 1, messages.Count );
+      Assert.AreEqual( "Segment starts inside another one, overwriting it", messages.Values.First().Message );
+      Assert.AreEqual( ErrorCode.W0001_SEGMENT_OVERLAP, messages.Values.First().Code );
+
+      Assert.AreEqual( "00200000000000000000000000000000000000000000", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPseudoOpMessageLabelArithmetic()
     {
       string      source = @"n1 = ""a""

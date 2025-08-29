@@ -11,7 +11,7 @@ namespace RetroDevStudio.Parser
   {
     private ParseLineResult PONoWarning( List<TokenInfo> TokenInfos, ref int lineIndex, ref string[] Lines )
     {
-      if ( ParseLineInParameters( TokenInfos, 1, TokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> lineParams ) )
+      if ( !ParseLineInParameters( TokenInfos, 1, TokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> lineParams ) )
       {
         return ParseLineResult.ERROR_ABORT;
       }

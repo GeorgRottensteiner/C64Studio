@@ -42,17 +42,20 @@ namespace TestProject
 
     public static GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages )
     {
-      return TestAssembleC64Studio( Source, CompileTargetType.PRG, out Messages, out RetroDevStudio.Types.ASM.FileInfo info );
+      return TestAssembleC64Studio( Source, CompileTargetType.PRG, null, out Messages, out RetroDevStudio.Types.ASM.FileInfo info );
     }
 
 
 
-    public static GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, CompileTargetType TargetType, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo Info )
+    public static GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, CompileTargetType TargetType, RetroDevStudio.Parser.CompileConfig config, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo Info )
     {
       RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
       parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      if ( config == null )
+      {
+        config = new RetroDevStudio.Parser.CompileConfig();
+      }
       config.OutputFile = "test.prg";
       config.TargetType = TargetType;
       config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
