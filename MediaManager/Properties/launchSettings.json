@@ -2,7 +2,7 @@
   "profiles": {
     "MediaManager": {
       "commandName": "Project",
-      "commandLineArgs": "-d64 \"Magic Math.d64\" -import \"magic math.prg\" -renameto \"mAgic math\"",
+      "commandLineArgs": "-d64 \"temp.d64\" -import \"magic math.prg\" -renameto \"MAGIC MATH\"",
       "workingDirectory": "D:\\projekte\\c64\\Mighty Math 64"
     }
   }

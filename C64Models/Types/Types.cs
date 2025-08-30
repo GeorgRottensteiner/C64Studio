@@ -1484,7 +1484,7 @@ namespace RetroDevStudio
         PetSCIIToChar.Add( (byte)255, PetSCIIToChar[(byte)126] );
       }
       // pseudo 0 entry
-      PetSCIIToChar.Add( (byte)0, new SingleKeyInfo( PhysicalKey.KEY_AT, 0, false, 0, false, ' ', false, "", "" ) ); 
+      PetSCIIToChar.Add( (byte)0, new SingleKeyInfo( PhysicalKey.KEY_AT, 0, false, 0, false, (char)0, false, "", "" ) ); 
       for ( int i = 0; i < 256; ++i )
       {
         if ( !PetSCIIToChar.ContainsKey( (byte)i ) )
