@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ImportCharsetInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MapperCommdore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MachineFileTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\BASIC\BasicFileParser.MetaData.BinaryDataPRINT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ErrorCode.cs" />
     <Compile Include="..\C64Models\Attributes\MachineTypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />

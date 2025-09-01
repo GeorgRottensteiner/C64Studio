@@ -2026,6 +2026,12 @@ namespace RetroDevStudio.Parser.BASIC
             hadError = true;
           }
           return true;
+        case "BINDATAPRINT":
+          if ( !MetaDataBinaryDataAsPRINT( LineIndex, MetaData, metaDataParams ) )
+          {
+            hadError = true;
+          }
+          return true;
         case "SPRITEDATA":
           if ( !MetaDataSpriteData( LineIndex, MetaData, metaDataParams ) )
           {
