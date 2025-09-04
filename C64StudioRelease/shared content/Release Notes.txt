@@ -17,6 +17,88 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+04.09.2025 - 8.2:         Add: BASIC #bindataprint statement
+                          Fix: MediaManager also borked spaces in filenames (using -renameto)
+                          Fix: Broken space inserted as 0 byte in PETSCII file names
+                          Fix: Git preferences, max length of author
+                          Fix: !nowarn not working (facepalm)
+                          Fix missing PETSCII mapping chars from last fix
+                          Fix: BASIC wrong values for PETSCII symbols (mostly shifted letters, but some others) when using macro mode Fix: BASIC line length check in macro mode Add: BASIC include predefined symbols from configuration
+                          Add jump to line option to context menu
+                          Fix issue #138 (renamed file in (real) folder would remove the folder part of the full filename Fix wrong order of relativizing file names in folders
+                          Fix: New Solution Wizard automatic re-enabling project repository checkbox
+                          Fix: Graphic Screen Import for IFF files Add: Graphic Screen Export option to truncate palette to a fixed color
+                          Add: Char Screen, add missing interleaved export
+                          Fix: inherited macro accessing wrong lines on relabeling
+                          Fix: Potential crash on inherited macros that were not complete
+                          Add: Assembler dependency/symbol inheritance now also working for macros
+                          Fix: The fix to swap CBM-N and CBM-M properly Fix: De-Lars-ed Renumber dialog
+                          Fix: Switched CBM-M and CBM-N character
+                          Fix: text label concattenation with different mappings (!pet)
+                          Add: Text Editors: Find Previous option
+                          Fix: ASM syntax highlighting of comments after an operator
+                          Fix: BASIC in lowercase mode, could insert $efxx chars for uppercase letters in string entry mode
+                          Fix: Graphic Screen Editor - Saving IFF, BODY Chunk size was wrong with compression Fix: Graphic Screen Editor - Allow arbitrary sized images (not only 8x8 etc.)
+                          Add: ASM allow full insertion of string labels for !text type POs
+                          Add/Fix: Rewrite of VICE binary monitor interface (should fix emulation skipping startup breakpoints) - seems to have issues with two breakpoints in close vicinity though Add: Export as IFF with compression for Mega65 compatibility
+                          Fix: GraphicScreenEditor -> Edit Palette working correctly again
+                          Add: Option to configure auto-save Add: Proper graphic screen support for 8bit images (IFF) plus optimized saving
+                          Fix issue #137, Fonts were set as embedded resource instead of Content/Copy Always.
+                          Fix: Tiny64 emulator/debugger updated to properly remove temporary breakpoints once hit plus clear the breakpoint triggered state once a breakpoint has been hit (otherwise you couldn't go forward from a breakpoint anymore) Fix: Syntax coloring updated to also affect the settings dialog
+                          Add: Toggle comment selection
+                          Fix: Syntax Coloring for assembler breaks with tabs (urgh)
+                          Fix: D81 file deletion wrote at wrong track/sector
+                          Add: Charset editor - Allow import onto selection/range Add: Charset editor - Restore default for selection
+                          Adjust size of BASIC text for import/export text boxes
+                          Fix the fixed fix that broke while applying the fix: (Find Next works again after being broken fixing the single char replace all)
+                          Fix: BASIC renumber for normal renumber was broken Fix: FastColoredTextBox after aborted text drag didn't remove highlight
+                          Add: Disassembler - Data Table List
+                          Add: BASIC option to only renumber actual line numbers
+                          Fix: (Finally) Nested loop debugging and byte count seems to work correctly now
+                          Fix: BASIC/ASM replacing single char issue Fix: Disabled DecentForms.Button allowing click Fix: BASIC Renumber wrong error when selection ends with comment
+                          WIP?: Assembler Syntax coloring replaced by parsing instead of regex
+                          WIP: Asm syntax coloring de-regexed
+                          Add: BASIC - > Collapsed token mode Fix: BASIC - > manual entry max length check done on collapsed tokens
+                          Fix: Resource Text issues with 4.8 (replaced with direct text placement) Add: Remove Duplicates feature in map editor/text screen editor (may still have some issues) Fix: Split BASIC and assembler warnings in
+                          WIP: Charset - Collapse duplicates
+                          Fix: Yet another macro dialog crash
+                          Fix: Preferences showing macro names without build info, crash without project
+                          Fix: File Manager: Export file as lower case (to match import) Fix: Potential crash in Navigate Back/Forward after document was closed Add: binary imports, option to auto-handle extension (.prg skips 2 bytes) WIP: Graphic screen editor - color selection/palette handling
+                          Fixing release shared folder
+                          Fix: BASIC, allow [,] as single char tokens Fix: Replace otf with ttf for ZX81 font, otf doesn't work in Windows 7
+                          Add: Option for very first and very last argument (WIP for argument rewrite)
+                          Fix: Renaming item in Solution Exploer also updates main caption
+                          Fix: Theming - Mismatched mouse over and scrollbar range on TreeView Add: BASIC dialect files for Data Becker Supergraphic 64
+                          Fix: Broken file saving, did not follow directory track/sector pointers properly! Add: Data Becker Supergraphic 64 BASIC dialect file
+                          Add: Custom Confirmation dialogs instead of messageboxes, on some occasions with cacheable reply Add: TASM .end statement
+                          Add: Issue #75, Charscreen editor, option to highlight used char in screen
+                          Add: Assembler PO !bin now allows an expression list instead of a single expression
+                          Add: Assembler, enhance PO !bin to allow modification expression
+                          Add: BASIC: Add ° as secondary PI replacement key
+                          Fix: Char Editor - Pasting ECM chars Refix: BASIC copy/Paste of lowercase letters in string literals
+                          Fix: CharEditor ECM mode, copy/paste and move to index issues
+                          Fix: More theming issues I've introduced by the previous fix
+                          Fix: Color theming not applied on opening files from solution explorer
+                          Fix: T64 format (export as hex, and open as BASIC)
+                          Fix: BASIC renumber, did not recognize end overlap if line was empty
+                          Fix: D81 file writing broken on second file (would mangle t/s pointers of first file)
+                          Fix: BASIC string entry mode, broke Undo (and maybe other accelerators)
+                          Fix: Character import of hires with >= 8 could result in custom color being set to %8
+                          Add: Preferences - Clearing Cached Data (search/replace history) Add: Mousewheel zoom for graphic screen editor
+                          Fix: Find/Replace, replace with autosuggest did not allow case variants
+                          Add: Graphic Screen editor, scrolling with middle button
+                          Fix: BASIC lowercase working again for real now
+                          Fix: BASIC -> broke compiling in lower case BASICs Fix: Debugger not always unmarking active debug line
+                          Add: Changing order of emulators changes order in combo directly
+                          Add: Assembler !fill with to range, add times argument
+                          Add: Assembler !repeat <num> statement
+                          Fix: BASIC Editor, lowercase messed up label mode. Ctrl-Tab working again
+                          Fix: Doc issue for !fill range Fix: BASIC editor, some ctrl commands outside of quote mode didn't work anymore (e.g. Ctrl Home, Ctrl End, etc.) Fix: Assembler: Issue with !zone without brackets inside inactive scope messed up the scope count
+                          Add: Only do warning W1004 if not in baselib file
+                          Add: Preferences -> Tools -> Macro insertion in parameter fields for tools
+                          Fix: Crash on Macro dialog double click if no edit control has been passed
+
+
 02.04.2025 - 8.1:         Fix: Crash in charset export as BASIC data Add: Make unused constant warning different to allow ignoring
                           Add: !Fill <from> to <to> option Fix: Assembler, showing unused label warning for LABEL = ..expressions
                           Fix: Assembler combined comments are cleared if after a line of actual code Add: New S-BASIC tokens FCALC, RFCALC, replaces RESET
