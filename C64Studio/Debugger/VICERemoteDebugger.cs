@@ -17,51 +17,6 @@ namespace RetroDevStudio
       V_3_0 = 2
     };
 
-    private enum BinaryMonitorCommand
-    {
-      MON_CMD_MEMORY_GET                = 0x01,
-      MON_CMD_MEMORY_SET                = 0x02,
-      MON_CMD_CHECKPOINT_GET            = 0x11,
-      MON_CMD_CHECKPOINT_SET            = 0x12,
-      MON_CMD_CHECKPOINT_DELETE         = 0x13,
-      MON_CMD_CHECKPOINT_LIST           = 0x14,
-      MON_CMD_CHECKPOINT_TOGGLE         = 0x15,
-      MON_CMD_CONDITION_SET             = 0x22,
-      MON_CMD_REGISTERS_GET             = 0x31,
-      MON_CMD_REGISTERS_SET             = 0x32,
-      MON_CMD_ADVANCE_INSTRUCTION       = 0x71,
-      MON_CMD_KEYBOARD_FEED             = 0x72,
-      MON_CMD_STEP_OUT                  = 0x73,
-      MON_CMD_PING                      = 0x81,
-      MON_CMD_BANKS_AVAILABLE           = 0x82,
-      MON_CMD_REGISTERS_AVAILABLE       = 0x83,
-      MON_CMD_EXIT                      = 0xaa,
-      MON_CMD_QUIT                      = 0xbb,
-      MON_CMD_RESET                     = 0xcc,
-      MON_CMD_AUTOSTART                 = 0xdd
-      
-    };
-
-    private enum BinaryMonitorCommandResponse
-    {
-      MON_RESPONSE_MEM_GET              = 0x01,
-      MON_RESPONSE_CHECKPOINT_INFO      = 0x11,
-      MON_RESPONSE_REGISTER_INFO        = 0x31,
-      MON_RESPONSE_JAM                  = 0x61,
-      MON_RESPONSE_STOPPED              = 0x62,
-      MON_RESPONSE_RESUMED              = 0x63,
-
-      // mirrored request types
-      MON_RESPONSE_CHECKPOINT_DELETE    = 0x13,
-      MON_RESPONSE_ADVANCE_INSTRUCTION  = 0x71,
-      MON_RESPONSE_STEP_OUT             = 0x73,
-      MON_RESPONSE_EXIT                 = 0xaa,
-      MON_RESPONSE_QUIT                 = 0xbb,
-      MON_RESPONSE_RESET                = 0xcc,
-      MON_RESPONSE_AUTOSTART            = 0xdd
-
-    };
-
     // these are for C64, don't know about others!
     private enum BinaryMonitorBankID
     {

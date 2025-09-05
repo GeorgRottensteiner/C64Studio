@@ -42,12 +42,15 @@ namespace RetroDevStudio.Controls
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.editTextOutput = new System.Windows.Forms.TextBox();
+      this.checkPad = new System.Windows.Forms.CheckBox();
+      this.editPadCount = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // checkInsertSpaces
       // 
       this.checkInsertSpaces.AutoSize = true;
-      this.checkInsertSpaces.Location = new System.Drawing.Point(3, 131);
+      this.checkInsertSpaces.Location = new System.Drawing.Point(3, 159);
       this.checkInsertSpaces.Name = "checkInsertSpaces";
       this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
       this.checkInsertSpaces.TabIndex = 34;
@@ -91,7 +94,7 @@ namespace RetroDevStudio.Controls
       // checkExportHex
       // 
       this.checkExportHex.AutoSize = true;
-      this.checkExportHex.Location = new System.Drawing.Point(3, 108);
+      this.checkExportHex.Location = new System.Drawing.Point(3, 136);
       this.checkExportHex.Name = "checkExportHex";
       this.checkExportHex.Size = new System.Drawing.Size(175, 17);
       this.checkExportHex.TabIndex = 33;
@@ -109,6 +112,7 @@ namespace RetroDevStudio.Controls
       this.checkWrapAtMaxChars.TabIndex = 29;
       this.checkWrapAtMaxChars.Text = "Wrap at";
       this.checkWrapAtMaxChars.UseVisualStyleBackColor = true;
+      this.checkWrapAtMaxChars.CheckedChanged += new System.EventHandler(this.checkWrapAtMaxChars_CheckedChanged);
       // 
       // checkExportToDataWrap
       // 
@@ -119,6 +123,7 @@ namespace RetroDevStudio.Controls
       this.checkExportToDataWrap.TabIndex = 31;
       this.checkExportToDataWrap.Text = "Wrap at";
       this.checkExportToDataWrap.UseVisualStyleBackColor = true;
+      this.checkExportToDataWrap.CheckedChanged += new System.EventHandler(this.checkExportToDataWrap_CheckedChanged_1);
       // 
       // editWrapCharCount
       // 
@@ -168,6 +173,35 @@ namespace RetroDevStudio.Controls
       this.editTextOutput.Size = new System.Drawing.Size(494, 381);
       this.editTextOutput.TabIndex = 39;
       // 
+      // checkPad
+      // 
+      this.checkPad.AutoSize = true;
+      this.checkPad.Location = new System.Drawing.Point(3, 110);
+      this.checkPad.Name = "checkPad";
+      this.checkPad.Size = new System.Drawing.Size(67, 17);
+      this.checkPad.TabIndex = 31;
+      this.checkPad.Text = "Pad with";
+      this.checkPad.UseVisualStyleBackColor = true;
+      this.checkPad.CheckedChanged += new System.EventHandler(this.checkPad_CheckedChanged);
+      // 
+      // editPadCount
+      // 
+      this.editPadCount.Enabled = false;
+      this.editPadCount.Location = new System.Drawing.Point(73, 108);
+      this.editPadCount.Name = "editPadCount";
+      this.editPadCount.Size = new System.Drawing.Size(73, 20);
+      this.editPadCount.TabIndex = 32;
+      this.editPadCount.Text = "3";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(152, 111);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(38, 13);
+      this.label5.TabIndex = 36;
+      this.label5.Text = "zeroes";
+      // 
       // ExportBinaryAsBASICData
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -180,10 +214,13 @@ namespace RetroDevStudio.Controls
       this.Controls.Add(this.label4);
       this.Controls.Add(this.checkExportHex);
       this.Controls.Add(this.checkWrapAtMaxChars);
+      this.Controls.Add(this.checkPad);
       this.Controls.Add(this.checkExportToDataWrap);
       this.Controls.Add(this.editWrapCharCount);
+      this.Controls.Add(this.editPadCount);
       this.Controls.Add(this.editWrapByteCount);
       this.Controls.Add(this.label1);
+      this.Controls.Add(this.label5);
       this.Controls.Add(this.label2);
       this.Name = "ExportBinaryAsBASICData";
       this.Size = new System.Drawing.Size(688, 387);
@@ -207,5 +244,8 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editTextOutput;
+    private System.Windows.Forms.CheckBox checkPad;
+    private System.Windows.Forms.TextBox editPadCount;
+    private System.Windows.Forms.Label label5;
   }
 }

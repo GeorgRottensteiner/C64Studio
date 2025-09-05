@@ -81,47 +81,48 @@ namespace RetroDevStudio.Controls
       bool asHex = checkExportHex.Checked;
       bool insertSpaces = checkInsertSpaces.Checked;
       int wrapCharCount = GetExportCharCount();
+      int padCount = -1;
 
       switch ( Info.Data )
       {
         case ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICData( Info.ScreenCharData + Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           break;
         case ExportCharsetScreenInfo.ExportData.CHAR_ONLY:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICData( Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_ONLY:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICData( Info.ScreenColorData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR:
           if ( asHex )
           {
-            sb.Append( Util.ToBASICHexData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICHexData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           else
           {
-            sb.Append( Util.ToBASICData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+            sb.Append( Util.ToBASICData( Info.ScreenColorData + Info.ScreenCharData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
           }
           break;
         default:

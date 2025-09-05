@@ -107,7 +107,7 @@ namespace RetroDevStudio.Parser.BASIC
         length = (int)subFile.Length - offset;
       }
 
-      string basicDatas = Util.ToBASICData( subFile.SubBuffer( offset, length ), startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength, false );
+      string basicDatas = Util.ToBASICData( subFile.SubBuffer( offset, length ), startLine, stepLine, 0, Settings.BASICDialect.SafeLineLength, false, -1 );
 
       string[]  newLines = basicDatas.Split( new string[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries );
 

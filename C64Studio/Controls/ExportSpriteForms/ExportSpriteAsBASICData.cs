@@ -86,11 +86,11 @@ namespace RetroDevStudio.Controls
 
       if ( asHex )
       {
-        sb.Append( Util.ToBASICHexData( Info.ExportData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+        sb.Append( Util.ToBASICHexData( Info.ExportData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, -1 ) );
       }
       else
       {
-        sb.Append( Util.ToBASICData( Info.ExportData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces ) );
+        sb.Append( Util.ToBASICData( Info.ExportData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, -1 ) );
       }
 
       EditOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize * 0.8f );

@@ -356,18 +356,18 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces, bool AsHex )
+    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces, bool AsHex, int padCount )
     {
       if ( AsHex )
       {
-        return ToBASICHexData( Data, StartLine, LineOffset, WrapByteCount, WrapCharCount, InsertSpaces );
+        return ToBASICHexData( Data, StartLine, LineOffset, WrapByteCount, WrapCharCount, InsertSpaces, padCount );
       }
-      return ToBASICData( Data, StartLine, LineOffset, WrapByteCount, WrapCharCount, InsertSpaces );
+      return ToBASICData( Data, StartLine, LineOffset, WrapByteCount, WrapCharCount, InsertSpaces, padCount );
     }
 
 
 
-    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces )
+    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces, int padCount )
     {
       StringBuilder   sb = new StringBuilder();
 
@@ -403,6 +403,11 @@ namespace RetroDevStudio
         bool    firstByte = true;
         int     numBytesInLine = 0;
         int     numByteValuesInLine = 0;
+        string  formatString = "D2";
+        if ( padCount > 0 )
+        {
+          formatString = $"D{padCount}";
+        }
 
         if ( WrapCharCount > 0 )
         {
@@ -417,7 +422,7 @@ namespace RetroDevStudio
           &&      ( numByteValuesInLine < WrapByteCount )
           &&      ( dataPos < Data.Length ) )
           {
-            int   numCharsToAdd = Data.ByteAt( dataPos ).ToString().Length;
+            int   numCharsToAdd = Data.ByteAt( dataPos ).ToString( formatString ).Length;
             if ( !firstByte )
             {
               ++numCharsToAdd;
@@ -432,7 +437,7 @@ namespace RetroDevStudio
               sb.Append( ',' );
             }
             firstByte = false;
-            sb.Append( Data.ByteAt( dataPos ) );
+            sb.Append( Data.ByteAt( dataPos ).ToString( formatString ) );
             ++dataPos;
             numBytesInLine += numCharsToAdd;
             ++numByteValuesInLine;
@@ -448,7 +453,7 @@ namespace RetroDevStudio
               sb.Append( ',' );
             }
             firstByte = false;
-            sb.Append( Data.ByteAt( dataPos ) );
+            sb.Append( Data.ByteAt( dataPos ).ToString( formatString ) );
             ++dataPos;
             ++numBytesInLine;
           }
@@ -462,7 +467,7 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, bool InsertSpaces )
+    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, bool InsertSpaces, int padCount )
     {
       StringBuilder   sb = new StringBuilder();
 
@@ -491,6 +496,11 @@ namespace RetroDevStudio
         }
 
         bool    firstByte = true;
+        string  formatString = "X2";
+        if ( padCount > 0 )
+        {
+          formatString = $"X{padCount}";
+        }
 
         while ( ( sb.Length - startLength < 76 )
         &&      ( dataPos < Data.Length ) )
@@ -500,7 +510,7 @@ namespace RetroDevStudio
             sb.Append( ',' );
           }
           firstByte = false;
-          sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
+          sb.Append( Data.ByteAt( dataPos ).ToString( formatString ) );
           ++dataPos;
         }
         sb.AppendLine();
@@ -512,12 +522,12 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces )
+    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount, bool InsertSpaces, int padCount )
     {
       if ( ( WrapByteCount < 1 )
       &&   ( WrapCharCount < 1 ) )
       {
-        return ToBASICHexData( Data, StartLine, LineOffset, InsertSpaces );
+        return ToBASICHexData( Data, StartLine, LineOffset, InsertSpaces, padCount );
       }
 
       StringBuilder   sb = new StringBuilder();
@@ -548,6 +558,11 @@ namespace RetroDevStudio
 
         bool    firstByte = true;
         int     numBytesInLine = 0;
+        string  formatString = "X2";
+        if ( padCount > 0 )
+        {
+          formatString = $"X{padCount}";
+        }
 
         if ( WrapCharCount > 0 )
         {
@@ -558,7 +573,10 @@ namespace RetroDevStudio
 
           // size of line number + DATA token
           numBytesInLine = StartLine.ToString().Length + 1;
-          while ( ( numBytesInLine + 3 <= WrapCharCount )
+
+          string nextValue = Data.ByteAt( dataPos ).ToString( formatString );
+
+          while ( ( numBytesInLine + nextValue.Length <= WrapCharCount )
           &&      ( dataPos < Data.Length ) )
           {
             if ( !firstByte )
@@ -567,9 +585,9 @@ namespace RetroDevStudio
               ++numBytesInLine;
             }
             firstByte = false;
-            sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
+            sb.Append( nextValue );
             ++dataPos;
-            numBytesInLine += 2;
+            numBytesInLine += nextValue.Length;
           }
         }
         else
@@ -583,7 +601,7 @@ namespace RetroDevStudio
               sb.Append( ',' );
             }
             firstByte = false;
-            sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
+            sb.Append( Data.ByteAt( dataPos ).ToString( formatString ) );
             ++dataPos;
             ++numBytesInLine;
           }

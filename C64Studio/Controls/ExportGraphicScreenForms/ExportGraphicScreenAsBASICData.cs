@@ -207,7 +207,7 @@ namespace RetroDevStudio.Controls
           break;
       }
 
-      sb.AppendLine( Util.ToBASICData( exportedData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, asHex ) );
+      sb.AppendLine( Util.ToBASICData( exportedData, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, asHex, -1 ) );
 
       EditOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize * 0.8f );
       EditOutput.Text = sb.ToString();
