@@ -23,7 +23,7 @@ namespace RetroDevStudio.Documents
       try
       {
 #if DEBUG
-        string    helpDocPath = @"..\..\..\..\Doc\main.html";
+        string    helpDocPath = @"..\..\..\..\C64StudioRelease\shared content\Doc\main.html";
 #else
         string    helpDocPath = @"Doc\main.html";
 #endif
