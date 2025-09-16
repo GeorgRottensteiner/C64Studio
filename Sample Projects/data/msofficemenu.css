@@ -1,0 +1,87 @@
+body
+{
+  background: #d0d0d0;
+}
+
+#mybody
+{
+  background: #d0d0d0;
+  color: #000000;
+  font-family:  Verdana;
+  font-size: 70%;
+  font-style: normal;
+  font-weight: normal;
+  margin-top: 0;
+  margin-bottom:  0;
+  margin-left:  0;
+  margin-right: 0;
+  width:  100%;
+}
+
+#code
+{
+  background: #E7DFBE;
+  white-space: pre;
+  font-family: "Courier New";
+  margin: 0px;
+}
+
+  a:link    {color: #0000cc;}
+  a:active  {color: #0000cc;}
+  a:visited {color: #990099;}
+
+
+table {font-family: Verdana; }
+th    {text-align: left; background: #bbbbbb; vertical-align: bottom;}
+tr    {vertical-align: top;}
+td    {vertical-align: top; background: #e0e0e0; }
+
+
+H1     {font: sans-serif Verdana; font-size: 46%; }
+H2     {font: sans-serif Verdana; font-size: 75%; background: #FFF3A5; }
+H3     {font: sans-serif Verdana; font-size: 125%; font-weight: bold; }
+
+
+ul, #myUL {
+list-style-type: none;
+padding-inline-start: 20px;
+margin-left:10px;
+}
+
+#myUL {
+margin: 0;
+padding: 0;
+}
+
+.caret {
+cursor: pointer;
+-webkit-user-select: none; /* Safari 3.1+ */
+-moz-user-select: none; /* Firefox 2+ */
+-ms-user-select: none; /* IE 10+ */
+user-select: none;
+}
+
+.caret::before {
+content: "\25B6";
+color: black;
+display: inline-block;
+margin-right: 6px;
+}
+
+.caret-down::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari */
+  transform: rotate(90deg);
+}
+
+.nested {
+display: none;
+}
+
+.active {
+display: block;
+}

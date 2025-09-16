@@ -814,7 +814,7 @@ namespace RetroDevStudio.Parser
                                                                       i * paddedLength );
               if ( addColor )
               {
-                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+                spriteData.SetU8At( i * paddedLength + singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
               }
             }
           }
@@ -833,7 +833,7 @@ namespace RetroDevStudio.Parser
                                                                       i * paddedLength );
               if ( addColor )
               {
-                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+                spriteData.SetU8At( i * paddedLength + singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
               }
             }
           }

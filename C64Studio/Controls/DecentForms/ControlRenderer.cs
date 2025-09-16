@@ -1145,6 +1145,58 @@ namespace DecentForms
 
 
 
+    public void RenderGridList()
+    {
+      var gridList = (GridList)_Control;
+
+      FillRectangle( 0, 0, _Control.ClientSize.Width, _Control.ClientSize.Height, ColorControlActiveBackground );
+
+      _G.Clip = new Region( new Rectangle( 0, 0, _Control.ActualWorkWidth, _Control.ActualWorkHeight ) );
+
+      int   firstItem = gridList.FirstVisibleItemIndex;
+
+      for ( int i = 0; i <= gridList.VisibleItemCount; ++i )
+      {
+        int   realIndex = firstItem + i;
+        if ( realIndex >= gridList.Items.Count )
+        {
+          break;
+        }
+
+        gridList.RenderItem( this, gridList.Items[realIndex] );
+      }
+    }
+
+
+
+    internal void RenderGridListItem( GridList.GridListItem item )
+    {
+      var gridList = (GridList)_Control;
+
+      int realIndex = item.Index;
+      var rect = gridList.GetItemRect( realIndex );
+      
+
+      if ( realIndex == gridList.SelectedIndex )
+      {
+        FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
+
+        DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
+        DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
+      }
+      else if ( realIndex == gridList.MouseOverItem )
+      {
+        FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
+        DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+      }
+      else
+      {
+        DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+      }
+    }
+
+
+
     /*
     internal void RenderGroupBox( string Text )
     {

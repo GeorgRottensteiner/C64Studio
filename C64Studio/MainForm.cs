@@ -49,6 +49,7 @@ namespace RetroDevStudio
     public ValueTableEditor       m_ValueTableEditor = null;
     public PaletteEditor          m_PaletteEditor = null;
     public Documents.Help         m_Help = null;
+    public Documents.SampleExplorer   m_SampleExplorer = null;
     public FormFindReplace        m_FindReplace = null;
     public FormFilesChanged       m_FilesChanged = null;
 
@@ -8113,6 +8114,18 @@ namespace RetroDevStudio
     private void mainToolToggleSelection_Click( object sender, EventArgs e )
     {
       ApplyFunction( RetroDevStudio.Types.Function.TOGGLE_SELECTION );
+    }
+
+
+
+    private void sampleExplorerToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_SampleExplorer == null )
+      {
+        m_SampleExplorer = new SampleExplorer( StudioCore );
+      }
+      m_SampleExplorer.ShowHint = DockState.Document;
+      m_SampleExplorer.Show( panelMain );
     }
 
 

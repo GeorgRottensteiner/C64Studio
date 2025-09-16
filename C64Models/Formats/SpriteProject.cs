@@ -443,6 +443,10 @@ namespace RetroDevStudio.Formats
       for ( int i = 0; i < numSprites; ++i )
       {
         Sprites[i].Tile.CustomColor = (byte)memIn.ReadInt32();
+        if ( Sprites[i].Tile.CustomColor == 255 )
+        {
+          Sprites[i].Tile.CustomColor = 1;
+        }
       }
       for ( int i = 0; i < numSprites; ++i )
       {

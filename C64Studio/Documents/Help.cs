@@ -23,9 +23,9 @@ namespace RetroDevStudio.Documents
       try
       {
 #if DEBUG
-        string    helpDocPath = @"..\..\..\..\C64StudioRelease\shared content\Doc\main.html";
+        string    helpDocPath = @"../../../../C64StudioRelease/shared content/Doc/main.html";
 #else
-        string    helpDocPath = @"Doc\main.html";
+        string    helpDocPath = @"Doc/main.html";
 #endif
         string    fullPath = GR.Path.Append( GR.Path.GetDirectoryName( Application.ExecutablePath ), helpDocPath );
 
@@ -79,7 +79,7 @@ namespace RetroDevStudio.Documents
     {
       webBrowser.Zoom( Core.Settings.HelpZoomFactor );
 #if DEBUG
-      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/main.html" ) );
+      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../C64StudioRelease/shared content/Doc/main.html" ) );
 #else
       webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/main.html" ) );
 #endif
@@ -91,7 +91,7 @@ namespace RetroDevStudio.Documents
     {
       webBrowser.Zoom( Core.Settings.HelpZoomFactor );
 #if DEBUG
-      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/" + URL ) );
+      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../C64StudioRelease/shared content/Doc/" + URL ) );
 #else
       webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/" + URL ) );
 #endif

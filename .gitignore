@@ -328,3 +328,6 @@
 /Sample Projects/MacroTest/includesymbol.prg
 /Sample Projects/MacroTest/basic to d64.prg
 /Sample Projects/MacroTest/basicmetabinprint.prg
+/Sample Projects/Multi Project with dependencies/level1/level1.prg
+/Sample Projects/Multi Project with dependencies/level2/level2.prg
+/Sample Projects/Multi Project with dependencies/Main/main.prg

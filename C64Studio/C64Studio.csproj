@@ -63,6 +63,21 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\DecentForms\GridList\GridList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DecentForms\GridList\GridList.GridListItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DecentForms\GridList\GridList.GridListItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DecentForms\GridList\GridList.GridListItemIndexCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DecentForms\GridList\GridList.GridListSelectedItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxSelectedItemCollection.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -427,6 +442,9 @@
     <Compile Update="Documents\Bookmarks.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Documents\SampleExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Documents\PaletteEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -578,6 +596,9 @@
     <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Documents\SampleExplorer.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Documents\ReadOnlyFile.resx">
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
