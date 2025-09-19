@@ -2313,6 +2313,13 @@ namespace RetroDevStudio.Parser.BASIC
           return ConstantData.LowerCaseCharTo64Char[Character].HasNative;
         }
       }
+      if ( ( !UpperCaseMode )
+      &&   ( Character >= 0xef00 )
+      &&   ( Character <= 0xefff ) )
+      {
+        // PETSCII in true type has 0x100 offset for lowercase
+        Character = (char)( Character - 0x0100 );
+      }
       if ( ( !ConstantData.CharToC64Char.ContainsKey( Character ) )
       ||   ( !ConstantData.CharToC64Char[Character].HasNative ) )
       {
