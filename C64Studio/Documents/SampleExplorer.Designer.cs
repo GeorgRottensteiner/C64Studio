@@ -64,6 +64,7 @@
       // gridSamples
       // 
       this.gridSamples.BorderStyle = DecentForms.BorderStyle.SUNKEN;
+      this.gridSamples.CustomMouseHandling = true;
       this.gridSamples.Dock = System.Windows.Forms.DockStyle.Fill;
       this.gridSamples.ItemHeight = 200;
       this.gridSamples.ItemWidth = 320;
@@ -76,6 +77,8 @@
       this.gridSamples.Size = new System.Drawing.Size(896, 679);
       this.gridSamples.TabIndex = 2;
       this.gridSamples.Text = "gridList1";
+      this.gridSamples.DrawItem += new DecentForms.GridList.DrawGridListItemEventHandler(this.gridSamples_DrawItem);
+      this.gridSamples.CustomEventHandler += new DecentForms.GridList.ForwardedEventHandler(this.gridSamples_CustomEventHandler);
       // 
       // SampleExplorer
       // 
@@ -85,6 +88,7 @@
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "SampleExplorer";
       this.Text = "Sample Explorer";
+      this.Load += new System.EventHandler(this.SampleExplorer_Load);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       this.toolStripNavigation.ResumeLayout(false);
       this.toolStripNavigation.PerformLayout();

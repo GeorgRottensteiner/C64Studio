@@ -22,6 +22,10 @@ namespace DecentForms
 
     private int             _DisplayOffsetX = 0;
     private int             _DisplayOffsetY = 0;
+    private int             _SubAreaDisplayOffsetX = 0;
+    private int             _SubAreaDisplayOffsetY = 0;
+    private Rectangle       _OriginalBounds = Rectangle.Empty; 
+
 
     private static Dictionary<System.Drawing.Image,System.Drawing.Image>    _GrayscaledImageCache = new Dictionary<System.Drawing.Image, System.Drawing.Image>();
 
@@ -115,6 +119,7 @@ namespace DecentForms
 
       _DisplayOffsetX = Control.DisplayOffsetX;
       _DisplayOffsetY = Control.DisplayOffsetY;
+      _OriginalBounds = new Rectangle( (int)_G.ClipBounds.X, (int)_G.ClipBounds.Y, (int)_G.ClipBounds.Width, (int)_G.ClipBounds.Height );
     }
 
 
@@ -278,6 +283,13 @@ namespace DecentForms
 
 
 
+    public void DrawRectangle( Rectangle bounds, uint BaseColor )
+    {
+      DrawRectangle( bounds.Left, bounds.Top, bounds.Width, bounds.Height, BaseColor );
+    }
+
+
+
     public void DrawRectangle( int X, int Y, int Width, int Height, uint BaseColor )
     {
       var   borderPen       = ColoredPen( BaseColor );
@@ -286,6 +298,13 @@ namespace DecentForms
       Y -= _DisplayOffsetY;
 
       _G.DrawRectangle( borderPen, X, Y, Width - 1, Height - 1 );
+    }
+
+
+
+    public void FillRectangle( Rectangle bounds, uint BaseColor )
+    {
+      FillRectangle( bounds.Left, bounds.Top, bounds.Width, bounds.Height, BaseColor );
     }
 
 
@@ -414,12 +433,12 @@ namespace DecentForms
 
     public void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, Button.ButtonStyle Style )
     {
-      RenderButton( MouseOver, Pushed, IsDefault, Style, new Rectangle( 0, 0, _Control.Width, _Control.Height ) );
+      RenderButton( MouseOver, Pushed, IsDefault, _Control.Focused, Style, new Rectangle( 0, 0, _Control.Width, _Control.Height ), _Control.Text );
     }
 
 
 
-    internal void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, Button.ButtonStyle Style, Rectangle Rect )
+    internal void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, bool focused, Button.ButtonStyle Style, Rectangle Rect, string text )
     {
       Rect.Offset( -_DisplayOffsetX, -_DisplayOffsetY );
 
@@ -459,7 +478,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect );
             }
-            DrawDisabledText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
+            DrawDisabledText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
           }
           else if ( Pushed )
           {
@@ -468,7 +487,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect, 0, 1 );
             }
-            DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED, 0, 1 );
+            DrawText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED, 0, 1 );
           }
           else if ( MouseOver )
           {
@@ -478,7 +497,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect );
             }
-            DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
+            DrawText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
           }
           else
           {
@@ -487,7 +506,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect );
             }
-            DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
+            DrawText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
           }
           if ( IsDefault )
           {
@@ -503,7 +522,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect );
             }
-            DrawDisabledText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
+            DrawDisabledText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
           }
           else if ( Pushed )
           {
@@ -513,7 +532,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect, 0, 1 );
             }
-            DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED, 0, 1 );
+            DrawText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED, 0, 1 );
           }
           else if ( MouseOver )
           {
@@ -523,7 +542,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect );
             }
-            DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
+            DrawText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
           }
           else
           {
@@ -533,7 +552,7 @@ namespace DecentForms
             {
               DrawImageCentered( imageToDraw, Rect );
             }
-            DrawText( _Control.Text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
+            DrawText( text, Rect.Left, Rect.Top, Rect.Width, Rect.Height, TextAlignment.CENTERED );
           }
           if ( IsDefault )
           {
@@ -542,7 +561,7 @@ namespace DecentForms
           break;
       }
 
-      if ( _Control.Focused )
+      if ( focused )
       {
         DrawFocusRect( Rect.Left + 3, Rect.Top + 3, Rect.Width - 6, Rect.Height - 6, ColorControlText );
       }
@@ -707,6 +726,11 @@ namespace DecentForms
 
     public void DrawImage( System.Drawing.Image Image, int X, int Y, int Width, int Height )
     {
+      if ( Image == null )
+      {
+        DrawRectangle( X, Y, Width, Height, 0xffff00ff );
+        return;
+      }
       _G.DrawImage( Image, X - _DisplayOffsetX, Y - _DisplayOffsetY, Width, Height );
     }
 
@@ -1163,36 +1187,66 @@ namespace DecentForms
           break;
         }
 
-        gridList.RenderItem( this, gridList.Items[realIndex] );
+        gridList.RenderItem( this, gridList.Items[realIndex], gridList.GetItemRect( realIndex ) );
       }
     }
 
 
 
-    internal void RenderGridListItem( GridList.GridListItem item )
+    internal void RenderGridListItem( GridList.GridListItem item, Rectangle bounds )
     {
       var gridList = (GridList)_Control;
 
       int realIndex = item.Index;
-      var rect = gridList.GetItemRect( realIndex );
-      
 
       if ( realIndex == gridList.SelectedIndex )
       {
-        FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
+        FillRectangle( bounds.Left, bounds.Top, bounds.Width, bounds.Height, ColorControlBackgroundSelected );
 
-        DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
-        DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
+        DrawText( item.Text, bounds.Left, bounds.Top, bounds.Width, bounds.Height, TextAlignment.LEFT, ColorControlTextSelected );
+        DrawFocusRect( bounds.Left, bounds.Top, bounds.Width, bounds.Height, ColorControlText );
       }
       else if ( realIndex == gridList.MouseOverItem )
       {
-        FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
-        DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
+        FillRectangle( bounds.Left, bounds.Top, bounds.Width, bounds.Height, ColorControlBackgroundMouseOver );
+        DrawText( item.Text, bounds.Left, bounds.Top, bounds.Width, bounds.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
       }
       else
       {
-        DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
+        DrawText( item.Text, bounds.Left, bounds.Top, bounds.Width, bounds.Height, TextAlignment.LEFT );
       }
+    }
+
+
+
+    public void SetClip( int x, int y, int width, int height, int offsetX = 0, int offsetY = 0 )
+    {
+      // TODO - clip against control bounds
+      _DisplayOffsetX = -offsetX - _SubAreaDisplayOffsetX;
+      _DisplayOffsetY = -offsetY - _SubAreaDisplayOffsetY;
+      _SubAreaDisplayOffsetX = -offsetX;
+      _SubAreaDisplayOffsetY = -offsetY;
+      _G.SetClip( new Rectangle( x + offsetX, y + offsetY, width, height ) );
+    }
+
+
+
+    public Rectangle GetClipRect()
+    {
+      var bounds = _G.ClipBounds;
+      return new Rectangle( (int)_G.ClipBounds.X - _DisplayOffsetX, (int)_G.ClipBounds.Y - _DisplayOffsetY, (int)_G.ClipBounds.Width, (int)_G.ClipBounds.Height );
+    }
+
+
+
+    internal void RestoreClip()
+    {
+      _DisplayOffsetX -= _SubAreaDisplayOffsetX;
+      _DisplayOffsetY -= _SubAreaDisplayOffsetY;
+      _SubAreaDisplayOffsetX = 0;
+      _SubAreaDisplayOffsetY = 0;
+
+      _G.SetClip( _OriginalBounds );
     }
 
 

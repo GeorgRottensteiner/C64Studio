@@ -26,8 +26,12 @@ namespace DecentForms
     public event EventHandler       SelectedIndexChanged;
 
     public delegate void DrawGridListItemEventHandler( DecentForms.ControlBase Sender, GridListItemEventArgs e );
+    public delegate void ForwardedEventHandler( DecentForms.ControlBase Sender, GridListItem item, DecentForms.ControlEvent e );
 
-    public event DrawGridListItemEventHandler     DrawItem;
+    public event DrawGridListItemEventHandler   DrawItem;
+
+    [Description( "Called when CustomMouseHandling is true and mouse/keyboard events occur" )]
+    public event ForwardedEventHandler          CustomEventHandler;
 
 
 
@@ -74,6 +78,9 @@ namespace DecentForms
 
     public int ItemWidth { get; set; } = 32;
     public int ItemHeight { get; set; } = 15;
+
+    [Description( "If set to true, mouse handling (hover, click) is not done by the control, but sent as events")]
+    public bool CustomMouseHandling { get; set; } = false;
 
     private int _itemsPerLine = 1;
 
@@ -512,9 +519,25 @@ namespace DecentForms
           Invalidate();
           break;
         case ControlEvent.EventType.MOUSE_ENTER:
+          _MouseOverItem = ItemIndexFromPosition( Event.MouseX, Event.MouseY );
+          if ( _MouseOverItem != -1 )
+          {
+            Invalidate( GetItemRect( _MouseOverItem ) );
+            if ( CustomMouseHandling )
+            {
+              CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+            }
+          }
           Invalidate();
           break;
         case ControlEvent.EventType.MOUSE_WHEEL:
+          if ( ( CustomMouseHandling )
+          &&   ( _MouseOverItem != -1 ) )
+          {
+            CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+            break;
+          }
+
           if ( ( _ScrollBarH.Visible )
           &&   ( _ScrollBarH.Bounds.Contains( Event.MouseX, Event.MouseY ) ) )
           {
@@ -540,12 +563,21 @@ namespace DecentForms
                 Invalidate( GetItemRect( _MouseOverItem ) );
               }
             }
-            
+            if ( ( CustomMouseHandling )
+            &&   ( _MouseOverItem != -1 ) )
+            {
+              CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+              break;
+            }
           }
           break;
         case ControlEvent.EventType.MOUSE_LEAVE:
           if ( _MouseOverItem != -1 )
           {
+            if ( CustomMouseHandling )
+            {
+              CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+            }
             Invalidate( GetItemRect( _MouseOverItem ) );
             _MouseOverItem = -1;
           }
@@ -557,11 +589,21 @@ namespace DecentForms
           {
             SelectedIndex = _MouseOverItem;
           }
+          if ( ( CustomMouseHandling )
+          &&   ( _MouseOverItem != -1 ) )
+          {
+            CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+          }
           Capture     = true;
           break;
         case ControlEvent.EventType.MOUSE_UP:
           Capture = false;
           Invalidate();
+          if ( ( CustomMouseHandling )
+          &&   ( _MouseOverItem != -1 ) )
+          {
+            CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+          }
           break;
         case ControlEvent.EventType.KEY_DOWN:
           if ( Event.Key == Keys.Down )
@@ -652,12 +694,20 @@ namespace DecentForms
               }
             }
           }
+
+          if ( ( CustomMouseHandling )
+          &&   ( SelectedIndex != -1 ) )
+          {
+            CustomEventHandler?.Invoke( this, Items[SelectedIndex], Event );
+          }
           break;
         case ControlEvent.EventType.KEY_UP:
           if ( Focused )
           {
-            if ( Event.Key == Keys.Space )
+            if ( ( CustomMouseHandling )
+            &&   ( SelectedIndex != -1 ) )
             {
+              CustomEventHandler?.Invoke( this, Items[SelectedIndex], Event );
             }
           }
           break;
@@ -694,15 +744,20 @@ namespace DecentForms
 
 
 
-    internal void RenderItem( ControlRenderer renderer, GridListItem item )
+    internal void RenderItem( ControlRenderer renderer, GridListItem item, Rectangle bounds )
     {
       if ( DrawItem != null )
       {
-        DrawItem( this, new GridListItemEventArgs( renderer, item ) );
+        renderer.SetClip( 0, 0, bounds.Width, bounds.Height, bounds.X, bounds.Y );
+        var localBounds = new Rectangle( 0, 0, bounds.Width, bounds.Height );
+
+        DrawItem( this, new GridListItemEventArgs( renderer, item, localBounds ) );
+
+        renderer.RestoreClip();
         return;
       }
 
-      renderer.RenderGridListItem( item );
+      renderer.RenderGridListItem( item, bounds );
     }
 
 
@@ -830,22 +885,27 @@ namespace DecentForms
 
   public class GridListItemEventArgs : EventArgs
   {
-    private readonly ControlRenderer        renderer;
+    private readonly ControlRenderer        _renderer;
 
-    private readonly GridList.GridListItem  item;
+    private readonly GridList.GridListItem  _item;
 
-
-
-    public GridList.GridListItem Item => item;
-
-    public ControlRenderer Renderer => renderer;
+    private readonly Rectangle              _bounds;
 
 
 
-    public GridListItemEventArgs( ControlRenderer Renderer, GridList.GridListItem Item )
+    public GridList.GridListItem Item => _item;
+
+    public ControlRenderer Renderer => _renderer;
+
+    public Rectangle Bounds => _bounds;
+
+
+
+    public GridListItemEventArgs( ControlRenderer Renderer, GridList.GridListItem Item, Rectangle bounds )
     {
-      renderer  = Renderer;
-      item      = Item;
+      _renderer = Renderer;
+      _item     = Item;
+      _bounds   = bounds;
     }
   }
 
