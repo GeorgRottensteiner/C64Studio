@@ -5,7 +5,7 @@ namespace RetroDevStudio.Types
   public class CompileTarget
   {
     // default
-    public CompileTargetType  Type  = CompileTargetType.PRG;
+    public CompileTargetType  Type  = CompileTargetType.NONE;
 
     // for tape/disk images (file name inside disk)
     public string             InternalFilename = "";

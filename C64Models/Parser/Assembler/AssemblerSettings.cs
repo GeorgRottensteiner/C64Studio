@@ -291,6 +291,8 @@ namespace RetroDevStudio.Parser
           PlainAssignmentOperators.AddRange( new string[] { "=" } );
           IncludeExpectsStringLiteral = true;
           StatementSeparatorChars.Add( ':' );
+          DefaultTarget.Type = Types.CompileTargetType.PRG;
+          DefaultTargetExtension = ".prg"; 
           break;
         case Types.AssemblerType.ACME:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
@@ -404,6 +406,8 @@ namespace RetroDevStudio.Parser
           IncludeExpectsStringLiteral = true;
           StatementSeparatorChars.Add( ':' );
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
+          DefaultTarget.Type = Types.CompileTargetType.PRG;
+          DefaultTargetExtension = ".prg";
           break;
         case Types.AssemblerType.DASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
@@ -708,6 +712,8 @@ namespace RetroDevStudio.Parser
           LabelsMustBeAtStartOfLine = true;
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
           GreaterOrLessBehaviourReversed = true;
+          DefaultTarget.Type = Types.CompileTargetType.PRG;
+          DefaultTargetExtension = ".prg";
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
@@ -751,6 +757,8 @@ namespace RetroDevStudio.Parser
           PlainAssignmentOperators.AddRange( new string[] { "=" } );
           CaseSensitive = false;
           IncludeExpectsStringLiteral = true;
+          DefaultTarget.Type = Types.CompileTargetType.PLAIN;
+          DefaultTargetExtension = ".bin";
           break;
         case Types.AssemblerType.CBMPRGSTUDIO:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
@@ -830,6 +838,8 @@ namespace RetroDevStudio.Parser
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;
+          DefaultTarget.Type = Types.CompileTargetType.PRG;
+          DefaultTargetExtension = ".prg";
           break;
         case Types.AssemblerType.KICKASSEMBLER:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";

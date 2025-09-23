@@ -11055,6 +11055,11 @@ namespace RetroDevStudio.Parser
       {
         m_CompileTarget.Type = Config.TargetType;
       }
+      // fall back to assembler type default
+      if ( m_CompileTarget.Type == CompileTargetType.NONE )
+      {
+        m_CompileTarget.Type = m_AssemblerSettings.DefaultTarget.Type;
+      }
 
       GR.Memory.ByteBuffer    result = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer    currentResultBlock = new GR.Memory.ByteBuffer();

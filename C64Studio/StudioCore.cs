@@ -114,6 +114,18 @@ namespace RetroDevStudio
       {
         compileTarget = Parser.CompileTarget.Type;
       }
+      if ( compileTarget == RetroDevStudio.Types.CompileTargetType.NONE )
+      {
+        //compileTarget = Parser.m_AssemblerSettings.DefaultTarget.Type;
+        Debug.Log( "hurz" );
+      }
+      /*
+      // override with default
+      if ( m_CompileConfig.TargetType == CompileTargetType.NONE )
+      {
+        m_CompileConfig.TargetType = ;
+      }
+      */
       return compileTarget;
     }
 
