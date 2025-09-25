@@ -17,6 +17,7 @@ namespace RetroDevStudio
     private GR.Collections.Map<string,ProjectConfig>         Configs = new GR.Collections.Map<string, ProjectConfig>();
     public ProjectConfig      CurrentConfig = null;
     public List<WatchEntry>   WatchEntries = new List<WatchEntry>();
+    public int                WatchEntryListOffset = 0;
     public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<RetroDevStudio.Types.Breakpoint>>();
 
 

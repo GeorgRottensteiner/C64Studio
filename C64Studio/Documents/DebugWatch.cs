@@ -698,10 +698,6 @@ namespace RetroDevStudio.Documents
       var oldItem = m_WatchEntries[index];
       m_WatchEntries[index] = m_WatchEntries[index - 1];
       m_WatchEntries[index - 1] = oldItem;
-      /*
-      m_WatchEntries.RemoveAt( index );
-      m_WatchEntries.Insert( index - 1, oldItem );
-      */
     }
 
 
@@ -733,9 +729,6 @@ namespace RetroDevStudio.Documents
 
       m_WatchEntries[index] = m_WatchEntries[index + 1];
       m_WatchEntries[index + 1] = oldItem;
-      /*
-      m_WatchEntries.RemoveAt( index );
-      m_WatchEntries.Insert( index + 1, oldItem );*/
     }
 
 
@@ -815,6 +808,33 @@ namespace RetroDevStudio.Documents
           Core.Settings.DialogSettings.StoreListViewColumns( "DebugWatch", listWatch );
           break;
       }
+    }
+
+
+
+    public void ApplyWatchEntries( Project project )
+    {
+      listWatch.BeginUpdate();
+      ClearAllWatchEntries();
+      foreach ( var watch in project.Settings.WatchEntries )
+      {
+        AddWatchEntry( watch, true );
+      }
+      listWatch.AutoScrollOffset = new System.Drawing.Point( listWatch.AutoScrollOffset.X, project.Settings.WatchEntryListOffset );
+      listWatch.EndUpdate();
+    }
+
+
+
+    public void ApplyWatches( List<WatchEntry> watchEntries )
+    {
+      listWatch.BeginUpdate();
+      ClearAllWatchEntries();
+      foreach ( var watch in watchEntries )
+      {
+        AddWatchEntry( watch, true );
+      }
+      listWatch.EndUpdate();
     }
 
 

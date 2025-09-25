@@ -1479,20 +1479,11 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.Debugger != null )
             {
               // projectless debugging, use watches from debugger
-              m_DebugWatch.ClearAllWatchEntries();
-              foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
-              {
-                m_DebugWatch.AddWatchEntry( watch, true );
-              }
+              m_DebugWatch.ApplyWatches( StudioCore.Debugging.Debugger.CurrentWatches() );
             }
             else if ( project != null )
             {
-              m_DebugWatch.ClearAllWatchEntries();
-              foreach ( var watch in project.Settings.WatchEntries )
-              {
-                m_DebugWatch.AddWatchEntry( watch, true );
-              }
-              StudioCore.Debugging.BreakPoints = project.Settings.BreakPoints;
+              m_DebugWatch.ApplyWatchEntries( project );
             }
             else if ( Event.Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
             {
