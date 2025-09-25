@@ -4114,6 +4114,12 @@ namespace RetroDevStudio.Parser.BASIC
         return false;
       }
 
+      var machineType = MachineType.C64;
+      if ( Settings.BASICDialect.MachineTypes.Count > 0 )
+      {
+        machineType = Settings.BASICDialect.MachineTypes[0];
+      }
+
       if ( !ExtractMachineSpecificData( fullFileData, nativeType, out var Data, out startAddress ) )
       {
         return false;
@@ -4136,7 +4142,7 @@ namespace RetroDevStudio.Parser.BASIC
       while ( dataPos < Data.Length )
       {
         // pointer to next line
-        var extractresult = ExtractLine( Data, ref dataPos, out var lineData, out int lineNumber );
+        var extractresult = ExtractLine( Data, ref dataPos, machineType, out var lineData, out int lineNumber );
         if ( extractresult == ExtractLineResult.ERROR )
         {
           return false;
@@ -4181,7 +4187,7 @@ namespace RetroDevStudio.Parser.BASIC
         {
           byte    byteValue = lineData.ByteAt( lineDataPos );
 
-          byteValue = MapNativeByteValueToChar( Settings.BASICDialect, byteValue );
+          byteValue = MapNativeByteValueToChar( machineType, Settings.BASICDialect, byteValue );
 
           if ( byteValue == 34 )
           {
@@ -4322,6 +4328,7 @@ namespace RetroDevStudio.Parser.BASIC
         case MachineType.ZX81:
           break;
       }
+      /*
       if ( ( _ParseContext.KeyboardMachineType == MachineType.C64 )
       ||   ( _ParseContext.KeyboardMachineType == MachineType.C128 )
       ||   ( _ParseContext.KeyboardMachineType == MachineType.CBM )
@@ -4348,7 +4355,7 @@ namespace RetroDevStudio.Parser.BASIC
         {
           byteValue = 126;
         }
-      }
+      }*/
       return ConstantData.AllPhysicalKeyInfos[_ParseContext.KeyboardMachineType].FirstOrDefault( k => k.NativeValue == byteValue );
     }
 
@@ -4425,23 +4432,44 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private byte MapNativeByteValueToChar( Dialect dialect, byte byteValue )
+    private byte MapNativeByteValueToChar( MachineType machineType, Dialect dialect, byte byteValue )
     {
+      switch ( machineType )
+      {
+        case MachineType.CBM:
+        case MachineType.C128:
+        case MachineType.C64:
+        case MachineType.COMMANDER_X16:
+        case MachineType.MEGA65:
+        case MachineType.PET:
+        case MachineType.PLUS4:
+        case MachineType.VIC20:
+          /*
+          if ( ( byteValue >= 192 )
+          &&   ( byteValue <= 223 ) )
+          {
+            return (byte)( byteValue - 192 + 96 );
+          }
+          else if ( ( byteValue >= 224 )
+          &&        ( byteValue <= 254 ) )
+          {
+            return (byte)( byteValue - 224 + 160 );
+          }
+          else if ( byteValue == 255 )
+          {
+            return 126;
+          }*/
+          break;
+      }
       return byteValue;
     }
 
 
 
-    private ExtractLineResult ExtractLine( ByteBuffer data, ref int dataPos, out ByteBuffer lineData, out int lineNumber )
+    private ExtractLineResult ExtractLine( ByteBuffer data, ref int dataPos, MachineType machineType, out ByteBuffer lineData, out int lineNumber )
     {
       lineData    = null;
       lineNumber  = -1;
-
-      var machineType = MachineType.C64;
-      if ( Settings.BASICDialect.MachineTypes.Count > 0 )
-      {
-        machineType = Settings.BASICDialect.MachineTypes[0];
-      }
 
       switch ( machineType )
       {
