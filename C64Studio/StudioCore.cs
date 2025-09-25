@@ -5,6 +5,7 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -139,11 +140,22 @@ namespace RetroDevStudio
       ||     ( string.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
       ||   ( Parser == null ) )
       {
+        var targetType = DetermineTargetType( Doc, Parser );
+
         // default to same name.prg and cbm
         string    targetExtension = "";
         if ( Parser != null )
         {
-          targetExtension = Parser.DefaultTargetExtension;
+          var attr = GR.EnumHelper.GetAttributeOfType<DefaultFileExtensionAttribute>( targetType );
+
+          if ( attr != null )
+          {
+            targetExtension = attr.Extension;
+          }
+          else
+          {
+            targetExtension = Parser.DefaultTargetExtension;
+          }
         }
         else if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
         {
