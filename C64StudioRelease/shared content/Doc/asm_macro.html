@@ -360,19 +360,29 @@
     <br />
   </div>
   <a name="for"></a>
-  <H2>!FOR &lt;Variable&gt; = &lt;Start Value Expression&gt; TO &lt;End Value Expression&gt; [STEP &lt;Step Value Expression&gt;]</H2>
+  <H2>!FOR &lt;Variable&gt; = &lt;Start Value Expression&gt; TO &lt;End Value Expression&gt; [STEP &lt;Step Value Expression&gt;]<br />
+  !FOR &lt;Variable&gt;, &lt;Start Value Expression&gt;, &lt;End Value Expression&gt; { }</H2>
   <div id="mybody">
-    This pseudo op starts a for loop. To end a for loop specify !END<br />
+    This pseudo op starts a for loop. To end a for loop specify either !END or {, depending on the used variant.<br />
     <Variable>
       can be global or local (local starts with a dot)<br />
       Start value, end value and step value are treated as expressions.<br />
       <br />
       <br />
+      <b>C64Studio style</b>
       <div id="code">
         <br />      !for ROW = 0 TO 24
         lda BACK_BUFFER + ROW * 40
         sta SCREEN_CHAR + ROW * 40
-        !end
+      !end
+      </div>
+      <br />
+      <b>ACME style</b>
+      <div id="code">
+        <br />      !for ROW, 0, 24 {
+        lda BACK_BUFFER + ROW * 40
+        sta SCREEN_CHAR + ROW * 40
+      }
       </div>
       <br />
       <br />

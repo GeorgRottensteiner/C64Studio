@@ -4056,6 +4056,16 @@ namespace RetroDevStudio.Parser
       {
         var    lastLoop = lastOpenedScope.Loop;
 
+        if ( ( lineTokenInfos.Last().Content == "}" ) != lastLoop.IsUsingBrackets )
+        {
+          AddError( lineIndex,
+                    RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR,
+                    "Mismatching scope end! Either use {, } or !for and !end, not both",
+                    lastLoop.EndValueTokens[0].StartPos,
+                    lastLoop.EndValueTokens.Last().EndPos + 1 - lastLoop.EndValueTokens[0].StartPos );
+          return ParseLineResult.ERROR_ABORT;
+        }
+
         // if inside macro definition do not evaluate now!
         if ( ( ScopeInsideMacroDefinition() )
         ||   ( !_ParseContext.IsScopingActive ) )
@@ -5534,8 +5544,6 @@ namespace RetroDevStudio.Parser
                   AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
-                OnScopeRemoved( lineIndex );
-                _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
                 var result = HandleScopeEnd( m_ASMFileInfo.Macros, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
@@ -9807,169 +9815,6 @@ namespace RetroDevStudio.Parser
     private void PORealPC( Types.ASM.LineInfo info )
     {
       info.PseudoPCOffset = -2;
-    }
-
-
-
-    private void POFor( string zoneName, ref int intermediateLineOffset, List<Types.TokenInfo> lineTokenInfos )
-    {
-      if ( ScopeInsideMacroDefinition() )
-      {
-        // ignore for loop if we are inside a macro definition!
-
-        // add dummy scope so !ends properly match
-        Types.LoopInfo loop = new Types.LoopInfo();
-
-        loop.LineIndex = _ParseContext.LineIndex;
-
-        Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
-
-        scope.Active      = true;
-        scope.Loop        = loop;
-        scope.StartIndex  = _ParseContext.LineIndex;
-        _ParseContext.Scopes.Add( scope );
-        return;
-      }
-      if ( lineTokenInfos.Count < 5 )
-      {
-        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>" );
-      }
-      else
-      {
-        if ( ( ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        &&     ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
-        ||   ( lineTokenInfos[2].Content != "=" ) )
-        {
-          AddError( _ParseContext.LineIndex,
-                    RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                    "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>",
-                    lineTokenInfos[1].StartPos,
-                    lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-        }
-        else
-        {
-          int     indexTo = FindTokenContent( lineTokenInfos, "to" );
-          int     indexStep = FindTokenContent( lineTokenInfos, "step" );
-          int     stepValue = 1;
-          bool    hadError = false;
-
-          if ( ( indexTo == -1 )
-          ||   ( indexTo < 3 ) )
-          {
-            AddError( _ParseContext.LineIndex,
-                      RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                      "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>",
-                      lineTokenInfos[1].StartPos,
-                      lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
-            hadError = true;
-          }
-          if ( indexStep != -1 )
-          {
-            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, indexStep + 1, lineTokenInfos.Count - indexStep - 1, out SymbolInfo stepValueSymbol ) )
-            {
-              AddError( _ParseContext.LineIndex,
-                        RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                        "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>",
-                        lineTokenInfos[indexStep + 1].StartPos,
-                        lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[indexStep + 1].StartPos );
-              hadError = true;
-            }
-            else
-            {
-              stepValue = stepValueSymbol.ToInt32();
-              if ( stepValue == 0 )
-              {
-                AddError( _ParseContext.LineIndex,
-                          RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                          "Value of step must not be zero",
-                          lineTokenInfos[indexStep + 1].StartPos,
-                          lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[indexStep + 1].StartPos );
-                hadError = true;
-              }
-            }
-          }
-          else
-          {
-            indexStep = lineTokenInfos.Count;
-          }
-
-          if ( !hadError )
-          {
-            var endValueTokens = lineTokenInfos.GetRange( indexTo + 1, indexStep - indexTo - 1 );
-            int startValue = 0;
-            int endValue = 0;
-            if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, 3, indexTo - 3, out SymbolInfo startValueSymbol ) )
-            {
-              AddError( _ParseContext.LineIndex,
-                        RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                        "Could not evaluate start value",
-                        lineTokenInfos[3].StartPos,
-                        lineTokenInfos[indexTo - 3].EndPos + 1 - lineTokenInfos[3].StartPos );
-              hadError = true;
-            }
-            else if ( !EvaluateTokens( _ParseContext.LineIndex, lineTokenInfos, indexTo + 1, indexStep - indexTo - 1, out SymbolInfo endValueSymbol ) )
-            {
-              AddError( _ParseContext.LineIndex,
-                        RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                        "Could not evaluate end value",
-                        lineTokenInfos[indexTo + 1].StartPos,
-                        lineTokenInfos[indexStep - indexTo - 1].EndPos + 1 - lineTokenInfos[indexTo + 1].StartPos );
-              hadError = true;
-            }
-            else
-            {
-              startValue = startValueSymbol.ToInt32();
-              endValue = endValueSymbol.ToInt32();
-              if ( ( stepValue < 0 )
-              &&   ( endValue >= startValue ) )
-              {
-                AddError( _ParseContext.LineIndex,
-                          RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                          "End value must be lower than start value with negative step",
-                          lineTokenInfos[indexTo + 1].StartPos,
-                          lineTokenInfos[indexStep - 1].EndPos + 1 - lineTokenInfos[indexTo + 1].StartPos );
-                hadError = true;
-              }
-              else if ( ( stepValue > 0 )
-              &&        ( endValue < startValue ) )
-              {
-                AddError( _ParseContext.LineIndex,
-                          RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
-                          "End value must be higher than start value with positive step",
-                          lineTokenInfos[indexTo + 1].StartPos,
-                          lineTokenInfos[indexStep - indexTo - 1].EndPos + 1 - lineTokenInfos[indexTo + 1].StartPos );
-                hadError = true;
-              }
-            }
-            if ( !hadError )
-            {
-              Types.LoopInfo loop = new Types.LoopInfo();
-
-              loop.Label                      = lineTokenInfos[1].Content;
-              loop.LineIndex                  = _ParseContext.LineIndex;
-              loop.StartValue                 = startValue;
-              loop.EndValue                   = endValue;
-              loop.StepValue                  = stepValue;
-              loop.CurrentValue               = startValue;
-              loop.EndValueTokens             = endValueTokens;
-              loop.EndValueTokensTextmapping  = _ParseContext.CurrentTextMapping;
-
-              //Debug.Log( $"Begin Loop for {loop.Label}" );
-
-              Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
-              // TODO - active depends on parent scopes
-              scope.Active      = true;
-              scope.Loop        = loop;
-              scope.StartIndex  = _ParseContext.LineIndex;
-              _ParseContext.Scopes.Add( scope );
-
-              AddTempLabel( loop.Label, _ParseContext.LineIndex + 1, -1, CreateIntegerSymbol( startValue ), "" ).IsForVariable = true;
-
-              intermediateLineOffset = 0;
-            }
-          }
-        }
-      }
     }
 
 

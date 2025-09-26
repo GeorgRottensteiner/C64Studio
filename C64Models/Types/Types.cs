@@ -651,6 +651,7 @@ namespace RetroDevStudio.Types
     public int                IterationCount = 1;
     public Map<byte,byte>     EndValueTokensTextmapping = null;
     public List<TokenInfo>    EndValueTokens = null;
+    public bool               IsUsingBrackets = false; // true if loop is defined as !FOR (...) {...} instead of !FOR .. !END
   };
 
 
