@@ -1357,6 +1357,29 @@ namespace RetroDevStudio.Documents
       }
       DetermineTokenAndTypeBelow( lineNumber, charPos, out List<TokenInfo> lineTokens, out TokenInfo tokenBelow, out TokenInfo.TokenType tokenTypeBelow );
 
+      if ( tokenTypeBelow == TokenInfo.TokenType.LITERAL_NUMBER )
+      {
+        if ( !Parser.ParseValue( -1, tokenBelow, out var tokenValueBelow ) )
+        {
+          m_ToolTip.Hide( editSource );
+          return;
+        }
+        var sb = new StringBuilder();
+        var value = tokenValueBelow.ToInteger();
+        sb.AppendLine( $"{value}" );
+        sb.AppendLine( $"${value:X}" );
+        sb.AppendLine( $"%{Convert.ToString( value, 2 )}" );
+
+        string toolTipText = sb.ToString();
+        if ( m_LastTooltipText != toolTipText )
+        {
+          m_LastTooltipText = toolTipText;
+          m_ToolTip.SetToolTip( editSource, toolTipText );
+        }
+        return;
+      }
+
+
       Types.ASM.FileInfo    debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( debugFileInfo == null )
       {
@@ -3930,99 +3953,23 @@ namespace RetroDevStudio.Documents
         return;
       }
 
-      int     firstLine = editSource.Selection.Start.iLine;
-      int     endLine = editSource.Selection.End.iLine;
+      HandleTextSelectionAction( ( token, value ) => ApplyDelta( token, value, formDelta.Delta, formDelta.InsertAsHex ) );
+    }
 
-      if ( firstLine > endLine )
+
+
+    private void ApplyDelta( TokenInfo token, long value, int delta, bool insertAsHex )
+    {
+      value += delta;
+
+      if ( insertAsHex )
       {
-        int   temp = firstLine;
-        firstLine = endLine;
-        endLine = temp;
+        token.Content = "$" + value.ToString( "X2" );
       }
-
-      if ( editSource.SelectionLength == 0 )
+      else
       {
-        firstLine = m_ContextMenuLineIndex;
-        endLine = firstLine;
+        token.Content = value.ToString();
       }
-
-
-      editSource.BeginAutoUndo();
-
-      for ( int lineIndex = firstLine; lineIndex <= endLine; ++lineIndex )
-      {
-        string    text = editSource.Lines[lineIndex];
-
-        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
-
-        int     firstLiteralTokenIndex = 1;
-
-        if ( ( tokens.Count > 0 )
-        &&   ( ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL )
-        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) ) )
-        {
-          firstLiteralTokenIndex = 2;
-        }
-
-        if ( ( tokens.Count > firstLiteralTokenIndex )
-        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
-        {
-          string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
-          if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
-          {
-            var pseudoOp = DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
-
-            if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.LOW_BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.HIGH_BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_PET )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_RAW )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_SCREEN ) )
-            {
-              // we only touch literal values!
-              for ( int i = firstLiteralTokenIndex; i < tokens.Count; ++i )
-              {
-                if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
-                &&   ( ( ( ( i >= firstLiteralTokenIndex )
-                &&         ( tokens[i - 1].Content == "," ) )
-                ||       ( i == firstLiteralTokenIndex ) ) )
-                ||     ( ( ( ( i + 1 < tokens.Count )
-                &&         ( tokens[i + 1].Content == "," ) )
-                ||       ( i + 1 == tokens.Count ) ) ) )
-                {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
-                  {
-                    int resultValue = resultValueSymbol.ToInt32();
-                    resultValue += formDelta.Delta;
-
-                    if ( formDelta.InsertAsHex )
-                    {
-                      tokens[i].Content = "$" + resultValue.ToString( "X2" );
-                    }
-                    else
-                    {
-                      tokens[i].Content = resultValue.ToString();
-                    }
-                  }
-                }
-              }
-              string    newLine = Parser.TokensToExpression( tokens );
-              if ( tokens[0].StartPos > 0 )
-              {
-                newLine = new string( ' ', tokens[0].StartPos ) + newLine;
-              }
-              editSource.SetLineText( lineIndex, newLine ); 
-            }
-          }
-        }
-      }
-      editSource.EndAutoUndo();
-
-      SetModified();
     }
 
 
@@ -4147,29 +4094,102 @@ namespace RetroDevStudio.Documents
 
     private void convertDecimalToHexToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      HandleTextSelectionAction( DecimalToHex );
+    }
+
+
+
+    private void DecimalToHex( TokenInfo token, long value )
+    {
+      token.Content = "$" + value.ToString( "X2" );
+    }
+
+
+
+    private void HandleTextSelectionAction( Action<TokenInfo,long> conversionFunction )
+    {
       int     firstLine = editSource.Selection.Start.iLine;
       int     endLine = editSource.Selection.End.iLine;
+      int     startChar = editSource.Selection.Start.iChar;
+      int     endChar = editSource.Selection.End.iChar;
 
       if ( firstLine > endLine )
       {
         int   temp = firstLine;
         firstLine = endLine;
         endLine = temp;
+        startChar = editSource.Selection.End.iChar;
+        endChar = editSource.Selection.Start.iChar;
+      }
+      else if ( firstLine == endLine )
+      {
+        if ( endChar < startChar )
+        {
+          int   temp = startChar;
+          startChar = endChar;
+          endChar = temp;
+        }
       }
 
+      // fall back, use full line
       if ( editSource.SelectionLength == 0 )
       {
         firstLine = m_ContextMenuLineIndex;
         endLine = firstLine;
+        startChar = 0;
+        endChar = editSource.Lines[firstLine].Length - 1;
       }
-
 
       editSource.BeginAutoUndo();
 
       for ( int lineIndex = firstLine; lineIndex <= endLine; ++lineIndex )
       {
         string    text = editSource.Lines[lineIndex];
+        string    selectedText = text;
+        string    prefix = "";
+        string    postfix = "";
 
+        if ( ( lineIndex == endLine )
+        &&   ( endChar != -1 )
+        &&   ( endChar < text.Length - 1 ) )
+        {
+          if ( endChar < text.Length )
+          {
+            postfix = text.Substring( endChar );
+          }
+          selectedText = text.Substring( 0, endChar );
+        }
+        if ( ( lineIndex == firstLine )
+        &&   ( startChar != -1 )
+        &&   ( startChar < selectedText.Length ) )
+        {
+          if ( startChar > 0 )
+          {
+            prefix = selectedText.Substring( 0, startChar );
+          }
+          selectedText = selectedText.Substring( startChar );
+        }
+
+        // a single value
+        var tokensSimple = Parser.ParseTokenInfo( selectedText, 0, selectedText.Length );
+        if ( ( tokensSimple.Count == 1 )
+        &&   ( tokensSimple[0].Type == TokenInfo.TokenType.LITERAL_NUMBER ) )
+        {
+          if ( Parser.EvaluateTokens( 0, tokensSimple, 0, 1, out SymbolInfo resultValueSymbol ) )
+          {
+            var resultValue = resultValueSymbol.ToInteger();
+
+            conversionFunction( tokensSimple[0], resultValue );
+
+            string    newLine = Parser.TokensToExpression( tokensSimple );
+
+            newLine = prefix + newLine + postfix;
+            editSource.SetLineText( lineIndex, newLine );
+          }
+          continue;
+        }
+
+        // go for !byte, etc. statements
         var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
 
         int     firstLiteralTokenIndex = 1;
@@ -4193,6 +4213,9 @@ namespace RetroDevStudio.Documents
 
             if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD_BE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.DWORD )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.DWORD_BE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.LOW_BYTE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.HIGH_BYTE )
             ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT )
@@ -4205,16 +4228,15 @@ namespace RetroDevStudio.Documents
               {
                 if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
                 &&   ( ( ( ( i >= firstLiteralTokenIndex )
-                &&         ( tokens[i - 1].Content == "," ) )
-                ||       ( i == firstLiteralTokenIndex ) ) )
-                ||     ( ( ( ( i + 1 < tokens.Count )
+                &&       ( tokens[i - 1].Content == "," ) )
+                ||     ( i == firstLiteralTokenIndex ) ) )
+                ||   ( ( ( ( i + 1 < tokens.Count )
                 &&         ( tokens[i + 1].Content == "," ) )
-                ||       ( i + 1 == tokens.Count ) ) ) )
+                ||         ( i + 1 == tokens.Count ) ) ) )
                 {
                   if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
                   {
-                    int resultValue = resultValueSymbol.ToInt32();
-                    tokens[i].Content = "$" + resultValue.ToString( "X2" );
+                    conversionFunction( tokens[i], resultValueSymbol.ToInteger() );
                   }
                 }
               }
@@ -4223,104 +4245,28 @@ namespace RetroDevStudio.Documents
               {
                 newLine = new string( ' ', tokens[0].StartPos ) + newLine;
               }
-              editSource.SetLineText( lineIndex, newLine ); 
+              editSource.SetLineText( lineIndex, newLine );
             }
           }
         }
       }
       editSource.EndAutoUndo();
 
-      SetModified();    
+      SetModified();
     }
 
 
 
     private void convertHexToDecimalToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      int     firstLine = editSource.Selection.Start.iLine;
-      int     endLine = editSource.Selection.End.iLine;
-
-      if ( firstLine > endLine )
-      {
-        int   temp = firstLine;
-        firstLine = endLine;
-        endLine = temp;
-      }
-
-      if ( editSource.SelectionLength == 0 )
-      {
-        firstLine = m_ContextMenuLineIndex;
-        endLine = firstLine;
-      }
+      HandleTextSelectionAction( HexToDecimal );
+    }
 
 
-      editSource.BeginAutoUndo();
 
-      for ( int lineIndex = firstLine; lineIndex <= endLine; ++lineIndex )
-      {
-        string    text = editSource.Lines[lineIndex];
-
-        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
-
-        int     firstLiteralTokenIndex = 1;
-
-        if ( ( tokens.Count > 0 )
-        &&   ( ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL )
-        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) ) )
-        {
-          firstLiteralTokenIndex = 2;
-        }
-
-        if ( ( tokens.Count > firstLiteralTokenIndex )
-        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
-        {
-          string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
-          if ( DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
-          {
-            var pseudoOp = DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
-
-            if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.LOW_BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.HIGH_BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_PET )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_RAW )
-            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_SCREEN ) )
-            {
-              // we only touch literal values!
-              for ( int i = firstLiteralTokenIndex; i < tokens.Count; ++i )
-              {
-                if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
-                &&   ( ( ( ( i >= firstLiteralTokenIndex )
-                &&         ( tokens[i - 1].Content == "," ) )
-                ||       ( i == firstLiteralTokenIndex ) ) )
-                ||     ( ( ( ( i + 1 < tokens.Count )
-                &&         ( tokens[i + 1].Content == "," ) )
-                ||       ( i + 1 == tokens.Count ) ) ) )
-                {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
-                  {
-                    int resultValue = resultValueSymbol.ToInt32();
-                    tokens[i].Content = resultValue.ToString();
-                  }
-                }
-              }
-              string    newLine = Parser.TokensToExpression( tokens );
-              if ( tokens[0].StartPos > 0 )
-              {
-                newLine = new string( ' ', tokens[0].StartPos ) + newLine;
-              }
-              editSource.SetLineText( lineIndex, newLine ); 
-            }
-          }
-        }
-      }
-      editSource.EndAutoUndo();
-
-      SetModified();    
+    private void HexToDecimal( TokenInfo token, long value )
+    {
+      token.Content = value.ToString();
     }
 
 

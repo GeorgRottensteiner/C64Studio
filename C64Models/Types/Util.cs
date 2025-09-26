@@ -403,7 +403,7 @@ namespace RetroDevStudio
         bool    firstByte = true;
         int     numBytesInLine = 0;
         int     numByteValuesInLine = 0;
-        string  formatString = "D2";
+        string  formatString = "D";
         if ( padCount > 0 )
         {
           formatString = $"D{padCount}";

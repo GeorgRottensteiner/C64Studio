@@ -60,6 +60,17 @@ namespace RetroDevStudio.Controls
 
 
 
+    private int GetExportPadCount()
+    {
+      if ( checkPad.Checked )
+      {
+        return GR.Convert.ToI32( editPadCount.Text );
+      }
+      return -1;
+    }
+
+
+
     public override bool HandleExport( ExportCharsetInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
       var   sb = new StringBuilder();
@@ -81,6 +92,7 @@ namespace RetroDevStudio.Controls
       bool asHex = checkExportHex.Checked;
       bool insertSpaces = checkInsertSpaces.Checked;
       int wrapCharCount = GetExportCharCount();
+      int padCount = GetExportPadCount();
 
       List<int>     exportIndices = Info.ExportIndices;
 
@@ -92,16 +104,23 @@ namespace RetroDevStudio.Controls
 
       if ( asHex )
       {
-        sb.Append( Util.ToBASICHexData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, -1 ) );
+        sb.Append( Util.ToBASICHexData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
       }
       else
       {
-        sb.Append( Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, -1 ) );
+        sb.Append( Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount, wrapCharCount, insertSpaces, padCount ) );
       }
 
       EditOutput.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.BASICSourceFontSize * 0.8f );
       EditOutput.Text = sb.ToString();
       return true;
+    }
+
+
+
+    private void checkPad_CheckedChanged( object sender, EventArgs e )
+    {
+      editPadCount.Enabled = checkPad.Checked;
     }
 
 

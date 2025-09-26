@@ -81,7 +81,7 @@ namespace RetroDevStudio.Controls
       bool asHex = checkExportHex.Checked;
       bool insertSpaces = checkInsertSpaces.Checked;
       int wrapCharCount = GetExportCharCount();
-      int padCount = -1;
+      int padCount = GetExportPadCount();
 
       switch ( Info.Data )
       {
@@ -139,6 +139,24 @@ namespace RetroDevStudio.Controls
     private void checkWrapAtMaxChars_CheckedChanged( object sender, EventArgs e )
     {
       editWrapCharCount.Enabled = checkWrapAtMaxChars.Checked;
+    }
+
+
+
+    private void checkPad_CheckedChanged( object sender, EventArgs e )
+    {
+      editPadCount.Enabled = checkPad.Checked;
+    }
+
+
+
+    private int GetExportPadCount()
+    {
+      if ( checkPad.Checked )
+      {
+        return GR.Convert.ToI32( editPadCount.Text );
+      }
+      return -1;
     }
 
 

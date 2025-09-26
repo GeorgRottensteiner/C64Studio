@@ -41,12 +41,15 @@ namespace RetroDevStudio.Controls
       this.editWrapCharCount = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.checkInsertSpaces = new System.Windows.Forms.CheckBox();
+      this.checkPad = new System.Windows.Forms.CheckBox();
+      this.editPadCount = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // checkExportHex
       // 
       this.checkExportHex.AutoSize = true;
-      this.checkExportHex.Location = new System.Drawing.Point(3, 107);
+      this.checkExportHex.Location = new System.Drawing.Point(3, 133);
       this.checkExportHex.Name = "checkExportHex";
       this.checkExportHex.Size = new System.Drawing.Size(141, 17);
       this.checkExportHex.TabIndex = 6;
@@ -149,17 +152,49 @@ namespace RetroDevStudio.Controls
       // checkInsertSpaces
       // 
       this.checkInsertSpaces.AutoSize = true;
-      this.checkInsertSpaces.Location = new System.Drawing.Point(3, 130);
+      this.checkInsertSpaces.Location = new System.Drawing.Point(3, 156);
       this.checkInsertSpaces.Name = "checkInsertSpaces";
       this.checkInsertSpaces.Size = new System.Drawing.Size(91, 17);
       this.checkInsertSpaces.TabIndex = 7;
       this.checkInsertSpaces.Text = "Insert Spaces";
       this.checkInsertSpaces.UseVisualStyleBackColor = true;
       // 
+      // checkPad
+      // 
+      this.checkPad.AutoSize = true;
+      this.checkPad.Location = new System.Drawing.Point(3, 107);
+      this.checkPad.Name = "checkPad";
+      this.checkPad.Size = new System.Drawing.Size(67, 17);
+      this.checkPad.TabIndex = 37;
+      this.checkPad.Text = "Pad with";
+      this.checkPad.UseVisualStyleBackColor = true;
+      this.checkPad.CheckedChanged += new System.EventHandler(this.checkPad_CheckedChanged);
+      // 
+      // editPadCount
+      // 
+      this.editPadCount.Enabled = false;
+      this.editPadCount.Location = new System.Drawing.Point(90, 107);
+      this.editPadCount.Name = "editPadCount";
+      this.editPadCount.Size = new System.Drawing.Size(73, 20);
+      this.editPadCount.TabIndex = 38;
+      this.editPadCount.Text = "3";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(169, 108);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(38, 13);
+      this.label5.TabIndex = 39;
+      this.label5.Text = "zeroes";
+      // 
       // ExportCharscreenAsBASICData
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkPad);
+      this.Controls.Add(this.editPadCount);
+      this.Controls.Add(this.label5);
       this.Controls.Add(this.checkWrapAtMaxChars);
       this.Controls.Add(this.editWrapCharCount);
       this.Controls.Add(this.label1);
@@ -192,5 +227,8 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.TextBox editWrapCharCount;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.CheckBox checkInsertSpaces;
+    private System.Windows.Forms.CheckBox checkPad;
+    private System.Windows.Forms.TextBox editPadCount;
+    private System.Windows.Forms.Label label5;
   }
 }
