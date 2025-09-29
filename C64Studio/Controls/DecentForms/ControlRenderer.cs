@@ -1283,7 +1283,7 @@ namespace DecentForms
 
       if ( listControl.Columns.Count > 0 )
       {
-        int iItem = listControl.FirstVisibleItemIndex;
+        int itemIndex = listControl.FirstVisibleItemIndex;
 
         bool bDone = false;
 
@@ -1295,7 +1295,7 @@ namespace DecentForms
           {
             for ( int column = 0; column < listControl.Columns.Count; ++column )
             {
-              if ( !listControl.GetItemRect( iItem, column, out rcItem ) )
+              if ( !listControl.GetItemRect( itemIndex, column, out rcItem ) )
               {
                 bDone = true;
                 break;
@@ -1303,22 +1303,22 @@ namespace DecentForms
               if ( listControl.Font != null )
               {
                 uint color = ColorControlText;
-                if ( listControl.Items[iItem].Selected )
+                if ( listControl.Items[itemIndex].Selected )
                 {
                   color = ColorControlTextSelected;
                   FillRectangle( rcItem, ColorControlBackgroundSelected );
                 }
-                else if ( listControl.MouseOverItem == iItem )
+                else if ( listControl.MouseOverItem == itemIndex )
                 {
                   color = ColorControlTextMouseOver;
                   FillRectangle( rcItem, ColorControlBackgroundMouseOver );
                 }
-                DrawText( listControl.Items[iItem].SubItems[column].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
+                DrawText( listControl.Items[itemIndex].SubItems[column].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
                           listControl.Columns[column].Alignment,
                           color );
               }
             }
-            ++iItem;
+            ++itemIndex;
           }
           while ( !bDone );
         }

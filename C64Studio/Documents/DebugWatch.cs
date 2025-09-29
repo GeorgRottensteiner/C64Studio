@@ -516,35 +516,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listWatch_ColumnClick( object sender, ColumnClickEventArgs e )
-    {
-      /*
-      if ( e.Column != m_ListWatchSortColumn )
-      {
-        // Set the sort column to the new column.
-        m_ListWatchSortColumn = e.Column;
-        // Set the sort order to ascending by default.
-        listWatch.Sorting = SortOrder.Ascending;
-      }
-      else
-      {
-        // Determine what the last sort order was and change it.
-        if ( listWatch.Sorting == SortOrder.Ascending )
-        {
-          listWatch.Sorting = SortOrder.Descending;
-        }
-        else
-        {
-          listWatch.Sorting = SortOrder.Ascending;
-        }
-      }
-      listWatch.ListViewItemSorter = new GR.Forms.ListViewItemComparer( m_ListWatchSortColumn, listWatch.Sorting );
-      listWatch.Sort();
-      */
-    }
-
-
-
     private void bytes1ToolStripMenuItem_Click( object sender, EventArgs e )
     {
       foreach ( var item in listWatch.SelectedItems )
@@ -835,6 +806,13 @@ namespace RetroDevStudio.Documents
       listWatch.EndUpdate();
 
       return previousOffset;
+    }
+
+
+
+    private void listWatch_ColumnClicked( DecentForms.ControlBase Sender )
+    {
+      m_ListWatchSortColumn = listWatch.SortColumn;
     }
 
 

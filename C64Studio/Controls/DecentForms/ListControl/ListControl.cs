@@ -31,7 +31,6 @@ namespace DecentForms
     private int           _HeaderHeight = 24;
     private bool          _HasHeader = true;
 
-    private List<int>     _sortedItems = new List<int>();
     private int           _sortColumn = -1;
     private bool          _sortAscending = true;
 
@@ -44,6 +43,7 @@ namespace DecentForms
 
     public event EventHandler       SelectedIndexChanged;
     public event EventHandler       Scrolled;
+    public event EventHandler       ColumnClicked;
 
 
 
@@ -106,14 +106,15 @@ namespace DecentForms
 
 
 
-    private void SortItems()
+    internal void SortItems()
     {
       if ( ( _sortColumn < 0 )
       ||   ( _sortColumn >= Columns.Count ) )
       {
         return;
       }
-      _sortedItems = Items.OrderBy( i => i.SubItems[_sortColumn].Text ).Select( i => i.Index ).ToList();
+      Items.SortByColumn( _sortColumn, _sortAscending );
+      Invalidate();
     }
 
 
@@ -979,8 +980,19 @@ namespace DecentForms
 
     private void OnColumnClicked( int selectedColumn )
     {
-      // TODO sort
-      Debug.Log( $"Sort by column {selectedColumn} clicked" );
+      if ( selectedColumn == _sortColumn )
+      {
+        _sortAscending = !_sortAscending;
+      }
+      else
+      {
+        _sortColumn = selectedColumn;
+        _sortAscending = true;
+      }
+      SortItems();
+      Invalidate();
+
+      ColumnClicked?.Invoke( this );
     }
 
 
@@ -1089,7 +1101,6 @@ namespace DecentForms
     {
       FixItemIndices();
       _CachedMaxItemWidth = -1;
-      SortItems();
       AdjustScrollBars();
       Invalidate();
     }

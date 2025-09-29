@@ -75,7 +75,9 @@
       this.listWatch.SelectedItem = null;
       this.listWatch.SelectionMode = DecentForms.SelectionMode.ONE;
       this.listWatch.Size = new System.Drawing.Size(608, 195);
+      this.listWatch.SortColumn = -1;
       this.listWatch.TabIndex = 0;
+      this.listWatch.ColumnClicked += new DecentForms.EventHandler(this.listWatch_ColumnClicked);
       this.listWatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listWatch_KeyDown);
       // 
       // contextDebugItem

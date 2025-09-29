@@ -47,6 +47,7 @@ namespace DecentForms
       {
         subItem._Owner = _Owner;  
       }
+      _Owner.SortItems();
       _Owner.ItemsModified();
 
       return Item._Index;
@@ -73,6 +74,7 @@ namespace DecentForms
         }
         _Items.Add( newItem );
       }
+      _Owner.SortItems();
       _Owner.ItemsModified();
     }
 
@@ -106,6 +108,7 @@ namespace DecentForms
           _Owner.SelectedIndex = Item.Index;
         }
       }
+      _Owner.SortItems();
       _Owner.ItemsModified();
       return true;
     }
@@ -137,6 +140,7 @@ namespace DecentForms
         }
       }
 
+      _Owner.SortItems();
       _Owner.ItemsModified();
     }
 
@@ -168,6 +172,7 @@ namespace DecentForms
           }
         }
         _Items.RemoveRange( Index, Count );
+        _Owner.SortItems();
         _Owner.ItemsModified();
       }
     }
@@ -226,6 +231,7 @@ namespace DecentForms
         subItem._Owner = null;
       }
       _Items.Insert( InsertAtIndex, Item );
+      _Owner.SortItems();
       _Owner.ItemsModified();
     }
 
@@ -235,6 +241,20 @@ namespace DecentForms
     {
       _Items.Clear();
       _Owner.ItemsModified();
+    }
+
+
+
+    internal void SortByColumn( int sortColumn, bool sortAscending )
+    {
+      if ( sortAscending )
+      {
+        _Items.Sort( ( a, b ) => a.SubItems[sortColumn].Text.CompareTo( b.SubItems[sortColumn].Text ) );
+      }
+      else
+      {
+        _Items.Sort( ( a, b ) => b.SubItems[sortColumn].Text.CompareTo( a.SubItems[sortColumn].Text ) );
+      }
     }
 
 
