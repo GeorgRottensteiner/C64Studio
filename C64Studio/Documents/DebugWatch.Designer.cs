@@ -30,10 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugWatch));
-      this.listWatch = new System.Windows.Forms.ListView();
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.listWatch = new DecentForms.ListControl();
       this.contextDebugItem = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.displayAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.hexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,37 +61,22 @@
       // 
       // listWatch
       // 
-      this.listWatch.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3});
+      this.listWatch.BorderStyle = DecentForms.BorderStyle.SUNKEN;
       this.listWatch.ContextMenuStrip = this.contextDebugItem;
       this.listWatch.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.listWatch.FullRowSelect = true;
-      this.listWatch.HideSelection = false;
+      this.listWatch.FirstVisibleItemIndex = 0;
+      this.listWatch.HasHeader = true;
+      this.listWatch.HeaderHeight = 24;
+      this.listWatch.ItemHeight = 15;
       this.listWatch.Location = new System.Drawing.Point(0, 0);
       this.listWatch.Name = "listWatch";
+      this.listWatch.ScrollAlwaysVisible = false;
+      this.listWatch.SelectedIndex = -1;
+      this.listWatch.SelectedItem = null;
+      this.listWatch.SelectionMode = DecentForms.SelectionMode.ONE;
       this.listWatch.Size = new System.Drawing.Size(608, 195);
       this.listWatch.TabIndex = 0;
-      this.listWatch.UseCompatibleStateImageBehavior = false;
-      this.listWatch.View = System.Windows.Forms.View.Details;
-      this.listWatch.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listWatch_ColumnClick);
       this.listWatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listWatch_KeyDown);
-      // 
-      // columnHeader1
-      // 
-      this.columnHeader1.Text = "Name";
-      this.columnHeader1.Width = 140;
-      // 
-      // columnHeader2
-      // 
-      this.columnHeader2.Text = "Type";
-      this.columnHeader2.Width = 110;
-      // 
-      // columnHeader3
-      // 
-      this.columnHeader3.Text = "Content";
-      this.columnHeader3.Width = 300;
       // 
       // contextDebugItem
       // 
@@ -113,7 +95,7 @@
             this.copyToClipboardToolStripMenuItem,
             this.copySelectedValuesToClipboardToolStripMenuItem});
       this.contextDebugItem.Name = "contextDebugItem";
-      this.contextDebugItem.Size = new System.Drawing.Size(264, 264);
+      this.contextDebugItem.Size = new System.Drawing.Size(264, 242);
       this.contextDebugItem.Opening += new System.ComponentModel.CancelEventHandler(this.contextDebugItem_Opening);
       // 
       // displayAsToolStripMenuItem
@@ -296,10 +278,7 @@
 
     #endregion
 
-    private System.Windows.Forms.ListView listWatch;
-    private System.Windows.Forms.ColumnHeader columnHeader1;
-    private System.Windows.Forms.ColumnHeader columnHeader2;
-    private System.Windows.Forms.ColumnHeader columnHeader3;
+    private DecentForms.ListControl listWatch;
     private System.Windows.Forms.ContextMenuStrip contextDebugItem;
     private System.Windows.Forms.ToolStripMenuItem displayAsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem hexToolStripMenuItem;

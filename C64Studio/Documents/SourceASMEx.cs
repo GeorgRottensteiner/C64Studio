@@ -1610,7 +1610,7 @@ namespace RetroDevStudio.Documents
       {
         case ApplicationEvent.Type.KEY_BINDINGS_MODIFIED:
           break;
-        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+        case ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED:
           UpdateStatusInfo();
           break;
         case ApplicationEvent.Type.SETTING_MODIFIED:

@@ -25,6 +25,10 @@ namespace RetroDevStudio.Documents
     {
       InitializeComponent();
 
+      listWatch.Columns.Add( "Name", 140 );
+      listWatch.Columns.Add( "Type", 140 );
+      listWatch.Columns.Add( "Value(s)", 140 );
+
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
@@ -32,7 +36,7 @@ namespace RetroDevStudio.Documents
 
     public void AddWatchEntry( WatchEntry Watch, bool ShowLastValues = false )
     {
-      ListViewItem  item = new ListViewItem();
+      var  item = new DecentForms.ListControlItem();
 
       item.Text = Watch.Name;
       if ( Watch.IndexedX )
@@ -102,7 +106,7 @@ namespace RetroDevStudio.Documents
     public void RemoveWatchEntry( WatchEntry Watch )
     {
       m_WatchEntries.Remove( Watch );
-      foreach ( ListViewItem item in listWatch.Items )
+      foreach ( var item in listWatch.Items )
       {
         WatchEntry watchEntry = (WatchEntry)item.Tag;
 
@@ -122,7 +126,7 @@ namespace RetroDevStudio.Documents
 
     public void UpdateValue( string WatchVar, bool IndexedX, bool IndexedY, GR.Memory.ByteBuffer Data )
     {
-      foreach ( ListViewItem item in listWatch.Items )
+      foreach ( var item in listWatch.Items )
       {
         WatchEntry watchEntry = (WatchEntry)item.Tag;
 
@@ -278,7 +282,7 @@ namespace RetroDevStudio.Documents
     {
       if ( e.KeyCode == Keys.Delete )
       {
-        foreach ( ListViewItem item in listWatch.SelectedItems )
+        foreach ( var item in listWatch.SelectedItems )
         {
           Core.MainForm.RemoveWatchEntry( (WatchEntry)item.Tag );
         }
@@ -289,7 +293,7 @@ namespace RetroDevStudio.Documents
 
     private void hexToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry    entry = (WatchEntry)item.Tag;
 
@@ -303,7 +307,7 @@ namespace RetroDevStudio.Documents
 
     private void decimalToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -317,7 +321,7 @@ namespace RetroDevStudio.Documents
 
     private void binaryToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -333,7 +337,7 @@ namespace RetroDevStudio.Documents
     {
       watchReadFromMemoryToolStripMenuItem.Checked = !watchReadFromMemoryToolStripMenuItem.Checked;
       displayBoundsToolStripMenuItem.Visible = watchReadFromMemoryToolStripMenuItem.Checked;
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -350,7 +354,7 @@ namespace RetroDevStudio.Documents
 
     private void removeEntryToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         Core.MainForm.RemoveWatchEntry( (WatchEntry)item.Tag );
       }
@@ -397,8 +401,8 @@ namespace RetroDevStudio.Documents
 
       foreach ( var watchEntry in m_WatchEntries )
       {
-        ListViewItem itemToModify = null;
-        foreach ( ListViewItem item in listWatch.Items )
+        DecentForms.ListControlItem itemToModify = null;
+        foreach ( var item in listWatch.Items )
         {
           WatchEntry oldWatchEntry = (WatchEntry)item.Tag;
 
@@ -410,7 +414,7 @@ namespace RetroDevStudio.Documents
         }
         if ( itemToModify == null )
         {
-          itemToModify = new ListViewItem();
+          itemToModify = new DecentForms.ListControlItem();
 
           itemToModify.Text = watchEntry.Name;
           if ( watchEntry.IndexedX )
@@ -514,6 +518,7 @@ namespace RetroDevStudio.Documents
 
     private void listWatch_ColumnClick( object sender, ColumnClickEventArgs e )
     {
+      /*
       if ( e.Column != m_ListWatchSortColumn )
       {
         // Set the sort column to the new column.
@@ -535,13 +540,14 @@ namespace RetroDevStudio.Documents
       }
       listWatch.ListViewItemSorter = new GR.Forms.ListViewItemComparer( m_ListWatchSortColumn, listWatch.Sorting );
       listWatch.Sort();
+      */
     }
 
 
 
     private void bytes1ToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -559,7 +565,7 @@ namespace RetroDevStudio.Documents
 
     private void bytes2ToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -576,7 +582,7 @@ namespace RetroDevStudio.Documents
 
     private void bytes16ToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -593,7 +599,7 @@ namespace RetroDevStudio.Documents
 
     private void bytes32ToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -610,7 +616,7 @@ namespace RetroDevStudio.Documents
 
     private void bytes8ToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -627,9 +633,9 @@ namespace RetroDevStudio.Documents
 
     public override void ApplyDisplayDetails( GR.Memory.ByteBuffer Buffer )
     {
-      GR.IO.MemoryReader binReader = Buffer.MemoryReader();
+      var binReader = Buffer.MemoryReader();
 
-      foreach ( ColumnHeader column in listWatch.Columns )
+      foreach ( var column in listWatch.Columns )
       {
         int     width = binReader.ReadInt32();
         if ( width != 0 )
@@ -643,9 +649,9 @@ namespace RetroDevStudio.Documents
 
     public override GR.Memory.ByteBuffer DisplayDetails()
     {
-      GR.Memory.ByteBuffer      displayData = new GR.Memory.ByteBuffer();
+      var      displayData = new GR.Memory.ByteBuffer();
 
-      foreach ( ColumnHeader column in listWatch.Columns )
+      foreach ( var column in listWatch.Columns )
       {
         displayData.AppendI32( column.Width );
       }
@@ -656,7 +662,7 @@ namespace RetroDevStudio.Documents
 
     private void bytes4ToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -736,7 +742,7 @@ namespace RetroDevStudio.Documents
     private void toggleEndiannessToolStripMenuItem_Click( object sender, EventArgs e )
     {
       toggleEndiannessToolStripMenuItem.Checked = !toggleEndiannessToolStripMenuItem.Checked;
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -765,7 +771,7 @@ namespace RetroDevStudio.Documents
     private void copyToClipboardToolStripMenuItem_Click( object sender, EventArgs e )
     {
       var sb = new StringBuilder();
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -784,7 +790,7 @@ namespace RetroDevStudio.Documents
     private void copySelectedValuesToClipboardToolStripMenuItem_Click( object sender, EventArgs e )
     {
       var sb = new StringBuilder();
-      foreach ( ListViewItem item in listWatch.SelectedItems )
+      foreach ( var item in listWatch.SelectedItems )
       {
         WatchEntry entry = (WatchEntry)item.Tag;
 
@@ -812,29 +818,23 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void ApplyWatchEntries( Project project )
+    public int ApplyWatchEntries( List<WatchEntry> entries, int listOffset = -1 )
     {
+      int    previousOffset = listWatch.FirstVisibleItemIndex;
+
       listWatch.BeginUpdate();
       ClearAllWatchEntries();
-      foreach ( var watch in project.Settings.WatchEntries )
+      foreach ( var watch in entries )
       {
         AddWatchEntry( watch, true );
       }
-      listWatch.AutoScrollOffset = new System.Drawing.Point( listWatch.AutoScrollOffset.X, project.Settings.WatchEntryListOffset );
-      listWatch.EndUpdate();
-    }
-
-
-
-    public void ApplyWatches( List<WatchEntry> watchEntries )
-    {
-      listWatch.BeginUpdate();
-      ClearAllWatchEntries();
-      foreach ( var watch in watchEntries )
+      if ( listOffset != -1 )
       {
-        AddWatchEntry( watch, true );
+        listWatch.FirstVisibleItemIndex = listOffset;
       }
       listWatch.EndUpdate();
+
+      return previousOffset;
     }
 
 

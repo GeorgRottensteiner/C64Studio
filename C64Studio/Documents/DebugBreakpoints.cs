@@ -484,7 +484,7 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.SHUTTING_DOWN:
           Core.Settings.DialogSettings.StoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
           break;
-        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+        case ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED:
           {
             listBreakpoints.Items.Clear();
             if ( ( Event.Doc != null )

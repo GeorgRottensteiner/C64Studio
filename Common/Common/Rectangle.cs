@@ -1,11 +1,18 @@
 using GR.Math;
+using System;
+using System.Diagnostics;
 
 
 
 namespace GR.Math
 {
+  [DebuggerDisplay( "X={X}, Y={Y}, Width={Width}, Height={Height}" )]
   public struct Rectangle
   {
+    public static readonly Rectangle Empty = new Rectangle();
+
+
+
     Point     Position;
     Point     Size;
 
@@ -123,6 +130,10 @@ namespace GR.Math
 
 
 
+    public void Offset( int dx, int dy )
+    {
+      Position.Offset( dx, dy );
+    }
   }
 
 }

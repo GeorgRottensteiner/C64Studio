@@ -81,6 +81,20 @@
     <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxSelectedItemCollection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ColumnCollection.cs" />
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlSubItemCollection.cs" />
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlSubItem.cs" />
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlItem.cs" />
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlItemCollection.cs" />
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlItemIndexCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlSelectedItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>

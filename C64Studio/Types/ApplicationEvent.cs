@@ -12,7 +12,7 @@ namespace RetroDevStudio.Types
       DOCUMENT_CREATED,
       DOCUMENT_OPENED,
       DOCUMENT_CLOSED,
-      DOCUMENT_ACTIVATED,
+      ACTIVE_DOCUMENT_CHANGED,
       DOCUMENT_FILENAME_CHANGED,
       DOCUMENT_SAVED,
       ELEMENT_CREATED,
@@ -49,6 +49,7 @@ namespace RetroDevStudio.Types
     public DocumentInfo     Doc = null;
     public ProjectElement   Element = null;
     public Project          Project = null;
+    public Project          PreviousProject = null;
     public string           OriginalValue = "";
     public string           UpdatedValue = "";
 

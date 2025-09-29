@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Controls;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -1219,6 +1220,13 @@ namespace DecentForms
 
 
 
+    public void SetClip( GR.Math.Rectangle rect )
+    {
+      SetClip( rect.Left, rect.Top, rect.Width, rect.Height );
+    }
+
+
+
     public void SetClip( int x, int y, int width, int height, int offsetX = 0, int offsetY = 0 )
     {
       // TODO - clip against control bounds
@@ -1231,10 +1239,10 @@ namespace DecentForms
 
 
 
-    public Rectangle GetClipRect()
+    public GR.Math.Rectangle GetClipRect()
     {
       var bounds = _G.ClipBounds;
-      return new Rectangle( (int)_G.ClipBounds.X - _DisplayOffsetX, (int)_G.ClipBounds.Y - _DisplayOffsetY, (int)_G.ClipBounds.Width, (int)_G.ClipBounds.Height );
+      return new GR.Math.Rectangle( (int)_G.ClipBounds.X - _DisplayOffsetX, (int)_G.ClipBounds.Y - _DisplayOffsetY, (int)_G.ClipBounds.Width, (int)_G.ClipBounds.Height );
     }
 
 
@@ -1247,6 +1255,74 @@ namespace DecentForms
       _SubAreaDisplayOffsetY = 0;
 
       _G.SetClip( _OriginalBounds );
+    }
+
+
+
+    internal void RenderListControl()
+    {
+      var listControl = (ListControl)_Control;  
+
+      // show header
+      var oldClip = GetClipRect();
+      for ( int i = 0; i < listControl.Columns.Count; ++i )
+      {
+        var rc = listControl.GetHeaderRect( i );
+
+        SetClip( rc );
+
+        FillRaisedRectangle( rc.Left, rc.Top, rc.Width, rc.Height, ColorControlBackground );
+
+        if ( listControl.Font != null )
+        {
+          DrawText( listControl.Columns[i].Name, rc.Left, rc.Top, rc.Width, rc.Height, listControl.Columns[i].Alignment | DecentForms.TextAlignment.CENTERED_V,
+                    ColorControlText );
+        }
+      }
+      SetClip( oldClip );
+
+      if ( listControl.Columns.Count > 0 )
+      {
+        int iItem = listControl.FirstVisibleItemIndex;
+
+        bool bDone = false;
+
+        Rectangle rcItem;
+
+        if ( listControl.Items.Count > 0 )
+        {
+          do
+          {
+            for ( int column = 0; column < listControl.Columns.Count; ++column )
+            {
+              if ( !listControl.GetItemRect( iItem, column, out rcItem ) )
+              {
+                bDone = true;
+                break;
+              }
+              if ( listControl.Font != null )
+              {
+                uint color = ColorControlText;
+                if ( listControl.Items[iItem].Selected )
+                {
+                  color = ColorControlTextSelected;
+                  FillRectangle( rcItem, ColorControlBackgroundSelected );
+                }
+                else if ( listControl.MouseOverItem == iItem )
+                {
+                  color = ColorControlTextMouseOver;
+                  FillRectangle( rcItem, ColorControlBackgroundMouseOver );
+                }
+                DrawText( listControl.Items[iItem].SubItems[column].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
+                          listControl.Columns[column].Alignment,
+                          color );
+              }
+            }
+            ++iItem;
+          }
+          while ( !bDone );
+        }
+      }
     }
 
 

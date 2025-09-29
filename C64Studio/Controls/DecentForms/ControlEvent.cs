@@ -26,7 +26,9 @@ namespace DecentForms
       KEY_UP              = 0x00000012,
 
       FOCUSED             = 0x00000020,
-      FOCUS_LOST          = 0x00000021
+      FOCUS_LOST          = 0x00000021,
+
+      SET_CURSOR          = 0x00000030
     }
 
 

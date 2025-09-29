@@ -113,6 +113,30 @@ namespace RetroDevStudio
 
 
 
+    public void StoreListViewColumns( string ControlKey, DecentForms.ListControl List )
+    {
+      foreach ( var col in List.Columns )
+      {
+        StoreSetting( ControlKey + ".ColumnWidth." + col.Index, col.Width.ToString() );
+      }
+    }
+
+
+
+    public void RestoreListViewColumns( string ControlKey, DecentForms.ListControl List )
+    {
+      foreach ( var col in List.Columns )
+      {
+        int   width = GetSettingI( ControlKey + ".ColumnWidth." + col.Index );
+        if ( width > 0 )
+        {
+          col.Width = width;
+        }
+      }
+    }
+
+
+
     public ByteBuffer ToBuffer()
     {
       var result = new ByteBuffer();

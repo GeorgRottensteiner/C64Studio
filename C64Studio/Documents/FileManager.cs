@@ -1346,7 +1346,7 @@ namespace RetroDevStudio.Documents
 
       switch ( Event.EventType )
       {
-        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+        case ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED:
           UpdateStatusInfo();
           break;
       }

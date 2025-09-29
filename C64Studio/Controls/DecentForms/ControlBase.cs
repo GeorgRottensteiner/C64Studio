@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,6 +19,7 @@ namespace DecentForms
     private bool          _MouseOver = false;
     private bool          _MouseDown = false;
     private int           _AccumulatedMouseWheelDelta = 0;
+    private Point         _LastMousePos = new Point();
 
     private BorderStyle   _BorderStyle = BorderStyle.FLAT;
 
@@ -210,11 +212,11 @@ namespace DecentForms
 
 
 
-    public new void Invalidate( System.Drawing.Rectangle rect )
+    public void Invalidate( GR.Math.Rectangle rect )
     {
       rect.Offset( -_DisplayOffsetX, -_DisplayOffsetY );
 
-      base.Invalidate( rect );
+      base.Invalidate( new System.Drawing.Rectangle( rect.Left, rect.Top, rect.Width, rect.Height ) );
     }
 
 
@@ -391,6 +393,7 @@ namespace DecentForms
       if ( !_MouseDown )
       {
         _MouseDown = true;
+        _LastMousePos = e.Location;
         RaiseControlEvent( ControlEvent.EventType.MOUSE_DOWN, e.X, e.Y, ToButtonBitMask( e.Button ) );
       }
       base.OnMouseDown( e );
@@ -403,6 +406,7 @@ namespace DecentForms
       if ( _MouseDown )
       {
         _MouseDown = false;
+        _LastMousePos = e.Location;
         RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, e.X, e.Y, ToButtonBitMask( e.Button ) );
       }
       base.OnMouseDown( e );
@@ -436,6 +440,7 @@ namespace DecentForms
 
     protected override void OnMouseClick( MouseEventArgs e )
     {
+      _LastMousePos = e.Location;
       RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ) );
       base.OnMouseClick( e );
     }
@@ -444,6 +449,7 @@ namespace DecentForms
 
     protected override void OnMouseDoubleClick( MouseEventArgs e )
     {
+      _LastMousePos = e.Location;
       RaiseControlEvent( ControlEvent.EventType.MOUSE_DOUBLE_CLICK, e.X, e.Y, ToButtonBitMask( e.Button ) );
       base.OnMouseDoubleClick( e );
     }
@@ -452,6 +458,7 @@ namespace DecentForms
 
     protected override void OnMouseMove( MouseEventArgs e )
     {
+      _LastMousePos = e.Location;
       RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ) );
       base.OnMouseMove( e );
     }
@@ -572,10 +579,93 @@ namespace DecentForms
       public static IntPtr UiaRootObjectId = (IntPtr)(-25);
     }
 
+    public class NativeWin32
+    {
+      public const int WM_SETCURSOR = 0x0020;
+    }
+
+    public enum CursorType
+    {
+      CURSOR_DEFAULT = 0,   // arrow
+      CURSOR_HAND,
+      CURSOR_HOURGLASS,
+      CURSOR_FORBIDDEN,
+      CURSOR_SIZE_NS,
+      CURSOR_SIZE_WE,
+      CURSOR_SIZE_NWSE,
+      CURSOR_SIZE_NESW,
+      CURSOR_SIZEALL,
+      CURSOR_TEXT_EDIT
+    };
+
+    CursorType  _cursor = CursorType.CURSOR_DEFAULT;
+
+    protected void SetCursor( CursorType cursor )
+    {
+      if ( cursor == _cursor )
+      {
+        return;
+      }
+      _cursor = cursor;
+
+      Cursor  newCursor = Cursors.Arrow;
+      switch ( cursor )
+      {
+        case CursorType.CURSOR_DEFAULT:
+        default:
+          newCursor = Cursors.Arrow;
+          break;
+        case CursorType.CURSOR_HOURGLASS:
+          newCursor = Cursors.WaitCursor;
+          break;
+        case CursorType.CURSOR_FORBIDDEN:
+          newCursor = Cursors.No;
+          break;
+        case CursorType.CURSOR_HAND:
+          newCursor = Cursors.Hand;
+          break;
+        case CursorType.CURSOR_SIZEALL:
+          newCursor = Cursors.SizeAll;
+          break;
+        case CursorType.CURSOR_SIZE_NESW:
+          newCursor = Cursors.SizeNESW;
+          break;
+        case CursorType.CURSOR_SIZE_WE:
+          newCursor = Cursors.SizeWE;
+          break;
+        case CursorType.CURSOR_SIZE_NS:
+          newCursor = Cursors.SizeNS;
+          break;
+        case CursorType.CURSOR_SIZE_NWSE:
+          newCursor = Cursors.SizeNWSE;
+          break;
+        case CursorType.CURSOR_TEXT_EDIT:
+          newCursor = Cursors.IBeam;
+          break;
+      }
+      this.Cursor = newCursor;
+      Cursor.Current = newCursor;
+    }
+
+
+
     protected override void WndProc( ref Message m )
     {
       switch ( m.Msg )
       {
+        case NativeWin32.WM_SETCURSOR:
+          if ( ( m.LParam.ToInt32() & 0xFFFF ) == 1 ) // LOWORD(lParam) == 1 means client area
+          {
+            if ( RaiseControlEvent( ControlEvent.EventType.SET_CURSOR, _LastMousePos.X, _LastMousePos.Y ) )
+            {
+              m.Result = (IntPtr)1;
+              return;
+            }
+            SetCursor( CursorType.CURSOR_DEFAULT );
+            m.Result = (IntPtr)1;
+            return;
+          }
+          break;
         case NativeUIA.WM_GETOBJECT:
           {
             // If the window is being asked for a UIA provider, return ourselves.

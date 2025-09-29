@@ -67,6 +67,7 @@ namespace RetroDevStudio
 
     private bool                  m_ChangingToolWindows = false;
     private bool                  m_LoadingProject = false;
+    private DocumentInfo          m_previousActiveDocument = null;
 
     private BaseDocument          m_ActiveSource = null;
     internal ToolInfo             m_CurrentActiveTool = null;
@@ -1468,7 +1469,7 @@ namespace RetroDevStudio
         case RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED:
           EmulatorListUpdated();
           break;
-        case RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+        case RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED:
           if ( Event.Doc == null )
           {
             mainToolPrint.Enabled = false;
@@ -1479,11 +1480,15 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.Debugger != null )
             {
               // projectless debugging, use watches from debugger
-              m_DebugWatch.ApplyWatches( StudioCore.Debugging.Debugger.CurrentWatches() );
+              m_DebugWatch.ApplyWatchEntries( StudioCore.Debugging.Debugger.CurrentWatches() );
             }
             else if ( project != null )
             {
-              m_DebugWatch.ApplyWatchEntries( project );
+              int previousOffset = m_DebugWatch.ApplyWatchEntries( project.Settings.WatchEntries, project.Settings.WatchEntryListOffset );
+              if ( Event.PreviousProject != null )
+              {
+                Event.PreviousProject.Settings.WatchEntryListOffset = previousOffset;
+              }
             }
             else if ( Event.Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
             {
@@ -1491,6 +1496,7 @@ namespace RetroDevStudio
               var mappedBreakpoints = ( (SourceASMEx)Event.Doc.BaseDoc ).MapBreakpoints();
               StudioCore.Debugging.BreakPoints = mappedBreakpoints;
             }
+            m_DebugWatch.DebuggedProject = project;
 
             mainToolPrint.Enabled = Event.Doc.ContainsCode;
             if ( IsCodeDocument( Event.Doc ) )
@@ -1564,21 +1570,21 @@ namespace RetroDevStudio
           }
           break;
         case Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
-          m_DebugWatch.DebuggedProject = m_CurrentProject;
-          m_DebugWatch.ClearAllWatchEntries();
-          if ( m_CurrentProject != null )
+          if ( m_DebugWatch.DebuggedProject != m_CurrentProject )
           {
-            foreach ( var watch in m_CurrentProject.Settings.WatchEntries )
+            m_DebugWatch.DebuggedProject = m_CurrentProject;
+            if ( m_CurrentProject != null )
             {
-              m_DebugWatch.AddWatchEntry( watch, true );
+              int newOffset = m_DebugWatch.ApplyWatchEntries( m_CurrentProject.Settings.WatchEntries, m_CurrentProject.Settings.WatchEntryListOffset );
+              if ( Event.PreviousProject != null )
+              {
+                Event.PreviousProject.Settings.WatchEntryListOffset = newOffset;
+              }
             }
-          }
-          else if ( StudioCore.Debugging.Debugger != null )
-          {
-            // projectless debugging, use watches from debugger
-            foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
+            else if ( StudioCore.Debugging.Debugger != null )
             {
-              m_DebugWatch.AddWatchEntry( watch, true );
+              // projectless debugging, use watches from debugger
+              m_DebugWatch.ApplyWatchEntries( StudioCore.Debugging.Debugger.CurrentWatches() );
             }
           }
           m_DebugRegisters.DebuggedProject    = m_CurrentProject;
@@ -1605,7 +1611,11 @@ namespace RetroDevStudio
     void panelMain_ActiveDocumentChanged( object sender, EventArgs e )
     {
       var docInfo = ActiveDocumentInfo;
-      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED, docInfo ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED, docInfo )
+      {
+        PreviousProject = ( ( m_previousActiveDocument != null ) ? m_previousActiveDocument.Project : null )
+      } );
+      m_previousActiveDocument = docInfo;
 
       mainToolFind.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
       mainToolFindReplace.Enabled = mainToolFind.Enabled;
@@ -3448,8 +3458,14 @@ namespace RetroDevStudio
       }
       if ( m_CurrentProject != NewProject )
       {
+        var oldProject = m_CurrentProject;
         m_CurrentProject = NewProject;
-        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject ) );
+
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject )
+          {
+            PreviousProject = oldProject
+          } );
+
         if ( mainToolConfig.ComboBox != null )
         {
           mainToolConfig.Items.Clear();
@@ -6143,7 +6159,7 @@ namespace RetroDevStudio
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
       // resend doc activate event, since only now all settings are known (breakpoints)
-      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED, ActiveDocumentInfo ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED, ActiveDocumentInfo ) );
 
       StudioCore.Navigating.Solution.DuringLoad = false;
 
