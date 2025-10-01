@@ -43,6 +43,7 @@ namespace DecentForms
     {
       _Items.Add( Item );
       Item._Owner = _Owner;
+      FixIndices();
       _Owner.ItemsModified();
 
       return Item.Index;
@@ -65,6 +66,7 @@ namespace DecentForms
         newItem._Owner = _Owner;
         _Items.Add( newItem );
       }
+      FixIndices();
       _Owner.ItemsModified();
     }
 
@@ -90,6 +92,7 @@ namespace DecentForms
           _Owner.SelectedIndex = Item.Index;
         }
       }
+      FixIndices();
       _Owner.ItemsModified();
       return true;
     }
@@ -105,7 +108,7 @@ namespace DecentForms
       }
       _Items[Index]._Owner = null;
       _Items.RemoveAt( Index );
-
+      FixIndices();
       _Owner.ItemsModified();
     }
 
@@ -132,6 +135,7 @@ namespace DecentForms
           _Items[Index + i]._Owner = null;
         }
         _Items.RemoveRange( Index, Count );
+        FixIndices();
         _Owner.ItemsModified();
       }
     }
@@ -186,6 +190,7 @@ namespace DecentForms
       }
       Item._Owner = _Owner;
       _Items.Insert( InsertAtIndex, Item );
+      FixIndices();
       _Owner.ItemsModified();
     }
 
@@ -199,6 +204,13 @@ namespace DecentForms
 
 
 
+    private void FixIndices()
+    {
+      for ( int i = 0; i < Count; ++i )
+      {
+        _Items[i].Index = i;
+      }
+    }
   }
 
 

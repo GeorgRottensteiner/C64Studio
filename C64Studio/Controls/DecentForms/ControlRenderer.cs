@@ -1271,7 +1271,14 @@ namespace DecentForms
 
         SetClip( rc );
 
-        FillRaisedRectangle( rc.Left, rc.Top, rc.Width, rc.Height, ColorControlBackground );
+        if ( listControl.PushedColumn == i )
+        {
+          FillSunkenRectangle( rc.Left, rc.Top, rc.Width, rc.Height, ColorControlBackground );
+        }
+        else
+        {
+          FillRaisedRectangle( rc.Left, rc.Top, rc.Width, rc.Height, ColorControlBackground );
+        }
 
         if ( listControl.Font != null )
         {
@@ -1279,7 +1286,7 @@ namespace DecentForms
                     ColorControlText );
         }
       }
-      SetClip( oldClip );
+      RestoreClip();
 
       if ( listControl.Columns.Count > 0 )
       {
@@ -1293,6 +1300,7 @@ namespace DecentForms
         {
           do
           {
+            int   maxX = 0;
             for ( int column = 0; column < listControl.Columns.Count; ++column )
             {
               if ( !listControl.GetItemRect( itemIndex, column, out rcItem ) )
@@ -1300,6 +1308,7 @@ namespace DecentForms
                 bDone = true;
                 break;
               }
+              maxX = rcItem.Right;
               if ( listControl.Font != null )
               {
                 uint color = ColorControlText;
@@ -1318,9 +1327,16 @@ namespace DecentForms
                           color );
               }
             }
+            if ( ( listControl.Focused )
+            &&   ( listControl.Items[itemIndex].Selected ) )
+            {
+              rcItem = listControl.GetItemRect( itemIndex );
+              DrawFocusRect( rcItem.Left, rcItem.Top, maxX - rcItem.Left, rcItem.Height, ColorControlText );
+            }
             ++itemIndex;
           }
-          while ( !bDone );
+          while ( ( !bDone )
+          &&      ( itemIndex < listControl.Items.Count ) ); 
         }
       }
     }

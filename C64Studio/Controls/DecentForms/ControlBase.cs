@@ -602,12 +602,6 @@ namespace DecentForms
 
     protected void SetCursor( CursorType cursor )
     {
-      if ( cursor == _cursor )
-      {
-        return;
-      }
-      _cursor = cursor;
-
       Cursor  newCursor = Cursors.Arrow;
       switch ( cursor )
       {
@@ -643,6 +637,15 @@ namespace DecentForms
           newCursor = Cursors.IBeam;
           break;
       }
+
+      if ( ( this.Cursor == newCursor )
+      &&   ( Cursor.Current == newCursor )
+      &&   ( cursor == _cursor ) )
+      {
+        return;
+      }
+      _cursor = cursor;
+
       this.Cursor = newCursor;
       Cursor.Current = newCursor;
     }

@@ -176,8 +176,8 @@ namespace DecentForms
       x = 0;
       for ( int i = 0; i < _Columns.Count; ++i )
       {
-        if ( ( position.X - _DisplayOffsetX >= x )
-        &&   ( position.X - _DisplayOffsetX < x + _Columns[i].Width ) )
+        if ( ( position.X + _DisplayOffsetX >= x )
+        &&   ( position.X + _DisplayOffsetX < x + _Columns[i].Width ) )
         {
           subItem = i;
           hitResult = HitTestResult.ITEM;
@@ -185,6 +185,7 @@ namespace DecentForms
         }
         x += _Columns[i].Width;
       }
+      item = -1;
       return ( subItem != -1 );
     }
 
@@ -314,7 +315,7 @@ namespace DecentForms
       }
       if ( rectItem.Top < 0 )
       {
-        rectItem = new Rectangle(  rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
+        rectItem = new Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
       }
       rectItem.Offset( -_DisplayOffsetX, HeaderHeight );
 
@@ -323,7 +324,7 @@ namespace DecentForms
 
 
 
-    Rectangle GetItemRect( int iItem )
+    public Rectangle GetItemRect( int iItem )
     {
       var rectItem = Rectangle.Empty;
       if ( ( iItem >= Items.Count )
@@ -333,7 +334,7 @@ namespace DecentForms
       }
       rectItem.X      = 0;
       rectItem.Y      = (int)( iItem - FirstVisibleItemIndex ) * ItemHeight;
-      rectItem.Width  = ClientSize.Width;
+      rectItem.Width  = _Columns.Sum( c => c.Width );
       rectItem.Height = ItemHeight;
 
       if ( rectItem.Bottom < 0 )
@@ -711,6 +712,20 @@ namespace DecentForms
 
 
 
+    public int PushedColumn
+    {
+      get
+      {
+        if ( _pushedColumn )
+        {
+          return _selectedColumn;
+        }
+        return -1;
+      }
+    }
+
+
+
     private int FullWidth()
     {
       return _Columns.Sum( c => c.Width );
@@ -757,6 +772,7 @@ namespace DecentForms
           }
           break;
         case ControlEvent.EventType.MOUSE_UPDATE:
+          if ( !_pushedColumn )
           {
             if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
             {
@@ -798,6 +814,14 @@ namespace DecentForms
                   }
                 }
               }
+            }
+            else
+            {
+              if ( _MouseOverItem != -1 )
+              {
+                Invalidate( GetItemRect( _MouseOverItem ) );
+              }
+              _MouseOverItem = -1;
             }
           }
           break;
@@ -1125,6 +1149,14 @@ namespace DecentForms
           Invalidate();
         }
       }
+    }
+
+
+
+    internal void ColumnsModified()
+    {
+      AdjustScrollBars();
+      Invalidate();
     }
 
 
