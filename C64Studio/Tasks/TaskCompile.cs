@@ -527,13 +527,16 @@ namespace RetroDevStudio.Tasks
         {
           buildInfo.TargetType = baseDoc.Element.TargetType;
         }
-        else
+        else 
         {
-          buildInfo = Core.Compiling.m_LastBuildInfo[baseDoc.FullPath];
+          Core.Compiling.m_LastBuildInfo.TryGetValue( baseDoc.FullPath, out buildInfo );
         }
         if ( buildInfo.TargetType == RetroDevStudio.Types.CompileTargetType.NONE )
         {
-          buildInfo.TargetType = Core.Compiling.m_LastBuildInfo[baseDoc.FullPath].TargetType;
+          if ( Core.Compiling.m_LastBuildInfo.TryGetValue( baseDoc.FullPath, out var prevBuildInfo ) )
+          {
+            buildInfo.TargetType = prevBuildInfo.TargetType;
+          }
         }
         Core.AddToOutput( "Build is current" + System.Environment.NewLine );
       }
