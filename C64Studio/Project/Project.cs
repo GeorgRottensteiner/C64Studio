@@ -799,6 +799,12 @@ namespace RetroDevStudio
       if ( Element.Document == null )
       {
         string origFilename = Element.DocumentInfo.DocumentFilename;
+        if ( ( !string.IsNullOrEmpty( origFilename ) )
+        &&   ( !System.IO.File.Exists( Element.DocumentInfo.FullPath ) ) )
+        {
+          Core.Notification.MessageBox( "Error creating document", $"Could not create document, file {Element.DocumentInfo.FullPath} does not exist!" );
+          return null;
+        }
         BaseDocument    document = Core.MainForm.CreateNewDocument( Element.DocumentInfo.Type, Element.DocumentInfo.Project );
         if ( document == null )
         {

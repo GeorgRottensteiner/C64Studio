@@ -503,7 +503,7 @@
     <Compile Remove="StudioSettings.cs" />
     <Compile Remove="Tasks\TaskBuildElement.cs" />
     <Compile Remove="Types.cs" />
-    <Compile Remove="Types\CharsetProject.cs" />
+    <Compile Remove="Models\CharsetProject.cs" />
     <EmbeddedResource Remove="Documents\SourceASM.resx" />
     <EmbeddedResource Remove="Documents\SourceBasic.resx" />
     <EmbeddedResource Remove="FormGraphicImport.resx" />

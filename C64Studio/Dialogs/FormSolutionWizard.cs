@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,6 +40,8 @@ namespace RetroDevStudio.Dialogs
       checkSeparateRepositoryForProject.Checked = ( global::SourceControl.Controller.IsFunctional ) && ( Settings.SourceControlInfo.CreateProjectRepository );
 
       btnOK.Enabled = false;
+
+      editSolutionName.SelectAll();
       UpdateSummary();
     }
     

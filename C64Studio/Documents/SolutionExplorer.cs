@@ -1255,8 +1255,19 @@ namespace RetroDevStudio.Documents
       else
       {
         // there is a file attached
-        var result = Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL_ALL, "Delete File?", "You chose to remove an element from the project. Do you also want to delete the file?", "SolutionExplorerDeleteFileOfElementConfirmation" );
-
+        var result = DlgDeactivatableMessage.UserChoice.CANCEL;
+        if ( !System.IO.File.Exists( element.DocumentInfo.FullPath ) )
+        {
+          result = Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO, "Remove File?", "You chose to remove an element from the project. Are you sure you want to do this?", "SolutionExplorerRemoveFileOfElementConfirmation" );
+          if ( result == DlgDeactivatableMessage.UserChoice.NO )
+          {
+            return;
+          }
+        }
+        else
+        {
+          result = Core.Notification.UserDecision( DlgDeactivatableMessage.MessageButtons.YES_NO_CANCEL_ALL, "Delete File?", "You chose to remove an element from the project. Do you also want to delete the file?", "SolutionExplorerDeleteFileOfElementConfirmation" );
+        }
         if ( result == DlgDeactivatableMessage.UserChoice.CANCEL )
         {
           return;

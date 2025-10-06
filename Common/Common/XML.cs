@@ -583,7 +583,7 @@ namespace GR
         }
       }
       
-      public bool Parse( string xmlText )
+      public bool Parse( string xmlText, bool headerTagRequired = true )
       {
         Clear();
         xmlText = xmlText.Trim();
@@ -621,8 +621,15 @@ namespace GR
         if ( ( !headerTag.StartsWith( "?" ) )
         ||   ( !headerTag.EndsWith( "?" ) ) )
         {
-          m_Error = "invalid header tag";
-          return false;
+          if ( headerTagRequired )
+          {
+            m_Error = "invalid header tag";
+            return false;
+          }
+          else
+          {
+            iTagEndPos = -1;
+          }
         }
         
         /*

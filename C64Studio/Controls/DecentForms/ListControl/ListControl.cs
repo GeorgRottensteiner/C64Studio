@@ -23,9 +23,6 @@ namespace DecentForms
     private int           _selectedColumn = -1;
     private bool          _pushedColumn = false;    
 
-    // cache max item width (since that's resource heavy, -1 means required to recalc)
-    private int           _CachedMaxItemWidth = -1;
-
     private bool          _UpdateLocked = false;
     private bool          _RedrawRequired= false;
     private int           _HeaderHeight = 24;
@@ -1103,7 +1100,6 @@ namespace DecentForms
 
     internal void ItemModified( int itemIndex )
     {
-      _CachedMaxItemWidth = -1;
       Invalidate( GetItemRect( itemIndex ) );
     }
 
@@ -1124,7 +1120,6 @@ namespace DecentForms
     internal void ItemsModified()
     {
       FixItemIndices();
-      _CachedMaxItemWidth = -1;
       AdjustScrollBars();
       Invalidate();
     }

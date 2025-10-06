@@ -1,0 +1,5 @@
+<Sample Name="Sample Project 3"
+  Machine="VIC20" 
+  ShortDescription="VIC20, char screen project example" 
+  Desc="Shows how to include a char screen from a charscreen project. This expects an unexpanded VIC20.">
+</Sample>

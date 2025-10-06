@@ -3815,7 +3815,7 @@ namespace RetroDevStudio
 
 
 
-    public void AddExistingFileToProject( Project ProjectToAddTo, DecentForms.TreeView.TreeNode Node, string Filename, bool CopyToProjectFolderWithoutAsking )
+    public void AddExistingFileToProject( Project ProjectToAddTo, DecentForms.TreeView.TreeNode Node, string Filename, bool CopyToProjectFolderWithoutAsking, bool openAfterAdding = true )
     {
       string importFile = Filename;
 
@@ -3941,7 +3941,7 @@ namespace RetroDevStudio
         // force icon refresh
         panelMain.Refresh();
       }
-      else
+      else if ( openAfterAdding )
       {
         ProjectToAddTo.ShowDocument( element );
       }
@@ -7146,9 +7146,9 @@ namespace RetroDevStudio
 
 
 
-    private Project AddNewSolution()
+    public Project AddNewSolution( string preferredSolutionName = "New Solution" )
     {
-      var solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
+      var solWizard = new FormSolutionWizard( preferredSolutionName, StudioCore.Settings );
       if ( solWizard.ShowDialog() != DialogResult.OK )
       {
         return null;

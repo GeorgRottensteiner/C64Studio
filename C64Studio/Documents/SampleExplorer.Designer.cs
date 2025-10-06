@@ -60,6 +60,7 @@
       this.editSampleFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.editSampleFilter.Name = "editSampleFilter";
       this.editSampleFilter.Size = new System.Drawing.Size(300, 25);
+      this.editSampleFilter.TextChanged += new System.EventHandler(this.editSampleFilter_TextChanged);
       // 
       // gridSamples
       // 

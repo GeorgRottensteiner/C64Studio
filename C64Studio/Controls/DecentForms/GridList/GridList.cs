@@ -11,14 +11,11 @@ namespace DecentForms
 {
   public partial class GridList : ControlBase
   {
-    private VScrollBar    _ScrollBar = new VScrollBar();
+    private VScrollBar    _ScrollBarV = new VScrollBar();
     private HScrollBar    _ScrollBarH = new HScrollBar();
     private bool          _ScrollAlwaysVisible = false;
     private int           _MouseOverItem = -1;
     private int           _SelectedIndex = -1;
-
-    // cache max item width (since that's resource heavy, -1 means required to recalc)
-    private int           _CachedMaxItemWidth = -1;
 
     private bool          _UpdateLocked = false;
     private bool          _RedrawRequired= false;
@@ -45,11 +42,12 @@ namespace DecentForms
 
       
 
-      Controls.Add( _ScrollBar );
+      Controls.Add( _ScrollBarV );
       Controls.Add( _ScrollBarH );
-      _ScrollBar.Scroll += _ScrollBar_Scroll;
+      _ScrollBarV.Dock = DockStyle.Right;
+      _ScrollBarV.Scroll += _ScrollBar_Scroll;
       _ScrollBarH.Scroll += _ScrollBarH_Scroll;
-      UpdateScrollbarState();
+      AdjustScrollbars();
     }
 
 
@@ -109,7 +107,7 @@ namespace DecentForms
       set 
       {
         _ScrollAlwaysVisible = value;
-        UpdateScrollbarState();
+        AdjustScrollbars();
         Invalidate(); 
       } 
     }
@@ -120,7 +118,7 @@ namespace DecentForms
     {
       get
       {
-        return _ScrollBar.Value;
+        return _ScrollBarV.Value;
       }
     }
 
@@ -138,8 +136,8 @@ namespace DecentForms
       _InsideAdjustScrollbars = true;
       if ( ItemHeight == 0 )
       {
-        _ScrollBar.Visible = false;
-        _ScrollBar.Value = 0;
+        _ScrollBarV.Visible = false;
+        _ScrollBarV.Value = 0;
 
         _InsideAdjustScrollbars = false;
         return;
@@ -150,9 +148,13 @@ namespace DecentForms
       {
         actualHeight -= _ScrollBarH.Height;
       }
-      int visibleItems = actualHeight / ItemHeight;
+      int visibleItemsVertical = actualHeight / ItemHeight;
+      if ( visibleItemsVertical <= 0 )
+      {
+        visibleItemsVertical = 1;
+      }
 
-      if ( _ScrollBar.Visible )
+      if ( _ScrollBarV.Visible )
       {
         // verify if we could fit all items without the scrollbar
         actualWidth += System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
@@ -161,12 +163,12 @@ namespace DecentForms
         {
           potentialItemsPerLine = 1;
         }
-        int scrollLength = ( ( Items.Count + potentialItemsPerLine - 1 ) / potentialItemsPerLine ) - visibleItems;
+        int scrollLength = ( ( Items.Count + potentialItemsPerLine - 1 ) / potentialItemsPerLine ) - visibleItemsVertical;
         if ( scrollLength <= 0 )
         {
           _itemsPerLine = potentialItemsPerLine;
-          _ScrollBar.Visible = false;
-          _ScrollBar.Value = 0;
+          _ScrollBarV.Visible = false;
+          _ScrollBarV.Value = 0;
           _InsideAdjustScrollbars = false;
           return;
         }
@@ -177,115 +179,23 @@ namespace DecentForms
       {
         _itemsPerLine = 1;
       }
-      int scrollLength2 = ( ( Items.Count + _itemsPerLine - 1 ) / _itemsPerLine ) - visibleItems;
+      int scrollLength2 = ( ( Items.Count + _itemsPerLine - 1 ) / _itemsPerLine ) - visibleItemsVertical;
 
       if ( scrollLength2 <= 0 )
       {
-        _ScrollBar.Visible = false;
-        _ScrollBar.Value = 0;
+        _ScrollBarV.Visible = false;
+        _ScrollBarV.Value = 0;
       }
       else
       {
-        _ScrollBar.Maximum = scrollLength2;
-        if ( _ScrollBar.Value > _ScrollBar.Maximum )
+        _ScrollBarV.Maximum = scrollLength2;
+        if ( _ScrollBarV.Value > _ScrollBarV.Maximum )
         {
-          _ScrollBar.Maximum = 0;
+          _ScrollBarV.Maximum = 0;
         }
-        _ScrollBar.Visible = true;
+        _ScrollBarV.Visible = true;
       }
       _InsideAdjustScrollbars = false;
-    }
-
-
-
-    private void UpdateScrollbarState()
-    {
-      AdjustScrollbars();
-      return;
-      bool    needVerticalScrollbar   = VerticalScrollbarRequired();
-      bool    needHorizontalScrollbar = HorizontalScrollbarRequired();
-
-      int     potentialVScrollWidth = needVerticalScrollbar ? _ScrollBar.Width : 0;
-
-      if ( MaxItemWidth > ClientSize.Width - potentialVScrollWidth )
-      {
-        _ScrollBarH.Visible = true;
-        _ScrollBarH.Bounds = new System.Drawing.Rectangle( 0, ClientSize.Height - _ScrollBarH.Height, ClientSize.Width - potentialVScrollWidth, _ScrollBarH.Height );
-
-        _ScrollBarH.Maximum = MaxItemWidth - ( ClientSize.Width - potentialVScrollWidth );
-
-        float factor = ( ClientSize.Width - potentialVScrollWidth ) / (float)MaxItemWidth;
-        _ScrollBarH.SetSliderSize( (int)( ( _ScrollBarH.Width - 2 * 17 ) * factor ) );
-
-      }
-      else
-      {
-        _ScrollBarH.Visible = false;
-      }
-
-      if ( needVerticalScrollbar )
-      {
-        _ScrollBar.Visible  = true;
-
-        int usableHeight = ClientSize.Height;
-        if ( needHorizontalScrollbar )
-        {
-          usableHeight -= _ScrollBarH.Height;
-        }
-        _ScrollBar.Bounds = new System.Drawing.Rectangle( ClientSize.Width - _ScrollBar.Width, 0, _ScrollBar.Width, usableHeight );
-
-        int   visibleItemCount = 1;
-        if ( ItemHeight == 0 )
-        {
-          visibleItemCount = 1;
-        }
-        else if ( needHorizontalScrollbar )
-        {
-          visibleItemCount = ( ClientSize.Height - _ScrollBarH.Height ) / ItemHeight;
-        }
-        else
-        {
-          visibleItemCount = ClientSize.Height / ItemHeight;
-        }
-        int     newMax = Items.Count - visibleItemCount;
-        if ( Items.Count == 0 )
-        {
-          _ScrollBar.Maximum = 0;
-          _ScrollBar.SetSliderSize( _ScrollBar.Height - 2 * 17 );
-        }
-        else
-        {
-
-          if ( _ScrollBar.Value > newMax )
-          {
-            _ScrollBar.Value = newMax;
-          }
-          _ScrollBar.Maximum = newMax;
-
-          float factor = usableHeight / ( (float)Items.Count * ItemHeight );
-          _ScrollBar.SetSliderSize( (int)( ( _ScrollBar.Height - 2 * 17 ) * factor ) );
-        }
-      }
-      else
-      {
-        if ( !_ScrollAlwaysVisible )
-        {
-          _ScrollBar.Visible = false;
-        }
-        _ScrollBar.Value = 0;
-        _ScrollBar.Maximum = 0;
-      }
-
-      _ActualWorkWidth = 0;
-      _ActualWorkHeight = 0;
-      if ( needVerticalScrollbar )
-      {
-        _ActualWorkWidth = ClientSize.Width - _ScrollBar.Width;
-      }
-      if ( needHorizontalScrollbar )
-      {
-        _ActualWorkHeight = ClientSize.Height - _ScrollBarH.Height;
-      }
     }
 
 
@@ -294,9 +204,9 @@ namespace DecentForms
     {
       if ( VerticalScrollbarRequired() )
       {
-        return MaxItemWidth > ClientSize.Width - _ScrollBar.Width;
+        return ItemWidth > ClientSize.Width - _ScrollBarV.Width;
       }
-      return MaxItemWidth > ClientSize.Width;
+      return ItemWidth > ClientSize.Width;
     }
 
 
@@ -305,7 +215,7 @@ namespace DecentForms
     {
       base.OnSizeChanged( e );
 
-      UpdateScrollbarState();
+      AdjustScrollbars();
     }
 
 
@@ -344,11 +254,11 @@ namespace DecentForms
     {
       get
       {
-        if ( !_ScrollBar.Visible )
+        if ( !_ScrollBarV.Visible )
         {
-          return Math.Max( MaxItemWidth, ClientSize.Width );
+          return Math.Max( 1, ClientSize.Width / ItemWidth * ItemWidth );
         }
-        return Math.Max( MaxItemWidth, ClientSize.Width - _ScrollBar.Width );
+        return Math.Max( 1, ( ClientSize.Width - _ScrollBarV.Width  ) / ItemWidth * ItemWidth );
       }
     }
 
@@ -454,12 +364,12 @@ namespace DecentForms
           }
           if ( _SelectedIndex < FirstVisibleItemIndex )
           {
-            _ScrollBar.Value = _SelectedIndex;
+            _ScrollBarV.Value = _SelectedIndex;
             Invalidate();
           }
           else if ( _SelectedIndex >= FirstVisibleItemIndex + VisibleItemCount )
           {
-            _ScrollBar.Value = Math.Max( 0, _SelectedIndex - VisibleItemCount + 1 );
+            _ScrollBarV.Value = Math.Max( 0, _SelectedIndex - VisibleItemCount + 1 );
             Invalidate();
           }
           else if ( _SelectedIndex != -1 )
@@ -468,42 +378,6 @@ namespace DecentForms
           }
         }
       }
-    }
-
-
-
-    protected int MaxItemWidth 
-    {
-      get
-      {
-        if ( _CachedMaxItemWidth != -1 )
-        {
-          return _CachedMaxItemWidth;
-        }
-        RecalcMaxItemWidth();
-        return _CachedMaxItemWidth;
-      }
-    }
-
-
-
-    private void RecalcMaxItemWidth()
-    {
-      if ( Items == null )
-      {
-        _CachedMaxItemWidth = 0;
-        return;
-      }
-
-      int     curMaxWidth = 0;
-
-      for ( int i = 0; i < Items.Count; ++i )
-      {
-        var textSize = TextRenderer.MeasureText( Items[i].Text, Font );
-
-        curMaxWidth = Math.Max( textSize.Width, curMaxWidth );
-      }
-      _CachedMaxItemWidth = curMaxWidth;
     }
 
 
@@ -543,9 +417,9 @@ namespace DecentForms
           {
             _ScrollBarH.RaiseControlEvent( Event );
           }
-          else if ( _ScrollBar.Visible )
+          else if ( _ScrollBarV.Visible )
           {
-            _ScrollBar.RaiseControlEvent( Event );
+            _ScrollBarV.RaiseControlEvent( Event );
           }
           break;
         case ControlEvent.EventType.MOUSE_UPDATE:
@@ -711,6 +585,17 @@ namespace DecentForms
             }
           }
           break;
+        case ControlEvent.EventType.SET_CURSOR:
+          if ( ( CustomMouseHandling )
+          &&   ( _MouseOverItem != -1 ) )
+          {
+            CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
+            if ( Event.Handled )
+            {
+              return;
+            }
+          }
+          break;
       }
       base.OnControlEvent( Event );
     }
@@ -814,8 +699,28 @@ namespace DecentForms
 
     private void ItemModified( GridListItem Item )
     {
-      _CachedMaxItemWidth = -1;
+      RebuildVisibleItemIndices();
       Invalidate( GetItemRect( Item.Index ) );
+    }
+
+
+
+    private void RebuildVisibleItemIndices()
+    {
+      int   visibleIndex = 0;
+
+      foreach ( var item in Items )
+      {
+        if ( item.Visible )
+        {
+          item._VisibleIndex = visibleIndex;
+          ++visibleIndex;
+        }
+        else
+        {
+          item._VisibleIndex = -1;
+        }
+      }
     }
 
 
@@ -823,11 +728,13 @@ namespace DecentForms
     internal Rectangle GetItemRect( int ItemIndex )
     {
       if ( ( ItemIndex < FirstVisibleItemIndex )
-      ||   ( ItemIndex >= Items.Count ) )
+      ||   ( ItemIndex >= Items.Count )
+      ||   ( !Items[ItemIndex].Visible ) )
       {
         return Rectangle.Empty;
       }
-      int  localIndex = ItemIndex - FirstVisibleItemIndex;
+      int  localIndex = Items[ItemIndex]._VisibleIndex - FirstVisibleItemIndex;
+
       return new Rectangle( ( localIndex % ItemsPerLine ) * ItemWidth, 
                             localIndex / ItemsPerLine * ItemHeight,
                             ItemWidth, ItemHeight );
@@ -850,8 +757,8 @@ namespace DecentForms
     private void ItemsModified()
     {
       FixItemIndices();
-      _CachedMaxItemWidth = -1;
-      UpdateScrollbarState();
+      RebuildVisibleItemIndices();
+      AdjustScrollbars();
       Invalidate();
     }
 

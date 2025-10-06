@@ -1700,6 +1700,10 @@ namespace DecentForms
         OnAfterLabelEdit( nodeLabelEditEventArgs );
         if ( !nodeLabelEditEventArgs.CancelEdit )
         {
+          if ( _EditedNode == null )
+          {
+            return;
+          }
           _EditedNode.Text = nodeLabelEditEventArgs.Label;
         }
       }

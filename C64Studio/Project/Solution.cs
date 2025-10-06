@@ -215,6 +215,10 @@ namespace RetroDevStudio
 
       var oldProjectFilename = Project.Settings.Filename;
       var newProjectFilename = GR.Path.RenameFilenameWithoutExtension( oldProjectFilename, NewName );
+      if ( oldProjectFilename == newProjectFilename )
+      {
+        return;
+      }
       if ( System.IO.File.Exists( newProjectFilename ) )
       {
         MainForm.StudioCore.Notification.MessageBox( "Cannot rename project", $"The new project filename '{newProjectFilename}' already exists!" );

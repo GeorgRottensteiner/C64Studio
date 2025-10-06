@@ -600,7 +600,9 @@ namespace DecentForms
 
     CursorType  _cursor = CursorType.CURSOR_DEFAULT;
 
-    protected void SetCursor( CursorType cursor )
+
+
+    public void SetCursor( CursorType cursor )
     {
       Cursor  newCursor = Cursors.Arrow;
       switch ( cursor )

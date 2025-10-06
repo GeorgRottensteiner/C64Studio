@@ -1,0 +1,5 @@
+<Sample Name="Sample Project 1"
+  Machine="C64" 
+  ShortDescription="A basic C64 project example" 
+  Desc="Creates a BASIC stub, sets the color of the screen border to white and returns to BASIC">
+</Sample>

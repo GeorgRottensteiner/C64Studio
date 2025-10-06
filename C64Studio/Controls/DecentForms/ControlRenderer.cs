@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Controls;
+﻿using GR.Image;
+using RetroDevStudio.Controls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -1188,6 +1189,11 @@ namespace DecentForms
           break;
         }
 
+        var item = gridList.Items[realIndex];
+        if ( !item.Visible )
+        {
+          continue;
+        }
         gridList.RenderItem( this, gridList.Items[realIndex], gridList.GetItemRect( realIndex ) );
       }
     }
@@ -1337,6 +1343,58 @@ namespace DecentForms
           }
           while ( ( !bDone )
           &&      ( itemIndex < listControl.Items.Count ) ); 
+        }
+      }
+    }
+
+
+
+    internal void DrawWrappedText( string textToDraw, List<Rectangle> rectangles )
+    {
+      int curY = -1;
+      foreach ( var rect in rectangles )
+      {
+        if ( curY == -1 )
+        {
+          curY = rect.Top;
+        }
+
+        // Measure how much text fits in the current rectangle
+        StringFormat format = new StringFormat();
+        format.Trimming = StringTrimming.Word; // Ensure words are not cut off
+        format.FormatFlags = StringFormatFlags.LineLimit | StringFormatFlags.NoWrap;
+
+        DrawLine:;
+        int charsFitted, linesFilled;
+        SizeF size = _G.MeasureString( textToDraw, _Control.Font, rect.Size, format, out charsFitted, out linesFilled );
+        if ( linesFilled == 0 )
+        {
+          continue;
+        }
+
+        // Draw the portion of text that fits in the current rectangle
+        TextRenderer.DrawText( _G,
+                                textToDraw.Substring( 0, charsFitted ),
+                                _Control.Font,
+                                new Point( rect.Left - _DisplayOffsetX, curY - _DisplayOffsetY ),
+                                ToColor( ColorControlText ),
+                                TextFormatFlags.PreserveGraphicsClipping | TextFormatFlags.WordBreak );
+        curY += (int)( size.Height * DPIHandler.DPIY / 96 );
+
+        // Remove the drawn portion from the remaining text
+        if ( charsFitted < textToDraw.Length )
+        {
+          textToDraw = textToDraw.Substring( charsFitted );
+
+          if ( curY >= rect.Bottom )
+          {
+            continue;
+          }
+          goto DrawLine;
+        }
+        else
+        {
+          break; // All text has been drawn
         }
       }
     }

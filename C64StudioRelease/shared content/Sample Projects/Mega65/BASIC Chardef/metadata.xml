@@ -1,0 +1,5 @@
+<Sample Name="BASIC Chardef"
+  Machine="Mega65" 
+  ShortDescription="Use CHARDEF command" 
+  Desc="Shows the plain usage of the BASIC CHARDEF command to redefine the design of letter E.">
+</Sample>

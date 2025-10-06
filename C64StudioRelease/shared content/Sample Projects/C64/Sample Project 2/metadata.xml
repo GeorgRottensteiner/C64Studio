@@ -1,0 +1,5 @@
+<Sample Name="Sample Project 2"
+  Machine="C64" 
+  ShortDescription="A basic C64 project example" 
+  Desc="Creates a BASIC stub, displays a text on screen and returns to BASIC">
+</Sample>

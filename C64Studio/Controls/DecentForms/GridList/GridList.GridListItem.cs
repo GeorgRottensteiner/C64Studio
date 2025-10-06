@@ -9,6 +9,8 @@
       private bool          _Checked = false;
       internal bool         _Selected = false;
       internal int          _Index = -1;
+      internal int          _VisibleIndex = -1;
+      private bool          _Visible = true;
 
 
 
@@ -35,6 +37,24 @@
         {
           _Text = value;
           _Owner?.ItemModified( this );
+        }
+      }
+
+
+
+      public bool Visible
+      {
+        get
+        {
+          return _Visible;
+        }
+        set
+        {
+          if ( _Visible != value )
+          {
+            _Visible = value;
+            _Owner?.ItemModified( this );
+          }
         }
       }
 
