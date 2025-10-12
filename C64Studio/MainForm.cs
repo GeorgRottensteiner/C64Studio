@@ -6338,6 +6338,8 @@ namespace RetroDevStudio
         {
           document.SetDocumentFilename( Filename );
           document.Text = GR.Path.GetFileName( Filename );
+          // call this here so the proper tab settings are applied
+          document.RefreshDisplayOptions();
           if ( !document.LoadDocument() )
           {
             document.ToolTipText = "";

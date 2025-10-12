@@ -101,20 +101,20 @@ namespace RetroDevStudio
     public ToolStripMenuItem  MenuItem = null;
     public string             ToolDescription = "";
     public GR.Collections.Map<Perspective,bool> Visible = new GR.Collections.Map<Perspective, bool>();
-  };
+  }
 
   public class KeymapEntry
   {
     public Types.PhysicalKey  KeyboardKey = RetroDevStudio.Types.PhysicalKey.UNDEFINED;
     public System.Windows.Forms.Keys Key = System.Windows.Forms.Keys.None;
-  };
+  }
 
   public class DebugMemoryViewSettings
   {
     public int      DebugMemoryOffset = 0;
     public int      DebugMemoryByteOffset = 0;
     public int      DebugMemoryNumBytesPerLine = 8;
-  };
+  }
 
   public enum SortBy
   {
@@ -263,6 +263,7 @@ namespace RetroDevStudio
 
     public SourceControlInfo                    SourceControlInfo = new SourceControlInfo();
     public DialogSettings                       DialogSettings = new DialogSettings();
+    public AutoFormatSettings                   FormatSettings = new AutoFormatSettings();
 
     private int                                 _functionIndex = 0;
 
