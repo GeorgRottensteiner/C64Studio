@@ -1,0 +1,5 @@
+<Sample Name="FCM 40x25 16-Bit Chars"
+  Machine="Mega65" 
+  ShortDescription="40x25 16-Bit FCM text screen" 
+  Desc="Displays a Full Color Mode (NCM) 40x25 text screen with 16 bit characters from the provided charscreen project file. Exhibits how to include a charset and set up FCM mode with 16 bit characters. Also uses a custom palette.">
+</Sample>

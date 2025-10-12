@@ -17,6 +17,8 @@ SCREEN_COLOR  = $ff80000
 ZEROPAGE_POINTER_1 = $f8
 ZEROPAGE_POINTER_2 = $fa
 
+CHAR_PALETTE_ENTRY_COUNT = 256
+
 ;use $fc to $ff as target (32bit)
 ZEROPAGE_POINTER_TARGET = $fc
 
@@ -106,8 +108,8 @@ ZEROPAGE_POINTER_TARGET = $fc
           lda #0
           sta [ZEROPAGE_POINTER_TARGET],z
 
+          ;this requires the carry bit from the lo byte addition set!
           lda (ZEROPAGE_POINTER_1),y
-          clc
           adc #>( TILE_DATA / 64 )
           sta (ZEROPAGE_POINTER_2),y
 
@@ -147,9 +149,43 @@ ZEROPAGE_POINTER_TARGET = $fc
           dex
           bne .NextLine
 
+          jsr SetPalette
+
 
           ;endless loop
           jmp *
+
+
+!lzone SetPalette
+          ;Bit 6-7 = Mapped Palette
+          ;bit 0-1 = Char palette index
+          lda #%01011001
+          sta VIC4.PALSEL
+
+          ;copy palette data (CHAR_PALETTE_ENTRY_COUNT entries),
+          ldx #0
+          ldy #0
+-
+
+          lda PALETTE_DATA, x
+          sta VIC4.PALRED,y
+          lda PALETTE_DATA + 1 * CHAR_PALETTE_ENTRY_COUNT, x
+          sta VIC4.PALGREEN,y
+          lda PALETTE_DATA + 2 * CHAR_PALETTE_ENTRY_COUNT, x
+          sta VIC4.PALBLUE,y
+
+          iny
+          inx
+          bne -
+
+          lda #33
+          sta VIC.BACKGROUND_COLOR
+
+          ;set sprite pal to bank 1
+          lda #%10011001
+          sta VIC4.PALSEL
+
+          rts
 
 
 
@@ -157,9 +193,14 @@ TEXT_SCREEN_DATA
           ;contains 40x25 character words (40 * 25 * 2 bytes)
           !media "Text Screen.charscreen",CHAR
 
+PALETTE_DATA
+          ;holds the 3 RGB values of all 256 colors
+          ;note: Mega65 tries to be compatible to the C65, so high and low nybble of a color
+          ;      byte are swapped. Hence SWIZZLED is used so we can copy the values over directly
+          !media "Text Screen.charscreen",PALETTESWIZZLED
 
 !realign 64
 TILE_DATA
 
-!media "Text Screen.charscreen",CHARSET,0,2
+!media "Text Screen.charscreen",CHARSET,0,652
 

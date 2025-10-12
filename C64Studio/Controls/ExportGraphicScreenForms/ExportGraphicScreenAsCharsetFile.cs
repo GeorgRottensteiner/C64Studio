@@ -39,24 +39,22 @@ namespace RetroDevStudio.Controls
         }
       }
       comboCharScreens.SelectedIndex = 0;
-
-      comboExportCharsetType.Items.Add( "HiRes Charset" );
-      comboExportCharsetType.Items.Add( "Multicolor Charset" );
-      comboExportCharsetType.SelectedIndex = 0;
     }
 
 
 
-    public override bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public override bool HandleExport( GraphicScreenEditor editor, ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
       if ( comboCharScreens.SelectedIndex == -1 )
       {
         return false;
       }
-      if ( !ApplyCharsetChecks( Info, comboExportCharsetType.SelectedIndex == 1, false, out var charScreenData, out var charsetData ) )
+      Debug.Log( "HandleExport a" );
+      if ( !ApplyCharsetChecks( editor, Info, false, out var charScreenData, out var charsetData ) )
       {
         return false;
       }
+      Debug.Log( "HandleExport b" );
 
       DocumentInfo    docToImportTo = (DocumentInfo)( (Types.ComboItem)comboCharScreens.SelectedItem ).Tag;
 
@@ -132,10 +130,37 @@ namespace RetroDevStudio.Controls
         charset.Colors.PaletteMappingIndex = project.CharSet.Colors.PaletteMappingIndex;
 
         project.Chars = charScreenData;
+        project.CharSet.Colors = charset.Colors;
+
+        Debug.Log( "HandleExport c" );
+        charset.TotalNumberOfCharacters = Lookup.NumCharactersForMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ) );
+        for  ( int i = 0; i < charset.Characters.Count; ++i )
+        {
+          charset.Characters[i].Tile = new GraphicTile( Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 0 ) ),
+                                    Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 0 ) ),
+                                    Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 1 ),
+                                    charset.Colors );
+        }
+        Debug.Log( "HandleExport d" );
+        while ( charset.Characters.Count < charset.TotalNumberOfCharacters )
+        {
+          var newChar = new CharData()
+          {
+            Tile = new GraphicTile( Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 0 ) ),
+                                    Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 0 ) ), 
+                                    Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 1 ),
+                                    charset.Colors )
+          };
+          newChar.Tile.CustomColor = 1;
+          charset.Characters.Add( newChar );
+        }
+        Debug.Log( "HandleExport e" );
+
         for ( int i = 0; i < charset.TotalNumberOfCharacters; ++i )
         {
           charsetData.CopyTo( charset.Characters[i].Tile.Data, i * Lookup.NumBytesOfSingleCharacterBitmap( charset.Mode ), Lookup.NumBytesOfSingleCharacterBitmap( charset.Mode ) );
         }
+        Debug.Log( "HandleExport f" );
         charScreen.InjectProjects( project, charset );
         charScreen.SetModified();
       }

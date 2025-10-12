@@ -104,7 +104,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public override bool HandleExport( GraphicScreenEditor editor, ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
       if ( ( startLine < 0 )

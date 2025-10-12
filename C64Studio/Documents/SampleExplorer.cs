@@ -64,12 +64,27 @@ namespace RetroDevStudio.Documents
       foreach ( var systemfolder in folders )
       {
         var sysFolderName = GR.Path.GetFileName( systemfolder ).ToUpper();
+        var machine = MachineType.ANY;
         if ( !Enum.GetNames( typeof( MachineType ) ).Contains( sysFolderName ) )
         {
-          //Debug.Log( $"Unsupported sample machine type {sysFolderName}" );
-          continue; 
+          foreach ( MachineType machineType in Enum.GetValues( typeof( MachineType ) ) )
+          {
+            if ( GR.EnumHelper.GetDescription( machineType ).ToUpper() == sysFolderName )
+            {
+              machine = machineType;
+              break;
+            }
+          }
+          if ( machine == MachineType.ANY )
+          {
+            //Debug.Log( $"Unsupported sample machine type {sysFolderName}" );
+            continue;
+          }
         }
-        var machine = (MachineType)System.Enum.Parse( typeof( MachineType ), sysFolderName, true );
+        else
+        {
+          machine = (MachineType)System.Enum.Parse( typeof( MachineType ), sysFolderName, true );
+        }
 
         var sampleFolders = System.IO.Directory.GetDirectories( systemfolder );
         foreach ( var sampleFolder in sampleFolders )
@@ -94,7 +109,8 @@ namespace RetroDevStudio.Documents
               };
               try
               {
-                project.Image = Bitmap.FromFile( thumbFile );
+                var unlockedImage = Core.Imaging.LoadImageFromFile( thumbFile );
+                project.Image = unlockedImage.GetAsBitmap();
               }
               catch ( Exception )
               {
@@ -112,26 +128,28 @@ namespace RetroDevStudio.Documents
 
     private void SampleLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
-      if (e.Error != null)
+      btnRefresh.Enabled = true;
+      if ( e.Error != null )
       {
-        Core.AddToOutputLine(string.Format("Error loading samples: {0}", e.Error.Message));
+        Core.AddToOutputLine( $"Error loading samples: {e.Error.Message}" );
         return;
       }
 
-      if (!e.Cancelled)
+      if ( e.Cancelled )
       {
-        List<SampleProject> samples = e.Result as List<SampleProject>;
-        if ( samples != null )
+        return;
+      }
+      var samples = e.Result as List<SampleProject>;
+      if ( samples != null )
+      {
+        gridSamples.Items.Clear();
+        foreach ( SampleProject sample in samples )
         {
-          gridSamples.Items.Clear();
-          foreach ( SampleProject sample in samples )
-          {
-            gridSamples.Items.Add( new DecentForms.GridList.GridListItem 
-            { 
-              Text = sample.Name,
-              Tag = sample
-            });
-          }
+          gridSamples.Items.Add( new DecentForms.GridList.GridListItem 
+          { 
+            Text = sample.Name,
+            Tag = sample
+          });
         }
       }
     }
@@ -295,7 +313,7 @@ namespace RetroDevStudio.Documents
       e.Renderer.DrawText( sample.ShortDescription, e.Bounds.X + 4, e.Bounds.Y + 20, e.Bounds.Width - 8, e.Bounds.Height - 20, DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.TOP, 0xff000000 );
       e.Renderer.DrawImage( sample.Image, e.Bounds.X + e.Bounds.Width - 132, e.Bounds.Y + 4, 128, 96 );
 
-      e.Renderer.DrawText( sample.Machine.ToString(), e.Bounds.X + 4, e.Bounds.Bottom - 26, 100, 20, DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, 0xff000000 );
+      e.Renderer.DrawText( GR.EnumHelper.GetDescription( sample.Machine ), e.Bounds.X + 4, e.Bounds.Bottom - 26, 100, 20, DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, 0xff000000 );
 
       var bounds = GetSampleLinkRect( e.Item );
       e.Renderer.DrawText( "Create", e.Bounds.X, e.Bounds.Bottom - 28, e.Bounds.Width, 20, DecentForms.TextAlignment.CENTERED_H | DecentForms.TextAlignment.BOTTOM, 0xff4040ff );
@@ -322,6 +340,7 @@ namespace RetroDevStudio.Documents
     {
       if ( !sampleLoader.IsBusy )
       {
+        btnRefresh.Enabled = false;
         sampleLoader.RunWorkerAsync();
       }
     }
@@ -346,6 +365,17 @@ namespace RetroDevStudio.Documents
         }
       }
       gridSamples.EndUpdate();
+    }
+
+
+
+    private void btnRefresh_Click( object sender, EventArgs e )
+    {
+      if ( !sampleLoader.IsBusy )
+      {
+        btnRefresh.Enabled = false;
+        sampleLoader.RunWorkerAsync();
+      }
     }
 
 

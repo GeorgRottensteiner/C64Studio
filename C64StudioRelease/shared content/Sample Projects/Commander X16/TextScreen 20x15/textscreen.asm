@@ -8,7 +8,7 @@ VIDEO_RAM = $01b000
 * = $0801
 
 !basic
-
+          ;set video RAM to $01b000
           lda #( VIDEO_RAM >> 16 ) | $10
           sta VERA.ADDRx_H
           lda #( VIDEO_RAM >> 8 ) & $ff
@@ -116,4 +116,5 @@ VIDEO_RAM = $01b000
 
 
 SCREEN_DATA
+          ;this places 20x15 screen data, with char and color interleaved
           !media "textscreen20x15.charscreen",CHARCOLORINTERLEAVED

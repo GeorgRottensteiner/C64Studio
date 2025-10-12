@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GR.Memory;
+using RetroDevStudio.Documents;
 
 namespace RetroDevStudio.Controls
 {
@@ -74,7 +75,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public override bool HandleExport( GraphicScreenEditor editor, ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
       // prepare data
       var exportType = (ExportType)comboExportType.SelectedIndex;
@@ -102,7 +103,7 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.HIRES_CHARSET:
         case ExportType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, false, true, out charScreenChars, out charsetData ) )
+          if ( !ApplyCharsetChecks( editor, Info, true, out charScreenChars, out charsetData ) )
           {
             return false;
           }
@@ -123,7 +124,7 @@ namespace RetroDevStudio.Controls
           break;
         case ExportType.MULTICOLOR_CHARSET:
         case ExportType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          if ( !ApplyCharsetChecks( Info, true, true, out charScreenChars, out charsetData ) )
+          if ( !ApplyCharsetChecks( editor, Info, true, out charScreenChars, out charsetData ) )
           {
             return false;
           }

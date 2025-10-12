@@ -10,10 +10,6 @@
 
 SCREEN_CHAR   = $0800
 
-;for 40x25 the lower 1000 bytes of the color RAM are mapped here
-SCREEN_COLOR  = $d800
-
-
 * = $2001
 
           ;this must follow after !cpu m65, because it adds a BANK to the BASIC upstart
@@ -86,4 +82,5 @@ TEXT_SCREEN_DATA
 * = $3000
 TILE_DATA
 
-!media "Text Screen.charscreen",CHARSET,0,2
+          ;this statement includes the charset data of 2 FCM characters (2 * 8x8 = 128 bytes)
+          !media "Text Screen.charscreen",CHARSET,0,2

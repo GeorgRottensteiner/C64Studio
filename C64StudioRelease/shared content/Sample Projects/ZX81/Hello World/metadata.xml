@@ -1,0 +1,5 @@
+<Sample Name="ZX81 Hello World"
+  Machine="ZX81"
+  ShortDescription="Simple assembly"
+  Desc="Assembles the assembly into a BASIC loader. Displays 'Hello World' on screen.">
+</Sample>

@@ -102,7 +102,7 @@ namespace RetroDevStudio.Controls
 
 
     
-    public override bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public override bool HandleExport( GraphicScreenEditor editor, ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
       var charsetProject = GraphicScreenEditor.ExportToCharset( Info.Project, Info.Chars );
       if ( charsetProject == null )

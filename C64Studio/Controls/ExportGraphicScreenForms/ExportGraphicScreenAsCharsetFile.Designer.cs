@@ -31,8 +31,6 @@ namespace RetroDevStudio.Controls
     {
       this.comboCharScreens = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
-      this.comboExportCharsetType = new System.Windows.Forms.ComboBox();
       this.SuspendLayout();
       // 
       // comboCharScreens
@@ -55,32 +53,10 @@ namespace RetroDevStudio.Controls
       this.label1.TabIndex = 14;
       this.label1.Text = "Export to:";
       // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(3, 38);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(73, 13);
-      this.label2.TabIndex = 14;
-      this.label2.Text = "Charset Type:";
-      // 
-      // comboExportCharsetType
-      // 
-      this.comboExportCharsetType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.comboExportCharsetType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboExportCharsetType.FormattingEnabled = true;
-      this.comboExportCharsetType.Location = new System.Drawing.Point(77, 35);
-      this.comboExportCharsetType.Name = "comboExportCharsetType";
-      this.comboExportCharsetType.Size = new System.Drawing.Size(237, 21);
-      this.comboExportCharsetType.TabIndex = 13;
-      // 
       // ExportGraphicScreenAsCharsetFile
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
-      this.Controls.Add(this.comboExportCharsetType);
       this.Controls.Add(this.comboCharScreens);
       this.Name = "ExportGraphicScreenAsCharsetFile";
       this.Size = new System.Drawing.Size(317, 317);
@@ -93,7 +69,5 @@ namespace RetroDevStudio.Controls
 
     private System.Windows.Forms.ComboBox comboCharScreens;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.ComboBox comboExportCharsetType;
   }
 }

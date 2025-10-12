@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RetroDevStudio.Types
 {
-  public class SampleProject
+  public class SampleProject : IDisposable
   {
     public SampleProjectType Type = SampleProjectType.SAMPLE;
     public string URL = "";
@@ -16,5 +16,15 @@ namespace RetroDevStudio.Types
     public string LongDescription = "";
     public Image  Image = null;
     public MachineType Machine = MachineType.C64;
+
+
+
+    public void Dispose()
+    {
+      Image?.Dispose();
+    }
+
+
+
   }
 }

@@ -284,13 +284,13 @@ namespace RetroDevStudio.Parser
         else
         {
           if ( ( startIndex < 0 )
-          ||   ( startIndex >= charProject.ExportNumCharacters ) )
+          ||   ( startIndex >= charProject.TotalNumberOfCharacters ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
             return false;
           }
           if ( ( numChars <= 0 )
-          || ( ( startIndex + numChars ) > charProject.ExportNumCharacters ) )
+          || ( ( startIndex + numChars ) > charProject.TotalNumberOfCharacters ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numChars );
             return false;
@@ -1089,7 +1089,7 @@ namespace RetroDevStudio.Parser
           }
 
           int startIndex = 0;
-          int numChars = screenProject.CharSet.ExportNumCharacters;
+          int numChars = screenProject.CharSet.TotalNumberOfCharacters;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
@@ -1102,7 +1102,7 @@ namespace RetroDevStudio.Parser
             numChars = numCharsSymbol.ToInt32();
           }
           if ( ( startIndex < 0 )
-          ||   ( startIndex >= screenProject.CharSet.ExportNumCharacters ) )
+          ||   ( startIndex >= screenProject.CharSet.TotalNumberOfCharacters ) )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
             return false;
@@ -1112,10 +1112,10 @@ namespace RetroDevStudio.Parser
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters, must be >= 1" );
             return false;
           }
-          if ( startIndex + numChars > screenProject.CharSet.ExportNumCharacters )
+          if ( startIndex + numChars > screenProject.CharSet.TotalNumberOfCharacters )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters, charset has " 
-                  + screenProject.CharSet.ExportNumCharacters + " characters, but we're trying to fetch up to " + ( startIndex + numChars ) );
+                  + screenProject.CharSet.TotalNumberOfCharacters + " characters, but we're trying to fetch up to " + ( startIndex + numChars ) );
             return false;
           }
           dataToInclude = screenProject.CharSet.CharacterData( startIndex, numChars );

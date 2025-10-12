@@ -1215,6 +1215,13 @@ namespace GR
 
 
 
+      public void Fill( byte fillValue )
+      {
+        Fill( 0, (int)Length, fillValue );
+      }
+
+
+
       public void Fill( int Offset, int Count, byte FillValue )
       {
         if ( ( Offset >= m_Data.Length )

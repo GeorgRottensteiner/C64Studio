@@ -1756,30 +1756,31 @@ namespace RetroDevStudio.Documents
 
     private bool CheckForFCMCharsetErrors( int AllowedNumberOfChars )
     {
-      bool      foundError = false;
+      Debug.Log( "CheckExportType inside c" );
       ClearErrorFlags();
-      // nothing can go wrong, 256 colors for free use
-      if ( foundError )
-      {
-        return true;
-      }
+      Debug.Log( "CheckExportType inside d" );
 
       // check for duplicates
       int items = m_Chars.Count;
       int foldedItems = 0;
       int curIndex = 0;
 
+      Debug.Log( "CheckExportType inside e" );
+      var images = new ByteBuffer[m_Chars.Count];
       for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
       {
-        var  tile1 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index1 % ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockWidth,
+        images[index1] = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index1 % ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockWidth,
           ( index1 / ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockHeight,
           CheckBlockWidth, CheckBlockHeight ) ).GetAsData();
+      }
+
+      for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
+      {
+        var  tile1 = images[index1];
         bool wasFolded = false;
         for ( int index2 = 0; index2 < index1; ++index2 )
         {
-          var  tile2 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index2 % ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockWidth,
-                                    ( index2 / ( ( m_GraphicScreenProject.ScreenWidth + CheckBlockWidth - 1 ) / CheckBlockWidth ) ) * CheckBlockHeight,
-                                    CheckBlockWidth, CheckBlockHeight ) ).GetAsData();
+          var  tile2 = images[index2];
 
           if ( tile1.Compare( tile2 ) == 0 )
           {
@@ -1805,6 +1806,7 @@ namespace RetroDevStudio.Documents
           ++curIndex;
         }
       }
+      Debug.Log( "CheckExportType inside f" );
       labelCharInfo.Text = "";
       if ( items - foldedItems > AllowedNumberOfChars )
       {
@@ -2056,13 +2058,16 @@ namespace RetroDevStudio.Documents
 
     private void btnCheck_Click( DecentForms.ControlBase Sender )
     {
+      Debug.Log( "CheckExportType a" );
       CheckExportType();
+      Debug.Log( "CheckExportType b" );
     }
 
 
 
-    private bool CheckExportType()
+    public bool CheckExportType()
     {
+      Debug.Log( "CheckExportType inside a" );
       foreach ( Formats.CharData aChar in m_Chars )
       {
         aChar.Error = "";
@@ -2070,35 +2075,36 @@ namespace RetroDevStudio.Documents
         aChar.Replacement = null;
       }
 
-      bool  allGood = false;
+      Debug.Log( "CheckExportType inside b" );
+      bool  hasErrors = false;
 
       switch ( (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex )
       {
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
-          allGood = CheckForHiResBitmapErrors();
+          hasErrors = CheckForHiResBitmapErrors();
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
-          allGood = CheckForMCBitmapErrors();
+          hasErrors = CheckForMCBitmapErrors();
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.HIRES_CHARSET:
-          allGood = CheckForHiResCharsetErrors();
+          hasErrors = CheckForHiResCharsetErrors();
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
-          allGood = CheckForMCCharsetErrors();
+          hasErrors = CheckForMCCharsetErrors();
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
-          allGood = CheckForFCMCharsetErrors( 256 );
+          hasErrors = CheckForFCMCharsetErrors( 256 );
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
-          allGood = CheckForFCMCharsetErrors( 8192 );
+          hasErrors = CheckForFCMCharsetErrors( 8192 );
           break;
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.VIC20_CHARSET:
         case RetroDevStudio.Formats.GraphicScreenProject.CheckType.VIC20_CHARSET_8X16:
-          allGood = CheckForVIC20CharsetErrors();
+          hasErrors = CheckForVIC20CharsetErrors();
           break;
         case GraphicScreenProject.CheckType.MEGA65_BITMAP:
           // always fine
-          allGood = true;
+          hasErrors = true;
           break;
         default:
           Debug.Log( "Unsupported CheckType: " + (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex );
@@ -2106,7 +2112,7 @@ namespace RetroDevStudio.Documents
       }
       Redraw();
 
-      return allGood;
+      return !hasErrors;
     }
 
 
@@ -3518,7 +3524,9 @@ namespace RetroDevStudio.Documents
 
     private void btnExport_Click( DecentForms.ControlBase Sender )
     {
+      Debug.Log( "CheckExportType a" );
       CheckExportType();
+      Debug.Log( "CheckExportType b" );
 
       var exportInfo = new ExportGraphicScreenInfo()
       {
@@ -3534,7 +3542,8 @@ namespace RetroDevStudio.Documents
 
       editExportOutput.Text = "";
       editExportOutput.Font = m_DefaultOutputFont;
-      if ( !_ExportForm.HandleExport( exportInfo, editExportOutput, DocumentInfo ) )
+      Debug.Log( "CheckExportType c" );
+      if ( !_ExportForm.HandleExport( this, exportInfo, editExportOutput, DocumentInfo ) )
       {
         // if export as charset was chosen and failed with checks, redraw
         Redraw();

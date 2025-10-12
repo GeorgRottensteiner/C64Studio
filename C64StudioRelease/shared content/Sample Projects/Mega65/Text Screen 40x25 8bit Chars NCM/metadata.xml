@@ -1,0 +1,5 @@
+<Sample Name="Text Screen 40x25 NCM"
+  Machine="Mega65" 
+  ShortDescription="40x25 NCM text screen from project" 
+  Desc="Displays a Nibble Color Mode (NCM) 20x25 text screen from the provided charscreen project file. Exhibits how to include a charset and set up NCM mode with 8 bit characters. Note characters are 16x8 pixel in size, using 16 colors.">
+</Sample>

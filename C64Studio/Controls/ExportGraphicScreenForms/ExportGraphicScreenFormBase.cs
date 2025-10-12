@@ -1,5 +1,6 @@
 ﻿using GR.Memory;
 using RetroDevStudio;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -35,34 +36,20 @@ namespace RetroDevStudio.Controls
 
 
 
-    public virtual bool HandleExport( ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public virtual bool HandleExport( GraphicScreenEditor editor, ExportGraphicScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
     {
       return false;
     }
 
 
 
-    protected bool ApplyCharsetChecks( ExportGraphicScreenInfo Info, bool charsetIsMultiColor, bool stripUnusedChars,
+    protected bool ApplyCharsetChecks( GraphicScreenEditor editor, ExportGraphicScreenInfo Info, bool stripUnusedChars,
                                        out List<uint> screenData,
                                        out ByteBuffer charsetData )
     {
       screenData = new List<uint>();
       charsetData = new ByteBuffer();
 
-      int   x = 0;
-      int   y = 0;
-      foreach ( var c in Info.Chars )
-      {
-        Info.ErrornousChars[x / Info.CheckBlockWidth, y / Info.CheckBlockHeight] = !Info.Project.CheckCharBox( c, x, y, Info.CheckBlockWidth, Info.CheckBlockHeight, charsetIsMultiColor );
-
-        x += Info.CheckBlockWidth;
-        if ( x >= Info.Image.Width )
-        {
-          x = 0;
-          y += Info.CheckBlockHeight;
-        }
-      }
-      // automatic check
       if ( Info.Chars.Any( c => !string.IsNullOrEmpty( c.Error ) ) )
       {
         Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, conversion had errors!\r\nCheck the chosen colors for possible combinations!" );
@@ -102,20 +89,21 @@ namespace RetroDevStudio.Controls
           ++curIndex;
         }
       }
-      if ( items - foldedItems > 256 )
+      int totalNumChars = Lookup.NumCharactersForMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ) );
+      if ( items - foldedItems > totalNumChars )
       {
-        Core.Notification.MessageBox( "Cannot export to charset", "Cannot export to charset, more than 256 unique characters found!\r\nCheck the chosen colors for possible combinations!" );
+        Core.Notification.MessageBox( "Cannot export to charset", $"Cannot export to charset, more than {totalNumChars} unique characters found!\r\nCheck the chosen colors for possible combinations!" );
         return false;
       }
 
-      // BOO TODO!
+      int numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ) );
       if ( stripUnusedChars )
       {
-        charsetData.Resize( (uint)( 8 * ( items - foldedItems ) ) );
+        charsetData.Resize( (uint)( numBytes * ( items - foldedItems ) ) );
       }
       else
       {
-        charsetData.Resize( 256 * 8 );
+        charsetData.Resize( (uint)( totalNumChars * numBytes ) );
       }
       screenData = new List<uint>( Info.Chars.Count );
 
@@ -124,7 +112,7 @@ namespace RetroDevStudio.Controls
         screenData.Add( (uint)( ( Info.Chars[i].Index & 0xffff ) | ( Info.Chars[i].Tile.CustomColor << 16 ) ) );
         if ( Info.Chars[i].Replacement == null )
         {
-          Info.Chars[i].Tile.Data.CopyTo( charsetData, 0, 8, Info.Chars[i].Index * 8 );
+          Info.Chars[i].Tile.Data.CopyTo( charsetData, 0, numBytes, Info.Chars[i].Index * numBytes );
         }
         else
         {

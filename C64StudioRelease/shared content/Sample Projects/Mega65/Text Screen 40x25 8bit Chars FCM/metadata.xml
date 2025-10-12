@@ -1,0 +1,5 @@
+<Sample Name="Text Screen 40x25 FCM"
+  Machine="Mega65" 
+  ShortDescription="40x25 FCM text screen from project" 
+  Desc="Displays a Full Color Mode (FCM) 40x25 text screen from the provided charscreen project file. Exhibits how to include a charset and set up FCM mode with 8 bit characters.">
+</Sample>
