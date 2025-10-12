@@ -74,6 +74,7 @@ namespace RetroDevStudio.Documents
 
     private string                            m_SyntaxColoringCurrentKnownCPU       = "";
     private AssemblerType                     m_SyntaxColoringCurrentKnownAssembler = AssemblerType.AUTO;
+    private ASMSyntaxHighlighter              _syntaxHighlighter = null;
 
     private delegate void delSimpleEventHandler();
 
@@ -223,7 +224,9 @@ namespace RetroDevStudio.Documents
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
       editSource.PreferredLineWidth = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
       editSource.ToolTipDisplayDuration = 30000;
-      editSource.SyntaxHighlighter = new ASMSyntaxHighlighter( this );
+
+      _syntaxHighlighter            = new ASMSyntaxHighlighter( this );
+      editSource.SyntaxHighlighter  = _syntaxHighlighter;
 
       btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
@@ -1692,9 +1695,6 @@ namespace RetroDevStudio.Documents
               m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )],
               m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )]
             };
-          //fullRange.ClearStyle( styles );
-          //fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
-          //fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
           editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
         }
       }
@@ -1727,31 +1727,14 @@ namespace RetroDevStudio.Documents
         DocumentInfo.ASMFileInfo.AssemblerSettings = new AssemblerSettings();
         DocumentInfo.ASMFileInfo.AssemblerSettings.SetAssemblerType( AssemblerType.C64_STUDIO );
       }
-
-      /*
-      var sb = new StringBuilder();
-
-      sb.Append( @"(" );
-      sb.Append( string.Join( "|", DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.Keys.ToArray() ) );
-      sb.Append( @")\b" );
-
-      m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
-      */
     }
 
 
 
     private void UpdateOpcodeSyntaxColoringSource()
     {
-      /*
-      var sb = new StringBuilder();
-
-      sb.Append( @"\b(" );
-      sb.Append( string.Join( "|(?<!\\S)", DocumentInfo.ASMFileInfo.Processor.Opcodes.Keys.ToArray() ) );
-      sb.Append( @")\b" );
-
-      m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
-      */
+      _syntaxHighlighter.Parser.SetAssemblerType( DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType );
+      _syntaxHighlighter.Parser.m_Processor = DocumentInfo.ASMFileInfo.Processor;
     }
 
 

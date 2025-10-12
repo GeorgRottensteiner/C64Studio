@@ -1,5 +1,39 @@
 !zone ZX81
 
+VERSN     = $4009
+E_PPC     = $400a
+D_FILE    = $400c
+DF_CC     = $400e
+VARS      = $4010
+DEST      = $4012
+E_LINE    = $4014
+CH_ADD    = $4016
+X_PTR     = $4018
+STKBOT    = $401a
+STKEND    = $401c
+BREG      = $401e
+MEM       = $401f
+UNUSED1   = $4021
+DF_SZ     = $4022
+S_TOP     = $4023
+LAST_K    = $4025
+DEBOUN    = $4027
+MARGIN    = $4028
+NXTLIN    = $4029
+OLDPPC    = $402b
+FLAGX     = $402d
+STRLEN    = $402e
+T_ADDR    = $4030
+SEED      = $4032
+FRAMES    = $4034
+COORDS    = $4036
+PR_CC     = $4038
+S_POSN    = $4039
+CDFLAG    = $403b
+PRBUFF    = $403c
+MEMBOT    = $405d
+UNUNSED2  = $407b
+
 
 !macro Line1
 ; Origin of a ZX81 file is always 16393
@@ -44,14 +78,11 @@ UNUNSED2       !word 0
 
 ;end of system variables
 
-Line1
           !byte $00,$01                    ; Line number 1
           !word Line1End - Line1Text       ; Line length
 
 Line1Text
           !byte $EA                        ; REM
-
-Program
 
 !end
 
@@ -72,7 +103,7 @@ Line2
 
 Line2Text
                 !byte $F9,$D4                    ; RAND USR
-                !byte $1D,$22,$21,$1D,$20        ; 16514       ZX81'd value of label 'Program'
+                !byte $1D,$22,$21,$1D,$20        ; 16514       ZX81'd value of address the actual program starts (End of macro Line1)
                 !byte $7E                        ; Number
                 !byte $8F,$01,$04,$00,$00        ; Numeric encoding
                 !byte $76                        ; Newline
@@ -107,7 +138,6 @@ Display
 
 ; Variables area (empty)
 Variables
-VariablesEnd
                 !byte $80
 BasicEnd
 !end

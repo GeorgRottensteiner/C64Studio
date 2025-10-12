@@ -13,9 +13,9 @@ namespace RetroDevStudio.CustomRenderer
 {
   class ASMSyntaxHighlighter : FastColoredTextBoxNS.SyntaxHighlighter
   {
-    static ASMFileParser      _Parser = new ASMFileParser();
+    public ASMFileParser    Parser = new ASMFileParser();
 
-    private SourceASMEx       _SourceDoc = null;
+    private SourceASMEx     _SourceDoc = null;
 
 
 
@@ -48,7 +48,7 @@ namespace RetroDevStudio.CustomRenderer
           continue;
         }
 
-        var info = _Parser.ParseTokenInfo( line, 0, line.Length );
+        var info = Parser.ParseTokenInfo( line, 0, line.Length );
 
         var lineRange = ChangedRange.tb.GetLine( i );
         lineRange.ClearStyle( StyleIndex.All );
@@ -112,7 +112,7 @@ namespace RetroDevStudio.CustomRenderer
           }
         }
       }
-      _Parser.Clear();
+      Parser.Clear();
     }
 
 
