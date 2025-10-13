@@ -93,29 +93,33 @@ ZEROPAGE_POINTER_TARGET = $fc
 
 -
           ;we need to add offset to the character data
-          lda #0
-          sta [ZEROPAGE_POINTER_TARGET],z
-
           ;lo byte
           lda (ZEROPAGE_POINTER_1),y
           clc
           adc #<( TILE_DATA / 64 )
           sta (ZEROPAGE_POINTER_2),y
           iny
-          inz
 
           ;hi byte
-          lda #0
-          sta [ZEROPAGE_POINTER_TARGET],z
-
           ;this requires the carry bit from the lo byte addition set!
           lda (ZEROPAGE_POINTER_1),y
           adc #>( TILE_DATA / 64 )
           sta (ZEROPAGE_POINTER_2),y
 
-          iny
+          ;set color RAM (color RAM is also using 2 bytes. The upper byte is defining the
+          ;  palette index to be used for pixel value $ff.
+          ;  We set the lower byte to zero, and the upper to $ff
+
+          ;low color RAM byte
+          lda #0
+          sta [ZEROPAGE_POINTER_TARGET],z
+          inz
+          ;high color RAM byte (use palette index 255 for pixel value $ff)
+          lda #255
+          sta [ZEROPAGE_POINTER_TARGET],z
           inz
 
+          iny
           cpy #80
           bne -
 

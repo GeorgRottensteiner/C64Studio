@@ -1,4 +1,4 @@
-﻿; adapted Shallan's RRB sample
+; adapted Shallan's RRB sample
 
 ; Think of render buffer as a list of instructions per line:
 ; where each screen location and color ram location defines the instruction
@@ -30,7 +30,10 @@
 
 COLOR_RAM         = $ff80000
 
+;the character data is set up as a last of regular characters
 ;   40    characters screen width
+;
+;followed by 3 GOTOX statements with an argument value each
 ;   +1    first GOTOX statement
 ;   +1    first GOTOX char
 ;   +1    second GOTOX statement
@@ -40,7 +43,7 @@ COLOR_RAM         = $ff80000
 ; = 46
 ROW_SIZE          = 46
 
-;we use 16bit characters
+;we use 16bit characters, therefor * 2
 ROW_SIZE_BYTES    = ROW_SIZE * 2
 
 GOTOX             = $10
@@ -118,17 +121,17 @@ MainLoop
           bpl -
 
           ;do stuff
-          inc SinusIndex
+          inc SINUSINDEX
 
-          ldx SinusIndex
+          ldx SINUSINDEX
           ldy #$00
 
 .Loop
-          lda ScreenOffsets, y
+          lda SCREEN_OFFSETS, y
           iny
           sta SCREEN_VECTOR + 0
 
-          lda ScreenOffsets, y
+          lda SCREEN_OFFSETS, y
           iny
           sta SCREEN_VECTOR + 1
 
@@ -168,8 +171,7 @@ MainLoop
           jmp MainLoop
 
 
-!zone CopyColors
-CopyColors
+!lzone CopyColors
           +RunDMAJob Job
           rts
 
@@ -178,7 +180,7 @@ Job
           +DMACopyJob COLORS, COLOR_RAM, ROW_SIZE_BYTES * 25, 0, 0
 
 
-SinusIndex
+SINUSINDEX
           !byte $00
 
 
@@ -186,13 +188,13 @@ PI = 3.1415926
 SCREEN_WIDTH = 320
 
 SINE_TABLE_LO
-          !fill 256, <( math.sin(math.todegrees(i / 256.0 * PI * 2)) * ( SCREEN_WIDTH - 8 ) / 2 + ( SCREEN_WIDTH - 8 ) / 2 )
+          !fill 256, <( math.sin( math.todegrees( i / 256.0 * PI * 2 ) ) * ( SCREEN_WIDTH - 8 ) / 2 + ( SCREEN_WIDTH - 8 ) / 2 )
 
 SINE_TABLE_HI
-          !fill 256, >( math.sin(math.todegrees(i / 256.0 * PI * 2)) * ( SCREEN_WIDTH - 8 ) / 2 + ( SCREEN_WIDTH - 8 ) / 2 )
+          !fill 256, >( math.sin( math.todegrees( i / 256.0 * PI * 2 ) ) * ( SCREEN_WIDTH - 8 ) / 2 + ( SCREEN_WIDTH - 8 ) / 2 )
 
 
-ScreenOffsets
+SCREEN_OFFSETS
           !for rox = 0 to 24
           !word SCREEN_BASE + rox * ROW_SIZE_BYTES + 80
           !end
@@ -204,10 +206,11 @@ SCREEN_BASE
           ;Build each row in a loop
           !for LINE = 0 to 24
 
+          ;40 characters, starting with @ in first line, A in second, etc.
           !fill 40, [LINE, 0]  ;0 1 2 3 4 5 6 7 8 9 10 11
 
-          ;Because GOTOX flag set in color ram, no draw!!!,
-          ;instead set XPosition to 100
+          ;Because GOTOX flag set in color ram, the value is interpreted as x pos, not a drawn character!
+          ;   set x position to 100
           !byte $64, 0
 
           ;actual char
