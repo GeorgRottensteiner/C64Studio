@@ -5379,6 +5379,12 @@ namespace FastColoredTextBoxNS
         DoAutoIndentChars( Selection.Start.iLine );
 
       lines.Manager.EndAutoUndoCommands();
+
+      if ( c == '\n' )
+      {
+        OnAutoFormatLine( Selection.Start.iLine - 1 );
+      }
+
       DoCaretVisible();
       Invalidate();
 
@@ -5386,6 +5392,21 @@ namespace FastColoredTextBoxNS
 
       return true;
     }
+
+
+
+    public delegate void delAutoFormatLine( int lineIndex );
+
+    [Browsable( true )]
+    [Description( "Called after a line was finished by pressing enter" )]
+    public event delAutoFormatLine AutoFormatLine = null;
+
+    private void OnAutoFormatLine( int iLine )
+    {
+      AutoFormatLine?.Invoke( iLine );
+    }
+
+
 
     #region AutoIndentChars
 

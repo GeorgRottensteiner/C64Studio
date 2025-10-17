@@ -10,6 +10,7 @@ namespace RetroDevStudio
 {
   public class AutoFormatSettings
   {
+    public bool     AutoFormatActive = false;
     public int      NumTabsIndentation = 5;
     public bool     IndentPseudoOpsLikeCode = true;
     public bool     PutLabelsOnSeparateLine = true;

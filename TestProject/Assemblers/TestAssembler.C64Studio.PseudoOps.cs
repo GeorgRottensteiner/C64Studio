@@ -173,6 +173,37 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroWithImmediateBackwardLabels()
+    {
+      string   source =@"*=$0801
+                        !basic
+                        !macro name
+                    ---
+                          bne ---
+                        !end
+
+                    ---
+                        jmp ---
+
+                        +name";
+
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "01080B080A009E323036310000004C0D08D0FE", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPOFill1Param()
     {
       string      source = @"* = $2000

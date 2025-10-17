@@ -4450,5 +4450,62 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void editSource_AutoFormatLine( int lineIndex )
+    {
+      if ( !Core.Settings.FormatSettings.AutoFormatActive )
+      {
+        return;
+      }
+      var tokens = Parser.PrepareLineTokens( editSource.Lines[lineIndex], Parser.m_TextCodeMappingRaw );
+      if ( ( tokens == null )
+      ||   ( tokens.Count == 0 ) )
+      {
+        // uh oh
+        return;
+      }
+
+      if ( !tokens.Any( t => t.Content == ":" ) )
+      {
+        // must stay in single line
+        if ( Core.Settings.FormatSettings.PutLabelsOnSeparateLine )
+        {
+          // is label in front?
+          if ( ( Parser.IsTokenLabel( tokens[0].Type ) )
+          &&   ( tokens.Any( t => Parser.IsTokenOpcode( t.Type ) ) ) )
+          {
+            var opcodeToken = tokens.First( t =>Parser.IsTokenOpcode( t.Type ) );
+            int index = tokens.IndexOf( opcodeToken );
+
+            // split the line between label and opcode part
+            var labelLine = Parser.TokensToExpression( tokens, 0, index );
+            var opcodeLine = Parser.TokensToExpression( tokens, index, tokens.Count - index );
+
+            var origRangeStart = editSource.Selection.Start;
+            var origRangeEnd = editSource.Selection.End;
+
+            editSource.Selection.Start  = new Place( 0, lineIndex );
+            editSource.Selection.End    = new Place( editSource.Lines[lineIndex].Length, lineIndex );
+
+            editSource.SelectedText = labelLine + "\r\n" + opcodeLine;
+            //Debug.Log( $"Labelline: {labelLine} " );
+            //Debug.Log( $"Opcodeline: {opcodeLine} " );
+            editSource.Selection.Start  = new Place( origRangeStart.iChar, origRangeStart.iLine + 1 );
+            editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + 1 );
+          }
+        }
+
+        /*
+        // is label in front?
+        if ( ( Parser.IsTokenLabel( tokens[0].Type ) )
+        &&   ( tokens.Any( t => Parser.IsTokenOpcode( t.Type ) ) ) )
+        {
+          if ( 
+        }*/
+
+      }
+    }
+
+
+
   }
 }

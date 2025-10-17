@@ -133,6 +133,7 @@
       this.editSource.Zoom = 100;
       this.editSource.LineVisited += new System.EventHandler<FastColoredTextBoxNS.LineVisitedArgs>(this.editSource_LineVisited);
       this.editSource.PaintLine += new System.EventHandler<FastColoredTextBoxNS.PaintLineEventArgs>(this.editSource_PaintLine);
+      this.editSource.AutoFormatLine += new FastColoredTextBoxNS.FastColoredTextBox.delAutoFormatLine(this.editSource_AutoFormatLine);
       this.editSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.editSource_DragDrop);
       this.editSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.editSource_DragEnter);
       this.editSource.MouseClick += new System.Windows.Forms.MouseEventHandler(this.editSource_MouseClick);
@@ -171,7 +172,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(250, 552);
+      this.contextSource.Size = new System.Drawing.Size(250, 530);
       // 
       // copyToolStripMenuItem
       // 

@@ -3629,12 +3629,26 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool IsTokenLabel( TokenInfo.TokenType Type )
+    public bool IsTokenLabel( TokenInfo.TokenType Type )
     {
       if ( ( Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
       ||   ( Type == TokenInfo.TokenType.LABEL_GLOBAL )
       ||   ( Type == TokenInfo.TokenType.LABEL_INTERNAL )
       ||   ( Type == TokenInfo.TokenType.LABEL_LOCAL ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public bool IsTokenOpcode( TokenInfo.TokenType Type )
+    {
+      if ( ( Type == TokenInfo.TokenType.OPCODE )
+      ||   ( Type == TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
+      ||   ( Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+      ||   ( Type == TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
       {
         return true;
       }
@@ -5421,24 +5435,27 @@ namespace RetroDevStudio.Parser
         bool      evaluatedContent = false;
         if ( lineTokenInfos[0].Content.StartsWith( "-" ) )
         {
-          if ( ( m_AssemblerSettings.LocalLabelStacking )
-          &&   ( lineTokenInfos[0].Content.Length > 1 ) )
+          if ( !ScopeInsideMacroDefinition() )
           {
-            AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Local labels (+/n) must be single character", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-          }
-          else if ( m_AssemblerSettings.LocalLabelStacking )
-          {
-            previousMinusLabelStacked.Add( lineIndex, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
-          }
-          else
-          {
-            if ( !previousMinusLabel.ContainsKey( lineTokenInfos[0].Content ) )
+            if ( ( m_AssemblerSettings.LocalLabelStacking )
+            &&   ( lineTokenInfos[0].Content.Length > 1 ) )
             {
-              previousMinusLabel.Add( lineTokenInfos[0].Content, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
+              AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Local labels (+/n) must be single character", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            }
+            else if ( m_AssemblerSettings.LocalLabelStacking )
+            {
+              previousMinusLabelStacked.Add( lineIndex, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
             }
             else
             {
-              previousMinusLabel[lineTokenInfos[0].Content] = INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString();
+              if ( !previousMinusLabel.ContainsKey( lineTokenInfos[0].Content ) )
+              {
+                previousMinusLabel.Add( lineTokenInfos[0].Content, INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString() );
+              }
+              else
+              {
+                previousMinusLabel[lineTokenInfos[0].Content] = INTERNAL_LOCAL_LABEL_PREFIX + lineTokenInfos[0].Content + INTERNAL_LOCAL_LABEL_POSTFIX + lineIndex.ToString();
+              }
             }
           }
         }
@@ -12040,7 +12057,7 @@ namespace RetroDevStudio.Parser
       for ( int i = 0; i < result.Count; ++i )
       {
         if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        && ( result[i].Content == INTERNAL_LOCAL_LABEL_PREFIX ) )
+        &&   ( result[i].Content == INTERNAL_LOCAL_LABEL_PREFIX ) )
         {
           int     curPos = i + 1;
 
@@ -12149,6 +12166,23 @@ namespace RetroDevStudio.Parser
           {
             result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
+        }
+      }
+
+      // internal label followed by global starting with internal local prefix (replaced internal label in macro call)
+      for ( int i = 0; i < result.Count; ++i )
+      {
+        if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+        &&   ( i + 1 < result.Count )
+        &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        &&   ( result[i + 1].Content.StartsWith( INTERNAL_LOCAL_LABEL_PREFIX ) )
+        &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+        {
+          result[i].Content += result[i + 1].Content;
+          result[i].Length += result[i + 1].Length;
+          result.RemoveAt( i + 1 );
+          --i;
+          continue;
         }
       }
 
@@ -13678,7 +13712,7 @@ namespace RetroDevStudio.Parser
 
 
 
-    private string TokensToExpression( List<Types.TokenInfo> Tokens, int StartIndex, int Count )
+    internal string TokensToExpression( List<Types.TokenInfo> Tokens, int StartIndex, int Count )
     {
       StringBuilder sb = new StringBuilder();
 
