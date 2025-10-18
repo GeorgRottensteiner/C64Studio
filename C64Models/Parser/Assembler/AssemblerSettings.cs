@@ -487,7 +487,7 @@ namespace RetroDevStudio.Parser
           IncludeHasOnlyFilename = true;
           IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
           CaseSensitive = false;
-          LoopEndHasNoScope = true;
+          LoopEndHasNoScope = false;
           MessageAutoIncludesBlanksBetweenParameters = true;
           DefaultTarget.Type      = Types.CompileTargetType.PLAIN;
           DefaultTargetExtension  = ".bin";

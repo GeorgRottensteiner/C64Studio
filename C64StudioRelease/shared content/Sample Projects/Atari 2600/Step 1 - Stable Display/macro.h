@@ -27,13 +27,13 @@ VERSION_MACRO         = 105
 ;
 ; 1.02  14/JUN/2003     - VERTICAL_SYNC macro added
 ;                         (standardised macro for vertical synch code)
-; 1.01  22/MAR/2003     - SLEEP macro added. 
+; 1.01  22/MAR/2003     - SLEEP macro added.
 ;                       - NO_ILLEGAL_OPCODES switch implemented
 ; 1.0 22/MAR/2003   Initial release
 
-; Note: These macros use illegal opcodes.  To disable illegal opcode usage, 
+; Note: These macros use illegal opcodes.  To disable illegal opcode usage,
 ;   define the symbol NO_ILLEGAL_OPCODES (-DNO_ILLEGAL_OPCODES=1 on command-line).
-;   If you do not allow illegal opcode usage, you must include this file 
+;   If you do not allow illegal opcode usage, you must include this file
 ;   *after* including VCS.H (as the non-illegal opcodes access hardware
 ;   registers and require them to be defined first).
 
@@ -68,7 +68,7 @@ VERSION_MACRO         = 105
                     ENDIF
 .CYCLES             SET .CYCLES - 3
                 ENDIF
-            
+
                 REPEAT .CYCLES / 2
                     nop
                 REPEND
@@ -77,7 +77,7 @@ VERSION_MACRO         = 105
 ;-------------------------------------------------------------------------------
 ; VERTICAL_SYNC
 ; Original author: Manuel Polik
-; Inserts the code required for a proper 3 scannline 
+; Inserts the code required for a proper 3 scannline
 ; vertical sync sequence
 ;
 ; Note: Alters the accumulator
@@ -108,7 +108,7 @@ VERSION_MACRO         = 105
             MAC CLEAN_START
                 sei
                 cld
-            
+
                 ldx #0
                 txa
                 tay
@@ -142,8 +142,8 @@ VERSION_MACRO         = 105
                 STA .POINTER+1  ; Store in pointer+1
 
             ENDM
-            
-            
+
+
 ;-------------------------------------------------------
 ; SAME PAGE BRANCH CHECK
 ; Original auther: John Payson
@@ -159,7 +159,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbcs
                 bcs     {1}
                 if (* ^ {1}) & $FF00
@@ -167,7 +167,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbeq
                 beq     {1}
                 if (* ^ {1}) & $FF00
@@ -175,7 +175,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbmi
                 bmi     {1}
                 if (* ^ {1}) & $FF00
@@ -183,7 +183,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbne
                 bne     {1}
                 if (* ^ {1}) & $FF00
@@ -191,7 +191,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbpl
                 bpl     {1}
                 if (* ^ {1}) & $FF00
@@ -199,7 +199,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbvc
                 bvc     {1}
                 if (* ^ {1}) & $FF00
@@ -207,7 +207,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac sbvs
                 bvs     {1}
                 if (* ^ {1}) & $FF00
@@ -215,7 +215,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
 ;-------------------------------------------------------
 ; DIFFERENT PAGE BRANCH CHECK
 ; Original auther: Darrell Spice, Jr.
@@ -231,7 +231,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac dbcs
                 bcs     {1}
                 if ((* ^ {1}) & $FF00) = 0
@@ -239,7 +239,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac dbeq
                 beq     {1}
                 if ((* ^ {1}) & $FF00) = 0
@@ -247,7 +247,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac dbmi
                 bmi     {1}
                 if ((* ^ {1}) & $FF00) = 0
@@ -255,7 +255,7 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac dbne
                 bne     {1}
                 if ((* ^ {1}) & $FF00) = 0
@@ -263,15 +263,15 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac dbpl
                 bpl     {1}
                 if ((* ^ {1}) & $FF00) = 0
                 echo "SAME PAGE","WARNING ",{1}," at ",*
                 err
                 endif
-            endm            
-            
+            endm
+
             mac dbvc
                 bvc     {1}
                 if ((* ^ {1}) & $FF00) = 0
@@ -279,15 +279,15 @@ VERSION_MACRO         = 105
                 err
                 endif
             endm
-            
+
             mac dbvs
                 bvs     {1}
                 if ((* ^ {1}) & $FF00) = 0
                 echo "SAME PAGE","WARNING ",{1}," at ",*
                 err
                 endif
-            endm            
+            endm
 
-; EOF 
+; EOF
 
 

@@ -254,8 +254,8 @@ namespace RetroDevStudio.Documents
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
       editDisassembly.AllowTabs = true; //Core.Settings.AllowTabs;
-      editDisassembly.ConvertTabsToSpaces = Core.Settings.TabConvertToSpaces;
-      editDisassembly.TabLength = Core.Settings.TabSize;
+      editDisassembly.ConvertTabsToSpaces = Core.Settings.FormatSettings.TabConvertToSpaces;
+      editDisassembly.TabLength = Core.Settings.FormatSettings.TabSize;
 
       editDisassembly.CaretWidth = Core.Settings.CaretWidth;
 

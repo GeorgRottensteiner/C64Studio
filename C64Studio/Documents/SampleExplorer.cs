@@ -31,11 +31,6 @@ namespace RetroDevStudio.Documents
 
       InitializeComponent();
       InitializeSampleLoader();
-
-      /*
-      gridSamples.Items.Add( new DecentForms.GridList.GridListItem() { Text = "Sample 1" } );
-      gridSamples.Items.Add( new DecentForms.GridList.GridListItem() { Text = "Sample 2" } );
-      gridSamples.Items.Add( new DecentForms.GridList.GridListItem() { Text = "Sample 3" } );*/
     }
 
 
@@ -77,7 +72,7 @@ namespace RetroDevStudio.Documents
           }
           if ( machine == MachineType.ANY )
           {
-            //Debug.Log( $"Unsupported sample machine type {sysFolderName}" );
+            Debug.Log( $"Unsupported sample machine type {sysFolderName}" );
             continue;
           }
         }
@@ -97,7 +92,7 @@ namespace RetroDevStudio.Documents
           if ( parser.Parse( GR.IO.File.ReadAllText( metaFile ), false ) )
           {
             var xmlSample = parser.FindByType( "Sample" );
-            if ( xmlSample != null ) 
+            if ( xmlSample != null )
             {
               var project = new SampleProject()
               {
@@ -118,6 +113,10 @@ namespace RetroDevStudio.Documents
 
               samples.Add( project );
             }
+          }
+          else
+          {
+            Debug.Log( $"Failed to parse metadata.xml: {parser.ParseError()}" );
           }
         }
       }

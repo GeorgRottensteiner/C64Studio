@@ -152,9 +152,7 @@ namespace RetroDevStudio
     public bool                                 AutoSaveSettings    = true;
     public int                                  AutoSaveSettingsDelayMilliSeconds = 300000;
 
-    public int                                  TabSize             = 2;
     public int                                  CaretWidth          = 1;
-    public bool                                 TabConvertToSpaces  = true;
     public bool                                 AllowTabs           = true;
     public bool                                 ASMHideLineNumbers  = false;
     public bool                                 ASMShowBytes        = true;
@@ -167,8 +165,6 @@ namespace RetroDevStudio
     public bool                                 ASMShowShortCutLabels = true;
     public int                                  ASMShowMaxLineLengthIndicatorLength = 0;
     public bool                                 ASMLabelFileIgnoreAssemblerIDLabels = false;
-
-    public bool                                 StripTrailingSpaces = false;
 
     public bool                                 OutlineShowLocalLabels = true;
     public bool                                 OutlineShowShortCutLabels = true;
@@ -656,10 +652,10 @@ namespace RetroDevStudio
       SettingsData.Append( chunkStoredDialogResults.ToBuffer() );
 
       GR.IO.FileChunk chunkTabs = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_TEXT_EDITOR );
-      chunkTabs.AppendI32( TabSize );
+      chunkTabs.AppendI32( FormatSettings.TabSize );
       chunkTabs.AppendU8( 1 );// (byte)( AllowTabs ? 1 : 0 ) );
-      chunkTabs.AppendU8( (byte)( TabConvertToSpaces ? 1 : 0 ) );
-      chunkTabs.AppendU8( (byte)( StripTrailingSpaces ? 1 : 0 ) );
+      chunkTabs.AppendU8( (byte)( FormatSettings.TabConvertToSpaces ? 1 : 0 ) );
+      chunkTabs.AppendU8( (byte)( FormatSettings.StripTrailingSpaces ? 1 : 0 ) );
       chunkTabs.AppendString( SourceFileEncoding.WebName );
       chunkTabs.AppendI32( BASICShowMaxLineLengthIndicatorLength );
       chunkTabs.AppendI32( ASMShowMaxLineLengthIndicatorLength );
@@ -1118,15 +1114,15 @@ namespace RetroDevStudio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              TabSize = binIn.ReadInt32();
-              if ( ( TabSize <= 0 )
-              ||   ( TabSize >= 100 ) )
+              FormatSettings.TabSize = binIn.ReadInt32();
+              if ( ( FormatSettings.TabSize <= 0 )
+              ||   ( FormatSettings.TabSize >= 100 ) )
               {
-                TabSize = 2;
+                FormatSettings.TabSize = 2;
               }
               binIn.ReadUInt8();  // was AllowTabs = ( binIn.ReadUInt8() != 0 );
-              TabConvertToSpaces  = ( binIn.ReadUInt8() != 0 );
-              StripTrailingSpaces = ( binIn.ReadUInt8() != 0 );
+              FormatSettings.TabConvertToSpaces  = ( binIn.ReadUInt8() != 0 );
+              FormatSettings.StripTrailingSpaces = ( binIn.ReadUInt8() != 0 );
 
               string  encodingName = binIn.ReadString();
               if ( !string.IsNullOrEmpty( encodingName ) )
@@ -1817,23 +1813,7 @@ namespace RetroDevStudio
       }
 
       AllowTabs = true;
-      /*
-      if ( ( AllowTabs )
-      &&   ( TabConvertToSpaces ) )
-      {
-        // both are weird
-        TabConvertToSpaces = true;
-        AllowTabs = false;
-      }*/
-      if ( TabSize < 1 )
-      {
-        TabSize = 1;
-      }
-      // randomly big value, no reason
-      if ( TabSize > 800 )
-      {
-        TabSize = 800;
-      }
+      FormatSettings.TabSize = GR.MathUtil.Clamp( 1, FormatSettings.TabSize, 800 );
       if ( ( CaretWidth < 1 )
       ||   ( CaretWidth >= 200 ) )
       {

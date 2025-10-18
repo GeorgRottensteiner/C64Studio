@@ -69,7 +69,7 @@ namespace RetroDevStudio.Documents
       editText.CommentPrefix = ";";
 
       //editText.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
-      editText.TabLength = Core.Settings.TabSize;
+      editText.TabLength = Core.Settings.FormatSettings.TabSize;
 
       //call OnTextChanged for refresh syntax highlighting
       editText.OnTextChanged();

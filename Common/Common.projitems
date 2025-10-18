@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\PixelFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\SortedListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Set.cs" />

@@ -44,9 +44,9 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public override void ApplySettingsToControls()
     {
-      checkConvertTabsToSpaces.Checked  = Core.Settings.TabConvertToSpaces;
-      editTabSize.Text                  = Core.Settings.TabSize.ToString();
-      checkStripTrailingSpaces.Checked  = Core.Settings.StripTrailingSpaces;
+      checkConvertTabsToSpaces.Checked  = Core.Settings.FormatSettings.TabConvertToSpaces;
+      editTabSize.Text                  = Core.Settings.FormatSettings.TabSize.ToString();
+      checkStripTrailingSpaces.Checked  = Core.Settings.FormatSettings.StripTrailingSpaces;
       editCaretWidth.Text               = Core.Settings.CaretWidth.ToString();  
       labelFontPreview.Font             = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
@@ -80,9 +80,9 @@ namespace RetroDevStudio.Dialogs.Preferences
       var xmlFonts = SettingsRoot.AddChild( "Generic.Fonts" );
       var xmlCaret = SettingsRoot.AddChild( "Generic.Caret" );
 
-      xmlTabs.AddAttribute( "TabSize", Core.Settings.TabSize.ToString() );
-      xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.TabConvertToSpaces ? "yes" : "no" );
-      xmlTabs.AddAttribute( "StripTrailingSpaces", Core.Settings.StripTrailingSpaces ? "yes" : "no" );
+      xmlTabs.AddAttribute( "TabSize", Core.Settings.FormatSettings.TabSize.ToString() );
+      xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.FormatSettings.TabConvertToSpaces ? "yes" : "no" );
+      xmlTabs.AddAttribute( "StripTrailingSpaces", Core.Settings.FormatSettings.StripTrailingSpaces ? "yes" : "no" );
 
       xmlASMEditor.AddAttribute( "ShowLineNumbers", !Core.Settings.ASMHideLineNumbers ? "yes" : "no" );
       xmlASMEditor.AddAttribute( "ShowByteSize", Core.Settings.ASMShowBytes ? "yes" : "no" );
@@ -110,9 +110,9 @@ namespace RetroDevStudio.Dialogs.Preferences
       var xmlTabs = SettingsRoot.FindByType( "Generic.Tabs" );
       if ( xmlTabs != null )
       {
-        Core.Settings.TabConvertToSpaces  = IsSettingTrue( xmlTabs.Attribute( "ConvertTabsToSpaces" ) );
-        Core.Settings.TabSize             = GR.Convert.ToI32( xmlTabs.Attribute( "TabSize" ) );
-        Core.Settings.StripTrailingSpaces = IsSettingTrue( xmlTabs.Attribute( "StripTrailingSpaces" ) );
+        Core.Settings.FormatSettings.TabConvertToSpaces  = IsSettingTrue( xmlTabs.Attribute( "ConvertTabsToSpaces" ) );
+        Core.Settings.FormatSettings.TabSize             = GR.Convert.ToI32( xmlTabs.Attribute( "TabSize" ) );
+        Core.Settings.FormatSettings.StripTrailingSpaces = IsSettingTrue( xmlTabs.Attribute( "StripTrailingSpaces" ) );
       }
 
       var xmlASMEditor = SettingsRoot.FindByType( "Generic.AssemblerEditor" );
@@ -174,9 +174,9 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void checkConvertTabsToSpaces_CheckedChanged( object sender, EventArgs e )
     {
-      if ( Core.Settings.TabConvertToSpaces != checkConvertTabsToSpaces.Checked )
+      if ( Core.Settings.FormatSettings.TabConvertToSpaces != checkConvertTabsToSpaces.Checked )
       {
-        Core.Settings.TabConvertToSpaces = checkConvertTabsToSpaces.Checked;
+        Core.Settings.FormatSettings.TabConvertToSpaces = checkConvertTabsToSpaces.Checked;
         RefreshDisplayOnDocuments();
       }
     }
@@ -188,9 +188,9 @@ namespace RetroDevStudio.Dialogs.Preferences
       int     tabSize = GR.Convert.ToI32( editTabSize.Text );
 
       if ( ( tabSize >= 1 )
-      &&   ( Core.Settings.TabSize != tabSize ) )
+      &&   ( Core.Settings.FormatSettings.TabSize != tabSize ) )
       {
-        Core.Settings.TabSize = tabSize;
+        Core.Settings.FormatSettings.TabSize = tabSize;
         RefreshDisplayOnDocuments();
       }
     }
@@ -199,7 +199,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     private void checkStripTrailingSpaces_CheckedChanged( object sender, EventArgs e )
     {
-      Core.Settings.StripTrailingSpaces = checkStripTrailingSpaces.Checked;
+      Core.Settings.FormatSettings.StripTrailingSpaces = checkStripTrailingSpaces.Checked;
     }
 
 

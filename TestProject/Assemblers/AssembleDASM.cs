@@ -1,11 +1,43 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Types;
 
 namespace TestProject
 {
   [TestClass]
   public class AssembleDASM
   {
+    public static GR.Memory.ByteBuffer TestAssembleDASM( string Source, out RetroDevStudio.Types.ASM.FileInfo Info )
+    {
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.DASM );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = CompileTargetType.NONE;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.DASM;
+
+      bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages )
+        {
+          Debug.Log( msg.Value.Message + " in line " + asmFileInfo.LineInfo[msg.Key].Line );
+        }
+      }
+
+
+      Assert.IsTrue( parseResult );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      Info = asmFileInfo;
+
+      return parser.AssembledOutput.Assembly;
+    }
+
+
+
     [TestMethod]
     public void TestDASMSyntax()
     {
@@ -64,6 +96,21 @@ LABEL
       Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, asmFileInfo.Messages.Values[0].Code );
 
       Assert.AreEqual( "0020EE00D04C0020", assembly.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestDASMRepeat()
+    {
+      string      source = "  ORG $2000\r\n"
+                        +  "  REPEAT 3\r\n"
+                        +  " nop\r\n"
+                        +  "  REPEND";
+
+      var assembly = TestAssembleDASM( source, out var info );
+
+      Assert.AreEqual( "EAEAEA", assembly.ToString() );
     }
 
 

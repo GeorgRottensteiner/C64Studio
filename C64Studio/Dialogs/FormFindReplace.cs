@@ -1165,8 +1165,8 @@ namespace RetroDevStudio.Dialogs
           if ( edit == null )
           {
             edit = new FastColoredTextBoxNS.FastColoredTextBox();
-            edit.AllowTabs = true; //Core.Settings.AllowTabs;
-            edit.TabLength = Core.Settings.TabSize;
+            edit.AllowTabs = true;
+            edit.TabLength = Core.Settings.FormatSettings.TabSize;
             textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
             if ( elementToSearch.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
             {
@@ -1250,7 +1250,7 @@ namespace RetroDevStudio.Dialogs
           {
             edit = new FastColoredTextBoxNS.FastColoredTextBox();
             edit.AllowTabs = true; // Core.Settings.AllowTabs;
-            edit.TabLength = Core.Settings.TabSize;
+            edit.TabLength = Core.Settings.FormatSettings.TabSize;
 
             textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
             if ( elementToSearch.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
@@ -1314,8 +1314,8 @@ namespace RetroDevStudio.Dialogs
       if ( edit == null )
       {
         edit = new FastColoredTextBoxNS.FastColoredTextBox();
-        edit.AllowTabs = true; //Core.Settings.AllowTabs;
-        edit.TabLength = Core.Settings.TabSize;
+        edit.AllowTabs = true;
+        edit.TabLength = Core.Settings.FormatSettings.TabSize;
 
         edit.Text = textFromElement;
         createdDummyEdit = true;

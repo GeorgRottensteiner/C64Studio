@@ -2332,7 +2332,7 @@ namespace RetroDevStudio.Documents
           int caretLine = editSource.Selection.Start.iLine;
           int caretPos = editSource.Selection.Start.iChar;
 
-          if ( Core.Settings.StripTrailingSpaces )
+          if ( Core.Settings.FormatSettings.StripTrailingSpaces )
           {
             editSource.StripTrailingSpaces();
           }
@@ -3160,9 +3160,9 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
       ApplySyntaxColoring( Types.ColorableElement.ERROR_UNDERLINE );
 
-      editSource.AllowTabs            = true; //Core.Settings.AllowTabs;
-      editSource.ConvertTabsToSpaces  = Core.Settings.TabConvertToSpaces;
-      editSource.TabLength            = Core.Settings.TabSize;
+      editSource.AllowTabs            = true;
+      editSource.ConvertTabsToSpaces  = Core.Settings.FormatSettings.TabConvertToSpaces;
+      editSource.TabLength            = Core.Settings.FormatSettings.TabSize;
       editSource.ShowLineNumbers      = !Core.Settings.ASMHideLineNumbers;
       editSource.PreferredLineWidth   = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
       editSource.CaretWidth           = Core.Settings.CaretWidth;
@@ -4470,37 +4470,42 @@ namespace RetroDevStudio.Documents
         if ( Core.Settings.FormatSettings.PutLabelsOnSeparateLine )
         {
           // is label in front?
-          if ( ( Parser.IsTokenLabel( tokens[0].Type ) )
-          &&   ( tokens.Any( t => Parser.IsTokenOpcode( t.Type ) ) ) )
+          if ( Parser.IsTokenLabel( tokens[0].Type ) )
           {
-            var opcodeToken = tokens.First( t =>Parser.IsTokenOpcode( t.Type ) );
-            int index = tokens.IndexOf( opcodeToken );
+            if ( tokens.Count > 1 )
+            {
+              int index = 1;
 
-            // split the line between label and opcode part
-            var labelLine = Parser.TokensToExpression( tokens, 0, index );
-            var opcodeLine = Parser.TokensToExpression( tokens, index, tokens.Count - index );
+              // split the line between label and opcode part
+              var labelLine = Parser.TokensToExpression( tokens, 0, index );
+              var opcodeLine = Parser.TokensToExpression( tokens, index, tokens.Count - index );
 
-            var origRangeStart = editSource.Selection.Start;
-            var origRangeEnd = editSource.Selection.End;
+              var origRangeStart = editSource.Selection.Start;
+              var origRangeEnd = editSource.Selection.End;
 
-            editSource.Selection.Start  = new Place( 0, lineIndex );
-            editSource.Selection.End    = new Place( editSource.Lines[lineIndex].Length, lineIndex );
+              editSource.Selection.Start  = new Place( 0, lineIndex );
+              editSource.Selection.End    = new Place( editSource.Lines[lineIndex].Length, lineIndex );
 
-            editSource.SelectedText = labelLine + "\r\n" + opcodeLine;
-            //Debug.Log( $"Labelline: {labelLine} " );
-            //Debug.Log( $"Opcodeline: {opcodeLine} " );
-            editSource.Selection.Start  = new Place( origRangeStart.iChar, origRangeStart.iLine + 1 );
-            editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + 1 );
+              editSource.SelectedText = Core.Settings.FormatSettings.FormatStatementLabel() + labelLine + "\r\n" 
+                                      + Core.Settings.FormatSettings.FormatStatementIndentation() + opcodeLine;
+              editSource.Selection.Start  = new Place( origRangeStart.iChar, origRangeStart.iLine + 1 );
+              editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + 1 );
+            }
           }
         }
-
-        /*
-        // is label in front?
-        if ( ( Parser.IsTokenLabel( tokens[0].Type ) )
-        &&   ( tokens.Any( t => Parser.IsTokenOpcode( t.Type ) ) ) )
+        if ( !Parser.IsTokenLabel( tokens[0].Type ) )
         {
-          if ( 
-        }*/
+          var origRangeStart = editSource.Selection.Start;
+          var origRangeEnd = editSource.Selection.End;
+
+          editSource.Selection.Start = new Place( 0, lineIndex );
+          editSource.Selection.End = new Place( editSource.Lines[lineIndex].Length, lineIndex );
+
+          editSource.SelectedText = Core.Settings.FormatSettings.FormatStatementIndentation() 
+                                  + Core.Settings.FormatSettings.FormatStatement( Parser, tokens );
+          editSource.Selection.Start = new Place( origRangeStart.iChar, origRangeStart.iLine + 1 );
+          editSource.Selection.End = new Place( origRangeEnd.iChar, origRangeEnd.iLine + 1 );
+        }
 
       }
     }

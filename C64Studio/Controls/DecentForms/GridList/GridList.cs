@@ -409,7 +409,10 @@ namespace DecentForms
           &&   ( _MouseOverItem != -1 ) )
           {
             CustomEventHandler?.Invoke( this, Items[_MouseOverItem], Event );
-            break;
+            if ( Event.Handled )
+            {
+              break;
+            }
           }
 
           if ( ( _ScrollBarH.Visible )

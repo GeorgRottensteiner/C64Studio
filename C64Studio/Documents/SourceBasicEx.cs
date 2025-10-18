@@ -203,7 +203,7 @@ namespace RetroDevStudio.Documents
       editSource.KeyPressing += EditSource_KeyPressing;
       editSource.ZoomChanged += EditSource_ZoomChanged;
 
-      editSource.TabLength = Core.Settings.TabSize;
+      editSource.TabLength = Core.Settings.FormatSettings.TabSize;
 
       m_ToolTip.Active = true;
       m_ToolTip.SetToolTip( editSource, "x" );
@@ -875,7 +875,7 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = "#";
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
-      editSource.TabLength  = Core.Settings.TabSize;
+      editSource.TabLength  = Core.Settings.FormatSettings.TabSize;
       editSource.CaretWidth = Core.Settings.CaretWidth;
 
       //call OnTextChanged for refresh syntax highlighting
