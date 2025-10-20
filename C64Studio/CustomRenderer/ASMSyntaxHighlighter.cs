@@ -67,23 +67,10 @@ namespace RetroDevStudio.CustomRenderer
           {
             case Types.TokenInfo.TokenType.OPCODE:
               subRange.SetStyle( StyleIndex.Style8 );
-              /*
-              if (  _Parser.IsComment( token ) )
-              {
-                hadREM = true;
-              }*/
               break;
             case Types.TokenInfo.TokenType.SINGLE_CHAR:
               subRange.SetStyle( StyleIndex.Style6 );
               break;
-              /*
-            case BasicFileParser.Token.Type.EX_BASIC_TOKEN:
-              subRange.SetStyle( StyleIndex.Style2 );
-              break;
-            case BasicFileParser.Token.Type.LINE_NUMBER:
-              subRange.SetStyle( StyleIndex.Style5 );
-              break;
-              */
             case Types.TokenInfo.TokenType.LITERAL_NUMBER:
             case Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER:
               subRange.SetStyle( StyleIndex.Style7 );
@@ -101,9 +88,11 @@ namespace RetroDevStudio.CustomRenderer
               break;
             case Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL:
             case Types.TokenInfo.TokenType.LABEL_GLOBAL:
-            case Types.TokenInfo.TokenType.LABEL_INTERNAL:
             case Types.TokenInfo.TokenType.LABEL_LOCAL:
               subRange.SetStyle( StyleIndex.Style9 );
+              break;
+            case Types.TokenInfo.TokenType.LABEL_INTERNAL:
+              subRange.SetStyle( StyleIndex.Style10 );
               break;
             case Types.TokenInfo.TokenType.OPERATOR:
               subRange.SetStyle( StyleIndex.Style5 );

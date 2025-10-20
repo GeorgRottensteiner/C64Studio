@@ -292,6 +292,9 @@ namespace RetroDevStudio.Types
     [Description( "Mini Map Overlay" )]
     MINI_MAP,
 
+    [Description( "Immediate Label" )]
+    IMMEDIATE_LABEL,
+
     LAST_ENTRY
   }
 

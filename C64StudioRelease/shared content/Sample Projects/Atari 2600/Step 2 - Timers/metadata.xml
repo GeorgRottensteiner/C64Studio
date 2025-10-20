@@ -1,0 +1,5 @@
+<Sample Name="Collect Game #2/14"
+  Machine="Atari 2600"
+  ShortDescription="Raster Bars with timers"
+  Desc="Uses a timer to display the same colored raster bars.">
+</Sample>

@@ -1,0 +1,5 @@
+<Sample Name="Collect Game #3/14"
+  Machine="Atari 2600"
+  ShortDescription="Display counters"
+  Desc="Displays two counters on top of the screen, above colored raster bars. The counters are increased and wrap around.">
+</Sample>

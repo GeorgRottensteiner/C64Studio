@@ -109,7 +109,7 @@ namespace RetroDevStudio
     public string FormatStatementIndentation()
     {
       if ( ( !AutoFormatActive )
-      || ( !IndentStatements ) )
+      ||   ( !IndentStatements ) )
       {
         return "";
       }
@@ -121,11 +121,23 @@ namespace RetroDevStudio
     public string FormatStatementLabel()
     {
       if ( ( !AutoFormatActive )
-      || ( !IndentLabels ) )
+      ||   ( !IndentLabels ) )
       {
         return "";
       }
       return TabChar( NumTabsIndentationLabels );
+    }
+
+
+
+    public string FormatPseudoOpIndentation()
+    {
+      if ( ( !AutoFormatActive )
+      ||   ( !IndentPseudoOpsLikeCode ) )
+      {
+        return "";
+      }
+      return TabChar( NumTabsIndentationPseudoOps );
     }
 
 
@@ -143,28 +155,77 @@ namespace RetroDevStudio
 
     public string FormatStatement( ASMFileParser parser, List<TokenInfo> tokens )
     {
-      if ( tokens.Count == 0 )
+      return FormatStatement( parser, tokens, 0, tokens.Count );
+    }
+
+
+
+    public string FormatStatement( ASMFileParser parser, List<TokenInfo> tokens, int startIndex, int count )
+    {
+      if ( count == 0 )
       {
         return "";
       }
+      var tokensSlice = tokens.Skip( startIndex ).Take( count ).ToList();
       var sb = new StringBuilder();
-      if ( tokens.Any( t => parser.IsTokenOpcode( t.Type ) ) )
+      if ( tokensSlice.Any( t => parser.IsTokenOpcode( t.Type ) ) )
       {
-        var opcodeToken = tokens.First( t =>parser.IsTokenOpcode( t.Type ) );
-        int index = tokens.IndexOf( opcodeToken );
+        var opcodeToken = tokensSlice.First( t =>parser.IsTokenOpcode( t.Type ) );
+        int index = tokensSlice.IndexOf( opcodeToken );
 
         sb.Append( opcodeToken.Content );
 
+        bool insertedFirstSpace = false;
         if ( ( SeparateInstructionsAndOperands )
-        &&   ( index + 1 < tokens.Count ) )
+        &&   ( index + 1 < tokensSlice.Count ) )
         {
+          insertedFirstSpace = true;
           sb.Append( ' ', IndentOperandsFromInstructions );
         }
-        sb.Append( parser.TokensToExpression( tokens, index + 1, tokens.Count - index - 1 ) );
+        if ( InsertSpacesBetweenOperands )
+        {
+          for ( int i = index + 1; i < tokensSlice.Count; ++i )
+          {
+            if ( ( i > index + 1 )
+            ||   ( !insertedFirstSpace ) )
+            {
+              if ( tokensSlice[i].Content == "," )
+              {
+                // no space before comma
+              }
+              else if ( ( i > index +1 )
+              &&        ( tokensSlice[i - 1].Content == "#" ) )
+              {
+                // no space after #
+              }
+              else
+              {
+                sb.Append( ' ' );
+              }
+            }
+            sb.Append( tokensSlice[i].Content );
+          }
+        }
+        else
+        {
+          sb.Append( parser.TokensToExpression( tokensSlice, index + 1, tokensSlice.Count - index - 1 ) );
+        }
       }
       else
       {
-        sb.Append( parser.TokensToExpression( tokens ) );
+        if ( InsertSpacesBetweenOperands )
+        {
+          sb.Append( tokensSlice[0].Content );
+          for ( int i = 1; i < tokensSlice.Count; ++i )
+          {
+            sb.Append( ' ' );
+            sb.Append( tokensSlice[i].Content );
+          }
+        }
+        else
+        {
+          sb.Append( parser.TokensToExpression( tokensSlice ) );
+        }
       }
       return sb.ToString();
     }

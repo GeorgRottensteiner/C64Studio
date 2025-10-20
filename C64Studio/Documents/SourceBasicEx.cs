@@ -863,6 +863,7 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_NUMBER );
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_STRING );
       ApplySyntaxColoring( Types.ColorableElement.LABEL );
+      ApplySyntaxColoring( Types.ColorableElement.IMMEDIATE_LABEL );
       ApplySyntaxColoring( Types.ColorableElement.CODE );
       ApplySyntaxColoring( Types.ColorableElement.OPERATOR );
       ApplySyntaxColoring( Types.ColorableElement.CURRENT_DEBUG_LINE );
@@ -926,7 +927,7 @@ namespace RetroDevStudio.Documents
     // lower value means higher prio?
     int SyntaxElementStylePrio( Types.ColorableElement Element )
     {
-      int     value = 10;
+      int     value = 13;
 
       switch ( Element )
       {
@@ -960,11 +961,14 @@ namespace RetroDevStudio.Documents
         case RetroDevStudio.Types.ColorableElement.LABEL:
           value = 9;
           break;
-        case RetroDevStudio.Types.ColorableElement.ERROR_UNDERLINE:
+        case ColorableElement.IMMEDIATE_LABEL:
           value = 10;
           break;
-        case RetroDevStudio.Types.ColorableElement.NONE:
+        case RetroDevStudio.Types.ColorableElement.ERROR_UNDERLINE:
           value = 11;
+          break;
+        case RetroDevStudio.Types.ColorableElement.NONE:
+          value = 12;
           break;
 
       }

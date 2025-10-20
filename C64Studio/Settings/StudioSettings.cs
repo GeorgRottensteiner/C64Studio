@@ -962,6 +962,8 @@ namespace RetroDevStudio
       // dialog appearance info
       SettingsData.Append( DialogSettings.ToBuffer() );
 
+      SettingsData.Append( FormatSettings.ToBuffer() );
+
       // Palettes
       foreach ( var palSystem in Palettes )
       {
@@ -1609,6 +1611,9 @@ namespace RetroDevStudio
           case FileChunkConstants.SETTINGS_DIALOG_APPEARANCE:
             DialogSettings.ReadFromBuffer( chunkData.MemoryReader() );
             break;
+          case FileChunkConstants.SETTINGS_CODE_FORMATTING:
+            FormatSettings.ReadFromBuffer( chunkData.MemoryReader() );
+            break;
         }
       }
       return true;
@@ -1693,6 +1698,7 @@ namespace RetroDevStudio
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.LITERAL_STRING, 0xff008000, 0xffffffff, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.LITERAL_NUMBER, 0xff0000ff, 0xffffffff, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.LABEL, 0xff800000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.IMMEDIATE_LABEL, 0xff800000, 0xffffffff, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.COMMENT, 0xff008000, 0xffffffff, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.PSEUDO_OP, 0xffff8000, 0xffffffff, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.CURRENT_DEBUG_LINE, 0xff000000, 0xffffff00, false );
@@ -1782,6 +1788,7 @@ namespace RetroDevStudio
         SetDefaultColors();
       }
 
+      // set colors for any not set elements
       foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
         if ( !SyntaxColoring.ContainsKey( element ) )

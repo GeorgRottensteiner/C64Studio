@@ -659,7 +659,7 @@ namespace RetroDevStudio.Documents
     // lower value means higher prio?
     int SyntaxElementStylePrio( Types.ColorableElement Element )
     {
-      int     value = 10;
+      int     value = 13;
 
       switch ( Element )
       {
@@ -693,11 +693,14 @@ namespace RetroDevStudio.Documents
         case Types.ColorableElement.LABEL:
           value = 9;
           break;
-        case Types.ColorableElement.ERROR_UNDERLINE:
+        case ColorableElement.IMMEDIATE_LABEL:
           value = 10;
           break;
-        case Types.ColorableElement.NONE:
+        case Types.ColorableElement.ERROR_UNDERLINE:
           value = 11;
+          break;
+        case Types.ColorableElement.NONE:
+          value = 12;
           break;
 
       }
@@ -3151,6 +3154,7 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.COMMENT );
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_NUMBER );
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_STRING );
+      ApplySyntaxColoring( Types.ColorableElement.IMMEDIATE_LABEL );
       ApplySyntaxColoring( Types.ColorableElement.LABEL );
       ApplySyntaxColoring( Types.ColorableElement.CODE );
       ApplySyntaxColoring( Types.ColorableElement.OPERATOR );
@@ -4470,9 +4474,12 @@ namespace RetroDevStudio.Documents
         if ( Core.Settings.FormatSettings.PutLabelsOnSeparateLine )
         {
           // is label in front?
-          if ( Parser.IsTokenLabel( tokens[0].Type ) )
+          if ( ( Parser.IsTokenLabel( tokens[0].Type ) )
+          ||   ( tokens[0].Content == "*" ) )
           {
-            if ( tokens.Count > 1 )
+            // more tokens, and it's not an assignment
+            if ( ( tokens.Count > 1 )
+            &&   ( tokens[1].Content != "=" ) )
             {
               int index = 1;
 
@@ -4480,34 +4487,52 @@ namespace RetroDevStudio.Documents
               var labelLine = Parser.TokensToExpression( tokens, 0, index );
               var opcodeLine = Parser.TokensToExpression( tokens, index, tokens.Count - index );
 
-              var origRangeStart = editSource.Selection.Start;
-              var origRangeEnd = editSource.Selection.End;
-
-              editSource.Selection.Start  = new Place( 0, lineIndex );
-              editSource.Selection.End    = new Place( editSource.Lines[lineIndex].Length, lineIndex );
-
-              editSource.SelectedText = Core.Settings.FormatSettings.FormatStatementLabel() + labelLine + "\r\n" 
-                                      + Core.Settings.FormatSettings.FormatStatementIndentation() + opcodeLine;
-              editSource.Selection.Start  = new Place( origRangeStart.iChar, origRangeStart.iLine + 1 );
-              editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + 1 );
+              ReplaceText( tokens,
+                           Core.Settings.FormatSettings.FormatStatementLabel() + labelLine + "\r\n"
+                            + Core.Settings.FormatSettings.FormatStatementIndentation()
+                            + Core.Settings.FormatSettings.FormatStatement( Parser, tokens, index, tokens.Count - index ),
+                           lineIndex,
+                           1 );
             }
           }
         }
-        if ( !Parser.IsTokenLabel( tokens[0].Type ) )
+        if ( tokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
         {
-          var origRangeStart = editSource.Selection.Start;
-          var origRangeEnd = editSource.Selection.End;
-
-          editSource.Selection.Start = new Place( 0, lineIndex );
-          editSource.Selection.End = new Place( editSource.Lines[lineIndex].Length, lineIndex );
-
-          editSource.SelectedText = Core.Settings.FormatSettings.FormatStatementIndentation() 
-                                  + Core.Settings.FormatSettings.FormatStatement( Parser, tokens );
-          editSource.Selection.Start = new Place( origRangeStart.iChar, origRangeStart.iLine + 1 );
-          editSource.Selection.End = new Place( origRangeEnd.iChar, origRangeEnd.iLine + 1 );
+          ReplaceText( tokens,
+                       Core.Settings.FormatSettings.FormatPseudoOpIndentation() 
+                        + Core.Settings.FormatSettings.FormatStatement( Parser, tokens ),
+                       lineIndex,
+                       0 );
+        }
+        else if ( ( !Parser.IsTokenLabel( tokens[0].Type ) )
+        &&        ( tokens[0].Content != "*" ) )
+        {
+          ReplaceText( tokens,
+                       Core.Settings.FormatSettings.FormatStatementIndentation()
+                        + Core.Settings.FormatSettings.FormatStatement( Parser, tokens ),
+                       lineIndex,
+                       0 );
         }
 
       }
+    }
+
+
+
+    private void ReplaceText( List<TokenInfo> tokens, string newText, int lineIndex, int lineOffset = 0 )
+    {
+      var origRangeStart = editSource.Selection.Start;
+      var origRangeEnd = editSource.Selection.End;
+
+      editSource.Selection.Start = new Place( 0, lineIndex );
+      editSource.Selection.End = new Place( editSource.Lines[lineIndex].Length, lineIndex );
+
+      if ( editSource.SelectedText != newText )
+      {
+        editSource.SelectedText = newText;
+      }
+      editSource.Selection.Start  = new Place( origRangeStart.iChar, origRangeStart.iLine + lineOffset );
+      editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + lineOffset );
     }
 
 

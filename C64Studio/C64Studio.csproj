@@ -419,6 +419,9 @@
     <Compile Update="Dialogs\Preferences\DlgPrefSounds.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\DlgPrefFormatting.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\DlgPrefSourceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

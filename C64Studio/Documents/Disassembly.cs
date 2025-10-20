@@ -28,7 +28,8 @@ namespace RetroDevStudio.Documents
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
       m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( pseudoOps, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
 
-      m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
+      m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[a-zA-Z]+[a-zA-Z_\d]*[:]*" );
+      m_TextRegExp[(int)Types.ColorableElement.IMMEDIATE_LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
       // only ; outside of double quotes
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";(?=(?:[^""]*""[^""]*"")*[^""]*$).*" );
     }
@@ -60,6 +61,7 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_NUMBER );
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_STRING );
       ApplySyntaxColoring( Types.ColorableElement.LABEL );
+      ApplySyntaxColoring( Types.ColorableElement.IMMEDIATE_LABEL );
       ApplySyntaxColoring( Types.ColorableElement.CODE );
       ApplySyntaxColoring( Types.ColorableElement.EMPTY_SPACE );
       ApplySyntaxColoring( Types.ColorableElement.OPERATOR );
@@ -79,7 +81,7 @@ namespace RetroDevStudio.Documents
 
     int SyntaxElementStylePrio( Types.ColorableElement Element )
     {
-      int     value = 10;
+      int     value = 11;
 
       switch ( Element )
       {
@@ -98,6 +100,9 @@ namespace RetroDevStudio.Documents
         case RetroDevStudio.Types.ColorableElement.LABEL:
           value = 7;
           break;
+        case Types.ColorableElement.IMMEDIATE_LABEL:
+          value = 8;
+          break;
         case RetroDevStudio.Types.ColorableElement.LITERAL_NUMBER:
           value = 3;
           break;
@@ -108,10 +113,10 @@ namespace RetroDevStudio.Documents
           value = 5;
           break;
         case RetroDevStudio.Types.ColorableElement.NONE:
-          value = 9;
+          value = 10;
           break;
         case RetroDevStudio.Types.ColorableElement.OPERATOR:
-          value = 8;
+          value = 9;
           break;
       }
       return value;
@@ -130,6 +135,7 @@ namespace RetroDevStudio.Documents
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LABEL )], m_TextRegExp[(int)Types.ColorableElement.LABEL] );
+      e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.IMMEDIATE_LABEL )], m_TextRegExp[(int)Types.ColorableElement.IMMEDIATE_LABEL] );
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.COMMENT )], m_TextRegExp[(int)Types.ColorableElement.COMMENT] );
     }
 
