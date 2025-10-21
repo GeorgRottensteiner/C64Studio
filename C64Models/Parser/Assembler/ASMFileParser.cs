@@ -5969,7 +5969,7 @@ namespace RetroDevStudio.Parser
               ||   ( info.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE_REGISTER ) )
               {
                 if ( ( lineTokenInfos.Count > 1 )
-                && ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
+                &&   ( lineTokenInfos[1].Content.StartsWith( "#" ) ) )
                 {
                   if ( lineTokenInfos[1].Length == 1 )
                   {
@@ -10128,6 +10128,8 @@ namespace RetroDevStudio.Parser
 
       Set<string>   definedLocalLabels = new Set<string>();
 
+      ++_ParseContext.DoNotAddCollapseTokens;
+
       // check for definitions of local labels
       for ( int i = 0; i < Lines.Length; ++i )
       {
@@ -10181,6 +10183,8 @@ namespace RetroDevStudio.Parser
         }
         ++replacementLineIndex;
       }
+
+      --_ParseContext.DoNotAddCollapseTokens;
       return replacementLines;
     }
 
@@ -12491,6 +12495,11 @@ namespace RetroDevStudio.Parser
 
     private void CollapsePreprocessorLabels( List<TokenInfo> result )
     {
+      if ( _ParseContext.DoNotAddCollapseTokens > 0 )
+      {
+        return;
+      }
+
       // collapse <label#>#<value> (make a single token label name)
       if ( result.Count >= 3 )
       {
@@ -12503,7 +12512,7 @@ namespace RetroDevStudio.Parser
           &&   ( IsTokenLabel( result[i + 1].Type ) ) )
           {
             // collapse
-            if ( EvaluateLabel( -1, result[i + 1].Content, out long labelValue ) )
+            if ( EvaluateLabel( _ParseContext.LineIndex, result[i + 1].Content, out long labelValue ) )
             {
               result[i - 1].Content = result[i - 1].Content.Substring( 0, result[i - 1].Length - 1 ) + labelValue.ToString();
               result[i - 1].Length  = result[i - 1].Content.Length;

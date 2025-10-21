@@ -3940,8 +3940,11 @@ namespace FastColoredTextBoxNS
 
     private void RecalcScrollByOneLine( int iLine )
     {
-      if ( iLine >= lines.Count )
+      if ( ( iLine >= lines.Count )
+      ||   ( iLine < 0 ) )
+      {
         return;
+      }
 
       int maxLineLength = lines[iLine].Count;
       if ( this.maxLineLength < maxLineLength && !WordWrap )
@@ -7851,8 +7854,11 @@ namespace FastColoredTextBoxNS
     /// <returns>Coordiantes</returns>
     public Point PlaceToPoint( Place place )
     {
-      if ( place.iLine >= LineInfos.Count )
+      if ( ( place.iLine >= LineInfos.Count )
+      ||   ( place.iLine < 0 ) )
+      {
         return new Point();
+      }
       int y = LineInfos[place.iLine].startY;
       //
       int iWordWrapIndex = LineInfos[place.iLine].GetWordWrapStringIndex( place.iChar );
@@ -8932,6 +8938,12 @@ namespace FastColoredTextBoxNS
     {
       var startRange = new Range( this, placeInsideBrackets, placeInsideBrackets );
       var range = startRange.Clone();
+
+      if ( ( range.Start.iChar == -1 )
+      ||   ( range.End.iChar == -1 ) )
+      {
+        return null;
+      }
 
       Range leftBracketPosition = null;
       Range rightBracketPosition = null;

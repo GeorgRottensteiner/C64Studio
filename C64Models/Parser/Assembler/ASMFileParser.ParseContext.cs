@@ -16,6 +16,7 @@ namespace RetroDevStudio.Parser
     {
       // whether ParseValue adds references during evaluation
       public bool         DoNotAddReferences    = false;
+      public int          DoNotAddCollapseTokens = 0;  
 
       // used for 65816 assembly
       public bool         Assume16BitAccu       = false;
@@ -46,6 +47,9 @@ namespace RetroDevStudio.Parser
         ForwardLabelStacked.Clear();
         TextMappings.Clear();
         Scopes.Clear();
+
+        DoNotAddCollapseTokens  = 0;
+        DoNotAddReferences      = false;
       }
 
     }

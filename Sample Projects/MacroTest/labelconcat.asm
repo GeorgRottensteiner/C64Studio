@@ -1,5 +1,12 @@
 * = $1000
 
+          !for xx = 0 to 5
+          CHR_##xx = xx
+          !end
+
+yy = 2
+CHR_##yy = yy
+
 hurz = 3
 
 
@@ -22,3 +29,5 @@ msg = a + b ;msg = "the value is 1/$1"
 
 
 !message a + b ;"the value is 1/$1"
+
+!message "CHR_1=",CHR_1

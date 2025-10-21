@@ -686,6 +686,30 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestLabelConcattenation()
+    {
+      string      source = @"a = 15
+                              * = $2000
+                              label##a = a    ;results in label15 = 15
+                              !for r = 0 to 4
+                                ROW_##r = r * 3
+                                lda #a
+                                a = a - 1
+                              !end";
+
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      Assert.AreEqual( "0020A90FA90EA90DA90CA90B", assembly.ToString() );
+      Assert.AreEqual( 15, info.Labels["label15"].AddressOrValue );
+      Assert.AreEqual( 0, info.Labels["ROW_0"].AddressOrValue );
+      Assert.AreEqual( 3, info.Labels["ROW_1"].AddressOrValue );
+      Assert.AreEqual( 6, info.Labels["ROW_2"].AddressOrValue );
+      Assert.AreEqual( 9, info.Labels["ROW_3"].AddressOrValue );
+      Assert.AreEqual( 12, info.Labels["ROW_4"].AddressOrValue );
+    }
+
+
+
+    [TestMethod]
     public void TestLocalLabelInLoop()
     {
       string      source = @"!for j = 0 to 5
