@@ -1705,6 +1705,7 @@ namespace RetroDevStudio
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.EMPTY_SPACE, 0xff000000, 0xffffffff, false );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.OPERATOR, 0xff000080, 0xffffffff, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.ERROR_UNDERLINE, 0xffff0000, 0xffffffff, false );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.WARNING_UNDERLINE, 0xffffff00, 0xffffffff, false );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS, 0xff000080, 0xffff8000, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.SELECTED_TEXT, 0xff800000, 0xff800000, true );
       SetSyntaxColor( RetroDevStudio.Types.ColorableElement.BACKGROUND_CONTROL, 0xff000000, 0xfff0f0f0, true );

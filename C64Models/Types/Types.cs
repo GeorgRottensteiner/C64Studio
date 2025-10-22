@@ -241,59 +241,82 @@ namespace RetroDevStudio.Types
   public enum ColorableElement
   {
     [Description( "Text" )]
+    [Order( 1 )]
     NONE = 0,
     [Description( "Code" )]
+    [Order( 2 )]
     CODE,
     [Description( "String Literal" )]
+    [Order( 3 )]
     LITERAL_STRING,
     [Description( "Numeric Literal" )]
+    [Order( 4 )]
     LITERAL_NUMBER,
     [Description( "Label" )]
+    [Order( 5 )]
     LABEL,
     [Description( "Comment" )]
+    [Order( 9 )]
     COMMENT,
     [Description( "Pseudo Operator" )]
+    [Order( 7 )]
     PSEUDO_OP,
     [Description( "Current Debug Position" )]
+    [Order( 13 )]
     CURRENT_DEBUG_LINE,
     [Description( "Empty Space" )]
+    [Order( 0 )]
     EMPTY_SPACE,
     [Description( "Operator" )]
+    [Order( 8 )]
     OPERATOR,
     [Description( "Highlighted Search Results" )]
+    [Order( 12 )]
     HIGHLIGHTED_SEARCH_RESULTS,
 
     [Description( "Error Underline" )]
+    [Order( 10 )]
     ERROR_UNDERLINE,
 
     [Description( "Selected Text" )]
+    [Order( 17 )]
     SELECTED_TEXT,
 
     [Description( "Control Text" )]
+    [Order( 16 )]
     CONTROL_TEXT,
 
-    //FIRST_GUI_ELEMENT = CONTROL_TEXT,
-
     [Description( "Control Background" )]
+    [Order( 15 )]
     BACKGROUND_CONTROL,
 
     [Description( "Debug Changed Element" )]
+    [Order( 14 )]
     CHANGED_DEBUG_ELEMENT,
 
     [Description( "Selection Frame" )]
+    [Order( 20 )]
     SELECTION_FRAME,
 
     [Description( "Button Background" )]
+    [Order( 21 )]
     BACKGROUND_BUTTON,
 
     [Description( "Line Numbers" )]
+    [Order( 18 )]
     LINE_NUMBERS,
 
     [Description( "Mini Map Overlay" )]
+    [Order( 19 )]
     MINI_MAP,
 
     [Description( "Immediate Label" )]
+    [Order( 6 )]
     IMMEDIATE_LABEL,
+
+    [Description( "Warning Underline" )]
+    [Order( 11 )]
+    WARNING_UNDERLINE,
 
     LAST_ENTRY
   }

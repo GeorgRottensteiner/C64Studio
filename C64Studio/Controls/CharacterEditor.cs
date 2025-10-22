@@ -521,7 +521,7 @@ namespace RetroDevStudio.Controls
       }
       if ( CharIndex == 0 )
       {
-        Debug.Log( "Chareditor RebuildCharImage" );
+        //Debug.Log( "Chareditor RebuildCharImage" );
       }
 
       m_Project.Characters[CharIndex].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
@@ -1024,40 +1024,40 @@ namespace RetroDevStudio.Controls
       _SkipRebuildCharImage = true;
       m_Project = Project;
 
-      Debug.Log( "CharsetUpdated a " );
+      //Debug.Log( "CharsetUpdated a " );
       var origPalette = m_Project.Colors.Palette;
       
       if ( ( comboCharsetMode.SelectedIndex != (int)m_Project.Mode )
       &&   ( (int)m_Project.Mode < comboCharsetMode.Items.Count ) )
       {
-        Debug.Log( "CharsetUpdated b " );
+        //Debug.Log( "CharsetUpdated b " );
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
-        Debug.Log( "CharsetUpdated c " );
+        //Debug.Log( "CharsetUpdated c " );
       }
       panelCharacters.ItemWidth   = Lookup.CharacterWidthInPixel( m_Project.Characters[0].Tile.Mode );
       panelCharacters.ItemHeight  = Lookup.CharacterHeightInPixel( m_Project.Characters[0].Tile.Mode );
 
-      Debug.Log( "CharsetUpdated d " );
+      //Debug.Log( "CharsetUpdated d " );
       ChangeColorSettingsDialog();
-      Debug.Log( "CharsetUpdated e " );
+      //Debug.Log( "CharsetUpdated e " );
       ChangeColorPickerDialog();
-      Debug.Log( "CharsetUpdated f" );
+      //Debug.Log( "CharsetUpdated f" );
       UpdatePalette();
-      Debug.Log( "CharsetUpdated g" );
+      //Debug.Log( "CharsetUpdated g" );
       if ( Lookup.AllowPaletteModification( Lookup.PaletteTypeFromTextCharMode( m_Project.Mode ) ) )
       {
-        Debug.Log( "CharsetUpdated g2" );
+        //Debug.Log( "CharsetUpdated g2" );
         m_Project.Colors.Palette = origPalette;
         OnPaletteChanged();
       }
-      Debug.Log( "CharsetUpdated h" );
+      //Debug.Log( "CharsetUpdated h" );
       _SkipRebuildCharImage = false;
       RebuildAllCharImages();
-      Debug.Log( "CharsetUpdated i" );
+      //Debug.Log( "CharsetUpdated i" );
 
       //OnPaletteChanged();
 
-      Debug.Log( "CharsetUpdated j" );
+      //Debug.Log( "CharsetUpdated j" );
 
       listCategories.Items.Clear();
       int categoryIndex = 0;
@@ -1069,7 +1069,7 @@ namespace RetroDevStudio.Controls
         listCategories.Items.Add( itemCat );
         ++categoryIndex;
       }
-      Debug.Log( "CharsetUpdated k" );
+      //Debug.Log( "CharsetUpdated k" );
       RefreshCategoryCounts();
 
       checkShowGrid.Checked = m_Project.ShowGrid;
@@ -1086,15 +1086,15 @@ namespace RetroDevStudio.Controls
       }
       SelectCategory( m_Project.Characters[m_CurrentChar].Category );
 
-      Debug.Log( "CharsetUpdated l" );
+      //Debug.Log( "CharsetUpdated l" );
       panelCharacters_SelectionChanged( null, null );
 
-      Debug.Log( "CharsetUpdated m" );
+      //Debug.Log( "CharsetUpdated m" );
       panelCharacters.Invalidate();
       canvasEditor.Invalidate();
-      Debug.Log( "CharsetUpdated n" );
+      //Debug.Log( "CharsetUpdated n" );
       RedrawColorPicker();
-      Debug.Log( "CharsetUpdated o" );
+      //Debug.Log( "CharsetUpdated o" );
 
       DoNotAddUndo = false;
       DoNotUpdateFromControls = false;

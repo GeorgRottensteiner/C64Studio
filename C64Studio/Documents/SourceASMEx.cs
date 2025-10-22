@@ -594,36 +594,10 @@ namespace RetroDevStudio.Documents
     {
       //clear previous highlighting but error highlighting
       var indexMask = editSource.GetStyleIndexMask( m_TextStyles );
-      indexMask = (FastColoredTextBoxNS.StyleIndex)( ( (int)indexMask ) & ~(int)FastColoredTextBoxNS.StyleIndex.Style10 );
+
+      // mask out error style (11 matched SyntaxPrio)
+      indexMask = (FastColoredTextBoxNS.StyleIndex)( ( (int)indexMask ) & ~( (int)FastColoredTextBoxNS.StyleIndex.Style11 | (int)FastColoredTextBoxNS.StyleIndex.Style12 ) );
       Range.ClearStyle( indexMask );
-
-      // apply all styles
-      /*
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_NUMBER )], m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_STRING )], m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LABEL )], m_TextRegExp[(int)Types.ColorableElement.LABEL] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.COMMENT )], m_TextRegExp[(int)Types.ColorableElement.COMMENT] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.OPERATOR )], m_TextRegExp[(int)Types.ColorableElement.OPERATOR] );
-      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.NONE )], m_TextRegExp[(int)Types.ColorableElement.NONE] );
-      if ( m_CurrentHighlightText != null )
-      {
-        string    regex = m_CurrentHighlightText.Replace( @"\", @"\\" );
-        regex = regex.Replace( @"^", @"\^" );
-        regex = regex.Replace( @"$", @"\$" );
-        regex = regex.Replace( @".", @"\." );
-        regex = regex.Replace( @"|", @"\|" );
-        regex = regex.Replace( @"?", @"\?" );
-        regex = regex.Replace( @"*", @"\*" );
-        regex = regex.Replace( @"+", @"\+" );
-        regex = regex.Replace( @"(", @"\(" );
-        regex = regex.Replace( @")", @"\)" );
-        regex = regex.Replace( @"{", @"\{" );
-        regex = regex.Replace( @"[", @"\[" );
-
-        Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS )], regex );
-      }*/
     }
 
 
@@ -699,8 +673,11 @@ namespace RetroDevStudio.Documents
         case Types.ColorableElement.ERROR_UNDERLINE:
           value = 11;
           break;
-        case Types.ColorableElement.NONE:
+        case Types.ColorableElement.WARNING_UNDERLINE:
           value = 12;
+          break;
+        case Types.ColorableElement.NONE:
+          value = 13;
           break;
 
       }
@@ -920,7 +897,8 @@ namespace RetroDevStudio.Documents
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
-      if ( Element == Types.ColorableElement.ERROR_UNDERLINE )
+      if ( ( Element == Types.ColorableElement.ERROR_UNDERLINE )
+      ||   ( Element == Types.ColorableElement.WARNING_UNDERLINE ) )
       {
         m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.WavyLineStyle( 255, GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
 
@@ -3163,6 +3141,7 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.PSEUDO_OP );
       ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
       ApplySyntaxColoring( Types.ColorableElement.ERROR_UNDERLINE );
+      ApplySyntaxColoring( Types.ColorableElement.WARNING_UNDERLINE );
 
       editSource.AllowTabs            = true;
       editSource.ConvertTabsToSpaces  = Core.Settings.FormatSettings.TabConvertToSpaces;

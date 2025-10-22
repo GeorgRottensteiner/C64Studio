@@ -143,18 +143,18 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void RefillColorList()
     {
       listColoring.Items.Clear();
-      foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
+
+      var allElements = System.Enum.GetValues( typeof( Types.ColorableElement ) )
+                          .Cast<Types.ColorableElement>()
+                          .Where( c => c != RetroDevStudio.Types.ColorableElement.LAST_ENTRY )
+                          .OrderBy( c => GR.EnumHelper.GetAttributeOfType<OrderAttribute>( c ).Order );
+
+      foreach ( var element in allElements )
       {
         if ( element == RetroDevStudio.Types.ColorableElement.LAST_ENTRY )
         {
           continue;
         }
-        /*
-        if ( element >= Types.ColorableElement.FIRST_GUI_ELEMENT )
-        {
-          // TODO - for now GUI elements not custom drawn (yet)
-          break;
-        }*/
         ListViewItem itemSCLocal = new ListViewItem( GR.EnumHelper.GetDescription( element ) );
         itemSCLocal.Tag = Core.Settings.SyntaxColoring[element];
         listColoring.Items.Add( itemSCLocal );
@@ -213,7 +213,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       }
 
       if ( ( color.BGColorAuto )
-      && ( color.Name != "Empty Space" ) )
+      &&   ( color.Name != "Empty Space" ) )
       {
         comboElementBG.SelectedIndex = 0;
       }

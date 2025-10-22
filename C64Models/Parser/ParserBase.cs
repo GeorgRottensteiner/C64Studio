@@ -22,6 +22,17 @@ namespace RetroDevStudio.Parser
       public int                    Length = 0;
 
 
+
+      public bool IsError
+      {
+        get
+        {
+          return Type == LineType.ERROR;
+        }
+      }
+
+
+
       public enum LineType
       {
         NONE,

@@ -51,7 +51,8 @@ namespace RetroDevStudio.CustomRenderer
         var info = Parser.ParseTokenInfo( line, 0, line.Length );
 
         var lineRange = ChangedRange.tb.GetLine( i );
-        lineRange.ClearStyle( StyleIndex.All );
+        // clear all but warning/error styles
+        lineRange.ClearStyle( StyleIndex.All & ( ~( StyleIndex.Style11 | StyleIndex.Style12 ) ) );
 
         bool hadREM = false;
 

@@ -871,6 +871,7 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.PSEUDO_OP );
       ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
       ApplySyntaxColoring( Types.ColorableElement.ERROR_UNDERLINE );
+      ApplySyntaxColoring( Types.ColorableElement.WARNING_UNDERLINE );
 
       //editSource.CommentPrefix = "REM";
       editSource.CommentPrefix = "#";
@@ -967,8 +968,11 @@ namespace RetroDevStudio.Documents
         case RetroDevStudio.Types.ColorableElement.ERROR_UNDERLINE:
           value = 11;
           break;
-        case RetroDevStudio.Types.ColorableElement.NONE:
+        case RetroDevStudio.Types.ColorableElement.WARNING_UNDERLINE:
           value = 12;
+          break;
+        case RetroDevStudio.Types.ColorableElement.NONE:
+          value = 13;
           break;
 
       }
@@ -979,7 +983,8 @@ namespace RetroDevStudio.Documents
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
-      if ( Element == Types.ColorableElement.ERROR_UNDERLINE )
+      if ( ( Element == Types.ColorableElement.ERROR_UNDERLINE )
+      ||   ( Element == Types.ColorableElement.WARNING_UNDERLINE ) )
       {
         m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.WavyLineStyle( 255, GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
         editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];

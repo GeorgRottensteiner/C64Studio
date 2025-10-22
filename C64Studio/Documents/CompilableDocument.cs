@@ -21,7 +21,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void MarkTextAsError( int LineIndex, int CharPosStart, int CharLength )
+    public void MarkTextAsError( int LineIndex, int CharPosStart, int CharLength, bool isError )
     {
       if ( ( LineIndex < 0 )
       ||   ( LineIndex >= SourceControl.LinesCount ) )
@@ -50,15 +50,14 @@ namespace RetroDevStudio.Documents
 
       var range = new FastColoredTextBoxNS.Range( SourceControl, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
 
-      range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );
+      range.SetStyle( isError ? FastColoredTextBoxNS.StyleIndex.Style11 : FastColoredTextBoxNS.StyleIndex.Style12 );
     }
 
 
 
     internal void RemoveAllErrorMarkings()
     {
-      //TODO das macht schon wieder die folding markers weg!!
-      SourceControl.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
+      SourceControl.ClearStyleWithoutAffectingFoldingMarkers( ( FastColoredTextBoxNS.StyleIndex)( FastColoredTextBoxNS.StyleIndex.Style11 | FastColoredTextBoxNS.StyleIndex.Style12 ) );
     }
 
 

@@ -309,7 +309,7 @@ namespace RetroDevStudio
               }
               if ( compilableDocToUse == compilableDoc )
               {
-                compilableDoc.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+                compilableDoc.MarkTextAsError( documentLine, message.CharIndex, message.Length, message.IsError );
               }
             }
           }
