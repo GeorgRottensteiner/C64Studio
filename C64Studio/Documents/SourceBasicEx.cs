@@ -1964,105 +1964,9 @@ namespace RetroDevStudio.Documents
           {
             if ( shiftPushed )
             {
-              // only expand token if we are not inside a comment!
-              string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
-              if ( m_LowerCaseMode )
+              if ( HandleExpandCommand( mappedKey, keyData ) )
               {
-                leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
-              }
-
-              var tokens = m_Parser.PureTokenizeLine( leftText );
-              bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) );
-
-              if ( ( mappedKey != "?" )
-              &&   ( isInsideComment ) )
-              {
-                editSource.SelectedText = mappedKey;
                 return true;
-              }
-
-              if ( mappedKey == "?" )
-              {
-                if ( isInsideComment )
-                {
-                  editSource.SelectedText = "?";
-                  return true;
-                }
-
-                var stringLiteral = tokens.Tokens.FirstOrDefault( t => ( t.StartIndex < editSource.Selection.Start.iChar )
-                              && ( t.TokenType == BasicFileParser.Token.Type.STRING_LITERAL )
-                              && ( editSource.Selection.Start.iChar <= t.StartIndex + t.Content.Length ) );
-                if ( stringLiteral != null )
-                {
-                  // is it a full string literal (trailing "), then disable if cursor is after the second "
-                  if ( ( stringLiteral.Content.Length > 1 )
-                  &&   ( stringLiteral.Content.EndsWith( "\"" ) )
-                  &&   ( editSource.Selection.Start.iChar == stringLiteral.StartIndex + stringLiteral.Content.Length ) )
-                  {
-                    stringLiteral = null;
-                  }
-                }
-                bool insideStringLiteral = ( stringLiteral != null );
-                bool needStringEnterMode = insideStringLiteral;
-
-                if ( tokens.Tokens.Any( t => ( t.StartIndex <= editSource.Selection.Start.iChar )
-                                                        && ( t.Content == "\"" ) ) )
-                {
-                  needStringEnterMode = true;
-                }
-                if ( needStringEnterMode )
-                {
-                  editSource.SelectedText = "?";
-                  return true;
-                }
-                if ( m_LowerCaseMode )
-                {
-                  editSource.SelectedText = BasicFileParser.MakeLowerCase( "PRINT", Core.Settings.BASICUseNonC64Font );
-                }
-                else
-                {
-                  editSource.SelectedText = "PRINT";
-                }
-                return true;
-              }
-              // auto-expand could be a token
-              if ( ( leftText.Length >= 1 )
-              &&   ( leftText[leftText.Length - 1] >= 'A' )
-              &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
-              {
-                leftText = leftText.ToLower() + (char)keyData; 
-                foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
-                {
-                  if ( ( opcode.ShortCut != null )
-                  &&   ( opcode.ShortCut.Length > 0 )
-                  &&   ( opcode.ShortCut.Length <= leftText.Length )
-                  &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
-                  {
-                    if ( m_CollapsedTokenMode )
-                    {
-                      if ( m_LowerCaseMode )
-                      {
-                        if ( mappedKey.Length == 1 )
-                        {
-                          InsertOrReplaceChar( mappedKey[0] );
-                        }
-                      }
-                      else
-                      {
-                        InsertOrReplaceChar( BasicFileParser.MakeUpperCase( "" + char.ToUpper( (char)keyData ), Core.Settings.BASICUseNonC64Font )[0] );
-                      }
-                    }
-                    else if ( m_LowerCaseMode )
-                    {
-                      editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
-                    }
-                    else
-                    {
-                      editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
-                    }
-                    return true;
-                  }
-                }
               }
             }
 
@@ -2113,6 +2017,27 @@ namespace RetroDevStudio.Documents
           return true;
         }
         return base.ProcessCmdKey( ref msg, keyData );
+      }
+
+      if ( ( Core.Settings.BASICAlwaysMappedKeyMode )
+      &&   ( !m_StringEnterMode ) )
+      {
+        if ( ( !commodorePushed )
+        &&   ( !altPushed ) )
+        {
+          if ( ( ( (char)keyData >= 'A' )
+          &&   ( (char)keyData <= 'Z' ) )
+          ||     ( mappedKey == "?" ) )
+          {
+            if ( shiftPushed )
+            {
+              if ( HandleExpandCommand( mappedKey, keyData ) )
+              {
+                return true;
+              }
+            }
+          }
+        }
       }
       //Debug.Log( "Key: " + keyData.ToString() + ", Bare Key: " + bareKey.ToString() );
 
@@ -2292,6 +2217,113 @@ namespace RetroDevStudio.Documents
       //Debug.Log( $"-no keymapping found for {keyData}" );
       // swallow unmapped keys that would produce text (or disallowed characters, e.g. small letters)
       return base.ProcessCmdKey( ref msg, keyData );
+    }
+
+
+
+    private bool HandleExpandCommand( string mappedKey, Keys keyData )
+    {
+      // only expand token if we are not inside a comment!
+      string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
+      if ( m_LowerCaseMode )
+      {
+        leftText = BasicFileParser.MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+      }
+
+      var tokens = m_Parser.PureTokenizeLine( leftText );
+      bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) );
+
+      if ( ( mappedKey != "?" )
+      &&   ( isInsideComment ) )
+      {
+        editSource.SelectedText = mappedKey;
+        return true;
+      }
+
+      if ( mappedKey == "?" )
+      {
+        if ( isInsideComment )
+        {
+          editSource.SelectedText = "?";
+          return true;
+        }
+
+        var stringLiteral = tokens.Tokens.FirstOrDefault( t => ( t.StartIndex < editSource.Selection.Start.iChar )
+                              && ( t.TokenType == BasicFileParser.Token.Type.STRING_LITERAL )
+                              && ( editSource.Selection.Start.iChar <= t.StartIndex + t.Content.Length ) );
+        if ( stringLiteral != null )
+        {
+          // is it a full string literal (trailing "), then disable if cursor is after the second "
+          if ( ( stringLiteral.Content.Length > 1 )
+          &&   ( stringLiteral.Content.EndsWith( "\"" ) )
+          &&   ( editSource.Selection.Start.iChar == stringLiteral.StartIndex + stringLiteral.Content.Length ) )
+          {
+            stringLiteral = null;
+          }
+        }
+        bool insideStringLiteral = ( stringLiteral != null );
+        bool needStringEnterMode = insideStringLiteral;
+
+        if ( tokens.Tokens.Any( t => ( t.StartIndex <= editSource.Selection.Start.iChar )
+                                                && ( t.Content == "\"" ) ) )
+        {
+          needStringEnterMode = true;
+        }
+        if ( needStringEnterMode )
+        {
+          editSource.SelectedText = "?";
+          return true;
+        }
+        if ( m_LowerCaseMode )
+        {
+          editSource.SelectedText = BasicFileParser.MakeLowerCase( "PRINT", Core.Settings.BASICUseNonC64Font );
+        }
+        else
+        {
+          editSource.SelectedText = "PRINT";
+        }
+        return true;
+      }
+      // auto-expand could be a token
+      if ( ( leftText.Length >= 1 )
+      &&   ( leftText[leftText.Length - 1] >= 'A' )
+      &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
+      {
+        leftText = leftText.ToLower() + (char)keyData;
+        foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
+        {
+          if ( ( opcode.ShortCut != null )
+          &&   ( opcode.ShortCut.Length > 0 )
+          &&   ( opcode.ShortCut.Length <= leftText.Length )
+          &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
+          {
+            if ( m_CollapsedTokenMode )
+            {
+              if ( m_LowerCaseMode )
+              {
+                if ( mappedKey.Length == 1 )
+                {
+                  InsertOrReplaceChar( mappedKey[0] );
+                }
+              }
+              else
+              {
+                InsertOrReplaceChar( BasicFileParser.MakeUpperCase( "" + char.ToUpper( (char)keyData ), Core.Settings.BASICUseNonC64Font )[0] );
+              }
+            }
+            else if ( m_LowerCaseMode )
+            {
+              editSource.SelectedText = BasicFileParser.MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
+            }
+            else
+            {
+              editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
+            }
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
 
