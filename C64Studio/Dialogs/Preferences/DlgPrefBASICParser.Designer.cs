@@ -33,6 +33,7 @@
       this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
       this.checkBASICStripREM = new System.Windows.Forms.CheckBox();
       this.checkBASICStripSpaces = new System.Windows.Forms.CheckBox();
+      this.checkBASICAlwaysMappedKeyMode = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // checkBASICAutoToggleEntryModeOnPosition
@@ -90,17 +91,29 @@
       this.checkBASICStripSpaces.UseVisualStyleBackColor = true;
       this.checkBASICStripSpaces.CheckedChanged += new System.EventHandler(this.checkBASICStripSpaces_CheckedChanged);
       // 
-      // PrefBASICParser
+      // checkBASICAlwaysMappedKeyMode
+      // 
+      this.checkBASICAlwaysMappedKeyMode.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkBASICAlwaysMappedKeyMode.Location = new System.Drawing.Point(3, 156);
+      this.checkBASICAlwaysMappedKeyMode.Name = "checkBASICAlwaysMappedKeyMode";
+      this.checkBASICAlwaysMappedKeyMode.Size = new System.Drawing.Size(266, 24);
+      this.checkBASICAlwaysMappedKeyMode.TabIndex = 14;
+      this.checkBASICAlwaysMappedKeyMode.Text = "Use mapped keys also outside of strings";
+      this.checkBASICAlwaysMappedKeyMode.UseVisualStyleBackColor = true;
+      this.checkBASICAlwaysMappedKeyMode.CheckedChanged += new System.EventHandler(this.checkBASICAlwaysMappedKeyMode_CheckedChanged);
+      // 
+      // DlgPrefBASICParser
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkBASICAlwaysMappedKeyMode);
       this.Controls.Add(this.checkBASICAutoToggleEntryModeOnPosition);
       this.Controls.Add(this.checkBASICAutoToggleEntryMode);
       this.Controls.Add(this.checkBASICStripSpaces);
       this.Controls.Add(this.checkBASICShowControlCodes);
       this.Controls.Add(this.checkBASICStripREM);
-      this.Name = "PrefBASICParser";
-      this.Size = new System.Drawing.Size(304, 171);
+      this.Name = "DlgPrefBASICParser";
+      this.Size = new System.Drawing.Size(304, 241);
       this.ResumeLayout(false);
 
     }
@@ -111,5 +124,6 @@
         private System.Windows.Forms.CheckBox checkBASICStripREM;
         private System.Windows.Forms.CheckBox checkBASICStripSpaces;
     private System.Windows.Forms.CheckBox checkBASICAutoToggleEntryModeOnPosition;
+    private System.Windows.Forms.CheckBox checkBASICAlwaysMappedKeyMode;
   }
 }

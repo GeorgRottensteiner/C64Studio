@@ -4439,6 +4439,7 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
+      
       var tokens = Parser.PrepareLineTokens( editSource.Lines[lineIndex], Parser.m_TextCodeMappingRaw );
       if ( ( tokens == null )
       ||   ( tokens.Count == 0 ) )

@@ -12166,7 +12166,7 @@ namespace RetroDevStudio.Parser
           {
             result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
-          else if ( result.Count == 1 )
+          else if ( result.Count >= 1 )
           {
             result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }

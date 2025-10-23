@@ -38,6 +38,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkBASICAutoToggleEntryMode.Checked           = Core.Settings.BASICAutoToggleEntryMode;
       checkBASICStripREM.Checked                      = Core.Settings.BASICStripREM;
       checkBASICAutoToggleEntryModeOnPosition.Checked = Core.Settings.BASICAutoToggleEntryModeOnPosition;
+      checkBASICAlwaysMappedKeyMode.Checked           = Core.Settings.BASICAlwaysMappedKeyMode;
     }
 
 
@@ -52,6 +53,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlSettingRoot.AddChild( "AutoToggleEntryMode", Core.Settings.BASICAutoToggleEntryMode ? "yes" : "no" );
       xmlSettingRoot.AddChild( "AutoToggleEntryModeOnPosition", Core.Settings.BASICAutoToggleEntryModeOnPosition ? "yes" : "no" );
       xmlSettingRoot.AddChild( "StripREM", Core.Settings.BASICStripREM ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "AlwaysMappedKeyMode", Core.Settings.BASICAlwaysMappedKeyMode ? "yes" : "no" );
     }
 
 
@@ -85,6 +87,10 @@ namespace RetroDevStudio.Dialogs.Preferences
         else if ( xmlKey.Type == "ShowControlCodesAsChars" )
         {
           Core.Settings.BASICShowControlCodesAsChars = IsSettingTrue( xmlKey.Content );
+        }
+        else if ( xmlKey.Type == "AlwaysMappedKeyMode" )
+        {
+          Core.Settings.BASICAlwaysMappedKeyMode = IsSettingTrue( xmlKey.Content );
         }
       }
     }
@@ -124,6 +130,13 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void checkBASICAutoToggleEntryModeOnPosition_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.BASICAutoToggleEntryModeOnPosition = checkBASICAutoToggleEntryModeOnPosition.Checked;
+    }
+
+
+
+    private void checkBASICAlwaysMappedKeyMode_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.BASICAlwaysMappedKeyMode = checkBASICAlwaysMappedKeyMode.Checked;
     }
 
 

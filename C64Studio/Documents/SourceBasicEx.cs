@@ -38,7 +38,6 @@ namespace RetroDevStudio.Documents
     System.Windows.Forms.Keys m_CommodoreKeyReplacement = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.ControlKey;
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
     private FastColoredTextBoxNS.Style[]      m_TextStyles = new FastColoredTextBoxNS.Style[(int)Types.ColorableElement.LAST_ENTRY];
-    //private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
     private string                            m_CurrentHighlightText = null;
     private List<TextLocation>                m_CurrentHighlightLocations = new List<TextLocation>();
@@ -1871,7 +1870,8 @@ namespace RetroDevStudio.Documents
       string  mappedKey = KeyCodeToUnicode( keyData );
       System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
 
-      if ( !m_StringEnterMode )
+      if ( ( !m_StringEnterMode )
+      &&   ( !Core.Settings.BASICAlwaysMappedKeyMode ) )
       {
         if ( keyData == ( Keys.Control | Keys.A ) )
         {
@@ -1950,7 +1950,8 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      if ( !m_StringEnterMode )
+      if ( ( !m_StringEnterMode )
+      &&   ( !Core.Settings.BASICAlwaysMappedKeyMode ) )
       {
         // simply insert, no key mapping!
         // need uppercase when lowercase mode is not active!

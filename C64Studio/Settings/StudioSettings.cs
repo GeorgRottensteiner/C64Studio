@@ -207,6 +207,7 @@ namespace RetroDevStudio
     public bool                                 BASICAutoToggleEntryMode = true;
     public bool                                 BASICAutoToggleEntryModeOnPosition = true;
     public bool                                 BASICStripREM = false;
+    public bool                                 BASICAlwaysMappedKeyMode = false;
 
     public MemoryDisplayType                    MemoryDisplay = MemoryDisplayType.ASCII;
     public MemorySourceType                     MemorySource = MemorySourceType.CPU;
@@ -847,6 +848,7 @@ namespace RetroDevStudio
       chunkBASICParser.AppendU8( (byte)( !BASICAutoToggleEntryMode ? 1 : 0 ) );
       chunkBASICParser.AppendU8( (byte)( BASICStripREM ? 1 : 0 ) );
       chunkBASICParser.AppendU8( (byte)( BASICAutoToggleEntryModeOnPosition ? 1 : 0 ) );
+      chunkBASICParser.AppendU8( (byte)( BASICAlwaysMappedKeyMode ? 1 : 0 ) );
       SettingsData.Append( chunkBASICParser.ToBuffer() );
 
       // BASIC key map
@@ -1434,6 +1436,7 @@ namespace RetroDevStudio
               BASICAutoToggleEntryMode                = ( binIn.ReadUInt8() == 0 );
               BASICStripREM                           = ( binIn.ReadUInt8() != 0 );
               BASICAutoToggleEntryModeOnPosition      = ( binIn.ReadUInt8() != 0 );
+              BASICAlwaysMappedKeyMode                = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_ENVIRONMENT:
