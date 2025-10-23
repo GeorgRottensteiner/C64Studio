@@ -1,0 +1,6 @@
+<Sample Name="Multicolor Bitmap"
+  Machine="C64"
+  ShortDescription="Displays a multicolor bitmap"
+  Tags="Assembly,C64,Text,Screen,Character"
+  Desc="Showcases the usage of a graphicscreen project, the !media pseudo op and how to copy the bitmap, color and screen data to the proper locations">
+</Sample>

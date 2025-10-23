@@ -1,0 +1,6 @@
+<Sample Name="BASIC Sprites"
+  Machine="C64"
+  ShortDescription="Sets up and displays sprites"
+  Tags="BASIC,C64,Sprites"
+  Desc="Showcases the usage of a sprite project in BASIC. Uses the #spritedata directive to generate DATAs on the fly.">
+</Sample>

@@ -1,0 +1,6 @@
+<Sample Name="BASIC Bitmap"
+  Machine="C64"
+  ShortDescription="Displays a bitmap screen"
+  Tags="BASIC,C64,Text,Screen,Character"
+  Desc="Showcases the set up and display of a bitmap in BASIC. This is slow(!). Bitmap data is read from DATAs and POKEd at the target locations.">
+</Sample>
