@@ -118,7 +118,7 @@ namespace DecentForms
     {
       get
       {
-        return _ScrollBarV.Value;
+        return _ScrollBarV.Value * ItemsPerLine;
       }
     }
 
@@ -148,7 +148,7 @@ namespace DecentForms
       {
         actualHeight -= _ScrollBarH.Height;
       }
-      int visibleItemsVertical = actualHeight / ItemHeight;
+      int visibleItemsVertical = ( actualHeight - ItemHeight + 1 ) / ItemHeight + 1;
       if ( visibleItemsVertical <= 0 )
       {
         visibleItemsVertical = 1;
@@ -242,9 +242,9 @@ namespace DecentForms
         }
         if ( _ScrollBarH.Visible )
         {
-          return ItemsPerLine * ( ClientSize.Height - _ScrollBarH.Height ) / ItemHeight;
+          return ItemsPerLine * ( ClientSize.Height + ItemHeight - 1 - _ScrollBarH.Height ) / ItemHeight;
         }
-        return ItemsPerLine * ClientSize.Height / ItemHeight;
+        return ItemsPerLine * ( ClientSize.Height + ItemHeight - 1 ) / ItemHeight;
       }
     }
 
