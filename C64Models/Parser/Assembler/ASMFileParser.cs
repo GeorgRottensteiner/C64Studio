@@ -12190,6 +12190,27 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      // internal label followed by global is a macro call 
+      if ( AssemblerSettings.MacroFunctionCallPrefix.Contains( "+" ) )
+      {
+        for ( int i = 0; i < result.Count; ++i )
+        {
+          if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+          &&   ( result[i].Content == "+" )
+          &&   ( i + 1 < result.Count )
+          &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          {
+            result[i].Content += result[i + 1].Content;
+            result[i].Length += result[i + 1].Length;
+            result[i].Type = TokenInfo.TokenType.CALL_MACRO;
+            result.RemoveAt( i + 1 );
+            --i;
+            continue;
+          }
+        }
+      }
+
       // DASM style macro params
       bool    foundMacroParam = true;
       while ( ( result.Count >= 3 )

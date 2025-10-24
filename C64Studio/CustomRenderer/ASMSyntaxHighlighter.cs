@@ -52,7 +52,7 @@ namespace RetroDevStudio.CustomRenderer
 
         var lineRange = ChangedRange.tb.GetLine( i );
         // clear all but warning/error styles
-        lineRange.ClearStyle( StyleIndex.All & ( ~( StyleIndex.Style11 | StyleIndex.Style12 ) ) );
+        lineRange.ClearStyle( StyleIndex.All & ( ~( StyleIndex.Style12 | StyleIndex.Style13 ) ) );
 
         bool hadREM = false;
 
@@ -84,16 +84,19 @@ namespace RetroDevStudio.CustomRenderer
             case Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR:
               subRange.SetStyle( StyleIndex.Style3 );
               break;
+            case Types.TokenInfo.TokenType.CALL_MACRO:
+              subRange.SetStyle( StyleIndex.Style9 );
+              break;
             case Types.TokenInfo.TokenType.PSEUDO_OP:
               subRange.SetStyle( StyleIndex.Style6 );
               break;
             case Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL:
             case Types.TokenInfo.TokenType.LABEL_GLOBAL:
             case Types.TokenInfo.TokenType.LABEL_LOCAL:
-              subRange.SetStyle( StyleIndex.Style9 );
+              subRange.SetStyle( StyleIndex.Style10 );
               break;
             case Types.TokenInfo.TokenType.LABEL_INTERNAL:
-              subRange.SetStyle( StyleIndex.Style10 );
+              subRange.SetStyle( StyleIndex.Style11 );
               break;
             case Types.TokenInfo.TokenType.OPERATOR:
               subRange.SetStyle( StyleIndex.Style5 );

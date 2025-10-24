@@ -50,14 +50,14 @@ namespace RetroDevStudio.Documents
 
       var range = new FastColoredTextBoxNS.Range( SourceControl, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
 
-      range.SetStyle( isError ? FastColoredTextBoxNS.StyleIndex.Style11 : FastColoredTextBoxNS.StyleIndex.Style12 );
+      range.SetStyle( isError ? FastColoredTextBoxNS.StyleIndex.Style12 : FastColoredTextBoxNS.StyleIndex.Style13 );
     }
 
 
 
     internal void RemoveAllErrorMarkings()
     {
-      SourceControl.ClearStyleWithoutAffectingFoldingMarkers( ( FastColoredTextBoxNS.StyleIndex)( FastColoredTextBoxNS.StyleIndex.Style11 | FastColoredTextBoxNS.StyleIndex.Style12 ) );
+      SourceControl.ClearStyleWithoutAffectingFoldingMarkers( ( FastColoredTextBoxNS.StyleIndex)( FastColoredTextBoxNS.StyleIndex.Style12 | FastColoredTextBoxNS.StyleIndex.Style13 ) );
     }
 
 

@@ -596,7 +596,7 @@ namespace RetroDevStudio.Documents
       var indexMask = editSource.GetStyleIndexMask( m_TextStyles );
 
       // mask out error style (11 matched SyntaxPrio)
-      indexMask = (FastColoredTextBoxNS.StyleIndex)( ( (int)indexMask ) & ~( (int)FastColoredTextBoxNS.StyleIndex.Style11 | (int)FastColoredTextBoxNS.StyleIndex.Style12 ) );
+      indexMask = (FastColoredTextBoxNS.StyleIndex)( ( (int)indexMask ) & ~( (int)FastColoredTextBoxNS.StyleIndex.Style12 | (int)FastColoredTextBoxNS.StyleIndex.Style13 ) );
       Range.ClearStyle( indexMask );
     }
 
@@ -633,7 +633,7 @@ namespace RetroDevStudio.Documents
     // lower value means higher prio?
     int SyntaxElementStylePrio( Types.ColorableElement Element )
     {
-      int     value = 13;
+      int     value = 14;
 
       switch ( Element )
       {
@@ -664,20 +664,23 @@ namespace RetroDevStudio.Documents
         case Types.ColorableElement.CODE:
           value = 8;
           break;
-        case Types.ColorableElement.LABEL:
+        case Types.ColorableElement.MACRO_CALL:
           value = 9;
           break;
-        case ColorableElement.IMMEDIATE_LABEL:
+        case Types.ColorableElement.LABEL:
           value = 10;
           break;
-        case Types.ColorableElement.ERROR_UNDERLINE:
+        case ColorableElement.IMMEDIATE_LABEL:
           value = 11;
           break;
-        case Types.ColorableElement.WARNING_UNDERLINE:
+        case Types.ColorableElement.ERROR_UNDERLINE:
           value = 12;
           break;
-        case Types.ColorableElement.NONE:
+        case Types.ColorableElement.WARNING_UNDERLINE:
           value = 13;
+          break;
+        case Types.ColorableElement.NONE:
+          value = 14;
           break;
 
       }
@@ -3135,6 +3138,7 @@ namespace RetroDevStudio.Documents
       ApplySyntaxColoring( Types.ColorableElement.IMMEDIATE_LABEL );
       ApplySyntaxColoring( Types.ColorableElement.LABEL );
       ApplySyntaxColoring( Types.ColorableElement.CODE );
+      ApplySyntaxColoring( Types.ColorableElement.MACRO_CALL );
       ApplySyntaxColoring( Types.ColorableElement.OPERATOR );
       ApplySyntaxColoring( Types.ColorableElement.CURRENT_DEBUG_LINE );
       ApplySyntaxColoring( Types.ColorableElement.NONE );
@@ -4439,7 +4443,7 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      
+
       var tokens = Parser.PrepareLineTokens( editSource.Lines[lineIndex], Parser.m_TextCodeMappingRaw );
       if ( ( tokens == null )
       ||   ( tokens.Count == 0 ) )

@@ -1,8 +1,20 @@
+          !macro gnu
+          lda #12
+          rts
+          !end
+
+
 * = $2000
+
+          +gnu
+
 Main
 -
           lda #$ff
           jmp -
+
+
+
 
 
 NotMain

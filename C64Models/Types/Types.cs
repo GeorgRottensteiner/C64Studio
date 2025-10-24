@@ -256,67 +256,71 @@ namespace RetroDevStudio.Types
     [Order( 5 )]
     LABEL,
     [Description( "Comment" )]
-    [Order( 9 )]
+    [Order( 10 )]
     COMMENT,
     [Description( "Pseudo Operator" )]
     [Order( 7 )]
     PSEUDO_OP,
     [Description( "Current Debug Position" )]
-    [Order( 13 )]
+    [Order( 14 )]
     CURRENT_DEBUG_LINE,
     [Description( "Empty Space" )]
     [Order( 0 )]
     EMPTY_SPACE,
     [Description( "Operator" )]
-    [Order( 8 )]
+    [Order( 9 )]
     OPERATOR,
     [Description( "Highlighted Search Results" )]
-    [Order( 12 )]
+    [Order( 13 )]
     HIGHLIGHTED_SEARCH_RESULTS,
 
     [Description( "Error Underline" )]
-    [Order( 10 )]
+    [Order( 11 )]
     ERROR_UNDERLINE,
 
     [Description( "Selected Text" )]
-    [Order( 17 )]
+    [Order( 18 )]
     SELECTED_TEXT,
 
     [Description( "Control Text" )]
-    [Order( 16 )]
+    [Order( 17 )]
     CONTROL_TEXT,
 
     [Description( "Control Background" )]
-    [Order( 15 )]
+    [Order( 16 )]
     BACKGROUND_CONTROL,
 
     [Description( "Debug Changed Element" )]
-    [Order( 14 )]
+    [Order( 15 )]
     CHANGED_DEBUG_ELEMENT,
 
     [Description( "Selection Frame" )]
-    [Order( 20 )]
+    [Order( 21 )]
     SELECTION_FRAME,
 
     [Description( "Button Background" )]
-    [Order( 21 )]
+    [Order( 22 )]
     BACKGROUND_BUTTON,
 
     [Description( "Line Numbers" )]
-    [Order( 18 )]
+    [Order( 19 )]
     LINE_NUMBERS,
 
     [Description( "Mini Map Overlay" )]
-    [Order( 19 )]
+    [Order( 20 )]
     MINI_MAP,
 
     [Description( "Immediate Label" )]
-    [Order( 6 )]
+    [Order( 7 )]
     IMMEDIATE_LABEL,
 
     [Description( "Warning Underline" )]
-    [Order( 11 )]
+    [Order( 12 )]
     WARNING_UNDERLINE,
+
+    [Description( "Macro Call" )]
+    [Order( 8 )]
+    MACRO_CALL,
 
     LAST_ENTRY
   }
