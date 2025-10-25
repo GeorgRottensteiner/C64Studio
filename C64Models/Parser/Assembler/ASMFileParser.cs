@@ -12193,9 +12193,12 @@ namespace RetroDevStudio.Parser
       // internal label followed by global is a macro call 
       if ( AssemblerSettings.MacroFunctionCallPrefix.Contains( "+" ) )
       {
-        for ( int i = 0; i < result.Count; ++i )
+        // only check at start of line (first token, or second after a label)
+        // TODO - statements separated by :
+        for ( int i = 0; i < Math.Min( 2, result.Count ); ++i )
         {
-          if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+          if ( ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+          ||     ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR ) )
           &&   ( result[i].Content == "+" )
           &&   ( i + 1 < result.Count )
           &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
