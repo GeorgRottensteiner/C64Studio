@@ -1,6 +1,6 @@
 <Sample Name="HiRes Bitmap Screen"
   Machine="C64"
   ShortDescription="Displays a HiRes bitmap screen"
-  Tags="Assembly,C64,Text,Screen,Graphic,HiRes"
+  Tags="Assembly,C64,Text,Screen,Graphic,HiRes,Feature"
   Desc="Showcases the usage of a graphicscreen project, the !media pseudo op and how to copy the bitmap, color and screen data to the proper locations.">
 </Sample>

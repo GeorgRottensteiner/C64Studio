@@ -14,6 +14,7 @@ namespace RetroDevStudio.Types
     public string Name = "";
     public string ShortDescription = "";
     public string LongDescription = "";
+    public List<string> Tags = new List<string>();
     public Image  Image = null;
     public MachineType Machine = MachineType.C64;
 

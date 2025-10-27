@@ -397,13 +397,19 @@ namespace RetroDevStudio.Documents
         return;
       }
       var bps = new List<Types.Breakpoint>();
+      var itemsToDelete = new List<ListViewItem>();
       foreach ( ListViewItem item in listBreakpoints.SelectedItems )
       {
         bps.Add( (Types.Breakpoint)item.Tag );
+        itemsToDelete.Add( item );
       }
       foreach ( var bp in bps )
       {
         RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+      }
+      foreach ( var item in itemsToDelete )
+      {
+        listBreakpoints.Items.Remove( item );
       }
     }
 
@@ -442,7 +448,7 @@ namespace RetroDevStudio.Documents
 
     private void btnDeleteAllBreakpoints_Click( DecentForms.ControlBase Sender )
     {
-      List<Types.Breakpoint>    bpsToRemove = new List<Types.Breakpoint>();
+      var bpsToRemove = new List<Types.Breakpoint>();
       foreach ( ListViewItem item in listBreakpoints.Items )
       {
         var bp = (Types.Breakpoint)item.Tag;
@@ -453,6 +459,7 @@ namespace RetroDevStudio.Documents
       {
         RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
       }
+      listBreakpoints.Items.Clear();
     }
 
 

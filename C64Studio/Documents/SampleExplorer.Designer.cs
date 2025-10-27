@@ -30,10 +30,12 @@
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SampleExplorer));
       this.toolStripNavigation = new System.Windows.Forms.ToolStrip();
+      this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+      this.comboTags = new System.Windows.Forms.ToolStripComboBox();
       this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
       this.editSampleFilter = new System.Windows.Forms.ToolStripTextBox();
-      this.gridSamples = new DecentForms.GridList();
       this.btnRefresh = new System.Windows.Forms.ToolStripButton();
+      this.gridSamples = new DecentForms.GridList();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStripNavigation.SuspendLayout();
       this.SuspendLayout();
@@ -41,6 +43,8 @@
       // toolStripNavigation
       // 
       this.toolStripNavigation.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel2,
+            this.comboTags,
             this.toolStripLabel1,
             this.editSampleFilter,
             this.btnRefresh});
@@ -49,6 +53,20 @@
       this.toolStripNavigation.Size = new System.Drawing.Size(896, 25);
       this.toolStripNavigation.TabIndex = 1;
       this.toolStripNavigation.Text = "toolStrip1";
+      // 
+      // toolStripLabel2
+      // 
+      this.toolStripLabel2.Name = "toolStripLabel2";
+      this.toolStripLabel2.Size = new System.Drawing.Size(66, 22);
+      this.toolStripLabel2.Text = "Categories:";
+      // 
+      // comboTags
+      // 
+      this.comboTags.AutoSize = false;
+      this.comboTags.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboTags.Name = "comboTags";
+      this.comboTags.Size = new System.Drawing.Size(121, 23);
+      this.comboTags.SelectedIndexChanged += new System.EventHandler(this.comboCategories_SelectedIndexChanged);
       // 
       // toolStripLabel1
       // 
@@ -63,6 +81,16 @@
       this.editSampleFilter.Name = "editSampleFilter";
       this.editSampleFilter.Size = new System.Drawing.Size(300, 25);
       this.editSampleFilter.TextChanged += new System.EventHandler(this.editSampleFilter_TextChanged);
+      // 
+      // btnRefresh
+      // 
+      this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
+      this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.btnRefresh.Name = "btnRefresh";
+      this.btnRefresh.Size = new System.Drawing.Size(23, 22);
+      this.btnRefresh.ToolTipText = "Refresh";
+      this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
       // 
       // gridSamples
       // 
@@ -82,16 +110,6 @@
       this.gridSamples.Text = "gridList1";
       this.gridSamples.DrawItem += new DecentForms.GridList.DrawGridListItemEventHandler(this.gridSamples_DrawItem);
       this.gridSamples.CustomEventHandler += new DecentForms.GridList.ForwardedEventHandler(this.gridSamples_CustomEventHandler);
-      // 
-      // btnRefresh
-      // 
-      this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
-      this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.btnRefresh.Name = "btnRefresh";
-      this.btnRefresh.Size = new System.Drawing.Size(23, 22);
-      this.btnRefresh.ToolTipText = "Refresh";
-      this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
       // 
       // SampleExplorer
       // 
@@ -117,5 +135,7 @@
     private System.Windows.Forms.ToolStripTextBox editSampleFilter;
     private DecentForms.GridList gridSamples;
     private System.Windows.Forms.ToolStripButton btnRefresh;
+    private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+    private System.Windows.Forms.ToolStripComboBox comboTags;
   }
 }

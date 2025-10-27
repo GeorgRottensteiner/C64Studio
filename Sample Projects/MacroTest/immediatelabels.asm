@@ -1,4 +1,4 @@
-          !macro gnu
+          !macro gnu a,b
           lda #12
           rts
           !end
@@ -6,9 +6,9 @@
 
 * = $2000
 
---        +gnu
+--        +gnu 1,2
 
-          +gnu
+          +gnu 3,4
 
 
 

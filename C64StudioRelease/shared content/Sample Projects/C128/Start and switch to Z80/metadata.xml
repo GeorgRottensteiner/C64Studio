@@ -1,0 +1,6 @@
+<Sample Name="Mix 6510 and Z80"
+  Machine="C128"
+  ShortDescription="Shows !cpu pseudo op"
+  Tags="Assembly,6510,Z80,C128,Feature"
+  Desc="Shows the usage of the !cpu pseudo op, having both 6510 and Z80 assembly in one file.">
+</Sample>

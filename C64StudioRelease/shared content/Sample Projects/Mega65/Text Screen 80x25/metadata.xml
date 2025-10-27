@@ -1,5 +1,6 @@
 <Sample Name="Text Screen 80x25"
   Machine="Mega65"
   ShortDescription="80x25 Text Screen"
+  Tags="Assembly,Mega65,Text"
   Desc="Displays a 80x25 sized text screen, using all 32 available colors">
 </Sample>

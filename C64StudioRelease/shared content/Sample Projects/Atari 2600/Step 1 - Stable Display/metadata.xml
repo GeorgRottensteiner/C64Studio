@@ -1,5 +1,6 @@
 <Sample Name="Collect Game #1/14"
   Machine="Atari 2600"
   ShortDescription="Stable Display - Raster Bars"
+  Tags="Assembly,Atari 2600,Tutorial"
   Desc="Displays some colored raster bars with a stable display">
 </Sample>

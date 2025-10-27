@@ -19,6 +19,7 @@ namespace RetroDevStudio.Documents
   {
     private BackgroundWorker  sampleLoader;
     private Font              _titleFont;
+    private List<string>      _tags = new List<string>();
 
 
 
@@ -31,6 +32,9 @@ namespace RetroDevStudio.Documents
 
       InitializeComponent();
       InitializeSampleLoader();
+
+      comboTags.Items.Add( "All" );
+      comboTags.SelectedIndex = 0;
     }
 
 
@@ -53,6 +57,7 @@ namespace RetroDevStudio.Documents
       string    sampleBasePath = @"Sample Projects";
 #endif
 
+      _tags.Clear();
       sampleBasePath = System.IO.Path.GetFullPath( sampleBasePath );
       var folders = System.IO.Directory.GetDirectories( sampleBasePath );
       var samples = new List<SampleProject>();
@@ -87,6 +92,11 @@ namespace RetroDevStudio.Documents
           var metaFile = GR.Path.Append( sampleFolder, "metadata.xml" );
           var thumbFile = GR.Path.Append( sampleFolder, "thumbnail.png" );
 
+          if ( !System.IO.File.Exists( metaFile ) )
+          {
+            continue;
+          }
+
           var parser = new GR.Strings.XMLParser();
 
           if ( parser.Parse( GR.IO.File.ReadAllText( metaFile ), false ) )
@@ -102,6 +112,22 @@ namespace RetroDevStudio.Documents
                 ShortDescription  = xmlSample.Attribute( "ShortDescription" ),
                 LongDescription   = xmlSample.Attribute( "Desc" )
               };
+
+              var xmlTags = xmlSample.Attribute( "Tags" );
+              if ( !string.IsNullOrEmpty( xmlTags ) )
+              {
+                var tags = xmlTags.Split( new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries );
+                foreach ( var tag in tags )
+                {
+                  var trimmedTag = tag.Trim();
+                  project.Tags.Add( trimmedTag );
+                  if ( !_tags.Contains( trimmedTag ) )
+                  {
+                    _tags.Add( trimmedTag );
+                  }
+                }
+              }
+
               try
               {
                 var unlockedImage = Core.Imaging.LoadImageFromFile( thumbFile );
@@ -151,18 +177,42 @@ namespace RetroDevStudio.Documents
           });
         }
       }
+      _tags.Sort();
+      comboTags.BeginUpdate();
+      if ( comboTags.Items.Count > 1 )
+      {
+        comboTags.Items.RemoveAt( 1 );
+      }
+      foreach ( var category in _tags )
+      {
+        comboTags.Items.Add( category );
+      }
+      
+      comboTags.EndUpdate();
     }
 
 
 
-    private Rectangle GetSampleLinkRect( DecentForms.GridList.GridListItem item )
+    private Rectangle GetSampleCloneRect( DecentForms.GridList.GridListItem item )
     {
       var bounds = gridSamples.GetItemRect( item.Index );
 
-      return new Rectangle( bounds.X + bounds.Width / 2 - 18,
-                            bounds.Bottom - 24,
+      return new Rectangle( bounds.X + bounds.Width / 2 - 18 - 40,
+                            bounds.Bottom - 26,
                             2 * 18,
-                            28 - 9 );
+                            18 );
+    }
+
+
+
+    private Rectangle GetSampleOpenRect( DecentForms.GridList.GridListItem item )
+    {
+      var bounds = gridSamples.GetItemRect( item.Index );
+
+      return new Rectangle( bounds.X + bounds.Width / 2 - 18 + 20,
+                            bounds.Bottom - 26,
+                            2 * 18,
+                            18 );
     }
 
 
@@ -173,8 +223,10 @@ namespace RetroDevStudio.Documents
       {
         case DecentForms.ControlEvent.EventType.SET_CURSOR:
           {
-            var bounds = GetSampleLinkRect( item );
-            if ( bounds.Contains( e.MouseX, e.MouseY ) )
+            var bounds1 = GetSampleCloneRect( item );
+            var bounds2 = GetSampleOpenRect( item );
+            if ( ( bounds1.Contains( e.MouseX, e.MouseY ) )
+            ||   ( bounds2.Contains( e.MouseX, e.MouseY ) ) )
             {
               Sender.SetCursor( DecentForms.ControlBase.CursorType.CURSOR_HAND );
               e.Handled = true;
@@ -184,15 +236,37 @@ namespace RetroDevStudio.Documents
           break;
         case DecentForms.ControlEvent.EventType.MOUSE_DOWN:
           {
-            var bounds = GetSampleLinkRect( item );
-            if ( bounds.Contains( e.MouseX, e.MouseY ) )
+            var bounds1 = GetSampleCloneRect( item );
+            if ( bounds1.Contains( e.MouseX, e.MouseY ) )
             {
               SetupSample( ( (SampleProject)item.Tag ) );
+            }
+            var bounds2 = GetSampleOpenRect( item );
+            if ( bounds2.Contains( e.MouseX, e.MouseY ) )
+            {
+              OpenSample( ( (SampleProject)item.Tag ) );
             }
           }
           break;
       }
       //Debug.Log(string.Format("SampleExplorer: Event {0} on item {1}", e.Type, item.Text));
+    }
+
+
+
+    private void OpenSample( SampleProject tag )
+    {
+      if ( !Core.MainForm.CloseSolution() )
+      {
+        return;
+      }
+      var searchSolution = System.IO.Directory.GetFiles( tag.SourceFolder, "*.s64", System.IO.SearchOption.TopDirectoryOnly );
+      if ( searchSolution.Length == 0 )
+      {
+        Core.MessageBox( "Could not find a Solution file (*.s64) in the sample folder.", "No Solution File!" );
+        return;
+      }
+      Core.MainForm.OpenSolution( searchSolution[0] );
     }
 
 
@@ -314,9 +388,18 @@ namespace RetroDevStudio.Documents
 
       e.Renderer.DrawText( GR.EnumHelper.GetDescription( sample.Machine ), e.Bounds.X + 4, e.Bounds.Bottom - 26, 100, 20, DecentForms.TextAlignment.LEFT | DecentForms.TextAlignment.CENTERED_V, 0xff000000 );
 
-      var bounds = GetSampleLinkRect( e.Item );
-      e.Renderer.DrawText( "Create", e.Bounds.X, e.Bounds.Bottom - 28, e.Bounds.Width, 20, DecentForms.TextAlignment.CENTERED_H | DecentForms.TextAlignment.BOTTOM, 0xff4040ff );
-      e.Renderer.DrawLine( e.Bounds.X + e.Bounds.Width / 2 - 18, e.Bounds.Bottom - 9, e.Bounds.X + e.Bounds.Width / 2 + 18, e.Bounds.Bottom - 9, 0xff4040ff );
+      var bounds = GetSampleCloneRect( e.Item );
+      bounds.X %= gridSamples.ItemWidth;
+      bounds.Y %= gridSamples.ItemHeight;
+
+      e.Renderer.DrawText( "Clone", bounds.X, bounds.Y, bounds.Width, 20, DecentForms.TextAlignment.CENTERED, 0xff4040ff );
+      e.Renderer.DrawLine( bounds.Left, bounds.Bottom - 1, bounds.Right, bounds.Bottom - 1, 0xff4040ff );
+
+      bounds = GetSampleOpenRect( e.Item );
+      bounds.X %= gridSamples.ItemWidth;
+      bounds.Y %= gridSamples.ItemHeight;
+      e.Renderer.DrawText( "Open", bounds.X, bounds.Y, bounds.Width, 20, DecentForms.TextAlignment.CENTERED, 0xff4040ff );
+      e.Renderer.DrawLine( bounds.Left, bounds.Bottom - 1, bounds.Right, bounds.Bottom - 1, 0xff4040ff );
 
       DrawSampleText( e.Renderer, e.Bounds, sample.LongDescription );
     }
@@ -353,14 +436,35 @@ namespace RetroDevStudio.Documents
         return;
       }
 
+      UpdateFilter();
+    }
+
+
+
+    private void UpdateFilter()
+    {
+      if ( sampleLoader.IsBusy )
+      {
+        return;
+      }
       gridSamples.BeginUpdate();
       foreach ( var item in gridSamples.Items )
       {
         if ( item.Tag is SampleProject sample )
         {
-          item.Visible = ( editSampleFilter.Text.Length == 0 )
-            || ( sample.Name.IndexOf( editSampleFilter.Text, StringComparison.InvariantCultureIgnoreCase ) != -1 )
-            || ( sample.ShortDescription.IndexOf( editSampleFilter.Text, StringComparison.InvariantCultureIgnoreCase ) != -1 );
+          bool    isVisible = ( editSampleFilter.Text.Length == 0 )
+                                || ( sample.Name.IndexOf( editSampleFilter.Text, StringComparison.InvariantCultureIgnoreCase ) != -1 )
+                                || ( sample.ShortDescription.IndexOf( editSampleFilter.Text, StringComparison.InvariantCultureIgnoreCase ) != -1 );
+          if ( comboTags.SelectedIndex > 0 )
+          {
+            string category = comboTags.Items[comboTags.SelectedIndex].ToString();
+
+            if ( !sample.Tags.Contains( category ) )
+            {
+              isVisible = false;
+            }
+          }
+          item.Visible = isVisible;
         }
       }
       gridSamples.EndUpdate();
@@ -375,6 +479,13 @@ namespace RetroDevStudio.Documents
         btnRefresh.Enabled = false;
         sampleLoader.RunWorkerAsync();
       }
+    }
+
+
+
+    private void comboCategories_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      UpdateFilter();
     }
 
 

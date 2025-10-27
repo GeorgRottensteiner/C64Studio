@@ -16,12 +16,12 @@
 ;    RAM-Block 0    /    $7fff:     \
 ;    auswählen     /     RAM       $d000-
 ;                 /                $dfff:
-;         $8000-$cfff und           I/O 
-;         $e000-$ffff:   
+;         $8000-$cfff und           I/O
+;         $e000-$ffff:
 ;         RAM einblenden
 ;
-; Zusammenfassung:                        
-; $0000 - $cfff: o RAM                 
+; Zusammenfassung:
+; $0000 - $cfff: o RAM
 ; $d000 - $dfff: # I/O
 ; $e000 - $ffff: o RAM
 ; ------------------------------------------------------------------
@@ -71,10 +71,10 @@
 z80
 ;.mod1   ; Es folgt Z80-Code
 !cpu z80
-          
+
           ld a,$3f      ; Bit0 gesetzt => $d000-$dfff=RAM(?)
           ld ($ff00),a  ; Setzen des Konfig.registers
           ld a,$51      ; Z80-
           ld ($3000),a  ; Programm
           jp $ffe0      ; Betriebssystem-Routine:
-                        ; 8502 aktivieren 
+                        ; 8502 aktivieren
