@@ -1147,7 +1147,7 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_MINUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 124 - 32, true, 124 + 96, true, (char)0xee5c, true, "CBM -" ).Replacements.Add( "CBM--" );   // C= -
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_MINUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 125 - 32, true, 125 + 96, true, (char)0xee5d, true, "SHIFT -" ).Replacements.Add( "SHIFT--" );   // Shift -
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
-      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 126, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
+      AddKeyInfo( MachineType.C64, PhysicalKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 126 + 96, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127 + 96, true, (char)0xee5f, true, "CBM *" ).Replacements.Add( "CBM-*" );   // C= *
 
       // 128-159 $80-$9F     +64 $40        192-223 $C0-$DF  

@@ -4244,6 +4244,24 @@ namespace RetroDevStudio.Parser.BASIC
           if ( insideStringLiteral )
           {
             var c64Key = FindKeyByCharacter( byteValue );
+            if ( c64Key == null )
+            {
+              if ( ( byteValue >= 96 )
+              &&   ( byteValue <= 127 ) )
+              {
+                byteValue += 192 - 96;
+              }
+              if ( ( byteValue >= 224 )
+              &&   ( byteValue <= 254 ) )
+              {
+                byteValue -= 224 - 160;
+              }
+              if ( byteValue == 255 )
+              {
+                byteValue = 126;
+              }
+              c64Key = FindKeyByCharacter( byteValue );
+            }
             if ( c64Key != null )
             {
               lineContent += c64Key.CharValue;
