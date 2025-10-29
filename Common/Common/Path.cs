@@ -410,7 +410,11 @@ namespace GR
     /// <returns></returns>
     public static string RenameExtension( string OrigFilename, string NewExtension, string Separators = PotentialPathSeparators )
     {
-      return GetFileNameWithoutExtension( OrigFilename, Separators ) + NewExtension;
+      if ( !NewExtension.StartsWith( "." ) )
+      {
+        NewExtension = "." + NewExtension;
+      }
+      return Append( GetDirectoryName( OrigFilename, PotentialPathSeparators ), GetFileNameWithoutExtension( OrigFilename, Separators ) + NewExtension );
     }
 
 

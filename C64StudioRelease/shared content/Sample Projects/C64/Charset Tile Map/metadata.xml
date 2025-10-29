@@ -1,0 +1,6 @@
+<Sample Name="Charset Tile Map"
+  Machine="C64"
+  ShortDescription="Display tileset maps"
+  Tags="Assembly,C64,Map,Text,Feature"
+  Desc="Showcases the usage of a map project in assembly. Displays two maps, which you can switch by pressing space.">
+</Sample>

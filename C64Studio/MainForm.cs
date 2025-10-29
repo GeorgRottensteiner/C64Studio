@@ -3511,7 +3511,8 @@ namespace RetroDevStudio
         createdNewSolution = true;
         StudioCore.Navigating.Solution = new Solution( this );
         StudioCore.Navigating.Solution.DuringLoad = true;
-        SaveSolution();
+
+        SaveSolution( GR.Path.RenameExtension( Filename, ".s64" ) );
       }
 
       Project newProject = new Project();
@@ -6173,7 +6174,7 @@ namespace RetroDevStudio
 
 
 
-    public void SaveSolution()
+    public void SaveSolution( string suggestedFilename = "" )
     {
       if ( StudioCore.Navigating.Solution == null )
       {
@@ -6190,6 +6191,17 @@ namespace RetroDevStudio
 
         saveDlg.Title = "Save Solution as";
         saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_SOLUTION + Types.Constants.FILEFILTER_ALL );
+
+        if ( !string.IsNullOrEmpty( suggestedFilename ) )
+        {
+          saveDlg.FileName          = GR.Path.GetFileName( suggestedFilename );
+          saveDlg.InitialDirectory  = GR.Path.GetDirectoryName( suggestedFilename );
+        }
+        else
+        {
+          saveDlg.FileName = "Untitled.s64";
+        }
+
         if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
         {
           return;
