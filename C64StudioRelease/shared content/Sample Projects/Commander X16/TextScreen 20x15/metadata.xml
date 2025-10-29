@@ -1,5 +1,6 @@
 <Sample Name="Commander X16 20x15"
   Machine="Commander X16"
   ShortDescription="20x15 text screen"
+  Tags="Assembly,Commander X16,Character,Text"
   Desc="Displays a 20x15 text screen from the provided charscreen project file. Exhibits how to include a charset and set up the 20x15 mode.">
 </Sample>

@@ -179,7 +179,7 @@ namespace RetroDevStudio.Documents
       }
       _tags.Sort();
       comboTags.BeginUpdate();
-      if ( comboTags.Items.Count > 1 )
+      while ( comboTags.Items.Count > 1 )
       {
         comboTags.Items.RemoveAt( 1 );
       }

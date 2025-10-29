@@ -1,0 +1,6 @@
+<Sample Name="16 color sprites"
+  Machine="Commander X16"
+  ShortDescription="4 sizes of 16 color sprites"
+  Tags="Assembly,Commander X16,Sprites"
+  Desc="Displays 4 different sized 16 color sprites. Showcases usage of sprite projects, sets up VERA and enables four sprites">
+</Sample>

@@ -1183,8 +1183,9 @@ namespace DecentForms
 
       for ( int i = 0; i <= gridList.VisibleItemCount; ++i )
       {
-        int   realIndex = firstItem + i;
-        if ( realIndex >= gridList.Items.Count )
+        int  realVisibleIndex = firstItem + i;
+        int  realIndex = gridList.GetItemIndexFromVisibleIndex( realVisibleIndex );
+        if ( realIndex == -1 )
         {
           break;
         }

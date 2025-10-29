@@ -527,6 +527,7 @@
     <None Remove="BASIC Dialects\Tuned Simons' BASIC.txt" />
     <None Remove="BASIC Dialects\Walrus BASIC 8.txt" />
     <None Remove="BASIC Dialects\XC=Basic.txt" />
+    <None Remove="Documents\SampleExplorer.cs~RF3809ccc7.TMP" />
     <None Remove="Fonts\C64_Pro_Mono_v1.0-STYLE.ttf" />
     <None Remove="Fonts\ZX81-Regular.ttf" />
   </ItemGroup>

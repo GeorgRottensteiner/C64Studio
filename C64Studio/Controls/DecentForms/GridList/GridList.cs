@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -19,6 +20,8 @@ namespace DecentForms
 
     private bool          _UpdateLocked = false;
     private bool          _RedrawRequired= false;
+    private bool          _ItemsModified = false; 
+    private List<int>     _visibleItemIndex = new List<int>();
 
     public event EventHandler       SelectedIndexChanged;
 
@@ -90,10 +93,10 @@ namespace DecentForms
       }
     }
 
-    public GridListItemCollection          Items { get; private set; }
-    public GridListItemIndexCollection     SelectedIndices { get; private set; }
-    public GridListSelectedItemCollection  SelectedItems { get; private set; }
-    public SelectionMode                  SelectionMode { get; set; }
+    public GridListItemCollection           Items { get; private set; }
+    public GridListItemIndexCollection      SelectedIndices { get; private set; }
+    public GridListSelectedItemCollection   SelectedItems { get; private set; }
+    public SelectionMode                    SelectionMode { get; set; }
 
 
 
@@ -163,7 +166,7 @@ namespace DecentForms
         {
           potentialItemsPerLine = 1;
         }
-        int scrollLength = ( ( Items.Count + potentialItemsPerLine - 1 ) / potentialItemsPerLine ) - visibleItemsVertical;
+        int scrollLength = ( ( _visibleItemIndex.Count + potentialItemsPerLine - 1 ) / potentialItemsPerLine ) - visibleItemsVertical;
         if ( scrollLength <= 0 )
         {
           _itemsPerLine = potentialItemsPerLine;
@@ -179,7 +182,7 @@ namespace DecentForms
       {
         _itemsPerLine = 1;
       }
-      int scrollLength2 = ( ( Items.Count + _itemsPerLine - 1 ) / _itemsPerLine ) - visibleItemsVertical;
+      int scrollLength2 = ( ( _visibleItemIndex.Count + _itemsPerLine - 1 ) / _itemsPerLine ) - visibleItemsVertical;
 
       if ( scrollLength2 <= 0 )
       {
@@ -226,8 +229,8 @@ namespace DecentForms
       {
         return false;
       }
-      return ( Items.Count > VisibleItemCount ) 
-          || ( _ScrollAlwaysVisible );
+      return ( _ScrollAlwaysVisible )
+          || ( _visibleItemIndex.Count > VisibleItemCount );
     }
 
 
@@ -616,11 +619,11 @@ namespace DecentForms
       }
       int   localIndex = ( X / ItemWidth ) + ( Y / ItemHeight ) * ItemsPerLine;
       int   itemIndex = FirstVisibleItemIndex + localIndex;
-      if ( itemIndex >= Items.Count )
+      if ( itemIndex >= _visibleItemIndex.Count )
       {
         return -1;
       }
-      return itemIndex;
+      return _visibleItemIndex[itemIndex];
     }
 
 
@@ -702,6 +705,12 @@ namespace DecentForms
 
     private void ItemModified( GridListItem Item )
     {
+      if ( _UpdateLocked )
+      {
+        _ItemsModified = true;
+        _RedrawRequired = true;
+        return;
+      }
       RebuildVisibleItemIndices();
       Invalidate( GetItemRect( Item.Index ) );
     }
@@ -712,18 +721,32 @@ namespace DecentForms
     {
       int   visibleIndex = 0;
 
+      _visibleItemIndex.Clear();
       foreach ( var item in Items )
       {
         if ( item.Visible )
         {
           item._VisibleIndex = visibleIndex;
           ++visibleIndex;
+          _visibleItemIndex.Add( item.Index );
         }
         else
         {
           item._VisibleIndex = -1;
         }
       }
+    }
+
+
+
+    internal int GetItemIndexFromVisibleIndex( int visibleIndex )
+    {
+      if ( ( visibleIndex < 0 )
+      ||   ( visibleIndex >= _visibleItemIndex.Count ) )
+      {
+        return -1;
+      }
+      return _visibleItemIndex[visibleIndex];
     }
 
 
@@ -780,6 +803,12 @@ namespace DecentForms
       if ( _UpdateLocked )
       {
         _UpdateLocked = false;
+        if ( _ItemsModified )
+        {
+          _ItemsModified = false;
+          ItemsModified();
+          return;
+        }
         if ( _RedrawRequired )
         {
           Invalidate();
