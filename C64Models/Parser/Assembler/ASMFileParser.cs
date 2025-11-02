@@ -12191,7 +12191,8 @@ namespace RetroDevStudio.Parser
       }
 
       // internal label followed by global is a macro call 
-      if ( AssemblerSettings.MacroFunctionCallPrefix.Contains( "+" ) )
+      if ( ( AssemblerSettings.MacroFunctionCallPrefix.Contains( "+" ) )
+      &&   ( !_ParseContext.DuringExpressionEvaluation ) )
       {
         // only check at start of line (first token, or second after a label)
         // TODO - statements separated by :

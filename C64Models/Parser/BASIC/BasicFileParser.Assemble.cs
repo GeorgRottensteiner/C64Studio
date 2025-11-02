@@ -119,7 +119,7 @@ namespace RetroDevStudio.Parser.BASIC
             ushort variablesPos = (ushort)( result.Length - 1 + 16393 );
             ushort basicEnd = (ushort)( result.Length + 16393 );
 
-            
+
             result.SetU16At( startOffset + 3, displayPos );
             result.SetU16At( startOffset + 5, (ushort)( displayPos + 1 ) );
             result.SetU16At( startOffset + 7, variablesPos );

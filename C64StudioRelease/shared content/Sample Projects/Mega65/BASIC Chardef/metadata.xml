@@ -1,5 +1,6 @@
 <Sample Name="BASIC Chardef"
   Machine="Mega65" 
   ShortDescription="Use CHARDEF command" 
+  Tags="Assembly,Mega65,Text"
   Desc="Shows the plain usage of the BASIC CHARDEF command to redefine the design of letter E.">
 </Sample>

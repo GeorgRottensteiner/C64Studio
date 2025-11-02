@@ -1,5 +1,6 @@
 <Sample Name="Text Screen 40x25"
   Machine="Mega65" 
   ShortDescription="40x25 text screen from project" 
+  Tags="Assembly,Mega65,Text"
   Desc="Displays a regular 40x25 text screen from the provided charscreen project file. Exhibits the extended color bit for the secondary 16 colors.">
 </Sample>

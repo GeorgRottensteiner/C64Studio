@@ -126,7 +126,14 @@ namespace RetroDevStudio
       }
       else
       {
-        SetForegroundWindow( Core.MainForm.Handle );
+        try
+        {
+          SetForegroundWindow( Core.MainForm.Handle );
+        }
+        catch ( System.ObjectDisposedException )
+        {
+          return;
+        }
       }
     }
 

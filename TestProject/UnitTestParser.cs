@@ -2395,6 +2395,20 @@ ContrivedTest:
     }
 
 
+
+    [TestMethod]
+    public void TestExpressionNotCollapsingIntoMacroCall()
+    {
+      string      source = @"KEY = 100
+                             EXPRESSION = 100+KEY*8";
+
+      var assembly = TestAssemble( source, out var info );
+
+      Assert.AreEqual( 900, info.Labels["EXPRESSION"].ToInteger() );
+    }
+
+
+
     [TestMethod]
     public void TestNegativeLiteralCollapsing()
     {

@@ -21,26 +21,11 @@ namespace RetroDevStudio
       Text = "Compile Target";
       InitializeComponent();
 
-      comboTargetType.Items.Add( "None" );
-      comboTargetType.Items.Add( "Plain" );
-      comboTargetType.Items.Add( "PRG (cbm)" );
-      comboTargetType.Items.Add( "T64" );
-      comboTargetType.Items.Add( "8 KB Cartridge (bin)" );
-      comboTargetType.Items.Add( "8 KB Cartridge (crt)" );
-      comboTargetType.Items.Add( "16 KB Cartridge (bin)" );
-      comboTargetType.Items.Add( "16 KB Cartridge (crt)" );
-      comboTargetType.Items.Add( "D64" );
-      comboTargetType.Items.Add( "Magic Desk 64 KB Cartridge (bin)" );
-      comboTargetType.Items.Add( "Magic Desk 64 KB Cartridge (crt)" );
-      comboTargetType.Items.Add( "TAP" );
-      comboTargetType.Items.Add( "Easyflash Cartridge (bin)" );
-      comboTargetType.Items.Add( "Easyflash Cartridge (crt)" );
-      comboTargetType.Items.Add( "RGCD 64 KB Cartridge (bin)" );
-      comboTargetType.Items.Add( "RGCD 64 KB Cartridge (crt)" );
-      comboTargetType.Items.Add( "GMOD2 Cartridge (bin)" );
-      comboTargetType.Items.Add( "GMOD2 Cartridge (crt)" );
-      comboTargetType.Items.Add( "D81" );
 
+      foreach ( var value in Enum.GetValues( typeof( Types.CompileTargetType ) ) )
+      {
+        comboTargetType.Items.Add( GR.EnumHelper.GetDescription( (Types.CompileTargetType)value ) );
+      }
       comboTargetType.SelectedIndex = (int)Element.TargetType;
 
       editTargetFilename.Text = Element.TargetFilename;

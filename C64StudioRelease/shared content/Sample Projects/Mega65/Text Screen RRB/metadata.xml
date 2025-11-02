@@ -1,5 +1,6 @@
 <Sample Name="Simple RRB Mode"
   Machine="Mega65"
   ShortDescription="Showcases the Raster Rewrite Buffer"
+  Tags="Assembly,Mega65,Text"
   Desc="Displays a regular text screen, overlaying two characters with modifying X position with a sine swing.">
 </Sample>

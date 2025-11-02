@@ -365,14 +365,14 @@ namespace DecentForms
           {
             return;
           }
-          if ( _SelectedIndex < FirstVisibleItemIndex )
+          if ( Items[_SelectedIndex]._VisibleIndex < FirstVisibleItemIndex )
           {
             _ScrollBarV.Value = _SelectedIndex;
             Invalidate();
           }
-          else if ( _SelectedIndex >= FirstVisibleItemIndex + VisibleItemCount )
+          else if ( Items[_SelectedIndex]._VisibleIndex >= FirstVisibleItemIndex + VisibleItemCount )
           {
-            _ScrollBarV.Value = Math.Max( 0, _SelectedIndex - VisibleItemCount + 1 );
+            _ScrollBarV.Value = Math.Max( 0, Items[_SelectedIndex]._VisibleIndex - VisibleItemCount + 1 );
             Invalidate();
           }
           else if ( _SelectedIndex != -1 )

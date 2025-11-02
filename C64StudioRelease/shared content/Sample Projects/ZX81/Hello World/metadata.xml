@@ -1,5 +1,6 @@
 <Sample Name="ZX81 Hello World"
   Machine="ZX81"
   ShortDescription="Simple assembly"
+  Tags="ZX81,Assembly"
   Desc="Assembles the assembly into a BASIC loader. Displays 'Hello World' on screen.">
 </Sample>

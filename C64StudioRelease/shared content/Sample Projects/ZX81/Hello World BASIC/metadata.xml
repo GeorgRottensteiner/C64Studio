@@ -1,0 +1,6 @@
+<Sample Name="ZX81 Hello World"
+  Machine="ZX81"
+  ShortDescription="Simple BASIC"
+  Tags="ZX81,BASIC"
+  Desc="Showcases a simple BASIC program displaying graphic characters using a for loop.">
+</Sample>

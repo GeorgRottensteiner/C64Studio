@@ -118,7 +118,7 @@ namespace RetroDevStudio.Types
     [DefaultFileExtension( ".nes" )]
     CARTRIDGE_NES,
     [Description( "P (ZX81)" )]
-    [DefaultFileExtension( ".p81" )]
+    [DefaultFileExtension( ".p" )]
     P_ZX81
   }
 
