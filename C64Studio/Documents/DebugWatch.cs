@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -354,7 +355,8 @@ namespace RetroDevStudio.Documents
 
     private void removeEntryToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( var item in listWatch.SelectedItems )
+      var entries = listWatch.SelectedItems.ToList();
+      foreach ( var item in entries )
       {
         Core.MainForm.RemoveWatchEntry( (WatchEntry)item.Tag );
       }

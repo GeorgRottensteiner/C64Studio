@@ -328,7 +328,7 @@ namespace RetroDevStudio.Parser.BASIC
 
           string[] parts = line.Split( ';' );
           if ( ( parts.Length != 3 )
-          && ( parts.Length != 4 ) )
+          &&   ( parts.Length != 4 ) )
           {
             ErrorMessage = $"Invalid BASIC format file '{File}', expected three or four columns in line {lineIndex}";
             return null;

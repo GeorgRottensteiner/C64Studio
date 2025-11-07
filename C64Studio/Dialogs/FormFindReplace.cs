@@ -267,6 +267,19 @@ namespace RetroDevStudio.Dialogs
         Core.MainForm.WriteToLog( "-continue from " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
       }
 
+      if ( ( LastSearchFound.StartPosition != -1 )
+      &&   ( LastSearchFound.Length > 0 ) )
+      {
+        if ( searchForward )
+        {
+          ++LastSearchFound.StartPosition;
+        }
+        else
+        {
+          --LastSearchFound.StartPosition;
+        }
+      }
+
       if ( FindNextNew( SearchText,
                         searchForward,
                         checkSearchRegExp.Checked,
@@ -305,7 +318,6 @@ namespace RetroDevStudio.Dialogs
 
         var edit = EditFromDocumentEx( LastSearchFound.FoundInDocument );
 
-        //Debug.Log( "Found in " + LastSearchFound.FoundInDocument.FullPath + ", line " + LastSearchFound.LineNumber + ", pos " + LastSearchFound.StartPosition );
         var foundRange = RangeFromSearchLocation( edit, LastSearchFound );
 
         //if ( (FindTarget)comboSearchTarget.SelectedIndex != FindTarget.CURRENT_SELECTION )
@@ -433,7 +445,7 @@ namespace RetroDevStudio.Dialogs
         return new SearchLocation();
       }
 
-      int     startPos = LastPosition + 1;
+      int     startPos = LastPosition;
       if ( Upwards )
       {
         startPos = LastPosition - 1;
