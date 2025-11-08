@@ -172,7 +172,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(250, 530);
+      this.contextSource.Size = new System.Drawing.Size(250, 552);
       // 
       // copyToolStripMenuItem
       // 

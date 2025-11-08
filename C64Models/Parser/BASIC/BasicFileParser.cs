@@ -1291,6 +1291,17 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
+    internal bool IsDataToken( Token token )
+    {
+      if ( token.Content == "DATA" )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     public bool IsComment( Opcode Opcode )
     {
       if ( Opcode.Command == "REM" )

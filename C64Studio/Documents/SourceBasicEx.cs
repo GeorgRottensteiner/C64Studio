@@ -3671,5 +3671,55 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void disassembleDATAsToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      int     firstLine = editSource.Selection.Start.iLine;
+      int     endLine = editSource.Selection.End.iLine;
+      int     startChar = editSource.Selection.Start.iChar;
+      int     endChar = editSource.Selection.End.iChar;
+
+      if ( firstLine > endLine )
+      {
+        int   temp = firstLine;
+        firstLine = endLine;
+        endLine = temp;
+        startChar = editSource.Selection.End.iChar;
+        endChar = editSource.Selection.Start.iChar;
+      }
+      else if ( firstLine == endLine )
+      {
+        if ( endChar < startChar )
+        {
+          int   temp = startChar;
+          startChar = endChar;
+          endChar = temp;
+        }
+      }
+
+      // fall back, use full line
+      if ( editSource.SelectionLength == 0 )
+      {
+        firstLine = m_ContextMenuLineIndex;
+        endLine = firstLine;
+        startChar = 0;
+        endChar = editSource.Lines[firstLine].Length - 1;
+      }
+
+      var data = Util.FromBASIC( editSource.SelectedText );
+      if ( editSource.SelectionLength == 0 )
+      {
+        data = Util.FromBASIC( editSource.Text );
+      }
+
+      var disassembler = new Disassembler( Core );
+      disassembler.SetHexData( data );
+
+      disassembler.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
+      disassembler.RefreshDisplayOptions();
+      disassembler.Show( Core.MainForm.panelMain );
+    }
+
+
+
   }
 }

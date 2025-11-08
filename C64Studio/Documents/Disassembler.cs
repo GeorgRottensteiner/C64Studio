@@ -137,7 +137,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void SetHexData( GR.Memory.ByteBuffer Data )
+    public void SetHexData( GR.Memory.ByteBuffer Data )
     {
       hexView.ByteProvider = new Be.Windows.Forms.DynamicByteProvider( Data.Data() );
       hexView.ByteProvider.Changed += new EventHandler( ByteProvider_Changed );
