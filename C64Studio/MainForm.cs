@@ -2329,6 +2329,19 @@ namespace RetroDevStudio
                 valueToInsert = Document.Project.Settings.BasePath;
               }
               break;
+            case "ProjectName":
+              if ( Document?.Project != null )
+              {
+                valueToInsert = Document.Project.Settings.Name;
+              }
+              break;
+            case "SolutionName":
+              if ( ( StudioCore.Navigating.Solution != null )
+              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              {
+                valueToInsert = StudioCore.Navigating.Solution.Name;
+              }
+              break;
             case "SolutionPath":
               if ( ( StudioCore.Navigating.Solution != null )
               &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )

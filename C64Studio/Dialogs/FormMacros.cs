@@ -47,7 +47,9 @@ namespace RetroDevStudio.Dialogs
 
       InsertMacro( "$(ConfigName)" );
       InsertMacro( "$(ProjectPath)" );
+      InsertMacro( "$(ProjectName)" );
       InsertMacro( "$(SolutionPath)" );
+      InsertMacro( "$(SolutionName)" );
       InsertMacro( "$(MediaManager)" );
       InsertMacro( "$(MediaTool)" );
 
