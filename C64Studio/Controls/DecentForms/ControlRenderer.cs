@@ -1385,7 +1385,7 @@ namespace DecentForms
         // Remove the drawn portion from the remaining text
         if ( charsFitted < textToDraw.Length )
         {
-          textToDraw = textToDraw.Substring( charsFitted );
+          textToDraw = textToDraw.Substring( charsFitted ).TrimStart();
 
           if ( curY >= rect.Bottom )
           {

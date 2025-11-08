@@ -1,0 +1,6 @@
+<Sample Name="Tunes Simons' BASIC"
+  Machine="C64"
+  ShortDescription="Displays test screens"
+  Tags="BASIC,C64,TSB,Disk,Feature"
+  Desc="Showcases the usage of TSB (Tuned Simons' BASIC), using a second loader program which sets up TSB and loads the actual file. Uses a post build event to import files in a disk image, and how to pass the image on to an emulator. The loader is configured as dependency of the main testbild.bas file, so it is built along with it.">
+</Sample>

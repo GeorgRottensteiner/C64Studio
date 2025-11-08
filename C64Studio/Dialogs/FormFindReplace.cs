@@ -418,7 +418,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private bool IsCharPartOfWord( char TestChar )
+    private static bool IsCharPartOfWord( char TestChar )
     {
       if ( ( TestChar == '_' )
       ||   ( ( TestChar >= 'A' )
@@ -435,11 +435,16 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    private SearchLocation FindNextOccurrence( string SearchSource,
-                                               string SearchString, 
-                                               bool RegularExpression, bool WholeWords, bool IgnoreCase, bool Upwards, int LastPosition )
+    private static SearchLocation FindNextOccurrence( string SearchSource,
+                                                      string SearchString, 
+                                                      bool RegularExpression, 
+                                                      bool WholeWords, 
+                                                      bool IgnoreCase, 
+                                                      bool Upwards, 
+                                                      int LastPosition,
+                                                      out string errorMessage )
     {
-      _LastErrorMessage = "";
+      errorMessage = "";
       if ( string.IsNullOrEmpty( SearchString ) )
       {
         return new SearchLocation();
@@ -480,7 +485,7 @@ namespace RetroDevStudio.Dialogs
         }
         catch ( Exception ex )
         {
-          _LastErrorMessage = "Invalid Regular Expression: " + ex.Message;
+          errorMessage = "Invalid Regular Expression: " + ex.Message;
           return new SearchLocation();
         }
 
@@ -530,16 +535,19 @@ namespace RetroDevStudio.Dialogs
       if ( WholeWords )
       {
         bool    isWholeWord = true;
+        // previous char is the same category as search char?
         if ( ( pos > 0 )
-        &&   ( IsCharPartOfWord( SearchSource[pos - 1] ) ) )
+        &&   ( IsCharPartOfWord( SearchSource[pos - 1] ) == IsCharPartOfWord( SearchString[0] ) ) )
         {
           isWholeWord = false;
         }
+        // next char is same category as last search char?
         if ( ( pos + SearchString.Length < SearchSource.Length )
-        &&   ( IsCharPartOfWord( SearchSource[pos + SearchString.Length] ) ) )
+        &&   ( IsCharPartOfWord( SearchSource[pos + SearchString.Length] ) == IsCharPartOfWord( SearchString[SearchString.Length - 1] ) ) )
         {
           isWholeWord = false;
         }
+        // not a word boundary, continue searching
         if ( !isWholeWord )
         {
           startPos = pos + 1;
@@ -1011,7 +1019,7 @@ namespace RetroDevStudio.Dialogs
           }
         }
 
-        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition, out _LastErrorMessage );
         newLocation.FoundInDocument = activeDocument.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
         {
@@ -1019,11 +1027,11 @@ namespace RetroDevStudio.Dialogs
           {
             if ( SearchDown )
             {
-              newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, 0 );
+              newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, 0, out _LastErrorMessage );
             }
             else
             {
-              newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, edit.Text.Length );
+              newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, edit.Text.Length, out _LastErrorMessage );
             }
           }
           if ( newLocation.StartPosition == -1 )
@@ -1072,7 +1080,7 @@ namespace RetroDevStudio.Dialogs
         }
 
         textFromElement = edit.Text;
-        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, searchStart - 1 );
+        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, searchStart - 1, out _LastErrorMessage );
         newLocation.FoundInDocument = activeDocument.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
         {
@@ -1130,7 +1138,7 @@ namespace RetroDevStudio.Dialogs
           }
         }
 
-        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition, out _LastErrorMessage );
         newLocation.FoundInDocument = activeDocument.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
         {
@@ -1204,7 +1212,7 @@ namespace RetroDevStudio.Dialogs
           }
         }
 
-        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition, out _LastErrorMessage );
         newLocation.FoundInDocument = elementToSearch.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
         {
@@ -1289,7 +1297,7 @@ namespace RetroDevStudio.Dialogs
           }
         }
 
-        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+        newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition, out _LastErrorMessage );
         newLocation.FoundInDocument = elementToSearch.DocumentInfo;
         if ( newLocation.StartPosition == -1 )
         {
@@ -1988,7 +1996,8 @@ namespace RetroDevStudio.Dialogs
                                                          WholeWords,
                                                          IgnoreCase,
                                                          false,
-                                                         LastReplaceFound.StartPosition );
+                                                         LastReplaceFound.StartPosition, 
+                                                         out _LastErrorMessage );
         if ( newLocation.StartPosition == -1 )
         {
           Core.Searching.AddSearchResults( searchResults );
