@@ -3708,7 +3708,9 @@ namespace FastColoredTextBoxNS
     {
       int i = GetStyleIndex( style );
       if ( i < 0 )
+      {
         i = AddStyle( style );
+      }
       return i;
     }
 

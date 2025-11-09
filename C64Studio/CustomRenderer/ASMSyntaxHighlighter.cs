@@ -15,15 +15,6 @@ namespace RetroDevStudio.CustomRenderer
   {
     public ASMFileParser    Parser = new ASMFileParser();
 
-    private SourceASMEx     _SourceDoc = null;
-
-
-
-    public ASMSyntaxHighlighter( SourceASMEx sourceDoc )
-    {
-      _SourceDoc = sourceDoc;
-    }
-
 
 
     public override void HighlightSyntax( Language Language, FastColoredTextBoxNS.Range ChangedRange )

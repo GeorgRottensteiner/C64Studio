@@ -225,7 +225,7 @@ namespace RetroDevStudio.Documents
       editSource.PreferredLineWidth = Core.Settings.ASMShowMaxLineLengthIndicatorLength;
       editSource.ToolTipDisplayDuration = 30000;
 
-      _syntaxHighlighter            = new ASMSyntaxHighlighter( this );
+      _syntaxHighlighter            = new ASMSyntaxHighlighter();
       editSource.SyntaxHighlighter  = _syntaxHighlighter;
 
       btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();

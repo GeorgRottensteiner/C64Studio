@@ -1,4 +1,5 @@
 ﻿using FastColoredTextBoxNS;
+using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using System;
@@ -51,6 +52,9 @@ namespace RetroDevStudio.Documents
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";(?=(?:[^""]*""[^""]*"")*[^""]*$).*" );
 
       InitializeComponent();
+
+      editDisassembly.SyntaxHighlighter = new ASMSyntaxHighlighter();
+
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
