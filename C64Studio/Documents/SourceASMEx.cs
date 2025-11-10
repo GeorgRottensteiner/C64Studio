@@ -3102,7 +3102,7 @@ namespace RetroDevStudio.Documents
 
       m_InsertingText = false;
       SetModified();
-      RefreshDisplayOptions();
+      editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
     }
 
 

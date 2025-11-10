@@ -2628,7 +2628,7 @@ namespace RetroDevStudio.Documents
         editSource.TextSource.Manager.ExecuteCommand( new BookmarkCommand( editSource.TextSource ) );
       }
       editSource.EndAutoUndo();
-
+      editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
       SetModified();
     }
 
@@ -3712,7 +3712,7 @@ namespace RetroDevStudio.Documents
       }
 
       var disassembler = new Disassembler( Core );
-      disassembler.SetHexData( data );
+      disassembler.SetData( data );
 
       disassembler.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
       disassembler.RefreshDisplayOptions();

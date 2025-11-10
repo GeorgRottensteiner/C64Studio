@@ -1833,6 +1833,7 @@ namespace RetroDevStudio.Dialogs
                                                         checkReplaceIgnoreCase.Checked,
                                                         out occurrences );
 
+          int oldZoom = edit.Zoom;
           edit.SelectedText = replacedText;
 
           // restore old selection
