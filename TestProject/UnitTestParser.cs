@@ -676,6 +676,61 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroLessThanNeededArgs()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                                !byte v2
+                              }
+
+                              main
+                                +test 64 ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroMoreThanNeededArgs()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                              }
+
+                              main
+                                +test 64, 65, 66 ";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      foreach ( var entry in asmFileInfo.Messages.Values )
+      {
+        code = entry.Code;
+        break;
+      }
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( 1, parser.Warnings );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, asmFileInfo.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, asmFileInfo.Messages.Values[1].Code );
+    }
+
+
+
+    [TestMethod]
     public void TestMacroWithMultiPartParameters()
     {
       string      source = @"    * = $c000

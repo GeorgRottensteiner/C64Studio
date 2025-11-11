@@ -79,7 +79,7 @@ namespace RetroDevStudio.Parser
       }
 
       if ( ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-      &&   ( lineTokenInfos.Count != 2 ) )
+      &&   ( lineTokenInfos.Count < 2 ) )
       {
         AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname>" );
         hadError = true;

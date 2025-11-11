@@ -237,9 +237,19 @@ namespace RetroDevStudio.Parser
       Macro = null;
       if ( m_AssemblerSettings.MacrosCanBeOverloaded )
       {
-        //if ( macroFunctions.Keys.Any( k => ( k.first == Key.first ) && ( k.second == Key.second ) ) )
         if ( !macroFunctions.ContainsKey( Key ) )
         {
+          if ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+          {
+            // try to find a macro with less parameters that has variable arguments
+            var potentialMacros = macroFunctions.Where( mf => ( mf.Key.first == Key.first ) && ( mf.Key.second > Key.second ) );
+            if ( !potentialMacros.Any() )
+            {
+              return false;
+            }
+            Macro = potentialMacros.OrderBy( pm => pm.Key.second ).First().Value;
+            return true;
+          }
           return false;
         }
         Macro = macroFunctions[Key];

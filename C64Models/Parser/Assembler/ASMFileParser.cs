@@ -10024,6 +10024,15 @@ namespace RetroDevStudio.Parser
               {
                 // replace parameter!
                 modifiedToken = true;
+                if ( j >= param.Count )
+                {
+                  // trying to access a not provided argument
+                  m_LastErrorInfo.LineIndex = lineIndex;
+                  m_LastErrorInfo.Pos       = token.StartPos;
+                  m_LastErrorInfo.Length    = token.Length;
+                  m_LastErrorInfo.Code      = ErrorCode.E1302_MALFORMED_MACRO;
+                  return null;
+                }
                 token.Content = param[j];
                 token.Length = param[j].Length;
 

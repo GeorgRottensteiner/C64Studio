@@ -285,6 +285,7 @@ namespace RetroDevStudio.Parser
           POPrefix = "!";
           MacroFunctionCallPrefix.Add( "+" );
           MacrosCanBeOverloaded = true;
+          MacrosHaveVariableNumberOfArguments = true;
           GlobalLabelsAutoZone = false;
           SupportsRealNumbers = true;
           DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=", "&=" }  );
