@@ -159,6 +159,11 @@ namespace RetroDevStudio.Parser
             }
             shouldParameterBeAComma = !shouldParameterBeAComma;
           }
+          if ( param.Distinct().Count() != param.Count )
+          {
+            AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter names must be unique" );
+            hadError = true;
+          }
           if ( !hadError )
           {
             Types.MacroFunctionInfo macroFunction = new RetroDevStudio.Types.MacroFunctionInfo();

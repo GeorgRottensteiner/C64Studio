@@ -170,7 +170,14 @@ namespace RetroDevStudio.Parser
           string[] replacementLines = RelabelLocalLabelsForMacro( Lines, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
           if ( replacementLines == null )
           {
-            AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
+            if ( !string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
+            {
+              AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, m_LastErrorInfo.Message + " at position " + m_LastErrorInfo.Pos );
+            }
+            else
+            {
+              AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
+            }
           }
           else
           {

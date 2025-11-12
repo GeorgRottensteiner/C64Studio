@@ -49,10 +49,11 @@ namespace RetroDevStudio.Parser
 
     public class ErrorInfo
     {
-      public int                 LineIndex = 0;
-      public int                 Pos = -1;
-      public int                 Length = 0;
-      public Types.ErrorCode     Code = Types.ErrorCode.OK;
+      public int                  LineIndex = 0;
+      public int                  Pos = -1;
+      public int                  Length = 0;
+      public string               Message = "";
+      public Types.ErrorCode      Code = Types.ErrorCode.OK;
 
 
       public ErrorInfo()
@@ -10026,15 +10027,27 @@ namespace RetroDevStudio.Parser
                 modifiedToken = true;
                 if ( j >= param.Count )
                 {
+                  /*
                   // trying to access a not provided argument
                   m_LastErrorInfo.LineIndex = lineIndex;
                   m_LastErrorInfo.Pos       = token.StartPos;
                   m_LastErrorInfo.Length    = token.Length;
                   m_LastErrorInfo.Code      = ErrorCode.E1302_MALFORMED_MACRO;
-                  return null;
+                  m_LastErrorInfo.Message   = $"Trying to access parameter {token.Content}, which was not given when calling the macro";
+
+                  LineIndexInsideMacro = i - functionInfo.LineIndex;
+                  return null;*/
+                  // replace with unique name
+                  string  replacementName = functionInfo.Name + "_" + lineIndex + "_" + token.Content;
+
+                  token.Content = replacementName;
+                  token.Length  = replacementName.Length;
                 }
-                token.Content = param[j];
-                token.Length = param[j].Length;
+                else
+                {
+                  token.Content = param[j];
+                  token.Length = param[j].Length;
+                }
 
                 tempTokens = ParseTokenInfo( token.Content, 0, token.Content.Length );
                 for ( int k = 0; k < tempTokens.Count; ++k )
