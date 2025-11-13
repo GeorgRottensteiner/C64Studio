@@ -607,6 +607,7 @@ Sequence
   <div id="mybody">
     This pseudo op defines a macro function. To end the body of a function specify !END<br />
     The number of parameters is variable. Optionally a !macro definition may also be encapsulated by {, } curly braces.<br />
+    Macros may be called with less arguments than defined. In that case the argument value is not defined and will lead to an error if accessed. You may however use !ifdef etc. to check its existance.<br />
     <br />
     To call a macro use +&lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]<br />
     <br />
