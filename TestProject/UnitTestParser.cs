@@ -818,6 +818,54 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestIfDefParamWithElse()
+    {
+      string      source = @"* = $2000
+                              !macro testmacro v1,v2 {
+                                !ifdefparam v2 {
+                                  !warn ""v2 DEFINED""
+                                  !byte 0
+                                }
+                                !ifndefparam v2 {
+                                  !warn ""v2 NOT DEFINED""
+                                  !byte 1
+                                }
+                              }
+
+                              !macro testmacromitelse v1,v2 {
+                                !ifdefparam v2 {
+                                  !warn ""v2 DEFINED""
+                                  !byte 2
+                                } else {
+                                  !warn ""v2 NOT DEFINED""
+                                  !byte 3
+                                }
+                              }
+
+                              +testmacro b0
+                              +testmacro b0 , w0
+
+                              +testmacromitelse b0
+                              +testmacromitelse b0, w0";
+
+      var assembly = TestAssemble( source, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+
+      Assert.AreEqual( "002001000302", assembly.ToString() );
+
+      Assert.AreEqual( 4, asmFileInfo.Messages.Count );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[0].Code );
+      Assert.AreEqual( "v2 NOT DEFINED", asmFileInfo.Messages.Values[0].Message );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[1].Code );
+      Assert.AreEqual( "v2 DEFINED", asmFileInfo.Messages.Values[1].Message );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[2].Code );
+      Assert.AreEqual( "v2 NOT DEFINED", asmFileInfo.Messages.Values[2].Message );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[3].Code );
+      Assert.AreEqual( "v2 DEFINED", asmFileInfo.Messages.Values[3].Message );
+    }
+
+
+
+    [TestMethod]
     public void TestMacroLessThanNeededArgsAccessingUnprovidedArg()
     {
       string      source = @"* =$2000

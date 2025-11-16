@@ -9995,7 +9995,8 @@ namespace RetroDevStudio.Parser
           {
             if ( pseudoOp.Type == MacroInfo.PseudoOpType.IFDEF_ARGUMENT )
             {
-              if ( param.Contains( tokens[1].Content ) )
+              if ( ( functionInfo.ParameterNames.IndexOf( tokens[1].Content ) != -1 )
+              &&   ( functionInfo.ParameterNames.IndexOf( tokens[1].Content ) < param.Count ) )
               {
                 // argument exists
                 activeScopes.Push( 1 );
@@ -10012,15 +10013,16 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT )
             {
-              if ( !param.Contains( tokens[1].Content ) )
+              if ( ( functionInfo.ParameterNames.IndexOf( tokens[1].Content ) != -1 )
+              &&   ( functionInfo.ParameterNames.IndexOf( tokens[1].Content ) < param.Count ) )
               {
                 // argument exists
-                activeScopes.Push( 1 );
+                activeScopes.Push( 2 );
               }
               else
               {
                 // argument does not exist
-                activeScopes.Push( 2 );
+                activeScopes.Push( 1 );
               }
               // this part is blended out
               replacementLines[replacementLineIndex] = string.Empty;
@@ -10046,6 +10048,10 @@ namespace RetroDevStudio.Parser
               uint   scopeFlag = activeScopes.Pop();
               scopeFlag = 3 - scopeFlag;
               activeScopes.Push( scopeFlag );
+              // this part is blended out
+              replacementLines[replacementLineIndex] = string.Empty;
+              ++replacementLineIndex;
+              continue;
             }
           }
           else if ( ContainsScopeEndWithCurlyBraces( tokens ) )
