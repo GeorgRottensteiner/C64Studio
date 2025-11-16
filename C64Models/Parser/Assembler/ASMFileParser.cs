@@ -5611,19 +5611,7 @@ namespace RetroDevStudio.Parser
               break;
             default:
               // normal scope end
-              if ( ( lineTokenInfos.Count == 3 )
-              &&   ( lineTokenInfos[0].Content == "}" )
-              &&   ( lineTokenInfos[2].Content == "{" )
-              &&   ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
-              {
-                if ( !ScopeInsideMacroDefinition() )
-                {
-                  _ParseContext.Scopes[_ParseContext.Scopes.Count - 1].Active = !_ParseContext.Scopes[_ParseContext.Scopes.Count - 1].IfChainHadActiveEntry;
-                  //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
-                  //Debug.Log( "toggle scope state " + lineIndex );
-                }
-              }
-              else if ( lineTokenInfos.Count == 1 )
+              if ( ContainsScopeEndWithCurlyBraces( lineTokenInfos ) )
               {
                 OnScopeRemoved( lineIndex );
                 _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
@@ -5694,6 +5682,15 @@ namespace RetroDevStudio.Parser
                     }
                   }
                   _ParseContext.Scopes.Add( scope );
+                }
+              }
+              else if ( ContainsScopeEndWithCurlyBracesWithElse( lineTokenInfos ) )
+              {
+                if ( !ScopeInsideMacroDefinition() )
+                {
+                  _ParseContext.Scopes[_ParseContext.Scopes.Count - 1].Active = !_ParseContext.Scopes[_ParseContext.Scopes.Count - 1].IfChainHadActiveEntry;
+                  //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+                  //Debug.Log( "toggle scope state " + lineIndex );
                 }
               }
               else
@@ -6806,7 +6803,7 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM ) )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM ) )
             {
               var result = POIncludeBinary( pseudoOp.Type, lineTokenInfos, lineIndex, info, out lineSizeInBytes );
               if ( result == ParseLineResult.CALL_CONTINUE )
@@ -6856,10 +6853,10 @@ namespace RetroDevStudio.Parser
                 incSourceInfo.FullPath = docFile;
 
                 incSourceInfo.GlobalStartLine = lineIndex + i;
-                incSourceInfo.LocalStartLine  = docLine;
-                incSourceInfo.LineCount       = 1;
-                incSourceInfo.FilenameParent  = ParentFilename;
-                incSourceInfo.Source          = SourceInfo.SourceInfoSource.MEDIA_INCLUDE;
+                incSourceInfo.LocalStartLine = docLine;
+                incSourceInfo.LineCount = 1;
+                incSourceInfo.FilenameParent = ParentFilename;
+                incSourceInfo.Source = SourceInfo.SourceInfoSource.MEDIA_INCLUDE;
 
                 InsertSourceInfo( incSourceInfo );
               }
@@ -6944,8 +6941,8 @@ namespace RetroDevStudio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -7005,6 +7002,11 @@ namespace RetroDevStudio.Parser
                   m_CurrentZoneName = macroName;
                   info.Zone = m_CurrentZoneName;
                 }
+              }
+              else
+              {
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.FOR )
@@ -7084,7 +7086,7 @@ namespace RetroDevStudio.Parser
               int startBracket = parseLine.IndexOf( "{" );
               int numTokensForIf = lineTokenInfos.Count - 1;
               if ( ( startBracket == -1 )
-              &&   ( !m_AssemblerSettings.IfWithoutBrackets ) )
+              && ( !m_AssemblerSettings.IfWithoutBrackets ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1004_MISSING_OPENING_BRACKET, "Missing opening brace" );
               }
@@ -7203,7 +7205,7 @@ namespace RetroDevStudio.Parser
                 }
               }
               if ( ( paramPos == 0 )
-              ||   ( paramPos > 1 ) )
+              || ( paramPos > 1 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !bank <Number>[,<Size>]" );
               }
@@ -7381,8 +7383,8 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BYTE )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, true );
               info.Line = parseLine;
@@ -7500,7 +7502,7 @@ namespace RetroDevStudio.Parser
             {
               var parseResult = POSkip( lineTokenInfos, lineIndex, info, ref programStepPos, ref trueCompileCurrentAddress );
               if ( ( parseResult == ParseLineResult.RETURN_NULL )
-              ||   ( parseResult == ParseLineResult.ERROR_ABORT ) )
+              || ( parseResult == ParseLineResult.ERROR_ABORT ) )
               {
                 HadFatalError = true;
                 return Lines;
@@ -7601,6 +7603,19 @@ namespace RetroDevStudio.Parser
               else if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 continue;
+              }
+            }
+            else if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.IFDEF_ARGUMENT )
+            ||        ( pseudoOp.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT ) )
+            {
+              var scopeIfDefArg = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+              scopeIfDefArg.StartIndex = lineIndex;
+              scopeIfDefArg.Active = false;
+
+              _ParseContext.Scopes.Add( scopeIfDefArg );
+              if ( !ScopeInsideMacroDefinition() )
+              {
+                AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, $"Macro {pseudoOp.Keyword} found outside macro, this is only allowed inside a macro definition!" );
               }
             }
             else
@@ -7919,6 +7934,11 @@ namespace RetroDevStudio.Parser
                 m_CurrentZoneName = macroName;
                 info.Zone         = m_CurrentZoneName;
               }
+            }
+            else
+            {
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( ( macroInfo.Type == Types.MacroInfo.PseudoOpType.END )
@@ -8281,6 +8301,36 @@ namespace RetroDevStudio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private bool ContainsScopeEndWithCurlyBracesWithElse( List<TokenInfo> lineTokenInfos )
+    {
+      // } ELSE .... {
+      if ( ( lineTokenInfos.Count >= 3 )
+      &&   ( lineTokenInfos[0].Content == "}" )
+      &&   ( lineTokenInfos.Last().Content == "{" )
+      &&   ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private bool ContainsScopeEndWithCurlyBraces( List<TokenInfo> lineTokenInfos )
+    {
+      if ( ( ( lineTokenInfos.Count == 1 )
+      &&     ( lineTokenInfos[0].Content == "}" ) )
+      ||   ( ( lineTokenInfos.Count == 2 )
+      &&     ( lineTokenInfos[0].Content == "}" )
+      &&     ( lineTokenInfos[1].Type == TokenInfo.TokenType.COMMENT ) ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -9699,9 +9749,12 @@ namespace RetroDevStudio.Parser
     private bool TokenIsConditionalThatStartsScope( TokenInfo Token )
     {
       if ( ( Token.Type == TokenInfo.TokenType.PSEUDO_OP )
-      &&   ( ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.IF ).ToUpper() )
-      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.IFDEF ).ToUpper() )
-      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.IFNDEF ).ToUpper() ) ) )
+      &&   ( m_AssemblerSettings.PseudoOps.Any( po => ( ( po.Value.Type == MacroInfo.PseudoOpType.IF )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFDEF )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFDEF_ARGUMENT )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFNDEF ) )
+                                                   && ( po.Key == Token.Content.ToUpper() ) ) ) )
       {
         return true;
       }
@@ -9730,11 +9783,6 @@ namespace RetroDevStudio.Parser
                                                    ||   ( po.Value.Type == MacroInfo.PseudoOpType.END )
                                                    ||   ( po.Value.Type == MacroInfo.PseudoOpType.LOOP_END ) )
                                                    && ( po.Key == Token.Content.ToUpper() ) ) ) )
-        /*
-      &&   ( ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END_IF ).ToUpper() )
-      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.ELSE ).ToUpper() )
-      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.LOOP_END ).ToUpper() )
-      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.PseudoOpType.END ).ToUpper() ) ) )*/
       {
         return true;
       }
@@ -9846,6 +9894,13 @@ namespace RetroDevStudio.Parser
       LineIndexInsideMacro = -1;
       ClearErrorInfo();
 
+      // we need to keep track of scopes (could be nested)
+      //  uint flags
+      //    0 = irrelevant scope (e.g. regular ifdef scope)
+      //    1 = active ifdefparam scope
+      //    2 = inactive ifdefparam scope
+      var activeScopes = new Stack<uint>();
+
       for ( int i = functionInfo.LineIndex + 1; i < functionInfo.LineEnd; ++i )
       {
         List<Types.TokenInfo> tokens = ParseTokenInfo( functionInfo.Content[i - functionInfo.LineIndex - 1], 0, functionInfo.Content[i - functionInfo.LineIndex - 1].Length );
@@ -9855,6 +9910,7 @@ namespace RetroDevStudio.Parser
           LineIndexInsideMacro = i;
           return null;
         }
+
         // text replace macro
         bool replacedParam = false;
 
@@ -9865,7 +9921,7 @@ namespace RetroDevStudio.Parser
           ||     ( tokens[j].Type == TokenInfo.TokenType.LABEL_LOCAL ) )
           &&   ( tokens[j].Content.EndsWith( "#" ) )
           &&   ( tokens[j + 1].Type == TokenInfo.TokenType.SEPARATOR )
-          &&   ( tokens[j + 1].Content == "#" ) 
+          &&   ( tokens[j + 1].Content == "#" )
           &&   ( paramName.Contains( tokens[j + 2].Content ) ) )
           {
             int     paramIndex = paramName.IndexOf( tokens[j + 2].Content );
@@ -9930,6 +9986,99 @@ namespace RetroDevStudio.Parser
           }
         }
         bool modifiedToken = false;
+
+        // handle !ifdef for macro arguments (special case!)
+        if ( tokens.Count >= 1 )
+        {
+          if ( ( tokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
+          &&   ( AssemblerSettings.PseudoOps.TryGetValue( tokens[0].Content.ToUpper(), out var pseudoOp ) ) )
+          {
+            if ( pseudoOp.Type == MacroInfo.PseudoOpType.IFDEF_ARGUMENT )
+            {
+              if ( param.Contains( tokens[1].Content ) )
+              {
+                // argument exists
+                activeScopes.Push( 1 );
+              }
+              else
+              {
+                // argument does not exist
+                activeScopes.Push( 2 );
+              }
+              // this part is blended out
+              replacementLines[replacementLineIndex] = string.Empty;
+              ++replacementLineIndex;
+              continue;
+            }
+            else if ( pseudoOp.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT )
+            {
+              if ( !param.Contains( tokens[1].Content ) )
+              {
+                // argument exists
+                activeScopes.Push( 1 );
+              }
+              else
+              {
+                // argument does not exist
+                activeScopes.Push( 2 );
+              }
+              // this part is blended out
+              replacementLines[replacementLineIndex] = string.Empty;
+              ++replacementLineIndex;
+              continue;
+            }
+            else if ( TokenIsConditionalThatStartsScope( tokens[0] ) )
+            {
+              activeScopes.Push( 0 );
+            }
+          }
+          else if ( ContainsScopeEndWithCurlyBracesWithElse( tokens ) )
+          {
+            // reverse active state
+            if ( activeScopes.Count == 0 )
+            {
+              AddError( lineIndex + replacementLineIndex, ErrorCode.E1310_END_IF_WITHOUT_SCOPE, "Scope end signified but no active scope found" );
+              LineIndexInsideMacro = replacementLineIndex;
+              return null;
+            }
+            if ( activeScopes.Peek() != 0 )
+            {
+              uint   scopeFlag = activeScopes.Pop();
+              scopeFlag = 3 - scopeFlag;
+              activeScopes.Push( scopeFlag );
+            }
+          }
+          else if ( ContainsScopeEndWithCurlyBraces( tokens ) )
+          {
+            if ( activeScopes.Count == 0 )
+            {
+              AddError( lineIndex + replacementLineIndex, ErrorCode.E1310_END_IF_WITHOUT_SCOPE, "Scope end signified but no active scope found" );
+              LineIndexInsideMacro = replacementLineIndex;
+              return null;
+            }
+            var removedScopeType = activeScopes.Pop();
+            if ( removedScopeType == 0 )
+            {
+              replacementLines[replacementLineIndex] = functionInfo.Content[replacementLineIndex];
+            }
+            else
+            {
+              replacementLines[replacementLineIndex] = string.Empty;//functionInfo.Content[replacementLineIndex];
+            }
+            ++replacementLineIndex;
+            continue;
+          }
+        }
+
+        if ( ( activeScopes.Count > 0 )
+        &&   ( activeScopes.Contains( 2 ) ) )
+        {
+          // this part is blended out
+          replacementLines[replacementLineIndex] = string.Empty;
+          ++replacementLineIndex;
+          continue;
+        }
+
 
         List<Types.TokenInfo>  replacingTokens = new List<Types.TokenInfo>();
         for ( int tokenIndex = 0; tokenIndex < tokens.Count; ++tokenIndex )
@@ -10138,6 +10287,14 @@ namespace RetroDevStudio.Parser
         }
         ++replacementLineIndex;
       }
+
+      if ( activeScopes.Count > 0 )
+      {
+        AddError( lineIndex + replacementLineIndex, ErrorCode.E1005_MISSING_CLOSING_BRACKET, "Scopes are not properly closed at end of macro" );
+        LineIndexInsideMacro = replacementLineIndex;
+        return null;
+      }
+
       return replacementLines;
     }
 

@@ -750,6 +750,74 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroLessThanNeededArgsIfDefUsedBeforeDefinition()
+    {
+      // gnu is defined after the macro call, so the ifdef does not count
+      // !ifdefparam would work
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                              !ifdef v2 {
+                                jmp v2                    
+                              }
+                              }
+
+                                +test 64, gnu 
+                                gnu";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002040", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroLessThanNeededArgsIfDefArgumentDefined()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                              !ifdefparam v2 {
+                                !byte v2                    
+                              }
+                              }
+
+                              main
+                                +test 64 ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002040", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestIfDefParamOutsideMacro()
+    {
+      string      source = @"* =$2000
+                              !ifdefparam v2 {
+                                !byte v2                    
+                              }";
+
+      var parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1301_PSEUDO_OPERATION, asmFileInfo.Messages.Values[0].Code );
+    }
+
+
+
+    [TestMethod]
     public void TestMacroLessThanNeededArgsAccessingUnprovidedArg()
     {
       string      source = @"* =$2000

@@ -17,6 +17,7 @@ using Disassembler = RetroDevStudio.Documents.Disassembler;
 using System.IO;
 using System.ComponentModel;
 using RetroDevStudio.Parser.BASIC;
+using RetroDevStudio.Controls;
 
 
 
@@ -3106,6 +3107,11 @@ namespace RetroDevStudio
           if ( ( AppState == Types.StudioState.NORMAL )
           ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
+            if ( ( m_CurrentProject != null )
+            &&   ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
+            {
+              m_CurrentProject.Settings.BreakPoints[Event.Breakpoint.DocumentFilename].Remove( Event.Breakpoint );
+            }
             RemoveBreakpoint( Event.Breakpoint );
           }
           break;

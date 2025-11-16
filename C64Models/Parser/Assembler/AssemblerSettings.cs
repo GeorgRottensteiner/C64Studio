@@ -251,6 +251,8 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!IFDEF", Types.MacroInfo.PseudoOpType.IFDEF );
           AddPseudoOp( "!IFNDEF", Types.MacroInfo.PseudoOpType.IFNDEF );
           AddPseudoOp( "!IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "!IFDEFPARAM", Types.MacroInfo.PseudoOpType.IFDEF_ARGUMENT );
+          AddPseudoOp( "!IFNDEFPARAM", Types.MacroInfo.PseudoOpType.IFNDEF_ARGUMENT );
           AddPseudoOp( "!FILL", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "!FI", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "!ALIGN", Types.MacroInfo.PseudoOpType.ALIGN );

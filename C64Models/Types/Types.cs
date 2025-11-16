@@ -51,6 +51,8 @@ namespace RetroDevStudio.Types
       IFDEF,
       IFNDEF,
       IF,
+      IFDEF_ARGUMENT,               // only used inside macros
+      IFNDEF_ARGUMENT,              // only used inside macros
       FILL,
       ALIGN,
       END_OF_FILE,
