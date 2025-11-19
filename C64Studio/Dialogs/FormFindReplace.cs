@@ -221,12 +221,15 @@ namespace RetroDevStudio.Dialogs
         if ( edit != null )
         {
           bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
+          int   oldLength = LastSearchFound.Length;
           LastSearchFound.Clear();
           LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
           LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
           if ( hadLastFind )
           {
-            ++LastSearchFound.StartPosition;
+            LastSearchFound.StartPosition += oldLength;
+            LastSearchFound.Length = oldLength;
+            //++LastSearchFound.StartPosition;
           }
         }
       }
@@ -995,6 +998,14 @@ namespace RetroDevStudio.Dialogs
           if ( DirectlyFromSourceFile != null )
           {
             lastPosition = CharacterPosFromPosition( edit, edit.Selection.Start );
+            if ( SearchDown )
+            {
+              ++lastPosition;
+            }
+            else
+            {
+              --lastPosition;
+            }
           }
           else if ( lastPosition != -1 )
           {
@@ -1398,6 +1409,7 @@ namespace RetroDevStudio.Dialogs
       {
         numLines = 1;
       }
+      LastFound.Length = NewLocation.Length;
 
       // try to find zone
       if ( ( NewLocation.FoundInDocument != null )
