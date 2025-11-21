@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #12/14"
+  Machine="Atari 2600"
+  ShortDescription="Add the Missile Objects"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Adds the missile objects as additional collectables. All can be collected for points.">
+</Sample>

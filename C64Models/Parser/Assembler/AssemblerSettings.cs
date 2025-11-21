@@ -437,7 +437,7 @@ namespace RetroDevStudio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß:";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
           AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";

@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #5/14"
+  Machine="Atari 2600"
+  ShortDescription="Automate Vertical Delay"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Displays two sprites for the players. Player #1 can be moved around, player #2 is drawn as a box (will be collectable later).">
+</Sample>

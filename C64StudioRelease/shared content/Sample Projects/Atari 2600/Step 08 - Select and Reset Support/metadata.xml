@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #8/14"
+  Machine="Atari 2600"
+  ShortDescription="Select and Reset"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Adds select and reset support. The game starts in the menu state. Press select to start a new game, and reset to return to the menu state.">
+</Sample>

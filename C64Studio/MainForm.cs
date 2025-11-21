@@ -3532,6 +3532,8 @@ namespace RetroDevStudio
         StudioCore.Navigating.Solution.DuringLoad = true;
 
         SaveSolution( GR.Path.RenameExtension( Filename, ".s64" ) );
+
+        solutionToolStripMenuItemTop.Visible = true;
       }
 
       Project newProject = new Project();
@@ -7166,7 +7168,14 @@ namespace RetroDevStudio
     {
       if ( ActiveDocument != null )
       {
-        ActiveDocument.Close();
+        if ( ActiveDocument.HideOnClose )
+        {
+          ActiveDocument.Hide();
+        }
+        else
+        {
+          ActiveDocument.Close();
+        }
       }
     }
 

@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #7/14"
+  Machine="Atari 2600"
+  ShortDescription="Draw the Playfield"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Displays two sprites for the players and a maze background. Players can be moved around and are blocked by the maze. Additionally a automatically decreasing timer bar is shown on top of the play field.">
+</Sample>

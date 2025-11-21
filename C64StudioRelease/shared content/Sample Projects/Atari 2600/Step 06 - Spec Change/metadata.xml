@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #6/14"
+  Machine="Atari 2600"
+  ShortDescription="Spec Change"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Displays two sprites for the players. Players can be moved around. Additionally a automatically decreasing timer bar is shown on top of the play field.">
+</Sample>
