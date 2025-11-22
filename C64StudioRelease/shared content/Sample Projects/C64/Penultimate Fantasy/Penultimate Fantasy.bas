@@ -1,3 +1,4 @@
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2,uppercase,10,10
 1 POKE55,240:POKE56,120:CLR:V=53248:POKEV+21,0:PRINT"PLEASE WAIT, LOADING..."
 2 IFPEEK(2)=0THENPOKE2,1:LOAD"MAP",8,1
 10 MT=14:DIMM$(MT),MD$(MT),MH(MT),MM(MT),MA(MT),MD(MT),MS(MT),MB(MT),MX(MT)
@@ -13,7 +14,7 @@
 30 TM=19:DIMT$(TM):FORI=0TOTM-1:READT$(I):NEXT
 40 READC:IFC=-1THEN45
 41 FORI=0TO7:READB:POKE57344+C*8+I,B:NEXT:GOTO40
-45 FORSP=0TO8:FORP=0TO62:READB:POKE50176+SP*64+P,B:NEXTP,SP
+45 FORSP=0TO8:FORP=0TO62:READB:POKE50176+SP*64+P,B:NEXTP,SP 
 50 POKE648,192:POKE56576,248:POKE53272,8
 62 FORI=0TOIC-1:READI$(I),IA(I),ID(I),IS(I),IE(I),IT(I):NEXT
 69 RC=15:RS=165
@@ -113,8 +114,8 @@
 460 MY=4:MX=23:MC=14:IFP=1ORP=3THENMX=3
 461 PRINT"CHOOSE ITEM TO EQUIP";
 462 PRINT""LEFT$(CD$,MY-1)SPC(MX-3);"";
-464 FORI=0TO13:PRINT"{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}                  ";:NEXT
-466 PRINT"{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}{left}";
+464 FORI=0TO13:PRINT"                  ";:NEXT
+466 PRINT"";
 470 MT=SL:GOSUB30000
 471 IFIN(M)<>0ANDIT(IN(M))<>SLTHEN100
 472 IFSL=0THENQ=PW(P):PW(P)=IN(M):IN(M)=Q:GOTO100
@@ -156,14 +157,14 @@
 1200 PRINT"";
 1201 PRINT"                                      ";
 1202 PRINT"";
-1210 PRINTDD$;"{up}HPMP";
+1210 PRINTDD$;"HPMP";
 1211 FORI=0TO3:PRINT"                                  ";:NEXT
 1212 PRINT"";
 1213 POKE50151,72:POKE56295,9:RETURN
 1230 GOSUB2000:GOTO2031
 1300 PRINT"";
 1301 FORI=1TO23:PRINT""SPC(38)"";:NEXT
-1302 PRINT"{up}{up}{up}";
+1302 PRINT"";
 1303 POKE50151,72:POKE56295,9
 1305 PRINT"A BEAM OF LIGHT SURROUNDS YOU BEFORE";
 1306 PRINT"EVERYTHING FADES TO BLACK.";
@@ -172,7 +173,7 @@
 1311 PRINT"WHATA WEIRD DREAM THAT WAS.";:FORI=0TO2000:NEXT
 1312 PRINT"AT LEAST YOU HOPE IT WAS.";:FORI=0TO2000:NEXT
 1313 PRINT"THANK YOU FOR PLAYING!";
-1315 PRINT"{left}{left}{left}{left}{left}{left}{left}THE END";
+1315 PRINT"THE END";
 1320 GETA$:IFA$=""THEN1320
 1330 GOTO40500
 1399 STOP
@@ -242,10 +243,10 @@
 10200 A=5:LC=INT(RND(1)*2)+1:FORI=0TOLC:GOSUB45000:NEXT:RETURN
 10201 A=9:LC=INT(RND(1)*2)+1:FORI=1TOLC:GOSUB45000:NEXT:RETURN
 18000 PRINT""P$(C)" MOVES"
-18001 PRINTDD$;SPC(17)"  ATTACK{left}{left}{left}{left}{left}{left}{left}{left}  ITEM";:M=2
-18002 IFPM(C)>0THENPRINT"{left}{left}{left}{left}{left}{left}  MAGIC";:M=3
-18003 PRINT""LEFT$(CD$,5+C*3)SPC(37)"  {left}{left}  ";
-18004 PRINT"{left}{left}{left}{up}"PD$(C);
+18001 PRINTDD$;SPC(17)"  ATTACK  ITEM";:M=2
+18002 IFPM(C)>0THENPRINT"  MAGIC";:M=3
+18003 PRINT""LEFT$(CD$,5+C*3)SPC(37)"    ";
+18004 PRINT""PD$(C);
 18008 MY=0
 18009 POKE49969+MY*40,35
 18010 GETA$:IFA$=""THEN18010
@@ -257,10 +258,10 @@
 18016 IFMY<0THENMY=M-1
 18017 GOTO18009
 18020 REM *PLAYER ACTIONS*
-18021 PRINT""LEFT$(CD$,5+C*3)SPC(36)"  {left}{left}  {left}{up}"PD$(C);
-18022 PRINTDD$;SPC(17)"        {left}{left}{left}{left}{left}{left}{left}{left}      {left}{left}{left}{left}{left}{left}       ";
+18021 PRINT""LEFT$(CD$,5+C*3)SPC(36)"    "PD$(C);
+18022 PRINTDD$;SPC(17)"                     ";
 18023 ONMY+1GOTO18100,18040:MT=3:MX=18:MY=20:MC=4:GOSUB30000
-18024 PRINTDD$;SPC(17)"        {left}{left}{left}{left}{left}{left}{left}{left}        {left}{left}{left}{left}{left}{left}{left}{left}        {left}{left}{left}{left}{left}{left}{left}{left}        ";
+18024 PRINTDD$;SPC(17)"                                ";
 18025 IFIN(M)=0ORIT(IN(M))<>3THEN10010
 18026 M=IN(M)
 18027 IFIE(M)>FM(C)THENPRINT"NOT ENOUGH MANA";:GOTO10010
@@ -276,13 +277,13 @@
 18038 FT(CE)=-1
 18039 GOTO18300
 18040 MT=2:MX=18:MY=20:MC=4:GOSUB30000
-18041 PRINTDD$;SPC(17)"        {left}{left}{left}{left}{left}{left}{left}{left}        {left}{left}{left}{left}{left}{left}{left}{left}        ";
-18042 PRINT"{left}{left}{left}{left}{left}{left}{left}{left}        ";
+18041 PRINTDD$;SPC(17)"                        ";
+18042 PRINT"        ";
 18043 IFIN(M)=0ORIT(IN(M))<>MTTHEN10010
 18045 IFIN(M)=3THENGOSUB300:IN(M)=0:GOSUB2000:GOTO10010
 18099 GOTO10010
 18100 GOSUB46000
-18110 AP=FA(C)-FD(CE):IFAP<=0THENPRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}MISS";:GOTO18143
+18110 AP=FA(C)-FD(CE):IFAP<=0THENPRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"MISS";:GOTO18143
 18111 AP=INT(RND(0)*AP)+1
 18115 FH(CE)=FH(CE)-AP:IFFH(CE)<0THENFH(CE)=0
 18116 IFCE<4THENPH(CE)=FH(CE)
@@ -293,11 +294,11 @@
 18122 FT(CE)=-1
 18140 POKEV,(FX(CE)*8+21)AND255:POKEV+1,FY(CE)*8+50:POKE50168,16:POKEV+28,0
 18141 POKEV+16,-(FX(CE)>30):POKEV+21,1
-18142 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}";AP
+18142 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"";AP
 18143 FORI=0TO5:POKEV,PEEK(V)+2:POKEV+1,PEEK(V+1)+2:FORJ=1TO10:NEXTJ,I
 18144 POKEV+21,0:IFCE<4THENGOSUB2000
-18145 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}    "
-18146 IFFT(CE)=-1THENPRINT""LEFT$(CD$,FY(CE))SPC(FX(CE));"  {left}{left}  ";
+18145 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"    "
+18146 IFFT(CE)=-1THENPRINT""LEFT$(CD$,FY(CE))SPC(FX(CE));"    ";
 18147 IFCC=0THEN18180
 18148 IFPP=0THEN19000
 18150 GOTO10010
@@ -311,7 +312,7 @@
 18199 NEXT
 18200 FORI=0TO3:IFPH(I)=0ORP3(I)=0THEN18220
 18201 TX=WX
-18203 PRINT""LEFT$(CD$,5+I*3)SPC(20)"EXPERIENCE {left}"TX"{left} ";
+18203 PRINT""LEFT$(CD$,5+I*3)SPC(20)"EXPERIENCE "TX" ";
 18204 IFTX=0THEN18220
 18205 XS=1:IFTX>9THENXS=10
 18206 IFTX>99THENXS=100
@@ -335,11 +336,11 @@
 18305 IFM=7THENB=23:POKEV+28,0
 18310 POKEV+16,-(FX(CE)>30):POKE50168,B:POKEV+21,1
 18314 PRINT"";:IFM=9THENPRINT"";
-18315 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}";AP
+18315 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"";AP
 18319 FORK=0TO3:FORI=0TO1:POKE50168,B+I:FORJ=1TO40:NEXTJ,I,K
 18320 POKEV+21,0:IFCE<4THENGOSUB2000
-18321 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}    "
-18322 IFFT(CE)=-1THENPRINT""LEFT$(CD$,FY(CE))SPC(FX(CE));"  {left}{left}  ";
+18321 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"    "
+18322 IFFT(CE)=-1THENPRINT""LEFT$(CD$,FY(CE))SPC(FX(CE));"    ";
 18323 IFCC=0THEN18180
 18324 IFPP=0THEN19000
 18325 GOTO10010
@@ -419,7 +420,7 @@
 30235 PRINT""LEFT$(CD$,DY)SPC(DX+9)"DEF"PD(P)+ID(PR(P));
 30239 RETURN
 40000 SP=30960+RS*CR:FORI=0TO7:PRINT""LEFT$(CD$,I*2);
-40005 FORJ=0TO19:PRINTT$(PEEK(SP))"{up}";:SP=SP+1:NEXTJ,I
+40005 FORJ=0TO19:PRINTT$(PEEK(SP))"";:SP=SP+1:NEXTJ,I
 40009 RETURN
 40300 REM*ADD ITEM FROM NI, SETS NI TO -1 IF ADDED*
 40302 IS=0
@@ -428,7 +429,7 @@
 40307 GOTO40305
 40500 PRINT"";
 40501 FORI=1TO23:PRINT""SPC(38)"";:NEXT
-40502 PRINT"{up}{up}{up}";
+40502 PRINT"";
 40503 POKE50151,72:POKE56295,9
 40510 PRINT""SPC(10)"PENULTIMATE FANTASY"
 40520 PRINT"F1 NEW GAME   F3 LOAD GAME"
@@ -451,7 +452,7 @@
 40610 ER(10)=7:EX(10)=3:EY(10)=5:ET(10)=9
 40616 PRINT"";
 40617 FORI=1TO23:PRINT""SPC(38)"";:NEXT
-40618 PRINT"{up}{up}{up}";
+40618 PRINT"";
 40619 POKE50151,72:POKE56295,9
 40620 PRINT"WHAT...    YOU FELL ASLEEP IN YOUR";
 40621 PRINT"BED AFTER THAT WEIRD DRINK. AND YOU";
@@ -496,7 +497,7 @@
 45003 F1(CC)=MH(A):F2(CC)=MM(A)
 45004 IFCC>=4THENFX(CC)=5:FY(CC)=5+(CC-4)*3
 45005 CC=CC+1:RETURN
-45100 PRINTDD$;"       {left}{left}{left}{left}{left}{left}{left}       {left}{left}{left}{left}{left}{left}{left}       {left}{left}{left}{left}{left}{left}{left}       ";
+45100 PRINTDD$;"                            ";
 45101 CM=0
 45102 FORI=4TO7:IFFT(I)=-1THENNEXT:RETURN
 45103 PRINT""LEFT$(CD$,20+CM)M$(FT(I));:CM=CM+1:NEXT
@@ -524,42 +525,42 @@
 47101 AP=IE(M)*4+2-INT(RND(0)*5):FM(C)=FM(C)-IE(M):IFC<4THENPM(C)=FM(C):GOSUB2000
 47102 FH(CE)=FH(CE)+AP:IFFH(CE)>F1(CE)THENFH(CE)=F1(CE)
 47103 IFCE<4THENPH(CE)=FH(CE):GOSUB2000
-47110 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}";AP
+47110 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"";AP
 47125 FORI=0TO500:NEXT
-47140 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}    "
+47140 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"    "
 47150 GOTO10010
 47160 REM*SLOW MAGIC*
 47161 FM(C)=FM(C)-IE(M):IFC<4THENPM(C)=FM(C):GOSUB2000
 47162 FS(CE)=FS(CE)/2:IFFS(CE)<5THENFS(CE)=5
-47170 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}SLOW";
+47170 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"SLOW";
 47175 FORI=0TO500:NEXT
-47180 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"{up}{left}    "
+47180 PRINT""LEFT$(CD$,FY(CE))SPC(FX(CE))"    "
 47190 GOTO10010
 47300 REM*PLAYER MAGIC*
 47301 IFM=9THEN47100
 47349 GOTO18030
-50000 DATA"IMP",5,,8,"{left}{left}",4,1,,3
-50001 DATA"SNAKE",8,,12,"{left}{left}",6,1,,5
-50002 DATA"VIPER",12,,18,"{left}{left}",6,1,,9
-50003 DATA"NACHO",30,,22,"{left}{left}",15,5,,50
-50004 DATA"GOLEM",20,,4,"{left}{left}",20,8,,17
-50005 DATA"MOSS",30,,7,"{left}{left}",26,9,,21
-50006 DATA"BONES",50,,20,"{left}{left}",18,8,,15
-50007 DATA"WISP",25,50,15,"{left}{left}",,8,,17
-50008 DATA"TROLL",100,,9,"{left}{left}",40,13,,100
-50009 DATA"SPARK",30,50,22,"{left}{left}",,8,,17
-50010 DATA"BURNER",80,90,30,"{left}{left}",25,13,,42
-50011 DATA"TBERRY",120,10,60,"{left}{left}",60,20,,150
-50012 DATA"DRACUL",250,60,50,"DE{left}{left}FG",70,25,,500
-50013 DATA"GLADOS",500,70,60,"HI{left}{left}JK",80,30,,1000
-51000 DATA"KRON",15,,10,"{left}{left}",4,3,,
-51001 DATA"LENA",17,,10,"{left}{left}",3,3,,
-51002 DATA"DOLM",9,7,8,"{left}{left}",1,1,,
-51003 DATA"MIRA",9,23,7,"{left}{left}",1,1,1,2
-52000 DATA"{left}{left}","{left}{left}","@{left}{left}AB","C{left}{left}C","{left}{left}"
-52001 DATA"{left}{left}","QR{left}{left}ST","77{left}{left}77","{left}{left}","{left}{left}"
-52002 DATA"{left}{left}","{left}{left}","{left}{left}","{left}{left}","{left}{left}"
-52003 DATA"{left}{left}","{left}{left}","LM{left}{left}NO","PP{left}{left}PP"
+50000 DATA"IMP",5,,8,"",4,1,,3
+50001 DATA"SNAKE",8,,12,"",6,1,,5
+50002 DATA"VIPER",12,,18,"",6,1,,9
+50003 DATA"NACHO",30,,22,"",15,5,,50
+50004 DATA"GOLEM",20,,4,"",20,8,,17
+50005 DATA"MOSS",30,,7,"",26,9,,21
+50006 DATA"BONES",50,,20,"",18,8,,15
+50007 DATA"WISP",25,50,15,"",,8,,17
+50008 DATA"TROLL",100,,9,"",40,13,,100
+50009 DATA"SPARK",30,50,22,"",,8,,17
+50010 DATA"BURNER",80,90,30,"",25,13,,42
+50011 DATA"TBERRY",120,10,60,"",60,20,,150
+50012 DATA"DRACUL",250,60,50,"DEFG",70,25,,500
+50013 DATA"GLADOS",500,70,60,"HIJK",80,30,,1000
+51000 DATA"KRON",15,,10,"",4,3,,
+51001 DATA"LENA",17,,10,"",3,3,,
+51002 DATA"DOLM",9,7,8,"",1,1,,
+51003 DATA"MIRA",9,23,7,"",1,1,1,2
+52000 DATA"","","@AB","CC",""
+52001 DATA"","QRST","7777","",""
+52002 DATA"","","","",""
+52003 DATA"","","LMNO","PPPP"
 55000 DATA32,,,,,,,,,46,0,0,0,0,0,0,0,24
 55001 DATA48,,124,198,198,198,198,198,124,49,,48,112,48,48,48,48,252
 55002 DATA50,,124,198,6,124,192,192,254,51,,124,198,6,124,6,198,124
