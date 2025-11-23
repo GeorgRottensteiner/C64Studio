@@ -46,6 +46,7 @@
       this.editAutoSaveDelay = new System.Windows.Forms.TextBox();
       this.labelAutoSaveInfo1 = new System.Windows.Forms.Label();
       this.labelAutoSaveInfo2 = new System.Windows.Forms.Label();
+      this.checkRunningUnderWINE = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -129,7 +130,7 @@
       this.checkForUpdate.Location = new System.Drawing.Point(3, 173);
       this.checkForUpdate.Name = "checkForUpdate";
       this.checkForUpdate.Size = new System.Drawing.Size(230, 24);
-      this.checkForUpdate.TabIndex = 6;
+      this.checkForUpdate.TabIndex = 7;
       this.checkForUpdate.Text = "Check for update on startup";
       this.checkForUpdate.UseVisualStyleBackColor = true;
       this.checkForUpdate.CheckedChanged += new System.EventHandler(this.checkForUpdate_CheckedChanged);
@@ -142,7 +143,7 @@
       this.checkShowOutputDisplayAfterBuild.Location = new System.Drawing.Point(3, 143);
       this.checkShowOutputDisplayAfterBuild.Name = "checkShowOutputDisplayAfterBuild";
       this.checkShowOutputDisplayAfterBuild.Size = new System.Drawing.Size(230, 24);
-      this.checkShowOutputDisplayAfterBuild.TabIndex = 5;
+      this.checkShowOutputDisplayAfterBuild.TabIndex = 6;
       this.checkShowOutputDisplayAfterBuild.Text = "Show \"Output Display\" after build";
       this.checkShowOutputDisplayAfterBuild.UseVisualStyleBackColor = true;
       this.checkShowOutputDisplayAfterBuild.CheckedChanged += new System.EventHandler(this.checkShowOutputDisplayAfterBuild_CheckedChanged);
@@ -155,7 +156,7 @@
       this.checkShowCompilerMessagesAfterBuild.Location = new System.Drawing.Point(3, 113);
       this.checkShowCompilerMessagesAfterBuild.Name = "checkShowCompilerMessagesAfterBuild";
       this.checkShowCompilerMessagesAfterBuild.Size = new System.Drawing.Size(230, 24);
-      this.checkShowCompilerMessagesAfterBuild.TabIndex = 4;
+      this.checkShowCompilerMessagesAfterBuild.TabIndex = 5;
       this.checkShowCompilerMessagesAfterBuild.Text = "Show \"Compiler Messages\" after build";
       this.checkShowCompilerMessagesAfterBuild.UseVisualStyleBackColor = true;
       this.checkShowCompilerMessagesAfterBuild.CheckedChanged += new System.EventHandler(this.checkShowCompilerMessagesAfterBuild_CheckedChanged);
@@ -181,7 +182,7 @@
       this.btnRegisterSolutionFileType.Location = new System.Drawing.Point(13, 28);
       this.btnRegisterSolutionFileType.Name = "btnRegisterSolutionFileType";
       this.btnRegisterSolutionFileType.Size = new System.Drawing.Size(123, 20);
-      this.btnRegisterSolutionFileType.TabIndex = 4;
+      this.btnRegisterSolutionFileType.TabIndex = 0;
       this.btnRegisterSolutionFileType.Text = "Solution Files (*.s64)";
       this.btnRegisterSolutionFileType.Click += new DecentForms.EventHandler(this.btnRegisterSolutionFileType_Click);
       // 
@@ -195,7 +196,7 @@
       this.btnRegisterProjectFileType.Location = new System.Drawing.Point(142, 28);
       this.btnRegisterProjectFileType.Name = "btnRegisterProjectFileType";
       this.btnRegisterProjectFileType.Size = new System.Drawing.Size(123, 20);
-      this.btnRegisterProjectFileType.TabIndex = 4;
+      this.btnRegisterProjectFileType.TabIndex = 1;
       this.btnRegisterProjectFileType.Text = "Project Files (*.c64)";
       this.btnRegisterProjectFileType.Click += new DecentForms.EventHandler(this.btnRegisterProjectFileType_Click);
       // 
@@ -219,7 +220,7 @@
       this.checkAutoSaveSettings.Location = new System.Drawing.Point(3, 203);
       this.checkAutoSaveSettings.Name = "checkAutoSaveSettings";
       this.checkAutoSaveSettings.Size = new System.Drawing.Size(230, 24);
-      this.checkAutoSaveSettings.TabIndex = 6;
+      this.checkAutoSaveSettings.TabIndex = 8;
       this.checkAutoSaveSettings.Text = "Auto-Save settings";
       this.checkAutoSaveSettings.UseVisualStyleBackColor = true;
       this.checkAutoSaveSettings.CheckedChanged += new System.EventHandler(this.checkAutoSaveSettings_CheckedChanged);
@@ -229,7 +230,7 @@
       this.editAutoSaveDelay.Location = new System.Drawing.Point(329, 205);
       this.editAutoSaveDelay.Name = "editAutoSaveDelay";
       this.editAutoSaveDelay.Size = new System.Drawing.Size(119, 20);
-      this.editAutoSaveDelay.TabIndex = 22;
+      this.editAutoSaveDelay.TabIndex = 9;
       this.editAutoSaveDelay.TextChanged += new System.EventHandler(this.editAutoSaveDelay_TextChanged);
       // 
       // labelAutoSaveInfo1
@@ -250,6 +251,17 @@
       this.labelAutoSaveInfo2.TabIndex = 23;
       this.labelAutoSaveInfo2.Text = "ms";
       // 
+      // checkRunningUnderWINE
+      // 
+      this.checkRunningUnderWINE.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkRunningUnderWINE.Location = new System.Drawing.Point(3, 233);
+      this.checkRunningUnderWINE.Name = "checkRunningUnderWINE";
+      this.checkRunningUnderWINE.Size = new System.Drawing.Size(230, 24);
+      this.checkRunningUnderWINE.TabIndex = 10;
+      this.checkRunningUnderWINE.Text = "Running under WINE";
+      this.checkRunningUnderWINE.UseVisualStyleBackColor = true;
+      this.checkRunningUnderWINE.CheckedChanged += new System.EventHandler(this.checkRunningUnderWINE_CheckedChanged);
+      // 
       // DlgPrefApplication
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -264,6 +276,7 @@
       this.Controls.Add(this.label32);
       this.Controls.Add(this.editDefaultOpenSolutionPath);
       this.Controls.Add(this.checkAutoOpenLastSolution);
+      this.Controls.Add(this.checkRunningUnderWINE);
       this.Controls.Add(this.checkAutoSaveSettings);
       this.Controls.Add(this.checkForUpdate);
       this.Controls.Add(this.label29);
@@ -297,5 +310,6 @@
     private System.Windows.Forms.TextBox editAutoSaveDelay;
     private System.Windows.Forms.Label labelAutoSaveInfo1;
     private System.Windows.Forms.Label labelAutoSaveInfo2;
+    private System.Windows.Forms.CheckBox checkRunningUnderWINE;
   }
 }

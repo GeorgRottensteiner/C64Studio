@@ -236,6 +236,7 @@ namespace RetroDevStudio
     public DateTime                             LastUpdateCheck = DateTime.MinValue;
 
     public AppMode                              StudioAppMode = AppMode.UNDECIDED;
+    public bool                                 IsRunningUnderWINE = false;  
 
     public Dictionary<PaletteType,List<Palette>>  Palettes = new Dictionary<PaletteType, List<Palette>>();
 
@@ -874,6 +875,7 @@ namespace RetroDevStudio
       chunkEnvironment.AppendU8( (byte)( !ShowOutputDisplayAfterBuild ? 1 : 0 ) );
       chunkEnvironment.AppendU8( (byte)( !AutoSaveSettings ? 1 : 0 ) );
       chunkEnvironment.AppendI32( AutoSaveSettingsDelayMilliSeconds );
+      chunkEnvironment.AppendU32( (byte)( IsRunningUnderWINE ? 1 : 0 ) );
 
       SettingsData.Append( chunkEnvironment.ToBuffer() );
 
@@ -1473,6 +1475,7 @@ namespace RetroDevStudio
               ShowOutputDisplayAfterBuild     = ( binIn.ReadUInt8() == 0 );
               AutoSaveSettings                = ( binIn.ReadUInt8() == 0 );
               AutoSaveSettingsDelayMilliSeconds = binIn.ReadInt32();
+              IsRunningUnderWINE              = ( binIn.ReadUInt32() == 1 );
             }
             break;
           case FileChunkConstants.SETTINGS_PERSPECTIVES:

@@ -2,13 +2,14 @@ namespace RetroDevStudio
 {
   public static class SysWrapper
   {
-    private static int _tempFileIndex = 0;
+    private static int    _tempFileIndex = 0;
+    internal static bool  s_IsRunningUnderWINE = false;
 
 
 
     public static string GetTempPath()
     {
-      if ( GR.OS.IsWindows )
+      if ( !s_IsRunningUnderWINE )
       {
         return System.IO.Path.GetTempPath();
       }
@@ -23,7 +24,7 @@ namespace RetroDevStudio
 
     public static string GetTempFileName()
     {
-      if ( GR.OS.IsWindows )
+      if ( !s_IsRunningUnderWINE )
       {
         return System.IO.Path.GetTempFileName();
       }

@@ -44,6 +44,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkForUpdate.Checked                      = Core.Settings.CheckForUpdates;
       checkAutoSaveSettings.Checked               = Core.Settings.AutoSaveSettings;
       editAutoSaveDelay.Text                      = Core.Settings.AutoSaveSettingsDelayMilliSeconds.ToString();
+      checkRunningUnderWINE.Checked               = Core.Settings.IsRunningUnderWINE;
     }
 
 
@@ -68,6 +69,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlEnvironment.AddAttribute( "CheckForUpdatesOnStartup", Core.Settings.CheckForUpdates ? "yes" : "no" );
       xmlEnvironment.AddAttribute( "AutoSaveSettings", Core.Settings.AutoSaveSettings ? "yes" : "no" );
       xmlEnvironment.AddAttribute( "AutoSaveSettingsDelayMS", Core.Settings.AutoSaveSettingsDelayMilliSeconds.ToString() );
+      xmlEnvironment.AddAttribute( "IsRunningUnderWINE", Core.Settings.IsRunningUnderWINE ? "yes" : "no" );
     }
 
 
@@ -86,6 +88,7 @@ namespace RetroDevStudio.Dialogs.Preferences
         Core.Settings.CheckForUpdates               = IsSettingTrue( xmlEnvironment.Attribute( "CheckForUpdatesOnStartup" ) );
         Core.Settings.AutoSaveSettings              = IsSettingTrue( xmlEnvironment.Attribute( "AutoSaveSettings" ) );
         Core.Settings.AutoSaveSettingsDelayMilliSeconds = GR.Convert.ToI32( xmlEnvironment.Attribute( "AutoSaveSettingsDelayMS" ) );
+        Core.Settings.IsRunningUnderWINE            = IsSettingTrue( xmlEnvironment.Attribute( "IsRunningUnderWINE" ) );
       }
     }
     
@@ -266,5 +269,19 @@ namespace RetroDevStudio.Dialogs.Preferences
         }
       }
     }
+
+
+
+    private void checkRunningUnderWINE_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.IsRunningUnderWINE != checkRunningUnderWINE.Checked )
+      {
+        Core.Settings.IsRunningUnderWINE = checkRunningUnderWINE.Checked;
+        SysWrapper.s_IsRunningUnderWINE = checkRunningUnderWINE.Checked;
+      }
+    }
+
+
+
   }
 }
