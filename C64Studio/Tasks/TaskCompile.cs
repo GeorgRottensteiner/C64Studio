@@ -152,7 +152,7 @@ namespace RetroDevStudio.Tasks
       {
         try
         {
-          Core.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
+          Core.Debugging.TempDebuggerStartupFilename = SysWrapper.GetTempFileName();
 
           System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, symbolFile );
           switch ( labelFormat )
@@ -178,7 +178,7 @@ namespace RetroDevStudio.Tasks
       {
         try
         {
-          Core.Debugging.TempDebuggerBreakpointFilename = System.IO.Path.GetTempFileName();
+          Core.Debugging.TempDebuggerBreakpointFilename = SysWrapper.GetTempFileName();
 
           if ( labelFormat == Types.ASM.LabelFileFormat.RETRODEBUGGER )
           {

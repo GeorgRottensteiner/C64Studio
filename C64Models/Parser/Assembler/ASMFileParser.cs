@@ -5316,10 +5316,6 @@ namespace RetroDevStudio.Parser
 
         // PDS/DASM macro call?
         int   labelOffset = 0;
-        if ( parseLine.StartsWith( ".left" ) )
-        {
-          int y = 5;
-        }
         DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 0 );
         if ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
         {
@@ -11534,11 +11530,6 @@ namespace RetroDevStudio.Parser
     public List<Types.TokenInfo> ParseTokenInfo( string Source, int Start, int Length )
     {
       ClearErrorInfo();
-
-      if ( Source.StartsWith( ".left" ) )
-      {
-        int x = 2;
-      }
 
       List <Types.TokenInfo> result = new List<Types.TokenInfo>();
 

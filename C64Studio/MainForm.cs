@@ -2830,7 +2830,7 @@ namespace RetroDevStudio
           {
             try
             {
-              StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
+              StudioCore.Debugging.TempDebuggerStartupFilename = SysWrapper.GetTempFileName();
 
               switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
               {
