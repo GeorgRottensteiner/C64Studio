@@ -1476,6 +1476,8 @@ namespace RetroDevStudio
               AutoSaveSettings                = ( binIn.ReadUInt8() == 0 );
               AutoSaveSettingsDelayMilliSeconds = binIn.ReadInt32();
               IsRunningUnderWINE              = ( binIn.ReadUInt32() == 1 );
+
+              SysWrapper.s_IsRunningUnderWINE = IsRunningUnderWINE;
             }
             break;
           case FileChunkConstants.SETTINGS_PERSPECTIVES:

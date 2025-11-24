@@ -2803,7 +2803,7 @@ namespace RetroDevStudio
 
         if ( !System.IO.Directory.Exists( StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory.Trim( new char[] { '\"' } ) ) )
         {
-          StudioCore.AddToOutput( "The determined working directory" + StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
+          StudioCore.AddToOutput( "The determined working directory " + StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
           return false;
         }
 
