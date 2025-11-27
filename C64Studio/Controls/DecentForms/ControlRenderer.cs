@@ -1153,16 +1153,40 @@ namespace DecentForms
         {
           FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundSelected );
 
+          if ( listBox.HasCheckBoxes )
+          {
+            var checkRect = listBox.GetItemCheckRect( realIndex );
+            DrawCheckBox( checkRect, false, item.Checked );
+            rect.Width -= listBox.ItemHeight;
+            rect.X += listBox.ItemHeight;
+          }
+
           DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextSelected );
           DrawFocusRect( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlText );
         }
         else if ( realIndex == listBox.MouseOverItem )
         {
           FillRectangle( rect.Left, rect.Top, rect.Width, rect.Height, ColorControlBackgroundMouseOver );
+          if ( listBox.HasCheckBoxes )
+          {
+            var checkRect = listBox.GetItemCheckRect( realIndex );
+            DrawCheckBox( checkRect, false, item.Checked );
+            rect.Width -= listBox.ItemHeight;
+            rect.X += listBox.ItemHeight;
+          }
+
           DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT, ColorControlTextMouseOver );
         }
         else
         {
+          if ( listBox.HasCheckBoxes )
+          {
+            var checkRect = listBox.GetItemCheckRect( realIndex );
+            DrawCheckBox( checkRect, false, item.Checked );
+            rect.Width -= listBox.ItemHeight;
+            rect.X += listBox.ItemHeight;
+          }
+
           DrawText( item.Text, rect.Left, rect.Top, rect.Width, rect.Height, TextAlignment.LEFT );
         }
 

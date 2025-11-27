@@ -224,6 +224,7 @@ namespace RetroDevStudio.Parser
           }
           info.LineData.SetU8At( i, (byte)expressionResult );
         }
+        m_TemporaryFillLoopPos = -1;
       }
 
       return ParseLineResult.OK;

@@ -144,7 +144,8 @@ namespace DecentForms
 
     public enum ExtendedWindowStyleFlags : long
     {
-      WS_EX_CLIENTEDGE = 0x00000200L
+      WS_EX_CLIENTEDGE = 0x00000200L,
+      WS_EX_WINDOWEDGE = 0x00000100L
     }
 
 
@@ -186,12 +187,24 @@ namespace DecentForms
           switch ( _BorderStyle )
           {
             case BorderStyle.FLAT:
+              windowStylesEx &= ~(uint)( ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE | ExtendedWindowStyleFlags.WS_EX_WINDOWEDGE );
+              windowStyles |= (uint)WindowStyleFlags.WS_BORDER;
+              windowStyles &= ~(uint)WindowStyleFlags.WS_DLGFRAME;
+              break;
+            case BorderStyle.SUNKEN:
+              windowStylesEx &= ~(uint)ExtendedWindowStyleFlags.WS_EX_WINDOWEDGE;
+              windowStylesEx |= (uint)ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE;
+              windowStyles |= (uint)WindowStyleFlags.WS_BORDER;
+              windowStyles &= ~(uint)WindowStyleFlags.WS_DLGFRAME;
+              break;
+            case BorderStyle.RAISED:
               windowStylesEx &= ~(uint)ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE;
+              windowStylesEx |= (uint)ExtendedWindowStyleFlags.WS_EX_WINDOWEDGE;
               windowStyles |= (uint)WindowStyleFlags.WS_BORDER;
               windowStyles &= ~(uint)WindowStyleFlags.WS_DLGFRAME;
               break;
             case BorderStyle.NONE:
-              windowStylesEx &= ~(uint)ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE;
+              windowStylesEx &= ~(uint)( ExtendedWindowStyleFlags.WS_EX_CLIENTEDGE | ExtendedWindowStyleFlags.WS_EX_WINDOWEDGE );
               windowStyles &= ~(uint)( WindowStyleFlags.WS_DLGFRAME | WindowStyleFlags.WS_BORDER );
               break;
           }

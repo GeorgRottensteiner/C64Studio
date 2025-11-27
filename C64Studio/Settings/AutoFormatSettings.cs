@@ -23,6 +23,7 @@ namespace RetroDevStudio
 
     public bool     IndentPseudoOpsLikeCode = true;
     public int      NumTabsIndentationPseudoOps = 5;
+    public List<MacroInfo.PseudoOpType>   PseudoOpsToIndent = new List<MacroInfo.PseudoOpType>();
 
     public bool     SeparateInstructionsAndOperands = true;
     public int      IndentOperandsFromInstructions = 2;
@@ -62,6 +63,12 @@ namespace RetroDevStudio
       chunkDetails.AppendI32( IndentLabels ? 1 : 0 );
       chunkDetails.AppendI32( NumTabsIndentationLabels );
 
+      chunkDetails.AppendI32( PseudoOpsToIndent.Count );
+      foreach ( var entry in PseudoOpsToIndent )
+      {
+        chunkDetails.AppendI32( (int)entry );
+      }
+
       return chunkDetails.ToBuffer();
     }
 
@@ -77,6 +84,7 @@ namespace RetroDevStudio
       IndentStatements = true;
 
       NumTabsIndentationPseudoOps = 5;
+      PseudoOpsToIndent.Clear();
 
       SeparateInstructionsAndOperands = true;
       IndentOperandsFromInstructions = 2;
@@ -91,6 +99,8 @@ namespace RetroDevStudio
 
     public void ReadFromBuffer( IReader binIn )
     {
+      PseudoOpsToIndent.Clear();  
+
       AutoFormatActive = ( binIn.ReadInt32() != 0 );
       IndentStatements = ( binIn.ReadInt32() != 0 );
       NumTabsIndentationStatements = binIn.ReadInt32();
@@ -102,6 +112,12 @@ namespace RetroDevStudio
       InsertSpacesBetweenOperands = ( binIn.ReadInt32() != 0 );
       IndentLabels = ( binIn.ReadInt32() != 0 );
       NumTabsIndentationLabels = binIn.ReadInt32();
+
+      int numPOsToIndent = binIn.ReadInt32();
+      for ( int i = 0; i < numPOsToIndent; ++i )
+      {
+        PseudoOpsToIndent.Add( (MacroInfo.PseudoOpType)binIn.ReadInt32() );
+      }
     }
 
 
@@ -130,13 +146,22 @@ namespace RetroDevStudio
 
 
 
-    public string FormatPseudoOpIndentation()
+    public string FormatPseudoOpIndentation( TokenInfo tokenInfo, AssemblerSettings assemblerSettings )
     {
       if ( ( !AutoFormatActive )
       ||   ( !IndentPseudoOpsLikeCode ) )
       {
         return "";
       }
+      if ( assemblerSettings.PseudoOps.TryGetValue( tokenInfo.Content.ToUpper(), out var po ) )
+      {
+        if ( PseudoOpsToIndent.Contains( po.Type ) )
+        {
+          return TabChar( NumTabsIndentationStatements );
+        }
+        return TabChar( NumTabsIndentationPseudoOps );
+      }
+
       return TabChar( NumTabsIndentationPseudoOps );
     }
 

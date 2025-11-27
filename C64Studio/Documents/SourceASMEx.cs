@@ -4483,7 +4483,7 @@ namespace RetroDevStudio.Documents
         if ( tokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
         {
           ReplaceText( tokens,
-                       Core.Settings.FormatSettings.FormatPseudoOpIndentation() 
+                       Core.Settings.FormatSettings.FormatPseudoOpIndentation( tokens[0], Parser.AssemblerSettings ) 
                         + Core.Settings.FormatSettings.FormatStatement( Parser, tokens ),
                        lineIndex,
                        0 );

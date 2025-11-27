@@ -1,4 +1,6 @@
-﻿using GR.Strings;
+﻿using GR.Collections;
+using GR.Strings;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,6 +58,53 @@ namespace RetroDevStudio.Dialogs.Preferences
           control.Enabled = Core.Settings.FormatSettings.AutoFormatActive;
         }
       }
+
+      var namedPOs = new Dictionary<MacroInfo.PseudoOpType, Set<string>>();
+      foreach ( AssemblerType assemblerType in Enum.GetValues( typeof( AssemblerType ) ) )
+      {
+        if ( assemblerType == AssemblerType.AUTO )
+        {
+          continue;
+        }
+        var assemblerSettings = new RetroDevStudio.Parser.AssemblerSettings();
+        assemblerSettings.SetAssemblerType( assemblerType );
+
+        foreach ( MacroInfo.PseudoOpType pseudoOp in Enum.GetValues( typeof( MacroInfo.PseudoOpType ) ) )
+        {
+          var pos = assemblerSettings.PseudoOps.Where( po => po.Value.Type == pseudoOp ).Select( po => po.Key );
+
+          foreach ( var singlePO in pos )
+          {
+            if ( namedPOs.ContainsKey( pseudoOp ) )
+            {
+              namedPOs[pseudoOp].Add( singlePO );
+            }
+            else
+            {
+              namedPOs.Add( pseudoOp, new Set<string>() );
+              namedPOs[pseudoOp].Add( singlePO );
+            }
+          }
+        }
+      }
+
+      listPseudoOpsToIndent.BeginUpdate();
+      foreach ( var pseudoOp in namedPOs )
+      {
+        int itemIndex = -1;
+        var displayText = string.Join( ",",  pseudoOp.Value.ToArray() );
+        if ( !string.IsNullOrEmpty( displayText ) )
+        {
+          itemIndex = listPseudoOpsToIndent.Items.Add( displayText );
+        }
+        else
+        {
+          itemIndex = listPseudoOpsToIndent.Items.Add( GR.EnumHelper.GetDescription( pseudoOp.Key ) );
+        }
+        listPseudoOpsToIndent.Items[itemIndex].Tag      = pseudoOp.Key;
+        listPseudoOpsToIndent.Items[itemIndex].Checked  = Core.Settings.FormatSettings.PseudoOpsToIndent.Contains( pseudoOp.Key );
+      }
+      listPseudoOpsToIndent.EndUpdate();
     }
 
 
@@ -224,6 +273,27 @@ namespace RetroDevStudio.Dialogs.Preferences
       if ( int.TryParse( editInsertSpacesBetweenOpcodesAndArguments.Text, out int numSpaces ) )
       {
         Core.Settings.FormatSettings.IndentOperandsFromInstructions = numSpaces;
+      }
+    }
+
+
+
+    private void listPseudoOpsToIndent_CheckChanged( DecentForms.ControlBase Sender )
+    {
+      if ( listPseudoOpsToIndent.SelectedIndex != -1 )
+      {
+        var pseudoOp = (MacroInfo.PseudoOpType)listPseudoOpsToIndent.Items[listPseudoOpsToIndent.SelectedIndex].Tag;
+        if ( listPseudoOpsToIndent.Items[listPseudoOpsToIndent.SelectedIndex].Checked )
+        {
+          if ( !Core.Settings.FormatSettings.PseudoOpsToIndent.Contains( pseudoOp ) )
+          {
+            Core.Settings.FormatSettings.PseudoOpsToIndent.Add( pseudoOp );
+          }
+        }
+        else
+        {
+          Core.Settings.FormatSettings.PseudoOpsToIndent.Remove( pseudoOp );
+        }
       }
     }
 
