@@ -30,6 +30,10 @@ namespace RetroDevStudio.Parser
         OnScopeAdded( zoneScope );
         scopedZone = true;
       }
+      if ( ScopeInsideMacroDefinition() )
+      {
+        return;
+      }
       if ( lineTokenInfos.Count > 2 )
       {
         AddError( _ParseContext.LineIndex, Types.ErrorCode.E1303_MALFORMED_ZONE_DESCRIPTOR, "Expected single zone descriptor" );

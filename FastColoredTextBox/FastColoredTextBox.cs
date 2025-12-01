@@ -8596,10 +8596,95 @@ namespace FastColoredTextBoxNS
 
 
     /// <summary>
+    /// Insert prefix into front of lines in range
+    /// </summary>
+    public virtual void InsertLinePrefix( Range rangeToProcess, string prefix, bool InsertOnEmptyLinesAsWell = true )
+    {
+      Range old = rangeToProcess.Clone();
+      int from = Math.Min( rangeToProcess.Start.iLine, rangeToProcess.End.iLine );
+      int to = Math.Max( rangeToProcess.Start.iLine, rangeToProcess.End.iLine );
+      
+
+      int   startOffset = old.Start.iChar;
+      if ( old.Start.iLine > old.End.iLine )
+      {
+        startOffset = old.End.iChar;
+        if ( rangeToProcess.Start.iChar == 0 )
+        {
+          --to;
+        }
+      }
+      else if ( old.Start.iLine < old.End.iLine )
+      {
+        if ( rangeToProcess.End.iChar == 0 )
+        {
+          --to;
+        }
+      }
+
+      if ( old.Start.iLine == old.End.iLine )
+      {
+        startOffset = Math.Min( old.Start.iChar, old.End.iChar );
+      }
+
+      BeginUpdate();
+      rangeToProcess.BeginUpdate();
+      lines.Manager.BeginAutoUndoCommands();
+      lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
+      int spaces = GetMinStartSpacesCount( from, to, InsertOnEmptyLinesAsWell );
+      for ( int i = from; i <= to; i++ )
+      {
+        // only insert prefix on non empty lines
+        if ( ( !InsertOnEmptyLinesAsWell )
+        &&   ( TextSource[i].Text.Trim().Length == 0 ) )
+        {
+          continue;
+        }
+
+        string detabbedLine = ReTabifyLine( TextSource[i].Text, TabLength );
+        int offset = 0;
+
+        if ( ( spaces + 1 < detabbedLine.Length )
+        &&   ( detabbedLine[spaces] == '\t' ) )
+        {
+          while ( ( spaces + offset + 1 < detabbedLine.Length )
+          &&      ( detabbedLine[spaces + offset] == '\t' )
+          &&      ( ( ( spaces + offset ) % TabLength ) != 0 ) )
+          {
+            // inside a tab!
+            ++offset;
+          }
+        }
+        if ( ( i == from )
+        &&   ( spaces + offset < startOffset ) )
+        {
+          rangeToProcess.Start = new Place( startOffset, i );
+        }
+        else
+        {
+          rangeToProcess.Start = new Place( spaces + offset, i );
+        }
+
+        lines.Manager.ExecuteCommand( new InsertTextCommand( TextSource, prefix ) );
+      }
+      rangeToProcess.Start = new Place( startOffset, from );
+      rangeToProcess.End = new Place( lines[to].Count, to );
+      needRecalc = true;
+      lines.Manager.EndAutoUndoCommands();
+      rangeToProcess.EndUpdate();
+      EndUpdate();
+      Invalidate();
+    }
+
+
+
+    /// <summary>
     /// Insert prefix into front of selected lines
     /// </summary>
     public virtual void InsertLinePrefix( string prefix, bool InsertOnEmptyLinesAsWell = true )
     {
+      InsertLinePrefix( Selection, prefix, InsertOnEmptyLinesAsWell );
+      /*
       Range old = Selection.Clone();
       int from = Math.Min( Selection.Start.iLine, Selection.End.iLine );
       int to = Math.Max( Selection.Start.iLine, Selection.End.iLine );
@@ -8673,7 +8758,7 @@ namespace FastColoredTextBoxNS
       lines.Manager.EndAutoUndoCommands();
       Selection.EndUpdate();
       EndUpdate();
-      Invalidate();
+      Invalidate();*/
     }
 
 

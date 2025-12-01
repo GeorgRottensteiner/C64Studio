@@ -161,6 +161,7 @@ namespace RetroDevStudio.Documents
       helpToolStripMenuItem.Tag                         = Function.HELP;
       commentSelectionToolStripMenuItem.Tag             = Function.COMMENT_SELECTION;
       uncommentSelectionToolStripMenuItem.Tag           = Function.UNCOMMENT_SELECTION;
+      toggleCommentToolStripMenuItem.Tag                = Function.TOGGLE_SELECTION;
       addBookmarkHereToolStripMenuItem.Tag              = Function.BOOKMARK_ADD;
       removeBookmarkToolStripMenuItem.Tag               = Function.BOOKMARK_DELETE;
       removeAllBookmarksOfThisFileToolStripMenuItem.Tag = Function.BOOKMARK_DELETE_ALL;
@@ -2093,6 +2094,23 @@ namespace RetroDevStudio.Documents
             {
             }
           }
+          foreach ( ToolStripItem subItem in menu.DropDownItems )
+          {
+            if ( subItem is ToolStripMenuItem )
+            {
+              var subMenu = (ToolStripMenuItem)subItem;
+              if ( subMenu.Tag is Function )
+              {
+                try
+                {
+                  subMenu.ShortcutKeys = Core.Settings.DetermineAcceleratorKeyForFunction( (Function)subMenu.Tag, Core.State );
+                }
+                catch ( Exception )
+                {
+                }
+              }
+            }
+          }
         }
       }
 
@@ -2118,13 +2136,15 @@ namespace RetroDevStudio.Documents
       }
       if ( editSource.SelectionLength > 0 )
       {
-        commentSelectionToolStripMenuItem.Enabled = true;
+        commentSelectionToolStripMenuItem.Enabled   = true;
         uncommentSelectionToolStripMenuItem.Enabled = true;
+        toggleCommentToolStripMenuItem.Enabled      = true;
       }
       else
       {
-        commentSelectionToolStripMenuItem.Enabled = false;
+        commentSelectionToolStripMenuItem.Enabled   = false;
         uncommentSelectionToolStripMenuItem.Enabled = false;
+        toggleCommentToolStripMenuItem.Enabled      = false;
       }
       if ( !Core.Settings.ASMShowMiniView )
       {
@@ -4444,6 +4464,20 @@ namespace RetroDevStudio.Documents
         return;
       }
 
+      var origRangeStart = editSource.Selection.Start;
+      var origRangeEnd = editSource.Selection.End;
+
+      AutoFormatLine( lineIndex, out int lineOffset );
+
+      editSource.Selection.Start = new Place( origRangeStart.iChar, origRangeStart.iLine + lineOffset );
+      editSource.Selection.End = new Place( origRangeEnd.iChar, origRangeEnd.iLine + lineOffset );
+    }
+
+
+
+    private void AutoFormatLine( int lineIndex, out int lineOffset )
+    {
+      lineOffset = 0;
       var tokens = Parser.PrepareLineTokens( editSource.Lines[lineIndex], Parser.m_TextCodeMappingRaw );
       if ( ( tokens == null )
       ||   ( tokens.Count == 0 ) )
@@ -4477,6 +4511,7 @@ namespace RetroDevStudio.Documents
                             + Core.Settings.FormatSettings.FormatStatement( Parser, tokens, index, tokens.Count - index ),
                            lineIndex,
                            1 );
+              lineOffset = 1;
             }
           }
         }
@@ -4497,7 +4532,6 @@ namespace RetroDevStudio.Documents
                        lineIndex,
                        0 );
         }
-
       }
     }
 
@@ -4505,6 +4539,7 @@ namespace RetroDevStudio.Documents
 
     private void ReplaceText( List<TokenInfo> tokens, string newText, int lineIndex, int lineOffset = 0 )
     {
+      /*
       var origRangeStart = editSource.Selection.Start;
       var origRangeEnd = editSource.Selection.End;
 
@@ -4516,7 +4551,45 @@ namespace RetroDevStudio.Documents
         editSource.SelectedText = newText;
       }
       editSource.Selection.Start  = new Place( origRangeStart.iChar, origRangeStart.iLine + lineOffset );
-      editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + lineOffset );
+      editSource.Selection.End    = new Place( origRangeEnd.iChar, origRangeEnd.iLine + lineOffset );*/
+      editSource.SetLineText( lineIndex, newText );
+    }
+
+
+
+    private void toggleCommentToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ToggleSelectionComment();
+    }
+
+
+
+    private void autoformatToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      int startLine = 0;
+      int lastLine = editSource.LinesCount - 1;
+
+      if ( !editSource.Selection.IsEmpty )
+      {
+        var origRangeStart  = editSource.Selection.Start;
+        var origRangeEnd    = editSource.Selection.End;
+        if ( origRangeEnd.iLine < origRangeStart.iLine )
+        {
+          startLine = origRangeEnd.iLine;
+          lastLine = origRangeStart.iLine;
+        }
+        else
+        {
+          startLine = origRangeStart.iLine;
+          lastLine = origRangeEnd.iLine;
+        }
+      }
+      editSource.BeginAutoUndo();
+      for ( int i = startLine; i <= lastLine; ++i )
+      {
+        AutoFormatLine( i, out int dummy );
+      }
+      editSource.EndAutoUndo();
     }
 
 

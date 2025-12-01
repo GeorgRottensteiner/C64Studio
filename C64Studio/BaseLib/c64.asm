@@ -1,4 +1,4 @@
-﻿!zone VIC
+!zone VIC
 .SPRITE_X_POS        = $d000
 .SPRITE_Y_POS        = $d001
 .SPRITE_X_EXTEND     = $d010
