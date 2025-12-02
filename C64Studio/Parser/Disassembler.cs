@@ -52,7 +52,13 @@ namespace RetroDevStudio.Parser
 
 
 
-    private string MnemonicToString( Tiny64.Opcode opcode, GR.Memory.ByteBuffer Data, int DataStartAddress, int CodePos, GR.Collections.Set<ushort> AccessedAddresses, GR.Collections.Map<int,string> NamedLabels )
+    private string MnemonicToString( Tiny64.Opcode opcode, 
+                                     GR.Memory.ByteBuffer Data, 
+                                     int DataStartAddress, 
+                                     int CodePos, 
+                                     GR.Collections.Set<ushort> AccessedAddresses, 
+                                     GR.Collections.Map<int,string> NamedLabels,
+                                     GR.Collections.Set<string> usedNamedLabels )
     {
       string output = opcode.Mnemonic.ToLower();
 
@@ -135,10 +141,12 @@ namespace RetroDevStudio.Parser
         if ( NamedLabels.ContainsKey( targetAddress ) )
         {
           addressPlacement = NamedLabels[targetAddress];
+          usedNamedLabels.Add( addressPlacement );
         }
         else if ( NamedLabels.ContainsKey( targetAddress - 1 ) )
         {
           addressPlacement = NamedLabels[targetAddress - 1] + "+1";
+          usedNamedLabels.Add( addressPlacement );
         }
       }
       switch ( opcode.Addressing )
@@ -313,10 +321,11 @@ namespace RetroDevStudio.Parser
 
       int progStepPos = JumpedAtAddresses.First;
 
-      GR.Collections.Set<ushort> accessedAddresses = new GR.Collections.Set<ushort>();
-      GR.Collections.Set<int>    addressesToCheck = new GR.Collections.Set<int>( JumpedAtAddresses );
-      GR.Collections.Set<int>    addressesChecked = new GR.Collections.Set<int>();
-      GR.Collections.Set<ushort> probableLabel = new GR.Collections.Set<ushort>();
+      var accessedAddresses = new GR.Collections.Set<ushort>();
+      var addressesToCheck = new GR.Collections.Set<int>( JumpedAtAddresses );
+      var addressesChecked = new GR.Collections.Set<int>();
+      var probableLabel = new GR.Collections.Set<ushort>();
+      var usedNamedLabels = new GR.Collections.Set<string>();
 
       // check for basic header
       int sysAddress = -1;
@@ -469,25 +478,6 @@ namespace RetroDevStudio.Parser
         ++trueAddress;
       }
 
-      // TODO - skip labels that are set inside the disassembly below
-      bool addedNamedLabel = false;
-      foreach ( var namedLabel in NamedLabels )
-      {
-        if ( ( appearingLabels.ContainsValue( namedLabel.Value ) )
-        ||   ( appearingLabelsPlusOne.ContainsValue( namedLabel.Value ) ) )
-        {
-          continue;
-        }
-        addedNamedLabel = true;
-        sb.Append( namedLabel.Value );
-        sb.Append( " = $" );
-        sb.AppendLine( namedLabel.Key.ToString( "X4" ) );
-      }
-      if ( addedNamedLabel )
-      {
-        sb.AppendLine();
-      }
-
       trueAddress = DataStartAddress;
       bool    hadBytes = false;
       int     hadBytesStart = 0;
@@ -530,11 +520,13 @@ namespace RetroDevStudio.Parser
             if ( NamedLabels.ContainsKey( trueAddress ) )
             {
               sb.AppendLine( NamedLabels[trueAddress] );
+              usedNamedLabels.Add( NamedLabels[trueAddress] );
             }
             else if ( NamedLabels.ContainsKey( trueAddress - 1 ) )
             {
               sb.Append( NamedLabels[trueAddress - 1] );
               sb.AppendLine( "+1" );
+              usedNamedLabels.Add( NamedLabels[trueAddress - 1] );
             }
             else
             {
@@ -614,7 +606,7 @@ namespace RetroDevStudio.Parser
           }
           if ( instruction != null )
           {
-            sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
+            sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels, usedNamedLabels ) );
             sb.Append( "\r\n" );
             trueAddress += instruction.first.OpcodeSize + 1;
           }
@@ -644,7 +636,33 @@ namespace RetroDevStudio.Parser
         sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
         hadBytes = false;
       }
-      Disassembly = sb.ToString();
+
+      // prefix defined named labels which have not been used yet
+      var sbPrefix = new StringBuilder();
+      bool addedNamedLabel = false;
+      foreach ( var namedLabel in NamedLabels )
+      {
+        if ( ( appearingLabels.ContainsValue( namedLabel.Value ) )
+        ||   ( appearingLabelsPlusOne.ContainsValue( namedLabel.Value ) ) )
+        {
+          continue;
+        }
+        if ( ( Settings.OnlyAddUsedLabels )
+        &&   ( !usedNamedLabels.ContainsValue( namedLabel.Value ) ) )
+        {
+          continue;
+        } 
+        addedNamedLabel = true;
+        sbPrefix.Append( namedLabel.Value );
+        sbPrefix.Append( " = $" );
+        sbPrefix.AppendLine( namedLabel.Key.ToString( "X4" ) );
+      }
+      if ( addedNamedLabel )
+      {
+        sbPrefix.AppendLine();
+      }
+
+      Disassembly = sbPrefix.ToString() + sb.ToString();
       return true;
     }
 

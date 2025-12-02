@@ -9,5 +9,6 @@ namespace RetroDevStudio
     public bool     AddLineAddresses = false;
     public bool     AddAssembledBytes = false;
     public bool     StopAtReturns = false;
+    public bool     OnlyAddUsedLabels = false;
   }
 }

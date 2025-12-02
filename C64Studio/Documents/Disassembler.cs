@@ -353,7 +353,8 @@ namespace RetroDevStudio.Documents
       { 
         AddLineAddresses  = checkShowLineAddresses.Checked, 
         AddAssembledBytes = checkShowHexData.Checked,
-        StopAtReturns     = checkStopAtReturns.Checked
+        StopAtReturns     = checkStopAtReturns.Checked,
+        OnlyAddUsedLabels = checkOnlyAddUsedLabels.Checked
       };
 
       if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, 
@@ -1151,6 +1152,12 @@ namespace RetroDevStudio.Documents
       UpdateDisassembly();
     }
 
+
+
+    private void checkOnlyAddUsedLabels_CheckedChanged( object sender, EventArgs e )
+    {
+      UpdateDisassembly();
+    }
 
 
 

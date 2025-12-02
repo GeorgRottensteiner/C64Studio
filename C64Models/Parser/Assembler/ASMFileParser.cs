@@ -12627,12 +12627,6 @@ namespace RetroDevStudio.Parser
         }
       }
       // collapse <label>##<value> (make a single token label name)
-      if ( ( result.Count > 0 )
-      &&   ( result[0].OriginatingString.Contains( "BANK##" ) ) )
-      {
-        int a = 2;
-      }
-
       if ( result.Count >= 4 )
       {
         for ( int i = 1; i <= result.Count - 3; ++i )
