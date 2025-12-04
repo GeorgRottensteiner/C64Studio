@@ -257,5 +257,48 @@ namespace RetroDevStudio
 
 
 
+    public bool AutoFormatPseudoOpArguments( TokenInfo tokenInfo, AssemblerSettings assemblerSettings )
+    {
+      if ( !AutoFormatActive )
+      {
+        return false;
+      }
+      if ( !assemblerSettings.PseudoOps.TryGetValue( tokenInfo.Content.ToUpper(), out var po ) )
+      {
+        return false;
+      }
+      switch ( po.Type )
+      {
+        case MacroInfo.PseudoOpType.BYTE:
+        case MacroInfo.PseudoOpType.WORD:
+        case MacroInfo.PseudoOpType.WORD_BE:
+        case MacroInfo.PseudoOpType.DWORD:
+        case MacroInfo.PseudoOpType.DWORD_BE:
+        case MacroInfo.PseudoOpType.TEXT:
+        case MacroInfo.PseudoOpType.FILL:
+        case MacroInfo.PseudoOpType.ALIGN:
+        case MacroInfo.PseudoOpType.ALIGN_DASM:
+        case MacroInfo.PseudoOpType.BANK:
+        case MacroInfo.PseudoOpType.BASIC:
+        case MacroInfo.PseudoOpType.ERROR:
+        case MacroInfo.PseudoOpType.FOR:
+        case MacroInfo.PseudoOpType.MESSAGE:
+        case MacroInfo.PseudoOpType.ORG:
+        case MacroInfo.PseudoOpType.PSEUDO_PC:
+        case MacroInfo.PseudoOpType.REPEAT:
+        case MacroInfo.PseudoOpType.SET:
+        case MacroInfo.PseudoOpType.SKIP:
+        case MacroInfo.PseudoOpType.TEXT_PET:
+        case MacroInfo.PseudoOpType.TEXT_RAW:
+        case MacroInfo.PseudoOpType.TEXT_SCREEN:
+        case MacroInfo.PseudoOpType.TEXT_SCREEN_XOR:
+        case MacroInfo.PseudoOpType.WHILE:
+          return true;
+      }
+      return false;
+    }
+
+
+
   }
 }
