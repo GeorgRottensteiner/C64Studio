@@ -1,6 +1,6 @@
-<Sample Name="BASIC Sprites"
+<Sample Name="Magic Desk"
   Machine="C64"
-  ShortDescription="Sets up and displays sprites"
-  Tags="BASIC,C64,Sprites,Feature"
-  Desc="Showcases the usage of a sprite project in BASIC. Uses the #spritedata directive to generate DATAs on the fly.">
+  ShortDescription="Showcases Magic Desk cartridge"
+  Tags="C64,Cartridge,Feature"
+  Desc="Shows how to set up a Magic Desk type cartridge. Sets up all 8 banks, and lets the user toggle between. Using the !bank pseudo op to auto-fill banks.">
 </Sample>

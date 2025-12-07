@@ -2,26 +2,34 @@
 
 !src <c64.asm>
 
+          ;this macro is used to insert the same code in every bank
+          ;only variation is the bank number which is inserted via argument
 !macro HandleBank bank
-!bank bank,$2000
+!bank bank , $2000
+
+;generates a dynamic zone name, concattenating BANK with the current bank number (BANK0 up to BANK7)
 !zone BANK##bank
 
+          ;make all code appear to assemble at $8000
 !pseudopc $8000
+          ;RESET vector
           !word launcher
+          ;NMI vector
           !word launcher
-
+          ;magic number (must be "CBM80")
           !pet "CBM80"
 
 launcher
           sei
-          stx VIC.CONTROL_2
-          jsr $fda3 ;prepare irq
-          jsr $fd50 ;init memory
-          jsr $fd15 ;init i/o
-          jsr $ff5b ;init video
-          cli
+          stx VIC.CONTROL_2   ;activate VIC
+          jsr $fda3           ;init CIA
+          jsr $fd50           ;check RAM
+          jsr $fd15           ;init kernal vectors
+          jsr $ff5b           ;init VIC
+          cli                 ;enable interrupts
 
 -
+          ;display BANK<number>
           lda #'B' - 64
           sta $0400
           lda #'A' - 64
@@ -36,15 +44,20 @@ launcher
           adc #$30
           sta $0405
 
+          ;check if joystick is pushed up
           lda #$01
-          bit $dc00
+          bit CIA1.DATA_PORT_A
           bne .NotUpPressed
 
+          ;check if joystick up is released
 .WaitForRelease
           lda #$01
-          bit $dc00
+          bit CIA1.DATA_PORT_A
           beq .WaitForRelease
 
+          ;switch cartridge to next bank
+          ;the moment $de00 is written to the relevant bank is active from $8000 to $9fff
+          ;since we place the same code in all banks the CPU can continue
           lda #( bank + 1 ) % 8
           sta $de00
 .NotUpPressed
@@ -64,305 +77,4 @@ launcher
           +HandleBank 5
           +HandleBank 6
           +HandleBank 7
-
-
-
-;          ;bank 0
-;* = $8000
-
-;!bank 0,$2000
-;          !word launcher
-;          !word launcher
-
-;          !pet "CBM80"
-
-;launcher
-;          sei
-;          stx VIC.CONTROL_2
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 0
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #1
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-;          ;bank 1
-;!bank 1,$2000
-
-
-
-;!zone BANK1
-
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 1
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #2
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-;          ;bank 2
-
-;!bank 2,$2000
-;!zone BANK2
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 2
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #3
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-
-;          ;bank 3
-;!bank 3,$2000
-;!zone BANK3
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 3
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #4
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-
-;          ;bank 4
-;!bank 4,$2000
-;!zone BANK4
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 4
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #5
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-
-;          ;bank 5
-;!bank 5,$2000
-;!zone BANK5
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 5
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #6
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-
-
-
-;          ;bank 6
-;!bank 6,$2000
-;!zone BANK6
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 6
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #7
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
-
-
-;          ;bank 7
-;!bank 7,$2000
-;!zone BANK7
-;!pseudopc $8000
-
-;          !word .launcher
-;          !word .launcher
-;          !pet "CBM80"
-
-;.launcher
-;          sei
-;          stx $d016
-;          jsr $fda3 ;prepare irq
-;          jsr $fd50 ;init memory
-;          jsr $fd15 ;init i/o
-;          jsr $ff5b ;init video
-;          cli
-
-;-
-;          +DisplayScreen 7
-
-;          lda #$01
-;          bit $dc00
-;          bne .NotUpPressed
-
-;.WaitForRelease
-;          lda #$01
-;          bit $dc00
-;          beq .WaitForRelease
-
-;          lda #0
-;          sta $de00
-;.NotUpPressed
-
-;          jmp -
 
