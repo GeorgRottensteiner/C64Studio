@@ -3007,6 +3007,15 @@ namespace RetroDevStudio
           StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<RetroDevStudio.Types.Breakpoint>();
         }
         StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
+
+        if ( m_CurrentProject != null )
+        {
+          if ( !m_CurrentProject.Settings.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
+          {
+            m_CurrentProject.Settings.BreakPoints.Add( Breakpoint.DocumentFilename, new List<Breakpoint>() );
+          }
+          m_CurrentProject.Settings.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
+        }
       }
       else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
