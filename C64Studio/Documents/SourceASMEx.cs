@@ -1,22 +1,22 @@
-﻿using System;
+﻿using FastColoredTextBoxNS;
+using GR.Collections;
+using GR.Image;
+using GR.IO;
+using GR.Memory;
+using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Dialogs;
+using RetroDevStudio.Parser;
+using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using RetroDevStudio.Types;
-using FastColoredTextBoxNS;
-
-using System.Linq;
-using System.Drawing;
-using GR.Memory;
-using GR.IO;
-using System.Globalization;
-using GR.Image;
-using RetroDevStudio.Parser;
-using RetroDevStudio.Dialogs;
-using GR.Collections;
-using RetroDevStudio.CustomRenderer;
 
 
 
@@ -4517,11 +4517,22 @@ namespace RetroDevStudio.Documents
         }
         if ( tokens[0].Type == TokenInfo.TokenType.PSEUDO_OP )
         {
-          ReplaceText( tokens,
-                       Core.Settings.FormatSettings.FormatPseudoOpIndentation( tokens[0], Parser.AssemblerSettings ) 
-                        + Core.Settings.FormatSettings.FormatStatement( Parser, tokens ),
-                       lineIndex,
-                       0 );
+          if ( !Core.Settings.FormatSettings.AutoFormatPseudoOpArguments( tokens[0], Parser.AssemblerSettings ) )
+          {
+            ReplaceText( tokens,
+                         Core.Settings.FormatSettings.FormatPseudoOpIndentation( tokens[0], Parser.AssemblerSettings )
+                          + Parser.TokensToExpression( tokens ),
+                         lineIndex,
+                         0 );
+          }
+          else
+          {
+            ReplaceText( tokens,
+                         Core.Settings.FormatSettings.FormatPseudoOpIndentation( tokens[0], Parser.AssemblerSettings )
+                          + Core.Settings.FormatSettings.FormatStatement( Parser, tokens ),
+                         lineIndex,
+                         0 );
+          }
         }
         else if ( ( !Parser.IsTokenLabel( tokens[0].Type ) )
         &&        ( tokens[0].Content != "*" ) )
