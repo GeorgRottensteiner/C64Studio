@@ -50,6 +50,7 @@ namespace RetroDevStudio
       MON_RESPONSE_CHECKPOINT_DELETE    = 0x13,
       MON_RESPONSE_ADVANCE_INSTRUCTION  = 0x71,
       MON_RESPONSE_STEP_OUT             = 0x73,
+      MON_RESPONSE_CMD_PING             = 0x81,
       MON_RESPONSE_EXIT                 = 0xaa,
       MON_RESPONSE_QUIT                 = 0xbb,
       MON_RESPONSE_RESET                = 0xcc,
@@ -100,6 +101,12 @@ namespace RetroDevStudio
     GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<RetroDevStudio.Types.Breakpoint>();
     private List<RequestData>         _initialBreakpoints = new List<RequestData>();
 
+    // 0 = connecting
+    // 1 = MON_RESPONSE_STOPPED after PING
+    // 2 = MON_RESPONSE_RESUMED after RESET
+    // 3 = MON_RESPONSE_AUTOSTART after OPEN_FILE
+    private int                       _initialStartupState = 0;
+
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
@@ -148,6 +155,7 @@ namespace RetroDevStudio
         m_RequestQueue.Clear();
         m_UnansweredBinaryRequests.Clear();
         _initialBreakpoints.Clear();
+        _initialStartupState = 0;
         m_LastRequestID = 0;
         m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
         if ( client != null )
@@ -174,12 +182,16 @@ namespace RetroDevStudio
         m_State = DebuggerState.RUNNING;
 
         // connected, force reset plus add break points now
+        SendBinaryCommand( BinaryMonitorCommand.MON_CMD_PING, null, null );
+        //QueueRequest( DebugRequestType.BREAK_INFO );
+        /*
         QueueRequest( DebugRequestType.STEP );
         QueueRequest( DebugRequestType.RESET );
         if ( !string.IsNullOrEmpty( _ExternalFileToOpen ) )
         {
           QueueRequest( new RequestData( DebugRequestType.OPEN_FILE ) { Info = _ExternalFileToOpen } );
-        }/*if ( _IsCartridge )
+        }*/
+        /*if ( _IsCartridge )
         {
           Log( "Connected - force break" );
           QueueRequest( DebugRequestType.STEP );
@@ -329,75 +341,68 @@ namespace RetroDevStudio
         {
           case BinaryMonitorCommandResponse.MON_RESPONSE_REGISTER_INFO:
             {
-              var info = new RegisterInfo();
-
-              int numItems = m_ReceivedDataBin.UInt16At( packagePos );
-              packagePos += 2;
-              for ( int i = 0; i < numItems; ++i )
+              if ( _initialStartupState >= 3 )
               {
-                byte      itemSize = m_ReceivedDataBin.ByteAt( packagePos );
-                byte      itemID = m_ReceivedDataBin.ByteAt( packagePos + 1 );
-                ushort    itemValue = m_ReceivedDataBin.UInt16At( packagePos + 2 );
+                var info = new RegisterInfo();
 
-                packagePos += itemSize + 1;
-
-                Log( "Register " + itemID.ToString( "X2" ) + " = " + itemValue.ToString( "X4" ) );
-
-                switch ( itemID )
+                int numItems = m_ReceivedDataBin.UInt16At( packagePos );
+                packagePos += 2;
+                for ( int i = 0; i < numItems; ++i )
                 {
-                  case 0x00:
-                    info.A = (byte)itemValue;
-                    break;
-                  case 0x01:
-                    info.X = (byte)itemValue;
-                    break;
-                  case 0x02:
-                    info.Y = (byte)itemValue;
-                    break;
-                  case 0x03:
-                    info.PC = itemValue;
-                    break;
-                  case 0x04:
-                    info.StackPointer = (byte)itemValue;
-                    break;
-                  case 0x05:
-                    info.StatusFlags = (byte)itemValue;
-                    break;
-                  case 0x35:
-                    info.RasterLine = itemValue;
-                    break;
-                  case 0x36:
-                    info.Cycles = itemValue;
-                    break;
-                  case 0x37:
-                    // $00
-                    break;
-                  case 0x38:
-                    info.ProcessorPort01 = (byte)itemValue;
-                    break;
-                  default:
-                    Log( "Invalid Item ID " + itemID.ToString( "X2" ) + " received" );
-                    //m_ReceivedDataBin.Clear();
-                    //return true;
-                    break;
+                  byte      itemSize = m_ReceivedDataBin.ByteAt( packagePos );
+                  byte      itemID = m_ReceivedDataBin.ByteAt( packagePos + 1 );
+                  ushort    itemValue = m_ReceivedDataBin.UInt16At( packagePos + 2 );
+
+                  packagePos += itemSize + 1;
+
+                  Log( "Register " + itemID.ToString( "X2" ) + " = " + itemValue.ToString( "X4" ) );
+
+                  switch ( itemID )
+                  {
+                    case 0x00:
+                      info.A = (byte)itemValue;
+                      break;
+                    case 0x01:
+                      info.X = (byte)itemValue;
+                      break;
+                    case 0x02:
+                      info.Y = (byte)itemValue;
+                      break;
+                    case 0x03:
+                      info.PC = itemValue;
+                      break;
+                    case 0x04:
+                      info.StackPointer = (byte)itemValue;
+                      break;
+                    case 0x05:
+                      info.StatusFlags = (byte)itemValue;
+                      break;
+                    case 0x35:
+                      info.RasterLine = itemValue;
+                      break;
+                    case 0x36:
+                      info.Cycles = itemValue;
+                      break;
+                    case 0x37:
+                      // $00
+                      break;
+                    case 0x38:
+                      info.ProcessorPort01 = (byte)itemValue;
+                      break;
+                    default:
+                      Log( "Invalid Item ID " + itemID.ToString( "X2" ) + " received" );
+                      //m_ReceivedDataBin.Clear();
+                      //return true;
+                      break;
+                  }
                 }
 
-                /*
-                e_A = 0x00,
-                e_X = 0x01,
-                e_Y = 0x02,
-                e_PC = 0x03,
-                e_SP = 0x04,
-                e_FLAGS = 0x05,
-                e_Rasterline = 0x35,
-                e_Cycle = 0x36  */
+                var ded       = new DebugEventData();
+                ded.Registers = info;
+                ded.Type = RetroDevStudio.DebugEvent.REGISTER_INFO;
+
+                DebugEvent( ded );
               }
-
-              var ded       = new DebugEventData();
-              ded.Registers = info;
-              ded.Type      = RetroDevStudio.DebugEvent.REGISTER_INFO;
-
-              DebugEvent( ded );
               m_Request = new RequestData( DebugRequestType.NONE );
             }
             break;
@@ -453,19 +458,40 @@ namespace RetroDevStudio
           case BinaryMonitorCommandResponse.MON_RESPONSE_JAM:
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_AUTOSTART:
-            // now add all breakpoints
-            foreach ( var initBP in _initialBreakpoints )
+            if ( _initialStartupState == 2 )
             {
-              QueueRequest( initBP );
+              _initialStartupState = 3;
             }
-            _initialBreakpoints.Clear();
-            Core.Debugging.OnInitialBreakpointReached( -1 );
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_STOPPED:
             m_State   = DebuggerState.PAUSED;
             m_Request = new RequestData( DebugRequestType.NONE );
+            if ( _initialStartupState == 0 )
+            {
+              _initialStartupState = 1;
+              Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
+              Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
+              Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
+              // now add all breakpoints
+              foreach ( var initBP in _initialBreakpoints )
+              {
+                QueueRequest( initBP );
+              }
+              _initialBreakpoints.Clear();
+              Core.Debugging.OnInitialBreakpointReached( -1, false );
+
+              QueueRequest( DebugRequestType.RESET );
+            }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_RESUMED:
+            if ( _initialStartupState == 1 )
+            {
+              _initialStartupState = 2;
+              if ( !string.IsNullOrEmpty( _ExternalFileToOpen ) )
+              {
+                QueueRequest( new RequestData( DebugRequestType.OPEN_FILE ) { Info = _ExternalFileToOpen } );
+              }
+            }
             m_Request = new RequestData( DebugRequestType.NONE );
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_CHECKPOINT_DELETE:
@@ -490,6 +516,7 @@ namespace RetroDevStudio
           case BinaryMonitorCommandResponse.MON_RESPONSE_STEP_OUT:
           case BinaryMonitorCommandResponse.MON_RESPONSE_EXIT:
           case BinaryMonitorCommandResponse.MON_RESPONSE_QUIT:
+          case BinaryMonitorCommandResponse.MON_RESPONSE_CMD_PING:
             // no action required
             m_Request = new RequestData( DebugRequestType.NONE );
             break;

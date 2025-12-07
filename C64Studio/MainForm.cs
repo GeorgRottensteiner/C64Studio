@@ -1,23 +1,24 @@
-﻿using System;
+﻿using GR.Image;
+using RetroDevStudio.Controls;
+using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Dialogs;
+using RetroDevStudio.Documents;
+using RetroDevStudio.IdleQueue;
+using RetroDevStudio.Parser;
+using RetroDevStudio.Parser.BASIC;
+using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using WeifenLuo.WinFormsUI.Docking;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using RetroDevStudio.IdleQueue;
-using RetroDevStudio.Types;
-using RetroDevStudio.CustomRenderer;
-using RetroDevStudio.Parser;
-using GR.Image;
-using RetroDevStudio.Documents;
-using RetroDevStudio.Dialogs;
-using System.Linq;
+using Tiny64;
+using WeifenLuo.WinFormsUI.Docking;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
-using System.IO;
-using System.ComponentModel;
-using RetroDevStudio.Parser.BASIC;
-using RetroDevStudio.Controls;
 
 
 
@@ -3012,7 +3013,7 @@ namespace RetroDevStudio
         {
           if ( !m_CurrentProject.Settings.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
           {
-            m_CurrentProject.Settings.BreakPoints.Add( Breakpoint.DocumentFilename, new List<Breakpoint>() );
+            m_CurrentProject.Settings.BreakPoints.Add( Breakpoint.DocumentFilename, new List<Types.Breakpoint>() );
           }
           m_CurrentProject.Settings.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
         }
@@ -3044,6 +3045,7 @@ namespace RetroDevStudio
       if ( ( AppState == Types.StudioState.NORMAL )
       ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
       {
+        m_DebugBreakpoints.RemoveBreakpoint( Breakpoint );
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
         {
           foreach ( Types.Breakpoint breakPoint in StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] )
@@ -3051,7 +3053,6 @@ namespace RetroDevStudio
             if ( breakPoint == Breakpoint )
             {
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
-              m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
               if ( StudioCore.Debugging.IsDebuggerConnectedToActiveProject() )
               {
                 if ( AppState == Types.StudioState.NORMAL )

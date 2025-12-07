@@ -211,6 +211,8 @@ namespace RetroDevStudio
 
     public void ReseatBreakpoints( Project Project, Types.ASM.FileInfo ASMFileInfo )
     {
+      BreakPoints = new GR.Collections.Map<string, List<Breakpoint>>( Project.Settings.BreakPoints );
+
       foreach ( var key in BreakPoints.Keys )
       {
         foreach ( Types.Breakpoint breakPoint in BreakPoints[key] )
@@ -263,7 +265,7 @@ namespace RetroDevStudio
 
 
 
-    public bool OnInitialBreakpointReached( int Address )
+    public bool OnInitialBreakpointReached( int Address, bool queueRun = true )
     {
       if ( ( BreakpointsToAddAfterStartup.Count == 0 )
       &&   ( Core.Debugging.OverrideDebugStart == -1 ) )
@@ -295,7 +297,8 @@ namespace RetroDevStudio
       }
 
       // keep running for non cart
-      if ( !Parser.ASMFileParser.IsCartridge( DebugType ) )
+      if ( ( !Parser.ASMFileParser.IsCartridge( DebugType ) )
+      &&   ( queueRun ) )
       {
         Debugger.Run();
       }
