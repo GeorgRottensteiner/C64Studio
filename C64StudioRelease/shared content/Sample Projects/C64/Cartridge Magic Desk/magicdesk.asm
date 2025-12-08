@@ -12,9 +12,9 @@
 
           ;make all code appear to assemble at $8000
 !pseudopc $8000
-          ;RESET vector
+          ;RESET vector (cold start)
           !word launcher
-          ;NMI vector
+          ;NMI vector   (warm start, RESTORE)
           !word launcher
           ;magic number (must be "CBM80")
           !pet "CBM80"

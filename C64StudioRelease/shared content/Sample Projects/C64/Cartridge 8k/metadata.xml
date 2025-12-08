@@ -1,0 +1,6 @@
+<Sample Name="Cart 8k"
+  Machine="C64"
+  ShortDescription="Showcases 8k cartridge"
+  Tags="C64,Cartridge,Feature"
+  Desc="Shows how to set up a 8k cartridge. Displays a text and flashes the border.">
+</Sample>
