@@ -167,7 +167,9 @@ namespace RetroDevStudio.Parser
             return ParseLineResult.ERROR_ABORT;
           }
           int lineIndexInMacro = -1;
+          ++_ParseContext.DoNotAddCollapseTokens;
           string[] replacementLines = RelabelLocalLabelsForMacro( Lines, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
+          --_ParseContext.DoNotAddCollapseTokens;
           if ( replacementLines == null )
           {
             if ( !string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
