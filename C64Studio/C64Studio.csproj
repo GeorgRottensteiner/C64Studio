@@ -459,6 +459,9 @@
     <Compile Update="Documents\Bookmarks.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Documents\Calculator.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Documents\SampleExplorer.cs">
       <SubType>Form</SubType>
     </Compile>

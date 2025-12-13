@@ -1952,7 +1952,8 @@ namespace RetroDevStudio
     bool CloseAllProjects()
     {
       if ( ( StudioCore.Navigating.Solution == null )
-      ||   ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) ) )
+      ||   ( ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) )
+      &&     ( StudioCore.Navigating.Solution.Filename.Length > 0 ) ) )
       {
         // we have no solution, or the solution was deleted externally
         return true;
@@ -3540,6 +3541,7 @@ namespace RetroDevStudio
         StudioCore.Navigating.Solution.DuringLoad = true;
 
         projectToolStripMenuItem.Visible = true;
+        solutionToolStripMenuItemTop.Visible = true;
 
         if ( SourceControl.Controller.IsFolderUnderSourceControl( newProject.FullPath( "" ) ) )
         {

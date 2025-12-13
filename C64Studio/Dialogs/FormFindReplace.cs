@@ -214,6 +214,7 @@ namespace RetroDevStudio.Dialogs
 
     public void FindNext( BaseDocument DirectlyFromSourceFile )
     {
+      /*
       if ( Core.MainForm.ActiveDocumentInfo != null )
       {
         var edit = EditFromDocumentEx( Core.MainForm.ActiveDocumentInfo );
@@ -221,12 +222,45 @@ namespace RetroDevStudio.Dialogs
         if ( edit != null )
         {
           bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
+          int   searchLength = 0;
+          if ( hadLastFind )
+          {
+            searchLength = LastSearchFound.Length;
+          }
           LastSearchFound.Clear();
           LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
           LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
           if ( hadLastFind )
           {
+            //++LastSearchFound.StartPosition;
+            LastSearchFound.StartPosition += searchLength;  
+            LastSearchFound.Length = searchLength;
+          }
+        }
+      }
+      FindNext( DirectlyFromSourceFile, comboSearchText.Text, true );
+    */
+      // continue searching from cursor
+      var docInfo = DirectlyFromSourceFile.DocumentInfo;
+      if ( docInfo != null )
+      {
+        var edit = EditFromDocumentEx( docInfo );
+
+        if ( edit != null )
+        {
+          bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
+          int   searchLength = 0;
+          if ( hadLastFind )
+          {
+            searchLength = LastSearchFound.Length;
+          }
+          LastSearchFound.Clear();
+          LastSearchFound.FoundInDocument = docInfo;
+          LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
+          if ( hadLastFind )
+          {
             ++LastSearchFound.StartPosition;
+            LastSearchFound.Length = searchLength;
           }
         }
       }
@@ -267,15 +301,19 @@ namespace RetroDevStudio.Dialogs
         Core.MainForm.WriteToLog( "-continue from " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
       }
 
+      int forceOffset = 0;
+
       if ( ( LastSearchFound.StartPosition != -1 )
       &&   ( LastSearchFound.Length > 0 ) )
       {
         if ( searchForward )
         {
+          forceOffset = 1;
           ++LastSearchFound.StartPosition;
         }
         else
         {
+          forceOffset = -1;
           --LastSearchFound.StartPosition;
         }
       }
@@ -288,6 +326,7 @@ namespace RetroDevStudio.Dialogs
                         checkSearchWrap.Checked,
                         (FindTarget)comboSearchTarget.SelectedIndex,
                         DirectlyFromSourceFile,
+                        forceOffset,
                         LastSearchFound ) )
       {
         Core.MainForm.WriteToLog( "-found in " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
@@ -952,6 +991,7 @@ namespace RetroDevStudio.Dialogs
                               bool Wrap, 
                               FindTarget Target, 
                               BaseDocument DirectlyFromSourceFile, 
+                              int forceOffset,
                               SearchLocation LastFound )
     {
       if ( string.IsNullOrEmpty( SearchString ) )
@@ -994,7 +1034,7 @@ namespace RetroDevStudio.Dialogs
         {
           if ( DirectlyFromSourceFile != null )
           {
-            lastPosition = CharacterPosFromPosition( edit, edit.Selection.Start );
+            lastPosition = CharacterPosFromPosition( edit, edit.Selection.Start ) + forceOffset;
           }
           else if ( lastPosition != -1 )
           {
@@ -1444,6 +1484,7 @@ namespace RetroDevStudio.Dialogs
                            false,
                            (FindTarget)comboSearchTarget.SelectedIndex,
                            null,
+                           0,
                            LastSearchFound ) )
         {
           return;
@@ -1644,6 +1685,7 @@ namespace RetroDevStudio.Dialogs
                         checkReplaceWrap.Checked,
                         (FindTarget)comboReplaceTarget.SelectedIndex,
                         null,
+                        0,
                         LastReplaceFound ) )
       {
         if ( LastReplaceFound.FoundInDocument == null )
@@ -1751,6 +1793,7 @@ namespace RetroDevStudio.Dialogs
                         checkReplaceWrap.Checked,
                         (FindTarget)comboReplaceTarget.SelectedIndex,
                         null,
+                        0,
                         LastReplaceFound ) )
       {
         var    edit = EditFromDocumentEx( LastReplaceFound.FoundInDocument );
@@ -2051,6 +2094,7 @@ namespace RetroDevStudio.Dialogs
                            false,
                            (FindTarget)comboSearchTarget.SelectedIndex,
                            null,
+                           0,
                            LastSearchFound ) )
         {
           if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
