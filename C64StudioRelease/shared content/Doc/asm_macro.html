@@ -30,6 +30,8 @@
       <li><a href="#hex">!HEX, !H</a></li>
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
+      <li><a href="#ifdefparam">!IFDEFPARAM</a></li>
+      <li><a href="#ifndefparam">!IFNDEFPARAM</a></li>
       <li><a href="#jumplist">!JUMPLIST</a></li>
       <li><a href="#list">!LIST</a></li>
       <li><a href="#lzone">!LZONE</a></li>
@@ -360,8 +362,10 @@
     <br />
   </div>
   <a name="for"></a>
-  <H2>!FOR &lt;Variable&gt; = &lt;Start Value Expression&gt; TO &lt;End Value Expression&gt; [STEP &lt;Step Value Expression&gt;]<br />
-  !FOR &lt;Variable&gt;, &lt;Start Value Expression&gt;, &lt;End Value Expression&gt; { }</H2>
+  <H2>
+    !FOR &lt;Variable&gt; = &lt;Start Value Expression&gt; TO &lt;End Value Expression&gt; [STEP &lt;Step Value Expression&gt;]<br />
+    !FOR &lt;Variable&gt;, &lt;Start Value Expression&gt;, &lt;End Value Expression&gt; { }
+  </H2>
   <div id="mybody">
     This pseudo op starts a for loop. To end a for loop specify either !END or {, depending on the used variant.<br />
     <Variable>
@@ -374,7 +378,7 @@
         <br />      !for ROW = 0 TO 24
         lda BACK_BUFFER + ROW * 40
         sta SCREEN_CHAR + ROW * 40
-      !end
+        !end
       </div>
       <br />
       <b>ACME style</b>
@@ -382,7 +386,7 @@
         <br />      !for ROW, 0, 24 {
         lda BACK_BUFFER + ROW * 40
         sta SCREEN_CHAR + ROW * 40
-      }
+        }
       </div>
       <br />
       <br />
@@ -398,7 +402,7 @@
     This pseudo op fills the given value count times at the current location.<br />
     The expression form can be a list, several expressions are separated by comma. !fill uses every element of a list after each other, and restarts at the first element if required.
     The calculation is evaluated for every byte. The expression inside the brackets uses the label "i" as index, counting the usage of the full list. Any global "i" label is suspended inside the brackets and restored afterwards.<br />
-    The other variant is a range with a from expression to a target expression. The value is calculated linearly from the first to the last entry. If the optional times expression is given, the range is repeated "times" times.<br>
+    The other variant is a range with a from expression to a target expression. The value is calculated linearly from the first to the last entry. If the optional times expression is given, the range is repeated "times" times.<br />
     <br />
     <b>Example #1 - simple fill</b><br />
     <br />
@@ -537,6 +541,46 @@
     <br />
     <br />
   </div>
+  <a name="ifdefparam"></a><a name="if"></a>
+  <H2>!IFDEFPARAM &lt;expression&gt; {</H2>
+  <div id="mybody">
+    This pseudo op starts an conditional block. The conditional block is only evaluated if the listed argument is given when calling a macro. The opening curly brace must be on the same line. It is only valid used inside a macro.<br />
+    <br />
+    A conditional block has to end with a closing curly brace. An optional else or else if statement may open an opposite conditional block, however it must be stated on one line.<br />
+    <br />
+    <div id="code">
+      <br />      !macro runme v1,v2 {
+      !ifdefparam v2 {
+      ;only inserted if v2 is provided in call
+      clc
+      lda #v2
+      }
+      ldx #v1
+      }
+    </div>
+    <br />
+    <br />
+  </div>
+  <a name="ifndefparam"></a>
+  <H2>!IFNDEFPARAM &lt;expression&gt; {</H2>
+  <div id="mybody">
+    This pseudo op starts an conditional block. The conditional block is only evaluated if the listed argument is not given when calling a macro. The opening curly brace must be on the same line. It is only valid used inside a macro.<br />
+    <br />
+    A conditional block has to end with a closing curly brace. An optional else or else if statement may open an opposite conditional block, however it must be stated on one line.<br />
+    <br />
+    <div id="code">
+      <br />      !macro runme v1,v2 {
+      !ifndefparam v2 {
+      ;only inserted if v2 is not provided in call
+      clc
+      lda #v2
+      }
+      ldx #v1
+      }
+    </div>
+    <br />
+    <br />
+  </div>
   <a name="jumplist"></a>
   <H2>!JUMPLIST &lt;Label&gt;</H2>
   <div id="mybody">
@@ -545,25 +589,25 @@
     <br />
     <div id="code">
       <br />      ;actual routines
-Routine1
+      Routine1
       lda #0
       rts
-Routine2
+      Routine2
       lda #1
       rts
-Routine3
+      Routine3
       lda #2
       rts
 
       ;jump table (with optional extra data)
       ;<= this global label starts a new zone, !jumptable references the last global label above)
-RoutinesPtrs
+      RoutinesPtrs
       !jumptable Routine1       ;lo byte of Routine1, hi byte of Routine1
       !byte 1,2,3,4
       !jumptable Routine2
       !jumptable Routine3
 
-Sequence
+      Sequence
       !byte RoutinesPtrs.Routine1  ;= 0
       !byte 10,11,12
       !byte RoutinesPtrs.Routine3  ;= 8
@@ -607,6 +651,7 @@ Sequence
   <div id="mybody">
     This pseudo op defines a macro function. To end the body of a function specify !END<br />
     The number of parameters is variable. Optionally a !macro definition may also be encapsulated by {, } curly braces.<br />
+    Macros may be called with less arguments than defined. In that case the argument value is not defined and will lead to an error if accessed. You may however use !ifdef etc. to check its existance.<br />
     <br />
     To call a macro use +&lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]<br />
     <br />
@@ -2723,17 +2768,19 @@ Sequence
   <a name="repeat"></a>
   <H2>!REPEAT&lt;Expression&gt; {</H2>
   <div id="mybody">
-    This pseudo op repeats the following statements until the next closing statement (!end) <Expression> times.<br />
-    <br />
-    <br />
-    <div id="code">
+    This pseudo op repeats the following statements until the next closing statement (!end) <Expression>
+      times.<br />
+      <br />
+      <br />
+      <div id="code">
 
-      !repeat 10
+        !repeat 10
         nop
-      !end
-    </div>
-    <br />
-    <br />
+        !end
+      </div>
+      <br />
+      <br />
+    </Expression>
   </div>
   <a name="scrxor"></a>
   <H2>!SCRXOR &lt;xor value&gt,...</H2>
@@ -2984,9 +3031,9 @@ Sequence
     <div id="code">
       a = 5
       !while a > 0 {
-        lda #a
-        sta SCREEN_CHAR + a
-        a = a - 1
+      lda #a
+      sta SCREEN_CHAR + a
+      a = a - 1
       }
     </div>
     <br />

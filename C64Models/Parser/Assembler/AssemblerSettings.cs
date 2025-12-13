@@ -172,7 +172,8 @@ namespace RetroDevStudio.Parser
         case Types.AssemblerType.C64_STUDIO:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
-          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#'";
+          //AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#'";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "'";
 
           OpenBracketChars = "(" + INTERNAL_OPENING_BRACE + SQUARE_BRACKETS_OPEN;
           CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE + SQUARE_BRACKETS_CLOSE;
@@ -251,6 +252,8 @@ namespace RetroDevStudio.Parser
           AddPseudoOp( "!IFDEF", Types.MacroInfo.PseudoOpType.IFDEF );
           AddPseudoOp( "!IFNDEF", Types.MacroInfo.PseudoOpType.IFNDEF );
           AddPseudoOp( "!IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "!IFDEFPARAM", Types.MacroInfo.PseudoOpType.IFDEF_ARGUMENT );
+          AddPseudoOp( "!IFNDEFPARAM", Types.MacroInfo.PseudoOpType.IFNDEF_ARGUMENT );
           AddPseudoOp( "!FILL", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "!FI", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "!ALIGN", Types.MacroInfo.PseudoOpType.ALIGN );
@@ -285,6 +288,7 @@ namespace RetroDevStudio.Parser
           POPrefix = "!";
           MacroFunctionCallPrefix.Add( "+" );
           MacrosCanBeOverloaded = true;
+          MacrosHaveVariableNumberOfArguments = true;
           GlobalLabelsAutoZone = false;
           SupportsRealNumbers = true;
           DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=", "&=" }  );
@@ -434,7 +438,7 @@ namespace RetroDevStudio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß:";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
           AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";

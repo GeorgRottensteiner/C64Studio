@@ -69,8 +69,12 @@
       this.showAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+      this.selectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toggleCommentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.commentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+      this.autoformatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.modifyDataValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.convertDecimalToHexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.convertHexToDecimalToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -163,8 +167,7 @@
             this.showAddressToolStripMenuItem,
             this.helpToolStripMenuItem,
             this.toolStripSeparator3,
-            this.commentSelectionToolStripMenuItem,
-            this.uncommentSelectionToolStripMenuItem,
+            this.selectionToolStripMenuItem,
             this.modifyDataValuesToolStripMenuItem,
             this.toolStripMenuItem1,
             this.showMemoryToolStripMenuItem,
@@ -172,7 +175,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(250, 552);
+      this.contextSource.Size = new System.Drawing.Size(250, 508);
       // 
       // copyToolStripMenuItem
       // 
@@ -437,19 +440,50 @@
       this.toolStripSeparator3.Name = "toolStripSeparator3";
       this.toolStripSeparator3.Size = new System.Drawing.Size(246, 6);
       // 
+      // selectionToolStripMenuItem
+      // 
+      this.selectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toggleCommentToolStripMenuItem,
+            this.commentSelectionToolStripMenuItem,
+            this.uncommentSelectionToolStripMenuItem,
+            this.toolStripSeparator8,
+            this.autoformatToolStripMenuItem});
+      this.selectionToolStripMenuItem.Name = "selectionToolStripMenuItem";
+      this.selectionToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+      this.selectionToolStripMenuItem.Text = "Selection";
+      // 
+      // toggleCommentToolStripMenuItem
+      // 
+      this.toggleCommentToolStripMenuItem.Name = "toggleCommentToolStripMenuItem";
+      this.toggleCommentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.toggleCommentToolStripMenuItem.Text = "Toggle Comment";
+      this.toggleCommentToolStripMenuItem.Click += new System.EventHandler(this.toggleCommentToolStripMenuItem_Click);
+      // 
       // commentSelectionToolStripMenuItem
       // 
       this.commentSelectionToolStripMenuItem.Name = "commentSelectionToolStripMenuItem";
-      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.commentSelectionToolStripMenuItem.Text = "Comment Selection";
+      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.commentSelectionToolStripMenuItem.Text = "Comment";
       this.commentSelectionToolStripMenuItem.Click += new System.EventHandler(this.commentSelectionToolStripMenuItem_Click);
       // 
       // uncommentSelectionToolStripMenuItem
       // 
       this.uncommentSelectionToolStripMenuItem.Name = "uncommentSelectionToolStripMenuItem";
-      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-      this.uncommentSelectionToolStripMenuItem.Text = "Uncomment Selection";
+      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.uncommentSelectionToolStripMenuItem.Text = "Uncomment";
       this.uncommentSelectionToolStripMenuItem.Click += new System.EventHandler(this.uncommentSelectionToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator8
+      // 
+      this.toolStripSeparator8.Name = "toolStripSeparator8";
+      this.toolStripSeparator8.Size = new System.Drawing.Size(177, 6);
+      // 
+      // autoformatToolStripMenuItem
+      // 
+      this.autoformatToolStripMenuItem.Name = "autoformatToolStripMenuItem";
+      this.autoformatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.autoformatToolStripMenuItem.Text = "Autoformat";
+      this.autoformatToolStripMenuItem.Click += new System.EventHandler(this.autoformatToolStripMenuItem_Click);
       // 
       // modifyDataValuesToolStripMenuItem
       // 
@@ -630,8 +664,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ComboBox comboZoneSelector;
     private System.Windows.Forms.ComboBox comboLocalLabelSelector;
-    private System.Windows.Forms.ToolStripMenuItem commentSelectionToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem uncommentSelectionToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator separatorCommenting;
     private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     private FastColoredTextBoxNS.DocumentMap miniMap;
@@ -672,5 +704,11 @@
     private System.Windows.Forms.ToolStripMenuItem readDirect16ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem readDirect1ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem selectionToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem commentSelectionToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem toggleCommentToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem uncommentSelectionToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+    private System.Windows.Forms.ToolStripMenuItem autoformatToolStripMenuItem;
   }
 }

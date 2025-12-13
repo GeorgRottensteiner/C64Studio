@@ -23,8 +23,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ImportCharsetInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MapperCommdore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MachineFileTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Bank.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.For.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BASIC\BasicFileParser.MetaData.BinaryDataPRINT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)syswrapper\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)types\CharlistLayout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ErrorCode.cs" />
     <Compile Include="..\C64Models\Attributes\MachineTypeAttribute.cs" />
@@ -189,6 +191,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Emulator\Interfaces\" />
     <Folder Include="$(MSBuildThisFileDirectory)BackwardCompatiblity\" />
+    <Folder Include="$(MSBuildThisFileDirectory)SysWrapper\" />
     <Folder Include="$(MSBuildThisFileDirectory)Processors\" />
     <Folder Include="$(MSBuildThisFileDirectory)Version\" />
   </ItemGroup>

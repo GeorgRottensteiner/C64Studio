@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #10/14"
+  Machine="Atari 2600"
+  ShortDescription="Random Numbers"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="The variations with the box sprite randomly place the box. The box can be collected which increases the score. If the chosen place for the box collides with the maze a new location is attempted.">
+</Sample>

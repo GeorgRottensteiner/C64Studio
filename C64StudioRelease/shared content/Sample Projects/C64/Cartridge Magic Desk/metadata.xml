@@ -1,0 +1,6 @@
+<Sample Name="Magic Desk"
+  Machine="C64"
+  ShortDescription="Showcases Magic Desk cartridge"
+  Tags="C64,Cartridge,Feature"
+  Desc="Shows how to set up a Magic Desk type cartridge. Sets up all 8 banks, and lets the user toggle between. Using the !bank pseudo op to auto-fill banks.">
+</Sample>

@@ -20,13 +20,13 @@
     ;   playfield   = Score Display - at very top of screen
     ;                 Timer Bar     - just below the Score Display
     ;                 Arena         - for the remainder of the screen
-    
+
 ;===============================================================================
 ; Change Log
 ;===============================================================================
- 
+
     ; 2014.06.24 - generate a stable display
-    ; 2014.06.25 - add timers 
+    ; 2014.06.25 - add timers
     ; 2014.06.28 - add score display and check for TV Type
     ; 2014.07.03 - add 2LK (2 line kernel)
     ; 2014.07.04 - 2LK update, set VDELP0 and VDELP1 based on Y positions
@@ -41,8 +41,8 @@
     ; 2014.07.11 - add ball object
     ; 2014.07.12 - add missile objects
     ; 2014.07.13 - add sound effects
-    
-    
+
+
 ;===============================================================================
 ; Initialize dasm
 ;===============================================================================
@@ -52,10 +52,10 @@
     ; put into a "reduced package".  This package limits the 6507 to an 8K
     ; address space and also removes support for external interrupts.
         PROCESSOR 6502
-    
-    ; vcs.h contains the standard definitions for TIA and RIOT registers 
-        include vcs.h       
-    
+
+    ; vcs.h contains the standard definitions for TIA and RIOT registers
+        include vcs.h
+
     ; macro.h contains commonly used routines which aid in coding
         include macro.h
 
@@ -63,9 +63,9 @@
 ; Define Constants
 ;===============================================================================
     ; height of the arena (gameplay area).  Since we're using a 2 line kernel,
-    ; actual height will be twice this.  Also, we're using 0-87 for the 
+    ; actual height will be twice this.  Also, we're using 0-87 for the
     ; scanlines so actual height is 176 = 88*2
-ARENA_HEIGHT    = 87  
+ARENA_HEIGHT    = 87
     ; height of boxes drawn by missile0, missile1 and ball
 BOX_HEIGHT      = 8
 
@@ -76,9 +76,9 @@ BOX_HEIGHT      = 8
     ; define a segment for variables
     ; .U means uninitialized, does not end up in ROM
         SEG.U VARS
-    
+
     ; RAM starts at $80
-        ORG $80             
+        ORG $80
 
     ; Holds 2 digit score for each player, stored as BCD (Binary Coded Decimal)
 Score:          ds 2    ; stored in $80-81
@@ -139,7 +139,7 @@ GameState:      ds 1    ; stored in $A9
     ;              are tested using the BIT command.
 
     ; used for the "screen saver" color cycle effect
-ColorCycle:     ds 1    ; stored in $AA   
+ColorCycle:     ds 1    ; stored in $AA
 
     ; game variation
     ; D1 - Arena selection, choice of 2
@@ -157,13 +157,13 @@ SelectDelay:    ds 1    ; stored in $AD
     ; used by Random for an 8 bit random number
 Rand8:          ds 1    ; stored in $AE
     ; optionally define space for Rand16 for 16 bit random number
-Rand16:         ds 1    ; stored in $AF 
+Rand16:         ds 1    ; stored in $AF
 
     ; keep track of Arena playfield index
 ArenaIndex:     ds 1    ; stored in $B0
 
     ; index for sound effect driver
-    
+
 SFX_LEFT:       ds 1    ; stored in $B1
 SFX_RIGHT:      ds 1    ; stored in $B2
 
@@ -172,8 +172,8 @@ SFX_RIGHT:      ds 1    ; stored in $B2
 ;===============================================================================
 
     ; define a segment for code
-    SEG CODE    
-    
+    SEG CODE
+
     ; 2K ROM starts at $F800, 4K ROM starts at $F000
     ORG $F800
 
@@ -205,7 +205,7 @@ PosObject:
         sec
         sta WSYNC
 DivideLoop
-        sbc #15        ; 2  2 - each time thru this loop takes 5 cycles, which is 
+        sbc #15        ; 2  2 - each time thru this loop takes 5 cycles, which is
         bcs DivideLoop ; 2  4 - the same amount of time it takes to draw 15 pixels
         eor #7         ; 2  6 - The EOR & ASL statements convert the remainder
         asl            ; 2  8 - of position/15 to the value needed to fine tune
@@ -216,19 +216,19 @@ DivideLoop
         sta RESP0,X    ; 4 23 - set coarse X position of object
         rts            ; 6 29
 
-        
+
 ;===============================================================================
 ; Initialize Atari
-;===============================================================================    
+;===============================================================================
 InitSystem:
     ; CLEAN_START is a macro found in macro.h
     ; it sets all RAM, TIA registers and CPU registers to 0
-        CLEAN_START   
-        
+        CLEAN_START
+
     ; seed the random number generator
         lda INTIM       ; unknown value
         sta Rand8       ; use as seed
-        eor #$FF        ; both seed values cannot be 0, so flip the bits 
+        eor #$FF        ; both seed values cannot be 0, so flip the bits
         sta Rand16      ;   just in case INTIM was 0
 
     ; position objects and display variation=1 and players=1
@@ -236,10 +236,10 @@ InitSystem:
         inx             ; x was 0, now 1
         stx Score       ; display human readable game variation
         stx Score+1     ; display human readable player count
-        
-    ; from here we "fall into" the main loop    
-              
-            
+
+    ; from here we "fall into" the main loop
+
+
 ;===============================================================================
 ; Main Program Loop
 ;===============================================================================
@@ -249,7 +249,7 @@ Main:
         jsr Kernel          ; Jump to SubRoutine Kernel
         jsr OverScan        ; Jump to SubRoutine OverScan
         jmp Main            ; JuMP to Main
-    
+
 
 ;===============================================================================
 ; Vertical Sync
@@ -272,7 +272,7 @@ VerticalSync:
 VSskip: inc Frame       ; increment Frame count
 
         sta WSYNC   ; Wait for Sync - halts CPU until end of 1st scanline of VSYNC
-        lda #$30    ; 
+        lda #$30    ;
         sta NUSIZ0  ; set missile0 to be 8x
         sta NUSIZ1  ; set missile1 to be 8x
         sta WSYNC   ; wait until end of 2nd scanline of VSYNC
@@ -281,17 +281,17 @@ VSskip: inc Frame       ; increment Frame count
         sta PF1     ; blank the playfield
         sta PF2     ; blank the playfield
         sta GRP0    ; blanks player0 if VDELP0 was off
-        sta GRP1    ; blanks player0 if VDELP0 was on, player1 if VDELP1 was off 
+        sta GRP1    ; blanks player0 if VDELP0 was on, player1 if VDELP1 was off
         sta GRP0    ; blanks                           player1 if VDELP1 was on
         sta VDELP0  ; turn off Vertical Delay
         sta VDELP1  ; turn off Vertical Delay
         sta CXCLR   ; clear collision detection latches
         sta WSYNC   ; wait until end of 3rd scanline of VSYNC
         sta VSYNC   ; Accumulator D1=0, turns off Vertical Sync signal
-Sleep12:            ;       jsr here to sleep for 12 cycles        
+Sleep12:            ;       jsr here to sleep for 12 cycles
         rts         ; ReTurn from Subroutine
-    
-    
+
+
 ;===============================================================================
 ; Vertical Blank
 ; --------------
@@ -304,13 +304,13 @@ VerticalBlank:
         bpl NotActive       ; skip timer and joystick if game is not active
         jsr UpdateTimer
         jsr ProcessJoystick
-NotActive:        
+NotActive:
         jsr PositionObjects
         jsr SetObjectColors
         jsr PrepScoreForDisplay
         rts             ; ReTurn from Subroutine
 
-    
+
 ;===============================================================================
 ; Kernel
 ; ------
@@ -336,15 +336,15 @@ NotActive:
 ;---------------------------------------
 ;
 ;===============================================================================
-Kernel:            
+Kernel:
         sta WSYNC       ; Wait for SYNC (halts CPU until end of scanline)
-;---------------------------------------                
+;---------------------------------------
         lda INTIM       ; 4  4 - check the timer
         bne Kernel      ; 2  6 - (3 7) Branch if its Not Equal to 0
     ; turn on the display
         sta VBLANK      ; 3  9 - Accumulator D1=0, turns off Vertical Blank signal (image output on)
         ldx #5          ; 2 11 - use X as the loop counter for ScoreLoop
-        
+
     ; first thing we draw is the score.  Score is drawn using only PF1 of the
     ; playfield.  The playfield is set for in repeat mode, and SCORE is turned
     ; on so the left and right sides take on the colors of player0 and player1.
@@ -361,7 +361,7 @@ ScoreLoop:              ;   43 - cycle after bpl ScoreLoop
         ora ScoreGfx    ; 3 69 -   merge with the tens digit graphics
         sta ScoreGfx    ; 3 72 -   and save it
         sta WSYNC       ; 3 75 - wait for end of scanline
-;---------------------------------------        
+;---------------------------------------
         sta PF1         ; 3  3 - @66-28, update playfield for Score dislay
         ldy DigitTens+1 ; 3  6 - get the left digit offset for the Score+1
         lda DigitGfx,y  ; 5 11 -   use it to load the digit graphics
@@ -374,7 +374,7 @@ ScoreLoop:              ;   43 - cycle after bpl ScoreLoop
         sta ScoreGfx+1  ; 3 32 -   and save it
         jsr Sleep12     ;12 44 - waste some cycles
         sta PF1         ; 3 47 - @39-54, update playfield for Score+1 display
-        ldy ScoreGfx    ; 3 50 - preload for next scanline 
+        ldy ScoreGfx    ; 3 50 - preload for next scanline
         sta WSYNC       ; 3 53 - wait for end of scanline
 ;---------------------------------------
         sty PF1         ; 3  3 - update playfield for the Score display
@@ -388,15 +388,15 @@ ScoreLoop:              ;   43 - cycle after bpl ScoreLoop
         bne ScoreLoop   ; 2 42 - (3 43) if dex != 0 then branch to ScoreLoop
         sta WSYNC       ; 3 45 - wait for end of scanline
 ;---------------------------------------
-        stx PF1         ; 3  3 - x = 0, so this blanks out playfield        
+        stx PF1         ; 3  3 - x = 0, so this blanks out playfield
         sta WSYNC       ; 3  6 - wait for end of scanline
-;---------------------------------------  
+;---------------------------------------
         lda #0          ; 2  2
         sta CTRLPF      ; 3  5 - turn off SCORE mode
         ldx #1          ; 2  7
     ; draw timer bar
-TimerBar:    
-        sta WSYNC       ; 3  
+TimerBar:
+        sta WSYNC       ; 3
 ;---------------------------------------
         lda TimerPF     ; 3  3
         sta PF0         ; 3  6
@@ -428,12 +428,12 @@ TimerBar:
     ;       line 1 - updates player1, missile1, playfield
     ;       line 2 - updates player0, missile0, ball
     ;       if not at bottom, goto ArenaLoop
-        
+
         lda #0              ; 2  2
         sta PF0             ; 3  5
         sta PF1             ; 3  8
         sta PF2             ; 3 11
-        lda ArenaColor      ; 3 14        
+        lda ArenaColor      ; 3 14
         sta COLUPF          ; 3 17
         lda Variation       ; 3 20
         lsr                 ; 2 22 - which Arena to show
@@ -442,12 +442,12 @@ TimerBar:
         stx ArenaIndex      ; 3 31 - save it for Kernal use
         lda ArenaPF0,x      ; 4 35 - reflect and priority for playfield
         and #%00000111      ; 2 37 - get the lower 3 bits for CTRLPF
-        ora #%00110000      ; 2 39 - set ball to display as 8x pixel 
+        ora #%00110000      ; 2 39 - set ball to display as 8x pixel
         sta CTRLPF          ; 3 42
         ldy #ARENA_HEIGHT+1 ; 2 44 - the arena will be 180 scanlines (from 0-89)*2
-    
+
     ; prime ENABL so ball can appear on topmost scanline of Arena
-        ldx #1              ; 2 46 - D1=0, so ball will be off 
+        ldx #1              ; 2 46 - D1=0, so ball will be off
         lda #BOX_HEIGHT-1   ; 2 48 - height of box graphic
         dcp BallDraw        ; 5 53 - Decrement BallDraw and compare with height
         bcs DoEnablPre      ; 2 55 - (3 56) if Carry is Set, then ball is on current scanline
@@ -456,9 +456,9 @@ TimerBar:
 DoEnablPre:                 ;   56 - from bcs DoEnablPre
         inx                 ; 2 58 - D1=1, so ball will be ON
         stx ENABL           ; 3 61
-        
-    ; prime GRP0 so player0 can appear on topmost scanline of the Arena        
-        lda #HUMAN_HEIGHT-1 ; 2 63 - height of player0 graphics, 
+
+    ; prime GRP0 so player0 can appear on topmost scanline of the Arena
+        lda #HUMAN_HEIGHT-1 ; 2 63 - height of player0 graphics,
         dcp Player0Draw     ; 5 68 - Decrement Player0Draw and compare with height
         bcs DoDrawGrp0pre   ; 2 70 - (3 71) if Carry is Set, then player0 is on current scanline
         lda #0              ; 2 72 - otherwise use 0 to turn off player0
@@ -466,20 +466,20 @@ DoEnablPre:                 ;   56 - from bcs DoEnablPre
                             ;        causes the lda (Player0Ptr),y to be skipped
 DoDrawGrp0pre:              ;   71 - from bcs DoDrawGRP0pre
         lda (Player0Ptr),y  ; 5 76/0 - load the shape for player0
-;---------------------------------------        
+;---------------------------------------
         sta GRP0            ; 3  3 - @0-22, update player0 graphics
         dey                 ; 2  5
 
 ArenaLoop:                  ;   17 - (currently 17 from bpl ArenaLoop)
     ; continuation of line 2 of the 2LK
-    ; this precalculates data that's used on line 1 of the 2LK        
+    ; this precalculates data that's used on line 1 of the 2LK
         tya                 ; 2 19 - 2LK loop counter in A for testing
         and #%11            ; 2 21 - test for every 4th time through the loop,
         bne SkipX           ; 2 23 - (3 24) branch if not 4th time
         inc ArenaIndex      ; 5 28 - if 4th time, increase index so new playfield data is used
-SkipX:                      ;   28 - use 28 as it's the longest path to here        
+SkipX:                      ;   28 - use 28 as it's the longest path to here
 
-        ldx #1              ; 2 30 - D1=0, so missile1 will be off 
+        ldx #1              ; 2 30 - D1=0, so missile1 will be off
         lda #BOX_HEIGHT-1   ; 2 32 - height of box graphic
         dcp Missile1Draw    ; 5 37 - Decrement Missile1Draw and compare with height
         bcs DoEnam1         ; 2 39 - (3 40) if Carry is Set, then missile1 is on current scanline
@@ -487,7 +487,7 @@ SkipX:                      ;   28 - use 28 as it's the longest path to here
                             ;        causes the inx to be skipped
 DoEnam1:                    ;   40 - from bcs DoEnam1
         inx                 ; 2 42 - D1=1, so ball will be ON
-    
+
         lda #HUMAN_HEIGHT-1 ; 2 44 - height of the humanoid graphics, subtract 1 due to starting with 0
         dcp Player1Draw     ; 5 49 - Decrement Player1Draw and compare with height
         bcs DoDrawGrp1      ; 2 51 - (3 52) if Carry is Set, then player1 is on current scanline
@@ -508,9 +508,9 @@ DoDrawGrp1:                 ;   52 - from bcs DoDrawGrp1
         sta PF1             ; 3 23 - @71-28 and update it
         lda ArenaPF2,x      ; 4 27 - get current scanline's playfield pattern
         sta PF2             ; 3 30 - @60-39
-        
-    ; precalculate data that's needed for line 2 of the 2LK    
-        ldx #1              ; 2 32 - D1=0, so missile0 will be off 
+
+    ; precalculate data that's needed for line 2 of the 2LK
+        ldx #1              ; 2 32 - D1=0, so missile0 will be off
         lda #BOX_HEIGHT-1   ; 2 34 - height of box graphic
         dcp Missile0Draw    ; 5 39 - Decrement Missile0Draw and compare with height
         bcs DoEnam0         ; 2 41 - (3 42) if Carry is Set, then missile0 is on current scanline
@@ -519,8 +519,8 @@ DoDrawGrp1:                 ;   52 - from bcs DoDrawGrp1
 DoEnam0:                    ;   42 - from bcs DoEnam0
         inx                 ; 2 44 - D1=1, so ball will be ON
         stx Temp            ; 3 47 - save for line 2
-        
-        ldx #1              ; 2 49 - D1=0, so ball will be off 
+
+        ldx #1              ; 2 49 - D1=0, so ball will be off
         lda #BOX_HEIGHT-1   ; 2 51 - height of box graphic
         dcp BallDraw        ; 5 56 - Decrement BallDraw and compare with height
         bcs DoEnabl         ; 2 58 - (3 59) if Carry is Set, then ball is on current scanline
@@ -528,8 +528,8 @@ DoEnam0:                    ;   42 - from bcs DoEnam0
                             ;        causes the inx to be skipped
 DoEnabl:                    ;   59 - from bcs DoEnablPre
         inx                 ; 2 61 - D1=1, so ball will be ON
-    
-        lda #HUMAN_HEIGHT-1 ; 2 63 - height of the box graphics, 
+
+        lda #HUMAN_HEIGHT-1 ; 2 63 - height of the box graphics,
         dcp Player0Draw     ; 5 68 - Decrement Player0Draw and compare with height
         bcs DoDrawGrp0      ; 2 70 - (3 71) if Carry is Set then player0 is on current scanline
         lda #0              ; 2 72 - otherwise use 0 to turn off player0
@@ -554,7 +554,7 @@ DoDrawGrp0:                 ;   71 - from bcs DoDrawGRP0
 ArenaOffset:
         .byte 0         ; Arena 1
         .byte 22        ; Arena 2
-        
+
 ;===============================================================================
 ; Overscan
 ; --------------
@@ -564,17 +564,17 @@ OverScan:
         sta WSYNC       ; Wait for SYNC (halts CPU until end of scanline)
         lda #2          ; LoaD Accumulator with 2 so D1=1
         sta VBLANK      ; STore Accumulator to VBLANK, D1=1 turns image output off
-        
+
     ; set the timer so the total number of scanlines ends up being 262
         lda #35
         sta TIM64T
-        
+
         jsr SFX_UPDATE      ; update sound effects
-        
+
         bit GameState       ; check if the game is active
         bmi TestCollisions  ; if so, process collisions
         jmp OSwait          ; else wait for OS to be over
-        
+
 TestCollisions:
     ; Test left player collisions
         bit CXP0FB      ; N=player0/playfield, V=player0/ball
@@ -593,33 +593,33 @@ notP0PF:
         ldx #4              ; which box was collected
         jsr Collect2ptBox   ; update score and reposition box
         ldy #0              ; which score to update if box collected
-        
-notP0BL:        
+
+notP0BL:
         bit CXM0P       ; V=player0/missile0
         bvc notP0M0     ; if V is off then player0 did not collide with missile0
         ldy #0          ; which score to update
         ldx #2          ; which box was collected
         jsr CollectBox  ; update score and reposition box
-        
+
 notP0M0:
         bit CXM1P       ; N=player0/missile1
         bpl notP0M1     ; if N is off then player0 did not collide with missile1
         ldy #0          ; which score to update
         ldx #3          ; which box was collected
         jsr CollectBox  ; update score and reposition box
-        
+
 notP0M1:
         bit Players     ; test how many players are in this game variation
         bmi RightPlayer ; test Right Player collisions if its a 2 player game
         bit CXPPMM      ; else see if left player collected box drawn by player1
         bpl OSwait      ; player0 did not collide wth player1
         ldy #0          ; which score to update
-        ldx #1          ; which box was collected 
+        ldx #1          ; which box was collected
         jsr CollectBox  ; update score and reposition box
         jmp OSwait      ; 1 player game, so skip Right Player test
-        
-RightPlayer:        
-    ; Test right player collisions  
+
+RightPlayer:
+    ; Test right player collisions
         bit CXP1FB      ; N=player1/playfield, V=player1/ball
         bpl notP1PF     ; if N is off, then player1 did not collide with playfield
         lda SavedX+1    ; recall saved X
@@ -628,36 +628,36 @@ RightPlayer:
         sta ObjectY+1   ; and move player back to it
         ldy #sfxCOLLIDE ; Game Over sound effect
         jsr SFX_TRIGGER
-        
+
 notP1PF:
         bit CXP1FB          ; N=player1/playfield, V=player1/ball
         bvc notP1BL         ; if V is off, then player1 did not collide with ball
         ldy #1              ; which score to update
         ldx #4              ; which box was collected
         jsr Collect2ptBox   ; update score and reposition box
-        
-notP1BL:        
+
+notP1BL:
         bit CXM0P       ; N=player1/missile0
         bpl notP1M0     ; if N is off then player1 did not collide with missile0
         ldy #1          ; which score to update
         ldx #2          ; which box was collected
         jsr CollectBox  ; update score and reposition box
-        
+
 notP1M0:
         bit CXM1P       ; V=player1/missile1
         bvc notP1M1     ; if V is off then player1 did not collide with missile1
         ldy #1          ; which score to update
         ldx #3          ; which box was collected
         jsr CollectBox  ; update score and reposition box
-        
+
 notP1M1:
-    
+
 OSwait:
         sta WSYNC   ; Wait for SYNC (halts CPU until end of scanline)
         lda INTIM   ; Check the Timer
         bne OSwait  ; Branch if its Not Equal to 0
         rts         ; ReTurn from Subroutine
-    
+
 
 ;===============================================================================
 ; UpdateTimer
@@ -665,11 +665,11 @@ OSwait:
 ; udpates timer display
 ;===============================================================================
 UpdateTimer:
-        lda Frame       
+        lda Frame
         and #63
         beq TimerTick   ; tick the timer once every 64 frames
         rts
-        
+
 TimerTick:
         lda TimerPF         ; get TimerPF
         and #%11110000      ; and chop off the lower nybble
@@ -679,7 +679,7 @@ TimerTick:
         ldy #sfxGAMEOVER    ; Game Over sound effect
         jsr SFX_TRIGGER
         rts
-        
+
 DecrementTimer:
         lsr TimerPF+5   ; PF2 right side, reversed bits so shift right
         rol TimerPF+4   ; PF1 right side, normal bits so shift left
@@ -697,10 +697,10 @@ DecrementTimer:
         bne NoTickSfx   ; branch if there's a value in the lower 5 bits
         ldy #sfxPING    ; else do a sound effect
         jsr SFX_TRIGGER
-NoTickSfx:        
+NoTickSfx:
         rts
 
-        
+
 ;===============================================================================
 ; ProcessJoystick
 ; --------------
@@ -717,14 +717,14 @@ NoTickSfx:
 ; NOTE the values are the opposite of what you might expect. If the direction
 ; is held, the bit value will be 0.
 ;
-; Fire buttons are read via INPT4 (left) and INPT5 (right).  They are 
+; Fire buttons are read via INPT4 (left) and INPT5 (right).  They are
 ; not used in Collect.
 ;===============================================================================
 ProcessJoystick:
         lda SWCHA       ; reads joystick positions
-        
+
         ldx #0          ; x=0 for left joystick, x=1 for right
-PJloop:    
+PJloop:
         ldy ObjectX,x   ; save original X location so the player can be
         sty SavedX,x    ;   bounced back upon colliding with the playfield
         ldy ObjectY,x   ; save original Y location so the player can be
@@ -750,7 +750,7 @@ CheckLeft:
         ldy #159        ; else wrap to right edge
 SaveX2: sty ObjectX,x   ; save X
         ldy #8          ; turn on reflect of player, which
-        sty REFP0,x     ; makes humanoid image face left 
+        sty REFP0,x     ; makes humanoid image face left
 
 CheckDown:
         asl                     ; shift A bits left, D is now in the carry bit
@@ -771,17 +771,17 @@ CheckUp:
         bne SaveY2              ; save Y if we're not at the top
         ldy #0                  ; else wrap to bottom
 SaveY2: sty ObjectY,x           ; save Y
-        
-NextJoystick:     
+
+NextJoystick:
         bit Players         ; test number of players by putting D7 into N
         bpl OnePlayer       ; if N is off, it's a 1 player game so abort loop
         inx                 ; increase loop control
         cpx #2              ; check if we've processed both joysticks
         bne PJloop          ; branch if we haven't
-OnePlayer:        
+OnePlayer:
         rts
-        
-        
+
+
 ;===============================================================================
 ; PositionObjects
 ; --------------
@@ -790,31 +790,31 @@ OnePlayer:
 ;===============================================================================
 PositionObjects:
         ldx #4              ; position all objects
-POloop        
+POloop
         lda ObjectX,x       ; get the object's X position
-        jsr PosObject       ; set coarse X position and fine-tune amount 
+        jsr PosObject       ; set coarse X position and fine-tune amount
         dex                 ; DEcrement X
         bpl POloop          ; Branch PLus so we position all objects
         sta WSYNC           ; wait for end of scanline
         sta HMOVE           ; use fine-tune values to set final X positions
-        
-    ; prep left player's Y position for 2LK 
+
+    ; prep left player's Y position for 2LK
         ldx #1              ; preload X for setting VDELPx
         lda ObjectY         ; get the human's Y position
         clc
-        adc #1              ; add 1 to compensate for priming of GRP0        
+        adc #1              ; add 1 to compensate for priming of GRP0
         lsr                 ; divide by 2 for the 2LK position
         sta Temp            ; save for position calculations
         bcs NoDelay0        ; if carry is set we don't need Vertical Delay
         stx VDELP0          ; carry was clear, so set Vertical Delay
-NoDelay0:        
+NoDelay0:
     ; Player0Draw = ARENA_HEIGHT + HUMAN_HEIGHT - Y position + 1
-    ; the + 1 compensates for priming of GRP0    
+    ; the + 1 compensates for priming of GRP0
         lda #(ARENA_HEIGHT + HUMAN_HEIGHT + 1)
         sec
         sbc Temp
         sta Player0Draw
-        
+
     ; Player0Ptr = HumanGfx + HUMAN_HEIGHT - 1 - Y position
         lda #<(HumanGfx + HUMAN_HEIGHT - 1)
         sec
@@ -823,20 +823,20 @@ NoDelay0:
         lda #>(HumanGfx + HUMAN_HEIGHT - 1)
         sbc #0
         sta Player0Ptr+1
-        
+
     ; prep right player's Y position for 2LK
         lda ObjectY+1       ; get the box's Y position
         lsr                 ; divide by 2 for the 2LK position
         sta Temp            ; save for position calculations
         bcs NoDelay1        ; if carry is set we don't need Vertical Delay
         stx VDELP1          ; carry was clear, so set Vertical Delay
-NoDelay1:        
+NoDelay1:
     ; Player1Draw = ARENA_HEIGHT + HUMAN_HEIGHT - Y position + 1
         lda #(ARENA_HEIGHT + HUMAN_HEIGHT)
         sec
         sbc Temp
         sta Player1Draw
-        
+
         lda Variation       ; get the game variation
         and #1              ; and find out if we're 1 or 2 player
         tax
@@ -848,7 +848,7 @@ NoDelay1:
         lda ShapePtrHi,x
         sbc #0
         sta Player1Ptr+1
-        
+
     ; prep missile0's Y position for 2LK
         lda ObjectY+2       ; get the missile's Y position
         lsr                 ; divide by 2 for 2LK
@@ -857,8 +857,8 @@ NoDelay1:
         lda #(ARENA_HEIGHT + BOX_HEIGHT)
         sec
         sbc Temp
-        sta Missile0Draw        
-        
+        sta Missile0Draw
+
     ; prep missile1's Y position for 2LK
         lda ObjectY+3       ; get the missile's Y position
         lsr                 ; divide by 2 for 2LK
@@ -867,31 +867,31 @@ NoDelay1:
         lda #(ARENA_HEIGHT + BOX_HEIGHT)
         sec
         sbc Temp
-        sta Missile1Draw              
-        
-    ; prep ball's Y position for 2LK 
+        sta Missile1Draw
+
+    ; prep ball's Y position for 2LK
         ldx #1              ; preload X for setting VDELBL
         lda ObjectY+4       ; get the balls's Y position
         clc
-        adc #1              ; add 1 to compensate for priming of ball        
+        adc #1              ; add 1 to compensate for priming of ball
         lsr                 ; divide by 2 for the 2LK position
         sta Temp            ; save for position calculations
         bcs NoDelayBL        ; if carry is set we don't need Vertical Delay
         stx VDELBL          ; carry was clear, so set Vertical Delay
-NoDelayBL:        
+NoDelayBL:
     ; BallDraw = ARENA_HEIGHT + BOX_HEIGHT - Y position + 1
-    ; the + 1 compensates for priming of ENABL    
+    ; the + 1 compensates for priming of ENABL
         lda #(ARENA_HEIGHT + BOX_HEIGHT + 1)
         sec
         sbc Temp
-        sta BallDraw        
-        
+        sta BallDraw
+
         rts
-        
+
 ShapePtrLow:
         .byte <(BoxGfx + HUMAN_HEIGHT - 1)
         .byte <(HumanGfx + HUMAN_HEIGHT - 1)
-        
+
 ShapePtrHi:
         .byte >(BoxGfx + HUMAN_HEIGHT - 1)
         .byte >(HumanGfx + HUMAN_HEIGHT - 1)
@@ -921,22 +921,22 @@ SOCgameover:
         ldy #$0f
         sty Temp2       ; set B&W mask
         ldy #9          ; and use the b&w entries in the table (5-9)
-SOCloop:        
+SOCloop:
         lda Colors,y    ; get the color or b&w value
         eor Temp        ; color cycle
         and Temp2       ; B&W mask
         sta COLUP0-1,x  ; and set it
         dey             ; decrease Y
-        dex             ; decrease X 
+        dex             ; decrease X
         bne SOCloop     ; Branch Not Equal to Zero
         lda Colors,y    ; get the Arena color
         eor Temp        ; color cycle
         and Temp2       ; B&W mask
         sta ArenaColor  ; save in RAM for Kernal Usage
-        
+
         rts             ; ReTurn from Subroutine
-        
-Colors:   
+
+Colors:
         .byte $46   ; red        - goes into COLUPF, color for Arena (after Timer is drawn)
         .byte $86   ; blue       - goes into COLUP0, color for player0 and missile0
         .byte $C6   ; green      - goes into COLUP1, color for player1 and missile1
@@ -947,8 +947,8 @@ Colors:
         .byte $06   ; dark grey  - goes into COLUP1, color for player1 and missile1
         .byte $04   ; dark grey  - goes into COLUPF, color for Timer
         .byte $00   ; black      - goes into COLUBK, color for background
-        
-        
+
+
 ;===============================================================================
 ; PrepScoreForDisplay
 ; --------------
@@ -961,7 +961,7 @@ Colors:
 ;       # * 5 = (# * 2 * 2) + #
 ; The value in the upper nybble is already times 16, so we need to divide it.
 ; The 6507 can shift the bits the right, which is the same as divide by 2.
-;       (# / 16) * 5 = (# / 2 / 2) + (# / 2 / 2 / 2 / 2)  
+;       (# / 16) * 5 = (# / 2 / 2) + (# / 2 / 2 / 2 / 2)
 ;===============================================================================
 PrepScoreForDisplay:
         ldx #1          ; use X as the loop counter for PSFDloop
@@ -984,9 +984,9 @@ PSFDloop:
         sta DigitTens,x ; STore A in DigitTens+1(first pass) or DigitTens(second pass)
         dex             ; DEcrement X by 1
         bpl PSFDloop    ; Branch PLus (positive) to PSFDloop
-        rts             ; ReTurn from Subroutine      
+        rts             ; ReTurn from Subroutine
 
-        
+
 ;===============================================================================
 ; ProcessSwitches
 ; --------------
@@ -1006,10 +1006,10 @@ ProcessSwitches:
         lsr             ; D0 is now in C
         bcs NotReset    ; if D0 was on, the RESET switch was not held
         jsr NewGame     ; Prep for new game
-        lda #%10000000  
-        sta GameState   ; set D7 on to signify Game Active  
+        lda #%10000000
+        sta GameState   ; set D7 on to signify Game Active
         bne NotSelect   ; clear SelectDelay
-        
+
 NotReset:
         lsr             ; D1 is now in C
         bcs NotSelect   ; if D1 was on, the SELECT switch was not held
@@ -1031,21 +1031,21 @@ SelectOK:
         tax             ; transfer it to X
         inx             ; and increase it by 1 for the human readable varation 1-4
         stx Score       ; save in Score so it shows on left side
-        ldy #1          ; default to showing 1 player variation 
+        ldy #1          ; default to showing 1 player variation
         lsr             ; D0 of Variation, # of players, now in Carry flag
-        bcc Not2        ; if Carry is clear, then show 1 player 
+        bcc Not2        ; if Carry is clear, then show 1 player
         iny             ; else set Y to 2 to show 2 players
 Not2:
         ror Players     ; put Carry into D7 for BIT testing of # of players
         sty Score+1     ; show the human readable # of players on right side
         rts
-        
+
 NotSelect:
         lda #0          ; clears SelectDelay if SELECT not held
         sta SelectDelay
         rts
-        
-        
+
+
 ;===============================================================================
 ; NewGame
 ; --------------
@@ -1063,15 +1063,15 @@ NewGame:
         sta ObjectY
         sta ObjectY+1
         sta REFP0       ; bit D3 is off, so don't reflect player0
-    ; reset timer        
+    ; reset timer
         lda #%11111111
         sta TimerPF
         sta TimerPF+1
         sta TimerPF+2
         sta TimerPF+3
         sta TimerPF+4
-        sta TimerPF+5   
-        
+        sta TimerPF+5
+
     ; Randomly position the boxes for the new game.  Set X to 1 for a 1 player
     ; game or 2 for a 2 player game so that the appropriate objects will be
     ; randomly placed in the Arena.
@@ -1084,21 +1084,21 @@ IPloop:
         inx                 ; increase X for next object
         cpx #5              ; check if we hit 5
         bne IPloop          ; branch back if we haven't
-  
+
     ; reset scores
         ldx #0
         stx Score
         bit Players         ; check # of players
         bpl BlankRightScore
         stx Score+1
-        rts      
-        
+        rts
+
 BlankRightScore:
         lda #$AA            ; AA defines a "space" character
         sta Score+1
         rts
-        
-        
+
+
 ;===============================================================================
 ; RandomLocation
 ; --------------
@@ -1130,7 +1130,7 @@ RandomLocation:
         adc Temp        ; add in random # from 0-127 for range of 0-142
         adc #5          ; add 5 for range of 5-147
         sta ObjectX,x   ; save the random X position
-        
+
         jsr Random      ; get a random value between 0-255
         and #127        ; limit range to 0-127
         sta Temp        ; save it
@@ -1140,16 +1140,16 @@ RandomLocation:
         adc Temp        ; add in random # from 0-127 for range of 0-142
         adc #26         ; add 26 for range of 26-168
         sta ObjectY,x   ; save the random Y position
-        
+
     ; for alignment test, set to (100, 100)
     ;   lda #100
     ;   sta ObjectX,x
     ;   sta ObjectY,x
-        
+
         cpx #2
         bcc RLdone
         inc ObjectX,x   ; missile and ball objects need their X adjusted
-RLdone:        
+RLdone:
         rts
 
 
@@ -1175,15 +1175,15 @@ CollectBox:
         bcc Not100          ; if the Carry is clear, score did not roll
         sta GameState       ; stop the game (A holds 0)
         lda #$BB            ; B image is !! to show that score rolled
-Not100:        
+Not100:
         sta Score,y         ; and save it
         cld                 ; CLear Decimal flag
         jsr RandomLocation  ; move box to new location
         ldy #sfxCOLLECT     ; select sound effect
-        jsr SFX_TRIGGER     ; and trigger it        
+        jsr SFX_TRIGGER     ; and trigger it
         rts
 
-        
+
 ;===============================================================================
 ; Random
 ; --------------
@@ -1208,7 +1208,7 @@ Not100:
 ; Rand8.  Doing just that and the code works as an 8 bit LFSR.  If you have
 ; some extra RAM, which isn't always feasible on the Atari, then allocating a
 ; second RAM variable called Rand16 will turn this into a 16 bit LFSR.
-;=============================================================================== 
+;===============================================================================
 Random:
         lda Rand8
         lsr
@@ -1216,14 +1216,14 @@ Random:
         rol Rand16      ; this command is only used if Rand16 has been defined
  endif
         bcc noeor
-        eor #$B4 
-noeor 
+        eor #$B4
+noeor
         sta Rand8
  ifconst Rand16
         eor Rand16      ; this command is only used if Rand16 has been defined
  endif
-        rts   
-        
+        rts
+
 ;===============================================================================
 ; Sound Effects
 ; -------------
@@ -1246,7 +1246,7 @@ noeor
 ;   OverScan:
 ;           ... ; turn off video and set timer, then call
 ;           jsr SFX_UPDATE
-;           ... 
+;           ...
 ;
 ; To trigger a sound effect, load Y with the effect and call SFX_TRIGGER
 ;
@@ -1257,17 +1257,17 @@ noeor
 ;           jsr SFX_OFF
 ;===============================================================================
         include sfx.asm
-        
+
 ;===============================================================================
 ; free space check before DigitGfx
 ;===============================================================================
-        
+
  if (* & $FF)
     echo "------", [(>.+1)*256 - .]d, "bytes free before DigitGfx"
     align 256
-  endif    
-    
-  
+  endif
+
+
 ;===============================================================================
 ; Digit Graphics
 ;===============================================================================
@@ -1278,73 +1278,73 @@ DigitGfx:
         .byte %00000101
         .byte %00000101
         .byte %00000111
-        
+
         .byte %00010001
         .byte %00010001
         .byte %00010001
-        .byte %00010001        
         .byte %00010001
-        
+        .byte %00010001
+
         .byte %01110111
         .byte %00010001
         .byte %01110111
         .byte %01000100
         .byte %01110111
-        
+
         .byte %01110111
         .byte %00010001
         .byte %00110011
         .byte %00010001
         .byte %01110111
-        
+
         .byte %01010101
         .byte %01010101
         .byte %01110111
         .byte %00010001
         .byte %00010001
-        
+
         .byte %01110111
         .byte %01000100
         .byte %01110111
         .byte %00010001
         .byte %01110111
-           
+
         .byte %01110111
         .byte %01000100
         .byte %01110111
         .byte %01010101
         .byte %01110111
-        
+
         .byte %01110111
         .byte %00010001
         .byte %00010001
         .byte %00010001
         .byte %00010001
-        
+
         .byte %01110111
         .byte %01010101
         .byte %01110111
         .byte %01010101
         .byte %01110111
-        
+
         .byte %01110111
         .byte %01010101
         .byte %01110111
         .byte %00010001
         .byte %01110111
-        
+
         .byte %00000000     ; used to blank out right score in 1 player games
         .byte %00000000
         .byte %00000000
         .byte %00000000
         .byte %00000000
-        
+
         .byte %01010101     ; used if a player collected 100 boxes
         .byte %01010101
         .byte %01010101
         .byte %00000000
         .byte %01010101
-        
+
 HumanGfx:
         .byte %00011100
         .byte %00011000
@@ -1356,7 +1356,7 @@ HumanGfx:
         .byte %00000000
         .byte %00011000
         .byte %00011000
-HUMAN_HEIGHT = * - HumanGfx      
+HUMAN_HEIGHT = * - HumanGfx
 
 BoxGfx:
         .byte %00000000
@@ -1369,7 +1369,7 @@ BoxGfx:
         .byte %10000001
         .byte %10000001
         .byte %11111111
-        
+
 ArenaPF0:   ; PF0 is drawn in reverse order, and only the upper nybble
         .byte %11110001 ; Arena 1   lower nybble control playfield, set for REFLECT
         .byte %00010000
@@ -1392,8 +1392,8 @@ ArenaPF0:   ; PF0 is drawn in reverse order, and only the upper nybble
         .byte %00010000
         .byte %00010000
         .byte %00010000
-        .byte %11110000  
-        
+        .byte %11110000
+
         .byte %11110100 ; Arena 2 - lower nybble controls playfield, set for PRIORITY
         .byte %00010000
         .byte %00010000
@@ -1415,10 +1415,10 @@ ArenaPF0:   ; PF0 is drawn in reverse order, and only the upper nybble
         .byte %00000000
         .byte %00000000
         .byte %00000000
-        .byte %11110000       
-        
+        .byte %11110000
 
-ArenaPF1:   ; PF1 is drawn in expected order       
+
+ArenaPF1:   ; PF1 is drawn in expected order
         .byte %11111111 ; Arena 1
         .byte %00000000
         .byte %00000000
@@ -1440,8 +1440,8 @@ ArenaPF1:   ; PF1 is drawn in expected order
         .byte %00000000
         .byte %00000000
         .byte %00000000
-        .byte %11111111     
-        
+        .byte %11111111
+
         .byte %00000000 ; Arena 2
         .byte %00000000
         .byte %00000000
@@ -1463,9 +1463,9 @@ ArenaPF1:   ; PF1 is drawn in expected order
         .byte %00111000
         .byte %00000000
         .byte %00000000
-        .byte %00000000   
-        
-        
+        .byte %00000000
+
+
 ArenaPF2:   ; PF2 is drawn in reverse order
         .byte %11111111 ; Arena 1
         .byte %10000000
@@ -1488,8 +1488,8 @@ ArenaPF2:   ; PF2 is drawn in reverse order
         .byte %00000000
         .byte %00000000
         .byte %10000000
-        .byte %11111111       
-        
+        .byte %11111111
+
         .byte %11111111 ; Arena 2
         .byte %00000000
         .byte %00000100
@@ -1511,22 +1511,22 @@ ArenaPF2:   ; PF2 is drawn in reverse order
         .byte %00000100
         .byte %00000100
         .byte %00000000
-        .byte %11111111       
+        .byte %11111111
 
-        
+
 ;===============================================================================
 ; free space check before End of Cartridge
 ;===============================================================================
-        
+
  if (* & $FF)
     echo "------", [$FFFA - *]d, "bytes free before End of Cartridge"
     align 256
-  endif    
-        
+  endif
+
 ;===============================================================================
 ; Define End of Cartridge
 ;===============================================================================
-        ORG $FFFA        ; set address to 6507 Interrupt Vectors 
+        ORG $FFFA        ; set address to 6507 Interrupt Vectors
         .WORD InitSystem ; NMI
         .WORD InitSystem ; RESET
         .WORD InitSystem ; IRQ

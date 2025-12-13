@@ -21,9 +21,11 @@ namespace DecentForms
     private int           _CachedMaxItemWidth = -1;
 
     private bool          _UpdateLocked = false;
-    private bool          _RedrawRequired= false;
+    private bool          _RedrawRequired = false;
+    private bool          _HasCheckBoxes = false;
 
     public event EventHandler       SelectedIndexChanged;
+    public event EventHandler       CheckChanged;
 
 
 
@@ -89,6 +91,21 @@ namespace DecentForms
         UpdateScrollbarState();
         Invalidate(); 
       } 
+    }
+
+
+
+    public bool HasCheckBoxes
+    {
+      get
+      {
+        return _HasCheckBoxes;
+      }
+      set
+      {
+        _HasCheckBoxes = value;
+        Invalidate();
+      }
     }
 
 
@@ -467,7 +484,14 @@ namespace DecentForms
           {
             SelectedIndex = _MouseOverItem;
           }
-          Capture     = true;
+          if ( ( SelectedIndex != -1 )
+          &&   ( GetItemCheckRect( SelectedIndex ).Contains( Event.MouseX, Event.MouseY ) ) )
+          {
+            Items[SelectedIndex].Checked = !Items[SelectedIndex].Checked;
+            CheckChanged?.Invoke( this );
+            Invalidate( GetItemRect( SelectedIndex ) );
+          }
+          Capture = true;
           break;
         case ControlEvent.EventType.MOUSE_UP:
           Capture = false;
@@ -560,6 +584,16 @@ namespace DecentForms
               {
                 SelectedIndex = Items.Count - 1;
               }
+            }
+          }
+          else if ( Event.Key == Keys.Space )
+          {
+            if ( ( HasCheckBoxes )
+            &&   ( SelectedIndex != -1 ) )
+            {
+              Items[SelectedIndex].Checked = !Items[SelectedIndex].Checked;
+              CheckChanged?.Invoke( this );
+              Invalidate( GetItemRect( SelectedIndex ) );
             }
           }
           break;
@@ -666,10 +700,23 @@ namespace DecentForms
       if ( ( ItemIndex < FirstVisibleItemIndex )
       ||   ( ItemIndex >= Items.Count ) )
       {
-        return new Rectangle();
+        return Rectangle.Empty;
       }
       // TODO - check, multi column
       return new Rectangle( 0, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight, UsableItemWidth, ItemHeight );
+    }
+
+
+
+    internal Rectangle GetItemCheckRect( int ItemIndex )
+    {
+      if ( ( !HasCheckBoxes )
+      ||   ( ItemIndex < FirstVisibleItemIndex )
+      ||   ( ItemIndex >= Items.Count ) )
+      {
+        return Rectangle.Empty;
+      }
+      return new Rectangle( 2 - _ScrollBarH.Value, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight + 2, ItemHeight - 4, ItemHeight - 4 );
     }
 
 

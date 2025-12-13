@@ -222,45 +222,13 @@ namespace RetroDevStudio.Dialogs
         if ( edit != null )
         {
           bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
-          int   searchLength = 0;
-          if ( hadLastFind )
-          {
-            searchLength = LastSearchFound.Length;
-          }
+          int   oldLength = LastSearchFound.Length;
           LastSearchFound.Clear();
           LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
           LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
           if ( hadLastFind )
           {
-            //++LastSearchFound.StartPosition;
-            LastSearchFound.StartPosition += searchLength;  
-            LastSearchFound.Length = searchLength;
-          }
-        }
-      }
-      FindNext( DirectlyFromSourceFile, comboSearchText.Text, true );
-    */
-      // continue searching from cursor
-      var docInfo = DirectlyFromSourceFile.DocumentInfo;
-      if ( docInfo != null )
-      {
-        var edit = EditFromDocumentEx( docInfo );
-
-        if ( edit != null )
-        {
-          bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
-          int   searchLength = 0;
-          if ( hadLastFind )
-          {
-            searchLength = LastSearchFound.Length;
-          }
-          LastSearchFound.Clear();
-          LastSearchFound.FoundInDocument = docInfo;
-          LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
-          if ( hadLastFind )
-          {
             ++LastSearchFound.StartPosition;
-            LastSearchFound.Length = searchLength;
           }
         }
       }
@@ -1438,6 +1406,7 @@ namespace RetroDevStudio.Dialogs
       {
         numLines = 1;
       }
+      LastFound.Length = NewLocation.Length;
 
       // try to find zone
       if ( ( NewLocation.FoundInDocument != null )
@@ -1876,6 +1845,7 @@ namespace RetroDevStudio.Dialogs
                                                         checkReplaceIgnoreCase.Checked,
                                                         out occurrences );
 
+          int oldZoom = edit.Zoom;
           edit.SelectedText = replacedText;
 
           // restore old selection

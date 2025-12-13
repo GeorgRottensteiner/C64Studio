@@ -1,0 +1,6 @@
+<Sample Name="Penultimate Fantasy"
+  Machine="C64"
+  ShortDescription="A BASIC game"
+  Tags="BASIC,C64,Feature"
+  Desc="A medium sized BASIC game in the gist of Final Fantasy. Uses a post build event to combine the new build into a disk image and starting the emulator with it. This was an entry for the Forum64 BASIC game competition from 2010.">
+</Sample>

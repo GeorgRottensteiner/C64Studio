@@ -710,6 +710,45 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestLabelConcattenationInMacro()
+    {
+      string      source = @"* = $2000
+
+                    if_level = 0
+
+                    !macro IF var, condition, type, val {
+
+                      if_level = if_level + 1
+
+                      !set if_condition##if_level = condition
+                      !set test##if_level = 17
+
+                      !warn ""if_condition##if_level>>"", if_condition##if_level
+                      !warn ""test##if_level>>"", test##if_level
+
+          }
+
+          +IF gnu , 2 , hurz , value
+          +IF gnu , 3 , hurz , value";
+
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      Assert.AreEqual( "0020", assembly.ToString() );
+
+      Assert.AreEqual( 2, info.Labels["if_condition1"].AddressOrValue );
+      Assert.AreEqual( 17, info.Labels["test1"].AddressOrValue );
+      Assert.AreEqual( 3, info.Labels["if_condition2"].AddressOrValue );
+      Assert.AreEqual( 17, info.Labels["test2"].AddressOrValue );
+
+      Assert.AreEqual( 4, info.Messages.Count );
+      Assert.AreEqual( "if_condition##if_level>>2/$2", info.Messages.First().Value.Message );
+      Assert.AreEqual( "test##if_level>>17/$11", info.Messages.Skip( 1 ).First().Value.Message );
+      Assert.AreEqual( "if_condition##if_level>>3/$3", info.Messages.Skip( 2 ).First().Value.Message );
+      Assert.AreEqual( "test##if_level>>17/$11", info.Messages.Skip( 3 ).First().Value.Message );
+    }
+
+
+
+    [TestMethod]
     public void TestLocalLabelInLoop()
     {
       string      source = @"!for j = 0 to 5

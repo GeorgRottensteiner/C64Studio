@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #9/14"
+  Machine="Atari 2600"
+  ShortDescription="Game Variations"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Added variations of the game. Pressing select toggles through several modes, currently different player #2 sprite and a second maze.">
+</Sample>

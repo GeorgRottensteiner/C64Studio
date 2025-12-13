@@ -676,6 +676,270 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroWithDuplicateArgNames()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v1 {
+                                !byte v1                  
+                              }
+
+                                +test 64, 255";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      foreach ( var entry in asmFileInfo.Messages.Values )
+      {
+        code = entry.Code;
+        break;
+      }
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( 0, parser.Warnings );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, asmFileInfo.Messages.Values[0].Code );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroLessThanNeededArgs()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                              }
+
+                              main
+                                +test 64 ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002040", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroLessThanNeededArgsIfDefined()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                              !ifdef v2 {
+                                !byte v2                    
+                              }
+                              }
+
+                              main
+                                +test 64 ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002040", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroLessThanNeededArgsIfDefUsedBeforeDefinition()
+    {
+      // gnu is defined after the macro call, so the ifdef does not count
+      // !ifdefparam would work
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                              !ifdef v2 {
+                                jmp v2                    
+                              }
+                              }
+
+                                +test 64, gnu 
+                                gnu";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002040", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroLessThanNeededArgsIfDefArgumentDefined()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                              !ifdefparam v2 {
+                                !byte v2                    
+                              }
+                              }
+
+                              main
+                                +test 64 ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002040", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestIfDefParamOutsideMacro()
+    {
+      string      source = @"* =$2000
+                              !ifdefparam v2 {
+                                !byte v2                    
+                              }";
+
+      var parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1301_PSEUDO_OPERATION, asmFileInfo.Messages.Values[0].Code );
+    }
+
+
+
+    [TestMethod]
+    public void TestIfDefParamWithElse()
+    {
+      string      source = @"* = $2000
+                              !macro testmacro v1,v2 {
+                                !ifdefparam v2 {
+                                  !warn ""v2 DEFINED""
+                                  !byte 0
+                                }
+                                !ifndefparam v2 {
+                                  !warn ""v2 NOT DEFINED""
+                                  !byte 1
+                                }
+                              }
+
+                              !macro testmacromitelse v1,v2 {
+                                !ifdefparam v2 {
+                                  !warn ""v2 DEFINED""
+                                  !byte 2
+                                } else {
+                                  !warn ""v2 NOT DEFINED""
+                                  !byte 3
+                                }
+                              }
+
+                              +testmacro b0
+                              +testmacro b0 , w0
+
+                              +testmacromitelse b0
+                              +testmacromitelse b0, w0";
+
+      var assembly = TestAssemble( source, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+
+      Assert.AreEqual( "002001000302", assembly.ToString() );
+
+      Assert.AreEqual( 4, asmFileInfo.Messages.Count );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[0].Code );
+      Assert.AreEqual( "v2 NOT DEFINED", asmFileInfo.Messages.Values[0].Message );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[1].Code );
+      Assert.AreEqual( "v2 DEFINED", asmFileInfo.Messages.Values[1].Message );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[2].Code );
+      Assert.AreEqual( "v2 NOT DEFINED", asmFileInfo.Messages.Values[2].Message );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0005_USER_WARNING, asmFileInfo.Messages.Values[3].Code );
+      Assert.AreEqual( "v2 DEFINED", asmFileInfo.Messages.Values[3].Message );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroLessThanNeededArgsAccessingUnprovidedArg()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                                !byte v1
+                                !byte v2
+                              }
+
+                              main
+                                +test 64 ";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      foreach ( var entry in asmFileInfo.Messages.Values )
+      {
+        code = entry.Code;
+        break;
+      }
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( 1, parser.Warnings );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, asmFileInfo.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, asmFileInfo.Messages.Values[1].Code );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroMoreThanNeededArgs()
+    {
+      string      source = @"* =$2000
+                            !MACRO test v1, v2 {
+                              }
+
+                              main
+                                +test 64, 65, 66 ";
+
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      foreach ( var entry in asmFileInfo.Messages.Values )
+      {
+        code = entry.Code;
+        break;
+      }
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( 1, parser.Warnings );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, asmFileInfo.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, asmFileInfo.Messages.Values[1].Code );
+    }
+
+
+
+    [TestMethod]
     public void TestMacroWithMultiPartParameters()
     {
       string      source = @"    * = $c000

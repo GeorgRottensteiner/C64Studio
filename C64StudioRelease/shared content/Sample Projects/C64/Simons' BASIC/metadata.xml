@@ -1,0 +1,6 @@
+<Sample Name="Simons' BASIC"
+  Machine="C64"
+  ShortDescription="Displays a hires screen"
+  Tags="BASIC,C64,Simons,Feature"
+  Desc="Showcases the usage of Simons' BASIC. Using the Simons' BASIC dialect; displays a simple hires screen with text.">
+</Sample>

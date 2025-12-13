@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #14/14"
+  Machine="Atari 2600"
+  ShortDescription="Animation"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Adds animation to the player. The player now runs around with running frames or stands still.">
+</Sample>

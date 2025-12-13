@@ -1,0 +1,6 @@
+<Sample Name="Collect Game #11/14"
+  Machine="Atari 2600"
+  ShortDescription="Add the Ball Object"
+  Tags="Assembly,Atari 2600,Tutorial"
+  Desc="Adds the ball object as secondary box for the game. Both box and filled box can be collected for points.">
+</Sample>

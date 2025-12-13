@@ -87,7 +87,7 @@ namespace RetroDevStudio
       bool  error = false;
 
       RunProcess = new System.Diagnostics.Process();
-      RunProcess.StartInfo.FileName = toolRun.Filename;
+      RunProcess.StartInfo.FileName = SysWrapper.MapPath( toolRun.Filename );
       RunProcess.StartInfo.WorkingDirectory = Core.MainForm.FillParameters( toolRun.WorkPath, Document, true, out error );
       RunProcess.EnableRaisingEvents = true;
 
@@ -97,6 +97,7 @@ namespace RetroDevStudio
       {
         RunProcess.StartInfo.WorkingDirectory = RunProcess.StartInfo.WorkingDirectory.Substring( 1, RunProcess.StartInfo.WorkingDirectory.Length - 2 );
       }
+      RunProcess.StartInfo.WorkingDirectory = SysWrapper.MapPath( RunProcess.StartInfo.WorkingDirectory );
 
       RunProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( ExternalProcessOutputReceived );
       RunProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( ExternalProcessOutputReceived );
@@ -177,34 +178,53 @@ namespace RetroDevStudio
         args = Command.Substring( spacePos + 1 ).Trim();
       }
 
-      fullCommand = "cmd.exe";
+      string finalCommand = "";
 
-      bool error = false;
-      bool errorAtArgs = false;
-
-      string command = Core.MainForm.FillParameters( Command, CommandDocument, false, out error );
-      if ( error )
+      if ( SysWrapper.s_IsRunningUnderWINE )
       {
-        return false;
+        // under WINE we need to launch via cmd.exe to have proper path resolution
+        finalCommand = SysWrapper.MapPath( Core.MainForm.FillParameters( Command, CommandDocument, false, out bool errorArgs ) );
+        if ( errorArgs )
+        {
+          return false;
+        }
+        args = Core.MainForm.FillParameters( args, CommandDocument, false, out bool errorAtArgs );
+        if ( errorAtArgs )
+        {
+          return false;
+        }
       }
-      args = "/C \"" + command + "\"";
-      args = Core.MainForm.FillParameters( args, CommandDocument, false, out errorAtArgs );
-      if ( ( error )
-      ||   ( errorAtArgs ) )
+      else
       {
-        return false;
+        fullCommand = "cmd.exe";
+
+        bool errorArgs = false;
+        bool errorAtArgs = false;
+
+        finalCommand = Core.MainForm.FillParameters( Command, CommandDocument, false, out errorArgs );
+        if ( errorArgs )
+        {
+          return false;
+        }
+        args = "/C \"" + finalCommand + "\"";
+        args = Core.MainForm.FillParameters( args, CommandDocument, false, out errorAtArgs );
+        if ( errorAtArgs )
+        {
+          return false;
+        }
       }
 
-      Core.AddToOutput( command + System.Environment.NewLine );
+
+      Core.AddToOutput( finalCommand + System.Environment.NewLine );
 
       m_ExternalProcess = new System.Diagnostics.Process();
-      m_ExternalProcess.StartInfo.FileName = fullCommand;
-      m_ExternalProcess.StartInfo.WorkingDirectory = Core.MainForm.FillParameters( "$(BuildTargetPath)", CommandDocument, false, out error );
-
+      m_ExternalProcess.StartInfo.FileName          = fullCommand;
+      m_ExternalProcess.StartInfo.WorkingDirectory  = SysWrapper.MapPath( Core.MainForm.FillParameters( "$(BuildTargetPath)", CommandDocument, false, out bool error ) );
       if ( error )
       {
         return false;
       }
+
       if ( !System.IO.Directory.Exists( m_ExternalProcess.StartInfo.WorkingDirectory + "/" ) )
       {
         Core.AddToOutput( "The determined working directory \"" + m_ExternalProcess.StartInfo.WorkingDirectory + "\" does not exist" + System.Environment.NewLine );
@@ -246,10 +266,10 @@ namespace RetroDevStudio
       Application.DoEvents();
       m_ExternalProcess.WaitForExit();
 
-      bool success = (m_ExternalProcess.ExitCode == 0);
+      bool success = ( m_ExternalProcess.ExitCode == 0 );
       if ( !success )
       {
-        Core.AddToOutput( "External Command " + command + " exited with result code " + m_ExternalProcess.ExitCode.ToString() + System.Environment.NewLine );
+        Core.AddToOutput( "External Command " + finalCommand + " exited with result code " + m_ExternalProcess.ExitCode.ToString() + System.Environment.NewLine );
       }
       m_ExternalProcess.Close();
       return success;

@@ -167,10 +167,19 @@ namespace RetroDevStudio.Parser
             return ParseLineResult.ERROR_ABORT;
           }
           int lineIndexInMacro = -1;
+          ++_ParseContext.DoNotAddCollapseTokens;
           string[] replacementLines = RelabelLocalLabelsForMacro( Lines, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
+          --_ParseContext.DoNotAddCollapseTokens;
           if ( replacementLines == null )
           {
-            AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
+            if ( !string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
+            {
+              AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, m_LastErrorInfo.Message + " at position " + m_LastErrorInfo.Pos );
+            }
+            else
+            {
+              AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
+            }
           }
           else
           {
@@ -237,9 +246,19 @@ namespace RetroDevStudio.Parser
       Macro = null;
       if ( m_AssemblerSettings.MacrosCanBeOverloaded )
       {
-        //if ( macroFunctions.Keys.Any( k => ( k.first == Key.first ) && ( k.second == Key.second ) ) )
         if ( !macroFunctions.ContainsKey( Key ) )
         {
+          if ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+          {
+            // try to find a macro with less parameters that has variable arguments
+            var potentialMacros = macroFunctions.Where( mf => ( mf.Key.first == Key.first ) && ( mf.Key.second > Key.second ) );
+            if ( !potentialMacros.Any() )
+            {
+              return false;
+            }
+            Macro = potentialMacros.OrderBy( pm => pm.Key.second ).First().Value;
+            return true;
+          }
           return false;
         }
         Macro = macroFunctions[Key];

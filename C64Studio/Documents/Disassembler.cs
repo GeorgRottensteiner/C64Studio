@@ -1,4 +1,5 @@
 ﻿using FastColoredTextBoxNS;
+using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Parser;
 using System;
@@ -51,6 +52,9 @@ namespace RetroDevStudio.Documents
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";(?=(?:[^""]*""[^""]*"")*[^""]*$).*" );
 
       InitializeComponent();
+
+      editDisassembly.SyntaxHighlighter = new ASMSyntaxHighlighter();
+
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
@@ -137,7 +141,19 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void SetHexData( GR.Memory.ByteBuffer Data )
+    public void SetData( GR.Memory.ByteBuffer data )
+    {
+      m_Disassembler.SetData( data );
+      m_DisassemblyProject.Data = data;
+
+      SetHexData( data );
+
+      UpdateDisassembly();
+    }
+
+
+
+    private void SetHexData( GR.Memory.ByteBuffer Data )
     {
       hexView.ByteProvider = new Be.Windows.Forms.DynamicByteProvider( Data.Data() );
       hexView.ByteProvider.Changed += new EventHandler( ByteProvider_Changed );
@@ -337,7 +353,8 @@ namespace RetroDevStudio.Documents
       { 
         AddLineAddresses  = checkShowLineAddresses.Checked, 
         AddAssembledBytes = checkShowHexData.Checked,
-        StopAtReturns     = checkStopAtReturns.Checked
+        StopAtReturns     = checkStopAtReturns.Checked,
+        OnlyAddUsedLabels = checkOnlyAddUsedLabels.Checked
       };
 
       if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, 
@@ -1135,6 +1152,12 @@ namespace RetroDevStudio.Documents
       UpdateDisassembly();
     }
 
+
+
+    private void checkOnlyAddUsedLabels_CheckedChanged( object sender, EventArgs e )
+    {
+      UpdateDisassembly();
+    }
 
 
 
