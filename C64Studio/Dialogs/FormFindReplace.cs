@@ -214,21 +214,26 @@ namespace RetroDevStudio.Dialogs
 
     public void FindNext( BaseDocument DirectlyFromSourceFile )
     {
-      /*
-      if ( Core.MainForm.ActiveDocumentInfo != null )
+      var docInfo = DirectlyFromSourceFile.DocumentInfo;
+      if ( docInfo != null )
       {
-        var edit = EditFromDocumentEx( Core.MainForm.ActiveDocumentInfo );
+        var edit = EditFromDocumentEx( docInfo );
 
         if ( edit != null )
         {
           bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
-          int   oldLength = LastSearchFound.Length;
+          int   searchLength = 0;
+          if ( hadLastFind )
+          {
+            searchLength = LastSearchFound.Length;
+          }
           LastSearchFound.Clear();
-          LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
+          LastSearchFound.FoundInDocument = docInfo;
           LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
           if ( hadLastFind )
           {
             ++LastSearchFound.StartPosition;
+            LastSearchFound.Length = searchLength;
           }
         }
       }

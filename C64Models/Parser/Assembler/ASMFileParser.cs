@@ -10794,6 +10794,8 @@ namespace RetroDevStudio.Parser
 
           string  formatString = "D" + numLineDigits.ToString();
 
+          bool    hideInPreprocessedOutput = false;
+
           for ( int i = 0; i < Lines.Length; ++i )
           {
             if ( FileInfo.LineInfo.ContainsKey( i ) )
@@ -10801,6 +10803,7 @@ namespace RetroDevStudio.Parser
               var     info = FileInfo.LineInfo[i];
               if ( info != null )
               {
+                hideInPreprocessedOutput = info.HideInPreprocessedOutput;
                 if ( info.HideInPreprocessedOutput )
                 {
                   continue;
@@ -10837,7 +10840,6 @@ namespace RetroDevStudio.Parser
                   {
                     writer.Write( ' ' );
                   }
-                  //writer.Write( info.LineData.ToString() );
                 }
                 else
                 {
@@ -10846,7 +10848,7 @@ namespace RetroDevStudio.Parser
                 writer.Write( "  " );
                 writer.WriteLine( Lines[i].TrimStart() );
               }
-              else
+              else if ( !hideInPreprocessedOutput )
               {
                 writer.Write( i.ToString( formatString ) );
                 writer.Write( "  " );
@@ -10855,7 +10857,7 @@ namespace RetroDevStudio.Parser
                 writer.WriteLine( Lines[i].TrimStart() );
               }
             }
-            else
+            else if ( !hideInPreprocessedOutput )
             {
               writer.Write( i.ToString( formatString ) );
               writer.Write( "  " );
