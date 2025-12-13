@@ -9956,7 +9956,8 @@ namespace RetroDevStudio.Parser
               return null;
             }
             var removedScopeType = activeScopes.Pop();
-            if ( removedScopeType == 0 )
+            if ( ( removedScopeType == 0 )
+            &&   ( !activeScopes.Contains( 2 ) ) )
             {
               replacementLines[replacementLineIndex] = functionInfo.Content[replacementLineIndex];
             }
