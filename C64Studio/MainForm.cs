@@ -667,9 +667,9 @@ namespace RetroDevStudio
 
         try
         {
-          if ( StudioCore.Settings.BASICKeyMap.DefaultKeymaps.ContainsKey( (uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID ) )
+          if ( StudioCore.Settings.BASICKeyMap.DefaultKeymaps.ContainsKey( (byte)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID ) )
           {
-            StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[(uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID];
+            StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[(byte)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID];
           }
           else
           {

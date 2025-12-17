@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 
 namespace RetroDevStudio
 {
@@ -93,8 +95,8 @@ namespace RetroDevStudio
       AddKeymapEntry( Types.PhysicalKey.KEY_CURSOR_UP_DOWN, 7, System.Windows.Forms.Keys.Down );
       AddKeymapEntry( Types.PhysicalKey.KEY_CURSOR_LEFT_RIGHT, 7, System.Windows.Forms.Keys.Right );
 
-      //AddKeymapEntry( Types.KeyboardKey.KEY_CURSOR_UP_DOWN, 7, System.Windows.Forms.Keys.Up, (char)0xeed1, 145, -1, 0, -1, 0 );
-      //AddKeymapEntry( Types.KeyboardKey.KEY_CURSOR_LEFT_RIGHT, 7, System.Windows.Forms.Keys.Left, (char)0xeedd, 157, -1, 0, -1, 0 );
+      AddKeymapEntry( Types.PhysicalKey.KEY_SIM_CURSOR_LEFT, 7, System.Windows.Forms.Keys.Left );
+      AddKeymapEntry( Types.PhysicalKey.KEY_SIM_CURSOR_UP, 7, System.Windows.Forms.Keys.Up );
 
       AddKeymapEntry( Types.PhysicalKey.KEY_FLASH, 7, System.Windows.Forms.Keys.OemBackslash );
 
@@ -166,6 +168,11 @@ namespace RetroDevStudio
       AddKeymapEntry( Types.PhysicalKey.KEY_F3, 9, System.Windows.Forms.Keys.F3 );
       AddKeymapEntry( Types.PhysicalKey.KEY_F5, 9, System.Windows.Forms.Keys.F5 );
       AddKeymapEntry( Types.PhysicalKey.KEY_F7, 9, System.Windows.Forms.Keys.F7 );
+
+      AddKeymapEntry( Types.PhysicalKey.KEY_CURSOR_UP_DOWN, 9, System.Windows.Forms.Keys.Down );
+      AddKeymapEntry( Types.PhysicalKey.KEY_CURSOR_LEFT_RIGHT, 9, System.Windows.Forms.Keys.Right );
+      AddKeymapEntry( Types.PhysicalKey.KEY_SIM_CURSOR_LEFT, 9, System.Windows.Forms.Keys.Left );
+      AddKeymapEntry( Types.PhysicalKey.KEY_SIM_CURSOR_UP, 9, System.Windows.Forms.Keys.Up );
 
       AddKeymapEntry( Types.PhysicalKey.KEY_FLASH, 9, System.Windows.Forms.Keys.OemBackslash );
     }
