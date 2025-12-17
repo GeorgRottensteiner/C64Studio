@@ -1125,7 +1125,9 @@ namespace RetroDevStudio.Documents
     {
       if ( Element != null )
       {
-        foreach ( var childNode in Element.Node.Nodes )
+        var nodesToRemove = new List<DecentForms.TreeView.TreeNode>();
+        nodesToRemove.AddRange( Element.Node.Nodes );
+        foreach ( var childNode in nodesToRemove )
         {
           ProjectElement childElement = ElementFromNode( childNode );
           RemoveAndDeleteElement( childElement );

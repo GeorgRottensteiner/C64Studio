@@ -1175,6 +1175,7 @@ namespace RetroDevStudio
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_F7, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 140 + 64, true, 140, true, (char)0xeecc, true, "F8" ).Replacements.Add( "F8" );   // TODO F8
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_RETURN, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 141 + 64, true, 141, true, (char)0xeecd, -1, 0, true, "SHIFT RETURN", "SH RET" ).Replacements.AddRange( new string[] { "SHIFT-RETURN", "SRET" } );   // TODO Shift-Return
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 206,      true, 0,   false, (char)0xee4e, true, "SHIFT N" ).Replacements.Add( "SHIFT-N" );   // Shift-N
+      AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 142 + 64, true, 142, true, (char)0xeece, true, "UPPERCASE" ).Replacements.Add( "SWUC" );
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 14, true, 142, true, (char)0xee8e, -1, 0, true, "LOWERCASE", "LOWCASE" ).Replacements.AddRange( new string[] { "CTRL-N", "SWLC" } );
 

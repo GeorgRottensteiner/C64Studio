@@ -4149,11 +4149,12 @@ namespace RetroDevStudio.Parser.BASIC
       //  zum Abschluss ist der Pointer 00 00
 
       int     dataPos = 0;
+      int     currentDataAddress = startAddress;
 
       while ( dataPos < Data.Length )
       {
         // pointer to next line
-        var extractresult = ExtractLine( Data, ref dataPos, machineType, out var lineData, out int lineNumber );
+        var extractresult = ExtractLine( Data, ref dataPos, ref currentDataAddress, machineType, out var lineData, out int lineNumber );
         if ( extractresult == ExtractLineResult.ERROR )
         {
           return false;
@@ -4495,7 +4496,7 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private ExtractLineResult ExtractLine( ByteBuffer data, ref int dataPos, MachineType machineType, out ByteBuffer lineData, out int lineNumber )
+    private ExtractLineResult ExtractLine( ByteBuffer data, ref int dataPos, ref int addressAtPos, MachineType machineType, out ByteBuffer lineData, out int lineNumber )
     {
       lineData    = null;
       lineNumber  = -1;
@@ -4538,6 +4539,7 @@ namespace RetroDevStudio.Parser.BASIC
               return ExtractLineResult.ERROR;
             }
             dataPos += 4 + length;
+            addressAtPos += 4 + length;
 
             return ExtractLineResult.OK;
           }
@@ -4549,37 +4551,44 @@ namespace RetroDevStudio.Parser.BASIC
         case MachineType.PET:
         case MachineType.PLUS4:
         case MachineType.VIC20:
-          if ( dataPos + 2 > data.Length )
           {
-            return ExtractLineResult.ERROR;
-          }
-          if ( data.UInt16At( dataPos ) == 0 )
-          {
-            // end
-            return ExtractLineResult.END_OF_CODE;
-          }
-
-          // TODO - check pointer?
-          dataPos += 2;
-
-          // line number
-          if ( dataPos + 2 > data.Length )
-          {
-            // no space for line number
-            return ExtractLineResult.ERROR;
-          }
-          lineNumber = data.UInt16At( dataPos );
-
-          {
-            int endPos = data.Find( 0, dataPos + 2 );
-            if ( endPos == -1 )
+            if ( dataPos + 2 > data.Length )
             {
               return ExtractLineResult.ERROR;
             }
-            lineData = data.SubBuffer( dataPos + 2, endPos - dataPos - 2 );
-            dataPos = endPos + 1;
+            ushort endPointer = data.UInt16At( dataPos );
+            if ( endPointer == 0 )
+            {
+              // end
+              return ExtractLineResult.END_OF_CODE;
+            }
+
+            int actualLineLength = endPointer - ( addressAtPos + 2 );
+
+            dataPos += 2;
+            addressAtPos += 2;
+
+            // line number
+            if ( dataPos + 2 > data.Length )
+            {
+              // no space for line number
+              return ExtractLineResult.ERROR;
+            }
+            lineNumber = data.UInt16At( dataPos );
+
+            if ( dataPos + actualLineLength > data.Length )
+            {
+              // line exceeds data length
+              return ExtractLineResult.ERROR;
+            }
+            int endPos = dataPos + actualLineLength;
+            // -1 to strip the ending 00
+            lineData = data.SubBuffer( dataPos + 2, endPos - dataPos - 2 - 1 );
+
+            addressAtPos += endPos - dataPos;
+            dataPos = endPos;
+            return ExtractLineResult.OK;
           }
-          return ExtractLineResult.OK;
       }
       lineData = null;
       return ExtractLineResult.ERROR;
