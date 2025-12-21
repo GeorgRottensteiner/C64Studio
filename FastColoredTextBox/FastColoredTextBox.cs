@@ -7416,6 +7416,19 @@ namespace FastColoredTextBoxNS
           lines[iLine].IsChanged = true;
     }
 
+
+
+    public void MarkLineAsChanged( int lineIndex )
+    {
+      if ( ( lineIndex >= 0 )
+      &&   ( lineIndex < lines.Count ) )
+      {
+        lines[lineIndex].IsChanged = true;
+      }
+    }
+
+
+
     /// <summary>
     /// Fires SelectionChanged event
     /// </summary>

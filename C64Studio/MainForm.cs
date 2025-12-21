@@ -3575,6 +3575,10 @@ namespace RetroDevStudio
         SetActiveProject( newProject );
 
         StudioCore.TaskManager.AddTask( new Tasks.TaskPreparseFilesInProject( newProject, mainToolConfig.SelectedItem.ToString() ) );
+        foreach ( var element in newProject.Elements )
+        {
+          StudioCore.TaskManager.AddTask( new Tasks.TaskRefreshSourceControlState( element.DocumentInfo ) );
+        }
 
         return newProject;
       }
@@ -3607,6 +3611,7 @@ namespace RetroDevStudio
 
         foreach ( ProjectElement element in elementsToPreParse )
         {
+          StudioCore.TaskManager.AddTask( new Tasks.TaskRefreshSourceControlState( element.DocumentInfo ) );
           if ( element.Document == null )
           {
             continue;

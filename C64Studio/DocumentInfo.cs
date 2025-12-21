@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using System;
 using System.Collections.Generic;
 
 
@@ -30,12 +31,13 @@ namespace RetroDevStudio
     public Dictionary<string, SymbolInfo> LabelModeReferences = new Dictionary<string, SymbolInfo>();
 
 
-
     private List<Types.AutoCompleteItemInfo>    m_KnownKeywords = new List<Types.AutoCompleteItemInfo>();
     private GR.Collections.MultiMap<string, SymbolInfo> m_KnownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
 
     public GR.Collections.Set<int>        CollapsedFoldingBlocks = new GR.Collections.Set<int>();
     public GR.Collections.Set<int>        Bookmarks = new GR.Collections.Set<int>();
+
+    private List<int>                     _modifiedLines = new List<int>();
 
 
 
@@ -387,6 +389,21 @@ namespace RetroDevStudio
             elementDependency.DocumentInfo.MarkAsDirty();
           }
         }
+      }
+    }
+
+
+
+    public void OnMarkModifiedLines( List<int> modifiedLines )
+    {
+      if ( Element == null )
+      {
+        return;
+      }
+      _modifiedLines = modifiedLines;
+      if ( BaseDoc != null )
+      {
+        BaseDoc.OnMarkModifiedLines( _modifiedLines );
       }
     }
 

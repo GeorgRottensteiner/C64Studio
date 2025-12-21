@@ -908,6 +908,7 @@ namespace RetroDevStudio
       Element.IsShown = true;
       Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_OPENED, Element.DocumentInfo ) );
       Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_OPENED, Element ) );
+      Core.TaskManager.AddTask( new Tasks.TaskRefreshSourceControlState( Element.DocumentInfo ) );
 
       return Element.Document;
     }

@@ -36,7 +36,7 @@ namespace SourceControl
         Controller = new Controller( Folder );
         return true;
       }
-      catch ( Exception ) 
+      catch ( Exception )
       {
         return false;
       }
@@ -57,7 +57,7 @@ namespace SourceControl
         }
         return true;
       }
-      catch ( Exception ) 
+      catch ( Exception )
       {
         return false;
       }
@@ -81,7 +81,7 @@ namespace SourceControl
 #if NET6_0_OR_GREATER
       try
       {
-        _GITRepo  = new Repository( Folder );
+        _GITRepo = new Repository( Folder );
         _BasePath = Folder;
       }
       catch ( Exception )
@@ -158,7 +158,7 @@ namespace SourceControl
       try
       {
         if ( ( System.IO.Path.IsPathRooted( FullPath ) )
-        &&   ( GR.PathSC.IsSubPath( _BasePath, FullPath ) ) )
+        && ( GR.PathSC.IsSubPath( _BasePath, FullPath ) ) )
         {
           FullPath = GR.PathSC.RelativePathTo( _BasePath, true, FullPath, false );
         }
@@ -275,9 +275,9 @@ namespace SourceControl
         RepositoryStatus status = _GITRepo.RetrieveStatus();
         List<string> filePaths = status.Modified.Select(mods => mods.FilePath).ToList();
 
-        foreach ( var filePath in filePaths ) 
-        { 
-          _GITRepo.Index.Add( filePath ); 
+        foreach ( var filePath in filePaths )
+        {
+          _GITRepo.Index.Add( filePath );
         }
         _GITRepo.Index.Write();
         return true;
@@ -323,7 +323,7 @@ namespace SourceControl
         {
           var state = _GITRepo.RetrieveStatus( filePath );
           if ( ( ( state & FileStatus.ModifiedInIndex ) == FileStatus.ModifiedInIndex )
-          ||   ( ( state & FileStatus.ModifiedInWorkdir ) == FileStatus.ModifiedInWorkdir ) )
+          || ( ( state & FileStatus.ModifiedInWorkdir ) == FileStatus.ModifiedInWorkdir ) )
           {
             _GITRepo.CheckoutPaths( _GITRepo.Head.FriendlyName, new[] { filePath }, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force } );
           }
@@ -360,7 +360,7 @@ git checkout <file>*/
     public bool CanAddToRepository( FileState FileState )
     {
       return ( ( FileState == FileState.NewInWorkdir )
-        ||     ( FileState == FileState.Nonexistent ) );
+        || ( FileState == FileState.Nonexistent ) );
     }
 
 
@@ -375,9 +375,9 @@ git checkout <file>*/
     public bool CanRemoveFromRepository( FileState FileState )
     {
       if ( ( ( FileState & FileState.NewInIndex ) != 0 )
-      ||   ( ( FileState & FileState.ModifiedInIndex ) != 0 )
-      ||   ( ( FileState & FileState.RenamedInIndex ) != 0 )
-      ||   ( ( FileState & FileState.TypeChangeInIndex ) != 0 ) )
+      || ( ( FileState & FileState.ModifiedInIndex ) != 0 )
+      || ( ( FileState & FileState.RenamedInIndex ) != 0 )
+      || ( ( FileState & FileState.TypeChangeInIndex ) != 0 ) )
       {
         return true;
       }
@@ -389,8 +389,8 @@ git checkout <file>*/
     public bool CanCommit( FileState FileState )
     {
       if ( ( ( FileState & FileState.ModifiedInIndex ) != 0 )
-      ||   ( ( FileState & FileState.ModifiedInWorkdir ) != 0 )
-      ||   ( ( FileState & FileState.NewInIndex ) != 0 ) )
+      || ( ( FileState & FileState.ModifiedInWorkdir ) != 0 )
+      || ( ( FileState & FileState.NewInIndex ) != 0 ) )
       {
         return true;
       }
@@ -402,8 +402,8 @@ git checkout <file>*/
     public bool CanRevertChanges( FileState FileState )
     {
       if ( ( ( FileState & FileState.ModifiedInIndex ) != 0 )
-      ||   ( ( FileState & FileState.ModifiedInWorkdir ) != 0 )
-      ||   ( FileState == FileState.Unaltered ) )
+      || ( ( FileState & FileState.ModifiedInWorkdir ) != 0 )
+      || ( FileState == FileState.Unaltered ) )
       {
         return true;
       }
@@ -412,5 +412,38 @@ git checkout <file>*/
 
 
 
+    public List<int> ListModifiedLines( string filename )
+    {
+#if NET6_0_OR_GREATER
+      try
+      {
+        var patch = _GITRepo.Diff.Compare<Patch>( _GITRepo.Head.Tip.Tree, DiffTargets.WorkingDirectory );
+        var modifiedLines = new List<int>();
+
+        var changesInFile = patch[filename];
+        if ( changesInFile != null )
+        {
+          foreach ( var line in changesInFile.AddedLines )
+          {
+            modifiedLines.Add( line.LineNumber - 1 );
+          }
+        }
+        return modifiedLines;
+      }
+      catch ( Exception ex )
+      {
+        Console.WriteLine( "Exception:RepoActions:ListModifiedLines " + ex.Message );
+        return new List<int>();
+      }
+#else
+      return new List<int>();
+#endif
+    }
+
+
+
   }
+
+
+
 }

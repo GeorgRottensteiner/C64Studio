@@ -2345,6 +2345,8 @@ namespace RetroDevStudio.Documents
 
         editSource.TextSource.ClearIsChanged();
         editSource.Invalidate();
+
+        Core.TaskManager.AddTask( new Tasks.TaskRefreshSourceControlState( DocumentInfo ) );
       }
       catch ( System.Exception ex )
       {
@@ -2913,6 +2915,7 @@ namespace RetroDevStudio.Documents
       if ( element != null )
       {
         DocumentInfo.Project.ShowDocument( element );
+        Core.TaskManager.AddTask( new Tasks.TaskRefreshSourceControlState( DocumentInfo ) );
       }
       else
       {
@@ -4601,6 +4604,20 @@ namespace RetroDevStudio.Documents
         AutoFormatLine( i, out int dummy );
       }
       editSource.EndAutoUndo();
+    }
+
+
+
+    protected override void MarkModifiedLines( List<int> list )
+    {
+      foreach ( var line in list )
+      {
+        if ( ( line >= 0 ) 
+        &&   ( line < editSource.LinesCount ) )
+        {
+          editSource.MarkLineAsChanged( line );
+        }
+      }
     }
 
 

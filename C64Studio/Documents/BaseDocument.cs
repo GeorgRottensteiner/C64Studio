@@ -1415,6 +1415,23 @@ namespace RetroDevStudio.Documents
 
 
 
+    public void OnMarkModifiedLines( List<int> modifiedLines )
+    {
+      if ( InvokeRequired )
+      {
+        Invoke( new Action<List<int>>( MarkModifiedLines ), new object[] { modifiedLines } );
+        return;
+      }
+      MarkModifiedLines( modifiedLines );
+    }
+
+
+
+    protected virtual void MarkModifiedLines( List<int> list )
+    {
+    }
+
+
 
   }
 }

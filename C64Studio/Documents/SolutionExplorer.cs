@@ -439,6 +439,7 @@ namespace RetroDevStudio.Documents
               {
                 AddContextMenuItem( contextMenu.Items, "Ignore", SourceControlIgnore, info );
               }
+              AddContextMenuItem( contextMenu.Items, "List changed lines", SourceControlListChangedLines, info );
               if ( project.SourceControl.CanCommit( info.FileState ) )
               { 
                 AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChangesSingleFile, info );
@@ -529,6 +530,24 @@ namespace RetroDevStudio.Documents
                                                          formCommit.CommitMessage );
             RefreshSourceControlState();
           }
+        }
+      }
+    }
+
+
+
+    private void SourceControlListChangedLines( object sender, EventArgs e )
+    {
+      var info = (TreeItemInfo)m_ContextMenuNode.Tag;
+      var project = ProjectFromNode( m_ContextMenuNode );
+
+      if ( ( project != null )
+      &&   ( project.SourceControl.HasChanges ) )
+      {
+        var lines = project.SourceControl.ListModifiedLines( info.Element.DocumentInfo.DocumentFilename );
+        foreach ( var line in lines )
+        {
+          Debug.Log( $"Changed line {line}" );
         }
       }
     }
