@@ -17,6 +17,61 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+22.12.2025 - 8.3:         Add: ASM - show lines as changed with info from GIT
+                          Fix: BASIC key mapping, per default had no cursor keys in german, and no sim keys in english layout
+                          Fix: Wrong unicode for 0x8e (Reverse Shift N) Fix: BASIC disassembler using end pointer instead of looking for next zero byte
+                          Fix: !ifdefparam with nested !if would leave free floating squiggly bracket
+                          Fix: Macro code was listed in preprocessed file even inside !list off segment
+                          Fix: Assembler, macro label replacement would collapse concattenated labels too early
+                          Fix: Binary debugger Protocol, breakpoint handling
+                          Add: Autoformatting pseudo ops options
+                          Fix: Breakpoints did not get added to project settings
+                          Add: Disassembler - option to only add used named labels
+                          Add: !zone now also allows label scaffolding Add: ASM option to auto format selection/whole file Saaaample
+                          Fix: Issue #148, !for loop with "i" after a !bin statement using "i" as well interfered Add: Code Formatting options for pseudo ops
+                          Fix: DASM - : not a valid label character
+                          Fix: Find Next from key binding was broken again
+                          Fix !ifdefparam
+                          Add: Pseudo Op !ifdefparam/!ifndefparam for use in macros only, detect whether an optional parameter was passed
+                          Add: Assembler, allow unused arguments in macros Add: Simons' BASIC sample
+                          WIP: Macro with less arguments (not fully working yet!)
+                          Fix: Replace all reset the displayed zoom  (issue #142) Fix: Disassemlber crash using directly imported BASIC data
+                          Fix: Find/Replace dialog (and others using preferred size) made DPI aware
+                          Fix: FastColoredTextBox: DPI aware expand/collapse markers
+                          Fix: issue #143 (adding too many styles)
+                          Add: safety measure for FastColoredTextBox (LargeChange could get negative)
+                          Fix: FindNext not working (again) Fix: Open .c64 file, cancel saving of .s64; close solution would not close files
+                          Add: Event Macros "ProjectName" and "SolutionName" (issue #140)
+                          Add: BASIC option to open selected DATAs in disassembler (issue #141)
+                          Fix: Word search in FindReplace properly handling non word character searches Saamples #174
+                          Fix: Find/Replace skipping single chars (sigh) Upd: Docs for BASIC dialect file
+                          Fix: Assembler - accidentally collapsing +Label inside expression into macro call Sammmmmmmmmples
+                          Fix: Missing PETSCII characters when disassembling BASIC
+                          Add: Sample Explorer: simple open option, category filter
+                          Fix: Syntax coloring for macro calls Add: Coloring option for macro calls
+                          Fix: BASIC command complete in outside of string entry mode mode
+                          Fix: single char immedate labels not colored properly Add: BASIC option to keep key mapping outside of strings
+                          Add: syntax coloring for warnings Fix missing recoloring
+                          Fix: Assembler - label concattenation working in loops
+                          Add: Auto formatting options (wippy) Add: Extra coloring option for internal labels Add: More samples
+                          Fix: DASM REPEND not working properly Add: More samples
+                          Fix: Assembler, internal backward label not interpreted from inside macro, with length > 1 char Fix: opening asm files with tabs without a project could replace tabs with spaces even when it was turned off
+                          Fix: Opening asm files without project could replace all tabs with 2 spaces
+                          Fix: Assembly - Syntax coloring for different CPUs/assembler types
+                          Add: More samples Fix: Graphic screen export to charscreen for Mega65 FCM 16-bit char mode
+                          Add: Sample Explorer WIP #1
+                          Fix: BASIC - Potential crash fix when building
+                          Add: Charscreen/Charset padding option for BASIC data export Add: Assembler - Modify values also applies to single constants now Add: Assembler - Mouseover on numeric literals shows decimal, hex and binary Add: Assembler - !for loop in ACME style additionally supported
+                          Add: Assembler ACME style !for loops
+                          Fix: File Manager/BASIC yet another PETSCII value shift issue, when opening a BASIC file from a media
+                          Fix: Assembling - Automated extension depending on configured target type
+                          Fix: Default assembling target type per assembler is now honoured
+                          Fix: BASIC Messed up lower case chars on copy/paste check
+                          Upd: Use docs from shared content folder instead of having a second copy around
+                          ReAdd: Nearly lost BASIC DATA export with padding option
+
+
+
 04.09.2025 - 8.2:         Add: BASIC #bindataprint statement
                           Fix: MediaManager also borked spaces in filenames (using -renameto)
                           Fix: Broken space inserted as 0 byte in PETSCII file names
@@ -74,7 +129,7 @@ Version history:
                           Add: Issue #75, Charscreen editor, option to highlight used char in screen
                           Add: Assembler PO !bin now allows an expression list instead of a single expression
                           Add: Assembler, enhance PO !bin to allow modification expression
-                          Add: BASIC: Add ° as secondary PI replacement key
+                          Add: BASIC: Add   as secondary PI replacement key
                           Fix: Char Editor - Pasting ECM chars Refix: BASIC copy/Paste of lowercase letters in string literals
                           Fix: CharEditor ECM mode, copy/paste and move to index issues
                           Fix: More theming issues I've introduced by the previous fix
@@ -1850,21 +1905,21 @@ supplemented by the additional permissions listed below.
 
 0. Additional Definitions.
 
-As used herein, “this License” refers to version 3 of the GNU Lesser General Public License, and the “GNU GPL” refers to 
+As used herein,  this License  refers to version 3 of the GNU Lesser General Public License, and the  GNU GPL  refers to 
 version 3 of the GNU General Public License.
 
-“The Library” refers to a covered work governed by this License, other than an Application or a Combined Work as defined below.
+ The Library  refers to a covered work governed by this License, other than an Application or a Combined Work as defined below.
 
-An “Application” is any work that makes use of an interface provided by the Library, but which is not otherwise based on the 
+An  Application  is any work that makes use of an interface provided by the Library, but which is not otherwise based on the 
 Library. Defining a subclass of a class defined by the Library is deemed a mode of using an interface provided by the Library.
 
-A “Combined Work” is a work produced by combining or linking an Application with the Library. The particular version of the 
-Library with which the Combined Work was made is also called the “Linked Version”.
+A  Combined Work  is a work produced by combining or linking an Application with the Library. The particular version of the 
+Library with which the Combined Work was made is also called the  Linked Version .
 
-The “Minimal Corresponding Source” for a Combined Work means the Corresponding Source for the Combined Work, excluding any 
+The  Minimal Corresponding Source  for a Combined Work means the Corresponding Source for the Combined Work, excluding any 
 source code for portions of the Combined Work that, considered in isolation, are based on the Application, and not on the Linked Version.
 
-The “Corresponding Application Code” for a Combined Work means the object code and/or source code for the Application, including 
+The  Corresponding Application Code  for a Combined Work means the object code and/or source code for the Application, including 
 any data and utility programs needed for reproducing the Combined Work from the Application, but excluding the System Libraries 
 of the Combined Work.
 
@@ -1932,7 +1987,7 @@ The Free Software Foundation may publish revised and/or new versions of the GNU 
 Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.
 
 Each version is given a distinguishing version number. If the Library as you received it specifies that a certain numbered version
-of the GNU Lesser General Public License “or any later version” applies to it, you have the option of following the terms and 
+of the GNU Lesser General Public License  or any later version  applies to it, you have the option of following the terms and 
 conditions either of that published version or of any later version published by the Free Software Foundation. If the Library as 
 you received it does not specify a version number of the GNU Lesser General Public License, you may choose any version of the GNU 
 Lesser General Public License ever published by the Free Software Foundation.
