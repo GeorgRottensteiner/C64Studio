@@ -455,33 +455,33 @@
       // toggleCommentToolStripMenuItem
       // 
       this.toggleCommentToolStripMenuItem.Name = "toggleCommentToolStripMenuItem";
-      this.toggleCommentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.toggleCommentToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
       this.toggleCommentToolStripMenuItem.Text = "Toggle Comment";
       this.toggleCommentToolStripMenuItem.Click += new System.EventHandler(this.toggleCommentToolStripMenuItem_Click);
       // 
       // commentSelectionToolStripMenuItem
       // 
       this.commentSelectionToolStripMenuItem.Name = "commentSelectionToolStripMenuItem";
-      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.commentSelectionToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
       this.commentSelectionToolStripMenuItem.Text = "Comment";
       this.commentSelectionToolStripMenuItem.Click += new System.EventHandler(this.commentSelectionToolStripMenuItem_Click);
       // 
       // uncommentSelectionToolStripMenuItem
       // 
       this.uncommentSelectionToolStripMenuItem.Name = "uncommentSelectionToolStripMenuItem";
-      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.uncommentSelectionToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
       this.uncommentSelectionToolStripMenuItem.Text = "Uncomment";
       this.uncommentSelectionToolStripMenuItem.Click += new System.EventHandler(this.uncommentSelectionToolStripMenuItem_Click);
       // 
       // toolStripSeparator8
       // 
       this.toolStripSeparator8.Name = "toolStripSeparator8";
-      this.toolStripSeparator8.Size = new System.Drawing.Size(177, 6);
+      this.toolStripSeparator8.Size = new System.Drawing.Size(163, 6);
       // 
       // autoformatToolStripMenuItem
       // 
       this.autoformatToolStripMenuItem.Name = "autoformatToolStripMenuItem";
-      this.autoformatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.autoformatToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
       this.autoformatToolStripMenuItem.Text = "Autoformat";
       this.autoformatToolStripMenuItem.Click += new System.EventHandler(this.autoformatToolStripMenuItem_Click);
       // 

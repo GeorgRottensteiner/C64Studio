@@ -55,7 +55,20 @@ namespace RetroDevStudio.Documents
 
 
 
-    internal void RemoveAllErrorMarkings()
+
+    public virtual string DetermineCommentInLine( int lineIndex )
+    {
+      if ( ( lineIndex < 0 )
+      ||   ( lineIndex >= SourceControl.LinesCount ) )
+      {
+        return "";
+      }
+      return "";
+    }
+
+
+
+    public void RemoveAllErrorMarkings()
     {
       SourceControl.ClearStyleWithoutAffectingFoldingMarkers( ( FastColoredTextBoxNS.StyleIndex)( FastColoredTextBoxNS.StyleIndex.Style12 | FastColoredTextBoxNS.StyleIndex.Style13 ) );
     }

@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio.Documents;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 
 
@@ -405,6 +406,23 @@ namespace RetroDevStudio
       {
         BaseDoc.OnMarkModifiedLines( _modifiedLines );
       }
+    }
+
+
+
+    public string DetermineCommentInLine( int lineIndex )
+    {
+      if ( Element == null )
+      {
+        return null;
+      }
+      if ( ( BaseDoc != null )
+      &&   ( Compilable )
+      &&   ( BaseDoc is CompilableDocument compilableDoc ) )
+      {
+        return compilableDoc.DetermineCommentInLine( lineIndex );
+      }
+      return "";
     }
 
 

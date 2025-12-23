@@ -153,7 +153,8 @@ namespace RetroDevStudio.Documents
 
       item.SubItems.Add( ( LineIndex + 1 ).ToString() );
       item.SubItems.Add( Doc.FullPath );
-      
+      item.SubItems.Add( Doc.DetermineCommentInLine( LineIndex ) );
+
 
       listMessages.Items.Add( item );
     }

@@ -36,10 +36,11 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.contextMenuBookmarks = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.jumpToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.imageListCompileResult = new System.Windows.Forms.ImageList(this.components);
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.deleteBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.deleteAllBookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+      this.imageListCompileResult = new System.Windows.Forms.ImageList(this.components);
+      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.contextMenuBookmarks.SuspendLayout();
       this.SuspendLayout();
@@ -49,7 +50,8 @@
       this.listMessages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
-            this.columnHeader3});
+            this.columnHeader3,
+            this.columnHeader4});
       this.listMessages.ContextMenuStrip = this.contextMenuBookmarks;
       this.listMessages.Dock = System.Windows.Forms.DockStyle.Fill;
       this.listMessages.FullRowSelect = true;
@@ -77,7 +79,7 @@
       // columnHeader3
       // 
       this.columnHeader3.Text = "File";
-      this.columnHeader3.Width = 500;
+      this.columnHeader3.Width = 400;
       // 
       // contextMenuBookmarks
       // 
@@ -87,7 +89,7 @@
             this.deleteBookmarkToolStripMenuItem,
             this.deleteAllBookmarksToolStripMenuItem});
       this.contextMenuBookmarks.Name = "contextCompilerMessage";
-      this.contextMenuBookmarks.Size = new System.Drawing.Size(185, 98);
+      this.contextMenuBookmarks.Size = new System.Drawing.Size(185, 76);
       // 
       // jumpToFileToolStripMenuItem
       // 
@@ -96,11 +98,10 @@
       this.jumpToFileToolStripMenuItem.Text = "&Jump to file";
       this.jumpToFileToolStripMenuItem.Click += new System.EventHandler(this.jumpToFileToolStripMenuItem_Click);
       // 
-      // imageListCompileResult
+      // toolStripSeparator1
       // 
-      this.imageListCompileResult.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListCompileResult.ImageStream")));
-      this.imageListCompileResult.TransparentColor = System.Drawing.Color.Magenta;
-      this.imageListCompileResult.Images.SetKeyName(0, "bookmark-icon.ico");
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
       // 
       // deleteBookmarkToolStripMenuItem
       // 
@@ -116,10 +117,16 @@
       this.deleteAllBookmarksToolStripMenuItem.Text = "Delete all bookmarks";
       this.deleteAllBookmarksToolStripMenuItem.Click += new System.EventHandler(this.deleteAllBookmarksToolStripMenuItem_Click);
       // 
-      // toolStripSeparator1
+      // imageListCompileResult
       // 
-      this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
+      this.imageListCompileResult.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListCompileResult.ImageStream")));
+      this.imageListCompileResult.TransparentColor = System.Drawing.Color.Magenta;
+      this.imageListCompileResult.Images.SetKeyName(0, "bookmark-icon.ico");
+      // 
+      // columnHeader4
+      // 
+      this.columnHeader4.Text = "Comment";
+      this.columnHeader4.Width = 250;
       // 
       // Bookmarks
       // 
@@ -146,5 +153,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripMenuItem deleteBookmarkToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem deleteAllBookmarksToolStripMenuItem;
-  }
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+    }
 }

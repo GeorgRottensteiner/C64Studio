@@ -902,5 +902,22 @@ namespace RetroDevStudio.Parser
       }
     }
 
-  };
+
+
+    public string CommentPrefix
+    {
+      get
+      {
+        if ( AllowedTokenStartChars.ContainsKey( Types.TokenInfo.TokenType.COMMENT ) )
+        {
+          return AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT];
+        }
+        return ";";
+      }
+    }
+
+
+
+
+  }
 }
