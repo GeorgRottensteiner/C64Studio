@@ -224,5 +224,39 @@ namespace RetroDevStudio
     }
 
 
+
+    internal static void SanitizeArguments( ToolInfo tool )
+    {
+      if ( Emulators.EmulatorInfo.IsVICEFamily( tool.Filename ) )
+      {
+        if ( Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( tool.Filename ) )
+        {
+          if ( tool.TrueDriveOnArguments.Contains( "drive8truedrive" ) )
+          {
+            tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
+              .Replace( "-drive8truedrive", "-truedrive" )
+              .Replace( "+virtualdev8", "+virtualdev" );
+            tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
+              .Replace( "+drive8truedrive", "+truedrive" )
+              .Replace( "-virtualdev8", "-virtualdev" );
+          }
+        }
+        else
+        {
+          if ( tool.TrueDriveOnArguments.Contains( "-truedrive" ) )
+          {
+            tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
+              .Replace( "-truedrive", "-drive8truedrive" )
+              .Replace( "+virtualdev", "+virtualdev8" );
+            tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
+              .Replace( "+truedrive", "+drive8truedrive" )
+              .Replace( "-virtualdev", "-virtualdev8" );
+          }
+        }
+      }
+    }
+
+
+
   }
 }

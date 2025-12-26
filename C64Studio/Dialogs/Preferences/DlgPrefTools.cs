@@ -258,6 +258,12 @@ namespace RetroDevStudio.Dialogs.Preferences
             ToolInfo.SetDefaultRunArguments( tool );
             alistTools_SelectedIndexChanged( null, null );
           }
+          else
+          {
+            ToolInfo.SanitizeArguments( tool );
+            editToolTrueDriveOffArguments.Text  = tool.TrueDriveOffArguments;
+            editToolTrueDriveOnArguments.Text   = tool.TrueDriveOnArguments;
+          }
         }
       }
     }
