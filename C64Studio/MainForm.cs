@@ -3054,19 +3054,19 @@ namespace RetroDevStudio
             if ( breakPoint == Breakpoint )
             {
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
-              if ( StudioCore.Debugging.IsDebuggerConnectedToActiveProject() )
-              {
-                if ( AppState == Types.StudioState.NORMAL )
-                {
-                  StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
-                }
-                else
-                {
-                  StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex, breakPoint );
-                }
-              }
               break;
             }
+          }
+        }
+        if ( StudioCore.Debugging.IsDebuggerConnectedToActiveProject() )
+        {
+          if ( AppState == Types.StudioState.NORMAL )
+          {
+            StudioCore.Debugging.Debugger?.RemoveBreakpoint( Breakpoint.RemoteIndex );
+          }
+          else
+          {
+            StudioCore.Debugging.Debugger.RemoveBreakpoint( Breakpoint.RemoteIndex, Breakpoint );
           }
         }
 

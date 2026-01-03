@@ -1,0 +1,6 @@
+<Sample Name="BASIC/Assembly"
+  Machine="C64"
+  ShortDescription="Combine BASIC and assembly"
+  Tags="BASIC,Assembly,C64"
+  Desc="Shows how to set up a project with a BASIC and assembly part. Both binaries are combined in a disk image. BASIC is LOADing the assembly from disk and accessing a label from the assembly for the SYS call.">
+</Sample>
