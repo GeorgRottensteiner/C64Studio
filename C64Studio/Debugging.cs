@@ -211,7 +211,10 @@ namespace RetroDevStudio
 
     public void ReseatBreakpoints( Project Project, Types.ASM.FileInfo ASMFileInfo )
     {
-      BreakPoints = new GR.Collections.Map<string, List<Breakpoint>>( Project.Settings.BreakPoints );
+      if ( Project != null )
+      {
+        BreakPoints = new GR.Collections.Map<string, List<Breakpoint>>( Project.Settings.BreakPoints );
+      }
 
       foreach ( var key in BreakPoints.Keys )
       {
