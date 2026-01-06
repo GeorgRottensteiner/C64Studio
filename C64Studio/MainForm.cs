@@ -1,4 +1,6 @@
 ﻿using GR.Image;
+using RetroDevStudio.Audio;
+using RetroDevStudio.Audio.SID;
 using RetroDevStudio.Controls;
 using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Dialogs;
@@ -83,6 +85,8 @@ namespace RetroDevStudio
 
     public Cursor                 CursorHand = null;
     public Cursor                 CursorGrab = null;
+
+    private AudioHandler          _audioHandler = new AudioHandler();
 
 
 
@@ -4241,6 +4245,7 @@ namespace RetroDevStudio
 
     private void MainForm_FormClosed( object sender, FormClosedEventArgs e )
     {
+      _audioHandler.Dispose();
       StudioCore.Debugging.Debugger?.Quit();
     }
 
@@ -8192,6 +8197,13 @@ namespace RetroDevStudio
       }
       m_SampleExplorer.ShowHint = DockState.Document;
       m_SampleExplorer.Show( panelMain );
+    }
+
+
+
+    private void soundPlayerToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      _audioHandler.SID( new byte[0], 0x0801, 0xa871 );
     }
 
 
