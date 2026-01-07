@@ -188,15 +188,21 @@ namespace RetroDevStudio
         Tool.DebugArguments = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
         Tool.PassLabelsToEmulator = true;
 
-        if ( Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( Tool.Filename ) )
+        switch ( Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( Tool.Filename ) )
         {
-          Tool.TrueDriveOnArguments = "-truedrive +virtualdev";
-          Tool.TrueDriveOffArguments = "+truedrive -virtualdev";
-        }
-        else
-        {
-          Tool.TrueDriveOnArguments = "-drive8truedrive +virtualdev8";
-          Tool.TrueDriveOffArguments = "+drive8truedrive -virtualdev8";
+          case EmulatorInfo.VICETrueDriveVersion.PRE_3_6:
+            // pre 3.6
+            Tool.TrueDriveOnArguments = "-truedrive +virtualdev";
+            Tool.TrueDriveOffArguments = "+truedrive -virtualdev";
+            break;
+          case EmulatorInfo.VICETrueDriveVersion.FROM_3_6_TO_3_9:
+            Tool.TrueDriveOnArguments = "-drive8truedrive +virtualdev8";
+            Tool.TrueDriveOffArguments = "+drive8truedrive -virtualdev8";
+            break;
+          case EmulatorInfo.VICETrueDriveVersion.FROM_3_10_AND_LATER:
+            Tool.TrueDriveOnArguments = "-drive8truedrive";
+            Tool.TrueDriveOffArguments = "+drive8truedrive";
+            break;
         }
       }
       else if ( upperCaseFilename.StartsWith( "CCS64" ) )
@@ -229,29 +235,44 @@ namespace RetroDevStudio
     {
       if ( Emulators.EmulatorInfo.IsVICEFamily( tool.Filename ) )
       {
-        if ( Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( tool.Filename ) )
+        switch ( Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( tool.Filename ) )
         {
-          if ( tool.TrueDriveOnArguments.Contains( "drive8truedrive" ) )
-          {
-            tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
-              .Replace( "-drive8truedrive", "-truedrive" )
-              .Replace( "+virtualdev8", "+virtualdev" );
-            tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
-              .Replace( "+drive8truedrive", "+truedrive" )
-              .Replace( "-virtualdev8", "-virtualdev" );
-          }
-        }
-        else
-        {
-          if ( tool.TrueDriveOnArguments.Contains( "-truedrive" ) )
-          {
-            tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
-              .Replace( "-truedrive", "-drive8truedrive" )
-              .Replace( "+virtualdev", "+virtualdev8" );
-            tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
-              .Replace( "+truedrive", "+drive8truedrive" )
-              .Replace( "-virtualdev", "-virtualdev8" );
-          }
+          case EmulatorInfo.VICETrueDriveVersion.PRE_3_6:
+            // pre 3.6
+            if ( tool.TrueDriveOnArguments.Contains( "drive8truedrive" ) )
+            {
+              tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
+                .Replace( "-drive8truedrive", "-truedrive" )
+                .Replace( "+virtualdev8", "+virtualdev" );
+              tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
+                .Replace( "+drive8truedrive", "+truedrive" )
+                .Replace( "-virtualdev8", "-virtualdev" );
+            }
+            break;
+          case EmulatorInfo.VICETrueDriveVersion.FROM_3_6_TO_3_9:
+            if ( tool.TrueDriveOnArguments.Contains( "-truedrive" ) )
+            {
+              tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
+                .Replace( "-truedrive", "-drive8truedrive" )
+                .Replace( "+virtualdev", "+virtualdev8" );
+              tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
+                .Replace( "+truedrive", "+drive8truedrive" )
+                .Replace( "-virtualdev", "-virtualdev8" );
+            }
+            break;
+          case EmulatorInfo.VICETrueDriveVersion.FROM_3_10_AND_LATER:
+            if ( tool.TrueDriveOnArguments.Contains( "-truedrive" ) )
+            {
+              tool.TrueDriveOnArguments = tool.TrueDriveOnArguments
+                .Replace( "-truedrive", "-drive8truedrive" )
+                .Replace( "+virtualdev", "" )
+                .Replace( "+virtualdev8", "" );
+              tool.TrueDriveOffArguments = tool.TrueDriveOffArguments
+                .Replace( "+truedrive", "+drive8truedrive" )
+                .Replace( "-virtualdev", "" )
+                .Replace( "-virtualdev8", "" );
+            }
+            break;
         }
       }
     }

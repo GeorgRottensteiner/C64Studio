@@ -8,6 +8,15 @@ namespace RetroDevStudio.Emulators
 {
   public static class EmulatorInfo
   {
+    public enum VICETrueDriveVersion
+    {
+      PRE_3_6,        // -truedrive +virtualdev
+      FROM_3_6_TO_3_9,     // xxx8
+      FROM_3_10_AND_LATER  // 
+    }
+
+
+
     public static bool IsMega65Family( string emulatorFilename )
     {
       string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
@@ -24,6 +33,7 @@ namespace RetroDevStudio.Emulators
       return ( ( uppercaseFilename.StartsWith( "X64" ) )
             || ( uppercaseFilename.StartsWith( "XSCPU64" ) )
             || ( uppercaseFilename.StartsWith( "X128" ) )
+            || ( uppercaseFilename.StartsWith( "X64DTV" ) )
             || ( uppercaseFilename.StartsWith( "XCBM" ) )
             || ( uppercaseFilename.StartsWith( "XPET" ) )
             || ( uppercaseFilename.StartsWith( "XPLUS4" ) )
@@ -45,7 +55,7 @@ namespace RetroDevStudio.Emulators
 
 
 
-    public static bool IsVICEVersionOldTrueDrive( string emulatorFilename )
+    public static VICETrueDriveVersion IsVICEVersionOldTrueDrive( string emulatorFilename )
     {
       try
       {
@@ -57,12 +67,13 @@ namespace RetroDevStudio.Emulators
         if ( versionPos == -1 )
         {
           // does not even have the version info
-          return true;
+          return VICETrueDriveVersion.PRE_3_6;
         }
         int zeroPos = executable.Find( 0, versionPos + (int)searchKey.Length );
         if ( zeroPos == -1 )
         {
-          return false;
+          // malformed version info, assume >= 3.6
+          return VICETrueDriveVersion.FROM_3_6_TO_3_9;
         }
         // found the action version string
         string    versionString = executable.SubBuffer( versionPos + (int)searchKey.Length, zeroPos - versionPos - (int)searchKey.Length ).ToAsciiString();
@@ -75,24 +86,29 @@ namespace RetroDevStudio.Emulators
         if ( ( versionParts.Length >= 1 )
         &&   ( string.Compare( versionParts[0], "3" ) > 0 ) )
         {
-          return false;
+          return VICETrueDriveVersion.FROM_3_10_AND_LATER;
         }
         if ( ( versionParts.Length >= 1 )
         &&   ( string.Compare( versionParts[0], "3" ) < 0 ) )
         {
-          return true;
+          return VICETrueDriveVersion.PRE_3_6;
         }
         // < 3.6
         if ( ( versionParts.Length >= 2 )
-        &&   ( string.Compare( versionParts[1], "6" ) < 0 ) )
+        &&   ( GR.Convert.ToI32( versionParts[1] ) < 6 ) )
         {
-          return true;
+          return VICETrueDriveVersion.PRE_3_6;
         }
-        return false;
+        if ( ( versionParts.Length >= 2 )
+        &&   ( GR.Convert.ToI32( versionParts[1] ) >= 10 ) )
+        {
+          return VICETrueDriveVersion.FROM_3_10_AND_LATER;
+        }
+        return VICETrueDriveVersion.FROM_3_6_TO_3_9;
       }
       catch ( Exception )
       {
-        return false;
+        return VICETrueDriveVersion.FROM_3_6_TO_3_9;
       }
     }
 
