@@ -76,6 +76,7 @@
       this.label10 = new System.Windows.Forms.Label();
       this.label9 = new System.Windows.Forms.Label();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
+      this.labelInfo2 = new System.Windows.Forms.Label();
       this.labelInfo = new System.Windows.Forms.Label();
       this.btnToolText = new DecentForms.RadioButton();
       this.btnToolSelect = new DecentForms.RadioButton();
@@ -390,6 +391,7 @@
       this.tabEditor.Controls.Add(this.label10);
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
+      this.tabEditor.Controls.Add(this.labelInfo2);
       this.tabEditor.Controls.Add(this.labelInfo);
       this.tabEditor.Controls.Add(this.btnToolText);
       this.tabEditor.Controls.Add(this.btnToolSelect);
@@ -652,11 +654,19 @@
       this.comboCharsetMode.TabIndex = 16;
       this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
+      // labelInfo2
+      // 
+      this.labelInfo2.Location = new System.Drawing.Point(473, 432);
+      this.labelInfo2.Name = "labelInfo2";
+      this.labelInfo2.Size = new System.Drawing.Size(179, 74);
+      this.labelInfo2.TabIndex = 33;
+      this.labelInfo2.Text = "Pos: 0,0  Offset: $0000\r\nline 2";
+      // 
       // labelInfo
       // 
       this.labelInfo.Location = new System.Drawing.Point(339, 432);
       this.labelInfo.Name = "labelInfo";
-      this.labelInfo.Size = new System.Drawing.Size(315, 74);
+      this.labelInfo.Size = new System.Drawing.Size(128, 74);
       this.labelInfo.TabIndex = 33;
       this.labelInfo.Text = "Pos: 0,0  Offset: $0000\r\nline 2";
       // 
@@ -1054,5 +1064,6 @@
         private System.Windows.Forms.Label labelCharPanelLayout;
     private System.Windows.Forms.Panel panelColorChooser;
     private DecentForms.CheckBox checkHighlightUsedChars;
-  }
+        private System.Windows.Forms.Label labelInfo2;
+    }
 }

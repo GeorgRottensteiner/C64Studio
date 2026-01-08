@@ -699,70 +699,79 @@ namespace RetroDevStudio.Documents
 
 
 
-    private string InfoText()
+    private void UpdateInfoText()
     {
       StringBuilder   sb = new StringBuilder();
+      StringBuilder   sb2 = new StringBuilder();
 
       int     charX = m_MousePos.X + m_CharsetScreen.ScreenOffsetX;
       int     charY = m_MousePos.Y + m_CharsetScreen.ScreenOffsetY;
       int     numBytesOfSingleChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
+      ushort  charAtPos = m_CharsetScreen.CharacterAt( charX, charY );
+      ushort  colorAtPos = m_CharsetScreen.ColorAt( charX, charY );
+      string  formatString = ( numBytesOfSingleChar == 2 ) ? "X4" : "X2";
 
       sb.Append( "Pos " );
       sb.Append( charX );
       sb.Append( ',' );
       sb.Append( charY );
-      sb.Append( "  Offset $" );
-      sb.Append( ( charX + charY * m_CharsetScreen.ScreenWidth ).ToString( "X4" ) );
+      sb.AppendLine();
+
+      sb2.Append( "Offset $" );
+      sb2.Append( ( charX + charY * m_CharsetScreen.ScreenWidth ).ToString( formatString ) );
 
       int     screenOffset = PreferredScreenOffset( PreferredMachineType );
       if ( screenOffset != -1 )
       {
-        sb.Append( "/$" );
-        sb.Append( ( screenOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( "X4" ) );
+        sb2.Append( "/$" );
+        sb2.Append( ( screenOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( formatString ) );
       }
       int     colorOffset = PreferredColorOffset( PreferredMachineType );
       if ( colorOffset != -1 )
       {
-        sb.Append( "/$" );
-        sb.Append( ( colorOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( "X4" ) );
+        sb2.Append( "/$" );
+        sb2.Append( ( colorOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( formatString ) );
       }
+      sb2.AppendLine();
+
+      // char/color below mouse
+      sb.Append( "Below Char $" );
+      sb.Append( charAtPos.ToString( formatString ) );
+      sb.Append( "," );
+      sb.Append( charAtPos );
       sb.AppendLine();
+
+      sb2.Append( "Color $" );
+      sb2.Append( colorAtPos.ToString( formatString ) );
+      sb2.Append( "," );
+      sb2.Append( colorAtPos );
+      sb2.AppendLine();
 
       sb.Append( "Char $" );
-      if ( numBytesOfSingleChar == 2 )
-      {
-        sb.Append( m_CurrentChar.ToString( "X4" ) );
-      }
-      else
-      {
-        sb.Append( m_CurrentChar.ToString( "X2" ) );
-      }
+      sb.Append( m_CurrentChar.ToString( formatString ) );
       sb.Append( ',' );
       sb.Append( m_CurrentChar );
-      sb.Append( "  Color $" );
-      if ( numBytesOfSingleChar == 2 )
-      {
-        sb.Append( m_CurrentColor.ToString( "X4" ) );
-      }
-      else
-      {
-        sb.Append( m_CurrentColor.ToString( "X2" ) );
-      }
-      sb.Append( ',' );
-      sb.Append( m_CurrentColor );
       sb.AppendLine();
-      sb.Append( "Sprite Pos $" );
 
+      sb2.Append( "Color $" );
+      sb2.Append( m_CurrentColor.ToString( formatString ) );
+      sb2.Append( ',' );
+      sb2.Append( m_CurrentColor );
+      sb2.AppendLine();
+
+      sb.Append( "Sprite Pos X $" );
       int spritePosX = charX * m_CharacterWidth + 24;
       int spritePosY = charY * m_CharacterHeight + 50;
       sb.Append( spritePosX.ToString( "X3" ) );
       sb.Append( '/' );
       sb.Append( spritePosX );
-      sb.Append( ", $" );
-      sb.Append( spritePosY.ToString( "X2" ) );
-      sb.Append( '/' );
-      sb.Append( spritePosY );
       sb.AppendLine();
+
+      sb2.Append( "Pos Y $" );
+      sb2.Append( spritePosY.ToString( "X2" ) );
+      sb2.Append( '/' );
+      sb2.Append( spritePosY );
+      sb2.AppendLine();
 
       if ( m_SelectionBounds.Width > 0 )
       {
@@ -770,14 +779,16 @@ namespace RetroDevStudio.Documents
         sb.Append( m_SelectionBounds.X );
         sb.Append( ", " );
         sb.Append( m_SelectionBounds.Y );
-        sb.Append( " " );
-        sb.Append( m_SelectionBounds.Width );
-        sb.Append( "*" );
-        sb.Append( m_SelectionBounds.Height );
         sb.AppendLine();
+
+        sb2.Append( m_SelectionBounds.Width );
+        sb2.Append( "*" );
+        sb2.Append( m_SelectionBounds.Height );
+        sb2.AppendLine();
       }
 
-      return sb.ToString();
+      labelInfo.Text = sb.ToString();
+      labelInfo2.Text = sb2.ToString();
     }
 
 
@@ -841,7 +852,7 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      labelInfo.Text = InfoText();
+      UpdateInfoText();
 
       if ( ( Buttons & MouseButtons.Left ) == 0 )
       {
@@ -952,7 +963,7 @@ namespace RetroDevStudio.Documents
                   }
                 }
                 RecalcSelectionBounds();
-                labelInfo.Text = InfoText();
+                UpdateInfoText();
                 pictureEditor.Invalidate();
                 Redraw();
               }
@@ -1168,7 +1179,7 @@ namespace RetroDevStudio.Documents
           _colorPickerDlg.SelectedChar            = m_CurrentChar;
           _colorPickerDlg.SelectedPaletteMapping  = m_CurrentPaletteMapping;
         }
-        labelInfo.Text = InfoText();
+        UpdateInfoText();
         RedrawColorChooser();
       }
     }
@@ -1685,7 +1696,7 @@ namespace RetroDevStudio.Documents
 
           RedrawFullScreen();
           pictureEditor.Invalidate();
-          labelInfo.Text = InfoText();
+          UpdateInfoText();
 
           if ( ( DocumentInfo.Project == null )
           ||   ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) ) )
@@ -1847,7 +1858,7 @@ namespace RetroDevStudio.Documents
       }
 
       RedrawColorChooser();
-      labelInfo.Text = InfoText();
+      UpdateInfoText();
 
       if ( _HighlightUsedChars )
       {
@@ -2840,7 +2851,7 @@ namespace RetroDevStudio.Documents
     private void _ColorChooserDlg_SelectedColorChanged( ushort Color )
     {
       m_CurrentColor = Color;
-      labelInfo.Text = InfoText();
+      UpdateInfoText();
     }
 
 
