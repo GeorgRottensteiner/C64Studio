@@ -22,7 +22,7 @@ namespace RetroDevStudio.Parser
       {
         lineTokenInfos.RemoveAt( lineTokenInfos.Count - 1 );
 
-        // TODO - check of zonescope exists, no nestes zone scopes!
+        // TODO - check if zonescope exists, no nestes zone scopes!
 
         Types.ScopeInfo   zoneScope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
         zoneScope.StartIndex = _ParseContext.LineIndex;
@@ -63,7 +63,7 @@ namespace RetroDevStudio.Parser
         }
         info.Zone = m_CurrentZoneName;
 
-        AddZone( m_CurrentZoneName, _ParseContext.LineIndex, zoneToken.StartPos, zoneToken.Length );
+        AddZone( m_CurrentZoneName, _ParseContext.LineIndex, zoneToken.StartPos, zoneToken.Length, m_CompileCurrentAddress );
         if ( AutoGlobalLabel )
         {
           var label = AddLabel( m_CurrentZoneName, m_CompileCurrentAddress, _ParseContext.LineIndex, m_CurrentZoneName, zoneToken.StartPos, zoneToken.Length );

@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)syswrapper\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)types\CharlistLayout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ErrorCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Zone.cs" />
     <Compile Include="..\C64Models\Attributes\MachineTypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\MediaFormatAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\AdditionalArgumentCount.cs" />

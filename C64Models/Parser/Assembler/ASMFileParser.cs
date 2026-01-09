@@ -454,14 +454,14 @@ namespace RetroDevStudio.Parser
 
 
 
-    public void AddZone( string Name, int SourceLine, int CharIndex, int Length )
+    public void AddZone( string Name, int SourceLine, int CharIndex, int Length, long address )
     {
       string        zoneFile;
       int           localLine;
       SourceInfo    srcInfo;
       m_ASMFileInfo.FindTrueLineSource( SourceLine, out zoneFile, out localLine, out srcInfo );
 
-      var token = new SymbolInfo();
+      var token = new Zone();
       token.Type              = SymbolInfo.Types.ZONE;
       token.Name              = Name;
       token.LineIndex         = SourceLine;
@@ -470,10 +470,11 @@ namespace RetroDevStudio.Parser
       token.Length            = Length;
       token.DocumentFilename  = zoneFile;
       token.SourceInfo        = srcInfo;
+      token.AddressOrValue    = address;
 
       if ( !m_ASMFileInfo.Zones.ContainsKey( Name ) )
       {
-        m_ASMFileInfo.Zones.Add( Name, new List<SymbolInfo>() );
+        m_ASMFileInfo.Zones.Add( Name, new List<Zone>() );
       }
       m_ASMFileInfo.Zones[Name].Add( token );
     }
@@ -8752,6 +8753,8 @@ namespace RetroDevStudio.Parser
         }
       }
       m_CurrentZoneName = m_CurrentGlobalZoneName;
+      // TODO
+      AddZone( m_CurrentZoneName, _ParseContext.LineIndex + 1, -1, 0, 222 );
     }
 
 
@@ -9245,6 +9248,8 @@ namespace RetroDevStudio.Parser
           {
             // auto-zone
             m_CurrentZoneName = lineTokenInfos[0].Content;
+
+            AddZone( m_CurrentZoneName, _ParseContext.LineIndex, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length, info.AddressStart );
             info.Zone = m_CurrentZoneName;
           }
         }
@@ -10718,6 +10723,7 @@ namespace RetroDevStudio.Parser
         _ParseContext.DuringExpressionEvaluation = true;
         DetermineUnparsedLabels();
         _ParseContext.DuringExpressionEvaluation = false;
+        UpdateZoneSizes();
         m_ASMFileInfo.PopulateAddressToLine();
         foreach ( SymbolInfo token in m_ASMFileInfo.Labels.Values )
         {
@@ -10775,6 +10781,54 @@ namespace RetroDevStudio.Parser
 
       DumpLineAddresses();
       return true;
+    }
+
+
+
+    private void UpdateZoneSizes()
+    {
+      string  currentZone = "";
+      long    globalZoneSize = 0;
+      Zone    zoneInfo = null;
+
+      foreach ( var lineInfo in m_ASMFileInfo.LineInfo.Values )
+      {
+        if ( string.IsNullOrEmpty( lineInfo.Zone ) )
+        {
+          globalZoneSize += lineInfo.NumBytes;
+        }
+        if ( currentZone != lineInfo.Zone )
+        { 
+          // zone changes
+          currentZone = lineInfo.Zone;
+          zoneInfo = null;
+          if ( m_ASMFileInfo.Zones.ContainsKey( currentZone ) )
+          {
+            zoneInfo = m_ASMFileInfo.Zones[currentZone].FirstOrDefault( z => z.LineIndex == lineInfo.LineIndex );
+          }
+        }
+        if ( zoneInfo != null )
+        {
+          zoneInfo.SizeInBytes += lineInfo.NumBytes;
+        }
+        else if ( !string.IsNullOrEmpty( currentZone ) )
+        {
+          Debug.Log( $"No zone found for line {lineInfo.LineIndex} in zone {currentZone}" );
+        }
+      }
+      var globalZone = new Zone();
+      globalZone.SizeInBytes  = globalZoneSize;
+      globalZone.LineIndex    = 0;
+      globalZone.Name = "Global";
+      globalZone.LocalLineIndex = 0;
+      globalZone.CharIndex = 0;
+      m_ASMFileInfo.FindTrueLineSource( 0, out globalZone.DocumentFilename, out int dummy );
+
+      if ( !m_ASMFileInfo.Zones.ContainsKey( "" ) )
+      {
+        m_ASMFileInfo.Zones.Add( "", new List<Zone>() );
+      }
+      m_ASMFileInfo.Zones[""].Add( globalZone );
     }
 
 

@@ -1552,31 +1552,19 @@ namespace RetroDevStudio.Documents
       comboZoneSelector.BeginUpdate();
       comboZoneSelector.Items.Clear();
 
-      var globalSymbol = new SymbolInfo();
-      globalSymbol.Name           = "Global";
-      globalSymbol.LocalLineIndex = 0;
-      globalSymbol.CharIndex      = 0;
-      globalSymbol.DocumentFilename = DocumentFilename;
-      comboZoneSelector.Items.Add( globalSymbol );
-
-      GR.Collections.Set<string>    keySet = DocumentInfo.KnownTokens.GetUniqueKeys();
       var  uniqueZones = new GR.Collections.Map<string, SymbolInfo>();
-
-      foreach ( string key in keySet )
+      foreach ( var zones in DocumentInfo.ASMFileInfo.Zones.Values )
       {
-        List<SymbolInfo>    listValues = DocumentInfo.KnownTokens.GetValues( key, false );
-
-        foreach ( SymbolInfo symbol in listValues )
+        foreach ( var zone in zones )
         {
-          if ( ( ( ( symbol.SourceInfo != null )
-          &&       ( symbol.SourceInfo.FullPath == DocumentInfo.FullPath ) )
-          ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, DocumentInfo.FullPath ) ) )
-          &&   ( symbol.Type == SymbolInfo.Types.ZONE ) )
+          if ( ( GR.Path.IsPathEqual( zone.DocumentFilename, DocumentInfo.FullPath ) )
+          ||   ( zone.Name == "Global" ) )
           {
-            uniqueZones.Add( symbol.Zone, symbol );
+            uniqueZones.Add( zone.Zone, zone );
           }
         }
       }
+
 
       // direct zones inside the file, zone from previous file (if applicable)
       foreach ( var zone in uniqueZones )
