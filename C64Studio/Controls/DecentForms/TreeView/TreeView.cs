@@ -990,6 +990,13 @@ namespace DecentForms
               }
             }
           }
+          else if ( Event.Key == System.Windows.Forms.Keys.Return )
+          {
+            if ( SelectedNode != null )
+            {
+              NodeMouseDoubleClick?.Invoke( this, new TreeNodeMouseClickEventArgs( SelectedNode, Event.MouseButtons, Event.MouseX, Event.MouseY ) );
+            }
+          }
           break;
       }
       base.OnControlEvent( Event );
