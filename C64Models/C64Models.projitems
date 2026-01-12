@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\CharsetLayoutAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DefaultFileExtensionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\FileTypeNativeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\TypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\OrderAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\PaletteTypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converter\ColorQuantizer.cs" />

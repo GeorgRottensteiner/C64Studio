@@ -1,6 +1,5 @@
 ﻿using GR.Image;
 using RetroDevStudio.Audio;
-using RetroDevStudio.Audio.SID;
 using RetroDevStudio.Controls;
 using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Dialogs;
@@ -52,6 +51,7 @@ namespace RetroDevStudio
     public LabelExplorer          m_LabelExplorer = null;
     public ValueTableEditor       m_ValueTableEditor = null;
     public PaletteEditor          m_PaletteEditor = null;
+    public SFXEditor              m_SFXEditor = null;
     public Documents.Help         m_Help = null;
     public Documents.SampleExplorer   m_SampleExplorer = null;
     public FormFindReplace        m_FindReplace = null;
@@ -520,6 +520,7 @@ namespace RetroDevStudio
       m_DebugBreakpoints = new DebugBreakpoints( StudioCore );
       m_ValueTableEditor = new ValueTableEditor( StudioCore );
       m_PaletteEditor = new PaletteEditor( StudioCore );
+      m_SFXEditor = new SFXEditor( StudioCore );
       m_FindReplace = new FormFindReplace( StudioCore );
       m_Help = new Documents.Help( StudioCore );
       m_Bookmarks = new Bookmarks( StudioCore );
@@ -534,6 +535,7 @@ namespace RetroDevStudio
       m_MapEditor.SetInternal();
       m_Disassembler.SetInternal();
       m_ValueTableEditor.SetInternal();
+      m_SFXEditor.SetInternal();
 
       // butt ugly hack
       StudioCore.Settings.ToolTiny64.Type = ToolInfo.ToolType.EMULATOR;
@@ -558,6 +560,7 @@ namespace RetroDevStudio
       AddToolWindow( ToolWindowType.GRAPHIC_SCREEN_EDITOR, m_GraphicScreenEditor, DockState.Document, graphicScreenEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.MAP_EDITOR, m_MapEditor, DockState.Document, mapEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PALETTE_EDITOR, m_PaletteEditor, DockState.Document, paletteEditorToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.SFX_EDITOR, m_SFXEditor, DockState.Document, sfxEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.PETSCII_TABLE, m_PetSCIITable, DockState.Float, petSCIITableToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.CALCULATOR, m_Calculator, DockState.DockRight, calculatorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.HELP, m_Help, DockState.Document, helpToolStripMenuItem, false, false );
@@ -590,6 +593,7 @@ namespace RetroDevStudio
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REFERENCES )] = m_FindReferences;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.LABEL_EXPLORER )] = m_LabelExplorer;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PALETTE_EDITOR )] = m_PaletteEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SFX_EDITOR )] = m_SFXEditor;
 
 
       StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
@@ -8203,7 +8207,7 @@ namespace RetroDevStudio
 
     private void soundPlayerToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      _audioHandler.SID( new byte[0], 0x0801, 0xa871 );
+      _audioHandler.Play( new GR.Memory.ByteBuffer() );
     }
 
 

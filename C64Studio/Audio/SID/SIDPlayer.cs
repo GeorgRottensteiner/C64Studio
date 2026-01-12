@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 
-namespace RetroDevStudio.Audio.SID
+namespace RetroDevStudio.Audio
 {
   internal class SIDPlayer : IDisposable
   {
@@ -72,7 +72,8 @@ namespace RetroDevStudio.Audio.SID
           return false;
         }
         var hex = ByteArrayToHexString( sidData );
-        return _player.PlayFromBinary( hexData, dataStartAddress, songStartAddress );
+        //return _player.PlayFromBinary( hexData, dataStartAddress, songStartAddress );
+        return _player.PlayFromBinary( hex, dataStartAddress, songStartAddress );
       }
       catch ( Exception ex )
       {

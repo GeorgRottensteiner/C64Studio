@@ -78,7 +78,9 @@ namespace RetroDevStudio
     [Description( "Label Explorer" )]
     LABEL_EXPLORER,
     [Description( "Palette Editor" )]
-    PALETTE_EDITOR
+    PALETTE_EDITOR,
+    [Description( "Sound Effect Editor" )]
+    SFX_EDITOR
   };
 
   public enum MemoryDisplayType

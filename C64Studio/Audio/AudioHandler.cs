@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GR;
+using GR.Memory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +9,9 @@ namespace RetroDevStudio.Audio
 {
   internal class AudioHandler : IDisposable
   {
-    private SID.SIDPlayer     _sidPlayer = null;
+    private SFXPlayerDescriptor _currentSFXPlayer = null; 
+
+    private SIDPlayer           _sidPlayer = null;
 
 
 
@@ -23,18 +27,35 @@ namespace RetroDevStudio.Audio
       _sidPlayer?.Stop();
       _sidPlayer?.Dispose();
       _sidPlayer = null;
+
+      _currentSFXPlayer = null;
     }
 
 
 
-    public void SID( byte[] sidData, int dataStartAddress, int songStartAddress )
+    internal void SetSFXPlayer( SFXPlayerDescriptor player )
     {
-      StopAll();
+      _currentSFXPlayer = player;
+
+      var playerClass = EnumHelper.GetAttributeOfType<TypeAttribute>( player.Player );
+
+      // TODO
       if ( _sidPlayer == null )
       {
-        _sidPlayer = new SID.SIDPlayer();
-        _sidPlayer.Play( sidData, dataStartAddress, songStartAddress );
+        _sidPlayer = new SIDPlayer();
       }
+      //ObjectType instance = (ObjectType)Activator.CreateInstance(objectType);
+    }
+
+
+
+    internal void Play( ByteBuffer playerData )
+    {
+      if ( _sidPlayer == null )
+      {
+        _sidPlayer = new SIDPlayer();
+      }
+      _sidPlayer.Play( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, _currentSFXPlayer.AddressToStartPlayer );
     }
 
 
