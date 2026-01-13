@@ -103,7 +103,7 @@ namespace RetroDevStudio.Documents
       player1.Parameters.Add( new ValueDescriptor()
       {
         AddressToWriteTo = 0x9fa + 3 * 100,
-        Name = "Delay",
+        Name = "Decay",
         RelevantBits = 4,
         MinValue = 0,
         MaxValue = 15

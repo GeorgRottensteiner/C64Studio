@@ -10,6 +10,7 @@ namespace RetroDevStudio.Emulators
   {
     public enum VICETrueDriveVersion
     {
+      NOT_VICE,
       PRE_3_6,        // -truedrive +virtualdev
       FROM_3_6_TO_3_9,     // xxx8
       FROM_3_10_AND_LATER  // 
@@ -59,6 +60,10 @@ namespace RetroDevStudio.Emulators
     {
       try
       {
+        if ( !IsVICEFamily( emulatorFilename ) )
+        {
+          return VICETrueDriveVersion.NOT_VICE;
+        }
         var executable = GR.IO.File.ReadAllBytes( emulatorFilename );
 
         // look for "vice-logo-black.svg00About VICE00"

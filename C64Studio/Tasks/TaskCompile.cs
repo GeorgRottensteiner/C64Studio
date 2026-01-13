@@ -329,6 +329,8 @@ namespace RetroDevStudio.Tasks
 
         if ( !toolRun.IsInternal )
         {
+          var viceVersion = Emulators.EmulatorInfo.IsVICEVersionOldTrueDrive( toolRun.Filename );
+
           Core.Executing.RunProcess.BeginErrorReadLine();
           Core.Executing.RunProcess.BeginOutputReadLine();
 
@@ -350,6 +352,10 @@ namespace RetroDevStudio.Tasks
           &&   ( waitForInputIdleFailed ) )
           {
             // assume GTK VICE
+            numConnectionAttempts = 10;
+          }
+          if ( viceVersion == Emulators.EmulatorInfo.VICETrueDriveVersion.FROM_3_10_AND_LATER )
+          {
             numConnectionAttempts = 10;
           }
         }
