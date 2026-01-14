@@ -17,7 +17,7 @@ namespace RetroDevStudio.Audio
     // how to apply the value in the final byte
     public int        ShiftBitsLeft = 0;
     public int        ShiftBitsRight = 0;
-    public int        RelevantBits = 8;
+    public int        RelevantBits = 0xff;
 
     public Dictionary<string,int>     ValidValues = new Dictionary<string, int>();
   }

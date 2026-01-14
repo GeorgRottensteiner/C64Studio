@@ -1576,7 +1576,8 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      if ( comboZoneSelector.SelectedIndex == -1 )
+      if ( ( comboZoneSelector.SelectedIndex == -1 )
+      &&   ( comboZoneSelector.Items.Count > 0 ) )
       {
         comboZoneSelector.SelectedIndex = 0;
       }

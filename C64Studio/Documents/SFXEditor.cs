@@ -78,7 +78,7 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 100,
         Name = "Frequency", // low
-        RelevantBits = 0xffff,
+        RelevantBits = 0xff,
         MinValue = 0,
         MaxValue = 65535
       } );
@@ -86,7 +86,7 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 2 * 100,
         Name = "Frequency",  // hi
-        RelevantBits = 0xffff,
+        RelevantBits = 0xff,
         ShiftBitsRight = 8,
         MinValue = 0,
         MaxValue = 65535
@@ -95,7 +95,7 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 3 * 100,
         Name = "Attack",
-        RelevantBits = 4,
+        RelevantBits = 0xf0,
         ShiftBitsLeft = 4,
         MinValue = 0,
         MaxValue = 15
@@ -104,7 +104,7 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 3 * 100,
         Name = "Decay",
-        RelevantBits = 4,
+        RelevantBits = 0x0f,
         MinValue = 0,
         MaxValue = 15
       } );
@@ -112,7 +112,7 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 4 * 100,
         Name = "Sustain",
-        RelevantBits = 4,
+        RelevantBits = 0xf0,
         ShiftBitsLeft = 4,
         MinValue = 0,
         MaxValue = 15
@@ -121,7 +121,7 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 4 * 100,
         Name = "Release",
-        RelevantBits = 4,
+        RelevantBits = 0x0f,
         MinValue = 0,
         MaxValue = 15
       } );
@@ -129,15 +129,15 @@ namespace RetroDevStudio.Documents
       {
         AddressToWriteTo = 0x9fa + 5 * 100,
         Name = "Pulse", // low
-        RelevantBits = 8,
+        RelevantBits = 0xff,
         MinValue = 0,
         MaxValue = 65535
       } );
       player1.Parameters.Add( new ValueDescriptor()
       {
         AddressToWriteTo = 0x9fa + 6 * 100,
-        Name = "Frequency",  // hi
-        RelevantBits = 8,
+        Name = "Pulse",  // hi
+        RelevantBits = 0xff00,
         ShiftBitsRight = 8,
         MinValue = 0,
         MaxValue = 65535
@@ -395,6 +395,7 @@ FX_WAVE_NOISE         = 3
 
       foreach ( var entry in targetValues )
       {
+        Debug.Log( $"Set {entry.Key:X} to {entry.Value:X}" );
         playerData.SetU8At( entry.Key - _currentPlayer.PlayerCodeAddress, entry.Value );
       }
     }
