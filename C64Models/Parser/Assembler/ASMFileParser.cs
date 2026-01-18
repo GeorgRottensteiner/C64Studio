@@ -1836,7 +1836,14 @@ namespace RetroDevStudio.Parser
               symbol.Type = SymbolInfo.Types.CONSTANT_STRING;
               symbol.String = Tokens[StartIndex].Content;
               symbol.LineIndex = LineIndex;
-              NumBytesGiven = Tokens[StartIndex].Length;
+
+              if ( symbol.String == "\"" )
+              {
+                symbol.String = "\"\"";
+              } 
+
+              NumBytesGiven = symbol.String.Length;
+
 
               symbol.String = Parser.BASIC.BasicFileParser.ReplaceAllMacrosByPETSCIICode( symbol.String, _ParseContext.CurrentTextMapping, MachineType.C64, out bool hadError );
               if ( hadError )
