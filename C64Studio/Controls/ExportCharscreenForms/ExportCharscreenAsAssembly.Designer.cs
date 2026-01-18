@@ -36,6 +36,7 @@ namespace RetroDevStudio.Controls
       this.editWrapByteCount = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.editPrefix = new System.Windows.Forms.TextBox();
+      this.checkPETSCIIEncoding = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // checkExportASMAsPetSCII
@@ -43,9 +44,9 @@ namespace RetroDevStudio.Controls
       this.checkExportASMAsPetSCII.AutoSize = true;
       this.checkExportASMAsPetSCII.Location = new System.Drawing.Point(3, 72);
       this.checkExportASMAsPetSCII.Name = "checkExportASMAsPetSCII";
-      this.checkExportASMAsPetSCII.Size = new System.Drawing.Size(93, 17);
+      this.checkExportASMAsPetSCII.Size = new System.Drawing.Size(124, 17);
       this.checkExportASMAsPetSCII.TabIndex = 6;
-      this.checkExportASMAsPetSCII.Text = "Prefer PetSCII";
+      this.checkExportASMAsPetSCII.Text = "Prefer !pet statement";
       this.checkExportASMAsPetSCII.UseVisualStyleBackColor = true;
       // 
       // checkExportHex
@@ -111,10 +112,21 @@ namespace RetroDevStudio.Controls
       this.editPrefix.TabIndex = 1;
       this.editPrefix.Text = "!byte ";
       // 
+      // checkPETSCIIEncoding
+      // 
+      this.checkPETSCIIEncoding.AutoSize = true;
+      this.checkPETSCIIEncoding.Location = new System.Drawing.Point(3, 95);
+      this.checkPETSCIIEncoding.Name = "checkPETSCIIEncoding";
+      this.checkPETSCIIEncoding.Size = new System.Drawing.Size(114, 17);
+      this.checkPETSCIIEncoding.TabIndex = 6;
+      this.checkPETSCIIEncoding.Text = "PETSCII encoding";
+      this.checkPETSCIIEncoding.UseVisualStyleBackColor = true;
+      // 
       // ExportCharscreenAsAssembly
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkPETSCIIEncoding);
       this.Controls.Add(this.checkExportASMAsPetSCII);
       this.Controls.Add(this.checkExportHex);
       this.Controls.Add(this.checkExportToDataIncludeRes);
@@ -138,5 +150,6 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.TextBox editWrapByteCount;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editPrefix;
-  }
+        private System.Windows.Forms.CheckBox checkPETSCIIEncoding;
+    }
 }

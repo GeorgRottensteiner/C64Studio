@@ -44,7 +44,10 @@ namespace RetroDevStudio.Controls
       var             sb = new StringBuilder();
       StringBuilder   sbPET = null;
 
-      if ( ( checkExportASMAsPetSCII.Checked )
+      var charData = new ByteBuffer( Info.ScreenCharData );
+
+      if ( ( ( checkExportASMAsPetSCII.Checked )
+      ||     ( checkPETSCIIEncoding.Checked ) )
       &&   ( ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR )
       ||     ( Info.Data == ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR )
       ||     ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_ONLY ) ) )
@@ -59,73 +62,87 @@ namespace RetroDevStudio.Controls
         bool            isReverse = false;
         bool            insideQuotes = false;
 
-        sbPET = new StringBuilder();
-
-
-        for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
+        if ( checkExportASMAsPetSCII.Checked )
         {
-          sbPET.Append( "!pet " );
-          insideQuotes = false;
-          for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+          sbPET = new StringBuilder();
+          for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
           {
-            byte newChar = (byte)Info.Charscreen.CharacterAt( x, i );
-              
-            byte charToAdd = newChar;
+            sbPET.Append( "!pet " );
+            insideQuotes = false;
+            for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+            {
+              byte newChar = (byte)Info.Charscreen.CharacterAt( x, i );
 
-            if ( newChar >= 128 )
-            {
-              isReverse = true;
-            }
-            else if ( isReverse )
-            {
-              isReverse = false;
-            }
-            if ( isReverse )
-            {
-              charToAdd -= 128;
-            }
-            if ( ( ConstantData.ScreenCodeToChar[newChar].HasNative )
-            &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
-            {
-              if ( x > Info.Area.Left )
+              byte charToAdd = newChar;
+
+              if ( newChar >= 128 )
               {
-                if ( !insideQuotes )
-                {
-                  sbPET.Append( ", \"" );
-                }
+                isReverse = true;
               }
-              else
+              else if ( isReverse )
               {
-                sbPET.Append( "\"" );
+                isReverse = false;
               }
-              sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
-              insideQuotes = true;
-            }
-            else
-            {
-              if ( x > Info.Area.Left )
+              if ( isReverse )
               {
-                if ( insideQuotes )
+                charToAdd -= 128;
+              }
+              if ( ( ConstantData.ScreenCodeToChar[newChar].HasNative )
+              &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
+              {
+                if ( x > Info.Area.Left )
                 {
-                  sbPET.Append( "\", " );
+                  if ( !insideQuotes )
+                  {
+                    sbPET.Append( ", \"" );
+                  }
                 }
                 else
                 {
-                  sbPET.Append( ", " );
+                  sbPET.Append( "\"" );
                 }
+                sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
+                insideQuotes = true;
               }
-              sbPET.Append( '$' );
-              sbPET.Append( newChar.ToString( "X2" ) );
-              insideQuotes = false;
+              else
+              {
+                if ( x > Info.Area.Left )
+                {
+                  if ( insideQuotes )
+                  {
+                    sbPET.Append( "\", " );
+                  }
+                  else
+                  {
+                    sbPET.Append( ", " );
+                  }
+                }
+                sbPET.Append( '$' );
+                newChar = ConstantData.ScreenCodeToChar[newChar].NativeValue;
+                sbPET.Append( newChar.ToString( "X2" ) );
+                insideQuotes = false;
+              }
+            }
+            if ( insideQuotes )
+            {
+              sbPET.AppendLine( "\"" );
+            }
+            else
+            {
+              sbPET.AppendLine();
             }
           }
-          if ( insideQuotes )
+        }
+        else
+        {
+          // encode as PETSCII values
+          for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
           {
-            sbPET.AppendLine( "\"" );
-          }
-          else
-          {
-            sbPET.AppendLine();
+            for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+            {
+              byte value = (byte)Info.Charscreen.CharacterAt( x, i );
+              charData.SetU8At( x - Info.Area.Left + ( i - Info.Area.Top ) * Info.Area.Width, ConstantData.ScreenCodeToChar[value].NativeValue );
+            }
           }
         }
       }
@@ -133,10 +150,10 @@ namespace RetroDevStudio.Controls
       ByteBuffer  interleavedBuffer = null;
       if ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED )
       {
-        interleavedBuffer = new ByteBuffer( Info.ScreenCharData.Length + Info.ScreenColorData.Length );
-        for ( int i = 0; i < Info.ScreenCharData.Length; ++i )
+        interleavedBuffer = new ByteBuffer( charData.Length + Info.ScreenColorData.Length );
+        for ( int i = 0; i < charData.Length; ++i )
         {
-          interleavedBuffer.SetU8At( i * 2, Info.ScreenCharData.ByteAt( i ) );
+          interleavedBuffer.SetU8At( i * 2, charData.ByteAt( i ) );
           interleavedBuffer.SetU8At( i * 2 + 1, Info.ScreenColorData.ByteAt( i ) );
         }
       }
@@ -149,7 +166,7 @@ namespace RetroDevStudio.Controls
       }
       else
       {
-        screenData = Util.ToASMData( Info.ScreenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
+        screenData = Util.ToASMData( charData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
       }
       string colorData  = Util.ToASMData( Info.ScreenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
 
