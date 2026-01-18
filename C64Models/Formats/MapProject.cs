@@ -938,15 +938,29 @@ namespace RetroDevStudio.Formats
 
     internal void ExportTilesAsBuffer( bool RowByRow, out GR.Memory.ByteBuffer TileData )
     {
+      int   maxTileWidth = 0;
+      int   maxTileHeight = 0;
+      foreach ( var tile in Tiles )
+      {
+        if ( tile.Chars.Width > maxTileWidth )
+        {
+          maxTileWidth = tile.Chars.Width;
+        }
+        if ( tile.Chars.Height > maxTileHeight )
+        {
+          maxTileHeight = tile.Chars.Height;
+        }
+      }
+
       TileData = new GR.Memory.ByteBuffer();
 
       foreach ( Formats.MapProject.Tile tile in Tiles )
       {
         if ( RowByRow )
         {
-          for ( int j = 0; j < tile.Chars.Height; ++j )
+          for ( int j = 0; j < maxTileHeight; ++j )
           {
-            for ( int i = 0; i < tile.Chars.Width; ++i )
+            for ( int i = 0; i < maxTileWidth; ++i )
             {
               TileData.AppendU8( (byte)tile.Chars[i, j].Character );
               TileData.AppendU8( (byte)tile.Chars[i, j].Color );
@@ -955,9 +969,9 @@ namespace RetroDevStudio.Formats
         }
         else
         {
-          for ( int i = 0; i < tile.Chars.Width; ++i )
+          for ( int i = 0; i < maxTileWidth; ++i )
           {
-            for ( int j = 0; j < tile.Chars.Height; ++j )            
+            for ( int j = 0; j < maxTileHeight; ++j )            
             {
               TileData.AppendU8( (byte)tile.Chars[i, j].Character );
               TileData.AppendU8( (byte)tile.Chars[i, j].Color );
