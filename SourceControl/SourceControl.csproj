@@ -33,7 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.30.0" Condition="'$(TargetFramework)'=='net8.0-windows'" />
+    <PackageReference Include="LibGit2Sharp" Version="0.31.0" Condition="'$(TargetFramework)'=='net8.0-windows'" />
   </ItemGroup>
 
 </Project>

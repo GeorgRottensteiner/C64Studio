@@ -60,5 +60,19 @@ namespace RetroDevStudio.Audio
 
 
 
+    internal void Replay( ByteBuffer playerData )
+    {
+      if ( _sidPlayer == null )
+      {
+        Play( playerData );
+        return;
+      }
+      _sidPlayer.Pause();
+      _sidPlayer.Inject( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, _currentSFXPlayer.AddressToStartPlayer );
+      _sidPlayer.Resume();
+    }
+
+
+
   }
 }

@@ -21,6 +21,8 @@ namespace RetroDevStudio.Audio
     public int                    AddressToTriggerPlaying = -1;
     public byte                   ValueToTriggerPlaying = 1;
 
+    public bool                   CanReplay = true; 
+
 
   }
 }

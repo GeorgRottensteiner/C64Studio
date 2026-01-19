@@ -84,6 +84,18 @@ namespace RetroDevStudio.Audio
 
 
 
+    public bool Inject( byte[] sidData, int dataStartAddress, int songStartAddress )
+    {
+      if ( ( !IsPaused() )
+      &&   ( !IsPlaying() ) )
+      {
+        return Play( sidData, dataStartAddress, songStartAddress );
+      }
+      return _player.InjectMemory( ByteArrayToHexString( sidData ), dataStartAddress, songStartAddress );
+    }
+
+
+
     public void Stop()
     {
       _player.Stop();
@@ -91,9 +103,30 @@ namespace RetroDevStudio.Audio
 
 
 
+    public void Pause()
+    {
+      _player.Pause();
+    }
+
+
+
+    public void Resume()
+    {
+      _player.Resume();
+    }
+
+
+
     public bool IsPlaying()
     {
       return _player.State == SharpSid.State.PLAYING;
+    }
+
+
+
+    public bool IsPaused()
+    {
+      return _player.State == SharpSid.State.PAUSED;
     }
 
 
