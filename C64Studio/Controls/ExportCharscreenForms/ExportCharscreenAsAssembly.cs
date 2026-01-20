@@ -47,6 +47,7 @@ namespace RetroDevStudio.Controls
       bool            useHex = checkExportHex.Checked;
       bool            usePETStatement = checkExportASMAsPetSCII.Checked;    
       bool            usePETSCIIEncoding = checkPETSCIIEncoding.Checked;
+      bool            stripInvisibleColors = false;//checkExportToBASICCollapseColors.Checked;
 
       // can't have both
       if ( usePETStatement )
@@ -71,6 +72,11 @@ namespace RetroDevStudio.Controls
         // pet export only exports chars, no color changes
         bool            isReverse = false;
         bool            insideQuotes = false;
+        int             curColor = -1;
+        int             colorChangeCache = -1;
+        bool            mega65UpperColorRange = false;
+        bool            isFirstCharInLine = true;
+        bool            addColors = ( Info.Data != ExportCharsetScreenInfo.ExportData.CHAR_ONLY );
 
         if ( checkExportASMAsPetSCII.Checked )
         {
@@ -79,8 +85,10 @@ namespace RetroDevStudio.Controls
           {
             sbPET.Append( "!pet " );
             insideQuotes = false;
+            isFirstCharInLine = true;
             for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
             {
+              ushort newColor = (ushort)Info.Charscreen.ColorAt( x, i );
               byte newChar = (byte)Info.Charscreen.CharacterAt( x, i );
 
               byte charToAdd = newChar;
@@ -91,8 +99,9 @@ namespace RetroDevStudio.Controls
                 {
                   if ( usePETStatement )
                   {
-                    EnableQuotes( x, Info, sbPET, ref insideQuotes );
+                    EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
                     sbPET.Append( "{rvson}" );
+                    isFirstCharInLine = false;
                   }
                   isReverse = true;
                 }
@@ -101,8 +110,9 @@ namespace RetroDevStudio.Controls
               {
                 if ( usePETStatement )
                 {
-                  EnableQuotes( x, Info, sbPET, ref insideQuotes );
+                  EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
                   sbPET.Append( "{rvsoff}" );
+                  isFirstCharInLine = false;
                 }
                 isReverse = false;
               }
@@ -110,17 +120,55 @@ namespace RetroDevStudio.Controls
               {
                 charToAdd -= 128;
               }
+
+              if ( ( addColors )
+              &&   ( newColor != curColor ) )
+              {
+                if ( stripInvisibleColors )
+                {
+                  colorChangeCache = newColor;
+                }
+                else
+                {
+                  int colorToUse = newColor;
+                  if ( newColor >= 16 )
+                  {
+                    if ( !mega65UpperColorRange )
+                    {
+                      mega65UpperColorRange = true;
+                      EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                      sbPET.Append( "{" + ConstantData.PetSCIIToChar[1].Replacements[0] + "}" );
+                      isFirstCharInLine = false;
+                    }
+                    colorToUse &= 0x0f;
+                  }
+                  else if ( mega65UpperColorRange )
+                  {
+                    mega65UpperColorRange = false;
+                    EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                    sbPET.Append( "{" + ConstantData.PetSCIIToChar[4].Replacements[0] + "}" );
+                    isFirstCharInLine = false;
+                  }
+                  EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                  sbPET.Append( "{" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].Replacements[0] +"}" );
+                  isFirstCharInLine = false;
+                }
+                curColor = newColor;
+              }
+
+
               if ( ( ConstantData.ScreenCodeToChar[charToAdd].HasNative )
               &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
               {
-                EnableQuotes( x, Info, sbPET, ref insideQuotes );
+                EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
                 sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
                 insideQuotes = true;
+                isFirstCharInLine = false;
               }
               else
               {
-                DisableQuotes( x, Info, sbPET, ref insideQuotes );
-                if ( x > Info.Area.Left )
+                DisableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                if ( !isFirstCharInLine )
                 {
                   sbPET.Append( ", " );
                 }
@@ -134,9 +182,10 @@ namespace RetroDevStudio.Controls
                 {
                   sbPET.Append( newChar );
                 }
+                isFirstCharInLine = false;
               }
             }
-            DisableQuotes( Info.Area.Right, Info, sbPET, ref insideQuotes );
+            DisableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
             sbPET.Append( ", " );
             if ( useHex )
             {
@@ -193,7 +242,17 @@ namespace RetroDevStudio.Controls
       sb.Append( Info.Area.Height );
       sb.AppendLine();
 
-      switch ( Info.Data )
+      var mode = Info.Data;
+      if ( checkExportASMAsPetSCII.Checked )
+      {
+        if ( ( mode == ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR )
+        ||   ( mode == ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR ) )
+        {
+          mode = ExportCharsetScreenInfo.ExportData.CHAR_ONLY;
+        }
+      }
+
+      switch ( mode )
       {
         case ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR:
           sb.Append( ";screen char data" + Environment.NewLine + screenData + Environment.NewLine + ";screen color data" + Environment.NewLine + colorData );
@@ -222,11 +281,11 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void EnableQuotes( int x, ExportCharsetScreenInfo info, StringBuilder sbPET, ref bool insideQuotes )
+    private void EnableQuotes( bool isFirstCharInLine, ExportCharsetScreenInfo info, StringBuilder sbPET, ref bool insideQuotes )
     {
       if ( !insideQuotes )
       {
-        if ( x > info.Area.Left )
+        if ( !isFirstCharInLine )
         {
           sbPET.Append( ", \"" );
         }
@@ -240,11 +299,11 @@ namespace RetroDevStudio.Controls
 
 
 
-    private void DisableQuotes( int x, ExportCharsetScreenInfo info, StringBuilder sbPET, ref bool insideQuotes )
+    private void DisableQuotes( bool isFirstCharInLine, ExportCharsetScreenInfo info, StringBuilder sbPET, ref bool insideQuotes )
     {
       if ( insideQuotes )
       {
-        if ( x > info.Area.Left )
+        if ( !isFirstCharInLine )
         {
           sbPET.Append( "\"" );
         }
