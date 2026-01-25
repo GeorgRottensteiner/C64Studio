@@ -37,17 +37,21 @@ namespace RetroDevStudio.Controls
       this.label2 = new System.Windows.Forms.Label();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.checkPETSCIIEncoding = new System.Windows.Forms.CheckBox();
+      this.checkExportToBASICReplaceShiftSpaceWithSpace = new System.Windows.Forms.CheckBox();
+      this.checkExportToBASICReplaceSpaceWithRight = new System.Windows.Forms.CheckBox();
+      this.checkExportToBASICCollapseColors = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // checkExportASMAsPetSCII
       // 
       this.checkExportASMAsPetSCII.AutoSize = true;
-      this.checkExportASMAsPetSCII.Location = new System.Drawing.Point(3, 72);
+      this.checkExportASMAsPetSCII.Location = new System.Drawing.Point(3, 118);
       this.checkExportASMAsPetSCII.Name = "checkExportASMAsPetSCII";
       this.checkExportASMAsPetSCII.Size = new System.Drawing.Size(124, 17);
-      this.checkExportASMAsPetSCII.TabIndex = 6;
+      this.checkExportASMAsPetSCII.TabIndex = 7;
       this.checkExportASMAsPetSCII.Text = "Prefer !pet statement";
       this.checkExportASMAsPetSCII.UseVisualStyleBackColor = true;
+      this.checkExportASMAsPetSCII.CheckedChanged += new System.EventHandler(this.checkExportASMAsPetSCII_CheckedChanged);
       // 
       // checkExportHex
       // 
@@ -57,7 +61,7 @@ namespace RetroDevStudio.Controls
       this.checkExportHex.Location = new System.Drawing.Point(3, 49);
       this.checkExportHex.Name = "checkExportHex";
       this.checkExportHex.Size = new System.Drawing.Size(141, 17);
-      this.checkExportHex.TabIndex = 5;
+      this.checkExportHex.TabIndex = 4;
       this.checkExportHex.Text = "Export with Hex notation";
       this.checkExportHex.UseVisualStyleBackColor = true;
       // 
@@ -115,17 +119,52 @@ namespace RetroDevStudio.Controls
       // checkPETSCIIEncoding
       // 
       this.checkPETSCIIEncoding.AutoSize = true;
-      this.checkPETSCIIEncoding.Location = new System.Drawing.Point(3, 95);
+      this.checkPETSCIIEncoding.Location = new System.Drawing.Point(3, 72);
       this.checkPETSCIIEncoding.Name = "checkPETSCIIEncoding";
       this.checkPETSCIIEncoding.Size = new System.Drawing.Size(114, 17);
-      this.checkPETSCIIEncoding.TabIndex = 6;
+      this.checkPETSCIIEncoding.TabIndex = 5;
       this.checkPETSCIIEncoding.Text = "PETSCII encoding";
       this.checkPETSCIIEncoding.UseVisualStyleBackColor = true;
+      // 
+      // checkExportToBASICReplaceShiftSpaceWithSpace
+      // 
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.AutoSize = true;
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Location = new System.Drawing.Point(3, 95);
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Name = "checkExportToBASICReplaceShiftSpaceWithSpace";
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Size = new System.Drawing.Size(180, 17);
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.TabIndex = 6;
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Text = "Replace Shift-Space with Space";
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.UseVisualStyleBackColor = true;
+      // 
+      // checkExportToBASICReplaceSpaceWithRight
+      // 
+      this.checkExportToBASICReplaceSpaceWithRight.AutoSize = true;
+      this.checkExportToBASICReplaceSpaceWithRight.Enabled = false;
+      this.checkExportToBASICReplaceSpaceWithRight.Location = new System.Drawing.Point(9, 164);
+      this.checkExportToBASICReplaceSpaceWithRight.Name = "checkExportToBASICReplaceSpaceWithRight";
+      this.checkExportToBASICReplaceSpaceWithRight.Size = new System.Drawing.Size(183, 17);
+      this.checkExportToBASICReplaceSpaceWithRight.TabIndex = 9;
+      this.checkExportToBASICReplaceSpaceWithRight.Text = "Replace Space with Cursor Right";
+      this.checkExportToBASICReplaceSpaceWithRight.UseVisualStyleBackColor = true;
+      // 
+      // checkExportToBASICCollapseColors
+      // 
+      this.checkExportToBASICCollapseColors.AutoSize = true;
+      this.checkExportToBASICCollapseColors.Enabled = false;
+      this.checkExportToBASICCollapseColors.Location = new System.Drawing.Point(9, 141);
+      this.checkExportToBASICCollapseColors.Name = "checkExportToBASICCollapseColors";
+      this.checkExportToBASICCollapseColors.Size = new System.Drawing.Size(118, 17);
+      this.checkExportToBASICCollapseColors.TabIndex = 8;
+      this.checkExportToBASICCollapseColors.Text = "Strip invisible colors";
+      this.checkExportToBASICCollapseColors.UseVisualStyleBackColor = true;
       // 
       // ExportCharscreenAsAssembly
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkExportToBASICReplaceShiftSpaceWithSpace);
+      this.Controls.Add(this.checkExportToBASICReplaceSpaceWithRight);
+      this.Controls.Add(this.checkExportToBASICCollapseColors);
       this.Controls.Add(this.checkPETSCIIEncoding);
       this.Controls.Add(this.checkExportASMAsPetSCII);
       this.Controls.Add(this.checkExportHex);
@@ -151,5 +190,8 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editPrefix;
         private System.Windows.Forms.CheckBox checkPETSCIIEncoding;
+        private System.Windows.Forms.CheckBox checkExportToBASICReplaceShiftSpaceWithSpace;
+        private System.Windows.Forms.CheckBox checkExportToBASICReplaceSpaceWithRight;
+        private System.Windows.Forms.CheckBox checkExportToBASICCollapseColors;
     }
 }

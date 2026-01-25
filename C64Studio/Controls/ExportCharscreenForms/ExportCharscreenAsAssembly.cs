@@ -47,12 +47,20 @@ namespace RetroDevStudio.Controls
       bool            useHex = checkExportHex.Checked;
       bool            usePETStatement = checkExportASMAsPetSCII.Checked;    
       bool            usePETSCIIEncoding = checkPETSCIIEncoding.Checked;
-      bool            stripInvisibleColors = false;//checkExportToBASICCollapseColors.Checked;
+      bool            replaceSpaceWithCursorRight = checkExportToBASICReplaceSpaceWithRight.Checked;
+      bool            replaceShiftSpaceWithSpace = checkExportToBASICReplaceShiftSpaceWithSpace.Checked;
+      bool            stripInvisibleColors = checkExportToBASICCollapseColors.Checked;
+
 
       // can't have both
       if ( usePETStatement )
       {
         usePETSCIIEncoding = false;
+      }
+      else
+      {
+        stripInvisibleColors = false;
+        replaceSpaceWithCursorRight = false;
       }
 
       var charData = new ByteBuffer( Info.ScreenCharData );
@@ -116,15 +124,23 @@ namespace RetroDevStudio.Controls
                 }
                 isReverse = false;
               }
+
               if ( isReverse )
               {
                 charToAdd -= 128;
+              }
+              if ( ( charToAdd == 96 )
+              &&   ( replaceShiftSpaceWithSpace ) )
+              {
+                charToAdd = 32;
               }
 
               if ( ( addColors )
               &&   ( newColor != curColor ) )
               {
-                if ( stripInvisibleColors )
+                if ( ( ( charToAdd == 32 )
+                ||     ( charToAdd == 96 ) )
+                &&   ( stripInvisibleColors ) )
                 {
                   colorChangeCache = newColor;
                 }
@@ -157,12 +173,19 @@ namespace RetroDevStudio.Controls
               }
 
 
-              if ( ( ConstantData.ScreenCodeToChar[charToAdd].HasNative )
-              &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
+              if ( ( replaceSpaceWithCursorRight )
+              &&   ( charToAdd == 32 )
+              &&   ( usePETStatement ) )
+              {
+                EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                sbPET.Append( "{right}" );
+                isFirstCharInLine = false;
+              }
+              else if ( ( ConstantData.ScreenCodeToChar[charToAdd].HasNative )
+              &&        ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
               {
                 EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
                 sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
-                insideQuotes = true;
                 isFirstCharInLine = false;
               }
               else
@@ -207,8 +230,28 @@ namespace RetroDevStudio.Controls
             for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
             {
               byte value = (byte)Info.Charscreen.CharacterAt( x, i );
+
+              if ( ( value == 96 )
+              &&   ( replaceShiftSpaceWithSpace ) )
+              {
+                value = 32;
+              }
+
               charData.SetU8At( x - Info.Area.Left + ( i - Info.Area.Top ) * Info.Area.Width, ConstantData.ScreenCodeToChar[value].NativeValue );
             }
+          }
+        }
+      }
+      else
+      {
+        for ( int i = 0; i < charData.Length; ++i )
+        {
+          byte value = charData.ByteAt( i );
+          if ( ( value == 96 )
+          &&   ( replaceShiftSpaceWithSpace ) )
+          {
+            value = 32;
+            charData.SetU8At( i, value );
           }
         }
       }
@@ -316,6 +359,14 @@ namespace RetroDevStudio.Controls
     private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
     {
       editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
+    }
+
+
+
+    private void checkExportASMAsPetSCII_CheckedChanged( object sender, EventArgs e )
+    {
+      checkExportToBASICReplaceSpaceWithRight.Enabled       = checkExportASMAsPetSCII.Checked;
+      checkExportToBASICCollapseColors.Enabled              = checkExportASMAsPetSCII.Checked;
     }
 
 
