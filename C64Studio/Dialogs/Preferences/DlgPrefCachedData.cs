@@ -24,7 +24,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     public DlgPrefCachedData( StudioCore Core ) : base( Core )
     {
-      _Keywords.AddRange( new string[] { "cache", "clear", "search", "replace", "history" } );
+      _Keywords.AddRange( new string[] { "cache", "clear", "search", "replace", "history", "size" } );
 
       InitializeComponent();
     }
@@ -64,6 +64,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       Core.Settings.ReplaceWithArguments.Clear();
       Core.MainForm.RaiseApplicationEvent( new Types.ApplicationEvent( Types.ApplicationEvent.Type.REPLACE_WITH_HISTORY_UPDATED ) );
       Core.Settings.StoredDialogResults.Clear();
+      Core.Settings.DialogSettings.ClearDialogPlacements();
     }
 
 
@@ -71,6 +72,13 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void btnClearDecisionCache_Click( DecentForms.ControlBase Sender )
     {
       Core.Settings.StoredDialogResults.Clear();
+    }
+
+
+
+    private void btnClearStoredDialogSizes_Click( DecentForms.ControlBase Sender )
+    {
+      Core.Settings.DialogSettings.ClearDialogPlacements();
     }
 
 

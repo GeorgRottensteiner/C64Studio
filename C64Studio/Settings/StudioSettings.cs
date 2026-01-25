@@ -10,6 +10,7 @@ using System.Drawing;
 using RetroDevStudio.Documents;
 using System.Linq;
 using System.Management;
+using RetroDevStudio.Dialogs;
 
 namespace RetroDevStudio
 {
@@ -1923,13 +1924,13 @@ namespace RetroDevStudio
     {
       foreach ( PaletteType palType in System.Enum.GetValues( typeof( PaletteType ) ) )
       {
-        if ( !Core.Settings.Palettes.ContainsKey( palType ) )
+        if ( !Palettes.ContainsKey( palType ) )
         {
-          Core.Settings.Palettes.Add( palType, new List<Palette>() );
+          Palettes.Add( palType, new List<Palette>() );
         }
-        if ( Core.Settings.Palettes[palType].Count == 0 )
+        if ( Palettes[palType].Count == 0 )
         {
-          Core.Settings.Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );
+          Palettes[palType].Add( PaletteManager.PaletteFromType( palType ) );
         }
       }
     }

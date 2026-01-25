@@ -24,18 +24,21 @@ namespace RetroDevStudio.Dialogs
       AddElementTabs();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+      Core.Settings.DialogSettings.RestoreAppearance( "ElementProperties", this );
+
       Core.Theming.ApplyTheme( this );
     }
 
 
 
-    private void AddTab( Form TabForm )
+    private void AddTab( Form tabForm )
     {
       TabPage   page = new TabPage();
-      page.Controls.Add( TabForm );
-      page.Text = page.Controls[0].Text;
-      page.Controls[0].Visible = true;
-      page.Tag = TabForm;
+      page.Controls.Add( tabForm );
+      page.Text                 = page.Controls[0].Text;
+      page.Controls[0].Visible  = true;
+      page.Tag                  = tabForm;
+      tabForm.Dock              = DockStyle.Fill;
       tabElementProperties.TabPages.Add( page );
     }
 
@@ -75,6 +78,15 @@ namespace RetroDevStudio.Dialogs
       }
       Close();
     }
+
+
+
+    private void ElementProperties_FormClosing( object sender, FormClosingEventArgs e )
+    {
+      m_Core.Settings.DialogSettings.StoreAppearance( "ElementProperties", this );
+    }
+
+
 
   }
 }

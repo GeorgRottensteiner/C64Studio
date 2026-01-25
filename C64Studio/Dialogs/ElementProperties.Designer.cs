@@ -45,7 +45,12 @@
       // 
       // btnClose
       // 
+      this.btnClose.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnClose.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClose.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnClose.Image = null;
       this.btnClose.Location = new System.Drawing.Point(548, 394);
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(75, 23);
@@ -61,13 +66,12 @@
       this.ClientSize = new System.Drawing.Size(635, 429);
       this.Controls.Add(this.btnClose);
       this.Controls.Add(this.tabElementProperties);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-      this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "ElementProperties";
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
       this.Text = "Element Properties";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ElementProperties_FormClosing);
       this.ResumeLayout(false);
 
     }

@@ -85,7 +85,10 @@ namespace RetroDevStudio
 
       BuildEventDetails.Parent    = this;
       BuildEventDetails.Location  = new Point( 0, 68 );
+      BuildEventDetails.Width     = ClientSize.Width - BuildEventDetails.Location.X - 68;
+      BuildEventDetails.Height    = ClientSize.Height - BuildEventDetails.Location.Y - 0;
       BuildEventDetails.Visible   = true;
+      BuildEventDetails.Anchor    = AnchorStyles.Right | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Left;
 
       if ( !_DuringInit )
       {

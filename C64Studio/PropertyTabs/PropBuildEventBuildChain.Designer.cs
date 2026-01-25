@@ -56,6 +56,8 @@
       // 
       // comboBuildChainConfig
       // 
+      this.comboBuildChainConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.comboBuildChainConfig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBuildChainConfig.Enabled = false;
       this.comboBuildChainConfig.FormattingEnabled = true;
@@ -67,6 +69,8 @@
       // 
       // comboBuildChainProject
       // 
+      this.comboBuildChainProject.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.comboBuildChainProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBuildChainProject.Enabled = false;
       this.comboBuildChainProject.FormattingEnabled = true;
@@ -80,6 +84,8 @@
       // 
       this.listBuildChainProjects.AddButtonEnabled = false;
       this.listBuildChainProjects.AllowClone = true;
+      this.listBuildChainProjects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
       this.listBuildChainProjects.DeleteButtonEnabled = false;
       this.listBuildChainProjects.Enabled = false;
       this.listBuildChainProjects.HasOwnerDrawColumn = true;
@@ -155,6 +161,8 @@
       // 
       // comboBuildChainFile
       // 
+      this.comboBuildChainFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.comboBuildChainFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBuildChainFile.Enabled = false;
       this.comboBuildChainFile.FormattingEnabled = true;

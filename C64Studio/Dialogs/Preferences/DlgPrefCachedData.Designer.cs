@@ -39,6 +39,8 @@
       this.label4 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
       this.btnClearDecisionCache = new DecentForms.Button();
+      this.btnClearStoredDialogSizes = new DecentForms.Button();
+      this.label6 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // label11
@@ -60,7 +62,7 @@
       this.btnClearReplaceWithHistory.Location = new System.Drawing.Point(258, 64);
       this.btnClearReplaceWithHistory.Name = "btnClearReplaceWithHistory";
       this.btnClearReplaceWithHistory.Size = new System.Drawing.Size(75, 20);
-      this.btnClearReplaceWithHistory.TabIndex = 18;
+      this.btnClearReplaceWithHistory.TabIndex = 2;
       this.btnClearReplaceWithHistory.Text = "Clear";
       this.btnClearReplaceWithHistory.Click += new DecentForms.EventHandler(this.btnClearReplaceWithHistory_Click);
       // 
@@ -74,7 +76,7 @@
       this.btnClearReplaceSearchHistory.Location = new System.Drawing.Point(258, 41);
       this.btnClearReplaceSearchHistory.Name = "btnClearReplaceSearchHistory";
       this.btnClearReplaceSearchHistory.Size = new System.Drawing.Size(75, 20);
-      this.btnClearReplaceSearchHistory.TabIndex = 18;
+      this.btnClearReplaceSearchHistory.TabIndex = 1;
       this.btnClearReplaceSearchHistory.Text = "Clear";
       this.btnClearReplaceSearchHistory.Click += new DecentForms.EventHandler(this.btnClearReplaceSearchHistory_Click);
       // 
@@ -88,7 +90,7 @@
       this.btnClearSearchHistory.Location = new System.Drawing.Point(258, 18);
       this.btnClearSearchHistory.Name = "btnClearSearchHistory";
       this.btnClearSearchHistory.Size = new System.Drawing.Size(75, 20);
-      this.btnClearSearchHistory.TabIndex = 18;
+      this.btnClearSearchHistory.TabIndex = 0;
       this.btnClearSearchHistory.Text = "Clear";
       this.btnClearSearchHistory.Click += new DecentForms.EventHandler(this.btnClearSearchHistory_Click);
       // 
@@ -126,17 +128,17 @@
       this.btnClearAll.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnClearAll.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnClearAll.Image = null;
-      this.btnClearAll.Location = new System.Drawing.Point(258, 142);
+      this.btnClearAll.Location = new System.Drawing.Point(258, 151);
       this.btnClearAll.Name = "btnClearAll";
       this.btnClearAll.Size = new System.Drawing.Size(75, 20);
-      this.btnClearAll.TabIndex = 18;
+      this.btnClearAll.TabIndex = 5;
       this.btnClearAll.Text = "Clear";
       this.btnClearAll.Click += new DecentForms.EventHandler(this.btnClearAll_Click);
       // 
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(13, 147);
+      this.label4.Location = new System.Drawing.Point(13, 156);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(44, 13);
       this.label4.TabIndex = 19;
@@ -161,20 +163,45 @@
       this.btnClearDecisionCache.Location = new System.Drawing.Point(258, 87);
       this.btnClearDecisionCache.Name = "btnClearDecisionCache";
       this.btnClearDecisionCache.Size = new System.Drawing.Size(75, 20);
-      this.btnClearDecisionCache.TabIndex = 18;
+      this.btnClearDecisionCache.TabIndex = 3;
       this.btnClearDecisionCache.Text = "Clear";
       this.btnClearDecisionCache.Click += new DecentForms.EventHandler(this.btnClearDecisionCache_Click);
+      // 
+      // btnClearStoredDialogSizes
+      // 
+      this.btnClearStoredDialogSizes.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnClearStoredDialogSizes.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnClearStoredDialogSizes.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnClearStoredDialogSizes.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnClearStoredDialogSizes.Image = null;
+      this.btnClearStoredDialogSizes.Location = new System.Drawing.Point(258, 110);
+      this.btnClearStoredDialogSizes.Name = "btnClearStoredDialogSizes";
+      this.btnClearStoredDialogSizes.Size = new System.Drawing.Size(75, 20);
+      this.btnClearStoredDialogSizes.TabIndex = 4;
+      this.btnClearStoredDialogSizes.Text = "Clear";
+      this.btnClearStoredDialogSizes.Click += new DecentForms.EventHandler(this.btnClearStoredDialogSizes_Click);
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(13, 115);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(65, 13);
+      this.label6.TabIndex = 19;
+      this.label6.Text = "Dialog Sizes";
       // 
       // DlgPrefCachedData
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.label4);
+      this.Controls.Add(this.label6);
       this.Controls.Add(this.label5);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.btnClearAll);
+      this.Controls.Add(this.btnClearStoredDialogSizes);
       this.Controls.Add(this.btnClearDecisionCache);
       this.Controls.Add(this.btnClearReplaceWithHistory);
       this.Controls.Add(this.btnClearReplaceSearchHistory);
@@ -199,5 +226,7 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label5;
     private DecentForms.Button btnClearDecisionCache;
-  }
+        private DecentForms.Button btnClearStoredDialogSizes;
+        private System.Windows.Forms.Label label6;
+    }
 }

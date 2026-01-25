@@ -1,16 +1,20 @@
 ﻿using GR.Collections;
 using GR.IO;
+using GR.Math;
 using GR.Memory;
+using SourceControl;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace RetroDevStudio
 {
   public class DialogSettings
   {
     private Dictionary<string,string>       _Settings = new Dictionary<string,string>();
+    private Dictionary<string, Rectangle>   _StoredDialogPlacements = new Dictionary<string, Rectangle>();
 
 
 
@@ -24,6 +28,16 @@ namespace RetroDevStudio
     public void StoreSetting( string Key, int Value )
     {
       _Settings[Key] = Value.ToString();
+    }
+
+
+
+    public void DeleteSetting( string key )
+    {
+      if ( _Settings.ContainsKey( key ) )
+      {
+        _Settings.Remove( key );
+      }
     }
 
 
@@ -67,9 +81,10 @@ namespace RetroDevStudio
 
 
 
-    public void RestoreAppearance( string ControlKey, Form Form )
+    public void RestoreAppearance( string ControlKey, Form form )
     {
       var state = (FormWindowState)GetSettingI( ControlKey + ".State" );
+      form.StartPosition = FormStartPosition.Manual;
 
       int x = GetSettingI( ControlKey + ".X" );
       int y = GetSettingI( ControlKey + ".Y" );
@@ -79,10 +94,10 @@ namespace RetroDevStudio
       if ( ( w > 0 )
       &&   ( h > 0 ) )
       {
-        Form.SetBounds( x, y, w, h );
+        form.SetBounds( x, y, w, h );
         if ( state != FormWindowState.Normal )
         {
-          Form.WindowState = state;
+          form.WindowState = state;
         }
       }
     }
@@ -170,6 +185,24 @@ namespace RetroDevStudio
     }
 
 
+
+    internal void ClearDialogPlacements()
+    {
+      ClearDialogPlacement( "Macros.BuildEvents" );
+      ClearDialogPlacement( "Macros.Tools" );
+      ClearDialogPlacement( "Macros.Debugging" );
+    }
+
+
+
+    private void ClearDialogPlacement( string controlName )
+    {
+      DeleteSetting( controlName + ".State" );
+      DeleteSetting( controlName + ".X" );
+      DeleteSetting( controlName + ".Y" );
+      DeleteSetting( controlName + ".W" );
+      DeleteSetting( controlName + ".H" );
+    }
 
   }
 }
