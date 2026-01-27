@@ -4934,6 +4934,9 @@ namespace RetroDevStudio
     {
       switch ( Function )
       {
+        case Function.CANCEL_BUILD:
+          StudioCore.Compiling.CancelBuild();
+          break;
         case Function.BOOKMARK_DELETE_ALL:
           if ( ActiveContent != null )
           {

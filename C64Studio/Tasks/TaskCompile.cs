@@ -422,9 +422,7 @@ namespace RetroDevStudio.Tasks
 
       Core.SetStatus( "Building..." );
       Core.ClearOutput();
-      Core.Compiling.m_RebuiltFiles.Clear();
-      Core.Compiling.m_RebuiltBuildConfigFiles.Clear();
-      Core.Compiling.m_BuildChainStack.Clear();
+      Core.Compiling.BuildStarted();
       bool needsRebuild = Core.Compiling.NeedsRebuild( m_DocumentToBuild );
       if ( needsRebuild )
       {
@@ -490,7 +488,6 @@ namespace RetroDevStudio.Tasks
       var buildInfo = new SingleBuildInfo();
 
       SingleBuildInfo buildInfoFromLastBuildOfThisFile = null;
-      //Core.Compiling.m_LastBuildInfo.TryGetValue( baseDoc.FullPath, out buildInfoFromLastBuildOfThisFile );
       buildInfoFromLastBuildOfThisFile = baseDoc.LastBuildInfo;
 
       if ( ( buildInfoFromLastBuildOfThisFile != null )
@@ -635,6 +632,13 @@ namespace RetroDevStudio.Tasks
 
     bool BuildElement( DocumentInfo Doc, string ConfigSetting, string AdditionalPredefines, bool OutputMessages, out SingleBuildInfo BuildInfo, out Types.ASM.FileInfo FileInfo )
     {
+      if ( Core.Compiling.IsBuildCancelled() )
+      {
+        BuildInfo = null;
+        FileInfo  = null;
+        Core.AddToOutputLine( "Build cancelled by user" );
+        return false;
+      }
       BuildInfo = new SingleBuildInfo();
       BuildInfo.TargetFile            = "";
       BuildInfo.TargetType            = Types.CompileTargetType.NONE;
@@ -1021,6 +1025,10 @@ namespace RetroDevStudio.Tasks
           Core.AddToOutput( "Compiled to file " + BuildInfo.TargetFile + ", " + parser.AssembledOutput.Assembly.Length + " bytes" + System.Environment.NewLine );
         }
 
+        // mark as successfully built before post build steps (for build chains)
+        BuildInfo.TimeStampOfTargetFile = Core.Compiling.FileLastWriteTime( BuildInfo.TargetFile );
+        Doc.HasBeenSuccessfullyBuilt = true;
+
         if ( ( configSetting != null )
         &&   ( configSetting.PostBuildChain.Active ) )
         {
@@ -1054,6 +1062,7 @@ namespace RetroDevStudio.Tasks
           Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );
           if ( !Core.Executing.RunCommand( Doc, "post build", configSetting.PostBuild ) )
           {
+            Doc.HasBeenSuccessfullyBuilt = false;
             return false;
           }
         }
@@ -1105,6 +1114,7 @@ namespace RetroDevStudio.Tasks
       catch ( Exception ex )
       {
         Core.AddToOutput( "An error occurred during building an element\r\n" + ex.ToString() );
+        Doc.HasBeenSuccessfullyBuilt = false;
         return false;
       }
     }

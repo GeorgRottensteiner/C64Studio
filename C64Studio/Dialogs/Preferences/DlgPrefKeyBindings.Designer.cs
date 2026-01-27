@@ -166,7 +166,7 @@
       this.columnHeader8.Text = "2nd Binding";
       this.columnHeader8.Width = 113;
       // 
-      // PrefKeyBindings
+      // DlgPrefKeyBindings
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -177,8 +177,9 @@
       this.Controls.Add(this.label10);
       this.Controls.Add(this.btnBindKey);
       this.Controls.Add(this.editKeyBinding);
-      this.Name = "PrefKeyBindings";
+      this.Name = "DlgPrefKeyBindings";
       this.Size = new System.Drawing.Size(645, 436);
+      this.Load += new System.EventHandler(this.DlgPrefKeyBindings_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 

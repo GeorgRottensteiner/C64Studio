@@ -17,6 +17,8 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     protected List<string>    _Keywords = new List<string>();
 
+    protected Form            _owner = null;
+
 
 
     public DlgPrefBase()
@@ -30,6 +32,12 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       this.Core = Core;
       InitializeComponent();
+    }
+
+
+
+    public virtual void OnClosing()
+    {
     }
 
 

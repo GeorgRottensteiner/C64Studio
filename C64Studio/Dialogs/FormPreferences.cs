@@ -84,6 +84,20 @@ namespace RetroDevStudio.Dialogs
 
 
 
+    protected override void OnClosing( CancelEventArgs e )
+    {
+      var prevPrefBase = panelPreferences.Controls.Count > 0
+                          ? panelPreferences.Controls[0] as DlgPrefBase
+                          : null;
+      if ( prevPrefBase != null )
+      {
+        prevPrefBase.OnClosing();
+      }
+      base.OnClosing( e );
+    }
+
+
+
     private void btnOK_Click( DecentForms.ControlBase Sender )
     {
       Close();
@@ -243,6 +257,13 @@ namespace RetroDevStudio.Dialogs
         btnExportHere.Enabled = false;
         btnImportHere.Enabled = false;
         return;
+      }
+      var prevPrefBase = panelPreferences.Controls.Count > 0
+                          ? panelPreferences.Controls[0] as DlgPrefBase
+                          : null;
+      if ( prevPrefBase != null )
+      {
+        prevPrefBase.OnClosing();
       }
       var prefBase = e.Node.Tag as DlgPrefBase;
       prefBase.Location = new Point( 0, 0 );

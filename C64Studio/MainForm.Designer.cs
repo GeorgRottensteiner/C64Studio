@@ -235,6 +235,7 @@
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
       this.timerAutoSave = new System.Windows.Forms.Timer(this.components);
+      this.cancelBuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -959,6 +960,7 @@
             this.rebuildToolStripMenuItem,
             this.buildandRunToolStripMenuItem,
             this.debugToolStripMenuItem1,
+            this.cancelBuildToolStripMenuItem,
             this.toolStripSeparator19,
             this.preprocessedFileToolStripMenuItem,
             this.relocationFileToolStripMenuItem});
@@ -970,7 +972,7 @@
       // 
       this.compileToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolCompile;
       this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
-      this.compileToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+      this.compileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.compileToolStripMenuItem.Tag = "";
       this.compileToolStripMenuItem.Text = "&Compile";
       this.compileToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
@@ -979,7 +981,7 @@
       // 
       this.buildToolStripMenuItem1.Image = global::RetroDevStudio.Properties.Resources.ToolBuild;
       this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
-      this.buildToolStripMenuItem1.Size = new System.Drawing.Size(165, 22);
+      this.buildToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
       this.buildToolStripMenuItem1.Text = "&Build";
       this.buildToolStripMenuItem1.Click += new System.EventHandler(this.buildToolStripMenuItem1_Click);
       // 
@@ -987,7 +989,7 @@
       // 
       this.rebuildToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolRebuild;
       this.rebuildToolStripMenuItem.Name = "rebuildToolStripMenuItem";
-      this.rebuildToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+      this.rebuildToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.rebuildToolStripMenuItem.Text = "&Rebuild";
       this.rebuildToolStripMenuItem.Click += new System.EventHandler(this.rebuildToolStripMenuItem_Click);
       // 
@@ -995,7 +997,7 @@
       // 
       this.buildandRunToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolBuildAndRun;
       this.buildandRunToolStripMenuItem.Name = "buildandRunToolStripMenuItem";
-      this.buildandRunToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+      this.buildandRunToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.buildandRunToolStripMenuItem.Text = "Build &and Run";
       this.buildandRunToolStripMenuItem.Click += new System.EventHandler(this.buildandRunToolStripMenuItem_Click);
       // 
@@ -1003,26 +1005,26 @@
       // 
       this.debugToolStripMenuItem1.Image = global::RetroDevStudio.Properties.Resources.ToolDebug;
       this.debugToolStripMenuItem1.Name = "debugToolStripMenuItem1";
-      this.debugToolStripMenuItem1.Size = new System.Drawing.Size(165, 22);
+      this.debugToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
       this.debugToolStripMenuItem1.Text = "D&ebug";
       this.debugToolStripMenuItem1.Click += new System.EventHandler(this.debugToolStripMenuItem1_Click);
       // 
       // toolStripSeparator19
       // 
       this.toolStripSeparator19.Name = "toolStripSeparator19";
-      this.toolStripSeparator19.Size = new System.Drawing.Size(162, 6);
+      this.toolStripSeparator19.Size = new System.Drawing.Size(177, 6);
       // 
       // preprocessedFileToolStripMenuItem
       // 
       this.preprocessedFileToolStripMenuItem.Name = "preprocessedFileToolStripMenuItem";
-      this.preprocessedFileToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+      this.preprocessedFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.preprocessedFileToolStripMenuItem.Text = "Preprocessed File";
       this.preprocessedFileToolStripMenuItem.Click += new System.EventHandler(this.preprocessedFileToolStripMenuItem_Click);
       // 
       // relocationFileToolStripMenuItem
       // 
       this.relocationFileToolStripMenuItem.Name = "relocationFileToolStripMenuItem";
-      this.relocationFileToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+      this.relocationFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.relocationFileToolStripMenuItem.Text = "Relocation File";
       this.relocationFileToolStripMenuItem.Click += new System.EventHandler(this.relocationFileToolStripMenuItem_Click);
       // 
@@ -1968,6 +1970,13 @@
       this.timerAutoSave.Interval = 300000;
       this.timerAutoSave.Tick += new System.EventHandler(this.timerAutoSave_Tick);
       // 
+      // cancelBuildToolStripMenuItem
+      // 
+      this.cancelBuildToolStripMenuItem.Enabled = false;
+      this.cancelBuildToolStripMenuItem.Name = "cancelBuildToolStripMenuItem";
+      this.cancelBuildToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.cancelBuildToolStripMenuItem.Text = "Cancel Build";
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -2207,6 +2216,7 @@
     private System.Windows.Forms.ToolStripMenuItem sampleExplorerToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem soundPlayerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sfxEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelBuildToolStripMenuItem;
     }
 }
 

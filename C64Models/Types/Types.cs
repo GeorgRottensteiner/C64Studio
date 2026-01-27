@@ -177,7 +177,8 @@ namespace RetroDevStudio.Types
     BUILD_TO_RELOCATION_FILE,
     RENAME_ALL_REFERENCES,
     TOGGLE_SELECTION,
-    FIND_PREVIOUS
+    FIND_PREVIOUS,
+    CANCEL_BUILD
   }
 
   public enum StudioState

@@ -16,6 +16,8 @@ namespace RetroDevStudio
 
     public bool                       m_BuildIsCurrent = false;
 
+    private volatile bool             _cancelBuild = false;
+
     public Dictionary<string,SingleBuildInfo>            m_LastBuildInfo = new Dictionary<string, SingleBuildInfo>();
 
     public Stack<BuildChain>          m_BuildChainStack = new Stack<BuildChain>();
@@ -378,6 +380,36 @@ namespace RetroDevStudio
         //Debug.Log( "FileLastWriteTime failed: " + ex.ToString() );
       }
       return fileTime;
+    }
+
+
+
+    internal void CancelBuild()
+    {
+      if ( ( _cancelBuild )
+      ||   ( !IsCurrentlyBuilding() ) )
+      {
+        return;
+      }
+      _cancelBuild = true;
+      Core.AddToOutputLine( "Build cancel requested..." );
+    }
+
+
+
+    internal bool IsBuildCancelled()
+    {
+      return _cancelBuild;
+    }
+
+
+
+    public void BuildStarted()
+    {
+      _cancelBuild = false;
+      m_RebuiltFiles.Clear();
+      m_RebuiltBuildConfigFiles.Clear();
+      m_BuildChainStack.Clear();
     }
 
 

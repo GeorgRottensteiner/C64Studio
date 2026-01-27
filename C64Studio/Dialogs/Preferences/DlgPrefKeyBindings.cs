@@ -301,8 +301,20 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    private void DlgPrefKeyBindings_Load( object sender, EventArgs e )
+    {
+      Core.Settings.DialogSettings.RestoreListViewColumns( "Preferences.KeyBinding.List", listFunctions );
+    }
+
+
+
+    public override void OnClosing()
+    {
+      Core.Settings.DialogSettings.StoreListViewColumns( "Preferences.KeyBinding.List", listFunctions );
+    }
+
+
+
   }
-
-
 
 }

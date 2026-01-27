@@ -277,6 +277,20 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    public override void OnClosing()
+    {
+      Core.Settings.DialogSettings.StoreListViewColumns( "Preferences.BASICKeyBinding.List", listBASICKeyMap );
+    }
+
+
+
+    private void DlgPrefBASICKeyBindings_Load( object sender, EventArgs e )
+    {
+      Core.Settings.DialogSettings.RestoreListViewColumns( "Preferences.BASICKeyBinding.List", listBASICKeyMap );
+    }
+
+
+
   }
 
 

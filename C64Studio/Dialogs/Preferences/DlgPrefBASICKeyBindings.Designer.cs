@@ -136,7 +136,7 @@
       this.columnHeader10.Text = "Display";
       this.columnHeader10.Width = 138;
       // 
-      // PrefBASICKeyBindings
+      // DlgPrefBASICKeyBindings
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -145,8 +145,9 @@
       this.Controls.Add(this.listBASICKeyMap);
       this.Controls.Add(this.editBASICKeyMapBinding);
       this.Controls.Add(this.label25);
-      this.Name = "PrefBASICKeyBindings";
+      this.Name = "DlgPrefBASICKeyBindings";
       this.Size = new System.Drawing.Size(675, 387);
+      this.Load += new System.EventHandler(this.DlgPrefBASICKeyBindings_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 

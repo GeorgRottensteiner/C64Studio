@@ -362,6 +362,9 @@ namespace RetroDevStudio
       RegisterFunction( Function.DEBUG_RUN_TO, "Run to Cursor", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.NORMAL );
       RegisterFunction( Function.TOGGLE_BREAKPOINT, "Toggle Breakpoint", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.NORMAL );
 
+      // functions for during a build
+      RegisterFunction( Function.CANCEL_BUILD, "Cancel Build", FunctionStudioState.BUILDING );
+
       // start with default palettes
       Palettes.Add( PaletteType.C64, new List<Palette>() { ConstantData.DefaultPaletteC64() } );
       Palettes.Add( PaletteType.C128_VDC, new List<Palette>() { ConstantData.DefaultPaletteC128() } );
