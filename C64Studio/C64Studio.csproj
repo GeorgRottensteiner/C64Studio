@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <RootNamespace>RetroDevStudio</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -603,7 +603,6 @@
   <ItemGroup>
     <PackageReference Include="DockPanelSuite" Version="3.1.1" />
     <PackageReference Include="DockPanelSuite.ThemeVS2005" Version="3.1.1" />
-    <PackageReference Include="GeorgRottensteiner.SharpSid" Version="0.9.4" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
@@ -619,6 +618,14 @@
   <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows'">
     <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\..\SharpSid\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpSid">
+      <HintPath>..\..\SharpSid\SharpSid\bin\Debug\net8.0\SharpSid.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Documents\SampleExplorer.resx">

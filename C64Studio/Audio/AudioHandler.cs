@@ -55,6 +55,7 @@ namespace RetroDevStudio.Audio
       {
         _sidPlayer = new SIDPlayer();
       }
+      _sidPlayer.Volume = 100;
       _sidPlayer.Play( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, _currentSFXPlayer.AddressToStartPlayer );
     }
 
@@ -62,14 +63,20 @@ namespace RetroDevStudio.Audio
 
     internal void Replay( ByteBuffer playerData )
     {
+      Play( playerData );
+      /*
       if ( _sidPlayer == null )
       {
         Play( playerData );
         return;
       }
-      _sidPlayer.Pause();
-      _sidPlayer.Inject( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, _currentSFXPlayer.AddressToStartPlayer );
-      _sidPlayer.Resume();
+      if ( !_sidPlayer.IsPlaying() )
+      {
+        Play( playerData );
+        return;
+      }
+      //_sidPlayer.Inject( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, -1 );
+      */
     }
 
 
