@@ -9,3 +9,9 @@ wic_crt = 1
 
 
 ICH_BIN_EIN_LABEL
+
+TX
+!SCR " THIS IS MY NEW 8X8 SCROLLER. AWESOME! "
+          !BYTE 0 ; 0 means end of scroll reacvhed
+
+!SCR " this is my new 8x8 scroller. awesome! "

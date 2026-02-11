@@ -8,6 +8,7 @@ namespace RetroDevStudio.Audio
 {
   internal class SFXPlayerDescriptor
   {
+    public string                 PlayerCodeAssembly = "";
     public ByteBuffer             PlayerCode = new ByteBuffer();
     public Audio.SFXPlayer        Player = SFXPlayer.RETRO_DEV_STUDIO_SID;  
     public string                 Name = "";
