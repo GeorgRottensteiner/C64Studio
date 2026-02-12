@@ -24,6 +24,7 @@ namespace RetroDevStudio.Documents
     public BinaryDisplay( StudioCore Core, GR.Memory.ByteBuffer WorkData, bool AllowEditing, bool FixedWidth )
     {
       this.Core = Core;
+      DocumentInfo.Type = ProjectElement.ElementType.BINARY_FILE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       AutoScaleMode = AutoScaleMode.None;
       InitializeComponent();

@@ -91,7 +91,7 @@ namespace RetroDevStudio.Audio
       {
         return Play( sidData, dataStartAddress, songStartAddress );
       }
-      return _player.InjectMemory( ByteArrayToHexString( sidData ), dataStartAddress, songStartAddress );
+      return _player.InjectMemory( ByteArrayToHexString( sidData ), dataStartAddress, -1 );
     }
 
 
@@ -127,6 +127,16 @@ namespace RetroDevStudio.Audio
     public bool IsPaused()
     {
       return _player.State == SharpSid.State.PAUSED;
+    }
+
+
+
+    public int Volume
+    {
+      set
+      {
+        _player.SetVolume( value );
+      }
     }
 
 
