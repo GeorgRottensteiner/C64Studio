@@ -603,6 +603,7 @@
   <ItemGroup>
     <PackageReference Include="DockPanelSuite" Version="3.1.1" />
     <PackageReference Include="DockPanelSuite.ThemeVS2005" Version="3.1.1" />
+    <PackageReference Include="GeorgRottensteiner.SharpSid" Version="0.9.5" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
