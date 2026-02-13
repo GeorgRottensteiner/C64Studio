@@ -1088,24 +1088,11 @@ namespace RetroDevStudio.Documents
     private void btnAddDataTable_Click( DecentForms.ControlBase Sender )
     {
       string    addressT = editDataTables.Text;
-      int       address = 0;
-
       if ( addressT.Length > 0 )
       {
-        if ( addressT[0] == '$' )
-        {
-          address = GR.Convert.ToI32( addressT.Substring( 1 ), 16 );
-        }
-        else if ( addressT.StartsWith( "0x" ) )
-        {
-          address = GR.Convert.ToI32( addressT.Substring( 2 ), 16 );
-        }
-        else
-        {
-          address = GR.Convert.ToI32( addressT );
-        }
-        if ( ( int.TryParse( editDataTableLength.Text, out int length ) )
-        &&   ( length > 0 ) )
+        int address = GR.Convert.ToI32( addressT, 10 );
+        int length = GR.Convert.ToI32( editDataTableLength.Text, 10 );
+        if ( length > 0 ) 
         {
           AddDataTableAddress( (ushort)address, length );
         }

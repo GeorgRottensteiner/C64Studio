@@ -18,6 +18,7 @@ namespace RetroDevStudio
     public StudioSettings     Settings = new StudioSettings();
     public Debugging          Debugging;
     public Imaging            Imaging;
+    public Audio.Audio        Audio;  
     public Compiling          Compiling;
     public Searching          Searching;
     public Navigating         Navigating;
@@ -49,6 +50,7 @@ namespace RetroDevStudio
       Debugging     = new Debugging( this );
       Executing     = new Executing( this );
       Imaging       = new Imaging( this );
+      Audio         = new Audio.Audio( this );
       Theming       = new StudioTheme( this );
       Notification  = new Notification( this );
 

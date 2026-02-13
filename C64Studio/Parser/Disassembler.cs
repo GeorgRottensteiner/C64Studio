@@ -314,7 +314,8 @@ namespace RetroDevStudio.Parser
       StringBuilder sb = new StringBuilder();
       Disassembly = "";
       FirstLineWithOpcode = 1;
-      if ( JumpedAtAddresses.Count == 0 )
+      if ( ( JumpedAtAddresses.Count == 0 )
+      ||   ( m_SourceData == null ) )
       {
         return false;
       }
@@ -355,7 +356,8 @@ namespace RetroDevStudio.Parser
           {
             break;
           }
-          if ( progStepPos >= DataStartAddress + m_SourceData.Length )
+          if ( ( m_SourceData == null )
+          ||   ( progStepPos >= DataStartAddress + m_SourceData.Length ) )
           {
             // reached the end
             break;

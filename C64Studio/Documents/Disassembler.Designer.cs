@@ -30,789 +30,778 @@ namespace RetroDevStudio.Documents
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
+      components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Disassembler));
-      this.editDisassembly = new FastColoredTextBoxNS.FastColoredTextBox();
-      this.contextMenuDisassembler = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.addAsLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.panel1 = new System.Windows.Forms.Panel();
-      this.btnOpenBinary = new DecentForms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnImportFromBinary = new DecentForms.Button();
-      this.editStartAddress = new System.Windows.Forms.TextBox();
-      this.label1 = new System.Windows.Forms.Label();
-      this.btnExportToASM = new DecentForms.Button();
-      this.btnReloadFile = new DecentForms.Button();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnDeleteJumpedAtAddress = new DecentForms.Button();
-      this.btnAddJumpAddress = new DecentForms.Button();
-      this.editJumpAddress = new System.Windows.Forms.TextBox();
-      this.listJumpedAtAddresses = new System.Windows.Forms.ListView();
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.tabContent = new System.Windows.Forms.TabControl();
-      this.tabDisassembly = new System.Windows.Forms.TabPage();
-      this.tabBinary = new System.Windows.Forms.TabPage();
-      this.hexView = new Be.Windows.Forms.HexBox();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.btnSaveProject = new DecentForms.Button();
-      this.btnOpenProject = new DecentForms.Button();
-      this.editDisassemblyProjectName = new System.Windows.Forms.TextBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.groupBox4 = new System.Windows.Forms.GroupBox();
-      this.label4 = new System.Windows.Forms.Label();
-      this.label3 = new System.Windows.Forms.Label();
-      this.btnNamedLabelsImport = new DecentForms.Button();
-      this.btnExportNamedLabels = new DecentForms.Button();
-      this.btnDeleteNamedLabel = new DecentForms.Button();
-      this.btnAddNamedLabel = new DecentForms.Button();
-      this.editLabelAddress = new System.Windows.Forms.TextBox();
-      this.editLabelName = new System.Windows.Forms.TextBox();
-      this.listNamedLabels = new System.Windows.Forms.ListView();
-      this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.checkStopAtReturns = new System.Windows.Forms.CheckBox();
-      this.checkShowHexData = new System.Windows.Forms.CheckBox();
-      this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
-      this.groupBox6 = new System.Windows.Forms.GroupBox();
-      this.btnDeleteDataTable = new DecentForms.Button();
-      this.label6 = new System.Windows.Forms.Label();
-      this.label5 = new System.Windows.Forms.Label();
-      this.listDataTables = new System.Windows.Forms.ListView();
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.btnAddDataTable = new DecentForms.Button();
-      this.editDataTableLength = new System.Windows.Forms.TextBox();
-      this.editDataTables = new System.Windows.Forms.TextBox();
-      this.checkOnlyAddUsedLabels = new System.Windows.Forms.CheckBox();
-      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
-      this.contextMenuDisassembler.SuspendLayout();
-      this.panel1.SuspendLayout();
-      this.groupBox1.SuspendLayout();
-      this.groupBox2.SuspendLayout();
-      this.tabContent.SuspendLayout();
-      this.tabDisassembly.SuspendLayout();
-      this.tabBinary.SuspendLayout();
-      this.groupBox3.SuspendLayout();
-      this.groupBox4.SuspendLayout();
-      this.groupBox5.SuspendLayout();
-      this.groupBox6.SuspendLayout();
-      this.SuspendLayout();
+      editDisassembly = new FastColoredTextBoxNS.FastColoredTextBox();
+      contextMenuDisassembler = new System.Windows.Forms.ContextMenuStrip( components );
+      addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      addAsLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      panel1 = new System.Windows.Forms.Panel();
+      btnOpenBinary = new DecentForms.Button();
+      groupBox1 = new System.Windows.Forms.GroupBox();
+      btnImportFromBinary = new DecentForms.Button();
+      editStartAddress = new System.Windows.Forms.TextBox();
+      label1 = new System.Windows.Forms.Label();
+      btnExportToASM = new DecentForms.Button();
+      btnReloadFile = new DecentForms.Button();
+      groupBox2 = new System.Windows.Forms.GroupBox();
+      btnDeleteJumpedAtAddress = new DecentForms.Button();
+      btnAddJumpAddress = new DecentForms.Button();
+      editJumpAddress = new System.Windows.Forms.TextBox();
+      listJumpedAtAddresses = new System.Windows.Forms.ListView();
+      columnHeader1 = new System.Windows.Forms.ColumnHeader();
+      columnHeader2 = new System.Windows.Forms.ColumnHeader();
+      tabContent = new System.Windows.Forms.TabControl();
+      tabDisassembly = new System.Windows.Forms.TabPage();
+      tabBinary = new System.Windows.Forms.TabPage();
+      hexView = new Be.Windows.Forms.HexBox();
+      groupBox3 = new System.Windows.Forms.GroupBox();
+      btnSaveProject = new DecentForms.Button();
+      btnOpenProject = new DecentForms.Button();
+      editDisassemblyProjectName = new System.Windows.Forms.TextBox();
+      label2 = new System.Windows.Forms.Label();
+      groupBox4 = new System.Windows.Forms.GroupBox();
+      label4 = new System.Windows.Forms.Label();
+      label3 = new System.Windows.Forms.Label();
+      btnNamedLabelsImport = new DecentForms.Button();
+      btnExportNamedLabels = new DecentForms.Button();
+      btnDeleteNamedLabel = new DecentForms.Button();
+      btnAddNamedLabel = new DecentForms.Button();
+      editLabelAddress = new System.Windows.Forms.TextBox();
+      editLabelName = new System.Windows.Forms.TextBox();
+      listNamedLabels = new System.Windows.Forms.ListView();
+      columnHeader3 = new System.Windows.Forms.ColumnHeader();
+      columnHeader4 = new System.Windows.Forms.ColumnHeader();
+      toolTip1 = new System.Windows.Forms.ToolTip( components );
+      groupBox5 = new System.Windows.Forms.GroupBox();
+      checkStopAtReturns = new System.Windows.Forms.CheckBox();
+      checkOnlyAddUsedLabels = new System.Windows.Forms.CheckBox();
+      checkShowHexData = new System.Windows.Forms.CheckBox();
+      checkShowLineAddresses = new System.Windows.Forms.CheckBox();
+      groupBox6 = new System.Windows.Forms.GroupBox();
+      btnDeleteDataTable = new DecentForms.Button();
+      label6 = new System.Windows.Forms.Label();
+      label5 = new System.Windows.Forms.Label();
+      listDataTables = new System.Windows.Forms.ListView();
+      columnHeader5 = new System.Windows.Forms.ColumnHeader();
+      columnHeader6 = new System.Windows.Forms.ColumnHeader();
+      btnAddDataTable = new DecentForms.Button();
+      editDataTableLength = new System.Windows.Forms.TextBox();
+      editDataTables = new System.Windows.Forms.TextBox();
+      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
+      ( (System.ComponentModel.ISupportInitialize)editDisassembly ).BeginInit();
+      contextMenuDisassembler.SuspendLayout();
+      panel1.SuspendLayout();
+      groupBox1.SuspendLayout();
+      groupBox2.SuspendLayout();
+      tabContent.SuspendLayout();
+      tabDisassembly.SuspendLayout();
+      tabBinary.SuspendLayout();
+      groupBox3.SuspendLayout();
+      groupBox4.SuspendLayout();
+      groupBox5.SuspendLayout();
+      groupBox6.SuspendLayout();
+      SuspendLayout();
       // 
       // editDisassembly
       // 
-      this.editDisassembly.AutoCompleteBracketsList = new char[] {
-        '(',
-        ')',
-        '{',
-        '}',
-        '[',
-        ']',
-        '\"',
-        '\"',
-        '\'',
-        '\''};
-      this.editDisassembly.AutoScrollMinSize = new System.Drawing.Size(2, 13);
-      this.editDisassembly.BackBrush = null;
-      this.editDisassembly.CharHeight = 13;
-      this.editDisassembly.CharWidth = 7;
-      this.editDisassembly.ContextMenuStrip = this.contextMenuDisassembler;
-      this.editDisassembly.ConvertTabsToSpaces = false;
-      this.editDisassembly.Cursor = System.Windows.Forms.Cursors.IBeam;
-      this.editDisassembly.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-      this.editDisassembly.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.editDisassembly.Font = new System.Drawing.Font("Courier New", 9F);
-      this.editDisassembly.IsReplaceMode = false;
-      this.editDisassembly.Location = new System.Drawing.Point(0, 0);
-      this.editDisassembly.Name = "editDisassembly";
-      this.editDisassembly.Paddings = new System.Windows.Forms.Padding(0);
-      this.editDisassembly.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-      this.editDisassembly.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editDisassembly.ServiceColors")));
-      this.editDisassembly.ShowLineNumbers = false;
-      this.editDisassembly.Size = new System.Drawing.Size(456, 626);
-      this.editDisassembly.TabIndex = 0;
-      this.editDisassembly.TabLength = 2;
-      this.editDisassembly.Zoom = 100;
+      editDisassembly.AutoCompleteBracketsList = new char[]
+  {
+    '(',
+    ')',
+    '{',
+    '}',
+    '[',
+    ']',
+    '"',
+    '"',
+    '\'',
+    '\''
+  };
+      editDisassembly.AutoScrollMinSize = new System.Drawing.Size( 2, 13 );
+      editDisassembly.BackBrush = null;
+      editDisassembly.CharHeight = 13;
+      editDisassembly.CharWidth = 7;
+      editDisassembly.ContextMenuStrip = contextMenuDisassembler;
+      editDisassembly.ConvertTabsToSpaces = false;
+      editDisassembly.Cursor = System.Windows.Forms.Cursors.IBeam;
+      editDisassembly.DisabledColor = System.Drawing.Color.FromArgb( 100, 180, 180, 180 );
+      editDisassembly.Dock = System.Windows.Forms.DockStyle.Fill;
+      editDisassembly.Font = new System.Drawing.Font( "Courier New", 9F );
+      editDisassembly.Hotkeys = resources.GetString( "editDisassembly.Hotkeys" );
+      editDisassembly.IsReplaceMode = false;
+      editDisassembly.Location = new System.Drawing.Point( 0, 0 );
+      editDisassembly.Name = "editDisassembly";
+      editDisassembly.Paddings = new System.Windows.Forms.Padding( 0 );
+      editDisassembly.SelectionColor = System.Drawing.Color.FromArgb( 60, 0, 0, 255 );
+      editDisassembly.ServiceColors = (FastColoredTextBoxNS.ServiceColors)resources.GetObject( "editDisassembly.ServiceColors" );
+      editDisassembly.ShowLineNumbers = false;
+      editDisassembly.Size = new System.Drawing.Size( 456, 626 );
+      editDisassembly.TabIndex = 0;
+      editDisassembly.TabLength = 2;
+      editDisassembly.Zoom = 100;
       // 
       // contextMenuDisassembler
       // 
-      this.contextMenuDisassembler.ImageScalingSize = new System.Drawing.Size(28, 28);
-      this.contextMenuDisassembler.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addJumpAddressToolStripMenuItem,
-            this.addAsLabelToolStripMenuItem});
-      this.contextMenuDisassembler.Name = "contextMenuDisassembler";
-      this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 48);
-      this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
+      contextMenuDisassembler.ImageScalingSize = new System.Drawing.Size( 28, 28 );
+      contextMenuDisassembler.Items.AddRange( new System.Windows.Forms.ToolStripItem[] { addJumpAddressToolStripMenuItem, addAsLabelToolStripMenuItem } );
+      contextMenuDisassembler.Name = "contextMenuDisassembler";
+      contextMenuDisassembler.Size = new System.Drawing.Size( 174, 48 );
+      contextMenuDisassembler.Opening +=  contextMenuDisassembler_Opening ;
       // 
       // addJumpAddressToolStripMenuItem
       // 
-      this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
-      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-      this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
-      this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
+      addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
+      addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size( 173, 22 );
+      addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
+      addJumpAddressToolStripMenuItem.Click +=  addJumpAddressToolStripMenuItem_Click ;
       // 
       // addAsLabelToolStripMenuItem
       // 
-      this.addAsLabelToolStripMenuItem.Name = "addAsLabelToolStripMenuItem";
-      this.addAsLabelToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-      this.addAsLabelToolStripMenuItem.Text = "Add as Label";
-      this.addAsLabelToolStripMenuItem.Click += new System.EventHandler(this.addAsLabelToolStripMenuItem_Click);
+      addAsLabelToolStripMenuItem.Name = "addAsLabelToolStripMenuItem";
+      addAsLabelToolStripMenuItem.Size = new System.Drawing.Size( 173, 22 );
+      addAsLabelToolStripMenuItem.Text = "Add as Label";
+      addAsLabelToolStripMenuItem.Click +=  addAsLabelToolStripMenuItem_Click ;
       // 
       // panel1
       // 
-      this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panel1.Controls.Add(this.editDisassembly);
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel1.Location = new System.Drawing.Point(3, 3);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(460, 630);
-      this.panel1.TabIndex = 2;
+      panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      panel1.Controls.Add( editDisassembly );
+      panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+      panel1.Location = new System.Drawing.Point( 3, 3 );
+      panel1.Name = "panel1";
+      panel1.Size = new System.Drawing.Size( 460, 630 );
+      panel1.TabIndex = 2;
       // 
       // btnOpenBinary
       // 
-      this.btnOpenBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnOpenBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnOpenBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnOpenBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOpenBinary.Image = null;
-      this.btnOpenBinary.Location = new System.Drawing.Point(6, 19);
-      this.btnOpenBinary.Name = "btnOpenBinary";
-      this.btnOpenBinary.Size = new System.Drawing.Size(122, 23);
-      this.btnOpenBinary.TabIndex = 0;
-      this.btnOpenBinary.Text = "Open";
-      this.btnOpenBinary.Click += new DecentForms.EventHandler(this.btnOpenBinary_Click);
+      btnOpenBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnOpenBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnOpenBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnOpenBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnOpenBinary.Image = null;
+      btnOpenBinary.Location = new System.Drawing.Point( 6, 19 );
+      btnOpenBinary.Name = "btnOpenBinary";
+      btnOpenBinary.Size = new System.Drawing.Size( 122, 23 );
+      btnOpenBinary.TabIndex = 0;
+      btnOpenBinary.Text = "Open";
+      btnOpenBinary.Click +=  btnOpenBinary_Click ;
       // 
       // groupBox1
       // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.btnImportFromBinary);
-      this.groupBox1.Controls.Add(this.editStartAddress);
-      this.groupBox1.Controls.Add(this.label1);
-      this.groupBox1.Controls.Add(this.btnExportToASM);
-      this.groupBox1.Controls.Add(this.btnReloadFile);
-      this.groupBox1.Controls.Add(this.btnOpenBinary);
-      this.groupBox1.Location = new System.Drawing.Point(492, 14);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(657, 80);
-      this.groupBox1.TabIndex = 4;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Data";
+      groupBox1.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      groupBox1.Controls.Add( btnImportFromBinary );
+      groupBox1.Controls.Add( editStartAddress );
+      groupBox1.Controls.Add( label1 );
+      groupBox1.Controls.Add( btnExportToASM );
+      groupBox1.Controls.Add( btnReloadFile );
+      groupBox1.Controls.Add( btnOpenBinary );
+      groupBox1.Location = new System.Drawing.Point( 492, 14 );
+      groupBox1.Name = "groupBox1";
+      groupBox1.Size = new System.Drawing.Size( 657, 80 );
+      groupBox1.TabIndex = 4;
+      groupBox1.TabStop = false;
+      groupBox1.Text = "Data";
       // 
       // btnImportFromBinary
       // 
-      this.btnImportFromBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnImportFromBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnImportFromBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnImportFromBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnImportFromBinary.Image = null;
-      this.btnImportFromBinary.Location = new System.Drawing.Point(134, 48);
-      this.btnImportFromBinary.Name = "btnImportFromBinary";
-      this.btnImportFromBinary.Size = new System.Drawing.Size(122, 23);
-      this.btnImportFromBinary.TabIndex = 3;
-      this.btnImportFromBinary.Text = "Binary from clipboard";
-      this.toolTip1.SetToolTip(this.btnImportFromBinary, "Binary from clipboard");
-      this.btnImportFromBinary.Click += new DecentForms.EventHandler(this.btnImportBinary_Click);
+      btnImportFromBinary.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnImportFromBinary.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnImportFromBinary.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnImportFromBinary.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnImportFromBinary.Image = null;
+      btnImportFromBinary.Location = new System.Drawing.Point( 134, 48 );
+      btnImportFromBinary.Name = "btnImportFromBinary";
+      btnImportFromBinary.Size = new System.Drawing.Size( 122, 23 );
+      btnImportFromBinary.TabIndex = 3;
+      btnImportFromBinary.Text = "Binary from clipboard";
+      toolTip1.SetToolTip( btnImportFromBinary, "Binary from clipboard" );
+      btnImportFromBinary.Click +=  btnImportBinary_Click ;
       // 
       // editStartAddress
       // 
-      this.editStartAddress.Location = new System.Drawing.Point(354, 48);
-      this.editStartAddress.Name = "editStartAddress";
-      this.editStartAddress.Size = new System.Drawing.Size(100, 20);
-      this.editStartAddress.TabIndex = 4;
-      this.editStartAddress.TextChanged += new System.EventHandler(this.editStartAddress_TextChanged);
+      editStartAddress.Location = new System.Drawing.Point( 354, 48 );
+      editStartAddress.Name = "editStartAddress";
+      editStartAddress.Size = new System.Drawing.Size( 100, 20 );
+      editStartAddress.TabIndex = 4;
+      editStartAddress.TextChanged +=  editStartAddress_TextChanged ;
       // 
       // label1
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(355, 24);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(99, 13);
-      this.label1.TabIndex = 5;
-      this.label1.Text = "Data Start Address:";
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point( 355, 24 );
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size( 99, 13 );
+      label1.TabIndex = 5;
+      label1.Text = "Data Start Address:";
       // 
       // btnExportToASM
       // 
-      this.btnExportToASM.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportToASM.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportToASM.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportToASM.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportToASM.Image = null;
-      this.btnExportToASM.Location = new System.Drawing.Point(6, 48);
-      this.btnExportToASM.Name = "btnExportToASM";
-      this.btnExportToASM.Size = new System.Drawing.Size(122, 23);
-      this.btnExportToASM.TabIndex = 2;
-      this.btnExportToASM.Text = "Export to Assembly";
-      this.btnExportToASM.Click += new DecentForms.EventHandler(this.btnExportAssembly_Click);
+      btnExportToASM.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnExportToASM.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnExportToASM.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnExportToASM.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnExportToASM.Image = null;
+      btnExportToASM.Location = new System.Drawing.Point( 6, 48 );
+      btnExportToASM.Name = "btnExportToASM";
+      btnExportToASM.Size = new System.Drawing.Size( 122, 23 );
+      btnExportToASM.TabIndex = 2;
+      btnExportToASM.Text = "Export to Assembly";
+      btnExportToASM.Click +=  btnExportAssembly_Click ;
       // 
       // btnReloadFile
       // 
-      this.btnReloadFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnReloadFile.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnReloadFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnReloadFile.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnReloadFile.Image = null;
-      this.btnReloadFile.Location = new System.Drawing.Point(134, 19);
-      this.btnReloadFile.Name = "btnReloadFile";
-      this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
-      this.btnReloadFile.TabIndex = 1;
-      this.btnReloadFile.Text = "Reload File";
-      this.btnReloadFile.Click += new DecentForms.EventHandler(this.btnReloadFile_Click);
+      btnReloadFile.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnReloadFile.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnReloadFile.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnReloadFile.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnReloadFile.Image = null;
+      btnReloadFile.Location = new System.Drawing.Point( 134, 19 );
+      btnReloadFile.Name = "btnReloadFile";
+      btnReloadFile.Size = new System.Drawing.Size( 122, 23 );
+      btnReloadFile.TabIndex = 1;
+      btnReloadFile.Text = "Reload File";
+      btnReloadFile.Click +=  btnReloadFile_Click ;
       // 
       // groupBox2
       // 
-      this.groupBox2.Controls.Add(this.btnDeleteJumpedAtAddress);
-      this.groupBox2.Controls.Add(this.btnAddJumpAddress);
-      this.groupBox2.Controls.Add(this.editJumpAddress);
-      this.groupBox2.Controls.Add(this.listJumpedAtAddresses);
-      this.groupBox2.Location = new System.Drawing.Point(492, 100);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(182, 197);
-      this.groupBox2.TabIndex = 4;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Jumped at addresses";
+      groupBox2.Controls.Add( btnDeleteJumpedAtAddress );
+      groupBox2.Controls.Add( btnAddJumpAddress );
+      groupBox2.Controls.Add( editJumpAddress );
+      groupBox2.Controls.Add( listJumpedAtAddresses );
+      groupBox2.Location = new System.Drawing.Point( 492, 100 );
+      groupBox2.Name = "groupBox2";
+      groupBox2.Size = new System.Drawing.Size( 182, 197 );
+      groupBox2.TabIndex = 4;
+      groupBox2.TabStop = false;
+      groupBox2.Text = "Jumped at addresses";
       // 
       // btnDeleteJumpedAtAddress
       // 
-      this.btnDeleteJumpedAtAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnDeleteJumpedAtAddress.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnDeleteJumpedAtAddress.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnDeleteJumpedAtAddress.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnDeleteJumpedAtAddress.Enabled = false;
-      this.btnDeleteJumpedAtAddress.Image = null;
-      this.btnDeleteJumpedAtAddress.Location = new System.Drawing.Point(6, 169);
-      this.btnDeleteJumpedAtAddress.Name = "btnDeleteJumpedAtAddress";
-      this.btnDeleteJumpedAtAddress.Size = new System.Drawing.Size(64, 22);
-      this.btnDeleteJumpedAtAddress.TabIndex = 3;
-      this.btnDeleteJumpedAtAddress.Text = "Delete";
-      this.btnDeleteJumpedAtAddress.Click += new DecentForms.EventHandler(this.btnDeleteJumpedAtAddress_Click);
+      btnDeleteJumpedAtAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnDeleteJumpedAtAddress.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnDeleteJumpedAtAddress.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnDeleteJumpedAtAddress.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnDeleteJumpedAtAddress.Enabled = false;
+      btnDeleteJumpedAtAddress.Image = null;
+      btnDeleteJumpedAtAddress.Location = new System.Drawing.Point( 6, 169 );
+      btnDeleteJumpedAtAddress.Name = "btnDeleteJumpedAtAddress";
+      btnDeleteJumpedAtAddress.Size = new System.Drawing.Size( 64, 22 );
+      btnDeleteJumpedAtAddress.TabIndex = 3;
+      btnDeleteJumpedAtAddress.Text = "Delete";
+      btnDeleteJumpedAtAddress.Click +=  btnDeleteJumpedAtAddress_Click ;
       // 
       // btnAddJumpAddress
       // 
-      this.btnAddJumpAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnAddJumpAddress.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnAddJumpAddress.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnAddJumpAddress.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnAddJumpAddress.Image = null;
-      this.btnAddJumpAddress.Location = new System.Drawing.Point(112, 19);
-      this.btnAddJumpAddress.Name = "btnAddJumpAddress";
-      this.btnAddJumpAddress.Size = new System.Drawing.Size(64, 20);
-      this.btnAddJumpAddress.TabIndex = 1;
-      this.btnAddJumpAddress.Text = "add";
-      this.btnAddJumpAddress.Click += new DecentForms.EventHandler(this.btnAddJumpAddress_Click);
+      btnAddJumpAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnAddJumpAddress.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnAddJumpAddress.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnAddJumpAddress.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnAddJumpAddress.Image = null;
+      btnAddJumpAddress.Location = new System.Drawing.Point( 112, 19 );
+      btnAddJumpAddress.Name = "btnAddJumpAddress";
+      btnAddJumpAddress.Size = new System.Drawing.Size( 64, 20 );
+      btnAddJumpAddress.TabIndex = 1;
+      btnAddJumpAddress.Text = "add";
+      btnAddJumpAddress.Click +=  btnAddJumpAddress_Click ;
       // 
       // editJumpAddress
       // 
-      this.editJumpAddress.Location = new System.Drawing.Point(6, 19);
-      this.editJumpAddress.Name = "editJumpAddress";
-      this.editJumpAddress.Size = new System.Drawing.Size(100, 20);
-      this.editJumpAddress.TabIndex = 0;
-      this.toolTip1.SetToolTip(this.editJumpAddress, "Jump Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal");
+      editJumpAddress.Location = new System.Drawing.Point( 6, 19 );
+      editJumpAddress.Name = "editJumpAddress";
+      editJumpAddress.Size = new System.Drawing.Size( 100, 20 );
+      editJumpAddress.TabIndex = 0;
+      toolTip1.SetToolTip( editJumpAddress, "Jump Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal" );
       // 
       // listJumpedAtAddresses
       // 
-      this.listJumpedAtAddresses.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-      this.listJumpedAtAddresses.HideSelection = false;
-      this.listJumpedAtAddresses.Location = new System.Drawing.Point(6, 47);
-      this.listJumpedAtAddresses.Name = "listJumpedAtAddresses";
-      this.listJumpedAtAddresses.Size = new System.Drawing.Size(170, 117);
-      this.listJumpedAtAddresses.TabIndex = 2;
-      this.listJumpedAtAddresses.UseCompatibleStateImageBehavior = false;
-      this.listJumpedAtAddresses.View = System.Windows.Forms.View.Details;
-      this.listJumpedAtAddresses.SelectedIndexChanged += new System.EventHandler(this.listJumpedAtAddresses_SelectedIndexChanged);
-      this.listJumpedAtAddresses.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listJumpedAtAddresses_KeyDown);
+      listJumpedAtAddresses.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2 } );
+      listJumpedAtAddresses.FullRowSelect = true;
+      listJumpedAtAddresses.Location = new System.Drawing.Point( 6, 47 );
+      listJumpedAtAddresses.Name = "listJumpedAtAddresses";
+      listJumpedAtAddresses.Size = new System.Drawing.Size( 170, 117 );
+      listJumpedAtAddresses.TabIndex = 2;
+      listJumpedAtAddresses.UseCompatibleStateImageBehavior = false;
+      listJumpedAtAddresses.View = System.Windows.Forms.View.Details;
+      listJumpedAtAddresses.SelectedIndexChanged +=  listJumpedAtAddresses_SelectedIndexChanged ;
+      listJumpedAtAddresses.KeyDown +=  listJumpedAtAddresses_KeyDown ;
       // 
       // columnHeader1
       // 
-      this.columnHeader1.Text = "Address";
-      this.columnHeader1.Width = 90;
+      columnHeader1.Text = "Address";
+      columnHeader1.Width = 90;
       // 
       // columnHeader2
       // 
-      this.columnHeader2.Text = "Used";
+      columnHeader2.Text = "Used";
       // 
       // tabContent
       // 
-      this.tabContent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.tabContent.Controls.Add(this.tabDisassembly);
-      this.tabContent.Controls.Add(this.tabBinary);
-      this.tabContent.Location = new System.Drawing.Point(12, 14);
-      this.tabContent.Name = "tabContent";
-      this.tabContent.SelectedIndex = 0;
-      this.tabContent.Size = new System.Drawing.Size(474, 662);
-      this.tabContent.TabIndex = 0;
+      tabContent.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left ;
+      tabContent.Controls.Add( tabDisassembly );
+      tabContent.Controls.Add( tabBinary );
+      tabContent.Location = new System.Drawing.Point( 12, 14 );
+      tabContent.Name = "tabContent";
+      tabContent.SelectedIndex = 0;
+      tabContent.Size = new System.Drawing.Size( 474, 662 );
+      tabContent.TabIndex = 0;
       // 
       // tabDisassembly
       // 
-      this.tabDisassembly.Controls.Add(this.panel1);
-      this.tabDisassembly.Location = new System.Drawing.Point(4, 22);
-      this.tabDisassembly.Name = "tabDisassembly";
-      this.tabDisassembly.Padding = new System.Windows.Forms.Padding(3);
-      this.tabDisassembly.Size = new System.Drawing.Size(466, 636);
-      this.tabDisassembly.TabIndex = 0;
-      this.tabDisassembly.Text = "Disassembly";
-      this.tabDisassembly.UseVisualStyleBackColor = true;
+      tabDisassembly.Controls.Add( panel1 );
+      tabDisassembly.Location = new System.Drawing.Point( 4, 22 );
+      tabDisassembly.Name = "tabDisassembly";
+      tabDisassembly.Padding = new System.Windows.Forms.Padding( 3 );
+      tabDisassembly.Size = new System.Drawing.Size( 466, 636 );
+      tabDisassembly.TabIndex = 0;
+      tabDisassembly.Text = "Disassembly";
+      tabDisassembly.UseVisualStyleBackColor = true;
       // 
       // tabBinary
       // 
-      this.tabBinary.Controls.Add(this.hexView);
-      this.tabBinary.Location = new System.Drawing.Point(4, 22);
-      this.tabBinary.Name = "tabBinary";
-      this.tabBinary.Padding = new System.Windows.Forms.Padding(3);
-      this.tabBinary.Size = new System.Drawing.Size(466, 636);
-      this.tabBinary.TabIndex = 1;
-      this.tabBinary.Text = "Binary";
-      this.tabBinary.UseVisualStyleBackColor = true;
+      tabBinary.Controls.Add( hexView );
+      tabBinary.Location = new System.Drawing.Point( 4, 22 );
+      tabBinary.Name = "tabBinary";
+      tabBinary.Padding = new System.Windows.Forms.Padding( 3 );
+      tabBinary.Size = new System.Drawing.Size( 466, 636 );
+      tabBinary.TabIndex = 1;
+      tabBinary.Text = "Binary";
+      tabBinary.UseVisualStyleBackColor = true;
       // 
       // hexView
       // 
-      this.hexView.BytesPerLine = 8;
-      this.hexView.ColumnInfoVisible = true;
-      this.hexView.CustomHexViewer = null;
-      this.hexView.DisplayedAddressOffset = ((long)(0));
-      this.hexView.DisplayedByteOffset = 0;
-      this.hexView.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.hexView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
-      this.hexView.LineInfoVisible = true;
-      this.hexView.Location = new System.Drawing.Point(3, 3);
-      this.hexView.MarkedForeColor = System.Drawing.Color.Empty;
-      this.hexView.Name = "hexView";
-      this.hexView.NumDigitsMemorySize = 8;
-      this.hexView.SelectedByteProvider = null;
-      this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-      this.hexView.Size = new System.Drawing.Size(460, 630);
-      this.hexView.StringViewVisible = true;
-      this.hexView.TabIndex = 1;
-      this.hexView.TextFont = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.hexView.UseFixedBytesPerLine = true;
-      this.hexView.VScrollBarVisible = true;
+      hexView.BytesPerLine = 8;
+      hexView.ColumnInfoVisible = true;
+      hexView.CustomHexViewer = null;
+      hexView.DisplayedAddressOffset = 0L;
+      hexView.DisplayedByteOffset = 0;
+      hexView.Dock = System.Windows.Forms.DockStyle.Fill;
+      hexView.Font = new System.Drawing.Font( "Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0 );
+      hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
+      hexView.LineInfoVisible = true;
+      hexView.Location = new System.Drawing.Point( 3, 3 );
+      hexView.MarkedForeColor = System.Drawing.Color.Empty;
+      hexView.Name = "hexView";
+      hexView.NumDigitsMemorySize = 8;
+      hexView.SelectedByteProvider = null;
+      hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb( 100, 60, 188, 255 );
+      hexView.Size = new System.Drawing.Size( 460, 630 );
+      hexView.StringViewVisible = true;
+      hexView.TabIndex = 1;
+      hexView.TextFont = new System.Drawing.Font( "Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0 );
+      hexView.UseFixedBytesPerLine = true;
+      hexView.VScrollBarVisible = true;
       // 
       // groupBox3
       // 
-      this.groupBox3.Controls.Add(this.btnSaveProject);
-      this.groupBox3.Controls.Add(this.btnOpenProject);
-      this.groupBox3.Controls.Add(this.editDisassemblyProjectName);
-      this.groupBox3.Controls.Add(this.label2);
-      this.groupBox3.Location = new System.Drawing.Point(492, 303);
-      this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(385, 77);
-      this.groupBox3.TabIndex = 6;
-      this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Disassembly Project";
+      groupBox3.Controls.Add( btnSaveProject );
+      groupBox3.Controls.Add( btnOpenProject );
+      groupBox3.Controls.Add( editDisassemblyProjectName );
+      groupBox3.Controls.Add( label2 );
+      groupBox3.Location = new System.Drawing.Point( 492, 303 );
+      groupBox3.Name = "groupBox3";
+      groupBox3.Size = new System.Drawing.Size( 385, 77 );
+      groupBox3.TabIndex = 6;
+      groupBox3.TabStop = false;
+      groupBox3.Text = "Disassembly Project";
       // 
       // btnSaveProject
       // 
-      this.btnSaveProject.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnSaveProject.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnSaveProject.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnSaveProject.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnSaveProject.Image = null;
-      this.btnSaveProject.Location = new System.Drawing.Point(91, 45);
-      this.btnSaveProject.Name = "btnSaveProject";
-      this.btnSaveProject.Size = new System.Drawing.Size(75, 23);
-      this.btnSaveProject.TabIndex = 2;
-      this.btnSaveProject.Text = "Save";
-      this.btnSaveProject.Click += new DecentForms.EventHandler(this.btnSaveProject_Click);
+      btnSaveProject.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnSaveProject.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnSaveProject.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnSaveProject.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnSaveProject.Image = null;
+      btnSaveProject.Location = new System.Drawing.Point( 91, 45 );
+      btnSaveProject.Name = "btnSaveProject";
+      btnSaveProject.Size = new System.Drawing.Size( 75, 23 );
+      btnSaveProject.TabIndex = 2;
+      btnSaveProject.Text = "Save";
+      btnSaveProject.Click +=  btnSaveProject_Click ;
       // 
       // btnOpenProject
       // 
-      this.btnOpenProject.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnOpenProject.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnOpenProject.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnOpenProject.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOpenProject.Image = null;
-      this.btnOpenProject.Location = new System.Drawing.Point(10, 45);
-      this.btnOpenProject.Name = "btnOpenProject";
-      this.btnOpenProject.Size = new System.Drawing.Size(75, 23);
-      this.btnOpenProject.TabIndex = 1;
-      this.btnOpenProject.Text = "Open";
-      this.btnOpenProject.Click += new DecentForms.EventHandler(this.btnOpenProject_Click);
+      btnOpenProject.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnOpenProject.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnOpenProject.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnOpenProject.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnOpenProject.Image = null;
+      btnOpenProject.Location = new System.Drawing.Point( 10, 45 );
+      btnOpenProject.Name = "btnOpenProject";
+      btnOpenProject.Size = new System.Drawing.Size( 75, 23 );
+      btnOpenProject.TabIndex = 1;
+      btnOpenProject.Text = "Open";
+      btnOpenProject.Click +=  btnOpenProject_Click ;
       // 
       // editDisassemblyProjectName
       // 
-      this.editDisassemblyProjectName.Location = new System.Drawing.Point(51, 19);
-      this.editDisassemblyProjectName.Name = "editDisassemblyProjectName";
-      this.editDisassemblyProjectName.Size = new System.Drawing.Size(320, 20);
-      this.editDisassemblyProjectName.TabIndex = 0;
-      this.editDisassemblyProjectName.TextChanged += new System.EventHandler(this.editDisassemblyProjectName_TextChanged);
+      editDisassemblyProjectName.Location = new System.Drawing.Point( 51, 19 );
+      editDisassemblyProjectName.Name = "editDisassemblyProjectName";
+      editDisassemblyProjectName.Size = new System.Drawing.Size( 320, 20 );
+      editDisassemblyProjectName.TabIndex = 0;
+      editDisassemblyProjectName.TextChanged +=  editDisassemblyProjectName_TextChanged ;
       // 
       // label2
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(7, 22);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(38, 13);
-      this.label2.TabIndex = 5;
-      this.label2.Text = "Name:";
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point( 7, 22 );
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size( 38, 13 );
+      label2.TabIndex = 5;
+      label2.Text = "Name:";
       // 
       // groupBox4
       // 
-      this.groupBox4.Controls.Add(this.label4);
-      this.groupBox4.Controls.Add(this.label3);
-      this.groupBox4.Controls.Add(this.btnNamedLabelsImport);
-      this.groupBox4.Controls.Add(this.btnExportNamedLabels);
-      this.groupBox4.Controls.Add(this.btnDeleteNamedLabel);
-      this.groupBox4.Controls.Add(this.btnAddNamedLabel);
-      this.groupBox4.Controls.Add(this.editLabelAddress);
-      this.groupBox4.Controls.Add(this.editLabelName);
-      this.groupBox4.Controls.Add(this.listNamedLabels);
-      this.groupBox4.Location = new System.Drawing.Point(883, 100);
-      this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(266, 197);
-      this.groupBox4.TabIndex = 4;
-      this.groupBox4.TabStop = false;
-      this.groupBox4.Text = "Named Labels";
+      groupBox4.Controls.Add( label4 );
+      groupBox4.Controls.Add( label3 );
+      groupBox4.Controls.Add( btnNamedLabelsImport );
+      groupBox4.Controls.Add( btnExportNamedLabels );
+      groupBox4.Controls.Add( btnDeleteNamedLabel );
+      groupBox4.Controls.Add( btnAddNamedLabel );
+      groupBox4.Controls.Add( editLabelAddress );
+      groupBox4.Controls.Add( editLabelName );
+      groupBox4.Controls.Add( listNamedLabels );
+      groupBox4.Location = new System.Drawing.Point( 883, 100 );
+      groupBox4.Name = "groupBox4";
+      groupBox4.Size = new System.Drawing.Size( 266, 197 );
+      groupBox4.TabIndex = 4;
+      groupBox4.TabStop = false;
+      groupBox4.Text = "Named Labels";
       // 
       // label4
       // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(9, 47);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(37, 13);
-      this.label4.TabIndex = 3;
-      this.label4.Text = "Value:";
+      label4.AutoSize = true;
+      label4.Location = new System.Drawing.Point( 9, 47 );
+      label4.Name = "label4";
+      label4.Size = new System.Drawing.Size( 37, 13 );
+      label4.TabIndex = 3;
+      label4.Text = "Value:";
       // 
       // label3
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(9, 24);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(38, 13);
-      this.label3.TabIndex = 3;
-      this.label3.Text = "Name:";
+      label3.AutoSize = true;
+      label3.Location = new System.Drawing.Point( 9, 24 );
+      label3.Name = "label3";
+      label3.Size = new System.Drawing.Size( 38, 13 );
+      label3.TabIndex = 3;
+      label3.Text = "Name:";
       // 
       // btnNamedLabelsImport
       // 
-      this.btnNamedLabelsImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnNamedLabelsImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNamedLabelsImport.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnNamedLabelsImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnNamedLabelsImport.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnNamedLabelsImport.Image = null;
-      this.btnNamedLabelsImport.Location = new System.Drawing.Point(127, 169);
-      this.btnNamedLabelsImport.Name = "btnNamedLabelsImport";
-      this.btnNamedLabelsImport.Size = new System.Drawing.Size(64, 22);
-      this.btnNamedLabelsImport.TabIndex = 5;
-      this.btnNamedLabelsImport.Text = "Import";
-      this.btnNamedLabelsImport.Click += new DecentForms.EventHandler(this.btnNamedLabelsImport_Click);
+      btnNamedLabelsImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnNamedLabelsImport.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnNamedLabelsImport.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnNamedLabelsImport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnNamedLabelsImport.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnNamedLabelsImport.Image = null;
+      btnNamedLabelsImport.Location = new System.Drawing.Point( 127, 169 );
+      btnNamedLabelsImport.Name = "btnNamedLabelsImport";
+      btnNamedLabelsImport.Size = new System.Drawing.Size( 64, 22 );
+      btnNamedLabelsImport.TabIndex = 5;
+      btnNamedLabelsImport.Text = "Import";
+      btnNamedLabelsImport.Click +=  btnNamedLabelsImport_Click ;
       // 
       // btnExportNamedLabels
       // 
-      this.btnExportNamedLabels.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnExportNamedLabels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnExportNamedLabels.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnExportNamedLabels.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnExportNamedLabels.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnExportNamedLabels.Image = null;
-      this.btnExportNamedLabels.Location = new System.Drawing.Point(196, 169);
-      this.btnExportNamedLabels.Name = "btnExportNamedLabels";
-      this.btnExportNamedLabels.Size = new System.Drawing.Size(64, 22);
-      this.btnExportNamedLabels.TabIndex = 6;
-      this.btnExportNamedLabels.Text = "Export";
-      this.btnExportNamedLabels.Click += new DecentForms.EventHandler(this.btnExportNamedLabels_Click);
+      btnExportNamedLabels.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnExportNamedLabels.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnExportNamedLabels.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnExportNamedLabels.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnExportNamedLabels.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnExportNamedLabels.Image = null;
+      btnExportNamedLabels.Location = new System.Drawing.Point( 196, 169 );
+      btnExportNamedLabels.Name = "btnExportNamedLabels";
+      btnExportNamedLabels.Size = new System.Drawing.Size( 64, 22 );
+      btnExportNamedLabels.TabIndex = 6;
+      btnExportNamedLabels.Text = "Export";
+      btnExportNamedLabels.Click +=  btnExportNamedLabels_Click ;
       // 
       // btnDeleteNamedLabel
       // 
-      this.btnDeleteNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnDeleteNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnDeleteNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnDeleteNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnDeleteNamedLabel.Enabled = false;
-      this.btnDeleteNamedLabel.Image = null;
-      this.btnDeleteNamedLabel.Location = new System.Drawing.Point(6, 169);
-      this.btnDeleteNamedLabel.Name = "btnDeleteNamedLabel";
-      this.btnDeleteNamedLabel.Size = new System.Drawing.Size(64, 22);
-      this.btnDeleteNamedLabel.TabIndex = 4;
-      this.btnDeleteNamedLabel.Text = "Delete";
-      this.btnDeleteNamedLabel.Click += new DecentForms.EventHandler(this.btnDeleteNamedLabel_Click);
+      btnDeleteNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnDeleteNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnDeleteNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnDeleteNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnDeleteNamedLabel.Enabled = false;
+      btnDeleteNamedLabel.Image = null;
+      btnDeleteNamedLabel.Location = new System.Drawing.Point( 6, 169 );
+      btnDeleteNamedLabel.Name = "btnDeleteNamedLabel";
+      btnDeleteNamedLabel.Size = new System.Drawing.Size( 64, 22 );
+      btnDeleteNamedLabel.TabIndex = 4;
+      btnDeleteNamedLabel.Text = "Delete";
+      btnDeleteNamedLabel.Click +=  btnDeleteNamedLabel_Click ;
       // 
       // btnAddNamedLabel
       // 
-      this.btnAddNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnAddNamedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnAddNamedLabel.BackColor = System.Drawing.SystemColors.Control;
-      this.btnAddNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnAddNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnAddNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnAddNamedLabel.Enabled = false;
-      this.btnAddNamedLabel.Image = null;
-      this.btnAddNamedLabel.Location = new System.Drawing.Point(196, 42);
-      this.btnAddNamedLabel.Name = "btnAddNamedLabel";
-      this.btnAddNamedLabel.Size = new System.Drawing.Size(64, 22);
-      this.btnAddNamedLabel.TabIndex = 2;
-      this.btnAddNamedLabel.Text = "add";
-      this.btnAddNamedLabel.Click += new DecentForms.EventHandler(this.btnAddNamedLabel_Click);
+      btnAddNamedLabel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnAddNamedLabel.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnAddNamedLabel.BackColor = System.Drawing.SystemColors.Control;
+      btnAddNamedLabel.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnAddNamedLabel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnAddNamedLabel.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnAddNamedLabel.Enabled = false;
+      btnAddNamedLabel.Image = null;
+      btnAddNamedLabel.Location = new System.Drawing.Point( 196, 42 );
+      btnAddNamedLabel.Name = "btnAddNamedLabel";
+      btnAddNamedLabel.Size = new System.Drawing.Size( 64, 22 );
+      btnAddNamedLabel.TabIndex = 2;
+      btnAddNamedLabel.Text = "add";
+      btnAddNamedLabel.Click +=  btnAddNamedLabel_Click ;
       // 
       // editLabelAddress
       // 
-      this.editLabelAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editLabelAddress.Location = new System.Drawing.Point(53, 44);
-      this.editLabelAddress.Name = "editLabelAddress";
-      this.editLabelAddress.Size = new System.Drawing.Size(137, 20);
-      this.editLabelAddress.TabIndex = 1;
-      this.toolTip1.SetToolTip(this.editLabelAddress, "Label Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal");
-      this.editLabelAddress.TextChanged += new System.EventHandler(this.editLabelAddress_TextChanged);
+      editLabelAddress.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      editLabelAddress.Location = new System.Drawing.Point( 53, 44 );
+      editLabelAddress.Name = "editLabelAddress";
+      editLabelAddress.Size = new System.Drawing.Size( 137, 20 );
+      editLabelAddress.TabIndex = 1;
+      toolTip1.SetToolTip( editLabelAddress, "Label Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal" );
+      editLabelAddress.TextChanged +=  editLabelAddress_TextChanged ;
       // 
       // editLabelName
       // 
-      this.editLabelName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editLabelName.Location = new System.Drawing.Point(53, 19);
-      this.editLabelName.Name = "editLabelName";
-      this.editLabelName.Size = new System.Drawing.Size(207, 20);
-      this.editLabelName.TabIndex = 0;
-      this.toolTip1.SetToolTip(this.editLabelName, "Label Name");
-      this.editLabelName.TextChanged += new System.EventHandler(this.editLabelName_TextChanged);
+      editLabelName.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      editLabelName.Location = new System.Drawing.Point( 53, 19 );
+      editLabelName.Name = "editLabelName";
+      editLabelName.Size = new System.Drawing.Size( 207, 20 );
+      editLabelName.TabIndex = 0;
+      toolTip1.SetToolTip( editLabelName, "Label Name" );
+      editLabelName.TextChanged +=  editLabelName_TextChanged ;
       // 
       // listNamedLabels
       // 
-      this.listNamedLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listNamedLabels.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3,
-            this.columnHeader4});
-      this.listNamedLabels.FullRowSelect = true;
-      this.listNamedLabels.HideSelection = false;
-      this.listNamedLabels.Location = new System.Drawing.Point(6, 70);
-      this.listNamedLabels.Name = "listNamedLabels";
-      this.listNamedLabels.Size = new System.Drawing.Size(254, 93);
-      this.listNamedLabels.TabIndex = 3;
-      this.listNamedLabels.UseCompatibleStateImageBehavior = false;
-      this.listNamedLabels.View = System.Windows.Forms.View.Details;
-      this.listNamedLabels.SelectedIndexChanged += new System.EventHandler(this.listNamedLabels_SelectedIndexChanged);
-      this.listNamedLabels.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listNamedLabels_KeyDown);
+      listNamedLabels.Anchor =   System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
+      listNamedLabels.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] { columnHeader3, columnHeader4 } );
+      listNamedLabels.FullRowSelect = true;
+      listNamedLabels.Location = new System.Drawing.Point( 6, 70 );
+      listNamedLabels.Name = "listNamedLabels";
+      listNamedLabels.Size = new System.Drawing.Size( 254, 93 );
+      listNamedLabels.TabIndex = 3;
+      listNamedLabels.UseCompatibleStateImageBehavior = false;
+      listNamedLabels.View = System.Windows.Forms.View.Details;
+      listNamedLabels.SelectedIndexChanged +=  listNamedLabels_SelectedIndexChanged ;
+      listNamedLabels.KeyDown +=  listNamedLabels_KeyDown ;
       // 
       // columnHeader3
       // 
-      this.columnHeader3.Text = "Label";
-      this.columnHeader3.Width = 132;
+      columnHeader3.Text = "Label";
+      columnHeader3.Width = 132;
       // 
       // columnHeader4
       // 
-      this.columnHeader4.Text = "Address";
-      this.columnHeader4.Width = 106;
+      columnHeader4.Text = "Address";
+      columnHeader4.Width = 106;
       // 
       // toolTip1
       // 
-      this.toolTip1.ShowAlways = true;
+      toolTip1.ShowAlways = true;
       // 
       // groupBox5
       // 
-      this.groupBox5.Controls.Add(this.checkStopAtReturns);
-      this.groupBox5.Controls.Add(this.checkOnlyAddUsedLabels);
-      this.groupBox5.Controls.Add(this.checkShowHexData);
-      this.groupBox5.Controls.Add(this.checkShowLineAddresses);
-      this.groupBox5.Location = new System.Drawing.Point(492, 386);
-      this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(385, 122);
-      this.groupBox5.TabIndex = 7;
-      this.groupBox5.TabStop = false;
-      this.groupBox5.Text = "Options";
+      groupBox5.Controls.Add( checkStopAtReturns );
+      groupBox5.Controls.Add( checkOnlyAddUsedLabels );
+      groupBox5.Controls.Add( checkShowHexData );
+      groupBox5.Controls.Add( checkShowLineAddresses );
+      groupBox5.Location = new System.Drawing.Point( 492, 386 );
+      groupBox5.Name = "groupBox5";
+      groupBox5.Size = new System.Drawing.Size( 385, 122 );
+      groupBox5.TabIndex = 7;
+      groupBox5.TabStop = false;
+      groupBox5.Text = "Options";
       // 
       // checkStopAtReturns
       // 
-      this.checkStopAtReturns.AutoSize = true;
-      this.checkStopAtReturns.Checked = true;
-      this.checkStopAtReturns.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkStopAtReturns.Location = new System.Drawing.Point(10, 65);
-      this.checkStopAtReturns.Name = "checkStopAtReturns";
-      this.checkStopAtReturns.Size = new System.Drawing.Size(253, 17);
-      this.checkStopAtReturns.TabIndex = 2;
-      this.checkStopAtReturns.Text = "Stop Disassembly at End Points (e.g. RTS/JMP)";
-      this.checkStopAtReturns.UseVisualStyleBackColor = true;
-      this.checkStopAtReturns.CheckedChanged += new System.EventHandler(this.checkStopAtReturns_CheckedChanged);
-      // 
-      // checkShowHexData
-      // 
-      this.checkShowHexData.AutoSize = true;
-      this.checkShowHexData.Checked = true;
-      this.checkShowHexData.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkShowHexData.Location = new System.Drawing.Point(10, 42);
-      this.checkShowHexData.Name = "checkShowHexData";
-      this.checkShowHexData.Size = new System.Drawing.Size(166, 17);
-      this.checkShowHexData.TabIndex = 1;
-      this.checkShowHexData.Text = "Show Assembled Byte Values";
-      this.checkShowHexData.UseVisualStyleBackColor = true;
-      this.checkShowHexData.CheckedChanged += new System.EventHandler(this.checkShowHexData_CheckedChanged);
-      // 
-      // checkShowLineAddresses
-      // 
-      this.checkShowLineAddresses.AutoSize = true;
-      this.checkShowLineAddresses.Checked = true;
-      this.checkShowLineAddresses.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkShowLineAddresses.Location = new System.Drawing.Point(10, 19);
-      this.checkShowLineAddresses.Name = "checkShowLineAddresses";
-      this.checkShowLineAddresses.Size = new System.Drawing.Size(200, 17);
-      this.checkShowLineAddresses.TabIndex = 0;
-      this.checkShowLineAddresses.Text = "Show Line Addresses in Disassembly";
-      this.checkShowLineAddresses.UseVisualStyleBackColor = true;
-      this.checkShowLineAddresses.CheckedChanged += new System.EventHandler(this.checkShowLineAddresses_CheckedChanged);
-      // 
-      // groupBox6
-      // 
-      this.groupBox6.Controls.Add(this.btnDeleteDataTable);
-      this.groupBox6.Controls.Add(this.label6);
-      this.groupBox6.Controls.Add(this.label5);
-      this.groupBox6.Controls.Add(this.listDataTables);
-      this.groupBox6.Controls.Add(this.btnAddDataTable);
-      this.groupBox6.Controls.Add(this.editDataTableLength);
-      this.groupBox6.Controls.Add(this.editDataTables);
-      this.groupBox6.Location = new System.Drawing.Point(680, 100);
-      this.groupBox6.Name = "groupBox6";
-      this.groupBox6.Size = new System.Drawing.Size(197, 197);
-      this.groupBox6.TabIndex = 8;
-      this.groupBox6.TabStop = false;
-      this.groupBox6.Text = "Data Tables";
-      // 
-      // btnDeleteDataTable
-      // 
-      this.btnDeleteDataTable.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnDeleteDataTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnDeleteDataTable.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnDeleteDataTable.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnDeleteDataTable.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnDeleteDataTable.Enabled = false;
-      this.btnDeleteDataTable.Image = null;
-      this.btnDeleteDataTable.Location = new System.Drawing.Point(6, 169);
-      this.btnDeleteDataTable.Name = "btnDeleteDataTable";
-      this.btnDeleteDataTable.Size = new System.Drawing.Size(64, 22);
-      this.btnDeleteDataTable.TabIndex = 4;
-      this.btnDeleteDataTable.Text = "Delete";
-      this.btnDeleteDataTable.Click += new DecentForms.EventHandler(this.btnDeleteDataTable_Click);
-      // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(6, 47);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(43, 13);
-      this.label6.TabIndex = 3;
-      this.label6.Text = "Length:";
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(6, 22);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(48, 13);
-      this.label5.TabIndex = 3;
-      this.label5.Text = "Address:";
-      // 
-      // listDataTables
-      // 
-      this.listDataTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.listDataTables.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-      this.listDataTables.HideSelection = false;
-      this.listDataTables.Location = new System.Drawing.Point(6, 70);
-      this.listDataTables.Name = "listDataTables";
-      this.listDataTables.Size = new System.Drawing.Size(177, 89);
-      this.listDataTables.TabIndex = 3;
-      this.listDataTables.UseCompatibleStateImageBehavior = false;
-      this.listDataTables.View = System.Windows.Forms.View.Details;
-      this.listDataTables.SelectedIndexChanged += new System.EventHandler(this.listDataTables_SelectedIndexChanged);
-      this.listDataTables.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listDataTables_KeyDown);
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "Address";
-      this.columnHeader5.Width = 90;
-      // 
-      // columnHeader6
-      // 
-      this.columnHeader6.Text = "Length";
-      // 
-      // btnAddDataTable
-      // 
-      this.btnAddDataTable.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnAddDataTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnAddDataTable.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnAddDataTable.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnAddDataTable.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnAddDataTable.Image = null;
-      this.btnAddDataTable.Location = new System.Drawing.Point(119, 44);
-      this.btnAddDataTable.Name = "btnAddDataTable";
-      this.btnAddDataTable.Size = new System.Drawing.Size(64, 20);
-      this.btnAddDataTable.TabIndex = 2;
-      this.btnAddDataTable.Text = "add";
-      this.btnAddDataTable.Click += new DecentForms.EventHandler(this.btnAddDataTable_Click);
-      // 
-      // editDataTableLength
-      // 
-      this.editDataTableLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataTableLength.Location = new System.Drawing.Point(60, 44);
-      this.editDataTableLength.Name = "editDataTableLength";
-      this.editDataTableLength.Size = new System.Drawing.Size(53, 20);
-      this.editDataTableLength.TabIndex = 1;
-      // 
-      // editDataTables
-      // 
-      this.editDataTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataTables.Location = new System.Drawing.Point(60, 19);
-      this.editDataTables.Name = "editDataTables";
-      this.editDataTables.Size = new System.Drawing.Size(123, 20);
-      this.editDataTables.TabIndex = 0;
+      checkStopAtReturns.AutoSize = true;
+      checkStopAtReturns.Checked = true;
+      checkStopAtReturns.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkStopAtReturns.Location = new System.Drawing.Point( 10, 65 );
+      checkStopAtReturns.Name = "checkStopAtReturns";
+      checkStopAtReturns.Size = new System.Drawing.Size( 253, 17 );
+      checkStopAtReturns.TabIndex = 2;
+      checkStopAtReturns.Text = "Stop Disassembly at End Points (e.g. RTS/JMP)";
+      checkStopAtReturns.UseVisualStyleBackColor = true;
+      checkStopAtReturns.CheckedChanged +=  checkStopAtReturns_CheckedChanged ;
       // 
       // checkOnlyAddUsedLabels
       // 
-      this.checkOnlyAddUsedLabels.AutoSize = true;
-      this.checkOnlyAddUsedLabels.Checked = true;
-      this.checkOnlyAddUsedLabels.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkOnlyAddUsedLabels.Location = new System.Drawing.Point(10, 88);
-      this.checkOnlyAddUsedLabels.Name = "checkOnlyAddUsedLabels";
-      this.checkOnlyAddUsedLabels.Size = new System.Drawing.Size(123, 17);
-      this.checkOnlyAddUsedLabels.TabIndex = 3;
-      this.checkOnlyAddUsedLabels.Text = "Add only used labels";
-      this.checkOnlyAddUsedLabels.UseVisualStyleBackColor = true;
-      this.checkOnlyAddUsedLabels.CheckedChanged += new System.EventHandler(this.checkOnlyAddUsedLabels_CheckedChanged);
+      checkOnlyAddUsedLabels.AutoSize = true;
+      checkOnlyAddUsedLabels.Checked = true;
+      checkOnlyAddUsedLabels.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkOnlyAddUsedLabels.Location = new System.Drawing.Point( 10, 88 );
+      checkOnlyAddUsedLabels.Name = "checkOnlyAddUsedLabels";
+      checkOnlyAddUsedLabels.Size = new System.Drawing.Size( 123, 17 );
+      checkOnlyAddUsedLabels.TabIndex = 3;
+      checkOnlyAddUsedLabels.Text = "Add only used labels";
+      checkOnlyAddUsedLabels.UseVisualStyleBackColor = true;
+      checkOnlyAddUsedLabels.CheckedChanged +=  checkOnlyAddUsedLabels_CheckedChanged ;
+      // 
+      // checkShowHexData
+      // 
+      checkShowHexData.AutoSize = true;
+      checkShowHexData.Checked = true;
+      checkShowHexData.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkShowHexData.Location = new System.Drawing.Point( 10, 42 );
+      checkShowHexData.Name = "checkShowHexData";
+      checkShowHexData.Size = new System.Drawing.Size( 166, 17 );
+      checkShowHexData.TabIndex = 1;
+      checkShowHexData.Text = "Show Assembled Byte Values";
+      checkShowHexData.UseVisualStyleBackColor = true;
+      checkShowHexData.CheckedChanged +=  checkShowHexData_CheckedChanged ;
+      // 
+      // checkShowLineAddresses
+      // 
+      checkShowLineAddresses.AutoSize = true;
+      checkShowLineAddresses.Checked = true;
+      checkShowLineAddresses.CheckState = System.Windows.Forms.CheckState.Checked;
+      checkShowLineAddresses.Location = new System.Drawing.Point( 10, 19 );
+      checkShowLineAddresses.Name = "checkShowLineAddresses";
+      checkShowLineAddresses.Size = new System.Drawing.Size( 200, 17 );
+      checkShowLineAddresses.TabIndex = 0;
+      checkShowLineAddresses.Text = "Show Line Addresses in Disassembly";
+      checkShowLineAddresses.UseVisualStyleBackColor = true;
+      checkShowLineAddresses.CheckedChanged +=  checkShowLineAddresses_CheckedChanged ;
+      // 
+      // groupBox6
+      // 
+      groupBox6.Controls.Add( btnDeleteDataTable );
+      groupBox6.Controls.Add( label6 );
+      groupBox6.Controls.Add( label5 );
+      groupBox6.Controls.Add( listDataTables );
+      groupBox6.Controls.Add( btnAddDataTable );
+      groupBox6.Controls.Add( editDataTableLength );
+      groupBox6.Controls.Add( editDataTables );
+      groupBox6.Location = new System.Drawing.Point( 680, 100 );
+      groupBox6.Name = "groupBox6";
+      groupBox6.Size = new System.Drawing.Size( 197, 197 );
+      groupBox6.TabIndex = 8;
+      groupBox6.TabStop = false;
+      groupBox6.Text = "Data Tables";
+      // 
+      // btnDeleteDataTable
+      // 
+      btnDeleteDataTable.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnDeleteDataTable.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnDeleteDataTable.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnDeleteDataTable.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnDeleteDataTable.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnDeleteDataTable.Enabled = false;
+      btnDeleteDataTable.Image = null;
+      btnDeleteDataTable.Location = new System.Drawing.Point( 6, 169 );
+      btnDeleteDataTable.Name = "btnDeleteDataTable";
+      btnDeleteDataTable.Size = new System.Drawing.Size( 64, 22 );
+      btnDeleteDataTable.TabIndex = 4;
+      btnDeleteDataTable.Text = "Delete";
+      btnDeleteDataTable.Click +=  btnDeleteDataTable_Click ;
+      // 
+      // label6
+      // 
+      label6.AutoSize = true;
+      label6.Location = new System.Drawing.Point( 6, 47 );
+      label6.Name = "label6";
+      label6.Size = new System.Drawing.Size( 43, 13 );
+      label6.TabIndex = 3;
+      label6.Text = "Length:";
+      // 
+      // label5
+      // 
+      label5.AutoSize = true;
+      label5.Location = new System.Drawing.Point( 6, 22 );
+      label5.Name = "label5";
+      label5.Size = new System.Drawing.Size( 48, 13 );
+      label5.TabIndex = 3;
+      label5.Text = "Address:";
+      // 
+      // listDataTables
+      // 
+      listDataTables.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      listDataTables.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] { columnHeader5, columnHeader6 } );
+      listDataTables.FullRowSelect = true;
+      listDataTables.Location = new System.Drawing.Point( 6, 70 );
+      listDataTables.Name = "listDataTables";
+      listDataTables.Size = new System.Drawing.Size( 177, 89 );
+      listDataTables.TabIndex = 3;
+      listDataTables.UseCompatibleStateImageBehavior = false;
+      listDataTables.View = System.Windows.Forms.View.Details;
+      listDataTables.SelectedIndexChanged +=  listDataTables_SelectedIndexChanged ;
+      listDataTables.KeyDown +=  listDataTables_KeyDown ;
+      // 
+      // columnHeader5
+      // 
+      columnHeader5.Text = "Address";
+      columnHeader5.Width = 90;
+      // 
+      // columnHeader6
+      // 
+      columnHeader6.Text = "Length";
+      // 
+      // btnAddDataTable
+      // 
+      btnAddDataTable.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      btnAddDataTable.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      btnAddDataTable.BorderStyle = DecentForms.BorderStyle.FLAT;
+      btnAddDataTable.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      btnAddDataTable.DialogResult = System.Windows.Forms.DialogResult.OK;
+      btnAddDataTable.Image = null;
+      btnAddDataTable.Location = new System.Drawing.Point( 119, 44 );
+      btnAddDataTable.Name = "btnAddDataTable";
+      btnAddDataTable.Size = new System.Drawing.Size( 64, 20 );
+      btnAddDataTable.TabIndex = 2;
+      btnAddDataTable.Text = "add";
+      btnAddDataTable.Click +=  btnAddDataTable_Click ;
+      // 
+      // editDataTableLength
+      // 
+      editDataTableLength.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      editDataTableLength.Location = new System.Drawing.Point( 60, 44 );
+      editDataTableLength.Name = "editDataTableLength";
+      editDataTableLength.Size = new System.Drawing.Size( 53, 20 );
+      editDataTableLength.TabIndex = 1;
+      // 
+      // editDataTables
+      // 
+      editDataTables.Anchor =  System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Right ;
+      editDataTables.Location = new System.Drawing.Point( 60, 19 );
+      editDataTables.Name = "editDataTables";
+      editDataTables.Size = new System.Drawing.Size( 123, 20 );
+      editDataTables.TabIndex = 0;
       // 
       // Disassembler
       // 
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(1159, 688);
-      this.Controls.Add(this.groupBox6);
-      this.Controls.Add(this.groupBox5);
-      this.Controls.Add(this.groupBox3);
-      this.Controls.Add(this.tabContent);
-      this.Controls.Add(this.groupBox4);
-      this.Controls.Add(this.groupBox2);
-      this.Controls.Add(this.groupBox1);
-      this.MaximizeBox = false;
-      this.MinimizeBox = false;
-      this.Name = "Disassembler";
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.Text = "Disassembler";
-      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).EndInit();
-      this.contextMenuDisassembler.ResumeLayout(false);
-      this.panel1.ResumeLayout(false);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
-      this.tabContent.ResumeLayout(false);
-      this.tabDisassembly.ResumeLayout(false);
-      this.tabBinary.ResumeLayout(false);
-      this.groupBox3.ResumeLayout(false);
-      this.groupBox3.PerformLayout();
-      this.groupBox4.ResumeLayout(false);
-      this.groupBox4.PerformLayout();
-      this.groupBox5.ResumeLayout(false);
-      this.groupBox5.PerformLayout();
-      this.groupBox6.ResumeLayout(false);
-      this.groupBox6.PerformLayout();
-      this.ResumeLayout(false);
+      AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      ClientSize = new System.Drawing.Size( 1159, 688 );
+      Controls.Add( groupBox6 );
+      Controls.Add( groupBox5 );
+      Controls.Add( groupBox3 );
+      Controls.Add( tabContent );
+      Controls.Add( groupBox4 );
+      Controls.Add( groupBox2 );
+      Controls.Add( groupBox1 );
+      MaximizeBox = false;
+      MinimizeBox = false;
+      Name = "Disassembler";
+      ShowIcon = false;
+      ShowInTaskbar = false;
+      Text = "Disassembler";
+      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).EndInit();
+      ( (System.ComponentModel.ISupportInitialize)editDisassembly ).EndInit();
+      contextMenuDisassembler.ResumeLayout( false );
+      panel1.ResumeLayout( false );
+      groupBox1.ResumeLayout( false );
+      groupBox1.PerformLayout();
+      groupBox2.ResumeLayout( false );
+      groupBox2.PerformLayout();
+      tabContent.ResumeLayout( false );
+      tabDisassembly.ResumeLayout( false );
+      tabBinary.ResumeLayout( false );
+      groupBox3.ResumeLayout( false );
+      groupBox3.PerformLayout();
+      groupBox4.ResumeLayout( false );
+      groupBox4.PerformLayout();
+      groupBox5.ResumeLayout( false );
+      groupBox5.PerformLayout();
+      groupBox6.ResumeLayout( false );
+      groupBox6.PerformLayout();
+      ResumeLayout( false );
 
     }
 

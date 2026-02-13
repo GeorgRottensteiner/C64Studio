@@ -788,6 +788,8 @@ namespace RetroDevStudio
 
       RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED ) );
 
+      StudioCore.Audio.InitSFXEditors();
+
       if ( StudioCore.Settings.CheckForUpdates )
       {
         CheckForUpdate();

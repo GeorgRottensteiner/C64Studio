@@ -125,13 +125,19 @@ namespace GR
       int iPos = 0;
 
       if ( ( strValue.Length >= 2 )
-      && ( strValue.Substring( 0, 2 ) == "0x" ) )
+      &&   ( strValue.Substring( 0, 2 ) == "0x" ) )
       {
         iPos = 2;
         iBase = 16;
       }
       if ( ( strValue.Length >= 1 )
-      && ( strValue[0] == '#' ) )
+      &&   ( strValue[0] == '$' ) )
+      {
+        iPos = 1;
+        iBase = 16;
+      }
+      if ( ( strValue.Length >= 1 )
+      &&   ( strValue[0] == '#' ) )
       {
         iPos = 1;
         iBase = 16;
@@ -139,7 +145,7 @@ namespace GR
 
       // Space darf am Anfang sein
       while ( ( iPos < strValue.Length )
-      && ( strValue[iPos] == ' ' ) )
+      &&      ( strValue[iPos] == ' ' ) )
       {
         ++iPos;
       }
@@ -156,17 +162,17 @@ namespace GR
           // avoided use of toupper
 
           if ( ( cChar >= '0' )
-          && ( cChar <= '9' ) )
+          &&   ( cChar <= '9' ) )
           {
             iValue += cChar - '0';
           }
           else if ( ( cChar >= 'a' )
-          && ( cChar <= 'f' ) )
+          &&        ( cChar <= 'f' ) )
           {
             iValue += cChar + 10 - 'a';
           }
           else if ( ( cChar >= 'A' )
-          && ( cChar <= 'F' ) )
+          &&        ( cChar <= 'F' ) )
           {
             iValue += cChar + 10 - 'A';
           }
@@ -207,7 +213,7 @@ namespace GR
 
       // Space darf am Anfang sein
       while ( ( iPos < strValue.Length )
-      && ( strValue[iPos] == ' ' ) )
+      &&      ( strValue[iPos] == ' ' ) )
       {
         ++iPos;
       }
@@ -241,6 +247,8 @@ namespace GR
       }
       return bNegative ? -Value : Value;
     }
+
+
 
     public static UInt64 ToU64( string strValue, int iBase )
     {

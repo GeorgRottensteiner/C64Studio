@@ -118,17 +118,18 @@ namespace FastColoredTextBoxNS
             result.Clear();
             var cult = Thread.CurrentThread.CurrentUICulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-
-            var kc = new KeysConverter();
-            
-            foreach (var p in s.Split(','))
+            if ( !string.IsNullOrEmpty( s ) )
             {
-                var pp = p.Split('=');
-                var k = (Keys)kc.ConvertFromString(pp[0].Trim());
-                var a = (FCTBAction)Enum.Parse(typeof(FCTBAction), pp[1].Trim());
-                result[k] = a;
+              var kc = new KeysConverter();
+            
+              foreach (var p in s.Split(','))
+              {
+                  var pp = p.Split('=');
+                  var k = (Keys)kc.ConvertFromString(pp[0].Trim());
+                  var a = (FCTBAction)Enum.Parse(typeof(FCTBAction), pp[1].Trim());
+                  result[k] = a;
+              }
             }
-
             Thread.CurrentThread.CurrentUICulture = cult;
 
             return result;

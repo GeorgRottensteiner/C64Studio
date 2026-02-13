@@ -37,14 +37,15 @@ namespace RetroDevStudio.Audio
     {
       _currentSFXPlayer = player;
 
-      var playerClass = EnumHelper.GetAttributeOfType<TypeAttribute>( player.Player );
-
-      // TODO
-      if ( _sidPlayer == null )
+      switch ( player.Machine )
       {
-        _sidPlayer = new SIDPlayer();
+        case MachineType.C64:
+          if ( _sidPlayer == null )
+          {
+            _sidPlayer = new SIDPlayer();
+          }
+          break;
       }
-      //ObjectType instance = (ObjectType)Activator.CreateInstance(objectType);
     }
 
 
