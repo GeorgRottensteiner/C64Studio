@@ -1,27 +1,27 @@
-<SFXPlayer Name="RetroDev Studio SID Player" Machine="C64" Assembly="player.asm" CodeAddress="$0801" AddressToStartPlayer="2061" AddressToTriggerPlaying="0xe19" ValueToTriggerPlaying="1" CanReplay="True">
+<SFXPlayer Name="RetroDev Studio SID Player" Machine="C64" Assembly="player.asm" CodeAddress="$0801" AddressToStartPlayer="2061" AddressToTriggerPlaying="$a35" ValueToTriggerPlaying="1" CanReplay="True">
   <Parameters>
-    <Parameter Name="Effect" RelevantBits="0xfc" ShiftBitsLeft="2" AddressToWriteTo="0xa31">
+    <Parameter Name="Effect" RelevantBits="0xfc" ShiftBitsLeft="2" AddressToWriteTo="$a36">
       <Value Name="Slide" Value="0"/>
       <Value Name="None" Value="1"/>
       <Value Name="Step" Value="2"/>
       <Value Name="Slide Ping Pong" Value="3"/>
     </Parameter>
-    <Parameter Name="Waveform" RelevantBits="0x03" AddressToWriteTo="0xa31">
+    <Parameter Name="Waveform" RelevantBits="0x03" AddressToWriteTo="$a36">
       <Value Name="Triangle" Value="0"/>
       <Value Name="Sawtooth" Value="1"/>
       <Value Name="Pulse" Value="2"/>
       <Value Name="Noise Ping Pong" Value="3"/>
     </Parameter>
-    <Parameter Name="Frequency" RelevantBits="0xff" MinValue="0" MaxValue="65535" AddressToWriteTo="0xa31+100" />
-    <Parameter Name="Frequency" RelevantBits="0xff" ShiftBitsRight="8" MinValue="0" MaxValue="65535" AddressToWriteTo="0xa31+2*100" />
-    <Parameter Name="Attack" RelevantBits="0xf0" ShiftBitsLeft="4" MinValue="0" MaxValue="15" AddressToWriteTo="0xa31+3*100" />
-    <Parameter Name="Decay" RelevantBits="0x0f" MinValue="0" MaxValue="15" AddressToWriteTo="0xa31+3*100" />
-    <Parameter Name="Sustain" RelevantBits="0xf0" ShiftBitsLeft="4" MinValue="0" MaxValue="15" AddressToWriteTo="0xa31+4*100" />
-    <Parameter Name="Release" RelevantBits="0x0f" MinValue="0" MaxValue="15" AddressToWriteTo="0xa31+4*100" />
-    <Parameter Name="Pulse" RelevantBits="0xff" MinValue="0" MaxValue="65535" AddressToWriteTo="0xa31+5*100" />
-    <Parameter Name="Pulse" RelevantBits="0xff" ShiftBitsRight="8" MinValue="0" MaxValue="65535" AddressToWriteTo="0xa31+6*100" />
-    <Parameter Name="Delta" MinValue="-128" MaxValue="127" AddressToWriteTo="0xa31+7*100" />
-    <Parameter Name="Delay" MinValue="0" MaxValue="255" AddressToWriteTo="0xa31+8*100" />
-    <Parameter Name="Step" MinValue="-128" MaxValue="127" AddressToWriteTo="0xa31+9*100" />
+    <Parameter Name="Frequency" RelevantBits="0xff" MinValue="0" MaxValue="65535" AddressToWriteTo="$a37" />
+    <Parameter Name="Frequency" RelevantBits="0xff" ShiftBitsRight="8" MinValue="0" MaxValue="65535" AddressToWriteTo="$a38" />
+    <Parameter Name="Pulse" RelevantBits="0xff" MinValue="0" MaxValue="65535" AddressToWriteTo="$a39" />
+    <Parameter Name="Pulse" RelevantBits="0xff" ShiftBitsRight="8" MinValue="0" MaxValue="65535" AddressToWriteTo="$a3a" />
+    <Parameter Name="Attack" RelevantBits="0xf0" ShiftBitsLeft="4" MinValue="0" MaxValue="15" AddressToWriteTo="$a3b" />
+    <Parameter Name="Decay" RelevantBits="0x0f" MinValue="0" MaxValue="15" AddressToWriteTo="$a3b" />
+    <Parameter Name="Sustain" RelevantBits="0xf0" ShiftBitsLeft="4" MinValue="0" MaxValue="15" AddressToWriteTo="$a3c" />
+    <Parameter Name="Release" RelevantBits="0x0f" MinValue="0" MaxValue="15" AddressToWriteTo="$a3c" />
+    <Parameter Name="Delta" MinValue="-128" MaxValue="127" AddressToWriteTo="$a3d" />
+    <Parameter Name="Delay" MinValue="0" MaxValue="255" AddressToWriteTo="$a3e" />
+    <Parameter Name="Step" MinValue="-128" MaxValue="127" AddressToWriteTo="$a3f" />
   </Parameters>
 </SFXPlayer>

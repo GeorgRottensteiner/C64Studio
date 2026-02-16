@@ -20,7 +20,7 @@ namespace RetroDevStudio.Audio
   {
     StudioCore                  Core;
 
-    List<SFXPlayerDescriptor>   SFXPlayers = new List<SFXPlayerDescriptor>();
+    public List<SFXPlayerDescriptor>   SFXPlayers = new List<SFXPlayerDescriptor>();
 
 
 
@@ -31,21 +31,9 @@ namespace RetroDevStudio.Audio
 
 
 
-    private string BasePath()
-    {
-#if DEBUG
-      string    sfxPlayerBasePath = @"../../../../C64StudioRelease/shared content/SFXPlayers";
-#else
-      string    sfxPlayerBasePath = @"SFXPlayers";
-#endif
-      return sfxPlayerBasePath;
-    }
-
-
-
     public void InitSFXEditors()
     {
-      var sfxPlayerBasePath = System.IO.Path.GetFullPath( BasePath() );
+      var sfxPlayerBasePath = System.IO.Path.GetFullPath( Core.Navigating.SharedContentFolder( "SFXPlayers" ) );
       var folders = System.IO.Directory.GetDirectories( sfxPlayerBasePath );
       SFXPlayers = new List<SFXPlayerDescriptor>();
       foreach ( var systemfolder in folders )
@@ -110,13 +98,29 @@ namespace RetroDevStudio.Audio
                   var valueDescriptor = new ValueDescriptor()
                   {
                     Name              = xmlParam.Attribute( "Name" ),
-                    AddressToWriteTo  = GR.Convert.ToI32( xmlParam.Attribute( "AddressToWriteTo" ) ),
-                    MinValue          = GR.Convert.ToI32( xmlParam.Attribute( "MinValue" ) ),
-                    MaxValue          = GR.Convert.ToI32( xmlParam.Attribute( "MaxValue" ) ),
-                    ShiftBitsLeft     = GR.Convert.ToI32( xmlParam.Attribute( "ShiftBitsLeft" ) ),
-                    ShiftBitsRight    = GR.Convert.ToI32( xmlParam.Attribute( "ShiftBitsRight" ) ),
-                    RelevantBits      = GR.Convert.ToI32( xmlParam.Attribute( "RelevantBits" ) )
+                    AddressToWriteTo  = GR.Convert.ToI32( xmlParam.Attribute( "AddressToWriteTo" ) )
                   };
+                  if ( xmlParam.HasAttribute( "MinValue" ) )
+                  {
+                    valueDescriptor.MinValue = GR.Convert.ToI32( xmlParam.Attribute( "MinValue" ) );
+                  }
+                  if ( xmlParam.HasAttribute( "MaxValue" ) )
+                  {
+                    valueDescriptor.MaxValue = GR.Convert.ToI32( xmlParam.Attribute( "MaxValue" ) );
+                  }
+                  if ( xmlParam.HasAttribute( "ShiftBitsLeft" ) )
+                  {
+                    valueDescriptor.ShiftBitsLeft = GR.Convert.ToI32( xmlParam.Attribute( "ShiftBitsLeft" ) );
+                  }
+                  if ( xmlParam.HasAttribute( "ShiftBitsRight" ) )
+                  {
+                    valueDescriptor.ShiftBitsRight = GR.Convert.ToI32( xmlParam.Attribute( "ShiftBitsRight" ) );
+                  }
+                  if ( xmlParam.HasAttribute( "RelevantBits" ) )
+                  {
+                    valueDescriptor.RelevantBits = GR.Convert.ToI32( xmlParam.Attribute( "RelevantBits" ) );
+                  }
+
                   foreach ( var validValue in xmlParam )
                   {
                     if ( validValue.Type == "Value" )
@@ -156,6 +160,7 @@ namespace RetroDevStudio.Audio
         TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN,
         Assembler  = RetroDevStudio.Types.AssemblerType.C64_STUDIO
       };
+      config.LibraryFiles.Add( Core.Navigating.SharedContentFolder( "baselib" ) );
 
       bool parseResult = assembler.ParseFile( assemblyPath, GR.IO.File.ReadAllText( assemblyPath ), null, config, null,
                                                null, out Types.ASM.FileInfo asmFileInfo );
@@ -168,7 +173,7 @@ namespace RetroDevStudio.Audio
         }
         return false;
       }
-      if ( !assembler.Assemble( new Parser.CompileConfig() { OutputFile = "player.bin" } ) )
+      if ( !assembler.Assemble( new Parser.CompileConfig() { OutputFile = "player.bin", TargetType = CompileTargetType.PLAIN } ) )
       {
         Debug.Log( $"failed to assemble player for {sfxPlayer.Name}: {assembler.Errors} errors" );
         return false;

@@ -504,6 +504,7 @@ namespace RetroDevStudio
       defaultPalette.Name = "C64Studio";
 
       Palettes.Add( defaultPalette.Name, defaultPalette );
+      StudioCore.Audio.InitSFXEditors();
 
       m_SolutionExplorer = new SolutionExplorer( StudioCore );
       m_BinaryEditor = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
@@ -787,8 +788,6 @@ namespace RetroDevStudio
       ApplicationEvent += new ApplicationEventHandler( MainForm_ApplicationEvent );
 
       RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED ) );
-
-      StudioCore.Audio.InitSFXEditors();
 
       if ( StudioCore.Settings.CheckForUpdates )
       {
@@ -6062,6 +6061,7 @@ namespace RetroDevStudio
       }
       e.Cancel = false;
       StudioCore.ShuttingDown = true;
+
       SaveSettings();
       CloseSolution();
     }
@@ -6374,6 +6374,11 @@ namespace RetroDevStudio
         document = new SpriteEditor( StudioCore );
         document.ShowHint = DockState.Document;
         ( (SpriteEditor)document ).ImportSprites( Filename, true, true );
+      }
+      else if ( extension == ".SFXPROJECT" )
+      {
+        document = new SFXEditor( StudioCore );
+        document.ShowHint = DockState.Document;
       }
       else
       {

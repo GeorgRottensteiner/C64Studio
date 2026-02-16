@@ -621,14 +621,6 @@
     <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="NAudio">
-      <HintPath>..\..\SharpSid\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpSid">
-      <HintPath>..\..\SharpSid\SharpSid\bin\Debug\net8.0\SharpSid.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Update="Documents\SampleExplorer.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

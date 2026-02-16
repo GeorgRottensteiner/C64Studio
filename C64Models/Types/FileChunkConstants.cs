@@ -55,6 +55,11 @@
     public const ushort    SPRITESET_LAYER_ENTRY          = 0x1401;
     public const ushort    SPRITESET_LAYER_INFO           = 0x1402;
 
+    public const ushort    SFX_PROJECT                    = 0x1410;
+    public const ushort    SFX_PROJECT_INFO               = 0x1411;
+    public const ushort    SFX_EFFECT_LIST                = 0x1412;
+    public const ushort    SFX_EFFECT                     = 0x1413;
+
     public const ushort    MULTICOLOR_DATA                = 0x1500;
     public const ushort    CHARSET_DATA                   = 0x1501;   // multicolor-data und binary data
     public const ushort    PALETTE                        = 0x1502;   // int num entries, n * ARGB (uint)

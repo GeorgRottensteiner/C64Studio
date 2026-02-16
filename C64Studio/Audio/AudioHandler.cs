@@ -27,8 +27,6 @@ namespace RetroDevStudio.Audio
       _sidPlayer?.Stop();
       _sidPlayer?.Dispose();
       _sidPlayer = null;
-
-      _currentSFXPlayer = null;
     }
 
 
@@ -76,8 +74,7 @@ namespace RetroDevStudio.Audio
         Play( playerData );
         return;
       }
-      //_sidPlayer.Inject( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, -1 );
-      */
+      _sidPlayer.Inject( playerData.Data(), _currentSFXPlayer.PlayerCodeAddress, -1 );*/
     }
 
 

@@ -39,6 +39,20 @@ namespace RetroDevStudio
 
 
 
+    public string SharedContentFolder( string subFolder )
+    {
+#if DEBUG
+      string    sharedContentFolder = @"../../../../C64StudioRelease/shared content";
+#else
+      string    sharedContentFolder = "";
+#endif
+      string    fullPath = GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, sharedContentFolder );
+      
+      return GR.Path.Append( fullPath, subFolder );
+    }
+
+
+
     public void UpdateFromMessages( Types.ASM.FileInfo ASMInfo,
                                     Project ParsedProject )
     {

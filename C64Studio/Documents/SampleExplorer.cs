@@ -51,14 +51,8 @@ namespace RetroDevStudio.Documents
 
     private void SampleLoader_DoWork(object sender, DoWorkEventArgs e)
     {
-#if DEBUG
-      string    sampleBasePath = @"../../../../C64StudioRelease/shared content/Sample Projects";
-#else
-      string    sampleBasePath = @"Sample Projects";
-#endif
-
       _tags.Clear();
-      sampleBasePath = System.IO.Path.GetFullPath( sampleBasePath );
+      var sampleBasePath = System.IO.Path.GetFullPath( Core.Navigating.SharedContentFolder( "Sample Projects" ) );
       var folders = System.IO.Directory.GetDirectories( sampleBasePath );
       var samples = new List<SampleProject>();
       foreach ( var systemfolder in folders )

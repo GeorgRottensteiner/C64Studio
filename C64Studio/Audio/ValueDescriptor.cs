@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RetroDevStudio.Audio
 {
-  internal class ValueDescriptor
+  public class ValueDescriptor
   {
     public string     Name = "";
 

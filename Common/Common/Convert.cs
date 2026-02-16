@@ -218,29 +218,65 @@ namespace GR
         ++iPos;
       }
 
-
       bool bNegative = false;
+      if ( ( iPos < strValue.Length )
+      &&   ( strValue[iPos] == '-' ) )
+      {
+        bNegative = true;
+        ++iPos;
+      }
+      int iBase = 10;
+      if ( ( iPos + 2 <= strValue.Length )
+      &&   ( strValue.Substring( iPos, 2 ) == "0x" ) )
+      {
+        iPos += 2;
+        iBase = 16;
+      }
+      else if ( ( iPos + 1 <= strValue.Length )
+      &&        ( ( strValue.Substring( iPos, 1 ) == "$" )
+      ||          ( strValue.Substring( iPos, 1 ) == "#" ) ) )
+      {
+        ++iPos;
+        iBase = 16;
+      }
 
       while ( iPos < strValue.Length )
       {
-        Value *= 10;
+        Value *= iBase;
         char cChar = strValue[iPos];
 
         // avoided use of toupper
-        if ( ( iPos == 0 )
-        &&   ( cChar == '-' ) )
-        {
-          bNegative = true;
-        }
-        else if ( ( cChar >= '0' )
-        &&        ( cChar <= '9' ) )
+        if ( ( cChar >= '0' )
+        &&   ( cChar <= '9' ) )
         {
           Value += cChar - '0';
+        }
+        else if ( ( cChar >= 'a' )
+        &&        ( cChar <= 'f' ) )
+        {
+          if ( iBase < 16 )
+          {
+            // abort
+            Value /= iBase;
+            break;
+          }
+          Value += cChar + 10 - 'a';
+        }
+        else if ( ( cChar >= 'A' )
+        &&        ( cChar <= 'F' ) )
+        {
+          if ( iBase < 16 )
+          {
+            // abort
+            Value /= iBase;
+            break;
+          }
+          Value += cChar + 10 - 'A';
         }
         else
         {
           // ungültiges Zeichen
-          Value /= 10;
+          Value /= iBase;
           break;
         }
         ++iPos;

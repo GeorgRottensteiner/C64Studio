@@ -1,13 +1,21 @@
 ﻿using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Audio;
+using RetroDevStudio.Controls;
+using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Transactions;
 using System.Windows.Forms;
+using System.Windows.Media.Effects;
 using WeifenLuo.WinFormsUI.Docking;
+
+
 
 namespace RetroDevStudio.Documents
 {
@@ -16,7 +24,8 @@ namespace RetroDevStudio.Documents
     private AudioHandler              _audio = new AudioHandler();
 
     private List<SFXPlayerDescriptor> _players = new List<SFXPlayerDescriptor>();
-    private List<SFXEffect>           _effects = new List<SFXEffect>();
+
+    private SFXProject                _project = new SFXProject();
 
     private SFXPlayerDescriptor       _currentPlayer = null;
     private bool                      _updatingParams = false;
@@ -28,6 +37,19 @@ namespace RetroDevStudio.Documents
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.SHUTTING_DOWN:
+          Stop();
+          break;
+      }
+      base.OnApplicationEvent( Event );
     }
 
 
@@ -196,7 +218,9 @@ FX_WAVE_NOISE         = 3
       SFX_SLOT_10_STEP
           !fill 100,$32*/
 
-      _players.Add( player1 );
+      //_players.Add( player1 );
+
+      _players.AddRange( Core.Audio.SFXPlayers );
 
       foreach ( var player in _players )
       {
@@ -207,6 +231,17 @@ FX_WAVE_NOISE         = 3
         comboSFXPlayer.SelectedIndex = 0;
       }
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+    }
+
+
+
+    protected override void OnVisibleChanged( EventArgs e )
+    {
+      if ( IsHidden )
+      {
+        _audio.StopAll();
+      }
+      base.OnVisibleChanged( e );
     }
 
 
@@ -316,8 +351,21 @@ FX_WAVE_NOISE         = 3
         return;
       }
       _updatingParams = true;
+
+
+      if ( GetValueFromControl( (Control)sender, out var effectname, out var effectValue ) )
+      {
+        if ( listEffects.SelectedItem != null )
+        {
+          var effect = (SFXProject.SFXEffect)listEffects.SelectedItem.Tag;
+
+          effect.Parameters[effectname] = effectValue;
+        }
+      }
+
       RestartSoundEffect();
       _updatingParams = false;
+      SetModified();
     }
 
 
@@ -355,7 +403,7 @@ FX_WAVE_NOISE         = 3
         {
           continue;
         }
-        int               value = 0;         
+        int               value = 0;
 
         if ( control is System.Windows.Forms.ComboBox )
         {
@@ -412,60 +460,143 @@ FX_WAVE_NOISE         = 3
 
     private void listEffects_ItemAdded( object sender, Controls.ArrangedItemEntry Item )
     {
-      var effect = new SFXEffect();
+      var effect = new SFXProject.SFXEffect();
       effect.Name = editEffectName.Text;
 
       Item.Text = effect.Name;
       Item.Tag = effect;
 
-      _effects.Add( effect );
+      if ( string.IsNullOrEmpty( Item.Text ) )
+      {
+        Item.Text = $"SFX {_project.Effects.Count + 1}";
+        effect.Name = Item.Text;
+      }
+
+      foreach ( Control control in panelEffectValues.Controls )
+      {
+        if ( GetValueFromControl( control, out string effectName, out int effectValue ) )
+        {
+          var parms = (List<ValueDescriptor>)control.Tag;
+          if ( parms == null )
+          {
+            continue;
+          }
+          int               value = 0;
+
+          if ( control is System.Windows.Forms.ComboBox )
+          {
+            var combo = (System.Windows.Forms.ComboBox)control;
+            var param = control.Tag as List<ValueDescriptor>;
+            if ( combo.SelectedItem != null )
+            {
+              var item = (Types.ComboItem)combo.SelectedItem;
+              effect.Parameters[param[0].Name] = (int)item.Tag;
+            }
+          }
+          else if ( control is System.Windows.Forms.NumericUpDown )
+          {
+            var numericUpDown = (System.Windows.Forms.NumericUpDown)control;
+            var param = control.Tag as List<ValueDescriptor>;
+            value = (int)numericUpDown.Value;
+            effect.Parameters[param[0].Name] = value;
+          }
+          else
+          {
+            continue;
+          }
+
+        }
+      }
+
+      _project.Effects.Add( effect );
+      SetModified();
+    }
+
+
+
+    private bool GetValueFromControl( Control control, out string effectName, out int effectValue )
+    {
+      effectName = null;
+      effectValue = 0;
+      var parms = (List<ValueDescriptor>)control.Tag;
+      if ( parms == null )
+      {
+        return false;
+      }
+      if ( control is System.Windows.Forms.ComboBox )
+      {
+        var combo = (System.Windows.Forms.ComboBox)control;
+        var param = control.Tag as List<ValueDescriptor>;
+        if ( combo.SelectedItem != null )
+        {
+          var item = (Types.ComboItem)combo.SelectedItem;
+
+          effectName = param[0].Name;
+          effectValue = (int)item.Tag;
+          return true;
+        }
+      }
+      else if ( control is System.Windows.Forms.NumericUpDown )
+      {
+        var numericUpDown = (System.Windows.Forms.NumericUpDown)control;
+        var param = control.Tag as List<ValueDescriptor>;
+
+        effectName = param[0].Name;
+        effectValue = (int)numericUpDown.Value;
+
+        return true;
+      }
+      return false;
     }
 
 
 
     private void listEffects_ItemMoved( object sender, Controls.ArrangedItemEntry Item1, Controls.ArrangedItemEntry Item2 )
     {
-      var effect1 = (SFXEffect)Item1.Tag;
-      var effect2 = (SFXEffect)Item2.Tag;
+      var effect1 = (SFXProject.SFXEffect)Item1.Tag;
+      var effect2 = (SFXProject.SFXEffect)Item2.Tag;
 
       if ( ( effect1 == null )
-      ||   ( effect2 == null ) )
+      || ( effect2 == null ) )
       {
         return;
       }
 
-      int index1 = _effects.IndexOf( effect1 );
-      int index2 = _effects.IndexOf( effect2 );
+      int index1 = _project.Effects.IndexOf( effect1 );
+      int index2 = _project.Effects.IndexOf( effect2 );
 
       if ( ( index1 == -1 )
-      ||   ( index2 == -1 ) )
+      || ( index2 == -1 ) )
       {
         // If one or both not found, rebuild the list from the control order
-        _effects.Clear();
+        _project.Effects.Clear();
         foreach ( Controls.ArrangedItemEntry entry in listEffects.Items )
         {
-          var eff = entry.Tag as SFXEffect;
+          var eff = entry.Tag as SFXProject.SFXEffect;
           if ( eff != null )
           {
-            _effects.Add( eff );
+            _project.Effects.Add( eff );
           }
         }
+        SetModified();
         return;
       }
 
       // swap the two effects in the underlying list
-      var tmp = _effects[index1];
-      _effects[index1] = _effects[index2];
-      _effects[index2] = tmp;
+      var tmp = _project.Effects[index1];
+      _project.Effects[index1] = _project.Effects[index2];
+      _project.Effects[index2] = tmp;
+      SetModified();
     }
 
 
 
     private void listEffects_ItemRemoved( object sender, Controls.ArrangedItemEntry Item )
     {
-      var effect = (SFXEffect)Item.Tag;
+      var effect = (SFXProject.SFXEffect)Item.Tag;
 
-      _effects.Remove( effect );
+      _project.Effects.Remove( effect );
+      SetModified();
     }
 
 
@@ -476,14 +607,182 @@ FX_WAVE_NOISE         = 3
       {
         return;
       }
-      var effect = (SFXEffect)listEffects.SelectedItem.Tag;
-      effect.Name = editEffectName.Text;
+      var effect = (SFXProject.SFXEffect)listEffects.SelectedItem.Tag;
+      if ( effect.Name != editEffectName.Text )
+      {
+        effect.Name = editEffectName.Text;
+        listEffects.SelectedItem.Text = effect.Name;
+        SetModified();
+      }
     }
 
 
 
     private void btnPlay_Click( DecentForms.ControlBase Sender )
     {
+      RestartSoundEffect();
+    }
+
+
+
+    private void listEffects_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
+    {
+      if ( listEffects.SelectedItem == null )
+      {
+        return;
+      }
+      var effect = (SFXProject.SFXEffect)listEffects.SelectedItem.Tag;
+
+      _updatingParams = true;
+      editEffectName.Text = effect.Name;
+      foreach ( var effectValue in effect.Parameters )
+      {
+        foreach ( Control control in panelEffectValues.Controls )
+        {
+          var param = control.Tag as List<ValueDescriptor>;
+          if ( param != null )
+          {
+            if ( param[0].Name == effectValue.Key )
+            {
+              if ( control is ComboBox )
+              {
+                var combo = (ComboBox)control;
+                int index = 0;
+                foreach ( var value in param[0].ValidValues )
+                {
+                  if ( effectValue.Value == value.Value )
+                  {
+                    combo.SelectedIndex = index;
+                    break;
+                  }
+
+                  ++index;
+                }
+              }
+              else if ( control is NumericUpDown )
+              {
+                control.Text = effectValue.Value.ToString();
+              }
+            }
+          }
+        }
+      }
+
+      _updatingParams = false;
+      RestartSoundEffect();
+    }
+
+
+
+    protected override bool PerformSave( string FullPath )
+    {
+      return GR.IO.File.WriteAllBytes( FullPath, _project.SaveToBuffer() );
+    }
+
+
+
+    public override bool LoadDocument()
+    {
+      if ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
+      {
+        return false;
+      }
+      try
+      {
+        if ( !OpenProject( DocumentInfo.FullPath ) )
+        {
+          return false;
+        }
+      }
+      catch ( System.IO.IOException ex )
+      {
+        Core.Notification.MessageBox( "Could not load file", "Could not load SFX project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
+        return false;
+      }
+      SetUnmodified();
+      return true;
+    }
+
+
+
+    private bool OpenProject( string fullPath )
+    {
+      var data = GR.IO.File.ReadAllBytes( fullPath );
+
+      if ( !_project.ReadFromBuffer( data ) )
+      {
+        return false;
+      }
+
+
+      _updatingParams = true;
+      listEffects.Items.Clear();
+      foreach ( var effect in _project.Effects )
+      {
+        var item = new ArrangedItemEntry( effect.Name );
+        item.Tag = effect;
+
+        listEffects.Items.Add( item );
+      }
+
+      _updatingParams = false;
+      return true;
+    }
+
+
+
+    protected override bool QueryFilename( string PreviousFilename, out string Filename )
+    {
+      Filename = "";
+
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save SFX Project as";
+      saveDlg.Filter = "SFX Projects|*.sfxproject|All Files|*.*";
+      saveDlg.FileName = GR.Path.GetFileName( PreviousFilename );
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
+      {
+        return false;
+      }
+
+      Filename = saveDlg.FileName;
+      return true;
+    }
+
+
+
+    private void btnStop_Click( DecentForms.ControlBase Sender )
+    {
+      Stop();
+    }
+
+
+
+    private void Stop()
+    {
+      if ( _currentPlayer == null )
+      {
+        return;
+      }
+      _audio.StopAll();
+    }
+
+
+
+    private void btnRandomize_Click( DecentForms.ControlBase Sender )
+    {
+      _updatingParams = true;
+
+      foreach ( var parameter in _currentPlayer.Parameters )
+      {
+
+      }
+
+      _updatingParams = false;
       RestartSoundEffect();
     }
 

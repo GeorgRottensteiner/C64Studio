@@ -24,7 +24,7 @@ Loop
 
           jsr ResetSid
 
-          lda EXTERNAL_INTERFACE_TABLE.SOUND_EFFECT_TO_PLAY
+          lda #0
           jsr SetCurrentSound
           jmp Loop
 
@@ -54,6 +54,9 @@ Loop
           lda SID_MIRROR + 4
           sta SID_MIRROR_SETUP + 4
           sta SID.FREQUENCY_LO_1 + 4
+
+          lda #1
+          sta SFX_ACTIVE
 
           rts
 
@@ -146,42 +149,35 @@ Loop
 
 !src "sfxplay.asm"
 
-SFX_DATA
-SFX_SLOT_EFFECT_WAVE
-          !fill 100,( FX_SLIDE << 2 ) | ( FX_WAVE_PULSE )
-SFX_SLOT_2_FX_LO
-          !fill 100,$25
-SFX_SLOT_3_FX_HI
-          !fill 100,$4d
-SFX_SLOT_4_AD
-          !fill 100,$c5
-SFX_SLOT_5_SR
-          !fill 100,$ed
-SFX_SLOT_6_PULSE_LO
-          !fill 100,$95
-SFX_SLOT_7_PULSE_HI
-          !fill 100,$bd
-SFX_SLOT_8_DELTA
-          !fill 100,$03
-SFX_SLOT_9_DELAY
-          !fill 100,$5e
-SFX_SLOT_10_STEP
-          !fill 100,$32
-
-
-
-
 
 !lzone EXTERNAL_INTERFACE_TABLE
 ;set to 1 to restart sound effect
 .PLAY_SOUND_EFFECT
           !byte 0
-;0 to 99 of sound effect to play
-.SOUND_EFFECT_TO_PLAY
-          !byte 0
+.SFX_DATA
+SFX_SLOT_EFFECT_WAVE
+          !byte ( FX_SLIDE << 2 ) | ( FX_WAVE_TRIANGLE )
+SFX_SLOT_2_FX_LO
+          !byte $40 ; $81
+SFX_SLOT_3_FX_HI
+          !byte $1f ;$a9
+SFX_SLOT_4_AD
+          !byte $05 ;$22
+SFX_SLOT_5_SR
+          !byte $00 ;$4a
+SFX_SLOT_6_PULSE_LO
+          !byte $55 ;$d1
+SFX_SLOT_7_PULSE_HI
+          !byte $55 ;$fa
+SFX_SLOT_8_DELTA
+          !byte $05 ;$04
+SFX_SLOT_9_DELAY
+          !byte $05 ;$a6
+SFX_SLOT_10_STEP
+          !byte $05 ;$72
 
 
 !message "PLAY_SOUND_EFFECT = " , EXTERNAL_INTERFACE_TABLE.PLAY_SOUND_EFFECT
-!message "SFX_DATA * 100    = " , SFX_DATA
+!message "SFX_DATA * 100    = " , EXTERNAL_INTERFACE_TABLE.SFX_DATA
 
 !src <c64.asm>

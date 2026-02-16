@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -22,12 +23,7 @@ namespace RetroDevStudio.Documents
 
       try
       {
-#if DEBUG
-        string    helpDocPath = @"../../../../C64StudioRelease/shared content/Doc/main.html";
-#else
-        string    helpDocPath = @"Doc/main.html";
-#endif
-        string    fullPath = GR.Path.Append( GR.Path.GetDirectoryName( Application.ExecutablePath ), helpDocPath );
+        string    fullPath = Core.Navigating.SharedContentFolder( "Doc/main.html" );
 
         Core.AddToOutputLine( "Help Path: " + fullPath );
         webBrowser.Navigate( fullPath );
@@ -78,23 +74,15 @@ namespace RetroDevStudio.Documents
     private void toolStripBtnHome_Click( object sender, EventArgs e )
     {
       webBrowser.Zoom( Core.Settings.HelpZoomFactor );
-#if DEBUG
-      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../C64StudioRelease/shared content/Doc/main.html" ) );
-#else
-      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/main.html" ) );
-#endif
+      webBrowser.Navigate( Core.Navigating.SharedContentFolder( "Doc/main.html" ) );
     }
 
 
 
-    public void NavigateTo( string URL )
+    public void NavigateTo( string url )
     {
       webBrowser.Zoom( Core.Settings.HelpZoomFactor );
-#if DEBUG
-      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../C64StudioRelease/shared content/Doc/" + URL ) );
-#else
-      webBrowser.Navigate( GR.Path.Append( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/" + URL ) );
-#endif
+      webBrowser.Navigate( Core.Navigating.SharedContentFolder( "Doc/" + url ) );
     }
 
 

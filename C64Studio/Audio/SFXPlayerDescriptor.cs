@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RetroDevStudio.Audio
 {
-  internal class SFXPlayerDescriptor
+  public class SFXPlayerDescriptor
   {
     public MachineType            Machine = MachineType.C64;
 

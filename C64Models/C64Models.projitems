@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ImportCharsetInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MapperCommdore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MachineFileTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)formats\SFXProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Bank.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.For.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BASIC\BasicFileParser.MetaData.BinaryDataPRINT.cs" />
