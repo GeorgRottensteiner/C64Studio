@@ -633,6 +633,14 @@ FX_WAVE_NOISE         = 3
       }
       var effect = (SFXProject.SFXEffect)listEffects.SelectedItem.Tag;
 
+      ApplyEffectValuesToControls( effect );
+      RestartSoundEffect();
+    }
+
+
+
+    private void ApplyEffectValuesToControls( SFXProject.SFXEffect effect )
+    {
       _updatingParams = true;
       editEffectName.Text = effect.Name;
       foreach ( var effectValue in effect.Parameters )
@@ -669,7 +677,6 @@ FX_WAVE_NOISE         = 3
       }
 
       _updatingParams = false;
-      RestartSoundEffect();
     }
 
 
@@ -777,12 +784,37 @@ FX_WAVE_NOISE         = 3
     {
       _updatingParams = true;
 
-      foreach ( var parameter in _currentPlayer.Parameters )
+      bool isExistingEffect = true;
+      SFXProject.SFXEffect effect = (SFXProject.SFXEffect)listEffects.SelectedItem?.Tag;
+      if ( effect == null )
       {
-
+        isExistingEffect = false;
+        effect = new SFXProject.SFXEffect();
       }
 
+      var rng = new Random();
+      var usedParameterNames = new GR.Collections.Set<string>();
+      foreach ( var parameter in _currentPlayer.Parameters )
+      {
+        if ( usedParameterNames.Contains( parameter.Name ) )
+        {
+          continue; 
+        }
+        usedParameterNames.Add( parameter.Name );
+        if ( parameter.ValidValues.Count > 0 )
+        {
+          var randomIndex = rng.Next( parameter.ValidValues.Count );
+          var randomValue = parameter.ValidValues.ElementAt( randomIndex ).Value;
+
+          effect.Parameters[parameter.Name] = randomValue;
+        }
+        else
+        {
+          effect.Parameters[parameter.Name] = rng.Next( parameter.MinValue, parameter.MaxValue + 1 );
+        }
+      }
       _updatingParams = false;
+      ApplyEffectValuesToControls( effect );
       RestartSoundEffect();
     }
 

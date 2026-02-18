@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="mainTools.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="mainTools.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mainToolCommentSelection.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -151,37 +151,37 @@
   <data name="btnNavigateBackward.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVDhPxdJZSwJhFAZgf1QQRD+hLiQp27TFJFEyMwU1
-        jAgxiCTElKTCFpJJiwottMWghUwp2i2tbiojom68cuFtvpkyQy+sLjrwwszFeb4zZz7On4vbSUmH5mMJ
-        nTMG7SydmWtopiJQO86hmjiDcvwEXfYjdI4eQm4NQWYJQmvdSZA+BjC4Axmz7wk/TcVwIMMA5OTfRDy4
-        BQbQzkRxjXNEmVwghkvc4gqpTAqflfv8Wa3GDRbQTF9lgUjmFP17uqKAJoP/A6AXRgAShU8CAcVD4Nn/
-        HUjnA4K+VRYg2ybNqjUZulek0K+rUe+ogtQpgvdoGfG3OJLp5EfbVzXovSxAflWLmw+FRwJr2ARzaBCm
-        fSPaJoVYCLrx+PpQcIK6nmUWUI4dMxOIKSFEs40QTvJRpi9Bo70Grl0K9y/3BQG+dpEF5LZwdge8kUqU
-        95bijn7L3UEylf8JPJWbBTosB1ngMn0Cga02Dyg0QZVyjgVk5v0sQO7BDSJFAdwuigW4CifVbtpmbpZo
-        YBPNhjUI+330lj3Movi6JdRoFlCtnqfHdtEnU+AqSJwUA/xzcTjvMNB/lLgxaWwAAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGxSURBVDhPxdJZSwJhFAZgf1QQRP8gupCkbNMWk0TJzBTU
+        MCLEIJIQU5IKW0gmLSq00BaDFjKlaLe0uqmMiLrxyoW3+WbKDL2wuujACzMX5/nOnPk4fy5uJyUdmo8l
+        dM4YtLN0Zq6hmYpA7TiHauIMyvETdNmP0Dl6CLk1BJklCK11J0H6GMDgDmTMvif8NBXDgQwDkJN/E/Hg
+        FhhAOxPFNc4RZXKBGC5xiyukMil8Vu7zZ7UaN1hAM32VBSKZU/Tv6YoCmgz+D4BeGAFIFD4JBBQPgWf/
+        dyCdDwj6VlmAbJs0q9Zk6F6RQr+uRr2jClKnCN6jZcTf4kimkx9tX9Wg97IA+VUtbj4UHgmsYRPMoUGY
+        9o1omxRiIejG4+tDwQnqepZZQDl2zEwgpoQQzTZCOMlHmb4EjfYauHYp3L/cFwT42kUWkNvC2R3wRipR
+        3luKO/otdwfJVP4n8FRuFuiwHGSBy/QJBLbaPKDQBFXKORaQmfezALkHN4gUBXC7KBbgKpxUu2mbuVmi
+        gU00G9Yg7PfRW/Ywi+LrllCjWUC1ep4e20WfTIGrIHFSDPDPxeG8Ay17f5PkRs4lAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnNavigateForward.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG+SURBVDhPxZJJS0JRGIb9UUEQ/YRaSFI2aYNFolRmCmoY
-        IVIQSUgpRYUNJLcsKhqwyaABrSiaraw2NhBRG1cOvN1zzs0LlzbVogc++Bbne87He47sz8ibOV3PTCxh
-        88dgneRr4gaWsSjMvguYRs5hHD5Fy+AxmgeO0OQ5gL4vAqtnJ0HmqMAZCGXcwRf8tAp6QxkqIDf/puq7
-        t0AF1olbSEmlU0LH95kUHnCDO0Rxi0u+u6BV27nBBJbxa+GoyHcClbcUV+nTrKDKuSoI+MCkJFNJoRMF
-        +e25UPQXZgWqjhUmIGlLIRvE3+KY3uVQOViCPHsO1KNKaCYrUc+pqaDCvsQE5KmkEMHT+yNmIwHUjarh
-        CnfCfdANz6ELhkUtagJKlLUtMIFx6EQYE0mmk3j+eMbS8QJ0fg3KfUWwr5vRuqyDaU1PN1Ba55igyXso
-        jIlIQwy9rkLFKWAIarMZKEwBJmjs2xeOipChL0h/j2s49myIZs74p2SCIuMUE+jdYeGoyHeCGK7oP/gS
-        yFs4JpAb/FyDa5v+LE3XJqqda1A7gnzKizQopW0eJZZZFJtn+LWn+Zs5yA2k/BwV/DMy2Se0VH+UWdp1
-        8gAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG+SURBVDhPxZJJS0JRGIb9UUEQ/YNoIUnZpA0WiVKZKahh
+        hEhBJCGlFBU2kNyyqGjAJoMGtKJotrLa2EBEbVw58HbPOTcvXNpUix744Fuc7zkf7zmyPyNv5nQ9M7GE
+        zR+DdZKviRtYxqIw+y5gGjmHcfgULYPHaB44QpPnAPq+CKyenQSZowJnIJRxB1/w0yroDWWogNz8m6rv
+        3gIVWCduISWVTgkd32dSeMAN7hDFLS757oJWbecGE1jGr4WjIt8JVN5SXKVPs4Iq56og4AOTkkwlhU4U
+        5LfnQtFfmBWoOlaYgKQthWwQf4tjepdD5WAJ8uw5UI8qoZmsRD2npoIK+xITkKeSQgRP74+YjQRQN6qG
+        K9wJ90E3PIcuGBa1qAkoUda2wATGoRNhTCSZTuL54xlLxwvQ+TUo9xXBvm5G67IOpjU93UBpnWOCJu+h
+        MCYiDTH0ugoVp4AhqM1moDAFmKCxb184KkKGviD9Pa7h2LMhmjnjn5IJioxTTKB3h4WjIt8JYrii/+BL
+        IG/hmEBu8HMNrm36szRdm6h2rkHtCPIpL9KglLZ5lFhmUWye4dee5m/mIDeQ8nNU8M/IZJ+w/3+TRPaP
+        NgAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="mainStatus.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="mainStatus.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>240, 17</value>
   </metadata>
-  <metadata name="debugTools.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="debugTools.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>352, 17</value>
   </metadata>
-  <metadata name="timerAutoSave.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="timerAutoSave.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>467, 17</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -422,6 +422,7 @@ namespace RetroDevStudio
           return;
         }
 
+        Debug.Log( $"Token {tokenInfo.Name} expected at global line {tokenInfo.LineIndex} in file {tokenInfo.DocumentFilename}" );
         if ( fileToDebug.FindTrueLineSource( tokenInfo.LineIndex, out documentFile, out documentLine ) )
         {
           OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( tokenInfo.DocumentFilename ), documentLine );
@@ -446,7 +447,7 @@ namespace RetroDevStudio
         return;
       }
 
-      DocumentInfo.ASMFileInfo.InsertLines( globalLineIndex, LocalLineIndex, LineCount );
+      DocumentInfo.ASMFileInfo.InsertLines( DocumentInfo.FullPath, globalLineIndex, LocalLineIndex, LineCount );
     }
 
 
@@ -464,7 +465,7 @@ namespace RetroDevStudio
         return;
       }
 
-      DocumentInfo.ASMFileInfo.RemoveLines( globalLineIndex, LocalLineIndex, LineCount );
+      DocumentInfo.ASMFileInfo.RemoveLines( DocumentInfo.FullPath, globalLineIndex, LocalLineIndex, LineCount );
     }
 
 

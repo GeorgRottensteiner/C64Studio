@@ -413,8 +413,10 @@ namespace RetroDevStudio.Types.ASM
 
 
 
-    internal void InsertLines( int GlobalLineIndex, int LocalLineIndex, int LineCount )
+    internal void InsertLines( string modifiedDocument, int GlobalLineIndex, int LocalLineIndex, int LineCount )
     {
+      var modifiedSourceInfo = SourceInfo.Values.Where( si => GR.Path.IsPathEqual( si.Filename, modifiedDocument ) ).FirstOrDefault();
+
       // move all infos/symbols below down
       List<Tupel<int,int>>    lineAddressesToMove = new List<Tupel<int, int>>();
       foreach ( var entry in AddressToLine )
@@ -461,7 +463,11 @@ namespace RetroDevStudio.Types.ASM
         if ( label.Value.LineIndex >= GlobalLineIndex )
         {
           label.Value.LineIndex += LineCount;
-          label.Value.LocalLineIndex += LineCount;
+          if ( ( modifiedSourceInfo != null )
+          &&   ( modifiedSourceInfo.FullPath == modifiedDocument ) )
+          {
+            label.Value.LocalLineIndex += LineCount;
+          }
         }
       }
 
@@ -516,7 +522,6 @@ namespace RetroDevStudio.Types.ASM
       foreach ( var sourceInfoToMove in sourceInfosToMove )
       {
         sourceInfoToMove.GlobalStartLine += LineCount;
-        sourceInfoToMove.LocalStartLine += LineCount;
         SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
       }
 
@@ -563,8 +568,10 @@ namespace RetroDevStudio.Types.ASM
 
 
 
-    internal void RemoveLines( int GlobalLineIndex, int LocalLineIndex, int LineCount )
+    internal void RemoveLines( string modifiedDocument, int GlobalLineIndex, int LocalLineIndex, int LineCount )
     {
+      var modifiedSourceInfo = SourceInfo.Values.Where( si => GR.Path.IsPathEqual( si.Filename, modifiedDocument ) ).FirstOrDefault();
+
       // move all infos/symbols below up
       List<Tupel<int,int>>    lineAddressesToMove = new List<Tupel<int, int>>();
       List<Tupel<int,int>>    lineAddressesToRemove = new List<Tupel<int, int>>();
@@ -605,7 +612,12 @@ namespace RetroDevStudio.Types.ASM
         if ( label.Value.LineIndex >= GlobalLineIndex + LineCount )
         {
           label.Value.LineIndex -= LineCount;
-          label.Value.LocalLineIndex -= LineCount;
+
+          if ( ( modifiedSourceInfo != null )
+          &&   ( modifiedSourceInfo.FullPath == modifiedDocument ) )
+          {
+            label.Value.LocalLineIndex -= LineCount;
+          }
         }
       }
 
@@ -653,14 +665,14 @@ namespace RetroDevStudio.Types.ASM
           continue;
         }
         if ( ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
-        && ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
         {
           // completely inside, remove
           sourceInfosToRemove.Add( sourceInfo.Value );
           continue;
         }
         if ( ( sourceInfo.Value.GlobalStartLine < GlobalLineIndex )
-        && ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
         {
           // outside top
           int     linesToCutTop = GlobalLineIndex - sourceInfo.Value.GlobalStartLine;
@@ -671,16 +683,21 @@ namespace RetroDevStudio.Types.ASM
           sourceInfosToMove.Add( sourceInfo.Value );
           continue;
         }
+        if ( ( modifiedSourceInfo != null )
+        &&   ( modifiedSourceInfo == sourceInfo.Value ) )
+        {
+          sourceInfo.Value.LineCount -= LineCount;
+        }
         if ( ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
-        && ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount > GlobalLineIndex + LineCount ) )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount > GlobalLineIndex + LineCount ) )
         {
           // outside bottom
-          int     linesToCut = sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount - ( GlobalLineIndex + LineCount );
-          sourceInfo.Value.LineCount -= linesToCut;
+          //int     linesToCut = sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount - ( GlobalLineIndex + LineCount );
+          //sourceInfo.Value.LineCount -= linesToCut;
           continue;
         }
         // cutting a part out of this
-        sourceInfo.Value.LineCount -= LineCount;
+        //sourceInfo.Value.LineCount -= LineCount;
       }
       foreach ( var sourceInfoToMove in sourceInfosToMove )
       {
@@ -693,7 +710,7 @@ namespace RetroDevStudio.Types.ASM
       foreach ( var sourceInfoToMove in sourceInfosToMove )
       {
         sourceInfoToMove.GlobalStartLine -= LineCount;
-        sourceInfoToMove.LocalStartLine -= LineCount;
+        //sourceInfoToMove.LocalStartLine -= LineCount;
         if ( !SourceInfo.ContainsKey( sourceInfoToMove.GlobalStartLine ) )
         {
           // safety measure, if there's duplicate entries somethings off

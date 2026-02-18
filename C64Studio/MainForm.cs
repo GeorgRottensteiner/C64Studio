@@ -804,7 +804,7 @@ namespace RetroDevStudio
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
         if ( ( !StudioCore.Settings.LastSolutionWasEmpty )
-        &&   ( StudioCore.Settings.MRUProjects.Count > 0 ) )
+        && ( StudioCore.Settings.MRUProjects.Count > 0 ) )
         {
           var idleRequest = new IdleRequest();
           idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
@@ -838,12 +838,12 @@ namespace RetroDevStudio
     private void EnsureVisibleToolIsOnScreenArea( ToolWindow tool )
     {
       if ( ( tool.Document != null )
-      &&   ( tool.Document.Visible )
-      &&   ( !GR.Forms.WindowStateManager.GeometryLocationIsGood( tool.Document.PointToScreen( tool.Document.Location ), tool.Document.Size ) ) )
+      && ( tool.Document.Visible )
+      && ( !GR.Forms.WindowStateManager.GeometryLocationIsGood( tool.Document.PointToScreen( tool.Document.Location ), tool.Document.Size ) ) )
       {
         // tool is visible, but off screen?? -> move it to top/left
         if ( ( tool.Document.IsFloat )
-        &&   ( tool.Document.Pane != null ) )
+        && ( tool.Document.Pane != null ) )
         {
           tool.Document.Pane.FloatAt( new Rectangle( new Point(), tool.Document.Pane.Size ) );
         }
@@ -969,8 +969,8 @@ namespace RetroDevStudio
       var mediaTypeToCreate = (Formats.MediaFormatType)( ( (ToolStripMenuItem)sender ).Tag );
 
       FileManager doc = new FileManager( StudioCore, "" );
-      doc.ShowHint  = DockState.Float;
-      doc.Core      = StudioCore;
+      doc.ShowHint = DockState.Float;
+      doc.Core = StudioCore;
       doc.CreateEmptyMedia( mediaTypeToCreate );
       doc.Show( panelMain );
     }
@@ -997,9 +997,9 @@ namespace RetroDevStudio
         return null;
       }
 
-      newProject.Settings.Filename  = saveDlg.FileName;
-      newProject.Settings.Name      = GR.Path.GetFileNameWithoutExtension( saveDlg.FileName );
-      newProject.Settings.BasePath  = GR.Path.GetDirectoryName( saveDlg.FileName );
+      newProject.Settings.Filename = saveDlg.FileName;
+      newProject.Settings.Name = GR.Path.GetFileNameWithoutExtension( saveDlg.FileName );
+      newProject.Settings.BasePath = GR.Path.GetDirectoryName( saveDlg.FileName );
 
       if ( !newProject.Save( saveDlg.FileName ) )
       {
@@ -1041,14 +1041,14 @@ namespace RetroDevStudio
         colorSelectionBackground = ( colorSelectionBackground & 0x00ffffff ) | 0x40000000;
       }
 
-      DecentForms.ControlRenderer.ColorControlText                = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
-      DecentForms.ControlRenderer.ColorControlTextMouseOver       = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
-      DecentForms.ControlRenderer.ColorControlTextSelected        = StudioCore.Settings.FGColor( ColorableElement.SELECTED_TEXT );
-      DecentForms.ControlRenderer.ColorControlBackground          = StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON );
+      DecentForms.ControlRenderer.ColorControlText = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+      DecentForms.ControlRenderer.ColorControlTextMouseOver = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+      DecentForms.ControlRenderer.ColorControlTextSelected = StudioCore.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+      DecentForms.ControlRenderer.ColorControlBackground = StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON );
       DecentForms.ControlRenderer.ColorControlBackgroundMouseOver = colorSelectionBackground;
-      DecentForms.ControlRenderer.ColorControlBackgroundSelected  = colorSelectionBackground;
-      DecentForms.ControlRenderer.ColorControlActiveBackground    = StudioCore.Settings.BGColor( Types.ColorableElement.BACKGROUND_CONTROL );
-      DecentForms.ControlRenderer.ColorControlBorderFlat          = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+      DecentForms.ControlRenderer.ColorControlBackgroundSelected = colorSelectionBackground;
+      DecentForms.ControlRenderer.ColorControlActiveBackground = StudioCore.Settings.BGColor( Types.ColorableElement.BACKGROUND_CONTROL );
+      DecentForms.ControlRenderer.ColorControlBorderFlat = StudioCore.Settings.FGColor( ColorableElement.CONTROL_TEXT );
 
       var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
       var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
@@ -1172,7 +1172,7 @@ namespace RetroDevStudio
       {
         sb.Append( "Ctrl+" );
       }
-      if ( ( Key & Keys.Shift) != 0 )
+      if ( ( Key & Keys.Shift ) != 0 )
       {
         sb.Append( "Shift+" );
       }
@@ -1198,10 +1198,10 @@ namespace RetroDevStudio
           break;
         case DebugEvent.UPDATE_WATCH:
           if ( ( IsWatchShowingCurrentDebuggedProject() )
-          ||   ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
-            /*
-          ||   ( ( Event.Request.Type == DebugRequestType.MEM_DUMP )
-          &&     ( Event.Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition ) ) )*/
+          || ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
+          /*
+        ||   ( ( Event.Request.Type == DebugRequestType.MEM_DUMP )
+        &&     ( Event.Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition ) ) )*/
           {
             UpdateWatchInfo( Event.Request, Event.Data );
           }
@@ -1250,7 +1250,7 @@ namespace RetroDevStudio
 
       // restore previous active doc if it exists
       if ( ( previousActiveDoc != null )
-      &&   ( previousActiveDoc.BaseDoc != null ) )
+      && ( previousActiveDoc.BaseDoc != null ) )
       {
         previousActiveDoc.BaseDoc.Show();
       }
@@ -1328,7 +1328,7 @@ namespace RetroDevStudio
         {
           int itemIndex = mainToolEmulator.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
           if ( ( tool.Name.ToUpper() == StudioCore.Settings.EmulatorToRun )
-          ||   ( oldTool == tool ) )
+          || ( oldTool == tool ) )
           {
             mainToolEmulator.SelectedIndex = itemIndex;
           }
@@ -1546,13 +1546,13 @@ namespace RetroDevStudio
           UpdateMenuMRU();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
-          solutionToolStripMenuItem.Enabled                   = true;
-          solutionAddNewProjectToolStripMenuItem.Enabled      = true;
+          solutionToolStripMenuItem.Enabled = true;
+          solutionAddNewProjectToolStripMenuItem.Enabled = true;
           solutionAddExistingProjectToolStripMenuItem.Enabled = true;
-          solutionCloseToolStripMenuItem.Enabled              = true;
-          solutionSaveToolStripMenuItem.Enabled               = true;
-          solutionCloneToolStripMenuItem.Enabled              = true;
-          solutionRenameToolStripMenuItem.Enabled             = !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename );
+          solutionCloseToolStripMenuItem.Enabled = true;
+          solutionSaveToolStripMenuItem.Enabled = true;
+          solutionCloneToolStripMenuItem.Enabled = true;
+          solutionRenameToolStripMenuItem.Enabled = !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename );
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
@@ -1571,7 +1571,7 @@ namespace RetroDevStudio
           break;
         case Types.ApplicationEvent.Type.PROJECT_CLOSED:
           if ( ( StudioCore.Navigating.Solution != null )
-          &&   ( StudioCore.Navigating.Solution.Projects.Count > 1 ) )
+          && ( StudioCore.Navigating.Solution.Projects.Count > 1 ) )
           {
             removeProjectFromSolutionToolStripMenuItem.Enabled = true;
           }
@@ -1598,8 +1598,8 @@ namespace RetroDevStudio
               m_DebugWatch.ApplyWatchEntries( StudioCore.Debugging.Debugger.CurrentWatches() );
             }
           }
-          m_DebugRegisters.DebuggedProject    = m_CurrentProject;
-          m_DebugMemory.DebuggedProject       = m_CurrentProject;
+          m_DebugRegisters.DebuggedProject = m_CurrentProject;
+          m_DebugMemory.DebuggedProject = m_CurrentProject;
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.DOCUMENT_CLOSED:
@@ -1666,8 +1666,8 @@ namespace RetroDevStudio
         return false;
       }
       if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-      ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-      ||   ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+      || ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      || ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
       {
         return true;
       }
@@ -1683,7 +1683,7 @@ namespace RetroDevStudio
         return false;
       }
       if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-      ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+      || ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
       {
         return true;
       }
@@ -1719,7 +1719,7 @@ namespace RetroDevStudio
           bool canToggleBreakpoints = false;
 
           if ( ( StudioCore.State == Types.StudioState.NORMAL )
-          ||   ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
+          || ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             canToggleBreakpoints = true;
           }
@@ -1775,7 +1775,7 @@ namespace RetroDevStudio
             StudioCore.TaskManager.AddTask( new Tasks.TaskRefreshOutlineAndLabelExplorer( baseDoc ) );
           }
         }
-        saveToolStripMenuItem.Enabled   = baseDoc.Modified;
+        saveToolStripMenuItem.Enabled = baseDoc.Modified;
         saveAsToolStripMenuItem.Enabled = baseDoc.IsSaveable;
         mainToolSave.Enabled = baseDoc.Modified;
       }
@@ -1963,8 +1963,8 @@ namespace RetroDevStudio
     bool CloseAllProjects()
     {
       if ( ( StudioCore.Navigating.Solution == null )
-      ||   ( ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) )
-      &&     ( StudioCore.Navigating.Solution.Filename.Length > 0 ) ) )
+      || ( ( !System.IO.Directory.Exists( GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename ) ) )
+      && ( StudioCore.Navigating.Solution.Filename.Length > 0 ) ) )
       {
         // we have no solution, or the solution was deleted externally
         return true;
@@ -2196,9 +2196,9 @@ namespace RetroDevStudio
           if ( Document?.Element == null )
           {
             if ( ( StudioCore.Compiling.m_LastBuildInfo != null )
-            &&   ( Document != null )
-            &&   ( Document.FullPath != null )
-            &&   ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
+            && ( Document != null )
+            && ( Document.FullPath != null )
+            && ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
             {
               targetFilename = lastBuildInfoOfThisFile.TargetFile;
             }
@@ -2211,7 +2211,7 @@ namespace RetroDevStudio
               targetFilename = Document?.Element.CompileTargetFile;
             }
             if ( ( string.IsNullOrEmpty( targetFilename ) )
-            &&   ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+            && ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
             {
               targetFilename = GR.Path.RenameExtension( fullDocPath, ".prg" );
             }
@@ -2222,7 +2222,7 @@ namespace RetroDevStudio
             targetPath = GR.Path.GetDirectoryName( targetFilename );
           }
           if ( ( string.IsNullOrEmpty( targetPath ) )
-          &&   ( Document?.Project != null ) )
+          && ( Document?.Project != null ) )
           {
             targetPath = Document.Project.Settings.BasePath;
           }
@@ -2239,7 +2239,7 @@ namespace RetroDevStudio
 
           // alternative run file name
           if ( ( FillForRunning )
-          &&   ( Document?.Element != null ) )
+          && ( Document?.Element != null ) )
           {
             ProjectElement.PerConfigSettings configSettingRun = Document.Element.Settings[Document.Project.Settings.CurrentConfig.Name];
             if ( !string.IsNullOrEmpty( configSettingRun.DebugFile ) )
@@ -2271,7 +2271,7 @@ namespace RetroDevStudio
           int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
           {
             if ( ( Document?.Project != null )
-            &&   ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+            && ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
             {
               int   dummy = -1;
               if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out dummy ) )
@@ -2349,14 +2349,14 @@ namespace RetroDevStudio
               break;
             case "SolutionName":
               if ( ( StudioCore.Navigating.Solution != null )
-              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              && ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
               {
                 valueToInsert = StudioCore.Navigating.Solution.Name;
               }
               break;
             case "SolutionPath":
               if ( ( StudioCore.Navigating.Solution != null )
-              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              && ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
               {
                 valueToInsert = GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename );
               }
@@ -2802,7 +2802,7 @@ namespace RetroDevStudio
 
         // check file version (WinVICE remote debugger changes)
         if ( ( StudioCore.Debugging.Debugger != null )
-        &&   ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
+        && ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
         {
           return false;
         }
@@ -2833,8 +2833,8 @@ namespace RetroDevStudio
         }
 
         if ( ( Document != null )
-        &&   ( Document.ASMFileInfo != null )
-        &&   ( toolRun.PassLabelsToEmulator ) )
+        && ( Document.ASMFileInfo != null )
+        && ( toolRun.PassLabelsToEmulator ) )
         {
           string labelInfo = Document.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
           if ( labelInfo.Length > 0 )
@@ -3053,7 +3053,7 @@ namespace RetroDevStudio
     private void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
       if ( ( AppState == Types.StudioState.NORMAL )
-      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+      || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
       {
         m_DebugBreakpoints.RemoveBreakpoint( Breakpoint );
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
@@ -3083,7 +3083,7 @@ namespace RetroDevStudio
         {
           var doc = StudioCore.Navigating.FindDocumentByFilename( Breakpoint.DocumentFilename );
           if ( ( doc != null )
-          &&   ( doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+          && ( doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
           {
             SourceASMEx asm = (SourceASMEx)doc.BaseDoc;
             asm?.RemoveBreakpoint( Breakpoint );
@@ -3118,17 +3118,17 @@ namespace RetroDevStudio
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_ADDED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             AddBreakpoint( Event.Breakpoint );
           }
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_REMOVED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             if ( ( m_CurrentProject != null )
-            &&   ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
+            && ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
             {
               m_CurrentProject.Settings.BreakPoints[Event.Breakpoint.DocumentFilename].Remove( Event.Breakpoint );
             }
@@ -3197,13 +3197,13 @@ namespace RetroDevStudio
 
       Project newProject = new Project();
 
-      newProject.Core               = StudioCore;
-      newProject.Settings.Name      = projectWizard.ProjectName;
-      newProject.Settings.Filename  = projectWizard.ProjectFilename;
-      newProject.Settings.BasePath  = GR.Path.GetDirectoryName( newProject.Settings.Filename );
-      newProject.Node               = new DecentForms.TreeView.TreeNode();
-      newProject.Node.Tag           = new SolutionExplorer.TreeItemInfo() { Project = newProject };
-      newProject.Node.Text          = newProject.Settings.Name;
+      newProject.Core = StudioCore;
+      newProject.Settings.Name = projectWizard.ProjectName;
+      newProject.Settings.Filename = projectWizard.ProjectFilename;
+      newProject.Settings.BasePath = GR.Path.GetDirectoryName( newProject.Settings.Filename );
+      newProject.Node = new DecentForms.TreeView.TreeNode();
+      newProject.Node.Tag = new SolutionExplorer.TreeItemInfo() { Project = newProject };
+      newProject.Node.Text = newProject.Settings.Name;
 
 
       try
@@ -3254,7 +3254,7 @@ namespace RetroDevStudio
       if ( SaveProject( newProject ) )
       {
         if ( ( projectWizard.CreateRepository )
-        &&   ( newProject.SourceControl != null ) )
+        && ( newProject.SourceControl != null ) )
         {
           if ( addedSolution )
           {
@@ -3293,7 +3293,7 @@ namespace RetroDevStudio
       }
 
       if ( ( !AddToSolution )
-      &&   ( !CloseSolution() ) )
+      && ( !CloseSolution() ) )
       {
         return null;
       }
@@ -3304,7 +3304,7 @@ namespace RetroDevStudio
       {
         mainToolConfig.Items.Add( configName );
         if ( ( newProject.Settings.CurrentConfig != null )
-        &&   ( configName == newProject.Settings.CurrentConfig.Name ) )
+        && ( configName == newProject.Settings.CurrentConfig.Name ) )
         {
           mainToolConfig.SelectedItem = configName;
         }
@@ -3359,7 +3359,7 @@ namespace RetroDevStudio
         if ( element.Document != null )
         {
           if ( ( element.Document.Modified )
-          &&   ( !StudioCore.ShuttingDownDeniedSaveDocs.ContainsValue( element.Document ) ) )
+          && ( !StudioCore.ShuttingDownDeniedSaveDocs.ContainsValue( element.Document ) ) )
           {
             changes = true;
             break;
@@ -3501,9 +3501,9 @@ namespace RetroDevStudio
         m_CurrentProject = NewProject;
 
         RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject )
-          {
-            PreviousProject = oldProject
-          } );
+        {
+          PreviousProject = oldProject
+        } );
 
         if ( mainToolConfig.ComboBox != null )
         {
@@ -3661,7 +3661,7 @@ namespace RetroDevStudio
               {
                 ProjectElement element2 = newProject.GetElementByFilename(dependency);
                 if ( ( element2 != null )
-                &&   ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+                && ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
                 {
                   if ( element2.Document != null )
                   {
@@ -3712,7 +3712,7 @@ namespace RetroDevStudio
         return;
       }
       if ( ( CurrentProject != null )
-      &&   ( StudioCore.Navigating.Solution != null ) )
+      && ( StudioCore.Navigating.Solution != null ) )
       {
         Text = $"C64Studio - {StudioCore.Navigating.Solution.Name} ({CurrentProject.Settings.CurrentConfig.Name})";
         if ( ActiveDocument != null )
@@ -3885,12 +3885,12 @@ namespace RetroDevStudio
         return;
       }
       else if ( ( newFileExtension == ".CHARSETPROJECT" )
-      ||        ( newFileExtension == ".CHR" ) )
+      || ( newFileExtension == ".CHR" ) )
       {
         type = ProjectElement.ElementType.CHARACTER_SET;
       }
       else if ( ( newFileExtension == ".SPRITEPROJECT" )
-      ||        ( newFileExtension == ".SPR" ) )
+      || ( newFileExtension == ".SPR" ) )
       {
         type = ProjectElement.ElementType.SPRITE_SET;
       }
@@ -3907,7 +3907,7 @@ namespace RetroDevStudio
         type = ProjectElement.ElementType.GRAPHIC_SCREEN;
       }
       else if ( ( newFileExtension == ".BAS" )
-      ||        ( newFileExtension == ".B" ) )
+      || ( newFileExtension == ".B" ) )
       {
         type = ProjectElement.ElementType.BASIC_SOURCE;
       }
@@ -3977,11 +3977,11 @@ namespace RetroDevStudio
       var alreadyOpenedDoc = StudioCore.Navigating.FindDocumentByPath( importFile );
       if ( alreadyOpenedDoc != null )
       {
-        element.Document              = alreadyOpenedDoc;
-        element.DocumentInfo          = alreadyOpenedDoc.DocumentInfo;
-        element.DocumentInfo.Project  = ProjectToAddTo;
-        element.DocumentInfo.BaseDoc  = alreadyOpenedDoc;
-        element.DocumentInfo.Element  = element;
+        element.Document = alreadyOpenedDoc;
+        element.DocumentInfo = alreadyOpenedDoc.DocumentInfo;
+        element.DocumentInfo.Project = ProjectToAddTo;
+        element.DocumentInfo.BaseDoc = alreadyOpenedDoc;
+        element.DocumentInfo.Element = element;
 
         alreadyOpenedDoc.Core = StudioCore;
         alreadyOpenedDoc.Icon = IconFromType( element.DocumentInfo );
@@ -4023,14 +4023,14 @@ namespace RetroDevStudio
         // dockpanelsuite activates the first document, not the currently shown one if focus is set to it (by disabling the toolbar)
         BaseDocument    prevActiveDocument = ActiveDocument;
 
-        mainToolCompile.Enabled         = !Wait;
-        mainToolBuild.Enabled           = !Wait;
-        mainToolRebuild.Enabled         = !Wait;
-        mainToolBuildAndRun.Enabled     = !Wait;
-        mainToolDebug.Enabled           = !Wait;
-        mainToolConfig.Enabled          = !Wait;
+        mainToolCompile.Enabled = !Wait;
+        mainToolBuild.Enabled = !Wait;
+        mainToolRebuild.Enabled = !Wait;
+        mainToolBuildAndRun.Enabled = !Wait;
+        mainToolDebug.Enabled = !Wait;
+        mainToolConfig.Enabled = !Wait;
         mainToolToggleTrueDrive.Enabled = !Wait;
-        mainToolEmulator.Enabled        = !Wait;
+        mainToolEmulator.Enabled = !Wait;
 
         if ( Wait )
         {
@@ -4044,8 +4044,8 @@ namespace RetroDevStudio
         {
           // leave Window and Help submenu intact!
           if ( ( subMenu.Text != "&Window" )
-          &&   ( subMenu.Text != "&Help" )
-          &&   ( subMenu.Text != "&Edit" ) )
+          && ( subMenu.Text != "&Help" )
+          && ( subMenu.Text != "&Edit" ) )
           {
             subMenu.Enabled = !Wait;
           }
@@ -4391,7 +4391,7 @@ namespace RetroDevStudio
     private void refreshRegistersToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
+      || ( AppState == Types.StudioState.DEBUGGING_RUN ) )
       {
         StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
         if ( AppState == Types.StudioState.DEBUGGING_RUN )
@@ -4422,12 +4422,12 @@ namespace RetroDevStudio
       {
         foundElement = false;
 
-        retry:
+      retry:
         foreach ( DocumentInfo doc in tempSet )
         {
           if ( ( tempSet.ContainsValue( doc ) )
-          &&   ( ( doc != Doc )
-          ||     ( addedMainElement ) ) )
+          && ( ( doc != Doc )
+          || ( addedMainElement ) ) )
           {
             continue;
           }
@@ -4503,8 +4503,8 @@ namespace RetroDevStudio
           if ( doc.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
           {
             if ( ( StudioCore.Debugging.MarkedDocument == null )
-            ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-            ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
+            || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+            || ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
             {
               foundMatches.Add( doc );
             }
@@ -4533,7 +4533,7 @@ namespace RetroDevStudio
         }
       }
       if ( ( currentMarkedFile != null )
-      &&   ( currentMarkedFile != activeFile ) )
+      && ( currentMarkedFile != activeFile ) )
       {
         //Debug.Log( "Try with activefile first" );
         if ( currentMarkedFile.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
@@ -4547,7 +4547,7 @@ namespace RetroDevStudio
 
       // if any left use the first one
       if ( ( foundMatches.Count > 0 )
-      &&   ( foundMatches[0].ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) ) )
+      && ( foundMatches[0].ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) ) )
       {
         //Debug.Log( "use first of left overs: " + foundMatches[0].FullPath );
         var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
@@ -4580,7 +4580,7 @@ namespace RetroDevStudio
 
           // only update if we're not during closing of debugger
           if ( ( StudioCore.Debugging.Debugger != null )
-          &&   ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
+          && ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
           {
             m_DebugRegisters.SetRegisters( Registers );
             m_DebugRegisters.EnableRegisterOverrides( true );
@@ -4593,8 +4593,8 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
             {
               if ( ( StudioCore.Debugging.MarkedDocument == null )
-              ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-              ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
+              || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+              || ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
               {
                 var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
                 StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
@@ -4649,8 +4649,8 @@ namespace RetroDevStudio
       StudioCore.Debugging.DebugDisassembly.SetCursorToLine( 1, 0, true );
 
       if ( ( StudioCore.Debugging.MarkedDocument == null )
-      ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, "C64Studio-intermediatedisassembly" ) )
-      ||   ( StudioCore.Debugging.MarkedDocumentLine != 1 ) )
+      || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, "C64Studio-intermediatedisassembly" ) )
+      || ( StudioCore.Debugging.MarkedDocumentLine != 1 ) )
       {
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
@@ -4773,8 +4773,8 @@ namespace RetroDevStudio
       BaseDocument baseDocToCompile = ActiveContent;
 
       if ( ( AllowMainProjectOverride )
-      &&   ( StudioCore.Navigating.Solution != null )
-      &&   ( StudioCore.Navigating.Solution.ActiveProject != "" ) )
+      && ( StudioCore.Navigating.Solution != null )
+      && ( StudioCore.Navigating.Solution.ActiveProject != "" ) )
       {
         var project = StudioCore.Navigating.Solution.GetProjectByName( StudioCore.Navigating.Solution.ActiveProject );
         if ( project != null )
@@ -4788,8 +4788,8 @@ namespace RetroDevStudio
       }
 
       if ( ( ( baseDocToCompile != null )
-      &&     ( !baseDocToCompile.DocumentInfo.Compilable ) )
-      ||   ( baseDocToCompile == null ) )
+      && ( !baseDocToCompile.DocumentInfo.Compilable ) )
+      || ( baseDocToCompile == null ) )
       {
         baseDocToCompile = ActiveDocument;
       }
@@ -4802,21 +4802,21 @@ namespace RetroDevStudio
 
 
       if ( ( docToCompile.Element != null )
-      &&   ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
+      && ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
       {
         ProjectElement element = docToCompile.Project.GetElementByFilename( docToCompile.Project.Settings.MainDocument );
         if ( element != null )
         //&&   ( element.Document != null ) )
         {
           if ( ( docToCompile != null )
-          &&   ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-          ||     ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) ) )
+          && ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+          || ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) ) )
           {
             if ( ( element.DocumentInfo.ASMFileInfo != null )
-            &&   ( element.DocumentInfo.ASMFileInfo.LineInfo.Count != 0 )
-            &&   ( docToCompile.Compilable )
-            &&   ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
-            &&   ( !( element.IsDependentOn( docToCompile.FullPath ) ) ) )
+            && ( element.DocumentInfo.ASMFileInfo.LineInfo.Count != 0 )
+            && ( docToCompile.Compilable )
+            && ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
+            && ( !( element.IsDependentOn( docToCompile.FullPath ) ) ) )
             {
               return docToCompile;
             }
@@ -4848,7 +4848,7 @@ namespace RetroDevStudio
         baseDocToCompile = ActiveDocument;
       }
       if ( ( baseDocToCompile != null )
-      &&   ( !baseDocToCompile.DocumentInfo.Compilable ) )
+      && ( !baseDocToCompile.DocumentInfo.Compilable ) )
       {
         baseDocToCompile = ActiveDocument;
       }
@@ -4861,17 +4861,17 @@ namespace RetroDevStudio
 
       // if there is a main document AND we are part of it's compile chain
       if ( ( docToCompile.Element != null )
-      &&   ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
+      && ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
       {
         ProjectElement element = docToCompile.Project.GetElementByFilename(docToCompile.Project.Settings.MainDocument);
         if ( ( element != null )
-        &&   ( element.Document != null ) )
+        && ( element.Document != null ) )
         {
           if ( docToCompile != null )
           {
             if ( ( docToCompile.Compilable )
-            &&   ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
-            &&   ( !element.IsDependentOn( docToCompile.FullPath ) ) )
+            && ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
+            && ( !element.IsDependentOn( docToCompile.FullPath ) ) )
             {
               return docToCompile;
             }
@@ -4881,7 +4881,7 @@ namespace RetroDevStudio
       }
 
       if ( ( docToCompile == null )
-      ||   ( !docToCompile.Compilable ) )
+      || ( !docToCompile.Compilable ) )
       {
         return null;
       }
@@ -4912,7 +4912,7 @@ namespace RetroDevStudio
             return;
           }
           else if ( ( Doc.ASMFileInfo.AssemblerSettings != null )
-          &&        ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
+          && ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
           {
             m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
             return;
@@ -4951,7 +4951,7 @@ namespace RetroDevStudio
           {
             System.Windows.Forms.OpenFileDialog openDlg = new System.Windows.Forms.OpenFileDialog();
             openDlg.Title = "Open existing item";
-            openDlg.Filter = FilterString( Types.Constants.FILEFILTER_ALL_SUPPORTED_FILES + Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_CHARSET + Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_BINARY_FILES +Types.Constants.FILEFILTER_DISASSEMBLY + Types.Constants.FILEFILTER_ALL );
+            openDlg.Filter = FilterString( Types.Constants.FILEFILTER_ALL_SUPPORTED_FILES + Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_CHARSET + Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_BINARY_FILES + Types.Constants.FILEFILTER_DISASSEMBLY + Types.Constants.FILEFILTER_ALL );
 
             if ( m_CurrentProject != null )
             {
@@ -4971,7 +4971,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -4987,7 +4987,7 @@ namespace RetroDevStudio
           {
             string keywordBelow = null;
             if ( ( ActiveContent != null )
-            &&   ( ActiveContent is SourceASMEx ) )
+            && ( ActiveContent is SourceASMEx ) )
             {
               SourceASMEx asm = ActiveContent as SourceASMEx;
 
@@ -5100,8 +5100,8 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            &&   ( curDoc.BaseDoc != null )
-            &&   ( curDoc.ContainsCode ) )
+            && ( curDoc.BaseDoc != null )
+            && ( curDoc.ContainsCode ) )
             {
               return curDoc.BaseDoc.ApplyFunction( Function );
             }
@@ -5126,7 +5126,7 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            &&   ( curDoc.BaseDoc != null ) )
+            && ( curDoc.BaseDoc != null ) )
             {
               //Debug.Log( "ActiveCOntrol " + ActiveControl );
               return curDoc.BaseDoc.ApplyFunction( Function );
@@ -5138,7 +5138,7 @@ namespace RetroDevStudio
             // save current document
             BaseDocument curDoc = ActiveContent;
             if ( ( curDoc != null )
-            &&   ( !curDoc.DocumentInfo.ContainsCode ) )
+            && ( !curDoc.DocumentInfo.ContainsCode ) )
             {
               curDoc = ActiveDocument;
             }
@@ -5170,7 +5170,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5180,9 +5180,9 @@ namespace RetroDevStudio
             DocumentInfo docActive = DetermineDocument();
 
             if ( ( docToDebug == null )
-            ||   ( docActive == null )
-            ||   ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
-            &&     ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
+            || ( docActive == null )
+            || ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
+            && ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
             {
               break;
             }
@@ -5221,7 +5221,7 @@ namespace RetroDevStudio
             foreach ( BaseDocument doc in panelMain.Documents )
             {
               if ( ( doc.DocumentInfo.Element == null )
-              &&   ( doc.Modified ) )
+              && ( doc.Modified ) )
               {
                 doc.Save( BaseDocument.SaveMethod.SAVE );
               }
@@ -5241,12 +5241,12 @@ namespace RetroDevStudio
             // save current document
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            &&   ( !docToSave.IsSaveable ) )
+            && ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            ||   ( !docToSave.IsSaveable ) )
+            || ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5258,8 +5258,8 @@ namespace RetroDevStudio
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            ||   ( docToSave.DocumentInfo.Element == null ) )
+            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            || ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -5279,12 +5279,12 @@ namespace RetroDevStudio
             // save current document as
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            &&   ( !docToSave.IsSaveable ) )
+            && ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            ||   ( !docToSave.IsSaveable ) )
+            || ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5302,8 +5302,8 @@ namespace RetroDevStudio
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            ||   ( docToSave.DocumentInfo.Element == null ) )
+            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            || ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -5425,7 +5425,7 @@ namespace RetroDevStudio
         case RetroDevStudio.Types.Function.UNDO:
           BaseDocument docUndo = ActiveDocument;
           if ( ( docUndo != null )
-          &&   ( docUndo.UndoPossible ) )
+          && ( docUndo.UndoPossible ) )
           {
             docUndo.Undo();
             return true;
@@ -5434,7 +5434,7 @@ namespace RetroDevStudio
         case RetroDevStudio.Types.Function.REDO:
           BaseDocument docRedo = ActiveDocument;
           if ( ( docRedo != null )
-          &&   ( docRedo.RedoPossible ) )
+          && ( docRedo.RedoPossible ) )
           {
             docRedo.Redo();
             return true;
@@ -5449,7 +5449,7 @@ namespace RetroDevStudio
           return false;
         case Function.COPY:
           if ( ( ActiveContent == null )
-          ||   ( !ActiveContent.CopyPossible ) )
+          || ( !ActiveContent.CopyPossible ) )
           {
             return false;
           }
@@ -5457,7 +5457,7 @@ namespace RetroDevStudio
           return true;
         case Function.PASTE:
           if ( ( ActiveContent == null )
-          ||   ( !ActiveContent.PastePossible ) )
+          || ( !ActiveContent.PastePossible ) )
           {
             return false;
           }
@@ -5465,7 +5465,7 @@ namespace RetroDevStudio
           return true;
         case Function.CUT:
           if ( ( ActiveContent == null )
-          ||   ( !ActiveContent.CutPossible ) )
+          || ( !ActiveContent.CutPossible ) )
           {
             return false;
           }
@@ -5568,8 +5568,8 @@ namespace RetroDevStudio
     public void AddWatchEntry( WatchEntry Watch )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_RUN )
-      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      ||   ( AppState == Types.StudioState.NORMAL ) )
+      || ( AppState == Types.StudioState.DEBUGGING_BROKEN )
+      || ( AppState == Types.StudioState.NORMAL ) )
       {
         m_DebugWatch.AddWatchEntry( Watch );
 
@@ -5592,7 +5592,7 @@ namespace RetroDevStudio
     private bool IsWatchShowingCurrentDebuggedProject()
     {
       if ( ( StudioCore.Debugging.Debugger != null )
-      &&   ( StudioCore.Debugging.DebuggedProject == m_CurrentProject ) )
+      && ( StudioCore.Debugging.DebuggedProject == m_CurrentProject ) )
       {
         return true;
       }
@@ -5648,12 +5648,12 @@ namespace RetroDevStudio
 
               var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
 
-              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, 
+              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition,
                                              jumpedAtAddresses,
                                              dataTables,
-                                             namedLabels, 
-                                             settings, 
-                                             out disassembly, 
+                                             namedLabels,
+                                             settings,
+                                             out disassembly,
                                              out int firstLineIndexWithOpcode ) )
               {
                 StudioCore.Debugging.DebugDisassembly.SetText( disassembly );
@@ -5715,13 +5715,13 @@ namespace RetroDevStudio
       {
         config.Assembler = Document.Element.AssemblerType;
       }
-      config.AutoTruncateLiteralValues  = StudioCore.Settings.ASMAutoTruncateLiteralValues;
-      config.CreatePreProcesseFile      = CreatePreProcessedFile;
-      config.CreateRelocationFile       = CreateRelocationFile;
-      config.LibraryFiles               = StudioCore.Settings.ASMLibraryPaths;
-      config.InputFile                  = Document.FullPath;
-      config.WarningsToTreatAsError     = StudioCore.Settings.TreatWarningsAsErrors;
-      config.EnabledHacks               = StudioCore.Settings.EnabledC64StudioHacks;
+      config.AutoTruncateLiteralValues = StudioCore.Settings.ASMAutoTruncateLiteralValues;
+      config.CreatePreProcesseFile = CreatePreProcessedFile;
+      config.CreateRelocationFile = CreateRelocationFile;
+      config.LibraryFiles = StudioCore.Settings.ASMLibraryPaths;
+      config.InputFile = Document.FullPath;
+      config.WarningsToTreatAsError = StudioCore.Settings.TreatWarningsAsErrors;
+      config.EnabledHacks = StudioCore.Settings.EnabledC64StudioHacks;
 
       string sourceCode = "";
 
@@ -5742,7 +5742,7 @@ namespace RetroDevStudio
         }
       }
 
-      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines, 
+      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines,
                                       Document.LabelModeReferences, out ASMFileInfo );
 
       Document.ASMFileInfo = ASMFileInfo;
@@ -5763,8 +5763,8 @@ namespace RetroDevStudio
 
 
       if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
-      &&   ( Document.BaseDoc != null )
-      &&   ( Document.Element != null ) )
+      && ( Document.BaseDoc != null )
+      && ( Document.Element != null ) )
       {
         if ( Document.Element.AssemblerType != config.Assembler )
         {
@@ -5783,7 +5783,7 @@ namespace RetroDevStudio
           Document.DeducedDependency[Configuration.Name] = buildState;
         }
         buildState.Clear();
-        
+
 
         // auto-add all external dependencies with their current time stamp
         if ( Document.Element != null )
@@ -5808,8 +5808,8 @@ namespace RetroDevStudio
 
       if ( Document.Element != null )
       {
-        Document.Element.CompileTarget      = Parser.CompileTarget.Type;
-        Document.Element.CompileTargetFile  = Parser.CompileTargetFile;
+        Document.Element.CompileTarget = Parser.CompileTarget.Type;
+        Document.Element.CompileTargetFile = Parser.CompileTargetFile;
       }
       if ( buildState != null )
       {
@@ -5823,7 +5823,7 @@ namespace RetroDevStudio
           catch
           {
           }
-          buildState.BuildState.Add( dependency, new SingleBuildInfo() { TimeStampOfSourceFile = lastChangeTime, TargetFile = Parser.CompileTargetFile, TargetType = Parser.CompileTarget.Type }  );
+          buildState.BuildState.Add( dependency, new SingleBuildInfo() { TimeStampOfSourceFile = lastChangeTime, TargetFile = Parser.CompileTargetFile, TargetType = Parser.CompileTarget.Type } );
         }
       }
 
@@ -5839,8 +5839,8 @@ namespace RetroDevStudio
         var knownTokenInfos = ASMFileInfo.KnownTokenInfo();
 
         if ( ( Document.Project != null )
-        &&   ( !string.IsNullOrEmpty( Document.Project.Settings.MainDocument ) )
-        &&   ( GR.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
+        && ( !string.IsNullOrEmpty( Document.Project.Settings.MainDocument ) )
+        && ( GR.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
         {
           // give all other files the same keywords!
           // from source info
@@ -5869,8 +5869,8 @@ namespace RetroDevStudio
             ProjectElement elementToUpdate = Document.Project.GetElementByFilename(fileToUpdate);
             if ( elementToUpdate != null )
             {
-              elementToUpdate.DocumentInfo.KnownKeywords  = knownTokens;
-              elementToUpdate.DocumentInfo.KnownTokens    = knownTokenInfos;
+              elementToUpdate.DocumentInfo.KnownKeywords = knownTokens;
+              elementToUpdate.DocumentInfo.KnownTokens = knownTokenInfos;
               if ( elementToUpdate.Document != null )
               {
                 StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateKeywords( elementToUpdate.Document ) );
@@ -5884,8 +5884,8 @@ namespace RetroDevStudio
         {
           if ( Document != null )
           {
-            Document.KnownKeywords  = knownTokens;
-            Document.KnownTokens    = knownTokenInfos;
+            Document.KnownKeywords = knownTokens;
+            Document.KnownTokens = knownTokenInfos;
           }
 
           if ( !IsDocPartOfMainDocument( Document ) )
@@ -5905,12 +5905,12 @@ namespace RetroDevStudio
         {
           if ( Document.ASMFileInfoOriginal != null )
           {
-            Document.ASMFileInfo          = Document.ASMFileInfoOriginal;
-            Document.ASMFileInfoOriginal  = null;
+            Document.ASMFileInfo = Document.ASMFileInfoOriginal;
+            Document.ASMFileInfoOriginal = null;
           }
 
-          Document.KnownKeywords  = Document.ASMFileInfo.KnownTokens();
-          Document.KnownTokens    = Document.ASMFileInfo.KnownTokenInfo();
+          Document.KnownKeywords = Document.ASMFileInfo.KnownTokens();
+          Document.KnownTokens = Document.ASMFileInfo.KnownTokenInfo();
         }
       }
 
@@ -5919,7 +5919,7 @@ namespace RetroDevStudio
         StudioCore.TaskManager.AddTask( new Tasks.TaskUpdateCompileResult( Document.ASMFileInfo, Document ) );
       }
       if ( ( result )
-      &&   ( Document.BaseDoc != null ) )
+      && ( Document.BaseDoc != null ) )
       {
         Document.BaseDoc.FileParsed = true;
       }
@@ -5932,8 +5932,8 @@ namespace RetroDevStudio
     public void EnsureFileIsParsed( DocumentInfo Document )
     {
       if ( ( ( Document.BaseDoc != null )
-      &&     ( !Document.BaseDoc.FileParsed ) )
-      ||   ( StudioCore.Compiling.NeedsRebuild( Document ) ) )
+      && ( !Document.BaseDoc.FileParsed ) )
+      || ( StudioCore.Compiling.NeedsRebuild( Document ) ) )
       {
         if ( StudioCore.Compiling.NeedsRebuild( Document ) )
         {
@@ -6013,9 +6013,9 @@ namespace RetroDevStudio
       foreach ( BaseDocument doc in panelMain.Documents )
       {
         if ( ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( doc ) )
-        &&   ( doc.Modified )
-        &&   ( doc.DocumentInfo.Project == null )
-        &&   ( doc.DocumentInfo.Element == null ) )
+        && ( doc.Modified )
+        && ( doc.DocumentInfo.Project == null )
+        && ( doc.DocumentInfo.Element == null ) )
         {
 
           itemsWithChanges.Add( doc.Name );
@@ -6038,8 +6038,8 @@ namespace RetroDevStudio
             foreach ( var element in project.Elements )
             {
               if ( ( element.Document != null )
-              &&   ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( element.Document ) )
-              &&   ( element.Document.Modified ) )
+              && ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( element.Document ) )
+              && ( element.Document.Modified ) )
               {
                 itemsWithChanges.Add( element.Name );
                 docsWithChanges.Add( element.Document );
@@ -6207,8 +6207,8 @@ namespace RetroDevStudio
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, Filename, this );
       StudioCore.Settings.LastSolutionWasEmpty = false;
 
-      StudioCore.Navigating.Solution.Modified   = false;
-      solutionToolStripMenuItemTop.Visible      = true;
+      StudioCore.Navigating.Solution.Modified = false;
+      solutionToolStripMenuItemTop.Visible = true;
 
       RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
       // resend doc activate event, since only now all settings are known (breakpoints)
@@ -6217,7 +6217,7 @@ namespace RetroDevStudio
       StudioCore.Navigating.Solution.DuringLoad = false;
 
       if ( ( StudioCore.Navigating.Project == null )
-      &&   ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
+      && ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
       {
         StudioCore.Navigating.Project = StudioCore.Navigating.Solution.Projects[0];
       }
@@ -6246,8 +6246,8 @@ namespace RetroDevStudio
 
         if ( !string.IsNullOrEmpty( suggestedFilename ) )
         {
-          saveDlg.FileName          = GR.Path.GetFileName( suggestedFilename );
-          saveDlg.InitialDirectory  = GR.Path.GetDirectoryName( suggestedFilename );
+          saveDlg.FileName = GR.Path.GetFileName( suggestedFilename );
+          saveDlg.InitialDirectory = GR.Path.GetDirectoryName( suggestedFilename );
         }
         else
         {
@@ -6287,7 +6287,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6296,7 +6296,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      &&   ( docInfo.BaseDoc != null ) )
+      && ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6318,7 +6318,7 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".SPRITEPROJECT" )
-      ||        ( extension == ".SPR" ) )
+      || ( extension == ".SPR" ) )
       {
         document = new SpriteEditor( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6329,7 +6329,7 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".CHARSETPROJECT" )
-      ||        ( extension == ".CHR" ) )
+      || ( extension == ".CHR" ) )
       {
         document = new CharsetEditor( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6340,15 +6340,15 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".GRAPHICSCREEN" )
-      ||        ( extension == ".IFF" )
-      ||        ( extension == ".KOA" )
-      ||        ( extension == ".KLA" ) )
+      || ( extension == ".IFF" )
+      || ( extension == ".KOA" )
+      || ( extension == ".KLA" ) )
       {
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".BAS" )
-      ||        ( extension == ".B" ) )
+      || ( extension == ".B" ) )
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6397,7 +6397,7 @@ namespace RetroDevStudio
           editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else if ( ( extension == ".KLA" )
-        ||        ( extension == ".KOA" ) )
+        || ( extension == ".KOA" ) )
         {
           var editor = (GraphicScreenEditor)document;
 
@@ -6710,7 +6710,7 @@ namespace RetroDevStudio
     private void mainToolConfig_SelectedIndexChanged( object sender, EventArgs e )
     {
       if ( ( m_CurrentProject != null )
-      &&   ( m_CurrentProject.Settings.CurrentConfig != m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() ) ) )
+      && ( m_CurrentProject.Settings.CurrentConfig != m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() ) ) )
       {
         m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
 
@@ -6817,11 +6817,11 @@ namespace RetroDevStudio
           break;
         }
       }
-      saveToolStripMenuItem.Enabled     = ActiveDocument.Modified;
-      saveAsToolStripMenuItem.Enabled   = true;
-      saveAllToolStripMenuItem.Enabled  = modifications;
-      mainToolSave.Enabled              = ActiveDocument.Modified;
-      mainToolSaveAll.Enabled           = modifications;
+      saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
+      saveAsToolStripMenuItem.Enabled = true;
+      saveAllToolStripMenuItem.Enabled = modifications;
+      mainToolSave.Enabled = ActiveDocument.Modified;
+      mainToolSaveAll.Enabled = modifications;
     }
 
 
@@ -7323,14 +7323,14 @@ namespace RetroDevStudio
 
 
 
-    public bool ImportImage( string Filename, GR.Image.IImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight, 
-                             out GR.Image.IImage MappedImage, 
-                             out ColorSettings NewMCSettings, 
-                             out bool PasteAsBlock, 
+    public bool ImportImage( string Filename, GR.Image.IImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, int ItemWidth, int ItemHeight,
+                             out GR.Image.IImage MappedImage,
+                             out ColorSettings NewMCSettings,
+                             out bool PasteAsBlock,
                              out Types.GraphicType SelectedImportAsType )
     {
-      PasteAsBlock          = false;
-      SelectedImportAsType  = ImportType;
+      PasteAsBlock = false;
+      SelectedImportAsType = ImportType;
 
       // shortcut possible? (check if palette matches ours)
       if ( IncomingImage == null )
@@ -7342,8 +7342,8 @@ namespace RetroDevStudio
       // no mapping necessary - is always valid
       if ( ImportType == GraphicType.BITMAP_8BIT )
       {
-        MappedImage           = IncomingImage;
-        NewMCSettings         = MCSettings;
+        MappedImage = IncomingImage;
+        NewMCSettings = MCSettings;
         NewMCSettings.Palette = IncomingImage.Palette;
         return true;
       }
@@ -7355,8 +7355,8 @@ namespace RetroDevStudio
         for ( int i = 0; i < 16; ++i )
         {
           if ( ( IncomingImage.PaletteRed( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff0000 ) >> 16 ) )
-          ||   ( IncomingImage.PaletteGreen( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff00 ) >> 8 ) )
-          ||   ( IncomingImage.PaletteBlue( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff ) ) ) )
+          || ( IncomingImage.PaletteGreen( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff00 ) >> 8 ) )
+          || ( IncomingImage.PaletteBlue( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff ) ) ) )
           {
             match = false;
             break;
@@ -7364,7 +7364,7 @@ namespace RetroDevStudio
         }
         if ( match )
         {
-          MappedImage   = IncomingImage;
+          MappedImage = IncomingImage;
           NewMCSettings = MCSettings;
           return true;
         }
@@ -7377,10 +7377,10 @@ namespace RetroDevStudio
         NewMCSettings = MCSettings;
         return false;
       }
-      PasteAsBlock          = importGFX.PasteAsBlock;
-      SelectedImportAsType  = importGFX.SelectedImportAsType;
-      MappedImage           = importGFX.ConvertedImage;
-      NewMCSettings         = importGFX.MultiColorSettings;
+      PasteAsBlock = importGFX.PasteAsBlock;
+      SelectedImportAsType = importGFX.SelectedImportAsType;
+      MappedImage = importGFX.ConvertedImage;
+      NewMCSettings = importGFX.MultiColorSettings;
 
       IncomingImage.Dispose();
       return true;
@@ -8151,7 +8151,7 @@ namespace RetroDevStudio
     private void dumpSourceInfoToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( ActiveDocumentInfo != null )
-      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
+      && ( ActiveDocumentInfo.ASMFileInfo != null ) )
       {
         foreach ( KeyValuePair<int, Types.ASM.SourceInfo> pair in ActiveDocumentInfo.ASMFileInfo.SourceInfo )
         {
@@ -8218,6 +8218,20 @@ namespace RetroDevStudio
     private void soundPlayerToolStripMenuItem_Click( object sender, EventArgs e )
     {
       _audioHandler.Play( new GR.Memory.ByteBuffer() );
+    }
+
+
+
+    private void compareASMFileInfosToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      Debug.Log( $"Built {ActiveDocumentInfo.DocumentFilename}" );
+      foreach ( var element in StudioCore.Navigating.Project.Elements )
+      {
+        if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+        {
+          Debug.Log( $" {element.DocumentInfo.DocumentFilename}: matching ASMFileInfo {object.ReferenceEquals( ActiveDocumentInfo.ASMFileInfo, element.DocumentInfo.ASMFileInfo )}" );
+        }
+      }
     }
 
 

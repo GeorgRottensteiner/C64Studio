@@ -6,6 +6,7 @@ using RetroDevStudio.Documents;
 using GR.Memory;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Parser.BASIC;
+using System.Diagnostics;
 
 namespace RetroDevStudio.Tasks
 {
@@ -523,6 +524,15 @@ namespace RetroDevStudio.Tasks
         Core.Compiling.ASMFileInfo      = dummyInfo;
         Core.Compiling.m_LastBuildInfo[baseDoc.FullPath] = buildInfo;
         Core.Compiling.m_BuildIsCurrent = true;
+
+        Debug.Log( $"Built {baseDoc.DocumentFilename}" ); 
+        foreach ( var element in Core.Navigating.Project.Elements )
+        {
+          if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+          {
+            Debug.Log( $" {element.DocumentInfo.DocumentFilename}: matching ASMFileInfo {object.ReferenceEquals( dummyInfo, element.DocumentInfo.ASMFileInfo )}" );
+          }
+        }
       }
       else
       {

@@ -223,6 +223,8 @@ namespace RetroDevStudio
         ++_SetASMFileInfoStack[FullPath];
       }
 
+      Debug.Log( $"DocumentInfo.SetASMFileInfo for {FullPath}" );
+
       SourceASMEx   asm = null;
       SourceBasicEx basic = null;
 
@@ -319,6 +321,7 @@ namespace RetroDevStudio
         }
       }
 
+      /*
       if ( Element != null )
       {
         // and to all it's deduced dependencies!
@@ -337,7 +340,7 @@ namespace RetroDevStudio
             }
           }
         }
-      }
+      }*/
       if ( asm != null )
       {
         asm.DoNotFollowZoneSelectors = false;
