@@ -525,12 +525,15 @@ namespace RetroDevStudio.Tasks
         Core.Compiling.m_LastBuildInfo[baseDoc.FullPath] = buildInfo;
         Core.Compiling.m_BuildIsCurrent = true;
 
-        Debug.Log( $"Built {baseDoc.DocumentFilename}" ); 
-        foreach ( var element in Core.Navigating.Project.Elements )
+        Debug.Log( $"Built {baseDoc.DocumentFilename}" );
+        if ( Core.Navigating.Project != null )
         {
-          if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+          foreach ( var element in Core.Navigating.Project.Elements )
           {
-            Debug.Log( $" {element.DocumentInfo.DocumentFilename}: matching ASMFileInfo {object.ReferenceEquals( dummyInfo, element.DocumentInfo.ASMFileInfo )}" );
+            if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+            {
+              Debug.Log( $" {element.DocumentInfo.DocumentFilename}: matching ASMFileInfo {object.ReferenceEquals( dummyInfo, element.DocumentInfo.ASMFileInfo )}" );
+            }
           }
         }
       }

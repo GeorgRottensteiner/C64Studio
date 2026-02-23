@@ -8,7 +8,7 @@
           lda #$0f
           sta SID.FILTER_MODE_VOLUME
 
-          lda #1
+          lda #0
           sta EXTERNAL_INTERFACE_TABLE.PLAY_SOUND_EFFECT
 
           ;init player
