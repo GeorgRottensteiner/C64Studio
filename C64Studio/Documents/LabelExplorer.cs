@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -25,6 +26,7 @@ namespace RetroDevStudio.Documents
 
     private Dictionary<Types.ASM.FileInfo,GR.Collections.Map<string, bool>> _ExpandedNodesPerProject = new Dictionary<Types.ASM.FileInfo, GR.Collections.Map<string, bool>>();
     private Dictionary<string,Types.ASM.FileInfo>     _FileInfoPerFileCache = new Dictionary<string, Types.ASM.FileInfo>();
+    private Label                             _labelFilterClear;
 
 
 
@@ -46,6 +48,29 @@ namespace RetroDevStudio.Documents
       checkSortBySource.Enabled       = true;
       checkSortAlphabetically.Enabled = false;
       checkSortByType.Enabled         = true;
+
+      _labelFilterClear = new Label
+      {
+        Text = "×", // Unicode multiplication sign
+        Font = new Font( "Segoe UI", 9, FontStyle.Bold ),
+        Size = new Size( 14, editLabelExplorerFilter.Height - 2 ),
+        Visible = true,
+        FlatStyle = FlatStyle.Flat,
+        Location = new Point( editLabelExplorerFilter.Control.Location.X + editLabelExplorerFilter.Control.Width - 15, 
+                              editLabelExplorerFilter.Control.Location.Y + 1 ),
+        Cursor = Cursors.Arrow,
+        BackColor = Color.Transparent
+      };
+      _labelFilterClear.Click += ClearButton_Click;
+
+      Controls.Add( _labelFilterClear );
+    }
+
+
+
+    private void ClearButton_Click( object sender, EventArgs e )
+    {
+      editLabelExplorerFilter.Text = string.Empty;
     }
 
 
@@ -603,9 +628,18 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void editOutlineFilter_TextChanged( object sender, EventArgs e )
+    private void editLabelExplorerFilter_TextChanged( object sender, EventArgs e )
     {
       Core.Settings.LabelExplorerFilter = editLabelExplorerFilter.Text;
+      if ( editLabelExplorerFilter.TextLength > 0 )
+      {
+        _labelFilterClear.Visible = true;
+        _labelFilterClear.BringToFront();
+      }
+      else
+      {
+        _labelFilterClear.Visible = false;
+      }
       StoreOpenNodes();
       RefreshNodes();
     }

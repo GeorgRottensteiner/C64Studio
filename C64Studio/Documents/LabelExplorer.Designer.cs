@@ -151,7 +151,7 @@
       this.editLabelExplorerFilter.Name = "editLabelExplorerFilter";
       this.editLabelExplorerFilter.Size = new System.Drawing.Size(200, 23);
       this.editLabelExplorerFilter.ToolTipText = "Label Filter";
-      this.editLabelExplorerFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
+      this.editLabelExplorerFilter.TextChanged += new System.EventHandler(this.editLabelExplorerFilter_TextChanged);
       // 
       // checkSortByType
       // 

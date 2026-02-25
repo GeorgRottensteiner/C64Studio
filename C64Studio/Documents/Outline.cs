@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -24,6 +25,7 @@ namespace RetroDevStudio.Documents
 
     private Dictionary<Types.ASM.FileInfo,GR.Collections.Map<string, bool>> _ExpandedNodesPerProject = new Dictionary<Types.ASM.FileInfo, GR.Collections.Map<string, bool>>();
     private Dictionary<string,Types.ASM.FileInfo>     _FileInfoPerFileCache = new Dictionary<string, Types.ASM.FileInfo>();
+    private Label                             _labelFilterClear;
 
 
 
@@ -41,6 +43,29 @@ namespace RetroDevStudio.Documents
 
       checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
       checkShowLocalLabels.Image    = Core.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
+
+      _labelFilterClear = new Label
+      {
+        Text = "×", // Unicode multiplication sign
+        Font = new Font( "Segoe UI", 9, FontStyle.Bold ),
+        Size = new Size( 14, editOutlineFilter.Height - 2 ),
+        Visible = true,
+        FlatStyle = FlatStyle.Flat,
+        Location = new Point( editOutlineFilter.Control.Location.X + editOutlineFilter.Control.Width - 15,
+                              editOutlineFilter.Control.Location.Y + 1 ),
+        Cursor = Cursors.Arrow,
+        BackColor = Color.Transparent
+      };
+      _labelFilterClear.Click += ClearButton_Click;
+
+      Controls.Add( _labelFilterClear );
+    }
+
+
+
+    private void ClearButton_Click( object sender, EventArgs e )
+    {
+      editOutlineFilter.Text = string.Empty;
     }
 
 
@@ -515,6 +540,15 @@ namespace RetroDevStudio.Documents
     private void editOutlineFilter_TextChanged( object sender, EventArgs e )
     {
       Core.Settings.OutlineFilter = editOutlineFilter.Text;
+      if ( editOutlineFilter.TextLength > 0 )
+      {
+        _labelFilterClear.Visible = true;
+        _labelFilterClear.BringToFront();
+      }
+      else
+      {
+        _labelFilterClear.Visible = false;
+      }
       StoreOpenNodes();
       RefreshNodes();
     }
