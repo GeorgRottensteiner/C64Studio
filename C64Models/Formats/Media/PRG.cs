@@ -144,7 +144,8 @@ namespace RetroDevStudio.Formats
     public override bool RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename )
     {
       _LastError = "";
-      NewFilename.CopyTo( this.Filename, 0, 16 );
+      Filename.Clear();
+      Filename.Append( NewFilename );
       return true;
     }
 
