@@ -223,7 +223,7 @@ namespace RetroDevStudio
         ++_SetASMFileInfoStack[FullPath];
       }
 
-      Debug.Log( $"DocumentInfo.SetASMFileInfo for {FullPath}" );
+      //Debug.Log( $"DocumentInfo.SetASMFileInfo for {FullPath}" );
 
       SourceASMEx   asm = null;
       SourceBasicEx basic = null;

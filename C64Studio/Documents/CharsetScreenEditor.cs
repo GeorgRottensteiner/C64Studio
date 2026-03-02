@@ -2858,7 +2858,7 @@ namespace RetroDevStudio.Documents
 
     private void OnCharsetScreenModeChanged( bool setDefaultPalette = true )
     {
-      Debug.Log( "OnCharsetScreenModeChanged a" );
+      //Debug.Log( "OnCharsetScreenModeChanged a" );
       var clientSize = new Size( 640, 400 );
       var displaySize = new Size( 320, 200 );
 
@@ -2871,7 +2871,7 @@ namespace RetroDevStudio.Documents
         SetCharlistLayout( CharlistLayout.PLAIN );
       }
 
-      Debug.Log( "OnCharsetScreenModeChanged b" );
+      //Debug.Log( "OnCharsetScreenModeChanged b" );
       switch ( m_CharsetScreen.Mode )
       {
         case TextMode.NES:
@@ -2910,7 +2910,7 @@ namespace RetroDevStudio.Documents
           break;
       }
 
-      Debug.Log( "OnCharsetScreenModeChanged c" );
+      //Debug.Log( "OnCharsetScreenModeChanged c" );
       pictureEditor.ClientSize = new Size( clientSize.Width, clientSize.Height );
       pictureEditor.DisplayPage.Create( displaySize.Width, displaySize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
@@ -2933,19 +2933,19 @@ namespace RetroDevStudio.Documents
       panelCharacters.ItemHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       panelCharacters.Invalidate();
 
-      Debug.Log( "OnCharsetScreenModeChanged d" );
+      //Debug.Log( "OnCharsetScreenModeChanged d" );
       var origPalette = m_CharsetScreen.CharSet.Colors;
       UpdatePalette( setDefaultPalette );
 
-      Debug.Log( "OnCharsetScreenModeChanged e  charEditor.CharsetUpdated" );
+      //Debug.Log( "OnCharsetScreenModeChanged e  charEditor.CharsetUpdated" );
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-      Debug.Log( "OnCharsetScreenModeChanged f" );
+      //Debug.Log( "OnCharsetScreenModeChanged f" );
       if ( panelCharacters.Items.Count > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
       {
         panelCharacters.Items.RemoveRange( m_CharsetScreen.CharSet.TotalNumberOfCharacters,
                                            panelCharacters.Items.Count - m_CharsetScreen.CharSet.TotalNumberOfCharacters );
       }
-      Debug.Log( "OnCharsetScreenModeChanged g" );
+      //Debug.Log( "OnCharsetScreenModeChanged g" );
       panelCharacters.BeginUpdate();
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
@@ -2957,16 +2957,16 @@ namespace RetroDevStudio.Documents
       }
       panelCharacters.EndUpdate();
 
-      Debug.Log( "OnCharsetScreenModeChanged h" );
+      //Debug.Log( "OnCharsetScreenModeChanged h" );
       RebuildAllCharImages();
-      Debug.Log( "OnCharsetScreenModeChanged i" );
+      //Debug.Log( "OnCharsetScreenModeChanged i" );
 
       // TODO - change palette to machine type
 
       RedrawColorChooser();
-      Debug.Log( "OnCharsetScreenModeChanged j" );
+      //Debug.Log( "OnCharsetScreenModeChanged j" );
       RedrawFullScreen();
-      Debug.Log( "OnCharsetScreenModeChanged k" );
+      //Debug.Log( "OnCharsetScreenModeChanged k" );
     }
 
 

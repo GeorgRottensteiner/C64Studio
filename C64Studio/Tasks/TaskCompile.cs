@@ -525,6 +525,7 @@ namespace RetroDevStudio.Tasks
         Core.Compiling.m_LastBuildInfo[baseDoc.FullPath] = buildInfo;
         Core.Compiling.m_BuildIsCurrent = true;
 
+        /*
         Debug.Log( $"Built {baseDoc.DocumentFilename}" );
         if ( Core.Navigating.Project != null )
         {
@@ -535,7 +536,7 @@ namespace RetroDevStudio.Tasks
               Debug.Log( $" {element.DocumentInfo.DocumentFilename}: matching ASMFileInfo {object.ReferenceEquals( dummyInfo, element.DocumentInfo.ASMFileInfo )}" );
             }
           }
-        }
+        }*/
       }
       else
       {
