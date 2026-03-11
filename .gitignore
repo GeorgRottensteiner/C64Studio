@@ -362,3 +362,5 @@
 /Sample Projects/MacroTest/ifdefparamnested.prg
 /C64StudioRelease/shared content/Sample Projects/C64/BASIC and Assembly combined/assembly_separate.prg
 /C64StudioRelease/shared content/Sample Projects/C64/BASIC and Assembly combined/basic_separate.d64
+/Sample Projects/MacroTest/ifdef_in_else.prg
+/Sample Projects/MacroTest/nested_ifdef.prg

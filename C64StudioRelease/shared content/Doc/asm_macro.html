@@ -510,6 +510,21 @@
       }
     </div>
     <br />
+    <div id="code">
+      <br />      LABEL1
+
+      !ifdef LABEL2 {
+        ;LABEL2 is not defined, will not go here
+        lda #0
+      } else ifdef LABEL1 {
+        ;LABEL1 is defined, will go here
+        lda #1
+      } else {
+        ;LABEL1 is defined, so this branch will not be taken
+        lda #7
+      }
+    </div>
+    <br />
     <br />
   </div>
   <a name="ifndef"></a>
@@ -536,6 +551,21 @@
       } else {
       lda #0
       sta AUTO_LOAD
+      }
+    </div>
+    <br />
+    <div id="code">
+      <br />      LABEL1
+
+      !ifdef LABEL2 {
+      ;LABEL2 is not defined, will not go here
+      lda #0
+      } else ifndef LABEL3 {
+      ;LABEL3 is not defined, will go here
+      lda #1
+      } else {
+      ;LABEL3 is not defined, so this branch will be taken
+      lda #7
       }
     </div>
     <br />

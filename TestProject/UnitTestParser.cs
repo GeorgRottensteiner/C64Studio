@@ -1872,7 +1872,7 @@ namespace TestProject
 
           TEST2
 
-          !IFDEF TEST=2 {
+          !IFDEF TEST {
 
           lda #GREEN
 
@@ -1888,6 +1888,132 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "0020A9028D20D060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestElseWithIfDef()
+    {
+      string    source = @"* = $2000
+          ;GREEN = 5
+          RED = 2
+          ;BLUE = 3
+          !IFDEF GREEN {
+            lda #GREEN
+          } else ifdef RED {
+            lda #RED
+          } else {
+            lda #BLUE
+          }
+          sta 53280
+          rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020A9028D20D060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestElseWithIfNDef()
+    {
+      string    source = @"* = $2000
+          ;GREEN = 5
+          RED = 7
+          ;BLUE = 3
+          !IFDEF BLUE {
+            lda #BLUE
+          } else ifndef GREEN {
+            lda #RED
+          } else {
+            lda #GREEN
+          }
+          sta 53280
+          rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020A9078D20D060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestElseWithIfDefMalformedExpression()
+    {
+      string    source = @"* = $2000
+          RED = 2
+          !IFDEF GREEN {
+            lda #GREEN
+          } else ifdef RED shouldnot be here {
+            lda #RED
+          } else {
+            lda #BLUE
+          }
+          sta 53280
+          rts";
+
+      var parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      var config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      foreach ( var entry in asmFileInfo.Messages.Values )
+      {
+        code = entry.Code;
+        break;
+      }
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, code );
+    }
+
+
+
+    [TestMethod]
+    public void TestElseWithIfNDefMalformedExpression()
+    {
+      string    source = @"* = $2000
+          RED = 2
+          !IFDEF GREEN {
+            lda #GREEN
+          } else ifndef RED shouldnot be here {
+            lda #RED
+          } else {
+            lda #BLUE
+          }
+          sta 53280
+          rts";
+
+      var parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      var config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      RetroDevStudio.Types.ErrorCode  code = RetroDevStudio.Types.ErrorCode.OK;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo ) );
+
+      foreach ( var entry in asmFileInfo.Messages.Values )
+      {
+        code = entry.Code;
+        break;
+      }
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, code );
     }
 
 

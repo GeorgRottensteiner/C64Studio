@@ -5624,81 +5624,207 @@ namespace RetroDevStudio.Parser
                 OnScopeRemoved( lineIndex );
                 _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
               }
-              else if ( ( lineTokenInfos.Count >= 4 )
-              &&        ( lineTokenInfos[0].Content == "}" )
-              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
-              &&        ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
-              &&        ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
+              else if ( ContainsScopeEndWithCurlyBracesWithElse( lineTokenInfos ) )
               {
-                if ( !ScopeInsideMacroDefinition() )
+                // } else if <Expression> {
+                if ( ( lineTokenInfos.Count >= 4 )
+                &&   ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
                 {
-                  // else if
-
-                  // end previous block
-                  var prevScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
-                  _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
-
-                  // start new block
-                  long defineResult = -1;
-
-                  Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
-                  scope.StartIndex = lineIndex;
-
-
-                  if ( !isOuterScopingActive )
+                  if ( !ScopeInsideMacroDefinition() )
                   {
-                    // need no evaluation, can skip over this one, since it is inactive anyway
-                    scope.Active = false;
-                    scope.IfChainHadActiveEntry = false;
-                  }
-                  else if ( ( prevScope.Active )
-                  ||        ( prevScope.IfChainHadActiveEntry ) )
-                  {
-                    // need no evaluation, can skip over this one, since it is inactive anyway
-                    scope.Active = false;
-                    scope.IfChainHadActiveEntry = true;
-                  }
-                  else
-                  {
-                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out SymbolInfo defineResultSymbol ) )
+                    // else if
+
+                    // end previous block
+                    var prevScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
+                    _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+
+                    // start new block
+                    long defineResult = -1;
+
+                    Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                    scope.StartIndex = lineIndex;
+
+
+                    if ( !isOuterScopingActive )
                     {
-                      AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
-                                + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
-                                lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
-                      scope.Active = true;
+                      // need no evaluation, can skip over this one, since it is inactive anyway
+                      scope.Active = false;
+                      scope.IfChainHadActiveEntry = false;
+                    }
+                    else if ( ( prevScope.Active )
+                    ||        ( prevScope.IfChainHadActiveEntry ) )
+                    {
+                      // need no evaluation, can skip over this one, since it is inactive anyway
+                      scope.Active = false;
                       scope.IfChainHadActiveEntry = true;
-                      //return null;
                     }
                     else
                     {
-                      defineResult = defineResultSymbol.ToInteger();
-                      if ( defineResult == 0 )
+                      if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out SymbolInfo defineResultSymbol ) )
+                      {
+                        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
+                                  + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                                  lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                        scope.Active = true;
+                        scope.IfChainHadActiveEntry = true;
+                      }
+                      else
+                      {
+                        defineResult = defineResultSymbol.ToInteger();
+                        if ( defineResult == 0 )
+                        {
+                          scope.Active = false;
+                        }
+                        else
+                        {
+                          scope.Active = true;
+                          scope.IfChainHadActiveEntry = true;
+                        }
+                        // if chain already had an active entry?
+                        if ( prevScope.IfChainHadActiveEntry )
+                        {
+                          scope.Active = false;
+                          scope.IfChainHadActiveEntry = true;
+                        }
+                      }
+                    }
+                    _ParseContext.Scopes.Add( scope );
+                  }
+                }
+                // } else ifdef <Expression> {
+                else if ( ( lineTokenInfos.Count >= 4 )
+                &&        ( lineTokenInfos[2].Content.ToUpper() == "IFDEF" ) )
+                {
+                  if ( !ScopeInsideMacroDefinition() )
+                  {
+                    // end previous block
+                    var prevScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
+                    _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+
+                    // start new block
+                    Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                    scope.StartIndex = lineIndex;
+
+                    if ( !isOuterScopingActive )
+                    {
+                      // need no evaluation, can skip over this one, since it is inactive anyway
+                      scope.Active = false;
+                      scope.IfChainHadActiveEntry = false;
+                    }
+                    else if ( ( prevScope.Active )
+                    ||        ( prevScope.IfChainHadActiveEntry ) )
+                    {
+                      // need no evaluation, can skip over this one, since it is inactive anyway
+                      scope.Active = false;
+                      scope.IfChainHadActiveEntry = true;
+                    }
+                    else
+                    {
+                      // only evaluate the first token
+                      var tokens = lineTokenInfos.GetRange( 3, lineTokenInfos.Count - 4 );
+                      StripInternalBrackets( tokens );
+                      if ( tokens.Count != 1 )
+                      {
+                        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Expected single token for ifdef expression: "
+                                  + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                                  lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                        scope.Active = true;
+                        scope.IfChainHadActiveEntry = true;
+                        _ParseContext.Scopes.Add( scope );
+                        OnScopeAdded( scope );
+                        continue;
+                      }
+                      if ( !EvaluateTokens( lineIndex, tokens, out SymbolInfo defineResultSymbol ) )
                       {
                         scope.Active = false;
                       }
                       else
                       {
                         scope.Active = true;
-                        scope.IfChainHadActiveEntry = true;
                       }
-                      // if chain already had an active entry?
-                      if ( prevScope.IfChainHadActiveEntry )
+                      if ( scope.Active )
                       {
-                        scope.Active = false;
                         scope.IfChainHadActiveEntry = true;
                       }
                     }
+                    _ParseContext.Scopes.Add( scope );
+                    OnScopeAdded( scope );
                   }
-                  _ParseContext.Scopes.Add( scope );
                 }
-              }
-              else if ( ContainsScopeEndWithCurlyBracesWithElse( lineTokenInfos ) )
-              {
-                if ( !ScopeInsideMacroDefinition() )
+                // } else ifndef <Expression> {
+                else if ( ( lineTokenInfos.Count >= 4 )
+                &&        ( lineTokenInfos[2].Content.ToUpper() == "IFNDEF" ) )
                 {
-                  _ParseContext.Scopes[_ParseContext.Scopes.Count - 1].Active = !_ParseContext.Scopes[_ParseContext.Scopes.Count - 1].IfChainHadActiveEntry;
-                  //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
-                  //Debug.Log( "toggle scope state " + lineIndex );
+                  if ( !ScopeInsideMacroDefinition() )
+                  {
+                    // end previous block
+                    var prevScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
+                    _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+
+                    // start new block
+                    Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                    scope.StartIndex = lineIndex;
+
+                    if ( !isOuterScopingActive )
+                    {
+                      // need no evaluation, can skip over this one, since it is inactive anyway
+                      scope.Active = false;
+                      scope.IfChainHadActiveEntry = false;
+                    }
+                    else if ( ( prevScope.Active )
+                    ||        ( prevScope.IfChainHadActiveEntry ) )
+                    {
+                      // need no evaluation, can skip over this one, since it is inactive anyway
+                      scope.Active = false;
+                      scope.IfChainHadActiveEntry = true;
+                    }
+                    else
+                    {
+                      // only evaluate the first token
+                      var tokens = lineTokenInfos.GetRange( 3, lineTokenInfos.Count - 4 );
+                      StripInternalBrackets( tokens );
+                      if ( tokens.Count != 1 )
+                      {
+                        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Expected single token for ifndef expression: "
+                                  + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                                  lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                        scope.Active = true;
+                        scope.IfChainHadActiveEntry = true;
+                        _ParseContext.Scopes.Add( scope );
+                        OnScopeAdded( scope );
+                        continue;
+                      }
+                      if ( !EvaluateTokens( lineIndex, tokens, out SymbolInfo defineResultSymbol ) )
+                      {
+                        scope.Active = true;
+                      }
+                      else
+                      {
+                        scope.Active = false;
+                      }
+                      if ( scope.Active )
+                      {
+                        scope.IfChainHadActiveEntry = true;
+                      }
+                    }
+                    _ParseContext.Scopes.Add( scope );
+                    OnScopeAdded( scope );
+                  }
+                }
+                else
+                {
+                  if ( lineTokenInfos.Count > 3 )
+                  {
+                    AddError( lineIndex, Types.ErrorCode.E1006_MALFORMED_BLOCK_CLOSE_STATEMENT, "Malformed block close statement, expecting single \"}\", \"} else {\" or \"} else if <expression> {\"",
+                              lineTokenInfos[0].StartPos,
+                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
+                  }
+                  if ( !ScopeInsideMacroDefinition() )
+                  {
+                    _ParseContext.Scopes[_ParseContext.Scopes.Count - 1].Active = !_ParseContext.Scopes[_ParseContext.Scopes.Count - 1].IfChainHadActiveEntry;
+                    //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+                    //Debug.Log( "toggle scope state " + lineIndex );
+                  }
                 }
               }
               else
@@ -6949,8 +7075,8 @@ namespace RetroDevStudio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -6967,10 +7093,20 @@ namespace RetroDevStudio.Parser
                   scope.StartIndex = lineIndex;
 
                   // only evaluate the first token
+                  StripInternalBrackets( tokens );
+                  if ( tokens.Count != 1 )
+                  {
+                    AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Expected single token for ifdef expression: "
+                              + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                              lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                    scope.Active = true;
+                    scope.IfChainHadActiveEntry = true;
+                    _ParseContext.Scopes.Add( scope );
+                    OnScopeAdded( scope );
+                    continue;
+                  }
 
-                  StripInternalBrackets( tokens );//, 1 );
-                  // TODO - have to evaluate the rest of the line if it exists!!
-                  if ( !EvaluateTokens( lineIndex, tokens, 0, 1, out SymbolInfo defineResultSymbol ) )
+                  if ( !EvaluateTokens( lineIndex, tokens, out SymbolInfo defineResultSymbol ) )
                   {
                     scope.Active = hadElse;
                   }
