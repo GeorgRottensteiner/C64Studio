@@ -3837,7 +3837,7 @@ namespace RetroDevStudio
         return false;
       }
 
-      System.Windows.Forms.OpenFileDialog openDlg = new System.Windows.Forms.OpenFileDialog();
+      var openDlg = new System.Windows.Forms.OpenFileDialog();
       openDlg.Title = "Open existing item";
       openDlg.Filter = FilterString( Types.Constants.FILEFILTER_ALL_SUPPORTED_FILES + Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_CHARSET + Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_BINARY_FILES + Types.Constants.FILEFILTER_ALL );
       openDlg.InitialDirectory = projectToAddTo.Settings.BasePath;
@@ -8232,6 +8232,17 @@ namespace RetroDevStudio
           Debug.Log( $" {element.DocumentInfo.DocumentFilename}: matching ASMFileInfo {object.ReferenceEquals( ActiveDocumentInfo.ASMFileInfo, element.DocumentInfo.ASMFileInfo )}" );
         }
       }
+    }
+
+
+
+    private void addExistingItemsToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_CurrentProject == null )
+      {
+        return;
+      }
+      ImportExistingFiles( m_CurrentProject.Node );
     }
 
 
