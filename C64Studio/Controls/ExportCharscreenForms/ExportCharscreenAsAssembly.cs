@@ -172,6 +172,19 @@ namespace RetroDevStudio.Controls
                 curColor = newColor;
               }
 
+              if ( usePETStatement )
+              {
+                // need to flip upper/lower case
+                if ( ( charToAdd >= 1 )
+                &&   ( charToAdd <= 26 ) )
+                {
+                  EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+
+                  sbPET.Append( (char)( 'a' - 1 + charToAdd ) );
+                  isFirstCharInLine = false;
+                  continue;
+                }
+              }
 
               if ( ( replaceSpaceWithCursorRight )
               &&   ( charToAdd == 32 )
@@ -185,6 +198,7 @@ namespace RetroDevStudio.Controls
               &&        ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
               {
                 EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                
                 sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
                 isFirstCharInLine = false;
               }
