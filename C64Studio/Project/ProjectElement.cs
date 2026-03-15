@@ -24,7 +24,8 @@ namespace RetroDevStudio
       DISASSEMBLER,
       BINARY_FILE,
       MEDIA_MANAGER,
-      VALUE_TABLE
+      VALUE_TABLE,
+      TEXT_FILE
     };
 
     public enum BuildTypes

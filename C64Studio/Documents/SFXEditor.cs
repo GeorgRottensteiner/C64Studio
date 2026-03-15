@@ -784,11 +784,9 @@ FX_WAVE_NOISE         = 3
     {
       _updatingParams = true;
 
-      bool isExistingEffect = true;
       SFXProject.SFXEffect effect = (SFXProject.SFXEffect)listEffects.SelectedItem?.Tag;
       if ( effect == null )
       {
-        isExistingEffect = false;
         effect = new SFXProject.SFXEffect();
       }
 

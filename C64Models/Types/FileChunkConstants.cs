@@ -39,6 +39,7 @@
 
     public const ushort    SOURCE_ASM                     = 0x1330;
     public const ushort    SOURCE_BASIC                   = 0x1331;
+    public const ushort    SOURCE_TEXT_FILE               = 0x1332;
 
     public const ushort    CHARSET_PROJECT                = 0x1340;
     public const ushort    CHARSET_INFO                   = 0x1341;

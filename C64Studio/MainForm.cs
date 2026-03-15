@@ -6287,7 +6287,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6296,7 +6296,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      && ( docInfo.BaseDoc != null ) )
+      &&   ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6340,15 +6340,15 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".GRAPHICSCREEN" )
-      || ( extension == ".IFF" )
-      || ( extension == ".KOA" )
-      || ( extension == ".KLA" ) )
+      ||        ( extension == ".IFF" )
+      ||        ( extension == ".KOA" )
+      ||        ( extension == ".KLA" ) )
       {
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".BAS" )
-      || ( extension == ".B" ) )
+      ||        ( extension == ".B" ) )
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6378,6 +6378,19 @@ namespace RetroDevStudio
       else if ( extension == ".SFXPROJECT" )
       {
         document = new SFXEditor( StudioCore );
+        document.ShowHint = DockState.Document;
+      }
+      else if ( extension == ".SFXPROJECT" )
+      {
+        document = new SFXEditor( StudioCore );
+        document.ShowHint = DockState.Document;
+      }
+      else if ( ( extension == ".TXT" )
+      ||        ( extension == ".CFG" )
+      ||        ( extension == ".BAT" )
+      ||        ( extension == ".PS1" ) )
+      {
+        document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;
       }
       else
@@ -6507,6 +6520,9 @@ namespace RetroDevStudio
         case ProjectElement.ElementType.VALUE_TABLE:
           newDoc = new ValueTableEditor( StudioCore );
           break;
+        case ProjectElement.ElementType.TEXT_FILE:
+          newDoc = new TextFile( StudioCore );
+          break;
       }
       if ( newDoc != null )
       {
@@ -6561,6 +6577,9 @@ namespace RetroDevStudio
           break;
         case ProjectElement.ElementType.VALUE_TABLE:
           filterSource += Types.Constants.FILEFILTER_VALUE_TABLE_PROJECT;
+          break;
+        case ProjectElement.ElementType.TEXT_FILE:
+          filterSource += Types.Constants.FILEFILTER_TEXT_FILE;
           break;
       }
       openDlg.Filter = FilterString( filterSource );
