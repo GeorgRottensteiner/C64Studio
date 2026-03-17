@@ -3885,12 +3885,12 @@ namespace RetroDevStudio
         return;
       }
       else if ( ( newFileExtension == ".CHARSETPROJECT" )
-      || ( newFileExtension == ".CHR" ) )
+      ||        ( newFileExtension == ".CHR" ) )
       {
         type = ProjectElement.ElementType.CHARACTER_SET;
       }
       else if ( ( newFileExtension == ".SPRITEPROJECT" )
-      || ( newFileExtension == ".SPR" ) )
+      ||        ( newFileExtension == ".SPR" ) )
       {
         type = ProjectElement.ElementType.SPRITE_SET;
       }
@@ -3907,9 +3907,16 @@ namespace RetroDevStudio
         type = ProjectElement.ElementType.GRAPHIC_SCREEN;
       }
       else if ( ( newFileExtension == ".BAS" )
-      || ( newFileExtension == ".B" ) )
+      ||        ( newFileExtension == ".B" ) )
       {
         type = ProjectElement.ElementType.BASIC_SOURCE;
+      }
+      else if ( ( newFileExtension == ".TXT" )
+      ||        ( newFileExtension == ".CFG" )
+      ||        ( newFileExtension == ".BAT" )
+      ||        ( newFileExtension == ".PS1" ) )
+      {
+        type = ProjectElement.ElementType.TEXT_FILE;
       }
       else if ( newFileExtension == ".MAPPROJECT" )
       {
