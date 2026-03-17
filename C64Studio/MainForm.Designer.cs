@@ -81,11 +81,13 @@
       addNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewASMFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewBASICFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      projectAddNewTextFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewSpriteSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewCharacterSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewCharacterScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewGraphicScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       projectAddNewMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      addExistingItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       saveProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       removeProjectFromSolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -237,7 +239,6 @@
       mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
       timerAutoSave = new System.Windows.Forms.Timer( components );
-      addExistingItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       mainMenu.SuspendLayout();
       mainTools.SuspendLayout();
       mainStatus.SuspendLayout();
@@ -588,7 +589,7 @@
       // 
       // addNewToolStripMenuItem
       // 
-      addNewToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { projectAddNewASMFileToolStripMenuItem, projectAddNewBASICFileToolStripMenuItem, projectAddNewSpriteSetToolStripMenuItem, projectAddNewCharacterSetToolStripMenuItem, projectAddNewCharacterScreenToolStripMenuItem, projectAddNewGraphicScreenToolStripMenuItem, projectAddNewMapToolStripMenuItem } );
+      addNewToolStripMenuItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { projectAddNewASMFileToolStripMenuItem, projectAddNewBASICFileToolStripMenuItem, projectAddNewTextFileToolStripMenuItem, projectAddNewSpriteSetToolStripMenuItem, projectAddNewCharacterSetToolStripMenuItem, projectAddNewCharacterScreenToolStripMenuItem, projectAddNewGraphicScreenToolStripMenuItem, projectAddNewMapToolStripMenuItem } );
       addNewToolStripMenuItem.Name = "addNewToolStripMenuItem";
       addNewToolStripMenuItem.Size = new System.Drawing.Size( 193, 22 );
       addNewToolStripMenuItem.Text = "Add New";
@@ -606,6 +607,13 @@
       projectAddNewBASICFileToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       projectAddNewBASICFileToolStripMenuItem.Text = "BASIC File";
       projectAddNewBASICFileToolStripMenuItem.Click +=  projectAddNewBASICFileToolStripMenuItem_Click ;
+      // 
+      // projectAddNewTextFileToolStripMenuItem
+      // 
+      projectAddNewTextFileToolStripMenuItem.Name = "projectAddNewTextFileToolStripMenuItem";
+      projectAddNewTextFileToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
+      projectAddNewTextFileToolStripMenuItem.Text = "Text File";
+      projectAddNewTextFileToolStripMenuItem.Click +=  projectAddNewTextFileToolStripMenuItem_Click ;
       // 
       // projectAddNewSpriteSetToolStripMenuItem
       // 
@@ -641,6 +649,13 @@
       projectAddNewMapToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
       projectAddNewMapToolStripMenuItem.Text = "Map";
       projectAddNewMapToolStripMenuItem.Click +=  projectAddNewMapToolStripMenuItem_Click ;
+      // 
+      // addExistingItemsToolStripMenuItem
+      // 
+      addExistingItemsToolStripMenuItem.Name = "addExistingItemsToolStripMenuItem";
+      addExistingItemsToolStripMenuItem.Size = new System.Drawing.Size( 193, 22 );
+      addExistingItemsToolStripMenuItem.Text = "Add Existing Items...";
+      addExistingItemsToolStripMenuItem.Click +=  addExistingItemsToolStripMenuItem_Click ;
       // 
       // saveProjectToolStripMenuItem
       // 
@@ -1784,13 +1799,6 @@
       timerAutoSave.Interval = 300000;
       timerAutoSave.Tick +=  timerAutoSave_Tick ;
       // 
-      // addExistingItemsToolStripMenuItem
-      // 
-      addExistingItemsToolStripMenuItem.Name = "addExistingItemsToolStripMenuItem";
-      addExistingItemsToolStripMenuItem.Size = new System.Drawing.Size( 193, 22 );
-      addExistingItemsToolStripMenuItem.Text = "Add Existing Items...";
-      addExistingItemsToolStripMenuItem.Click +=  addExistingItemsToolStripMenuItem_Click ;
-      // 
       // MainForm
       // 
       AllowDrop = true;
@@ -2033,6 +2041,7 @@
         private System.Windows.Forms.ToolStripMenuItem cancelBuildToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem compareASMFileInfosToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem addExistingItemsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem projectAddNewTextFileToolStripMenuItem;
   }
 }
 

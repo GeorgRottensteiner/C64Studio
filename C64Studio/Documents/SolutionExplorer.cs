@@ -112,7 +112,7 @@ namespace RetroDevStudio.Documents
             if ( project != null )
             {
               project.Node.NodeFont = m_BoldFont;
-              project.Node.Text     = project.Node.Text;
+              project.Node.Text = project.Node.Text;
             }
           }
           seBtnCloneSolution.Enabled = true;
@@ -146,7 +146,7 @@ namespace RetroDevStudio.Documents
       Core.Settings.UpdateInMRU( Core.Settings.MRUFiles, element.DocumentInfo.FullPath, Core.MainForm );
 
       if ( ( element.Document != Core.MainForm.ActiveDocument )
-      &&   ( element.Document != null ) )
+      && ( element.Document != null ) )
       {
         element.Document.Show();
       }
@@ -176,7 +176,7 @@ namespace RetroDevStudio.Documents
 
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
-          &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+          && ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
           {
             isProjectOrFolder = true;
             isFolder = true;
@@ -246,6 +246,10 @@ namespace RetroDevStudio.Documents
             subItemNewBasic.Click += new EventHandler( projectAddBasicFile_Click );
             subItem.DropDownItems.Add( subItemNewBasic );
 
+            System.Windows.Forms.ToolStripMenuItem subItemNewText = new System.Windows.Forms.ToolStripMenuItem( "Text File" );
+            subItemNewText.Click += new EventHandler( projectAddTextFile_Click );
+            subItem.DropDownItems.Add( subItemNewText );
+
             System.Windows.Forms.ToolStripMenuItem subItemNewSprite = new System.Windows.Forms.ToolStripMenuItem( "Sprite Set" );
             subItemNewSprite.Click += new EventHandler( projectAddSpriteFile_Click );
             subItem.DropDownItems.Add( subItemNewSprite );
@@ -283,7 +287,7 @@ namespace RetroDevStudio.Documents
             item = AddContextMenuItem( contextMenu.Items, "Paste", treePasteElement_Click, null );
             IDataObject dataObj = Clipboard.GetDataObject();
             if ( ( dataObj != null )
-            &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
+            && ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
             {
               item.Enabled = true;
             }
@@ -298,7 +302,7 @@ namespace RetroDevStudio.Documents
             contextMenu.Items.Add( "-" );
 
             if ( ( isFolder )
-            ||   ( isProject ) )
+            || ( isProject ) )
             {
               AddContextMenuItem( contextMenu.Items, "Remove from solution", treeElementRemove_Click, null );
             }
@@ -331,7 +335,7 @@ namespace RetroDevStudio.Documents
             }
 
             if ( ( isProject )
-            &&   ( global::SourceControl.Controller.IsFunctional ) )
+            && ( global::SourceControl.Controller.IsFunctional ) )
             {
               contextMenu.Items.Add( "-" );
 
@@ -394,7 +398,7 @@ namespace RetroDevStudio.Documents
             item = AddContextMenuItem( contextMenu.Items, "Paste", treePasteElement_Click, null );
             IDataObject dataObj = Clipboard.GetDataObject();
             if ( ( dataObj != null )
-            &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
+            && ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
             {
               item.Enabled = true;
             }
@@ -406,7 +410,7 @@ namespace RetroDevStudio.Documents
             contextMenu.Items.Add( "-" );
 
             if ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-            ||   ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+            || ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
             {
               item = AddContextMenuItem( contextMenu.Items, "Build", treeElementBuild_Click, null );
               item.Enabled = ( Core.MainForm.AppState == RetroDevStudio.Types.StudioState.NORMAL );
@@ -427,7 +431,7 @@ namespace RetroDevStudio.Documents
             AddContextMenuItem( contextMenu.Items, "Open Explorer here", openFolderClick, null );
 
             if ( ( global::SourceControl.Controller.IsFunctional )
-            &&   ( project.SourceControl != null ) )
+            && ( project.SourceControl != null ) )
             {
               contextMenu.Items.Add( "-" );
 
@@ -441,11 +445,11 @@ namespace RetroDevStudio.Documents
               }
               AddContextMenuItem( contextMenu.Items, "List changed lines", SourceControlListChangedLines, info );
               if ( project.SourceControl.CanCommit( info.FileState ) )
-              { 
+              {
                 AddContextMenuItem( contextMenu.Items, "Commit Changes", SourceControlCommitChangesSingleFile, info );
               }
               if ( project.SourceControl.CanRevertChanges( info.FileState ) )
-              { 
+              {
                 AddContextMenuItem( contextMenu.Items, "Revert Changes", SourceControlRevertChangesSingleFile, info );
               }
               if ( project.SourceControl.CanRemoveFromRepository( info.FileState ) )
@@ -542,7 +546,7 @@ namespace RetroDevStudio.Documents
       var project = ProjectFromNode( m_ContextMenuNode );
 
       if ( ( project != null )
-      &&   ( project.SourceControl.HasChanges ) )
+      && ( project.SourceControl.HasChanges ) )
       {
         var lines = project.SourceControl.ListModifiedLines( info.Element.DocumentInfo.DocumentFilename );
         foreach ( var line in lines )
@@ -691,7 +695,7 @@ namespace RetroDevStudio.Documents
         {
           // unmark
           unmarkProject.Node.NodeFont = treeProject.Font;
-          unmarkProject.Node.Text     = unmarkProject.Node.Text;
+          unmarkProject.Node.Text = unmarkProject.Node.Text;
 
           Core.Navigating.Solution.ActiveProject = "";
           Core.Navigating.Solution.Modified = true;
@@ -703,8 +707,8 @@ namespace RetroDevStudio.Documents
       }
 
       project.Node.NodeFont = m_BoldFont;
-      project.Node.Text     = project.Node.Text;
-      
+      project.Node.Text = project.Node.Text;
+
       Core.Navigating.Solution.ActiveProject = project.Settings.Name;
       Core.Navigating.Solution.Modified = true;
     }
@@ -799,8 +803,8 @@ namespace RetroDevStudio.Documents
       if ( element != null )
       {
         while ( ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT )
-        &&      ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
-        &&      ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+        && ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
+        && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
         {
           Node = Node.Parent;
           element = ElementFromNode( Node );
@@ -824,6 +828,13 @@ namespace RetroDevStudio.Documents
     void projectAddASMFile_Click( object sender, EventArgs e )
     {
       AddNewFile( ProjectElement.ElementType.ASM_SOURCE, "ASM File", m_ContextMenuNode );
+    }
+
+
+
+    void projectAddTextFile_Click( object sender, EventArgs e )
+    {
+      AddNewFile( ProjectElement.ElementType.TEXT_FILE, "Text File", m_ContextMenuNode );
     }
 
 
@@ -1000,7 +1011,7 @@ namespace RetroDevStudio.Documents
           int   fileLength = memIn.ReadInt32();
 
           string sourceProjectFile  = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
-          sourceProject             = Core.Navigating.Solution.GetProjectByFilename( sourceProjectFile );
+          sourceProject = Core.Navigating.Solution.GetProjectByFilename( sourceProjectFile );
         }
         if ( dataObj.GetDataPresent( "RetroDevStudio.Folder" ) )
         {
@@ -1027,8 +1038,8 @@ namespace RetroDevStudio.Documents
           ProjectElement element = project.CreateElement( ProjectElement.ElementType.FOLDER, parentNodeToInsertTo );
 
           string relativeFilename = fileName;
-          element.Name            = relativeFilename;
-          element.Filename        = relativeFilename;
+          element.Name = relativeFilename;
+          element.Filename = relativeFilename;
 
           while ( parentNodeToInsertTo.Level >= 1 )
           {
@@ -1231,7 +1242,7 @@ namespace RetroDevStudio.Documents
           {
             return;
           }
-          
+
           Core.MainForm.CloseProject( projectToRemove );
           Core.Navigating.Solution.Modified = true;
           Core.MainForm.SaveSolution();
@@ -1310,7 +1321,7 @@ namespace RetroDevStudio.Documents
     void treeElementRename_Click( object sender, EventArgs e )
     {
       if ( ( m_ContextMenuNode != null )
-      &&   ( m_ContextMenuNode.Level >= 0 ) )
+      && ( m_ContextMenuNode.Level >= 0 ) )
       {
         treeProject.SelectedNode = m_ContextMenuNode;
         treeProject.StartLabelEdit();
@@ -1377,7 +1388,7 @@ namespace RetroDevStudio.Documents
       {
         var element = ElementFromNode( childNode );
         if ( ( element != null )
-        &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.GRAPHIC_SCREEN ) )
+        && ( element.DocumentInfo.Type == ProjectElement.ElementType.GRAPHIC_SCREEN ) )
         {
           Debug.Log( "Add project " + element.DocumentInfo.FullPath );
           if ( string.IsNullOrEmpty( basePath ) )
@@ -1419,9 +1430,9 @@ namespace RetroDevStudio.Documents
       var element     = ElementFromNode( m_ContextMenuNode );
 
       if ( ( element != null )
-      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT )
-      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
-      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+      && ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT )
+      && ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
+      && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
       {
         // a real file, select
         string argument = "/select, \"" + element.DocumentInfo.FullPath +"\"";
@@ -1473,7 +1484,7 @@ namespace RetroDevStudio.Documents
 
       m_HighlightedNodes.Add( project, Node );
       Node.NodeFont = m_BoldFont;
-      Node.Text     = Node.Text;
+      Node.Text = Node.Text;
     }
 
 
@@ -1483,8 +1494,8 @@ namespace RetroDevStudio.Documents
       ProjectElement element  = ElementFromNode( e.Node );
       // file nodes only allow editing of non extension part
       if ( ( element != null )
-      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
-      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
+      && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      && ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
       {
         e.Label = GR.Path.GetFileNameWithoutExtension( e.Label );
       }
@@ -1495,7 +1506,7 @@ namespace RetroDevStudio.Documents
     private void treeProject_AfterLabelEdit( DecentForms.ControlBase Sender, DecentForms.TreeView.NodeLabelEditEventArgs e )
     {
       if ( ( e.Node.Level < 0 )
-      ||   ( string.IsNullOrEmpty( e.Label ) ) )
+      || ( string.IsNullOrEmpty( e.Label ) ) )
       {
         e.CancelEdit = true;
         return;
@@ -1512,10 +1523,10 @@ namespace RetroDevStudio.Documents
           Core.Navigating.Solution.RenameProject( project, newText );
 
           Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_RENAMED )
-              {
-                OriginalValue = originalValue,
-                UpdatedValue = newText 
-              }
+          {
+            OriginalValue = originalValue,
+            UpdatedValue = newText
+          }
             );
         }
         return;
@@ -1544,11 +1555,11 @@ namespace RetroDevStudio.Documents
         project.SetModified();
 
         Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_RENAMED )
-            {
-              OriginalValue = originalValue,
-              UpdatedValue  = newText,
-              Element       = element
-            }
+        {
+          OriginalValue = originalValue,
+          UpdatedValue = newText,
+          Element = element
+        }
           );
         return;
       }
@@ -1602,11 +1613,11 @@ namespace RetroDevStudio.Documents
       project.SetModified();
 
       Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_RENAMED )
-          {
-            OriginalValue = GR.Path.GetFileName( oldFilename ),
-            UpdatedValue  = GR.Path.GetFileName( newText ),
-            Element       = element
-          }
+      {
+        OriginalValue = GR.Path.GetFileName( oldFilename ),
+        UpdatedValue = GR.Path.GetFileName( newText ),
+        Element = element
+      }
         );
     }
 
@@ -1623,12 +1634,12 @@ namespace RetroDevStudio.Documents
       if ( e.KeyCode == System.Windows.Forms.Keys.F2 )
       {
         if ( ( treeProject.SelectedNode != null )
-        &&   ( treeProject.SelectedNode.Level >= 0 ) )
+        && ( treeProject.SelectedNode.Level >= 0 ) )
         {
           treeProject.StartLabelEdit();
         }
-        e.Handled           = true;
-        e.SuppressKeyPress  = true;
+        e.Handled = true;
+        e.SuppressKeyPress = true;
       }
       else if ( e.KeyCode == System.Windows.Forms.Keys.Delete )
       {
@@ -1636,21 +1647,21 @@ namespace RetroDevStudio.Documents
         {
           DeleteNode( treeProject.SelectedNode );
         }
-        e.Handled           = true;
-        e.SuppressKeyPress  = true;
+        e.Handled = true;
+        e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.C )
-      &&        ( e.Control ) )
+      && ( e.Control ) )
       {
         if ( treeProject.SelectedNode != null )
         {
           CopyElement( treeProject.SelectedNode );
         }
-        e.Handled           = true;
-        e.SuppressKeyPress  = true;
+        e.Handled = true;
+        e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.V )
-      &&        ( e.Control ) )
+      && ( e.Control ) )
       {
         if ( !m_PasteKeyDown )
         {
@@ -1659,8 +1670,8 @@ namespace RetroDevStudio.Documents
           {
             PasteElement( treeProject.SelectedNode );
           }
-          e.Handled           = true;
-          e.SuppressKeyPress  = true;
+          e.Handled = true;
+          e.SuppressKeyPress = true;
         }
       }
     }
@@ -1744,7 +1755,7 @@ namespace RetroDevStudio.Documents
     private void treeProject_DragDrop( object sender, System.Windows.Forms.DragEventArgs e )
     {
       if ( ( e.Data.GetDataPresent( "DecentForms.TreeView+TreeNode", false ) )
-      &&   ( !string.IsNullOrEmpty( NodeMap ) ) )
+      && ( !string.IsNullOrEmpty( NodeMap ) ) )
       {
         DecentForms.TreeView.TreeNode MovingNode = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
         string[] NodeIndexes = this.NodeMap.Split( '|' );
@@ -1830,7 +1841,7 @@ namespace RetroDevStudio.Documents
     public ProjectElement ElementFromNode( DecentForms.TreeView.TreeNode Node )
     {
       if ( ( Node == null )
-      ||   ( Node.Level == 0 ) )
+      || ( Node.Level == 0 ) )
       {
         return null;
       }
@@ -1858,7 +1869,7 @@ namespace RetroDevStudio.Documents
     {
       ProjectElement    element = ElementFromNode( NodeParent );
       if ( ( element == null )
-      ||   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+      || ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
       {
         // either project or folder
         return true;
@@ -1888,14 +1899,14 @@ namespace RetroDevStudio.Documents
       // and either the nodeover is not the same thing as nodemoving UNLESSS nodeover happens
       // to be the last node in the branch (so we can allow drag & drop below a parent branch)
       if ( ( NodeOver != null )
-      &&   ( ( NodeOver != NodeMoving )
-      ||     ( ( NodeOver.Parent != null )
-      &&       ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
+      && ( ( NodeOver != NodeMoving )
+      || ( ( NodeOver.Parent != null )
+      && ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
       {
         int OffsetY = treeProject.PointToClient( Cursor.Position ).Y - NodeOver.Bounds.Top;
 
         if ( ( OffsetY < ( NodeOver.Bounds.Height / 2 ) )
-        &&   ( NodeOver == treeProject.Nodes[0] ) )
+        && ( NodeOver == treeProject.Nodes[0] ) )
         {
           // not above the first node!
           e.Effect = DragDropEffects.None;
@@ -1951,7 +1962,7 @@ namespace RetroDevStudio.Documents
             // If the node the mouse is over is the last node of the branch we should allow
             // the ability to drop the "nodemoving" node BELOW the parent node
             if ( ( NodeOver.Parent != null )
-            &&   ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) )
+            && ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) )
             {
               int XPos = treeProject.PointToClient( Cursor.Position ).X;
               if ( XPos < NodeOver.Bounds.Left )
@@ -2001,8 +2012,8 @@ namespace RetroDevStudio.Documents
             DrawFolderTopPlaceholders( NodeOver );
           }
           else if ( ( NodeOver.Parent != null )
-          &&        ( NodeOver.Index == 0 ) 
-          &&        ( OffsetY > ( NodeOver.Bounds.Height - ( NodeOver.Bounds.Height / 3 ) ) ) )
+          && ( NodeOver.Index == 0 )
+          && ( OffsetY > ( NodeOver.Bounds.Height - ( NodeOver.Bounds.Height / 3 ) ) ) )
           {
             //this.lblDebug.Text = "folder bottom";
 
@@ -2078,18 +2089,18 @@ namespace RetroDevStudio.Documents
       int RightPos = treeProject.Width - 4;
 
       Point[] LeftTriangle = new Point[5]{
-												   new Point(LeftPos, NodeOver.Bounds.Top - 4),
-												   new Point(LeftPos, NodeOver.Bounds.Top + 4),
-												   new Point(LeftPos + 4, NodeOver.Bounds.Y),
-												   new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
-												   new Point(LeftPos, NodeOver.Bounds.Top - 5)};
+                           new Point(LeftPos, NodeOver.Bounds.Top - 4),
+                           new Point(LeftPos, NodeOver.Bounds.Top + 4),
+                           new Point(LeftPos + 4, NodeOver.Bounds.Y),
+                           new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
+                           new Point(LeftPos, NodeOver.Bounds.Top - 5)};
 
       Point[] RightTriangle = new Point[5]{
-													new Point(RightPos, NodeOver.Bounds.Top - 4),
-													new Point(RightPos, NodeOver.Bounds.Top + 4),
-													new Point(RightPos - 4, NodeOver.Bounds.Y),
-													new Point(RightPos - 4, NodeOver.Bounds.Top - 1),
-													new Point(RightPos, NodeOver.Bounds.Top - 5)};
+                          new Point(RightPos, NodeOver.Bounds.Top - 4),
+                          new Point(RightPos, NodeOver.Bounds.Top + 4),
+                          new Point(RightPos - 4, NodeOver.Bounds.Y),
+                          new Point(RightPos - 4, NodeOver.Bounds.Top - 1),
+                          new Point(RightPos, NodeOver.Bounds.Top - 5)};
 
 
       g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
@@ -2114,18 +2125,18 @@ namespace RetroDevStudio.Documents
       RightPos = treeProject.Width - 4;
 
       Point[] LeftTriangle = new Point[5]{
-												   new Point(LeftPos, NodeOver.Bounds.Bottom - 4),
-												   new Point(LeftPos, NodeOver.Bounds.Bottom + 4),
-												   new Point(LeftPos + 4, NodeOver.Bounds.Bottom),
-												   new Point(LeftPos + 4, NodeOver.Bounds.Bottom - 1),
-												   new Point(LeftPos, NodeOver.Bounds.Bottom - 5)};
+                           new Point(LeftPos, NodeOver.Bounds.Bottom - 4),
+                           new Point(LeftPos, NodeOver.Bounds.Bottom + 4),
+                           new Point(LeftPos + 4, NodeOver.Bounds.Bottom),
+                           new Point(LeftPos + 4, NodeOver.Bounds.Bottom - 1),
+                           new Point(LeftPos, NodeOver.Bounds.Bottom - 5)};
 
       Point[] RightTriangle = new Point[5]{
-													new Point(RightPos, NodeOver.Bounds.Bottom - 4),
-													new Point(RightPos, NodeOver.Bounds.Bottom + 4),
-													new Point(RightPos - 4, NodeOver.Bounds.Bottom),
-													new Point(RightPos - 4, NodeOver.Bounds.Bottom - 1),
-													new Point(RightPos, NodeOver.Bounds.Bottom - 5)};
+                          new Point(RightPos, NodeOver.Bounds.Bottom - 4),
+                          new Point(RightPos, NodeOver.Bounds.Bottom + 4),
+                          new Point(RightPos - 4, NodeOver.Bounds.Bottom),
+                          new Point(RightPos - 4, NodeOver.Bounds.Bottom - 1),
+                          new Point(RightPos, NodeOver.Bounds.Bottom - 5)};
 
 
       g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
@@ -2149,18 +2160,18 @@ namespace RetroDevStudio.Documents
       RightPos = treeProject.Width - 4;
 
       Point[] LeftTriangle = new Point[5]{
-												   new Point(LeftPos, NodeOver.Bounds.Top - 4),
-												   new Point(LeftPos, NodeOver.Bounds.Top + 4),
-												   new Point(LeftPos + 4, NodeOver.Bounds.Y),
-												   new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
-												   new Point(LeftPos, NodeOver.Bounds.Top - 5)};
+                           new Point(LeftPos, NodeOver.Bounds.Top - 4),
+                           new Point(LeftPos, NodeOver.Bounds.Top + 4),
+                           new Point(LeftPos + 4, NodeOver.Bounds.Y),
+                           new Point(LeftPos + 4, NodeOver.Bounds.Top - 1),
+                           new Point(LeftPos, NodeOver.Bounds.Top - 5)};
 
       Point[] RightTriangle = new Point[5]{
-													new Point(RightPos, NodeOver.Bounds.Top - 4),
-													new Point(RightPos, NodeOver.Bounds.Top + 4),
-													new Point(RightPos - 4, NodeOver.Bounds.Y),
-													new Point(RightPos - 4, NodeOver.Bounds.Top - 1),
-													new Point(RightPos, NodeOver.Bounds.Top - 5)};
+                          new Point(RightPos, NodeOver.Bounds.Top - 4),
+                          new Point(RightPos, NodeOver.Bounds.Top + 4),
+                          new Point(RightPos - 4, NodeOver.Bounds.Y),
+                          new Point(RightPos - 4, NodeOver.Bounds.Top - 1),
+                          new Point(RightPos, NodeOver.Bounds.Top - 5)};
 
 
       g.FillPolygon( System.Drawing.Brushes.Black, LeftTriangle );
@@ -2176,11 +2187,11 @@ namespace RetroDevStudio.Documents
       Graphics g = treeProject.CreateGraphics();
       int RightPos = NodeOver.Bounds.Right + 6;
       Point[] RightTriangle = new Point[5]{
-													new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) + 4),
-													new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) + 4),
-													new Point(RightPos - 4, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2)),
-													new Point(RightPos - 4, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) - 1),
-													new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) - 5)};
+                          new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) + 4),
+                          new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) + 4),
+                          new Point(RightPos - 4, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2)),
+                          new Point(RightPos - 4, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) - 1),
+                          new Point(RightPos, NodeOver.Bounds.Y + (NodeOver.Bounds.Height / 2) - 5)};
 
       this.Refresh();
       g.FillPolygon( System.Drawing.Brushes.Black, RightTriangle );
@@ -2345,14 +2356,14 @@ namespace RetroDevStudio.Documents
     {
       if ( treeProject.SelectedNode == null )
       {
-        seBtnAddExisting.Enabled  = false;
-        seBtnAddNewItem.Enabled   = false;
-        seBtnDelete.Enabled       = false;
+        seBtnAddExisting.Enabled = false;
+        seBtnAddNewItem.Enabled = false;
+        seBtnDelete.Enabled = false;
         return;
       }
-      seBtnAddExisting.Enabled  = true;
-      seBtnAddNewItem.Enabled   = true;
-      seBtnDelete.Enabled       = true;
+      seBtnAddExisting.Enabled = true;
+      seBtnAddNewItem.Enabled = true;
+      seBtnDelete.Enabled = true;
     }
 
 
@@ -2375,7 +2386,7 @@ namespace RetroDevStudio.Documents
         }
         var element = ElementFromNode( e.Node );
         if ( ( element != null )
-        &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+        && ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
         {
           Core.Navigating.Solution.ExpandNode( element );
         }
@@ -2395,7 +2406,7 @@ namespace RetroDevStudio.Documents
         }
         var element = ElementFromNode( e.Node );
         if ( ( element != null )
-        &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+        && ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
         {
           Core.Navigating.Solution.CollapseNode( element );
         }
@@ -2597,7 +2608,7 @@ namespace RetroDevStudio.Documents
         return 0;
       }
       if ( ( State == FileState.ModifiedInIndex )
-      ||   ( State == FileState.ModifiedInWorkdir ) )
+      || ( State == FileState.ModifiedInWorkdir ) )
       {
         return 2;
       }
@@ -2785,6 +2796,14 @@ namespace RetroDevStudio.Documents
         e.Action = DragAction.Cancel;
       }
     }
+
+
+
+    private void seBtnAddNewTextFile_Click( object sender, EventArgs e )
+    {
+      AddNewFile( ProjectElement.ElementType.TEXT_FILE, "Text File", treeProject.SelectedNode );
+    }
+
 
 
   }

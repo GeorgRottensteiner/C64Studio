@@ -3287,14 +3287,15 @@ namespace FastColoredTextBoxNS
 
     protected virtual bool OnCreateClipboardData( DataObject data )
     {
+      /*
       var exp = new ExportToHTML();
       exp.UseBr = false;
       exp.UseNbsp = false;
       exp.UseStyleTag = true;
-      string html = "<pre>" + exp.GetHtml( Selection.Clone() ) + "</pre>";
+      string html = "<pre>" + exp.GetHtml( Selection.Clone() ) + "</pre>";*/
 
       data.SetData( DataFormats.UnicodeText, true, Selection.Text );
-      data.SetData( DataFormats.Html, PrepareHtmlForClipboard( html ) );
+      //data.SetData( DataFormats.Html, PrepareHtmlForClipboard( html ) );
       data.SetData( DataFormats.Rtf, new ExportToRTF().GetRtf( Selection.Clone() ) );
       if ( Selection.ColumnSelectionMode )
       {
