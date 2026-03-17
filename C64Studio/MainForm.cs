@@ -4429,7 +4429,7 @@ namespace RetroDevStudio
       {
         foundElement = false;
 
-      retry:
+retry:
         foreach ( DocumentInfo doc in tempSet )
         {
           if ( ( tempSet.ContainsValue( doc ) )
@@ -6294,7 +6294,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6303,7 +6303,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      &&   ( docInfo.BaseDoc != null ) )
+      && ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6347,15 +6347,15 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".GRAPHICSCREEN" )
-      ||        ( extension == ".IFF" )
-      ||        ( extension == ".KOA" )
-      ||        ( extension == ".KLA" ) )
+      || ( extension == ".IFF" )
+      || ( extension == ".KOA" )
+      || ( extension == ".KLA" ) )
       {
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".BAS" )
-      ||        ( extension == ".B" ) )
+      || ( extension == ".B" ) )
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6393,9 +6393,9 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".TXT" )
-      ||        ( extension == ".CFG" )
-      ||        ( extension == ".BAT" )
-      ||        ( extension == ".PS1" ) )
+      || ( extension == ".CFG" )
+      || ( extension == ".BAT" )
+      || ( extension == ".PS1" ) )
       {
         document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;
@@ -8269,6 +8269,13 @@ namespace RetroDevStudio
         return;
       }
       ImportExistingFiles( m_CurrentProject.Node );
+    }
+
+
+
+    private void projectAddNewTextFileToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddNewElement( ProjectElement.ElementType.TEXT_FILE, "Text File", m_CurrentProject, ( m_CurrentProject != null ) ? m_CurrentProject.Node : null );
     }
 
 
