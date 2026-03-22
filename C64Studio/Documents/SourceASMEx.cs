@@ -4533,6 +4533,13 @@ namespace RetroDevStudio.Documents
                          0 );
           }
         }
+        else if ( tokens[0].Content == "}" )
+        {
+          ReplaceText( tokens,
+                       Core.Settings.FormatSettings.FormatStatement( Parser, tokens ),
+                       lineIndex,
+                       0 );
+        }
         else if ( ( !Parser.IsTokenLabel( tokens[0].Type ) )
         &&        ( tokens[0].Content != "*" ) )
         {

@@ -128,8 +128,8 @@ namespace RetroDevStudio.Types
     PRINT,
     SAVE_ALL,
     SAVE_DOCUMENT_AS,
-    FIND_IN_PROJECT,
-    REPLACE_IN_PROJECT,
+    FIND_IN_SOLUTION,
+    REPLACE_IN_SOLUTION,
     HELP,
     REBUILD,
     TOGGLE_BREAKPOINT,
@@ -178,7 +178,9 @@ namespace RetroDevStudio.Types
     RENAME_ALL_REFERENCES,
     TOGGLE_SELECTION,
     FIND_PREVIOUS,
-    CANCEL_BUILD
+    CANCEL_BUILD,
+    FIND_IN_PROJECT,
+    REPLACE_IN_PROJECT
   }
 
   public enum StudioState

@@ -290,12 +290,14 @@ namespace RetroDevStudio
       RegisterFunction( Function.DELETE_LINE, "Delete Line", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND, "Find", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_IN_PROJECT, "Find in Project", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_IN_SOLUTION, "Find in Solution", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_NEXT, "Find Next", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_PREVIOUS, "Find Previous", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_REPLACE, "Replace", FunctionStudioState.ANY );
+      RegisterFunction( Function.REPLACE_IN_PROJECT, "Replace in Project", FunctionStudioState.ANY );
+      RegisterFunction( Function.REPLACE_IN_SOLUTION, "Replace in Solution", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
       RegisterFunction( Function.RENAME_ALL_REFERENCES, "Rename all references", FunctionStudioState.ANY );
-      RegisterFunction( Function.REPLACE_IN_PROJECT, "Replace in Project", FunctionStudioState.ANY );
 
       RegisterFunction( Function.GO_TO_DECLARATION, "Go To Declaration", FunctionStudioState.ANY );
       RegisterFunction( Function.HELP, "Help", FunctionStudioState.ANY );
@@ -1673,8 +1675,8 @@ namespace RetroDevStudio
       SetKeyBindingKey( RetroDevStudio.Types.Function.FIND, Keys.Control | Keys.F );
       SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
       SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
-      SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
-      SetKeyBindingKey( RetroDevStudio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_IN_SOLUTION, Keys.Control | Keys.Shift | Keys.F );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.REPLACE_IN_SOLUTION, Keys.Control | Keys.Shift | Keys.H );
       SetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
       SetKeyBindingKey( RetroDevStudio.Types.Function.PRINT, Keys.Control | Keys.P );
       SetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
@@ -1876,8 +1878,8 @@ namespace RetroDevStudio
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND, Keys.Control | Keys.F );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
-      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
-      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_IN_SOLUTION, Keys.Control | Keys.Shift | Keys.F );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REPLACE_IN_SOLUTION, Keys.Control | Keys.Shift | Keys.H );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.PRINT, Keys.Control | Keys.P );
       ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
