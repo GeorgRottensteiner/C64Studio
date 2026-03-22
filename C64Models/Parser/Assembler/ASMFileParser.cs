@@ -12247,6 +12247,7 @@ namespace RetroDevStudio.Parser
         }
       }
 
+      // detect Opcodes
       foreach ( var token in result )
       {
         string    lowerToken = token.Content.ToLower();
@@ -12264,6 +12265,26 @@ namespace RetroDevStudio.Parser
         if ( m_Processor.Opcodes.ContainsKey( lowerToken ) )
         {
           token.Type = RetroDevStudio.Types.TokenInfo.TokenType.OPCODE;
+
+          // if opcode has an optional postfix (e.g. ,x ,y ,z) color it as opcode as well
+          if ( m_Processor.Opcodes[lowerToken].Any( op => op.HasCommaSeparatedIndex ) )
+          {
+            int   index = result.IndexOf( token );
+            int   endIndex = result.FindIndex( index + 1, t => ( t.Type == TokenInfo.TokenType.SEPARATOR ) && ( t.Content == ":" ) );
+            if ( endIndex == -1 )
+            {
+              endIndex = result.FindIndex( index + 1, t => ( t.Type == TokenInfo.TokenType.COMMENT ) );
+              if ( endIndex == -1 )
+              {
+                endIndex = result.Count;
+              }
+            }
+            if ( ( index + 1 < endIndex - 2 )
+            &&   ( result[endIndex - 2].Content == "," ) )
+            {
+              result[endIndex - 1].Type = TokenInfo.TokenType.OPCODE;
+            }
+          }
         }
       }
 

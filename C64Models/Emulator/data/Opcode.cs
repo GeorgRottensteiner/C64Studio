@@ -263,6 +263,21 @@ namespace Tiny64
 
 
 
+    public bool HasCommaSeparatedIndex
+    {
+      get
+      {
+        if ( ( TrailingTokenCount == 2 )
+        ||   ( TrailingTokenCount == 3 ) )
+        {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
+
     public Opcode( string Mnemonic, ulong ByteValue, AddressingType Addressing )
     {
       this.Mnemonic = Mnemonic;
