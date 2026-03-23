@@ -10,9 +10,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Transactions;
 using System.Windows.Forms;
-using System.Windows.Media.Effects;
 using WeifenLuo.WinFormsUI.Docking;
 
 

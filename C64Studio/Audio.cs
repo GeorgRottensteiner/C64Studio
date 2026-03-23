@@ -1,6 +1,5 @@
 ﻿using GR.Image;
 using GR.Memory;
-using LibGit2Sharp;
 using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
 using System;
