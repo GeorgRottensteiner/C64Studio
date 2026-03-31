@@ -29,52 +29,29 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FindReferences));
-      this.listResults = new System.Windows.Forms.ListView();
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.listResults = new DecentForms.ListControl();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.SuspendLayout();
       // 
       // listResults
       // 
-      this.listResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader1,
-            this.columnHeader4});
+      this.listResults.BorderStyle = DecentForms.BorderStyle.SUNKEN;
       this.listResults.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.listResults.FullRowSelect = true;
-      this.listResults.HideSelection = false;
+      this.listResults.FirstVisibleItemIndex = 0;
+      this.listResults.HasHeader = true;
+      this.listResults.HeaderHeight = 24;
+      this.listResults.ItemHeight = 15;
       this.listResults.Location = new System.Drawing.Point(0, 0);
       this.listResults.Name = "listResults";
+      this.listResults.ScrollAlwaysVisible = false;
+      this.listResults.SelectedIndex = -1;
+      this.listResults.SelectedItem = null;
+      this.listResults.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listResults.Size = new System.Drawing.Size(678, 200);
+      this.listResults.SortColumn = -1;
+      this.listResults.SortOrder = DecentForms.SortOrder.NONE;
       this.listResults.TabIndex = 0;
-      this.listResults.UseCompatibleStateImageBehavior = false;
-      this.listResults.View = System.Windows.Forms.View.Details;
-      this.listResults.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listMessages_ColumnClick);
-      this.listResults.ItemActivate += new System.EventHandler(this.listResults_ItemActivate);
-      // 
-      // columnHeader2
-      // 
-      this.columnHeader2.Text = "Line";
-      this.columnHeader2.Width = 50;
-      // 
-      // columnHeader3
-      // 
-      this.columnHeader3.Text = "File";
-      this.columnHeader3.Width = 200;
-      // 
-      // columnHeader4
-      // 
-      this.columnHeader4.Text = "Text";
-      this.columnHeader4.Width = 400;
-      // 
-      // columnHeader1
-      // 
-      this.columnHeader1.Text = "Add. Info";
-      this.columnHeader1.Width = 100;
+      this.listResults.ItemActivate += new DecentForms.EventHandler(this.listResults_ItemActivate);
       // 
       // FindReferences
       // 
@@ -83,6 +60,8 @@
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "FindReferences";
       this.Text = "Find References";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FindReferences_FormClosing);
+      this.Load += new System.EventHandler(this.FindReferences_Load);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       this.ResumeLayout(false);
 
@@ -90,10 +69,6 @@
 
     #endregion
 
-    private System.Windows.Forms.ListView listResults;
-    private System.Windows.Forms.ColumnHeader columnHeader2;
-    private System.Windows.Forms.ColumnHeader columnHeader3;
-    private System.Windows.Forms.ColumnHeader columnHeader4;
-    private System.Windows.Forms.ColumnHeader columnHeader1;
+    private DecentForms.ListControl listResults;
   }
 }

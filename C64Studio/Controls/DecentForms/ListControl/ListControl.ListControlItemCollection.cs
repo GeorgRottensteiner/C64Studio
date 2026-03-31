@@ -80,6 +80,23 @@ namespace DecentForms
 
 
 
+    public void AddRange( ListControlItem[] Items )
+    {
+      foreach ( var item in Items )
+      {
+        item._Owner = _Owner;
+        foreach ( var subItem in item.SubItems )
+        {
+          subItem._Owner = _Owner;
+        }
+        _Items.Add( item );
+      }
+      _Owner.SortItems();
+      _Owner.ItemsModified();
+    }
+
+
+
     public bool Remove( ListControlItem Item )
     {
       if ( Item.Index == -1 )
@@ -245,15 +262,19 @@ namespace DecentForms
 
 
 
-    internal void SortByColumn( int sortColumn, bool sortAscending )
+    internal void SortByColumn( int sortColumn, SortOrder order )
     {
-      if ( sortAscending )
+      switch ( order )
       {
-        _Items.Sort( ( a, b ) => a.SubItems[sortColumn].Text.CompareTo( b.SubItems[sortColumn].Text ) );
-      }
-      else
-      {
-        _Items.Sort( ( a, b ) => b.SubItems[sortColumn].Text.CompareTo( a.SubItems[sortColumn].Text ) );
+        case SortOrder.ASCENDING:
+          _Items.Sort( ( a, b ) => a.SubItems[sortColumn].Text.CompareTo( b.SubItems[sortColumn].Text ) );
+          break;
+        case SortOrder.DESCENDING:
+          _Items.Sort( ( a, b ) => b.SubItems[sortColumn].Text.CompareTo( a.SubItems[sortColumn].Text ) );
+          break;
+        default:
+          _Items.Sort( ( a, b ) => b.Index - a.Index );
+          break;
       }
     }
 

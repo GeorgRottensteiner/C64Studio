@@ -608,7 +608,9 @@ namespace DecentForms
       CURSOR_SIZE_NWSE,
       CURSOR_SIZE_NESW,
       CURSOR_SIZEALL,
-      CURSOR_TEXT_EDIT
+      CURSOR_TEXT_EDIT,
+      CURSOR_H_SPLIT,
+      CURSOR_V_SPLIT
     };
 
     CursorType  _cursor = CursorType.CURSOR_DEFAULT;
@@ -650,6 +652,12 @@ namespace DecentForms
           break;
         case CursorType.CURSOR_TEXT_EDIT:
           newCursor = Cursors.IBeam;
+          break;
+        case CursorType.CURSOR_H_SPLIT:
+          newCursor = Cursors.HSplit;
+          break;
+        case CursorType.CURSOR_V_SPLIT:
+          newCursor = Cursors.VSplit;
           break;
       }
 
@@ -748,6 +756,13 @@ namespace DecentForms
       }*/
 
       return null;
+    }
+
+
+
+    public Size MeasureText( string text, Font font )
+    {
+      return TextRenderer.MeasureText( text, font );
     }
 
 

@@ -23,8 +23,13 @@ namespace RetroDevStudio.Documents
     {
       InitializeComponent();
 
-      listResults.Sorting = SortOrder.Ascending;
-      listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
+      listResults.Columns.Add( "Line", 50 );
+      listResults.Columns.Add( "File", 200 );
+      listResults.Columns.Add( "Text", 400 );
+      listResults.Columns.Add( "Add. Info", 100 );
+
+      //listResults.Sorting = SortOrder.Ascending;
+      //listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
     }
 
 
@@ -39,7 +44,7 @@ namespace RetroDevStudio.Documents
 
     public void AddSearchResult( FormFindReplace.SearchLocation FoundInfo )
     {
-      ListViewItem    item = new ListViewItem();
+      var item = new DecentForms.ListControlItem();
 
       item.Text = FoundInfo.LineNumber.ToString();
       if ( FoundInfo.FoundInDocument == null )
@@ -61,14 +66,14 @@ namespace RetroDevStudio.Documents
 
     public void AddSearchResults( List<FormFindReplace.SearchLocation> FoundInfos )
     {
-      ListViewItem[]    items = new ListViewItem[FoundInfos.Count];
-      int               i = 0;
+      var   items = new DecentForms.ListControlItem[FoundInfos.Count];
+      int   i = 0;
 
       foreach ( var foundInfo in FoundInfos )
       {
-        items[i] = new ListViewItem();
+        items[i] = new DecentForms.ListControlItem();
 
-        ListViewItem    item = items[i];
+        var item = items[i];
 
         item.Text = foundInfo.LineNumber.ToString();
         if ( foundInfo.FoundInDocument == null )
@@ -91,6 +96,7 @@ namespace RetroDevStudio.Documents
 
 
 
+    /*
     private void listMessages_ColumnClick( object sender, ColumnClickEventArgs e )
     {
       if ( e.Column != listResultsSortColumn )
@@ -98,12 +104,12 @@ namespace RetroDevStudio.Documents
         // Set the sort column to the new column.
         listResultsSortColumn = e.Column;
         // Set the sort order to ascending by default.
-        listResults.Sorting = SortOrder.Ascending;
+        listResults.Sort( e.Column, DecentForms.SortOrder.ASCENDING );
       }
       else
       {
         // Determine what the last sort order was and change it.
-        if ( listResults.Sorting == SortOrder.Ascending )
+        if ( listResults.SortOrder == DecentForms.SortOrder.ASCENDING )
         {
           listResults.Sorting = SortOrder.Descending;
         }
@@ -121,7 +127,7 @@ namespace RetroDevStudio.Documents
         listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
       }
       listResults.Sort();
-    }
+    }*/
 
 
 
@@ -129,7 +135,7 @@ namespace RetroDevStudio.Documents
     {
       StringBuilder   sb = new StringBuilder();
 
-      foreach ( ListViewItem item in listResults.Items )
+      foreach ( var item in listResults.Items )
       {
         sb.Append( item.SubItems[1].Text );
         sb.Append( ';' );
@@ -161,7 +167,7 @@ namespace RetroDevStudio.Documents
       }
 
       listResultsSortColumn = memIn.ReadInt32();
-      listResults.Sorting = (SortOrder)memIn.ReadInt32();
+      listResults.SortOrder = (DecentForms.SortOrder)memIn.ReadInt32();
     }
 
 
@@ -177,13 +183,13 @@ namespace RetroDevStudio.Documents
       }
 
       bufferData.AppendI32( listResultsSortColumn );
-      bufferData.AppendI32( (int)listResults.Sorting );
+      bufferData.AppendI32( (int)listResults.SortOrder );
       return bufferData;
     }
 
 
 
-    private void listResults_ItemActivate( object sender, EventArgs e )
+    private void listResults_ItemActivate( DecentForms.ControlBase control )
     {
       if ( listResults.SelectedIndices.Count == 0 )
       {
@@ -233,7 +239,7 @@ namespace RetroDevStudio.Documents
 
     private void AddReferenceItem( Project Project, Types.ASM.FileInfo ASMInfo, int GlobalLineIndex )
     {
-      var item = new ListViewItem( GlobalLineIndex.ToString() );
+      var item = new DecentForms.ListControlItem( GlobalLineIndex.ToString() );
       item.SubItems.Add( "" );
       item.SubItems.Add( "" );
       item.SubItems.Add( "" );
@@ -365,5 +371,20 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void FindReferences_Load( object sender, EventArgs e )
+    {
+      Core.Settings.DialogSettings.RestoreListViewColumns( "FindReferences", listResults );
+    }
+
+
+
+    private void FindReferences_FormClosing( object sender, FormClosingEventArgs e )
+    {
+      Core.Settings.DialogSettings.StoreListViewColumns( "FindReferences", listResults );
+    }
+
+
+
   }
 }
+

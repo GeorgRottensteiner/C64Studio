@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace DecentForms
     private bool          _HasHeader = true;
 
     private int           _sortColumn = -1;
-    private bool          _sortAscending = true;
+    private SortOrder     _sortOrder = SortOrder.NONE;
 
 
 
@@ -38,6 +39,7 @@ namespace DecentForms
 
 
 
+    public event EventHandler       ItemActivate;
     public event EventHandler       SelectedIndexChanged;
     public event EventHandler       Scrolled;
     public event EventHandler       ColumnClicked;
@@ -83,21 +85,39 @@ namespace DecentForms
       }
       set
       {
-        Sort( value, _sortAscending );
+        Sort( value, _sortOrder );
       }
     }
 
 
 
-    public void Sort( int columnIndex, bool ascending = true )
+    public SortOrder SortOrder
     {
+      get
+      {
+        return _sortOrder;
+      }
+      set
+      {
+        Sort( _sortColumn, _sortOrder );
+      }
+    }
+
+
+
+    public void Sort( int columnIndex = -1, SortOrder order = SortOrder.ASCENDING )
+    {
+      if ( columnIndex == -1 )
+      {
+        columnIndex = _sortColumn;
+      }
       if ( ( columnIndex < 0 )
       ||   ( columnIndex >= Columns.Count ) )
       {
         columnIndex = 0;
       }
       _sortColumn     = columnIndex;
-      _sortAscending  = ascending;
+      _sortOrder      = order;
       SortItems();
     }
 
@@ -110,7 +130,7 @@ namespace DecentForms
       {
         return;
       }
-      Items.SortByColumn( _sortColumn, _sortAscending );
+      Items.SortByColumn( _sortColumn, _sortOrder );
       Invalidate();
     }
 
@@ -182,7 +202,6 @@ namespace DecentForms
         }
         x += _Columns[i].Width;
       }
-      item = -1;
       return ( subItem != -1 );
     }
 
@@ -741,7 +760,7 @@ namespace DecentForms
               if ( ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
               ||   ( hitTestResult == HitTestResult.HEADER_SIZE_RIGHT ) )
               {
-                SetCursor( CursorType.CURSOR_SIZE_WE );
+                SetCursor( CursorType.CURSOR_V_SPLIT );
                 Event.Handled = true;
                 return;
               }
@@ -830,6 +849,33 @@ namespace DecentForms
           }
           Invalidate();
           break;
+        case ControlEvent.EventType.MOUSE_DOUBLE_CLICK:
+          if ( ( Event.MouseButtons & 1 ) != 0 )
+          {
+            if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
+            {
+              switch ( hitTestResult )
+              {
+                case HitTestResult.ITEM:
+                  if ( item != -1 )
+                  {
+                    SelectedIndex = item;
+                    ItemActivate?.Invoke( this );
+                  }
+                  break;
+                case HitTestResult.HEADER_SIZE_LEFT:
+                  if ( subItem > 0 )
+                  {
+                    AutoSizeColumn( subItem - 1 );
+                  }
+                  break;
+                case HitTestResult.HEADER_SIZE_RIGHT:
+                  AutoSizeColumn( subItem );
+                  break;
+              }
+            }
+          }
+          break;
         case ControlEvent.EventType.MOUSE_DOWN:
           {
             Focus();
@@ -900,7 +946,7 @@ namespace DecentForms
           {
             int   newIndex = _SelectedIndex;
             if ( ( _SelectedIndex == -1 )
-            &&   ( Items.Count > 0 ) )
+            && ( Items.Count > 0 ) )
             {
               newIndex = 0;
             }
@@ -917,7 +963,7 @@ namespace DecentForms
           {
             int   newIndex = _SelectedIndex;
             if ( ( _SelectedIndex == -1 )
-            &&   ( Items.Count > 0 ) )
+            && ( Items.Count > 0 ) )
             {
               newIndex = Items.Count - 1;
             }
@@ -934,7 +980,7 @@ namespace DecentForms
           {
             int   newIndex = _SelectedIndex;
             if ( ( _SelectedIndex == -1 )
-            &&   ( Items.Count > 0 ) )
+            && ( Items.Count > 0 ) )
             {
               newIndex = Items.Count - 1;
             }
@@ -951,7 +997,7 @@ namespace DecentForms
           {
             int   newIndex = _SelectedIndex;
             if ( ( _SelectedIndex == -1 )
-            &&   ( Items.Count > 0 ) )
+            && ( Items.Count > 0 ) )
             {
               newIndex = 0;
             }
@@ -984,6 +1030,13 @@ namespace DecentForms
               }
             }
           }
+          else if ( Event.Key == Keys.Enter )
+          {
+            if ( SelectedIndex != -1 )
+            {
+              ItemActivate?.Invoke( this );
+            }
+          }
           break;
         case ControlEvent.EventType.KEY_UP:
           if ( Focused )
@@ -999,16 +1052,46 @@ namespace DecentForms
 
 
 
+    private void AutoSizeColumn( int columnIndex )
+    {
+      if ( ( columnIndex < 0 )
+      &&   ( columnIndex >= _Columns.Count ) )
+      {
+        return;
+      }
+      var column = _Columns[columnIndex];
+
+      int   maxWidth = 5;
+      foreach ( var item in Items )
+      {
+        maxWidth = Math.Max( MeasureText( item.SubItems[columnIndex].Text, Font ).Width, maxWidth );
+      }
+      if ( column.Width != maxWidth )
+      {
+        column.Width = maxWidth;
+        Invalidate();
+      }
+    }
+
+
+
     private void OnColumnClicked( int selectedColumn )
     {
       if ( selectedColumn == _sortColumn )
       {
-        _sortAscending = !_sortAscending;
+        if ( _sortOrder == SortOrder.ASCENDING )
+        {
+          _sortOrder = SortOrder.DESCENDING;
+        }
+        else
+        {
+          _sortOrder = SortOrder.ASCENDING;
+        }
       }
       else
       {
         _sortColumn = selectedColumn;
-        _sortAscending = true;
+        _sortOrder = SortOrder.ASCENDING;
       }
       SortItems();
       Invalidate();
