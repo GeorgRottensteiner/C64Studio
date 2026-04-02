@@ -227,7 +227,9 @@ namespace GR.Image
       public Int32 biYPelsPerMeter;
       public Int32 biClrUsed;
       public Int32 biClrImportant;
-      public Int32 colors;
+      [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+      public uint[] bmiColors; // Color masks
+      //public Int32 colors;
     }
 
     [StructLayout( LayoutKind.Sequential, Pack = 1 )]
@@ -958,6 +960,17 @@ namespace GR.Image
       bmInfo.biPlanes       = 1;
       bmInfo.biBitCount     = (short)BitsPerPixel;
       bmInfo.biCompression  = (int)BitmapCompression.BI_RGB;
+
+      if ( m_PixelFormat == Drawing.PixelFormat.Format32bppArgb )
+      {
+        bmInfo.biCompression = (int)BitmapCompression.BI_BITFIELDS;
+        bmInfo.bmiColors = new uint[3];
+
+        // A8R8G8B8 masks
+        bmInfo.bmiColors[0] = 0x00FF0000; // Red
+        bmInfo.bmiColors[1] = 0x0000FF00; // Green
+        bmInfo.bmiColors[2] = 0x000000FF; // Blue
+      }
 
       if ( !keptPalette )
       {
@@ -2464,6 +2477,7 @@ namespace GR.Image
       {
         CreateBitmap();
       }
+      TODO - this removes alpha!
       return System.Drawing.Bitmap.FromHbitmap( m_Bitmap );
     }
 

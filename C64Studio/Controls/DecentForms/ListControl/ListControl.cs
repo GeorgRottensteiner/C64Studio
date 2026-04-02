@@ -177,6 +177,16 @@ namespace DecentForms
           }
           x += column.Width;
         }
+        // dragging header size at the right end
+        if ( ( hitResult == HitTestResult.NOWHERE )
+        &&   ( _Columns.Count > 0 )
+        &&   ( position.X + _DisplayOffsetX >= x )
+        &&   ( position.X + _DisplayOffsetX <= x + headerDragWidth )
+        &&   ( _Columns.Last().Sizable ) ) 
+        {
+          hitResult = HitTestResult.HEADER_SIZE_RIGHT;
+          subItem = _Columns.Count - 1;
+        }
         return hitResult != HitTestResult.NOWHERE;
       }
 
@@ -790,6 +800,22 @@ namespace DecentForms
         case ControlEvent.EventType.MOUSE_UPDATE:
           if ( !_pushedColumn )
           {
+            if ( _draggingColumn )
+            {
+              if ( _selectedColumn != -1 )
+              {
+                int   newWidth = Event.MouseX - GetHeaderRect( _selectedColumn ).Left + _DisplayOffsetX;
+                if ( newWidth < 5 )
+                {
+                  newWidth = 5;
+                }
+                Columns[_selectedColumn].Width = newWidth;
+                AdjustScrollBars();
+                Invalidate();
+                break;
+              }
+            }
+
             if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
             {
               if ( hitTestResult == HitTestResult.HEADER_COLUMN )
@@ -800,21 +826,7 @@ namespace DecentForms
               {
                 _MouseOverColumn = -1;
               }
-              if ( _draggingColumn )
-              {
-                if ( _selectedColumn != -1 )
-                {
-                  int   newWidth = Event.MouseX - GetHeaderRect( _selectedColumn ).Left + _DisplayOffsetX;
-                  if ( newWidth < 5 )
-                  {
-                    newWidth = 5;
-                  }
-                  Columns[_selectedColumn].Width = newWidth;
-                  AdjustScrollBars();
-                  Invalidate();
-                }
-              }
-              else
+              if ( !_draggingColumn )
               {
                 int   itemBelow = ItemIndexFromPosition( Event.MouseX, Event.MouseY );
                 if ( itemBelow != _MouseOverItem )
@@ -929,15 +941,15 @@ namespace DecentForms
                 Invalidate();
                 return;
               }
-              if ( _draggingColumn )
-              {
-                _draggingColumn = false;
-                _selectedColumn = -1;
-                AdjustScrollBars();
-                Invalidate();
-                return;
-              }
               Invalidate();
+            }
+            if ( _draggingColumn )
+            {
+              _draggingColumn = false;
+              _selectedColumn = -1;
+              AdjustScrollBars();
+              Invalidate();
+              return;
             }
           }
           break;
@@ -1061,7 +1073,7 @@ namespace DecentForms
       }
       var column = _Columns[columnIndex];
 
-      int   maxWidth = 5;
+      int   maxWidth = MeasureText( column.Name, Font ).Width;
       foreach ( var item in Items )
       {
         maxWidth = Math.Max( MeasureText( item.SubItems[columnIndex].Text, Font ).Width, maxWidth );
