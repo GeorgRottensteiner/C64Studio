@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Dialogs;
+using DecentForms;
 
 namespace RetroDevStudio.Documents
 {
@@ -28,8 +29,10 @@ namespace RetroDevStudio.Documents
       listResults.Columns.Add( "Text", 400 );
       listResults.Columns.Add( "Add. Info", 100 );
 
-      //listResults.Sorting = SortOrder.Ascending;
-      //listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
+      listResults.ColumnClicked += listMessages_ColumnClick;
+
+      listResults.SortColumn          = 0;
+      listResults.ListViewItemSorter  = new GR.Forms.NumericListViewItemComparer();
     }
 
 
@@ -91,43 +94,21 @@ namespace RetroDevStudio.Documents
         ++i;
       }
       listResults.Items.AddRange( items );
-      //listResults.Items.Add( item );
     }
 
 
 
-    /*
-    private void listMessages_ColumnClick( object sender, ColumnClickEventArgs e )
+    private void listMessages_ColumnClick( ControlBase control )
     {
-      if ( e.Column != listResultsSortColumn )
+      if ( listResults.SortColumn == 0 )
       {
-        // Set the sort column to the new column.
-        listResultsSortColumn = e.Column;
-        // Set the sort order to ascending by default.
-        listResults.Sort( e.Column, DecentForms.SortOrder.ASCENDING );
+        listResults.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer();
       }
       else
       {
-        // Determine what the last sort order was and change it.
-        if ( listResults.SortOrder == DecentForms.SortOrder.ASCENDING )
-        {
-          listResults.Sorting = SortOrder.Descending;
-        }
-        else
-        {
-          listResults.Sorting = SortOrder.Ascending;
-        }
+        listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer();
       }
-      if ( e.Column == 0 )
-      {
-        listResults.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer( listResultsSortColumn, listResults.Sorting );
-      }
-      else
-      {
-        listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
-      }
-      listResults.Sort();
-    }*/
+    }
 
 
 

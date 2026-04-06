@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace GR
 {
-  public class EnumHelper
+  public static class EnumHelper
   {
     public static string GetDescription( Enum en )
     {
@@ -47,6 +47,15 @@ namespace GR
       var attributes  = memInfo[0].GetCustomAttributes( typeof( T ), false );
 
       return attributes.Cast<T>().ToList();
+    }
+
+
+
+    public static bool HasAttribute<T>( this object obj ) where T : System.Attribute
+    {
+      var typeObj     = obj.GetType();
+      var attributes  = typeObj.GetCustomAttributes( typeof( T ), true );
+      return attributes.Length > 0;
     }
 
 

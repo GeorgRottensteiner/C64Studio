@@ -1,8 +1,10 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
-using RetroDevStudio;
+using System.Text;
 #if NET5_0_OR_GREATER
 using System.Runtime.Versioning;
 #endif
@@ -2477,7 +2479,33 @@ namespace GR.Image
       {
         CreateBitmap();
       }
-      TODO - this removes alpha!
+      if ( PixelFormat == Drawing.PixelFormat.Format32bppArgb )
+      {
+        // to keep alpha we need to manually copy data
+
+        // HACK clone bitmap to keep alpha working (Bitmap from stream doesn't set 32bit with alpha format!)
+        var clearBitmap = new Bitmap( Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb );
+
+        // Lock the bitmap's bits.  
+        var rect = new Rectangle( 0, 0, Width, Height );
+
+        var bmpDataTarget = clearBitmap.LockBits( rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, clearBitmap.PixelFormat );
+
+        // Get the address of the first line.
+        IntPtr ptrSource  = m_ImageData;
+        IntPtr ptrTarget  = bmpDataTarget.Scan0;
+        int bytes         = System.Math.Abs( bmpDataTarget.Stride ) * clearBitmap.Height;
+        byte[] rgbValues  = new byte[bytes];
+
+        // Copy the RGB values into the array.
+        System.Runtime.InteropServices.Marshal.Copy( ptrSource, rgbValues, 0, bytes );
+        System.Runtime.InteropServices.Marshal.Copy( rgbValues, 0, ptrTarget, bytes );
+
+        // Unlock the bits.
+        clearBitmap.UnlockBits( bmpDataTarget );
+
+        return clearBitmap;
+      }
       return System.Drawing.Bitmap.FromHbitmap( m_Bitmap );
     }
 

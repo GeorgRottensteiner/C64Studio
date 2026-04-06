@@ -262,15 +262,29 @@ namespace DecentForms
 
 
 
-    internal void SortByColumn( int sortColumn, SortOrder order )
+    internal void SortByColumn( int sortColumn, SortOrder order, IComparer comparer )
     {
       switch ( order )
       {
         case SortOrder.ASCENDING:
-          _Items.Sort( ( a, b ) => a.SubItems[sortColumn].Text.CompareTo( b.SubItems[sortColumn].Text ) );
+          if ( comparer != null )
+          {
+            _Items.Sort( ( a, b ) => comparer.Compare( a.SubItems[sortColumn].Text, b.SubItems[sortColumn].Text ) );
+          }
+          else
+          {
+            _Items.Sort( ( a, b ) => a.SubItems[sortColumn].Text.CompareTo( b.SubItems[sortColumn].Text ) );
+          }
           break;
         case SortOrder.DESCENDING:
-          _Items.Sort( ( a, b ) => b.SubItems[sortColumn].Text.CompareTo( a.SubItems[sortColumn].Text ) );
+          if ( comparer != null )
+          {
+            _Items.Sort( ( a, b ) => comparer.Compare( b.SubItems[sortColumn].Text, a.SubItems[sortColumn].Text ) );
+          }
+          else
+          {
+            _Items.Sort( ( a, b ) => b.SubItems[sortColumn].Text.CompareTo( a.SubItems[sortColumn].Text ) );
+          }
           break;
         default:
           _Items.Sort( ( a, b ) => b.Index - a.Index );

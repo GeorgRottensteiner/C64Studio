@@ -31,6 +31,8 @@ namespace DecentForms
 
     private int           _sortColumn = -1;
     private SortOrder     _sortOrder = SortOrder.NONE;
+    private System.Collections.IComparer    _itemComparer = null;
+    private bool          _insideColumnClickHandler = false;
 
 
 
@@ -77,6 +79,21 @@ namespace DecentForms
 
 
 
+    public System.Collections.IComparer ListViewItemSorter
+    {
+      get
+      {
+        return _itemComparer;
+      }
+      set
+      {
+        _itemComparer = value;
+        SortItems();
+      }
+    }
+
+
+
     public int SortColumn
     {
       get
@@ -118,6 +135,7 @@ namespace DecentForms
       }
       _sortColumn     = columnIndex;
       _sortOrder      = order;
+
       SortItems();
     }
 
@@ -130,7 +148,11 @@ namespace DecentForms
       {
         return;
       }
-      Items.SortByColumn( _sortColumn, _sortOrder );
+      if ( _insideColumnClickHandler )
+      {
+        return;
+      }
+      Items.SortByColumn( _sortColumn, _sortOrder, _itemComparer );
       Invalidate();
     }
 
@@ -893,26 +915,28 @@ namespace DecentForms
             Focus();
             if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
             {
-              if ( ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
-              ||   ( hitTestResult == HitTestResult.HEADER_SIZE_RIGHT ) )
+              if ( ( Event.MouseButtons & 1 ) == 1 )
               {
-                Capture = true;
-                _draggingColumn = true;
-                _selectedColumn = subItem;
-                if ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
+                if ( ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
+                ||   ( hitTestResult == HitTestResult.HEADER_SIZE_RIGHT ) )
                 {
-                  --_selectedColumn;
+                  Capture = true;
+                  _draggingColumn = true;
+                  _selectedColumn = subItem;
+                  if ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
+                  {
+                    --_selectedColumn;
+                  }
+                  return;
                 }
-                return;
+                else if ( hitTestResult == HitTestResult.HEADER_COLUMN )
+                {
+                  _selectedColumn = subItem;
+                  _pushedColumn = true;
+                  Invalidate();
+                  return;
+                }
               }
-              else if ( hitTestResult == HitTestResult.HEADER_COLUMN )
-              {
-                _selectedColumn = subItem;
-                _pushedColumn   = true;
-                return;
-              }
-              else  // item
-
               if ( hitTestResult == HitTestResult.ITEM )
               {
                 if ( _MouseOverItem != SelectedIndex )
@@ -929,19 +953,22 @@ namespace DecentForms
             Capture = false;
             if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
             {
-              if ( _pushedColumn )
+              if ( ( Event.MouseButtons & 1 ) == 0 )
               {
-                _pushedColumn = false;
-                if ( ( hitTestResult == HitTestResult.HEADER_COLUMN )
-                &&   ( _selectedColumn == _MouseOverColumn ) )
+                if ( _pushedColumn )
                 {
-                  OnColumnClicked( _selectedColumn );
+                  _pushedColumn = false;
+                  if ( ( hitTestResult == HitTestResult.HEADER_COLUMN )
+                  && ( _selectedColumn == _MouseOverColumn ) )
+                  {
+                    OnColumnClicked( _selectedColumn );
+                  }
+                  _selectedColumn = -1;
+                  Invalidate();
+                  return;
                 }
-                _selectedColumn = -1;
                 Invalidate();
-                return;
               }
-              Invalidate();
             }
             if ( _draggingColumn )
             {
@@ -1105,10 +1132,13 @@ namespace DecentForms
         _sortColumn = selectedColumn;
         _sortOrder = SortOrder.ASCENDING;
       }
-      SortItems();
-      Invalidate();
+
+      _insideColumnClickHandler = true;
 
       ColumnClicked?.Invoke( this );
+
+      _insideColumnClickHandler = false;
+      SortItems();
     }
 
 

@@ -22,8 +22,12 @@ namespace RetroDevStudio.Documents
     {
       InitializeComponent();
 
-      listResults.Sorting = SortOrder.Ascending;
-      listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
+      listResults.Columns.Add( "Line", 50 );
+      listResults.Columns.Add( "File", 200 );
+      listResults.Columns.Add( "Text", 400 );
+      listResults.Columns.Add( "Add. Info", 120 );
+      listResults.SortOrder           = DecentForms.SortOrder.NONE;
+      listResults.ListViewItemSorter  = new GR.Forms.NumericListViewItemComparer();
     }
 
 
@@ -38,7 +42,7 @@ namespace RetroDevStudio.Documents
 
     public void AddSearchResult( FormFindReplace.SearchLocation FoundInfo )
     {
-      ListViewItem    item = new ListViewItem();
+      var    item = new DecentForms.ListControlItem();
 
       item.Text = FoundInfo.LineNumber.ToString();
       if ( FoundInfo.FoundInDocument == null )
@@ -60,14 +64,14 @@ namespace RetroDevStudio.Documents
 
     public void AddSearchResults( List<FormFindReplace.SearchLocation> FoundInfos )
     {
-      ListViewItem[]    items = new ListViewItem[FoundInfos.Count];
-      int               i = 0;
+      var   items = new DecentForms.ListControlItem[FoundInfos.Count];
+      int   i = 0;
 
       foreach ( var foundInfo in FoundInfos )
       {
-        items[i] = new ListViewItem();
+        items[i] = new DecentForms.ListControlItem();
 
-        ListViewItem    item = items[i];
+        var item = items[i];
 
         item.Text = foundInfo.LineNumber.ToString();
         if ( foundInfo.FoundInDocument == null )
@@ -94,36 +98,16 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listMessages_ColumnClick( object sender, ColumnClickEventArgs e )
+    private void listMessages_ColumnClick( DecentForms.ControlBase control )
     {
-      if ( e.Column != listResultsSortColumn )
+      if ( listResults.SortColumn == 0 )
       {
-        // Set the sort column to the new column.
-        listResultsSortColumn = e.Column;
-        // Set the sort order to ascending by default.
-        listResults.Sorting = SortOrder.Ascending;
+        listResults.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer();
       }
       else
       {
-        // Determine what the last sort order was and change it.
-        if ( listResults.Sorting == SortOrder.Ascending )
-        {
-          listResults.Sorting = SortOrder.Descending;
-        }
-        else
-        {
-          listResults.Sorting = SortOrder.Ascending;
-        }
+        listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer();
       }
-      if ( e.Column == 0 )
-      {
-        listResults.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer( listResultsSortColumn, listResults.Sorting );
-      }
-      else
-      {
-        listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer( listResultsSortColumn, listResults.Sorting );
-      }
-      listResults.Sort();
     }
 
 
@@ -132,7 +116,7 @@ namespace RetroDevStudio.Documents
     {
       StringBuilder   sb = new StringBuilder();
 
-      foreach ( ListViewItem item in listResults.Items )
+      foreach ( var item in listResults.Items )
       {
         sb.Append( item.SubItems[1].Text );
         sb.Append( ';' );
@@ -164,7 +148,7 @@ namespace RetroDevStudio.Documents
       }
 
       listResultsSortColumn = memIn.ReadInt32();
-      listResults.Sorting = (SortOrder)memIn.ReadInt32();
+      listResults.SortOrder = (DecentForms.SortOrder)memIn.ReadInt32();
     }
 
 
@@ -180,13 +164,13 @@ namespace RetroDevStudio.Documents
       }
 
       bufferData.AppendI32( listResultsSortColumn );
-      bufferData.AppendI32( (int)listResults.Sorting );
+      bufferData.AppendI32( (int)listResults.SortOrder );
       return bufferData;
     }
 
 
 
-    private void listResults_ItemActivate( object sender, EventArgs e )
+    private void listResults_ItemActivate( DecentForms.ControlBase sender )
     {
       if ( listResults.SelectedIndices.Count == 0 )
       {
