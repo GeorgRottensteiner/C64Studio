@@ -2918,7 +2918,7 @@
   </div>
   <a name="source"></a>
   <a name="src"></a>
-  <H2>!SOURCE &lt;file name&gt;[,once]</H2>
+  <H2>!SOURCE &lt;file name&gt;[,once][,again]</H2>
   <div id="mybody">
     This pseudo op includes another source file at the current location. File names are used relative to the file containing the directive.<br />
     <br />
@@ -2926,12 +2926,17 @@
     <br />
     If ONCE is given as parameter C64Studio remembers to include the given file only once. Any further include statement (with ONCE) will skip over the file>.<br />
     <br />
+    If AGAIN is given as parameter duplicate inclusions do not trigger a warning.<br />
+    <br />
     <div id="code">
       <br />      !source "tiles.asm"
       !source &lt;kernal.asm&gt;
 
       !source "tiles.asm",once
       !source &lt;kernal.asm&gt;,once
+
+      !source "tiles.asm",again
+      !source &lt;kernal.asm&gt;,again
     </div>
     <br />
     <br />

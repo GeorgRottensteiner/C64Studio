@@ -16,12 +16,15 @@ namespace RetroDevStudio.Parser
       string          subFilename = "";
       PathResolving   resolving = PathResolving.FROM_FILE;
       bool            singleInclude = false;
+      bool            againInclude = false;
       SourceInfo.SourceInfoSource source = SourceInfo.SourceInfoSource.CODE_INCLUDE;
 
       if ( !ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, false, out List<List<TokenInfo>> parms ) )
       {
         return ParseLineResult.RETURN_NULL;
       }
+
+      string[] values = new string[] { "ONCE", "AGAIN" };
 
       if ( m_AssemblerSettings.IncludeHasOnlyFilename )
       {
@@ -50,16 +53,21 @@ namespace RetroDevStudio.Parser
         if ( ( parms.Count == 2 )
         &&   ( ( parms[1].Count != 1 )
         ||     ( parms[1][0].Type != TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( parms[1][0].Content.ToUpper() != "ONCE" ) ) )
+        ||     ( !values.Contains( parms[1][0].Content.ToUpper() ) ) ) )
         {
           AddError( lineIndex,
                   Types.ErrorCode.E1302_MALFORMED_MACRO,
-                  "Trailing argument must be 'ONCE'",
+                  "Trailing argument must be 'ONCE' or 'AGAIN'",
                   parms[1][0].StartPos,
                   parms[1].Last().EndPos - parms[1][0].StartPos + 1 );
           return ParseLineResult.RETURN_NULL;
         }
-        singleInclude = ( parms.Count == 2 );
+        if ( ( parms.Count >= 2 )
+        &&   ( parms[1].Count == 1 ) )
+        {
+          singleInclude = parms[1][0].Content.ToUpper() == "ONCE";
+          againInclude  = parms[1][0].Content.ToUpper() == "AGAIN";
+        }
       }
       else if ( ( parms.Count >= 1 )
       &&        ( parms.Count <= 2 )
@@ -73,16 +81,21 @@ namespace RetroDevStudio.Parser
         if ( ( parms.Count == 2 )
         &&   ( ( parms[1].Count != 1 )
         ||     ( parms[1][0].Type != TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( parms[1][0].Content.ToUpper() != "ONCE" ) ) )
+        ||     ( !values.Contains( parms[1][0].Content.ToUpper() ) ) ) )
         {
           AddError( lineIndex,
                   Types.ErrorCode.E1302_MALFORMED_MACRO,
-                  "Trailing argument must be 'ONCE'",
+                  "Trailing argument must be 'ONCE' or 'AGAIN'",
                   parms[1][0].StartPos,
                   parms[1].Last().EndPos - parms[1][0].StartPos + 1 );
           return ParseLineResult.RETURN_NULL;
         }
-        singleInclude = ( parms.Count == 2 );
+        if ( ( parms.Count >= 2 )
+        &&   ( parms[1].Count == 1 ) )
+        {
+          singleInclude = parms[1][0].Content.ToUpper() == "ONCE";
+          againInclude  = parms[1][0].Content.ToUpper() == "AGAIN";
+        }
         source = SourceInfo.SourceInfoSource.CODE_INCLUDE_BASELIB;
       }
       else
@@ -195,7 +208,7 @@ namespace RetroDevStudio.Parser
                     lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
           return ParseLineResult.RETURN_NULL;
         }
-        else
+        else if ( !againInclude )
         {
           AddWarning( lineIndex, Types.ErrorCode.E1402_DUPLICATE_INCLUSION, $"Duplicate inclusion of {subFilename}, was already included by {ParentFilename}",
                       lineTokenInfos[0].StartPos,
