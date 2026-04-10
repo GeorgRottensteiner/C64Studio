@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 
 
@@ -8,6 +9,7 @@ namespace DecentForms
 {
   public partial class ListControl
   {
+    [DebuggerDisplay( "Count = {Count}" )]
     public class ListControlItemIndexCollection : IEnumerable<int>, ICollection
     {
       private ListControl         _Owner;

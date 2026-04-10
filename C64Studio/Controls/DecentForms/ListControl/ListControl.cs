@@ -959,7 +959,7 @@ namespace DecentForms
                 {
                   _pushedColumn = false;
                   if ( ( hitTestResult == HitTestResult.HEADER_COLUMN )
-                  && ( _selectedColumn == _MouseOverColumn ) )
+                  &&   ( _selectedColumn == _MouseOverColumn ) )
                   {
                     OnColumnClicked( _selectedColumn );
                   }
@@ -969,6 +969,11 @@ namespace DecentForms
                 }
                 Invalidate();
               }
+            }
+            if ( _pushedColumn )
+            {
+              _pushedColumn = false;
+              Invalidate();
             }
             if ( _draggingColumn )
             {
@@ -1230,7 +1235,7 @@ namespace DecentForms
 
 
 
-    private void FixItemIndices()
+    internal void FixItemIndices()
     {
       int   itemIndex = 0;
       foreach ( var item in Items )

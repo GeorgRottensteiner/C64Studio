@@ -2,11 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 
 
 namespace DecentForms
 {
+  [DebuggerDisplay( "Count = {Count}" )]
   public class ListControlItemCollection : IEnumerable<ListControlItem>
   {
     private ListControl               _Owner;
@@ -42,6 +44,7 @@ namespace DecentForms
     public int Add( ListControlItem Item )
     {
       _Items.Add( Item );
+      Item._Index = _Items.Count - 1;
       Item._Owner = _Owner;
       foreach ( var subItem in Item.SubItems )
       {
@@ -73,6 +76,7 @@ namespace DecentForms
           subItem._Owner = _Owner;
         }
         _Items.Add( newItem );
+        newItem._Index = _Items.Count - 1;
       }
       _Owner.SortItems();
       _Owner.ItemsModified();
@@ -90,6 +94,7 @@ namespace DecentForms
           subItem._Owner = _Owner;
         }
         _Items.Add( item );
+        item._Index = _Items.Count - 1;
       }
       _Owner.SortItems();
       _Owner.ItemsModified();
@@ -125,6 +130,7 @@ namespace DecentForms
           _Owner.SelectedIndex = Item.Index;
         }
       }
+      _Owner.FixItemIndices();
       _Owner.SortItems();
       _Owner.ItemsModified();
       return true;
@@ -156,7 +162,7 @@ namespace DecentForms
           _Owner.SelectedIndex = Index;
         }
       }
-
+      _Owner.FixItemIndices();
       _Owner.SortItems();
       _Owner.ItemsModified();
     }
@@ -189,6 +195,7 @@ namespace DecentForms
           }
         }
         _Items.RemoveRange( Index, Count );
+        _Owner.FixItemIndices();
         _Owner.SortItems();
         _Owner.ItemsModified();
       }
@@ -248,6 +255,7 @@ namespace DecentForms
         subItem._Owner = null;
       }
       _Items.Insert( InsertAtIndex, Item );
+      _Owner.FixItemIndices();
       _Owner.SortItems();
       _Owner.ItemsModified();
     }
@@ -287,7 +295,7 @@ namespace DecentForms
           }
           break;
         default:
-          _Items.Sort( ( a, b ) => b.Index - a.Index );
+          //_Items.Sort( ( a, b ) => b.Index - a.Index );
           break;
       }
     }

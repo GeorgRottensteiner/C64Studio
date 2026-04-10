@@ -420,9 +420,10 @@ namespace DecentForms
       {
         _MouseDown = false;
         _LastMousePos = e.Location;
-        RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, e.X, e.Y, ToButtonBitMask( e.Button ) );
+
+        RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, e.X, e.Y, ToButtonBitMask( Control.MouseButtons ) );
       }
-      base.OnMouseDown( e );
+      base.OnMouseUp( e );
     }
 
 

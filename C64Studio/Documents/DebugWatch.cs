@@ -83,6 +83,7 @@ namespace RetroDevStudio.Documents
         {
           item.SubItems.Add( "(unread)" );
         }
+        m_WatchEntries.Add( Watch );
       }
       else
       {
@@ -376,9 +377,12 @@ namespace RetroDevStudio.Documents
       watchReadFromMemoryToolStripMenuItem.Checked = entry.DisplayMemory;
       displayBoundsToolStripMenuItem.Visible = entry.DisplayMemory;
       toggleEndiannessToolStripMenuItem.Checked = !entry.BigEndian;
+      pinToolStripMenuItem.Visible = false;
 
-      moveDownToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
-      moveUpToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] > 0 );
+      moveToTopToolStripMenuItem.Enabled    = ( listWatch.SelectedIndices[0] > 0 );
+      moveToBottomToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
+      moveDownToolStripMenuItem.Enabled     = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
+      moveUpToolStripMenuItem.Enabled       = ( listWatch.SelectedIndices[0] > 0 );
 
       if ( displayBoundsToolStripMenuItem.Visible )
       {
@@ -665,6 +669,7 @@ namespace RetroDevStudio.Documents
       WatchEntry entry = (WatchEntry)listWatch.SelectedItems[0].Tag;
       var     item = listWatch.Items[index];
 
+      listWatch.Sort( -1, DecentForms.SortOrder.NONE );
       listWatch.Items.RemoveAt( index );
       listWatch.Items.Insert( index - 1, item );
 
@@ -696,6 +701,7 @@ namespace RetroDevStudio.Documents
       WatchEntry entry = (WatchEntry)listWatch.SelectedItems[0].Tag;
       var     item = listWatch.Items[index];
 
+      listWatch.Sort( -1, DecentForms.SortOrder.NONE );
       listWatch.Items.RemoveAt( index );
       listWatch.Items.Insert( index + 1, item );
 
@@ -815,6 +821,71 @@ namespace RetroDevStudio.Documents
     private void listWatch_ColumnClicked( DecentForms.ControlBase Sender )
     {
       m_ListWatchSortColumn = listWatch.SortColumn;
+    }
+
+
+
+    private void moveToTopToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( listWatch.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      if ( listWatch.SelectedIndices[0] == 0 )
+      {
+        return;
+      }
+      int     index = listWatch.SelectedIndices[0];
+
+      WatchEntry entry = (WatchEntry)listWatch.SelectedItems[0].Tag;
+      var     item = listWatch.Items[index];
+
+      listWatch.Sort( -1, DecentForms.SortOrder.NONE );
+      listWatch.Items.RemoveAt( index );
+      listWatch.Items.Insert( 0, item );
+
+      var oldItem = m_WatchEntries[index];
+      m_WatchEntries[index] = m_WatchEntries[0];
+      m_WatchEntries[0] = oldItem;
+    }
+
+
+
+    private void moveToBottomToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( listWatch.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      if ( listWatch.SelectedIndices[0] + 1 == listWatch.Items.Count )
+      {
+        return;
+      }
+      int     index = listWatch.SelectedIndices[0];
+
+      WatchEntry entry = (WatchEntry)listWatch.SelectedItems[0].Tag;
+      var     item = listWatch.Items[index];
+
+      listWatch.Sort( -1, DecentForms.SortOrder.NONE );
+      listWatch.Items.RemoveAt( index );
+      listWatch.Items.Add( item );
+
+      // also exchange in project settings!
+      if ( m_WatchEntries.Count != listWatch.Items.Count )
+      {
+        Debug.Log( "Watch Entry count mismatch!!" );
+      }
+      var oldItem = m_WatchEntries[index];
+
+      m_WatchEntries.RemoveAt( index );
+      m_WatchEntries.Add( oldItem );
+    }
+
+
+
+    private void pinToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+
     }
 
 

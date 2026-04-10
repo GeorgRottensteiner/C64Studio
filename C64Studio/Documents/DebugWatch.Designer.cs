@@ -55,6 +55,9 @@
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
       this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.copySelectedValuesToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.pinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.contextDebugItem.SuspendLayout();
       this.SuspendLayout();
@@ -68,6 +71,7 @@
       this.listWatch.HasHeader = true;
       this.listWatch.HeaderHeight = 24;
       this.listWatch.ItemHeight = 15;
+      this.listWatch.ListViewItemSorter = null;
       this.listWatch.Location = new System.Drawing.Point(0, 0);
       this.listWatch.Name = "listWatch";
       this.listWatch.ScrollAlwaysVisible = false;
@@ -75,7 +79,8 @@
       this.listWatch.SelectedItem = null;
       this.listWatch.SelectionMode = DecentForms.SelectionMode.ONE;
       this.listWatch.Size = new System.Drawing.Size(608, 195);
-      this.listWatch.SortColumn = -1;
+      this.listWatch.SortColumn = 0;
+      this.listWatch.SortOrder = DecentForms.SortOrder.NONE;
       this.listWatch.TabIndex = 0;
       this.listWatch.ColumnClicked += new DecentForms.EventHandler(this.listWatch_ColumnClicked);
       this.listWatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listWatch_KeyDown);
@@ -88,8 +93,11 @@
             this.watchReadFromMemoryToolStripMenuItem,
             this.toggleEndiannessToolStripMenuItem,
             this.toolStripSeparator1,
+            this.pinToolStripMenuItem,
+            this.moveToTopToolStripMenuItem,
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem,
+            this.moveToBottomToolStripMenuItem,
             this.toolStripSeparator2,
             this.removeEntryToolStripMenuItem,
             this.removeAllToolStripMenuItem,
@@ -97,7 +105,7 @@
             this.copyToClipboardToolStripMenuItem,
             this.copySelectedValuesToClipboardToolStripMenuItem});
       this.contextDebugItem.Name = "contextDebugItem";
-      this.contextDebugItem.Size = new System.Drawing.Size(264, 242);
+      this.contextDebugItem.Size = new System.Drawing.Size(264, 330);
       this.contextDebugItem.Opening += new System.ComponentModel.CancelEventHandler(this.contextDebugItem_Opening);
       // 
       // displayAsToolStripMenuItem
@@ -265,6 +273,27 @@
       this.copySelectedValuesToClipboardToolStripMenuItem.Text = "Copy selected values to Clipboard";
       this.copySelectedValuesToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySelectedValuesToClipboardToolStripMenuItem_Click);
       // 
+      // moveToTopToolStripMenuItem
+      // 
+      this.moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
+      this.moveToTopToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+      this.moveToTopToolStripMenuItem.Text = "Move to Top";
+      this.moveToTopToolStripMenuItem.Click += new System.EventHandler(this.moveToTopToolStripMenuItem_Click);
+      // 
+      // moveToBottomToolStripMenuItem
+      // 
+      this.moveToBottomToolStripMenuItem.Name = "moveToBottomToolStripMenuItem";
+      this.moveToBottomToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+      this.moveToBottomToolStripMenuItem.Text = "Move to Bottom";
+      this.moveToBottomToolStripMenuItem.Click += new System.EventHandler(this.moveToBottomToolStripMenuItem_Click);
+      // 
+      // pinToolStripMenuItem
+      // 
+      this.pinToolStripMenuItem.Name = "pinToolStripMenuItem";
+      this.pinToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+      this.pinToolStripMenuItem.Text = "Pin";
+      this.pinToolStripMenuItem.Click += new System.EventHandler(this.pinToolStripMenuItem_Click);
+      // 
       // DebugWatch
       // 
       this.ClientSize = new System.Drawing.Size(608, 195);
@@ -305,5 +334,8 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem copySelectedValuesToClipboardToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem pinToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem moveToBottomToolStripMenuItem;
   }
 }
