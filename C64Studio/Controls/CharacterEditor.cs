@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using RetroDevStudio.Formats;
-using GR.Image;
-using RetroDevStudio;
-using RetroDevStudio.Types;
+﻿using GR.Collections;
 using GR.Forms;
 using GR.Generic;
-using GR.Collections;
+using GR.Image;
 using GR.Memory;
+using RetroDevStudio;
+using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
 
 namespace RetroDevStudio.Controls
 {
@@ -254,7 +255,6 @@ namespace RetroDevStudio.Controls
         {
           pastePos = 0;
         }
-        bool  firstEntry = true;
         var   modifiedChars = new List<int>();
         foreach ( var entry in clipList.Entries )
         {
@@ -272,8 +272,28 @@ namespace RetroDevStudio.Controls
           }
 
           modifiedChars.Add( pastePos );
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), firstEntry );
-          firstEntry = false;
+        }
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, modifiedChars ) );
+
+        pastePos = panelCharacters.SelectedIndex;
+        if ( pastePos == -1 )
+        {
+          pastePos = 0;
+        }
+        foreach ( var entry in clipList.Entries )
+        {
+          int indexGap =  entry.Index;
+          pastePos += indexGap;
+
+          if ( Lookup.IsECMMode( m_Project.Mode ) )
+          {
+            pastePos %= 64;
+          }
+
+          if ( pastePos >= m_Project.Characters.Count )
+          {
+            break;
+          }
 
           var targetTile = m_Project.Characters[pastePos].Tile;
 
@@ -365,7 +385,23 @@ namespace RetroDevStudio.Controls
             }
 
             modifiedChars.Add( pastePos );
-            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), i == 0 );
+          }
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, modifiedChars ) );
+
+          pastePos = panelCharacters.SelectedIndex;
+          if ( pastePos == -1 )
+          {
+            pastePos = 0;
+          }
+          for ( int i = 0; i < rangeCount; ++i )
+          {
+            int indexGap = memIn.ReadInt32();
+            pastePos += indexGap;
+
+            if ( pastePos >= m_Project.Characters.Count )
+            {
+              break;
+            }
 
             var mode = (TextCharMode)memIn.ReadInt32();
             m_Project.Characters[pastePos].Tile.CustomColor = (byte)memIn.ReadInt32();
@@ -477,13 +513,13 @@ namespace RetroDevStudio.Controls
 
 
 
-    public void CharacterChanged( int CharIndex, int Count )
+    public void CharacterChanged( List<int> modifiedChars )
     {
       DoNotUpdateFromControls = true;
 
       bool currentCharChanged = false;
 
-      for ( int charIndex = CharIndex; charIndex < CharIndex + Count; ++charIndex )
+      foreach ( var charIndex in modifiedChars  )
       {
         RebuildAffectedChar( charIndex );
         if ( m_CurrentChar == charIndex )
@@ -503,11 +539,6 @@ namespace RetroDevStudio.Controls
       RefreshCategoryCounts();
       DoNotUpdateFromControls = false;
 
-      var   modifiedChars = new List<int>();
-      for ( int i = 0; i < Count; ++i )
-      {
-        modifiedChars.Add( CharIndex + i );
-      }
       RaiseModifiedEvent( modifiedChars );
     }
 
@@ -646,6 +677,35 @@ namespace RetroDevStudio.Controls
           {
             continue;
           }
+          modifiedChars.Add( currentTargetChar );
+        }
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, modifiedChars ), !hadFirstUndoStep );
+      hadFirstUndoStep = true;
+
+      for ( int j = 0; j < charsY; ++j )
+      {
+        for ( int i = 0; i < charsX; ++i )
+        {
+          if ( pasteAsBlock )
+          {
+            int localCharX = ( curCharX + i ) % 16;
+            int localCharY = curCharY + j;
+            if ( curCharX + i >= 16 )
+            {
+              // wrap
+              localCharY += charsY * ( ( curCharX + i ) / 16 );
+            }
+            if ( localCharY >= 16 )
+            {
+              continue;
+            }
+            currentTargetChar = localCharY * 16 + localCharX;
+          }
+          else if ( currentTargetChar >= m_Project.TotalNumberOfCharacters )
+          {
+            continue;
+          }
 
           int copyWidth = mappedImage.Width - i * 8;
           if ( copyWidth > 8 )
@@ -658,11 +718,6 @@ namespace RetroDevStudio.Controls
             copyHeight = 8;
           }
           GR.Image.FastImage singleChar = mappedImage.GetImage( i * 8, j * 8, copyWidth, copyHeight ) as GR.Image.FastImage;
-
-          modifiedChars.Add( currentTargetChar );
-
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, currentTargetChar, 1 ), !hadFirstUndoStep );
-          hadFirstUndoStep = true;
 
           ImportChar( singleChar, currentTargetChar, ForceMulticolor );
           panelCharacters.InvalidateItemRect( currentTargetChar );
@@ -1199,7 +1254,7 @@ namespace RetroDevStudio.Controls
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex, 1 );
+        var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex );
         if ( affectedChar.Tile.SetPixel( charX, charY, newColor ) )
         {
           if ( m_ButtonReleased )
@@ -1359,18 +1414,26 @@ namespace RetroDevStudio.Controls
         selectedChars.Add( m_CurrentChar );
       }
 
-      bool  firstChar = true;
       var   modifiedChars = new List<int>();
       foreach ( var selChar in selectedChars )
       {
         if ( ( categoryIndex != -1 )
         &&   ( m_Project.Characters[selChar].Category != categoryIndex ) )
         {
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), firstChar );
-          firstChar = false;
-
-          m_Project.Characters[selChar].Category = categoryIndex;
           modifiedChars.Add( selChar );
+        }
+      }
+      if ( modifiedChars.Count > 0 )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, modifiedChars ) );
+      }
+
+      foreach ( var selChar in selectedChars )
+      {
+        if ( ( categoryIndex != -1 )
+        &&   ( m_Project.Characters[selChar].Category != categoryIndex ) )
+        {
+          m_Project.Characters[selChar].Category = categoryIndex;
         }
       }
       if ( modifiedChars.Count > 0 )
@@ -1430,11 +1493,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         for ( int y = 0; y < Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ); ++y )
         {
           byte result = (byte)( ~m_Project.Characters[index].Tile.Data.ByteAt( y ) );
@@ -1548,11 +1609,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var processedChar = m_Project.Characters[index];
 
         var tile = m_Project.Characters[index].Tile;
@@ -1577,11 +1636,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         for ( int x = 0; x < tile.Width; x += Lookup.PixelWidth( tile.Mode ) )
         {
@@ -1611,11 +1668,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         var resultTile = new GraphicTile( tile );
         int   sideSize = Math.Max( tile.Width, tile.Height );
@@ -1652,11 +1707,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         var resultTile = new GraphicTile( tile );
 
@@ -1694,11 +1747,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         for ( int x = 0; x < tile.Width; x += Lookup.PixelWidth( tile.Mode ) )
         {
@@ -1742,11 +1793,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         for ( int x = 0; x < tile.Width; x += Lookup.PixelWidth( tile.Mode ) )
         {
@@ -1769,11 +1818,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         for ( int y = 0; y < tile.Height; ++y )
         {
@@ -1812,11 +1859,9 @@ namespace RetroDevStudio.Controls
     {
       List<int>     selectedChars = Uniquify( panelCharacters.SelectedIndices );
 
-      UndoManager.StartUndoGroup();
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
-
         var tile = m_Project.Characters[index].Tile;
         for ( int y = 0; y < tile.Height; ++y )
         {
@@ -1912,7 +1957,12 @@ namespace RetroDevStudio.Controls
         if ( !DoNotAddUndo )
         {
           Debug.Log( "comboCharsetMode_SelectedIndexChanged ab" );
-          UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ), true );
+          var affectedChars = new List<int>();
+          for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+          {
+            affectedChars.Add( i );
+          }
+          UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ), true );
           UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ), false );
         }
         m_Project.Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
@@ -2119,7 +2169,12 @@ namespace RetroDevStudio.Controls
       m_Project.Colors = new ColorSettings( Colors );
 
       // make sure all chars still have valid palette indices!
-      UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
@@ -2227,19 +2282,16 @@ namespace RetroDevStudio.Controls
               }
 
               bool    modified = false;
+              UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
               foreach ( int selChar in selectedChars )
               {
                 if ( m_Project.Characters[selChar].Tile.CustomColor != CustomColor )
                 {
-                  {
-                    UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), modified == false );
-
-                    m_Project.Characters[selChar].Tile.CustomColor = (byte)CustomColor;
-                    m_Project.Characters[selChar].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[selChar].Tile.CustomColor );
-                    RebuildCharImage( selChar );
-                    modified = true;
-                    panelCharacters.InvalidateItemRect( selChar );
-                  }
+                  m_Project.Characters[selChar].Tile.CustomColor = (byte)CustomColor;
+                  m_Project.Characters[selChar].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[selChar].Tile.CustomColor );
+                  RebuildCharImage( selChar );
+                  modified = true;
+                  panelCharacters.InvalidateItemRect( selChar );
                 }
               }
               if ( modified )
@@ -2393,16 +2445,14 @@ namespace RetroDevStudio.Controls
     {
       bool  wasModified = false;
       var   selectedChars = panelCharacters.SelectedIndices;
-      bool  firstUndoStep = true;
 
       DoNotUpdateFromControls = true;
+
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selectedChars ) );
 
       foreach ( int i in selectedChars )
       {
         wasModified = true;
-
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i, 1 ), firstUndoStep );
-        firstUndoStep = false;
 
         for ( int j = 0; j < m_Project.Characters[i].Tile.Data.Length; ++j )
         {
@@ -2499,7 +2549,12 @@ namespace RetroDevStudio.Controls
         ++insertCharIndex;
       }
 
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       // ..and charset
       List<CharData>    origCharData = new List<CharData>();
@@ -2666,7 +2721,12 @@ namespace RetroDevStudio.Controls
         return;
       }
 
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       int category = (int)listCategories.SelectedItems[0].Tag;
       int collapsedCount = 0;
@@ -2719,7 +2779,12 @@ namespace RetroDevStudio.Controls
 
     private void btnSortCategories_Click( DecentForms.ControlBase Sender )
     {
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       int[]   charMapNewToOld = new int[256];
       int[]   charMapOldToNew = new int[256];
@@ -2764,7 +2829,12 @@ namespace RetroDevStudio.Controls
         return;
       }
 
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       int category = (int)listCategories.SelectedItems[0].Tag;
       int catTarget = GR.Convert.ToI32( editCollapseIndex.Text );
@@ -3179,7 +3249,12 @@ namespace RetroDevStudio.Controls
       }
 
 
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       // ..and charset
       List<CharData>    origCharData = new List<CharData>();
@@ -3232,7 +3307,12 @@ namespace RetroDevStudio.Controls
       var indices = SelectedIndices;
       int numBytesOfChar = Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode );
 
-      var undo1 = new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedChars ) );
 
       foreach ( var i in indices )
       {
@@ -3240,7 +3320,6 @@ namespace RetroDevStudio.Controls
         m_Project.Characters[i].Tile.CustomColor = 1;
         RebuildCharImage( i );
       }
-      UndoManager.AddUndoTask( undo1 );
       RaiseModifiedEvent( indices );
     }
 

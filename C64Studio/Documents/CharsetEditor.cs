@@ -105,7 +105,7 @@ namespace RetroDevStudio.Documents
 
     internal void CharacterChanged( int charIndex )
     {
-      characterEditor.CharacterChanged( charIndex, 1 );
+      characterEditor.CharacterChanged( new List<int> { charIndex } );
     }
 
 
@@ -782,7 +782,7 @@ namespace RetroDevStudio.Documents
         ImportIndices   = ListOfImportIndices()
       };
 
-      var undo1 = new Undo.UndoCharacterEditorCharChange( characterEditor, m_Charset, 0, m_Charset.TotalNumberOfCharacters );
+      var undo1 = new Undo.UndoCharacterEditorCharChange( characterEditor, m_Charset, importInfo.ImportIndices );
       var undo2 = new Undo.UndoCharacterEditorValuesChange( characterEditor, m_Charset );
 
       if ( m_ImportForm.HandleImport( importInfo, this ) )

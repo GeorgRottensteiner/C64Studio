@@ -2788,6 +2788,22 @@ namespace RetroDevStudio.Documents
       SetupColorPickerDialog();
       if ( changedMode )
       {
+        // re-mode characters
+        var mode = Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode );
+
+        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+        {
+          m_CharsetScreen.CharSet.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( mode, m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor );
+          m_CharsetScreen.CharSet.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( mode ) );
+          m_CharsetScreen.CharSet.Characters[i].Tile.Width = m_CharacterWidth;
+          m_CharsetScreen.CharSet.Characters[i].Tile.Height = m_CharacterHeight;
+          m_CharsetScreen.CharSet.Characters[i].Tile.Image.Resize( m_CharacterWidth, m_CharacterHeight );
+          if ( m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor >= Lookup.NumberOfColorsInCharacter( mode ) )
+          {
+            m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor %= (byte)Lookup.NumberOfColorsInCharacter( mode );
+          }
+        }
+
         OnCharsetScreenModeChanged();
         SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
         RedrawFullScreen();
@@ -3728,7 +3744,12 @@ namespace RetroDevStudio.Documents
 
     public void ImportCharsetFromImage( GR.Image.IImage Image )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( charEditor, m_CharsetScreen.CharSet, 0, m_CharsetScreen.CharSet.TotalNumberOfCharacters ) );
+      var affectedChars = new List<int>();
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        affectedChars.Add( i );
+      }
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( charEditor, m_CharsetScreen.CharSet, affectedChars ) );
 
       int   charWidth   = Lookup.CharacterWidthInPixel( m_CharsetScreen.CharSet.Characters[0].Tile.Mode );
       int   charHeight  = Lookup.CharacterHeightInPixel( m_CharsetScreen.CharSet.Characters[0].Tile.Mode );

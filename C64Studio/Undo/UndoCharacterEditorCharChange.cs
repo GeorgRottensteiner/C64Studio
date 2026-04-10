@@ -8,26 +8,38 @@ namespace RetroDevStudio.Undo
   {
     public CharacterEditor        Editor = null;
     public CharsetProject         Project = null;
-    public int                    CharIndex = 0;
-    public int                    CharCount = 0;
+    public List<int>              ModifiedCharacterIndices = new List<int>();
     public List<CharData>         Chars = new List<CharData>();
 
 
 
-    public UndoCharacterEditorCharChange( CharacterEditor Editor, CharsetProject Project, int CharIndex, int Count )
+    public UndoCharacterEditorCharChange( CharacterEditor Editor, CharsetProject Project, int modifiedChar )
+    {
+      Setup( Editor, Project, new List<int> { modifiedChar } );
+    }
+
+
+
+    public UndoCharacterEditorCharChange( CharacterEditor Editor, CharsetProject Project, List<int> modifiedChars )
+    {
+      Setup( Editor, Project, modifiedChars );
+    }
+
+
+
+    private void Setup( CharacterEditor Editor, CharsetProject Project, List<int> modifiedChars )
     {
       this.Editor = Editor;
       this.Project = Project;
-      this.CharIndex = CharIndex;
-      this.CharCount = Count;
+      ModifiedCharacterIndices = modifiedChars;
 
-      for ( int i = 0; i < Count; ++i )
+      foreach ( var charIndex in ModifiedCharacterIndices )
       {
         var charData = new CharData();
-        charData.Tile.Data        = new GR.Memory.ByteBuffer( Project.Characters[CharIndex + i].Tile.Data );
-        charData.Tile.CustomColor = Project.Characters[CharIndex + i].Tile.CustomColor;
-        charData.Category         = Project.Characters[CharIndex + i].Category;
-        charData.Index            = CharIndex + i;
+        charData.Tile.Data        = new GR.Memory.ByteBuffer( Project.Characters[charIndex].Tile.Data );
+        charData.Tile.CustomColor = Project.Characters[charIndex].Tile.CustomColor;
+        charData.Category         = Project.Characters[charIndex].Category;
+        charData.Index            = charIndex;
 
         Chars.Add( charData );
       }
@@ -47,23 +59,24 @@ namespace RetroDevStudio.Undo
 
     public override UndoTask CreateComplementaryTask()
     {
-      return new UndoCharacterEditorCharChange( Editor, Project, CharIndex, CharCount );
+      return new UndoCharacterEditorCharChange( Editor, Project, ModifiedCharacterIndices );
     }
 
 
 
     public override void Apply()
     {
-      for ( int i = 0; i < CharCount; ++i )
+      for ( int i = 0; i < ModifiedCharacterIndices.Count; ++i )
       {
+        var charIndex = ModifiedCharacterIndices[i];
         var charData = Chars[i];
 
-        Project.Characters[CharIndex + i].Tile.Data = new GR.Memory.ByteBuffer( charData.Tile.Data );
-        Project.Characters[CharIndex + i].Tile.CustomColor = charData.Tile.CustomColor;
-        Project.Characters[CharIndex + i].Category = charData.Category;
-        Project.Characters[CharIndex + i].Index = charData.Index;
+        Project.Characters[charIndex].Tile.Data         = new GR.Memory.ByteBuffer( charData.Tile.Data );
+        Project.Characters[charIndex].Tile.CustomColor  = charData.Tile.CustomColor;
+        Project.Characters[charIndex].Category          = charData.Category;
+        Project.Characters[charIndex].Index             = charData.Index;
       }
-      Editor.CharacterChanged( CharIndex, CharCount );
+      Editor.CharacterChanged( ModifiedCharacterIndices );
     }
   }
 }
