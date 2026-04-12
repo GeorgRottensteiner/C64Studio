@@ -1756,10 +1756,10 @@ namespace RetroDevStudio.Documents
     private void treeProject_DragDrop( object sender, System.Windows.Forms.DragEventArgs e )
     {
       if ( ( e.Data.GetDataPresent( "DecentForms.TreeView+TreeNode", false ) )
-      && ( !string.IsNullOrEmpty( NodeMap ) ) )
+      &&   ( !string.IsNullOrEmpty( NodeMap ) ) )
       {
         DecentForms.TreeView.TreeNode MovingNode = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
-        string[] NodeIndexes = this.NodeMap.Split( '|' );
+        string[] NodeIndexes = NodeMap.Split( '|' );
         var InsertCollection = treeProject.Nodes;
         for ( int i = 0; i < NodeIndexes.Length - 1; i++ )
         {
@@ -1783,16 +1783,17 @@ namespace RetroDevStudio.Documents
           // reorder in element list
           Project draggedProject = ProjectFromNode( draggedNode );
 
-          draggedProject.Elements.Remove( draggedElement );
-
-          ProjectElement targetElement = ElementFromNode( draggedNode.Parent );
-          if ( targetElement == null )
+          // rebuild element list from nodes
+          if ( draggedProject.Node.Nodes.Count > 0 )
           {
-            draggedProject.Elements.Add( draggedElement );
-          }
-          else
-          {
-            draggedProject.Elements.Insert( draggedProject.Elements.IndexOf( targetElement ) + 1, draggedElement );
+            draggedProject.Elements.Clear();
+            var node = draggedProject.Node.Nodes[0];
+            while ( ( node != null )
+            &&      ( ProjectFromNode( node ) == draggedProject ) )
+            {
+              draggedProject.Elements.Add( ElementFromNode( node ) );
+              node = DecentForms.TreeView.GetNextNode( node );
+            }
           }
           draggedProject.SetModified();
         }
@@ -1897,12 +1898,12 @@ namespace RetroDevStudio.Documents
       e.Effect = DragDropEffects.Move;
 
       // A bit long, but to summarize, process the following code only if the nodeover is null
-      // and either the nodeover is not the same thing as nodemoving UNLESSS nodeover happens
+      // and either the nodeover is not the same thing as nodemoving UNLESS nodeover happens
       // to be the last node in the branch (so we can allow drag & drop below a parent branch)
       if ( ( NodeOver != null )
-      && ( ( NodeOver != NodeMoving )
-      || ( ( NodeOver.Parent != null )
-      && ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
+      &&   ( ( NodeOver != NodeMoving )
+      ||     ( ( NodeOver.Parent != null )
+      &&       ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
       {
         int OffsetY = treeProject.PointToClient( Cursor.Position ).Y - NodeOver.Bounds.Top;
 
@@ -1925,8 +1926,6 @@ namespace RetroDevStudio.Documents
         {
           if ( OffsetY < ( NodeOver.Bounds.Height / 2 ) )
           {
-            //this.lblDebug.Text = "top";
-
             DecentForms.TreeView.TreeNode tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
@@ -1947,8 +1946,6 @@ namespace RetroDevStudio.Documents
           }
           else
           {
-            //this.lblDebug.Text = "bottom";
-
             DecentForms.TreeView.TreeNode tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
@@ -1960,10 +1957,11 @@ namespace RetroDevStudio.Documents
               tnParadox = tnParadox.Parent;
             }
             DecentForms.TreeView.TreeNode ParentDragDrop = null;
+
             // If the node the mouse is over is the last node of the branch we should allow
             // the ability to drop the "nodemoving" node BELOW the parent node
             if ( ( NodeOver.Parent != null )
-            && ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) )
+            &&   ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) )
             {
               int XPos = treeProject.PointToClient( Cursor.Position ).X;
               if ( XPos < NodeOver.Bounds.Left )
