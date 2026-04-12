@@ -1,16 +1,17 @@
-﻿using System;
+﻿using RetroDevStudio.Dialogs;
+using RetroDevStudio.Types;
+using SourceControl;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-using RetroDevStudio.Dialogs;
-using RetroDevStudio.Types;
 using System.Linq;
-using SourceControl;
-using static System.Windows.Forms.AxHost;
 using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
 using System.Xml.Linq;
+using static RetroDevStudio.Documents.BaseDocument;
+using static System.Windows.Forms.AxHost;
 
 
 
@@ -803,8 +804,8 @@ namespace RetroDevStudio.Documents
       if ( element != null )
       {
         while ( ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT )
-        && ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
-        && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+        &&      ( element.DocumentInfo.Type != ProjectElement.ElementType.SOLUTION )
+        &&      ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
         {
           Node = Node.Parent;
           element = ElementFromNode( Node );
@@ -1110,7 +1111,6 @@ namespace RetroDevStudio.Documents
           ProjectElement element = project.CreateElement( elementToCopy.DocumentInfo.Type, parentNodeToInsertTo );
 
           var origSettings = sourceProject.ElementToBuffer( elementToCopy );
-          //var copiedElement = new ProjectElement();
 
           var origSettingsReader = origSettings.MemoryReader();
           // skip 4 fields
@@ -1133,13 +1133,14 @@ namespace RetroDevStudio.Documents
           if ( element.Document != null )
           {
             element.Document.SetDocumentFilename( relativeFilename );
+            element.Document.ToolTipText = element.DocumentInfo.FullPath;
           }
           project.SetModified();
         }
         if ( dataObj.GetDataPresent( "FileDrop" ) )
         {
           // pasted a file (name) from explorer
-          string[] files = dataObj.GetData("FileDrop") as string[];
+          string[] files = dataObj.GetData( "FileDrop" ) as string[];
           if ( files == null )
           {
             return;
@@ -1651,7 +1652,7 @@ namespace RetroDevStudio.Documents
         e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.C )
-      && ( e.Control ) )
+      &&        ( e.Control ) )
       {
         if ( treeProject.SelectedNode != null )
         {
@@ -1661,7 +1662,7 @@ namespace RetroDevStudio.Documents
         e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.V )
-      && ( e.Control ) )
+      &&        ( e.Control ) )
       {
         if ( !m_PasteKeyDown )
         {

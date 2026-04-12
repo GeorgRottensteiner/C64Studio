@@ -3911,14 +3911,14 @@ namespace RetroDevStudio
         type = ProjectElement.ElementType.GRAPHIC_SCREEN;
       }
       else if ( ( newFileExtension == ".BAS" )
-      || ( newFileExtension == ".B" ) )
+      ||        ( newFileExtension == ".B" ) )
       {
         type = ProjectElement.ElementType.BASIC_SOURCE;
       }
       else if ( ( newFileExtension == ".TXT" )
-      || ( newFileExtension == ".CFG" )
-      || ( newFileExtension == ".BAT" )
-      || ( newFileExtension == ".PS1" ) )
+      ||        ( newFileExtension == ".CFG" )
+      ||        ( newFileExtension == ".BAT" )
+      ||        ( newFileExtension == ".PS1" ) )
       {
         type = ProjectElement.ElementType.TEXT_FILE;
       }
@@ -6339,7 +6339,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6348,7 +6348,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      && ( docInfo.BaseDoc != null ) )
+      &&   ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6381,7 +6381,7 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".CHARSETPROJECT" )
-      || ( extension == ".CHR" ) )
+      ||        ( extension == ".CHR" ) )
       {
         document = new CharsetEditor( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6392,15 +6392,15 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".GRAPHICSCREEN" )
-      || ( extension == ".IFF" )
-      || ( extension == ".KOA" )
-      || ( extension == ".KLA" ) )
+      ||        ( extension == ".IFF" )
+      ||        ( extension == ".KOA" )
+      ||        ( extension == ".KLA" ) )
       {
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".BAS" )
-      || ( extension == ".B" ) )
+      ||        ( extension == ".B" ) )
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6438,9 +6438,9 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".TXT" )
-      || ( extension == ".CFG" )
-      || ( extension == ".BAT" )
-      || ( extension == ".PS1" ) )
+      ||        ( extension == ".CFG" )
+      ||        ( extension == ".BAT" )
+      ||        ( extension == ".PS1" ) )
       {
         document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6688,9 +6688,9 @@ namespace RetroDevStudio
         string localizedFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath(ParentProject.Settings.BasePath), true, newFilename, false);
 
         ProjectElement el = CreateNewElement( Type, Description, ParentProject, ParentNode );
-        el.Filename = newFilename;
-        el.Node.Text = GR.Path.GetFileName( newFilename );
-        el.DocumentInfo.DocumentFilename = newFilename;
+        el.Filename = localizedFilename;
+        el.Node.Text = GR.Path.GetFileName( localizedFilename );
+        el.DocumentInfo.DocumentFilename = localizedFilename;
         el.Document.SetDocumentFilename( newFilename );
         el.Document.Save( BaseDocument.SaveMethod.SAVE );
       }
