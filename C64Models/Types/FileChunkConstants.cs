@@ -20,7 +20,9 @@
     public const ushort    PROJECT_CONFIG                 = 0x1100;
     public const ushort    PROJECT_WATCH_ENTRY            = 0x1101;
 
-    public const ushort    CHARSET_SCREEN_INFO            = 0x1200;
+    public const ushort    CHARSET_SCREEN_PROJECT_INFO    = 0x1200;   // collection of charset screens
+    public const ushort    CHARSET_SCREEN                 = 0x1201;   // single charset screen
+    public const ushort    CHARSET_SCREEN_INFO            = 0x1202;   //   charset screen info
     public const ushort    SCREEN_CHAR_DATA               = 0x1300;
     public const ushort    SCREEN_COLOR_DATA              = 0x1301;
     public const ushort    GRAPHIC_SCREEN_INFO            = 0x1310;

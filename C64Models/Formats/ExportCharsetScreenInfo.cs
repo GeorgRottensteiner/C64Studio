@@ -18,6 +18,7 @@ namespace RetroDevStudio.Formats
     }
 
     public CharsetScreenProject       Charscreen;
+    public int                        ScreenIndex = 0;     
     public GR.Memory.ByteBuffer       ScreenCharData;
     public GR.Memory.ByteBuffer       ScreenColorData;
     public GR.Memory.ByteBuffer       CharsetData;

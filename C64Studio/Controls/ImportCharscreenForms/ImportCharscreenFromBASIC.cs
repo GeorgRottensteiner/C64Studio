@@ -89,7 +89,7 @@ namespace RetroDevStudio.Controls
                         Editor.SetCharacter( cursorX, cursorY, key.ScreenCodeValue, curColor, 0 );
                       }
                       ++cursorX;
-                      if ( cursorX >= CharScreen.ScreenWidth )
+                      if ( cursorX >= Editor.CurrentScreen.ScreenWidth )
                       {
                         cursorX = 0;
                         ++cursorY;
@@ -160,7 +160,7 @@ namespace RetroDevStudio.Controls
                           --cursorX;
                           if ( cursorX < 0 )
                           {
-                            cursorX += CharScreen.ScreenWidth;
+                            cursorX += Editor.CurrentScreen.ScreenWidth;
                             --cursorY;
                           }
                           break;

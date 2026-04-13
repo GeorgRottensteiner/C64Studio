@@ -49,12 +49,10 @@ namespace RetroDevStudio.Controls
       {
         return false;
       }
-      Debug.Log( "HandleExport a" );
       if ( !ApplyCharsetChecks( editor, Info, false, out var charScreenData, out var charsetData ) )
       {
         return false;
       }
-      Debug.Log( "HandleExport b" );
 
       DocumentInfo    docToImportTo = (DocumentInfo)( (Types.ComboItem)comboCharScreens.SelectedItem ).Tag;
 
@@ -77,10 +75,11 @@ namespace RetroDevStudio.Controls
 
       if ( charScreen != null )
       {
-        Formats.CharsetScreenProject    project = new RetroDevStudio.Formats.CharsetScreenProject();
-        Formats.CharsetProject          charset = new RetroDevStudio.Formats.CharsetProject();
+        var project         = new RetroDevStudio.Formats.CharsetScreenProject();
+        var charset         = new RetroDevStudio.Formats.CharsetProject();
+        var affectedScreen  = project.Screens[0];
 
-        project.SetScreenSize( Info.BlockWidth, Info.BlockHeight );
+        affectedScreen.SetScreenSize( Info.BlockWidth, Info.BlockHeight );
 
         project.CharSet.Colors.BackgroundColor      = Info.Project.Colors.BackgroundColor;
         project.CharSet.Colors.MultiColor1          = Info.Project.Colors.MultiColor1;
@@ -129,10 +128,9 @@ namespace RetroDevStudio.Controls
         charset.Colors.PaletteIndexMapping = project.CharSet.Colors.PaletteIndexMapping;
         charset.Colors.PaletteMappingIndex = project.CharSet.Colors.PaletteMappingIndex;
 
-        project.Chars = charScreenData;
-        project.CharSet.Colors = charset.Colors;
+        affectedScreen.Chars    = charScreenData;
+        project.CharSet.Colors  = charset.Colors;
 
-        Debug.Log( "HandleExport c" );
         charset.TotalNumberOfCharacters = Lookup.NumCharactersForMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ) );
         for  ( int i = 0; i < charset.Characters.Count; ++i )
         {
@@ -141,7 +139,6 @@ namespace RetroDevStudio.Controls
                                     Lookup.GraphicTileModeFromTextCharMode( Lookup.CharacterModeFromCheckType( Info.Project.SelectedCheckType ), 1 ),
                                     charset.Colors );
         }
-        Debug.Log( "HandleExport d" );
         while ( charset.Characters.Count < charset.TotalNumberOfCharacters )
         {
           var newChar = new CharData()
@@ -154,13 +151,10 @@ namespace RetroDevStudio.Controls
           newChar.Tile.CustomColor = 1;
           charset.Characters.Add( newChar );
         }
-        Debug.Log( "HandleExport e" );
-
         for ( int i = 0; i < charset.TotalNumberOfCharacters; ++i )
         {
           charsetData.CopyTo( charset.Characters[i].Tile.Data, i * Lookup.NumBytesOfSingleCharacterBitmap( charset.Mode ), Lookup.NumBytesOfSingleCharacterBitmap( charset.Mode ) );
         }
-        Debug.Log( "HandleExport f" );
         charScreen.InjectProjects( project, charset );
         charScreen.SetModified();
       }

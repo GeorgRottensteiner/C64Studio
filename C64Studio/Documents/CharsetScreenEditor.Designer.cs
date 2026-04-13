@@ -57,6 +57,14 @@
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnScreenCopy = new DecentForms.Button();
+      this.btnMoveScreenDown = new DecentForms.Button();
+      this.btnMoveScreenUp = new DecentForms.Button();
+      this.btnScreenAdd = new DecentForms.Button();
+      this.btnScreenDelete = new DecentForms.Button();
+      this.editScreenName = new System.Windows.Forms.TextBox();
+      this.label18 = new System.Windows.Forms.Label();
+      this.comboScreens = new System.Windows.Forms.ComboBox();
       this.panelColorChooser = new System.Windows.Forms.Panel();
       this.comboCharlistLayout = new System.Windows.Forms.ComboBox();
       this.btnPaste = new DecentForms.Button();
@@ -74,6 +82,7 @@
       this.checkApplyColors = new DecentForms.CheckBox();
       this.checkApplyCharacter = new DecentForms.CheckBox();
       this.label10 = new System.Windows.Forms.Label();
+      this.label1 = new System.Windows.Forms.Label();
       this.label9 = new System.Windows.Forms.Label();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelInfo2 = new System.Windows.Forms.Label();
@@ -372,6 +381,14 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnScreenCopy);
+      this.tabEditor.Controls.Add(this.btnMoveScreenDown);
+      this.tabEditor.Controls.Add(this.btnMoveScreenUp);
+      this.tabEditor.Controls.Add(this.btnScreenAdd);
+      this.tabEditor.Controls.Add(this.btnScreenDelete);
+      this.tabEditor.Controls.Add(this.editScreenName);
+      this.tabEditor.Controls.Add(this.label18);
+      this.tabEditor.Controls.Add(this.comboScreens);
       this.tabEditor.Controls.Add(this.panelColorChooser);
       this.tabEditor.Controls.Add(this.comboCharlistLayout);
       this.tabEditor.Controls.Add(this.btnPaste);
@@ -389,6 +406,7 @@
       this.tabEditor.Controls.Add(this.checkApplyColors);
       this.tabEditor.Controls.Add(this.checkApplyCharacter);
       this.tabEditor.Controls.Add(this.label10);
+      this.tabEditor.Controls.Add(this.label1);
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
       this.tabEditor.Controls.Add(this.labelInfo2);
@@ -417,21 +435,125 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // btnScreenCopy
+      // 
+      this.btnScreenCopy.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnScreenCopy.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnScreenCopy.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnScreenCopy.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnScreenCopy.Image = null;
+      this.btnScreenCopy.Location = new System.Drawing.Point(806, 84);
+      this.btnScreenCopy.Name = "btnScreenCopy";
+      this.btnScreenCopy.Size = new System.Drawing.Size(35, 20);
+      this.btnScreenCopy.TabIndex = 25;
+      this.btnScreenCopy.Text = "Cpy";
+      this.toolTip1.SetToolTip(this.btnScreenCopy, "Copy Current Screen");
+      this.btnScreenCopy.Click += new DecentForms.EventHandler(this.btnScreenCopy_Click);
+      // 
+      // btnMoveScreenDown
+      // 
+      this.btnMoveScreenDown.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveScreenDown.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveScreenDown.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveScreenDown.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMoveScreenDown.Enabled = false;
+      this.btnMoveScreenDown.Image = null;
+      this.btnMoveScreenDown.Location = new System.Drawing.Point(941, 84);
+      this.btnMoveScreenDown.Name = "btnMoveScreenDown";
+      this.btnMoveScreenDown.Size = new System.Drawing.Size(26, 20);
+      this.btnMoveScreenDown.TabIndex = 28;
+      this.btnMoveScreenDown.Text = "▼";
+      this.toolTip1.SetToolTip(this.btnMoveScreenDown, "Move Screen Down");
+      this.btnMoveScreenDown.Click += new DecentForms.EventHandler(this.btnMoveMapDown_Click);
+      // 
+      // btnMoveScreenUp
+      // 
+      this.btnMoveScreenUp.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMoveScreenUp.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMoveScreenUp.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMoveScreenUp.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMoveScreenUp.Enabled = false;
+      this.btnMoveScreenUp.Image = null;
+      this.btnMoveScreenUp.Location = new System.Drawing.Point(909, 84);
+      this.btnMoveScreenUp.Name = "btnMoveScreenUp";
+      this.btnMoveScreenUp.Size = new System.Drawing.Size(26, 20);
+      this.btnMoveScreenUp.TabIndex = 27;
+      this.btnMoveScreenUp.Text = "▲";
+      this.toolTip1.SetToolTip(this.btnMoveScreenUp, "Move Screen Up");
+      this.btnMoveScreenUp.Click += new DecentForms.EventHandler(this.btnMoveMapUp_Click);
+      // 
+      // btnScreenAdd
+      // 
+      this.btnScreenAdd.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnScreenAdd.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnScreenAdd.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnScreenAdd.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnScreenAdd.Image = null;
+      this.btnScreenAdd.Location = new System.Drawing.Point(765, 84);
+      this.btnScreenAdd.Name = "btnScreenAdd";
+      this.btnScreenAdd.Size = new System.Drawing.Size(35, 20);
+      this.btnScreenAdd.TabIndex = 24;
+      this.btnScreenAdd.Text = "Add";
+      this.toolTip1.SetToolTip(this.btnScreenAdd, "Add New Screen");
+      this.btnScreenAdd.Click += new DecentForms.EventHandler(this.btnMapAdd_Click);
+      // 
+      // btnScreenDelete
+      // 
+      this.btnScreenDelete.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnScreenDelete.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnScreenDelete.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnScreenDelete.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnScreenDelete.Enabled = false;
+      this.btnScreenDelete.Image = null;
+      this.btnScreenDelete.Location = new System.Drawing.Point(847, 84);
+      this.btnScreenDelete.Name = "btnScreenDelete";
+      this.btnScreenDelete.Size = new System.Drawing.Size(56, 20);
+      this.btnScreenDelete.TabIndex = 26;
+      this.btnScreenDelete.Text = "Delete";
+      this.toolTip1.SetToolTip(this.btnScreenDelete, "Delete Current Screen");
+      this.btnScreenDelete.Click += new DecentForms.EventHandler(this.btnMapDelete_Click);
+      // 
+      // editScreenName
+      // 
+      this.editScreenName.Location = new System.Drawing.Point(765, 57);
+      this.editScreenName.Name = "editScreenName";
+      this.editScreenName.Size = new System.Drawing.Size(202, 20);
+      this.editScreenName.TabIndex = 23;
+      // 
+      // label18
+      // 
+      this.label18.AutoSize = true;
+      this.label18.Location = new System.Drawing.Point(678, 60);
+      this.label18.Name = "label18";
+      this.label18.Size = new System.Drawing.Size(38, 13);
+      this.label18.TabIndex = 58;
+      this.label18.Text = "Name:";
+      // 
+      // comboScreens
+      // 
+      this.comboScreens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboScreens.FormattingEnabled = true;
+      this.comboScreens.Location = new System.Drawing.Point(765, 3);
+      this.comboScreens.Name = "comboScreens";
+      this.comboScreens.Size = new System.Drawing.Size(202, 21);
+      this.comboScreens.TabIndex = 21;
+      this.comboScreens.SelectedIndexChanged += new System.EventHandler(this.comboScreens_SelectedIndexChanged);
+      // 
       // panelColorChooser
       // 
-      this.panelColorChooser.Location = new System.Drawing.Point(680, 380);
+      this.panelColorChooser.Location = new System.Drawing.Point(683, 456);
       this.panelColorChooser.Name = "panelColorChooser";
-      this.panelColorChooser.Size = new System.Drawing.Size(280, 120);
-      this.panelColorChooser.TabIndex = 50;
+      this.panelColorChooser.Size = new System.Drawing.Size(280, 76);
+      this.panelColorChooser.TabIndex = 35;
       // 
       // comboCharlistLayout
       // 
       this.comboCharlistLayout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCharlistLayout.FormattingEnabled = true;
-      this.comboCharlistLayout.Location = new System.Drawing.Point(726, 353);
+      this.comboCharlistLayout.Location = new System.Drawing.Point(724, 428);
       this.comboCharlistLayout.Name = "comboCharlistLayout";
-      this.comboCharlistLayout.Size = new System.Drawing.Size(211, 21);
-      this.comboCharlistLayout.TabIndex = 49;
+      this.comboCharlistLayout.Size = new System.Drawing.Size(217, 21);
+      this.comboCharlistLayout.TabIndex = 34;
       this.comboCharlistLayout.SelectedIndexChanged += new System.EventHandler(this.comboCharlistLayout_SelectedIndexChanged);
       // 
       // btnPaste
@@ -445,7 +567,7 @@
       this.btnPaste.Location = new System.Drawing.Point(198, 460);
       this.btnPaste.Name = "btnPaste";
       this.btnPaste.Size = new System.Drawing.Size(24, 24);
-      this.btnPaste.TabIndex = 48;
+      this.btnPaste.TabIndex = 18;
       this.toolTip1.SetToolTip(this.btnPaste, "Paste Characters");
       this.btnPaste.Click += new DecentForms.EventHandler(this.btnPaste_Click);
       // 
@@ -460,16 +582,16 @@
       this.btnCopy.Location = new System.Drawing.Point(168, 460);
       this.btnCopy.Name = "btnCopy";
       this.btnCopy.Size = new System.Drawing.Size(24, 24);
-      this.btnCopy.TabIndex = 47;
+      this.btnCopy.TabIndex = 17;
       this.toolTip1.SetToolTip(this.btnCopy, "Copy Selected Characters to Clipboard");
       this.btnCopy.Click += new DecentForms.EventHandler(this.btnCopy_Click);
       // 
       // editCharOffset
       // 
-      this.editCharOffset.Location = new System.Drawing.Point(751, 61);
+      this.editCharOffset.Location = new System.Drawing.Point(765, 136);
       this.editCharOffset.Name = "editCharOffset";
       this.editCharOffset.Size = new System.Drawing.Size(70, 20);
-      this.editCharOffset.TabIndex = 18;
+      this.editCharOffset.TabIndex = 32;
       this.editCharOffset.TextChanged += new System.EventHandler(this.editCharOffset_TextChanged);
       // 
       // btnShiftDown
@@ -482,7 +604,7 @@
       this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(24, 24);
-      this.btnShiftDown.TabIndex = 14;
+      this.btnShiftDown.TabIndex = 16;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.Click += new DecentForms.EventHandler(this.btnShiftDown_Click);
       // 
@@ -496,7 +618,7 @@
       this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(24, 24);
-      this.btnShiftUp.TabIndex = 13;
+      this.btnShiftUp.TabIndex = 15;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
       this.btnShiftUp.Click += new DecentForms.EventHandler(this.btnShiftUp_Click);
       // 
@@ -510,7 +632,7 @@
       this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(24, 24);
-      this.btnShiftRight.TabIndex = 12;
+      this.btnShiftRight.TabIndex = 14;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
       this.btnShiftRight.Click += new DecentForms.EventHandler(this.btnShiftRight_Click);
       // 
@@ -524,7 +646,7 @@
       this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(24, 24);
-      this.btnShiftLeft.TabIndex = 11;
+      this.btnShiftLeft.TabIndex = 13;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
       this.btnShiftLeft.Click += new DecentForms.EventHandler(this.btnShiftLeft_Click);
       // 
@@ -538,7 +660,7 @@
       this.btnClearScreen.Location = new System.Drawing.Point(8, 460);
       this.btnClearScreen.Name = "btnClearScreen";
       this.btnClearScreen.Size = new System.Drawing.Size(24, 24);
-      this.btnClearScreen.TabIndex = 10;
+      this.btnClearScreen.TabIndex = 12;
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
       this.btnClearScreen.Click += new DecentForms.EventHandler(this.btnClearScreen_Click);
       // 
@@ -552,7 +674,7 @@
       this.checkHighlightUsedChars.Location = new System.Drawing.Point(258, 460);
       this.checkHighlightUsedChars.Name = "checkHighlightUsedChars";
       this.checkHighlightUsedChars.Size = new System.Drawing.Size(24, 24);
-      this.checkHighlightUsedChars.TabIndex = 15;
+      this.checkHighlightUsedChars.TabIndex = 20;
       this.toolTip1.SetToolTip(this.checkHighlightUsedChars, "Highlight selected char on screen");
       this.checkHighlightUsedChars.CheckedChanged += new DecentForms.EventHandler(this.checkHighlightUsedChars_CheckedChanged);
       // 
@@ -566,7 +688,7 @@
       this.checkShowGrid.Location = new System.Drawing.Point(228, 460);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(24, 24);
-      this.checkShowGrid.TabIndex = 15;
+      this.checkShowGrid.TabIndex = 19;
       this.toolTip1.SetToolTip(this.checkShowGrid, "Show Grid");
       this.checkShowGrid.CheckedChanged += new DecentForms.EventHandler(this.checkShowGrid_CheckedChanged);
       // 
@@ -580,7 +702,7 @@
       this.checkReverse.Location = new System.Drawing.Point(228, 432);
       this.checkReverse.Name = "checkReverse";
       this.checkReverse.Size = new System.Drawing.Size(24, 24);
-      this.checkReverse.TabIndex = 8;
+      this.checkReverse.TabIndex = 10;
       this.toolTip1.SetToolTip(this.checkReverse, "Reverse Characters");
       this.checkReverse.CheckedChanged += new DecentForms.EventHandler(this.checkReverse_CheckedChanged);
       // 
@@ -594,7 +716,7 @@
       this.checkAutoCenter.Location = new System.Drawing.Point(258, 432);
       this.checkAutoCenter.Name = "checkAutoCenter";
       this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);
-      this.checkAutoCenter.TabIndex = 9;
+      this.checkAutoCenter.TabIndex = 11;
       this.toolTip1.SetToolTip(this.checkAutoCenter, "Automatically center text on entry");
       this.checkAutoCenter.CheckedChanged += new DecentForms.EventHandler(this.checkAutoCenterText_CheckedChanged);
       // 
@@ -608,7 +730,7 @@
       this.checkApplyColors.Location = new System.Drawing.Point(198, 432);
       this.checkApplyColors.Name = "checkApplyColors";
       this.checkApplyColors.Size = new System.Drawing.Size(24, 24);
-      this.checkApplyColors.TabIndex = 7;
+      this.checkApplyColors.TabIndex = 9;
       this.toolTip1.SetToolTip(this.checkApplyColors, "Affect Colors");
       this.checkApplyColors.CheckedChanged += new DecentForms.EventHandler(this.checkApplyColors_CheckedChanged);
       // 
@@ -622,23 +744,32 @@
       this.checkApplyCharacter.Location = new System.Drawing.Point(168, 432);
       this.checkApplyCharacter.Name = "checkApplyCharacter";
       this.checkApplyCharacter.Size = new System.Drawing.Size(24, 24);
-      this.checkApplyCharacter.TabIndex = 6;
+      this.checkApplyCharacter.TabIndex = 8;
       this.toolTip1.SetToolTip(this.checkApplyCharacter, "Affect Characters");
       this.checkApplyCharacter.CheckedChanged += new DecentForms.EventHandler(this.checkApplyCharacter_CheckedChanged);
       // 
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(677, 64);
+      this.label10.Location = new System.Drawing.Point(678, 139);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(38, 13);
       this.label10.TabIndex = 35;
       this.label10.Text = "Offset:";
       // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(678, 6);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(81, 13);
+      this.label1.TabIndex = 35;
+      this.label1.Text = "Current Screen:";
+      // 
       // label9
       // 
       this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(677, 11);
+      this.label9.Location = new System.Drawing.Point(678, 33);
       this.label9.Name = "label9";
       this.label9.Size = new System.Drawing.Size(37, 13);
       this.label9.TabIndex = 35;
@@ -648,10 +779,10 @@
       // 
       this.comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCharsetMode.FormattingEnabled = true;
-      this.comboCharsetMode.Location = new System.Drawing.Point(751, 8);
+      this.comboCharsetMode.Location = new System.Drawing.Point(765, 30);
       this.comboCharsetMode.Name = "comboCharsetMode";
-      this.comboCharsetMode.Size = new System.Drawing.Size(216, 21);
-      this.comboCharsetMode.TabIndex = 16;
+      this.comboCharsetMode.Size = new System.Drawing.Size(202, 21);
+      this.comboCharsetMode.TabIndex = 22;
       this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
       // labelInfo2
@@ -680,7 +811,7 @@
       this.btnToolText.Location = new System.Drawing.Point(128, 432);
       this.btnToolText.Name = "btnToolText";
       this.btnToolText.Size = new System.Drawing.Size(24, 24);
-      this.btnToolText.TabIndex = 5;
+      this.btnToolText.TabIndex = 7;
       this.toolTip1.SetToolTip(this.btnToolText, "Direct Text Entry");
       this.btnToolText.CheckedChanged += new DecentForms.EventHandler(this.btnToolText_CheckedChanged);
       // 
@@ -694,7 +825,7 @@
       this.btnToolSelect.Location = new System.Drawing.Point(104, 432);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolSelect.TabIndex = 4;
+      this.btnToolSelect.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
       this.btnToolSelect.CheckedChanged += new DecentForms.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
@@ -708,7 +839,7 @@
       this.btnToolFill.Location = new System.Drawing.Point(80, 432);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
-      this.btnToolFill.TabIndex = 3;
+      this.btnToolFill.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
       this.btnToolFill.CheckedChanged += new DecentForms.EventHandler(this.btnToolFill_CheckedChanged);
       // 
@@ -722,7 +853,7 @@
       this.btnToolQuad.Location = new System.Drawing.Point(56, 432);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
-      this.btnToolQuad.TabIndex = 2;
+      this.btnToolQuad.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Rectangle");
       this.btnToolQuad.CheckedChanged += new DecentForms.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
@@ -736,7 +867,7 @@
       this.btnToolRect.Location = new System.Drawing.Point(32, 432);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolRect.TabIndex = 1;
+      this.btnToolRect.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
       this.btnToolRect.CheckedChanged += new DecentForms.EventHandler(this.btnToolRect_CheckedChanged);
       // 
@@ -750,7 +881,7 @@
       this.btnToolEdit.Location = new System.Drawing.Point(8, 432);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
-      this.btnToolEdit.TabIndex = 0;
+      this.btnToolEdit.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
       this.btnToolEdit.CheckedChanged += new DecentForms.EventHandler(this.btnToolEdit_CheckedChanged);
       // 
@@ -761,27 +892,27 @@
       this.btnApplyScreenSize.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnApplyScreenSize.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnApplyScreenSize.Image = null;
-      this.btnApplyScreenSize.Location = new System.Drawing.Point(897, 35);
+      this.btnApplyScreenSize.Location = new System.Drawing.Point(917, 110);
       this.btnApplyScreenSize.Name = "btnApplyScreenSize";
-      this.btnApplyScreenSize.Size = new System.Drawing.Size(67, 20);
-      this.btnApplyScreenSize.TabIndex = 25;
+      this.btnApplyScreenSize.Size = new System.Drawing.Size(50, 20);
+      this.btnApplyScreenSize.TabIndex = 31;
       this.btnApplyScreenSize.Text = "Apply";
       this.btnApplyScreenSize.Click += new DecentForms.EventHandler(this.btnApplyScreenSize_Click);
       // 
       // editScreenHeight
       // 
-      this.editScreenHeight.Location = new System.Drawing.Point(830, 35);
+      this.editScreenHeight.Location = new System.Drawing.Point(841, 110);
       this.editScreenHeight.Name = "editScreenHeight";
-      this.editScreenHeight.Size = new System.Drawing.Size(61, 20);
-      this.editScreenHeight.TabIndex = 24;
+      this.editScreenHeight.Size = new System.Drawing.Size(70, 20);
+      this.editScreenHeight.TabIndex = 30;
       this.editScreenHeight.TextChanged += new System.EventHandler(this.editScreenHeight_TextChanged);
       // 
       // editScreenWidth
       // 
-      this.editScreenWidth.Location = new System.Drawing.Point(751, 35);
+      this.editScreenWidth.Location = new System.Drawing.Point(765, 110);
       this.editScreenWidth.Name = "editScreenWidth";
       this.editScreenWidth.Size = new System.Drawing.Size(70, 20);
-      this.editScreenWidth.TabIndex = 23;
+      this.editScreenWidth.TabIndex = 29;
       this.editScreenWidth.TextChanged += new System.EventHandler(this.editScreenWidth_TextChanged);
       // 
       // screenVScroll
@@ -817,7 +948,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(677, 38);
+      this.label7.Location = new System.Drawing.Point(678, 113);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(30, 13);
       this.label7.TabIndex = 22;
@@ -826,7 +957,7 @@
       // labelCharPanelLayout
       // 
       this.labelCharPanelLayout.AutoSize = true;
-      this.labelCharPanelLayout.Location = new System.Drawing.Point(677, 356);
+      this.labelCharPanelLayout.Location = new System.Drawing.Point(678, 431);
       this.labelCharPanelLayout.Name = "labelCharPanelLayout";
       this.labelCharPanelLayout.Size = new System.Drawing.Size(42, 13);
       this.labelCharPanelLayout.TabIndex = 22;
@@ -848,12 +979,12 @@
       this.panelCharacters.HottrackColor = ((uint)(2151694591u));
       this.panelCharacters.ItemHeight = 8;
       this.panelCharacters.ItemWidth = 8;
-      this.panelCharacters.Location = new System.Drawing.Point(677, 87);
+      this.panelCharacters.Location = new System.Drawing.Point(681, 162);
       this.panelCharacters.Name = "panelCharacters";
       this.panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelCharacters.SelectedIndex = -1;
       this.panelCharacters.Size = new System.Drawing.Size(260, 260);
-      this.panelCharacters.TabIndex = 26;
+      this.panelCharacters.TabIndex = 33;
       this.panelCharacters.TabStop = true;
       this.panelCharacters.VisibleAutoScrollHorizontal = false;
       this.panelCharacters.VisibleAutoScrollVertical = false;
@@ -887,7 +1018,7 @@
       this.tabCharsetEditor.Name = "tabCharsetEditor";
       this.tabCharsetEditor.SelectedIndex = 0;
       this.tabCharsetEditor.Size = new System.Drawing.Size(1069, 572);
-      this.tabCharsetEditor.TabIndex = 1;
+      this.tabCharsetEditor.TabIndex = 0;
       // 
       // tabCharset
       // 
@@ -1065,5 +1196,14 @@
     private System.Windows.Forms.Panel panelColorChooser;
     private DecentForms.CheckBox checkHighlightUsedChars;
         private System.Windows.Forms.Label labelInfo2;
-    }
+    private System.Windows.Forms.Label label1;
+    private DecentForms.Button btnScreenCopy;
+    private DecentForms.Button btnMoveScreenDown;
+    private DecentForms.Button btnMoveScreenUp;
+    private DecentForms.Button btnScreenAdd;
+    private DecentForms.Button btnScreenDelete;
+    private System.Windows.Forms.TextBox editScreenName;
+    private System.Windows.Forms.Label label18;
+    public System.Windows.Forms.ComboBox comboScreens;
+  }
 }

@@ -110,6 +110,7 @@ namespace RetroDevStudio.Controls
       bool    replaceShiftSpaceWithSpace = checkExportToBASICReplaceShiftSpaceWithSpace.Checked;
       bool    stripInvisibleColors = checkExportToBASICCollapseColors.Checked;
       bool    asString = checkExportToBASICAsString.Checked;
+      var     affectedScreen = Info.Charscreen.Screens[Info.ScreenIndex];
 
 
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
@@ -159,7 +160,7 @@ namespace RetroDevStudio.Controls
           startLine += lineStep;
           sb.Append( " PRINT\"" );
           if ( ( isReverse )
-          &&   ( Info.Area.Width != Info.Charscreen.ScreenWidth ) )
+          &&   ( Info.Area.Width != affectedScreen.ScreenWidth ) )
           {
             // need to re-start reverse mode
             sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
@@ -168,8 +169,8 @@ namespace RetroDevStudio.Controls
         
         for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
         {
-          ushort newColor = (ushort)Info.Charscreen.ColorAt( x, i );
-          ushort newChar = Info.Charscreen.CharacterAt( x, i );
+          ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
+          ushort newChar = affectedScreen.CharacterAt( x, i );
 
           if ( ( replaceShiftSpaceWithSpace )
           &&   ( ( newChar == 96 )
@@ -308,7 +309,7 @@ namespace RetroDevStudio.Controls
               if ( !asString )
               {
                 sb.Append( "\"" );
-                if ( Info.Area.Width == Info.Charscreen.ScreenWidth )
+                if ( Info.Area.Width == affectedScreen.ScreenWidth )
                 {
                   sb.Append( ";" );
                 }
@@ -318,7 +319,7 @@ namespace RetroDevStudio.Controls
                 startLine += lineStep;
                 sb.Append( " PRINT\"" );
                 if ( ( isReverse )
-                &&   ( Info.Area.Width != Info.Charscreen.ScreenWidth ) )
+                &&   ( Info.Area.Width != affectedScreen.ScreenWidth ) )
                 {
                   // need to re-start reverse mode
                   sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
@@ -353,7 +354,7 @@ namespace RetroDevStudio.Controls
         if ( !asString )
         {
           sb.Append( "\"" );
-          if ( Info.Area.Width == Info.Charscreen.ScreenWidth )
+          if ( Info.Area.Width == affectedScreen.ScreenWidth )
           {
             sb.Append( ";" );
           }

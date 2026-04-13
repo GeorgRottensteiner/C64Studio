@@ -1165,10 +1165,12 @@ namespace RetroDevStudio.Parser
         }
         else
         {
+          int   screenIndex = 0;
+          var   screen = screenProject.Screens[screenIndex];
           int   x = 0;
           int   y = 0;
-          int   w = screenProject.ScreenWidth;
-          int   h = screenProject.ScreenHeight;
+          int   w = screen.ScreenWidth;
+          int   h = screen.ScreenHeight;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo xSymbol ) ) )
@@ -1192,13 +1194,13 @@ namespace RetroDevStudio.Parser
           }
 
           if ( ( x < 0 )
-          ||   ( x >= screenProject.ScreenWidth )
+          ||   ( x >= screen.ScreenWidth )
           ||   ( y < 0 )
-          ||   ( y >= screenProject.ScreenHeight )
+          ||   ( y >= screen.ScreenHeight )
           ||   ( w < 0 )
-          ||   ( x + w > screenProject.ScreenWidth )
+          ||   ( x + w > screen.ScreenWidth )
           ||   ( h < 0 )
-          ||   ( y + h > screenProject.ScreenHeight ) )
+          ||   ( y + h > screen.ScreenHeight ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid coordinates" );
             return false;

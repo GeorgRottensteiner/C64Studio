@@ -27,98 +27,138 @@ namespace MediaTool
         return 1;
       }
 
-      int     x = 0;
-      int     y = 0;
-      int     width = -1;
-      int     height = -1;
-      if ( ArgParser.IsParameterSet( "AREA" ) )
+      int     firstScreen = 0;
+      int     count = -1;
+      if ( ArgParser.IsParameterSet( "OFFSET" ) )
       {
-        string      rangeInfo = ArgParser.Parameter( "AREA" );
-        string[]    rangeParts = rangeInfo.Split( ',' );
-        if ( rangeParts.Length != 4 )
+        firstScreen = GR.Convert.ToI32( ArgParser.Parameter( "OFFSET" ) );
+        if ( ( firstScreen < 0 )
+        ||   ( firstScreen >= charScreenProject.Screens.Count ) )
         {
-          System.Console.WriteLine( "AREA is invalid, expected four values separated by comma: x,y,width,height" );
-          return 1;
-        }
-        x       = GR.Convert.ToI32( rangeParts[0] );
-        y       = GR.Convert.ToI32( rangeParts[1] );
-        width   = GR.Convert.ToI32( rangeParts[2] );
-        height  = GR.Convert.ToI32( rangeParts[3] );
-
-        if ( ( width <= 0 )
-        ||   ( height <= 0 )
-        ||   ( x < 0 )
-        ||   ( y < 0 )
-        ||   ( x + width > charScreenProject.ScreenWidth )
-        ||   ( y + height > charScreenProject.ScreenHeight ) )
-        {
-          System.Console.WriteLine( "AREA values are out of bounds or invalid, expected four values separated by comma: x,y,width,height" );
+          System.Console.WriteLine( "OFFSET is out of bounds" );
           return 1;
         }
       }
-      else
+      if ( ArgParser.IsParameterSet( "COUNT" ) )
       {
-        width = charScreenProject.ScreenWidth;
-        height = charScreenProject.ScreenHeight;
+        count = GR.Convert.ToI32( ArgParser.Parameter( "COUNT" ) );
+      }
+      if ( count == -1 )
+      {
+        count = charScreenProject.Screens.Count;
+      }
+      if ( ( count < 1 )
+      ||   ( firstScreen + count >= charScreenProject.Screens.Count ) )
+      {
+        System.Console.WriteLine( "COUNT is out of bounds" );
+        return 1;
       }
 
-      GR.Memory.ByteBuffer    resultingData = new GR.Memory.ByteBuffer();
+      var resultingData = new GR.Memory.ByteBuffer();
 
-      if ( ( ArgParser.Parameter( "TYPE" ) == "CHARS" )
-      ||   ( ArgParser.Parameter( "TYPE" ) == "CHARSCOLORS" ) )
+      for ( int s = 0; s < count; ++s )
       {
-        for ( int j = y; j < y + height; ++j )
+        if ( ( firstScreen + s < 0 )
+        ||   ( firstScreen + s >= charScreenProject.Screens.Count ) )
         {
-          for ( int i = x; i < x + width; ++i )
+          System.Console.WriteLine( "OFFSET and COUNT are out of bounds" );
+          return 1;
+        }
+        var     screen = charScreenProject.Screens[firstScreen + s];
+        int     x = 0;
+        int     y = 0;
+        int     width = -1;
+        int     height = -1;
+        if ( ArgParser.IsParameterSet( "AREA" ) )
+        {
+          string      rangeInfo = ArgParser.Parameter( "AREA" );
+          string[]    rangeParts = rangeInfo.Split( ',' );
+          if ( rangeParts.Length != 4 )
           {
-            resultingData.AppendU8( (byte)charScreenProject.CharacterAt( i, j ) );
+            System.Console.WriteLine( "AREA is invalid, expected four values separated by comma: x,y,width,height" );
+            return 1;
+          }
+          x       = GR.Convert.ToI32( rangeParts[0] );
+          y       = GR.Convert.ToI32( rangeParts[1] );
+          width   = GR.Convert.ToI32( rangeParts[2] );
+          height  = GR.Convert.ToI32( rangeParts[3] );
+
+          if ( ( width <= 0 )
+          ||   ( height <= 0 )
+          ||   ( x < 0 )
+          ||   ( y < 0 )
+          ||   ( x + width > screen.ScreenWidth )
+          ||   ( y + height > screen.ScreenHeight ) )
+          {
+            System.Console.WriteLine( $"AREA values are out of bounds or invalid for screen {screen.Name}, expected four values separated by comma: x,y,width,height" );
+            return 1;
           }
         }
-      }
-      if ( ( ArgParser.Parameter( "TYPE" ) == "COLORS" )
-      ||   ( ArgParser.Parameter( "TYPE" ) == "CHARSCOLORS" ) )
-      {
-        for ( int j = y; j < y + height; ++j )
+        else
         {
-          for ( int i = x; i < x + width; ++i )
+          width = screen.ScreenWidth;
+          height = screen.ScreenHeight;
+        }
+
+        GR.Memory.ByteBuffer    resultingDataPerScreen = new GR.Memory.ByteBuffer();
+
+        if ( ( ArgParser.Parameter( "TYPE" ) == "CHARS" )
+        ||   ( ArgParser.Parameter( "TYPE" ) == "CHARSCOLORS" ) )
+        {
+          for ( int j = y; j < y + height; ++j )
           {
-            resultingData.AppendU8( (byte)( charScreenProject.ColorAt( i, j ) ) );
+            for ( int i = x; i < x + width; ++i )
+            {
+              resultingDataPerScreen.AppendU8( (byte)screen.CharacterAt( i, j ) );
+            }
           }
         }
-      }
-      if ( ArgParser.Parameter( "TYPE" ) == "CHARSET" )
-      {
-        int     count = -1;
-        int     firstChar = 0;
-        if ( ArgParser.IsParameterSet( "OFFSET" ) )
+        if ( ( ArgParser.Parameter( "TYPE" ) == "COLORS" )
+        ||   ( ArgParser.Parameter( "TYPE" ) == "CHARSCOLORS" ) )
         {
-          firstChar = GR.Convert.ToI32( ArgParser.Parameter( "OFFSET" ) );
+          for ( int j = y; j < y + height; ++j )
+          {
+            for ( int i = x; i < x + width; ++i )
+            {
+              resultingDataPerScreen.AppendU8( (byte)( screen.ColorAt( i, j ) ) );
+            }
+          }
         }
-        if ( ArgParser.IsParameterSet( "COUNT" ) )
+        if ( ArgParser.Parameter( "TYPE" ) == "CHARSET" )
         {
-          count = GR.Convert.ToI32( ArgParser.Parameter( "COUNT" ) );
+          count = -1;
+          int     firstChar = 0;
+          if ( ArgParser.IsParameterSet( "OFFSET" ) )
+          {
+            firstChar = GR.Convert.ToI32( ArgParser.Parameter( "OFFSET" ) );
+          }
+          if ( ArgParser.IsParameterSet( "COUNT" ) )
+          {
+            count = GR.Convert.ToI32( ArgParser.Parameter( "COUNT" ) );
+          }
+          if ( count == -1 )
+          {
+            count = charScreenProject.CharSet.Characters.Count;
+          }
+          if ( ( firstChar < 0 )
+          ||   ( firstChar >= charScreenProject.CharSet.Characters.Count ) )
+          {
+            System.Console.WriteLine( "OFFSET is invalid" );
+            return 1;
+          }
+          if ( ( count <= 0 )
+          ||   ( firstChar + count > charScreenProject.CharSet.Characters.Count ) )
+          {
+            System.Console.WriteLine( "COUNT is invalid" );
+            return 1;
+          }
+          resultingDataPerScreen = new GR.Memory.ByteBuffer( (uint)( count * 8 ) );
+          for ( int j = 0; j < count; ++j )
+          {
+            charScreenProject.CharSet.Characters[firstChar + j].Tile.Data.CopyTo( resultingDataPerScreen, 0, 8, j * 8 );
+          }
         }
-        if ( count == -1 )
-        {
-          count = charScreenProject.CharSet.Characters.Count;
-        }
-        if ( ( firstChar < 0 )
-        ||   ( firstChar >= charScreenProject.CharSet.Characters.Count ) )
-        {
-          System.Console.WriteLine( "OFFSET is invalid" );
-          return 1;
-        }
-        if ( ( count <= 0 )
-        ||   ( firstChar + count > charScreenProject.CharSet.Characters.Count ) )
-        {
-          System.Console.WriteLine( "COUNT is invalid" );
-          return 1;
-        }
-        resultingData = new GR.Memory.ByteBuffer( (uint)( count * 8 ) );
-        for ( int i = 0; i < count; ++i )
-        {
-          charScreenProject.CharSet.Characters[firstChar + i].Tile.Data.CopyTo( resultingData, 0, 8, i * 8 );
-        }
+        resultingData.Append( resultingDataPerScreen );
       }
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), resultingData ) )
       {

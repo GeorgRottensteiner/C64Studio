@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace RetroDevStudio.Converter
 {
@@ -395,7 +393,8 @@ namespace RetroDevStudio.Converter
         foreach ( var project in projects )
         {
           // create screens from graphic
-          var screen = new RetroDevStudio.Formats.CharsetScreenProject();
+          var screenProject = new RetroDevStudio.Formats.CharsetScreenProject();
+          var screen = screenProject.Screens[0];
 
           int blockWidth = ( ( project.Image.Width + 7 ) / 8 );
           int blockHeight = ( ( project.Image.Height + 7 ) / 8 );
@@ -413,26 +412,27 @@ namespace RetroDevStudio.Converter
               }
 
               screen.Chars[x + y * blockWidth] = (ushort)( ( origCharData.Tile.CustomColor << 8 ) + charData.Index );
-              screen.Mode = project.MultiColor ? RetroDevStudio.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudio.TextMode.COMMODORE_40_X_25_HIRES;
-              screen.CharSet.Colors.MultiColor1  = project.Colors.MultiColor1;
-              screen.CharSet.Colors.MultiColor2  = project.Colors.MultiColor2;
-              screen.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
+              screenProject.Mode = project.MultiColor ? RetroDevStudio.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudio.TextMode.COMMODORE_40_X_25_HIRES;
+              screen.Mode = screenProject.Mode;
+              screenProject.CharSet.Colors.MultiColor1  = project.Colors.MultiColor1;
+              screenProject.CharSet.Colors.MultiColor2  = project.Colors.MultiColor2;
+              screenProject.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
             }
           }
-          screen.CharSet = new RetroDevStudio.Formats.CharsetProject();
-          screen.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
-          screen.CharSet.Colors.MultiColor1 = project.Colors.MultiColor1;
-          screen.CharSet.Colors.MultiColor2 = project.Colors.MultiColor2;
+          screenProject.CharSet = new RetroDevStudio.Formats.CharsetProject();
+          screenProject.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
+          screenProject.CharSet.Colors.MultiColor1 = project.Colors.MultiColor1;
+          screenProject.CharSet.Colors.MultiColor2 = project.Colors.MultiColor2;
 
           for ( uint c = 0; c < charSet.Length / 8; ++c )
           {
-            screen.CharSet.Characters[(int)c].Tile.Data = charSet.SubBuffer( (int)c * 8, 8 );
-            screen.CharSet.Characters[(int)c].Tile.CustomColor = 9;
+            screenProject.CharSet.Characters[(int)c].Tile.Data = charSet.SubBuffer( (int)c * 8, 8 );
+            screenProject.CharSet.Characters[(int)c].Tile.CustomColor = 9;
           }
 
           string    origFile = GR.Path.GetFileNameWithoutExtension( ProjectFiles[projectIndex] );
 
-          GR.IO.File.WriteAllBytes( GR.Path.Append( BasePath, origFile + ".charscreen" ), screen.SaveToBuffer() );
+          GR.IO.File.WriteAllBytes( GR.Path.Append( BasePath, origFile + ".charscreen" ), screenProject.SaveToBuffer() );
 
           ++projectIndex;
           charIndexOffset += blockWidth * blockHeight;

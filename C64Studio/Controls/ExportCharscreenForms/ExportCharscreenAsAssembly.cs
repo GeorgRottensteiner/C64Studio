@@ -50,6 +50,7 @@ namespace RetroDevStudio.Controls
       bool            replaceSpaceWithCursorRight = checkExportToBASICReplaceSpaceWithRight.Checked;
       bool            replaceShiftSpaceWithSpace = checkExportToBASICReplaceShiftSpaceWithSpace.Checked;
       bool            stripInvisibleColors = checkExportToBASICCollapseColors.Checked;
+      var             affectedScreen = Info.Charscreen.Screens[Info.ScreenIndex];
 
 
       // can't have both
@@ -96,8 +97,8 @@ namespace RetroDevStudio.Controls
             isFirstCharInLine = true;
             for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
             {
-              ushort newColor = (ushort)Info.Charscreen.ColorAt( x, i );
-              byte newChar = (byte)Info.Charscreen.CharacterAt( x, i );
+              ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
+              byte newChar = (byte)affectedScreen.CharacterAt( x, i );
 
               byte charToAdd = newChar;
 
@@ -243,7 +244,7 @@ namespace RetroDevStudio.Controls
           {
             for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
             {
-              byte value = (byte)Info.Charscreen.CharacterAt( x, i );
+              byte value = (byte)affectedScreen.CharacterAt( x, i );
 
               if ( ( value == 96 )
               &&   ( replaceShiftSpaceWithSpace ) )

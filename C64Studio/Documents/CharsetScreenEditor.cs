@@ -55,6 +55,7 @@ namespace RetroDevStudio.Documents
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
 
     private Formats.CharsetScreenProject    m_CharsetScreen = new RetroDevStudio.Formats.CharsetScreenProject();
+    private int                         m_CurrentScreenIndex = 0;
 
     private ToolMode                    m_ToolMode = ToolMode.SINGLE_CHAR;
 
@@ -219,6 +220,26 @@ namespace RetroDevStudio.Documents
 
 
 
+    public int CurrentScreenIndex
+    {
+      get
+      {
+        return m_CurrentScreenIndex;
+      }
+    }
+
+
+
+    public CharsetScreen CurrentScreen
+    {
+      get
+      {
+        return m_CharsetScreen.Screens[m_CurrentScreenIndex];
+      }
+    }
+
+
+
     private void ApplyPalette()
     {
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
@@ -248,16 +269,16 @@ namespace RetroDevStudio.Documents
       // visible chars
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
-      int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
-      int     y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
+      int     x2 = x1 + CurrentScreen.ScreenWidth - 1;
+      int     y2 = y1 + CurrentScreen.ScreenHeight - 1;
 
       if ( x1 < 0 )
       {
         x1 = 0;
       }
-      if ( x2 >= m_CharsetScreen.ScreenWidth )
+      if ( x2 >= CurrentScreen.ScreenWidth )
       {
-        x2 = m_CharsetScreen.ScreenWidth - 1;
+        x2 = CurrentScreen.ScreenWidth - 1;
       }
       if ( x2 - x1 > m_CharsWidth )
       {
@@ -267,9 +288,9 @@ namespace RetroDevStudio.Documents
       {
         y1 = 0;
       }
-      if ( y2 >= m_CharsetScreen.ScreenHeight )
+      if ( y2 >= CurrentScreen.ScreenHeight )
       {
-        y2 = m_CharsetScreen.ScreenHeight - 1;
+        y2 = CurrentScreen.ScreenHeight - 1;
       }
       if ( y2 - y1 > m_CharsHeight )
       {
@@ -278,14 +299,14 @@ namespace RetroDevStudio.Documents
 
       if ( _ShowGrid )
       {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
         {
           for ( int j = 0; j < TargetBuffer.Height; ++j )
           {
             TargetBuffer.SetPixel( i * pictureEditor.ClientRectangle.Width / m_CharsWidth, j, 0xffc0c0c0 );
           }
         }
-        for ( int i = 0; i < m_CharsetScreen.ScreenHeight; ++i )
+        for ( int i = 0; i < CurrentScreen.ScreenHeight; ++i )
         {
           for ( int j = 0; j < TargetBuffer.Width; ++j )
           {
@@ -301,7 +322,7 @@ namespace RetroDevStudio.Documents
         {
           for ( int y = y1; y <= y2; ++y )
           {
-            if ( m_CharsetScreen.CharacterAt( x, y ) == m_CurrentChar )
+            if ( CurrentScreen.CharacterAt( x, y ) == m_CurrentChar )
             {
               int  sx1 = ( ( x - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth;
               int  sx2 = ( ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_CharsWidth - 1;
@@ -320,13 +341,13 @@ namespace RetroDevStudio.Documents
       int     fillWidth = 0;
       int     fillHeight = 0;
 
-      if ( m_CharsetScreen.ScreenWidth - m_CharsetScreen.ScreenOffsetX < m_CharsWidth )
+      if ( CurrentScreen.ScreenWidth - m_CharsetScreen.ScreenOffsetX < m_CharsWidth )
       {
-        fillWidth = m_CharsWidth - ( m_CharsetScreen.ScreenWidth - m_CharsetScreen.ScreenOffsetX );
+        fillWidth = m_CharsWidth - ( CurrentScreen.ScreenWidth - m_CharsetScreen.ScreenOffsetX );
       }
-      if ( m_CharsetScreen.ScreenHeight - m_CharsetScreen.ScreenOffsetY < m_CharsHeight )
+      if ( CurrentScreen.ScreenHeight - m_CharsetScreen.ScreenOffsetY < m_CharsHeight )
       {
-        fillHeight = m_CharsHeight - ( m_CharsetScreen.ScreenHeight - m_CharsetScreen.ScreenOffsetY );
+        fillHeight = m_CharsHeight - ( CurrentScreen.ScreenHeight - m_CharsetScreen.ScreenOffsetY );
       }
       if ( ( fillWidth > 0 )
       &&   ( fillHeight > 0 ) )
@@ -573,13 +594,13 @@ namespace RetroDevStudio.Documents
       int     offsetY = undoY - m_MousePos.Y;
       int     undoWidth = m_FloatingSelectionSize.Width - ( undoX - m_MousePos.X );
       int     undoHeight = m_FloatingSelectionSize.Height - ( undoY - m_MousePos.Y );
-      if ( undoX + undoWidth > m_CharsetScreen.ScreenWidth )
+      if ( undoX + undoWidth > CurrentScreen.ScreenWidth )
       {
-        undoWidth = m_CharsetScreen.ScreenWidth - undoX;
+        undoWidth = CurrentScreen.ScreenWidth - undoX;
       }
-      if ( undoY + undoHeight > m_CharsetScreen.ScreenHeight )
+      if ( undoY + undoHeight > CurrentScreen.ScreenHeight )
       {
-        undoHeight = m_CharsetScreen.ScreenHeight - undoY;
+        undoHeight = CurrentScreen.ScreenHeight - undoY;
       }
       if ( ( undoWidth <= 0 )
       ||   ( undoHeight <= 0 ) )
@@ -587,21 +608,21 @@ namespace RetroDevStudio.Documents
         m_FloatingSelection = null;
         return;
       }
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CharsetScreen.ScreenOffsetX + undoX, m_CharsetScreen.ScreenOffsetY + undoY, undoWidth, undoHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, m_CharsetScreen.ScreenOffsetX + undoX, m_CharsetScreen.ScreenOffsetY + undoY, undoWidth, undoHeight ) );
 
       for ( int j = 0; j < undoHeight; ++j )
       {
         for ( int i = 0; i < undoWidth; ++i )
         {
           if ( ( offsetX + i >= 0 )
-          &&   ( offsetX + i < m_CharsetScreen.ScreenWidth )
+          &&   ( offsetX + i < CurrentScreen.ScreenWidth )
           &&   ( offsetY + j >= 0 )
-          &&   ( offsetY + j < m_CharsetScreen.ScreenHeight ) )
+          &&   ( offsetY + j < CurrentScreen.ScreenHeight ) )
           {
             var selectionChar = m_FloatingSelection[( offsetX + i ) + ( offsetY + j ) * m_FloatingSelectionSize.Width];
             if ( selectionChar.first )
             {
-              m_CharsetScreen.Chars[undoX + i + m_CharsetScreen.ScreenOffsetX + ( undoY + j + m_CharsetScreen.ScreenOffsetY ) * m_CharsetScreen.ScreenWidth] = selectionChar.second;
+              CurrentScreen.Chars[undoX + i + m_CharsetScreen.ScreenOffsetX + ( undoY + j + m_CharsetScreen.ScreenOffsetY ) * CurrentScreen.ScreenWidth] = selectionChar.second;
 
               DrawCharImage( pictureEditor.DisplayPage,
                  ( undoX + i ) * m_CharacterWidth,
@@ -637,14 +658,14 @@ namespace RetroDevStudio.Documents
 
       pointsToCheck.Add( new System.Drawing.Point( X, Y ) );
 
-      uint charToFill   = m_CharsetScreen.CompleteCharAt( X, Y );
-      uint charToInsert = m_CharsetScreen.AssembleChar( m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
+      uint charToFill   = CurrentScreen.CompleteCharAt( X, Y );
+      uint charToInsert = CurrentScreen.AssembleChar( m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
       if ( charToFill == charToInsert )
       {
         return;
       }
 
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ) );
 
       // for NES style filling to work we need to remember the original positions and replant later
       var changedChars = new GR.Collections.Set<System.Drawing.Point>();
@@ -654,29 +675,29 @@ namespace RetroDevStudio.Documents
         System.Drawing.Point    point = pointsToCheck[pointsToCheck.Count - 1];
         pointsToCheck.RemoveAt( pointsToCheck.Count - 1 );
 
-        if ( m_CharsetScreen.CompleteCharAt( point.X, point.Y ) != charToInsert )
+        if ( CurrentScreen.CompleteCharAt( point.X, point.Y ) != charToInsert )
         {
           DrawCharImage( m_Image, point.X * m_CharacterWidth, point.Y * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
-          m_CharsetScreen.SetCompleteCharAt( point.X, point.Y, charToInsert );
+          CurrentScreen.SetCompleteCharAt( point.X, point.Y, charToInsert );
           changedChars.Add( point );
 
           if ( ( point.X > 0 )
-          &&   ( m_CharsetScreen.CompleteCharAt( point.X - 1, point.Y ) == charToFill ) )
+          &&   ( CurrentScreen.CompleteCharAt( point.X - 1, point.Y ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X - 1, point.Y ) );
           }
-          if ( ( point.X + 1 < m_CharsetScreen.ScreenWidth )
-          &&   ( m_CharsetScreen.CompleteCharAt( point.X + 1, point.Y ) == charToFill ) )
+          if ( ( point.X + 1 < CurrentScreen.ScreenWidth )
+          &&   ( CurrentScreen.CompleteCharAt( point.X + 1, point.Y ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X + 1, point.Y ) );
           }
           if ( ( point.Y > 0 )
-          &&   ( m_CharsetScreen.CompleteCharAt( point.X, point.Y - 1 ) == charToFill ) )
+          &&   ( CurrentScreen.CompleteCharAt( point.X, point.Y - 1 ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y - 1 ) );
           }
-          if ( ( point.Y + 1 < m_CharsetScreen.ScreenHeight )
-          &&   ( m_CharsetScreen.CompleteCharAt( point.X, point.Y + 1 ) == charToFill ) )
+          if ( ( point.Y + 1 < CurrentScreen.ScreenHeight )
+          &&   ( CurrentScreen.CompleteCharAt( point.X, point.Y + 1 ) == charToFill ) )
           {
             pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y + 1 ) );
           }
@@ -707,8 +728,8 @@ namespace RetroDevStudio.Documents
       int     charX = m_MousePos.X + m_CharsetScreen.ScreenOffsetX;
       int     charY = m_MousePos.Y + m_CharsetScreen.ScreenOffsetY;
       int     numBytesOfSingleChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
-      ushort  charAtPos = m_CharsetScreen.CharacterAt( charX, charY );
-      ushort  colorAtPos = m_CharsetScreen.ColorAt( charX, charY );
+      ushort  charAtPos = CurrentScreen.CharacterAt( charX, charY );
+      ushort  colorAtPos = CurrentScreen.ColorAt( charX, charY );
       string  formatString = ( numBytesOfSingleChar == 2 ) ? "X4" : "X2";
 
       sb.Append( "Pos " );
@@ -718,19 +739,19 @@ namespace RetroDevStudio.Documents
       sb.AppendLine();
 
       sb2.Append( "Offset $" );
-      sb2.Append( ( charX + charY * m_CharsetScreen.ScreenWidth ).ToString( formatString ) );
+      sb2.Append( ( charX + charY * CurrentScreen.ScreenWidth ).ToString( formatString ) );
 
       int     screenOffset = PreferredScreenOffset( PreferredMachineType );
       if ( screenOffset != -1 )
       {
         sb2.Append( "/$" );
-        sb2.Append( ( screenOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( formatString ) );
+        sb2.Append( ( screenOffset + charX + charY * CurrentScreen.ScreenWidth ).ToString( formatString ) );
       }
       int     colorOffset = PreferredColorOffset( PreferredMachineType );
       if ( colorOffset != -1 )
       {
         sb2.Append( "/$" );
-        sb2.Append( ( colorOffset + charX + charY * m_CharsetScreen.ScreenWidth ).ToString( formatString ) );
+        sb2.Append( ( colorOffset + charX + charY * CurrentScreen.ScreenWidth ).ToString( formatString ) );
       }
       sb2.AppendLine();
 
@@ -861,9 +882,9 @@ namespace RetroDevStudio.Documents
         // clear reverse cache
         if ( m_ReverseChars )
         {
-          for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
+          for ( int x = 0; x < CurrentScreen.ScreenWidth; ++x )
           {
-            for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
+            for ( int y = 0; y < CurrentScreen.ScreenHeight; ++y )
             {
               m_ReverseCache[x, y] = false;
             }
@@ -888,7 +909,7 @@ namespace RetroDevStudio.Documents
 
                 var affectedArea = DetermineAffectedArea( p1.X, p1.Y, p2.X - p1.X + 1, p2.Y - p1.Y + 1 );
 
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, affectedArea ) );
 
                 if ( m_ToolMode == ToolMode.RECTANGLE )
                 {
@@ -939,9 +960,9 @@ namespace RetroDevStudio.Documents
                 &&   ( ( ModifierKeys & Keys.Control ) == Keys.None ) )
                 {
                   // not ctrl-Click, remove previous selection
-                  for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
+                  for ( int x = 0; x < CurrentScreen.ScreenWidth; ++x )
                   {
-                    for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
+                    for ( int y = 0; y < CurrentScreen.ScreenHeight; ++y )
                     {
                       m_SelectedChars[x, y] = false;
                     }
@@ -973,9 +994,9 @@ namespace RetroDevStudio.Documents
       }
 
       if ( ( charX < 0 )
-      ||   ( charX >= m_CharsetScreen.ScreenWidth )
+      ||   ( charX >= CurrentScreen.ScreenWidth )
       ||   ( charY < 0 )
-      ||   ( charY >= m_CharsetScreen.ScreenHeight ) )
+      ||   ( charY >= CurrentScreen.ScreenHeight ) )
       {
         return;
       }
@@ -1016,7 +1037,7 @@ namespace RetroDevStudio.Documents
             break;
           case ToolMode.SINGLE_CHAR:
             if ( ( m_ReverseChars )
-            ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != CombineChar( m_CurrentChar, m_CurrentChar, m_CurrentPaletteMapping ) ) )
+            ||   ( CurrentScreen.Chars[charX + charY * CurrentScreen.ScreenWidth] != CombineChar( m_CurrentChar, m_CurrentChar, m_CurrentPaletteMapping ) ) )
             {
               if ( m_ReverseChars )
               {
@@ -1028,7 +1049,7 @@ namespace RetroDevStudio.Documents
               }
 
               var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ), m_MouseButtonReleased );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, affectedArea ), m_MouseButtonReleased );
               m_MouseButtonReleased = false;
 
               SetCharacter( charX, charY );
@@ -1155,9 +1176,9 @@ namespace RetroDevStudio.Documents
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        m_CurrentChar           = m_CharsetScreen.CharacterAt( charX, charY );
-        m_CurrentColor          = m_CharsetScreen.ColorAt( charX, charY );
-        m_CurrentPaletteMapping = m_CharsetScreen.PaletteMappingAt( charX, charY );
+        m_CurrentChar           = CurrentScreen.CharacterAt( charX, charY );
+        m_CurrentColor          = CurrentScreen.ColorAt( charX, charY );
+        m_CurrentPaletteMapping = CurrentScreen.PaletteMappingAt( charX, charY );
         if ( IsLayoutUsable() )
         {
           for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
@@ -1214,9 +1235,9 @@ namespace RetroDevStudio.Documents
       if ( m_ReverseChars )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
-                       (ushort)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ) ^ 0x80 ), 
-                       (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ),
-                       (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
+                       (ushort)( ( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] & 0xffff ) ^ 0x80 ), 
+                       (ushort)( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] >> 16 ),
+                       (ushort)( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] >> 16 ) );
         return;
       }
 
@@ -1227,11 +1248,11 @@ namespace RetroDevStudio.Documents
       }
       else if ( m_AffectChars )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ), (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, m_CurrentChar, (ushort)( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] >> 16 ), (ushort)( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] >> 16 ) );
       }
       else if ( m_AffectColors )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ), m_CurrentColor, m_CurrentPaletteMapping );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, (ushort)( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] & 0xffff ), m_CurrentColor, m_CurrentPaletteMapping );
       }
     }
 
@@ -1248,7 +1269,7 @@ namespace RetroDevStudio.Documents
     {
       if ( m_ReverseChars )
       {
-        byte  origChar = (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff );
+        byte  origChar = (byte)( CurrentScreen.Chars[X + Y * CurrentScreen.ScreenWidth] & 0xff );
 
         SetCharacterWithoutReverse( X, Y, (byte)( Char ^ 0x80 ), Color, PaletteMappingIndex );
         return;
@@ -1265,7 +1286,7 @@ namespace RetroDevStudio.Documents
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
                        Char, Color, PaletteMappingIndex );
-        m_CharsetScreen.SetAt( X, Y, Char, Color, PaletteMappingIndex );
+        CurrentScreen.SetAt( X, Y, Char, Color, PaletteMappingIndex );
       }
       else if ( m_AffectChars )
       {
@@ -1273,19 +1294,19 @@ namespace RetroDevStudio.Documents
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
                        Char,
-                       m_CharsetScreen.ColorAt( X, Y ),
-                       m_CharsetScreen.ColorAt( X, Y ) );
-        m_CharsetScreen.SetCharacterAt( X, Y, Char );
+                       CurrentScreen.ColorAt( X, Y ),
+                       CurrentScreen.ColorAt( X, Y ) );
+        CurrentScreen.SetCharacterAt( X, Y, Char );
       }
       else if ( m_AffectColors )
       {
         DrawCharImage( pictureEditor.DisplayPage, 
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
-                       ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
-                       m_CharsetScreen.CharacterAt( X, Y ),
+                       ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
+                       CurrentScreen.CharacterAt( X, Y ),
                        Color,
                        PaletteMappingIndex );
-        m_CharsetScreen.SetColorAt( X, Y, Color, PaletteMappingIndex );
+        CurrentScreen.SetColorAt( X, Y, Color, PaletteMappingIndex );
       }
 
       if ( ( m_AffectColors )
@@ -1304,13 +1325,13 @@ namespace RetroDevStudio.Documents
             {
               continue;
             }
-            if ( m_CharsetScreen.PaletteMappingAt( xx + i, yy + j ) != PaletteMappingIndex )
+            if ( CurrentScreen.PaletteMappingAt( xx + i, yy + j ) != PaletteMappingIndex )
             {
-              m_CharsetScreen.SetColorAt( xx + i, yy + j, Color, PaletteMappingIndex );
+              CurrentScreen.SetColorAt( xx + i, yy + j, Color, PaletteMappingIndex );
               DrawCharImage( pictureEditor.DisplayPage,
                        ( xx + i - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( yy + j - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
-                       m_CharsetScreen.CharacterAt( xx + i, yy + j ),
+                       CurrentScreen.CharacterAt( xx + i, yy + j ),
                        Color,
                        PaletteMappingIndex );
             }
@@ -1337,8 +1358,8 @@ namespace RetroDevStudio.Documents
     {
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
-      int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
-      int     y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
+      int     x2 = x1 + CurrentScreen.ScreenWidth - 1;
+      int     y2 = y1 + CurrentScreen.ScreenHeight - 1;
 
       int     charWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
       int     charHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
@@ -1347,25 +1368,25 @@ namespace RetroDevStudio.Documents
       {
         x1 = 0;
       }
-      if ( x2 >= m_CharsetScreen.ScreenWidth )
+      if ( x2 >= CurrentScreen.ScreenWidth )
       {
-        x2 = m_CharsetScreen.ScreenWidth - 1;
+        x2 = CurrentScreen.ScreenWidth - 1;
       }
-      if ( x2 - x1 > m_CharsetScreen.ScreenWidth )
+      if ( x2 - x1 > CurrentScreen.ScreenWidth )
       {
-        x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
+        x2 = x1 + CurrentScreen.ScreenWidth - 1;
       }
       if ( y1 < 0 )
       {
         y1 = 0;
       }
-      if ( y2 >= m_CharsetScreen.ScreenHeight )
+      if ( y2 >= CurrentScreen.ScreenHeight )
       {
-        y2 = m_CharsetScreen.ScreenHeight - 1;
+        y2 = CurrentScreen.ScreenHeight - 1;
       }
-      if ( y2 - y1 > m_CharsetScreen.ScreenHeight )
+      if ( y2 - y1 > CurrentScreen.ScreenHeight )
       {
-        y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
+        y2 = y1 + CurrentScreen.ScreenHeight - 1;
       }
 
       for ( int i = x1; i <= x2; ++i )
@@ -1373,28 +1394,28 @@ namespace RetroDevStudio.Documents
         for ( int j = y1; j <= y2; ++j )
         {
           if ( ( j < 0 )
-          ||   ( j >= m_CharsetScreen.ScreenHeight )
+          ||   ( j >= CurrentScreen.ScreenHeight )
           ||   ( i < 0 )
-          ||   ( i >= m_CharsetScreen.ScreenWidth ) )
+          ||   ( i >= CurrentScreen.ScreenWidth ) )
           {
             continue;
           }
           DrawCharImage( pictureEditor.DisplayPage,
                          ( i - x1 ) * charWidth,
                          ( j - y1 ) * charHeight,
-                         m_CharsetScreen.CharacterAt( i, j ),
-                         m_CharsetScreen.ColorAt( i, j ),
-                         m_CharsetScreen.PaletteMappingAt( i, j ) );
+                         CurrentScreen.CharacterAt( i, j ),
+                         CurrentScreen.ColorAt( i, j ),
+                         CurrentScreen.PaletteMappingAt( i, j ) );
         }
       }
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * charWidth, j * charHeight,
-                         m_CharsetScreen.CharacterAt( i, j ),
-                         m_CharsetScreen.ColorAt( i, j ),
-                         m_CharsetScreen.PaletteMappingAt( i, j ) );
+                         CurrentScreen.CharacterAt( i, j ),
+                         CurrentScreen.ColorAt( i, j ),
+                         CurrentScreen.PaletteMappingAt( i, j ) );
         }
       }
 
@@ -1438,6 +1459,13 @@ namespace RetroDevStudio.Documents
       {
         return false;
       }
+      comboScreens.Items.Clear();
+      m_CurrentScreenIndex = 0;
+      foreach ( var screen in m_CharsetScreen.Screens )
+      {
+        comboScreens.Items.Add( screen.Name );
+      }
+      comboScreens.SelectedIndex = 0;
 
       var origPalette = m_CharsetScreen.CharSet.Colors.Palette;
       ApplyPalette();
@@ -1445,7 +1473,7 @@ namespace RetroDevStudio.Documents
 
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
-      SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      SetScreenSize( CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight, m_CurrentScreenIndex );
 
       SetupColorPickerDialog();
       OnCharsetScreenModeChanged();
@@ -1487,22 +1515,22 @@ namespace RetroDevStudio.Documents
           panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
         }
       }
-      editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
-      editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
+      editScreenWidth.Text = CurrentScreen.ScreenWidth.ToString();
+      editScreenHeight.Text = CurrentScreen.ScreenHeight.ToString();
 
       AdjustScrollbars();
 
       screenHScroll.Value = m_CharsetScreen.ScreenOffsetX;
       screenVScroll.Value = m_CharsetScreen.ScreenOffsetY;
 
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * m_CharacterWidth, j * m_CharacterHeight,
-                         m_CharsetScreen.CharacterAt( i, j ),
-                         m_CharsetScreen.ColorAt( i, j ),
-                         m_CharsetScreen.PaletteMappingAt( i, j ) );
+                         CurrentScreen.CharacterAt( i, j ),
+                         CurrentScreen.ColorAt( i, j ),
+                         CurrentScreen.PaletteMappingAt( i, j ) );
         }
       }
 
@@ -1757,16 +1785,16 @@ namespace RetroDevStudio.Documents
 
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
-      int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
-      int     y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
+      int     x2 = x1 + CurrentScreen.ScreenWidth - 1;
+      int     y2 = y1 + CurrentScreen.ScreenHeight - 1;
 
       if ( x1 < 0 )
       {
         x1 = 0;
       }
-      if ( x2 >= m_CharsetScreen.ScreenWidth )
+      if ( x2 >= CurrentScreen.ScreenWidth )
       {
-        x2 = m_CharsetScreen.ScreenWidth - 1;
+        x2 = CurrentScreen.ScreenWidth - 1;
       }
       if ( x2 - x1 > m_CharsWidth )
       {
@@ -1776,9 +1804,9 @@ namespace RetroDevStudio.Documents
       {
         y1 = 0;
       }
-      if ( y2 >= m_CharsetScreen.ScreenHeight )
+      if ( y2 >= CurrentScreen.ScreenHeight )
       {
-        y2 = m_CharsetScreen.ScreenHeight - 1;
+        y2 = CurrentScreen.ScreenHeight - 1;
       }
       if ( y2 - y1 > m_CharsHeight )
       {
@@ -1786,9 +1814,9 @@ namespace RetroDevStudio.Documents
       }
 
       // mark errornous chars
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
       {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
         {
           if ( m_ErrornousChars[i, j] )
           {
@@ -1828,9 +1856,9 @@ namespace RetroDevStudio.Documents
 
     private void pictureEditor_Paint( object sender, PaintEventArgs e )
     {
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
       {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
         {
           if ( m_ErrornousChars[i, j] )
           {
@@ -1884,14 +1912,14 @@ namespace RetroDevStudio.Documents
 
     private void RecalcSelectionBounds()
     {
-      int     minX = m_CharsetScreen.ScreenWidth;
+      int     minX = CurrentScreen.ScreenWidth;
       int     maxX = 0;
-      int     minY = m_CharsetScreen.ScreenHeight;
+      int     minY = CurrentScreen.ScreenHeight;
       int     maxY = 0;
 
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
           if ( m_SelectedChars[i, j] )
           {
@@ -1902,7 +1930,7 @@ namespace RetroDevStudio.Documents
           }
         }
       }
-      if ( minX == m_CharsetScreen.ScreenWidth )
+      if ( minX == CurrentScreen.ScreenWidth )
       {
         m_SelectionBounds = new GR.Math.Rectangle();
         return;
@@ -1918,14 +1946,14 @@ namespace RetroDevStudio.Documents
       {
         case 0:
           // all
-          return new GR.Math.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+          return new GR.Math.Rectangle( 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight );
         case 1:
           // selection
           {
             if ( m_SelectionBounds.Width == 0 )
             {
               // no selection, select all
-              return new GR.Math.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+              return new GR.Math.Rectangle( 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight );
             }
             return m_SelectionBounds;
           }
@@ -1947,20 +1975,20 @@ namespace RetroDevStudio.Documents
             {
               height = 1;
             }
-            if ( minX + width > m_CharsetScreen.ScreenWidth )
+            if ( minX + width > CurrentScreen.ScreenWidth )
             {
-              width = m_CharsetScreen.ScreenWidth - minX;
+              width = CurrentScreen.ScreenWidth - minX;
             }
-            if ( minY + height > m_CharsetScreen.ScreenHeight )
+            if ( minY + height > CurrentScreen.ScreenHeight )
             {
-              height = m_CharsetScreen.ScreenHeight - minX;
+              height = CurrentScreen.ScreenHeight - minX;
             }
             return new GR.Math.Rectangle( minX, minY, width, height );
           }
       }
 
       // should not happen
-      return new GR.Math.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      return new GR.Math.Rectangle( 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight );
     }
 
 
@@ -1973,7 +2001,7 @@ namespace RetroDevStudio.Documents
       }
       if ( Data.Length == 1000 )
       {
-        SetScreenSize( 40, 25 );
+        SetScreenSize( 40, 25, m_CurrentScreenIndex );
       }
       // update bg color
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
@@ -1982,11 +2010,11 @@ namespace RetroDevStudio.Documents
       if ( curBytePos < Data.Length )
       {
         // chars first
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
-          for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+          for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
           {
-            m_CharsetScreen.SetCharacterAt( i, j, Data.ByteAt( curBytePos ) );
+            CurrentScreen.SetCharacterAt( i, j, Data.ByteAt( curBytePos ) );
             ++curBytePos;
             if ( curBytePos >= Data.Length )
             {
@@ -2002,9 +2030,9 @@ namespace RetroDevStudio.Documents
       if ( curBytePos < Data.Length )
       {
         // sanity/shuffle colors
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
-          for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+          for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
           {
             ushort colorValue = Data.ByteAt( curBytePos );
             colorValue &= 0x4f;
@@ -2023,7 +2051,7 @@ namespace RetroDevStudio.Documents
               colorValue &= 0x0f;
             }
 
-            m_CharsetScreen.SetColorAt( i, j, colorValue, colorValue );
+            CurrentScreen.SetColorAt( i, j, colorValue, colorValue );
             ++curBytePos;
             if ( curBytePos >= Data.Length )
             {
@@ -2041,13 +2069,13 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void SetScreenSize( int Width, int Height )
+    public void SetScreenSize( int Width, int Height, int screenIndex )
     {
       m_ErrornousChars = new bool[Width, Height];
       m_SelectedChars = new bool[Width, Height];
       m_ReverseCache = new bool[Width, Height];
 
-      m_CharsetScreen.SetScreenSize( Width, Height );
+      m_CharsetScreen.Screens[screenIndex].SetScreenSize( Width, Height );
       m_Image.Create( Width * m_CharacterWidth, Height * m_CharacterHeight, GR.Drawing.PixelFormat.Format32bppRgb );
 
       m_TextEntryCachedLine.Clear();
@@ -2071,7 +2099,7 @@ namespace RetroDevStudio.Documents
       screenVScroll.SmallChange = 1;
       screenVScroll.LargeChange = 1;
 
-      if ( m_CharsetScreen.ScreenWidth <= m_CharsWidth )
+      if ( CurrentScreen.ScreenWidth <= m_CharsWidth )
       {
         screenHScroll.Maximum = 0;
         screenHScroll.Enabled = false;
@@ -2079,7 +2107,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        screenHScroll.Maximum = m_CharsetScreen.ScreenWidth - m_CharsWidth;
+        screenHScroll.Maximum = CurrentScreen.ScreenWidth - m_CharsWidth;
         screenHScroll.Enabled = true;
       }
       if ( m_CharsetScreen.ScreenOffsetX > screenHScroll.Maximum )
@@ -2088,7 +2116,7 @@ namespace RetroDevStudio.Documents
       }
 
       screenVScroll.Minimum = 0;
-      if ( m_CharsetScreen.ScreenHeight <= m_CharsHeight )
+      if ( CurrentScreen.ScreenHeight <= m_CharsHeight )
       {
         screenVScroll.Maximum = 0;
         screenVScroll.Enabled = false;
@@ -2096,7 +2124,7 @@ namespace RetroDevStudio.Documents
       }
       else
       {
-        screenVScroll.Maximum = m_CharsetScreen.ScreenHeight - m_CharsHeight;
+        screenVScroll.Maximum = CurrentScreen.ScreenHeight - m_CharsHeight;
         screenVScroll.Enabled = true;
       }
       if ( m_CharsetScreen.ScreenOffsetY > screenVScroll.Maximum )
@@ -2173,17 +2201,29 @@ namespace RetroDevStudio.Documents
     {
       int     newWidth = GR.Convert.ToI32( editScreenWidth.Text );
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
+      string  newName = editScreenName.Text;
 
-      if ( ( ( newWidth != m_CharsetScreen.ScreenWidth )
-      ||     ( newHeight !=  m_CharsetScreen.ScreenHeight ) )
+      bool firstTask = true;
+
+      if ( ( ( newWidth != CurrentScreen.ScreenWidth )
+      ||     ( newHeight != CurrentScreen.ScreenHeight ) )
       &&   ( newWidth > 0 )
       &&   ( newWidth <= 65535 )
       &&   ( newHeight > 0 )
       &&   ( newHeight <= 65535 ) )
       {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight, m_CurrentScreenIndex ), firstTask );
+        firstTask = false;
 
-        SetScreenSize( newWidth, newHeight );
+        SetScreenSize( newWidth, newHeight, m_CurrentScreenIndex );
+        Modified = true;
+      }
+      if ( newName != CurrentScreen.Name )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenNameChange( m_CharsetScreen, this, m_CurrentScreenIndex ), firstTask );
+        CurrentScreen.Name = newName;
+        comboScreens.Items[m_CurrentScreenIndex] = newName;
+        comboScreens.SelectedIndex = m_CurrentScreenIndex;
         Modified = true;
       }
     }
@@ -2218,22 +2258,22 @@ namespace RetroDevStudio.Documents
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
       Debug.Log( "Inject d" );
       Modified = false;
-      editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
-      editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
+      editScreenWidth.Text = CurrentScreen.ScreenWidth.ToString();
+      editScreenHeight.Text = CurrentScreen.ScreenHeight.ToString();
 
-      SetScreenSize( CharScreen.ScreenWidth, CharScreen.ScreenHeight );
+      SetScreenSize( CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight, m_CurrentScreenIndex );
 
       Debug.Log( "Inject e" );
       AdjustScrollbars();
 
-      for ( int i = 0; i < CharScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        for ( int j = 0; j < CharScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * m_CharacterWidth, j * m_CharacterHeight,
-                         m_CharsetScreen.CharacterAt( i, j ),
-                         m_CharsetScreen.ColorAt( i, j ),
-                         m_CharsetScreen.PaletteMappingAt( i, j ) );
+                         CurrentScreen.CharacterAt( i, j ),
+                         CurrentScreen.ColorAt( i, j ),
+                         CurrentScreen.PaletteMappingAt( i, j ) );
         }
       }
       Debug.Log( "Inject f" );
@@ -2329,9 +2369,9 @@ namespace RetroDevStudio.Documents
 
     private void HideSelection()
     {
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
           m_SelectedChars[i, j] = false;
         }
@@ -2345,15 +2385,15 @@ namespace RetroDevStudio.Documents
     private void CopyToClipboard()
     {
       // not only rectangular pieces
-      int     x1 = m_CharsetScreen.ScreenWidth;
+      int     x1 = CurrentScreen.ScreenWidth;
       int     x2 = 0;
-      int     y1 = m_CharsetScreen.ScreenHeight;
+      int     y1 = CurrentScreen.ScreenHeight;
       int     y2 = 0;
 
 
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
         {
           if ( m_SelectedChars[i, j] )
           {
@@ -2376,7 +2416,7 @@ namespace RetroDevStudio.Documents
           }
         }
       }
-      if ( x1 == m_CharsetScreen.ScreenWidth )
+      if ( x1 == CurrentScreen.ScreenWidth )
       {
         // no selection
         return;
@@ -2395,7 +2435,7 @@ namespace RetroDevStudio.Documents
           if ( m_SelectedChars[x1 + x, y1 + y] )
           {
             dataSelection.AppendU8( 1 );
-            dataSelection.AppendU32( m_CharsetScreen.Chars[( y1 + y ) * m_CharsetScreen.ScreenWidth + x1 + x] );
+            dataSelection.AppendU32( CurrentScreen.Chars[( y1 + y ) * CurrentScreen.ScreenWidth + x1 + x] );
           }
           else
           {
@@ -2541,8 +2581,8 @@ namespace RetroDevStudio.Documents
 
             if ( m_AutoCenterText )
             {
-              var affectedArea = DetermineAffectedArea( 0, charY, m_CharsetScreen.ScreenWidth, 1 );
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
+              var affectedArea = DetermineAffectedArea( 0, charY, CurrentScreen.ScreenWidth, 1 );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, affectedArea ) );
 
               // restore old line
               for ( int i = 0; i < m_TextEntryCachedLine.Count; ++i )
@@ -2577,7 +2617,7 @@ namespace RetroDevStudio.Documents
                   --charX;
                 }
                 var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
-                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, affectedArea ) );
                 charIndex = 32;
                 if ( m_ReverseChars )
                 {
@@ -2587,10 +2627,10 @@ namespace RetroDevStudio.Documents
             }
             else if ( m_AutoCenterText )
             {
-              if ( m_TextEntryEnteredText.Count >= m_CharsetScreen.ScreenWidth )
+              if ( m_TextEntryEnteredText.Count >= CurrentScreen.ScreenWidth )
               {
                 ++m_SelectedChar.Y;
-                if ( m_SelectedChar.Y >= m_CharsetScreen.ScreenHeight )
+                if ( m_SelectedChar.Y >= CurrentScreen.ScreenHeight )
                 {
                   m_SelectedChar.Y = 0;
                 }
@@ -2603,12 +2643,12 @@ namespace RetroDevStudio.Documents
             else
             {
               var affectedArea = DetermineAffectedArea( charX, charY, 1, 1 );
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, affectedArea ) );
-              if ( m_SelectedChar.X >= m_CharsetScreen.ScreenWidth - 1 )
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, affectedArea ) );
+              if ( m_SelectedChar.X >= CurrentScreen.ScreenWidth - 1 )
               {
                 m_SelectedChar.X = 0;
                 ++m_SelectedChar.Y;
-                if ( m_SelectedChar.Y >= m_CharsetScreen.ScreenHeight - 1 )
+                if ( m_SelectedChar.Y >= CurrentScreen.ScreenHeight - 1 )
                 {
                   m_SelectedChar.Y = 0;
                 }
@@ -2624,7 +2664,7 @@ namespace RetroDevStudio.Documents
 
             if ( m_AutoCenterText )
             {
-              int     newX = ( m_CharsetScreen.ScreenWidth - m_TextEntryEnteredText.Count ) / 2;
+              int     newX = ( CurrentScreen.ScreenWidth - m_TextEntryEnteredText.Count ) / 2;
               for ( int i = 0; i < m_TextEntryEnteredText.Count; ++i )
               {
                 ushort  origChar = (ushort)( m_TextEntryEnteredText[i] & 0xffff );
@@ -2636,7 +2676,7 @@ namespace RetroDevStudio.Documents
                                                 ( newX - m_CharsetScreen.ScreenOffsetY ) * m_CharacterWidth, ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
                                                 m_TextEntryCachedLine.Count * m_CharacterWidth, m_CharacterHeight );
               pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * m_CharacterWidth, charY * m_CharacterHeight, m_CharacterWidth, m_CharacterHeight ) );
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( 0, m_SelectedChar.Y * m_CharacterHeight, m_CharsetScreen.ScreenWidth * m_CharacterWidth, m_CharacterHeight ) );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( 0, m_SelectedChar.Y * m_CharacterHeight, CurrentScreen.ScreenWidth * m_CharacterWidth, m_CharacterHeight ) );
             }
             else
             {
@@ -2679,9 +2719,9 @@ namespace RetroDevStudio.Documents
     {
       m_TextEntryCachedLine.Clear();
 
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        m_TextEntryCachedLine.Add( m_CharsetScreen.Chars[i + LineIndex * m_CharsetScreen.ScreenWidth] );
+        m_TextEntryCachedLine.Add( CurrentScreen.Chars[i + LineIndex * CurrentScreen.ScreenWidth] );
       }
     }
 
@@ -2696,16 +2736,16 @@ namespace RetroDevStudio.Documents
           DrawCharImage( pictureEditor.DisplayPage,
                          ( x - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                          ( y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
-                         m_CharsetScreen.CharacterAt( x, y ),
-                         m_CharsetScreen.ColorAt( x, y ),
-                         m_CharsetScreen.PaletteMappingAt( x, y ) );
+                         CurrentScreen.CharacterAt( x, y ),
+                         CurrentScreen.ColorAt( x, y ),
+                         CurrentScreen.PaletteMappingAt( x, y ) );
 
           DrawCharImage( m_Image,
                          x * m_CharacterWidth,
                          y * m_CharacterHeight,
-                         m_CharsetScreen.CharacterAt( x, y ),
-                         m_CharsetScreen.ColorAt( x, y ),
-                         m_CharsetScreen.PaletteMappingAt( x, y ) );
+                         CurrentScreen.CharacterAt( x, y ),
+                         CurrentScreen.ColorAt( x, y ),
+                         CurrentScreen.PaletteMappingAt( x, y ) );
         }
       }
       pictureEditor.Invalidate( new System.Drawing.Rectangle( ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
@@ -2777,6 +2817,7 @@ namespace RetroDevStudio.Documents
         {
           m_CurrentPaletteMapping = 0;
         }
+        SanitizeValues();
         Modified = true;
       }
       m_CharacterWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ), 0 ) );
@@ -2805,9 +2846,32 @@ namespace RetroDevStudio.Documents
         }
 
         OnCharsetScreenModeChanged();
-        SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+        SetScreenSize( CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight, m_CurrentScreenIndex );
         RedrawFullScreen();
         AdjustScrollbars();
+      }
+    }
+
+
+
+    private void SanitizeValues()
+    {
+      foreach ( var screen in m_CharsetScreen.Screens )
+      {
+        for ( int i = 0; i < screen.ScreenWidth; ++i )
+        {
+          for ( int j = 0; j < screen.ScreenHeight; ++j )
+          {
+            if ( screen.Mode == TextMode.NES )
+            {
+              if ( screen.PaletteMappingAt( i, j ) >= 4 )
+              {
+                screen.SetColorAt( i, j, 0, screen.PaletteMappingAt( i, j ) & 3 );
+                Modified = true;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -3230,8 +3294,8 @@ namespace RetroDevStudio.Documents
     
     public void ImportFromData( int Width, int Height, ByteBuffer CharData, ByteBuffer ColorData, CharsetProject Charset )
     {
-      SetScreenSize( Width, Height );
-      m_CharsetScreen.SetScreenSize( Width, Height );
+      SetScreenSize( m_CurrentScreenIndex, Width, Height );
+      CurrentScreen.SetScreenSize( Width, Height );
       AdjustScrollbars();
 
       screenHScroll.Value = m_CharsetScreen.ScreenOffsetX;
@@ -3242,7 +3306,7 @@ namespace RetroDevStudio.Documents
         for ( int i = 0; i < Width; ++i )
         {
           int     bufferIndex = i + j * Width;
-          m_CharsetScreen.Chars[bufferIndex] = (uint)( CharData.ByteAt( bufferIndex ) + ( ColorData.ByteAt( bufferIndex ) << 16 ) );
+          CurrentScreen.Chars[bufferIndex] = (uint)( CharData.ByteAt( bufferIndex ) + ( ColorData.ByteAt( bufferIndex ) << 16 ) );
         }
       }
 
@@ -3250,8 +3314,8 @@ namespace RetroDevStudio.Documents
       m_CharsetScreen.CharSet.ReadFromBuffer( CharsetProject );
 
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
-      editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
+      editScreenWidth.Text = CurrentScreen.ScreenWidth.ToString();
+      editScreenHeight.Text = CurrentScreen.ScreenHeight.ToString();
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.ExportNumCharacters; ++i )
       {
@@ -3288,9 +3352,9 @@ namespace RetroDevStudio.Documents
       m_ReverseChars = checkReverse.Checked;
       if ( m_ReverseChars )
       {
-        for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
+        for ( int x = 0; x < CurrentScreen.ScreenWidth; ++x )
         {
-          for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
+          for ( int y = 0; y < CurrentScreen.ScreenHeight; ++y )
           {
             m_ReverseCache[x, y] = false;
           }
@@ -3307,16 +3371,16 @@ namespace RetroDevStudio.Documents
 
     private void charEditor_CharactersShifted( int[] OldToNew, int[] NewToOld )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ), false );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ), false );
 
       // now shift all characters
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
       {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
         {
-          uint  origChar = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
+          uint  origChar = CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth];
           uint  origColor = ( origChar & 0xffff0000 );
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( (uint)OldToNew[(int)( origChar & 0xffff )] | origColor );
+          CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth] = (uint)( (uint)OldToNew[(int)( origChar & 0xffff )] | origColor );
         }
       }
 
@@ -3343,12 +3407,12 @@ namespace RetroDevStudio.Documents
 
     private void btnClearScreen_Click( DecentForms.ControlBase Sender )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ), false );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ), false );
 
       // now shift all characters
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
       {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
         {
           SetCharacter( i, j, 32, 1, 0 );
         }
@@ -3377,16 +3441,16 @@ namespace RetroDevStudio.Documents
 
     private void btnShiftLeft_Click( DecentForms.ControlBase Sender )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ) );
 
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
       {
-        uint  oldChar = m_CharsetScreen.Chars[0 + j * m_CharsetScreen.ScreenWidth];
-        for ( int i = 1; i < m_CharsetScreen.ScreenWidth; ++i )
+        uint  oldChar = CurrentScreen.Chars[0 + j * CurrentScreen.ScreenWidth];
+        for ( int i = 1; i < CurrentScreen.ScreenWidth; ++i )
         {
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth - 1] = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
+          CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth - 1] = CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth];
         }
-        m_CharsetScreen.Chars[j * m_CharsetScreen.ScreenWidth + m_CharsetScreen.ScreenWidth - 1] = oldChar;
+        CurrentScreen.Chars[j * CurrentScreen.ScreenWidth + CurrentScreen.ScreenWidth - 1] = oldChar;
       }
       Modified = true;
       RedrawFullScreen();
@@ -3396,16 +3460,16 @@ namespace RetroDevStudio.Documents
 
     private void btnShiftRight_Click( DecentForms.ControlBase Sender )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ) );
 
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int j = 0; j < CurrentScreen.ScreenHeight; ++j )
       {
-        uint  oldChar = m_CharsetScreen.Chars[m_CharsetScreen.ScreenWidth - 1 + j * m_CharsetScreen.ScreenWidth];
-        for ( int i = m_CharsetScreen.ScreenWidth - 1; i >= 1; --i )
+        uint  oldChar = CurrentScreen.Chars[CurrentScreen.ScreenWidth - 1 + j * CurrentScreen.ScreenWidth];
+        for ( int i = CurrentScreen.ScreenWidth - 1; i >= 1; --i )
         {
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth - 1];
+          CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth] = CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth - 1];
         }
-        m_CharsetScreen.Chars[j * m_CharsetScreen.ScreenWidth] = oldChar;
+        CurrentScreen.Chars[j * CurrentScreen.ScreenWidth] = oldChar;
       }
       Modified = true;
       RedrawFullScreen();
@@ -3415,16 +3479,16 @@ namespace RetroDevStudio.Documents
 
     private void btnShiftUp_Click( DecentForms.ControlBase Sender )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ) );
 
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        uint  oldChar = m_CharsetScreen.Chars[i];
-        for ( int j = 0; j < m_CharsetScreen.ScreenHeight - 1; ++j )
+        uint  oldChar = CurrentScreen.Chars[i];
+        for ( int j = 0; j < CurrentScreen.ScreenHeight - 1; ++j )
         {
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + ( j + 1 ) * m_CharsetScreen.ScreenWidth];
+          CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth] = CurrentScreen.Chars[i + ( j + 1 ) * CurrentScreen.ScreenWidth];
         }
-        m_CharsetScreen.Chars[i + ( m_CharsetScreen.ScreenHeight - 1 ) * m_CharsetScreen.ScreenWidth] = oldChar;
+        CurrentScreen.Chars[i + ( CurrentScreen.ScreenHeight - 1 ) * CurrentScreen.ScreenWidth] = oldChar;
       }
       Modified = true;
       RedrawFullScreen();
@@ -3434,16 +3498,16 @@ namespace RetroDevStudio.Documents
 
     private void btnShiftDown_Click( DecentForms.ControlBase Sender )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight ) );
 
-      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      for ( int i = 0; i < CurrentScreen.ScreenWidth; ++i )
       {
-        uint  oldChar = m_CharsetScreen.Chars[i + ( m_CharsetScreen.ScreenHeight - 1 ) * m_CharsetScreen.ScreenWidth];
-        for ( int j = m_CharsetScreen.ScreenHeight - 1; j >= 1; --j )
+        uint  oldChar = CurrentScreen.Chars[i + ( CurrentScreen.ScreenHeight - 1 ) * CurrentScreen.ScreenWidth];
+        for ( int j = CurrentScreen.ScreenHeight - 1; j >= 1; --j )
         {
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + ( j - 1 ) * m_CharsetScreen.ScreenWidth];
+          CurrentScreen.Chars[i + j * CurrentScreen.ScreenWidth] = CurrentScreen.Chars[i + ( j - 1 ) * CurrentScreen.ScreenWidth];
         }
-        m_CharsetScreen.Chars[i] = oldChar;
+        CurrentScreen.Chars[i] = oldChar;
       }
       Modified = true;
       RedrawFullScreen();
@@ -3573,10 +3637,10 @@ namespace RetroDevStudio.Documents
 
     private void btnImport_Click( DecentForms.ControlBase Sender )
     {
-      var undo1 = new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      var undo1 = new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight );
       var undo2 = new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this );
       var undo3 = new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this );
-      var undo4 = new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      var undo4 = new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight, m_CurrentScreenIndex );
 
       if ( m_ImportForm.HandleImport( m_CharsetScreen, this ) )
       {
@@ -3797,6 +3861,115 @@ namespace RetroDevStudio.Documents
       _HighlightUsedChars = checkHighlightUsedChars.Checked;
       checkHighlightUsedChars.Image = _HighlightUsedChars ? Properties.Resources.charscreen_highlightusedchars_on.ToBitmap() : Properties.Resources.charscreen_highlightusedchars_off.ToBitmap();
       pictureEditor.Invalidate();
+    }
+
+
+
+    private void btnMapAdd_Click( DecentForms.ControlBase Sender )
+    {
+      int width   = GR.Convert.ToI32( editScreenWidth.Text );
+      int height  = GR.Convert.ToI32( editScreenHeight.Text );
+
+      if ( ( width <= 0 )
+      ||   ( height <= 0 ) )
+      {
+        return;
+      }
+      var screen = new CharsetScreen()
+      {
+        ScreenWidth   = width,
+        ScreenHeight  = height,
+        Name          = editScreenName.Text,
+      };
+      screen.SetScreenSize( width, height );
+
+      comboScreens.Items.Add( screen.Name );
+      m_CharsetScreen.Screens.Add( screen );
+      SetModified();
+    }
+
+
+
+    private void btnMapDelete_Click( DecentForms.ControlBase Sender )
+    {
+
+    }
+
+
+
+    private void btnMoveMapUp_Click( DecentForms.ControlBase Sender )
+    {
+
+    }
+
+
+
+    private void btnMoveMapDown_Click( DecentForms.ControlBase Sender )
+    {
+
+    }
+
+
+
+    private void comboScreens_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      editScreenName.Text = comboScreens.SelectedItem.ToString();
+      if ( m_CurrentScreenIndex == comboScreens.SelectedIndex )
+      {
+        return;
+      }
+      m_CurrentScreenIndex = comboScreens.SelectedIndex;
+      RedrawFullScreen();
+    }
+
+
+
+    private void btnScreenCopy_Click( DecentForms.ControlBase Sender )
+    {
+      var screen = new CharsetScreen()
+      {
+        ScreenWidth   = CurrentScreen.ScreenWidth,
+        ScreenHeight  = CurrentScreen.ScreenHeight,
+        Name          = CurrentScreen.Name + " Copy"
+      };
+      screen.SetScreenSize( CurrentScreen.ScreenWidth, CurrentScreen.ScreenHeight );
+      for ( int i = 0; i < CurrentScreen.Chars.Count; ++i )
+      {
+        screen.Chars[i] = CurrentScreen.Chars[i];
+      }
+
+      comboScreens.Items.Add( screen.Name );
+      m_CharsetScreen.Screens.Add( screen );
+      SetModified();
+    }
+
+
+
+    public void AddScreen( int screenIndex, Formats.CharsetScreen screen )
+    {
+      m_CharsetScreen.Screens.Insert( screenIndex, screen );
+
+      int   mapIndex = screenIndex;
+      comboScreens.Items.Insert( screenIndex, screen.Name );
+      SetModified();
+
+      AdjustScrollbars();
+      RedrawFullScreen();
+    }
+
+
+
+    public void RemoveScreen( int screenIndex )
+    {
+      if ( ( screenIndex < 0 )
+      ||   ( screenIndex >= m_CharsetScreen.Screens.Count ) )
+      {
+        Debug.Log( "remove invalid screen index" );
+        return;
+      }
+      m_CharsetScreen.Screens.RemoveAt( screenIndex );
+      comboScreens.Items.RemoveAt( screenIndex );
+      SetModified();
     }
 
 

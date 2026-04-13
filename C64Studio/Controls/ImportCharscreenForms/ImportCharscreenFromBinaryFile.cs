@@ -34,6 +34,8 @@ namespace RetroDevStudio.Controls
         bytesToSkip = 0;
       }
 
+      var screen = Editor.CurrentScreen;
+
       if ( Editor.OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSCREEN_SUPPORTED_FILES + Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( GR.Path.GetExtension( filename ).ToUpper() == ".CTM" )
@@ -191,7 +193,7 @@ namespace RetroDevStudio.Controls
                     if ( ( newWidth > 0 )
                     &&   ( newHeight > 0 ) )
                     {
-                      Editor.SetScreenSize( newWidth, newHeight );
+                      Editor.SetScreenSize( newWidth, newHeight, Editor.CurrentScreenIndex );
                     }
                   }
                   if ( parms.Length >= 3 )

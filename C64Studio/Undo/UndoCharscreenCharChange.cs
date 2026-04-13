@@ -16,12 +16,13 @@ namespace RetroDevStudio.Undo
     public int        Y = 0;
     public int        Width = 0;
     public int        Height = 0;
+    public int        ScreenIndex = 0; 
 
     public GR.Game.Layer<uint>     ChangedData = new GR.Game.Layer<uint>();
 
 
 
-    public UndoCharscreenCharChange( CharsetScreenProject Project, CharsetScreenEditor Editor, int X, int Y, int Width, int Height )
+    public UndoCharscreenCharChange( CharsetScreenProject Project, CharsetScreenEditor Editor, int screenIndex, int X, int Y, int Width, int Height )
     {
       this.X = X;
       this.Y = Y;
@@ -29,6 +30,9 @@ namespace RetroDevStudio.Undo
       this.Height = Height;
       this.Editor = Editor;
       this.Project = Project;
+      ScreenIndex = screenIndex;
+
+      var screen = Project.Screens[ScreenIndex];
 
       ChangedData.Resize( Width, Height );
 
@@ -36,21 +40,24 @@ namespace RetroDevStudio.Undo
       {
         for ( int j = 0; j < Height; ++j )
         {
-          ChangedData[i, j] = Project.Chars[X + i + ( Y + j ) * Project.ScreenWidth];
+          ChangedData[i, j] = screen.Chars[X + i + ( Y + j ) * screen.ScreenWidth];
         }
       }
     }
 
 
 
-    public UndoCharscreenCharChange( CharsetScreenProject Project, CharsetScreenEditor Editor, System.Drawing.Rectangle Area )
+    public UndoCharscreenCharChange( CharsetScreenProject Project, CharsetScreenEditor Editor, int screenIndex, System.Drawing.Rectangle Area )
     {
       X           = Area.X;
       Y           = Area.Y;
       Width       = Area.Width;
       Height      = Area.Height;
+      ScreenIndex = screenIndex;
       this.Editor = Editor;
       this.Project = Project;
+
+      var screen = Project.Screens[ScreenIndex];
 
       ChangedData.Resize( Width, Height );
 
@@ -58,7 +65,7 @@ namespace RetroDevStudio.Undo
       {
         for ( int j = 0; j < Height; ++j )
         {
-          ChangedData[i, j] = Project.Chars[X + i + ( Y + j ) * Project.ScreenWidth];
+          ChangedData[i, j] = screen.Chars[X + i + ( Y + j ) * screen.ScreenWidth];
         }
       }
     }
@@ -77,18 +84,19 @@ namespace RetroDevStudio.Undo
 
     public override UndoTask CreateComplementaryTask()
     {
-      return new UndoCharscreenCharChange( Project, Editor, X, Y, Width, Height );
+      return new UndoCharscreenCharChange( Project, Editor, ScreenIndex, X, Y, Width, Height );
     }
 
 
 
     public override void Apply()
     {
+      var screen = Project.Screens[ScreenIndex];
       for ( int i = 0; i < Width; ++i )
       {
         for ( int j = 0; j < Height; ++j )
         {
-          Project.Chars[X + i + ( Y + j ) * Project.ScreenWidth] = ChangedData[i, j];
+          screen.Chars[X + i + ( Y + j ) * screen.ScreenWidth] = ChangedData[i, j];
         }
       }
       Editor.UpdateArea( X, Y, Width, Height );

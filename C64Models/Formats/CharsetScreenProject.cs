@@ -10,31 +10,23 @@ namespace RetroDevStudio.Formats
 {
   public class CharsetScreenProject
   {
-    public int                          ScreenWidth = 40;
-    public int                          ScreenHeight = 25;
-
     public int                          ScreenOffsetX = 0;
     public int                          ScreenOffsetY = 0;
 
     // used to add onto char values on export
     public int                          CharOffset = 0;
 
-    public List<uint>                   Chars = new List<uint>( 40 * 25 );
-
     public string                       ExternalCharset = "";
     private TextMode                    _Mode = TextMode.COMMODORE_40_X_25_HIRES;
 
     public Formats.CharsetProject       CharSet = new RetroDevStudio.Formats.CharsetProject();
 
+    public List<CharsetScreen>          Screens = new List<CharsetScreen>() {  new CharsetScreen() };
+
 
 
     public CharsetScreenProject()
     {
-      for ( int j = 0; j < ScreenHeight * ScreenWidth; ++j )
-      {
-        // spaces with white color
-        Chars.Add( 0x010020 );
-      }
     }
 
 
@@ -47,8 +39,12 @@ namespace RetroDevStudio.Formats
       }
       set
       {
-        _Mode = value;
-        CharSet.Mode = Lookup.TextCharModeFromTextMode( _Mode );
+        _Mode         = value;
+        CharSet.Mode  = Lookup.TextCharModeFromTextMode( _Mode );
+        foreach ( var screen in Screens )
+        {
+          screen.Mode = value;
+        }
       }
     }
 
@@ -58,20 +54,18 @@ namespace RetroDevStudio.Formats
     {
       GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer();
 
-      GR.IO.FileChunk chunkScreenInfo = new GR.IO.FileChunk( FileChunkConstants.CHARSET_SCREEN_INFO );
+      GR.IO.FileChunk chunkScreenProjectInfo = new GR.IO.FileChunk( FileChunkConstants.CHARSET_SCREEN_PROJECT_INFO );
       // version
-      chunkScreenInfo.AppendI32( 0 );
-      // width
-      chunkScreenInfo.AppendI32( ScreenWidth );
-      // height
-      chunkScreenInfo.AppendI32( ScreenHeight );
-      chunkScreenInfo.AppendString( "" );
-      chunkScreenInfo.AppendI32( (int)Mode );
-      chunkScreenInfo.AppendI32( ScreenOffsetX );
-      chunkScreenInfo.AppendI32( ScreenOffsetY );
-      chunkScreenInfo.AppendI32( CharOffset );
+      chunkScreenProjectInfo.AppendI32( 1 );
+      chunkScreenProjectInfo.AppendI32( 0 ); // was width, unused now
+      chunkScreenProjectInfo.AppendI32( 0 ); // was height, unused now
+      chunkScreenProjectInfo.AppendString( "" );
+      chunkScreenProjectInfo.AppendI32( (int)Mode );
+      chunkScreenProjectInfo.AppendI32( ScreenOffsetX );
+      chunkScreenProjectInfo.AppendI32( ScreenOffsetY );
+      chunkScreenProjectInfo.AppendI32( CharOffset );
 
-      projectFile.Append( chunkScreenInfo.ToBuffer() );
+      projectFile.Append( chunkScreenProjectInfo.ToBuffer() );
 
       GR.IO.FileChunk chunkCharSet = new GR.IO.FileChunk( FileChunkConstants.CHARSET_DATA );
       chunkCharSet.Append( CharSet.SaveToBuffer() );
@@ -84,168 +78,63 @@ namespace RetroDevStudio.Formats
       chunkScreenMultiColorData.AppendU8( (byte)CharSet.Colors.MultiColor2 );
       projectFile.Append( chunkScreenMultiColorData.ToBuffer() );
 
-      GR.IO.FileChunk chunkScreenCharData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_CHAR_DATA );
-      if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 2 )
+      foreach ( var screen in Screens )
       {
-        for ( int i = 0; i < Chars.Count; ++i )
-        {
-          chunkScreenCharData.AppendU16( (ushort)( Chars[i] & 0xffff ) );
-        }
-      }
-      else
-      {
-        for ( int i = 0; i < Chars.Count; ++i )
-        {
-          chunkScreenCharData.AppendU8( (byte)( Chars[i] & 0xffff ) );
-        }
-      }
-      projectFile.Append( chunkScreenCharData.ToBuffer() );
+        var chunkScreen = new GR.IO.FileChunk( FileChunkConstants.CHARSET_SCREEN );
 
-      GR.IO.FileChunk chunkScreenColorData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_COLOR_DATA );
-      if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 2 )
-      {
-        for ( int i = 0; i < Chars.Count; ++i )
+        var chunkScreenInfo = new GR.IO.FileChunk( FileChunkConstants.CHARSET_SCREEN_INFO );
+        chunkScreenInfo.AppendString( screen.Name );
+        chunkScreenInfo.AppendI32( screen.ScreenWidth );
+        chunkScreenInfo.AppendI32( screen.ScreenHeight );
+        chunkScreenInfo.AppendI32( (int)screen.Mode );
+        chunkScreen.Append( chunkScreenInfo.ToBuffer() );
+
+        var chunkScreenCharData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_CHAR_DATA );
+        if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( screen.Mode ) ) == 2 )
         {
-          chunkScreenColorData.AppendU16( (ushort)( Chars[i] >> 16 ) );
+          for ( int i = 0; i < screen.Chars.Count; ++i )
+          {
+            chunkScreenCharData.AppendU16( (ushort)( screen.Chars[i] & 0xffff ) );
+          }
         }
-      }
-      else
-      {
-        for ( int i = 0; i < Chars.Count; ++i )
+        else
         {
-          chunkScreenColorData.AppendU8( (byte)( Chars[i] >> 16 ) );
+          for ( int i = 0; i < screen.Chars.Count; ++i )
+          {
+            chunkScreenCharData.AppendU8( (byte)( screen.Chars[i] & 0xffff ) );
+          }
         }
+        chunkScreen.Append( chunkScreenCharData.ToBuffer() );
+
+        GR.IO.FileChunk chunkScreenColorData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_COLOR_DATA );
+        if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( screen.Mode ) ) == 2 )
+        {
+          for ( int i = 0; i < screen.Chars.Count; ++i )
+          {
+            chunkScreenColorData.AppendU16( (ushort)( screen.Chars[i] >> 16 ) );
+          }
+        }
+        else
+        {
+          for ( int i = 0; i < screen.Chars.Count; ++i )
+          {
+            chunkScreenColorData.AppendU8( (byte)( screen.Chars[i] >> 16 ) );
+          }
+        }
+        chunkScreen.Append( chunkScreenColorData.ToBuffer() );
+
+        projectFile.Append( chunkScreen.ToBuffer() );
       }
-      projectFile.Append( chunkScreenColorData.ToBuffer() );
 
       return projectFile;
     }
 
 
 
-    public ushort CharacterAt( int X, int Y )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
-      {
-        return 0;
-      }
-
-      return (ushort)( Chars[Y * ScreenWidth + X] & 0xffff );
-    }
-
-
-
-    public ushort ColorAt( int X, int Y )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight )
-      ||   ( Mode == TextMode.NES ) )
-      {
-        return 0;
-      }
-
-      return (ushort)( Chars[Y * ScreenWidth + X] >> 16 );
-    }
-
-
-
-    public int PaletteMappingAt( int X, int Y )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight )
-      ||   ( Mode != TextMode.NES ) )
-      {
-        return 0;
-      }
-
-      return (ushort)( Chars[Y * ScreenWidth + X] >> 16 );
-    }
-
-
-
-    public uint CompleteCharAt( int X, int Y )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight )
-      ||   ( Mode == TextMode.NES ) )
-      {
-        return 0;
-      }
-
-      return Chars[Y * ScreenWidth + X];
-    }
-
-
-
-    public bool SetCharacterAt( int X, int Y, ushort CharValue )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
-      {
-        return false;
-      }
-
-      Chars[Y * ScreenWidth + X] = ( Chars[Y * ScreenWidth + X] & 0xffff0000 ) | CharValue;
-
-      return true;
-    }
-
-
-
-    public bool SetColorAt( int X, int Y, ushort ColorValue, int PaletteMappingIndex )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
-      {
-        return false;
-      }
-
-      if ( Mode == TextMode.NES )
-      {
-        // uses palette mapping index inside color 
-        Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
-      }
-      else
-      {
-        Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
-      }
-
-      return true;
-    }
-
-
-
-    public bool SetCompleteCharAt( int X, int Y, uint CompleteCharValue )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
-      {
-        return false;
-      }
-
-      Chars[Y * ScreenWidth + X] = CompleteCharValue;
-      return true;
-    }
-
-
-
     public bool ReadFromBuffer( GR.Memory.ByteBuffer ProjectFile )
     {
+      Screens.Clear();
+
       GR.IO.MemoryReader    memReader = new GR.IO.MemoryReader( ProjectFile );
 
       GR.IO.FileChunk chunk = new GR.IO.FileChunk();
@@ -255,21 +144,36 @@ namespace RetroDevStudio.Formats
         GR.IO.MemoryReader chunkReader = chunk.MemoryReader();
         switch ( chunk.Type )
         {
-          case FileChunkConstants.CHARSET_SCREEN_INFO:
+          case FileChunkConstants.CHARSET_SCREEN_PROJECT_INFO:
             {
               int version = chunkReader.ReadInt32();
-              ScreenWidth = chunkReader.ReadInt32();
-              ScreenHeight = chunkReader.ReadInt32();
-              ExternalCharset = chunkReader.ReadString();
-              _Mode = (TextMode)chunkReader.ReadInt32();
-              ScreenOffsetX = chunkReader.ReadInt32();
-              ScreenOffsetY = chunkReader.ReadInt32();
-              CharOffset = chunkReader.ReadInt32();
-
-              Chars = new List<uint>();
-              for ( int i = 0; i < ScreenWidth * ScreenHeight; ++i )
+              if ( version == 0 )
               {
-                Chars.Add( (uint)0x010020 );
+                int screenWidth = chunkReader.ReadInt32();
+                int screenHeight = chunkReader.ReadInt32();
+                ExternalCharset = chunkReader.ReadString();
+                _Mode = (TextMode)chunkReader.ReadInt32();
+                ScreenOffsetX = chunkReader.ReadInt32();
+                ScreenOffsetY = chunkReader.ReadInt32();
+                CharOffset = chunkReader.ReadInt32();
+
+                Screens.Add( new CharsetScreen() { Mode = Mode, ScreenWidth = screenWidth, ScreenHeight = screenHeight } );
+
+                Screens[0].Chars = new List<uint>();
+                for ( int i = 0; i < screenWidth * screenHeight; ++i )
+                {
+                  Screens[0].Chars.Add( (uint)0x010020 );
+                }
+              }
+              else if ( version == 1 )
+              {
+                int unusedScreenWidth = chunkReader.ReadInt32();
+                int unusedScreenHeight = chunkReader.ReadInt32();
+                ExternalCharset = chunkReader.ReadString();
+                _Mode = (TextMode)chunkReader.ReadInt32();
+                ScreenOffsetX = chunkReader.ReadInt32();
+                ScreenOffsetY = chunkReader.ReadInt32();
+                CharOffset = chunkReader.ReadInt32();
               }
             }
             break;
@@ -280,28 +184,28 @@ namespace RetroDevStudio.Formats
             CharSet.Colors.MultiColor2 = chunkReader.ReadUInt8();
             break;
           case FileChunkConstants.SCREEN_CHAR_DATA:
-            for ( int i = 0; i < Chars.Count; ++i )
+            for ( int i = 0; i < Screens[0].Chars.Count; ++i )
             {
               if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 1 )
               {
-                Chars[i] = (uint)( ( Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt8() );
+                Screens[0].Chars[i] = (uint)( ( Screens[0].Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt8() );
               }
               else
               {
-                Chars[i] = (uint)( ( Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt16() );
+                Screens[0].Chars[i] = (uint)( ( Screens[0].Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt16() );
               }
             }
             break;
           case FileChunkConstants.SCREEN_COLOR_DATA:
-            for ( int i = 0; i < Chars.Count; ++i )
+            for ( int i = 0; i < Screens[0].Chars.Count; ++i )
             {
               if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 1 )
               {
-                Chars[i] = (uint)( ( Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt8() << 16 ) );
+                Screens[0].Chars[i] = (uint)( ( Screens[0].Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt8() << 16 ) );
               }
               else
               {
-                Chars[i] = (uint)( ( Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt16() << 16 ) );
+                Screens[0].Chars[i] = (uint)( ( Screens[0].Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt16() << 16 ) );
               }
             }
             break;
@@ -310,6 +214,56 @@ namespace RetroDevStudio.Formats
               if ( !CharSet.ReadFromBuffer( chunk ) )
               {
                 return false;
+              }
+            }
+            break;
+          case FileChunkConstants.CHARSET_SCREEN:
+            {
+              GR.IO.FileChunk chunkData = new GR.IO.FileChunk();
+
+              var screen = new CharsetScreen();
+              Screens.Add( screen );
+
+              while ( chunkData.ReadFromStream( chunkReader ) )
+              {
+                GR.IO.MemoryReader subChunkReader = chunkData.MemoryReader();
+                switch ( chunkData.Type )
+                {
+                  case FileChunkConstants.CHARSET_SCREEN_INFO:
+                    screen.Name         = subChunkReader.ReadString();
+                    screen.ScreenWidth  = subChunkReader.ReadInt32();
+                    screen.ScreenHeight = subChunkReader.ReadInt32();
+                    screen.Mode         = (TextMode)subChunkReader.ReadInt32();
+
+                    screen.SetScreenSize( screen.ScreenWidth, screen.ScreenHeight );
+                    break;
+                  case FileChunkConstants.SCREEN_CHAR_DATA:
+                    for ( int i = 0; i < screen.Chars.Count; ++i )
+                    {
+                      if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( screen.Mode ) ) == 1 )
+                      {
+                        screen.Chars[i] = (uint)( ( screen.Chars[i] & 0xffff0000 ) | subChunkReader.ReadUInt8() );
+                      }
+                      else
+                      {
+                        screen.Chars[i] = (uint)( ( screen.Chars[i] & 0xffff0000 ) | subChunkReader.ReadUInt16() );
+                      }
+                    }
+                    break;
+                  case FileChunkConstants.SCREEN_COLOR_DATA:
+                    for ( int i = 0; i < screen.Chars.Count; ++i )
+                    {
+                      if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( screen.Mode ) ) == 1 )
+                      {
+                        screen.Chars[i] = (uint)( ( screen.Chars[i] & 0xffff ) | ( (uint)subChunkReader.ReadUInt8() << 16 ) );
+                      }
+                      else
+                      {
+                        screen.Chars[i] = (uint)( ( screen.Chars[i] & 0xffff ) | ( (uint)subChunkReader.ReadUInt16() << 16 ) );
+                      }
+                    }
+                    break;
+                }
               }
             }
             break;
@@ -324,6 +278,8 @@ namespace RetroDevStudio.Formats
 
     public bool ExportToBuffer( ExportCharsetScreenInfo Info )
     {
+      var affectedScreen = Screens[0];
+
       Info.ScreenCharData   = new GR.Memory.ByteBuffer();
       Info.ScreenColorData  = new GR.Memory.ByteBuffer();
       Info.CharsetData      = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
@@ -361,9 +317,9 @@ namespace RetroDevStudio.Formats
           for ( int x = 0; x < Info.Area.Width; ++x )
           {
             // "Smart" way of choosing either one
-            byte newColor   = (byte)( ColorAt( Info.Area.X + x, Info.Area.Y + i )
-                                    + PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
-            ushort newChar  = CharacterAt( Info.Area.X + x, Info.Area.Y + i );
+            byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
+                                    + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
+            ushort newChar  = affectedScreen.CharacterAt( Info.Area.X + x, Info.Area.Y + i );
 
             newChar = (ushort)( newChar + CharOffset );
 
@@ -407,10 +363,10 @@ namespace RetroDevStudio.Formats
         {
           for ( int i = 0; i < Info.Area.Height; ++i )
           {
-            byte newColor   = (byte)( ColorAt( Info.Area.X + x, Info.Area.Y + i )
-                                    + PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
+            byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
+                                    + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
 
-            ushort newChar = CharacterAt( x + Info.Area.X, i + Info.Area.Y );
+            ushort newChar = affectedScreen.CharacterAt( x + Info.Area.X, i + Info.Area.Y );
 
             newChar = (ushort)( newChar + CharOffset );
 
@@ -449,80 +405,6 @@ namespace RetroDevStudio.Formats
         }
       }
       return true;
-    }
-
-
-
-    public void SetScreenSize( int Width, int Height )
-    {
-      if ( ( Width == ScreenWidth )
-      &&   ( Height == ScreenHeight ) )
-      {
-        // nothing to do
-        return;
-      }
-      int     oldWidth = ScreenWidth;
-      int     oldHeight = ScreenHeight;
-
-      ScreenWidth = Width;
-      ScreenHeight = Height;
-
-      List<uint>    newChars = new List<uint>();
-
-      int     copyWidth = Math.Min( oldWidth, Width );
-      int     copyHeight = Math.Min( oldHeight, Height );
-
-      newChars = new List<uint>();
-      for ( int i = 0; i < ScreenWidth * ScreenHeight; ++i )
-      {
-        newChars.Add( (uint)0x010020 );
-      }
-      // copy over orig chars if possible
-      for ( int i = 0; i < copyWidth; ++i )
-      {
-        for ( int j = 0; j < copyHeight; ++j )
-        {
-          newChars[i + Width * j] = Chars[i + oldWidth * j];
-        }
-      }
-      Chars = newChars;
-    }
-
-
-
-    public bool SetAt( int X, int Y, ushort Char, ushort Color, int PaletteMappingIndex )
-    {
-      if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
-      ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
-      {
-        return false;
-      }
-
-      if ( Mode == TextMode.NES )
-      {
-        // uses palette mapping index inside color 
-        Chars[Y * ScreenWidth + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
-      }
-      else
-      {
-        Chars[Y * ScreenWidth + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( Color << 16 ) );
-      }
-
-      return true;
-        
-    }
-
-
-
-    public uint AssembleChar( ushort Char, ushort Color, int PaletteMappingIndex )
-    {
-      if ( Mode == TextMode.NES )
-      {
-        return (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
-      }
-      return (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)Color << 16 ) );
     }
 
 

@@ -42,8 +42,8 @@ namespace RetroDevStudio.Controls
         return false;
       }
 
-      int     neededWidth   = Info.Charscreen.ScreenWidth * 8;
-      int     neededHeight  = Info.Charscreen.ScreenHeight * 8;
+      int     neededWidth   = Info.Charscreen.Screens[Info.ScreenIndex].ScreenWidth * 8;
+      int     neededHeight  = Info.Charscreen.Screens[Info.ScreenIndex].ScreenHeight * 8;
 
       GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, GR.Drawing.PixelFormat.Format32bppRgb );
 
