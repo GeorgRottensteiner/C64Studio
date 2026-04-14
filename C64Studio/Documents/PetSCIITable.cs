@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using RetroDevStudio.Types;
 using GR.Image;
 using RetroDevStudio;
+using System.Linq;
 
 
 
@@ -60,7 +61,15 @@ namespace RetroDevStudio.Documents
       var bitmap = new System.Drawing.Bitmap( 80, 40, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
       var g = System.Drawing.Graphics.FromImage( bitmap );
 
-      System.Drawing.Brush  brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
+      uint bgColor = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+      var petsciiChar = ConstantData.ColorToPetSCIIChar.FirstOrDefault( pc => pc.Value == character.NativeValue ).Key;
+      if ( petsciiChar != default )
+      {
+        bgColor = Core.Imaging.PaletteFromMachine( MachineType.C64 ).ColorValues[petsciiChar];
+      }
+
+
+      System.Drawing.Brush  brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( bgColor ) );
       System.Drawing.Pen  penBorder = new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
       g.FillRectangle( brushBackground, 0, 0, 80, 40 );
