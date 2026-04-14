@@ -40,7 +40,7 @@ namespace RetroDevStudio.Undo
       {
         for ( int j = 0; j < Height; ++j )
         {
-          ChangedData[i, j] = screen.Chars[X + i + ( Y + j ) * screen.ScreenWidth];
+          ChangedData[i, j] = screen.Chars[X + i + ( Y + j ) * screen.Width];
         }
       }
     }
@@ -65,7 +65,7 @@ namespace RetroDevStudio.Undo
       {
         for ( int j = 0; j < Height; ++j )
         {
-          ChangedData[i, j] = screen.Chars[X + i + ( Y + j ) * screen.ScreenWidth];
+          ChangedData[i, j] = screen.Chars[X + i + ( Y + j ) * screen.Width];
         }
       }
     }
@@ -96,7 +96,7 @@ namespace RetroDevStudio.Undo
       {
         for ( int j = 0; j < Height; ++j )
         {
-          screen.Chars[X + i + ( Y + j ) * screen.ScreenWidth] = ChangedData[i, j];
+          screen.Chars[X + i + ( Y + j ) * screen.Width] = ChangedData[i, j];
         }
       }
       Editor.UpdateArea( X, Y, Width, Height );

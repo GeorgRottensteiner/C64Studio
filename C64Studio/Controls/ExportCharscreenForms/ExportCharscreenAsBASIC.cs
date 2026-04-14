@@ -160,7 +160,7 @@ namespace RetroDevStudio.Controls
           startLine += lineStep;
           sb.Append( " PRINT\"" );
           if ( ( isReverse )
-          &&   ( Info.Area.Width != affectedScreen.ScreenWidth ) )
+          &&   ( Info.Area.Width != affectedScreen.Width ) )
           {
             // need to re-start reverse mode
             sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
@@ -309,7 +309,7 @@ namespace RetroDevStudio.Controls
               if ( !asString )
               {
                 sb.Append( "\"" );
-                if ( Info.Area.Width == affectedScreen.ScreenWidth )
+                if ( Info.Area.Width == affectedScreen.Width )
                 {
                   sb.Append( ";" );
                 }
@@ -319,7 +319,7 @@ namespace RetroDevStudio.Controls
                 startLine += lineStep;
                 sb.Append( " PRINT\"" );
                 if ( ( isReverse )
-                &&   ( Info.Area.Width != affectedScreen.ScreenWidth ) )
+                &&   ( Info.Area.Width != affectedScreen.Width ) )
                 {
                   // need to re-start reverse mode
                   sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
@@ -354,7 +354,7 @@ namespace RetroDevStudio.Controls
         if ( !asString )
         {
           sb.Append( "\"" );
-          if ( Info.Area.Width == affectedScreen.ScreenWidth )
+          if ( Info.Area.Width == affectedScreen.Width )
           {
             sb.Append( ";" );
           }

@@ -11,8 +11,8 @@ namespace RetroDevStudio.Formats
   public class CharsetScreen
   {
     public string         Name = "Screen"; 
-    public int            ScreenWidth = 40;
-    public int            ScreenHeight = 25;
+    public int            Width = 40;
+    public int            Height = 25;
 
     public List<uint>     Chars = new List<uint>( 40 * 25 );
 
@@ -22,7 +22,7 @@ namespace RetroDevStudio.Formats
 
     public CharsetScreen()
     {
-      for ( int j = 0; j < ScreenHeight * ScreenWidth; ++j )
+      for ( int j = 0; j < Height * Width; ++j )
       {
         // spaces with white color
         Chars.Add( 0x010020 );
@@ -34,14 +34,14 @@ namespace RetroDevStudio.Formats
     public ushort CharacterAt( int X, int Y )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
+      ||   ( Y >= Height ) )
       {
         return 0;
       }
 
-      return (ushort)( Chars[Y * ScreenWidth + X] & 0xffff );
+      return (ushort)( Chars[Y * Width + X] & 0xffff );
     }
 
 
@@ -49,15 +49,15 @@ namespace RetroDevStudio.Formats
     public ushort ColorAt( int X, int Y )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight )
+      ||   ( Y >= Height )
       ||   ( Mode == TextMode.NES ) )
       {
         return 0;
       }
 
-      return (ushort)( Chars[Y * ScreenWidth + X] >> 16 );
+      return (ushort)( Chars[Y * Width + X] >> 16 );
     }
 
 
@@ -65,15 +65,15 @@ namespace RetroDevStudio.Formats
     public int PaletteMappingAt( int X, int Y )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight )
+      ||   ( Y >= Height )
       ||   ( Mode != TextMode.NES ) )
       {
         return 0;
       }
 
-      return (ushort)( ( Chars[Y * ScreenWidth + X] >> 16 ) & 0x03 );
+      return (ushort)( ( Chars[Y * Width + X] >> 16 ) & 0x03 );
     }
 
 
@@ -81,15 +81,15 @@ namespace RetroDevStudio.Formats
     public uint CompleteCharAt( int X, int Y )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight )
+      ||   ( Y >= Height )
       ||   ( Mode == TextMode.NES ) )
       {
         return 0;
       }
 
-      return Chars[Y * ScreenWidth + X];
+      return Chars[Y * Width + X];
     }
 
 
@@ -97,14 +97,14 @@ namespace RetroDevStudio.Formats
     public bool SetCharacterAt( int X, int Y, ushort CharValue )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
+      ||   ( Y >= Height ) )
       {
         return false;
       }
 
-      Chars[Y * ScreenWidth + X] = ( Chars[Y * ScreenWidth + X] & 0xffff0000 ) | CharValue;
+      Chars[Y * Width + X] = ( Chars[Y * Width + X] & 0xffff0000 ) | CharValue;
 
       return true;
     }
@@ -114,9 +114,9 @@ namespace RetroDevStudio.Formats
     public bool SetColorAt( int X, int Y, ushort ColorValue, int PaletteMappingIndex )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
+      ||   ( Y >= Height ) )
       {
         return false;
       }
@@ -124,11 +124,11 @@ namespace RetroDevStudio.Formats
       if ( Mode == TextMode.NES )
       {
         // uses palette mapping index inside color 
-        Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
+        Chars[Y * Width + X] = (uint)( ( Chars[Y * Width + X] & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
       }
       else
       {
-        Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
+        Chars[Y * Width + X] = (uint)( ( Chars[Y * Width + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
       }
 
       return true;
@@ -139,14 +139,14 @@ namespace RetroDevStudio.Formats
     public bool SetCompleteCharAt( int X, int Y, uint CompleteCharValue )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
+      ||   ( Y >= Height ) )
       {
         return false;
       }
 
-      Chars[Y * ScreenWidth + X] = CompleteCharValue;
+      Chars[Y * Width + X] = CompleteCharValue;
       return true;
     }
 
@@ -154,17 +154,17 @@ namespace RetroDevStudio.Formats
 
     public void SetScreenSize( int Width, int Height )
     {
-      if ( ( Width == ScreenWidth )
-      &&   ( Height == ScreenHeight ) )
+      if ( ( Width == this.Width )
+      &&   ( Height == this.Height ) )
       {
         // nothing to do
         return;
       }
-      int     oldWidth = ScreenWidth;
-      int     oldHeight = ScreenHeight;
+      int     oldWidth = this.Width;
+      int     oldHeight = this.Height;
 
-      ScreenWidth = Width;
-      ScreenHeight = Height;
+      this.Width = Width;
+      this.Height = Height;
 
       List<uint>    newChars = new List<uint>();
 
@@ -172,7 +172,7 @@ namespace RetroDevStudio.Formats
       int     copyHeight = Math.Min( oldHeight, Height );
 
       newChars = new List<uint>();
-      for ( int i = 0; i < ScreenWidth * ScreenHeight; ++i )
+      for ( int i = 0; i < this.Width * this.Height; ++i )
       {
         newChars.Add( (uint)0x010020 );
       }
@@ -192,9 +192,9 @@ namespace RetroDevStudio.Formats
     public bool SetAt( int X, int Y, ushort Char, ushort Color, int PaletteMappingIndex )
     {
       if ( ( X < 0 )
-      ||   ( X >= ScreenWidth )
+      ||   ( X >= Width )
       ||   ( Y < 0 )
-      ||   ( Y >= ScreenHeight ) )
+      ||   ( Y >= Height ) )
       {
         return false;
       }
@@ -202,11 +202,11 @@ namespace RetroDevStudio.Formats
       if ( Mode == TextMode.NES )
       {
         // uses palette mapping index inside color 
-        Chars[Y * ScreenWidth + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
+        Chars[Y * Width + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( (uint)PaletteMappingIndex << 16 ) );
       }
       else
       {
-        Chars[Y * ScreenWidth + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( Color << 16 ) );
+        Chars[Y * Width + X] = (uint)( (uint)( Char & 0xffff ) | (uint)( Color << 16 ) );
       }
 
       return true;

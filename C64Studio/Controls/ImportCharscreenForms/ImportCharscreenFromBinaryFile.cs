@@ -193,7 +193,8 @@ namespace RetroDevStudio.Controls
                     if ( ( newWidth > 0 )
                     &&   ( newHeight > 0 ) )
                     {
-                      Editor.SetScreenSize( newWidth, newHeight, Editor.CurrentScreenIndex );
+                      CharScreen.Screens[Editor.CurrentScreenIndex].SetScreenSize( newWidth, newHeight );
+                      Editor.ScreenModified( Editor.CurrentScreenIndex );
                     }
                   }
                   if ( parms.Length >= 3 )

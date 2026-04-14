@@ -87,8 +87,8 @@ namespace MediaTool
           ||   ( height <= 0 )
           ||   ( x < 0 )
           ||   ( y < 0 )
-          ||   ( x + width > screen.ScreenWidth )
-          ||   ( y + height > screen.ScreenHeight ) )
+          ||   ( x + width > screen.Width )
+          ||   ( y + height > screen.Height ) )
           {
             System.Console.WriteLine( $"AREA values are out of bounds or invalid for screen {screen.Name}, expected four values separated by comma: x,y,width,height" );
             return 1;
@@ -96,8 +96,8 @@ namespace MediaTool
         }
         else
         {
-          width = screen.ScreenWidth;
-          height = screen.ScreenHeight;
+          width = screen.Width;
+          height = screen.Height;
         }
 
         GR.Memory.ByteBuffer    resultingDataPerScreen = new GR.Memory.ByteBuffer();

@@ -56,8 +56,8 @@ namespace RetroDevStudio.Undo
     {
       return new UndoCharscreenSizeChange( Project, 
                                            Editor, 
-                                           Project.Screens[ScreenIndex].ScreenWidth, 
-                                           Project.Screens[ScreenIndex].ScreenHeight, 
+                                           Project.Screens[ScreenIndex].Width, 
+                                           Project.Screens[ScreenIndex].Height, 
                                            ScreenIndex );
     }
 
@@ -65,7 +65,7 @@ namespace RetroDevStudio.Undo
 
     public override void Apply()
     {
-      Editor.SetScreenSize( Width, Height, ScreenIndex );
+      Project.Screens[ScreenIndex].SetScreenSize( Width, Height );
       for ( int i = 0; i < Width; ++i )
       {
         for ( int j = 0; j < Height; ++j )
@@ -73,7 +73,7 @@ namespace RetroDevStudio.Undo
           Project.Screens[ScreenIndex].Chars[i + j * Width] = ChangedData[i, j];
         }
       }
-      Editor.UpdateArea( 0, 0, Width, Height );
+      Editor.ScreenModified( ScreenIndex );
       Editor.SetModified();
     }
 

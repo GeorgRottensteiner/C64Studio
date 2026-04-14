@@ -464,7 +464,7 @@
       this.btnMoveScreenDown.TabIndex = 28;
       this.btnMoveScreenDown.Text = "▼";
       this.toolTip1.SetToolTip(this.btnMoveScreenDown, "Move Screen Down");
-      this.btnMoveScreenDown.Click += new DecentForms.EventHandler(this.btnMoveMapDown_Click);
+      this.btnMoveScreenDown.Click += new DecentForms.EventHandler(this.btnMoveScreenDown_Click);
       // 
       // btnMoveScreenUp
       // 
@@ -480,7 +480,7 @@
       this.btnMoveScreenUp.TabIndex = 27;
       this.btnMoveScreenUp.Text = "▲";
       this.toolTip1.SetToolTip(this.btnMoveScreenUp, "Move Screen Up");
-      this.btnMoveScreenUp.Click += new DecentForms.EventHandler(this.btnMoveMapUp_Click);
+      this.btnMoveScreenUp.Click += new DecentForms.EventHandler(this.btnMoveScreenUp_Click);
       // 
       // btnScreenAdd
       // 
@@ -495,7 +495,7 @@
       this.btnScreenAdd.TabIndex = 24;
       this.btnScreenAdd.Text = "Add";
       this.toolTip1.SetToolTip(this.btnScreenAdd, "Add New Screen");
-      this.btnScreenAdd.Click += new DecentForms.EventHandler(this.btnMapAdd_Click);
+      this.btnScreenAdd.Click += new DecentForms.EventHandler(this.btnScreenAdd_Click);
       // 
       // btnScreenDelete
       // 
@@ -511,7 +511,7 @@
       this.btnScreenDelete.TabIndex = 26;
       this.btnScreenDelete.Text = "Delete";
       this.toolTip1.SetToolTip(this.btnScreenDelete, "Delete Current Screen");
-      this.btnScreenDelete.Click += new DecentForms.EventHandler(this.btnMapDelete_Click);
+      this.btnScreenDelete.Click += new DecentForms.EventHandler(this.btnScreenDelete_Click);
       // 
       // editScreenName
       // 
@@ -1002,7 +1002,6 @@
       this.pictureEditor.TabIndex = 0;
       this.pictureEditor.TabStop = false;
       this.pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.pictureEditor_PostPaint);
-      this.pictureEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureEditor_Paint);
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
       this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
       this.pictureEditor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureEditor_PreviewKeyDown);

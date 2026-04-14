@@ -84,8 +84,8 @@ namespace RetroDevStudio.Formats
 
         var chunkScreenInfo = new GR.IO.FileChunk( FileChunkConstants.CHARSET_SCREEN_INFO );
         chunkScreenInfo.AppendString( screen.Name );
-        chunkScreenInfo.AppendI32( screen.ScreenWidth );
-        chunkScreenInfo.AppendI32( screen.ScreenHeight );
+        chunkScreenInfo.AppendI32( screen.Width );
+        chunkScreenInfo.AppendI32( screen.Height );
         chunkScreenInfo.AppendI32( (int)screen.Mode );
         chunkScreen.Append( chunkScreenInfo.ToBuffer() );
 
@@ -157,7 +157,7 @@ namespace RetroDevStudio.Formats
                 ScreenOffsetY = chunkReader.ReadInt32();
                 CharOffset = chunkReader.ReadInt32();
 
-                Screens.Add( new CharsetScreen() { Mode = Mode, ScreenWidth = screenWidth, ScreenHeight = screenHeight } );
+                Screens.Add( new CharsetScreen() { Mode = Mode, Width = screenWidth, Height = screenHeight } );
 
                 Screens[0].Chars = new List<uint>();
                 for ( int i = 0; i < screenWidth * screenHeight; ++i )
@@ -231,11 +231,11 @@ namespace RetroDevStudio.Formats
                 {
                   case FileChunkConstants.CHARSET_SCREEN_INFO:
                     screen.Name         = subChunkReader.ReadString();
-                    screen.ScreenWidth  = subChunkReader.ReadInt32();
-                    screen.ScreenHeight = subChunkReader.ReadInt32();
+                    screen.Width  = subChunkReader.ReadInt32();
+                    screen.Height = subChunkReader.ReadInt32();
                     screen.Mode         = (TextMode)subChunkReader.ReadInt32();
 
-                    screen.SetScreenSize( screen.ScreenWidth, screen.ScreenHeight );
+                    screen.SetScreenSize( screen.Width, screen.Height );
                     break;
                   case FileChunkConstants.SCREEN_CHAR_DATA:
                     for ( int i = 0; i < screen.Chars.Count; ++i )
