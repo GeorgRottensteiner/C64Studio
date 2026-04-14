@@ -13,9 +13,9 @@ namespace RetroDevStudio.Parser
       ReplacementLines = null;
       lineSizeInBytes = 0;
 
-      ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, !Binary, out List<List<Types.TokenInfo>> paramTokens );
+      ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, true, out List<List<Types.TokenInfo>> paramTokens );
 
-      if ( ( paramTokens.Count > 7 )
+      if ( ( paramTokens.Count > 8 )
       ||   ( paramTokens.Count < 2 ) )
       {
         if ( Binary )
@@ -51,6 +51,7 @@ namespace RetroDevStudio.Parser
 
       if ( !Binary )
       {
+        // !media src <Filename>,<LabelPrefix>[,more params]
         if ( paramTokens.Count < 3 )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !mediasrc <Filename>,SrcLabelPrefix[,<MediaParams>...]" );
@@ -1033,9 +1034,9 @@ namespace RetroDevStudio.Parser
         // charcolorvert,x,y,width,height[,start,count]
         // colorcharvert,x,y,width,height[,start,count]
         // palette[,start,count]
-        if ( paramTokens.Count > 6 )
+        if ( paramTokens.Count > 8 )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Char|CharVert|Color|ColorVert|CharColor|CharColorVert|ColorChar|ColorCharVert|CharSet>[,<X>[,<Y>[,<Width>[,<Height>]]]]" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Char|CharVert|Color|ColorVert|CharColor|CharColorVert|ColorChar|ColorCharVert|CharSet>[,<X>[,<Y>[,<Width>[,<Height>[,<First Screen Index>[,<Screen Count>]]]]]" );
           return false;
         }
         if ( ( method != "CHAR" )
@@ -1193,14 +1194,18 @@ namespace RetroDevStudio.Parser
             h = hSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 7 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo sSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[6], out SymbolInfo sSymbol ) ) )
           {
             startIndex = sSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 8 )
-          &&   ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo cSymbol ) ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[7], out SymbolInfo cSymbol ) ) )
           {
             count = cSymbol.ToInt32();
+          }
+          else
+          {
+            count = screenProject.Screens.Count - startIndex;
           }
           if ( ( startIndex + count > screenProject.Screens.Count )
           ||   ( startIndex < 0 )
@@ -1213,6 +1218,8 @@ namespace RetroDevStudio.Parser
           dataToInclude.Clear();
 
           string    textToInclude = "";
+
+          var combinedReplacementLines = new List<string>();
 
           for ( int screenIndex = 0; screenIndex < count; ++screenIndex )
           {
@@ -1241,7 +1248,8 @@ namespace RetroDevStudio.Parser
 
             var exportInfo = new ExportCharsetScreenInfo();
             exportInfo.RowByRow = !method.EndsWith( "VERT" );
-            exportInfo.Area = new GR.Math.Rectangle( x, y, w, h ); 
+            exportInfo.Area = new GR.Math.Rectangle( x, y, w, h );
+            exportInfo.ScreensToExport.Add( screenIndex );
 
             if ( !screenProject.ExportToBuffer( exportInfo ) )
             {
@@ -1254,14 +1262,14 @@ namespace RetroDevStudio.Parser
             {
               if ( !Binary )
               {
-                textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
+                textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
                 textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
-                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+                combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
               }
               else
               {
-                dataToInclude = exportInfo.ScreenCharData;
+                dataToInclude += exportInfo.ScreenCharData;
               }
             }
             else if ( ( method == "COLOR" )
@@ -1269,13 +1277,13 @@ namespace RetroDevStudio.Parser
             {
               if ( !Binary )
               {
-                textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
+                textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
                 textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
-                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+                combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
               }
               else
               {
-                dataToInclude = exportInfo.ScreenColorData;
+                dataToInclude += exportInfo.ScreenColorData;
               }
             }
             else if ( ( method == "CHARCOLOR" )
@@ -1283,16 +1291,16 @@ namespace RetroDevStudio.Parser
             {
               if ( !Binary )
               {
-                textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
+                textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
                 textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
                 textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
                 textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
-                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+                combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
               }
               else
               {
-                dataToInclude = exportInfo.ScreenCharData + exportInfo.ScreenColorData;
+                dataToInclude += exportInfo.ScreenCharData + exportInfo.ScreenColorData;
               }
             }
             else if ( ( method == "CHARCOLORINTERLEAVED" )
@@ -1307,14 +1315,14 @@ namespace RetroDevStudio.Parser
 
               if ( !Binary )
               {
-                textToInclude = OptionalPrefix( labelPrefix, "_", "DATA" ) + System.Environment.NewLine;
+                textToInclude += OptionalPrefix( labelPrefix, "_", "DATA" ) + System.Environment.NewLine;
                 textToInclude += Util.ToASMData( interleavedBuffer, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
 
-                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+                combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
               }
               else
               {
-                dataToInclude = interleavedBuffer;
+                dataToInclude += interleavedBuffer;
               }
             }
             else if ( ( method == "COLORCHAR" )
@@ -1326,14 +1334,16 @@ namespace RetroDevStudio.Parser
                 textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
                 textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
                 textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
-                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+                combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
               }
               else
               {
-                dataToInclude = exportInfo.ScreenColorData + exportInfo.ScreenCharData;
+                dataToInclude += exportInfo.ScreenColorData + exportInfo.ScreenCharData;
               }
             }
           }
+
+          ReplacementLines = combinedReplacementLines.ToArray();
         }
       }
       else if ( extension == ".GRAPHICSCREEN" )

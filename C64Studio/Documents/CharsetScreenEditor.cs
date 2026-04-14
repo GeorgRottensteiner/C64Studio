@@ -1705,8 +1705,16 @@ namespace RetroDevStudio.Documents
         return false;
       }
 
+      int numBytesToSkip = 0;
       int numBytesOfSingleChar = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
-      int charsToImport = (int)charData.Length / numBytesOfSingleChar;
+
+      // assume 2 loading bytes at start
+      if ( numBytesOfSingleChar * m_CharsetScreen.CharSet.TotalNumberOfCharacters + 2 == charData.Length )
+      {
+        numBytesToSkip += 2;
+      }
+
+      int charsToImport = (int)( charData.Length - numBytesToSkip ) / numBytesOfSingleChar;
       if ( charsToImport > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
       {
         charsToImport = m_CharsetScreen.CharSet.TotalNumberOfCharacters;
@@ -1715,7 +1723,7 @@ namespace RetroDevStudio.Documents
       {
         for ( int j = 0; j < numBytesOfSingleChar; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, charData.ByteAt( i * numBytesOfSingleChar + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, charData.ByteAt( numBytesToSkip + i * numBytesOfSingleChar + j ) );
         }
         RebuildCharImage( i );
       }
