@@ -50,7 +50,6 @@ namespace RetroDevStudio.Controls
       bool            replaceSpaceWithCursorRight = checkExportToBASICReplaceSpaceWithRight.Checked;
       bool            replaceShiftSpaceWithSpace = checkExportToBASICReplaceShiftSpaceWithSpace.Checked;
       bool            stripInvisibleColors = checkExportToBASICCollapseColors.Checked;
-      var             affectedScreen = Info.Charscreen.Screens[Info.ScreenIndex];
 
 
       // can't have both
@@ -90,170 +89,171 @@ namespace RetroDevStudio.Controls
         if ( checkExportASMAsPetSCII.Checked )
         {
           sbPET = new StringBuilder();
-          for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
+
+          foreach ( var screenIndex in Info.ScreensToExport )
           {
-            sbPET.Append( "!pet " );
-            insideQuotes = false;
-            isFirstCharInLine = true;
-            for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+            var affectedScreen = Info.Charscreen.Screens[screenIndex];
+            for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
             {
-              ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
-              byte newChar = (byte)affectedScreen.CharacterAt( x, i );
-
-              byte charToAdd = newChar;
-
-              if ( newChar >= 128 )
+              sbPET.Append( "!pet " );
+              insideQuotes = false;
+              isFirstCharInLine = true;
+              for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
               {
-                if ( !isReverse )
+                ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
+                byte newChar    = (byte)affectedScreen.CharacterAt( x, i );
+
+                byte charToAdd = newChar;
+
+                if ( newChar >= 128 )
+                {
+                  if ( !isReverse )
+                  {
+                    if ( usePETStatement )
+                    {
+                      EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                      sbPET.Append( "{rvson}" );
+                      isFirstCharInLine = false;
+                    }
+                    isReverse = true;
+                  }
+                }
+                else if ( isReverse )
                 {
                   if ( usePETStatement )
                   {
                     EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                    sbPET.Append( "{rvson}" );
+                    sbPET.Append( "{rvsoff}" );
                     isFirstCharInLine = false;
                   }
-                  isReverse = true;
+                  isReverse = false;
                 }
-              }
-              else if ( isReverse )
-              {
+
+                if ( isReverse )
+                {
+                  charToAdd -= 128;
+                }
+                if ( ( charToAdd == 96 )
+                &&   ( replaceShiftSpaceWithSpace ) )
+                {
+                  charToAdd = 32;
+                }
+
+                if ( ( addColors )
+                &&   ( newColor != curColor ) )
+                {
+                  if ( ( ( charToAdd == 32 )
+                  ||     ( charToAdd == 96 ) )
+                  &&   ( stripInvisibleColors ) )
+                  {
+                    colorChangeCache = newColor;
+                  }
+                  else
+                  {
+                    int colorToUse = newColor;
+                    if ( newColor >= 16 )
+                    {
+                      if ( !mega65UpperColorRange )
+                      {
+                        mega65UpperColorRange = true;
+                        EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                        sbPET.Append( "{" + ConstantData.PetSCIIToChar[1].Replacements[0] + "}" );
+                        isFirstCharInLine = false;
+                      }
+                      colorToUse &= 0x0f;
+                    }
+                    else if ( mega65UpperColorRange )
+                    {
+                      mega65UpperColorRange = false;
+                      EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                      sbPET.Append( "{" + ConstantData.PetSCIIToChar[4].Replacements[0] + "}" );
+                      isFirstCharInLine = false;
+                    }
+                    EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                    sbPET.Append( "{" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].Replacements[0] +"}" );
+                    isFirstCharInLine = false;
+                  }
+                  curColor = newColor;
+                }
+
                 if ( usePETStatement )
                 {
+                  // need to flip upper/lower case
+                  if ( ( charToAdd >= 1 )
+                  &&   ( charToAdd <= 26 ) )
+                  {
+                    EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+
+                    sbPET.Append( (char)( 'a' - 1 + charToAdd ) );
+                    isFirstCharInLine = false;
+                    continue;
+                  }
+                }
+
+                if ( ( replaceSpaceWithCursorRight )
+                &&   ( charToAdd == 32 )
+                &&   ( usePETStatement ) )
+                {
                   EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                  sbPET.Append( "{rvsoff}" );
+                  sbPET.Append( "{right}" );
                   isFirstCharInLine = false;
                 }
-                isReverse = false;
-              }
-
-              if ( isReverse )
-              {
-                charToAdd -= 128;
-              }
-              if ( ( charToAdd == 96 )
-              &&   ( replaceShiftSpaceWithSpace ) )
-              {
-                charToAdd = 32;
-              }
-
-              if ( ( addColors )
-              &&   ( newColor != curColor ) )
-              {
-                if ( ( ( charToAdd == 32 )
-                ||     ( charToAdd == 96 ) )
-                &&   ( stripInvisibleColors ) )
+                else if ( ( ConstantData.ScreenCodeToChar[charToAdd].HasNative )
+                &&        ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
                 {
-                  colorChangeCache = newColor;
+                  EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                
+                  sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
+                  isFirstCharInLine = false;
                 }
                 else
                 {
-                  int colorToUse = newColor;
-                  if ( newColor >= 16 )
+                  DisableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+                  if ( !isFirstCharInLine )
                   {
-                    if ( !mega65UpperColorRange )
-                    {
-                      mega65UpperColorRange = true;
-                      EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                      sbPET.Append( "{" + ConstantData.PetSCIIToChar[1].Replacements[0] + "}" );
-                      isFirstCharInLine = false;
-                    }
-                    colorToUse &= 0x0f;
+                    sbPET.Append( ", " );
                   }
-                  else if ( mega65UpperColorRange )
+                  newChar = ConstantData.ScreenCodeToChar[charToAdd].NativeValue;
+                  if ( useHex )
                   {
-                    mega65UpperColorRange = false;
-                    EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                    sbPET.Append( "{" + ConstantData.PetSCIIToChar[4].Replacements[0] + "}" );
-                    isFirstCharInLine = false;
+                    sbPET.Append( '$' );
+                    sbPET.Append( newChar.ToString( "X2" ) );
                   }
-                  EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                  sbPET.Append( "{" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].Replacements[0] +"}" );
+                  else
+                  {
+                    sbPET.Append( newChar );
+                  }
                   isFirstCharInLine = false;
                 }
-                curColor = newColor;
               }
-
-              if ( usePETStatement )
+              DisableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
+              sbPET.Append( ", " );
+              if ( useHex )
               {
-                // need to flip upper/lower case
-                if ( ( charToAdd >= 1 )
-                &&   ( charToAdd <= 26 ) )
-                {
-                  EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-
-                  sbPET.Append( (char)( 'a' - 1 + charToAdd ) );
-                  isFirstCharInLine = false;
-                  continue;
-                }
-              }
-
-              if ( ( replaceSpaceWithCursorRight )
-              &&   ( charToAdd == 32 )
-              &&   ( usePETStatement ) )
-              {
-                EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                sbPET.Append( "{right}" );
-                isFirstCharInLine = false;
-              }
-              else if ( ( ConstantData.ScreenCodeToChar[charToAdd].HasNative )
-              &&        ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
-              {
-                EnableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                
-                sbPET.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
-                isFirstCharInLine = false;
+                sbPET.Append( "$0D" );
               }
               else
               {
-                DisableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-                if ( !isFirstCharInLine )
-                {
-                  sbPET.Append( ", " );
-                }
-                newChar = ConstantData.ScreenCodeToChar[charToAdd].NativeValue;
-                if ( useHex )
-                {
-                  sbPET.Append( '$' );
-                  sbPET.Append( newChar.ToString( "X2" ) );
-                }
-                else
-                {
-                  sbPET.Append( newChar );
-                }
-                isFirstCharInLine = false;
+                sbPET.Append( "13" );
               }
+              isReverse = false;
+              sbPET.AppendLine();
             }
-            DisableQuotes( isFirstCharInLine, Info, sbPET, ref insideQuotes );
-            sbPET.Append( ", " );
-            if ( useHex )
-            {
-              sbPET.Append( "$0D" );
-            }
-            else
-            {
-              sbPET.Append( "13" );
-            }
-            isReverse = false;
-            sbPET.AppendLine();
           }
         }
         else
         {
-          // encode as PETSCII values
-          for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
+          for ( int i = 0; i < charData.Length; ++i )
           {
-            for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+            byte value = charData.ByteAt( i );
+
+            if ( ( value == 96 )
+            &&   ( replaceShiftSpaceWithSpace ) )
             {
-              byte value = (byte)affectedScreen.CharacterAt( x, i );
-
-              if ( ( value == 96 )
-              &&   ( replaceShiftSpaceWithSpace ) )
-              {
-                value = 32;
-              }
-
-              charData.SetU8At( x - Info.Area.Left + ( i - Info.Area.Top ) * Info.Area.Width, ConstantData.ScreenCodeToChar[value].NativeValue );
+              value = 32;
             }
+
+            charData.SetU8At( i, ConstantData.ScreenCodeToChar[value].NativeValue );
           }
         }
       }

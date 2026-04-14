@@ -48,43 +48,44 @@ namespace RetroDevStudio.Controls
 
       StringBuilder   sb = new StringBuilder();
 
-      sb.Append( "unsigned char frame0000[]={// border,bg,chars,colors" );
-      sb.Append( (char)10 );
-      sb.Append( "0," );
-      sb.Append( Info.Charscreen.CharSet.Colors.BackgroundColor );
-      sb.Append( ',' );
-      sb.Append( (char)10 );
-
-      int     bytePos = 0;
-      for ( int j = 0; j < Info.Area.Height; ++j )
+      foreach ( var screenIndex in Info.ScreensToExport )
       {
-        for ( int i = 0; i < Info.Area.Width; ++i )
-        {
-          sb.Append( Info.ScreenCharData.ByteAt( bytePos ) );
-          sb.Append( ',' );
-          ++bytePos;
-        }
+        var affectedScreen = Info.Charscreen.Screens[screenIndex];
+
+        sb.Append( $"unsigned char frame{screenIndex:D4}[]={{// border,bg,chars,colors" );
         sb.Append( (char)10 );
-      }
+        sb.Append( "0," );
+        sb.Append( Info.Charscreen.CharSet.Colors.BackgroundColor );
+        sb.Append( ',' );
+        sb.Append( (char)10 );
 
-      bytePos = 0;
-      for ( int j = 0; j < Info.Area.Height; ++j )
-      {
-        for ( int i = 0; i < Info.Area.Width; ++i )
+        for ( int j = 0; j < Info.Area.Height; ++j )
         {
-          sb.Append( Info.ScreenColorData.ByteAt( bytePos ) );
-          ++bytePos;
-          if ( ( j < Info.Area.Height - 1 )
-          ||     ( i + 1 < Info.Area.Width ) )
+          for ( int i = 0; i < Info.Area.Width; ++i )
           {
+            sb.Append( affectedScreen.CharacterAt( i, j ) );
             sb.Append( ',' );
           }
+          sb.Append( (char)10 );
         }
-        sb.Append( (char)10 );
-      }
-      sb.Append( "};" );
-      sb.Append( (char)10 );
 
+        for ( int j = 0; j < Info.Area.Height; ++j )
+        {
+          for ( int i = 0; i < Info.Area.Width; ++i )
+          {
+            sb.Append( affectedScreen.ColorAt( i, j ) );
+            if ( ( j < Info.Area.Height - 1 )
+            ||   ( i + 1 < Info.Area.Width ) )
+            {
+              sb.Append( ',' );
+            }
+          }
+          sb.Append( (char)10 );
+        }
+        sb.Append( "};" );
+        sb.Append( (char)10 );
+
+      }
       sb.Append( "// META: " );
       sb.Append( Info.Area.Width );
       sb.Append( ' ' );

@@ -107,6 +107,11 @@ namespace RetroDevStudio.Documents
 
       m_DefaultOutputFont = editDataExport.Font;
 
+      comboExportScreens.Items.Add( "All Screens" );
+      comboExportScreens.Items.Add( "Current Screen" );
+      comboExportScreens.Items.Add( "Range" );
+      comboExportScreens.SelectedIndex = 0;
+
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportCharscreenAsAssembly ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportCharscreenAsBASICData ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC code", typeof( ExportCharsetAsBASIC ) ) );
@@ -3571,9 +3576,38 @@ namespace RetroDevStudio.Documents
         Charscreen  = m_CharsetScreen,
         Area        = DetermineExportRectangle(),
         RowByRow    = ( comboExportOrientation.SelectedIndex == 0 ),
-        Data        = (ExportCharsetScreenInfo.ExportData)comboExportData.SelectedIndex,
-        Image       = m_Image,
+        Data        = (ExportCharsetScreenInfo.ExportData)comboExportData.SelectedIndex
       };
+
+      switch ( comboExportScreens.SelectedIndex )
+      {
+        case 0:
+          // all
+          for ( int i = 0; i < comboScreens.Items.Count; ++i )
+          {
+            exportInfo.ScreensToExport.Add( i );
+          }
+          break;
+        case 1:
+          // current
+          exportInfo.ScreensToExport.Add( m_CurrentScreenIndex );
+          break;
+        case 2:
+          // range
+          {
+            int   first = GR.Convert.ToI32( editExportScreenFirstIndex.Text );
+            int   count = GR.Convert.ToI32( editExportScreenCount.Text );
+            for ( int i = 0; i < count; ++i )
+            {
+              if ( ( first + i >= 0 )
+              &&   ( first + i <= m_CharsetScreen.Screens.Count ) )
+              {
+                exportInfo.ScreensToExport.Add( i );
+              }
+            }
+          }
+          break;
+      }
 
       if ( ( exportInfo.Data == ExportCharsetScreenInfo.ExportData.CHARSET )
       &&   ( comboExportArea.SelectedIndex == 1 ) )
@@ -3581,7 +3615,6 @@ namespace RetroDevStudio.Documents
         // export selection (use selection from charset control)
         exportInfo.SelectedCharactersInCharset = charEditor.SelectedIndices;
       }
-
 
       editDataExport.Text = "";
       editDataExport.Font = m_DefaultOutputFont;
@@ -4059,6 +4092,16 @@ namespace RetroDevStudio.Documents
         AdjustScreenSizeSettingsToCurrentScreen();
         UpdateArea( 0, 0, CurrentScreen.Width, CurrentScreen.Height );
       }
+    }
+
+
+
+    private void comboExportScreens_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      labelExportScreenFirstIndex.Enabled = ( comboExportScreens.SelectedIndex == 2 );
+      editExportScreenFirstIndex.Enabled  = ( comboExportScreens.SelectedIndex == 2 );
+      labelExportScreenCount.Enabled      = ( comboExportScreens.SelectedIndex == 2 );
+      editExportScreenCount.Enabled       = ( comboExportScreens.SelectedIndex == 2 );
     }
 
 

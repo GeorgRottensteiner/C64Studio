@@ -30,13 +30,14 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabProject = new System.Windows.Forms.TabPage();
+      this.comboExportScreens = new System.Windows.Forms.ComboBox();
       this.btnExport = new DecentForms.Button();
       this.label12 = new System.Windows.Forms.Label();
       this.comboExportOrientation = new System.Windows.Forms.ComboBox();
@@ -46,14 +47,19 @@
       this.comboExportArea = new System.Windows.Forms.ComboBox();
       this.editAreaHeight = new System.Windows.Forms.TextBox();
       this.labelAreaHeight = new System.Windows.Forms.Label();
+      this.editExportScreenCount = new System.Windows.Forms.TextBox();
       this.editExportY = new System.Windows.Forms.TextBox();
+      this.labelExportScreenCount = new System.Windows.Forms.Label();
       this.editAreaWidth = new System.Windows.Forms.TextBox();
       this.labelAreaY = new System.Windows.Forms.Label();
+      this.editExportScreenFirstIndex = new System.Windows.Forms.TextBox();
       this.labelAreaWidth = new System.Windows.Forms.Label();
       this.editExportX = new System.Windows.Forms.TextBox();
+      this.labelExportScreenFirstIndex = new System.Windows.Forms.Label();
       this.labelAreaX = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
+      this.label3 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
@@ -166,6 +172,7 @@
       // 
       // tabProject
       // 
+      this.tabProject.Controls.Add(this.comboExportScreens);
       this.tabProject.Controls.Add(this.btnExport);
       this.tabProject.Controls.Add(this.label12);
       this.tabProject.Controls.Add(this.comboExportOrientation);
@@ -175,14 +182,19 @@
       this.tabProject.Controls.Add(this.comboExportArea);
       this.tabProject.Controls.Add(this.editAreaHeight);
       this.tabProject.Controls.Add(this.labelAreaHeight);
+      this.tabProject.Controls.Add(this.editExportScreenCount);
       this.tabProject.Controls.Add(this.editExportY);
+      this.tabProject.Controls.Add(this.labelExportScreenCount);
       this.tabProject.Controls.Add(this.editAreaWidth);
       this.tabProject.Controls.Add(this.labelAreaY);
+      this.tabProject.Controls.Add(this.editExportScreenFirstIndex);
       this.tabProject.Controls.Add(this.labelAreaWidth);
       this.tabProject.Controls.Add(this.editExportX);
+      this.tabProject.Controls.Add(this.labelExportScreenFirstIndex);
       this.tabProject.Controls.Add(this.labelAreaX);
       this.tabProject.Controls.Add(this.label11);
       this.tabProject.Controls.Add(this.label8);
+      this.tabProject.Controls.Add(this.label3);
       this.tabProject.Controls.Add(this.label6);
       this.tabProject.Controls.Add(this.comboExportData);
       this.tabProject.Location = new System.Drawing.Point(4, 22);
@@ -193,6 +205,16 @@
       this.tabProject.Text = "Export";
       this.tabProject.UseVisualStyleBackColor = true;
       // 
+      // comboExportScreens
+      // 
+      this.comboExportScreens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboExportScreens.FormattingEnabled = true;
+      this.comboExportScreens.Location = new System.Drawing.Point(90, 6);
+      this.comboExportScreens.Name = "comboExportScreens";
+      this.comboExportScreens.Size = new System.Drawing.Size(139, 21);
+      this.comboExportScreens.TabIndex = 0;
+      this.comboExportScreens.SelectedIndexChanged += new System.EventHandler(this.comboExportScreens_SelectedIndexChanged);
+      // 
       // btnExport
       // 
       this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -200,17 +222,17 @@
       this.btnExport.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnExport.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnExport.Image = null;
-      this.btnExport.Location = new System.Drawing.Point(370, 118);
+      this.btnExport.Location = new System.Drawing.Point(370, 148);
       this.btnExport.Name = "btnExport";
       this.btnExport.Size = new System.Drawing.Size(75, 21);
-      this.btnExport.TabIndex = 29;
+      this.btnExport.TabIndex = 11;
       this.btnExport.Text = "Export";
       this.btnExport.Click += new DecentForms.EventHandler(this.btnExport_Click);
       // 
       // label12
       // 
       this.label12.AutoSize = true;
-      this.label12.Location = new System.Drawing.Point(8, 91);
+      this.label12.Location = new System.Drawing.Point(8, 121);
       this.label12.Name = "label12";
       this.label12.Size = new System.Drawing.Size(61, 13);
       this.label12.TabIndex = 27;
@@ -223,19 +245,19 @@
       this.comboExportOrientation.Items.AddRange(new object[] {
             "row by row",
             "column by column"});
-      this.comboExportOrientation.Location = new System.Drawing.Point(90, 88);
+      this.comboExportOrientation.Location = new System.Drawing.Point(90, 118);
       this.comboExportOrientation.Name = "comboExportOrientation";
       this.comboExportOrientation.Size = new System.Drawing.Size(131, 21);
-      this.comboExportOrientation.TabIndex = 28;
+      this.comboExportOrientation.TabIndex = 9;
       // 
       // panelExport
       // 
       this.panelExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-      this.panelExport.Location = new System.Drawing.Point(6, 145);
+      this.panelExport.Location = new System.Drawing.Point(6, 208);
       this.panelExport.Name = "panelExport";
-      this.panelExport.Size = new System.Drawing.Size(439, 393);
-      this.panelExport.TabIndex = 26;
+      this.panelExport.Size = new System.Drawing.Size(439, 330);
+      this.panelExport.TabIndex = 12;
       // 
       // editDataExport
       // 
@@ -247,7 +269,7 @@
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
       this.editDataExport.Size = new System.Drawing.Size(604, 532);
-      this.editDataExport.TabIndex = 24;
+      this.editDataExport.TabIndex = 13;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
@@ -256,65 +278,91 @@
       // 
       this.comboExportMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboExportMethod.FormattingEnabled = true;
-      this.comboExportMethod.Location = new System.Drawing.Point(90, 118);
+      this.comboExportMethod.Location = new System.Drawing.Point(90, 148);
       this.comboExportMethod.Name = "comboExportMethod";
       this.comboExportMethod.Size = new System.Drawing.Size(243, 21);
-      this.comboExportMethod.TabIndex = 1;
+      this.comboExportMethod.TabIndex = 10;
       this.comboExportMethod.SelectedIndexChanged += new System.EventHandler(this.comboExportMethod_SelectedIndexChanged);
       // 
       // comboExportArea
       // 
       this.comboExportArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboExportArea.FormattingEnabled = true;
-      this.comboExportArea.Location = new System.Drawing.Point(90, 33);
+      this.comboExportArea.Location = new System.Drawing.Point(90, 63);
       this.comboExportArea.Name = "comboExportArea";
       this.comboExportArea.Size = new System.Drawing.Size(350, 21);
-      this.comboExportArea.TabIndex = 1;
+      this.comboExportArea.TabIndex = 4;
       this.comboExportArea.SelectedIndexChanged += new System.EventHandler(this.comboExportArea_SelectedIndexChanged);
       // 
       // editAreaHeight
       // 
-      this.editAreaHeight.Location = new System.Drawing.Point(386, 62);
+      this.editAreaHeight.Location = new System.Drawing.Point(386, 92);
       this.editAreaHeight.Name = "editAreaHeight";
       this.editAreaHeight.Size = new System.Drawing.Size(54, 20);
-      this.editAreaHeight.TabIndex = 5;
+      this.editAreaHeight.TabIndex = 8;
       // 
       // labelAreaHeight
       // 
       this.labelAreaHeight.AutoSize = true;
-      this.labelAreaHeight.Location = new System.Drawing.Point(339, 65);
+      this.labelAreaHeight.Location = new System.Drawing.Point(339, 95);
       this.labelAreaHeight.Name = "labelAreaHeight";
       this.labelAreaHeight.Size = new System.Drawing.Size(41, 13);
       this.labelAreaHeight.TabIndex = 7;
       this.labelAreaHeight.Text = "Height:";
       // 
+      // editExportScreenCount
+      // 
+      this.editExportScreenCount.Enabled = false;
+      this.editExportScreenCount.Location = new System.Drawing.Point(386, 7);
+      this.editExportScreenCount.Name = "editExportScreenCount";
+      this.editExportScreenCount.Size = new System.Drawing.Size(54, 20);
+      this.editExportScreenCount.TabIndex = 2;
+      // 
       // editExportY
       // 
-      this.editExportY.Location = new System.Drawing.Point(175, 62);
+      this.editExportY.Location = new System.Drawing.Point(175, 92);
       this.editExportY.Name = "editExportY";
       this.editExportY.Size = new System.Drawing.Size(54, 20);
-      this.editExportY.TabIndex = 3;
+      this.editExportY.TabIndex = 6;
+      // 
+      // labelExportScreenCount
+      // 
+      this.labelExportScreenCount.AutoSize = true;
+      this.labelExportScreenCount.Enabled = false;
+      this.labelExportScreenCount.Location = new System.Drawing.Point(339, 10);
+      this.labelExportScreenCount.Name = "labelExportScreenCount";
+      this.labelExportScreenCount.Size = new System.Drawing.Size(38, 13);
+      this.labelExportScreenCount.TabIndex = 5;
+      this.labelExportScreenCount.Text = "Count:";
       // 
       // editAreaWidth
       // 
-      this.editAreaWidth.Location = new System.Drawing.Point(279, 62);
+      this.editAreaWidth.Location = new System.Drawing.Point(279, 92);
       this.editAreaWidth.Name = "editAreaWidth";
       this.editAreaWidth.Size = new System.Drawing.Size(54, 20);
-      this.editAreaWidth.TabIndex = 4;
+      this.editAreaWidth.TabIndex = 7;
       // 
       // labelAreaY
       // 
       this.labelAreaY.AutoSize = true;
-      this.labelAreaY.Location = new System.Drawing.Point(152, 65);
+      this.labelAreaY.Location = new System.Drawing.Point(152, 95);
       this.labelAreaY.Name = "labelAreaY";
       this.labelAreaY.Size = new System.Drawing.Size(17, 13);
       this.labelAreaY.TabIndex = 5;
       this.labelAreaY.Text = "Y:";
       // 
+      // editExportScreenFirstIndex
+      // 
+      this.editExportScreenFirstIndex.Enabled = false;
+      this.editExportScreenFirstIndex.Location = new System.Drawing.Point(279, 6);
+      this.editExportScreenFirstIndex.Name = "editExportScreenFirstIndex";
+      this.editExportScreenFirstIndex.Size = new System.Drawing.Size(54, 20);
+      this.editExportScreenFirstIndex.TabIndex = 1;
+      // 
       // labelAreaWidth
       // 
       this.labelAreaWidth.AutoSize = true;
-      this.labelAreaWidth.Location = new System.Drawing.Point(235, 65);
+      this.labelAreaWidth.Location = new System.Drawing.Point(235, 95);
       this.labelAreaWidth.Name = "labelAreaWidth";
       this.labelAreaWidth.Size = new System.Drawing.Size(38, 13);
       this.labelAreaWidth.TabIndex = 6;
@@ -322,15 +370,25 @@
       // 
       // editExportX
       // 
-      this.editExportX.Location = new System.Drawing.Point(90, 62);
+      this.editExportX.Location = new System.Drawing.Point(90, 92);
       this.editExportX.Name = "editExportX";
       this.editExportX.Size = new System.Drawing.Size(54, 20);
-      this.editExportX.TabIndex = 2;
+      this.editExportX.TabIndex = 5;
+      // 
+      // labelExportScreenFirstIndex
+      // 
+      this.labelExportScreenFirstIndex.AutoSize = true;
+      this.labelExportScreenFirstIndex.Enabled = false;
+      this.labelExportScreenFirstIndex.Location = new System.Drawing.Point(235, 9);
+      this.labelExportScreenFirstIndex.Name = "labelExportScreenFirstIndex";
+      this.labelExportScreenFirstIndex.Size = new System.Drawing.Size(29, 13);
+      this.labelExportScreenFirstIndex.TabIndex = 4;
+      this.labelExportScreenFirstIndex.Text = "First:";
       // 
       // labelAreaX
       // 
       this.labelAreaX.AutoSize = true;
-      this.labelAreaX.Location = new System.Drawing.Point(67, 65);
+      this.labelAreaX.Location = new System.Drawing.Point(67, 95);
       this.labelAreaX.Name = "labelAreaX";
       this.labelAreaX.Size = new System.Drawing.Size(17, 13);
       this.labelAreaX.TabIndex = 4;
@@ -339,7 +397,7 @@
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(8, 121);
+      this.label11.Location = new System.Drawing.Point(8, 151);
       this.label11.Name = "label11";
       this.label11.Size = new System.Drawing.Size(79, 13);
       this.label11.TabIndex = 2;
@@ -348,16 +406,25 @@
       // label8
       // 
       this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(8, 36);
+      this.label8.Location = new System.Drawing.Point(8, 66);
       this.label8.Name = "label8";
       this.label8.Size = new System.Drawing.Size(65, 13);
       this.label8.TabIndex = 2;
       this.label8.Text = "Export Area:";
       // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(8, 9);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(49, 13);
+      this.label3.TabIndex = 0;
+      this.label3.Text = "Screens:";
+      // 
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(8, 9);
+      this.label6.Location = new System.Drawing.Point(8, 39);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(66, 13);
       this.label6.TabIndex = 0;
@@ -374,10 +441,10 @@
             "colors, then characters",
             "character set",
             "characters and colors interleaved (X16)"});
-      this.comboExportData.Location = new System.Drawing.Point(90, 6);
+      this.comboExportData.Location = new System.Drawing.Point(90, 36);
       this.comboExportData.Name = "comboExportData";
       this.comboExportData.Size = new System.Drawing.Size(350, 21);
-      this.comboExportData.TabIndex = 0;
+      this.comboExportData.TabIndex = 3;
       // 
       // tabEditor
       // 
@@ -994,7 +1061,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage1;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1204,5 +1271,11 @@
     private System.Windows.Forms.TextBox editScreenName;
     private System.Windows.Forms.Label label18;
     public System.Windows.Forms.ComboBox comboScreens;
+    private System.Windows.Forms.ComboBox comboExportScreens;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Label labelExportScreenFirstIndex;
+    private System.Windows.Forms.TextBox editExportScreenCount;
+    private System.Windows.Forms.Label labelExportScreenCount;
+    private System.Windows.Forms.TextBox editExportScreenFirstIndex;
   }
 }

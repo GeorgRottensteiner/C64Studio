@@ -81,7 +81,7 @@ namespace RetroDevStudio.Parser
       }
       string    method = paramTokens[includeMethodParamIndex][0].Content.ToUpper();
 
-      GR.Memory.ByteBuffer    dataToInclude = new GR.Memory.ByteBuffer();
+      var dataToInclude = new GR.Memory.ByteBuffer();
 
 
       if ( extension == ".CHR" )
@@ -1024,14 +1024,14 @@ namespace RetroDevStudio.Parser
       else if ( extension == ".CHARSCREEN" )
       {
         // screen
-        // char,x,y,width,height
-        // color,x,y,width,height
-        // charcolor,x,y,width,height
-        // colorchar,x,y,width,height
-        // charvert,x,y,width,height
-        // colorvert,x,y,width,height
-        // charcolorvert,x,y,width,height
-        // colorcharvert,x,y,width,height
+        // char,x,y,width,height[,start,count]
+        // color,x,y,width,height[,start,count]
+        // charcolor,x,y,width,height[,start,count]
+        // colorchar,x,y,width,height[,start,count]
+        // charvert,x,y,width,height[,start,count]
+        // colorvert,x,y,width,height[,start,count]
+        // charcolorvert,x,y,width,height[,start,count]
+        // colorcharvert,x,y,width,height[,start,count]
         // palette[,start,count]
         if ( paramTokens.Count > 6 )
         {
@@ -1058,7 +1058,7 @@ namespace RetroDevStudio.Parser
           return false;
         }
 
-        Formats.CharsetScreenProject    screenProject = new RetroDevStudio.Formats.CharsetScreenProject();
+        var screenProject = new RetroDevStudio.Formats.CharsetScreenProject();
 
         try
         {
@@ -1165,12 +1165,12 @@ namespace RetroDevStudio.Parser
         }
         else
         {
-          int   screenIndex = 0;
-          var   screen = screenProject.Screens[screenIndex];
           int   x = 0;
           int   y = 0;
-          int   w = screen.Width;
-          int   h = screen.Height;
+          int   w = -1;
+          int   h = -1;
+          int   startIndex = 0;
+          int   count = screenProject.Screens.Count;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo xSymbol ) ) )
@@ -1192,115 +1192,146 @@ namespace RetroDevStudio.Parser
           {
             h = hSymbol.ToInt32();
           }
-
-          if ( ( x < 0 )
-          ||   ( x >= screen.Width )
-          ||   ( y < 0 )
-          ||   ( y >= screen.Height )
-          ||   ( w < 0 )
-          ||   ( x + w > screen.Width )
-          ||   ( h < 0 )
-          ||   ( y + h > screen.Height ) )
+          if ( ( paramTokens.Count >= 7 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo sSymbol ) ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid coordinates" );
+            startIndex = sSymbol.ToInt32();
+          }
+          if ( ( paramTokens.Count >= 8 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo cSymbol ) ) )
+          {
+            count = cSymbol.ToInt32();
+          }
+          if ( ( startIndex + count > screenProject.Screens.Count )
+          ||   ( startIndex < 0 )
+          ||   ( count <= 0 ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Start Index/Count out of bounds" );
             return false;
           }
 
           dataToInclude.Clear();
 
-          var exportInfo = new ExportCharsetScreenInfo();
-          exportInfo.RowByRow = !method.EndsWith( "VERT" );
-          exportInfo.Area = new GR.Math.Rectangle( x, y, w, h ); 
-
-          if ( !screenProject.ExportToBuffer( exportInfo ) )
-          {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Failed to export data from " + subFilename );
-            return false;
-          }
-
           string    textToInclude = "";
-          if ( ( method == "CHAR" )
-          ||   ( method == "CHARVERT" ) )
-          {
-            if ( !Binary )
-            {
-              textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
-              ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
-            }
-            else
-            {
-              dataToInclude = exportInfo.ScreenCharData;
-            }
-          }
-          else if ( ( method == "COLOR" )
-          ||        ( method == "COLORVERT" ) )
+          for ( int screenIndex = 0; screenIndex < count; ++screenIndex )
           {
-            if ( !Binary )
-            {
-              textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
-              ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
-            }
-            else
-            {
-              dataToInclude = exportInfo.ScreenColorData;
-            }
-          }
-          else if ( ( method == "CHARCOLOR" )
-          ||        ( method == "CHARCOLORVERT" ) )
-          {
-            if ( !Binary )
-            {
-              textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
-              textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+            var screen = screenProject.Screens[screenIndex];
 
-              ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
-            }
-            else
+            if ( w == -1 )
             {
-              dataToInclude = exportInfo.ScreenCharData + exportInfo.ScreenColorData;
+              w = screen.Width;
             }
-          }
-          else if ( ( method == "CHARCOLORINTERLEAVED" )
-          ||        ( method == "CHARCOLORINTERLEAVEDVERT" ) )
-          {
-            var interleavedBuffer = new ByteBuffer( exportInfo.ScreenCharData.Length + exportInfo.ScreenColorData.Length );
-            for ( int i = 0; i < exportInfo.ScreenCharData.Length; ++i )
+            if ( h == -1 )
             {
-              interleavedBuffer.SetU8At( i * 2, exportInfo.ScreenCharData.ByteAt( i ) );
-              interleavedBuffer.SetU8At( i * 2 + 1, exportInfo.ScreenColorData.ByteAt( i ) );
+              h = screen.Height;
+            }
+            if ( ( x < 0 )
+            ||   ( x >= screen.Width )
+            ||   ( y < 0 )
+            ||   ( y >= screen.Height )
+            ||   ( w < 0 )
+            ||   ( x + w > screen.Width )
+            ||   ( h < 0 )
+            ||   ( y + h > screen.Height ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid coordinates" );
+              return false;
             }
 
-            if ( !Binary )
-            {
-              textToInclude = OptionalPrefix( labelPrefix, "_", "DATA" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( interleavedBuffer, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+            var exportInfo = new ExportCharsetScreenInfo();
+            exportInfo.RowByRow = !method.EndsWith( "VERT" );
+            exportInfo.Area = new GR.Math.Rectangle( x, y, w, h ); 
 
-              ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
-            }
-            else
+            if ( !screenProject.ExportToBuffer( exportInfo ) )
             {
-              dataToInclude = interleavedBuffer;
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Failed to export data from " + subFilename );
+              return false;
             }
-          }
-          else if ( ( method == "COLORCHAR" )
-          ||        ( method == "COLORCHARVERT" ) )
-          {
-            if ( !Binary )
+
+            if ( ( method == "CHAR" )
+            ||   ( method == "CHARVERT" ) )
             {
-              textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
-              textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
-              ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+              if ( !Binary )
+              {
+                textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+
+                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+              }
+              else
+              {
+                dataToInclude = exportInfo.ScreenCharData;
+              }
             }
-            else
+            else if ( ( method == "COLOR" )
+            ||        ( method == "COLORVERT" ) )
             {
-              dataToInclude = exportInfo.ScreenColorData + exportInfo.ScreenCharData;
+              if ( !Binary )
+              {
+                textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+              }
+              else
+              {
+                dataToInclude = exportInfo.ScreenColorData;
+              }
+            }
+            else if ( ( method == "CHARCOLOR" )
+            ||        ( method == "CHARCOLORVERT" ) )
+            {
+              if ( !Binary )
+              {
+                textToInclude = OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+                textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+
+                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+              }
+              else
+              {
+                dataToInclude = exportInfo.ScreenCharData + exportInfo.ScreenColorData;
+              }
+            }
+            else if ( ( method == "CHARCOLORINTERLEAVED" )
+            ||        ( method == "CHARCOLORINTERLEAVEDVERT" ) )
+            {
+              var interleavedBuffer = new ByteBuffer( exportInfo.ScreenCharData.Length + exportInfo.ScreenColorData.Length );
+              for ( int i = 0; i < exportInfo.ScreenCharData.Length; ++i )
+              {
+                interleavedBuffer.SetU8At( i * 2, exportInfo.ScreenCharData.ByteAt( i ) );
+                interleavedBuffer.SetU8At( i * 2 + 1, exportInfo.ScreenColorData.ByteAt( i ) );
+              }
+
+              if ( !Binary )
+              {
+                textToInclude = OptionalPrefix( labelPrefix, "_", "DATA" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( interleavedBuffer, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+
+                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+              }
+              else
+              {
+                dataToInclude = interleavedBuffer;
+              }
+            }
+            else if ( ( method == "COLORCHAR" )
+            ||        ( method == "COLORCHARVERT" ) )
+            {
+              if ( !Binary )
+              {
+                textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+                textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
+                textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+                ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+              }
+              else
+              {
+                dataToInclude = exportInfo.ScreenColorData + exportInfo.ScreenCharData;
+              }
             }
           }
         }

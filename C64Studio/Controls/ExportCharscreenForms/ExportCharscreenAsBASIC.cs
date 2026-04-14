@@ -110,7 +110,6 @@ namespace RetroDevStudio.Controls
       bool    replaceShiftSpaceWithSpace = checkExportToBASICReplaceShiftSpaceWithSpace.Checked;
       bool    stripInvisibleColors = checkExportToBASICCollapseColors.Checked;
       bool    asString = checkExportToBASICAsString.Checked;
-      var     affectedScreen = Info.Charscreen.Screens[Info.ScreenIndex];
 
 
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
@@ -149,241 +148,246 @@ namespace RetroDevStudio.Controls
         startLine += lineStep;
       }
 
-      int   startLength = sb.Length;
-
-      for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
+      foreach ( var screenIndex in Info.ScreensToExport )
       {
-        if ( !asString )
+        var affectedScreen = Info.Charscreen.Screens[screenIndex];
+
+        int   startLength = sb.Length;
+
+        for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
         {
-          startLength = sb.Length;
-          sb.Append( startLine );
-          startLine += lineStep;
-          sb.Append( " PRINT\"" );
-          if ( ( isReverse )
-          &&   ( Info.Area.Width != affectedScreen.Width ) )
+          if ( !asString )
           {
-            // need to re-start reverse mode
-            sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
+            startLength = sb.Length;
+            sb.Append( startLine );
+            startLine += lineStep;
+            sb.Append( " PRINT\"" );
+            if ( ( isReverse )
+            &&   ( Info.Area.Width != affectedScreen.Width ) )
+            {
+              // need to re-start reverse mode
+              sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
+            }
           }
-        }
         
-        for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
-        {
-          ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
-          ushort newChar = affectedScreen.CharacterAt( x, i );
+          for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+          {
+            ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
+            ushort newChar = affectedScreen.CharacterAt( x, i );
 
-          if ( ( replaceShiftSpaceWithSpace )
-          &&   ( ( newChar == 96 )
-          ||     ( newChar == 96 + 128 ) ) )
-          {
-            newChar -= 64;
-          }
+            if ( ( replaceShiftSpaceWithSpace )
+            &&   ( ( newChar == 96 )
+            ||     ( newChar == 96 + 128 ) ) )
+            {
+              newChar -= 64;
+            }
 
-          List<string>  charsToAppend = new List<string>();
+            List<string>  charsToAppend = new List<string>();
 
-          if ( newColor != curColor )
-          {
-            if ( stripInvisibleColors )
+            if ( newColor != curColor )
             {
-              colorChangeCache = newColor;
-            }
-            else
-            {
-              int colorToUse = newColor;
-              if ( newColor >= 16 )
+              if ( stripInvisibleColors )
               {
-                if ( !mega65UpperColorRange )
-                {
-                  mega65UpperColorRange = true;
-                  charsToAppend.Add( "" + ConstantData.PetSCIIToChar[1].CharValue );
-                }
-                colorToUse &= 0x0f;
-              }
-              else if ( mega65UpperColorRange )
-              {
-                mega65UpperColorRange = false;
-                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[4].CharValue );
-              }
-              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].CharValue );
-            }
-            curColor = newColor;
-          }
-          // skip color changes for space and shift-space
-          if ( ( newChar != 32 )
-          &&   ( newChar != 96 )
-          &&   ( stripInvisibleColors ) )
-          {
-            if ( colorChangeCache != -1 )
-            {
-              int   colorToUse = colorChangeCache;
-              if ( colorChangeCache >= 16 )
-              {
-                if ( !mega65UpperColorRange )
-                {
-                  mega65UpperColorRange = true;
-                  charsToAppend.Add( "" + ConstantData.PetSCIIToChar[1].CharValue );
-                }
-                colorToUse &= 0x0f;
-              }
-              else if ( mega65UpperColorRange )
-              {
-                mega65UpperColorRange = false;
-                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[4].CharValue );
-              }
-
-              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].CharValue );
-              colorChangeCache = -1;
-            }
-          }
-          if ( newChar >= 128 )
-          {
-            if ( !isReverse )
-            {
-              isReverse = true;
-              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[18].CharValue );
-            }
-          }
-          else if ( isReverse )
-          {
-            isReverse = false;
-            charsToAppend.Add( "" + ConstantData.PetSCIIToChar[146].CharValue );
-          }
-          if ( isReverse )
-          {
-            if ( newChar == 128 + 34 )
-            {
-              // reverse apostrophe
-              string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
-              if ( asString )
-              {
-                replacement = "\"+CHR$(34)+CHR$(20)+CHR$(34)+\"";
-              }
-
-              string    replacementString = "";
-              for ( int t = 0; t < replacement.Length; ++t )
-              {
-                replacementString += ConstantData.CharToC64Char[replacement[t]].CharValue;
-              }
-              charsToAppend.Add( replacementString );
-            }
-            else
-            {
-              charsToAppend.Add( "" + ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
-            }
-          }
-          else
-          {
-            if ( newChar == 34 )
-            {
-              // a regular apostrophe
-              string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
-              if ( asString )
-              {
-                replacement = "\"+CHR$(34)+CHR$(20)+CHR$(34)+\"";
-              }
-
-              string    replacementString = "";
-              for ( int t = 0; t < replacement.Length; ++t )
-              {
-                replacementString += ConstantData.CharToC64Char[replacement[t]].CharValue;
-              }
-              charsToAppend.Add( replacementString );
-            }
-            else if ( ( replaceSpaceWithCursorRight )
-            &&        ( newChar == 32 ) )
-            {
-              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[29].CharValue );
-            }
-            else
-            {
-              charsToAppend.Add( "" + ConstantData.ScreenCodeToChar[(byte)newChar].CharValue );
-            }
-          }
-
-          // don't make lines too long!
-          foreach ( var stringToAppend in charsToAppend )
-          {
-            if ( sb.Length - startLength + stringToAppend.Length >= wrapByteCount - 1 )
-            {
-              // we need to break and start a new line
-              if ( !asString )
-              {
-                sb.Append( "\"" );
-                if ( Info.Area.Width == affectedScreen.Width )
-                {
-                  sb.Append( ";" );
-                }
-                sb.Append( "\n" );
-                startLength = sb.Length;
-                sb.Append( startLine );
-                startLine += lineStep;
-                sb.Append( " PRINT\"" );
-                if ( ( isReverse )
-                &&   ( Info.Area.Width != affectedScreen.Width ) )
-                {
-                  // need to re-start reverse mode
-                  sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
-                }
+                colorChangeCache = newColor;
               }
               else
               {
-                if ( ( sb.Length >= 2 )
-                &&   ( sb[sb.Length - 2] == '+' )
-                &&   ( sb[sb.Length - 1] == '\"' ) )
+                int colorToUse = newColor;
+                if ( newColor >= 16 )
                 {
-                  sb.Length -= 2;
+                  if ( !mega65UpperColorRange )
+                  {
+                    mega65UpperColorRange = true;
+                    charsToAppend.Add( "" + ConstantData.PetSCIIToChar[1].CharValue );
+                  }
+                  colorToUse &= 0x0f;
+                }
+                else if ( mega65UpperColorRange )
+                {
+                  mega65UpperColorRange = false;
+                  charsToAppend.Add( "" + ConstantData.PetSCIIToChar[4].CharValue );
+                }
+                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].CharValue );
+              }
+              curColor = newColor;
+            }
+            // skip color changes for space and shift-space
+            if ( ( newChar != 32 )
+            &&   ( newChar != 96 )
+            &&   ( stripInvisibleColors ) )
+            {
+              if ( colorChangeCache != -1 )
+              {
+                int   colorToUse = colorChangeCache;
+                if ( colorChangeCache >= 16 )
+                {
+                  if ( !mega65UpperColorRange )
+                  {
+                    mega65UpperColorRange = true;
+                    charsToAppend.Add( "" + ConstantData.PetSCIIToChar[1].CharValue );
+                  }
+                  colorToUse &= 0x0f;
+                }
+                else if ( mega65UpperColorRange )
+                {
+                  mega65UpperColorRange = false;
+                  charsToAppend.Add( "" + ConstantData.PetSCIIToChar[4].CharValue );
+                }
+
+                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].CharValue );
+                colorChangeCache = -1;
+              }
+            }
+            if ( newChar >= 128 )
+            {
+              if ( !isReverse )
+              {
+                isReverse = true;
+                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[18].CharValue );
+              }
+            }
+            else if ( isReverse )
+            {
+              isReverse = false;
+              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[146].CharValue );
+            }
+            if ( isReverse )
+            {
+              if ( newChar == 128 + 34 )
+              {
+                // reverse apostrophe
+                string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
+                if ( asString )
+                {
+                  replacement = "\"+CHR$(34)+CHR$(20)+CHR$(34)+\"";
+                }
+
+                string    replacementString = "";
+                for ( int t = 0; t < replacement.Length; ++t )
+                {
+                  replacementString += ConstantData.CharToC64Char[replacement[t]].CharValue;
+                }
+                charsToAppend.Add( replacementString );
+              }
+              else
+              {
+                charsToAppend.Add( "" + ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
+              }
+            }
+            else
+            {
+              if ( newChar == 34 )
+              {
+                // a regular apostrophe
+                string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
+                if ( asString )
+                {
+                  replacement = "\"+CHR$(34)+CHR$(20)+CHR$(34)+\"";
+                }
+
+                string    replacementString = "";
+                for ( int t = 0; t < replacement.Length; ++t )
+                {
+                  replacementString += ConstantData.CharToC64Char[replacement[t]].CharValue;
+                }
+                charsToAppend.Add( replacementString );
+              }
+              else if ( ( replaceSpaceWithCursorRight )
+              &&        ( newChar == 32 ) )
+              {
+                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[29].CharValue );
+              }
+              else
+              {
+                charsToAppend.Add( "" + ConstantData.ScreenCodeToChar[(byte)newChar].CharValue );
+              }
+            }
+
+            // don't make lines too long!
+            foreach ( var stringToAppend in charsToAppend )
+            {
+              if ( sb.Length - startLength + stringToAppend.Length >= wrapByteCount - 1 )
+              {
+                // we need to break and start a new line
+                if ( !asString )
+                {
+                  sb.Append( "\"" );
+                  if ( Info.Area.Width == affectedScreen.Width )
+                  {
+                    sb.Append( ";" );
+                  }
+                  sb.Append( "\n" );
+                  startLength = sb.Length;
+                  sb.Append( startLine );
+                  startLine += lineStep;
+                  sb.Append( " PRINT\"" );
+                  if ( ( isReverse )
+                  &&   ( Info.Area.Width != affectedScreen.Width ) )
+                  {
+                    // need to re-start reverse mode
+                    sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
+                  }
                 }
                 else
                 {
-                  sb.Append( "\"" );
+                  if ( ( sb.Length >= 2 )
+                  &&   ( sb[sb.Length - 2] == '+' )
+                  &&   ( sb[sb.Length - 1] == '\"' ) )
+                  {
+                    sb.Length -= 2;
+                  }
+                  else
+                  {
+                    sb.Append( "\"" );
+                  }
+                  sb.Append( "\n" );
+                  startLength = sb.Length;
+                  sb.Append( startLine );
+                  startLine += lineStep;
+                  sb.Append( " B$=B$+\"" );
                 }
-                sb.Append( "\n" );
-                startLength = sb.Length;
-                sb.Append( startLine );
-                startLine += lineStep;
-                sb.Append( " B$=B$+\"" );
+              }
+              foreach ( char toAppend in stringToAppend )
+              {
+                sb.Append( toAppend );
               }
             }
-            foreach ( char toAppend in stringToAppend )
+          }
+
+          if ( !asString )
+          {
+            sb.Append( "\"" );
+            if ( Info.Area.Width == affectedScreen.Width )
             {
-              sb.Append( toAppend );
+              sb.Append( ";" );
+            }
+            sb.Append( "\n" );
+          }
+          else
+          {
+            // down
+            sb.Append( ConstantData.PetSCIIToChar[17].CharValue );
+            // left
+            for ( int x = 0; x < Info.Area.Width; ++x )
+            {
+              sb.Append( ConstantData.PetSCIIToChar[157].CharValue );
             }
           }
         }
-
-        if ( !asString )
+        if ( asString )
         {
-          sb.Append( "\"" );
-          if ( Info.Area.Width == affectedScreen.Width )
+          if ( ( sb.Length >= 2 )
+          &&   ( sb[sb.Length - 2] == '+' )
+          &&   ( sb[sb.Length - 1] == '\"' ) )
           {
-            sb.Append( ";" );
+            sb.Length -= 2;
+          }
+          else
+          {
+            sb.Append( "\"" );
           }
           sb.Append( "\n" );
         }
-        else
-        {
-          // down
-          sb.Append( ConstantData.PetSCIIToChar[17].CharValue );
-          // left
-          for ( int x = 0; x < Info.Area.Width; ++x )
-          {
-            sb.Append( ConstantData.PetSCIIToChar[157].CharValue );
-          }
-        }
-      }
-      if ( asString )
-      {
-        if ( ( sb.Length >= 2 )
-        &&   ( sb[sb.Length - 2] == '+' )
-        &&   ( sb[sb.Length - 1] == '\"' ) )
-        {
-          sb.Length -= 2;
-        }
-        else
-        {
-          sb.Append( "\"" );
-        }
-        sb.Append( "\n" );
       }
 
       Types.ComboItem comboItem = (Types.ComboItem)comboBasicFiles.SelectedItem;

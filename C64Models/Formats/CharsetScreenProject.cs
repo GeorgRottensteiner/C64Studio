@@ -278,8 +278,6 @@ namespace RetroDevStudio.Formats
 
     public bool ExportToBuffer( ExportCharsetScreenInfo Info )
     {
-      var affectedScreen = Screens[0];
-
       Info.ScreenCharData   = new GR.Memory.ByteBuffer();
       Info.ScreenColorData  = new GR.Memory.ByteBuffer();
       Info.CharsetData      = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
@@ -309,96 +307,101 @@ namespace RetroDevStudio.Formats
         Info.Area.Width = ( Info.Area.Width / 2 );
       }
 
-      if ( Info.RowByRow )
+      foreach ( var screenIndex in Info.ScreensToExport )
       {
-        // row by row
-        for ( int i = 0; i < Info.Area.Height; ++i )
+        var affectedScreen = Screens[screenIndex];
+
+        if ( Info.RowByRow )
         {
-          for ( int x = 0; x < Info.Area.Width; ++x )
+          // row by row
+          for ( int i = 0; i < Info.Area.Height; ++i )
           {
-            // "Smart" way of choosing either one
-            byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
-                                    + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
-            ushort newChar  = affectedScreen.CharacterAt( Info.Area.X + x, Info.Area.Y + i );
+            for ( int x = 0; x < Info.Area.Width; ++x )
+            {
+              // "Smart" way of choosing either one
+              byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
+                                      + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
+              ushort newChar  = affectedScreen.CharacterAt( Info.Area.X + x, Info.Area.Y + i );
 
-            newChar = (ushort)( newChar + CharOffset );
+              newChar = (ushort)( newChar + CharOffset );
 
-            if ( numBytesPerChar == 2 )
-            {
-              Info.ScreenCharData.AppendU16( newChar );
-            }
-            else
-            {
-              Info.ScreenCharData.AppendU8( (byte)newChar );
-            }
-            if ( Lookup.TextModeUsesColor( Mode ) )
-            {
-              if ( ( Mode == TextMode.MEGA65_80_X_25_HIRES )
-              ||   ( Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+              if ( numBytesPerChar == 2 )
               {
-                // colors >= 16 and < 32 need to be shifted up
-                if ( newColor >= 16 )
-                {
-                  newColor += 64 - 16;
-                }
-                Info.ScreenColorData.AppendU8( newColor );
-              }
-              else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
-              ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
-              {
-                // set the NCM bit in color byte 0
-                Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+                Info.ScreenCharData.AppendU16( newChar );
               }
               else
               {
-                Info.ScreenColorData.AppendU8( newColor );
+                Info.ScreenCharData.AppendU8( (byte)newChar );
+              }
+              if ( Lookup.TextModeUsesColor( Mode ) )
+              {
+                if ( ( Mode == TextMode.MEGA65_80_X_25_HIRES )
+                ||   ( Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+                {
+                  // colors >= 16 and < 32 need to be shifted up
+                  if ( newColor >= 16 )
+                  {
+                    newColor += 64 - 16;
+                  }
+                  Info.ScreenColorData.AppendU8( newColor );
+                }
+                else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
+                ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
+                {
+                  // set the NCM bit in color byte 0
+                  Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+                }
+                else
+                {
+                  Info.ScreenColorData.AppendU8( newColor );
+                }
               }
             }
           }
         }
-      }
-      else
-      {
-        for ( int x = 0; x < Info.Area.Width; ++x )
+        else
         {
-          for ( int i = 0; i < Info.Area.Height; ++i )
+          for ( int x = 0; x < Info.Area.Width; ++x )
           {
-            byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
-                                    + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
-
-            ushort newChar = affectedScreen.CharacterAt( x + Info.Area.X, i + Info.Area.Y );
-
-            newChar = (ushort)( newChar + CharOffset );
-
-            if ( numBytesPerChar == 2 )
+            for ( int i = 0; i < Info.Area.Height; ++i )
             {
-              Info.ScreenCharData.AppendU16( newChar );
-            }
-            else
-            {
-              Info.ScreenCharData.AppendU8( (byte)newChar );
-            }
-            if ( Lookup.TextModeUsesColor( Mode ) )
-            {
-              if ( ( Mode == TextMode.MEGA65_80_X_25_HIRES )
-              ||   ( Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+              byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
+                                      + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
+
+              ushort newChar = affectedScreen.CharacterAt( x + Info.Area.X, i + Info.Area.Y );
+
+              newChar = (ushort)( newChar + CharOffset );
+
+              if ( numBytesPerChar == 2 )
               {
-                // colors >= 16 and < 32 need to be shifted up
-                if ( newColor >= 16 )
-                {
-                  newColor += 64 - 16;
-                }
-                Info.ScreenColorData.AppendU8( newColor );
-              }
-              else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
-              ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
-              {
-                // set the NCM bit in color byte 0
-                Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+                Info.ScreenCharData.AppendU16( newChar );
               }
               else
               {
-                Info.ScreenColorData.AppendU8( newColor );
+                Info.ScreenCharData.AppendU8( (byte)newChar );
+              }
+              if ( Lookup.TextModeUsesColor( Mode ) )
+              {
+                if ( ( Mode == TextMode.MEGA65_80_X_25_HIRES )
+                ||   ( Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+                {
+                  // colors >= 16 and < 32 need to be shifted up
+                  if ( newColor >= 16 )
+                  {
+                    newColor += 64 - 16;
+                  }
+                  Info.ScreenColorData.AppendU8( newColor );
+                }
+                else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
+                ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
+                {
+                  // set the NCM bit in color byte 0
+                  Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+                }
+                else
+                {
+                  Info.ScreenColorData.AppendU8( newColor );
+                }
               }
             }
           }
