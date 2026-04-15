@@ -324,5 +324,16 @@ namespace RetroDevStudio
 
 
 
+    internal byte GetGrayScale( uint colorValue )
+    {
+      uint r = ( colorValue >> 16 ) & 0xff;
+      uint g = ( colorValue >> 8 ) & 0xff;
+      uint b = ( colorValue ) & 0xff;
+
+      return (byte)( r * 0.299 + g * 0.587 + b * 0.114 );
+    }
+
+
+
   }
 }

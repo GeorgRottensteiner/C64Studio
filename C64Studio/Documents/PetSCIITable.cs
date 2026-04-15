@@ -33,7 +33,8 @@ namespace RetroDevStudio.Documents
       listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
       listPETSCII.Font = Core.Imaging.FontFromMachine( MachineType.C64, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
-      foreach ( Types.SingleKeyInfo character in ConstantData.PetSCIIToChar.Values )
+      var keys = ConstantData.PetSCIIToChar.Values.OrderBy( p => p.NativeValue ).Distinct();
+      foreach ( Types.SingleKeyInfo character in keys )
       {
         if ( character.HasChar )
         {
@@ -63,6 +64,8 @@ namespace RetroDevStudio.Documents
 
       System.Drawing.Brush  brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
       System.Drawing.Pen  penBorder = new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
+      var textColor = Core.Settings.FGColor( ColorableElement.CONTROL_TEXT );
+      var textColorBottom = textColor;
 
       g.FillRectangle( brushBackground, 0, 0, 80, 40 );
       g.DrawRectangle( penBorder, 0, 0, 79, 39 );
@@ -70,16 +73,28 @@ namespace RetroDevStudio.Documents
       var petsciiChar = ConstantData.ColorToPetSCIIChar.FirstOrDefault( pc => pc.Value == character.NativeValue );
       if ( petsciiChar.Value != default )
       {
-        brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Imaging.PaletteFromMachine( MachineType.C64 ).ColorValues[petsciiChar.Key] ) );
+        var colorValue = Core.Imaging.PaletteFromMachine( MachineType.C64 ).ColorValues[petsciiChar.Key];
+
+        var color1 = Core.Imaging.GetGrayScale( colorValue );
+        var color2 = Core.Imaging.GetGrayScale( textColor );
+
+        if ( Math.Abs( color1 - color2 ) < 10 )
+        {
+          // too close, invert
+          textColor = 0xff000000 | ( 0x00ffffff - ( textColor & 0x00ffffff ) );
+        }
+
+        brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( colorValue ) );
         g.FillRectangle( brushBackground, 0, 0, 80, 20 );
         g.DrawRectangle( penBorder, 0, 0, 79, 19 );
       }
 
-      System.Drawing.Brush  brush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
+      var brush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( textColor ) );
+      var brushBottom = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( textColorBottom ) );
 
       g.DrawString( "" + character.CharValue, listPETSCII.Font, brush, new System.Drawing.PointF( 2, 4 ) );
       g.DrawString( character.NativeValue.ToString( "X02" ), _DefaultFont, brush, new System.Drawing.PointF( 40, 4 ) );
-      g.DrawString( character.Desc, _DefaultFont, brush, new System.Drawing.PointF( 1, 24 ) );
+      g.DrawString( character.Desc, _DefaultFont, brushBottom, new System.Drawing.PointF( 1, 24 ) );
 
       g.Dispose();
 

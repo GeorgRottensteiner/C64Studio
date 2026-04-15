@@ -1031,91 +1031,91 @@ namespace RetroDevStudio
       //  64- 95 $40-$5F     -64 $C0          0- 31 $00-$1F  
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.NORMAL, KeyType.NORMAL, 64 - 64, true, 64, true, '@', true );
 
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.NORMAL, KeyType.NORMAL, 65 - 64, true, 65, true, 'A', 'a', 0x41 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.NORMAL, KeyType.NORMAL, 66 - 64, true, 66, true, 'B', 'b', 0x42 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.NORMAL, KeyType.NORMAL, 67 - 64, true, 67, true, 'C', 'c', 0x43 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.NORMAL, KeyType.NORMAL, 68 - 64, true, 68, true, 'D', 'd', 0x44 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.NORMAL, KeyType.NORMAL, 69 - 64, true, 69, true, 'E', 'e', 0x45 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.NORMAL, KeyType.NORMAL, 70 - 64, true, 70, true, 'F', 'f', 0x46 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.NORMAL, KeyType.NORMAL, 71 - 64, true, 71, true, 'G', 'g', 0x47 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.NORMAL, KeyType.NORMAL, 72 - 64, true, 72, true, 'H', 'h', 0x48 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.NORMAL, KeyType.NORMAL, 73 - 64, true, 73, true, 'I', 'i', 0x49 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.NORMAL, KeyType.NORMAL, 74 - 64, true, 74, true, 'J', 'j', 0x4a );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.NORMAL, KeyType.NORMAL, 75 - 64, true, 75, true, 'K', 'k', 0x4b );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.NORMAL, KeyType.NORMAL, 76 - 64, true, 76, true, 'L', 'l', 0x4c );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.NORMAL, KeyType.NORMAL, 77 - 64, true, 77, true, 'M', 'm', 0x4d );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.NORMAL, KeyType.NORMAL, 78 - 64, true, 78, true, 'N', 'n', 0x4e );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.NORMAL, KeyType.NORMAL, 79 - 64, true, 79, true, 'O', 'o', 0x4f );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.NORMAL, KeyType.NORMAL, 80 - 64, true, 80, true, 'P', 'p', 0x50 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.NORMAL, KeyType.NORMAL, 81 - 64, true, 81, true, 'Q', 'q', 0x51 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.NORMAL, KeyType.NORMAL, 82 - 64, true, 82, true, 'R', 'r', 0x52 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.NORMAL, KeyType.NORMAL, 83 - 64, true, 83, true, 'S', 's', 0x53 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.NORMAL, KeyType.NORMAL, 84 - 64, true, 84, true, 'T', 't', 0x54 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.NORMAL, KeyType.NORMAL, 85 - 64, true, 85, true, 'U', 'u', 0x55 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.NORMAL, KeyType.NORMAL, 86 - 64, true, 86, true, 'V', 'v', 0x56 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.NORMAL, KeyType.NORMAL, 87 - 64, true, 87, true, 'W', 'w', 0x57 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 88 - 64, true, 88, true, 'X', 'x', 0x58 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, 'Y', 'y', 0x59 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, 'Z', 'z', 0x5a );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.NORMAL, KeyType.NORMAL, 65 - 64, true, 65, true, 'A', 'a', 0x41, "A" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.NORMAL, KeyType.NORMAL, 66 - 64, true, 66, true, 'B', 'b', 0x42, "B" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.NORMAL, KeyType.NORMAL, 67 - 64, true, 67, true, 'C', 'c', 0x43, "C" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.NORMAL, KeyType.NORMAL, 68 - 64, true, 68, true, 'D', 'd', 0x44, "D" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.NORMAL, KeyType.NORMAL, 69 - 64, true, 69, true, 'E', 'e', 0x45, "E" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.NORMAL, KeyType.NORMAL, 70 - 64, true, 70, true, 'F', 'f', 0x46, "F" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.NORMAL, KeyType.NORMAL, 71 - 64, true, 71, true, 'G', 'g', 0x47, "G" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.NORMAL, KeyType.NORMAL, 72 - 64, true, 72, true, 'H', 'h', 0x48, "H" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.NORMAL, KeyType.NORMAL, 73 - 64, true, 73, true, 'I', 'i', 0x49, "I" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.NORMAL, KeyType.NORMAL, 74 - 64, true, 74, true, 'J', 'j', 0x4a, "J" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.NORMAL, KeyType.NORMAL, 75 - 64, true, 75, true, 'K', 'k', 0x4b, "K" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.NORMAL, KeyType.NORMAL, 76 - 64, true, 76, true, 'L', 'l', 0x4c, "L" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.NORMAL, KeyType.NORMAL, 77 - 64, true, 77, true, 'M', 'm', 0x4d, "M" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.NORMAL, KeyType.NORMAL, 78 - 64, true, 78, true, 'N', 'n', 0x4e, "N" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.NORMAL, KeyType.NORMAL, 79 - 64, true, 79, true, 'O', 'o', 0x4f, "O" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.NORMAL, KeyType.NORMAL, 80 - 64, true, 80, true, 'P', 'p', 0x50, "P" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.NORMAL, KeyType.NORMAL, 81 - 64, true, 81, true, 'Q', 'q', 0x51, "Q" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.NORMAL, KeyType.NORMAL, 82 - 64, true, 82, true, 'R', 'r', 0x52, "R" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.NORMAL, KeyType.NORMAL, 83 - 64, true, 83, true, 'S', 's', 0x53, "S" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.NORMAL, KeyType.NORMAL, 84 - 64, true, 84, true, 'T', 't', 0x54, "T" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.NORMAL, KeyType.NORMAL, 85 - 64, true, 85, true, 'U', 'u', 0x55, "U" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.NORMAL, KeyType.NORMAL, 86 - 64, true, 86, true, 'V', 'v', 0x56, "V" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.NORMAL, KeyType.NORMAL, 87 - 64, true, 87, true, 'W', 'w', 0x57, "W" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 88 - 64, true, 88, true, 'X', 'x', 0x58, "X" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, 'Y', 'y', 0x59, "Y" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, 'Z', 'z', 0x5a, "Z" );
 
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.NORMAL, KeyType.NORMAL, 65 - 64, true, 65, true, (char)0xe041, (char)0xe141, 0x41 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.NORMAL, KeyType.NORMAL, 66 - 64, true, 66, true, (char)0xe042, (char)0xe142, 0x42 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.NORMAL, KeyType.NORMAL, 67 - 64, true, 67, true, (char)0xe043, (char)0xe143, 0x43 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.NORMAL, KeyType.NORMAL, 68 - 64, true, 68, true, (char)0xe044, (char)0xe144, 0x44 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.NORMAL, KeyType.NORMAL, 69 - 64, true, 69, true, (char)0xe045, (char)0xe145, 0x45 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.NORMAL, KeyType.NORMAL, 70 - 64, true, 70, true, (char)0xe046, (char)0xe146, 0x46 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.NORMAL, KeyType.NORMAL, 71 - 64, true, 71, true, (char)0xe047, (char)0xe147, 0x47 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.NORMAL, KeyType.NORMAL, 72 - 64, true, 72, true, (char)0xe048, (char)0xe148, 0x48 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.NORMAL, KeyType.NORMAL, 73 - 64, true, 73, true, (char)0xe049, (char)0xe149, 0x49 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.NORMAL, KeyType.NORMAL, 74 - 64, true, 74, true, (char)0xe04a, (char)0xe14a, 0x4a );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.NORMAL, KeyType.NORMAL, 75 - 64, true, 75, true, (char)0xe04b, (char)0xe14b, 0x4b );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.NORMAL, KeyType.NORMAL, 76 - 64, true, 76, true, (char)0xe04c, (char)0xe14c, 0x4c );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.NORMAL, KeyType.NORMAL, 77 - 64, true, 77, true, (char)0xe04d, (char)0xe14d, 0x4d );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.NORMAL, KeyType.NORMAL, 78 - 64, true, 78, true, (char)0xe04e, (char)0xe14e, 0x4e );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.NORMAL, KeyType.NORMAL, 79 - 64, true, 79, true, (char)0xe04f, (char)0xe14f, 0x4f );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.NORMAL, KeyType.NORMAL, 80 - 64, true, 80, true, (char)0xe050, (char)0xe150, 0x50 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.NORMAL, KeyType.NORMAL, 81 - 64, true, 81, true, (char)0xe051, (char)0xe151, 0x51 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.NORMAL, KeyType.NORMAL, 82 - 64, true, 82, true, (char)0xe052, (char)0xe152, 0x52 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.NORMAL, KeyType.NORMAL, 83 - 64, true, 83, true, (char)0xe053, (char)0xe153, 0x53 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.NORMAL, KeyType.NORMAL, 84 - 64, true, 84, true, (char)0xe054, (char)0xe154, 0x54 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.NORMAL, KeyType.NORMAL, 85 - 64, true, 85, true, (char)0xe055, (char)0xe155, 0x55 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.NORMAL, KeyType.NORMAL, 86 - 64, true, 86, true, (char)0xe056, (char)0xe156, 0x56 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.NORMAL, KeyType.NORMAL, 87 - 64, true, 87, true, (char)0xe057, (char)0xe157, 0x57 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 88 - 64, true, 88, true, (char)0xe058, (char)0xe158, 0x58 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, (char)0xe059, (char)0xe159, 0x59 );
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, (char)0xe05a, (char)0xe15a, 0x5a );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.NORMAL, KeyType.NORMAL, 65 - 64, true, 65, true, (char)0xe041, (char)0xe141, 0x41, "A" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.NORMAL, KeyType.NORMAL, 66 - 64, true, 66, true, (char)0xe042, (char)0xe142, 0x42, "B" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.NORMAL, KeyType.NORMAL, 67 - 64, true, 67, true, (char)0xe043, (char)0xe143, 0x43, "C" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.NORMAL, KeyType.NORMAL, 68 - 64, true, 68, true, (char)0xe044, (char)0xe144, 0x44, "D" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.NORMAL, KeyType.NORMAL, 69 - 64, true, 69, true, (char)0xe045, (char)0xe145, 0x45, "E" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.NORMAL, KeyType.NORMAL, 70 - 64, true, 70, true, (char)0xe046, (char)0xe146, 0x46, "F" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.NORMAL, KeyType.NORMAL, 71 - 64, true, 71, true, (char)0xe047, (char)0xe147, 0x47, "G" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.NORMAL, KeyType.NORMAL, 72 - 64, true, 72, true, (char)0xe048, (char)0xe148, 0x48, "H" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.NORMAL, KeyType.NORMAL, 73 - 64, true, 73, true, (char)0xe049, (char)0xe149, 0x49, "I" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.NORMAL, KeyType.NORMAL, 74 - 64, true, 74, true, (char)0xe04a, (char)0xe14a, 0x4a, "J" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.NORMAL, KeyType.NORMAL, 75 - 64, true, 75, true, (char)0xe04b, (char)0xe14b, 0x4b, "K" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.NORMAL, KeyType.NORMAL, 76 - 64, true, 76, true, (char)0xe04c, (char)0xe14c, 0x4c, "L" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.NORMAL, KeyType.NORMAL, 77 - 64, true, 77, true, (char)0xe04d, (char)0xe14d, 0x4d, "M" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.NORMAL, KeyType.NORMAL, 78 - 64, true, 78, true, (char)0xe04e, (char)0xe14e, 0x4e, "N" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.NORMAL, KeyType.NORMAL, 79 - 64, true, 79, true, (char)0xe04f, (char)0xe14f, 0x4f, "O" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.NORMAL, KeyType.NORMAL, 80 - 64, true, 80, true, (char)0xe050, (char)0xe150, 0x50, "P" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.NORMAL, KeyType.NORMAL, 81 - 64, true, 81, true, (char)0xe051, (char)0xe151, 0x51, "Q" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.NORMAL, KeyType.NORMAL, 82 - 64, true, 82, true, (char)0xe052, (char)0xe152, 0x52, "R" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.NORMAL, KeyType.NORMAL, 83 - 64, true, 83, true, (char)0xe053, (char)0xe153, 0x53, "S" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.NORMAL, KeyType.NORMAL, 84 - 64, true, 84, true, (char)0xe054, (char)0xe154, 0x54, "T" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.NORMAL, KeyType.NORMAL, 85 - 64, true, 85, true, (char)0xe055, (char)0xe155, 0x55, "U" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.NORMAL, KeyType.NORMAL, 86 - 64, true, 86, true, (char)0xe056, (char)0xe156, 0x56, "V" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.NORMAL, KeyType.NORMAL, 87 - 64, true, 87, true, (char)0xe057, (char)0xe157, 0x57, "W" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 88 - 64, true, 88, true, (char)0xe058, (char)0xe158, 0x58, "X" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, (char)0xe059, (char)0xe159, 0x59, "Y" );
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, (char)0xe05a, (char)0xe15a, 0x5a, "Z" );
 
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 161 - 64, true, 161, true, (char)0xee61, (char)0xef61, 161 ).Replacements.Add( "CBM-K" );   // C= K
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 162 - 64, true, 162, true, (char)0xee62, (char)0xef62, 162 ).Replacements.Add( "CBM-I" );   // C= I
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 163 - 64, true, 163, true, (char)0xee63, (char)0xef63, 163 ).Replacements.Add( "CBM-T" );   // C= T
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 164 - 64, true, 164, true, (char)0xee64, (char)0xef64, 164 ).Replacements.Add( "CBM-@" );   // C= @
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 165 - 64, true, 165, true, (char)0xee65, (char)0xef65, 165 ).Replacements.Add( "CBM-G" );   // C= G
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 166 - 64, true, 166, true, (char)0xee66, (char)0xef66, 166 ).Replacements.Add( "CBM-+" );   // C= +
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 167 - 64, true, 167, true, (char)0xee67, (char)0xef67, 167 ).Replacements.Add( "CBM-N" );   // C= N
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 168 - 64, true, 168, true, (char)0xee68, (char)0xef68, 168 ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 169 - 64, true, 169, true, (char)0xee69, (char)0xef69, 169 ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 170 - 64, true, 170, true, (char)0xee6a, (char)0xef6a, 170 ).Replacements.Add( "CBM-M" );   // C= M
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 171 - 64, true, 171, true, (char)0xee6b, (char)0xef6b, 171 ).Replacements.Add( "CBM-Q" );   // C= Q
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 172 - 64, true, 172, true, (char)0xee6c, (char)0xef6c, 172 ).Replacements.Add( "CBM-D" );   // C= D
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 173 - 64, true, 173, true, (char)0xee6d, (char)0xef6d, 173 ).Replacements.Add( "CBM-Z" );   // C= Y
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 174 - 64, true, 174, true, (char)0xee6e, (char)0xef6e, 174 ).Replacements.Add( "CBM-S" );   // C= S
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 175 - 64, true, 175, true, (char)0xee6f, (char)0xef6f, 175 ).Replacements.Add( "CBM-P" );   // C= P
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 176 - 64, true, 176, true, (char)0xee70, (char)0xef70, 176 ).Replacements.Add( "CBM-A" );   // C= A 
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 177 - 64, true, 177, true, (char)0xee71, (char)0xef71, 177 ).Replacements.Add( "CBM-E" );   // C= E
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 178 - 64, true, 178, true, (char)0xee72, (char)0xef72, 178 ).Replacements.Add( "CBM-R" );   // C= R
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 179 - 64, true, 179, true, (char)0xee73, (char)0xef73, 179 ).Replacements.Add( "CBM-W" );   // C= W
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 180 - 64, true, 180, true, (char)0xee74, (char)0xef74, 180 ).Replacements.Add( "CBM-H" );   // C= H
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 181 - 64, true, 181, true, (char)0xee75, (char)0xef75, 181 ).Replacements.Add( "CBM-J" );   // C= J
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 182 - 64, true, 182, true, (char)0xee76, (char)0xef76, 182 ).Replacements.Add( "CBM-L" );   // C= L
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 183 - 64, true, 183, true, (char)0xee77, (char)0xef77, 183 ).Replacements.Add( "CBM-Y" );   // C= Z
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 184 - 64, true, 184, true, (char)0xee78, (char)0xef78, 184 ).Replacements.Add( "CBM-U" );   // C= U
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 185 - 64, true, 185, true, (char)0xee79, (char)0xef79, 185 ).Replacements.Add( "CBM-O" );   // C= O
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 186 - 64, true, 186, true, (char)0xee7a, (char)0xef7a, 186 ).Replacements.Add( "SHIFT-@" );   // Shift @
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 187 - 64, true, 187, true, (char)0xee7b, (char)0xef7b, 187 ).Replacements.Add( "CBM-F" );   // C= F
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 188 - 64, true, 188, true, (char)0xee7c, (char)0xef7c, 188 ).Replacements.Add( "CBM-C" );   // C= C
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 189 - 64, true, 189, true, (char)0xee7d, (char)0xef7d, 189 ).Replacements.Add( "CBM-X" );   // C= X
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 190 - 64, true, 190, true, (char)0xee7e, (char)0xef7e, 190 ).Replacements.Add( "CBM-V" );   // C= V
-      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 191 - 64, true, 191, true, (char)0xee7f, (char)0xef7f, 191 ).Replacements.Add( "CBM-B" );   // C= B
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_K, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 161 - 64, true, 161, true, (char)0xee61, (char)0xef61, 161, "CBM-K" ).Replacements.Add( "CBM-K" );   // C= K
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_I, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 162 - 64, true, 162, true, (char)0xee62, (char)0xef62, 162, "CBM-I" ).Replacements.Add( "CBM-I" );   // C= I
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_T, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 163 - 64, true, 163, true, (char)0xee63, (char)0xef63, 163, "CBM-T" ).Replacements.Add( "CBM-T" );   // C= T
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 164 - 64, true, 164, true, (char)0xee64, (char)0xef64, 164, "CBM-@" ).Replacements.Add( "CBM-@" );   // C= @
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 165 - 64, true, 165, true, (char)0xee65, (char)0xef65, 165, "CBM-G" ).Replacements.Add( "CBM-G" );   // C= G
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 166 - 64, true, 166, true, (char)0xee66, (char)0xef66, 166, "CBM-+" ).Replacements.Add( "CBM-+" );   // C= +
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 167 - 64, true, 167, true, (char)0xee67, (char)0xef67, 167, "CBM-N" ).Replacements.Add( "CBM-N" );   // C= N
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 168 - 64, true, 168, true, (char)0xee68, (char)0xef68, 168, "CBM-POUND" ).Replacements.AddRange( new string[] { "CBM-POUND", "CBM-£" } );   // C= Insert 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 169 - 64, true, 169, true, (char)0xee69, (char)0xef69, 169, "SHIFT-POUND" ).Replacements.AddRange( new string[] { "SHIFT-POUND", "SHIFT-£" } );   // Shift Insert 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 170 - 64, true, 170, true, (char)0xee6a, (char)0xef6a, 170, "CBM-M" ).Replacements.Add( "CBM-M" );   // C= M
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 171 - 64, true, 171, true, (char)0xee6b, (char)0xef6b, 171, "CBM-Q" ).Replacements.Add( "CBM-Q" );   // C= Q
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 172 - 64, true, 172, true, (char)0xee6c, (char)0xef6c, 172, "CBM-D" ).Replacements.Add( "CBM-D" );   // C= D
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Z, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 173 - 64, true, 173, true, (char)0xee6d, (char)0xef6d, 173, "CBM-Z" ).Replacements.Add( "CBM-Z" );   // C= Y
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_S, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 174 - 64, true, 174, true, (char)0xee6e, (char)0xef6e, 174, "CBM-S" ).Replacements.Add( "CBM-S" );   // C= S
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_P, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 175 - 64, true, 175, true, (char)0xee6f, (char)0xef6f, 175, "CBM-P" ).Replacements.Add( "CBM-P" );   // C= P
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_A, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 176 - 64, true, 176, true, (char)0xee70, (char)0xef70, 176, "CBM-A" ).Replacements.Add( "CBM-A" );   // C= A 
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_E, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 177 - 64, true, 177, true, (char)0xee71, (char)0xef71, 177, "CBM-E" ).Replacements.Add( "CBM-E" );   // C= E
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_R, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 178 - 64, true, 178, true, (char)0xee72, (char)0xef72, 178, "CBM-R" ).Replacements.Add( "CBM-R" );   // C= R
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_W, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 179 - 64, true, 179, true, (char)0xee73, (char)0xef73, 179, "CBM-W" ).Replacements.Add( "CBM-W" );   // C= W
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_H, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 180 - 64, true, 180, true, (char)0xee74, (char)0xef74, 180, "CBM-H" ).Replacements.Add( "CBM-H" );   // C= H
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_J, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 181 - 64, true, 181, true, (char)0xee75, (char)0xef75, 181, "CBM-J" ).Replacements.Add( "CBM-J" );   // C= J
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_L, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 182 - 64, true, 182, true, (char)0xee76, (char)0xef76, 182, "CBM-L" ).Replacements.Add( "CBM-L" );   // C= L
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_Y, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 183 - 64, true, 183, true, (char)0xee77, (char)0xef77, 183, "CBM-Y" ).Replacements.Add( "CBM-Y" );   // C= Z
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_U, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 184 - 64, true, 184, true, (char)0xee78, (char)0xef78, 184, "CBM-U" ).Replacements.Add( "CBM-U" );   // C= U
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_O, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 185 - 64, true, 185, true, (char)0xee79, (char)0xef79, 185, "CBM-O" ).Replacements.Add( "CBM-O" );   // C= O
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_AT, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 186 - 64, true, 186, true, (char)0xee7a, (char)0xef7a, 186, "SHIFT-@" ).Replacements.Add( "SHIFT-@" );   // Shift @
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_F, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 187 - 64, true, 187, true, (char)0xee7b, (char)0xef7b, 187, "CBM-F" ).Replacements.Add( "CBM-F" );   // C= F
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_C, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 188 - 64, true, 188, true, (char)0xee7c, (char)0xef7c, 188, "CBM-C" ).Replacements.Add( "CBM-C" );   // C= C
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_X, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 189 - 64, true, 189, true, (char)0xee7d, (char)0xef7d, 189, "CBM-X" ).Replacements.Add( "CBM-X" );   // C= X
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_V, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 190 - 64, true, 190, true, (char)0xee7e, (char)0xef7e, 190, "CBM-V" ).Replacements.Add( "CBM-V" );   // C= V
+      AddKeyInfoLowerCase( MachineType.C64, PhysicalKey.KEY_B, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 191 - 64, true, 191, true, (char)0xee7f, (char)0xef7f, 191, "CBM-B" ).Replacements.Add( "CBM-B" );   // C= B
 
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 91 - 64, true, 91, true, '[', true );//(char)0xee1b, true );//'[', true );
       AddKeyInfo( MachineType.C64, PhysicalKey.KEY_POUND, KeyModifier.NORMAL, KeyType.NORMAL, 92 - 64, true, 92, true, '£', true ).Replacements.Add( "POUND" );
@@ -1535,9 +1535,9 @@ namespace RetroDevStudio
 
 
 
-    static SingleKeyInfo AddKeyInfoLowerCase( MachineType machine, PhysicalKey Key, KeyModifier Modifier, KeyType Type, byte ScreenCodeValue, bool HasScreenCode, byte PetSCIIValue, bool HasPetSCII, char CharValue, char LowerCaseCharValue, byte LowerCasePETSCII )
+    static SingleKeyInfo AddKeyInfoLowerCase( MachineType machine, PhysicalKey Key, KeyModifier Modifier, KeyType Type, byte ScreenCodeValue, bool HasScreenCode, byte PetSCIIValue, bool HasPetSCII, char CharValue, char LowerCaseCharValue, byte LowerCasePETSCII, string description )
     {
-      return AddKeyInfo( machine, Key, Modifier, Type, ScreenCodeValue, HasScreenCode, PetSCIIValue, HasPetSCII, CharValue, LowerCaseCharValue, LowerCasePETSCII, true, "" + (char)PetSCIIValue, "" );
+      return AddKeyInfo( machine, Key, Modifier, Type, ScreenCodeValue, HasScreenCode, PetSCIIValue, HasPetSCII, CharValue, LowerCaseCharValue, LowerCasePETSCII, true, description, "" );
     }
 
 
