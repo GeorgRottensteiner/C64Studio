@@ -3362,16 +3362,20 @@ namespace RetroDevStudio.Documents
 
     private void charEditor_CharactersShifted( int[] OldToNew, int[] NewToOld )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_CurrentScreenIndex, 0, 0, CurrentScreen.Width, CurrentScreen.Height ), false );
-
-      // now shift all characters
-      for ( int j = 0; j < CurrentScreen.Height; ++j )
+      for ( int screenIndex = 0; screenIndex < m_CharsetScreen.Screens.Count; ++screenIndex )
       {
-        for ( int i = 0; i < CurrentScreen.Width; ++i )
+        var screen = m_CharsetScreen.Screens[screenIndex];
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, screenIndex, 0, 0, CurrentScreen.Width, CurrentScreen.Height ), false );
+
+        // now shift all characters
+        for ( int j = 0; j < screen.Height; ++j )
         {
-          uint  origChar = CurrentScreen.Chars[i + j * CurrentScreen.Width];
-          uint  origColor = ( origChar & 0xffff0000 );
-          CurrentScreen.Chars[i + j * CurrentScreen.Width] = (uint)( (uint)OldToNew[(int)( origChar & 0xffff )] | origColor );
+          for ( int i = 0; i < screen.Width; ++i )
+          {
+            uint  origChar = screen.Chars[i + j * screen.Width];
+            uint  origColor = ( origChar & 0xffff0000 );
+            screen.Chars[i + j * screen.Width] = (uint)( (uint)OldToNew[(int)( origChar & 0xffff )] | origColor );
+          }
         }
       }
 

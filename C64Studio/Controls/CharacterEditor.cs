@@ -1108,6 +1108,7 @@ namespace RetroDevStudio.Controls
       //Debug.Log( "CharsetUpdated h" );
       _SkipRebuildCharImage = false;
       RebuildAllCharImages();
+      AdjustCharacterSizes();
       //Debug.Log( "CharsetUpdated i" );
 
       //OnPaletteChanged();
