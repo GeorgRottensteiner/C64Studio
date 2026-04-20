@@ -1923,9 +1923,11 @@ namespace RetroDevStudio.Documents
       if ( minX == CurrentScreen.Width )
       {
         m_SelectionBounds = new GR.Math.Rectangle();
+        btnCopy.Enabled = ( ( m_ToolMode == ToolMode.SELECT ) && ( m_SelectionBounds.Width > 0 ) && ( m_SelectionBounds.Height > 0 ) );
         return;
       }
       m_SelectionBounds = new GR.Math.Rectangle( minX, minY, maxX - minX + 1, maxY - minY + 1 );
+      btnCopy.Enabled = ( ( m_ToolMode == ToolMode.SELECT ) && ( m_SelectionBounds.Width > 0 ) && ( m_SelectionBounds.Height > 0 ) );
     }
 
 
@@ -2321,8 +2323,8 @@ namespace RetroDevStudio.Documents
 
     private void OnToolModeChanged()
     {
-      btnCopy.Enabled = ( m_ToolMode == ToolMode.SELECT );
-      btnPaste.Enabled = ( m_ToolMode == ToolMode.SELECT );
+      btnCopy.Enabled = ( ( m_ToolMode == ToolMode.SELECT ) && ( m_SelectionBounds.Width > 0 ) && ( m_SelectionBounds.Height > 0 ) );
+      btnPaste.Enabled = ( m_ToolMode == ToolMode.SELECT ) && Clipboard.ContainsData( "RetroDevStudio.CharacterScreenSelection" );
     }
 
 
@@ -2368,6 +2370,7 @@ namespace RetroDevStudio.Documents
         }
       }
       m_SelectionBounds = new GR.Math.Rectangle();
+      btnCopy.Enabled = ( ( m_ToolMode == ToolMode.SELECT ) && ( m_SelectionBounds.Width > 0 ) && ( m_SelectionBounds.Height > 0 ) );
       Redraw();
     }
 
@@ -3769,6 +3772,9 @@ namespace RetroDevStudio.Documents
     {
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.CLIPBOARD_CHANGED:
+          btnPaste.Enabled = ( m_ToolMode == ToolMode.SELECT ) && Clipboard.ContainsData( "RetroDevStudio.CharacterScreenSelection" );
+          break;
         case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
           {
             bool prevModified = Modified;

@@ -133,7 +133,11 @@ namespace RetroDevStudio.Documents
       editScreenHeight.Text = "200";
       SetScreenSize( 320, 200 );
 
-      Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
+      if ( Core.MainForm != null )
+      {
+        Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
+      }
+      btnPaste.Enabled = Clipboard.ContainsImage();
 
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image", typeof( ImportGraphicScreenFromImage ) ) );
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from Koala file (.prg)", typeof( ImportGraphicScreenFromKoalaFile ) ) );
@@ -3435,6 +3439,9 @@ namespace RetroDevStudio.Documents
     {
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.CLIPBOARD_CHANGED:
+          btnPaste.Enabled = Clipboard.ContainsImage();
+          break;
         case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
           {
             bool  prevModified = Modified;

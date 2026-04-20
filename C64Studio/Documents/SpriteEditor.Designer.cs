@@ -34,8 +34,8 @@ namespace RetroDevStudio.Documents
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
@@ -655,7 +655,7 @@ namespace RetroDevStudio.Documents
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage1;
+      this.layerPreview.DisplayPage = fastImage4;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
@@ -826,6 +826,7 @@ namespace RetroDevStudio.Documents
       this.btnCopyToClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnCopyToClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnCopyToClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnCopyToClipboard.Enabled = false;
       this.btnCopyToClipboard.Image = null;
       this.btnCopyToClipboard.Location = new System.Drawing.Point(269, 416);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
@@ -840,6 +841,7 @@ namespace RetroDevStudio.Documents
       this.btnPasteFromClipboard.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnPasteFromClipboard.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnPasteFromClipboard.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnPasteFromClipboard.Enabled = false;
       this.btnPasteFromClipboard.Image = null;
       this.btnPasteFromClipboard.Location = new System.Drawing.Point(269, 387);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
@@ -871,7 +873,7 @@ namespace RetroDevStudio.Documents
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1119,12 +1121,12 @@ namespace RetroDevStudio.Documents
             this.mega65ToolStripMenuItem,
             this.commanderX16ToolStripMenuItem});
       this.contextMenuChangeMode.Name = "contextMenuChangeMode";
-      this.contextMenuChangeMode.Size = new System.Drawing.Size(223, 70);
+      this.contextMenuChangeMode.Size = new System.Drawing.Size(222, 70);
       // 
       // c64HiResMultiColorToolStripMenuItem
       // 
       this.c64HiResMultiColorToolStripMenuItem.Name = "c64HiResMultiColorToolStripMenuItem";
-      this.c64HiResMultiColorToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+      this.c64HiResMultiColorToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
       this.c64HiResMultiColorToolStripMenuItem.Text = "C64 HiRes/MultiColor 24x21";
       this.c64HiResMultiColorToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
@@ -1135,27 +1137,27 @@ namespace RetroDevStudio.Documents
             this.mega65_64x214ColorsToolStripMenuItem,
             this.mega65_16x2116ColorsToolStripMenuItem});
       this.mega65ToolStripMenuItem.Name = "mega65ToolStripMenuItem";
-      this.mega65ToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+      this.mega65ToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
       this.mega65ToolStripMenuItem.Text = "Mega65";
       // 
       // mega65_24x214ColorsToolStripMenuItem
       // 
       this.mega65_24x214ColorsToolStripMenuItem.Name = "mega65_24x214ColorsToolStripMenuItem";
-      this.mega65_24x214ColorsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+      this.mega65_24x214ColorsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
       this.mega65_24x214ColorsToolStripMenuItem.Text = "24x21 4 Colors";
       this.mega65_24x214ColorsToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // mega65_64x214ColorsToolStripMenuItem
       // 
       this.mega65_64x214ColorsToolStripMenuItem.Name = "mega65_64x214ColorsToolStripMenuItem";
-      this.mega65_64x214ColorsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+      this.mega65_64x214ColorsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
       this.mega65_64x214ColorsToolStripMenuItem.Text = "64x21 4 Colors";
       this.mega65_64x214ColorsToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // mega65_16x2116ColorsToolStripMenuItem
       // 
       this.mega65_16x2116ColorsToolStripMenuItem.Name = "mega65_16x2116ColorsToolStripMenuItem";
-      this.mega65_16x2116ColorsToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+      this.mega65_16x2116ColorsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
       this.mega65_16x2116ColorsToolStripMenuItem.Text = "16x21 16 Colors";
       this.mega65_16x2116ColorsToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
@@ -1165,7 +1167,7 @@ namespace RetroDevStudio.Documents
             this.x16_16ColorsToolStripMenuItem,
             this.x16_256ColorsToolStripMenuItem});
       this.commanderX16ToolStripMenuItem.Name = "commanderX16ToolStripMenuItem";
-      this.commanderX16ToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+      this.commanderX16ToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
       this.commanderX16ToolStripMenuItem.Text = "Commander X16";
       // 
       // x16_16ColorsToolStripMenuItem
@@ -1194,112 +1196,112 @@ namespace RetroDevStudio.Documents
       // x16_8x8ToolStripMenuItem
       // 
       this.x16_8x8ToolStripMenuItem.Name = "x16_8x8ToolStripMenuItem";
-      this.x16_8x8ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x8ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x8ToolStripMenuItem.Text = "8x8";
       this.x16_8x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x8ToolStripMenuItem
       // 
       this.x16_16x8ToolStripMenuItem.Name = "x16_16x8ToolStripMenuItem";
-      this.x16_16x8ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x8ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x8ToolStripMenuItem.Text = "16x8";
       this.x16_16x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x8ToolStripMenuItem
       // 
       this.x16_32x8ToolStripMenuItem.Name = "x16_32x8ToolStripMenuItem";
-      this.x16_32x8ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x8ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x8ToolStripMenuItem.Text = "32x8";
       this.x16_32x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x8ToolStripMenuItem
       // 
       this.x16_64x8ToolStripMenuItem.Name = "x16_64x8ToolStripMenuItem";
-      this.x16_64x8ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x8ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x8ToolStripMenuItem.Text = "64x8";
       this.x16_64x8ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_8x16ToolStripMenuItem
       // 
       this.x16_8x16ToolStripMenuItem.Name = "x16_8x16ToolStripMenuItem";
-      this.x16_8x16ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x16ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x16ToolStripMenuItem.Text = "8x16";
       this.x16_8x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x16ToolStripMenuItem
       // 
       this.x16_16x16ToolStripMenuItem.Name = "x16_16x16ToolStripMenuItem";
-      this.x16_16x16ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x16ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x16ToolStripMenuItem.Text = "16x16";
       this.x16_16x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x16ToolStripMenuItem
       // 
       this.x16_32x16ToolStripMenuItem.Name = "x16_32x16ToolStripMenuItem";
-      this.x16_32x16ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x16ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x16ToolStripMenuItem.Text = "32x16";
       this.x16_32x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x16ToolStripMenuItem
       // 
       this.x16_64x16ToolStripMenuItem.Name = "x16_64x16ToolStripMenuItem";
-      this.x16_64x16ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x16ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x16ToolStripMenuItem.Text = "64x16";
       this.x16_64x16ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_8x32ToolStripMenuItem
       // 
       this.x16_8x32ToolStripMenuItem.Name = "x16_8x32ToolStripMenuItem";
-      this.x16_8x32ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x32ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x32ToolStripMenuItem.Text = "8x32";
       this.x16_8x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x32ToolStripMenuItem
       // 
       this.x16_16x32ToolStripMenuItem.Name = "x16_16x32ToolStripMenuItem";
-      this.x16_16x32ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x32ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x32ToolStripMenuItem.Text = "16x32";
       this.x16_16x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x32ToolStripMenuItem
       // 
       this.x16_32x32ToolStripMenuItem.Name = "x16_32x32ToolStripMenuItem";
-      this.x16_32x32ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x32ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x32ToolStripMenuItem.Text = "32x32";
       this.x16_32x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x32ToolStripMenuItem
       // 
       this.x16_64x32ToolStripMenuItem.Name = "x16_64x32ToolStripMenuItem";
-      this.x16_64x32ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x32ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x32ToolStripMenuItem.Text = "64x32";
       this.x16_64x32ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_8x64ToolStripMenuItem
       // 
       this.x16_8x64ToolStripMenuItem.Name = "x16_8x64ToolStripMenuItem";
-      this.x16_8x64ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x64ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x64ToolStripMenuItem.Text = "8x64";
       this.x16_8x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x64ToolStripMenuItem
       // 
       this.x16_16x64ToolStripMenuItem.Name = "x16_16x64ToolStripMenuItem";
-      this.x16_16x64ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x64ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x64ToolStripMenuItem.Text = "16x64";
       this.x16_16x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x64ToolStripMenuItem
       // 
       this.x16_32x64ToolStripMenuItem.Name = "x16_32x64ToolStripMenuItem";
-      this.x16_32x64ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x64ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x64ToolStripMenuItem.Text = "32x64";
       this.x16_32x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x64ToolStripMenuItem
       // 
       this.x16_64x64ToolStripMenuItem.Name = "x16_64x64ToolStripMenuItem";
-      this.x16_64x64ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x64ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x64ToolStripMenuItem.Text = "64x64";
       this.x16_64x64ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
@@ -1329,112 +1331,112 @@ namespace RetroDevStudio.Documents
       // x16_8x8x256ToolStripMenuItem
       // 
       this.x16_8x8x256ToolStripMenuItem.Name = "x16_8x8x256ToolStripMenuItem";
-      this.x16_8x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x8x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x8x256ToolStripMenuItem.Text = "8x8";
       this.x16_8x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x8x256ToolStripMenuItem
       // 
       this.x16_16x8x256ToolStripMenuItem.Name = "x16_16x8x256ToolStripMenuItem";
-      this.x16_16x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x8x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x8x256ToolStripMenuItem.Text = "16x8";
       this.x16_16x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x8x256ToolStripMenuItem
       // 
       this.x16_32x8x256ToolStripMenuItem.Name = "x16_32x8x256ToolStripMenuItem";
-      this.x16_32x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x8x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x8x256ToolStripMenuItem.Text = "32x8";
       this.x16_32x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x8x256ToolStripMenuItem
       // 
       this.x16_64x8x256ToolStripMenuItem.Name = "x16_64x8x256ToolStripMenuItem";
-      this.x16_64x8x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x8x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x8x256ToolStripMenuItem.Text = "64x8";
       this.x16_64x8x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_8x16x256ToolStripMenuItem
       // 
       this.x16_8x16x256ToolStripMenuItem.Name = "x16_8x16x256ToolStripMenuItem";
-      this.x16_8x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x16x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x16x256ToolStripMenuItem.Text = "8x16";
       this.x16_8x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x16x256ToolStripMenuItem
       // 
       this.x16_16x16x256ToolStripMenuItem.Name = "x16_16x16x256ToolStripMenuItem";
-      this.x16_16x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x16x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x16x256ToolStripMenuItem.Text = "16x16";
       this.x16_16x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x16x256ToolStripMenuItem
       // 
       this.x16_32x16x256ToolStripMenuItem.Name = "x16_32x16x256ToolStripMenuItem";
-      this.x16_32x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x16x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x16x256ToolStripMenuItem.Text = "32x16";
       this.x16_32x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x16x256ToolStripMenuItem
       // 
       this.x16_64x16x256ToolStripMenuItem.Name = "x16_64x16x256ToolStripMenuItem";
-      this.x16_64x16x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x16x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x16x256ToolStripMenuItem.Text = "64x16";
       this.x16_64x16x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_8x32x256ToolStripMenuItem
       // 
       this.x16_8x32x256ToolStripMenuItem.Name = "x16_8x32x256ToolStripMenuItem";
-      this.x16_8x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x32x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x32x256ToolStripMenuItem.Text = "8x32";
       this.x16_8x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x32x256ToolStripMenuItem
       // 
       this.x16_16x32x256ToolStripMenuItem.Name = "x16_16x32x256ToolStripMenuItem";
-      this.x16_16x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x32x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x32x256ToolStripMenuItem.Text = "16x32";
       this.x16_16x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x32x256ToolStripMenuItem
       // 
       this.x16_32x32x256ToolStripMenuItem.Name = "x16_32x32x256ToolStripMenuItem";
-      this.x16_32x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x32x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x32x256ToolStripMenuItem.Text = "32x32";
       this.x16_32x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x32x256ToolStripMenuItem
       // 
       this.x16_64x32x256ToolStripMenuItem.Name = "x16_64x32x256ToolStripMenuItem";
-      this.x16_64x32x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x32x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x32x256ToolStripMenuItem.Text = "64x32";
       this.x16_64x32x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_8x64x256ToolStripMenuItem
       // 
       this.x16_8x64x256ToolStripMenuItem.Name = "x16_8x64x256ToolStripMenuItem";
-      this.x16_8x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_8x64x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_8x64x256ToolStripMenuItem.Text = "8x64";
       this.x16_8x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_16x64x256ToolStripMenuItem
       // 
       this.x16_16x64x256ToolStripMenuItem.Name = "x16_16x64x256ToolStripMenuItem";
-      this.x16_16x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_16x64x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_16x64x256ToolStripMenuItem.Text = "16x64";
       this.x16_16x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_32x64x256ToolStripMenuItem
       // 
       this.x16_32x64x256ToolStripMenuItem.Name = "x16_32x64x256ToolStripMenuItem";
-      this.x16_32x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_32x64x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_32x64x256ToolStripMenuItem.Text = "32x64";
       this.x16_32x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 
       // x16_64x64x256ToolStripMenuItem
       // 
       this.x16_64x64x256ToolStripMenuItem.Name = "x16_64x64x256ToolStripMenuItem";
-      this.x16_64x64x256ToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+      this.x16_64x64x256ToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
       this.x16_64x64x256ToolStripMenuItem.Text = "64x64";
       this.x16_64x64x256ToolStripMenuItem.Click += new System.EventHandler(this.spriteModeChangedMenuItem_Click);
       // 

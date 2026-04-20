@@ -139,7 +139,24 @@ namespace RetroDevStudio.Controls
       comboCategories.Items.Add( itemUn.Name );
       RefreshCategoryCounts();
 
+      if ( Core.MainForm != null )
+      {
+        Core.MainForm.ApplicationEvent += OnApplicationEvent;
+      }
+      btnPaste.Enabled = Clipboard.ContainsImage() || Clipboard.ContainsData( "RetroDevStudio.ImageList" );
+
       DoNotUpdateFromControls = false;
+    }
+
+
+
+    protected override void OnHandleDestroyed( EventArgs e )
+    {
+      if ( Core.MainForm != null )
+      {
+        Core.MainForm.ApplicationEvent -= OnApplicationEvent;
+      }
+      base.OnHandleDestroyed( e );
     }
 
 
@@ -344,6 +361,7 @@ namespace RetroDevStudio.Controls
           Core.Notification.MessageBox( "Clipboard is empty", "No expected image format found in the clipboard" );
           return;
         }
+        /*
         if ( dataObj.GetDataPresent( "RetroDevStudio.ImageList" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.ImageList" );
@@ -473,7 +491,8 @@ namespace RetroDevStudio.Controls
           RaiseModifiedEvent( modifiedChars );
           return;
         }
-        else if ( !Clipboard.ContainsImage() )
+        */
+        if ( !Clipboard.ContainsImage() )
         {
           Core.Notification.MessageBox( "Clipboard is empty", "No expected image format found in the clipboard" );
           return;
@@ -3322,6 +3341,18 @@ namespace RetroDevStudio.Controls
         RebuildCharImage( i );
       }
       RaiseModifiedEvent( indices );
+    }
+
+
+
+    public void OnApplicationEvent( Types.ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.CLIPBOARD_CHANGED:
+          btnPaste.Enabled = Clipboard.ContainsImage() || Clipboard.ContainsData( "RetroDevStudio.ImageList" );
+          break;
+      }
     }
 
 

@@ -42,7 +42,8 @@ namespace RetroDevStudio.Types
       MARK_ALL_ASSEMBLIES_AS_DIRTY,   // raised e.g. when hack preferences are modified
       SEARCH_HISTORY_UPDATED,
       REPLACE_SEARCH_HISTORY_UPDATED,
-      REPLACE_WITH_HISTORY_UPDATED
+      REPLACE_WITH_HISTORY_UPDATED,
+      CLIPBOARD_CHANGED
     }
 
     public Type             EventType = Type.NONE;

@@ -3760,6 +3760,7 @@ namespace RetroDevStudio.Documents
 
     private void panelSprites_SelectionChanged( object sender, EventArgs e )
     {
+      btnCopyToClipboard.Enabled = ( panelSprites.SelectedIndices.Count > 0 );
       UpdateSpriteSelectionInfo();
     }
 
@@ -3786,6 +3787,9 @@ namespace RetroDevStudio.Documents
     {
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.CLIPBOARD_CHANGED:
+          btnPasteFromClipboard.Enabled = ( Clipboard.ContainsData( "RetroDevStudio.ImageList" ) || Clipboard.ContainsImage() );
+          break;
         case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
           {
             bool  prevModified = Modified;

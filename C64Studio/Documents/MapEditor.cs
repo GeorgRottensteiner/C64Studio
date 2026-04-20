@@ -197,6 +197,8 @@ namespace RetroDevStudio.Documents
       }
 
       characterEditor.CharsetUpdated( m_MapProject.Charset );
+
+      btnCopy.Enabled = ( m_CurrentMap != null );
       Modified = false;
 
       ResumeLayout();
@@ -1367,6 +1369,7 @@ namespace RetroDevStudio.Documents
       comboTileBGColor4.SelectedIndex = m_MapProject.BGColor4;
       comboMapProjectMode.SelectedIndex = (int)m_MapProject.Mode;
       checkShowGrid.Checked = m_MapProject.ShowGrid;
+      btnCopy.Enabled = ( m_CurrentMap != null );
 
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {
@@ -1996,6 +1999,8 @@ namespace RetroDevStudio.Documents
         btnCopy.Enabled = false;
         btnMoveMapDown.Enabled = false;
         btnMoveMapUp.Enabled = false;
+
+        btnCopy.Enabled = ( m_CurrentMap != null );
         return;
       }
       m_CurrentMap = ( (GR.Generic.Tupel<string, Formats.MapProject.Map>)comboMaps.SelectedItem ).second;
@@ -2018,6 +2023,7 @@ namespace RetroDevStudio.Documents
       comboMapMultiColor2.SelectedIndex = m_CurrentMap.AlternativeMultiColor2 + 1;
       comboMapBGColor.SelectedIndex = m_CurrentMap.AlternativeBackgroundColor + 1;
       comboMapAlternativeMode.SelectedIndex = (int)m_CurrentMap.AlternativeMode + 1;
+      btnCopy.Enabled = ( m_CurrentMap != null );
 
       RecalcTileUsageInCurrentMap();
 
@@ -3772,6 +3778,8 @@ namespace RetroDevStudio.Documents
     {
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.CLIPBOARD_CHANGED:
+          break;
         case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:
           {
             bool  prevModified = Modified;

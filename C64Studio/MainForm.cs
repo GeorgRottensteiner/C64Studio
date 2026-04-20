@@ -7915,8 +7915,9 @@ namespace RetroDevStudio
 
 
 
-    private static int WM_QUERYENDSESSION = 0x11;
-    private static int WM_ENDSESSION = 0x16;
+    private const int WM_QUERYENDSESSION = 0x11;
+    private const int WM_ENDSESSION = 0x16;
+    private const int WM_CLIPBOARDUPDATE = 0x031D;
 
 
 
@@ -7935,10 +7936,42 @@ namespace RetroDevStudio
         }
         s_SystemShutdown = false;
       }
+      else if ( m.Msg == WM_CLIPBOARDUPDATE )
+      {
+        OnClipboardChanged();
+      }
 
       // If this is WM_QUERYENDSESSION, the closing event should be  
       // raised in the base WndProc.  
       base.WndProc( ref m );
+    }
+
+
+
+    private void OnClipboardChanged()
+    {
+      RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.CLIPBOARD_CHANGED ) );
+    }
+
+
+
+    protected override void OnHandleCreated( EventArgs e )
+    {
+      base.OnHandleCreated( e );
+
+      if ( !RetroDevStudio.NativeMethods.AddClipboardFormatListener( Handle ) )
+      {
+        MessageBox.Show( "Failed to register clipboard listener.", "Error",
+            MessageBoxButtons.OK, MessageBoxIcon.Error );
+      }
+    }
+
+
+    protected override void OnHandleDestroyed( EventArgs e )
+    {
+      // Stop listening when form is destroyed
+      RetroDevStudio.NativeMethods.RemoveClipboardFormatListener( Handle );
+      base.OnHandleDestroyed( e );
     }
 
 
