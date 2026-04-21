@@ -694,10 +694,12 @@ namespace RetroDevStudio.Documents
         System.Drawing.Point    point = pointsToCheck[pointsToCheck.Count - 1];
         pointsToCheck.RemoveAt( pointsToCheck.Count - 1 );
 
-        if ( CurrentScreen.CompleteCharAt( point.X, point.Y ) != charToInsert )
+        if ( ( !changedChars.ContainsValue( point ) )
+        &&   ( CurrentScreen.CompleteCharAt( point.X, point.Y ) != charToInsert ) )
         {
-          DrawCharImage( m_Image, point.X * m_CharacterWidth, point.Y * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
-          CurrentScreen.SetCompleteCharAt( point.X, point.Y, charToInsert );
+          //DrawCharImage( m_Image, point.X * m_CharacterWidth, point.Y * m_CharacterHeight, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
+          //CurrentScreen.SetCompleteCharAt( point.X, point.Y, charToInsert );
+          SetCharacter( point.X, point.Y, m_CurrentChar, m_CurrentColor, m_CurrentPaletteMapping );
           changedChars.Add( point );
 
           if ( ( point.X > 0 )
@@ -1303,12 +1305,14 @@ namespace RetroDevStudio.Documents
       if ( ( m_AffectChars )
       &&   ( m_AffectColors ) )
       {
+        DrawCharImage( m_Image, X * m_CharacterWidth, Y * m_CharacterHeight, Char, Color, PaletteMappingIndex );
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, 
                        Char, Color, PaletteMappingIndex );
         CurrentScreen.SetAt( X, Y, Char, Color, PaletteMappingIndex );
       }
       else if ( m_AffectChars )
       {
+        DrawCharImage( m_Image, X * m_CharacterWidth, Y * m_CharacterHeight, Char, CurrentScreen.ColorAt( X, Y ), CurrentScreen.ColorAt( X, Y ) );
         DrawCharImage( pictureEditor.DisplayPage,
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
@@ -1319,6 +1323,7 @@ namespace RetroDevStudio.Documents
       }
       else if ( m_AffectColors )
       {
+        DrawCharImage( m_Image, X * m_CharacterWidth, Y * m_CharacterHeight, CurrentScreen.CharacterAt( X, Y ), Color, PaletteMappingIndex );
         DrawCharImage( pictureEditor.DisplayPage, 
                        ( X - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth, 
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
@@ -1347,6 +1352,8 @@ namespace RetroDevStudio.Documents
             if ( CurrentScreen.PaletteMappingAt( xx + i, yy + j ) != PaletteMappingIndex )
             {
               CurrentScreen.SetColorAt( xx + i, yy + j, Color, PaletteMappingIndex );
+
+              DrawCharImage( m_Image, ( xx + i ) * m_CharacterWidth, ( yy + j ) * m_CharacterHeight, CurrentScreen.CharacterAt( xx + i, yy + j ), Color, PaletteMappingIndex );
               DrawCharImage( pictureEditor.DisplayPage,
                        ( xx + i - m_CharsetScreen.ScreenOffsetX ) * m_CharacterWidth,
                        ( yy + j - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
