@@ -317,6 +317,24 @@ namespace RetroDevStudio
 
 
 
+    public DocumentInfo FindDocumentInfoByPath( Project project, string FullPath )
+    {
+      if ( project == null )
+      {
+        return FindDocumentInfoByPath( FullPath );
+      }
+
+      string  inPath = FullPath.Replace( "\\", "/" );
+      var element = project.GetElementByFilename( FullPath );
+      if ( element == null )
+      {
+        return new DocumentInfo() { DocumentFilename = FullPath };
+      }
+      return element.DocumentInfo;
+    }
+
+
+
     internal void OpenSourceOfNextMessage()
     {
       if ( CompileMessages == null )

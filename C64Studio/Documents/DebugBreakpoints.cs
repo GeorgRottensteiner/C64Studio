@@ -473,7 +473,7 @@ namespace RetroDevStudio.Documents
         if ( ( bp.LineIndex != -1 )
         &&   ( !string.IsNullOrEmpty( bp.DocumentFilename ) ) )
         {
-          Core.Navigating.OpenDocumentAndGotoLine( Core.Navigating.Project, Core.Navigating.FindDocumentInfoByPath( bp.DocumentFilename ), bp.LineIndex );
+          Core.Navigating.OpenDocumentAndGotoLine( Core.Navigating.Project, Core.Navigating.FindDocumentInfoByPath( Core.MainForm.CurrentProject, bp.DocumentFilename ), bp.LineIndex );
         }
       }
     }
