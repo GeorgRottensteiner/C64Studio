@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 
 
@@ -2266,6 +2267,19 @@ namespace RetroDevStudio.Documents
         if ( editSource.TextSource[blockStart].FoldingStartMarker != null )
         {
           editSource.CollapseFoldingBlock( blockStart );
+        }
+      }
+      if ( DocumentInfo.Project != null )
+      {
+        foreach ( var bps in DocumentInfo.Project.Settings.BreakPoints )
+        {
+          foreach ( var bp in bps.Value )
+          {
+            if ( bp.DocumentFilename == DocumentInfo.DocumentFilename )
+            {
+              AddBreakpoint( bp );
+            }
+          }
         }
       }
 
