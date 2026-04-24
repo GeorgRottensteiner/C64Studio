@@ -9,6 +9,7 @@
     <Import_RootNamespace>C64Models</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\RuntimeArgumentName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\CharsetLayoutAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\DefaultFileExtensionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\FileTypeNativeAttribute.cs" />

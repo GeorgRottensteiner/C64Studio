@@ -161,6 +161,8 @@ namespace GR.Text
                 {
                   currentInfo.Result = ParameterInfo.ParameterResult.INVALID_VALUE;
                   foundError = true;
+
+                  Console.WriteLine( "Invalid value " + param + " for parameter " + currentInfo.Name );
                 }
               }
             }

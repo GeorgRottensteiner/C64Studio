@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,6 +52,17 @@ namespace C64Ass
       _Args.AddSwitchValue( "-ASSEMBLER", "CBMPRGSTUDIO" );
       _Args.AddSwitchValue( "-ASSEMBLER", "TASM" );
       _Args.AddSwitchValue( "-ASSEMBLER", "KICKASSEMBLER" );
+
+      _Args.AddSwitch( "H", true );
+      _Args.AddSwitch( "-HACK", true );
+      foreach ( RetroDevStudio.Parser.AssemblerSettings.Hacks hack in Enum.GetValues( typeof( RetroDevStudio.Parser.AssemblerSettings.Hacks ) ) )
+      {
+        var hackAttribute = GR.EnumHelper.GetAttributeOfType<RuntimeArgumentNameAttribute>( hack );
+
+        _Args.AddSwitchValue( "H", hackAttribute.ArgumentName );
+        _Args.AddSwitchValue( "-HACK", hackAttribute.ArgumentName );
+      }
+
     }
 
 
@@ -83,6 +95,14 @@ namespace C64Ass
       System.Console.WriteLine( "                                 KICKASSEMBLER" );
       System.Console.WriteLine( "                                 PDS" );
       System.Console.WriteLine( "                                 TASM" );
+      System.Console.WriteLine( "-H, --HACK [List of Hacks]     - Enable specific hacks" );
+      System.Console.WriteLine( "                                 Values values are" );
+      foreach ( RetroDevStudio.Parser.AssemblerSettings.Hacks hack in Enum.GetValues( typeof( RetroDevStudio.Parser.AssemblerSettings.Hacks ) ) )
+      {
+        var hackAttribute = GR.EnumHelper.GetAttributeOfType<RuntimeArgumentNameAttribute>( hack );
+        System.Console.WriteLine( "                                 " + hackAttribute.ArgumentName );
+        System.Console.WriteLine( "                                   " + GR.EnumHelper.GetDescription( hack ) );
+      }
     }
 
 
@@ -109,7 +129,7 @@ namespace C64Ass
       if ( ( _Args.IsParameterSet( "V" ) )
       ||   ( _Args.IsParameterSet( "-VERSION" ) ) )
       {
-        Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
         Console.WriteLine( $"C64Ass Assembler V{version}" ); 
         return null;
@@ -166,7 +186,42 @@ namespace C64Ass
       {
         ParseWarnings( WarningsToIgnore, _Args.Parameter( "-IGNORE" ) );
       }
+      if ( _Args.IsParameterSet( "-IGNORE" ) )
+      {
+        ParseWarnings( WarningsToIgnore, _Args.Parameter( "-IGNORE" ) );
+      }
       config.AutoTruncateLiteralValues = _Args.IsParameterSet( "-AUTOTRUNCATELITERALS" );
+      if ( ( _Args.IsParameterSet( "H" ) )
+      ||   ( _Args.IsParameterSet( "-HACK" ) ) )
+      {
+        string  hacks = _Args.Parameter( "H" );
+        if ( string.IsNullOrEmpty( hacks ) )
+        {
+          hacks = _Args.Parameter( "-HACK" );
+        }
+        var singleHacks = hacks.Split( ',' );
+        foreach ( var singleHack in singleHacks )
+        {
+          bool foundHackEntry = false;
+          foreach ( RetroDevStudio.Parser.AssemblerSettings.Hacks hack in Enum.GetValues( typeof( RetroDevStudio.Parser.AssemblerSettings.Hacks ) ) )
+          {
+            var hackAttribute = GR.EnumHelper.GetAttributeOfType<RuntimeArgumentNameAttribute>( hack );
+            if ( hackAttribute.ArgumentName.ToUpper() == singleHack.ToUpper() )
+            {
+              foundHackEntry = true;
+              config.EnabledHacks.Add( hack );
+              break;
+            } 
+          }
+          if ( !foundHackEntry )
+          {
+            Console.WriteLine( "Unknown hack: " + singleHack );
+            WriteHelp();
+            return null;
+          }
+        }
+      }
+
       if ( ( _Args.IsParameterSet( "A" ) )
       ||   ( _Args.IsParameterSet( "-ASSEMBLER" ) ) )
       {

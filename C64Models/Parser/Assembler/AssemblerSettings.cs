@@ -10,8 +10,10 @@ namespace RetroDevStudio.Parser
     public enum Hacks
     {
       [Description( "Allows .byte/.word pseudo op additionally to the proper !byte/!word pseudo op" )]
+      [RuntimeArgumentName( "H1" )]
       ALLOW_DOT_BYTE_INSTRUCTION    = 1,
       [Description( "</> at beginning of expression affects full expression" )]
+      [RuntimeArgumentName( "H2" )]
       GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION = 2
     }
 
