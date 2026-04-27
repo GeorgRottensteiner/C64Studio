@@ -113,6 +113,7 @@
     public const ushort    SETTINGS_PALETTE               = 0x2023;
     public const ushort    SETTINGS_DIALOG_DECISIONS      = 0x2024;
     public const ushort    SETTINGS_CODE_FORMATTING       = 0x2025;
+    public const ushort    SETTINGS_RUN_DEBUGGER          = 0x2026;
   }
 
 }

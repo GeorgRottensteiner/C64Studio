@@ -1319,29 +1319,49 @@ namespace RetroDevStudio
     void EmulatorListUpdated()
     {
       ToolInfo oldTool = null;
+      ToolInfo oldDebugger = null;
       if ( mainToolEmulator.SelectedItem != null )
       {
         oldTool = ( (GR.Generic.Tupel<string, ToolInfo>)mainToolEmulator.SelectedItem ).second;
       }
+      if ( mainDebugDebugger.SelectedItem != null )
+      {
+        oldDebugger = ( (GR.Generic.Tupel<string, ToolInfo>)mainDebugDebugger.SelectedItem ).second;
+      }
 
       mainToolEmulator.Items.Clear();
+      mainDebugDebugger.Items.Clear();
       mainToolEmulator.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( StudioCore.Settings.ToolTiny64.Name, StudioCore.Settings.ToolTiny64 ) );
+      mainDebugDebugger.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( "Auto", null ) );
+      mainDebugDebugger.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( StudioCore.Settings.ToolTiny64.Name, StudioCore.Settings.ToolTiny64 ) );
       foreach ( var tool in StudioCore.Settings.ToolInfos )
       {
         if ( tool.Type == ToolInfo.ToolType.EMULATOR )
         {
           int itemIndex = mainToolEmulator.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
           if ( ( tool.Name.ToUpper() == StudioCore.Settings.EmulatorToRun )
-          || ( oldTool == tool ) )
+          ||   ( oldTool == tool ) )
           {
             mainToolEmulator.SelectedIndex = itemIndex;
+          }
+
+          itemIndex = mainDebugDebugger.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
+          if ( ( tool.Name.ToUpper() == StudioCore.Settings.DebuggerToRun )
+          ||   ( oldTool == tool ) )
+          {
+            mainDebugDebugger.SelectedIndex = itemIndex;
           }
         }
       }
       if ( ( mainToolEmulator.Items.Count != 0 )
-      && ( mainToolEmulator.SelectedIndex == -1 ) )
+      &&   ( mainToolEmulator.SelectedIndex == -1 ) )
       {
         mainToolEmulator.SelectedIndex = 0;
+      }
+      if ( ( mainDebugDebugger.Items.Count != 0 )
+      &&   ( mainDebugDebugger.SelectedIndex == -1 ) )
+      {
+        mainDebugDebugger.SelectedIndex = 0;
       }
     }
 
@@ -4042,6 +4062,7 @@ namespace RetroDevStudio
         mainToolConfig.Enabled = !Wait;
         mainToolToggleTrueDrive.Enabled = !Wait;
         mainToolEmulator.Enabled = !Wait;
+        mainDebugDebugger.Enabled = !Wait;
 
         if ( Wait )
         {
@@ -7741,20 +7762,6 @@ namespace RetroDevStudio
         mainToolToggleTrueDrive.Text = "Toggle True Drive\r\nCurrently disabled";
       }
 
-    }
-
-
-
-    private void mainToolEmulator_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( mainToolEmulator.SelectedIndex == -1 )
-      {
-        StudioCore.Settings.EmulatorToRun = "";
-      }
-      else
-      {
-        StudioCore.Settings.EmulatorToRun = ( (GR.Generic.Tupel<string, ToolInfo>)mainToolEmulator.SelectedItem ).first.ToUpper();
-      }
     }
 
 

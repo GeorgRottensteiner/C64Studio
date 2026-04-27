@@ -148,6 +148,7 @@ namespace RetroDevStudio
     public string                               MainWindowPlacement = "";
     public bool                                 TrueDriveEnabled = true;
     public string                               EmulatorToRun = "";
+    public string                               DebuggerToRun = "Auto";
     public bool                                 AutoOpenLastSolution = false;
     public bool                                 LastSolutionWasEmpty = false;
     public bool                                 ShowCompilerMessagesAfterBuild = true;
@@ -710,6 +711,10 @@ namespace RetroDevStudio
       chunkRunEmu.AppendString( EmulatorToRun );
       SettingsData.Append( chunkRunEmu.ToBuffer() );
 
+      GR.IO.FileChunk chunkRunDebugger = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_RUN_DEBUGGER );
+      chunkRunDebugger.AppendString( DebuggerToRun );
+      SettingsData.Append( chunkRunDebugger.ToBuffer() );
+
       GR.IO.FileChunk chunkDefaults = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DEFAULTS );
       chunkDefaults.AppendString( DefaultProjectBasePath );
       chunkDefaults.AppendU32( (uint)PreferredMachineType );
@@ -1254,6 +1259,13 @@ namespace RetroDevStudio
 
               TrueDriveEnabled = ( binIn.ReadUInt8() != 0 );
               EmulatorToRun = binIn.ReadString();
+            }
+            break;
+          case FileChunkConstants.SETTINGS_RUN_DEBUGGER:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              DebuggerToRun = binIn.ReadString();
             }
             break;
           case FileChunkConstants.SETTINGS_DEFAULTS:

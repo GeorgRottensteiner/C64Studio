@@ -328,19 +328,17 @@ namespace GR
 
 
 
-      public void AppendString( string TextData )
+      public void AppendString( string text )
       {
-        if ( TextData == null )
+        if ( text == null )
         {
           AppendU32( 0 );
           return;
         }
 
-        AppendU32( (UInt32)TextData.Length );
-        for ( int i = 0; i < TextData.Length; ++i )
-        {
-          AppendU8( (byte)TextData[i] );
-        }
+        var bytes = System.Text.Encoding.UTF8.GetBytes( text );
+        AppendU32( (UInt32)bytes.Length );
+        Append( bytes );
       }
 
 
