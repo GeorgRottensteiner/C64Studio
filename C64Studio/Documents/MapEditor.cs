@@ -48,6 +48,11 @@ namespace RetroDevStudio.Documents
     private int                         m_CurEditorOffsetX = 0;
     private int                         m_CurEditorOffsetY = 0;
 
+    private bool                        m_DragViewModeActiveBySpace = false;
+    private bool                        m_DragViewModeActiveByPressedMiddleButton = false;
+    private bool                        m_DragView = false;
+    private System.Drawing.Point        m_DragPoint = new System.Drawing.Point();
+
     private ToolMode                    m_ToolMode = ToolMode.SINGLE_TILE;
 
     private bool[,]                     m_SelectedTiles = new bool[20, 12];
@@ -200,6 +205,9 @@ namespace RetroDevStudio.Documents
 
       btnCopy.Enabled = ( m_CurrentMap != null );
       Modified = false;
+
+      pictureEditor.KeyUp += PictureEditor_KeyUp;
+      pictureEditor.LostFocus += PictureEditor_LostFocus;
 
       ResumeLayout();
     }
@@ -788,6 +796,29 @@ namespace RetroDevStudio.Documents
       int mapPos = trueX + offsetX + ( trueY + offsetY ) * m_CurrentMap.Tiles.Width;
       labelEditInfo.Text = "X: " + ( trueX + offsetX ).ToString() + " Y:" + ( trueY + offsetY ).ToString() + " Abs:" + mapPos.ToString() + "/$" + mapPos.ToString( "X2" );
 
+      if ( ( Buttons & MouseButtons.Middle ) != 0 )
+      {
+        if ( !m_DragViewModeActiveByPressedMiddleButton )
+        {
+          m_DragViewModeActiveByPressedMiddleButton = true;
+          m_DragView = true;
+          m_DragPoint = pictureEditor.PointToClient( MousePosition );
+          pictureEditor.Cursor = Core.MainForm.CursorGrab;
+        }
+        HandleViewDragging( X, Y );
+        return;
+      }
+      else
+      {
+        if ( m_DragViewModeActiveByPressedMiddleButton )
+        {
+          m_DragViewModeActiveByPressedMiddleButton = false;
+          m_DragView = false;
+          pictureEditor.Cursor = Cursors.Default;
+          return;
+        }
+      }
+
       if ( ( Buttons & MouseButtons.Left ) == 0 )
       {
         m_MouseButtonReleased = true;
@@ -925,6 +956,12 @@ namespace RetroDevStudio.Documents
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
+        if ( m_DragViewModeActiveBySpace )
+        {
+          HandleViewDragging( X, Y );
+          return;
+        }
+
         if ( m_FloatingSelection != null )
         {
           if ( m_MouseButtonReleased )
@@ -1111,6 +1148,15 @@ namespace RetroDevStudio.Documents
               }
             }
             break;
+        }
+      }
+      else
+      {
+        if ( ( m_DragViewModeActiveBySpace )
+        &&   ( m_DragView ) )
+        {
+          m_DragView = false;
+          pictureEditor.Cursor = Core.MainForm.CursorHand;
         }
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
@@ -3822,6 +3868,127 @@ namespace RetroDevStudio.Documents
       }
       return base.ProcessCmdKey( ref msg, keyData );
     }
+
+
+
+    private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyData == Keys.Space )
+      {
+        if ( !m_DragViewModeActiveBySpace )
+        {
+          m_DragViewModeActiveBySpace = true;
+          pictureEditor.Cursor = Core.MainForm.CursorHand;
+        }
+      }
+    }
+
+
+
+    private void PictureEditor_KeyUp( object sender, KeyEventArgs e )
+    {
+      if ( ( e.KeyData == Keys.Space )
+      &&   ( m_DragViewModeActiveBySpace ) )
+      {
+        m_DragViewModeActiveBySpace = false;
+        pictureEditor.Cursor = Cursors.Default;
+      }
+    }
+
+
+
+    private void PictureEditor_LostFocus( object sender, EventArgs e )
+    {
+      if ( m_DragViewModeActiveBySpace )
+      {
+        m_DragViewModeActiveBySpace = false;
+        pictureEditor.Cursor = Cursors.Default;
+      }
+    }
+
+
+
+    private void HandleViewDragging( int x, int y )
+    {
+      if ( !m_DragView )
+      {
+        m_DragView = true;
+        m_DragPoint = pictureEditor.PointToClient( MousePosition );
+        pictureEditor.Cursor = Core.MainForm.CursorGrab;
+      }
+      else
+      {
+        int   deltaX = x - m_DragPoint.X;
+        int   deltaY = y - m_DragPoint.Y;
+
+        // 2 is auto scaling factor
+        int     tileWidth = ( pictureEditor.ClientRectangle.Width / ScreenCharWidth ) * 2;
+        int     tileHeight = ( pictureEditor.ClientRectangle.Height / ScreenCharHeight ) * 2 ;
+
+        if ( ( deltaX != 0 )
+        ||   ( deltaY != 0 ) )
+        {
+          int   actDX = 0;
+          int   actDY = 0;
+          while ( deltaX >= tileWidth )
+          {
+            deltaX -= tileWidth;
+            --actDX;
+          }
+          while ( deltaX <= -tileWidth )
+          {
+            deltaX += tileWidth;
+            ++actDX;
+          }
+          while ( deltaY >= tileHeight )
+          {
+            deltaY -= tileHeight;
+            --actDY;
+          }
+          while ( deltaY <= -tileHeight )
+          {
+            deltaY += tileHeight;
+            ++actDY;
+          }
+
+          if ( ( actDX != 0 )
+          ||   ( actDY != 0 ) )
+          {
+            int tempDX = actDX;
+            int tempDY = actDY;
+
+            while ( ( actDX < 0 )
+            &&      ( mapHScroll.Value > 0 ) )
+            {
+              --mapHScroll.Value;
+              ++actDX;
+            }
+            while ( ( actDX > 0 )
+            &&      ( mapHScroll.Value < mapHScroll.Maximum ) )
+            {
+              ++mapHScroll.Value;
+              --actDX;
+            }
+            while ( ( actDY < 0 )
+            &&      ( mapVScroll.Value > 0 ) )
+            {
+              --mapVScroll.Value;
+              ++actDY;
+            }
+            while ( ( actDY > 0 )
+            &&      ( mapVScroll.Value < mapVScroll.Maximum ) )
+            {
+              ++mapVScroll.Value;
+              --actDY;
+            }
+            m_DragPoint.Offset( -tempDX * tileWidth, -tempDY * tileHeight );
+            mapHScroll_Scroll( mapHScroll );
+            mapVScroll_Scroll( mapHScroll );
+          }
+        }
+      }
+    }
+
 
 
 
