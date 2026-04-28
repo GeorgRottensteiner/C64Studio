@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using static RetroDevStudio.ToolInfo;
 
 namespace RetroDevStudio
 {
@@ -59,9 +60,15 @@ namespace RetroDevStudio
 
 
 
-    public ToolInfo DetermineTool( DocumentInfo Document, ToolInfo.ToolType RunType )
+    public ToolInfo DetermineTool( DocumentInfo Document, ToolInfo.ToolType RunType, ToolUse use )
     {
-      if ( Settings.EmulatorToRun == Settings.ToolTiny64.Name.ToUpper() )
+      string    key = Settings.EmulatorToRun;
+      if ( use == ToolUse.DEBUGGER )
+      {
+        key = Settings.DebuggerToRun;
+      }
+
+      if ( key == Settings.ToolTiny64.Name.ToUpper() )
       {
         return Settings.ToolTiny64;
       }
@@ -70,7 +77,7 @@ namespace RetroDevStudio
       {
         if ( ( tool.Type == RunType )
         &&   ( tool.Name != null )
-        &&   ( tool.Name.ToUpper() == Settings.EmulatorToRun ) )
+        &&   ( tool.Name.ToUpper() == key ) )
         {
           //AddToOutput( "Determined tool to run = " + tool.Name );
           return tool;

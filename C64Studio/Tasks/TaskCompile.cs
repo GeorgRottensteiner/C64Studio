@@ -58,7 +58,7 @@ namespace RetroDevStudio.Tasks
         Core.AddToOutput( "Debugging " + DocumentToDebug.Element.Name + System.Environment.NewLine );
       }
 
-      ToolInfo toolRun = Core.DetermineTool( DocumentToRun, ToolInfo.ToolType.EMULATOR );
+      ToolInfo toolRun = Core.DetermineTool( DocumentToRun, ToolInfo.ToolType.EMULATOR, ToolInfo.ToolUse.DEBUGGER );
       if ( toolRun == null )
       {
         Core.MessageBox( "No emulator tool has been configured yet!", "Missing emulator tool" );
@@ -747,7 +747,7 @@ namespace RetroDevStudio.Tasks
           return true;
         }
 
-        ToolInfo tool = Core.DetermineTool( Doc, ToolInfo.ToolType.ASSEMBLER );
+        ToolInfo tool = Core.DetermineTool( Doc, ToolInfo.ToolType.ASSEMBLER, ToolInfo.ToolUse.EMULATOR );
 
         ProjectElement.PerConfigSettings configSetting = null;
 

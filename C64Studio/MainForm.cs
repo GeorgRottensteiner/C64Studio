@@ -19,6 +19,7 @@ using System.Text;
 using System.Windows.Forms;
 using Tiny64;
 using WeifenLuo.WinFormsUI.Docking;
+using static RetroDevStudio.ToolInfo;
 using Disassembler = RetroDevStudio.Documents.Disassembler;
 
 
@@ -2810,7 +2811,7 @@ namespace RetroDevStudio
           StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
         }
 
-        ToolInfo toolRun = StudioCore.DetermineTool( Document, ToolInfo.ToolType.EMULATOR );
+        ToolInfo toolRun = StudioCore.DetermineTool( Document, ToolInfo.ToolType.EMULATOR, ToolUse.EMULATOR );
         if ( toolRun == null )
         {
           StudioCore.MessageBox( "No emulator tool has been configured yet!", "Missing emulator tool" );
@@ -6086,9 +6087,9 @@ namespace RetroDevStudio
       foreach ( BaseDocument doc in panelMain.Documents )
       {
         if ( ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( doc ) )
-        && ( doc.Modified )
-        && ( doc.DocumentInfo.Project == null )
-        && ( doc.DocumentInfo.Element == null ) )
+        &&   ( doc.Modified )
+        &&   ( doc.DocumentInfo.Project == null )
+        &&   ( doc.DocumentInfo.Element == null ) )
         {
 
           itemsWithChanges.Add( doc.Name );
@@ -7766,6 +7767,20 @@ namespace RetroDevStudio
 
 
 
+    private void mainToolEmulator_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( mainToolEmulator.SelectedIndex == -1 )
+      {
+        StudioCore.Settings.EmulatorToRun = "";
+      }
+      else
+      {
+        StudioCore.Settings.EmulatorToRun = ( (GR.Generic.Tupel<string, ToolInfo>)mainToolEmulator.SelectedItem ).first.ToUpper();
+      }
+    }
+
+
+
     private void mainToolOpenFile_Click( object sender, EventArgs e )
     {
       ApplyFunction( RetroDevStudio.Types.Function.OPEN_FILES );
@@ -8262,7 +8277,7 @@ namespace RetroDevStudio
     private void dumpSourceInfoToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( ActiveDocumentInfo != null )
-      && ( ActiveDocumentInfo.ASMFileInfo != null ) )
+      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
       {
         foreach ( KeyValuePair<int, Types.ASM.SourceInfo> pair in ActiveDocumentInfo.ASMFileInfo.SourceInfo )
         {
@@ -8389,6 +8404,21 @@ namespace RetroDevStudio
     private void findReplaceInSolutionToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( RetroDevStudio.Types.Function.REPLACE_IN_SOLUTION );
+    }
+
+
+
+    private void mainDebugDebugger_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( mainDebugDebugger.SelectedIndex == -1 )
+      {
+        StudioCore.Settings.DebuggerToRun = "Auto";
+      }
+      else
+      {
+        StudioCore.Settings.DebuggerToRun = ( (GR.Generic.Tupel<string, ToolInfo>)mainDebugDebugger.SelectedItem ).first.ToUpper();
+      }
+
     }
 
 

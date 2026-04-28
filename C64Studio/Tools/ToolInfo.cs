@@ -18,6 +18,12 @@ namespace RetroDevStudio
       EMULATOR
     }
 
+    public enum ToolUse
+    {
+      EMULATOR,
+      DEBUGGER
+    }
+
     public ToolType                             Type = ToolType.UNKNOWN;
     public string                               Name = "";
     public string                               Filename = "";
