@@ -191,6 +191,7 @@ namespace RetroDevStudio
       {
         return "";
       }
+
       var tokensSlice = tokens.Skip( startIndex ).Take( count ).ToList();
       var sb = new StringBuilder();
       if ( tokensSlice.Any( t => parser.IsTokenOpcode( t.Type ) ) )
@@ -209,6 +210,7 @@ namespace RetroDevStudio
         }
         if ( InsertSpacesBetweenOperands )
         {
+          bool firstOperand = true;
           for ( int i = index + 1; i < tokensSlice.Count; ++i )
           {
             if ( ( i > index + 1 )
@@ -217,15 +219,30 @@ namespace RetroDevStudio
               if ( tokensSlice[i].Content == "," )
               {
                 // no space before comma
+                firstOperand = false;
               }
-              else if ( ( i > index +1 )
+              else if ( ( i > index + 1 )
               &&        ( tokensSlice[i - 1].Content == "#" ) )
               {
                 // no space after #
               }
               else
               {
-                sb.Append( ' ' );
+                bool addSpace = true;
+                if ( firstOperand )
+                {
+                  firstOperand = false;
+                  if ( ( i > index + 1 )
+                  &&   ( parser.IsUnaryOperator( tokensSlice[i - 1].Content ) ) )
+                  {
+                    // unary operator
+                    addSpace = false;
+                  }
+                }
+                if ( addSpace )
+                {
+                  sb.Append( ' ' );
+                }
               }
             }
             sb.Append( tokensSlice[i].Content );

@@ -17,6 +17,8 @@ namespace RetroDevStudio.Parser
       GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION = 2
     }
 
+
+
     public GR.Collections.Map<string,int>                           OperatorPrecedence = new GR.Collections.Map<string,int>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenStartChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();

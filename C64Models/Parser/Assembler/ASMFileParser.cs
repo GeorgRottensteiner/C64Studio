@@ -1376,7 +1376,7 @@ namespace RetroDevStudio.Parser
           return true;
         }
         else if ( ( opText == "!=" )
-        || ( opText == "<>" ) )
+        ||        ( opText == "<>" ) )
         {
           Symbol = CreateIntegerSymbol( ( firstArg != secondArg ) ? 0xff : 0 );
           return true;
@@ -3634,6 +3634,18 @@ namespace RetroDevStudio.Parser
         tempLine = tempLine.Replace( '\t', ' ' );
         Lines[i] = tempLine;
       }
+    }
+
+
+
+    public bool IsUnaryOperator( string content )
+    {
+      if ( ( !m_AssemblerSettings.OperatorPrecedence.TryGetValue( content, out int precedence ) )
+      ||   ( precedence != HIGHEST_OPERATOR_PRECEDENCE ) )
+      {
+        return false;
+      }
+      return true;
     }
 
 
