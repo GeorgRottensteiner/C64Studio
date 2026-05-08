@@ -3000,6 +3000,7 @@ namespace RetroDevStudio.Documents
       comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.Colors.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_MapProject.Charset.Colors.BGColor4;
 
+      RecalcTileUsageTotal();
       RedrawMap();
       SetModified();
       return true;
