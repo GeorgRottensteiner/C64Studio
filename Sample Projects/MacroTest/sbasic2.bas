@@ -1,0 +1,4 @@
+#RetroDevStudio.MetaData.BASIC:8193,S-BASIC 65,uppercase,10,10
+565 BL$=CHR$(32)+CHR$(32)
+
+6020 IF PX&>=0 AND PX&<39 AND PY&>=0 AND PY&<25 THEN FCM TEXT PX&,PY&," "
