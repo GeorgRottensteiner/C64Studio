@@ -3304,6 +3304,13 @@ namespace RetroDevStudio.Documents
         case Function.RENAME_ALL_REFERENCES:
           RenameAllReferences( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
           return true;
+        case Function.HELP:
+          {
+            string wordBelow = FindWordFromPosition( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
+
+            Core.MainForm.CallHelp( wordBelow, DocumentInfo );
+          }
+          return true;
       }
       return false;
     }

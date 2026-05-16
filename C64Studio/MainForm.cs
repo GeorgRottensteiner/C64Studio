@@ -4954,9 +4954,16 @@ namespace RetroDevStudio
             return;
           }
           else if ( ( Doc.ASMFileInfo.AssemblerSettings != null )
-          && ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
+          &&        ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
           {
             m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
+            return;
+          }
+          else if ( ( Doc.ASMFileInfo.AssemblerSettings != null )
+          &&        ( Doc.ASMFileInfo.AssemblerSettings.POPrefix != null )
+          &&        ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Doc.ASMFileInfo.AssemblerSettings.POPrefix + Keyword.ToUpper() ) ) )
+          {
+            m_Help.NavigateTo( "asm_macro.html#" + Keyword.ToLower() );
             return;
           }
         }
@@ -5013,7 +5020,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5027,22 +5034,17 @@ namespace RetroDevStudio
           break;
         case RetroDevStudio.Types.Function.HELP:
           {
-            string keywordBelow = null;
-            if ( ( ActiveContent != null )
-            && ( ActiveContent is SourceASMEx ) )
+            var curDoc = ActiveDocumentInfo;
+            if ( ( curDoc != null )
+            &&   ( curDoc.BaseDoc != null )
+            &&   ( curDoc.ContainsCode ) )
             {
-              SourceASMEx asm = ActiveContent as SourceASMEx;
-
-              if ( asm.editSource.SelectionLength > 0 )
+              if ( curDoc.BaseDoc.ApplyFunction( Function ) )
               {
-                keywordBelow = asm.editSource.Selection.Text;
-              }
-              else
-              {
-                keywordBelow = asm.FindWordAtCaretPosition();
+                return true;
               }
             }
-            CallHelp( keywordBelow, ActiveDocumentInfo );
+            CallHelp( null, ActiveDocumentInfo );
           }
           return true;
         case RetroDevStudio.Types.Function.FIND_NEXT:
@@ -5183,8 +5185,8 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            && ( curDoc.BaseDoc != null )
-            && ( curDoc.ContainsCode ) )
+            &&   ( curDoc.BaseDoc != null )
+            &&   ( curDoc.ContainsCode ) )
             {
               return curDoc.BaseDoc.ApplyFunction( Function );
             }
