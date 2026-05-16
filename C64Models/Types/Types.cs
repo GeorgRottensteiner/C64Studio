@@ -1368,9 +1368,11 @@ namespace RetroDevStudio
 
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 240, true, 0, false, (char)0xeef0, true, "" );
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 241, true, 0, false, (char)0xeef1, true, "" );
-      //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 242, true, 0, false, (char)0xeef2, true, "" );
+      // why were these commented out?
+      AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 242, true, 0, false, (char)0xeef2, true, "" );
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 243, true, 0, false, (char)0xeef3, true, "" );
-      //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 244, true, 0, false, (char)0xeef4, true, "" );
+      // why were these commented out?
+      AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 244, true, 0, false, (char)0xeef4, true, "" );
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 245, true, 0, false, (char)0xeef5, true, "" );
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 246, true, 0, false, (char)0xeef6, true, "" );
       AddKeyInfo( MachineType.C64, PhysicalKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 247, true, 0, false, (char)0xeef7, true, "" );

@@ -775,6 +775,8 @@ namespace RetroDevStudio.Controls
         labelCharNo.Text = "Character: " + newChar.ToString();
         m_CurrentChar = (ushort)newChar;
 
+        editCharName.Text = m_Project.Characters[m_CurrentChar].Name;
+
         if ( !Lookup.HasCustomPalette( m_Project.Characters[m_CurrentChar].Tile.Mode ) )
         {
           if ( _ColorSettingsDlg.CustomColor != m_Project.Characters[m_CurrentChar].Tile.CustomColor )
@@ -1170,6 +1172,8 @@ namespace RetroDevStudio.Controls
       //Debug.Log( "CharsetUpdated n" );
       RedrawColorPicker();
       //Debug.Log( "CharsetUpdated o" );
+
+      editCharsetName.Text = m_Project.Name;
 
       DoNotAddUndo = false;
       DoNotUpdateFromControls = false;
@@ -3339,6 +3343,10 @@ namespace RetroDevStudio.Controls
         ConstantData.UpperCaseCharsetC64.CopyTo( m_Project.Characters[i].Tile.Data, i * numBytesOfChar, numBytesOfChar );
         m_Project.Characters[i].Tile.CustomColor = 1;
         RebuildCharImage( i );
+        if ( i == m_CurrentChar )
+        {
+          canvasEditor.Invalidate();
+        }
       }
       RaiseModifiedEvent( indices );
     }
@@ -3352,6 +3360,65 @@ namespace RetroDevStudio.Controls
         case ApplicationEvent.Type.CLIPBOARD_CHANGED:
           btnPaste.Enabled = Clipboard.ContainsImage() || Clipboard.ContainsData( "RetroDevStudio.ImageList" );
           break;
+      }
+    }
+
+
+
+    private void editCharsetName_TextChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.Name != editCharsetName.Text )
+      {
+        if ( ( UndoManager.LastUndo is Undo.UndoCharacterEditorNameChange )
+        &&   ( ( (Undo.UndoCharacterEditorNameChange)UndoManager.LastUndo ).Editor == this ) )
+        {
+          // collapse undo
+        }
+        else
+        {
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorNameChange( this ) );
+        }
+        m_Project.Name = editCharsetName.Text;
+
+        RaiseModifiedEvent( null );
+      }
+    }
+
+
+
+    private void editCharName_TextChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.Characters[m_CurrentChar].Name != editCharName.Text )
+      {
+        if ( ( UndoManager.LastUndo is Undo.UndoCharacterEditorCharacterNameChange )
+        &&   ( ( (Undo.UndoCharacterEditorCharacterNameChange)UndoManager.LastUndo ).Editor == this ) )
+        {
+          // collapse undo
+        }
+        else
+        {
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharacterNameChange( this, m_CurrentChar ) );
+        }
+
+        m_Project.Characters[m_CurrentChar].Name = editCharName.Text;
+        RaiseModifiedEvent( null );
+      }
+    }
+
+
+
+    public void NameChanged()
+    {
+      editCharsetName.Text = m_Project.Name;
+    }
+
+
+
+    public void CharacterNameChanged( int characterIndex )
+    {
+      if ( m_CurrentChar == characterIndex )
+      {
+        editCharName.Text = m_Project.Characters[characterIndex].Name;
       }
     }
 

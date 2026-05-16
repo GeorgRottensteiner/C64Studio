@@ -2,6 +2,7 @@
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 
@@ -15,6 +16,7 @@ namespace RetroDevStudio.Formats
     public string               Error = "";
     public int                  Index = 0;
     public GraphicTile          Tile = new GraphicTile();
+    public string               Name = "";
 
 
     public CharData()
@@ -165,6 +167,7 @@ namespace RetroDevStudio.Formats
       chunkCharsetInfo.AppendI32( (int)Mode );
       chunkCharsetInfo.AppendI32( TotalNumberOfCharacters );
       chunkCharsetInfo.AppendI32( ShowGrid ? 1 : 0 );
+      chunkCharsetInfo.AppendString( Name );
       chunkCharsetProject.Append( chunkCharsetInfo.ToBuffer() );
 
 
@@ -205,12 +208,12 @@ namespace RetroDevStudio.Formats
       {
         var chunkCharsetChar = new GR.IO.FileChunk( RetroDevStudio.FileChunkConstants.CHARSET_CHAR );
 
-        //chunkCharsetChar.AppendI32( (int)character.Mode );
         chunkCharsetChar.AppendI32( 0 );    // was mode
         chunkCharsetChar.AppendI32( character.Tile.CustomColor );
         chunkCharsetChar.AppendI32( character.Category );
         chunkCharsetChar.AppendI32( (int)character.Tile.Data.Length );
         chunkCharsetChar.Append( character.Tile.Data );
+        chunkCharsetChar.AppendString( character.Name );
 
         chunkCharsetProject.Append( chunkCharsetChar.ToBuffer() );
       }
@@ -476,9 +479,10 @@ namespace RetroDevStudio.Formats
               switch ( subChunk.Type )
               {
                 case FileChunkConstants.CHARSET_INFO:
-                  Mode = (TextCharMode)subMemIn.ReadInt32();
+                  Mode                    = (TextCharMode)subMemIn.ReadInt32();
                   TotalNumberOfCharacters = subMemIn.ReadInt32();
-                  ShowGrid = ( ( subMemIn.ReadInt32() & 1 ) == 1 );
+                  ShowGrid                = ( ( subMemIn.ReadInt32() & 1 ) == 1 );
+                  Name                    = subMemIn.ReadString();
                   break;
                 case FileChunkConstants.CHARSET_COLOR_SETTINGS:
                   {
@@ -528,6 +532,8 @@ namespace RetroDevStudio.Formats
                     charData.Tile.Data = new GR.Memory.ByteBuffer();
                     subMemIn.ReadBlock( charData.Tile.Data, (uint)dataLength );
 
+                    charData.Name = subMemIn.ReadString();
+
                     Characters.Add( charData );
                   }
                   break;
@@ -565,6 +571,85 @@ namespace RetroDevStudio.Formats
       }
       return true;
     }
+
+
+
+    internal bool ExportCharacterNamesAsAssembly( int startIndex, int numChars, out string textToInclude, string labelPrefix )
+    {
+      textToInclude = "";
+
+      var sb = new StringBuilder();
+
+      var usedLabels = new Dictionary<string, int>();
+      bool hadAChar = false;
+
+      string  prefix = NormalizeAsLabel( labelPrefix );
+      for ( int i = 0; i < numChars; ++i )
+      {
+        if ( string.IsNullOrEmpty( Characters[i].Name ) )
+        {
+          continue;
+        }
+        hadAChar = true;
+
+        sb.Append( prefix );
+        sb.Append( NormalizeAsLabel( Name ) );
+        sb.Append( "_" );
+
+        string    normalizedLabel = NormalizeAsLabel( Characters[i].Name ).ToUpper();
+        if ( usedLabels.ContainsKey( normalizedLabel ) )
+        {
+          int   subIndex = usedLabels[normalizedLabel] + 1;
+
+          usedLabels[normalizedLabel] = subIndex;
+          normalizedLabel += "_" + subIndex;
+        }
+        else
+        {
+          usedLabels.Add( normalizedLabel, 1 );
+        }
+
+        sb.Append( normalizedLabel );
+        sb.Append( "=" );
+        sb.Append( i );
+        sb.AppendLine();
+      }
+      if ( hadAChar )
+      {
+        textToInclude = sb.ToString();
+      }
+      return true;
+    }
+
+
+
+    private string NormalizeAsLabel( string Label )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      // remove diacritics
+      string normalizedString = Label.Normalize( NormalizationForm.FormD );
+
+      foreach ( var c in normalizedString )
+      {
+        if ( CharUnicodeInfo.GetUnicodeCategory( c ) == UnicodeCategory.NonSpacingMark )
+        {
+          continue;
+        }
+        if ( ( !char.IsDigit( c ) )
+        &&   ( !char.IsLetter( c ) )
+        &&   ( c != '_' ) )
+        {
+          sb.Append( '_' );
+        }
+        else
+        {
+          sb.Append( c );
+        }
+      }
+      return sb.ToString();
+    }
+
 
 
 

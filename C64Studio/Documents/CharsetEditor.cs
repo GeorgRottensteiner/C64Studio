@@ -196,7 +196,14 @@ namespace RetroDevStudio.Documents
         Core.Notification.MessageBox( "Could not load file", "Could not load charset project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message );
         return false;
       }
+
       SetUnmodified();
+      if ( string.IsNullOrEmpty( m_Charset.Name ) )
+      {
+        m_Charset.Name = GR.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
+        characterEditor.NameChanged();
+        SetModified();
+      }
       return true;
     }
 
@@ -286,7 +293,6 @@ namespace RetroDevStudio.Documents
 
     protected override bool PerformSave( string FullPath )
     {
-      m_Charset.Name      = DocumentInfo.DocumentFilename;
       m_Charset.UsedTiles = GR.Convert.ToU32( editCharactersFrom.Text );
 
       if ( IsBinaryFile() )

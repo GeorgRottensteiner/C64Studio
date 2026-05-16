@@ -150,6 +150,20 @@ namespace RetroDevStudio.Undo
 
 
 
+    public UndoTask LastUndo
+    {
+      get
+      {
+        if ( UndoTasks.Count == 0 )
+        {
+          return null;
+        }
+        return UndoTasks[UndoTasks.Count - 1];
+      }
+    }
+
+
+
     public void AddUndoTask( UndoTask Task )
     {
       AddUndoTask( Task, true );

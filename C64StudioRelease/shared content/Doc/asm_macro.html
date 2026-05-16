@@ -2148,6 +2148,40 @@
       </tr>
       <tr>
         <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          char
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all character names as labels (only if their name is set)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          char
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports all character names of the given range as labels (only if their name is set)
+        </td>
+      </tr>
+      <tr>
+        <td>
           Character Screen Project File
         </td>
         <td>
@@ -2689,33 +2723,37 @@
     <br />
     <br />
     <div id="code">
-      <br />        ;text screen
-      !mediasrc "title.charscreen",char
-      !mediasrc "title.charscreen",char,10,10,20,5
-      !mediasrc "title.charscreen",color
-      !mediasrc "title.charscreen",color,10,10,20,5
-      !mediasrc "title.charscreen",charcolor
-      !mediasrc "title.charscreen",charcolor,10,10,20,5
-      !mediasrc "title.charscreen",colorchar
-      !mediasrc "title.charscreen",colorchar,10,10,20,5
+      <br />      ;charset project
+      !mediasrc "title.charsetproject",labelprefix,char
+      !mediasrc "title.charsetproject",labelprefix,char,64,32
+
+      ;text screen
+      !mediasrc "title.charscreen",labelprefix,char
+      !mediasrc "title.charscreen",labelprefix,char,10,10,20,5
+      !mediasrc "title.charscreen",labelprefix,color
+      !mediasrc "title.charscreen",labelprefix,color,10,10,20,5
+      !mediasrc "title.charscreen",labelprefix,charcolor
+      !mediasrc "title.charscreen",labelprefix,charcolor,10,10,20,5
+      !mediasrc "title.charscreen",labelprefix,colorchar
+      !mediasrc "title.charscreen",labelprefix,colorchar,10,10,20,5
 
       ;Bitmap
-      !mediasrc "intro.graphicscreen",bitmap
-      !mediasrc "intro.graphicscreen",bitmap,8,8,304,184
-      !mediasrc "intro.graphicscreen",screen
-      !mediasrc "intro.graphicscreen",screen,8,8,304,184
-      !mediasrc "intro.graphicscreen",color
-      !mediasrc "intro.graphicscreen",color,8,8,304,184
-      !mediasrc "intro.graphicscreen",bitmapscreen
-      !mediasrc "intro.graphicscreen",bitmapscreen,8,8,304,184
-      !mediasrc "intro.graphicscreen",bitmapscreencolor
-      !mediasrc "intro.graphicscreen",bitmapscreencolor,8,8,304,184
+      !mediasrc "intro.graphicscreen",labelprefix,bitmap
+      !mediasrc "intro.graphicscreen",labelprefix,bitmap,8,8,304,184
+      !mediasrc "intro.graphicscreen",labelprefix,screen
+      !mediasrc "intro.graphicscreen",labelprefix,screen,8,8,304,184
+      !mediasrc "intro.graphicscreen",labelprefix,color
+      !mediasrc "intro.graphicscreen",labelprefix,color,8,8,304,184
+      !mediasrc "intro.graphicscreen",labelprefix,bitmapscreen
+      !mediasrc "intro.graphicscreen",labelprefix,bitmapscreen,8,8,304,184
+      !mediasrc "intro.graphicscreen",labelprefix,bitmapscreencolor
+      !mediasrc "intro.graphicscreen",labelprefix,bitmapscreencolor,8,8,304,184
 
       ;Maps
-      !mediasrc "overworld.map",tileelements
-      !mediasrc "overworld.map",tile
-      !mediasrc "overworld.map",map
-      !mediasrc "overworld.map",tilemap
+      !mediasrc "overworld.map",labelprefix,tileelements
+      !mediasrc "overworld.map",labelprefix,tile
+      !mediasrc "overworld.map",labelprefix,map
+      !mediasrc "overworld.map",labelprefix,tilemap
     </div>
     <br />
     <br />

@@ -148,12 +148,6 @@ namespace RetroDevStudio.Parser
       }
       else if ( extension == ".CHARSETPROJECT" )
       {
-        if ( !Binary )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Assembly include for charset projects is not supported" );
-          return false;
-        }
-
         // character project file
         // char,index,count
         if ( paramTokens.Count > 4 )
@@ -173,6 +167,7 @@ namespace RetroDevStudio.Parser
         }
         int startIndex = 0;
         int numChars = 256;
+        string textToInclude = "";
 
         if ( ( paramTokens.Count >= 3 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startIndexSymbol ) ) )
@@ -261,7 +256,6 @@ namespace RetroDevStudio.Parser
           }
           else
           {
-
             if ( ( startIndex < 0 )
             ||   ( startIndex >= charProject.Colors.Palette.NumColors ) )
             {
@@ -291,17 +285,34 @@ namespace RetroDevStudio.Parser
             return false;
           }
           if ( ( numChars <= 0 )
-          || ( ( startIndex + numChars ) > charProject.TotalNumberOfCharacters ) )
+          ||   ( ( startIndex + numChars ) > charProject.TotalNumberOfCharacters ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numChars );
             return false;
           }
 
-          dataToInclude = charProject.CharacterData( startIndex, numChars );
-          if ( method == "CHARCOLOR" )
+          if ( !Binary )
           {
-            dataToInclude += charProject.ColorData( startIndex, numChars );
+            if ( method != "CHAR" )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as assembly is only supported for 'CHAR'" );
+              return false;
+            }
+            charProject.ExportCharacterNamesAsAssembly( startIndex, numChars, out textToInclude, labelPrefix );
           }
+          else
+          {
+            dataToInclude = charProject.CharacterData( startIndex, numChars );
+            if ( method == "CHARCOLOR" )
+            {
+              dataToInclude += charProject.ColorData( startIndex, numChars );
+            }
+          }
+        }
+
+        if ( !Binary )
+        {
+          ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
         }
       }
       else if ( extension == ".VALUETABLEPROJECT" )
