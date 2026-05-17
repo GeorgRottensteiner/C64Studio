@@ -45,6 +45,7 @@
       this.checkInsertSpacesBetweenOperands = new System.Windows.Forms.CheckBox();
       this.listPseudoOpsToIndent = new DecentForms.ListBox();
       this.label4 = new System.Windows.Forms.Label();
+      this.checkInsertSpacesAfterComma = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // checkAutoFormatActive
@@ -186,10 +187,10 @@
       // 
       this.checkSeparateLineForLabels.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
       this.checkSeparateLineForLabels.Enabled = false;
-      this.checkSeparateLineForLabels.Location = new System.Drawing.Point(21, 322);
+      this.checkSeparateLineForLabels.Location = new System.Drawing.Point(21, 350);
       this.checkSeparateLineForLabels.Name = "checkSeparateLineForLabels";
       this.checkSeparateLineForLabels.Size = new System.Drawing.Size(257, 17);
-      this.checkSeparateLineForLabels.TabIndex = 11;
+      this.checkSeparateLineForLabels.TabIndex = 12;
       this.checkSeparateLineForLabels.Text = "Put Labels on separate line";
       this.checkSeparateLineForLabels.UseVisualStyleBackColor = true;
       this.checkSeparateLineForLabels.CheckedChanged += new System.EventHandler(this.checkSeparateLineForLabels_CheckedChanged);
@@ -232,12 +233,25 @@
       this.label4.TabIndex = 20;
       this.label4.Text = "Indent Pseudo Ops like statements";
       // 
+      // checkInsertSpacesAfterComma
+      // 
+      this.checkInsertSpacesAfterComma.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkInsertSpacesAfterComma.Enabled = false;
+      this.checkInsertSpacesAfterComma.Location = new System.Drawing.Point(21, 322);
+      this.checkInsertSpacesAfterComma.Name = "checkInsertSpacesAfterComma";
+      this.checkInsertSpacesAfterComma.Size = new System.Drawing.Size(257, 17);
+      this.checkInsertSpacesAfterComma.TabIndex = 11;
+      this.checkInsertSpacesAfterComma.Text = "Insert space after comma";
+      this.checkInsertSpacesAfterComma.UseVisualStyleBackColor = true;
+      this.checkInsertSpacesAfterComma.CheckedChanged += new System.EventHandler(this.checkInsertSpacesAfterComma_CheckedChanged);
+      // 
       // DlgPrefFormatting
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.listPseudoOpsToIndent);
       this.Controls.Add(this.checkAutoFormatActive);
+      this.Controls.Add(this.checkInsertSpacesAfterComma);
       this.Controls.Add(this.checkInsertSpacesBetweenOperands);
       this.Controls.Add(this.checkInsertSpacesBetweenOpcodeAndParameters);
       this.Controls.Add(this.checkIndentPseudoOps);
@@ -278,5 +292,6 @@
     private System.Windows.Forms.CheckBox checkInsertSpacesBetweenOperands;
     private DecentForms.ListBox listPseudoOpsToIndent;
     private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.CheckBox checkInsertSpacesAfterComma;
   }
 }

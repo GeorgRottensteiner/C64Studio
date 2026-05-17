@@ -31,6 +31,7 @@ namespace RetroDevStudio
     public bool     PutLabelsOnSeparateLine = true;
 
     public bool     InsertSpacesBetweenOperands = true;
+    public bool     InsertSpaceAfterComma = true;
 
     // these are saved outside this object
     public int      TabSize             = 2;
@@ -68,6 +69,7 @@ namespace RetroDevStudio
       {
         chunkDetails.AppendI32( (int)entry );
       }
+      chunkDetails.AppendI32( InsertSpaceAfterComma ? 1 : 0 );
 
       return chunkDetails.ToBuffer();
     }
@@ -90,6 +92,7 @@ namespace RetroDevStudio
       IndentOperandsFromInstructions = 2;
 
       InsertSpacesBetweenOperands = true;
+      InsertSpaceAfterComma       = true;
 
       IndentLabels = true;
       NumTabsIndentationLabels = 0;
@@ -118,6 +121,8 @@ namespace RetroDevStudio
       {
         PseudoOpsToIndent.Add( (MacroInfo.PseudoOpType)binIn.ReadInt32() );
       }
+
+      InsertSpaceAfterComma = ( binIn.ReadInt32() != 0 );
     }
 
 
@@ -219,7 +224,10 @@ namespace RetroDevStudio
               if ( tokensSlice[i].Content == "," )
               {
                 // no space before comma
-                firstOperand = false;
+                if ( !InsertSpaceAfterComma )
+                {
+                  firstOperand = false;
+                }
               }
               else if ( ( i > index + 1 )
               &&        ( tokensSlice[i - 1].Content == "#" ) )
@@ -253,14 +261,55 @@ namespace RetroDevStudio
           sb.Append( parser.TokensToExpression( tokensSlice, index + 1, tokensSlice.Count - index - 1 ) );
         }
       }
+      else if ( tokensSlice.Any( t => t.Type == TokenInfo.TokenType.PSEUDO_OP ) )
+      {
+        var pseudoOpToken = tokensSlice.First( t => t.Type == TokenInfo.TokenType.PSEUDO_OP );
+        int index = tokensSlice.IndexOf( pseudoOpToken );
+        sb.Append( pseudoOpToken.Content );
+
+        if ( ( SeparateInstructionsAndOperands )
+        &&   ( index + 1 < tokensSlice.Count ) )
+        {
+          sb.Append( ' ', IndentOperandsFromInstructions );
+        }
+        else
+        {
+          sb.Append( ' ' );
+        }
+        parser.ParseLineInParameters( tokensSlice, index + 1, tokensSlice.Count - index - 1, -1, true, out var parameters );
+        int paramIndex = 0;
+        foreach ( var parameter in parameters )
+        {
+          if ( paramIndex > 0 )
+          {
+            sb.Append( ',' );
+            if ( InsertSpaceAfterComma )
+            {
+              sb.Append( ' ' );
+            }
+          }
+          sb.Append( FormatStatement( parser, parameter, 0, parameter.Count ) );
+          ++paramIndex;
+        }
+      }
       else
       {
         if ( InsertSpacesBetweenOperands )
         {
           sb.Append( tokensSlice[0].Content );
+          bool addSpace = true;
+          if ( parser.IsUnaryOperator( tokensSlice[0].Content ) )
+          {
+            // unary operator
+            addSpace = false;
+          }
           for ( int i = 1; i < tokensSlice.Count; ++i )
           {
-            sb.Append( ' ' );
+            if ( addSpace )
+            {
+              sb.Append( ' ' );
+            }
+            addSpace = true;
             sb.Append( tokensSlice[i].Content );
           }
         }

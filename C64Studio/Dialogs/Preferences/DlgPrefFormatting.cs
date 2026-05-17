@@ -299,5 +299,15 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
+    private void checkInsertSpacesAfterComma_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( checkInsertSpacesAfterComma.Checked != Core.Settings.FormatSettings.InsertSpaceAfterComma )
+      {
+        Core.Settings.FormatSettings.InsertSpaceAfterComma = checkInsertSpacesAfterComma.Checked;
+      }
+    }
+
+
+
   }
 }
