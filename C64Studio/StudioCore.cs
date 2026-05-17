@@ -63,7 +63,8 @@ namespace RetroDevStudio
     public ToolInfo DetermineTool( DocumentInfo Document, ToolInfo.ToolType RunType, ToolUse use )
     {
       string    key = Settings.EmulatorToRun;
-      if ( use == ToolUse.DEBUGGER )
+      if ( ( use == ToolUse.DEBUGGER )
+      &&   ( Settings.DebuggerToRun.ToUpper() != "AUTO" ) )
       {
         key = Settings.DebuggerToRun;
       }
@@ -79,7 +80,6 @@ namespace RetroDevStudio
         &&   ( tool.Name != null )
         &&   ( tool.Name.ToUpper() == key ) )
         {
-          //AddToOutput( "Determined tool to run = " + tool.Name );
           return tool;
         }
       }

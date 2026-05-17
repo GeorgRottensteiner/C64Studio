@@ -27,6 +27,16 @@ namespace RetroDevStudio.Formats
       {
         Chars.InvalidTile = new TileChar();
       }
+
+      public Tile Clone()
+      {
+        return new Tile()
+        {
+          Name = this.Name,
+          Index = this.Index,
+          Chars = new GR.Game.Layer<TileChar>( this.Chars )
+        };
+      }
     };
 
     public class Map

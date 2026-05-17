@@ -87,6 +87,8 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabMapEditor = new System.Windows.Forms.TabControl();
       this.tabTiles = new System.Windows.Forms.TabPage();
+      this.btnRemoveDuplicates = new DecentForms.Button();
+      this.btnHighlightDuplicates = new DecentForms.Button();
       this.btnTileApply = new DecentForms.Button();
       this.btnCopyTileCharToNextIncreased = new DecentForms.Button();
       this.btnSetNextTileChar = new DecentForms.Button();
@@ -803,6 +805,8 @@
       // 
       // tabTiles
       // 
+      this.tabTiles.Controls.Add(this.btnRemoveDuplicates);
+      this.tabTiles.Controls.Add(this.btnHighlightDuplicates);
       this.tabTiles.Controls.Add(this.btnTileApply);
       this.tabTiles.Controls.Add(this.btnCopyTileCharToNextIncreased);
       this.tabTiles.Controls.Add(this.btnSetNextTileChar);
@@ -837,6 +841,35 @@
       this.tabTiles.TabIndex = 2;
       this.tabTiles.Text = "Tiles";
       this.tabTiles.UseVisualStyleBackColor = true;
+      // 
+      // btnRemoveDuplicates
+      // 
+      this.btnRemoveDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnRemoveDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnRemoveDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnRemoveDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnRemoveDuplicates.Image = null;
+      this.btnRemoveDuplicates.Location = new System.Drawing.Point(745, 90);
+      this.btnRemoveDuplicates.Name = "btnRemoveDuplicates";
+      this.btnRemoveDuplicates.Size = new System.Drawing.Size(122, 23);
+      this.btnRemoveDuplicates.TabIndex = 30;
+      this.btnRemoveDuplicates.Text = "Remove Duplicates";
+      this.btnRemoveDuplicates.Click += new DecentForms.EventHandler(this.btnRemoveDuplicates_Click);
+      // 
+      // btnHighlightDuplicates
+      // 
+      this.btnHighlightDuplicates.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnHighlightDuplicates.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnHighlightDuplicates.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnHighlightDuplicates.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnHighlightDuplicates.Image = null;
+      this.btnHighlightDuplicates.Location = new System.Drawing.Point(642, 90);
+      this.btnHighlightDuplicates.Name = "btnHighlightDuplicates";
+      this.btnHighlightDuplicates.Size = new System.Drawing.Size(97, 23);
+      this.btnHighlightDuplicates.TabIndex = 29;
+      this.btnHighlightDuplicates.Text = "Duplicates";
+      this.toolTip1.SetToolTip(this.btnHighlightDuplicates, "Highlight duplicates");
+      this.btnHighlightDuplicates.Click += new DecentForms.EventHandler(this.btnHighlightDuplicates_Click);
       // 
       // btnTileApply
       // 
@@ -1699,5 +1732,7 @@
     private DecentForms.Button btnImport;
     private System.Windows.Forms.ComboBox comboImportMethod;
     private System.Windows.Forms.Label label2;
+    private DecentForms.Button btnRemoveDuplicates;
+    private DecentForms.Button btnHighlightDuplicates;
   }
 }

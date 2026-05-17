@@ -35,6 +35,8 @@ namespace RetroDevStudio.Controls
       this.editWrapByteCount = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.editPrefix = new System.Windows.Forms.TextBox();
+      this.checkPrefix = new System.Windows.Forms.CheckBox();
+      this.editPrefixLabels = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
       // 
       // checkExportHex
@@ -77,7 +79,7 @@ namespace RetroDevStudio.Controls
       // 
       // editWrapByteCount
       // 
-      this.editWrapByteCount.Location = new System.Drawing.Point(99, 24);
+      this.editWrapByteCount.Location = new System.Drawing.Point(113, 24);
       this.editWrapByteCount.Name = "editWrapByteCount";
       this.editWrapByteCount.Size = new System.Drawing.Size(64, 20);
       this.editWrapByteCount.TabIndex = 3;
@@ -86,7 +88,7 @@ namespace RetroDevStudio.Controls
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(169, 26);
+      this.label2.Location = new System.Drawing.Point(183, 26);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(32, 13);
       this.label2.TabIndex = 19;
@@ -94,11 +96,32 @@ namespace RetroDevStudio.Controls
       // 
       // editPrefix
       // 
-      this.editPrefix.Location = new System.Drawing.Point(99, 1);
+      this.editPrefix.Location = new System.Drawing.Point(113, 1);
       this.editPrefix.Name = "editPrefix";
       this.editPrefix.Size = new System.Drawing.Size(64, 20);
       this.editPrefix.TabIndex = 1;
       this.editPrefix.Text = "!byte ";
+      // 
+      // checkPrefix
+      // 
+      this.checkPrefix.AutoSize = true;
+      this.checkPrefix.Location = new System.Drawing.Point(3, 72);
+      this.checkPrefix.Name = "checkPrefix";
+      this.checkPrefix.Size = new System.Drawing.Size(104, 17);
+      this.checkPrefix.TabIndex = 5;
+      this.checkPrefix.Text = "Prefix labels with";
+      this.checkPrefix.UseVisualStyleBackColor = true;
+      this.checkPrefix.CheckedChanged += new System.EventHandler(this.checkPrefix_CheckedChanged);
+      // 
+      // editPrefixLabels
+      // 
+      this.editPrefixLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editPrefixLabels.Enabled = false;
+      this.editPrefixLabels.Location = new System.Drawing.Point(113, 70);
+      this.editPrefixLabels.Name = "editPrefixLabels";
+      this.editPrefixLabels.Size = new System.Drawing.Size(201, 20);
+      this.editPrefixLabels.TabIndex = 6;
       // 
       // ExportMapAsAssembly
       // 
@@ -106,7 +129,9 @@ namespace RetroDevStudio.Controls
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.checkExportHex);
       this.Controls.Add(this.checkExportToDataIncludeRes);
+      this.Controls.Add(this.checkPrefix);
       this.Controls.Add(this.checkExportToDataWrap);
+      this.Controls.Add(this.editPrefixLabels);
       this.Controls.Add(this.editWrapByteCount);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.editPrefix);
@@ -124,5 +149,7 @@ namespace RetroDevStudio.Controls
     private System.Windows.Forms.TextBox editWrapByteCount;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editPrefix;
+    private System.Windows.Forms.CheckBox checkPrefix;
+    private System.Windows.Forms.TextBox editPrefixLabels;
   }
 }

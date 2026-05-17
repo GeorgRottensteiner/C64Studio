@@ -5223,7 +5223,7 @@ namespace RetroDevStudio
             // save current document
             BaseDocument curDoc = ActiveContent;
             if ( ( curDoc != null )
-            && ( !curDoc.DocumentInfo.ContainsCode ) )
+            &&   ( !curDoc.DocumentInfo.ContainsCode ) )
             {
               curDoc = ActiveDocument;
             }
@@ -5255,7 +5255,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5265,9 +5265,9 @@ namespace RetroDevStudio
             DocumentInfo docActive = DetermineDocument();
 
             if ( ( docToDebug == null )
-            || ( docActive == null )
-            || ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
-            && ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
+            ||   ( docActive == null )
+            ||   ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
+            &&     ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) ) )
             {
               break;
             }
@@ -5326,12 +5326,12 @@ namespace RetroDevStudio
             // save current document
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            && ( !docToSave.IsSaveable ) )
+            &&   ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            || ( !docToSave.IsSaveable ) )
+            ||   ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5343,8 +5343,8 @@ namespace RetroDevStudio
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            || ( docToSave.DocumentInfo.Element == null ) )
+            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            ||   ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -5387,8 +5387,8 @@ namespace RetroDevStudio
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            || ( docToSave.DocumentInfo.Element == null ) )
+            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            ||   ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )

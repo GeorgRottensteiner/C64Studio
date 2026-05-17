@@ -58,6 +58,7 @@ namespace RetroDevStudio.Controls
     {
       int wrapByteCount = GetExportWrapCount();
       string prefix = editPrefix.Text;
+      string prefixLabels = checkPrefix.Checked ? editPrefixLabels.Text : "";
 
       bool wrapData = checkExportToDataWrap.Checked;
       bool prefixRes = checkExportToDataIncludeRes.Checked;
@@ -71,12 +72,12 @@ namespace RetroDevStudio.Controls
 
       if ( Info.ExportType == MapExportType.TILE_DATA_AS_ELEMENTS )
       {
-        Info.Map.ExportTilesAsElements( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
+        Info.Map.ExportTilesAsElements( out tileData, prefixLabels, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
       if ( ( Info.ExportType == MapExportType.TILE_DATA )
       ||   ( Info.ExportType == MapExportType.TILE_AND_MAP_DATA ) )
       {
-        Info.Map.ExportTilesAsAssembly( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
+        Info.Map.ExportTilesAsAssembly( out tileData, prefixLabels, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
       if ( Info.ExportType == MapExportType.MAP_DATA_SELECTION )
       {
@@ -143,7 +144,7 @@ namespace RetroDevStudio.Controls
       if ( ( Info.ExportType == MapExportType.MAP_DATA )
       ||   ( Info.ExportType == MapExportType.TILE_AND_MAP_DATA ) )
       {
-        Info.Map.ExportMapsAsAssembly( !Info.RowByRow, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
+        Info.Map.ExportMapsAsAssembly( !Info.RowByRow, out mapData, prefixLabels, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
 
       string resultText = "";
@@ -172,6 +173,13 @@ namespace RetroDevStudio.Controls
     private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
     {
       editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
+    }
+
+
+
+    private void checkPrefix_CheckedChanged( object sender, EventArgs e )
+    {
+      editPrefixLabels.Enabled = checkPrefix.Checked;
     }
 
 

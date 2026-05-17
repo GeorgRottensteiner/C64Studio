@@ -1599,23 +1599,6 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool IsInQuotes( string Text )
-    {
-      if ( ( string.IsNullOrEmpty( Text ) )
-      ||   ( Text.Length < 2 ) )
-      {
-        return false;
-      }
-      if ( ( Text.StartsWith( "\"" ) )
-      &&   ( Text.EndsWith( "\"" ) ) )
-      {
-        return true;
-      }
-      return false;
-    }
-
-
-
     private List<Types.TokenInfo> ProcessExtFunction( int LineIndex, string FunctionName, List<Types.TokenInfo> Tokens, int StartIndex, int Count, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       // split arguments, eg. "extfunction( ..,.. )"
@@ -9638,19 +9621,6 @@ namespace RetroDevStudio.Parser
       lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + Count - paramStartIndex ) );
 
       return true;
-    }
-
-
-
-    private string DeQuote( string Content )
-    {
-      if ( ( Content.StartsWith( "\"" ) )
-      &&   ( Content.EndsWith( "\"" )
-      &&   ( Content.Length >=  2 ) ) )
-      {
-        return Content.Substring( 1, Content.Length - 2 );
-      }
-      return Content;
     }
 
 

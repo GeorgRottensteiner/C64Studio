@@ -586,17 +586,17 @@ namespace RetroDevStudio.Formats
       string  prefix = NormalizeAsLabel( labelPrefix );
       for ( int i = 0; i < numChars; ++i )
       {
-        if ( string.IsNullOrEmpty( Characters[i].Name ) )
+        if ( string.IsNullOrEmpty( Characters[startIndex + i].Name ) )
         {
           continue;
         }
         hadAChar = true;
 
         sb.Append( prefix );
-        sb.Append( NormalizeAsLabel( Name ) );
+        sb.Append( NormalizeAsLabel( Name ).ToUpper() );
         sb.Append( "_" );
 
-        string    normalizedLabel = NormalizeAsLabel( Characters[i].Name ).ToUpper();
+        string    normalizedLabel = NormalizeAsLabel( Characters[startIndex + i].Name ).ToUpper();
         if ( usedLabels.ContainsKey( normalizedLabel ) )
         {
           int   subIndex = usedLabels[normalizedLabel] + 1;

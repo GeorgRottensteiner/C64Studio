@@ -2334,6 +2334,40 @@
       </tr>
       <tr>
         <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charlabel
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all character names as labels (only if their name is set)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charlabel
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports all character names of the given range as labels (only if their name is set)
+        </td>
+      </tr>
+      <tr>
+        <td>
           Graphic Screen Project File
         </td>
         <td>
@@ -2718,6 +2752,40 @@
           Appends labels for tile indices, named &lt;LabelPrefix&gt;TILE_&lt;Normalized Label Name&gt;<br />
         </td>
       </tr>
+      <tr>
+        <td>
+          Map Project File
+        </td>
+        <td>
+          *.mapproject
+        </td>
+        <td>
+          charlabel
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all character names as labels (only if their name is set)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Map Project File
+        </td>
+        <td>
+          *.mapproject
+        </td>
+        <td>
+          charlabel
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports all character names of the given range as labels (only if their name is set)
+        </td>
+      </tr>
     </table>
     <br />
     <br />
@@ -2736,6 +2804,8 @@
       !mediasrc "title.charscreen",labelprefix,charcolor,10,10,20,5
       !mediasrc "title.charscreen",labelprefix,colorchar
       !mediasrc "title.charscreen",labelprefix,colorchar,10,10,20,5
+      !mediasrc "title.charscreen",labelprefix,charlabel
+      !mediasrc "title.charscreen",labelprefix,charlabel,64,32
 
       ;Bitmap
       !mediasrc "intro.graphicscreen",labelprefix,bitmap
@@ -2754,6 +2824,8 @@
       !mediasrc "overworld.map",labelprefix,tile
       !mediasrc "overworld.map",labelprefix,map
       !mediasrc "overworld.map",labelprefix,tilemap
+      !mediasrc "overworld.map",labelprefix,charlabel
+      !mediasrc "overworld.map",labelprefix,charlabel,64,32
     </div>
     <br />
     <br />

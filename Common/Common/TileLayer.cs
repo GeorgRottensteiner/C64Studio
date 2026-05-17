@@ -25,6 +25,19 @@ namespace GR
         Visible = true;
       }
 
+      public Layer( Layer<TileType> source )
+      {
+        Visible = true;
+        Resize( source.Width, source.Height );
+        for ( int i = 0; i < Width; ++i )
+        {
+          for ( int j = 0; j < Height; ++j )
+          {
+            this[i, j] = source[i, j];
+          }
+        }
+      }
+
       public int Width
       {
         get
@@ -41,7 +54,15 @@ namespace GR
         }
       }
 
-      
+      public int Count
+      {
+        get
+        {
+          return m_Width * m_Height;
+        }
+      }
+
+
       protected TileType[] m_Tiles = null;
 
 

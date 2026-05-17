@@ -198,12 +198,6 @@ namespace RetroDevStudio.Documents
       }
 
       SetUnmodified();
-      if ( string.IsNullOrEmpty( m_Charset.Name ) )
-      {
-        m_Charset.Name = GR.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
-        characterEditor.NameChanged();
-        SetModified();
-      }
       return true;
     }
 

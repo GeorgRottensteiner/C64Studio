@@ -27,6 +27,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MapperCommdore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Media\MachineFileTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)formats\SFXProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.MapProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.GraphicScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.Charscreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.SpritePad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.SpriteProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.Spriteset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.ValueTableProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.CharsetProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Media.Charset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.Bank.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\Assembler\ASMFileParser.PO.For.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BASIC\BasicFileParser.MetaData.BinaryDataPRINT.cs" />
