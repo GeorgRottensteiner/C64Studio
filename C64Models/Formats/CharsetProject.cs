@@ -592,9 +592,21 @@ namespace RetroDevStudio.Formats
         }
         hadAChar = true;
 
+        string nameLabel = NormalizeAsLabel( Name );
+
         sb.Append( prefix );
-        sb.Append( NormalizeAsLabel( Name ).ToUpper() );
-        sb.Append( "_" );
+        if ( ( !string.IsNullOrEmpty( prefix ) )
+        &&   ( !string.IsNullOrEmpty( nameLabel ) ) )
+        {
+          sb.Append( "_" );
+        }
+
+        sb.Append( nameLabel.ToUpper() );
+        if ( ( !string.IsNullOrEmpty( prefix ) )
+        ||   ( !string.IsNullOrEmpty( nameLabel ) ) )
+        {
+          sb.Append( "_" );
+        }
 
         string    normalizedLabel = NormalizeAsLabel( Characters[startIndex + i].Name ).ToUpper();
         if ( usedLabels.ContainsKey( normalizedLabel ) )
