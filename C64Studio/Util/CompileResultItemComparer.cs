@@ -8,18 +8,18 @@ namespace RetroDevStudio
   public class CompileResultItemComparer : IComparer
   {
     private int col;
-    private SortOrder order;
+    private DecentForms.SortOrder order;
 
 
     public CompileResultItemComparer()
     {
       col = 0;
-      order = SortOrder.Ascending;
+      order = DecentForms.SortOrder.ASCENDING;
     }
 
 
 
-    public CompileResultItemComparer( int column, SortOrder order )
+    public CompileResultItemComparer( int column, DecentForms.SortOrder order )
     {
       col = column;
       this.order = order;
@@ -44,8 +44,8 @@ namespace RetroDevStudio
 
     public int Compare( object x, object y )
     {
-      Parser.ParserBase.ParseMessage msg1 = (Parser.ParserBase.ParseMessage)( ( (ListViewItem)x ).Tag );
-      Parser.ParserBase.ParseMessage msg2 = (Parser.ParserBase.ParseMessage)( ( (ListViewItem)y ).Tag );
+      Parser.ParserBase.ParseMessage msg1 = (Parser.ParserBase.ParseMessage)( ( (DecentForms.ListControlItem)x ).Tag );
+      Parser.ParserBase.ParseMessage msg2 = (Parser.ParserBase.ParseMessage)( ( (DecentForms.ListControlItem)y ).Tag );
 
       int returnVal = -1;
 
@@ -118,7 +118,7 @@ namespace RetroDevStudio
       }
 
       // Determine whether the sort order is descending.
-      if ( order == SortOrder.Descending )
+      if ( order == DecentForms.SortOrder.DESCENDING )
       {
         // Invert the value returned by String.Compare.
         returnVal *= -1;

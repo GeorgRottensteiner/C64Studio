@@ -1,4 +1,6 @@
-﻿namespace DecentForms
+﻿using System.Drawing;
+
+namespace DecentForms
 {
   public class ListControlSubItem
   {
@@ -75,9 +77,6 @@
 
 
     public object Tag { get; set; } = null;
-
-
-
   }
 
 

@@ -277,7 +277,7 @@ namespace DecentForms
         case SortOrder.ASCENDING:
           if ( comparer != null )
           {
-            _Items.Sort( ( a, b ) => comparer.Compare( a.SubItems[sortColumn].Text, b.SubItems[sortColumn].Text ) );
+            _Items.Sort( ( a, b ) => comparer.Compare( a, b ) );
           }
           else
           {
@@ -287,7 +287,7 @@ namespace DecentForms
         case SortOrder.DESCENDING:
           if ( comparer != null )
           {
-            _Items.Sort( ( a, b ) => comparer.Compare( b.SubItems[sortColumn].Text, a.SubItems[sortColumn].Text ) );
+            _Items.Sort( ( a, b ) => comparer.Compare( a, b ) );
           }
           else
           {
@@ -295,7 +295,6 @@ namespace DecentForms
           }
           break;
         default:
-          //_Items.Sort( ( a, b ) => b.Index - a.Index );
           break;
       }
     }

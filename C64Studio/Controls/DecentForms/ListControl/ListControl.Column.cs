@@ -12,6 +12,7 @@ namespace DecentForms
     private int                         _width = 20;
 
     public DecentForms.TextAlignment    Alignment = TextAlignment.LEFT | TextAlignment.CENTERED_V;
+    public DecentForms.TextFormat       Format = TextFormat.DEFAULT;
     public bool                         Sizable = true;
     public int                          Index = -1;
     internal ListControl                _Owner = null;

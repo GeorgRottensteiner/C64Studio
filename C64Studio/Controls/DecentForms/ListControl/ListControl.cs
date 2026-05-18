@@ -1,4 +1,5 @@
-﻿using RetroDevStudio.Controls;
+﻿using RetroDevStudio;
+using RetroDevStudio.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -787,6 +788,16 @@ namespace DecentForms
 
 
 
+    public int SelectedColumn
+    {
+      get
+      {
+        return _selectedColumn;
+      }
+    }
+
+
+
     private int FullWidth()
     {
       return _Columns.Sum( c => c.Width );
@@ -1295,6 +1306,27 @@ namespace DecentForms
     {
       AdjustScrollBars();
       Invalidate();
+    }
+
+
+
+    public void EnsureVisible( int index )
+    {
+      if ( ( index < 0 )
+      ||   ( index >= Items.Count ) )
+      {
+        return;
+      }
+      if ( index < FirstVisibleItemIndex )
+      {
+        _ScrollBarV.Value = index;
+        Invalidate();
+      }
+      else if ( index >= FirstVisibleItemIndex + VisibleItemCount )
+      {
+        _ScrollBarV.Value = Math.Max( 0, index - VisibleItemCount + 1 );
+        Invalidate();
+      }
     }
 
 

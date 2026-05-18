@@ -14,7 +14,7 @@ namespace RetroDevStudio.Documents
 {
   public partial class CompileResult : BaseDocument
   {
-    private int       listMessagesSortColumn = 1;
+    private int       _messagesSortColumn = 1;
 
     private Project   m_ListProject = null;
 
@@ -24,8 +24,23 @@ namespace RetroDevStudio.Documents
     {
       InitializeComponent();
 
-      listMessages.Sorting = SortOrder.Ascending;
-      listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessagesSortColumn, listMessages.Sorting );
+      listMessages.SortOrder = DecentForms.SortOrder.ASCENDING;
+      listMessages.ListViewItemSorter = new CompileResultItemComparer();
+
+      listMessages.Columns.Add( ".", 20 );
+      listMessages.Columns[0].Sizable = false;
+      listMessages.Columns.Add( "Line", 50 );
+      listMessages.Columns.Add( "Code", 49 );
+      listMessages.Columns.Add( "File", 200 );
+      listMessages.Columns[3].Format = DecentForms.TextFormat.PATH_ELLIPSIS;
+      listMessages.Columns.Add( "Message", 400 );
+      listMessages.Columns[4].Format = DecentForms.TextFormat.PATH_ELLIPSIS;
+
+      listMessages.ImageList = new DecentForms.ImageList();
+      foreach ( System.Drawing.Image image in imageListCompileResult.Images )
+      {
+        listMessages.ImageList.Add( image );
+      }
 
       this.Core = Core;
     }
@@ -59,8 +74,8 @@ namespace RetroDevStudio.Documents
       }
 
       listMessages.BeginUpdate();
-      SortOrder oldOrder = listMessages.Sorting;
-      listMessages.Sorting = SortOrder.None;
+      var oldOrder = listMessages.SortOrder;
+      listMessages.SortOrder = DecentForms.SortOrder.NONE;
       listMessages.ListViewItemSorter = null; 
 
       foreach ( var msg in ASMFileInfo.Messages )
@@ -88,7 +103,7 @@ namespace RetroDevStudio.Documents
 
         ++documentLine;
 
-        ListViewItem item = new ListViewItem();
+        var item = new DecentForms.ListControlItem();
 
         if ( msgType == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR )
         {
@@ -123,13 +138,13 @@ namespace RetroDevStudio.Documents
         }
         if ( documentFile != null )
         {
-          item.SubItems.Add( new CSListViewSubItem( documentFile ) { Trimming = StringTrimming.EllipsisPath } );
+          item.SubItems.Add( new DecentForms.ListControlSubItem( documentFile ) );
         }
         else
         {
           item.SubItems.Add( "--" );
         }
-        item.SubItems.Add( new CSListViewSubItem( message.Message ) { Trimming = StringTrimming.EllipsisPath } );
+        item.SubItems.Add( new DecentForms.ListControlSubItem( message.Message ) );
         item.Tag = message;
 
         listMessages.Items.Add( item );
@@ -137,7 +152,7 @@ namespace RetroDevStudio.Documents
         {
           foreach ( var childMessage in message.ChildMessages )
           {
-            ListViewItem childItem = new ListViewItem();
+            var childItem = new DecentForms.ListControlItem();
 
             if ( childMessage.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR )
             {
@@ -178,22 +193,22 @@ namespace RetroDevStudio.Documents
             {
               childItem.SubItems.Add( childMessage.Code.ToString() );
             }
-            childItem.SubItems.Add( new CSListViewSubItem( messageDoc ) { Trimming = StringTrimming.EllipsisPath } );
-            childItem.SubItems.Add( new CSListViewSubItem( childMessage.Message ) { Trimming = StringTrimming.EllipsisPath } );
+            childItem.SubItems.Add( new DecentForms.ListControlSubItem( messageDoc ) );
+            childItem.SubItems.Add( new DecentForms.ListControlSubItem( childMessage.Message ) );
             childItem.Tag = childMessage;
 
             listMessages.Items.Add( childItem );
           }
         }
       }
-      listMessages.Sorting = oldOrder;
-      listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessagesSortColumn, listMessages.Sorting );
+      listMessages.SortOrder          = oldOrder;
+      listMessages.ListViewItemSorter = new CompileResultItemComparer( _messagesSortColumn, oldOrder );
       listMessages.EndUpdate();
     }
 
 
 
-    private void listMessages_ItemActivate( object sender, EventArgs e )
+    private void listMessages_ItemActivate( DecentForms.ControlBase sender )
     {
       if ( listMessages.SelectedItems.Count == 0 )
       {
@@ -204,7 +219,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void JumpToFile( ListViewItem Item )
+    private void JumpToFile( DecentForms.ListControlItem Item )
     {
       Parser.ParserBase.ParseMessage Message = (Parser.ParserBase.ParseMessage)Item.Tag;
 
@@ -234,33 +249,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listMessages_ColumnClick( object sender, ColumnClickEventArgs e )
-    {
-      if ( e.Column != listMessagesSortColumn )
-      {
-        // Set the sort column to the new column.
-        listMessagesSortColumn = e.Column;
-        // Set the sort order to ascending by default.
-        listMessages.Sorting = SortOrder.Ascending;
-      }
-      else
-      {
-        // Determine what the last sort order was and change it.
-        if ( listMessages.Sorting == SortOrder.Ascending )
-        {
-          listMessages.Sorting = SortOrder.Descending;
-        }
-        else
-        {
-          listMessages.Sorting = SortOrder.Ascending;
-        }
-      }
-      listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessagesSortColumn, listMessages.Sorting );
-      listMessages.Sort();
-    }
-
-
-
     private void contextCompilerMessage_Opening( object sender, CancelEventArgs e )
     {
       copyListToClipboardToolStripMenuItem.Enabled = ( listMessages.Items.Count != 0 );
@@ -273,7 +261,7 @@ namespace RetroDevStudio.Documents
       jumpToFileToolStripMenuItem.Enabled = true;
       copyListToClipboardToolStripMenuItem.Enabled = true;
       bool hasWarnings = false;
-      foreach ( ListViewItem item in listMessages.SelectedItems )
+      foreach ( var item in listMessages.SelectedItems )
       {
         Parser.ParserBase.ParseMessage message = (Parser.ParserBase.ParseMessage)item.Tag;
 
@@ -301,7 +289,7 @@ namespace RetroDevStudio.Documents
 
     private void ignoreWarningToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      foreach ( ListViewItem item in listMessages.SelectedItems )
+      foreach ( var item in listMessages.SelectedItems )
       {
         Parser.ParserBase.ParseMessage message = (Parser.ParserBase.ParseMessage)item.Tag;
 
@@ -329,7 +317,7 @@ namespace RetroDevStudio.Documents
     {
       StringBuilder   sb = new StringBuilder();
 
-      foreach ( ListViewItem item in listMessages.Items )
+      foreach ( var item in listMessages.Items )
       {
         sb.Append( item.SubItems[1].Text );
         sb.Append( ';' );
@@ -358,8 +346,8 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      listMessagesSortColumn = memIn.ReadInt32();
-      listMessages.Sorting = (SortOrder)memIn.ReadInt32();
+      _messagesSortColumn = memIn.ReadInt32();
+      listMessages.SortOrder = (DecentForms.SortOrder)memIn.ReadInt32();
     }
 
 
@@ -374,8 +362,8 @@ namespace RetroDevStudio.Documents
         bufferData.AppendI32( listMessages.Columns[i].Width );
       }
 
-      bufferData.AppendI32( listMessagesSortColumn );
-      bufferData.AppendI32( (int)listMessages.Sorting );
+      bufferData.AppendI32( _messagesSortColumn );
+      bufferData.AppendI32( (int)listMessages.SortOrder );
       return bufferData;
     }
 
@@ -400,7 +388,7 @@ namespace RetroDevStudio.Documents
     public void SelectMessage( Parser.ParserBase.ParseMessage Message )
     {
       listMessages.SelectedItems.Clear();
-      foreach ( ListViewItem item in listMessages.Items )
+      foreach ( var item in listMessages.Items )
       {
         if ( item.Tag == Message )
         {
@@ -408,6 +396,14 @@ namespace RetroDevStudio.Documents
           listMessages.EnsureVisible( item.Index );
         }
       }
+    }
+
+
+
+    private void listMessages_ColumnClicked( DecentForms.ControlBase Sender )
+    {
+      _messagesSortColumn = listMessages.SelectedColumn;
+      listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessages.SelectedColumn, listMessages.SortOrder );
     }
 
 

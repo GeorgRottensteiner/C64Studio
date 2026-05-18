@@ -30,12 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompileResult));
-      this.listMessages = new RetroDevStudio.Controls.CSListView();
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.listMessages = new DecentForms.ListControl();
       this.contextCompilerMessage = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.jumpToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.ignoreWarningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,53 +43,27 @@
       // 
       // listMessages
       // 
-      this.listMessages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader5,
-            this.columnHeader3,
-            this.columnHeader4});
+      this.listMessages.BorderStyle = DecentForms.BorderStyle.SUNKEN;
       this.listMessages.ContextMenuStrip = this.contextCompilerMessage;
       this.listMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.listMessages.FullRowSelect = true;
-      this.listMessages.HideSelection = false;
+      this.listMessages.FirstVisibleItemIndex = 0;
+      this.listMessages.HasHeader = true;
+      this.listMessages.HeaderHeight = 24;
+      this.listMessages.ImageList = null;
+      this.listMessages.ItemHeight = 15;
+      this.listMessages.ListViewItemSorter = null;
       this.listMessages.Location = new System.Drawing.Point(0, 0);
       this.listMessages.Name = "listMessages";
-      this.listMessages.OwnerDraw = true;
-      this.listMessages.SelectedTextBGColor = ((uint)(4278190335u));
-      this.listMessages.SelectedTextColor = ((uint)(4294967295u));
+      this.listMessages.ScrollAlwaysVisible = false;
+      this.listMessages.SelectedIndex = -1;
+      this.listMessages.SelectedItem = null;
+      this.listMessages.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listMessages.Size = new System.Drawing.Size(678, 200);
-      this.listMessages.SmallImageList = this.imageListCompileResult;
+      this.listMessages.SortColumn = -1;
+      this.listMessages.SortOrder = DecentForms.SortOrder.NONE;
       this.listMessages.TabIndex = 0;
-      this.listMessages.UseCompatibleStateImageBehavior = false;
-      this.listMessages.View = System.Windows.Forms.View.Details;
-      this.listMessages.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listMessages_ColumnClick);
-      this.listMessages.ItemActivate += new System.EventHandler(this.listMessages_ItemActivate);
-      // 
-      // columnHeader1
-      // 
-      this.columnHeader1.Text = ".";
-      this.columnHeader1.Width = 20;
-      // 
-      // columnHeader2
-      // 
-      this.columnHeader2.Text = "Line";
-      this.columnHeader2.Width = 50;
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "Code";
-      this.columnHeader5.Width = 49;
-      // 
-      // columnHeader3
-      // 
-      this.columnHeader3.Text = "File";
-      this.columnHeader3.Width = 200;
-      // 
-      // columnHeader4
-      // 
-      this.columnHeader4.Text = "Message";
-      this.columnHeader4.Width = 400;
+      this.listMessages.ItemActivate += new DecentForms.EventHandler(this.listMessages_ItemActivate);
+      this.listMessages.ColumnClicked += new DecentForms.EventHandler(this.listMessages_ColumnClicked);
       // 
       // contextCompilerMessage
       // 
@@ -160,13 +129,8 @@
     #endregion
 
     //private System.Windows.Forms.ListView listMessages;
-    private Controls.CSListView listMessages;
-    private System.Windows.Forms.ColumnHeader columnHeader2;
-    private System.Windows.Forms.ColumnHeader columnHeader1;
-    private System.Windows.Forms.ColumnHeader columnHeader3;
-    private System.Windows.Forms.ColumnHeader columnHeader4;
+    private DecentForms.ListControl listMessages;
     private System.Windows.Forms.ImageList imageListCompileResult;
-    private System.Windows.Forms.ColumnHeader columnHeader5;
     private System.Windows.Forms.ContextMenuStrip contextCompilerMessage;
     private System.Windows.Forms.ToolStripMenuItem jumpToFileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem ignoreWarningToolStripMenuItem;

@@ -133,7 +133,12 @@ namespace MediaTool
       GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
 
       bool[,]   errornousChars = new bool[( width + 7 ) / 8, ( height + 7 ) / 8];
-      var       charData = new List<RetroDevStudio.Formats.CharData>( errornousChars.Length );
+      var       charData = new List<RetroDevStudio.Formats.CharData>();
+      for ( int i = 0; i < errornousChars.Length; ++i )
+      {
+        charData.Add( new RetroDevStudio.Formats.CharData() );
+      }
+
       int       numErrors = 0;
 
       if ( !exportMC )
@@ -149,6 +154,13 @@ namespace MediaTool
       if ( numErrors > 0 )
       {
         System.Console.WriteLine( "Format did not match expectations (check for color clashes)" );
+        for ( int i = 0; i < charData.Count; ++i )
+        {
+          if ( !string.IsNullOrEmpty( charData[i].Error ) )
+          {
+            System.Console.WriteLine( $"  Problem in 8x8 block at {i % graphicScreen.BlockWidth}, {i / graphicScreen.BlockWidth}: {charData[i].Error}" );
+          }
+        }
         return 1;
       }
 

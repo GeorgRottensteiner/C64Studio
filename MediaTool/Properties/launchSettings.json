@@ -1,6 +1,11 @@
 {
   "profiles": {
-    "MediaTool": {
+    "GraphicScreen": {
+      "commandName": "Project",
+      "commandLineArgs": "-graphicscreen veil_046.graphicscreen -EXPORT veil_046.BITMAPSCREEN -type MULTICOLORBITMAP",
+      "workingDirectory": "C:\\Users\\georg\\Desktop"
+    },
+    "Sprites": {
       "commandName": "Project",
       "commandLineArgs": "-spriteproject BombJackDX.spriteproject -export bombjackdxlo.spr -type SPRITES -offset 96 -count 10",
       "workingDirectory": "d:\\projekte\\c64\\bombjackdx"

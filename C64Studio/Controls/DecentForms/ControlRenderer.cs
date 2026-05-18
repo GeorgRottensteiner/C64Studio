@@ -332,12 +332,46 @@ namespace DecentForms
 
 
 
+    public void DrawText( string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, TextFormat format, uint color )
+    {
+      DrawText( _Control.Font, Text, BoundsX, BoundsY, Width, Height, Alignment, format, color );
+    }
+
+
+
     public void DrawText( System.Drawing.Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, uint Color )
     {
       BoundsX -= _DisplayOffsetX;
       BoundsY -= _DisplayOffsetY;
 
       TextRenderer.DrawText( _G, Text, Font, new Rectangle( BoundsX, BoundsY, Width, Height ), ToColor( Color ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
+    }
+
+
+
+    public void DrawText( System.Drawing.Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, TextFormat format, uint Color )
+    {
+      BoundsX -= _DisplayOffsetX;
+      BoundsY -= _DisplayOffsetY;
+
+      TextRenderer.DrawText( _G, Text, Font, new Rectangle( BoundsX, BoundsY, Width, Height ), ToColor( Color ), 
+                             MapAlignmentToFlags( Alignment ) 
+                             | TextFormatFlags.PreserveGraphicsClipping
+                             | MapFormatToFlags( format )
+                             );
+    }
+
+
+
+    private TextFormatFlags MapFormatToFlags( TextFormat format )
+    {
+      var flags = TextFormatFlags.Default;
+      if ( ( format & TextFormat.PATH_ELLIPSIS ) != 0 )
+      {
+        flags |= TextFormatFlags.PathEllipsis;
+      }
+
+      return flags;
     }
 
 
@@ -1375,6 +1409,7 @@ namespace DecentForms
                 {
                   DrawText( listControl.Items[itemIndex].SubItems[column].Text, rcItem.Left, rcItem.Top, rcItem.Width, rcItem.Height,
                             listControl.Columns[column].Alignment,
+                            listControl.Columns[column].Format,
                             color );
                 }
               }

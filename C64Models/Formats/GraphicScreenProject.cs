@@ -92,7 +92,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    private int BlockWidth
+    public int BlockWidth
     {
       get
       {
@@ -102,7 +102,7 @@ namespace RetroDevStudio.Formats
 
 
 
-    private int BlockHeight
+    public int BlockHeight
     {
       get
       {
