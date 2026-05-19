@@ -789,6 +789,10 @@ namespace RetroDevStudio.Formats
 
       bool doneDetermination = false;
 
+      if ( ( x == 21 ) && ( y == 0 ) )
+      {
+        int xx = 2;
+      }
       do
       {
         // set current variant
@@ -851,12 +855,14 @@ namespace RetroDevStudio.Formats
       }
       while ( !doneDetermination );
 
+      // no valid mapping found, report error?
+      /*
       if ( ( ErrornousBlocks != null )
       &&   ( !ErrornousBlocks[x, y] ) )
       {
         ErrornousBlocks[x, y] = true;
         ++numErrors;
-      }
+      }*/
       return numErrors;
     }
 

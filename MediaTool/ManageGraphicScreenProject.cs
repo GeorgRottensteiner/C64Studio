@@ -41,8 +41,8 @@ namespace MediaTool
       string    exportType = ArgParser.Parameter( "TYPE" );
 
       if ( !ValidateExportType( "graphicscreen file", exportType, 
-          new string[] { "MULTICOLORBITMAPSCREENCOLOR", "MULTICOLORBITMAPCOLORSCREEN", "MULTICOLORBITMAPSCREEN", "MULTICOLORBITMAPCOLOR", "MULTICOLORBITMAP",
-                         "HIRESBITMAPSCREENCOLOR", "HIRESBITMAPCOLORSCREEN", "HIRESBITMAPSCREEN", "HIRESBITMAPCOLOR", "HIRESBITMAP" } ) )
+          new string[] { "MULTICOLORBITMAPSCREENCOLOR", "MULTICOLORBITMAPCOLORSCREEN", "MULTICOLORBITMAPSCREEN", "MULTICOLORBITMAPCOLOR", "MULTICOLORBITMAP", "MULTICOLORSCREEN", "MULTICOLORCOLOR",
+                         "HIRESBITMAPSCREENCOLOR", "HIRESBITMAPCOLORSCREEN", "HIRESBITMAPSCREEN", "HIRESBITMAPCOLOR", "HIRESSCREEN", "HIRESCOLOR", "HIRESBITMAP" } ) )
       {
         return 1;
       }
@@ -190,7 +190,7 @@ namespace MediaTool
         }
         else if ( exportType.StartsWith( "COLOR" ) )
         {
-          exportData.Append( bitmapData );
+          exportData.Append( screenColor );
           exportType = exportType.Substring( "COLOR".Length );
         }
         else
