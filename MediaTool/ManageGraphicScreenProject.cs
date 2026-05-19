@@ -1,4 +1,5 @@
 ﻿using GR.Image;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -123,9 +124,17 @@ namespace MediaTool
         height = graphicScreen.ScreenHeight;
       }
 
-      bool    exportMC = exportType.Contains( "MULTICOLOR" );
+      bool    exportMC = exportType.StartsWith( "MULTICOLOR" );
+      if ( exportMC )
+      {
+        exportType = exportType.Substring( "MULTICOLOR".Length );
+      }
+      else
+      {
+        exportType = exportType.Substring( "HIRES".Length );
+      }
       bool    exportScreen = exportType.Contains( "SCREEN" );
-      bool    exportColors = exportType.Contains( "COLORS" );
+      bool    exportColors = exportType.Contains( "COLOR" );
       bool    exportBitmap = exportType.Contains( "BITMAP" );
 
       GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
@@ -167,31 +176,28 @@ namespace MediaTool
       // build export data
       GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
 
-      if ( exportType.Contains( "BITMAPSCREENCOLORS" ) )
+      while ( exportType.Length > 0 )
       {
-        exportData.Append( bitmapData );
-        exportData.Append( screenChar );
-        exportData.Append( screenColor );
-      }
-      else if ( exportType.Contains( "BITMAPCOLORSSCREEN" ) )
-      {
-        exportData.Append( bitmapData );
-        exportData.Append( screenColor );
-        exportData.Append( screenChar );
-      }
-      else if ( exportType.Contains( "BITMAPCOLORS" ) )
-      {
-        exportData.Append( bitmapData );
-        exportData.Append( screenColor );
-      }
-      else if ( exportType.Contains( "BITMAPSCREEN" ) )
-      {
-        exportData.Append( bitmapData );
-        exportData.Append( screenChar );
-      }
-      else if ( exportType.Contains( "BITMAP" ) )
-      {
-        exportData.Append( bitmapData );
+        if ( exportType.StartsWith( "BITMAP" ) )
+        {
+          exportData.Append( bitmapData );
+          exportType = exportType.Substring( "BITMAP".Length );
+        }
+        else if ( exportType.StartsWith( "SCREEN" ) )
+        {
+          exportData.Append( screenChar );
+          exportType = exportType.Substring( "SCREEN".Length );
+        }
+        else if ( exportType.StartsWith( "COLOR" ) )
+        {
+          exportData.Append( bitmapData );
+          exportType = exportType.Substring( "COLOR".Length );
+        }
+        else
+        {
+          System.Console.WriteLine( $"'{exportType}' is not supported for media 'graphicscreen file'" );
+          return 1;
+        }
       }
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), exportData ) )
