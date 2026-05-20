@@ -1760,16 +1760,13 @@ namespace RetroDevStudio.Documents
 
     private bool CheckForFCMCharsetErrors( int AllowedNumberOfChars )
     {
-      Debug.Log( "CheckExportType inside c" );
       ClearErrorFlags();
-      Debug.Log( "CheckExportType inside d" );
 
       // check for duplicates
       int items = m_Chars.Count;
       int foldedItems = 0;
       int curIndex = 0;
 
-      Debug.Log( "CheckExportType inside e" );
       var images = new ByteBuffer[m_Chars.Count];
       for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
       {
@@ -1810,7 +1807,6 @@ namespace RetroDevStudio.Documents
           ++curIndex;
         }
       }
-      Debug.Log( "CheckExportType inside f" );
       labelCharInfo.Text = "";
       if ( items - foldedItems > AllowedNumberOfChars )
       {
@@ -2062,16 +2058,13 @@ namespace RetroDevStudio.Documents
 
     private void btnCheck_Click( DecentForms.ControlBase Sender )
     {
-      Debug.Log( "CheckExportType a" );
       CheckExportType();
-      Debug.Log( "CheckExportType b" );
     }
 
 
 
     public bool CheckExportType()
     {
-      Debug.Log( "CheckExportType inside a" );
       foreach ( Formats.CharData aChar in m_Chars )
       {
         aChar.Error = "";
@@ -2079,7 +2072,6 @@ namespace RetroDevStudio.Documents
         aChar.Replacement = null;
       }
 
-      Debug.Log( "CheckExportType inside b" );
       bool  hasErrors = false;
 
       switch ( (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex )
@@ -3531,9 +3523,7 @@ namespace RetroDevStudio.Documents
 
     private void btnExport_Click( DecentForms.ControlBase Sender )
     {
-      Debug.Log( "CheckExportType a" );
       CheckExportType();
-      Debug.Log( "CheckExportType b" );
 
       var exportInfo = new ExportGraphicScreenInfo()
       {
@@ -3549,7 +3539,6 @@ namespace RetroDevStudio.Documents
 
       editExportOutput.Text = "";
       editExportOutput.Font = m_DefaultOutputFont;
-      Debug.Log( "CheckExportType c" );
       if ( !_ExportForm.HandleExport( this, exportInfo, editExportOutput, DocumentInfo ) )
       {
         // if export as charset was chosen and failed with checks, redraw

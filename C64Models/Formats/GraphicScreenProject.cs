@@ -338,15 +338,15 @@ namespace RetroDevStudio.Formats
       var completeColorMapping = new GR.Collections.Map<byte, byte>();
 
 
-      for ( int y = CharY; y < HeightChars; ++y )
+      for ( int y = CharY; y < CharY + HeightChars; ++y )
       {
-        for ( int x = CharX; x < WidthChars; ++x )
+        for ( int x = CharX; x < CharX + WidthChars; ++x )
         {
           // ein zeichen-block
           usedColors.Clear();
           if ( ErrornousBlocks != null )
           {
-            ErrornousBlocks[x, y] = false;
+            ErrornousBlocks[x - CharX, y - CharY] = false;
           }
           for ( int charY = 0; charY < 8; ++charY )
           {
@@ -361,7 +361,7 @@ namespace RetroDevStudio.Formats
                 }
                 if ( ErrornousBlocks != null )
                 {
-                  ErrornousBlocks[x, y] = true;
+                  ErrornousBlocks[x - CharX, y - CharY] = true;
                 }
                 ++numErrors;
               }
@@ -378,7 +378,7 @@ namespace RetroDevStudio.Formats
             }
             if ( ErrornousBlocks != null )
             {
-              ErrornousBlocks[x, y] = true;
+              ErrornousBlocks[x - CharX, y - CharY] = true;
             }
             ++numErrors;
           }
@@ -459,25 +459,26 @@ namespace RetroDevStudio.Formats
 
                 currentColorMapping.Add( colorIndex, (byte)colorTarget );
 
+                int screenCharBytePos = ( x - CharX ) + ( y - CharY ) * WidthChars;
                 if ( colorTarget == 0 )
                 {
                   // upper screen char nibble
-                  byte value = screenChar.ByteAt( x + y * WidthChars );
+                  byte value = screenChar.ByteAt( screenCharBytePos );
                   value &= 0x0f;
                   value |= (byte)( colorIndex << 4 );
 
-                  screenChar.SetU8At( x + y * WidthChars, value );
+                  screenChar.SetU8At( screenCharBytePos, value );
                   usedColors[colorIndex] = 1;
                   firstColorIndex = colorIndex;
                 }
                 else if ( colorTarget == 1 )
                 {
                   // lower nibble in screen char
-                  byte value = screenChar.ByteAt( x + y * WidthChars );
+                  byte value = screenChar.ByteAt( screenCharBytePos );
                   value &= 0xf0;
                   value |= (byte)( colorIndex );
 
-                  screenChar.SetU8At( x + y * WidthChars, value );
+                  screenChar.SetU8At( screenCharBytePos, value );
                   usedColors[colorIndex] = 2;
                 }
 
@@ -509,7 +510,7 @@ namespace RetroDevStudio.Formats
                 {
                   // other color
                   byte colorValue = usedColors[colorIndex];
-                  int bitmapIndex = x * 8 + y * WidthChars * 8 + charY;
+                  int bitmapIndex = ( x - CharX ) * 8 + ( y - CharY ) * WidthChars * 8 + charY;
 
                   byte value = bitmapData.ByteAt( bitmapIndex );
                   int mask = ( 1 << ( 7 - charX ) );
@@ -543,16 +544,16 @@ namespace RetroDevStudio.Formats
 
       GR.Collections.Map<byte, ColorMappingTarget> usedColors = new GR.Collections.Map<byte, ColorMappingTarget>();
 
-      for ( int y = 0; y < HeightChars; ++y )
+      for ( int y = CharY; y < CharY + HeightChars; ++y )
       {
-        for ( int x = 0; x < WidthChars; ++x )
+        for ( int x = CharX; x < CharX + WidthChars; ++x )
         {
           // ein zeichen-block
           usedColors.Clear();
           usedBitPattern.Clear();
           if ( ErrornousBlocks != null )
           {
-            ErrornousBlocks[x, y] = false;
+            ErrornousBlocks[x - CharX, y - CharY] = false;
           }
           for ( int charY = 0; charY < 8; ++charY )
           {
@@ -567,7 +568,7 @@ namespace RetroDevStudio.Formats
                 }
                 if ( ErrornousBlocks != null )
                 {
-                  ErrornousBlocks[x, y] = true;
+                  ErrornousBlocks[x - CharX, y - CharY] = true;
                 }
                 ++numErrors;
               }
@@ -587,7 +588,7 @@ namespace RetroDevStudio.Formats
             }
             if ( ErrornousBlocks != null )
             {
-              ErrornousBlocks[x, y] = true;
+              ErrornousBlocks[x - CharX, y - CharY] = true;
             }
             ++numErrors;
           }
@@ -616,31 +617,33 @@ namespace RetroDevStudio.Formats
                   usedPatterns[colorIndex].Add( recommendedPattern[colorIndex] );
                   usedBitPattern.Add( recommendedPattern[colorIndex] );
 
+                  int screenCharBytePos1 = ( x - CharX ) + ( y - CharY ) * WidthChars;
+
                   switch ( recommendedPattern[colorIndex] )
                   {
                     case ColorMappingTarget.BITS_01:
                       {
                         // upper screen char nibble
-                        byte value = screenChar.ByteAt( x + y * WidthChars );
+                        byte value = screenChar.ByteAt( screenCharBytePos1 );
                         value &= 0x0f;
                         value |= (byte)( colorIndex << 4 );
 
-                        screenChar.SetU8At( x + y * WidthChars, value );
+                        screenChar.SetU8At( screenCharBytePos1, value );
                       }
                       break;
                     case ColorMappingTarget.BITS_10:
                       {
                         // lower nibble in screen char
-                        byte value = screenChar.ByteAt( x + y * WidthChars );
+                        byte value = screenChar.ByteAt( screenCharBytePos1 );
                         value &= 0xf0;
                         value |= (byte)( colorIndex );
 
-                        screenChar.SetU8At( x + y * WidthChars, value );
+                        screenChar.SetU8At( screenCharBytePos1, value );
                       }
                       break;
                     case ColorMappingTarget.BITS_11:
                       // color ram
-                      screenColor.SetU8At( x + y * WidthChars, colorIndex );
+                      screenColor.SetU8At( screenCharBytePos1, colorIndex );
                       break;
                   }
                   continue;
@@ -660,30 +663,31 @@ namespace RetroDevStudio.Formats
                 }
                 usedBitPattern.Add( bitPattern[colorTarget] );
 
+                int screenCharBytePos = ( x - CharX ) + ( y - CharY ) * WidthChars;
                 if ( colorTarget == 0 )
                 {
                   // upper screen char nibble
-                  byte value = screenChar.ByteAt( x + y * WidthChars );
+                  byte value = screenChar.ByteAt( screenCharBytePos );
                   value &= 0x0f;
                   value |= (byte)( colorIndex << 4 );
 
-                  screenChar.SetU8At( x + y * WidthChars, value );
+                  screenChar.SetU8At( screenCharBytePos, value );
                   usedColors[colorIndex] = ColorMappingTarget.BITS_01;
                 }
                 else if ( colorTarget == 1 )
                 {
                   // lower nibble in screen char
-                  byte value = screenChar.ByteAt( x + y * WidthChars );
+                  byte value = screenChar.ByteAt( screenCharBytePos );
                   value &= 0xf0;
                   value |= (byte)( colorIndex );
 
-                  screenChar.SetU8At( x + y * WidthChars, value );
+                  screenChar.SetU8At( screenCharBytePos, value );
                   usedColors[colorIndex] = ColorMappingTarget.BITS_10;
                 }
                 else if ( colorTarget == 2 )
                 {
                   // color ram
-                  screenColor.SetU8At( x + y * WidthChars, colorIndex );
+                  screenColor.SetU8At( screenCharBytePos, colorIndex );
                   usedColors[colorIndex] = ColorMappingTarget.BITS_11;
                 }
                 ++colorTarget;
@@ -718,7 +722,7 @@ namespace RetroDevStudio.Formats
                       colorValue = 0x03;
                       break;
                   }
-                  int bitmapIndex = x * 8 + y * 8 * WidthChars + charY;
+                  int bitmapIndex = ( x - CharX ) * 8 + ( y - CharY ) * WidthChars * 8 + charY;
 
                   byte value = bitmapData.ByteAt( bitmapIndex );
                   if ( charX == 0 )
@@ -789,10 +793,6 @@ namespace RetroDevStudio.Formats
 
       bool doneDetermination = false;
 
-      if ( ( x == 21 ) && ( y == 0 ) )
-      {
-        int xx = 2;
-      }
       do
       {
         // set current variant
