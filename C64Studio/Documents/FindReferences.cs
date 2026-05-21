@@ -26,8 +26,8 @@ namespace RetroDevStudio.Documents
 
       listResults.Columns.Add( "Line", 50 );
       listResults.Columns.Add( "File", 200 );
-      listResults.Columns.Add( "Text", 400 );
       listResults.Columns.Add( "Add. Info", 100 );
+      listResults.Columns.Add( "Text", 400 );
 
       listResults.ColumnClicked += listMessages_ColumnClick;
 
@@ -224,6 +224,7 @@ namespace RetroDevStudio.Documents
       item.SubItems.Add( "" );
       item.SubItems.Add( "" );
       item.SubItems.Add( "" );
+      item.SubItems.Add( "" );
 
       if ( ASMInfo.FindTrueLineSource( GlobalLineIndex, out string filename, out int localLineIndex, out Types.ASM.SourceInfo SourceInfo ) )
       {
@@ -329,9 +330,9 @@ namespace RetroDevStudio.Documents
       if ( ( curPos != -1 )
       &&   ( lastPos != -1 ) )
       {
-        return TextToSearch.Substring( lastPos, curPos - lastPos - 1 );
+        return TextToSearch.Substring( lastPos, curPos - lastPos - 1 ).Trim();
       }
-      return TextToSearch.Substring( lastPos );
+      return TextToSearch.Substring( lastPos ).Trim();
     }
 
 
