@@ -26,7 +26,7 @@ namespace RetroDevStudio.Documents
 
       listResults.Columns.Add( "Line", 50 );
       listResults.Columns.Add( "File", 200 );
-      listResults.Columns.Add( "Add. Info", 100 );
+      listResults.Columns.Add( "Zone", 100 );
       listResults.Columns.Add( "Text", 400 );
 
       listResults.ColumnClicked += listMessages_ColumnClick;
@@ -238,7 +238,7 @@ namespace RetroDevStudio.Documents
         item.SubItems[1].Text = filename;
         if ( ASMInfo.FindZoneInfoFromDocumentLine( filename, localLineIndex, out string zone, out string cheapLabelZone ) )
         {
-          item.SubItems[2].Text = "zone " + zone;
+          item.SubItems[2].Text = zone;
         }
 
         string    lineContent = "";
@@ -302,7 +302,7 @@ namespace RetroDevStudio.Documents
           }
         }
 
-        item.SubItems[3].Text = lineContent.Replace( "\t", "  " );
+        item.SubItems[3].Text = lineContent.Replace( "\t", "  " ).Trim();
       }
       listResults.Items.Add( item );
     }
