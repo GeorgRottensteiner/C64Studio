@@ -222,6 +222,14 @@ namespace RetroDevStudio.Parser
             count = countSymbol.ToInt32();
           }
         }
+        else if ( paramTokens.Count == 3 )
+        {
+          if ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startSymbol ) )
+          {
+            startIndex = startSymbol.ToInt32();
+            count = screenProject.Screens.Count - startIndex;
+          }
+        }
         else
         {
           if ( ( paramTokens.Count >= 3 )
@@ -304,7 +312,7 @@ namespace RetroDevStudio.Parser
           var exportInfo = new ExportCharsetScreenInfo();
           exportInfo.RowByRow = !method.EndsWith( "VERT" );
           exportInfo.Area = new GR.Math.Rectangle( x, y, widthToUse, heightToUse );
-          exportInfo.ScreensToExport.Add( screenIndex );
+          exportInfo.ScreensToExport.Add( startIndex + screenIndex );
 
           if ( !screenProject.ExportToBuffer( exportInfo ) )
           {

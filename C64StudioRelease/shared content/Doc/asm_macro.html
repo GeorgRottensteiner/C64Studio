@@ -1286,10 +1286,11 @@
           char
         </td>
         <td>
-          Index, Count
+          Index[, Count]
         </td>
         <td>
-          Exports all bytes of selected screens character data
+          Exports all bytes of selected screens character data.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1320,10 +1321,11 @@
           charvert
         </td>
         <td>
-          Index, Count
+          Index[, Count]
         </td>
         <td>
-          Exports all bytes of selected screens character data, column major
+          Exports all bytes of selected screens character data, column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1354,10 +1356,11 @@
           char
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of selected screens character data
+          Exports width * height bytes starting at screen coordinates x,y of selected screens character data.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1388,10 +1391,11 @@
           charvert
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of selected screens character data, column major
+          Exports width * height bytes starting at screen coordinates x,y of selected screens character data, column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1422,10 +1426,11 @@
           color
         </td>
         <td>
-          Index,count
+          Index[, Count]
         </td>
         <td>
-          Exports all bytes of selected screens color data
+          Exports all bytes of selected screens color data.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1456,10 +1461,11 @@
           colorvert
         </td>
         <td>
-          Index,count
+          Index[, Count]
         </td>
         <td>
-          Exports all bytes of selected screens color data, column major
+          Exports all bytes of selected screens color data, column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1490,10 +1496,11 @@
           color
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of selected screens color data
+          Exports width * height bytes starting at screen coordinates x,y of selected screens color data.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1524,10 +1531,11 @@
           colorvert
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of selected screens color data, column major
+          Exports width * height bytes starting at screen coordinates x,y of selected screens color data, column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1559,11 +1567,12 @@
           charcolor
         </td>
         <td>
-          Index,count
+          Index[, Count]
         </td>
         <td>
           Exports all bytes of the screen char data<br />
-          followed by all bytes of the screen color data, for selected screens
+          followed by all bytes of the screen color data, for selected screens.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1596,12 +1605,13 @@
           charcolorvert
         </td>
         <td>
-          Index,count
+          Index[, Count]
         </td>
         <td>
           Exports all bytes of the screen char data<br />
           followed by all bytes of the screen color data<br />
-          For selected screens, both column major
+          For selected screens, both column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1633,11 +1643,12 @@
           charcolor
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
-          followed by width * height bytes starting at screen coordinates x,y of the screen color data, for selected screens
+          followed by width * height bytes starting at screen coordinates x,y of the screen color data, for selected screens.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1670,12 +1681,13 @@
           charcolorvert
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
           followed by width * height bytes starting at screen coordinates x,y of the screen color data<br />
-          For selected screens, both column major
+          For selected screens, both column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1707,11 +1719,12 @@
           colorchar
         </td>
         <td>
-          Index,count
+          Index[, Count]
         </td>
         <td>
           Exports all bytes of the screen color data<br />
-          followed by all bytes of the screen char data, for selected screens
+          followed by all bytes of the screen char data, for selected screens.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1744,12 +1757,13 @@
           colorcharvert
         </td>
         <td>
-          Index,count
+          Index[, Count]
         </td>
         <td>
           Exports all bytes of the screen color data<br />
           followed by all bytes of the screen char data<br />
-          For selected screens, both column major
+          For selected screens, both column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1781,11 +1795,12 @@
           colorchar
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
-          followed by width * height bytes starting at screen coordinates x,y of the screen char data, for selected screens
+          followed by width * height bytes starting at screen coordinates x,y of the screen char data, for selected screens.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
@@ -1818,12 +1833,13 @@
           colorcharvert
         </td>
         <td>
-          x,y,width,height,index,count
+          x,y,width,height,index[,count]
         </td>
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
           followed by width * height bytes starting at screen coordinates x,y of the screen char data<br />
-          For selected screens, both column major
+          For selected screens, both column major.
+          If count is omitted all screens starting at index are exported
         </td>
       </tr>
       <tr>
