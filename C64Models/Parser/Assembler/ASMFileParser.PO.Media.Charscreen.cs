@@ -24,6 +24,14 @@ namespace RetroDevStudio.Parser
       // colorvert,x,y,width,height[,start,count]
       // charcolorvert,x,y,width,height[,start,count]
       // colorcharvert,x,y,width,height[,start,count]
+      // char[,start,count]
+      // color[,start,count]
+      // charcolor[,start,count]
+      // colorchar[,start,count]
+      // charvert[,start,count]
+      // colorvert[,start,count]
+      // charcolorvert[,start,count]
+      // colorcharvert[,start,count]
       // palette[,start,count]
       if ( paramTokens.Count > 8 )
       {
@@ -205,39 +213,51 @@ namespace RetroDevStudio.Parser
         int   startIndex = 0;
         int   count = screenProject.Screens.Count;
 
-        if ( ( paramTokens.Count >= 3 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo xSymbol ) ) )
+        if ( paramTokens.Count == 4 )
         {
-          x = xSymbol.ToInt32();
-        }
-        if ( ( paramTokens.Count >= 4 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo ySymbol ) ) )
-        {
-          y = ySymbol.ToInt32();
-        }
-        if ( ( paramTokens.Count >= 5 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo wSymbol ) ) )
-        {
-          w = wSymbol.ToInt32();
-        }
-        if ( ( paramTokens.Count >= 6 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo hSymbol ) ) )
-        {
-          h = hSymbol.ToInt32();
-        }
-        if ( ( paramTokens.Count >= 7 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[6], out SymbolInfo sSymbol ) ) )
-        {
-          startIndex = sSymbol.ToInt32();
-        }
-        if ( ( paramTokens.Count >= 8 )
-        &&   ( EvaluateTokens( lineIndex, paramTokens[7], out SymbolInfo cSymbol ) ) )
-        {
-          count = cSymbol.ToInt32();
+          if ( ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo startSymbol ) )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo countSymbol ) ) )
+          {
+            startIndex = startSymbol.ToInt32();
+            count = countSymbol.ToInt32();
+          }
         }
         else
         {
-          count = screenProject.Screens.Count - startIndex;
+          if ( ( paramTokens.Count >= 3 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], out SymbolInfo xSymbol ) ) )
+          {
+            x = xSymbol.ToInt32();
+          }
+          if ( ( paramTokens.Count >= 4 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[3], out SymbolInfo ySymbol ) ) )
+          {
+            y = ySymbol.ToInt32();
+          }
+          if ( ( paramTokens.Count >= 5 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[4], out SymbolInfo wSymbol ) ) )
+          {
+            w = wSymbol.ToInt32();
+          }
+          if ( ( paramTokens.Count >= 6 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[5], out SymbolInfo hSymbol ) ) )
+          {
+            h = hSymbol.ToInt32();
+          }
+          if ( ( paramTokens.Count >= 7 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[6], out SymbolInfo sSymbol ) ) )
+          {
+            startIndex = sSymbol.ToInt32();
+          }
+          if ( ( paramTokens.Count >= 8 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[7], out SymbolInfo cSymbol ) ) )
+          {
+            count = cSymbol.ToInt32();
+          }
+          else
+          {
+            count = screenProject.Screens.Count - startIndex;
+          }
         }
         if ( ( startIndex + count > screenProject.Screens.Count )
         ||   ( startIndex < 0 )
@@ -255,7 +275,7 @@ namespace RetroDevStudio.Parser
 
         for ( int screenIndex = 0; screenIndex < count; ++screenIndex )
         {
-          var screen = screenProject.Screens[screenIndex];
+          var screen = screenProject.Screens[startIndex + screenIndex];
 
           int widthToUse = w;
           int heightToUse = h;

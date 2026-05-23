@@ -1272,7 +1272,24 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen character data
+          Exports all bytes of all screens character data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          char
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports all bytes of selected screens character data
         </td>
       </tr>
       <tr>
@@ -1289,7 +1306,24 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen character data, column major
+          Exports all bytes of all screens character data, column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charvert
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports all bytes of selected screens character data, column major
         </td>
       </tr>
       <tr>
@@ -1306,7 +1340,24 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen character data
+          Exports width * height bytes starting at screen coordinates x,y of all screens character data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          char
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of selected screens character data
         </td>
       </tr>
       <tr>
@@ -1323,7 +1374,24 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen character data, column major
+          Exports width * height bytes starting at screen coordinates x,y of all screens character data, column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charvert
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of selected screens character data, column major
         </td>
       </tr>
       <tr>
@@ -1340,7 +1408,24 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data
+          Exports all bytes of all screens color data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          color
+        </td>
+        <td>
+          Index,count
+        </td>
+        <td>
+          Exports all bytes of selected screens color data
         </td>
       </tr>
       <tr>
@@ -1357,7 +1442,24 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data, column major
+          Exports all bytes of all screens color data, column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          colorvert
+        </td>
+        <td>
+          Index,count
+        </td>
+        <td>
+          Exports all bytes of selected screens color data, column major
         </td>
       </tr>
       <tr>
@@ -1374,7 +1476,24 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen color data
+          Exports width * height bytes starting at screen coordinates x,y of all screens color data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          color
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of selected screens color data
         </td>
       </tr>
       <tr>
@@ -1391,7 +1510,24 @@
           x,y,width,height
         </td>
         <td>
-          Exports width * height bytes starting at screen coordinates x,y of the screen color data, column major
+          Exports width * height bytes starting at screen coordinates x,y of all screens color data, column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          colorvert
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of selected screens color data, column major
         </td>
       </tr>
       <tr>
@@ -1408,8 +1544,26 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen char data<br />
-          followed by 40 * 25 bytes of the screen color data
+          Exports all bytes of the screen char data<br />
+          followed by all bytes of the screen color data, for all screens
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charcolor
+        </td>
+        <td>
+          Index,count
+        </td>
+        <td>
+          Exports all bytes of the screen char data<br />
+          followed by all bytes of the screen color data, for selected screens
         </td>
       </tr>
       <tr>
@@ -1426,9 +1580,28 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen char data<br />
-          followed by 40 * 25 bytes of the screen color data<br />
-          Both column major
+          Exports all bytes of the screen char data<br />
+          followed by all bytes of the screen color data<br />
+          For all screens, both column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charcolorvert
+        </td>
+        <td>
+          Index,count
+        </td>
+        <td>
+          Exports all bytes of the screen char data<br />
+          followed by all bytes of the screen color data<br />
+          For selected screens, both column major
         </td>
       </tr>
       <tr>
@@ -1446,7 +1619,25 @@
         </td>
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
-          followed by width * height bytes starting at screen coordinates x,y of the screen color data
+          followed by width * height bytes starting at screen coordinates x,y of the screen color data, for all screens
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charcolor
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen color data, for selected screens
         </td>
       </tr>
       <tr>
@@ -1465,7 +1656,26 @@
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
           followed by width * height bytes starting at screen coordinates x,y of the screen color data<br />
-          Both column major
+          For all screens, both column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          charcolorvert
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of the screen char data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen color data<br />
+          For selected screens, both column major
         </td>
       </tr>
       <tr>
@@ -1482,8 +1692,26 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data<br />
-          followed by 40 * 25 bytes of the screen char data
+          Exports all bytes of the screen color data<br />
+          followed by all bytes of the screen char data, for all screens
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          colorchar
+        </td>
+        <td>
+          Index,count
+        </td>
+        <td>
+          Exports all bytes of the screen color data<br />
+          followed by all bytes of the screen char data, for selected screens
         </td>
       </tr>
       <tr>
@@ -1500,9 +1728,28 @@
           None
         </td>
         <td>
-          Exports 40 * 25 bytes of the screen color data<br />
-          followed by 40 * 25 bytes of the screen char data<br />
-          Both column major
+          Exports all bytes of the screen color data<br />
+          followed by all bytes of the screen char data<br />
+          For all screens, both column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          colorcharvert
+        </td>
+        <td>
+          Index,count
+        </td>
+        <td>
+          Exports all bytes of the screen color data<br />
+          followed by all bytes of the screen char data<br />
+          For selected screens, both column major
         </td>
       </tr>
       <tr>
@@ -1520,7 +1767,25 @@
         </td>
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
-          followed by width * height bytes starting at screen coordinates x,y of the screen char data
+          followed by width * height bytes starting at screen coordinates x,y of the screen char data, for all screens
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          colorchar
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen char data, for selected screens
         </td>
       </tr>
       <tr>
@@ -1539,7 +1804,26 @@
         <td>
           Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
           followed by width * height bytes starting at screen coordinates x,y of the screen char data<br />
-          Both column major
+          For all screens, both column major
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Screen Project File
+        </td>
+        <td>
+          *.charscreen
+        </td>
+        <td>
+          colorcharvert
+        </td>
+        <td>
+          x,y,width,height,index,count
+        </td>
+        <td>
+          Exports width * height bytes starting at screen coordinates x,y of the screen color data<br />
+          followed by width * height bytes starting at screen coordinates x,y of the screen char data<br />
+          For selected screens, both column major
         </td>
       </tr>
       <tr>
