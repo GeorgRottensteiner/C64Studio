@@ -3919,9 +3919,10 @@ namespace RetroDevStudio.Documents
       };
       screen.SetScreenSize( width, height );
 
-      comboScreens.Items.Add( screen.Name );
-      m_CharsetScreen.Screens.Add( screen );
-      SetModified();
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenAdd( this, m_CharsetScreen, m_CurrentScreenIndex + 1 ) );
+      AddScreen( m_CurrentScreenIndex + 1, screen );
+
+      comboScreens.SelectedIndex = m_CurrentScreenIndex + 1;
     }
 
 
@@ -3934,7 +3935,6 @@ namespace RetroDevStudio.Documents
       }
 
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenRemove( this, m_CharsetScreen, m_CurrentScreenIndex ) );
-
       RemoveScreen( m_CurrentScreenIndex );
     }
 
@@ -4056,9 +4056,9 @@ namespace RetroDevStudio.Documents
         screen.Chars[i] = CurrentScreen.Chars[i];
       }
 
-      comboScreens.Items.Add( screen.Name );
-      m_CharsetScreen.Screens.Add( screen );
-      SetModified();
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenAdd( this, m_CharsetScreen, m_CurrentScreenIndex + 1 ) );
+      AddScreen( m_CurrentScreenIndex + 1, screen );
+      comboScreens.SelectedIndex = m_CurrentScreenIndex + 1;
     }
 
 
