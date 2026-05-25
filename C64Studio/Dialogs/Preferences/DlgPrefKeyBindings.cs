@@ -31,6 +31,11 @@ namespace RetroDevStudio.Dialogs.Preferences
       _Keywords.AddRange( new string[] { "keys", "binding", "hotkey" } );
 
       InitializeComponent();
+
+      listFunctions.Columns.Add( "State", 126 );
+      listFunctions.Columns.Add( "Function", 222 );
+      listFunctions.Columns.Add( "Binding", 113 );
+      listFunctions.Columns.Add( "2nd Binding", 113 );
     }
 
 
@@ -103,7 +108,6 @@ namespace RetroDevStudio.Dialogs.Preferences
     private void RefillAcceleratorList()
     {
       listFunctions.Items.Clear();
-      //foreach ( Types.Function function in Enum.GetValues( typeof( Types.Function ) ) )
       foreach ( Types.Function function in Core.Settings.Functions.OrderBy( fk => fk.Value.OrderIndex ).Select( fk => fk.Key ) )
       {
         if ( function == RetroDevStudio.Types.Function.NONE )
@@ -115,7 +119,7 @@ namespace RetroDevStudio.Dialogs.Preferences
           continue;
         }
 
-        ListViewItem itemF = new ListViewItem();
+        var itemF = new DecentForms.ListControlItem();
 
         itemF.Text = GR.EnumHelper.GetDescription( Core.Settings.Functions[function].State );
         itemF.SubItems.Add( Core.Settings.Functions[function].Description );
@@ -139,7 +143,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void listFunctions_SelectedIndexChanged( object sender, EventArgs e )
+    private void listFunctions_SelectedIndexChanged( DecentForms.ControlBase sender )
     {
       if ( listFunctions.SelectedItems.Count == 0 )
       {

@@ -27,7 +27,7 @@ namespace RetroDevStudio.Documents
       listMessages.SortOrder = DecentForms.SortOrder.ASCENDING;
       listMessages.ListViewItemSorter = new CompileResultItemComparer();
 
-      listMessages.Columns.Add( ".", 20 );
+      listMessages.Columns.Add( "", 20 );
       listMessages.Columns[0].Sizable = false;
       listMessages.Columns.Add( "Line", 50 );
       listMessages.Columns.Add( "Code", 49 );

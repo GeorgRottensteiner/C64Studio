@@ -506,7 +506,7 @@ namespace DecentForms
       int     potentialVScrollWidth = needVerticalScrollbar ? _ScrollBarV.Width : 0;
       int     fullWidth = FullWidth();
 
-      if ( fullWidth > ClientSize.Width - potentialVScrollWidth )
+      if ( fullWidth > ( ClientSize.Width - potentialVScrollWidth ) )
       {
         _ScrollBarH.Visible = true;
         _ScrollBarH.Bounds = new System.Drawing.Rectangle( 0, ClientSize.Height - _ScrollBarH.Height, ClientSize.Width - potentialVScrollWidth, _ScrollBarH.Height );
@@ -527,12 +527,14 @@ namespace DecentForms
       {
         _ScrollBarV.Visible  = true;
 
+        int vscrollHeight = ClientSize.Height;
         int usableHeight = ClientSize.Height - _HeaderHeight;
         if ( needHorizontalScrollbar )
         {
           usableHeight -= _ScrollBarH.Height;
+          vscrollHeight -= _ScrollBarH.Height;
         }
-        _ScrollBarV.Bounds = new System.Drawing.Rectangle( ClientSize.Width - _ScrollBarV.Width, 0, _ScrollBarV.Width, usableHeight );
+        _ScrollBarV.Bounds = new System.Drawing.Rectangle( ClientSize.Width - _ScrollBarV.Width, 0, _ScrollBarV.Width, vscrollHeight );
 
         int   visibleItemCount = 1;
         if ( ItemHeight == 0 )
@@ -595,7 +597,7 @@ namespace DecentForms
       int fullWidth = FullWidth();  
       if ( VerticalScrollbarRequired() )
       {
-        return fullWidth > ClientSize.Width - _ScrollBarV.Width;
+        return fullWidth > ( ClientSize.Width - _ScrollBarV.Width );
       }
       return fullWidth > ClientSize.Width;
     }

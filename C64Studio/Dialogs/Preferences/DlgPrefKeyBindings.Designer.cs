@@ -34,11 +34,7 @@
       this.btnBindKey = new DecentForms.Button();
       this.editKeyBinding = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
-      this.listFunctions = new System.Windows.Forms.ListView();
-      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.listFunctions = new DecentForms.ListControl();
       this.SuspendLayout();
       // 
       // btnSetDefaultsKeyBinding
@@ -129,42 +125,12 @@
       this.listFunctions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listFunctions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4,
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader8});
-      this.listFunctions.FullRowSelect = true;
-      this.listFunctions.HideSelection = false;
       this.listFunctions.Location = new System.Drawing.Point(3, 5);
-      this.listFunctions.MultiSelect = false;
       this.listFunctions.Name = "listFunctions";
       this.listFunctions.Size = new System.Drawing.Size(620, 383);
-      this.listFunctions.Sorting = System.Windows.Forms.SortOrder.Ascending;
+      this.listFunctions.SortOrder = DecentForms.SortOrder.ASCENDING;
       this.listFunctions.TabIndex = 15;
-      this.listFunctions.UseCompatibleStateImageBehavior = false;
-      this.listFunctions.View = System.Windows.Forms.View.Details;
-      this.listFunctions.SelectedIndexChanged += new System.EventHandler(this.listFunctions_SelectedIndexChanged);
-      // 
-      // columnHeader4
-      // 
-      this.columnHeader4.Text = "State";
-      this.columnHeader4.Width = 126;
-      // 
-      // columnHeader1
-      // 
-      this.columnHeader1.Text = "Function";
-      this.columnHeader1.Width = 222;
-      // 
-      // columnHeader2
-      // 
-      this.columnHeader2.Text = "Binding";
-      this.columnHeader2.Width = 113;
-      // 
-      // columnHeader8
-      // 
-      this.columnHeader8.Text = "2nd Binding";
-      this.columnHeader8.Width = 113;
+      this.listFunctions.SelectedIndexChanged += new DecentForms.EventHandler( listFunctions_SelectedIndexChanged );
       // 
       // DlgPrefKeyBindings
       // 
@@ -192,10 +158,6 @@
         private DecentForms.Button btnBindKey;
         private System.Windows.Forms.TextBox editKeyBinding;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.ListView listFunctions;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private DecentForms.ListControl listFunctions;
     }
 }

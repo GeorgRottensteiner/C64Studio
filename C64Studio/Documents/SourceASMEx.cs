@@ -1834,8 +1834,11 @@ namespace RetroDevStudio.Documents
             }
           }
           if ( ( tokens[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
-          &&   ( tokens[i].Content == "," ) )
+          &&   ( tokens[i].Content == "," )
+          &&   ( tokens[i].StartPos > posX ) )
           {
+            // we had an opcode, but now we are after a comma, so do not show auto complete anymore (e.g. for operands)
+            // assume suffixes like ,x or ,y etc. which need to auto complete
             if ( hadOpcodeFirst )
             {
               return;

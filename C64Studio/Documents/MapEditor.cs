@@ -3005,6 +3005,12 @@ namespace RetroDevStudio.Documents
       comboTileMulticolor2.SelectedIndex = m_Project.Charset.Colors.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_Project.Charset.Colors.BGColor4;
 
+      if ( ( comboMaps.SelectedIndex == -1 )
+      &&   ( comboMaps.Items.Count > 0 ) )
+      {
+        comboMaps.SelectedIndex = 0;
+      }
+
       RecalcTileUsageTotal();
       RedrawMap();
       SetModified();
