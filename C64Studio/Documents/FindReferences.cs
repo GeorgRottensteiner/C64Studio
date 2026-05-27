@@ -32,7 +32,7 @@ namespace RetroDevStudio.Documents
       listResults.ColumnClicked += listMessages_ColumnClick;
 
       listResults.SortColumn          = 0;
-      listResults.ListViewItemSorter  = new GR.Forms.NumericListViewItemComparer();
+      listResults.ListViewItemSorter  = new NumericListViewItemComparer();
     }
 
 
@@ -102,11 +102,11 @@ namespace RetroDevStudio.Documents
     {
       if ( listResults.SortColumn == 0 )
       {
-        listResults.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer();
+        listResults.ListViewItemSorter = new NumericListViewItemComparer( 0, listResults.SortOrder );
       }
       else
       {
-        listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer();
+        listResults.ListViewItemSorter = new ListViewItemComparer( listResults.SortColumn, listResults.SortOrder );
       }
     }
 

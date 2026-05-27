@@ -24,10 +24,10 @@ namespace RetroDevStudio.Documents
 
       listResults.Columns.Add( "Line", 50 );
       listResults.Columns.Add( "File", 200 );
+      listResults.Columns.Add( "Zone", 120 );
       listResults.Columns.Add( "Text", 400 );
-      listResults.Columns.Add( "Add. Info", 120 );
       listResults.SortOrder           = DecentForms.SortOrder.NONE;
-      listResults.ListViewItemSorter  = new GR.Forms.NumericListViewItemComparer();
+      listResults.ListViewItemSorter  = new NumericListViewItemComparer();
     }
 
 
@@ -89,8 +89,15 @@ namespace RetroDevStudio.Documents
           item.SubItems.Add( foundInfo.FoundInDocument.DocumentFilename );
           item.Tag = foundInfo.FoundInDocument;
         }
-        item.SubItems.Add( foundInfo.AdditionalInfo );
-        item.SubItems.Add( foundInfo.FoundLine );
+        if ( foundInfo.AdditionalInfo.StartsWith( "zone " ) )
+        {
+          item.SubItems.Add( foundInfo.AdditionalInfo.Substring( 5 ) );
+        }
+        else
+        {
+          item.SubItems.Add( foundInfo.AdditionalInfo );
+        }
+        item.SubItems.Add( foundInfo.FoundLine.Trim() );
         ++i;
       }
       listResults.Items.AddRange( items );
@@ -100,13 +107,14 @@ namespace RetroDevStudio.Documents
 
     private void listMessages_ColumnClick( DecentForms.ControlBase control )
     {
+      listResultsSortColumn = listResults.SelectedColumn;
       if ( listResults.SortColumn == 0 )
       {
-        listResults.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer();
+        listResults.ListViewItemSorter = new NumericListViewItemComparer( listResults.SortColumn, listResults.SortOrder );
       }
       else
       {
-        listResults.ListViewItemSorter = new GR.Forms.ListViewItemComparer();
+        listResults.ListViewItemSorter = new ListViewItemComparer( listResults.SortColumn, listResults.SortOrder );
       }
     }
 

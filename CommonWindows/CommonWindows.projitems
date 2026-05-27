@@ -15,7 +15,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\ImageListbox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\ListViewItemComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ScrollablePanel.cs">
       <SubType>Component</SubType>
     </Compile>

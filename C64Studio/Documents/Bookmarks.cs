@@ -23,13 +23,13 @@ namespace RetroDevStudio.Documents
 
       InitializeComponent();
 
-      listMessages.Columns.Add( ".", 20 );
+      listMessages.Columns.Add( "", 20 );
       listMessages.Columns[0].Sizable = false;
       listMessages.Columns.Add( "Line", 50 );
       listMessages.Columns.Add( "File", 400 );
       listMessages.Columns.Add( "Comment", 250 );
       listMessages.SortOrder = DecentForms.SortOrder.ASCENDING;
-      listMessages.ListViewItemSorter = new GR.Forms.NumericListViewItemComparer();
+      listMessages.ListViewItemSorter = new NumericListViewItemComparer();
       //new BookmarkItemComparer( listMessagesSortColumn, listMessages.SortOrder );
 
       var imageList = new DecentForms.ImageList();
@@ -81,10 +81,8 @@ namespace RetroDevStudio.Documents
 
     private void listMessages_ColumnClick( DecentForms.ControlBase sender )
     {
-      /*
-      listMessages.ListViewItemSorter = new BookmarkItemComparer( listMessagesSortColumn, listMessages.Sorting );
-      listMessages.Sort();
-      */
+      listMessagesSortColumn = listMessages.SelectedColumn;
+      listMessages.ListViewItemSorter = new BookmarkItemComparer( listMessagesSortColumn, listMessages.SortOrder );
     }
 
 
@@ -242,7 +240,7 @@ namespace RetroDevStudio.Documents
     {
       var docsToDeleteFrom = new Set<DocumentInfo>();
 
-      foreach ( var selectedItem in listMessages.SelectedItems )
+      foreach ( var selectedItem in listMessages.Items )
       {
         var doc = (DocumentInfo)selectedItem.Tag;
         docsToDeleteFrom.Add( doc );
