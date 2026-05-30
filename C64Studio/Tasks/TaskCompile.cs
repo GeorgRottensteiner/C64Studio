@@ -155,17 +155,20 @@ namespace RetroDevStudio.Tasks
         {
           Core.Debugging.TempDebuggerStartupFilename = SysWrapper.GetTempFileName();
 
-          System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, symbolFile );
           switch ( labelFormat )
           {
             case Types.ASM.LabelFileFormat.VICE:
               command += " -moncommands \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
               break;
             case Types.ASM.LabelFileFormat.C64DEBUGGER:
-            case Types.ASM.LabelFileFormat.RETRODEBUGGER:
               command += " -vicesymbols \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
               break;
+            case Types.ASM.LabelFileFormat.RETRODEBUGGER:
+              Core.Debugging.TempDebuggerStartupFilename += ".labels";
+              command += " -symbols \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
+              break;
           }
+          System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, symbolFile );
         }
         catch ( System.IO.IOException ioe )
         {

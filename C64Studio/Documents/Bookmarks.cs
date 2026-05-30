@@ -48,7 +48,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void ClearMessages()
+    public void ClearList()
     {
       listMessages.Items.Clear();
     }
@@ -253,6 +253,7 @@ namespace RetroDevStudio.Documents
           doc.BaseDoc.ApplyFunction( Function.BOOKMARK_DELETE_ALL );
         }
       }
+      ClearList();
     }
 
 

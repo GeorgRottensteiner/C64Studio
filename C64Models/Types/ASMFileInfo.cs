@@ -1016,6 +1016,14 @@ namespace RetroDevStudio.Types.ASM
     {
       StringBuilder   sb = new StringBuilder();
 
+      // header
+      /*
+      switch ( Format )
+      {
+        case LabelFileFormat.RETRODEBUGGER:
+          sb.Append( "{\r\n  Version: \"1\"\r\n  Segments: [\r\n    {\r\n      Name: Default\r\n      CodeLabels: [\r\n" );
+          break;
+      }*/
       var  sentLabels = new GR.Collections.Set<long>();
       foreach ( var token in Labels )
       {
@@ -1037,15 +1045,35 @@ namespace RetroDevStudio.Types.ASM
               }
               break;
             case LabelFileFormat.C64DEBUGGER:
-            case LabelFileFormat.RETRODEBUGGER: 
+            case LabelFileFormat.RETRODEBUGGER:
+              // retrodebugger uses its old C64Debugger format when symbols are passed via command line
+              // (but not when opened from the menu!)
               sb.Append( "al C:" );
               sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
               sb.Append( " ." );
               sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
               break;
+              /*
+            case LabelFileFormat.RETRODEBUGGER:
+              sb.AppendLine( "        {" );
+              sb.Append( "          Address: \"" );
+              sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
+              sb.AppendLine( "\"" );
+              sb.Append( "          Name: " );
+              sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+              sb.AppendLine( "        }" );
+              break;*/
           }
         }
       }
+      /*
+      // trailer
+      switch ( Format )
+      {
+        case LabelFileFormat.RETRODEBUGGER:
+          sb.Append( "      ]\r\n    }\r\n  ]\r\n}\r\n" );
+          break;
+      }*/
 
       return sb.ToString();
     }
