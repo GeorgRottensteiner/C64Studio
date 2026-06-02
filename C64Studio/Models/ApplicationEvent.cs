@@ -43,7 +43,9 @@ namespace RetroDevStudio.Types
       SEARCH_HISTORY_UPDATED,
       REPLACE_SEARCH_HISTORY_UPDATED,
       REPLACE_WITH_HISTORY_UPDATED,
-      CLIPBOARD_CHANGED
+      CLIPBOARD_CHANGED,
+      LINES_REMOVED,
+      LINES_INSERTED
     }
 
     public Type             EventType = Type.NONE;
@@ -53,6 +55,8 @@ namespace RetroDevStudio.Types
     public Project          PreviousProject = null;
     public string           OriginalValue = "";
     public string           UpdatedValue = "";
+    public int              LineIndex = -1;    // for events related to a specific line (e.g. setting modified, where the line index is the line of the setting in the settings file)
+    public int              LineCount = 0;     // for events related to a range of lines (e.g. lines added, lines removed)
 
 
 

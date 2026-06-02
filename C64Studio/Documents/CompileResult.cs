@@ -380,6 +380,70 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.SHUTTING_DOWN:
           Core.Settings.DialogSettings.StoreListViewColumns( "CompileResult", listMessages );
           break;
+        case ApplicationEvent.Type.LINES_INSERTED:
+          {
+            foreach ( var item in listMessages.Items )
+            {
+              Parser.ParserBase.ParseMessage message = (Parser.ParserBase.ParseMessage)item.Tag;
+
+              string  docFile = item.SubItems[3].Text;
+              int     localLineIndex = GR.Convert.ToI32( item.SubItems[1].Text ) - 1;
+              if ( docFile == Event.Doc.FullPath )
+              {
+                if ( localLineIndex >= Event.LineIndex )
+                {
+                  localLineIndex += Event.LineCount;
+                  item.SubItems[1].Text = ( localLineIndex + 1 ).ToString();
+                }
+                if ( message.AlternativeLineIndex >= Event.LineIndex )
+                {
+                  message.AlternativeLineIndex += Event.LineCount;
+                }
+              }
+            }
+          }
+          break;
+        case ApplicationEvent.Type.LINES_REMOVED:
+          {
+            var itemsToRemove = new System.Collections.Generic.List<DecentForms.ListControlItem>();
+            foreach ( var item in listMessages.Items )
+            {
+              Parser.ParserBase.ParseMessage message = (Parser.ParserBase.ParseMessage)item.Tag;
+
+              string  docFile = item.SubItems[3].Text;
+              int     localLineIndex = GR.Convert.ToI32( item.SubItems[1].Text ) - 1;
+              if ( docFile == Event.Doc.FullPath )
+              {
+                if ( ( localLineIndex >= Event.LineIndex )
+                &&   ( localLineIndex < Event.LineIndex + Event.LineCount ) ) 
+                {
+                  itemsToRemove.Add( item );
+                }
+                else if ( localLineIndex >= Event.LineIndex + Event.LineCount )
+                {
+                  localLineIndex -= Event.LineCount;
+                  item.SubItems[1].Text = ( localLineIndex + 1 ).ToString();
+                }
+              }
+              if ( message.AlternativeFile == Event.Doc.FullPath )
+              {
+                if ( ( message.AlternativeLineIndex >= Event.LineIndex )
+                &&   ( message.AlternativeLineIndex < Event.LineIndex + Event.LineCount ) ) 
+                {
+                  itemsToRemove.Add( item );
+                }
+                else if ( message.AlternativeLineIndex >= Event.LineIndex + Event.LineCount )
+                {
+                  message.AlternativeLineIndex -= Event.LineCount;
+                }
+              }
+            }
+            foreach ( var item in itemsToRemove )
+            {
+              listMessages.Items.Remove( item );
+            }
+          }
+          break;
       }
     }
 

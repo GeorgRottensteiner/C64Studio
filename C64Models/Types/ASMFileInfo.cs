@@ -1051,7 +1051,7 @@ namespace RetroDevStudio.Types.ASM
               sb.Append( "al C:" );
               sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
               sb.Append( " ." );
-              sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+              sb.Append( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) + "\n" );
               break;
               /*
             case LabelFileFormat.RETRODEBUGGER:

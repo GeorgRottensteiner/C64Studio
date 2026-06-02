@@ -41,7 +41,7 @@ namespace RetroDevStudio
     public double     RealValue = 0;
     public string     Zone = "";
     public bool       FromDependency = false;
-    public string     Info = "";
+    public string     Info = "";                // tooltip info
     public int        CharIndex = -1;
     public int        Length = 0;
     public RetroDevStudio.Types.ASM.SourceInfo SourceInfo = null;
@@ -74,6 +74,8 @@ namespace RetroDevStudio
       Length                = RHS.Length;
       SourceInfo            = RHS.SourceInfo;
       References            = RHS.References;
+      NumArguments          = RHS.NumArguments;
+      References            = new GR.Collections.MultiMap<int, SymbolReference>( RHS.References );
     }
 
 

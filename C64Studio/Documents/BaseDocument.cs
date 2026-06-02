@@ -34,12 +34,16 @@ namespace RetroDevStudio.Documents
         BOOKMARK_ADDED,
         BOOKMARK_REMOVED,
         ALL_BOOKMARKS_OF_DOCUMENT_REMOVED,
-        BOOKMARKS_UPDATED                   // sent when lines are inserted/deleted (and bookmarks move)
+        BOOKMARKS_UPDATED,                  // sent when lines are inserted/deleted (and bookmarks move)
+        LINES_REMOVED,                      // sent when lines are removed
+        LINES_ADDED                         // sent when lines are inserted
       }
 
       public Type EventType     = Type.NONE;
       public BaseDocument Doc   = null;
+      public DocumentInfo DocumentInfo = null;
       public int LineIndex      = -1;
+      public int LineCount      = 0;
       public int OtherLineIndex = -1;
       public Types.Breakpoint Breakpoint = null;
 

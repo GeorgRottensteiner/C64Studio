@@ -1348,7 +1348,7 @@ namespace RetroDevStudio
 
           itemIndex = mainDebugDebugger.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
           if ( ( tool.Name.ToUpper() == StudioCore.Settings.DebuggerToRun )
-          ||   ( oldTool == tool ) )
+          ||   ( oldDebugger == tool ) )
           {
             mainDebugDebugger.SelectedIndex = itemIndex;
           }
@@ -2827,7 +2827,7 @@ namespace RetroDevStudio
 
         // check file version (WinVICE remote debugger changes)
         if ( ( StudioCore.Debugging.Debugger != null )
-        && ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
+        &&   ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
         {
           return false;
         }
@@ -2858,8 +2858,8 @@ namespace RetroDevStudio
         }
 
         if ( ( Document != null )
-        && ( Document.ASMFileInfo != null )
-        && ( toolRun.PassLabelsToEmulator ) )
+        &&   ( Document.ASMFileInfo != null )
+        &&   ( toolRun.PassLabelsToEmulator ) )
         {
           string labelInfo = Document.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
           if ( labelInfo.Length > 0 )
@@ -2871,8 +2871,10 @@ namespace RetroDevStudio
               switch ( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) )
               {
                 case Types.ASM.LabelFileFormat.C64DEBUGGER:
-                case Types.ASM.LabelFileFormat.RETRODEBUGGER:
                   runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+                  break;
+                case Types.ASM.LabelFileFormat.RETRODEBUGGER:
+                  runArguments = "-symbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
                   break;
                 case Types.ASM.LabelFileFormat.VICE:
                 default:

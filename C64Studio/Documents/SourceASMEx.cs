@@ -716,6 +716,12 @@ namespace RetroDevStudio.Documents
       // special case, if we insert an empty line, insert "below"
       if ( !m_InsertingText )
       {
+        Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.LINES_INSERTED )
+        {
+          LineIndex = firstLine,
+          LineCount = count,
+          Doc       = DocumentInfo
+        } );
         Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
       }
 
@@ -814,12 +820,18 @@ namespace RetroDevStudio.Documents
       }
       RaiseDocEvent( new DocEvent( DocEvent.Type.BOOKMARKS_UPDATED ) );
 
-      int     firstLine = e.Index - 1;
+      int     firstLine = e.Index;
       int     count = e.Count;
       if ( count == 0 )
       {
         return;
       }
+      Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.LINES_REMOVED ) 
+        { 
+          LineIndex = firstLine, 
+          LineCount = count, 
+          Doc = DocumentInfo 
+        } );
       Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
 
       if ( ( firstLine >= 0 )
@@ -828,14 +840,14 @@ namespace RetroDevStudio.Documents
         m_LineInfos.RemoveRange( firstLine, count );
       }
 
-      int deletedAtLine = e.Index - 1;
+      int deletedAtLine = e.Index;
 
       var origBreakpoints = new GR.Collections.Map<int, List<RetroDevStudio.Types.Breakpoint>>( m_BreakPoints );
 
       foreach ( int breakpointLine in origBreakpoints.Keys )
       {
         //if ( ( breakpointLine >= deletedAtLine )
-        if ( ( breakpointLine > deletedAtLine )
+        if ( ( breakpointLine >= deletedAtLine )
         &&   ( breakpointLine < deletedAtLine + count ) )
         {
           // BP was deleted!
@@ -844,8 +856,7 @@ namespace RetroDevStudio.Documents
             RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
           }
         }
-        //else if ( breakpointLine >= deletedAtLine )
-        else if ( breakpointLine > deletedAtLine )
+        else if ( breakpointLine >= deletedAtLine )
         {
           if ( m_BreakPoints.ContainsKey( breakpointLine ) )
           {
