@@ -17,6 +17,84 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+07.06.2026 - 8.4:         Fix: Editing code (inserted/deleting lines) now also updates the Find References Dialog
+                          Fix: Passing labels to RetroDebugger used wrong argument Fix: Bookmark delete all not working properly
+                          Fix: !media did not use start index offset properly
+                          Add: Expand !media to allow range of screens to export in all variants
+                          Upd: Charset screen editor, add missing undo for adding a screen. Change add/copy behaviour to add below current
+                          Upd: find references trims shown text, renamed add.info to zone
+                          Fix: References, columns text and add. info were switched. Also properly show text in non-project files again
+                          Fix: Media Tool graphic screen with area
+                          Add: MediaTool single graphic screen to screen or color only options 
+                          Fix: Char label export, only use _ if actually between to words
+                          Fix: Mediatool -graphic screen export ran into exceptions if there were issues with the image
+                          Add: Autoformat option for space after comma; fix unary in parameter list
+                          Add: Charlabel export in charscreen and map projects
+                          Fix: Help on Pseudo Op opening help on content
+                          Add: Charset editor - charset/character name for exporting constants
+                          Fix: Missing $ in CHR$ in S-BASIC 65 dialect file
+                          Fix: Map Editor crash when importing charpad file after last update
+                          Add: Autoformat, special case <,> add beginning of expression
+                          Fix: !media would use previous screen in a list of screens width/height if not given 
+                          Upd: Bookmarks dialog using custom list control
+                          Add: Map Editor total tile usage counter Add: MediaTool - Export of map data column major
+                          Add: Map Editor - resize screen to allow more tiles visible
+                          Add: Map Editor - Free scrolling (space or middle mouse button)
+                          Add: Separate debugger choice
+                          Add: C64Ass - enable hacks option to match IDE assembler configs
+                          Fix: Breakpoints not set if file with breakpoints is re-opened
+                          Fix: Debug Breakpoint, double click could open file with same file name from different project
+                          Fix: Charscreen filling now follows "affect" options
+                          Add: Proper Clipboard event handling for paste buttons
+                          Fix: Charscreen - Multiscreen changes when moving chars Fix: Charscreen - NCM mode not properly set in charset editor on reload
+                          Fix: PETSCII table black color using inverted text color, order of keys, key descriptions for >= 192
+                          Add: PETSCII table coloring
+                          Add: PETSCII table, show colors colored
+                          Add: !media/!mediasrc support for multiple charscreens
+                          WIP: Charscreen import/export with more than one screen
+                          Add: WIP Charscreen support for multiple screens
+                          WIP: Multi Charscreen
+                          Fix: Solution Explorer shifting of element with direct cloning afterwards could mix up files when "clone"ing a solution
+                          Fix: Newly added elements to a solution are not having a relativized path inside before saving/reloading
+                          Add: DebugWatch Move to top/bottom
+                          Fix: Charscreen editor - mode change did not change charset mode correctly on the first change. Increase undo/redo speed
+                          Add: !source option AGAIN to skip duplicate inclusion warnings
+                          Upd: ListControl replacement
+                          Fix .NET versions gone missing
+                          Fix: Syntax Coloring of opcode postfix (,x ,y ,z)
+                          Add: Find/Replace separate per project/solution
+                          Add: Text File support (add new) 
+                          Rmv: Remove text/html for clipboard data
+                          Fix: Charscreen export with !pet statement didn't use correct case for A-Z
+                          Add: Project Menu -> Add Existing Items
+                          Add: else ifdef/ifndef
+                          Add: LabelExplorer/Outline delete filter x
+                          Fix: Renaming file in .prg not working correctly
+                          WIP: Source Info spreading to keep same ASMFileInfo for all members
+                          WIP: Auto-Shifting source infos/label locations on inserting/removing lines
+                          Add: SFXEditor - one player working
+                          Fix: Disassembler crash, allow hex values for data table length
+                          Add: Key binding to cancel build Add: Detection of build chain chain referencing the same file
+                          Add: Charscreen PETSCII export, more options
+                          Add: ElementProperties now resizable/placement restored
+                          Add: Charscreen export with !pet statement now includes colors directly
+                          Fix: Charscreen export for PETSCII using Reverse flag and line break
+                          Fix: #151, map editor binary export does not take in account different tile sizes (like tile data to assembly does)
+                          Add: PETSCII encoding export option for Charscreen Fix: PETCII !pet statement using wrong encoding for binary values
+                          WIP: More audio Fix: Crash in zone selector when no zones were present
+                          Add: VICE 10, auto-repeat connection attempts in case the config version mismatch popup appears
+                          WIP: SFX Editor
+                          Add: Enter in DecentForms.TreeView also triggers double click
+                          Add: Show zone sizes in bytes in selector
+                          Add: Display char/color below mouse in char screen editor
+                          Fix: Switched CBM-M with CBM-N on occasions
+                          Fix issue #150 (crash on debugging on non project files)
+                          Fix: Deleting breakpoints during debugging was not actually removing it from the debuggee Add: Sample BASIC/Assembly in disk image
+                          Add: Automated VICE true drive argument replacement when changing the executable
+                          Add: Bookmarks shown with comment
+
+
+
 22.12.2025 - 8.3:         Add: ASM - show lines as changed with info from GIT
                           Fix: BASIC key mapping, per default had no cursor keys in german, and no sim keys in english layout
                           Fix: Wrong unicode for 0x8e (Reverse Shift N) Fix: BASIC disassembler using end pointer instead of looking for next zero byte
