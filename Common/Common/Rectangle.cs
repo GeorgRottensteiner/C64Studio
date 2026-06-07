@@ -1,6 +1,7 @@
 using GR.Math;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 
 
 
@@ -13,15 +14,25 @@ namespace GR.Math
 
 
 
-    Point     Position;
-    Point     Size;
+    private Point     _Position;
+    private Point     _Size;
 
 
 
     public Rectangle( int X, int Y, int Width, int Height )
     {
-      Position  = new Point( X, Y );
-      Size      = new Point( Width, Height );
+      _Position  = new Point( X, Y );
+      _Size      = new Point( Width, Height );
+    }
+
+
+
+    public Point Size 
+    { 
+      get 
+      { 
+        return _Size; 
+      } 
     }
 
 
@@ -30,11 +41,11 @@ namespace GR.Math
     {
       get
       {
-        return Position.X;
+        return _Position.X;
       }
       set
       {
-        Position.X = value;
+        _Position.X = value;
       }
     }
 
@@ -44,11 +55,11 @@ namespace GR.Math
     {
       get
       {
-        return Position.Y;
+        return _Position.Y;
       }
       set
       {
-        Position.Y = value;
+        _Position.Y = value;
       }
     }
 
@@ -58,7 +69,7 @@ namespace GR.Math
     {
       get
       {
-        return Position.X + Size.X;
+        return _Position.X + _Size.X;
       }
     }
 
@@ -68,7 +79,7 @@ namespace GR.Math
     {
       get
       {
-        return Position.Y + Size.Y;
+        return _Position.Y + _Size.Y;
       }
     }
 
@@ -78,11 +89,11 @@ namespace GR.Math
     {
       get
       {
-        return Position.X;
+        return _Position.X;
       }
       set
       {
-        Position.X = value;
+        _Position.X = value;
       }
     }
 
@@ -92,11 +103,11 @@ namespace GR.Math
     {
       get
       {
-        return Position.Y;
+        return _Position.Y;
       }
       set
       {
-        Position.Y = value;
+        _Position.Y = value;
       }
     }
 
@@ -106,11 +117,11 @@ namespace GR.Math
     {
       get
       {
-        return Size.X;
+        return _Size.X;
       }
       set
       {
-        Size.X = value;
+        _Size.X = value;
       }
     }
 
@@ -120,11 +131,11 @@ namespace GR.Math
     {
       get
       {
-        return Size.Y;
+        return _Size.Y;
       }
       set
       {
-        Size.Y = value;
+        _Size.Y = value;
       }
     }
 
@@ -132,7 +143,17 @@ namespace GR.Math
 
     public void Offset( int dx, int dy )
     {
-      Position.Offset( dx, dy );
+      _Position.Offset( dx, dy );
+    }
+
+
+
+    public bool Contains( int x, int y )
+    {
+      return ( ( x >= Left ) 
+        &&     ( x < Right ) 
+        &&     ( y >= Top ) 
+        &&     ( y < Bottom ) );
     }
   }
 

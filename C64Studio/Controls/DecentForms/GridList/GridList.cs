@@ -640,7 +640,7 @@ namespace DecentForms
       if ( DrawItem != null )
       {
         renderer.SetClip( 0, 0, bounds.Width, bounds.Height, bounds.X, bounds.Y );
-        var localBounds = new Rectangle( 0, 0, bounds.Width, bounds.Height );
+        var localBounds = new GR.Math.Rectangle( 0, 0, bounds.Width, bounds.Height );
 
         DrawItem( this, new GridListItemEventArgs( renderer, item, localBounds ) );
 
@@ -828,7 +828,7 @@ namespace DecentForms
 
     private readonly GridList.GridListItem  _item;
 
-    private readonly Rectangle              _bounds;
+    private readonly GR.Math.Rectangle      _bounds;
 
 
 
@@ -836,11 +836,11 @@ namespace DecentForms
 
     public ControlRenderer Renderer => _renderer;
 
-    public Rectangle Bounds => _bounds;
+    public GR.Math.Rectangle Bounds => _bounds;
 
 
 
-    public GridListItemEventArgs( ControlRenderer Renderer, GridList.GridListItem Item, Rectangle bounds )
+    public GridListItemEventArgs( ControlRenderer Renderer, GridList.GridListItem Item, GR.Math.Rectangle bounds )
     {
       _renderer = Renderer;
       _item     = Item;

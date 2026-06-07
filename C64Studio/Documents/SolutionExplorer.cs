@@ -2428,10 +2428,10 @@ namespace RetroDevStudio.Documents
 
     // Returns the bounds of the specified node, including the region 
     // occupied by the node label and any node tag displayed.
-    private Rectangle NodeBounds( DecentForms.TreeView.TreeNode Node )
+    private GR.Math.Rectangle NodeBounds( DecentForms.TreeView.TreeNode Node )
     {
       // Set the return value to the normal node bounds.
-      Rectangle bounds = Node.Bounds;
+      GR.Math.Rectangle bounds = Node.Bounds;
       /*
       if ( node.Tag != null )
       {
@@ -2571,10 +2571,10 @@ namespace RetroDevStudio.Documents
 
 
 
-    public void DrawDocumentIcon( DecentForms.ControlRenderer Renderer, Rectangle NodeRect, int ImageIndex, FileState FileState )
+    public void DrawDocumentIcon( DecentForms.ControlRenderer Renderer, GR.Math.Rectangle NodeRect, int ImageIndex, FileState FileState )
     {
       Image nodeImg = treeProject.ImageList.Images[ImageIndex];
-      Point ptNodeIcon = new Point( NodeRect.Location.X - 20, NodeRect.Location.Y + ( NodeRect.Height - nodeImg.Height ) / 2 );
+      Point ptNodeIcon = new Point( NodeRect.X - 20, NodeRect.Y + ( NodeRect.Height - nodeImg.Height ) / 2 );
 
       Renderer.DrawImage( nodeImg, ptNodeIcon.X, ptNodeIcon.Y );
 

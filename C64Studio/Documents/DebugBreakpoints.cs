@@ -25,6 +25,14 @@ namespace RetroDevStudio.Documents
       this.Core = Core;
       InitializeComponent();
 
+      listBreakpoints.Columns.Add( "No", 32 );
+      listBreakpoints.Columns.Add( "Document", 102 );
+      listBreakpoints.Columns.Add( "Line", 50 );
+      listBreakpoints.Columns.Add( "Trigger", 50 );
+      listBreakpoints.Columns.Add( "Conditions", 127 );
+      listBreakpoints.Columns.Add( "Address", 59 );
+      listBreakpoints.Columns[5].Alignment = DecentForms.TextAlignment.CENTERED_H;
+
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
@@ -32,7 +40,7 @@ namespace RetroDevStudio.Documents
 
     public void AddBreakpoint( Types.Breakpoint Breakpoint )
     {
-      ListViewItem item = new ListViewItem();
+      var item = new DecentForms.ListControlItem();
 
       for ( int i = 0; i < 5; ++i )
       {
@@ -46,7 +54,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void AdjustItemText( ListViewItem Item, Types.Breakpoint Breakpoint )
+    private void AdjustItemText( DecentForms.ListControlItem Item, Types.Breakpoint Breakpoint )
     {
       if ( Breakpoint.RemoteIndex == -1 )
       {
@@ -117,7 +125,7 @@ namespace RetroDevStudio.Documents
 
     public void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
-      foreach ( ListViewItem item in listBreakpoints.Items )
+      foreach ( var item in listBreakpoints.Items )
       {
         if ( item.Tag == Breakpoint )
         {
@@ -129,7 +137,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listBreakpoints_SelectedIndexChanged( object sender, EventArgs e )
+    private void listBreakpoints_SelectedIndexChanged( DecentForms.ControlBase sender )
     {
       btnDeleteBreakpoint.Enabled = ( listBreakpoints.SelectedItems.Count != 0 );
       btnApplyChanges.Enabled = false;
@@ -337,7 +345,7 @@ namespace RetroDevStudio.Documents
 
     public void UpdateBreakpoint( Types.Breakpoint Breakpoint )
     {
-      foreach ( ListViewItem item in listBreakpoints.Items )
+      foreach ( var item in listBreakpoints.Items )
       {
         if ( item.Tag == Breakpoint )
         {
@@ -397,8 +405,8 @@ namespace RetroDevStudio.Documents
         return;
       }
       var bps = new List<Types.Breakpoint>();
-      var itemsToDelete = new List<ListViewItem>();
-      foreach ( ListViewItem item in listBreakpoints.SelectedItems )
+      var itemsToDelete = new List<DecentForms.ListControlItem>();
+      foreach ( var item in listBreakpoints.SelectedItems )
       {
         bps.Add( (Types.Breakpoint)item.Tag );
         itemsToDelete.Add( item );
@@ -449,7 +457,7 @@ namespace RetroDevStudio.Documents
     private void btnDeleteAllBreakpoints_Click( DecentForms.ControlBase Sender )
     {
       var bpsToRemove = new List<Types.Breakpoint>();
-      foreach ( ListViewItem item in listBreakpoints.Items )
+      foreach ( var item in listBreakpoints.Items )
       {
         var bp = (Types.Breakpoint)item.Tag;
         bpsToRemove.Add( bp );
@@ -464,7 +472,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void listBreakpoints_ItemActivate( object sender, EventArgs e )
+    private void listBreakpoints_ItemActivate( DecentForms.ControlBase sender )
     {
       if ( listBreakpoints.SelectedItems.Count > 0 )
       {
@@ -524,7 +532,7 @@ namespace RetroDevStudio.Documents
       {
         foreach ( var bp in bpList )
         {
-          ListViewItem item = new ListViewItem();
+          var item = new DecentForms.ListControlItem();
 
           for ( int i = 0; i < 5; ++i )
           {

@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugBreakpoints));
-      this.listBreakpoints = new System.Windows.Forms.ListView();
+      this.listBreakpoints = new DecentForms.ListControl();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -58,23 +58,12 @@
       // 
       this.listBreakpoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listBreakpoints.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader3,
-            this.columnHeader2});
-      this.listBreakpoints.FullRowSelect = true;
-      this.listBreakpoints.HideSelection = false;
       this.listBreakpoints.Location = new System.Drawing.Point(12, 12);
       this.listBreakpoints.Name = "listBreakpoints";
       this.listBreakpoints.Size = new System.Drawing.Size(510, 166);
       this.listBreakpoints.TabIndex = 0;
-      this.listBreakpoints.UseCompatibleStateImageBehavior = false;
-      this.listBreakpoints.View = System.Windows.Forms.View.Details;
-      this.listBreakpoints.ItemActivate += new System.EventHandler(this.listBreakpoints_ItemActivate);
-      this.listBreakpoints.SelectedIndexChanged += new System.EventHandler(this.listBreakpoints_SelectedIndexChanged);
+      this.listBreakpoints.ItemActivate += new DecentForms.EventHandler(this.listBreakpoints_ItemActivate);
+      this.listBreakpoints.SelectedIndexChanged += new DecentForms.EventHandler(this.listBreakpoints_SelectedIndexChanged);
       // 
       // columnHeader1
       // 
@@ -293,7 +282,7 @@
 
     #endregion
 
-    private System.Windows.Forms.ListView listBreakpoints;
+    private DecentForms.ListControl listBreakpoints;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;

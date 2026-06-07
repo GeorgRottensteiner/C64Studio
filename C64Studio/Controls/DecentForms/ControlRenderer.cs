@@ -270,7 +270,7 @@ namespace DecentForms
 
 
 
-    public void DrawRectangle( Rectangle bounds, uint BaseColor )
+    public void DrawRectangle( GR.Math.Rectangle bounds, uint BaseColor )
     {
       DrawRectangle( bounds.Left, bounds.Top, bounds.Width, bounds.Height, BaseColor );
     }
@@ -285,11 +285,12 @@ namespace DecentForms
       Y -= _DisplayOffsetY;
 
       _G.DrawRectangle( borderPen, X, Y, Width - 1, Height - 1 );
+      //_G.DrawRectangle( borderPen, X, Y, Width, Height );
     }
 
 
 
-    public void FillRectangle( Rectangle bounds, uint BaseColor )
+    public void FillRectangle( GR.Math.Rectangle bounds, uint BaseColor )
     {
       FillRectangle( bounds.Left, bounds.Top, bounds.Width, bounds.Height, BaseColor );
     }
@@ -454,12 +455,12 @@ namespace DecentForms
 
     public void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, Button.ButtonStyle Style )
     {
-      RenderButton( MouseOver, Pushed, IsDefault, _Control.Focused, Style, new Rectangle( 0, 0, _Control.Width, _Control.Height ), _Control.Text );
+      RenderButton( MouseOver, Pushed, IsDefault, _Control.Focused, Style, new GR.Math.Rectangle( 0, 0, _Control.Width, _Control.Height ), _Control.Text );
     }
 
 
 
-    internal void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, bool focused, Button.ButtonStyle Style, Rectangle Rect, string text )
+    internal void RenderButton( bool MouseOver, bool Pushed, bool IsDefault, bool focused, Button.ButtonStyle Style, GR.Math.Rectangle Rect, string text )
     {
       Rect.Offset( -_DisplayOffsetX, -_DisplayOffsetY );
 
@@ -776,7 +777,7 @@ namespace DecentForms
 
 
 
-    private void DrawImageCentered( System.Drawing.Image Image, Rectangle ImageRect, int DX = 0, int DY = 0 )
+    private void DrawImageCentered( System.Drawing.Image Image, GR.Math.Rectangle ImageRect, int DX = 0, int DY = 0 )
     {
       _G.DrawImage( Image, 
                     ImageRect.X + ( ImageRect.Width - Image.Width ) / 2 + DX - _DisplayOffsetX,
@@ -786,7 +787,7 @@ namespace DecentForms
 
 
 
-    public void RenderTreeViewExpansionToggle( bool IsExpanded, Rectangle Rect )
+    public void RenderTreeViewExpansionToggle( bool IsExpanded, GR.Math.Rectangle Rect )
     {
       int     rectSize = Rect.Height;
 
@@ -1007,7 +1008,7 @@ namespace DecentForms
     {
       var imageToDraw = GetStateBitmap( SystemImage.ARROW_UP, Enabled );
 
-      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+      DrawImageCentered( imageToDraw, new GR.Math.Rectangle( X, Y, Width, Height ) );
     }
 
 
@@ -1027,7 +1028,7 @@ namespace DecentForms
     {
       var imageToDraw = GetStateBitmap( SystemImage.ARROW_DOWN, Enabled );
 
-      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+      DrawImageCentered( imageToDraw, new GR.Math.Rectangle( X, Y, Width, Height ) );
     }
 
 
@@ -1036,7 +1037,7 @@ namespace DecentForms
     {
       var imageToDraw = GetStateBitmap( SystemImage.ARROW_LEFT, Enabled );
 
-      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+      DrawImageCentered( imageToDraw, new GR.Math.Rectangle( X, Y, Width, Height ) );
     }
 
 
@@ -1045,7 +1046,7 @@ namespace DecentForms
     {
       var imageToDraw = GetStateBitmap( SystemImage.ARROW_RIGHT, Enabled );
 
-      DrawImageCentered( imageToDraw, new Rectangle( X, Y, Width, Height ) );
+      DrawImageCentered( imageToDraw, new GR.Math.Rectangle( X, Y, Width, Height ) );
     }
 
 
@@ -1116,7 +1117,7 @@ namespace DecentForms
 
 
 
-    public void RenderTreeViewNodeText( TreeView.TreeNode Node, Rectangle Rect )
+    public void RenderTreeViewNodeText( TreeView.TreeNode Node, GR.Math.Rectangle Rect )
     {
       var treeView = (TreeView)_Control;
 
@@ -1333,32 +1334,11 @@ namespace DecentForms
 
         SetClip( rc );
 
-        if ( listControl.PushedColumn == i )
-        {
-          FillSunkenRectangle( rc.Left, rc.Top, rc.Width, rc.Height, ColorControlBackground );
-        }
-        else
-        {
-          FillRaisedRectangle( rc.Left, rc.Top, rc.Width, rc.Height, ColorControlBackground );
-        }
-
-        if ( listControl.Font != null )
-        {
-          DrawText( listControl.Columns[i].Name, rc.Left, rc.Top, rc.Width, rc.Height, listControl.Columns[i].Alignment | DecentForms.TextAlignment.CENTERED_V,
-                    ColorControlText );
-        }
-        if ( listControl.SortColumn == i )
-        {
-          switch ( listControl.SortOrder )
-          {
-            case SortOrder.DESCENDING:
-              DrawImageCentered( GetSystemImage( SystemImage.ARROW_DOWN ), new Rectangle( rc.Right - rc.Height, rc.Top, rc.Height, rc.Height ) );
-              break;
-            case SortOrder.ASCENDING:
-              DrawImageCentered( GetSystemImage( SystemImage.ARROW_UP ), new Rectangle( rc.Right - rc.Height, rc.Top, rc.Height, rc.Height ) );
-              break;
-          }
-        }
+        RenderListControlColumn( listControl.Columns[i], rc, 
+                                 listControl.PushedColumn == i, 
+                                 listControl.SortColumn == i, 
+                                 listControl.MouseOverColumn == i, 
+                                 listControl.SortOrder );
       }
       RestoreClip();
 
@@ -1368,7 +1348,7 @@ namespace DecentForms
 
         bool bDone = false;
 
-        Rectangle rcItem;
+        GR.Math.Rectangle rcItem;
 
         if ( listControl.Items.Count > 0 )
         {
@@ -1430,7 +1410,56 @@ namespace DecentForms
 
 
 
-    internal void DrawWrappedText( string textToDraw, List<Rectangle> rectangles )
+    private void RenderListControlColumn( Column column, GR.Math.Rectangle rc, bool isPushed, bool isSorted, bool isMouseOver, SortOrder sortOrder )
+    {
+      var listControl = (ListControl)_Control;
+
+      if ( isPushed )
+      {
+        FillRectangle( rc, DarkenColor( ColorControlBackground ) );
+      }
+      else if ( isMouseOver )
+      {
+        FillRectangle( rc, ColorControlBackgroundMouseOver );
+      }
+      else
+      {
+        FillRectangle( rc, ColorControlBackground );
+      }
+      if ( ( column.Index > 0 )
+      &&   ( !isPushed ) )
+      {
+        DrawLine( rc.Left, rc.Top, rc.Left, rc.Bottom - 1, DarkenColor( ColorControlBackground ) );
+      }
+      if ( ( column.Index + 1 < listControl.Columns.Count )
+      &&   ( isPushed ) )
+      {
+        DrawLine( rc.Right - 1, rc.Top, rc.Right - 1, rc.Bottom - 1, LightenColor( ColorControlBackground ) );
+      }
+      DrawLine( rc.Left, rc.Bottom - 1, rc.Right - 1, rc.Bottom - 1, DarkenColor( ColorControlBackground ) );
+
+      if ( listControl.Font != null )
+      {
+        DrawText( column.Name, rc.Left, rc.Top, rc.Width, rc.Height, column.Alignment | DecentForms.TextAlignment.CENTERED_V,
+                  ColorControlText );
+      }
+      if ( isSorted )
+      {
+        switch ( listControl.SortOrder )
+        {
+          case SortOrder.DESCENDING:
+            DrawImageCentered( GetSystemImage( SystemImage.ARROW_DOWN ), new GR.Math.Rectangle( rc.Right - rc.Height, rc.Top, rc.Height, rc.Height ) );
+            break;
+          case SortOrder.ASCENDING:
+            DrawImageCentered( GetSystemImage( SystemImage.ARROW_UP ), new GR.Math.Rectangle( rc.Right - rc.Height, rc.Top, rc.Height, rc.Height ) );
+            break;
+        }
+      }
+    }
+
+
+
+    internal void DrawWrappedText( string textToDraw, List<GR.Math.Rectangle> rectangles )
     {
       int curY = -1;
       foreach ( var rect in rectangles )
@@ -1447,7 +1476,7 @@ namespace DecentForms
 
         DrawLine:;
         int charsFitted, linesFilled;
-        SizeF size = _G.MeasureString( textToDraw, _Control.Font, rect.Size, format, out charsFitted, out linesFilled );
+        SizeF size = _G.MeasureString( textToDraw, _Control.Font, new SizeF( rect.Size.X, rect.Size.Y ), format, out charsFitted, out linesFilled );
         if ( linesFilled == 0 )
         {
           continue;

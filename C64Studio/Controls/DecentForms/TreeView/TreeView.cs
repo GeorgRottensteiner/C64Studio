@@ -1307,7 +1307,7 @@ namespace DecentForms
 
 
     // lets mouse register on whole node height +2 extra pixels left and right
-    internal Rectangle GetToggleRectForMouse( TreeNode Node )
+    internal GR.Math.Rectangle GetToggleRectForMouse( TreeNode Node )
     {
       var rect = Node.Bounds;
       var visualRect = GetToggleRect( Node );
@@ -1320,7 +1320,7 @@ namespace DecentForms
 
 
 
-    internal Rectangle GetToggleRect( TreeNode Node )
+    internal GR.Math.Rectangle GetToggleRect( TreeNode Node )
     {
       var   rect = Node.Bounds;
       int   rectSize = (int)( rect.Height * 9 / 16 );
@@ -1331,26 +1331,26 @@ namespace DecentForms
         extraOffset += ItemHeight;
       }
 
-      rect = new Rectangle( rect.Left - ExpandToggleItemSize - extraOffset, rect.Top, ExpandToggleItemSize, rect.Height );
-      rect = new Rectangle( rect.Left + ( rect.Width - rectSize ) / 2, rect.Top + rectSize / 2, rectSize, rectSize );
+      rect = new GR.Math.Rectangle( rect.Left - ExpandToggleItemSize - extraOffset, rect.Top, ExpandToggleItemSize, rect.Height );
+      rect = new GR.Math.Rectangle( rect.Left + ( rect.Width - rectSize ) / 2, rect.Top + rectSize / 2, rectSize, rectSize );
 
       return rect;
     }
 
 
 
-    internal Rectangle GetImageRect( TreeNode Node )
+    internal GR.Math.Rectangle GetImageRect( TreeNode Node )
     {
       var   rect = Node.Bounds;
       int   rectSize = rect.Height / 2;
 
       if ( ImageList != null )
       {
-        rect = new Rectangle( rect.Left - ItemHeight - rect.Height * 4 / 16, rect.Top, ExpandToggleItemSize, rect.Height );
+        rect = new GR.Math.Rectangle( rect.Left - ItemHeight - rect.Height * 4 / 16, rect.Top, ExpandToggleItemSize, rect.Height );
       }
       else
       {
-        rect = Rectangle.Empty;
+        rect = GR.Math.Rectangle.Empty;
       }
 
       return rect;
@@ -1609,8 +1609,8 @@ namespace DecentForms
       _PopupEditControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       _PopupEditControl.Text = nodeLabelEditEventArgs.Label;
       _PopupEditControl.Font = nodeLabelEditEventArgs.Node.NodeFont;
-      _PopupEditControl.ClientSize = bounds.Size;
-      _PopupEditControl.Bounds = bounds;
+      _PopupEditControl.ClientSize = new Size( bounds.Size.X, bounds.Size.Y );
+      _PopupEditControl.Bounds = new Rectangle( bounds.X, bounds.Y, bounds.Width, bounds.Height );
       if ( _PopupEditControl.Parent != this )
       {
         Controls.Add( _PopupEditControl );

@@ -332,9 +332,9 @@ namespace DecentForms
 
 
 
-    public bool GetItemRect( int iItem, int iColumn, out Rectangle rectItem )
+    public bool GetItemRect( int iItem, int iColumn, out GR.Math.Rectangle rectItem )
     {
-      rectItem = Rectangle.Empty;
+      rectItem = GR.Math.Rectangle.Empty;
       if ( ( iItem >= Items.Count )
       ||   ( iItem < FirstVisibleItemIndex ) )
       {
@@ -357,7 +357,7 @@ namespace DecentForms
           iX += Columns[iTempColumn].Width;
           ++iTempColumn;
         }
-        rectItem = new Rectangle( iX, (int)( iItem - FirstVisibleItemIndex ) * ItemHeight, Columns[iTempColumn].Width, ItemHeight );
+        rectItem = new GR.Math.Rectangle( iX, (int)( iItem - FirstVisibleItemIndex ) * ItemHeight, Columns[iTempColumn].Width, ItemHeight );
       }
       else
       {
@@ -367,17 +367,17 @@ namespace DecentForms
 
       if ( rectItem.Bottom < 0 )
       {
-        rectItem = new Rectangle();
+        rectItem = GR.Math.Rectangle.Empty;
         return false;
       }
       if ( rectItem.Top >= ClientRectangle.Height )
       {
-        rectItem = new Rectangle();
+        rectItem = GR.Math.Rectangle.Empty;
         return false;
       }
       if ( rectItem.Top < 0 )
       {
-        rectItem = new Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
+        rectItem = new GR.Math.Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
       }
       rectItem.Offset( -_DisplayOffsetX, HeaderHeight );
 
@@ -386,9 +386,9 @@ namespace DecentForms
 
 
 
-    public Rectangle GetItemRect( int iItem )
+    public GR.Math.Rectangle GetItemRect( int iItem )
     {
-      var rectItem = Rectangle.Empty;
+      var rectItem = GR.Math.Rectangle.Empty;
       if ( ( iItem >= Items.Count )
       ||   ( iItem < FirstVisibleItemIndex ) )
       {
@@ -401,15 +401,15 @@ namespace DecentForms
 
       if ( rectItem.Bottom < 0 )
       {
-        return Rectangle.Empty;
+        return GR.Math.Rectangle.Empty;
       }
       if ( rectItem.Top >= ClientRectangle.Height )
       {
-        return Rectangle.Empty;
+        return GR.Math.Rectangle.Empty;
       }
       if ( rectItem.Top < 0 )
       {
-        rectItem = new Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
+        rectItem = new GR.Math.Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
       }
       rectItem.Offset( -_DisplayOffsetX, HeaderHeight );
 
@@ -515,7 +515,7 @@ namespace DecentForms
 
         float factor = ( ClientSize.Width - potentialVScrollWidth ) / (float)fullWidth;
         _ScrollBarH.SetSliderSize( (int)( ( _ScrollBarH.Width - 2 * 17 ) * factor ) );
-
+        _ScrollBarH.LargeChange = ClientSize.Width;
       }
       else
       {
@@ -776,6 +776,16 @@ namespace DecentForms
 
 
 
+    public int MouseOverColumn
+    {
+      get 
+      { 
+        return _MouseOverColumn; 
+      }
+    }
+
+
+
     public int PushedColumn
     {
       get
@@ -852,7 +862,7 @@ namespace DecentForms
             {
               if ( _selectedColumn != -1 )
               {
-                int   newWidth = Event.MouseX - GetHeaderRect( _selectedColumn ).Left + _DisplayOffsetX;
+                int   newWidth = Event.MouseX - GetHeaderRect( _selectedColumn ).Left;// + _DisplayOffsetX;
                 if ( newWidth < 5 )
                 {
                   newWidth = 5;
@@ -864,15 +874,16 @@ namespace DecentForms
               }
             }
 
+            int newMouseOverColumn = -1;
             if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
             {
               if ( hitTestResult == HitTestResult.HEADER_COLUMN )
               {
-                _MouseOverColumn = subItem;
+                newMouseOverColumn = subItem;
               }
               else
               {
-                _MouseOverColumn = -1;
+                newMouseOverColumn = -1;
               }
               if ( !_draggingColumn )
               {
@@ -899,6 +910,18 @@ namespace DecentForms
               }
               _MouseOverItem = -1;
             }
+            if ( _MouseOverColumn != newMouseOverColumn )
+            {
+              if ( _MouseOverColumn != -1 )
+              {
+                Invalidate( GetHeaderRect( _MouseOverColumn ) );
+              }
+              _MouseOverColumn = newMouseOverColumn;
+              if ( _MouseOverColumn != -1 )
+              {
+                Invalidate( GetHeaderRect( _MouseOverColumn ) );
+              }
+            }
           }
           break;
         case ControlEvent.EventType.MOUSE_LEAVE:
@@ -906,6 +929,11 @@ namespace DecentForms
           {
             Invalidate( GetItemRect( _MouseOverItem ) );
             _MouseOverItem = -1;
+          }
+          if ( _MouseOverColumn != -1 )
+          {
+            Invalidate( GetHeaderRect( _MouseOverColumn ) );
+            _MouseOverColumn = -1;
           }
           Invalidate();
           break;

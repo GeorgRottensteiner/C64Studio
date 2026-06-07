@@ -400,12 +400,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void DrawSampleText( ControlRenderer renderer, Rectangle bounds, string longDescription )
+    private void DrawSampleText( ControlRenderer renderer, GR.Math.Rectangle bounds, string longDescription )
     {
-      var textBounds1 = new Rectangle( bounds.X + 4, bounds.Y + 40, bounds.Width - 132 - 2 * 4, 104 - 40 );
-      var textBounds2 = new Rectangle( bounds.X + 4, bounds.Y + 104, bounds.Width - 2 * 4, bounds.Height - 20 - 104 );
+      var textBounds1 = new GR.Math.Rectangle( bounds.X + 4, bounds.Y + 40, bounds.Width - 132 - 2 * 4, 104 - 40 );
+      var textBounds2 = new GR.Math.Rectangle( bounds.X + 4, bounds.Y + 104, bounds.Width - 2 * 4, bounds.Height - 20 - 104 );
 
-      var rects = new List<Rectangle>() { textBounds1, textBounds2 };
+      var rects = new List<GR.Math.Rectangle>() { textBounds1, textBounds2 };
 
       renderer.DrawWrappedText( longDescription, rects );
     }

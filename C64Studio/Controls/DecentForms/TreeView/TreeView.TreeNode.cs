@@ -172,13 +172,13 @@ namespace DecentForms
 
 
 
-      public Rectangle Bounds 
+      public GR.Math.Rectangle Bounds 
       {
         get
         {
           if ( _Owner == null )
           {
-            return Rectangle.Empty;
+            return GR.Math.Rectangle.Empty;
           }
           int   level = Level;
           int   visualIndex = VisualIndex - _Owner._PreviousScrollPosition;
@@ -187,7 +187,7 @@ namespace DecentForms
           {
             offsetOfTextLabel += _Owner.ItemHeight;
           }
-          return new Rectangle( offsetOfTextLabel, visualIndex *  _Owner.ItemHeight, _TextWidth, _Owner.ItemHeight );
+          return new GR.Math.Rectangle( offsetOfTextLabel, visualIndex *  _Owner.ItemHeight, _TextWidth, _Owner.ItemHeight );
         }
       }
 

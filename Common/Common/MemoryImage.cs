@@ -312,6 +312,8 @@ namespace GR.Image
     {
       Create( SourceImage.Width, SourceImage.Height, SourceImage.PixelFormat );
 
+      SourceImage.m_ImageData.CopyTo( m_ImageData );
+
       for ( int i = 0; i < PaletteEntryCount; ++i )
       {
         SetPaletteColor( i, SourceImage.PaletteRed( i ), SourceImage.PaletteGreen( i ), SourceImage.PaletteBlue( i ) );
@@ -903,9 +905,9 @@ namespace GR.Image
 
       // clip
       if ( ( X >= Width )
-      || ( Y >= Height )
-      || ( X + ImageWidth < 0 )
-      || ( Y + ImageHeight < 0 ) )
+      ||   ( Y >= Height )
+      ||   ( X + ImageWidth < 0 )
+      ||   ( Y + ImageHeight < 0 ) )
       {
         return subImage;
       }
