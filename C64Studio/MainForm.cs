@@ -2184,7 +2184,7 @@ namespace RetroDevStudio
 
 
 
-    public string FillParameters( string Mask, DocumentInfo Document, bool FillForRunning, out bool Error )
+    public string FillParameters( string Mask, DocumentInfo Document, bool FillForRunning, ToolInfo execTool, out bool Error )
     {
       Error = false;
 
@@ -2221,9 +2221,9 @@ namespace RetroDevStudio
           if ( Document?.Element == null )
           {
             if ( ( StudioCore.Compiling.m_LastBuildInfo != null )
-            && ( Document != null )
-            && ( Document.FullPath != null )
-            && ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
+            &&   ( Document != null )
+            &&   ( Document.FullPath != null )
+            &&   ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
             {
               targetFilename = lastBuildInfoOfThisFile.TargetFile;
             }
@@ -2236,7 +2236,7 @@ namespace RetroDevStudio
               targetFilename = Document?.Element.CompileTargetFile;
             }
             if ( ( string.IsNullOrEmpty( targetFilename ) )
-            && ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+            &&   ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
             {
               targetFilename = GR.Path.RenameExtension( fullDocPath, ".prg" );
             }
@@ -2264,7 +2264,7 @@ namespace RetroDevStudio
 
           // alternative run file name
           if ( ( FillForRunning )
-          && ( Document?.Element != null ) )
+          &&   ( Document?.Element != null ) )
           {
             ProjectElement.PerConfigSettings configSettingRun = Document.Element.Settings[Document.Project.Settings.CurrentConfig.Name];
             if ( !string.IsNullOrEmpty( configSettingRun.DebugFile ) )
@@ -2275,7 +2275,7 @@ namespace RetroDevStudio
                 StudioCore.AddToOutput( "Alternative run file name contains forbidden macro $(RunPath), $(RunFilename) or $(RunFilenameWithoutExtension)" + System.Environment.NewLine );
                 return "";
               }
-              fullRunFilename = FillParameters( configSettingRun.DebugFile, Document, false, out Error );
+              fullRunFilename = FillParameters( configSettingRun.DebugFile, Document, false, execTool, out Error );
               if ( Error )
               {
                 return "";
@@ -2296,7 +2296,7 @@ namespace RetroDevStudio
           int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
           {
             if ( ( Document?.Project != null )
-            && ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+            &&   ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
             {
               int   dummy = -1;
               if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out dummy ) )
@@ -2354,6 +2354,26 @@ namespace RetroDevStudio
             case "RunFilenameWithoutExtension":
               valueToInsert = fullRunFilenameWithoutExtension;
               break;
+            case "ExecutablePath":
+              if ( execTool != null )
+              {
+                valueToInsert = GR.Path.GetDirectoryName( execTool.Filename );
+              }
+              else
+              {
+                valueToInsert = "<Path to be inserted>";
+              }
+              break;
+            case "ExecutableFile":
+              if ( execTool != null )
+              {
+                valueToInsert = execTool.Filename;
+              }
+              else
+              {
+                valueToInsert = "<Filename to be inserted>";
+              }
+              break;
             case "ConfigName":
               if ( Document?.Project != null )
               {
@@ -2374,14 +2394,14 @@ namespace RetroDevStudio
               break;
             case "SolutionName":
               if ( ( StudioCore.Navigating.Solution != null )
-              && ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
               {
                 valueToInsert = StudioCore.Navigating.Solution.Name;
               }
               break;
             case "SolutionPath":
               if ( ( StudioCore.Navigating.Solution != null )
-              && ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
               {
                 valueToInsert = GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename );
               }
@@ -2902,7 +2922,7 @@ namespace RetroDevStudio
         {
           runArguments += " " + toolRun.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS );
         }
-        StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, out error );
+        StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, toolRun, out error );
         if ( error )
         {
           return false;

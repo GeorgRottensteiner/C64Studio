@@ -483,7 +483,7 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       var Document = Core.MainForm.ActiveDocumentInfo;
 
-      var formMacros = new FormMacros( Core, Document, _lastFocusedEdit, true, "Macros.Tools" );
+      var formMacros = new FormMacros( Core, Document, _lastFocusedEdit, true, true, "Macros.Tools" );
       formMacros.ShowDialog();
     }
 

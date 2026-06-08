@@ -254,7 +254,7 @@ namespace RetroDevStudio.Tasks
         command = toolRun.TrueDriveOffArguments + " " + command;
       }
 
-      string targetFilename = Core.MainForm.FillParameters( "$(BuildTargetFilename)", DocumentToRun, true, out bool error );
+      string targetFilename = Core.MainForm.FillParameters( "$(BuildTargetFilename)", DocumentToRun, true, toolRun, out bool error );
       if ( error )
       {
         return false;
@@ -265,7 +265,7 @@ namespace RetroDevStudio.Tasks
         {
           command = toolRun.Argument( Emulators.DynamicArgument.FIRST_ARGUMENTS ) + " " + command;
         }
-        Core.Executing.RunProcess.StartInfo.Arguments = Core.MainForm.FillParameters( command, DocumentToRun, true, out error );
+        Core.Executing.RunProcess.StartInfo.Arguments = Core.MainForm.FillParameters( command, DocumentToRun, true, toolRun, out error );
         if ( error )
         {
           return false;
@@ -273,11 +273,11 @@ namespace RetroDevStudio.Tasks
 
         if ( Parser.ASMFileParser.IsCartridge( targetType ) )
         {
-          Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.CartArguments, DocumentToRun, true, out error );
+          Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.CartArguments, DocumentToRun, true, toolRun, out error );
         }
         else
         {
-          Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.PRGArguments, DocumentToRun, true, out error );
+          Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.PRGArguments, DocumentToRun, true, toolRun, out error );
         }
         if ( !string.IsNullOrEmpty( toolRun.Argument( Emulators.DynamicArgument.LAST_ARGUMENTS ) ) )
         {
@@ -370,7 +370,7 @@ namespace RetroDevStudio.Tasks
           for ( int i = 0; i < numConnectionAttempts; ++i )
           {
             Core.AddToOutput( "Connection attempt " + ( i + 1 ).ToString() + Environment.NewLine );
-            string runFilename = Core.MainForm.FillParameters( "$(RunFilename)", DocumentToRun, true, out error );
+            string runFilename = Core.MainForm.FillParameters( "$(RunFilename)", DocumentToRun, true, toolRun, out error );
             if ( Core.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( targetType ), runFilename ) )
             {
               Core.AddToOutput( " succeeded" + System.Environment.NewLine );

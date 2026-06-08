@@ -17,7 +17,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    public FormMacros( StudioCore Core, DocumentInfo Doc, TextBox EditToInsert, bool ShowRunCommands, string AppearanceKey )
+    public FormMacros( StudioCore Core, DocumentInfo Doc, TextBox EditToInsert, bool ShowRunCommands, bool showExecuteCommands, string AppearanceKey )
     {
       InitializeComponent();
 
@@ -42,6 +42,11 @@ namespace RetroDevStudio.Dialogs
         InsertMacro( "$(RunFile)" );
         InsertMacro( "$(RunFilenameWithoutExtension)" );
       }
+      if ( showExecuteCommands )
+      {
+        InsertMacro( "$(ExecutablePath)" );
+        InsertMacro( "$(ExecutableFile)" );
+      }
       InsertMacro( "$(DebugStartAddress)" );
       InsertMacro( "$(DebugStartAddressHex)" );
 
@@ -65,7 +70,7 @@ namespace RetroDevStudio.Dialogs
       bool    error = false;
 
       ListViewItem    item = new ListViewItem( Macro );
-      var filledParam = Core.MainForm.FillParameters( Macro, m_Doc, false, out error );
+      var filledParam = Core.MainForm.FillParameters( Macro, m_Doc, false, null, out error );
       if ( filledParam == Macro )
       {
         item.SubItems.Add( "No valid build info found, recompile is required or not applicable" );

@@ -88,7 +88,7 @@ namespace RetroDevStudio
 
       RunProcess = new System.Diagnostics.Process();
       RunProcess.StartInfo.FileName = SysWrapper.MapPath( toolRun.Filename );
-      RunProcess.StartInfo.WorkingDirectory = Core.MainForm.FillParameters( toolRun.WorkPath, Document, true, out error );
+      RunProcess.StartInfo.WorkingDirectory = Core.MainForm.FillParameters( toolRun.WorkPath, Document, true, toolRun, out error );
       RunProcess.EnableRaisingEvents = true;
 
       if ( ( RunProcess.StartInfo.WorkingDirectory.StartsWith( "\"" ) )
@@ -183,12 +183,12 @@ namespace RetroDevStudio
       if ( SysWrapper.s_IsRunningUnderWINE )
       {
         // under WINE we need to launch via cmd.exe to have proper path resolution
-        finalCommand = SysWrapper.MapPath( Core.MainForm.FillParameters( Command, CommandDocument, false, out bool errorArgs ) );
+        finalCommand = SysWrapper.MapPath( Core.MainForm.FillParameters( Command, CommandDocument, false, null, out bool errorArgs ) );
         if ( errorArgs )
         {
           return false;
         }
-        args = Core.MainForm.FillParameters( args, CommandDocument, false, out bool errorAtArgs );
+        args = Core.MainForm.FillParameters( args, CommandDocument, false, null, out bool errorAtArgs );
         if ( errorAtArgs )
         {
           return false;
@@ -201,13 +201,13 @@ namespace RetroDevStudio
         bool errorArgs = false;
         bool errorAtArgs = false;
 
-        finalCommand = Core.MainForm.FillParameters( Command, CommandDocument, false, out errorArgs );
+        finalCommand = Core.MainForm.FillParameters( Command, CommandDocument, false, null, out errorArgs );
         if ( errorArgs )
         {
           return false;
         }
         args = "/C \"" + finalCommand + "\"";
-        args = Core.MainForm.FillParameters( args, CommandDocument, false, out errorAtArgs );
+        args = Core.MainForm.FillParameters( args, CommandDocument, false, null, out errorAtArgs );
         if ( errorAtArgs )
         {
           return false;
@@ -219,7 +219,7 @@ namespace RetroDevStudio
 
       m_ExternalProcess = new System.Diagnostics.Process();
       m_ExternalProcess.StartInfo.FileName          = fullCommand;
-      m_ExternalProcess.StartInfo.WorkingDirectory  = SysWrapper.MapPath( Core.MainForm.FillParameters( "$(BuildTargetPath)", CommandDocument, false, out bool error ) );
+      m_ExternalProcess.StartInfo.WorkingDirectory  = SysWrapper.MapPath( Core.MainForm.FillParameters( "$(BuildTargetPath)", CommandDocument, false, null, out bool error ) );
       if ( error )
       {
         return false;
