@@ -1,4 +1,5 @@
-﻿using GR.Strings;
+﻿using GR.Image;
+using GR.Strings;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -128,7 +129,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void paletteEditor_PaletteModified( PaletteType Type, Palette Palette )
+    private void paletteEditor_PaletteModified( PaletteType Type, GR.Image.Palette Palette )
     {
       Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( Types.ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED ) );
     }

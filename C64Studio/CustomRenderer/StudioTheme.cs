@@ -311,14 +311,14 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
+    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, GR.Image.Palette Pal )
     {
       DrawSingleColorComboBox( Combo, e, Pal, 0 );
     }
 
 
 
-    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal, int PaletteOffset )
+    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, GR.Image.Palette Pal, int PaletteOffset )
     {
       e.DrawBackground();
       if ( e.Index == -1 )
@@ -357,7 +357,7 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-    public void DrawMultiColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
+    public void DrawMultiColorComboBox( ComboBox Combo, DrawItemEventArgs e, GR.Image.Palette Pal )
     {
       e.DrawBackground();
       if ( e.Index == -1 )
@@ -405,7 +405,7 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-    public void DrawVC20ColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
+    public void DrawVC20ColorComboBox( ComboBox Combo, DrawItemEventArgs e, GR.Image.Palette Pal )
     {
       e.DrawBackground();
       if ( e.Index == -1 )

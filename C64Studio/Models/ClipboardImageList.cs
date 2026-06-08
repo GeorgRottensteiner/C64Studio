@@ -123,7 +123,7 @@ namespace RetroDevStudio.Types
       for ( int j = 0; j < numPalettes; ++j )
       {
         int numPaletteEntries = memIn.ReadInt32();
-        var pal = new Palette( numPaletteEntries );
+        var pal = new GR.Image.Palette( numPaletteEntries );
         for ( int i = 0; i < numPaletteEntries; ++i )
         {
           pal.ColorValues[i] = memIn.ReadUInt32();

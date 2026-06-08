@@ -1,4 +1,5 @@
-﻿using GR.Memory;
+﻿using GR.Image;
+using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Formats;

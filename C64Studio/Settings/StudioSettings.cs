@@ -11,6 +11,7 @@ using RetroDevStudio.Documents;
 using System.Linq;
 using System.Management;
 using RetroDevStudio.Dialogs;
+using GR.Image;
 
 namespace RetroDevStudio
 {
@@ -242,7 +243,7 @@ namespace RetroDevStudio
     public AppMode                              StudioAppMode = AppMode.UNDECIDED;
     public bool                                 IsRunningUnderWINE = false;  
 
-    public Dictionary<PaletteType,List<Palette>>  Palettes = new Dictionary<PaletteType, List<Palette>>();
+    public Dictionary<PaletteType,List<GR.Image.Palette>>  Palettes = new Dictionary<PaletteType, List<GR.Image.Palette>>();
 
     public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
     public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();

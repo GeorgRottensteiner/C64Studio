@@ -27,9 +27,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
   <PropertyGroup>
     <PlatformTargets>AnyCPU;ARM64</PlatformTargets>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>

@@ -21,7 +21,7 @@ namespace RetroDevStudio.Controls
   {
     public System.Drawing.Graphics  Graphics;
     public System.Drawing.Rectangle Bounds;
-    public Palette                  Palette;
+    public GR.Image.Palette         Palette;
 
 
 

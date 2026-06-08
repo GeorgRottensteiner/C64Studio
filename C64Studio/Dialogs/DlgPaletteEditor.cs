@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using RetroDevStudio.Controls;
+using GR.Image;
 
 
 
@@ -15,7 +16,7 @@ namespace RetroDevStudio.Dialogs
   {
     private StudioCore      Core;
 
-    private List<Palette>   OriginalOrder;
+    private List<GR.Image.Palette>   OriginalOrder;
 
 
     public ColorSettings Colors
@@ -37,7 +38,7 @@ namespace RetroDevStudio.Dialogs
     public DlgPaletteEditor( StudioCore Core, ColorSettings Colors )
     {
       PaletteMapping = new List<int>();
-      OriginalOrder = new List<Palette>();
+      OriginalOrder = new List<GR.Image.Palette>();
 
       this.Colors = new ColorSettings( Colors );
       this.Core = Core;

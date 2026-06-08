@@ -8,14 +8,14 @@ namespace RetroDevStudio.Displayer
 {
   public class SpriteDisplayer
   {
-    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       DisplayHiResSprite( Data, Palette, Width, Height, BGColor, SpriteColor, TargetImage, X, Y, false, false, false );
     }
 
 
 
-    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
+    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -64,21 +64,21 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       DisplayMultiColorSprite( Data, Palette, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false, false );
     }
 
 
 
-    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y, bool TransparentBackground )
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y, bool TransparentBackground )
     {
       DisplayMultiColorSprite( Data, Palette, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false, TransparentBackground );
     }
 
 
 
-    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -143,7 +143,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayNCMSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
+    public static void DisplayNCMSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -202,7 +202,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayX1616ColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int PaletteOffset, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool TransparentBackground )
+    public static void DisplayX1616ColorSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int PaletteOffset, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -265,7 +265,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayX16256ColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int PaletteOffset, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool TransparentBackground )
+    public static void DisplayX16256ColorSprite( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int PaletteOffset, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool TransparentBackground )
     {
       int   lineBytes = Width;
       for ( int j = 0; j < Height; ++j )

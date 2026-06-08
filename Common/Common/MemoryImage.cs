@@ -1,5 +1,4 @@
 ﻿using GR.Memory;
-using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

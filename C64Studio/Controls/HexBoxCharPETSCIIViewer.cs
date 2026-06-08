@@ -16,7 +16,7 @@ namespace Be.Windows.Forms
 
     PETSCIIDisplay      Mode = PETSCIIDisplay.UPPER_CASE;
 
-    public Palette      PaletteC64 = ConstantData.Palette;
+    public GR.Image.Palette      PaletteC64 = ConstantData.Palette;
 
 
 

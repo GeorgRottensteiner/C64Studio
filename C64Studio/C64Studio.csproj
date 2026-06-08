@@ -12,7 +12,7 @@
     <ApplicationIcon>c64.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsWindows)'=='true'">
-	<DefineConstants>OS_WINDOWS</DefineConstants>
+    <DefineConstants>OS_WINDOWS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Controls\ArrangedItemList.cs">
@@ -604,6 +604,7 @@
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\FastColoredTextBox\FastColoredTextBox.csproj">
       <Private></Private>
       <Aliases></Aliases>
@@ -708,7 +709,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" />
 </Project>

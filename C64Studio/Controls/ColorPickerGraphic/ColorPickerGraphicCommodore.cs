@@ -91,7 +91,7 @@ namespace RetroDevStudio.Controls
 
 
 
-    public override void UpdatePalette( Palette palette )
+    public override void UpdatePalette( GR.Image.Palette palette )
     {
       _Colors.Palette = palette;
       Redraw();

@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net3.5;net4.8;net8.0;net8.0-windows</TargetFrameworks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <!-- 3.5 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net3.5'">
+    <DefineConstants>OS_WINDOWS</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net3.5'">
+  </ItemGroup>
+  <!-- 4.8 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net4.8'">
+    <DefineConstants>OS_WINDOWS</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net4.8'">
+  </ItemGroup>
+  <!-- 8.0-windows -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <DefineConstants>OS_WINDOWS</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+  </ItemGroup>
+  <!-- 8.0 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <Compile Remove="Common/DPIHandler.cs" />
+    <Compile Remove="Common/FastImage.cs" />
+    <Compile Remove="Common/FastPictureBox.cs" />
+    <Compile Remove="Common/ImageListbox.cs" />
+    <Compile Remove="Common/ScrollablePanel.cs" />
+    <Compile Remove="Common/Util.cs" />
+    <Compile Remove="Common/WindowStateManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Common\FastPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Common\ImageListbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Common\ScrollablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

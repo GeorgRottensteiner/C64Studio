@@ -20,9 +20,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.3" />
   </ItemGroup>
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
   <PropertyGroup>
     <PlatformTargets>AnyCPU;ARM64</PlatformTargets>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>

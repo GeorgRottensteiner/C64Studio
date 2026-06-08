@@ -226,9 +226,9 @@ namespace RetroDevStudio.Controls
 
 
 
-    public void PaletteChanged( Palette Palette )
+    public void PaletteChanged( GR.Image.Palette Palette )
     {
-      Colors.Palette = new Palette( Palette );
+      Colors.Palette = new GR.Image.Palette( Palette );
       Invalidate();
     }
 

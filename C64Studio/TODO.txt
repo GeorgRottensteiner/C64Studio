@@ -1,13 +1,15 @@
-﻿* Any PO includes do not provide error message on non evaluable arguments (e.g. sprites, num sprites value)
+﻿* - Charset editor:
+The Charset editor only supports use of 1x1 characters. I think it would be great to have some kind of support for designing 1x2, 2x1 and 2x2 characters using the correct number of pixels in the editor instead of just 8x8 pixels. This would be useful for making larger text fonts.
+* Sprite path trail generator
+This would be handy for those who want to try and generate movement patterns for sprites. For example if you are coding something like a vertical or horizontal scrolling shoot 'em up (not SEUCK) and want to generate accurate alien formation that does not take too much memory.
+* Support for Turbo Macro Pro X (TMPX by Style). There are a few differences between the current assemblers that support the Turbo Assembler syntax. The ones currently integrated in C64 Studio is currently TASS, and C64ASM. At the moment I'm having to use Notepad +++ and batch files to work with this assembler and then saving everything in Turbo Macro Pro/Turbo Assembler format in order to assembler and run on a native C64.
+* Any PO includes do not provide error message on non evaluable arguments (e.g. sprites, num sprites value)
 * No error if assembly is larger then the target allows (>$ffff)
 * Solution Explorer Folders, optionally also create real folder?
 * Map Editor:
   Wenn ich eine Char-Grafik mit meinen Bildbearbeitungsprogramm erstellt habe, kann ich Grafik nicht importieren für das Charset im Map-Editor.
   Ich bin statt dessen immer über den Char-Editor gegangen, den dort kann ich ja Grafiken importieren. Und von dort habe ich dann die Chars kopiert 
   und im Map Editor/Charater Set eingefügt.
-
-  Und was auch cool wäre, wenn man sein Charset hat, und man hat alle Tiles damit erstellt, das man das Chraset nach doppelten Chars 
-  durchsuchen kann die dann entfernt werden.
 
   Was noch ein Wunsch von mir wäre, wenn ich Grafiken im Char-Editor importiere für den Mega65, wird ja meist die Farbpalette mit übernommen von 
   der Grafik. 

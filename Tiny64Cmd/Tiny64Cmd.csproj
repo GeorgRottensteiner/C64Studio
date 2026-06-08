@@ -8,6 +8,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>OS_WINDOWS</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
   </PropertyGroup>
@@ -17,6 +20,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.3" />
   </ItemGroup>
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
 </Project>

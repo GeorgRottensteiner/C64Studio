@@ -200,14 +200,14 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayHiResChar( Types.GraphicTile Tile, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayHiResChar( Types.GraphicTile Tile, GR.Image.Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       DisplayHiResChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, CharColor, TargetImage, X, Y );
     }
 
 
 
-    public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, int Width, int Height, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, int Width, int Height, GR.Image.    Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // single color
       int colorIndex = 0;
@@ -232,14 +232,14 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayMultiColorChar( Types.GraphicTile Tile, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMultiColorChar( Types.GraphicTile Tile, GR.Image.Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       DisplayMultiColorChar( Tile.Data, Tile.Width, Tile.Height, Palette, BGColor, MColor1, MColor2, CharColor, TargetImage, X, Y );
     }
 
 
 
-    public static void DisplayMultiColorChar( GR.Memory.ByteBuffer Data, int Width, int Height, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMultiColorChar( GR.Memory.ByteBuffer Data, int Width, int Height, GR.Image.Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // multicolor
       if ( CharColor < 8 )
@@ -281,7 +281,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayNESChar( GR.Memory.ByteBuffer Data, Palette Palette, List<List<int>> PaletteIndexMapping, int PaletteMappingIndex, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayNESChar( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, List<List<int>> PaletteIndexMapping, int PaletteMappingIndex, GR.Image.IImage TargetImage, int X, int Y )
     {
       for ( int j = 0; j < 8; ++j )
       {
@@ -320,7 +320,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayVIC20Char( Types.GraphicTile Tile, Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayVIC20Char( Types.GraphicTile Tile, GR.Image.Palette Palette, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // multicolor
       if ( CharColor < 8 )
@@ -363,7 +363,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayMega65FCMChar( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMega65FCMChar( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       for ( int j = 0; j < 8; ++j )
       {
@@ -381,7 +381,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayMega65NCMChar( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMega65NCMChar( GR.Memory.ByteBuffer Data, GR.Image.Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       for ( int j = 0; j < 8; ++j )
       {

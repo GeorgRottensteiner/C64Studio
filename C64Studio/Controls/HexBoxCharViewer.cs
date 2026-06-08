@@ -12,7 +12,7 @@ namespace Be.Windows.Forms
 {
   public class HexBoxCharViewer : ICustomHexViewer
   {
-    public Palette    PaletteC64 = ConstantData.Palette;
+    public GR.Image.Palette    PaletteC64 = ConstantData.Palette;
 
 
 

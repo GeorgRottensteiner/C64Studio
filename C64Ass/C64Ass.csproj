@@ -16,7 +16,7 @@
     <DefineConstants>OS_WINDOWS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
-	<DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
+	  <DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <ApplicationIcon>c64.ico</ApplicationIcon>
@@ -59,10 +59,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" Condition="'$(TargetFramework)' == 'net3.5'" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" Condition="'$(TargetFramework)' == 'net4.8'" />
-  <Import Project="..\CommonWindows\CommonWindows.projitems" Label="Shared" Condition="'$(TargetFramework)' == 'net8.0-windows'" />
-  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
 </Project>
