@@ -19,6 +19,14 @@ namespace GR.Math
 
 
 
+    public Rectangle( Rectangle source )
+    {
+      _Position = new Point( source.X, source.Y );
+      _Size = new Point( source.Width, source.Height );
+    }
+
+
+
     public Rectangle( int X, int Y, int Width, int Height )
     {
       _Position  = new Point( X, Y );

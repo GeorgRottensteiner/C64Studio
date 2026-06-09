@@ -93,12 +93,15 @@ namespace RetroDevStudio.Controls
           foreach ( var screenIndex in Info.ScreensToExport )
           {
             var affectedScreen = Info.Charscreen.Screens[screenIndex];
-            for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
+
+            var currentArea = Info.Charscreen.DetermineArea( Info.Area, affectedScreen );
+
+            for ( int i = currentArea.Top; i < currentArea.Bottom; ++i )
             {
               sbPET.Append( "!pet " );
               insideQuotes = false;
               isFirstCharInLine = true;
-              for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+              for ( int x = currentArea.Left; x < currentArea.Right; ++x )
               {
                 ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
                 byte newChar    = (byte)affectedScreen.CharacterAt( x, i );
@@ -294,11 +297,16 @@ namespace RetroDevStudio.Controls
       }
       string colorData  = Util.ToASMData( Info.ScreenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", useHex );
 
-      sb.Append( ";size " );
-      sb.Append( Info.Area.Width );
-      sb.Append( "," );
-      sb.Append( Info.Area.Height );
-      sb.AppendLine();
+      if ( Info.ScreensToExport.Count == 1 )
+      {
+        var currentArea = Info.Charscreen.DetermineArea( Info.Area, Info.Charscreen.Screens[Info.ScreensToExport[0]] );
+
+        sb.Append( ";size " );
+        sb.Append( currentArea.Width );
+        sb.Append( "," );
+        sb.Append( currentArea.Height );
+        sb.AppendLine();
+      }
 
       var mode = Info.Data;
       if ( checkExportASMAsPetSCII.Checked )

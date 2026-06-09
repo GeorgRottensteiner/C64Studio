@@ -1945,14 +1945,14 @@ namespace RetroDevStudio.Documents
       {
         case 0:
           // all
-          return new GR.Math.Rectangle( 0, 0, CurrentScreen.Width, CurrentScreen.Height );
+          return new GR.Math.Rectangle( 0, 0, -1, -1 );
         case 1:
           // selection
           {
             if ( m_SelectionBounds.Width == 0 )
             {
               // no selection, select all
-              return new GR.Math.Rectangle( 0, 0, CurrentScreen.Width, CurrentScreen.Height );
+              return new GR.Math.Rectangle( 0, 0, -1, -1 );
             }
             return m_SelectionBounds;
           }

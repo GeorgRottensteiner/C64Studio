@@ -276,6 +276,30 @@ namespace RetroDevStudio.Formats
 
 
 
+    public GR.Math.Rectangle DetermineArea( GR.Math.Rectangle area, CharsetScreen affectedScreen )
+    {
+      var resultingArea = new GR.Math.Rectangle( area );
+
+      if ( resultingArea.Width == -1 )
+      {
+        resultingArea.Width = affectedScreen.Width;
+      }
+      if ( resultingArea.Height == -1 )
+      {
+        resultingArea.Height = affectedScreen.Height;
+      }
+      // NCM mode, one character covers two "slots"
+      if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
+      ||  ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
+      {
+        resultingArea.X = ( resultingArea.X + 1 ) / 2;
+        resultingArea.Width = ( resultingArea.Width / 2 );
+      }
+      return resultingArea;
+    }
+
+
+
     public bool ExportToBuffer( ExportCharsetScreenInfo Info )
     {
       Info.ScreenCharData   = new GR.Memory.ByteBuffer();
@@ -299,29 +323,22 @@ namespace RetroDevStudio.Formats
 
       
 
-      // NCM mode, one character covers two "slots"
-      if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
-      ||   ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
-      {
-        Info.Area.X = ( Info.Area.X + 1 ) / 2;
-        Info.Area.Width = ( Info.Area.Width / 2 );
-      }
-
       foreach ( var screenIndex in Info.ScreensToExport )
       {
         var affectedScreen = Screens[screenIndex];
+        var affectedArea = DetermineArea( Info.Area, affectedScreen );
 
         if ( Info.RowByRow )
         {
           // row by row
-          for ( int i = 0; i < Info.Area.Height; ++i )
+          for ( int i = 0; i < affectedArea.Height; ++i )
           {
-            for ( int x = 0; x < Info.Area.Width; ++x )
+            for ( int x = 0; x < affectedArea.Width; ++x )
             {
               // "Smart" way of choosing either one
-              byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
-                                      + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
-              ushort newChar  = affectedScreen.CharacterAt( Info.Area.X + x, Info.Area.Y + i );
+              byte newColor   = (byte)( affectedScreen.ColorAt( affectedArea.X + x, affectedArea.Y + i )
+                                      + affectedScreen.PaletteMappingAt( affectedArea.X + x, affectedArea.Y + i ) );
+              ushort newChar  = affectedScreen.CharacterAt( affectedArea.X + x, affectedArea.Y + i );
 
               newChar = (ushort)( newChar + CharOffset );
 
@@ -361,14 +378,14 @@ namespace RetroDevStudio.Formats
         }
         else
         {
-          for ( int x = 0; x < Info.Area.Width; ++x )
+          for ( int x = 0; x < affectedArea.Width; ++x )
           {
-            for ( int i = 0; i < Info.Area.Height; ++i )
+            for ( int i = 0; i < affectedArea.Height; ++i )
             {
-              byte newColor   = (byte)( affectedScreen.ColorAt( Info.Area.X + x, Info.Area.Y + i )
-                                      + affectedScreen.PaletteMappingAt( Info.Area.X + x, Info.Area.Y + i ) );
+              byte newColor   = (byte)( affectedScreen.ColorAt( affectedArea.X + x, affectedArea.Y + i )
+                                      + affectedScreen.PaletteMappingAt( affectedArea.X + x, affectedArea.Y + i ) );
 
-              ushort newChar = affectedScreen.CharacterAt( x + Info.Area.X, i + Info.Area.Y );
+              ushort newChar = affectedScreen.CharacterAt( x + affectedArea.X, i + affectedArea.Y );
 
               newChar = (ushort)( newChar + CharOffset );
 

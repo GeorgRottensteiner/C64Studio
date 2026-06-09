@@ -151,10 +151,11 @@ namespace RetroDevStudio.Controls
       foreach ( var screenIndex in Info.ScreensToExport )
       {
         var affectedScreen = Info.Charscreen.Screens[screenIndex];
+        var affectedArea = Info.Charscreen.DetermineArea( Info.Area, affectedScreen );
 
         int   startLength = sb.Length;
 
-        for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
+        for ( int i = affectedArea.Top; i < affectedArea.Bottom; ++i )
         {
           if ( !asString )
           {
@@ -163,14 +164,14 @@ namespace RetroDevStudio.Controls
             startLine += lineStep;
             sb.Append( " PRINT\"" );
             if ( ( isReverse )
-            &&   ( Info.Area.Width != affectedScreen.Width ) )
+            &&   ( affectedArea.Width != affectedScreen.Width ) )
             {
               // need to re-start reverse mode
               sb.Append( ConstantData.PetSCIIToChar[18].CharValue );
             }
           }
         
-          for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
+          for ( int x = affectedArea.Left; x < affectedArea.Right; ++x )
           {
             ushort newColor = (ushort)affectedScreen.ColorAt( x, i );
             ushort newChar = affectedScreen.CharacterAt( x, i );

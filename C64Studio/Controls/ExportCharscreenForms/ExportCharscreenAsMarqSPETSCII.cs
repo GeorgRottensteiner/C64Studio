@@ -48,9 +48,16 @@ namespace RetroDevStudio.Controls
 
       StringBuilder   sb = new StringBuilder();
 
+      int maxWidth = 0;
+      int maxHeight = 0;
+
       foreach ( var screenIndex in Info.ScreensToExport )
       {
         var affectedScreen = Info.Charscreen.Screens[screenIndex];
+        var affectedArea = Info.Charscreen.DetermineArea( Info.Area, affectedScreen );
+
+        maxWidth = Math.Max( affectedArea.Width, maxWidth );
+        maxHeight = Math.Max( affectedArea.Height, maxHeight );
 
         sb.Append( $"unsigned char frame{screenIndex:D4}[]={{// border,bg,chars,colors" );
         sb.Append( (char)10 );
@@ -59,9 +66,9 @@ namespace RetroDevStudio.Controls
         sb.Append( ',' );
         sb.Append( (char)10 );
 
-        for ( int j = 0; j < Info.Area.Height; ++j )
+        for ( int j = 0; j < affectedArea.Height; ++j )
         {
-          for ( int i = 0; i < Info.Area.Width; ++i )
+          for ( int i = 0; i < affectedArea.Width; ++i )
           {
             sb.Append( affectedScreen.CharacterAt( i, j ) );
             sb.Append( ',' );
@@ -69,13 +76,13 @@ namespace RetroDevStudio.Controls
           sb.Append( (char)10 );
         }
 
-        for ( int j = 0; j < Info.Area.Height; ++j )
+        for ( int j = 0; j < affectedArea.Height; ++j )
         {
-          for ( int i = 0; i < Info.Area.Width; ++i )
+          for ( int i = 0; i < affectedArea.Width; ++i )
           {
             sb.Append( affectedScreen.ColorAt( i, j ) );
-            if ( ( j < Info.Area.Height - 1 )
-            ||   ( i + 1 < Info.Area.Width ) )
+            if ( ( j < affectedArea.Height - 1 )
+            ||   ( i + 1 < affectedArea.Width ) )
             {
               sb.Append( ',' );
             }
@@ -84,12 +91,11 @@ namespace RetroDevStudio.Controls
         }
         sb.Append( "};" );
         sb.Append( (char)10 );
-
       }
       sb.Append( "// META: " );
-      sb.Append( Info.Area.Width );
+      sb.Append( maxWidth );
       sb.Append( ' ' );
-      sb.Append( Info.Area.Height );
+      sb.Append( maxHeight );
       sb.Append( ' ' );
       switch ( Info.Charscreen.Mode )
       {
