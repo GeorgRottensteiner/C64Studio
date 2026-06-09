@@ -20,7 +20,8 @@ namespace RetroDevStudio.Types
     CBMPRGSTUDIO,
     TASM,             // also Tass
     KICKASSEMBLER,
-    ACME
+    ACME,
+    TURBO_MACRO_PRO
   };
 
   public class MacroInfo

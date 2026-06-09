@@ -8,7 +8,7 @@ using RetroDevStudio.Types;
 namespace TestProject
 {
   [TestClass]
-  public partial class TestAssembler : TestAssemblerC64Studio
+  public partial class TestAssembler : TestAssemblerBase
   {
     [TestMethod]
     public void TestAssemblyOpcodeImplicitNoGarbage()
@@ -37,7 +37,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $1234";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010AD3412", assembly.ToString() );
     }
@@ -50,7 +50,7 @@ namespace TestProject
       string      source = @"* = $1000
                             cmp ($1234 + 4 ) * 10";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010CD30B6", assembly.ToString() );
     }
@@ -63,7 +63,7 @@ namespace TestProject
       string      source = @"!set * = $1000
                             lda $1234";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010AD3412", assembly.ToString() );
     }
@@ -76,7 +76,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $12";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A512", assembly.ToString() );
     }
@@ -89,7 +89,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $12,x";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010B512", assembly.ToString() );
     }
@@ -102,7 +102,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $12,y";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010B91200", assembly.ToString() );
     }
@@ -115,7 +115,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $1234,x";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010BD3412", assembly.ToString() );
     }
@@ -148,7 +148,7 @@ namespace TestProject
       string      source = @"* = $1000
                             adc($12, x )";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "00106112", assembly.ToString() );
     }
@@ -202,7 +202,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($12),y";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010B112", assembly.ToString() );
     }
@@ -232,8 +232,6 @@ namespace TestProject
     public void TestAssemblyOpcodeEvaluationOpcodeOffsets()
     {
       string      source = @"!cpu 6510
-                        !to ""cpu6510.bin"",plain
-
                         LABEL_VALUE = 128
 
                         * = $1000
@@ -243,9 +241,9 @@ namespace TestProject
                         sta ( LABEL_VALUE - 1 ),y
                         sta ( LABEL_VALUE + 1, x )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
-      Assert.AreEqual( "957F998100917F8181", assembly.ToString() );
+      Assert.AreEqual( "0010957F998100917F8181", assembly.ToString() );
     }
 
 
@@ -327,7 +325,7 @@ namespace TestProject
               sta VALUE_2
               rts";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0108A502850360", assembly.ToString() );
       Assert.AreEqual( 0x0002, info.Labels["VALUE_1"].AddressOrValue );
@@ -355,7 +353,7 @@ namespace TestProject
               sta VALUE_2
               rts";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "050001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A502850360", assembly.ToString() );
       Assert.AreEqual( 0x0002, info.Labels["VALUE_1"].AddressOrValue );
@@ -373,7 +371,7 @@ namespace TestProject
 
                              jmp (JUMP_ADDRESS )";
 
-      var assembly = TestAssembleC64Studio( source, CompileTargetType.NONE, null, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, CompileTargetType.NONE, null, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
 
       Assert.AreEqual( 1, Messages.Count );
       Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, asmFileInfo.Messages.Values[0].Type );
@@ -502,7 +500,7 @@ namespace TestProject
       string      source = @"* = $2000
                              !fill $80000";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( 0x80002, (int)assembly.Length );
     }
@@ -531,7 +529,7 @@ namespace TestProject
                                 !end
                                 rts";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo Info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo Info );
 
       Assert.AreEqual( "0020A000B90104990004C8C927D0F5BD28208D2704A000B92904992804C8C927D0F5BD28218D4F04A000B95104995004C8C927D0F5BD28228D7704A000B97904997804C8C927D0F5BD28238D9F04A000B9A10499A004C8C927D0F5BD28248DC704A000B9C90499C804C8C927D0F5BD28258DEF04A000B9F10499F004C8C927D0F5BD28268D1705A000B91905991805C8C927D0F5BD28278D3F05A000B94105994005C8C927D0F5BD28288D6705A000B96905996805C8C927D0F5BD28298D8F05A000B99105999005C8C927D0F5BD282A8DB705A000B9B90599B805C8C927D0F5BD282B8DDF05A000B9E10599E005C8C927D0F5BD282C8D0706A000B90906990806C8C927D0F5BD282D8D2F06A000B93106993006C8C927D0F5BD282E8D5706A000B95906995806C8C927D0F5BD282F8D7F06A000B98106998006C8C927D0F5BD28308DA706A000B9A90699A806C8C927D0F5BD28318DCF06A000B9D10699D006C8C927D0F5BD28328DF706A000B9F90699F806C8C927D0F5BD28338D1F07A000B92107992007C8C927D0F5BD28348D4707A000B94907994807C8C927D0F5BD28358D6F07A000B97107997007C8C927D0F5BD28368D9707A000B99907999807C8C927D0F5BD28378DBF07A000B9C10799C007C8C927D0F5BD28388DE707A000B9E90799E807C8C927D0F5BD28398D0F0860", assembly.ToString() );
     }
@@ -563,7 +561,7 @@ namespace TestProject
                                   }
                                   ";
 
-      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
 
       Assert.AreEqual( 5, messages.Count );
       Assert.AreEqual( "Unused constant mathlib.FALSE", messages.Values[0].Message );
@@ -588,7 +586,7 @@ namespace TestProject
                             !byte GNU
                             }";
 
-      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
 
       Assert.AreEqual( "00C005", assembly.ToString() );
     }
@@ -606,7 +604,7 @@ namespace TestProject
                                 !END
                             }";
 
-      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
 
       Assert.AreEqual( "00C0", assembly.ToString() );
     }
@@ -635,7 +633,7 @@ namespace TestProject
                           !message ""defined""
                         }";
 
-      var assembly = TestAssembleC64Studio( source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
 
       Assert.AreEqual( 4, messages.Count );
       Assert.AreEqual( "library.test = 2/$2", messages.Values[0].Message );
@@ -663,7 +661,7 @@ namespace TestProject
                               !end
                               !end";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020BD00C08D28D8BD01C08D29D8BD28C08D50D8BD29C08D51D8", assembly.ToString() );
     }
 
@@ -679,7 +677,7 @@ namespace TestProject
                               a = a - 1
                               !end";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020A90FA90EA90DA90CA90BA90AA909A908A907A906", assembly.ToString() );
     }
 
@@ -697,7 +695,7 @@ namespace TestProject
                                 a = a - 1
                               !end";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020A90FA90EA90DA90CA90B", assembly.ToString() );
       Assert.AreEqual( 15, info.Labels["label15"].AddressOrValue );
       Assert.AreEqual( 0, info.Labels["ROW_0"].AddressOrValue );
@@ -731,7 +729,7 @@ namespace TestProject
           +IF gnu , 2 , hurz , value
           +IF gnu , 3 , hurz , value";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020", assembly.ToString() );
 
       Assert.AreEqual( 2, info.Labels["if_condition1"].AddressOrValue );
@@ -759,7 +757,7 @@ namespace TestProject
             inx
 !end";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
       
       Assert.AreEqual( "0040A914200040E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200041E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200042E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200043E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200044E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200045E8", assembly.ToString() );
     }
@@ -773,7 +771,7 @@ namespace TestProject
                              P_SCREEN = $b400
                           lda #<P_SCREEN + ( 4 * 10 )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "00C0A928", assembly.ToString() );
     }
@@ -787,7 +785,7 @@ namespace TestProject
                              P_SCREEN = $b400
                           lda #>P_SCREEN + ( 4 * 10 )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "00C0A9DC", assembly.ToString() );
     }
@@ -871,7 +869,7 @@ namespace TestProject
               !BYTE %00000000,%11100000,%00000000
               !BYTE $00";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "01080B080A009E3230363100000078A9B08D00D0A9818D01D0A9218DF807A9018D15D04C2208EAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEA000003F8000FFE001FFF001F3F003ECF803EFF803ECF801F3F001FFF001FFF0017FD000BFA0009F20004E40004E40002480002480001F00001F00001F00000E00000", assembly.ToString() );
     }
@@ -887,7 +885,7 @@ namespace TestProject
                             lda #""i""
                             !byte ""i""";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A96969", assembly.ToString() );
     }
@@ -902,7 +900,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda #""hello""";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A968", assembly.ToString() );
     }
@@ -927,7 +925,7 @@ namespace TestProject
                             lda #""A""          ; lda #$41
                             lda #(""A"" + $80)  ; lda #$41 (??)";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A961A9E1A941A9C1A961A9E1A941A9C1", assembly.ToString() );
     }
@@ -943,7 +941,7 @@ namespace TestProject
                             lda #'a'
                             !byte 'b'";
 
-      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A96162", assembly.ToString() );
     }
@@ -1019,7 +1017,7 @@ namespace TestProject
               !BYTE %11111000,%11111001,%11111010,%11111011
               !BYTE %11111100,%11111101,%11111110,%11111111";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "0020000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF", assembly.ToString() );
     }
@@ -1044,7 +1042,7 @@ namespace TestProject
               !byte TEST
               !byte TEST2";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "0020102030F00201", assembly.ToString() );
     }

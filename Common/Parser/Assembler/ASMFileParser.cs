@@ -1924,6 +1924,32 @@ namespace RetroDevStudio.Parser
         return false;
       }
 
+      if ( ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+      &&   ( Count > 1 )
+      &&   ( ( Tokens[StartIndex].Content == ">" )
+      ||     ( Tokens[StartIndex].Content == "<" ) ) )
+      {
+        // still call evaluate tokens since it will collapse the result
+        bool couldEvaluate = EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out SymbolInfo valueSymbol, out var numGivenBytes );
+        if ( couldEvaluate )
+        {
+          var valueInt = valueSymbol.ToInteger();
+          if ( ( ( Tokens[StartIndex].Content == ">" )
+          &&     ( !m_AssemblerSettings.GreaterOrLessBehaviourReversed ) )
+          ||   ( ( Tokens[StartIndex].Content == "<" )
+          &&     ( m_AssemblerSettings.GreaterOrLessBehaviourReversed ) ) )
+          {
+            valueSymbol.AddressOrValue = ( valueInt >> 8 ) & 0xff;
+          }
+          else
+          {
+            valueSymbol.AddressOrValue = ( valueInt & 0xff );
+          }
+          ResultingToken = valueSymbol;
+          return true;
+        }
+      }
+
       List<Types.TokenInfo> subTokenRange = Tokens.GetRange( StartIndex, Count );
 
       bool  evaluatedPart = false;
@@ -13156,6 +13182,37 @@ namespace RetroDevStudio.Parser
                 LineTokens.RemoveRange( expressionTokenStartIndex + 2, expressionTokenCount - 2 );
                 LineTokens[2].Content = ( value & 0xff ).ToString();
                 LineTokens[2].Type = TokenInfo.TokenType.LITERAL_NUMBER;
+              }
+            }
+          }
+          else if ( ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+          &&        ( LineTokens.Count >= 2 )
+          &&        ( ( LineTokens[1].Content == ">" )
+          ||          ( LineTokens[1].Content == "<" ) ) )
+          {
+            // since it's hi/lo it's always 1
+            numBytesFirstParam = 1;
+            // still call evaluate tokens since it will collapse the result
+            //_ParseContext.DoNotAddReferences = true;
+            bool couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex + 1, expressionTokenCount - 1, out SymbolInfo valueSymbol, out numGivenBytes );
+            //_ParseContext.DoNotAddReferences = false;
+            if ( couldEvaluate )
+            {
+              value = valueSymbol.ToInteger();
+              if ( ( ( LineTokens[1].Content == ">" )
+              &&     ( !m_AssemblerSettings.GreaterOrLessBehaviourReversed ) )
+              ||   ( ( LineTokens[1].Content == "<" )
+              &&     ( m_AssemblerSettings.GreaterOrLessBehaviourReversed ) ) )
+              {
+                LineTokens.RemoveRange( expressionTokenStartIndex + 1, expressionTokenCount - 1 );
+                LineTokens[1].Content = ( ( value >> 8 ) & 0xff ).ToString();
+                LineTokens[1].Type    = TokenInfo.TokenType.LITERAL_NUMBER;
+              }
+              else
+              {
+                LineTokens.RemoveRange( expressionTokenStartIndex + 1, expressionTokenCount - 1 );
+                LineTokens[1].Content = ( value & 0xff ).ToString();
+                LineTokens[1].Type = TokenInfo.TokenType.LITERAL_NUMBER;
               }
             }
           }

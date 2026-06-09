@@ -13,7 +13,7 @@ namespace TestProject
                         !byte math.sin(90)
                         !byte math.sin(180)";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "00100100", assembly.ToString() );
     }
@@ -28,7 +28,7 @@ namespace TestProject
                         !byte math.cos(90)
                         !byte math.cos(180)";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "001000FF", assembly.ToString() );
     }
@@ -43,7 +43,7 @@ namespace TestProject
                         !byte math.tan(20)
                         !byte math.tan(64)";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "00100002", assembly.ToString() );
     }
@@ -57,7 +57,7 @@ namespace TestProject
 
                         !byte math.todegrees(3.1415926)";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "0010B3", assembly.ToString() );
     }
@@ -71,7 +71,7 @@ namespace TestProject
 
                         !byte math.toradians(180)";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "001003", assembly.ToString() );
     }
@@ -85,7 +85,7 @@ namespace TestProject
 
                         !byte math.floor( 3.1415926 )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "001003", assembly.ToString() );
     }
@@ -99,7 +99,7 @@ namespace TestProject
 
                         !byte math.ceiling( 3.1415926 )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "001004", assembly.ToString() );
     }
@@ -114,7 +114,7 @@ namespace TestProject
                         !byte math.min( 3, 10 )
                         !byte math.min( 50, 10 )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "0010030A", assembly.ToString() );
     }
@@ -129,7 +129,7 @@ namespace TestProject
                         !byte math.max( 3, 10 )
                         !byte math.max( 50, 10 )";
 
-      var assembly = TestAssembleC64Studio( source );
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source );
 
       Assert.AreEqual( "00100A32", assembly.ToString() );
     }

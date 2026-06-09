@@ -256,6 +256,9 @@ namespace C64Ass
           case "PDS":
             config.Assembler = RetroDevStudio.Types.AssemblerType.PDS;
             break;
+          case "TMP":
+            config.Assembler = RetroDevStudio.Types.AssemblerType.TURBO_MACRO_PRO;
+            break;
         }
       }
 

@@ -505,6 +505,112 @@ namespace RetroDevStudio.Parser
           OpcodeSizeIdentifierOneByteOperands = new List<string> () { "b", "d", "z" };
           OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "w", "wx", "wy" };
           break;
+        case Types.AssemblerType.TURBO_MACRO_PRO:
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.";
+
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEFx";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
+          AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
+
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\{}[]";
+
+          AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DC.W", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "MACRO", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "MAC", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "ENDM", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( "RORG", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
+          AddPseudoOp( "REND", Types.MacroInfo.PseudoOpType.REAL_PC );
+          AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "SUBROUTINE", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "ERR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "IFCONST", Types.MacroInfo.PseudoOpType.IFDEF );
+          AddPseudoOp( "IFNCONST", Types.MacroInfo.PseudoOpType.IFNDEF );
+          AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
+          AddPseudoOp( "ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
+          AddPseudoOp( "DS.Z", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DS.B", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "ALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
+          AddPseudoOp( "ECHO", Types.MacroInfo.PseudoOpType.MESSAGE );
+
+          AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.LOOP_START );
+          AddPseudoOp( "REPEND", Types.MacroInfo.PseudoOpType.LOOP_END );
+
+          AddPseudoOp( "PROCESSOR", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "ORG", Types.MacroInfo.PseudoOpType.ORG );
+          AddPseudoOp( "SEG", Types.MacroInfo.PseudoOpType.SEG );
+          AddPseudoOp( "SEG.U", Types.MacroInfo.PseudoOpType.SEG_VIRTUAL );
+          AddPseudoOp( "INCDIR", Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
+
+          RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
+
+          LabelPostfix = ":";
+          MacroFunctionCallPrefix.Add( ":" );
+          GlobalLabelsAutoZone = false;
+          DefineSeparatorKeywords.AddRange( new string[] { "SET", "EQU", "=" } );
+          PlainAssignmentOperators.AddRange( new string[] { "SET", "EQU", "=" } );
+          MacroIsZone = true;
+          MacrosHaveVariableNumberOfArguments = true;
+          IncludeExpectsStringLiteral = false;
+          IncludeHasOnlyFilename = true;
+          IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
+          CaseSensitive = false;
+          LoopEndHasNoScope = false;
+          MessageAutoIncludesBlanksBetweenParameters = true;
+          DefaultTarget.Type = Types.CompileTargetType.PLAIN;
+          DefaultTargetExtension = ".bin";
+          LabelsMustBeAtStartOfLine = true;
+          GreaterOrLessThanAtBeginningAffectFullExpression = true;
+
+          // Turbo Macro Pro has no operator precedence
+          OperatorPrecedence.Clear();
+          OperatorPrecedence["-"] = 1;
+          OperatorPrecedence["+"] = 1;
+          OperatorPrecedence["/"] = 1;
+          OperatorPrecedence["*"] = 1;
+          OperatorPrecedence["%"] = 1;
+          OperatorPrecedence["|"] = 1;
+          OperatorPrecedence["&"] = 1;
+
+          OperatorPrecedence["<>"] = 2;
+          OperatorPrecedence[">="] = 2;
+          OperatorPrecedence["<="] = 2;
+          OperatorPrecedence["="] = 2;
+          OperatorPrecedence["=="] = 2;
+          OperatorPrecedence[">"] = 8;
+          OperatorPrecedence["<"] = 8;
+          OperatorPrecedence["!"] = 8;
+          OperatorPrecedence["~"] = 8;
+
+          break;
         case Types.AssemblerType.TASM:
           // 64tass, TASM
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";

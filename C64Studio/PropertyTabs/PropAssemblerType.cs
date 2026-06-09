@@ -32,6 +32,7 @@ namespace RetroDevStudio
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "CBMPRGSTUDIO", RetroDevStudio.Types.AssemblerType.CBMPRGSTUDIO ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "TASM", RetroDevStudio.Types.AssemblerType.TASM ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "Kick Assembler", RetroDevStudio.Types.AssemblerType.KICKASSEMBLER ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "Turbo Macro Pro", RetroDevStudio.Types.AssemblerType.TURBO_MACRO_PRO ) );
 
       SetType( Element.AssemblerType );
     }
