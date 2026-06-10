@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Image;
+using RetroDevStudio;
 using RetroDevStudio.Controls;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace DecentForms
 
       BorderStyle       = BorderStyle.SUNKEN;
 
-      
+      _ItemHeight        = (int)( ItemHeight * DPIHandler.DPIY / 96.0f + 0.5f );
 
       Controls.Add( _ScrollBarV );
       Controls.Add( _ScrollBarH );
@@ -441,7 +442,23 @@ namespace DecentForms
 
 
 
-    public int ItemHeight { get; set; } = 15;
+    private int _ItemHeight = 15;
+
+    public int ItemHeight
+    {
+      get
+      {
+        return _ItemHeight;
+      }
+      set
+      {
+        _ItemHeight = (int)( value * DPIHandler.DPIY / 96.0f + 0.5f );
+        Invalidate();
+      }
+    }
+
+
+
     public ListControlItemCollection          Items { get; private set; }
     public ListControlItemIndexCollection     SelectedIndices { get; private set; }
     public ListControlSelectedItemCollection  SelectedItems { get; private set; }

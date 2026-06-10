@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Image;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -37,7 +38,9 @@ namespace DecentForms
 
       BorderStyle       = BorderStyle.SUNKEN;
 
-      
+      _ItemHeight       = (int)( ItemHeight * DPIHandler.DPIY / 96.0f + 0.5f );
+
+
 
       Controls.Add( _ScrollBar );
       Controls.Add( _ScrollBarH );
@@ -70,7 +73,23 @@ namespace DecentForms
 
 
 
-    public int ItemHeight { get; set; } = 15;
+    private int _ItemHeight = 15;
+
+    public int ItemHeight
+    {
+      get
+      {
+        return _ItemHeight;
+      }
+      set
+      {
+        _ItemHeight = (int)( value * DPIHandler.DPIY / 96.0f + 0.5f );
+        Invalidate();
+      }
+    }
+
+
+
     public ListBoxItemCollection          Items { get; private set; }
     public ListBoxItemIndexCollection     SelectedIndices { get; private set; }
     public ListBoxSelectedItemCollection  SelectedItems { get; private set; }
