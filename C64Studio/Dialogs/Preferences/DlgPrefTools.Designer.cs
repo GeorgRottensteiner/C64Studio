@@ -31,17 +31,21 @@
       this.alistTools = new RetroDevStudio.Controls.ArrangedItemList();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnMacros = new DecentForms.Button();
       this.editToolCartArguments = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label12 = new System.Windows.Forms.Label();
+      this.editLastArgs = new System.Windows.Forms.TextBox();
+      this.label10 = new System.Windows.Forms.Label();
       this.editToolTrueDriveOffArguments = new System.Windows.Forms.TextBox();
+      this.editFirstArgs = new System.Windows.Forms.TextBox();
       this.label24 = new System.Windows.Forms.Label();
+      this.label9 = new System.Windows.Forms.Label();
       this.editToolTrueDriveOnArguments = new System.Windows.Forms.TextBox();
       this.label23 = new System.Windows.Forms.Label();
       this.editToolDebugArguments = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
       this.editToolPRGArguments = new System.Windows.Forms.TextBox();
+      this.btnMacros = new DecentForms.Button();
       this.comboToolType = new System.Windows.Forms.ComboBox();
       this.editToolName = new System.Windows.Forms.TextBox();
       this.editWorkPath = new System.Windows.Forms.TextBox();
@@ -54,10 +58,6 @@
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.label9 = new System.Windows.Forms.Label();
-      this.editFirstArgs = new System.Windows.Forms.TextBox();
-      this.label10 = new System.Windows.Forms.Label();
-      this.editLastArgs = new System.Windows.Forms.TextBox();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -124,20 +124,6 @@
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Runtime Arguments";
       // 
-      // btnMacros
-      // 
-      this.btnMacros.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-      this.btnMacros.BorderStyle = DecentForms.BorderStyle.FLAT;
-      this.btnMacros.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
-      this.btnMacros.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnMacros.Image = null;
-      this.btnMacros.Location = new System.Drawing.Point(570, 350);
-      this.btnMacros.Name = "btnMacros";
-      this.btnMacros.Size = new System.Drawing.Size(75, 23);
-      this.btnMacros.TabIndex = 8;
-      this.btnMacros.Text = "Macros";
-      this.btnMacros.Click += new DecentForms.EventHandler(this.btnMacros_Click);
-      // 
       // editToolCartArguments
       // 
       this.editToolCartArguments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -167,6 +153,25 @@
       this.label12.TabIndex = 3;
       this.label12.Text = "Cartridge:";
       // 
+      // editLastArgs
+      // 
+      this.editLastArgs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editLastArgs.Location = new System.Drawing.Point(83, 175);
+      this.editLastArgs.Name = "editLastArgs";
+      this.editLastArgs.Size = new System.Drawing.Size(291, 20);
+      this.editLastArgs.TabIndex = 6;
+      this.editLastArgs.TextChanged += new System.EventHandler(this.editLastArgs_TextChanged);
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(6, 178);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(54, 13);
+      this.label10.TabIndex = 3;
+      this.label10.Text = "Last Args:";
+      // 
       // editToolTrueDriveOffArguments
       // 
       this.editToolTrueDriveOffArguments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -177,6 +182,17 @@
       this.editToolTrueDriveOffArguments.TabIndex = 4;
       this.editToolTrueDriveOffArguments.TextChanged += new System.EventHandler(this.editToolTrueDriveOffArguments_TextChanged);
       // 
+      // editFirstArgs
+      // 
+      this.editFirstArgs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editFirstArgs.Location = new System.Drawing.Point(83, 149);
+      this.editFirstArgs.Name = "editFirstArgs";
+      this.editFirstArgs.Size = new System.Drawing.Size(291, 20);
+      this.editFirstArgs.TabIndex = 5;
+      this.editFirstArgs.TextChanged += new System.EventHandler(this.editFirstArgs_TextChanged);
+      this.editFirstArgs.Enter += new System.EventHandler(this.editGotFocus);
+      // 
       // label24
       // 
       this.label24.AutoSize = true;
@@ -185,6 +201,15 @@
       this.label24.Size = new System.Drawing.Size(75, 13);
       this.label24.TabIndex = 3;
       this.label24.Text = "True Drive off:";
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(6, 152);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(53, 13);
+      this.label9.TabIndex = 3;
+      this.label9.Text = "First Args:";
       // 
       // editToolTrueDriveOnArguments
       // 
@@ -236,6 +261,20 @@
       this.editToolPRGArguments.TabIndex = 0;
       this.editToolPRGArguments.TextChanged += new System.EventHandler(this.editToolPRGArguments_TextChanged);
       this.editToolPRGArguments.Enter += new System.EventHandler(this.editGotFocus);
+      // 
+      // btnMacros
+      // 
+      this.btnMacros.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+      this.btnMacros.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.btnMacros.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
+      this.btnMacros.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnMacros.Image = null;
+      this.btnMacros.Location = new System.Drawing.Point(570, 350);
+      this.btnMacros.Name = "btnMacros";
+      this.btnMacros.Size = new System.Drawing.Size(75, 23);
+      this.btnMacros.TabIndex = 8;
+      this.btnMacros.Text = "Macros";
+      this.btnMacros.Click += new DecentForms.EventHandler(this.btnMacros_Click);
       // 
       // comboToolType
       // 
@@ -358,45 +397,6 @@
       this.label1.Size = new System.Drawing.Size(82, 13);
       this.label1.TabIndex = 15;
       this.label1.Text = "Available Tools:";
-      // 
-      // label9
-      // 
-      this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(6, 152);
-      this.label9.Name = "label9";
-      this.label9.Size = new System.Drawing.Size(53, 13);
-      this.label9.TabIndex = 3;
-      this.label9.Text = "First Args:";
-      // 
-      // editFirstArgs
-      // 
-      this.editFirstArgs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editFirstArgs.Location = new System.Drawing.Point(83, 149);
-      this.editFirstArgs.Name = "editFirstArgs";
-      this.editFirstArgs.Size = new System.Drawing.Size(291, 20);
-      this.editFirstArgs.TabIndex = 5;
-      this.editFirstArgs.TextChanged += new System.EventHandler(this.editFirstArgs_TextChanged);
-      this.editFirstArgs.Enter += new System.EventHandler(this.editGotFocus);
-      // 
-      // label10
-      // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 178);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(54, 13);
-      this.label10.TabIndex = 3;
-      this.label10.Text = "Last Args:";
-      // 
-      // editLastArgs
-      // 
-      this.editLastArgs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editLastArgs.Location = new System.Drawing.Point(83, 175);
-      this.editLastArgs.Name = "editLastArgs";
-      this.editLastArgs.Size = new System.Drawing.Size(291, 20);
-      this.editLastArgs.TabIndex = 6;
-      this.editLastArgs.TextChanged += new System.EventHandler(this.editLastArgs_TextChanged);
       // 
       // DlgPrefTools
       // 

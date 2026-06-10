@@ -267,7 +267,7 @@ namespace RetroDevStudio.Dialogs
       }
       var prefBase = e.Node.Tag as DlgPrefBase;
       prefBase.Location = new Point( 0, 0 );
-      prefBase.Size     = panelPreferences.ClientSize;
+      //prefBase.Size     = panelPreferences.ClientSize;
 
       foreach ( Control control in panelPreferences.Controls )
       {
@@ -276,6 +276,12 @@ namespace RetroDevStudio.Dialogs
       panelPreferences.Controls.Clear();
       panelPreferences.Controls.Add( prefBase );
       prefBase.Visible = true;
+      if ( !prefBase.SizeSet )
+      {
+        prefBase.Size = panelPreferences.ClientSize;
+        prefBase.SizeSet = true;
+      }
+      //prefBase.Dock = DockStyle.Fill;
       btnExportHere.Enabled = true;
       btnImportHere.Enabled = true;
     }

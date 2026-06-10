@@ -152,6 +152,7 @@ namespace DecentForms
         _ScrollBarH.Bounds = new System.Drawing.Rectangle( 0, ClientSize.Height - _ScrollBarH.Height, ClientSize.Width - potentialVScrollWidth, _ScrollBarH.Height );
 
         _ScrollBarH.Maximum = MaxItemWidth - ( ClientSize.Width - potentialVScrollWidth );
+        _ScrollBarH.LargeChange = ClientSize.Width;
 
         float factor = ( ClientSize.Width - potentialVScrollWidth ) / (float)MaxItemWidth;
         _ScrollBarH.SetSliderSize( (int)( ( _ScrollBarH.Width - 2 * 17 ) * factor ) );

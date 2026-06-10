@@ -19,6 +19,8 @@ namespace RetroDevStudio.Dialogs.Preferences
 
     protected Form            _owner = null;
 
+    public bool               SizeSet = false;     // only set the size once 
+
 
 
     public DlgPrefBase()
