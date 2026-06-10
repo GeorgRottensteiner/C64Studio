@@ -56,6 +56,7 @@ namespace RetroDevStudio.Documents
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC DATA statements", typeof( ExportBinaryAsBASICData ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC PRINT", typeof( ExportBinaryAsPRINTStatement ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to file", typeof( ExportBinaryAsFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to C array", typeof( ExportBinaryAsCArray ) ) );
       comboExportMethod.SelectedIndex = 0;
 
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from file", typeof( ImportBinaryFromFile ) ) );

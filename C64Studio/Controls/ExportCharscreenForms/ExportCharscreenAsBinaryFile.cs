@@ -51,16 +51,16 @@ namespace RetroDevStudio.Controls
       switch ( Info.Data )
       {
         case ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR:
-          finalData = Info.ScreenCharData + Info.ScreenColorData;
+          finalData = Info.CombinedCharData + Info.CombinedColorData;
           break;
         case ExportCharsetScreenInfo.ExportData.CHAR_ONLY:
-          finalData = Info.ScreenCharData;
+          finalData = Info.CombinedCharData;
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_ONLY:
-          finalData = Info.ScreenColorData;
+          finalData = Info.CombinedColorData;
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR:
-          finalData = Info.ScreenColorData + Info.ScreenCharData;
+          finalData = Info.CombinedColorData + Info.CombinedCharData;
           break;
         case ExportCharsetScreenInfo.ExportData.CHARSET:
           finalData = Info.CharsetData;
@@ -70,11 +70,11 @@ namespace RetroDevStudio.Controls
             ByteBuffer  interleavedBuffer = null;
             if ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED )
             {
-              interleavedBuffer = new ByteBuffer( Info.ScreenCharData.Length + Info.ScreenColorData.Length );
-              for ( int i = 0; i < Info.ScreenCharData.Length; ++i )
+              interleavedBuffer = new ByteBuffer( Info.CombinedCharData.Length + Info.CombinedColorData.Length );
+              for ( int i = 0; i < Info.CombinedCharData.Length; ++i )
               {
-                interleavedBuffer.SetU8At( i * 2, Info.ScreenCharData.ByteAt( i ) );
-                interleavedBuffer.SetU8At( i * 2 + 1, Info.ScreenColorData.ByteAt( i ) );
+                interleavedBuffer.SetU8At( i * 2, Info.CombinedCharData.ByteAt( i ) );
+                interleavedBuffer.SetU8At( i * 2 + 1, Info.CombinedColorData.ByteAt( i ) );
               }
             }
             finalData = interleavedBuffer;

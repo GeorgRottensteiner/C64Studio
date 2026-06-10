@@ -326,13 +326,14 @@ namespace RetroDevStudio.Parser
             if ( !binary )
             {
               textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+
+              textToInclude += Util.ToASMData( exportInfo.ScreenCharData[0], false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
               combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
             }
             else
             {
-              dataToInclude += exportInfo.ScreenCharData;
+              dataToInclude += exportInfo.ScreenCharData[0];
             }
           }
           else if ( ( method == "COLOR" )
@@ -341,12 +342,12 @@ namespace RetroDevStudio.Parser
             if ( !binary )
             {
               textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenColorData[0], false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
               combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
             }
             else
             {
-              dataToInclude += exportInfo.ScreenColorData;
+              dataToInclude += exportInfo.ScreenColorData[0];
             }
           }
           else if ( ( method == "CHARCOLOR" )
@@ -355,25 +356,25 @@ namespace RetroDevStudio.Parser
             if ( !binary )
             {
               textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+              textToInclude += Util.ToASMData( exportInfo.ScreenCharData[0], false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
               textToInclude += OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenColorData[0], false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
               combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
             }
             else
             {
-              dataToInclude += exportInfo.ScreenCharData + exportInfo.ScreenColorData;
+              dataToInclude += exportInfo.ScreenCharData[0] + exportInfo.ScreenColorData[0];
             }
           }
           else if ( ( method == "CHARCOLORINTERLEAVED" )
           ||        ( method == "CHARCOLORINTERLEAVEDVERT" ) )
           {
-            var interleavedBuffer = new ByteBuffer( exportInfo.ScreenCharData.Length + exportInfo.ScreenColorData.Length );
-            for ( int i = 0; i < exportInfo.ScreenCharData.Length; ++i )
+            var interleavedBuffer = new ByteBuffer( exportInfo.ScreenCharData[0].Length + exportInfo.ScreenColorData[0].Length );
+            for ( int i = 0; i < exportInfo.ScreenCharData[0].Length; ++i )
             {
-              interleavedBuffer.SetU8At( i * 2, exportInfo.ScreenCharData.ByteAt( i ) );
-              interleavedBuffer.SetU8At( i * 2 + 1, exportInfo.ScreenColorData.ByteAt( i ) );
+              interleavedBuffer.SetU8At( i * 2, exportInfo.ScreenCharData[0].ByteAt( i ) );
+              interleavedBuffer.SetU8At( i * 2 + 1, exportInfo.ScreenColorData[0].ByteAt( i ) );
             }
 
             if ( !binary )
@@ -394,14 +395,14 @@ namespace RetroDevStudio.Parser
             if ( !binary )
             {
               textToInclude = OptionalPrefix( labelPrefix, "_", "COLOR" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+              textToInclude += Util.ToASMData( exportInfo.ScreenColorData[0], false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
               textToInclude += OptionalPrefix( labelPrefix, "_", "CHARS" ) + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenCharData[0], false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
               combinedReplacementLines.AddRange( textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ) );
             }
             else
             {
-              dataToInclude += exportInfo.ScreenColorData + exportInfo.ScreenCharData;
+              dataToInclude += exportInfo.ScreenColorData[0] + exportInfo.ScreenCharData[0];
             }
           }
         }

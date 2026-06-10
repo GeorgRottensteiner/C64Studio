@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using GR.Memory;
+using RetroDevStudio;
 using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
@@ -302,9 +303,11 @@ namespace RetroDevStudio.Formats
 
     public bool ExportToBuffer( ExportCharsetScreenInfo Info )
     {
-      Info.ScreenCharData   = new GR.Memory.ByteBuffer();
-      Info.ScreenColorData  = new GR.Memory.ByteBuffer();
-      Info.CharsetData      = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
+      Info.ScreenCharData     = new List<GR.Memory.ByteBuffer>();
+      Info.ScreenColorData    = new List<GR.Memory.ByteBuffer>();
+      Info.CombinedCharData   = new ByteBuffer();
+      Info.CombinedColorData  = new GR.Memory.ByteBuffer();
+      Info.CharsetData        = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
 
       int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) );
       int numBytesPerCharImage = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.TextCharModeFromTextMode( Mode ) );
@@ -321,12 +324,15 @@ namespace RetroDevStudio.Formats
         Info.CharsetData = newData;
       }
 
-      
-
       foreach ( var screenIndex in Info.ScreensToExport )
       {
         var affectedScreen = Screens[screenIndex];
         var affectedArea = DetermineArea( Info.Area, affectedScreen );
+        var curCharData = new ByteBuffer();
+        var curColorData = new ByteBuffer();
+
+        Info.ScreenCharData.Add( curCharData );
+        Info.ScreenColorData.Add( curColorData );
 
         if ( Info.RowByRow )
         {
@@ -344,11 +350,11 @@ namespace RetroDevStudio.Formats
 
               if ( numBytesPerChar == 2 )
               {
-                Info.ScreenCharData.AppendU16( newChar );
+                curCharData.AppendU16( newChar );
               }
               else
               {
-                Info.ScreenCharData.AppendU8( (byte)newChar );
+                curCharData.AppendU8( (byte)newChar );
               }
               if ( Lookup.TextModeUsesColor( Mode ) )
               {
@@ -360,17 +366,17 @@ namespace RetroDevStudio.Formats
                   {
                     newColor += 64 - 16;
                   }
-                  Info.ScreenColorData.AppendU8( newColor );
+                  curColorData.AppendU8( newColor );
                 }
                 else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
                 ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
                 {
                   // set the NCM bit in color byte 0
-                  Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+                  curColorData.AppendU16NetworkOrder( 0x0800 );
                 }
                 else
                 {
-                  Info.ScreenColorData.AppendU8( newColor );
+                  curColorData.AppendU8( newColor );
                 }
               }
             }
@@ -391,11 +397,11 @@ namespace RetroDevStudio.Formats
 
               if ( numBytesPerChar == 2 )
               {
-                Info.ScreenCharData.AppendU16( newChar );
+                curCharData.AppendU16( newChar );
               }
               else
               {
-                Info.ScreenCharData.AppendU8( (byte)newChar );
+                curCharData.AppendU8( (byte)newChar );
               }
               if ( Lookup.TextModeUsesColor( Mode ) )
               {
@@ -407,22 +413,25 @@ namespace RetroDevStudio.Formats
                   {
                     newColor += 64 - 16;
                   }
-                  Info.ScreenColorData.AppendU8( newColor );
+                  curColorData.AppendU8( newColor );
                 }
                 else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
                 ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
                 {
                   // set the NCM bit in color byte 0
-                  Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+                  curColorData.AppendU16NetworkOrder( 0x0800 );
                 }
                 else
                 {
-                  Info.ScreenColorData.AppendU8( newColor );
+                  curColorData.AppendU8( newColor );
                 }
               }
             }
           }
         }
+
+        Info.CombinedCharData += curCharData;
+        Info.CombinedColorData += curColorData;
       }
       return true;
     }

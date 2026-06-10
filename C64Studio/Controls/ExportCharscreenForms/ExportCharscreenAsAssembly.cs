@@ -63,7 +63,16 @@ namespace RetroDevStudio.Controls
         replaceSpaceWithCursorRight = false;
       }
 
-      var charData = new ByteBuffer( Info.ScreenCharData );
+      var charData = new ByteBuffer();
+      var colorData = new ByteBuffer();
+      foreach ( var entry in Info.ScreenCharData )
+      {
+        charData += entry;
+      }
+      foreach ( var entry in Info.ScreenColorData )
+      {
+        colorData += entry;
+      }
 
       if ( ( ( checkExportASMAsPetSCII.Checked )
       ||     ( checkPETSCIIEncoding.Checked ) )
@@ -277,11 +286,11 @@ namespace RetroDevStudio.Controls
       ByteBuffer  interleavedBuffer = null;
       if ( Info.Data == ExportCharsetScreenInfo.ExportData.CHAR_AND_COLOR_INTERLEAVED )
       {
-        interleavedBuffer = new ByteBuffer( charData.Length + Info.ScreenColorData.Length );
+        interleavedBuffer = new ByteBuffer( charData.Length + colorData.Length );
         for ( int i = 0; i < charData.Length; ++i )
         {
           interleavedBuffer.SetU8At( i * 2, charData.ByteAt( i ) );
-          interleavedBuffer.SetU8At( i * 2 + 1, Info.ScreenColorData.ByteAt( i ) );
+          interleavedBuffer.SetU8At( i * 2 + 1, colorData.ByteAt( i ) );
         }
       }
 
@@ -295,7 +304,7 @@ namespace RetroDevStudio.Controls
       {
         screenData = Util.ToASMData( charData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", useHex );
       }
-      string colorData  = Util.ToASMData( Info.ScreenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", useHex );
+      string colorDataASM  = Util.ToASMData( colorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", useHex );
 
       if ( Info.ScreensToExport.Count == 1 )
       {
@@ -321,16 +330,16 @@ namespace RetroDevStudio.Controls
       switch ( mode )
       {
         case ExportCharsetScreenInfo.ExportData.CHAR_THEN_COLOR:
-          sb.Append( ";screen char data" + Environment.NewLine + screenData + Environment.NewLine + ";screen color data" + Environment.NewLine + colorData );
+          sb.Append( ";screen char data" + Environment.NewLine + screenData + Environment.NewLine + ";screen color data" + Environment.NewLine + colorDataASM );
           break;
         case ExportCharsetScreenInfo.ExportData.CHAR_ONLY:
           sb.Append( ";screen char data" + Environment.NewLine + screenData + Environment.NewLine );
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_ONLY:
-          sb.Append( ";screen color data" + Environment.NewLine + colorData );
+          sb.Append( ";screen color data" + Environment.NewLine + colorDataASM );
           break;
         case ExportCharsetScreenInfo.ExportData.COLOR_THEN_CHAR:
-          sb.Append( ";screen color data" + Environment.NewLine + colorData + Environment.NewLine + ";screen char data" + Environment.NewLine + screenData );
+          sb.Append( ";screen color data" + Environment.NewLine + colorDataASM + Environment.NewLine + ";screen char data" + Environment.NewLine + screenData );
           break;
         case ExportCharsetScreenInfo.ExportData.CHARSET:
           sb.Append( ";charset data" + Environment.NewLine + Util.ToASMData( Info.CharsetData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", useHex ) );

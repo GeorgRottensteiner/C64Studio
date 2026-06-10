@@ -76,6 +76,7 @@ namespace RetroDevStudio.Documents
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportCharsetAsBinaryFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportCharsetAsImageFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportCharsetAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as C array", typeof( ExportCharsetAsCArray ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC DATA statements", typeof( ExportCharsetAsBASICData ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC CHARDEF statements", typeof( ExportCharsetAsBASICChardef ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as S-BASIC FCM CHARDEF statements", typeof( ExportCharsetAsSBASICFCMChardef ) ) );

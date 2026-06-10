@@ -93,6 +93,9 @@
     <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsCArray.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsPRINTStatement.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -109,6 +112,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ExportBinaryForms\ExportBinaryFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsCArray.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsCArray.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsCharsetFile.cs">

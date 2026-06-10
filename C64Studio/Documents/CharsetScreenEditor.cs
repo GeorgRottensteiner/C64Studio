@@ -119,6 +119,7 @@ namespace RetroDevStudio.Documents
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to charset project file", typeof( ExportCharscreenAsCharset ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportCharscreenAsImageFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportCharscreenAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to C array", typeof( ExportCharscreenAsCArray ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Marq's PETSCII editor", typeof( ExportCharscreenAsMarqSPETSCII ) ) );
       comboExportMethod.SelectedIndex = 0;
       comboExportOrientation.SelectedIndex = 0;

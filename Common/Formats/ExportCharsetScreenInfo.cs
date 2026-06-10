@@ -18,8 +18,10 @@ namespace RetroDevStudio.Formats
     }
 
     public CharsetScreenProject       Charscreen;
-    public GR.Memory.ByteBuffer       ScreenCharData;
-    public GR.Memory.ByteBuffer       ScreenColorData;
+    public List<GR.Memory.ByteBuffer> ScreenCharData = new List<GR.Memory.ByteBuffer>();
+    public List<GR.Memory.ByteBuffer> ScreenColorData = new List<GR.Memory.ByteBuffer>();
+    public GR.Memory.ByteBuffer       CombinedCharData;
+    public GR.Memory.ByteBuffer       CombinedColorData;
     public GR.Memory.ByteBuffer       CharsetData;
     public GR.Math.Rectangle          Area;
     public List<int>                  SelectedCharactersInCharset = new List<int>();

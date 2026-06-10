@@ -722,5 +722,42 @@ namespace RetroDevStudio
 
 
 
+    public static string ToCArray( ByteBuffer data, bool wrapData, int wrapByteCount, string varName, bool exportHex )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      sb.AppendLine( $"unsigned char {varName}[]={{" );
+
+      int dataPos = 0;
+
+      while ( dataPos < data.Length )
+      {
+        if ( ( wrapData )
+        &&   ( dataPos > 0 )
+        &&   ( ( dataPos % wrapByteCount ) == 0 ) )
+        {
+          sb.AppendLine();
+        }
+        sb.Append( exportHex ? $"0x{data.ByteAt( dataPos ).ToString( "X2" )}" : data.ByteAt( dataPos ).ToString() );
+        if ( dataPos + 1 < data.Length )
+        {
+          sb.Append( ',' );
+        }
+        ++dataPos;
+      }
+      if ( ( wrapData )
+      &&   ( dataPos > 0 )
+      &&   ( ( dataPos % wrapByteCount ) == 0 ) )
+      {
+        sb.AppendLine();
+      }
+      sb.AppendLine( "};" );
+
+      return sb.ToString();
+    }
+
+
+
   }
+
 }
