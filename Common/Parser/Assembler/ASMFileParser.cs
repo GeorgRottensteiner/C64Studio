@@ -9812,6 +9812,49 @@ namespace RetroDevStudio.Parser
 
 
 
+    private bool EndsWithOpeningCurlyBraces( List<TokenInfo> Tokens )
+    {
+      if ( Tokens.Count == 0 )
+      {
+        return false;
+      }
+      if ( Tokens.Last().Content == "{" )
+      {
+        return true;
+      }
+      if ( Tokens.Count <= 1 )
+      {
+        return false;
+      }
+      if ( ( Tokens.Last().Type == TokenInfo.TokenType.COMMENT )
+      &&   ( Tokens[Tokens.Count - 2].Content == "{" ) )
+      {
+        return true;
+      } 
+      return false;
+    }
+
+
+
+    private bool TokenIsConditionalThatStartsScopeWithCurlyBraces( TokenInfo Token )
+    {
+      if ( ( Token.Type == TokenInfo.TokenType.PSEUDO_OP )
+      &&   ( m_AssemblerSettings.PseudoOps.Any( po => ( ( po.Value.Type == MacroInfo.PseudoOpType.IF )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFDEF )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.FOR )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.WHILE )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFDEF_ARGUMENT )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.IFNDEF ) )
+                                                   && ( po.Key == Token.Content.ToUpper() ) ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private bool TokenIsFor( TokenInfo Token )
     {
       if ( ( Token.Type == TokenInfo.TokenType.PSEUDO_OP )
@@ -9952,7 +9995,8 @@ namespace RetroDevStudio.Parser
 
       for ( int i = functionInfo.LineIndex + 1; i < functionInfo.LineEnd; ++i )
       {
-        List<Types.TokenInfo> tokens = ParseTokenInfo( functionInfo.Content[i - functionInfo.LineIndex - 1], 0, functionInfo.Content[i - functionInfo.LineIndex - 1].Length );
+        var  lineContent = functionInfo.Content[i - functionInfo.LineIndex - 1];
+        var tokens = ParseTokenInfo( lineContent, 0, lineContent.Length );
         if ( tokens == null )
         {
           // there was an error!
@@ -10079,6 +10123,11 @@ namespace RetroDevStudio.Parser
               continue;
             }
             else if ( TokenIsConditionalThatStartsScope( tokens[0] ) )
+            {
+              activeScopes.Push( 0 );
+            }
+            else if ( ( EndsWithOpeningCurlyBraces( tokens ) )
+            &&        ( TokenIsConditionalThatStartsScopeWithCurlyBraces( tokens[0] ) ) )
             {
               activeScopes.Push( 0 );
             }

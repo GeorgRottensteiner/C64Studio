@@ -178,8 +178,10 @@ namespace RetroDevStudio.Parser
             }
             else
             {
-              AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
+              AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at macro line " + lineIndexInMacro );
             }
+            // these are fatal, everything else will result in funky errors
+            return ParseLineResult.ERROR_ABORT;
           }
           else
           {
