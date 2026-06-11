@@ -146,6 +146,7 @@ namespace RetroDevStudio.Documents
 
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportGraphicScreenAsAssembly ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportGraphicScreenAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as C array", typeof( ExportGraphicScreenAsCArray ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportGraphicScreenAsBASICData ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC PRINT code (convert to charset)", typeof( ExportGraphicScreenAsBASIC ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportGraphicScreenAsImage ) ) );

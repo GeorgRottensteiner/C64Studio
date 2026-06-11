@@ -119,6 +119,7 @@ namespace RetroDevStudio.Documents
 
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportMapAsAssembly ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportMapAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to C array", typeof( ExportMapAsCArray ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "charset to charset project", typeof( ExportMapCharsetAsCharset ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "charset to binary file", typeof( ExportMapCharsetAsBinaryFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "map to char screen project", typeof( ExportMapAsCharscreen ) ) );
@@ -1458,7 +1459,6 @@ namespace RetroDevStudio.Documents
       {
         RebuildCharImage( i );
       }
-      RedrawMap();
       RedrawColorChooser();
       characterEditor.CharsetUpdated( m_Project.Charset );
       Modified = false;
@@ -1486,6 +1486,10 @@ namespace RetroDevStudio.Documents
       RecalcTileUsageInCurrentMap();
       RecalcTileUsageTotal();
       UpdateTotalTileUsageStats();
+
+      comboMaps_SelectedIndexChanged( null, null );
+      //RedrawMap();
+      //Redraw();
 
       EnableFileWatcher();
       return true;
@@ -3922,6 +3926,9 @@ namespace RetroDevStudio.Documents
     {
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.DOCUMENT_INFO_CREATED:
+          RedrawMap();
+          break;
         case ApplicationEvent.Type.CLIPBOARD_CHANGED:
           break;
         case ApplicationEvent.Type.DEFAULT_PALETTE_CHANGED:

@@ -110,6 +110,7 @@ namespace RetroDevStudio.Documents
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportSpriteAsAssembly ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC DATA statements", typeof( ExportSpriteAsBASICData ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportSpriteAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to C array", typeof( ExportSpriteAsCArray ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportSpriteAsImageFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportSpriteAsImage ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Mega65 S-BASIC Spritedef", typeof( ExportSpriteAsSBASICFCSpritedef ) ) );

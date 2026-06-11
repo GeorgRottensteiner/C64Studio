@@ -120,6 +120,9 @@
     <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsCArray.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsCArray.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenAsCharsetFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -139,6 +142,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ExportGraphicScreenForms\ExportGraphicScreenFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportMapForms\ExportMapAsCArray.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsCArray.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ImportBinaryForms\ImportBinaryFormBase.cs">

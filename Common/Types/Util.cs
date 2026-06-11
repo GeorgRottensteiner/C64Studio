@@ -726,7 +726,7 @@ namespace RetroDevStudio
     {
       StringBuilder   sb = new StringBuilder();
 
-      sb.AppendLine( $"unsigned char {varName}[]={{" );
+      sb.AppendLine( $"const unsigned char {varName}[]={{" );
 
       int dataPos = 0;
 

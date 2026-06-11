@@ -6487,11 +6487,6 @@ namespace RetroDevStudio
         document = new SFXEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
-      else if ( extension == ".SFXPROJECT" )
-      {
-        document = new SFXEditor( StudioCore );
-        document.ShowHint = DockState.Document;
-      }
       else if ( ( extension == ".TXT" )
       ||        ( extension == ".CFG" )
       ||        ( extension == ".BAT" )
@@ -6517,7 +6512,7 @@ namespace RetroDevStudio
           editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else if ( ( extension == ".KLA" )
-        || ( extension == ".KOA" ) )
+        ||        ( extension == ".KOA" ) )
         {
           var editor = (GraphicScreenEditor)document;
 

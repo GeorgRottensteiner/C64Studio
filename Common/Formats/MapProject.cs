@@ -543,6 +543,59 @@ namespace RetroDevStudio.Formats
 
 
 
+    public bool ExportTilesAsCArrayElements( out string TileData, string LabelPrefix, bool WrapData, int WrapByteCount, bool exportHex )
+    {
+      var usedLabels = new Dictionary<string, int>();
+      var sb = new StringBuilder();
+
+      int tileIndex = 0;
+      foreach ( Formats.MapProject.Tile tile in Tiles )
+      {
+        string    normalizedLabel = NormalizeAsLabel( tile.Name ).ToLower();
+        if ( string.IsNullOrEmpty( tile.Name ) )
+        {
+          normalizedLabel = "tile_" + tileIndex;
+        }
+        if ( usedLabels.ContainsKey( normalizedLabel ) )
+        {
+          int   subIndex = usedLabels[normalizedLabel] + 1;
+
+          usedLabels[normalizedLabel] = subIndex;
+          normalizedLabel += "_" + subIndex;
+        }
+        else
+        {
+          usedLabels.Add( normalizedLabel, 1 );
+        }
+
+        var tileCharData = new GR.Memory.ByteBuffer();
+        for ( int j = 0; j < tile.Chars.Height; ++j )
+        {
+          for ( int i = 0; i < tile.Chars.Width; ++i )
+          {
+            tileCharData.AppendU8( tile.Chars[i, j].Character );
+          }
+        }
+        sb.AppendLine( Util.ToCArray( tileCharData, WrapData, WrapByteCount, "tile_" + normalizedLabel + "_chars", exportHex ) );
+
+        var tileColorData = new GR.Memory.ByteBuffer();
+        for ( int j = 0; j < tile.Chars.Height; ++j )
+        {
+          for ( int i = 0; i < tile.Chars.Width; ++i )
+          {
+            tileColorData.AppendU8( tile.Chars[i, j].Color );
+          }
+        }
+        sb.AppendLine( Util.ToCArray( tileColorData, WrapData, WrapByteCount, "tile_" + normalizedLabel + "_colors", exportHex ) );
+
+        ++tileIndex;
+      }
+      TileData = sb.ToString();
+      return true;
+    }
+
+
+
     public bool ExportTilesAsAssembly( out string TileData, string LabelPrefix, bool WrapData, int WrapByteCount, string DataByteDirective )
     {
       int   maxTileWidth = 0;
@@ -621,6 +674,76 @@ namespace RetroDevStudio.Formats
 
           sb.AppendLine( Util.ToASMData( tileColorData[i + j * maxTileWidth], WrapData, WrapByteCount, DataByteDirective ) );
           sb.AppendLine();
+        }
+      }
+      TileData = sb.ToString();
+      return true;
+    }
+
+
+      
+    public bool ExportTilesAsCArray( out string TileData, bool WrapData, int WrapByteCount, bool exportHex )
+    {
+      int   maxTileWidth = 0;
+      int   maxTileHeight = 0;
+      foreach ( var tile in Tiles )
+      {
+        if ( tile.Chars.Width > maxTileWidth )
+        {
+          maxTileWidth = tile.Chars.Width;
+        }
+        if ( tile.Chars.Height > maxTileHeight )
+        {
+          maxTileHeight = tile.Chars.Height;
+        }
+      }
+
+      GR.Memory.ByteBuffer[]  tileCharData = new GR.Memory.ByteBuffer[maxTileWidth * maxTileHeight];
+      GR.Memory.ByteBuffer[]  tileColorData = new GR.Memory.ByteBuffer[maxTileWidth * maxTileHeight];
+      for ( int j = 0; j < maxTileHeight; ++j )
+      {
+        for ( int i = 0; i < maxTileWidth; ++i )
+        {
+          tileCharData[i + j * maxTileWidth] = new GR.Memory.ByteBuffer( (uint)Tiles.Count );
+          tileColorData[i + j * maxTileWidth] = new GR.Memory.ByteBuffer( (uint)Tiles.Count );
+        }
+      }
+
+
+      int tileIndex = 0;
+
+      for ( int j = 0; j < maxTileHeight; ++j )
+      {
+        for ( int i = 0; i < maxTileWidth; ++i )
+        {
+          tileIndex = 0;
+          foreach ( var tile in Tiles )
+          {
+            if ( ( i < tile.Chars.Width )
+            && ( j < tile.Chars.Height ) )
+            {
+              tileCharData[i + j * maxTileWidth].SetU8At( tileIndex, tile.Chars[i, j].Character );
+              tileColorData[i + j * maxTileWidth].SetU8At( tileIndex, tile.Chars[i, j].Color );
+            }
+            ++tileIndex;
+          }
+        }
+      }
+
+      var sb = new StringBuilder();
+
+      for ( int j = 0; j < maxTileHeight; ++j )
+      {
+        for ( int i = 0; i < maxTileWidth; ++i )
+        {
+          sb.AppendLine( Util.ToCArray( tileCharData[i + j * maxTileWidth], WrapData, WrapByteCount, "tile_chars_" + i + "_" + j, exportHex ) );
+        }
+      }
+      for ( int j = 0; j < maxTileHeight; ++j )
+      {
+        for ( int i = 0; i < maxTileWidth; ++i )
+        {
+          sb.AppendLine( Util.ToCArray( tileColorData[i + j * maxTileWidth], WrapData, WrapByteCount, "tile_colors_" + i + "_" + j, exportHex ) );
         }
       }
       TileData = sb.ToString();
@@ -833,6 +956,45 @@ namespace RetroDevStudio.Formats
           sbMaps.Append( Util.ToASMData( extraData, WrapData, WrapByteCount, DataByteDirective ) );
           sbMaps.AppendLine();
         }
+      }
+
+      MapData = sbMaps.ToString();
+      return true;
+    }
+
+
+
+    public bool ExportMapsAsCArray( bool Vertical, out string MapData, string LabelPrefix, bool WrapData, int WrapByteCount, bool exportHex )
+    {
+      var sbMaps = new StringBuilder();
+
+      for ( int i = 0; i < Maps.Count; ++i )
+      {
+        var map = Maps[i];
+
+        GR.Memory.ByteBuffer mapDataBuffer = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.Tiles.Height ) );
+
+        if ( Vertical )
+        {
+          for ( int y = 0; y < map.Tiles.Height; ++y )
+          {
+            for ( int x = 0; x < map.Tiles.Width; ++x )
+            {
+              mapDataBuffer.SetU8At( x * map.Tiles.Height + y, (byte)map.Tiles[x, y] );
+            }
+          }
+        }
+        else
+        {
+          for ( int y = 0; y < map.Tiles.Height; ++y )
+          {
+            for ( int x = 0; x < map.Tiles.Width; ++x )
+            {
+              mapDataBuffer.SetU8At( x + y * map.Tiles.Width, (byte)map.Tiles[x, y] );
+            }
+          }
+        }
+        sbMaps.AppendLine( Util.ToCArray( mapDataBuffer, WrapData, WrapByteCount, LabelPrefix + "MAP_" + NormalizeAsLabel( map.Name.ToUpper() ), exportHex ) );
       }
 
       MapData = sbMaps.ToString();
