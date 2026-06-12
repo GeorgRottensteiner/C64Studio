@@ -42,6 +42,13 @@ namespace RetroDevStudio
 
 
 
+    public bool HasSetting( string Key )
+    {
+      return _Settings.ContainsKey( Key );
+    }
+
+
+
     public string GetSetting( string Key )
     {
       if ( _Settings.ContainsKey( Key ) )
@@ -134,6 +141,8 @@ namespace RetroDevStudio
       {
         StoreSetting( ControlKey + ".ColumnWidth." + col.Index, col.Width.ToString() );
       }
+      StoreSetting( ControlKey + ".SortOrder", (int)( List.SortOrder ) );
+      StoreSetting( ControlKey + ".SortColumn", List.SortColumn );
     }
 
 
@@ -147,6 +156,13 @@ namespace RetroDevStudio
         {
           col.Width = width;
         }
+      }
+      if ( ( HasSetting( ControlKey + ".SortOrder" ) )
+      &&   ( HasSetting( ControlKey + ".SortColumn" ) ) )
+      {
+        var sortOrder = (DecentForms.SortOrder)GetSettingI( ControlKey + ".SortOrder" );
+        var sortColumn = GetSettingI( ControlKey + ".SortColumn" );
+        List.Sort( sortColumn, sortOrder );
       }
     }
 
