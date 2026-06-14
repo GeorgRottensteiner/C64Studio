@@ -621,9 +621,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\DecentForms\" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">
       copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetFileName)"

@@ -128,13 +128,19 @@ namespace DecentForms
 
 
 
+    internal uint FactorColor( uint origColor, float factor )
+    {
+      return ( origColor & 0xff000000 )
+           | ( Lighten( ( origColor & 0xff0000 ) >> 16, factor ) << 16 )
+           | ( Lighten( ( origColor & 0x00ff00 ) >> 8, factor ) << 8 )
+           | ( Lighten( ( origColor & 0x0000ff ) >> 0, factor ) << 0 );
+    }
+
+
+
     internal uint DarkenColor( uint OrigColor )
     {
-      float   darkFactor = 0.85f;
-      return ( OrigColor & 0xff000000 ) 
-           | ( (uint)( ( ( OrigColor & 0xff0000 ) >> 16 ) * darkFactor ) << 16 )
-           | ( (uint)( ( ( OrigColor & 0x00ff00 ) >>  8 ) * darkFactor ) <<  8 )
-           | ( (uint)( ( ( OrigColor & 0x0000ff ) >>  0 ) * darkFactor ) <<  0 );
+      return FactorColor( OrigColor, 0.85f );
     }
 
 
@@ -153,11 +159,7 @@ namespace DecentForms
 
     internal uint LightenColor( uint OrigColor )
     {
-      float   lightFactor = 1.25f;
-      return ( OrigColor & 0xff000000 )
-           | ( Lighten( ( OrigColor & 0xff0000 ) >> 16, lightFactor ) << 16 )
-           | ( Lighten( ( OrigColor & 0x00ff00 ) >>  8, lightFactor ) <<  8 )
-           | ( Lighten( ( OrigColor & 0x0000ff ) >>  0, lightFactor ) <<  0 );
+      return FactorColor( OrigColor, 1.25f );
     }
 
 
@@ -1366,7 +1368,7 @@ namespace DecentForms
                 uint color = ColorControlText;
                 if ( listControl.Items[itemIndex].Selected )
                 {
-                  color = ColorControlTextSelected;
+                  //color = ColorControlTextSelected;
                   FillRectangle( rcItem, ColorControlBackgroundSelected );
                 }
                 else if ( listControl.MouseOverItem == itemIndex )
@@ -1600,6 +1602,45 @@ namespace DecentForms
           return true;
       }
       return false;
+    }
+
+
+
+    public void RenderScrollbar( GR.Math.Rectangle clientRectangle, bool mouseOverSlider, bool sliderPushed )
+    {
+      if ( _Control is ScrollBar scrollBar )
+      {
+        var sliderRect = scrollBar.GetSliderRect();
+        var contentRect = scrollBar.GetContentRect();
+
+        uint bgColor = FactorColor( ColorControlBackground, 1.075f );
+        if ( scrollBar.IsVertical )
+        {
+          // Render vertical scrollbar
+          if ( sliderRect.Top > contentRect.Top )
+          {
+            FillRectangle( 0, contentRect.Top, sliderRect.Width, sliderRect.Top - contentRect.Top, bgColor );
+          }
+          if ( sliderRect.Bottom < contentRect.Bottom )
+          {
+            FillRectangle( 0, sliderRect.Bottom, sliderRect.Width, contentRect.Bottom - sliderRect.Bottom, bgColor );
+          }
+        }
+        else
+        {
+          // Render horizontal scrollbar
+          if ( sliderRect.Left > contentRect.Left )
+          {
+            FillRectangle( contentRect.Left, 0, sliderRect.Left - contentRect.Left, sliderRect.Height, bgColor );
+          }
+          if ( sliderRect.Right < contentRect.Right )
+          {
+            FillRectangle( sliderRect.Right, 0, contentRect.Right - sliderRect.Right, sliderRect.Height, bgColor );
+          }
+        }
+        
+        RenderSlider( sliderRect.Left, sliderRect.Top, sliderRect.Width, sliderRect.Height, mouseOverSlider, sliderPushed );
+      }
     }
 
 

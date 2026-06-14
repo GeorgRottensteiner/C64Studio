@@ -333,42 +333,6 @@ namespace RetroDevStudio.Documents
 
 
 
-    public override void ApplyDisplayDetails( GR.Memory.ByteBuffer Buffer )
-    {
-      GR.IO.MemoryReader    memIn = Buffer.MemoryReader();
-
-      int     numColumns = memIn.ReadInt32();
-      for ( int i = 0; i < numColumns; ++i )
-      {
-        if ( i < listMessages.Columns.Count )
-        {
-          listMessages.Columns[i].Width = memIn.ReadInt32();
-        }
-      }
-
-      _messagesSortColumn = memIn.ReadInt32();
-      listMessages.SortOrder = (DecentForms.SortOrder)memIn.ReadInt32();
-    }
-
-
-
-    public override GR.Memory.ByteBuffer DisplayDetails()
-    {
-      GR.Memory.ByteBuffer    bufferData = new GR.Memory.ByteBuffer();
-
-      bufferData.AppendI32( listMessages.Columns.Count );
-      for ( int i = 0; i < listMessages.Columns.Count; ++i )
-      {
-        bufferData.AppendI32( listMessages.Columns[i].Width );
-      }
-
-      bufferData.AppendI32( _messagesSortColumn );
-      bufferData.AppendI32( (int)listMessages.SortOrder );
-      return bufferData;
-    }
-
-
-
     public override void OnApplicationEvent( ApplicationEvent Event )
     {
       base.OnApplicationEvent( Event );

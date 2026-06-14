@@ -284,7 +284,8 @@ namespace RetroDevStudio.Documents
     {
       if ( e.KeyCode == Keys.Delete )
       {
-        foreach ( var item in listWatch.SelectedItems )
+        var items = listWatch.SelectedItems.ToList();
+        foreach ( var item in items )
         {
           Core.MainForm.RemoveWatchEntry( (WatchEntry)item.Tag );
         }

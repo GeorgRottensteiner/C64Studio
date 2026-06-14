@@ -27,6 +27,10 @@ namespace DecentForms
 
 
 
+    public abstract bool IsVertical { get; }
+
+
+
     public int Minimum
     {
       get
@@ -284,7 +288,8 @@ namespace DecentForms
 
 
 
-    protected abstract Rectangle GetSliderRect();
+    public abstract Rectangle GetSliderRect();
+    public abstract Rectangle GetContentRect();
 
 
 
@@ -294,8 +299,9 @@ namespace DecentForms
       {
         return;
       }
-      var sliderRect = GetSliderRect();
-      Renderer.RenderSlider( sliderRect.Left, sliderRect.Top, sliderRect.Width, sliderRect.Height, _MouseOverSlider, _SliderPushed );
+      Renderer.RenderScrollbar( new GR.Math.Rectangle( ClientRectangle.Left, ClientRectangle.Top, ClientRectangle.Width, ClientRectangle.Height ), 
+                                _MouseOverSlider, 
+                                _SliderPushed );
     }
 
 

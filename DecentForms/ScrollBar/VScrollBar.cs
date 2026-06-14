@@ -39,6 +39,10 @@ namespace DecentForms
 
 
 
+    public override bool IsVertical => true;
+
+
+
     private void OnScrollUp( ControlBase Sender )
     {
       if ( Value > Minimum )
@@ -242,7 +246,14 @@ namespace DecentForms
 
 
 
-    protected override Rectangle GetSliderRect()
+    public override Rectangle GetContentRect()
+    {
+      return new Rectangle( 0, _ButtonHeight, ClientSize.Width, ClientSize.Height - 2 * _ButtonHeight );
+    }
+
+
+
+    public override Rectangle GetSliderRect()
     {
       int     sliderYPos = 0;
 
