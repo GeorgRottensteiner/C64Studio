@@ -1,5 +1,4 @@
-﻿using RetroDevStudio.Controls;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -297,6 +296,7 @@ namespace DecentForms
         default:
           break;
       }
+      _Owner.ItemsModified();
     }
 
 

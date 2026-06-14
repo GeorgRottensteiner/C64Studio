@@ -92,6 +92,9 @@ namespace RetroDevStudio.Documents
     private Dictionary<Control,int>     m_ControlsToTheRight = new Dictionary<Control, int>();
     private Dictionary<Control,int>     m_ControlsBelow = new Dictionary<Control, int>();
 
+    private List<int>                   _CharUsageInCurrentScreen = new List<int>();
+    private List<int>                   _CharUsageTotal = new List<int>();
+
 
 
     public CharsetScreenEditor( StudioCore Core )
@@ -211,7 +214,58 @@ namespace RetroDevStudio.Documents
           m_ControlsBelow.Add( control, control.Location.Y - bottomEnd );
         }
       }
+      RecalcTileUsages();
     }
+
+
+
+    public void RecalcTileUsages()
+    {
+      RecalcTileUsageInCurrentMap();
+      RecalcTileUsageTotal();
+      UpdateInfoText();
+    }
+
+
+
+    private void RecalcTileUsageTotal()
+    {
+      _CharUsageTotal.Clear();
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        _CharUsageTotal.Add( 0 );
+      }
+      foreach ( var screen in m_CharsetScreen.Screens )
+      {
+        for ( int i = 0; i < screen.Width; ++i )
+        {
+          for ( int j = 0; j < screen.Height; ++j )
+          {
+            ++_CharUsageTotal[screen.CharacterAt( i, j )];
+          }
+        }
+      }
+    }
+
+
+
+    private void RecalcTileUsageInCurrentMap()
+    {
+      _CharUsageInCurrentScreen.Clear();
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        _CharUsageInCurrentScreen.Add( 0 );
+      }
+      var curScreen = m_CharsetScreen.Screens[m_CurrentScreenIndex];
+      for ( int i = 0; i < curScreen.Width; ++i )
+      {
+        for ( int j = 0; j < curScreen.Height; ++j )
+        {
+          ++_CharUsageInCurrentScreen[curScreen.CharacterAt( i, j )];
+        }
+      }
+    }
+
 
 
 
@@ -666,6 +720,7 @@ namespace RetroDevStudio.Documents
         }
       }
       m_FloatingSelection = null;
+      RecalcTileUsages();
       Redraw();
       Modified = true;
     }
@@ -802,6 +857,12 @@ namespace RetroDevStudio.Documents
       sb2.Append( m_CurrentColor );
       sb2.AppendLine();
 
+      sb.Append( "Used in Screen " );
+      sb.AppendLine( _CharUsageInCurrentScreen[m_CurrentChar].ToString() );
+
+      sb2.Append( "Used Total " );
+      sb2.AppendLine( _CharUsageTotal[m_CurrentChar].ToString() );
+
       sb.Append( "Sprite Pos X $" );
       int spritePosX = charX * m_CharacterWidth + 24;
       int spritePosY = charY * m_CharacterHeight + 50;
@@ -815,6 +876,7 @@ namespace RetroDevStudio.Documents
       sb2.Append( '/' );
       sb2.Append( spritePosY );
       sb2.AppendLine();
+
 
       if ( m_SelectionBounds.Width > 0 )
       {
@@ -895,8 +957,6 @@ namespace RetroDevStudio.Documents
         }
       }
 
-      UpdateInfoText();
-
       if ( ( Buttons & MouseButtons.Left ) == 0 )
       {
         m_MouseButtonReleased = true;
@@ -957,6 +1017,7 @@ namespace RetroDevStudio.Documents
                   }
                 }
                 RedrawFullScreen();
+                RecalcTileUsages();
                 pictureEditor.Invalidate();
                 Modified = true;
               }
@@ -1015,6 +1076,7 @@ namespace RetroDevStudio.Documents
         }
       }
 
+      UpdateInfoText();
       if ( ( charX < 0 )
       ||   ( charX >= CurrentScreen.Width )
       ||   ( charY < 0 )
@@ -1076,6 +1138,7 @@ namespace RetroDevStudio.Documents
 
               SetCharacter( charX, charY );
               UpdateArea( affectedArea.X, affectedArea.Y, affectedArea.Width, affectedArea.Height );
+              RecalcTileUsages();
               Modified = true;
             }
             break;
@@ -1085,6 +1148,7 @@ namespace RetroDevStudio.Documents
               m_MouseButtonReleased = false;
 
               FillContent( charX, charY );
+              UpdateInfoText();
             }
             break;
           case ToolMode.RECTANGLE:
@@ -1560,6 +1624,7 @@ namespace RetroDevStudio.Documents
 
       RedrawColorChooser();
       RedrawFullScreen();
+      RecalcTileUsages();
 
       EnableFileWatcher();
       return true;
@@ -1754,7 +1819,6 @@ namespace RetroDevStudio.Documents
 
           RedrawFullScreen();
           pictureEditor.Invalidate();
-          UpdateInfoText();
 
           if ( ( DocumentInfo.Project == null )
           ||   ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) ) )
@@ -1767,6 +1831,7 @@ namespace RetroDevStudio.Documents
           }
           m_CharsetScreen.ExternalCharset = "";
           Modified = true;
+          RecalcTileUsages();
           return true;
         }
       }
@@ -2216,6 +2281,7 @@ namespace RetroDevStudio.Documents
 
         CurrentScreen.SetScreenSize( newWidth, newHeight );
         AdjustScreenSizeSettingsToCurrentScreen();
+        RecalcTileUsages();
         Modified = true;
       }
       if ( newName != CurrentScreen.Name )
@@ -2598,6 +2664,8 @@ namespace RetroDevStudio.Documents
                                                 0, m_SelectedChar.Y * m_CharacterHeight,
                                                 ( 0 - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight, ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * m_CharacterHeight,
                                                 m_TextEntryCachedLine.Count * m_CharacterWidth, m_CharacterHeight );
+              SetModified();
+              RecalcTileUsages();
             }
 
             if ( bareKey == Keys.Back )
@@ -2698,6 +2766,7 @@ namespace RetroDevStudio.Documents
                                                                       m_CharacterWidth, m_CharacterHeight ) );
             }
             Redraw();
+            RecalcTileUsages();
             Modified = true;
           }
         }
@@ -3049,6 +3118,7 @@ namespace RetroDevStudio.Documents
       //Debug.Log( "OnCharsetScreenModeChanged j" );
       RedrawFullScreen();
       //Debug.Log( "OnCharsetScreenModeChanged k" );
+      RecalcTileUsages();
     }
 
 
@@ -3325,6 +3395,7 @@ namespace RetroDevStudio.Documents
       }
       RedrawFullScreen();
       RedrawColorChooser();
+      RecalcTileUsages();
       Modified = true;
     }
 
@@ -3439,6 +3510,7 @@ namespace RetroDevStudio.Documents
       panelCharacters.Invalidate();
       pictureEditor.Invalidate();
       RedrawFullScreen();
+      RecalcTileUsages();
 
       Modified = true;
     }
@@ -3459,6 +3531,7 @@ namespace RetroDevStudio.Documents
         CurrentScreen.Chars[j * CurrentScreen.Width + CurrentScreen.Width - 1] = oldChar;
       }
       Modified = true;
+      RecalcTileUsages();
       RedrawFullScreen();
     }
 
@@ -3478,6 +3551,7 @@ namespace RetroDevStudio.Documents
         CurrentScreen.Chars[j * CurrentScreen.Width] = oldChar;
       }
       Modified = true;
+      RecalcTileUsages();
       RedrawFullScreen();
     }
 
@@ -3497,6 +3571,7 @@ namespace RetroDevStudio.Documents
         CurrentScreen.Chars[i + ( CurrentScreen.Height - 1 ) * CurrentScreen.Width] = oldChar;
       }
       Modified = true;
+      RecalcTileUsages();
       RedrawFullScreen();
     }
 
@@ -3516,6 +3591,7 @@ namespace RetroDevStudio.Documents
         CurrentScreen.Chars[i] = oldChar;
       }
       Modified = true;
+      RecalcTileUsages();
       RedrawFullScreen();
     }
 
@@ -4029,6 +4105,7 @@ namespace RetroDevStudio.Documents
       AdjustScreenOrderButtons();
       AdjustScreenSizeSettingsToCurrentScreen();
       RedrawFullScreen();
+      RecalcTileUsages();
     }
 
 
@@ -4080,6 +4157,7 @@ namespace RetroDevStudio.Documents
       SetModified();
 
       AdjustScrollbars();
+      RecalcTileUsages();
     }
 
 
@@ -4106,6 +4184,7 @@ namespace RetroDevStudio.Documents
       AdjustScreenOrderButtons();
       AdjustScreenSizeSettingsToCurrentScreen();
       RedrawFullScreen();
+      RecalcTileUsages();
       SetModified();
     }
 
@@ -4117,6 +4196,7 @@ namespace RetroDevStudio.Documents
       {
         AdjustScreenSizeSettingsToCurrentScreen();
         UpdateArea( 0, 0, CurrentScreen.Width, CurrentScreen.Height );
+        RecalcTileUsages();
       }
     }
 

@@ -1320,7 +1320,7 @@ namespace DecentForms
 
 
 
-    internal GR.Math.Rectangle GetToggleRect( TreeNode Node )
+    public GR.Math.Rectangle GetToggleRect( TreeNode Node )
     {
       var   rect = Node.Bounds;
       int   rectSize = (int)( rect.Height * 9 / 16 );

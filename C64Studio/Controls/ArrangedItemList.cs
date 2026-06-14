@@ -590,7 +590,6 @@ namespace RetroDevStudio.Controls
       }
       newItem.Text = itemToClone.Text;
       newItem = _Items.Add( newItem );
-      _Items.FixItemIndices();
       if ( ItemAdded != null )
       {
         ItemAdded( this, newItem );
@@ -636,7 +635,7 @@ namespace RetroDevStudio.Controls
 
   public class ArrangedItemEntry : DecentForms.ListBox.ListBoxItem
   {
-    internal new ArrangedItemList    _Owner = null;
+    internal ArrangedItemList    _Owner = null;
 
 
 
@@ -711,7 +710,7 @@ namespace RetroDevStudio.Controls
 
     public ArrangedItemEntry Add( ArrangedItemEntry Item )
     {
-      Item._Index = _Owner.listItems.Items.Add( Item );
+      _Owner.listItems.Items.Add( Item );
       Item._Owner = _Owner;
       /*
       if ( _Owner.ItemAdded != null )
@@ -729,7 +728,7 @@ namespace RetroDevStudio.Controls
     {
       var entry = new ArrangedItemEntry( _Owner );
       entry.Text = Value;
-      entry._Index = _Owner.listItems.Items.Add( entry );
+      _Owner.listItems.Items.Add( entry );
       _Owner.UpdateUI();
 
       return entry;
@@ -755,14 +754,11 @@ namespace RetroDevStudio.Controls
     {
       get
       {
-        var item = (ArrangedItemEntry)_Owner.listItems.Items[Index];
-        item._Index = Index;
-        return item;
+        return (ArrangedItemEntry)_Owner.listItems.Items[Index];
       }
       set
       {
         _Owner.listItems.Items[Index] = (ArrangedItemEntry)value;
-        value._Index = Index;
       }
     }
 
@@ -787,18 +783,7 @@ namespace RetroDevStudio.Controls
         _Owner.SelectedIndex = -1;
       }
       _Owner.listItems.Items.Remove( item );
-      FixItemIndices();
       _Owner.UpdateUI();
-    }
-
-
-
-    internal void FixItemIndices()
-    {
-      for ( int i = 0; i < _Owner.listItems.Items.Count; ++i )
-      {
-        ( (ArrangedItemEntry)_Owner.listItems.Items[i] )._Index = i;
-      }
     }
 
 
@@ -806,7 +791,6 @@ namespace RetroDevStudio.Controls
     internal void Insert( int v, ArrangedItemEntry item )
     {
       _Owner.listItems.Items.Insert( v, item );
-      FixItemIndices();
       _Owner.UpdateUI();
     }
   }

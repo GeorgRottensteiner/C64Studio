@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 
 
 namespace DecentForms
 {
+  [DebuggerDisplay( "Text = {Text}" )]
   public class ListControlItem
   {
     internal ListControl  _Owner = null;
@@ -12,7 +14,7 @@ namespace DecentForms
     internal int          _Index = -1;
     internal int          _ImageIndex = -1;
 
-    internal ListControlSubItemCollection SubItems = new ListControlSubItemCollection( null );
+    public ListControlSubItemCollection SubItems = new ListControlSubItemCollection( null );
 
 
 
@@ -41,6 +43,13 @@ namespace DecentForms
         SubItems[0].Text = value;
         _Owner?.ItemModified( Index );
       }
+    }
+
+
+
+    public override string ToString()
+    {
+      return Text;
     }
 
 

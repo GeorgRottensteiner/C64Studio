@@ -205,6 +205,9 @@ namespace RetroDevStudio
     public bool                                 LastFindRegexp = false;
     public bool                                 LastFindWrap = true;
     public int                                  LastFindTarget = 1;
+    public bool                                 RestoreLastFindTarget = true;
+    public int                                  LastReplaceTarget = 1;
+    public bool                                 RestoreLastReplaceTarget = true;
 
     public BASICKeyMap                          BASICKeyMap = new BASICKeyMap();
     public bool                                 BASICStripSpaces = true;
@@ -772,6 +775,9 @@ namespace RetroDevStudio
       {
         chunkFindReplace.AppendString( replaceArg );
       }
+      chunkFindReplace.AppendU8( (byte)LastReplaceTarget );
+      chunkFindReplace.AppendU8( (byte)( RestoreLastFindTarget ? 1 : 0 ) );
+      chunkFindReplace.AppendU8( (byte)( RestoreLastReplaceTarget ? 1 : 0 ) );
       SettingsData.Append( chunkFindReplace.ToBuffer() );
 
       GR.IO.FileChunk chunkIgnoredWarnings = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_IGNORED_WARNINGS );
@@ -1329,6 +1335,10 @@ namespace RetroDevStudio
                 ReplaceWithArguments.Add( binIn.ReadString() );
               }
               ReplaceWithArguments = ReplaceWithArguments.Distinct().ToList();
+
+              LastReplaceTarget         = binIn.ReadUInt8();
+              RestoreLastFindTarget     = ( binIn.ReadUInt8() == 1 );
+              RestoreLastReplaceTarget  = ( binIn.ReadUInt8() == 1 );
             }
             break;
           case FileChunkConstants.SETTINGS_IGNORED_WARNINGS:

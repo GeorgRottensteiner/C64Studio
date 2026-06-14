@@ -1,22 +1,23 @@
-﻿using RetroDevStudio.Controls;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 
 
 namespace DecentForms
 {
-  public partial class GridList
+  public partial class ListControl
   {
-    public class GridListItemCollection : IEnumerable<GridListItem>
+    [DebuggerDisplay( "Count = {Count}" )]
+    public class ListControlSelectedItemCollection : IEnumerable<ListControlItem>
     {
-      private GridList               _Owner;
-      private List<GridListItem>     _Items = new List<GridListItem>();
+      private ListControl               _Owner;
+      private List<ListControlItem>     _Items = new List<ListControlItem>();
 
 
 
-      internal GridListItemCollection( GridList Owner )
+      internal ListControlSelectedItemCollection( ListControl Owner )
       {
         _Owner = Owner;
       }
@@ -34,17 +35,16 @@ namespace DecentForms
 
 
 
-      public int IndexOf( GridListItem Item )
+      public int IndexOf( ListControlItem Item )
       {
         return _Items.IndexOf( Item );
       }
 
 
 
-      public int Add( GridListItem Item )
+      public int Add( ListControlItem Item )
       {
         _Items.Add( Item );
-        Item._Owner = _Owner;
         _Owner.ItemsModified();
 
         return Item._Index;
@@ -54,7 +54,7 @@ namespace DecentForms
 
       public int Add( string Text )
       {
-        return Add( new GridListItem( Text ) );
+        return Add( new ListControlItem( Text ) );
       }
 
 
@@ -63,8 +63,7 @@ namespace DecentForms
       {
         foreach ( var item in Items )
         {
-          var newItem = new GridListItem( item );
-          newItem._Owner = _Owner;
+          var newItem = new ListControlItem( item );
           _Items.Add( newItem );
         }
         _Owner.ItemsModified();
@@ -72,30 +71,18 @@ namespace DecentForms
 
 
 
-      public bool Remove( GridListItem Item )
+      public bool Remove( ListControlItem Item )
       {
         if ( Item.Index == -1 )
         {
           return false;
         }
+        _Items.Remove( Item );
         if ( Item.Selected )
         {
           Item.Selected = false;
         }
-        if ( !_Items.Remove( Item ) )
-        {
-          return false;
-        }
-        Item._Owner = null;
-        if ( _Owner.SelectedIndex == Item.Index )
-        {
-          // refresh selection
-          _Owner.SelectedIndex = -1;
-          if ( Item.Index < _Items.Count )
-          {
-            _Owner.SelectedIndex = Item.Index;
-          }
-        }
+        
         _Owner.ItemsModified();
         return true;
       }
@@ -109,20 +96,8 @@ namespace DecentForms
         {
           return;
         }
+        _Items.Remove( _Items[Index] );
         _Items[Index].Selected = false;
-        _Items[Index]._Owner = null;
-        _Items.RemoveAt( Index );
-
-        if ( _Owner.SelectedIndex == Index )
-        {
-          // refresh selection
-          _Owner.SelectedIndex = -1;
-          if ( Index < _Items.Count )
-          {
-            _Owner.SelectedIndex = Index;
-          }
-        }
-
         _Owner.ItemsModified();
       }
 
@@ -146,17 +121,16 @@ namespace DecentForms
         {
           for ( int i = 0; i < Count;  ++i )
           {
-            _Items[Index + i].Selected = false;
-            _Items[Index + i]._Owner = null;
+            _Items.RemoveAt( Index + Count - i - 1 );
+            _Items[Index + Count - i - 1].Selected = false;
           }
-          _Items.RemoveRange( Index, Count );
           _Owner.ItemsModified();
         }
       }
 
 
 
-      public GridListItem this[int Index]
+      public ListControlItem this[int Index]
       {
         get
         {
@@ -175,13 +149,13 @@ namespace DecentForms
             throw new ArgumentOutOfRangeException( $"Tried to access item {Index} of {_Items.Count}" );
           }
           _Items[Index] = value;
-          _Owner.ItemModified( value );
+          _Owner.ItemModified( Index );
         }
       }
 
 
 
-      public IEnumerator<GridListItem> GetEnumerator()
+      public IEnumerator<ListControlItem> GetEnumerator()
       {
         return _Items.GetEnumerator();
       }
@@ -195,14 +169,13 @@ namespace DecentForms
 
 
 
-      public void Insert( int InsertAtIndex, GridListItem Item )
+      public void Insert( int InsertAtIndex, ListControlItem Item )
       {
         if ( ( InsertAtIndex < 0 )
         ||   ( InsertAtIndex > _Items.Count ) )
         {
           throw new ArgumentOutOfRangeException( $"Trying to insert item at index {InsertAtIndex} of {_Items.Count}" );
         }
-        Item._Owner = _Owner;
         _Items.Insert( InsertAtIndex, Item );
         _Owner.ItemsModified();
       }
@@ -211,8 +184,15 @@ namespace DecentForms
 
       public void Clear()
       {
-        _Items.Clear();
-        _Owner.ItemsModified();
+        if ( _Items.Count > 0 )
+        {
+          var oldItems = _Items;
+          while ( _Items.Count > 0 )
+          {
+            _Items[0].Selected = false;
+          }
+          _Owner.ItemsModified();
+        }
       }
 
 

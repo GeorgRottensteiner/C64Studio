@@ -47,6 +47,8 @@
       this.labelAutoSaveInfo1 = new System.Windows.Forms.Label();
       this.labelAutoSaveInfo2 = new System.Windows.Forms.Label();
       this.checkRunningUnderWINE = new System.Windows.Forms.CheckBox();
+      this.checkFindRestoreLastTarget = new System.Windows.Forms.CheckBox();
+      this.checkReplaceRestoreLastFindTarget = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -204,7 +206,7 @@
       // 
       this.groupBox1.Controls.Add(this.btnRegisterSolutionFileType);
       this.groupBox1.Controls.Add(this.btnRegisterProjectFileType);
-      this.groupBox1.Location = new System.Drawing.Point(6, 285);
+      this.groupBox1.Location = new System.Drawing.Point(6, 329);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(535, 72);
       this.groupBox1.TabIndex = 21;
@@ -262,6 +264,32 @@
       this.checkRunningUnderWINE.UseVisualStyleBackColor = true;
       this.checkRunningUnderWINE.CheckedChanged += new System.EventHandler(this.checkRunningUnderWINE_CheckedChanged);
       // 
+      // checkFindRestoreLastTarget
+      // 
+      this.checkFindRestoreLastTarget.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkFindRestoreLastTarget.Checked = true;
+      this.checkFindRestoreLastTarget.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkFindRestoreLastTarget.Location = new System.Drawing.Point(3, 263);
+      this.checkFindRestoreLastTarget.Name = "checkFindRestoreLastTarget";
+      this.checkFindRestoreLastTarget.Size = new System.Drawing.Size(230, 24);
+      this.checkFindRestoreLastTarget.TabIndex = 7;
+      this.checkFindRestoreLastTarget.Text = "Restore last find target";
+      this.checkFindRestoreLastTarget.UseVisualStyleBackColor = true;
+      this.checkFindRestoreLastTarget.CheckedChanged += new System.EventHandler(this.checkFindRestoreLastTarget_CheckedChanged);
+      // 
+      // checkReplaceRestoreLastFindTarget
+      // 
+      this.checkReplaceRestoreLastFindTarget.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkReplaceRestoreLastFindTarget.Checked = true;
+      this.checkReplaceRestoreLastFindTarget.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkReplaceRestoreLastFindTarget.Location = new System.Drawing.Point(3, 293);
+      this.checkReplaceRestoreLastFindTarget.Name = "checkReplaceRestoreLastFindTarget";
+      this.checkReplaceRestoreLastFindTarget.Size = new System.Drawing.Size(230, 24);
+      this.checkReplaceRestoreLastFindTarget.TabIndex = 7;
+      this.checkReplaceRestoreLastFindTarget.Text = "Restore last replace target";
+      this.checkReplaceRestoreLastFindTarget.UseVisualStyleBackColor = true;
+      this.checkReplaceRestoreLastFindTarget.CheckedChanged += new System.EventHandler(this.checkReplaceRestoreLastFindTarget_CheckedChanged);
+      // 
       // DlgPrefApplication
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,6 +306,8 @@
       this.Controls.Add(this.checkAutoOpenLastSolution);
       this.Controls.Add(this.checkRunningUnderWINE);
       this.Controls.Add(this.checkAutoSaveSettings);
+      this.Controls.Add(this.checkReplaceRestoreLastFindTarget);
+      this.Controls.Add(this.checkFindRestoreLastTarget);
       this.Controls.Add(this.checkForUpdate);
       this.Controls.Add(this.label29);
       this.Controls.Add(this.checkShowCompilerMessagesAfterBuild);
@@ -311,5 +341,7 @@
     private System.Windows.Forms.Label labelAutoSaveInfo1;
     private System.Windows.Forms.Label labelAutoSaveInfo2;
     private System.Windows.Forms.CheckBox checkRunningUnderWINE;
+    private System.Windows.Forms.CheckBox checkFindRestoreLastTarget;
+    private System.Windows.Forms.CheckBox checkReplaceRestoreLastFindTarget;
   }
 }

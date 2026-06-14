@@ -1,5 +1,4 @@
 ﻿using GR.Image;
-using RetroDevStudio.Controls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using WeifenLuo.WinFormsUI.Docking;
 using static System.Net.Mime.MediaTypeNames;
 
 
@@ -1332,7 +1330,7 @@ namespace DecentForms
       {
         var rc = listControl.GetHeaderRect( i );
 
-        SetClip( rc );
+        //SetClip( rc );
 
         RenderListControlColumn( listControl.Columns[i], rc, 
                                  listControl.PushedColumn == i, 
@@ -1459,7 +1457,7 @@ namespace DecentForms
 
 
 
-    internal void DrawWrappedText( string textToDraw, List<GR.Math.Rectangle> rectangles )
+    public void DrawWrappedText( string textToDraw, List<GR.Math.Rectangle> rectangles )
     {
       int curY = -1;
       foreach ( var rect in rectangles )

@@ -751,7 +751,7 @@ namespace DecentForms
 
 
 
-    internal Rectangle GetItemRect( int ItemIndex )
+    public Rectangle GetItemRect( int ItemIndex )
     {
       if ( ( ItemIndex < FirstVisibleItemIndex )
       ||   ( ItemIndex >= Items.Count )

@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net3.5;net4.8;net8.0-windows</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows'">
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="CheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ControlBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="GridList\GridList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="GridList\GridList.GridListItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="GridList\GridList.GridListItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="GridList\GridList.GridListItemIndexCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="GridList\GridList.GridListSelectedItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListBox\ListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListBox\ListBox.ListBoxItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListBox\ListBox.ListBoxItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListBox\ListBox.ListBoxItemIndexCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListBox\ListBox.ListBoxSelectedItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListControl\ListControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListControl\ListControl.ListControlItemIndexCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ListControl\ListControl.ListControlSelectedItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="MenuButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="RadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ScrollBar\HScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ScrollBar\ScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="ScrollBar\VScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="TreeView\TreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="TreeView\TreeView.TreeNode.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="TreeView\TreeView.TreeNodeCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

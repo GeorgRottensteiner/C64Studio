@@ -1,5 +1,4 @@
-﻿using RetroDevStudio.Controls;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,16 +6,16 @@ using System.Collections.Generic;
 
 namespace DecentForms
 {
-  public partial class ListBox
+  public partial class GridList
   {
-    public class ListBoxItemCollection : IEnumerable<ListBoxItem>
+    public class GridListItemCollection : IEnumerable<GridListItem>
     {
-      private ListBox               _Owner;
-      private List<ListBoxItem>     _Items = new List<ListBoxItem>();
+      private GridList               _Owner;
+      private List<GridListItem>     _Items = new List<GridListItem>();
 
 
 
-      internal ListBoxItemCollection( ListBox Owner )
+      internal GridListItemCollection( GridList Owner )
       {
         _Owner = Owner;
       }
@@ -34,14 +33,14 @@ namespace DecentForms
 
 
 
-      public int IndexOf( ListBoxItem Item )
+      public int IndexOf( GridListItem Item )
       {
         return _Items.IndexOf( Item );
       }
 
 
 
-      public int Add( ListBoxItem Item )
+      public int Add( GridListItem Item )
       {
         _Items.Add( Item );
         Item._Owner = _Owner;
@@ -54,7 +53,7 @@ namespace DecentForms
 
       public int Add( string Text )
       {
-        return Add( new ListBoxItem( Text ) );
+        return Add( new GridListItem( Text ) );
       }
 
 
@@ -63,7 +62,7 @@ namespace DecentForms
       {
         foreach ( var item in Items )
         {
-          var newItem = new ListBoxItem( item );
+          var newItem = new GridListItem( item );
           newItem._Owner = _Owner;
           _Items.Add( newItem );
         }
@@ -72,7 +71,7 @@ namespace DecentForms
 
 
 
-      public bool Remove( ListBoxItem Item )
+      public bool Remove( GridListItem Item )
       {
         if ( Item.Index == -1 )
         {
@@ -156,7 +155,7 @@ namespace DecentForms
 
 
 
-      public ListBoxItem this[int Index]
+      public GridListItem this[int Index]
       {
         get
         {
@@ -181,7 +180,7 @@ namespace DecentForms
 
 
 
-      public IEnumerator<ListBoxItem> GetEnumerator()
+      public IEnumerator<GridListItem> GetEnumerator()
       {
         return _Items.GetEnumerator();
       }
@@ -195,7 +194,7 @@ namespace DecentForms
 
 
 
-      public void Insert( int InsertAtIndex, ListBoxItem Item )
+      public void Insert( int InsertAtIndex, GridListItem Item )
       {
         if ( ( InsertAtIndex < 0 )
         ||   ( InsertAtIndex > _Items.Count ) )

@@ -5076,25 +5076,36 @@ namespace RetroDevStudio
           m_FindReplace.FindPrevious( ActiveDocument );
           return true;
         case RetroDevStudio.Types.Function.FIND:
-          if ( ActiveDocumentInfo != null )
           {
-            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
-            if ( compilableDoc != null )
+            int findTarget = StudioCore.Settings.RestoreLastFindTarget ? StudioCore.Settings.LastFindTarget : 1;
+            if ( ActiveDocumentInfo != null )
             {
-              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+              if ( compilableDoc != null )
+              {
+                m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              }
+              else
+              {
+                m_FindReplace.comboSearchTarget.SelectedIndex = findTarget;
+              }
             }
-          }
-          if ( !m_FindReplace.Visible )
-          {
-            m_FindReplace.Show( panelMain );
-          }
-          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
-          m_FindReplace.comboSearchText.Focus();
-          StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
+            else
+            {
+              m_FindReplace.comboSearchTarget.SelectedIndex = findTarget;
+            }
+            if ( !m_FindReplace.Visible )
+            {
+              m_FindReplace.Show( panelMain );
+            }
+            EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
+            m_FindReplace.comboSearchText.Focus();
+            StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
 
-          m_FindReplace.tabFindReplace.SelectedIndex = 0;
-          m_FindReplace.comboSearchTarget.SelectedIndex = 1;
-          m_FindReplace.AcceptButton = m_FindReplace.btnFindNext;
+            m_FindReplace.tabFindReplace.SelectedIndex = 0;
+
+            m_FindReplace.AcceptButton = m_FindReplace.btnFindNext;
+          }
           return true;
         case RetroDevStudio.Types.Function.FIND_IN_SOLUTION:
           {
@@ -5143,22 +5154,35 @@ namespace RetroDevStudio
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           return true;
         case RetroDevStudio.Types.Function.FIND_REPLACE:
-          if ( ActiveDocumentInfo != null )
           {
-            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
-            if ( compilableDoc != null )
+            if ( ActiveDocumentInfo != null )
             {
-              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+              if ( compilableDoc != null )
+              {
+                m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              }
             }
+            else
+            {
+              if ( StudioCore.Settings.RestoreLastReplaceTarget )
+              {
+                m_FindReplace.comboReplaceTarget.SelectedIndex = StudioCore.Settings.LastReplaceTarget;
+              }
+              else
+              {
+                m_FindReplace.comboReplaceTarget.SelectedIndex = 1;
+              }
+            }
+            if ( !m_FindReplace.Visible )
+            {
+              m_FindReplace.Show( panelMain );
+            }
+            EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
+            m_FindReplace.comboReplaceSearchText.Focus();
+            StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
+            m_FindReplace.tabFindReplace.SelectedIndex = 1;
           }
-          if ( !m_FindReplace.Visible )
-          {
-            m_FindReplace.Show( panelMain );
-          }
-          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
-          m_FindReplace.comboReplaceSearchText.Focus();
-          StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
-          m_FindReplace.tabFindReplace.SelectedIndex = 1;
           return true;
         case RetroDevStudio.Types.Function.REPLACE_IN_PROJECT:
           {

@@ -100,6 +100,7 @@ namespace RetroDevStudio.Undo
         }
       }
       Editor.UpdateArea( X, Y, Width, Height );
+      Editor.RecalcTileUsages();
       Editor.SetModified();
     }
   }

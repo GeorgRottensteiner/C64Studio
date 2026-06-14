@@ -1495,23 +1495,40 @@ namespace RetroDevStudio.Dialogs
       checkSearchRegExp.Checked     = Settings.LastFindRegexp;
       checkSearchWrap.Checked       = Settings.LastFindWrap;
 
-      comboSearchTarget.SelectedIndex = Settings.LastFindTarget;
+      if ( Settings.RestoreLastFindTarget )
+      {
+        comboSearchTarget.SelectedIndex = Settings.LastFindTarget;
+      }
+      else
+      {
+        comboSearchTarget.SelectedIndex = 0;
+      }
       comboSearchText.Items.Clear();
       comboSearchText.Items.AddRange( Settings.FindArguments.ToArray() );
       comboReplaceSearchText.Items.Clear();
       comboReplaceSearchText.Items.AddRange( Settings.ReplaceArguments.ToArray() );
+
+      if ( Settings.RestoreLastReplaceTarget )
+      {
+        comboReplaceTarget.SelectedIndex = Settings.LastReplaceTarget;
+      }
+      else
+      {
+        comboReplaceTarget.SelectedIndex = 0;
+      }
     }
 
 
 
     public void ToSettings( StudioSettings Settings )
     {
-      Settings.LastFindWholeWord = checkSearchFullWords.Checked;
+      Settings.LastFindWholeWord  = checkSearchFullWords.Checked;
       Settings.LastFindIgnoreCase = checkSearchIgnoreCase.Checked;
-      Settings.LastFindRegexp = checkSearchRegExp.Checked;
-      Settings.LastFindWrap = checkSearchWrap.Checked;
+      Settings.LastFindRegexp     = checkSearchRegExp.Checked;
+      Settings.LastFindWrap       = checkSearchWrap.Checked;
 
-      Settings.LastFindTarget = comboSearchTarget.SelectedIndex;
+      Settings.LastFindTarget     = comboSearchTarget.SelectedIndex;
+      Settings.LastReplaceTarget  = comboReplaceTarget.SelectedIndex;
       Settings.FindArguments.Clear();
       foreach ( object obj in comboSearchText.Items )
       {

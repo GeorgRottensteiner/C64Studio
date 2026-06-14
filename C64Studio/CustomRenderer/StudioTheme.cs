@@ -124,12 +124,6 @@ namespace RetroDevStudio.CustomRenderer
       {
         control.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
 
-        if ( control is ThemedButton )
-        {
-          var button = control as ThemedButton;
-
-          button.DisabledTextColor = DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.CONTROL_TEXT ) ) );
-        }
         /*
         if ( control is MenuStrip )
         {

@@ -31,7 +31,6 @@ namespace RetroDevStudio.Documents
       listBreakpoints.Columns.Add( "Trigger", 50 );
       listBreakpoints.Columns.Add( "Conditions", 127 );
       listBreakpoints.Columns.Add( "Address", 59 );
-      listBreakpoints.Columns[5].Alignment = DecentForms.TextAlignment.CENTERED_H;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }

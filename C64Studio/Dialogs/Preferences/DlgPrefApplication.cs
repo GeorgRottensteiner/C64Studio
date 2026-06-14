@@ -45,6 +45,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkAutoSaveSettings.Checked               = Core.Settings.AutoSaveSettings;
       editAutoSaveDelay.Text                      = Core.Settings.AutoSaveSettingsDelayMilliSeconds.ToString();
       checkRunningUnderWINE.Checked               = Core.Settings.IsRunningUnderWINE;
+      checkFindRestoreLastTarget.Checked          = Core.Settings.RestoreLastFindTarget;
+      checkReplaceRestoreLastFindTarget.Checked   = Core.Settings.RestoreLastReplaceTarget;
     }
 
 
@@ -70,6 +72,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlEnvironment.AddAttribute( "AutoSaveSettings", Core.Settings.AutoSaveSettings ? "yes" : "no" );
       xmlEnvironment.AddAttribute( "AutoSaveSettingsDelayMS", Core.Settings.AutoSaveSettingsDelayMilliSeconds.ToString() );
       xmlEnvironment.AddAttribute( "IsRunningUnderWINE", Core.Settings.IsRunningUnderWINE ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "FindRestoreLastTarget", Core.Settings.RestoreLastFindTarget ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "ReplaceRestoreLastFindTarget", Core.Settings.RestoreLastReplaceTarget ? "yes" : "no" );
     }
 
 
@@ -89,6 +93,8 @@ namespace RetroDevStudio.Dialogs.Preferences
         Core.Settings.AutoSaveSettings              = IsSettingTrue( xmlEnvironment.Attribute( "AutoSaveSettings" ) );
         Core.Settings.AutoSaveSettingsDelayMilliSeconds = GR.Convert.ToI32( xmlEnvironment.Attribute( "AutoSaveSettingsDelayMS" ) );
         Core.Settings.IsRunningUnderWINE            = IsSettingTrue( xmlEnvironment.Attribute( "IsRunningUnderWINE" ) );
+        Core.Settings.RestoreLastFindTarget         = IsSettingTrue( xmlEnvironment.Attribute( "FindRestoreLastTarget" ) );
+        Core.Settings.RestoreLastReplaceTarget      = IsSettingTrue( xmlEnvironment.Attribute( "ReplaceRestoreLastFindTarget" ) );
       }
     }
     
@@ -278,6 +284,26 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         Core.Settings.IsRunningUnderWINE = checkRunningUnderWINE.Checked;
         SysWrapper.s_IsRunningUnderWINE = checkRunningUnderWINE.Checked;
+      }
+    }
+
+
+
+    private void checkFindRestoreLastTarget_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.RestoreLastFindTarget != checkFindRestoreLastTarget.Checked )
+      {
+        Core.Settings.RestoreLastFindTarget = checkFindRestoreLastTarget.Checked;
+      }
+    }
+
+
+
+    private void checkReplaceRestoreLastFindTarget_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.RestoreLastReplaceTarget != checkReplaceRestoreLastFindTarget.Checked )
+      {
+        Core.Settings.RestoreLastReplaceTarget = checkReplaceRestoreLastFindTarget.Checked;
       }
     }
 

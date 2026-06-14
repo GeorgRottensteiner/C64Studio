@@ -372,3 +372,5 @@
 /DecentForms.Base/bin
 /DecentForms.Base/obj
 /Sample Projects/MacroTest/macro_syntax_error.prg
+/DecentForms/bin/Debug
+/DecentForms/obj

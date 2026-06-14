@@ -1,6 +1,4 @@
 ﻿using GR.Image;
-using RetroDevStudio;
-using RetroDevStudio.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -321,8 +319,6 @@ namespace DecentForms
       {
         rect.Offset( Columns[i].Width, 0 );
       }
-      rect.Offset( -_DisplayOffsetX, 0 );
-
       // -1 means use the rest of the list
       if ( Columns[ColumnIndex].Width == -1 )
       {
@@ -371,7 +367,8 @@ namespace DecentForms
         rectItem = GR.Math.Rectangle.Empty;
         return false;
       }
-      if ( rectItem.Top >= ClientRectangle.Height )
+      int maxHeight = ( _ScrollBarH.Visible ) ? ClientRectangle.Height - _ScrollBarH.Height : ClientRectangle.Height;
+      if ( rectItem.Top >= maxHeight )
       {
         rectItem = GR.Math.Rectangle.Empty;
         return false;
@@ -380,7 +377,7 @@ namespace DecentForms
       {
         rectItem = new GR.Math.Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
       }
-      rectItem.Offset( -_DisplayOffsetX, HeaderHeight );
+      rectItem.Offset( 0, HeaderHeight );
 
       return true;
     }
@@ -412,7 +409,7 @@ namespace DecentForms
       {
         rectItem = new GR.Math.Rectangle( rectItem.Left, 0, rectItem.Width, rectItem.Height + rectItem.Top );
       }
-      rectItem.Offset( -_DisplayOffsetX, HeaderHeight );
+      rectItem.Offset( 0, HeaderHeight );
 
       return rectItem;
     }
@@ -879,7 +876,7 @@ namespace DecentForms
             {
               if ( _selectedColumn != -1 )
               {
-                int   newWidth = Event.MouseX - GetHeaderRect( _selectedColumn ).Left;// + _DisplayOffsetX;
+                int   newWidth = Event.MouseX - GetHeaderRect( _selectedColumn ).Left + _DisplayOffsetX;
                 if ( newWidth < 5 )
                 {
                   newWidth = 5;
@@ -1321,6 +1318,17 @@ namespace DecentForms
     internal void ItemsModified()
     {
       FixItemIndices();
+      foreach ( var item in Items )
+      {
+        if ( item.Selected )
+        {
+          if ( _SelectedIndex != item.Index )
+          {
+            _SelectedIndex = item.Index;
+            break;
+          }
+        }
+      }
       AdjustScrollBars();
       Invalidate();
     }

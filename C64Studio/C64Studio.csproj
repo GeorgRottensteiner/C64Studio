@@ -63,36 +63,6 @@
     <Compile Update="Controls\ColorSettings\ColorSettingsNES.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\DecentForms\GridList\GridList.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\GridList\GridList.GridListItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\GridList\GridList.GridListItemCollection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\GridList\GridList.GridListItemIndexCollection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\GridList\GridList.GridListSelectedItemCollection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxSelectedItemCollection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\ListControl\ListControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlItemIndexCollection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\ListControl\ListControl.ListControlSelectedItemCollection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\ScrollBar\ScrollBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="Controls\ExportBinaryForms\ExportBinaryAsCArray.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -222,9 +192,6 @@
     </Compile>
     <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\ListBox\ListBox.ListBoxItemIndexCollection.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsSBASICFCMChardef.cs">
       <SubType>UserControl</SubType>
@@ -384,12 +351,6 @@
     </Compile>
     <Compile Update="Controls\ImportSpriteForms\ImportSpriteFormBase.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\ThemedButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\DecentForms\MenuButton.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\MeasurableListView.cs">
       <SubType>Component</SubType>
@@ -618,21 +579,24 @@
     <PackageReference Include="DockPanelSuite.ThemeVS2005" Version="3.1.1" />
     <PackageReference Include="GeorgRottensteiner.SharpSid" Version="0.9.5" />
   </ItemGroup>
+  <!-- required for UIAutomation -->
+  <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows'">
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>
+  <!-- required for UIAutomation end -->
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\DecentForms\DecentForms.csproj" />
     <ProjectReference Include="..\FastColoredTextBox\FastColoredTextBox.csproj">
       <Private></Private>
       <Aliases></Aliases>
     </ProjectReference>
     <ProjectReference Include="..\HexBox\HexBox.csproj" />
     <ProjectReference Include="..\SourceControl\SourceControl.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows'">
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Documents\SampleExplorer.resx">
@@ -656,6 +620,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\DecentForms\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">
