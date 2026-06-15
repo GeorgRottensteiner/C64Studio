@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Parser;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RetroDevStudio.Parser;
+using static RetroDevStudio.Parser.AssemblerSettings;
 
 namespace TestProject
 {
@@ -2101,6 +2102,36 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "0020A9FF4C0020EE20D04C0520", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestCheapLocals2()
+    {
+      // This test is to verify that the cheap local label cannot be reused inside the same global label range (zones are not global labels)
+      // this is supposed to fail
+      string      source = @"* = $2000
+                             !zone Zone1
+                              @cheap
+                             lda #$ff
+                             jmp @cheap
+
+                             !zone Zone2
+                              @cheap
+                               inc $d020
+                                jmp @cheap";
+
+      var parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      var config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      Assert.IsFalse( parseResult );
     }
 
 

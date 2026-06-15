@@ -86,18 +86,18 @@
     Cheap labels start with a @. Their scope is global, and their name needs not to be unique. A new placement overrides any previously (upwards) existing definition.<br>
     <br>
     <br>
-    <div id="code"><br>  !zone Zone1
+    <div id="code"><br>  GlobalLabel1
   @CheapLabel
         lda #15
 
         ;directly reference cheap label
         jmp @CheapLabel
 
-  !zone Zone2
+  GlobalLabel2
         ;allow the same label name, overriding the existing label
   @CheapLabel
 
-        ;you cannot reference @CheapLabel from Zone1 anymore
+        ;you cannot reference @CheapLabel from the GlobalLabel1 range anymore
         jmp @CheapLabel
           <br></div>
     <br>
