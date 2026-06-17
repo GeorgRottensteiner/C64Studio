@@ -792,6 +792,7 @@ namespace RetroDevStudio.Documents
         RedrawFullScreen();
       }
       Modified = true;
+      RecalcTileUsages();
       Redraw();
     }
 
@@ -3495,6 +3496,7 @@ namespace RetroDevStudio.Documents
         }
       }
 
+      RecalcTileUsages();
       RedrawFullScreen();
       Modified = true;
     }
