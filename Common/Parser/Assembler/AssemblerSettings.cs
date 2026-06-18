@@ -14,7 +14,10 @@ namespace RetroDevStudio.Parser
       ALLOW_DOT_BYTE_INSTRUCTION    = 1,
       [Description( "</> at beginning of expression affects full expression" )]
       [RuntimeArgumentName( "H2" )]
-      GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION = 2
+      GREATER_OR_LESS_AT_BEGINNING_AFFECTS_FULL_EXPRESSION = 2,
+      [Description( "cheap local labels are scoped to local instead of global labels" )]
+      [RuntimeArgumentName( "H3" )]
+      CHEAP_LOCAL_LABELS_ARE_SCOPED_TO_LOCAL = 3
     }
 
 

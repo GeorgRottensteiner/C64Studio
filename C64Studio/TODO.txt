@@ -52,8 +52,6 @@ o -> Damit ich im geliebten Studio im C64 Basic Modus lange Variablennamen verwe
 o Breakpoints speichern! -> im Projekt (plus zusätzlich global bei non-projects)
 o Hot-Reload in VICE
 o BASIC - Ein #IFDEF ähnliches Konstrukt, um verschiedene BASIC Versionen im selben Code zu verwenden wär super.
-o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
-  Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 
 o Schön wäre es wenn man im "Memory View" Fenster, nachdem man "Goto Address" angeklickt hat ein Label eingeben könnte.
 o Allow change of the default palettes
 o Now that you have added the name of the current solution in the title bar of the program, I see that the name of the solution does 

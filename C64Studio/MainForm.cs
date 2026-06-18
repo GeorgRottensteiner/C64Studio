@@ -3969,6 +3969,8 @@ namespace RetroDevStudio
       }
       else if ( ( newFileExtension == ".TXT" )
       ||        ( newFileExtension == ".CFG" )
+      ||        ( newFileExtension == ".HTML" )
+      ||        ( newFileExtension == ".HTM" )
       ||        ( newFileExtension == ".BAT" )
       ||        ( newFileExtension == ".PS1" ) )
       {
@@ -6514,7 +6516,9 @@ namespace RetroDevStudio
       else if ( ( extension == ".TXT" )
       ||        ( extension == ".CFG" )
       ||        ( extension == ".BAT" )
-      ||        ( extension == ".PS1" ) )
+      ||        ( extension == ".PS1" )
+      ||        ( extension == ".HTML" )
+      ||        ( extension == ".HTM" ) )
       {
         document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;

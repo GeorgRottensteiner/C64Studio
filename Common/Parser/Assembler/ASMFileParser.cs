@@ -9448,8 +9448,12 @@ namespace RetroDevStudio.Parser
 
       for ( int i = 0; i < lineTokenInfos.Count; ++i )
       {
-        if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        &&   ( i == 0 ) )
+        if ( ( ( m_AssemblerSettings.EnabledHacks.Contains( AssemblerSettings.Hacks.CHEAP_LOCAL_LABELS_ARE_SCOPED_TO_LOCAL ) )
+        &&     ( lineTokenInfos[i].Type == TokenInfo.TokenType.LABEL_LOCAL )  
+        &&     ( i == 0 ) )
+        ||   ( ( !m_AssemblerSettings.EnabledHacks.Contains( AssemblerSettings.Hacks.CHEAP_LOCAL_LABELS_ARE_SCOPED_TO_LOCAL ) )
+        &&     ( lineTokenInfos[i].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        &&     ( i == 0 ) ) )
         {
           cheapLabelParent = lineTokenInfos[i].Content;
         }

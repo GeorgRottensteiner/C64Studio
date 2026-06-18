@@ -2086,7 +2086,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestCheapLocals()
+    public void TestCheapLocalsWithGlobals()
     {
       string      source = @"* = $2000
                              Main
@@ -2107,7 +2107,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestCheapLocals2()
+    public void TestCheapLocalsWithGlobals2()
     {
       // This test is to verify that the cheap local label cannot be reused inside the same global label range (zones are not global labels)
       // this is supposed to fail
@@ -2132,6 +2132,63 @@ namespace TestProject
 
       bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
       Assert.IsFalse( parseResult );
+      Assert.IsFalse( parseResult );
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, asmFileInfo.Messages.First().Value.Code );
+    }
+
+
+
+    [TestMethod]
+    public void TestCheapLocalsWithLocals()
+    {
+      string      source = @"* = $2000
+                             .Main
+                              @cheap
+                             lda #$ff
+                             jmp @cheap
+
+                             .NotMain
+                              @cheap
+                               inc $d020
+                                jmp @cheap";
+
+      var assembly = TestAssemble( source, new GR.Collections.Set<Hacks>() { Hacks.CHEAP_LOCAL_LABELS_ARE_SCOPED_TO_LOCAL } );
+
+      Assert.AreEqual( "0020A9FF4C0020EE20D04C0520", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestCheapLocalsWithLocals2()
+    {
+      // This test is to verify that the cheap local label cannot be reused inside the same local label range
+      // this is supposed to fail
+      string      source = @"* = $2000
+                             Main
+                              @cheap
+                             lda #$ff
+                             inc Main
+                             jmp @cheap
+
+                              @cheap
+                               inc $d020
+                                jmp @cheap";
+
+      var parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
+
+      var config = new RetroDevStudio.Parser.CompileConfig();
+      config.EnabledHacks.Add( Hacks.CHEAP_LOCAL_LABELS_ARE_SCOPED_TO_LOCAL );
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      Assert.IsFalse( parseResult );
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, asmFileInfo.Messages.First().Value.Code );
     }
 
 

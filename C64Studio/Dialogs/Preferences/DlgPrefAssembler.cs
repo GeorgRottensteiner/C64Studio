@@ -200,7 +200,8 @@ namespace RetroDevStudio.Dialogs.Preferences
       listHacks.BeginUpdate();
       foreach ( AssemblerSettings.Hacks hack in Enum.GetValues( typeof( AssemblerSettings.Hacks ) ) )
       {
-        int itemIndex = listHacks.Items.Add( new GR.Generic.Tupel<string, AssemblerSettings.Hacks>( GR.EnumHelper.GetDescription( hack ), hack ) );
+        var entryDescription = GR.EnumHelper.GetAttributeOfType<RuntimeArgumentNameAttribute>( hack ).ArgumentName + ": " + GR.EnumHelper.GetDescription( hack );
+        int itemIndex = listHacks.Items.Add( new GR.Generic.Tupel<string, AssemblerSettings.Hacks>( entryDescription, hack ) );
         if ( Core.Settings.EnabledC64StudioHacks.ContainsValue( hack ) )
         {
           listHacks.SetItemChecked( itemIndex, true );
