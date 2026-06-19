@@ -316,6 +316,19 @@ namespace RetroDevStudio.Documents
             string    itemText = itemParts[i];
             string    filterText = filterParts[i];
 
+            // if macro calls have a prefix, compare without prefix
+            if ( DocumentInfo.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix.Any() )
+            {
+              foreach ( var prefix in DocumentInfo.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix )
+              {
+                if ( itemText.StartsWith( prefix ) )
+                {
+                  itemText = itemText.Substring( prefix.Length );
+                  break;
+                }
+              }
+            }
+
             if ( itemText == filterText )
             {
               // full match
