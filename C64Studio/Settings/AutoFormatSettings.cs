@@ -338,6 +338,7 @@ namespace RetroDevStudio
         case MacroInfo.PseudoOpType.BYTE:
         case MacroInfo.PseudoOpType.WORD:
         case MacroInfo.PseudoOpType.WORD_BE:
+        case MacroInfo.PseudoOpType.WORD_MINUS_ONE:
         case MacroInfo.PseudoOpType.DWORD:
         case MacroInfo.PseudoOpType.DWORD_BE:
         case MacroInfo.PseudoOpType.TEXT:

@@ -76,8 +76,53 @@ namespace RetroDevStudio.Parser
 
 
 
+    // TMP styled zone (.block), is always scoped
+    private void POScopedZone( LineInfo info, List<TokenInfo> lineTokenInfos, bool AutoGlobalLabel )
+    {
+      if ( lineTokenInfos.Count != 1 )
+      {
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Expected single .block PO" );
+        return;
+      }
+
+      StartScopedZone( "TMPZONE_" + _ParseContext.LineIndex.ToString() );
+    }
 
 
+
+    private ScopeInfo StartScopedZone( string zoneName )
+    {
+      var zoneScope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
+      zoneScope.Name = zoneName;
+      zoneScope.StartIndex = _ParseContext.LineIndex;
+      m_CurrentZoneName = zoneScope.Name;
+      _ParseContext.Scopes.Add( zoneScope );
+      OnScopeAdded( zoneScope );
+      return zoneScope;
+    }
+
+
+
+    private ParseLineResult POScopedZoneEnd( LineInfo info, List<TokenInfo> lineTokenInfos )
+    {
+      if ( _ParseContext.Scopes.Count == 0 )
+      {
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1007_MISSING_LOOP_START, "Missing block start" );
+        return ParseLineResult.ERROR_ABORT;
+      }
+
+      Types.ScopeInfo   lastOpenedScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
+
+      if ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.ZONE )
+      {
+        AddError( _ParseContext.LineIndex, Types.ErrorCode.E1007_MISSING_LOOP_START, "Missing block start" );
+        return ParseLineResult.ERROR_ABORT;
+      }
+      OnScopeRemoved( _ParseContext.LineIndex );
+      _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+      DetermineActiveZone();
+      return ParseLineResult.OK;
+    }
 
   }
 }

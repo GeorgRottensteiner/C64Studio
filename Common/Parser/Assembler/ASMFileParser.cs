@@ -2908,6 +2908,16 @@ namespace RetroDevStudio.Parser
                   }
                 }
                 break;
+              case MacroInfo.PseudoOpType.WORD_MINUS_ONE:
+                {
+                  int     lineInBytes = 0;
+                  var result = PODataWordWithOffset( NeededParsedExpression, lineInfo.LineIndex, 0, NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, 1, out lineInBytes );
+                  if ( result == ParseLineResult.RETURN_FALSE )
+                  {
+                    return ParseLineResult.RETURN_FALSE;
+                  }
+                }
+                break;
               case MacroInfo.PseudoOpType.WORD_BE:
                 {
                   int     lineInBytes = 0;
@@ -3822,6 +3832,25 @@ namespace RetroDevStudio.Parser
             }
           }
         }
+
+        // need to remove instrinsic scope
+        if ( macroInfo.MacroIsScoped )
+        {
+          if ( _ParseContext.Scopes.Count == 0 )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Missing scope macro zone scope" );
+            return ParseLineResult.ERROR_ABORT;
+          }
+
+          lastOpenedScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
+          if ( lastOpenedScope.Type != ScopeInfo.ScopeType.ZONE )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, $"Expected zone scope, but encountered {lastOpenedScope.Type} instead" );
+            return ParseLineResult.ERROR_ABORT;
+          }
+          _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
+          return ParseLineResult.OK;
+        }
       }
       else if ( lastOpenedScope.RepeatUntil != null )
       {
@@ -4617,6 +4646,10 @@ namespace RetroDevStudio.Parser
 
     private bool IsList( List<TokenInfo> Tokens )
     {
+      if ( !m_AssemblerSettings.SupportsListStatement )
+      {
+        return false;
+      }
       if ( Tokens.Count < 2 )
       {
         return false;
@@ -5200,7 +5233,20 @@ namespace RetroDevStudio.Parser
       m_ErrorMessages = 0;
 
       // default text code mapping
-      _ParseContext.CurrentTextMapping = m_TextCodeMappingRaw;
+      switch ( m_AssemblerSettings.DefaultTextEncoding )
+      {
+        case MacroInfo.PseudoOpType.TEXT_RAW:
+        default:
+          _ParseContext.CurrentTextMapping = m_TextCodeMappingRaw;
+          break;
+        case MacroInfo.PseudoOpType.TEXT_SCREEN:
+          _ParseContext.CurrentTextMapping = m_TextCodeMappingScr;
+          break;
+        case MacroInfo.PseudoOpType.TEXT_PET:
+          _ParseContext.CurrentTextMapping = m_TextCodeMappingPet;
+          break;
+      }
+
       if ( AssemblerSettings.AllowsCustomTextMappings )
       {
         _ParseContext.TextMappings["none"]    = m_TextCodeMappingRaw;
@@ -5254,7 +5300,6 @@ namespace RetroDevStudio.Parser
         {
           m_CurrentCommentSB = new StringBuilder();
         }
-
 
         lineSizeInBytes = 0;
         hadCommentInLine = false;
@@ -6797,7 +6842,7 @@ namespace RetroDevStudio.Parser
         else if ( ( m_AssemblerSettings.POPrefix.Length > 0 )
         &&        ( upToken.StartsWith( m_AssemblerSettings.POPrefix ) ) )
         {
-          // a pseudo op
+          // a pseudo op for assemblers with PO prefix
           hadPseudoOp = true;
           if ( !m_AssemblerSettings.PseudoOps.ContainsKey( upToken ) )
           {
@@ -6958,7 +7003,7 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM ) )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.INCLUDE_BINARY_TASM ) )
             {
               var result = POIncludeBinary( pseudoOp.Type, lineTokenInfos, lineIndex, info, out lineSizeInBytes );
               if ( result == ParseLineResult.CALL_CONTINUE )
@@ -7153,14 +7198,20 @@ namespace RetroDevStudio.Parser
                 return Lines;
               }
             }
-            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MACRO )
+            else if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.MACRO )
+            ||        ( pseudoOp.Type == MacroInfo.PseudoOpType.MACRO_ZONED ) )
             {
+              bool isScopedMacro = ( pseudoOp.Type == MacroInfo.PseudoOpType.MACRO_ZONED );
+              if ( isScopedMacro )
+              {
+                StartScopedZone( "TMPZONE_" + _ParseContext.LineIndex.ToString() );
+              }
               string macroName = "";
               string outerFilename = "";
               int localLineIndex = 0;
               m_ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-              if ( POMacro( labelInFront, m_CurrentZoneName, m_ASMFileInfo.Macros, outerFilename, lineTokenInfos, out macroName ) )
+              if ( POMacro( labelInFront, m_CurrentZoneName, m_ASMFileInfo.Macros, outerFilename, lineTokenInfos, isScopedMacro, out macroName ) )
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
@@ -7339,6 +7390,14 @@ namespace RetroDevStudio.Parser
             {
               POZone( info, lineTokenInfos, true );
             }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SCOPED_ZONE )
+            {
+              POScopedZone( info, lineTokenInfos, false );
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SCOPED_ZONE_END )
+            {
+              POScopedZoneEnd( info, lineTokenInfos );
+            }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BANK )
             {
               POBank( lineTokenInfos, info, sizeInBytes, ref lineSizeInBytes );
@@ -7452,6 +7511,20 @@ namespace RetroDevStudio.Parser
             {
               info.LineCodeMapping = _ParseContext.CurrentTextMapping;
               var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD_MINUS_ONE )
+            {
+              info.LineCodeMapping = _ParseContext.CurrentTextMapping;
+              var result = PODataWordWithOffset( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, 1, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -7688,7 +7761,7 @@ namespace RetroDevStudio.Parser
         if ( ( !evaluatedContent )
         &&   ( m_AssemblerSettings.PseudoOps.ContainsKey( upToken ) ) )
         {
-          // TODO - ugly, copied code!!
+          // TODO - ugly, copied code for most macros!
           hadPseudoOp = true;
           Types.MacroInfo macroInfo = m_AssemblerSettings.PseudoOps[upToken];
           if ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.HEX )
@@ -7904,6 +7977,19 @@ namespace RetroDevStudio.Parser
               continue;
             }
           }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD_MINUS_ONE )
+          {
+            var result = PODataWordWithOffset( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, 1, out lineSizeInBytes );
+            if ( result == ParseLineResult.RETURN_NULL )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+            else if ( result == ParseLineResult.CALL_CONTINUE )
+            {
+              continue;
+            }
+          }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
           {
             var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
@@ -7985,7 +8071,7 @@ namespace RetroDevStudio.Parser
             int localLineIndex = 0;
             m_ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-            if ( POMacro( labelInFront, m_CurrentZoneName, m_ASMFileInfo.Macros, outerFilename, lineTokenInfos, out macroName ) )
+            if ( POMacro( labelInFront, m_CurrentZoneName, m_ASMFileInfo.Macros, outerFilename, lineTokenInfos, false, out macroName ) )
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
@@ -8917,7 +9003,7 @@ namespace RetroDevStudio.Parser
         }
       }
       m_CurrentZoneName = m_CurrentGlobalZoneName;
-      // TODO
+      // TODO - WTF??
       AddZone( m_CurrentZoneName, _ParseContext.LineIndex + 1, -1, 0, 222 );
     }
 

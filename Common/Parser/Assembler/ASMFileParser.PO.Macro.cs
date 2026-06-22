@@ -17,6 +17,7 @@ namespace RetroDevStudio.Parser
     private bool POMacro( string LabelInFront, string Zone, GR.Collections.Map<GR.Generic.Tupel<string,int>, Types.MacroFunctionInfo> macroFunctions, 
                           string OuterFilename,
                           List<Types.TokenInfo> lineTokenInfos, 
+                          bool scopedMacro,
                           out string MacroFunctionName )
     {
       // !macro Macroname [param1[,param2]]
@@ -49,6 +50,7 @@ namespace RetroDevStudio.Parser
         macroFunction.LineIndex       = _ParseContext.LineIndex;
         macroFunction.ParentFileName  = OuterFilename;
         macroFunction.UsesBracket     = hasBracket;
+        macroFunction.MacroIsScoped   = scopedMacro;
 
         macroFunction.Symbol                  = new SymbolInfo();
         macroFunction.Symbol.Name             = LabelInFront;
@@ -78,25 +80,34 @@ namespace RetroDevStudio.Parser
         return true;
       }
 
-      if ( ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-      &&   ( lineTokenInfos.Count < 2 ) )
+      if ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
       {
-        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname>" );
-        hadError = true;
+        if ( ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+        &&   ( lineTokenInfos.Count < 2 ) )
+        {
+          AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname>" );
+          hadError = true;
+        }
+        else if ( lineTokenInfos.Count < 2 )
+        {
+          AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname> [<Param1>[,<Param2>[...]]]" );
+          hadError = true;
+        }
+        else if ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        {
+          AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro name must be formatted like a global label" );
+          hadError = true;
+        }
       }
-      else if ( lineTokenInfos.Count < 2 )
+      if ( !hadError )
       {
-        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname> [<Param1>[,<Param2>[...]]]" );
-        hadError = true;
-      }
-      else if ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-      {
-        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro name must be formatted like a global label" );
-        hadError = true;
-      }
-      else
-      {
-        string macroName = lineTokenInfos[1].Content;
+        // TODO - macro name is defined by label in front
+        string macroName = "";
+
+        if ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
+        {
+          macroName = lineTokenInfos[1].Content;
+        }
         
         if ( ( !m_AssemblerSettings.MacrosCanBeOverloaded )
         &&   ( macroFunctions.Keys.Any( m => m.first == macroName ) ) )
@@ -174,6 +185,7 @@ namespace RetroDevStudio.Parser
             macroFunction.ParameterNames          = param;
             macroFunction.ParametersAreReferences = paramIsRef;
             macroFunction.UsesBracket             = hasBracket;
+            macroFunction.MacroIsScoped           = scopedMacro;
 
             macroFunction.Symbol                  = new SymbolInfo();
             macroFunction.Symbol.Name             = macroName;
@@ -184,7 +196,8 @@ namespace RetroDevStudio.Parser
             macroFunction.Symbol.NumArguments     = param.Count;
             macroFunction.Symbol.LineIndex        = _ParseContext.LineIndex;
 
-            if ( !_ParseContext.DoNotAddReferences )
+            if ( ( !_ParseContext.DoNotAddReferences )
+            &&   ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables ) )
             {
               macroFunction.Symbol.AddReference( _ParseContext.LineIndex, lineTokenInfos[1] );
             }

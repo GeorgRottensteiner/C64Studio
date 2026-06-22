@@ -15,6 +15,22 @@ namespace RetroDevStudio.Parser
   {
     private ParseLineResult PODataWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
     {
+      return HandlePODataWordWithOffset( lineTokenInfos, LineIndex, StartIndex, Count, info, parseLine, AllowNeededExpression, LittleEndian, 0, out lineSizeInBytes );
+    }
+
+
+
+    private ParseLineResult PODataWordWithOffset( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, int offsetBytes, out int lineSizeInBytes )
+    {
+      return HandlePODataWordWithOffset( lineTokenInfos, LineIndex, StartIndex, Count, info, parseLine, AllowNeededExpression, LittleEndian, offsetBytes, out lineSizeInBytes );
+    }
+
+
+
+    private ParseLineResult HandlePODataWordWithOffset( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, 
+        int offset,
+        out int lineSizeInBytes )
+    {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
       if ( !ParseLineInParameters( lineTokenInfos, StartIndex, Count, LineIndex, false, out List<List<TokenInfo>> paramList ) )
@@ -61,13 +77,14 @@ namespace RetroDevStudio.Parser
             foreach ( char aChar in textLiteral )
             {
               // map to PETSCII!
+              var offsetChar = (char)( aChar - offset );
               if ( LittleEndian )
               {
-                data.AppendU16( (byte)aChar );
+                data.AppendU16( (byte)offsetChar );
               }
               else
               {
-                data.AppendU16NetworkOrder( (byte)aChar );
+                data.AppendU16NetworkOrder( (byte)offsetChar );
               }
             }
           }
@@ -82,6 +99,7 @@ namespace RetroDevStudio.Parser
                         parms[0].StartPos,
                         parms[parms.Count - 1].EndPos - parms[0].StartPos + 1 );
             }
+            wordValue -= offset;
             if ( LittleEndian )
             {
               data.AppendU16( (ushort)wordValue );

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using LibGit2Sharp;
+﻿using LibGit2Sharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RetroDevStudio.Types;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace TestProject
 {
@@ -85,6 +86,67 @@ namespace TestProject
     public static GR.Memory.ByteBuffer TestAssemble( AssemblerType assemblerType, string Source )
     {
       return TestAssemble( assemblerType, Source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> Messages );
+    }
+
+
+
+    public static string GetProjectDirectory()
+    {
+      // Start from the output directory (where the test assembly runs)  
+      string currentDir = AppContext.BaseDirectory;
+
+      // Search for the marker file to find the project root  
+      while ( currentDir != null )
+      {
+        string markerPath = Path.Combine( currentDir, "System Tests");
+        if ( Directory.Exists( markerPath ) )
+        {
+          return markerPath;
+        }
+        currentDir = Directory.GetParent( currentDir )?.FullName;
+      }
+      throw new FileNotFoundException( "Marker file not found. Ensure sub folder 'System Tests' exists in the project directory." );
+    }
+
+
+
+    public static GR.Memory.ByteBuffer AssembleFromFile( AssemblerType assemblerType, string filename, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages, out RetroDevStudio.Types.ASM.FileInfo info )
+    {
+      filename = Path.Combine( GetProjectDirectory(), filename );
+      var config = new RetroDevStudio.Parser.CompileConfig()
+      {
+        InputFile = filename
+      };
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( assemblerType );
+
+      config.OutputFile = "test.prg";
+      config.TargetType = CompileTargetType.PLAIN;
+      config.Assembler  = assemblerType;
+      config.LibraryFiles.Add( GetProjectDirectory() );
+
+      var source = GR.IO.File.ReadAllText( config.InputFile );
+
+      bool parseResult= parser.ParseFile( config.InputFile, source, null, config, null, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      messages = asmFileInfo.Messages;
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages )
+        {
+          asmFileInfo.FindTrueLineSource( msg.Key, out var documentFile, out var documentLine );
+
+          Debug.Log( $"  {documentFile}({documentLine}): {msg.Value.Message}" );
+        }
+      }
+
+
+      Assert.IsTrue( parseResult );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      info = asmFileInfo;
+
+      return parser.AssembledOutput.Assembly;
     }
 
 

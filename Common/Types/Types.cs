@@ -32,6 +32,7 @@ namespace RetroDevStudio.Types
       BYTE,
       WORD,
       WORD_BE,
+      WORD_MINUS_ONE,
       DWORD,
       DWORD_BE,
       TEXT,
@@ -97,7 +98,10 @@ namespace RetroDevStudio.Types
       ASSUME_8BIT_REGISTERS_65816,
       SKIP,                             // basically a * = * + x
       WHILE,                            // ACME: !WHILE
-      JUMP_TABLE                        // !jumplist Label
+      JUMP_TABLE,                       // !jumplist Label
+      SCOPED_ZONE,                      // TMP: .block
+      SCOPED_ZONE_END,                  // TMP: .bend
+      MACRO_ZONED                       // TMP: .macro (intrinsic .block/.bend)
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;
@@ -769,6 +773,7 @@ namespace RetroDevStudio.Types
     public List<bool>   ParametersAreReferences = new List<bool>();
     public string[]     Content = null;
     public bool         UsesBracket = false;
+    public bool         MacroIsScoped = false;
     public string       ParentFileName = "";
     public SymbolInfo   Symbol = new SymbolInfo();
   };

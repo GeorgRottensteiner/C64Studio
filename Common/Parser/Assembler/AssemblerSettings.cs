@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -38,6 +39,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     GlobalLabelsAutoZone = false;
     public bool                                                     MacroIsZone = false;
     public bool                                                     MacrosHaveVariableNumberOfArguments = false;
+    public bool                                                     MacrosHaveNoDefinedVariables = false;
     public bool                                                     MacrosCanBeOverloaded = false;
     public bool                                                     MacroKeywordAfterName = false;
     public bool                                                     MacrosUseCheapLabelsAsParameters = false;
@@ -56,10 +58,12 @@ namespace RetroDevStudio.Parser
     public bool                                                     IfWithoutBrackets = false;
     public bool                                                     SupportsRealNumbers = false;
     public bool                                                     LocalLabelStacking = false;   // if true, TASM mode: ++ refers to 2nd + below, --- to 3rd - above, etc.
+    public bool                                                     SupportsListStatement = false; // can do !fill <num>,[1,2,..]
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
     public GR.Collections.Set<string>                               PlainAssignmentOperators = new GR.Collections.Set<string>();
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
+    public MacroInfo.PseudoOpType                                   DefaultTextEncoding = MacroInfo.PseudoOpType.TEXT_RAW;
 
     public Types.AssemblerType                                      AssemblerType = Types.AssemblerType.AUTO;
 
@@ -110,6 +114,7 @@ namespace RetroDevStudio.Parser
       MacrosCanBeOverloaded = false;
       MacroKeywordAfterName = false;
       MacrosUseCheapLabelsAsParameters = false;
+      MacrosHaveNoDefinedVariables = false;
       DoWithoutParameterIsUntil = false;
       LabelsMustBeAtStartOfLine = false;
       CaseSensitive = true;
@@ -125,9 +130,11 @@ namespace RetroDevStudio.Parser
       IfWithoutBrackets = false;
       LocalLabelStacking = false;
       SupportsRealNumbers = false;
+      SupportsListStatement = false;
       DefineSeparatorKeywords.Clear();
       PlainAssignmentOperators.Clear();
       StatementSeparatorChars.Clear();
+      DefaultTextEncoding = MacroInfo.PseudoOpType.TEXT_RAW;
 
       AssemblerType = Type;
 
@@ -298,6 +305,7 @@ namespace RetroDevStudio.Parser
           MacrosHaveVariableNumberOfArguments = true;
           GlobalLabelsAutoZone = false;
           SupportsRealNumbers = true;
+          SupportsListStatement = true;
           DefineSeparatorKeywords.AddRange( new string[] { "=", ">>=", "<<=", "+=", "-=", "*=", "/=", "%=", "&=" }  );
           PlainAssignmentOperators.AddRange( new string[] { "=" } );
           IncludeExpectsStringLiteral = true;
@@ -509,12 +517,11 @@ namespace RetroDevStudio.Parser
           OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "w", "wx", "wy" };
           break;
         case Types.AssemblerType.TURBO_MACRO_PRO:
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.";
-          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
 
           OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
           CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
@@ -526,64 +533,70 @@ namespace RetroDevStudio.Parser
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEFx";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
-          AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
-
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
+          AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.";
 
           AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\{}[]";
 
-          AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
-          AddPseudoOp( "DC.W", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.BYTE );
-          AddPseudoOp( "MACRO", Types.MacroInfo.PseudoOpType.MACRO );
-          AddPseudoOp( "MAC", Types.MacroInfo.PseudoOpType.MACRO );
-          AddPseudoOp( "ENDM", Types.MacroInfo.PseudoOpType.END );
-          AddPseudoOp( "RORG", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
-          AddPseudoOp( "REND", Types.MacroInfo.PseudoOpType.REAL_PC );
-          AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
-          AddPseudoOp( "INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
-          AddPseudoOp( "SUBROUTINE", Types.MacroInfo.PseudoOpType.ZONE );
-          AddPseudoOp( "ERR", Types.MacroInfo.PseudoOpType.ERROR );
-          AddPseudoOp( "IFCONST", Types.MacroInfo.PseudoOpType.IFDEF );
-          AddPseudoOp( "IFNCONST", Types.MacroInfo.PseudoOpType.IFNDEF );
-          AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
-          AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
-          AddPseudoOp( "ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
-          AddPseudoOp( "DS.Z", Types.MacroInfo.PseudoOpType.FILL );
-          AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
-          AddPseudoOp( "DS.B", Types.MacroInfo.PseudoOpType.FILL );
-          AddPseudoOp( "ALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
-          AddPseudoOp( "ECHO", Types.MacroInfo.PseudoOpType.MESSAGE );
+          AddPseudoOp( ".RTA", Types.MacroInfo.PseudoOpType.WORD_MINUS_ONE );
+          AddPseudoOp( ".TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          //AddPseudoOp( ".NULL", Types.MacroInfo.PseudoOpType.TEXT_NULL );
+          //AddPseudoOp( ".SHIFT", Types.MacroInfo.PseudoOpType.TEXT_SHIFT );
+          AddPseudoOp( ".SCREEN", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          //AddPseudoOp( ".REPEAT", Types.MacroInfo.PseudoOpType.FILL_LIST );
 
-          AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.LOOP_START );
-          AddPseudoOp( "REPEND", Types.MacroInfo.PseudoOpType.LOOP_END );
+          //AddPseudoOp( ".IF", Types.MacroInfo.PseudoOpType.IF_NOT_ZERO );
+          //AddPseudoOp( ".IFNE", Types.MacroInfo.PseudoOpType.IF_NOT_ZERO );
+          //AddPseudoOp( ".IFEQ", Types.MacroInfo.PseudoOpType.IF_ZERO ); 
+          //AddPseudoOp( ".IFPL", Types.MacroInfo.PseudoOpType.IF_PLUS );
+          //AddPseudoOp( ".IFMI", Types.MacroInfo.PseudoOpType.IF_MINUS );
+          AddPseudoOp( ".ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
+          AddPseudoOp( ".IFDEF", Types.MacroInfo.PseudoOpType.IFDEF );
+          AddPseudoOp( ".IFNDEF", Types.MacroInfo.PseudoOpType.IFNDEF );
 
-          AddPseudoOp( "PROCESSOR", Types.MacroInfo.PseudoOpType.IGNORE );
-          AddPseudoOp( "ORG", Types.MacroInfo.PseudoOpType.ORG );
-          AddPseudoOp( "SEG", Types.MacroInfo.PseudoOpType.SEG );
-          AddPseudoOp( "SEG.U", Types.MacroInfo.PseudoOpType.SEG_VIRTUAL );
-          AddPseudoOp( "INCDIR", Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
+          AddPseudoOp( ".BLOCK", Types.MacroInfo.PseudoOpType.SCOPED_ZONE );
+          AddPseudoOp( ".BEND", Types.MacroInfo.PseudoOpType.SCOPED_ZONE_END );
 
-          RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
+          AddPseudoOp( ".VAR", Types.MacroInfo.PseudoOpType.SET );
 
-          LabelPostfix = ":";
-          MacroFunctionCallPrefix.Add( ":" );
+          //AddPseudoOp( ".LBL", Types.MacroInfo.PseudoOpType.GOTO_TARGET );
+          //AddPseudoOp( ".GOTO", Types.MacroInfo.PseudoOpType.GOTO );
+
+          AddPseudoOp( ".MACRO", Types.MacroInfo.PseudoOpType.MACRO_ZONED );
+          AddPseudoOp( ".SEGMENT", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( ".ENDM", Types.MacroInfo.PseudoOpType.END );
+
+          AddPseudoOp( ".INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( ".BINARY", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+
+          //AddPseudoOp( ".OFFS", Types.MacroInfo.PseudoOpType.PSEUDO_PC_DELTA );
+
+          AddPseudoOp( ".PRON", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( ".PROFF", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( ".HIDEMAC", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( ".SHOWMAC", Types.MacroInfo.PseudoOpType.IGNORE );
+
+          AddPseudoOp( ".END", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+
+          //AddPseudoOp( ".EOR", Types.MacroInfo.PseudoOpType.EOR );
+          //AddPseudoOp( ".BOUNCE", Types.MacroInfo.PseudoOpType.BOUNCE );  WTF?
+          POPrefix = ".";
+          MacroFunctionCallPrefix.Add( "#" );
+          MacrosHaveNoDefinedVariables = true;
           GlobalLabelsAutoZone = false;
-          DefineSeparatorKeywords.AddRange( new string[] { "SET", "EQU", "=" } );
-          PlainAssignmentOperators.AddRange( new string[] { "SET", "EQU", "=" } );
+          DefineSeparatorKeywords.AddRange( new string[] { "=" } );
+          PlainAssignmentOperators.AddRange( new string[] { "=" } );
           MacroIsZone = true;
-          MacrosHaveVariableNumberOfArguments = true;
-          IncludeExpectsStringLiteral = false;
-          IncludeHasOnlyFilename = true;
+          IncludeExpectsStringLiteral = true;
           IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
           CaseSensitive = false;
           LoopEndHasNoScope = false;
@@ -592,6 +605,7 @@ namespace RetroDevStudio.Parser
           DefaultTargetExtension = ".bin";
           LabelsMustBeAtStartOfLine = true;
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
+          DefaultTextEncoding = MacroInfo.PseudoOpType.TEXT_PET;
 
           // Turbo Macro Pro has no operator precedence
           OperatorPrecedence.Clear();
@@ -610,9 +624,6 @@ namespace RetroDevStudio.Parser
           OperatorPrecedence["=="] = 2;
           OperatorPrecedence[">"] = 8;
           OperatorPrecedence["<"] = 8;
-          OperatorPrecedence["!"] = 8;
-          OperatorPrecedence["~"] = 8;
-
           break;
         case Types.AssemblerType.TASM:
           // 64tass, TASM

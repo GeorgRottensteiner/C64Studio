@@ -53,5 +53,23 @@ namespace TestProject
 
       Assert.AreEqual( "4C03104C0310", data.ToString() );
     }
+
+
+
+    [TestMethod]
+    [DataRow( "tmp/include_macro.asm", "33" )]
+    [DataRow( "tmp/bytewordrta.asm", "1941cce2fce1fc" )]
+    [DataRow( "tmp/block.asm", "02ff02" )]
+    public void AssembleTMP( string sourceFile, string expectedData )
+    {
+      var result = TestAssemblerBase.AssembleFromFile( AssemblerType.TURBO_MACRO_PRO, sourceFile, 
+              out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages, 
+              out RetroDevStudio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( expectedData.ToUpper(), result.ToString() );
+    }
+
+
+
   }
 }

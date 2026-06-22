@@ -46,12 +46,13 @@ namespace RetroDevStudio.Parser
           {
             string    textLiteral = byteValueSymbol.ToString();
 
+            /*
             textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, _ParseContext.CurrentTextMapping, MachineType.C64, out bool hadError );
             if ( hadError )
             {
               AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
               return;
-            }
+            }*/
 
             if ( textLiteral.Length > 1 )
             {
