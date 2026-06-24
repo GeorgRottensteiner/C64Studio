@@ -108,6 +108,10 @@ namespace RetroDevStudio.Parser
         {
           macroName = lineTokenInfos[1].Content;
         }
+        else
+        {
+          macroName = _ParseContext.LastUsedLocalLabel;
+        }
         
         if ( ( !m_AssemblerSettings.MacrosCanBeOverloaded )
         &&   ( macroFunctions.Keys.Any( m => m.first == macroName ) ) )

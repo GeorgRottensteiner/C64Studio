@@ -85,7 +85,7 @@ namespace RetroDevStudio.Parser
         return;
       }
 
-      StartScopedZone( "TMPZONE_" + _ParseContext.LineIndex.ToString() );
+      StartScopedZone( _ParseContext.LastUsedLocalLabel );
     }
 
 
@@ -97,6 +97,7 @@ namespace RetroDevStudio.Parser
       zoneScope.StartIndex = _ParseContext.LineIndex;
       m_CurrentZoneName = zoneScope.Name;
       _ParseContext.Scopes.Add( zoneScope );
+      AddZone( zoneName, _ParseContext.LineIndex, 0, -1, m_CompileCurrentAddress );
       OnScopeAdded( zoneScope );
       return zoneScope;
     }

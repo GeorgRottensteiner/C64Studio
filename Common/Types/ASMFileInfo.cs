@@ -24,7 +24,8 @@ namespace RetroDevStudio.Types.ASM
       CODE_INCLUDE,
       CODE_INCLUDE_BASELIB,
       MEDIA_INCLUDE,
-      MACRO
+      MACRO,
+      CODE_GENERATED        // does not exist in any file
     }
 
     public string             Filename = "";

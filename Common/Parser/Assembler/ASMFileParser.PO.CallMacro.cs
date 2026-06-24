@@ -80,33 +80,39 @@ namespace RetroDevStudio.Parser
             param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, i - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
             //parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
 
-            // is reference properly matched?
-            if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+            if ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
             {
-              if ( param.Count > functionInfo.ParametersAreReferences.Count )
+              // is reference properly matched?
+              if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
               {
-                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-                hadError = true;
+                if ( param.Count > functionInfo.ParametersAreReferences.Count )
+                {
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                  hadError = true;
+                }
+                else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
+                {
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                  hadError = true;
+                }
               }
-              else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
+
+              if ( ( !hadError )
+              &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+              &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
               {
-                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-                hadError = true;
+                param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
+
+                string paramName = param[param.Count - 1];
+
+                if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
+                {
+                  AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
+                }
               }
             }
-
-            if ( ( !hadError )
-            &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-            &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
+            else
             {
-              param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
-
-              string paramName = param[param.Count - 1];
-
-              if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
-              {
-                AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
-              }
             }
             startIndex = i + 1;
           }
@@ -127,34 +133,38 @@ namespace RetroDevStudio.Parser
             // braces so potential original operators are evaluated before the rest is
             param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
           }
-          // is reference properly matched?
-          if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+          if ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
           {
-            if ( param.Count > functionInfo.ParametersAreReferences.Count )
+            // is reference properly matched?
+            if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
             {
-              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-              hadError = true;
+              if ( param.Count > functionInfo.ParametersAreReferences.Count )
+              {
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                hadError = true;
+              }
+              else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
+              {
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                hadError = true;
+              }
             }
-            else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
+            if ( ( !hadError )
+            &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+            &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
             {
-              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-              hadError = true;
-            }
-          }
-          if ( ( !hadError )
-          &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
-          &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
-          {
-            param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
-            string paramName = param[param.Count - 1];
+              param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
+              string paramName = param[param.Count - 1];
 
-            if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
-            {
-              AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
+              if ( m_ASMFileInfo.UnparsedLabels.ContainsKey( paramName ) )
+              {
+                AddLabel( paramName, 0, lineIndex, info.Zone, -1, 0 );
+              }
             }
           }
         }
         if ( ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
+        &&   ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
         &&   ( param.Count != functionInfo.ParameterNames.Count ) )
         {
           AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
@@ -200,20 +210,51 @@ namespace RetroDevStudio.Parser
 
               newLines[lineIndex] = labelInFront;
 
+              int headerLines= 0;
+              int trailingLines = 0;
+              if ( macro.MacroIsScoped )
+              {
+                /*
+                headerLines = 1;
+                trailingLines = 1;
+                var sourceInfoHeader = new Types.ASM.SourceInfo()
+                {
+                  Filename         = functionInfo.ParentFileName,
+                  FullPath         = functionInfo.ParentFileName,
+                  GlobalStartLine  = lineIndex + 1,
+                  LineCount        = 1,
+                  Source           = SourceInfo.SourceInfoSource.CODE_GENERATED,
+                  LocalStartLine   = -1
+                };
+                InsertSourceInfo( sourceInfoHeader );
+
+                var sourceInfoTrailer = new Types.ASM.SourceInfo()
+                {
+                  Filename         = functionInfo.ParentFileName,
+                  FullPath         = functionInfo.ParentFileName,
+                  GlobalStartLine  = lineIndex + 1 + replacementLines.Length - trailingLines,
+                  LineCount        = 1,
+                  Source           = SourceInfo.SourceInfoSource.CODE_GENERATED,
+                  LocalStartLine   = -1
+                };
+                InsertSourceInfo( sourceInfoTrailer );*/
+              }
+
               // adjust source infos to make lookup work correctly
-              Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-              sourceInfo.Filename         = functionInfo.ParentFileName;
-              sourceInfo.FullPath         = functionInfo.ParentFileName;
-              sourceInfo.GlobalStartLine  = lineIndex + 1;
-              sourceInfo.LineCount        = replacementLines.Length;
-              sourceInfo.Source           = SourceInfo.SourceInfoSource.MACRO;
+              var sourceInfo = new Types.ASM.SourceInfo()
+              {
+                Filename         = functionInfo.ParentFileName,
+                FullPath         = functionInfo.ParentFileName,
+                GlobalStartLine  = lineIndex + 1 + headerLines,
+                LineCount        = replacementLines.Length - headerLines - trailingLines,
+                Source           = SourceInfo.SourceInfoSource.MACRO
+              };
               string dummy;
-              m_ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
+              m_ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1 + headerLines, out dummy, out sourceInfo.LocalStartLine );
 
               InsertSourceInfo( sourceInfo );
 
               Lines = newLines;
-
               return ParseLineResult.CALL_CONTINUE;
             }
           }

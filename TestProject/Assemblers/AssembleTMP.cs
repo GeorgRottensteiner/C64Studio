@@ -36,7 +36,7 @@ namespace TestProject
 
       var data = TestAssemble( AssemblerType.TURBO_MACRO_PRO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
-      Assert.AreEqual( "0314F0D4", data.ToString() );
+      Assert.AreEqual( "00100314F0D4", data.ToString() );
     }
 
 
@@ -51,13 +51,13 @@ namespace TestProject
 
       var data = TestAssemble( AssemblerType.TURBO_MACRO_PRO, source, out RetroDevStudio.Types.ASM.FileInfo info );
 
-      Assert.AreEqual( "4C03104C0310", data.ToString() );
+      Assert.AreEqual( "00104C03104C0310", data.ToString() );
     }
 
 
 
     [TestMethod]
-    [DataRow( "tmp/include_macro.asm", "33" )]
+    [DataRow( "tmp/include_macro.asm", "a2fda9519d0004a90f9d00d8a2fea9589d0004a90e9d00d8a2ffa95a9d0004a90d9d00d860" )]
     [DataRow( "tmp/bytewordrta.asm", "1941cce2fce1fc" )]
     [DataRow( "tmp/block.asm", "02ff02" )]
     public void AssembleTMP( string sourceFile, string expectedData )

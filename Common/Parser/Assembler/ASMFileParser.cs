@@ -110,7 +110,7 @@ namespace RetroDevStudio.Parser
 
     private ErrorInfo                   m_LastErrorInfo = new ErrorInfo();
 
-    private bool                        DoLogSourceInfo = false;
+    private bool                        DoLogSourceInfo = true;
 
     private string                      m_CurrentZoneName = "";
     private string                      m_CurrentGlobalZoneName = "";
@@ -3832,25 +3832,6 @@ namespace RetroDevStudio.Parser
             }
           }
         }
-
-        // need to remove instrinsic scope
-        if ( macroInfo.MacroIsScoped )
-        {
-          if ( _ParseContext.Scopes.Count == 0 )
-          {
-            AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Missing scope macro zone scope" );
-            return ParseLineResult.ERROR_ABORT;
-          }
-
-          lastOpenedScope = _ParseContext.Scopes[_ParseContext.Scopes.Count - 1];
-          if ( lastOpenedScope.Type != ScopeInfo.ScopeType.ZONE )
-          {
-            AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, $"Expected zone scope, but encountered {lastOpenedScope.Type} instead" );
-            return ParseLineResult.ERROR_ABORT;
-          }
-          _ParseContext.Scopes.RemoveAt( _ParseContext.Scopes.Count - 1 );
-          return ParseLineResult.OK;
-        }
       }
       else if ( lastOpenedScope.RepeatUntil != null )
       {
@@ -5209,6 +5190,8 @@ namespace RetroDevStudio.Parser
       m_CurrentCommentSB = new StringBuilder();
       HadFatalError = false;
 
+      ParentFilename = GR.Path.Normalize( ParentFilename, false );
+
       if ( DoLogSourceInfo )
       {
         OrigLines = new Dictionary<string, string[]>();
@@ -5362,6 +5345,12 @@ namespace RetroDevStudio.Parser
         // split lines by ':'
         int   localIndex = 0;
         string filename = "";
+
+        if ( lineIndex == 30 )
+        {
+          int xx = 2;
+        }
+
         if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
         {
           DumpSourceInfos( OrigLines );
@@ -5395,6 +5384,11 @@ namespace RetroDevStudio.Parser
         {
           DetectPDSOrDASMMacroCall( m_ASMFileInfo.Macros, lineTokenInfos, 1 );
           labelOffset = 1;
+
+          if ( lineTokenInfos[0].Type == TokenInfo.TokenType.LABEL_LOCAL )
+          {
+            _ParseContext.LastUsedLocalLabel = lineTokenInfos[0].Content;
+          }
         }
         // a dot in front of a global label is potentially a pseudo op for PDS
         PDSCombineDotLabelInFrontAsPseudoOP( lineTokenInfos, labelOffset );
@@ -7202,10 +7196,6 @@ namespace RetroDevStudio.Parser
             ||        ( pseudoOp.Type == MacroInfo.PseudoOpType.MACRO_ZONED ) )
             {
               bool isScopedMacro = ( pseudoOp.Type == MacroInfo.PseudoOpType.MACRO_ZONED );
-              if ( isScopedMacro )
-              {
-                StartScopedZone( "TMPZONE_" + _ParseContext.LineIndex.ToString() );
-              }
               string macroName = "";
               string outerFilename = "";
               int localLineIndex = 0;
@@ -10070,8 +10060,19 @@ namespace RetroDevStudio.Parser
     // relabels local labels in macros to avoid clashes with duplicate calls - spares parameters
     private string[] RelabelLocalLabelsForMacro( string[] Lines, int lineIndex, string functionName, Types.MacroFunctionInfo functionInfo, List<string> paramName, List<string> param, GR.Collections.Map<byte, byte> TextCodeMapping, out int LineIndexInsideMacro )
     {
-      string[] replacementLines = new string[functionInfo.LineEnd - functionInfo.LineIndex - 1];
+      int   addBlockEndStatementLines = functionInfo.MacroIsScoped ? 2 : 0;
+
+      string[] replacementLines = new string[functionInfo.LineEnd - functionInfo.LineIndex - 1 + addBlockEndStatementLines];
+
       int replacementLineIndex = 0;
+      int functionInfoLineIndex = 0;
+      if ( functionInfo.MacroIsScoped )
+      {
+        replacementLines[0] = ".block";
+        ++replacementLineIndex;
+      }
+
+        
 
       LineIndexInsideMacro = -1;
       ClearErrorInfo();
@@ -10099,6 +10100,39 @@ namespace RetroDevStudio.Parser
 
         for ( int j = 0; j < tokens.Count; ++j )
         {
+          // TMPx has arguments as \1, \2, ...
+          if ( ( m_AssemblerSettings.MacrosHaveNoDefinedVariables )
+          &&   ( j + 1 < tokens.Count )
+          &&   ( tokens[j].Type == TokenInfo.TokenType.SEPARATOR )
+          &&   ( tokens[j].Content == "\\" )
+          &&   ( tokens[j + 1].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+          &&   ( tokens[j].StartPos + tokens[j].Length == tokens[j + 1].StartPos ) )
+          {
+            int   argumentIndex = GR.Convert.ToI32( tokens[j + 1].Content );
+            if ( ( argumentIndex < 1 )
+            ||   ( argumentIndex > param.Count ) )
+            {
+              LineIndexInsideMacro = i;
+              AddError( lineIndex + replacementLineIndex, ErrorCode.E1302_MALFORMED_MACRO, $"Argument number {argumentIndex} is referenced, expected value to be >= 1 and <= {param.Count}" );              
+              return null;
+            }
+            tokens[j].Content = param[argumentIndex - 1];
+            if ( param[argumentIndex - 1].Contains( '"' ) )
+            {
+              tokens[j].Type = TokenInfo.TokenType.LITERAL_STRING;
+            }
+            else
+            {
+              tokens[j].Type = TokenInfo.TokenType.LITERAL_NUMBER;
+            }
+
+            tokens.RemoveRange( j + 1, 1 );
+            j = 0;
+
+            replacedParam = true;
+            continue;
+          }
+
           if ( ( j + 3 < tokens.Count )
           &&   ( IsTokenLabel( tokens[j].Type ) )
           &&   ( tokens[j + 1].Type == TokenInfo.TokenType.SEPARATOR )
@@ -10192,6 +10226,7 @@ namespace RetroDevStudio.Parser
               // this part is blended out
               replacementLines[replacementLineIndex] = string.Empty;
               ++replacementLineIndex;
+              ++functionInfoLineIndex;
               continue;
             }
             else if ( pseudoOp.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT )
@@ -10210,6 +10245,7 @@ namespace RetroDevStudio.Parser
               // this part is blended out
               replacementLines[replacementLineIndex] = string.Empty;
               ++replacementLineIndex;
+              ++functionInfoLineIndex;
               continue;
             }
             else if ( TokenIsConditionalThatStartsScope( tokens[0] ) )
@@ -10239,6 +10275,7 @@ namespace RetroDevStudio.Parser
               // this part is blended out
               replacementLines[replacementLineIndex] = string.Empty;
               ++replacementLineIndex;
+              ++functionInfoLineIndex;
               continue;
             }
           }
@@ -10254,13 +10291,14 @@ namespace RetroDevStudio.Parser
             if ( ( removedScopeType == 0 )
             &&   ( !activeScopes.Contains( 2 ) ) )
             {
-              replacementLines[replacementLineIndex] = functionInfo.Content[replacementLineIndex];
+              replacementLines[replacementLineIndex] = functionInfo.Content[functionInfoLineIndex];
             }
             else
             {
-              replacementLines[replacementLineIndex] = string.Empty;//functionInfo.Content[replacementLineIndex];
+              replacementLines[replacementLineIndex] = string.Empty;
             }
             ++replacementLineIndex;
+            ++functionInfoLineIndex;
             continue;
           }
         }
@@ -10271,6 +10309,7 @@ namespace RetroDevStudio.Parser
           // this part is blended out
           replacementLines[replacementLineIndex] = string.Empty;
           ++replacementLineIndex;
+          ++functionInfoLineIndex;
           continue;
         }
 
@@ -10478,9 +10517,10 @@ namespace RetroDevStudio.Parser
         }
         else
         {
-          replacementLines[replacementLineIndex] = functionInfo.Content[replacementLineIndex];
+          replacementLines[replacementLineIndex] = functionInfo.Content[functionInfoLineIndex];
         }
         ++replacementLineIndex;
+        ++functionInfoLineIndex;
       }
 
       if ( activeScopes.Count > 0 )
@@ -10490,6 +10530,11 @@ namespace RetroDevStudio.Parser
         return null;
       }
 
+      // TMPx scoped macros have an implicit scope block
+      if ( functionInfo.MacroIsScoped )
+      {
+        replacementLines[replacementLines.Length - 1] = ".bend";
+      }
       return replacementLines;
     }
 
@@ -10926,18 +10971,23 @@ namespace RetroDevStudio.Parser
       Debug.Log( "=======> Step " + dumpCount );
       foreach ( KeyValuePair<int,Types.ASM.SourceInfo> pair in m_ASMFileInfo.SourceInfo )
       {
-        Debug.Log( "From line " + ( pair.Value.GlobalStartLine + 1 ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 + 1 ) + ", local " + ( pair.Value.LocalStartLine + 1 ) + ", " + pair.Value.LineCount + " lines from " + pair.Value.Filename );
-        for ( int i = 0; i < pair.Value.LineCount; ++i )
+        string  origPath = GR.Path.Normalize( pair.Value.Filename, false );
+        Debug.Log( "From line " + ( pair.Value.GlobalStartLine + 1 ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 + 1 ) + ", local " + ( pair.Value.LocalStartLine + 1 ) + ", " + pair.Value.LineCount + " lines from " + origPath + " from " + pair.Value.Source );
+
+        if ( pair.Value.Source != SourceInfo.SourceInfoSource.CODE_GENERATED )
         {
-          if ( pair.Value.LocalStartLine + i >= OrigLines[pair.Value.Filename].Length )
+          for ( int i = 0; i < pair.Value.LineCount; ++i )
           {
-            Debug.Log( "DumpSourceInfos: Out of bounds! " + ( pair.Value.LocalStartLine + i ).ToString() + " >= " + OrigLines[pair.Value.Filename].Length );
-            sb.AppendLine( "OUT OF BOUNDS!" );
-            break;
-          }
-          else
-          {
-            sb.AppendLine( OrigLines[pair.Value.Filename][pair.Value.LocalStartLine + i] );
+            if ( pair.Value.LocalStartLine + i >= OrigLines[origPath].Length )
+            {
+              Debug.Log( "DumpSourceInfos: Out of bounds! " + ( pair.Value.LocalStartLine + i ).ToString() + " >= " + OrigLines[origPath].Length );
+              sb.AppendLine( "OUT OF BOUNDS!" );
+              break;
+            }
+            else
+            {
+              sb.AppendLine( OrigLines[origPath][pair.Value.LocalStartLine + i] );
+            }
           }
         }
         sb.AppendLine( "======================" );

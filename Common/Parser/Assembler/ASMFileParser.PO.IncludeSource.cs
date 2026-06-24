@@ -132,20 +132,20 @@ namespace RetroDevStudio.Parser
         return ParseLineResult.RETURN_NULL;
       }
 
-      if ( DoLogSourceInfo )
-      {
-        string subFilenameFull2 = GR.Path.Append( GR.Path.GetDirectoryName( ParentFilename ), subFilename );
-        if ( !OrigLines.ContainsKey( subFilenameFull2 ) )
-        {
-          OrigLines.Add( subFilenameFull2, new string[Lines.Length] );
-          Array.Copy( Lines, OrigLines[subFilenameFull2], Lines.Length );
-        }
-      }
-
       if ( ( singleInclude )
       &&   ( m_AlreadyIncludedSingleIncludeFiles.Contains( subFilename ) ) )
       {
         // do not re-include single include files
+        if ( DoLogSourceInfo )
+        {
+          string subFilenameFull2 = GR.Path.Append( GR.Path.GetDirectoryName( ParentFilename ), subFilename );
+          if ( !OrigLines.ContainsKey( subFilenameFull2 ) )
+          {
+            OrigLines.Add( subFilenameFull2, new string[Lines.Length] );
+            Array.Copy( Lines, OrigLines[subFilenameFull2], Lines.Length );
+          }
+        }
+
         return ParseLineResult.CALL_CONTINUE;
       }
       if ( singleInclude )
@@ -191,11 +191,21 @@ namespace RetroDevStudio.Parser
           source = SourceInfo.SourceInfoSource.CODE_INCLUDE_BASELIB;
         }
       }
+      subFilenameFull = GR.Path.Normalize( subFilenameFull, false );
 
       if ( GR.Path.IsPathEqual( ParentFilename, subFilenameFull ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, $"Circular inclusion of {subFilenameFull}, trying to include itself" );
         return ParseLineResult.RETURN_NULL;
+      }
+
+      if ( DoLogSourceInfo )
+      {
+        if ( !OrigLines.ContainsKey( subFilenameFull ) )
+        {
+          OrigLines.Add( subFilenameFull, new string[Lines.Length] );
+          Array.Copy( Lines, OrigLines[subFilenameFull], Lines.Length );
+        }
       }
 
       if ( m_LoadedFiles[ParentFilename].Any( lf => ( lf.first == subFilenameFull ) ) )

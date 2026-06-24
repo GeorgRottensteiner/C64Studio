@@ -39,7 +39,7 @@ namespace RetroDevStudio.Parser
     public bool                                                     GlobalLabelsAutoZone = false;
     public bool                                                     MacroIsZone = false;
     public bool                                                     MacrosHaveVariableNumberOfArguments = false;
-    public bool                                                     MacrosHaveNoDefinedVariables = false;
+    public bool                                                     MacrosHaveNoDefinedVariables = false; // TMPx (arguments are not defined, set as \1, \2, ...)
     public bool                                                     MacrosCanBeOverloaded = false;
     public bool                                                     MacroKeywordAfterName = false;
     public bool                                                     MacrosUseCheapLabelsAsParameters = false;
@@ -601,8 +601,8 @@ namespace RetroDevStudio.Parser
           CaseSensitive = false;
           LoopEndHasNoScope = false;
           MessageAutoIncludesBlanksBetweenParameters = true;
-          DefaultTarget.Type = Types.CompileTargetType.PLAIN;
-          DefaultTargetExtension = ".bin";
+          DefaultTarget.Type = Types.CompileTargetType.PRG;
+          DefaultTargetExtension = ".prg";
           LabelsMustBeAtStartOfLine = true;
           GreaterOrLessThanAtBeginningAffectFullExpression = true;
           DefaultTextEncoding = MacroInfo.PseudoOpType.TEXT_PET;

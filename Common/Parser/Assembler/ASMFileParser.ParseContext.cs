@@ -28,6 +28,8 @@ namespace RetroDevStudio.Parser
 
       public string       ParentFilename        = "";
 
+      public string       LastUsedLocalLabel    = null;
+
       // only set to true during DetermineUnparsedLabels
       public bool         DuringExpressionEvaluation = false;
 
@@ -38,20 +40,6 @@ namespace RetroDevStudio.Parser
       public SortedList<int,string>             ForwardLabelStacked = new SortedList<int, string>();
 
       public List<ScopeInfo>                    Scopes = new List<ScopeInfo>();
-      
-
-      public void Clear()
-      {
-        LineIndex           = -1;
-
-        ForwardLabelStacked.Clear();
-        TextMappings.Clear();
-        Scopes.Clear();
-
-        DoNotAddCollapseTokens  = 0;
-        DoNotAddReferences      = false;
-      }
-
     }
 
 
