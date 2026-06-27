@@ -629,10 +629,12 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.DEBUG_STEP].ToolBarButton = mainDebugStepInto;
       StudioCore.Settings.Functions[Function.FIND].MenuItem = searchToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND].ToolBarButton = mainToolFind;
+      StudioCore.Settings.Functions[Function.FIND_IN_DOCUMENT].MenuItem = searchInDocumentToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_IN_PROJECT].MenuItem = searchInProjectToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_IN_SOLUTION].MenuItem = searchInSolutionToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_REPLACE].MenuItem = findReplaceToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_REPLACE].ToolBarButton = mainToolFindReplace;
+      StudioCore.Settings.Functions[Function.REPLACE_IN_DOCUMENT].MenuItem = findReplaceInDocumentToolStripMenuItem;
       StudioCore.Settings.Functions[Function.REPLACE_IN_PROJECT].MenuItem = findReplaceInProjectToolStripMenuItem;
       StudioCore.Settings.Functions[Function.REPLACE_IN_SOLUTION].MenuItem = findReplaceInSolutionToolStripMenuItem;
       StudioCore.Settings.Functions[Function.PRINT].ToolBarButton = mainToolPrint;
@@ -809,7 +811,7 @@ namespace RetroDevStudio
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
         if ( ( !StudioCore.Settings.LastSolutionWasEmpty )
-        && ( StudioCore.Settings.MRUProjects.Count > 0 ) )
+        &&   ( StudioCore.Settings.MRUProjects.Count > 0 ) )
         {
           var idleRequest = new IdleRequest();
           idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
@@ -5155,6 +5157,29 @@ namespace RetroDevStudio
           m_FindReplace.comboSearchTarget.SelectedIndex = 3;
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           return true;
+        case RetroDevStudio.Types.Function.FIND_IN_DOCUMENT:
+          {
+            if ( ActiveDocumentInfo != null )
+            {
+              var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+              if ( compilableDoc != null )
+              {
+                m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              }
+            }
+          }
+          if ( !m_FindReplace.Visible )
+          {
+            m_FindReplace.Show( panelMain );
+          }
+          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
+          m_FindReplace.comboSearchText.Focus();
+          StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
+          m_FindReplace.tabFindReplace.SelectedIndex = 0;
+          // document per default
+          m_FindReplace.comboSearchTarget.SelectedIndex = 1;
+          m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
+          return true;
         case RetroDevStudio.Types.Function.FIND_REPLACE:
           {
             if ( ActiveDocumentInfo != null )
@@ -5185,6 +5210,24 @@ namespace RetroDevStudio
             StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
             m_FindReplace.tabFindReplace.SelectedIndex = 1;
           }
+          return true;
+        case RetroDevStudio.Types.Function.REPLACE_IN_DOCUMENT:
+          {
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
+          }
+          if ( !m_FindReplace.Visible )
+          {
+            m_FindReplace.Show( panelMain );
+          }
+          EnsureVisibleToolIsOnScreenArea( StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE] );
+          m_FindReplace.comboReplaceSearchText.Focus();
+          StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
+          m_FindReplace.tabFindReplace.SelectedIndex = 1;
+          m_FindReplace.comboReplaceTarget.SelectedIndex = 1;
           return true;
         case RetroDevStudio.Types.Function.REPLACE_IN_PROJECT:
           {
@@ -6300,7 +6343,10 @@ namespace RetroDevStudio
         }
         StudioCore.Navigating.Solution.Projects.Clear();
         StudioCore.Navigating.Solution = null;
-        StudioCore.Settings.LastSolutionWasEmpty = true;
+        if ( !StudioCore.ShuttingDown )
+        {
+          StudioCore.Settings.LastSolutionWasEmpty = true;
+        }
 
         // clear entries
         m_DebugWatch.ClearAllWatchEntries();
@@ -6350,7 +6396,7 @@ namespace RetroDevStudio
       StudioCore.Navigating.Solution.DuringLoad = false;
 
       if ( ( StudioCore.Navigating.Project == null )
-      && ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
+      &&   ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
       {
         StudioCore.Navigating.Project = StudioCore.Navigating.Solution.Projects[0];
       }
@@ -8475,6 +8521,34 @@ namespace RetroDevStudio
         StudioCore.Settings.DebuggerToRun = ( (GR.Generic.Tupel<string, ToolInfo>)mainDebugDebugger.SelectedItem ).first.ToUpper();
       }
 
+    }
+
+
+
+    private void searchInDocumentToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.FIND_IN_DOCUMENT );
+    }
+
+
+
+    private void findReplaceInDocumentToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.REPLACE_IN_DOCUMENT );
+    }
+
+
+
+    private void findAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.FIND_ALL_REFERENCES );
+    }
+
+
+
+    private void renameAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.RENAME_ALL_REFERENCES );
     }
 
 

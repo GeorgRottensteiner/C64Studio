@@ -294,11 +294,13 @@ namespace RetroDevStudio
       RegisterFunction( Function.CENTER_ON_CURSOR, "Center on Cursor", FunctionStudioState.ANY );
       RegisterFunction( Function.DELETE_LINE, "Delete Line", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND, "Find", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_IN_DOCUMENT, "Find in Document", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_IN_PROJECT, "Find in Project", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_IN_SOLUTION, "Find in Solution", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_NEXT, "Find Next", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_PREVIOUS, "Find Previous", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_REPLACE, "Replace", FunctionStudioState.ANY );
+      RegisterFunction( Function.REPLACE_IN_DOCUMENT, "Replace in Document", FunctionStudioState.ANY );
       RegisterFunction( Function.REPLACE_IN_PROJECT, "Replace in Project", FunctionStudioState.ANY );
       RegisterFunction( Function.REPLACE_IN_SOLUTION, "Replace in Solution", FunctionStudioState.ANY );
       RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );

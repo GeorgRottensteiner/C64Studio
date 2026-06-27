@@ -248,6 +248,7 @@ namespace RetroDevStudio.Dialogs
       this.comboSearchTarget.Name = "comboSearchTarget";
       this.comboSearchTarget.Size = new System.Drawing.Size(328, 21);
       this.comboSearchTarget.TabIndex = 1;
+      this.comboSearchTarget.SelectedIndexChanged += new System.EventHandler(this.comboSearchTarget_SelectedIndexChanged);
       // 
       // comboSearchText
       // 

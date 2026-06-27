@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.Documents;
+using RetroDevStudio.Properties;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -2142,6 +2143,7 @@ namespace RetroDevStudio.Dialogs
       {
         checkReplaceWrap.Checked = false;
       }
+      Core.Settings.LastReplaceTarget = comboReplaceTarget.SelectedIndex;
     }
 
 
@@ -2180,6 +2182,13 @@ namespace RetroDevStudio.Dialogs
           break;
       }
       base.OnApplicationEvent( Event );
+    }
+
+
+
+    private void comboSearchTarget_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      Core.Settings.LastFindTarget = comboSearchTarget.SelectedIndex;
     }
 
 

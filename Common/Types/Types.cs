@@ -185,7 +185,9 @@ namespace RetroDevStudio.Types
     FIND_PREVIOUS,
     CANCEL_BUILD,
     FIND_IN_PROJECT,
-    REPLACE_IN_PROJECT
+    REPLACE_IN_PROJECT,
+    FIND_IN_DOCUMENT,
+    REPLACE_IN_DOCUMENT
   }
 
   public enum StudioState

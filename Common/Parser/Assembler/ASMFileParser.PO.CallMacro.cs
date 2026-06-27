@@ -77,7 +77,33 @@ namespace RetroDevStudio.Parser
           {
             // separator
             // we're using a custom internal brace to not mix up opcode detection with expression parsing
-            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, i - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
+
+            // rename cheap labels to plain cheap labels again
+            var subRange = lineTokenInfos.GetRange( startIndex, i - startIndex );
+            for ( int jj = 0; jj < subRange.Count; ++jj ) 
+            {
+              var token = subRange[jj];
+
+              if ( token.Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+              {
+                var newToken = new TokenInfo()
+                {
+                  Type = token.Type, 
+                  Content = token.Content,
+                  Length = token.Length,
+                  OriginatingString = token.OriginatingString,
+                  StartPos = token.StartPos
+                };
+                int   cheapSymbolPos = newToken.Content.IndexOf( '@' );
+                if ( cheapSymbolPos != -1 )
+                {
+                  newToken.Content = newToken.Content.Substring( cheapSymbolPos );
+                  newToken.Length = newToken.Content.Length;
+                }
+                subRange[jj] = newToken;
+              }
+            }
+            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( subRange ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
             //parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
 
             if ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
@@ -124,14 +150,39 @@ namespace RetroDevStudio.Parser
         }
         else if ( startIndex < lineTokenInfos.Count )
         {
+          // rename cheap labels to plain cheap labels again
+          var subRange = lineTokenInfos.GetRange( startIndex, lineTokenInfos.Count - startIndex );
+          for ( int jj = 0; jj < subRange.Count; ++jj )
+          {
+            var token = subRange[jj];
+
+            if ( token.Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+            {
+              var newToken = new TokenInfo()
+              {
+                Type = token.Type,
+                Content = token.Content,
+                Length = token.Length,
+                OriginatingString = token.OriginatingString,
+                StartPos = token.StartPos
+              };
+              int   cheapSymbolPos = newToken.Content.IndexOf( '@' );
+              if ( cheapSymbolPos != -1 )
+              {
+                newToken.Content = newToken.Content.Substring( cheapSymbolPos );
+                newToken.Length = newToken.Content.Length;
+              }
+              subRange[jj] = newToken;
+            }
+          }
           if ( lineTokenInfos.Count - startIndex == 1 )
           {
-            param.Add( TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) );
+            param.Add( TokensToExpression( subRange ) );
           }
           else
           {
             // braces so potential original operators are evaluated before the rest is
-            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
+            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( subRange ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
           }
           if ( !m_AssemblerSettings.MacrosHaveNoDefinedVariables )
           {
