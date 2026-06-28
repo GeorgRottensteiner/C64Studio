@@ -110,7 +110,7 @@ namespace RetroDevStudio.Parser
 
     private ErrorInfo                   m_LastErrorInfo = new ErrorInfo();
 
-    private bool                        DoLogSourceInfo = true;
+    private bool                        DoLogSourceInfo = false;//true;
 
     private string                      m_CurrentZoneName = "";
     private string                      m_CurrentGlobalZoneName = "";

@@ -1683,9 +1683,13 @@ namespace RetroDevStudio.Documents
     {
       DecentForms.TreeView.TreeNode node = (DecentForms.TreeView.TreeNode)e.Item;
 
+      // only allow project drag if there is more than one
       if ( node.Level == 0 )
       {
-        return;
+        if ( Core.Navigating.Solution.Projects.Count <= 1 )
+        {
+          return;
+        }
       }
       timerDragDrop.Interval = 100;
       timerDragDrop.Start();
@@ -1776,26 +1780,41 @@ namespace RetroDevStudio.Documents
           // reset element hierarchy
           var draggedNode = treeProject.SelectedNode;
 
-          ProjectElement draggedElement = ElementFromNode( draggedNode );
-
-          AdjustElementHierarchy( draggedElement, draggedNode );
-
-          // reorder in element list
-          Project draggedProject = ProjectFromNode( draggedNode );
-
-          // rebuild element list from nodes
-          if ( draggedProject.Node.Nodes.Count > 0 )
+          if ( draggedNode.Level != 0 )
           {
-            draggedProject.Elements.Clear();
-            var node = draggedProject.Node.Nodes[0];
-            while ( ( node != null )
-            &&      ( ProjectFromNode( node ) == draggedProject ) )
+            ProjectElement draggedElement = ElementFromNode( draggedNode );
+
+            AdjustElementHierarchy( draggedElement, draggedNode );
+
+            // reorder in element list
+            Project draggedProject = ProjectFromNode( draggedNode );
+
+            // rebuild element list from nodes
+            if ( draggedProject.Node.Nodes.Count > 0 )
             {
-              draggedProject.Elements.Add( ElementFromNode( node ) );
-              node = DecentForms.TreeView.GetNextNode( node );
+              draggedProject.Elements.Clear();
+              var node = draggedProject.Node.Nodes[0];
+              while ( ( node != null )
+              &&      ( ProjectFromNode( node ) == draggedProject ) )
+              {
+                draggedProject.Elements.Add( ElementFromNode( node ) );
+                node = DecentForms.TreeView.GetNextNode( node );
+              }
             }
+            draggedProject.SetModified();
           }
-          draggedProject.SetModified();
+          else
+          {
+            var newList = new List<Project>();
+            var projectNode = treeProject.Nodes[0];
+            while ( projectNode != null )
+            {
+              newList.Add( ProjectFromNode( projectNode ) );
+              projectNode = projectNode.NextNode;
+            }
+            Core.Navigating.Solution.Projects = newList;
+            Core.Navigating.Solution.Modified = true;
+          }
         }
       }
       timerDragDrop.Stop();
@@ -1843,7 +1862,7 @@ namespace RetroDevStudio.Documents
     public ProjectElement ElementFromNode( DecentForms.TreeView.TreeNode Node )
     {
       if ( ( Node == null )
-      || ( Node.Level == 0 ) )
+      ||   ( Node.Level == 0 ) )
       {
         return null;
       }
@@ -1852,10 +1871,20 @@ namespace RetroDevStudio.Documents
 
 
 
-    bool CanNodeBeInProject( DecentForms.TreeView.TreeNode NodeParent, DecentForms.TreeView.TreeNode NodeChild )
+    bool CanNodeBeInProject( DecentForms.TreeView.TreeNode dragTarget, DecentForms.TreeView.TreeNode draggedNode )
     {
-      Project   origProject = ProjectFromNode( NodeChild );
-      Project   newProject = ProjectFromNode( NodeParent );
+      if ( draggedNode.Level == 0 )
+      {
+        // dragging a project
+        if ( ( dragTarget == null )
+        ||   ( dragTarget.Level != 0 ) )
+        {
+          return false;
+        }
+        return true;
+      }
+      Project   origProject = ProjectFromNode( draggedNode );
+      Project   newProject = ProjectFromNode( dragTarget );
 
       // can only drag inside one project
       if ( origProject != newProject )
@@ -1869,9 +1898,14 @@ namespace RetroDevStudio.Documents
 
     bool CanNodeBeChildOf( DecentForms.TreeView.TreeNode NodeParent, DecentForms.TreeView.TreeNode NodeChild )
     {
+      // project cannot be childs
+      if ( NodeChild.Level == 0 )
+      {
+        return false;
+      }
       ProjectElement    element = ElementFromNode( NodeParent );
       if ( ( element == null )
-      || ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+      ||   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
       {
         // either project or folder
         return true;
@@ -1888,9 +1922,10 @@ namespace RetroDevStudio.Documents
     private void treeProject_DragOver( object sender, System.Windows.Forms.DragEventArgs e )
     {
       DecentForms.TreeView.TreeNode NodeOver = treeProject.GetNodeAt( treeProject.PointToClient( Cursor.Position ) );
-      DecentForms.TreeView.TreeNode NodeMoving = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
+      DecentForms.TreeView.TreeNode draggedNode = (DecentForms.TreeView.TreeNode)e.Data.GetData( "DecentForms.TreeView+TreeNode" );
 
-      if ( !CanNodeBeInProject( NodeOver, NodeMoving ) )
+      if ( ( !CanNodeBeInProject( NodeOver, draggedNode ) )
+      ||   ( draggedNode == NodeOver ) )
       {
         e.Effect = DragDropEffects.None;
         return;
@@ -1901,18 +1936,22 @@ namespace RetroDevStudio.Documents
       // and either the nodeover is not the same thing as nodemoving UNLESS nodeover happens
       // to be the last node in the branch (so we can allow drag & drop below a parent branch)
       if ( ( NodeOver != null )
-      &&   ( ( NodeOver != NodeMoving )
+      &&   ( ( NodeOver != draggedNode )
       ||     ( ( NodeOver.Parent != null )
       &&       ( NodeOver.Index == ( NodeOver.Parent.Nodes.Count - 1 ) ) ) ) )
       {
         int OffsetY = treeProject.PointToClient( Cursor.Position ).Y - NodeOver.Bounds.Top;
 
         if ( ( OffsetY < ( NodeOver.Bounds.Height / 2 ) )
-        && ( NodeOver == treeProject.Nodes[0] ) )
+        &&   ( NodeOver == treeProject.Nodes[0] ) )
         {
           // not above the first node!
-          e.Effect = DragDropEffects.None;
-          return;
+          if ( ( draggedNode.Level != 0 )
+          ||   ( NodeOver == draggedNode ) )
+          {
+            e.Effect = DragDropEffects.None;
+            return;
+          }
         }
 
         int NodeOverImageWidth = 16;
@@ -1922,14 +1961,19 @@ namespace RetroDevStudio.Documents
         }
         Graphics g = treeProject.CreateGraphics();
 
-        if ( !CanNodeBeChildOf( NodeOver, NodeMoving ) )
+        if ( !CanNodeBeChildOf( NodeOver, draggedNode ) )
         {
           if ( OffsetY < ( NodeOver.Bounds.Height / 2 ) )
           {
+            if ( !CanNodeBeSetAsPreviousSibling( NodeOver, draggedNode ) )
+            {
+              e.Effect = DragDropEffects.None;
+              return;
+            }
             DecentForms.TreeView.TreeNode tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
-              if ( tnParadox.Parent == NodeMoving )
+              if ( tnParadox.Parent == draggedNode )
               {
                 NodeMap = "";
                 return;
@@ -1946,10 +1990,15 @@ namespace RetroDevStudio.Documents
           }
           else
           {
+            if ( !CanNodeBeSetAsNextSibling( NodeOver, draggedNode ) )
+            {
+              e.Effect = DragDropEffects.None;
+              return;
+            }
             DecentForms.TreeView.TreeNode tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
-              if ( tnParadox.Parent == NodeMoving )
+              if ( tnParadox.Parent == draggedNode )
               {
                 NodeMap = "";
                 return;
@@ -1994,7 +2043,7 @@ namespace RetroDevStudio.Documents
             var tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
-              if ( tnParadox.Parent == NodeMoving )
+              if ( tnParadox.Parent == draggedNode )
               {
                 NodeMap = "";
                 return;
@@ -2019,7 +2068,7 @@ namespace RetroDevStudio.Documents
             var tnParadox = NodeOver;
             while ( tnParadox.Parent != null )
             {
-              if ( tnParadox.Parent == NodeMoving )
+              if ( tnParadox.Parent == draggedNode )
               {
                 NodeMap = "";
                 return;
@@ -2047,14 +2096,14 @@ namespace RetroDevStudio.Documents
             }
             else
             {
-              if ( NodeMoving == NodeOver )
+              if ( draggedNode == NodeOver )
               {
                 return;
               }
               var tnParadox = NodeOver;
               while ( tnParadox.Parent != null )
               {
-                if ( tnParadox.Parent == NodeMoving )
+                if ( tnParadox.Parent == draggedNode )
                 {
                   NodeMap = "";
                   return;
@@ -2075,6 +2124,28 @@ namespace RetroDevStudio.Documents
           }
         }
       }
+    }
+
+
+
+    private bool CanNodeBeSetAsNextSibling( DecentForms.TreeView.TreeNode nodeOver, DecentForms.TreeView.TreeNode draggedNode )
+    {
+      if ( draggedNode.Level > 0 )
+      {
+        return true;
+      }
+      return draggedNode.PreviousNode != nodeOver;
+    }
+
+
+
+    private bool CanNodeBeSetAsPreviousSibling( DecentForms.TreeView.TreeNode nodeOver, DecentForms.TreeView.TreeNode draggedNode )
+    {
+      if ( draggedNode.Level > 0 )
+      {
+        return true;
+      }
+      return draggedNode.NextNode != nodeOver;
     }
 
 
