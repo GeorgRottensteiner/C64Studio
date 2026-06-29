@@ -728,15 +728,15 @@ namespace DecentForms
 
 
 
-    internal Rectangle GetItemCheckRect( int ItemIndex )
+    internal GR.Math.Rectangle GetItemCheckRect( int ItemIndex )
     {
       if ( ( !HasCheckBoxes )
       ||   ( ItemIndex < FirstVisibleItemIndex )
       ||   ( ItemIndex >= Items.Count ) )
       {
-        return Rectangle.Empty;
+        return GR.Math.Rectangle.Empty;
       }
-      return new Rectangle( 2 - _ScrollBarH.Value, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight + 2, ItemHeight - 4, ItemHeight - 4 );
+      return new GR.Math.Rectangle( 2 - _ScrollBarH.Value, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight + 2, ItemHeight - 4, ItemHeight - 4 );
     }
 
 

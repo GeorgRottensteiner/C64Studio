@@ -11,8 +11,10 @@ namespace DecentForms
     internal ListControl  _Owner = null;
     private bool          _Checked = false;
     internal bool         _Selected = false;
+    internal bool         _GroupHeader = false;
     internal int          _Index = -1;
     internal int          _ImageIndex = -1;
+    internal int          _GroupIndex = -1;
 
     public ListControlSubItemCollection SubItems = new ListControlSubItemCollection( null );
 
@@ -28,6 +30,14 @@ namespace DecentForms
     public ListControlItem( string Text )
     {
       SubItems.Add( new ListControlSubItem( Text ) );
+    }
+
+
+
+    public ListControlItem( string text, bool groupHeader )
+    {
+      _GroupHeader = groupHeader;
+      SubItems.Add( new ListControlSubItem( text ) );
     }
 
 
@@ -69,6 +79,16 @@ namespace DecentForms
 
 
 
+    public bool GroupHeader
+    {
+      get
+      {
+        return _GroupHeader;
+      }
+    }
+
+
+
     public int ImageIndex
     {
       get
@@ -82,6 +102,20 @@ namespace DecentForms
       }
     }
 
+
+
+    public int GroupIndex
+    {
+      get
+      {
+        return _GroupIndex;
+      }
+      set
+      {
+        _GroupIndex = value;
+        _Owner?.ItemModified( Index );
+      }
+    }
 
 
     public bool Selected

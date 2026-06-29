@@ -285,7 +285,7 @@ namespace DecentForms
 
 
 
-    public bool RaiseControlEvent( ControlEvent.EventType Type, int MouseX = -1, int MouseY = -1, uint MouseButtons = 0, int MouseWheelDelta = 0 )
+    public bool RaiseControlEvent( ControlEvent.EventType Type, int MouseX = -1, int MouseY = -1, uint MouseButtons = 0, int MouseWheelDelta = 0, Keys modifierKeys = Keys.None )
     {
       var newEvent = new ControlEvent()
       {
@@ -293,7 +293,8 @@ namespace DecentForms
         MouseX          = MouseX,
         MouseY          = MouseY,
         MouseButtons    = MouseButtons,
-        MouseWheelDelta = MouseWheelDelta
+        MouseWheelDelta = MouseWheelDelta,
+        Key             = modifierKeys
       };
       OnControlEvent( newEvent );
 
@@ -334,7 +335,7 @@ namespace DecentForms
             if ( _MouseOver )
             {
               _MouseOver = false;
-              RaiseControlEvent( ControlEvent.EventType.MOUSE_LEAVE, Event.MouseX, Event.MouseY, Event.MouseButtons );
+              RaiseControlEvent( ControlEvent.EventType.MOUSE_LEAVE, Event.MouseX, Event.MouseY, Event.MouseButtons, 0, Event.Key );
               Invalidate();
             }
           }
@@ -343,7 +344,7 @@ namespace DecentForms
             if ( !_MouseOver )
             {
               _MouseOver = true;
-              RaiseControlEvent( ControlEvent.EventType.MOUSE_ENTER, Event.MouseX, Event.MouseY, Event.MouseButtons );
+              RaiseControlEvent( ControlEvent.EventType.MOUSE_ENTER, Event.MouseX, Event.MouseY, Event.MouseButtons, 0, Event.Key );
             }
             if ( ( Event.MouseButtons & 1 ) == 1 )
             {
@@ -352,7 +353,7 @@ namespace DecentForms
                 if ( !_MouseDown )
                 {
                   _MouseDown = true;
-                  RaiseControlEvent( ControlEvent.EventType.MOUSE_DOWN, Event.MouseX, Event.MouseY, Event.MouseButtons );
+                  RaiseControlEvent( ControlEvent.EventType.MOUSE_DOWN, Event.MouseX, Event.MouseY, Event.MouseButtons, 0, Event.Key );
                 }
               }
             }
@@ -363,7 +364,7 @@ namespace DecentForms
             if ( _MouseDown )
             {
               _MouseDown = false;
-              RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, Event.MouseX, Event.MouseY, Event.MouseButtons );
+              RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, Event.MouseX, Event.MouseY, Event.MouseButtons, 0, Event.Key );
             }
           }
           break;
@@ -407,7 +408,7 @@ namespace DecentForms
       {
         _MouseDown = true;
         _LastMousePos = e.Location;
-        RaiseControlEvent( ControlEvent.EventType.MOUSE_DOWN, e.X, e.Y, ToButtonBitMask( e.Button ) );
+        RaiseControlEvent( ControlEvent.EventType.MOUSE_DOWN, e.X, e.Y, ToButtonBitMask( e.Button ), 0, ModifierKeys );
       }
       base.OnMouseDown( e );
     }
@@ -421,7 +422,7 @@ namespace DecentForms
         _MouseDown = false;
         _LastMousePos = e.Location;
 
-        RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, e.X, e.Y, ToButtonBitMask( Control.MouseButtons ) );
+        RaiseControlEvent( ControlEvent.EventType.MOUSE_UP, e.X, e.Y, ToButtonBitMask( Control.MouseButtons ), 0, ModifierKeys );
       }
       base.OnMouseUp( e );
     }
@@ -455,7 +456,7 @@ namespace DecentForms
     protected override void OnMouseClick( MouseEventArgs e )
     {
       _LastMousePos = e.Location;
-      RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ) );
+      RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ), 0, ModifierKeys );
       base.OnMouseClick( e );
     }
 
@@ -464,7 +465,7 @@ namespace DecentForms
     protected override void OnMouseDoubleClick( MouseEventArgs e )
     {
       _LastMousePos = e.Location;
-      RaiseControlEvent( ControlEvent.EventType.MOUSE_DOUBLE_CLICK, e.X, e.Y, ToButtonBitMask( e.Button ) );
+      RaiseControlEvent( ControlEvent.EventType.MOUSE_DOUBLE_CLICK, e.X, e.Y, ToButtonBitMask( e.Button ), 0, ModifierKeys );
       base.OnMouseDoubleClick( e );
     }
 
@@ -473,7 +474,7 @@ namespace DecentForms
     protected override void OnMouseMove( MouseEventArgs e )
     {
       _LastMousePos = e.Location;
-      RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ) );
+      RaiseControlEvent( ControlEvent.EventType.MOUSE_UPDATE, e.X, e.Y, ToButtonBitMask( e.Button ), 0, ModifierKeys );
       base.OnMouseMove( e );
     }
 
@@ -521,8 +522,8 @@ namespace DecentForms
     protected override bool IsInputKey( Keys keyData )
     {
       if ( ( keyData == Keys.Tab )
-      || ( keyData == Keys.Escape )   // escape here, without that CancelButtons do not work!
-      || ( keyData == ( Keys.Shift | Keys.Tab ) ) )
+      ||   ( keyData == Keys.Escape )   // escape here, without that CancelButtons do not work!
+      ||   ( keyData == ( Keys.Shift | Keys.Tab ) ) )
       {
         return false;
       }

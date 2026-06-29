@@ -957,7 +957,7 @@ namespace DecentForms
 
 
 
-    private void DrawCheckBox( Rectangle CheckRect, bool MouseOver, bool Checked )
+    private void DrawCheckBox( GR.Math.Rectangle CheckRect, bool MouseOver, bool Checked )
     {
       uint    color = ColorControlBorderFlat;
       uint    bgColor = ( MouseOver ? ColorControlBackgroundMouseOver: ColorControlActiveBackground );
@@ -1350,6 +1350,8 @@ namespace DecentForms
 
         GR.Math.Rectangle rcItem;
 
+        int columnIndexWithImage = listControl.CheckBoxes ? 1 : 0;
+
         if ( listControl.Items.Count > 0 )
         {
           do
@@ -1376,14 +1378,33 @@ namespace DecentForms
                   color = ColorControlTextMouseOver;
                   FillRectangle( rcItem, ColorControlBackgroundMouseOver );
                 }
-
-                if ( ( column == 0 )
-                &&   ( listControl.ImageList != null )
-                &&   ( listControl.Items[itemIndex].ImageIndex >= 0 )
-                &&   ( listControl.Items[itemIndex].ImageIndex < listControl.ImageList.Count ) )
+                if ( listControl.Items[itemIndex].GroupHeader )
                 {
-                  DrawImageCentered( listControl.ImageList[listControl.Items[itemIndex].ImageIndex],
-                                     rcItem );
+                  if ( column == 0 )
+                  {
+                    DrawText( listControl.Items[itemIndex].Text, rcItem.Left, rcItem.Top, _Control.ClientSize.Width, rcItem.Height,
+                              listControl.Columns[column].Alignment,
+                              listControl.Columns[column].Format,
+                              color );
+                  }
+                }
+                else if ( ( listControl.CheckBoxes )
+                &&        ( column == 0 ) )
+                {
+                  var checkRect = listControl.GetItemCheckRect( itemIndex );
+
+                  DrawCheckBox( checkRect, false, listControl.Items[itemIndex].Checked );
+                }
+                else if ( ( column == columnIndexWithImage )
+                &&        ( listControl.ImageList != null )
+                &&        ( listControl.Items[itemIndex].ImageIndex >= 0 )
+                &&        ( listControl.Items[itemIndex].ImageIndex < listControl.ImageList.Count ) )
+                {
+                  if ( !listControl.RaiseDrawItemImage( this, itemIndex, rcItem ) )
+                  {
+                    DrawImageCentered( listControl.ImageList[listControl.Items[itemIndex].ImageIndex],
+                                       rcItem );
+                  }
                 }
                 else
                 {

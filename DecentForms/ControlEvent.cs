@@ -42,6 +42,27 @@ namespace DecentForms
     public Keys             Key = Keys.None;
 
     public bool             Handled = false;
+
+
+
+    public bool ControlPressed
+    {
+      get
+      {
+        return ( Key & Keys.Control ) == Keys.Control;
+      }
+    }
+
+    public bool ShiftPressed
+    {
+      get
+      {
+        return ( Key & Keys.Shift ) == Keys.Shift;
+      }
+    }
+
+
+
   }
 
 

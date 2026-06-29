@@ -14,6 +14,10 @@ namespace DecentForms
 {
   public partial class ListControl : ControlBase
   {
+    public delegate void ListControlDrawItemImageHandler( DecentForms.ControlBase Sender, ControlRenderer renderer, int x, int y, DecentForms.ListControlItem item );
+
+
+
     private VScrollBar    _ScrollBarV = new VScrollBar();
     private HScrollBar    _ScrollBarH = new HScrollBar();
     private bool          _ScrollAlwaysVisible = false;
@@ -28,6 +32,8 @@ namespace DecentForms
     private bool          _RedrawRequired= false;
     private int           _HeaderHeight = 24;
     private bool          _HasHeader = true;
+    private bool          _CheckBoxes = false;
+    private bool          _MultiSelect = false;
 
     private int           _sortColumn = -1;
     private SortOrder     _sortOrder = SortOrder.NONE;
@@ -41,8 +47,11 @@ namespace DecentForms
 
     public event EventHandler       ItemActivate;
     public event EventHandler       SelectedIndexChanged;
+    public event EventHandler       CheckChanged;
     public event EventHandler       Scrolled;
     public event EventHandler       ColumnClicked;
+    public new event DecentForms.EventHandlerWithEvent MouseClick;
+    public event ListControlDrawItemImageHandler    DrawItemImage;
 
 
 
@@ -50,9 +59,10 @@ namespace DecentForms
     {
       NOWHERE            = 0,
       ITEM               = 1,
-      HEADER_COLUMN      = 2,
-      HEADER_SIZE_LEFT   = 3,      // on size bar to the left of column
-      HEADER_SIZE_RIGHT  = 4       // on size bar to the right of column
+      ITEM_CHECK         = 2,
+      HEADER_COLUMN      = 3,
+      HEADER_SIZE_LEFT   = 4,      // on size bar to the left of column
+      HEADER_SIZE_RIGHT  = 5       // on size bar to the right of column
     };
 
 
@@ -62,6 +72,7 @@ namespace DecentForms
       _Columns          = new ColumnCollection( this );
       SelectedIndices   = new ListControlItemIndexCollection( this );
       SelectedItems     = new ListControlSelectedItemCollection( this );
+      CheckedItems      = new ListControlCheckedItemCollection( this );
       Items             = new ListControlItemCollection( this );
 
       BorderStyle       = BorderStyle.SUNKEN;
@@ -171,6 +182,47 @@ namespace DecentForms
 
 
 
+    public bool CheckBoxes 
+    {
+      get
+      {
+        return _CheckBoxes;
+      }
+      set
+      {
+        if ( _CheckBoxes != value )
+        {
+          _CheckBoxes = value;
+          Invalidate();
+        }
+      }
+    }
+
+
+
+    public bool MultiSelected
+    {
+      get
+      {
+        return _MultiSelect;
+      }
+      set
+      {
+        if ( _MultiSelect != value )
+        {
+          _MultiSelect = value;
+          if ( ( !_MultiSelect )
+          &&   ( SelectedItems.Count > 0 ) )
+          {
+            SelectedItems.Clear();
+          }
+          Invalidate();
+        }
+      }
+    }
+
+
+
     bool HitTest( Point position, out HitTestResult hitResult, out int item, out int subItem )
     {
       item      = -1;
@@ -242,7 +294,16 @@ namespace DecentForms
         &&   ( position.X + _DisplayOffsetX < x + _Columns[i].Width ) )
         {
           subItem = i;
-          hitResult = HitTestResult.ITEM;
+
+          if ( ( i == 0 )
+          &&   ( CheckBoxes ) )
+          {
+            hitResult = HitTestResult.ITEM_CHECK;
+          }
+          else
+          {
+            hitResult = HitTestResult.ITEM;
+          }
           break;
         }
         x += _Columns[i].Width;
@@ -325,6 +386,19 @@ namespace DecentForms
         rect.Width = ClientRectangle.Width - rect.Left;
       }
       return rect;
+    }
+
+
+
+    internal GR.Math.Rectangle GetItemCheckRect( int ItemIndex )
+    {
+      if ( ( !CheckBoxes )
+      ||   ( ItemIndex < FirstVisibleItemIndex )
+      ||   ( ItemIndex >= Items.Count ) )
+      {
+        return GR.Math.Rectangle.Empty;
+      }
+      return new GR.Math.Rectangle( 2 - _ScrollBarH.Value, ( ItemIndex - FirstVisibleItemIndex ) * ItemHeight + 2 + _HeaderHeight, ItemHeight - 4, ItemHeight - 4 );
     }
 
 
@@ -459,6 +533,7 @@ namespace DecentForms
     public ListControlItemCollection          Items { get; private set; }
     public ListControlItemIndexCollection     SelectedIndices { get; private set; }
     public ListControlSelectedItemCollection  SelectedItems { get; private set; }
+    public ListControlCheckedItemCollection   CheckedItems { get; private set; }
     // used for sorting
     public List<int>                          ItemIndices { get; private set; } = new List<int>();
     public SelectionMode                      SelectionMode { get; set; }
@@ -985,8 +1060,14 @@ namespace DecentForms
             {
               if ( ( Event.MouseButtons & 1 ) == 1 )
               {
-                if ( ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
-                ||   ( hitTestResult == HitTestResult.HEADER_SIZE_RIGHT ) )
+                if ( hitTestResult == HitTestResult.ITEM_CHECK )
+                {
+                  Items[item].Checked = !Items[item].Checked;
+                  CheckChanged?.Invoke( this );
+                  Invalidate( GetItemRect( item ) );
+                }
+                else if ( ( hitTestResult == HitTestResult.HEADER_SIZE_LEFT )
+                ||        ( hitTestResult == HitTestResult.HEADER_SIZE_RIGHT ) )
                 {
                   Capture = true;
                   _draggingColumn = true;
@@ -1003,15 +1084,72 @@ namespace DecentForms
                   _pushedColumn = true;
                   Invalidate();
                   return;
+                } 
+                if ( hitTestResult == HitTestResult.ITEM )
+                {
+                  if ( _MouseOverItem != SelectedIndex )
+                  {
+                    if ( ( Event.ControlPressed )
+                    &&   ( !Event.ShiftPressed ) )
+                    {
+                      if ( !Items[MouseOverItem].GroupHeader )
+                      {
+                        Items[MouseOverItem].Selected = !Items[MouseOverItem].Selected;
+                      }
+                    }
+                    else if ( Event.ShiftPressed )
+                    {
+                      if ( ( item != -1 )
+                      &&   ( SelectedIndex != -1 ) )
+                      {
+                        int min = item;
+                        int max = SelectedIndex;
+                        if ( min > max )
+                        {
+                          min = SelectedIndex;
+                          max = item;
+                        }
+                        if ( !Event.ControlPressed )
+                        {
+                          SelectedItems.Clear();
+                        }
+                        for ( int i = min; i <= max; ++i )
+                        {
+                          if ( !Items[i].GroupHeader )
+                          {
+                            Items[i].Selected = true;
+                          }
+                        }
+                      }
+                    }
+                    else
+                    {
+                      if ( ( _MouseOverItem == -1 )
+                      ||   ( !Items[_MouseOverItem].GroupHeader ) )
+                      {
+                        SelectedIndex = _MouseOverItem;
+                      }
+                    }
+                  }
+                  else if ( Event.ControlPressed )
+                  {
+                    if ( !Items[MouseOverItem].GroupHeader )
+                    {
+                      Items[MouseOverItem].Selected = !Items[MouseOverItem].Selected;
+                    }
+                  }
+                  Capture = true;
                 }
               }
-              if ( hitTestResult == HitTestResult.ITEM )
+              
+              if ( ( Event.MouseButtons & 2 ) == 2 )
               {
-                if ( _MouseOverItem != SelectedIndex )
+                if ( ( item != -1 )
+                &&   ( !Items[item].Selected )
+                &&   ( !Items[item].GroupHeader ) )
                 {
-                  SelectedIndex = _MouseOverItem;
+                  SelectedIndex = item;
                 }
-                Capture = true;
               }
             }
           }
@@ -1021,6 +1159,7 @@ namespace DecentForms
             Capture = false;
             if ( HitTest( new Point( Event.MouseX, Event.MouseY ), out var hitTestResult, out var item, out var subItem ) )
             {
+              MouseClick?.Invoke( this, Event );
               if ( ( Event.MouseButtons & 1 ) == 0 )
               {
                 if ( _pushedColumn )
@@ -1291,6 +1430,10 @@ namespace DecentForms
       {
         SelectedIndices.Remove( Item.Index );
       }
+      if ( _SelectedIndex == Item.Index )
+      {
+        _SelectedIndex = -1;
+      }
       Invalidate( GetItemRect( Item.Index ) );
     }
 
@@ -1382,6 +1525,18 @@ namespace DecentForms
         _ScrollBarV.Value = Math.Max( 0, index - VisibleItemCount + 1 );
         Invalidate();
       }
+    }
+
+
+
+    public bool RaiseDrawItemImage( ControlRenderer renderer, int itemIndex, GR.Math.Rectangle rcItem )
+    {
+      if ( DrawItemImage == null )
+      {
+        return false;
+      }
+      DrawItemImage.Invoke( this, renderer, rcItem.Left, rcItem.Top, Items[itemIndex] );
+      return true;
     }
 
 

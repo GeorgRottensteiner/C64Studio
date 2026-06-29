@@ -8,6 +8,7 @@ using GR.Image;
 
 namespace DecentForms
 {
+  [DefaultEvent( "CheckedChanged" )]
   public class CheckBox : ControlBase
   {
     private bool              _Pushed       = false;
@@ -15,6 +16,8 @@ namespace DecentForms
     private bool              _PushedByKey  = false;
     private bool              _Checked      = false;
     private ContentAlignment  _CheckAlignment = ContentAlignment.MiddleLeft;
+    private TextAlignment     _TextAlignment = TextAlignment.CENTERED;
+
 
     [DefaultValue( Appearance.Normal )]
     private Appearance        _Appearance   = Appearance.Normal;
@@ -40,6 +43,7 @@ namespace DecentForms
     {
       get
       {
+        System.Windows.Forms.Button btn;
         return _CheckAlignment;
       }
       set
@@ -216,7 +220,7 @@ namespace DecentForms
 
 
 
-    public Rectangle GetCheckRect()
+    public GR.Math.Rectangle GetCheckRect()
     {
       int     x = 0;
       int     y = 0;
@@ -260,7 +264,7 @@ namespace DecentForms
           break;
       }
 
-      return new Rectangle( x, y, _CheckBoxSize, _CheckBoxSize );
+      return new GR.Math.Rectangle( x, y, _CheckBoxSize, _CheckBoxSize );
     }
 
 

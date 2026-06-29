@@ -35,15 +35,13 @@ namespace RetroDevStudio.Dialogs
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.editCommitMessage = new System.Windows.Forms.TextBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.listCommitFiles = new RetroDevStudio.Controls.CSListView();
-      this.columnCheck = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.listCommitFiles = new DecentForms.ListControl();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.editCommitAuthor = new System.Windows.Forms.TextBox();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editCommitEmail = new System.Windows.Forms.TextBox();
+      this.checkShowUnversionedFiles = new DecentForms.CheckBox();
+      this.checkShowUnmodifiedFiles = new DecentForms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -52,6 +50,7 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnCancel
       // 
+      this.btnCancel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnCancel.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -66,6 +65,7 @@ namespace RetroDevStudio.Dialogs
       // 
       // btnOK
       // 
+      this.btnOK.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
       this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnOK.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnOK.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
@@ -122,47 +122,28 @@ namespace RetroDevStudio.Dialogs
       this.listCommitFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.listCommitFiles.BorderStyle = DecentForms.BorderStyle.SUNKEN;
       this.listCommitFiles.CheckBoxes = true;
-      this.listCommitFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnCheck,
-            this.columnType,
-            this.columnFile,
-            this.columnExtension});
-      this.listCommitFiles.FullRowSelect = true;
-      this.listCommitFiles.HideSelection = false;
+      this.listCommitFiles.FirstVisibleItemIndex = 0;
+      this.listCommitFiles.HasHeader = true;
+      this.listCommitFiles.HeaderHeight = 24;
+      this.listCommitFiles.ImageList = null;
+      this.listCommitFiles.ItemHeight = 15;
+      this.listCommitFiles.ListViewItemSorter = null;
       this.listCommitFiles.Location = new System.Drawing.Point(6, 19);
+      this.listCommitFiles.MultiSelected = false;
       this.listCommitFiles.Name = "listCommitFiles";
-      this.listCommitFiles.OwnerDraw = true;
-      this.listCommitFiles.SelectedTextBGColor = ((uint)(4278190335u));
-      this.listCommitFiles.SelectedTextColor = ((uint)(4294967295u));
+      this.listCommitFiles.ScrollAlwaysVisible = false;
+      this.listCommitFiles.SelectedIndex = -1;
+      this.listCommitFiles.SelectedItem = null;
+      this.listCommitFiles.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listCommitFiles.Size = new System.Drawing.Size(550, 259);
-      this.listCommitFiles.Sorting = System.Windows.Forms.SortOrder.Ascending;
+      this.listCommitFiles.SortColumn = 0;
+      this.listCommitFiles.SortOrder = DecentForms.SortOrder.NONE;
       this.listCommitFiles.TabIndex = 0;
-      this.listCommitFiles.UseCompatibleStateImageBehavior = false;
-      this.listCommitFiles.View = System.Windows.Forms.View.Details;
-      this.listCommitFiles.DrawItemImage += new RetroDevStudio.Controls.CSListView.DrawItemImageHandler(this.listCommitFiles_DrawItemImage);
-      this.listCommitFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listCommitFiles_ColumnClick);
-      this.listCommitFiles.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.listCommitFiles_ColumnWidthChanging);
-      this.listCommitFiles.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listCommitFiles_MouseClick);
-      // 
-      // columnCheck
-      // 
-      this.columnCheck.Text = ".";
-      this.columnCheck.Width = 24;
-      // 
-      // columnType
-      // 
-      this.columnType.Text = ".";
-      this.columnType.Width = 24;
-      // 
-      // columnFile
-      // 
-      this.columnFile.Text = "Filename";
-      this.columnFile.Width = 400;
-      // 
-      // columnExtension
-      // 
-      this.columnExtension.Text = "Extension";
+      this.listCommitFiles.ColumnClicked += new DecentForms.EventHandler(this.listCommitFiles_ColumnClick);
+      this.listCommitFiles.MouseClick += new DecentForms.EventHandlerWithEvent(this.listCommitFiles_MouseClick);
+      this.listCommitFiles.DrawItemImage += new DecentForms.ListControl.ListControlDrawItemImageHandler(this.listCommitFiles_DrawItemImage);
       // 
       // groupBox3
       // 
@@ -200,6 +181,34 @@ namespace RetroDevStudio.Dialogs
       this.editCommitEmail.TabIndex = 0;
       this.editCommitEmail.TextChanged += new System.EventHandler(this.editCommitEmail_TextChanged);
       // 
+      // checkShowUnversionedFiles
+      // 
+      this.checkShowUnversionedFiles.Appearance = System.Windows.Forms.Appearance.Normal;
+      this.checkShowUnversionedFiles.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkShowUnversionedFiles.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.checkShowUnversionedFiles.Checked = true;
+      this.checkShowUnversionedFiles.Image = null;
+      this.checkShowUnversionedFiles.Location = new System.Drawing.Point(12, 502);
+      this.checkShowUnversionedFiles.Name = "checkShowUnversionedFiles";
+      this.checkShowUnversionedFiles.Size = new System.Drawing.Size(151, 23);
+      this.checkShowUnversionedFiles.TabIndex = 6;
+      this.checkShowUnversionedFiles.Text = "Show unversioned files";
+      this.checkShowUnversionedFiles.CheckedChanged += new DecentForms.EventHandler(this.checkShowUnversionedFiles_CheckedChanged);
+      // 
+      // checkShowUnmodifiedFiles
+      // 
+      this.checkShowUnmodifiedFiles.Appearance = System.Windows.Forms.Appearance.Normal;
+      this.checkShowUnmodifiedFiles.BorderStyle = DecentForms.BorderStyle.NONE;
+      this.checkShowUnmodifiedFiles.CheckAlign = DecentForms.ContentAlignment.MiddleLeft;
+      this.checkShowUnmodifiedFiles.Checked = false;
+      this.checkShowUnmodifiedFiles.Image = null;
+      this.checkShowUnmodifiedFiles.Location = new System.Drawing.Point(180, 502);
+      this.checkShowUnmodifiedFiles.Name = "checkShowUnmodifiedFiles";
+      this.checkShowUnmodifiedFiles.Size = new System.Drawing.Size(151, 23);
+      this.checkShowUnmodifiedFiles.TabIndex = 6;
+      this.checkShowUnmodifiedFiles.Text = "Show unmodified files";
+      this.checkShowUnmodifiedFiles.CheckedChanged += new DecentForms.EventHandler(this.checkShowUnmodifiedFiles_CheckedChanged);
+      // 
       // FormCommitChanges
       // 
       this.AcceptButton = this.btnOK;
@@ -207,6 +216,8 @@ namespace RetroDevStudio.Dialogs
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
       this.ClientSize = new System.Drawing.Size(586, 537);
+      this.Controls.Add(this.checkShowUnmodifiedFiles);
+      this.Controls.Add(this.checkShowUnversionedFiles);
       this.Controls.Add(this.groupBox4);
       this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.groupBox2);
@@ -239,14 +250,12 @@ namespace RetroDevStudio.Dialogs
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.TextBox editCommitMessage;
     private System.Windows.Forms.GroupBox groupBox2;
-    private CSListView listCommitFiles;
-    private System.Windows.Forms.ColumnHeader columnType;
-    private System.Windows.Forms.ColumnHeader columnFile;
-    private System.Windows.Forms.ColumnHeader columnCheck;
+    private DecentForms.ListControl listCommitFiles;
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.TextBox editCommitAuthor;
     private System.Windows.Forms.GroupBox groupBox4;
     private System.Windows.Forms.TextBox editCommitEmail;
-    private System.Windows.Forms.ColumnHeader columnExtension;
+    private DecentForms.CheckBox checkShowUnversionedFiles;
+    private DecentForms.CheckBox checkShowUnmodifiedFiles;
   }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 
 
@@ -42,12 +43,21 @@ namespace DecentForms
 
     public int Add( ListControlItem Item )
     {
+      if ( Item.GroupHeader )
+      {
+        Item.GroupIndex = _Items.Count( it => it._GroupHeader );
+      }
       _Items.Add( Item );
       Item._Index = _Items.Count - 1;
       Item._Owner = _Owner;
+      
       foreach ( var subItem in Item.SubItems )
       {
         subItem._Owner = _Owner;  
+      }
+      if ( Item.Checked )
+      {
+        _Owner.CheckedItems.Add( Item );
       }
       _Owner.SortItems();
       _Owner.ItemsModified();
@@ -74,8 +84,17 @@ namespace DecentForms
         {
           subItem._Owner = _Owner;
         }
+        if ( newItem.GroupHeader )
+        {
+          newItem.GroupIndex = _Items.Count( it => it._GroupHeader );
+        }
         _Items.Add( newItem );
+        
         newItem._Index = _Items.Count - 1;
+        if ( newItem.Checked )
+        {
+          _Owner.CheckedItems.Add( newItem );
+        }
       }
       _Owner.SortItems();
       _Owner.ItemsModified();
@@ -92,8 +111,17 @@ namespace DecentForms
         {
           subItem._Owner = _Owner;
         }
+        if ( item.GroupHeader )
+        {
+          item.GroupIndex = _Items.Count( it => it._GroupHeader );
+        }
         _Items.Add( item );
+        
         item._Index = _Items.Count - 1;
+        if ( item.Checked )
+        {
+          _Owner.CheckedItems.Add( item );
+        }
       }
       _Owner.SortItems();
       _Owner.ItemsModified();
@@ -119,6 +147,10 @@ namespace DecentForms
       foreach ( var subItem in Item.SubItems )
       {
         subItem._Owner = null;
+      }
+      if ( Item.Checked )
+      {
+        _Owner.CheckedItems.Remove( Item );
       }
       if ( _Owner.SelectedIndex == Item.Index )
       {
@@ -146,6 +178,10 @@ namespace DecentForms
       }
       _Items[Index].Selected = false;
       _Items[Index]._Owner = null;
+      if ( _Items[Index].Checked )
+      {
+        _Owner.CheckedItems.Remove( _Items[Index] );
+      }
       foreach ( var subItem in _Items[Index].SubItems )
       {
         subItem._Owner = null;
@@ -188,6 +224,10 @@ namespace DecentForms
         {
           _Items[Index + i].Selected = false;
           _Items[Index + i]._Owner = null;
+          if ( _Items[Index + i].Checked )
+          {
+            _Owner.CheckedItems.Remove( _Items[Index + i] );
+          }
           foreach ( var subItem in _Items[Index + i].SubItems )
           {
             subItem._Owner = null;
@@ -254,6 +294,10 @@ namespace DecentForms
         subItem._Owner = null;
       }
       _Items.Insert( InsertAtIndex, Item );
+      if ( Item.Checked )
+      {
+        _Owner.CheckedItems.Add( Item );
+      }
       _Owner.FixItemIndices();
       _Owner.SortItems();
       _Owner.ItemsModified();

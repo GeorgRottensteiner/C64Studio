@@ -2675,10 +2675,11 @@ namespace RetroDevStudio.Documents
       }
       if ( ( State & FileState.NewInIndex ) != 0 )
       {
+        // new
         return 0;
       }
       if ( ( State == FileState.ModifiedInIndex )
-      || ( State == FileState.ModifiedInWorkdir ) )
+      ||   ( State == FileState.ModifiedInWorkdir ) )
       {
         return 2;
       }
