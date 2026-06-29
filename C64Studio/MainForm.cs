@@ -55,6 +55,7 @@ namespace RetroDevStudio
     public SFXEditor              m_SFXEditor = null;
     public Documents.Help         m_Help = null;
     public Documents.SampleExplorer   m_SampleExplorer = null;
+    public Documents.FileManager      m_FileManager = null;
     public FormFindReplace        m_FindReplace = null;
     public FormFilesChanged       m_FilesChanged = null;
 
@@ -8549,6 +8550,19 @@ namespace RetroDevStudio
     private void renameAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( Function.RENAME_ALL_REFERENCES );
+    }
+
+
+
+    private void fileManagerToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( m_FileManager == null )
+      {
+        m_FileManager = new FileManager( StudioCore, "" );
+        m_FileManager.HideOnClose = true;
+      }
+      m_FileManager.ShowHint = DockState.Float;
+      m_FileManager.Show( panelMain );
     }
 
 
