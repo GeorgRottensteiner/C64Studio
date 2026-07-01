@@ -14,8 +14,6 @@ namespace RetroDevStudio.Documents
 {
   public partial class CompileResult : BaseDocument
   {
-    private int       _messagesSortColumn = 1;
-
     private Project   m_ListProject = null;
 
 
@@ -202,7 +200,8 @@ namespace RetroDevStudio.Documents
         }
       }
       listMessages.SortOrder          = oldOrder;
-      listMessages.ListViewItemSorter = new CompileResultItemComparer( _messagesSortColumn, oldOrder );
+
+      listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessages.SortColumn, oldOrder );
       listMessages.EndUpdate();
     }
 
@@ -430,7 +429,6 @@ namespace RetroDevStudio.Documents
 
     private void listMessages_ColumnClicked( DecentForms.ControlBase Sender )
     {
-      _messagesSortColumn = listMessages.SelectedColumn;
       listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessages.SelectedColumn, listMessages.SortOrder );
     }
 

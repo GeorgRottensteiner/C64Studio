@@ -5061,6 +5061,10 @@ namespace RetroDevStudio.Parser
       foreach ( var libFile in m_CompileConfig.LibraryFiles )
       {
         string    fullBasePath = libFile;
+        if ( string.IsNullOrEmpty( libFile ) )
+        {
+          return subFilename;
+        }
         if ( !GR.Path.IsPathRooted( libFile ) )
         {
 #if DEBUG

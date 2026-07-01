@@ -309,11 +309,13 @@ namespace RetroDevStudio.Parser
                              GR.Collections.Map<int,string> NamedLabels, 
                              DisassemblerSettings Settings, 
                              out string Disassembly, 
+                             out Dictionary<int,int> lineAddresses,
                              out int FirstLineWithOpcode )
     {
       StringBuilder sb = new StringBuilder();
       Disassembly = "";
       FirstLineWithOpcode = 1;
+      lineAddresses = new Dictionary<int, int>();
       if ( ( JumpedAtAddresses.Count == 0 )
       ||   ( m_SourceData == null ) )
       {
@@ -464,6 +466,7 @@ namespace RetroDevStudio.Parser
 
       sb.Append( "* = $" );
       sb.AppendLine( DataStartAddress.ToString( "x4" ) );
+      lineAddresses.Add( 0, DataStartAddress );
 
       var appearingLabels = new GR.Collections.Set<string>();
       var appearingLabelsPlusOne = new GR.Collections.Set<string>();
@@ -510,6 +513,7 @@ namespace RetroDevStudio.Parser
             FirstLineWithOpcode = localLineIndex;
           }
           ++localLineIndex;
+          lineAddresses.Add( localLineIndex, trueAddress );
 
           if ( accessedAddresses.ContainsValue( (ushort)trueAddress ) )
           {
@@ -518,6 +522,7 @@ namespace RetroDevStudio.Parser
             // line break in front of named label
             sb.AppendLine();
             AddLineAddress( Settings, sb, trueAddress );
+            lineAddresses.Add( localLineIndex + 1, trueAddress );
 
             if ( NamedLabels.ContainsKey( trueAddress ) )
             {
@@ -544,6 +549,7 @@ namespace RetroDevStudio.Parser
             AddLineAddress( Settings, sb, trueAddress );
 
             sb.AppendLine( NamedLabels[trueAddress] );
+            lineAddresses.Add( localLineIndex + 1, trueAddress );
           }
 
           if ( instruction != null )
@@ -566,6 +572,7 @@ namespace RetroDevStudio.Parser
               sb.Append( addressInside.Key - trueAddress );
               sb.AppendLine();
               AddLineAddress( Settings, sb, trueAddress );
+              lineAddresses.Add( localLineIndex + 1, trueAddress );
             }
 
             var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + 1 + instruction.first.OpcodeSize ) );
@@ -579,6 +586,7 @@ namespace RetroDevStudio.Parser
               sb.Append( addressInside - trueAddress );
               sb.AppendLine();
               AddLineAddress( Settings, sb, trueAddress );
+              lineAddresses.Add( localLineIndex + 1, trueAddress );
             }
           }
 

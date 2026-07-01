@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Text;
@@ -26,6 +27,8 @@ namespace RetroDevStudio.Documents
 
     private int                         m_ContextMenuOpeningInLineIndex = -1;
     private int                         m_ContextMenuCharPos = -1;
+
+    private Dictionary<int,int>         _LineAddresses = new Dictionary<int, int>();
 
 
 
@@ -363,6 +366,7 @@ namespace RetroDevStudio.Documents
                                        m_DisassemblyProject.NamedLabels, 
                                        settings, 
                                        out string disassembly, 
+                                       out _LineAddresses,
                                        out int dummy ) )
       {
         editDisassembly.Text = disassembly;
@@ -638,6 +642,7 @@ namespace RetroDevStudio.Documents
                                         m_DisassemblyProject.NamedLabels, 
                                         settings, 
                                         out disassembly, 
+                                        out var dummyList,
                                         out int dummy ) )
       {
         return;
@@ -1144,6 +1149,65 @@ namespace RetroDevStudio.Documents
     private void checkOnlyAddUsedLabels_CheckedChanged( object sender, EventArgs e )
     {
       UpdateDisassembly();
+    }
+
+
+
+    private void btnJumpToAddress_Click( DecentForms.ControlBase Sender )
+    {
+      int  jumpAddress = GR.Convert.ToI32( editJumpToAddress.Text );
+
+      if ( ( jumpAddress < m_DisassemblyProject.DataStartAddress )
+      ||   ( jumpAddress >= m_DisassemblyProject.DataStartAddress + m_DisassemblyProject.Data.Length ) )
+      {
+        Core.Notification.MessageBox( "Jump address out of range!", "The jump address is outside of the data range!" );
+        return;
+      }
+
+      int   previousLineIndex = 0;
+      int   targetLineIndex = -1;
+      int   previousAddress = 0xffffff;
+      foreach ( var entry in _LineAddresses )
+      {
+        if ( ( previousAddress < jumpAddress )
+        &&   ( entry.Value < m_DisassemblyProject.DataStartAddress ) )
+        {
+          previousAddress = entry.Value;
+          previousLineIndex = entry.Key;
+          continue;
+        }
+        if ( entry.Value == jumpAddress )
+        {
+          targetLineIndex = entry.Key;
+          break;
+        }
+        else if ( ( entry.Value > jumpAddress )
+        &&        ( previousAddress < jumpAddress ) )
+        {
+          targetLineIndex = previousLineIndex;
+          break;
+        }
+        previousLineIndex = entry.Key;
+        previousAddress = entry.Value;
+      }
+      if ( targetLineIndex == -1 )
+      {
+        Core.Notification.MessageBox( "Could not find line from address!", "Could not determine the line number from the given address!" );
+        return;
+      }
+
+      if ( editDisassembly.VerticalScroll.Visible )
+      {
+        int newOffset = Math.Max( 0, targetLineIndex );
+        newOffset = Math.Min( editDisassembly.LinesCount, newOffset );
+
+        editDisassembly.Navigate( newOffset, 0 );
+      }
+      else
+      {
+        editDisassembly.Navigate( 0, 0 );
+      }
+      CenterOnCaret();
     }
 
 

@@ -2229,6 +2229,10 @@ namespace RetroDevStudio.Documents
       foreach ( var libFile in Core.Settings.ASMLibraryPaths )
       {
         string    fullBasePath = libFile;
+        if ( string.IsNullOrEmpty( libFile ) )
+        {
+          return SubFilename;
+        }
         if ( !GR.Path.IsPathRooted( libFile ) )
         {
 #if DEBUG

@@ -5831,6 +5831,7 @@ namespace RetroDevStudio
                                              namedLabels,
                                              settings,
                                              out disassembly,
+                                             out var dummyList,
                                              out int firstLineIndexWithOpcode ) )
               {
                 StudioCore.Debugging.DebugDisassembly.SetText( disassembly );
