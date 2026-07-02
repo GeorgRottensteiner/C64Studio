@@ -16,7 +16,7 @@ namespace DecentForms
     private bool              _PushedByKey  = false;
     private bool              _Checked      = false;
     private ContentAlignment  _CheckAlignment = ContentAlignment.MiddleLeft;
-    private TextAlignment     _TextAlignment = TextAlignment.CENTERED;
+    //private TextAlignment     _TextAlignment = TextAlignment.CENTERED;
 
 
     [DefaultValue( Appearance.Normal )]
@@ -43,7 +43,6 @@ namespace DecentForms
     {
       get
       {
-        System.Windows.Forms.Button btn;
         return _CheckAlignment;
       }
       set

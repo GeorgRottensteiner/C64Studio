@@ -189,6 +189,7 @@ namespace RetroDevStudio.Documents
       this.btnOpenBinary.Size = new System.Drawing.Size(122, 23);
       this.btnOpenBinary.TabIndex = 0;
       this.btnOpenBinary.Text = "Open";
+      this.btnOpenBinary.Click += new DecentForms.EventHandler( this.btnOpenBinary_Click );
       // 
       // groupBox1
       // 
