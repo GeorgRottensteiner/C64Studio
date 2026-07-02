@@ -5813,7 +5813,7 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.DebugDisassembly != null )
             {
               // update disassembly
-              Parser.Disassembler disassembler = new RetroDevStudio.Parser.Disassembler( Tiny64.Processor.Create6510() );
+              Parser.BinaryDisassembler disassembler = new RetroDevStudio.Parser.BinaryDisassembler( Tiny64.Processor.Create6510() );
               string disassembly = "";
 
               disassembler.SetData( Data );

@@ -89,8 +89,8 @@ namespace RetroDevStudio.Documents
       this.editDataTableLength = new System.Windows.Forms.TextBox();
       this.editDataTables = new System.Windows.Forms.TextBox();
       this.groupBox7 = new System.Windows.Forms.GroupBox();
-      this.editJumpToAddress = new System.Windows.Forms.TextBox();
       this.btnJumpToAddress = new DecentForms.Button();
+      this.editJumpToAddress = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.contextMenuDisassembler.SuspendLayout();
@@ -151,21 +151,21 @@ namespace RetroDevStudio.Documents
             this.addAsLabelToolStripMenuItem});
       this.contextMenuDisassembler.Name = "contextMenuDisassembler";
       this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 48);
-      this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler( this.contextMenuDisassembler_Opening );
+      this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
       // 
       // addJumpAddressToolStripMenuItem
       // 
       this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
       this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
-      this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler( this.addJumpAddressToolStripMenuItem_Click );
+      this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
       // 
       // addAsLabelToolStripMenuItem
       // 
       this.addAsLabelToolStripMenuItem.Name = "addAsLabelToolStripMenuItem";
       this.addAsLabelToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
       this.addAsLabelToolStripMenuItem.Text = "Add as Label";
-      this.addAsLabelToolStripMenuItem.Click += new System.EventHandler( this.addAsLabelToolStripMenuItem_Click );
+      this.addAsLabelToolStripMenuItem.Click += new System.EventHandler(this.addAsLabelToolStripMenuItem_Click);
       // 
       // panel1
       // 
@@ -189,7 +189,6 @@ namespace RetroDevStudio.Documents
       this.btnOpenBinary.Size = new System.Drawing.Size(122, 23);
       this.btnOpenBinary.TabIndex = 0;
       this.btnOpenBinary.Text = "Open";
-      btnOpenBinary.Click += btnOpenBinary_Click;
       // 
       // groupBox1
       // 
@@ -252,7 +251,7 @@ namespace RetroDevStudio.Documents
       this.btnExportToASM.Size = new System.Drawing.Size(122, 23);
       this.btnExportToASM.TabIndex = 2;
       this.btnExportToASM.Text = "Export to Assembly";
-      this.btnExportToASM.Click += new DecentForms.EventHandler( this.btnExportAssembly_Click );
+      this.btnExportToASM.Click += new DecentForms.EventHandler(this.btnExportAssembly_Click);
       // 
       // btnReloadFile
       // 
@@ -740,8 +739,6 @@ namespace RetroDevStudio.Documents
       this.listDataTables.TabIndex = 3;
       this.listDataTables.UseCompatibleStateImageBehavior = false;
       this.listDataTables.View = System.Windows.Forms.View.Details;
-      listDataTables.SelectedIndexChanged += listDataTables_SelectedIndexChanged;
-      listDataTables.KeyDown += listDataTables_KeyDown;
       // 
       // columnHeader5
       // 
@@ -794,13 +791,6 @@ namespace RetroDevStudio.Documents
       this.groupBox7.TabStop = false;
       this.groupBox7.Text = "Jump to Address";
       // 
-      // editJumpToAddress
-      // 
-      this.editJumpToAddress.Location = new System.Drawing.Point(8, 19);
-      this.editJumpToAddress.Name = "editJumpToAddress";
-      this.editJumpToAddress.Size = new System.Drawing.Size(182, 20);
-      this.editJumpToAddress.TabIndex = 0;
-      // 
       // btnJumpToAddress
       // 
       this.btnJumpToAddress.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -814,6 +804,15 @@ namespace RetroDevStudio.Documents
       this.btnJumpToAddress.TabIndex = 1;
       this.btnJumpToAddress.Text = "Jump";
       this.btnJumpToAddress.Click += new DecentForms.EventHandler(this.btnJumpToAddress_Click);
+      // 
+      // editJumpToAddress
+      // 
+      this.editJumpToAddress.AcceptsReturn = true;
+      this.editJumpToAddress.Location = new System.Drawing.Point(8, 19);
+      this.editJumpToAddress.Name = "editJumpToAddress";
+      this.editJumpToAddress.Size = new System.Drawing.Size(182, 20);
+      this.editJumpToAddress.TabIndex = 0;
+      this.editJumpToAddress.KeyDown += new System.Windows.Forms.KeyEventHandler(this.editJumpToAddress_KeyDown);
       // 
       // Disassembler
       // 

@@ -5350,11 +5350,6 @@ namespace RetroDevStudio.Parser
         int   localIndex = 0;
         string filename = "";
 
-        if ( lineIndex == 30 )
-        {
-          int xx = 2;
-        }
-
         if ( !m_ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
         {
           DumpSourceInfos( OrigLines );

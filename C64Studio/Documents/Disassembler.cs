@@ -18,7 +18,7 @@ namespace RetroDevStudio.Documents
   {
     private Formats.DisassemblyProject  m_DisassemblyProject = new RetroDevStudio.Formats.DisassemblyProject();
 
-    private Parser.Disassembler         m_Disassembler = new RetroDevStudio.Parser.Disassembler( Tiny64.Processor.Create6510() );
+    private Parser.BinaryDisassembler         m_Disassembler = new RetroDevStudio.Parser.BinaryDisassembler( Tiny64.Processor.Create6510() );
 
     private string                      m_OpenedFilename = "";
 
@@ -28,7 +28,7 @@ namespace RetroDevStudio.Documents
     private int                         m_ContextMenuOpeningInLineIndex = -1;
     private int                         m_ContextMenuCharPos = -1;
 
-    private Dictionary<int,int>         _LineAddresses = new Dictionary<int, int>();
+    private GR.Collections.Map < int, int >         _LineAddresses = new GR.Collections.Map < int, int >();
 
 
 
@@ -274,7 +274,6 @@ namespace RetroDevStudio.Documents
       editDisassembly.Language = FastColoredTextBoxNS.Language.VB;
       editDisassembly.CommentPrefix = ";";
 
-      //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
       editDisassembly.AllowTabs = true; //Core.Settings.AllowTabs;
       editDisassembly.ConvertTabsToSpaces = Core.Settings.FormatSettings.TabConvertToSpaces;
       editDisassembly.TabLength = Core.Settings.FormatSettings.TabSize;
@@ -341,7 +340,6 @@ namespace RetroDevStudio.Documents
       backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
-      //editSource.AddStyle( m_TextStyles[(int)Element] );
       editDisassembly.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
       editDisassembly.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
     }
@@ -1207,7 +1205,24 @@ namespace RetroDevStudio.Documents
       {
         editDisassembly.Navigate( 0, 0 );
       }
+      if ( ( targetLineIndex >= 0 )
+      &&   ( targetLineIndex < editDisassembly.LinesCount ) )
+      {
+        editDisassembly.Selection = new FastColoredTextBoxNS.Range( editDisassembly, 0, targetLineIndex, editDisassembly.Lines[targetLineIndex].Length, targetLineIndex );
+      }
       CenterOnCaret();
+    }
+
+
+
+    private void editJumpToAddress_KeyDown( object sender, KeyEventArgs e )
+    {
+      if ( e.KeyCode == Keys.Enter )
+      {
+        // Example: prevent newline and handle Enter
+        e.SuppressKeyPress = true; // Stops the newline
+        btnJumpToAddress_Click( null );
+      }
     }
 
 
