@@ -1210,7 +1210,7 @@ namespace RetroDevStudio.Documents
       {
         editDisassembly.Selection = new FastColoredTextBoxNS.Range( editDisassembly, 0, targetLineIndex, editDisassembly.Lines[targetLineIndex].Length, targetLineIndex );
       }
-      CenterOnCaret();
+      editDisassembly.DoSelectionVisible();
     }
 
 
