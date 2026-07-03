@@ -18,7 +18,7 @@ namespace RetroDevStudio.Documents
   {
     private Formats.DisassemblyProject  m_DisassemblyProject = new RetroDevStudio.Formats.DisassemblyProject();
 
-    private Parser.BinaryDisassembler         m_Disassembler = new RetroDevStudio.Parser.BinaryDisassembler( Tiny64.Processor.Create6510() );
+    private Parser.BinaryDisassembler   m_Disassembler = new RetroDevStudio.Parser.BinaryDisassembler( Tiny64.Processor.Create6510() );
 
     private string                      m_OpenedFilename = "";
 
@@ -1161,6 +1161,10 @@ namespace RetroDevStudio.Documents
         Core.Notification.MessageBox( "Jump address out of range!", "The jump address is outside of the data range!" );
         return;
       }
+
+      // in the binary view, jump to the address
+      hexView.Select( jumpAddress - m_DisassemblyProject.DataStartAddress, 1 );
+      hexView.ScrollByteIntoView();
 
       int   previousLineIndex = 0;
       int   targetLineIndex = -1;
