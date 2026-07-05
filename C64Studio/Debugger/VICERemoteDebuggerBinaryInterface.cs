@@ -41,6 +41,7 @@ namespace RetroDevStudio
     {
       MON_RESPONSE_MEM_GET              = 0x01,
       MON_RESPONSE_CHECKPOINT_INFO      = 0x11,
+      MON_RESPONSE_CONDITION_SET        = 0x22,
       MON_RESPONSE_REGISTER_INFO        = 0x31,
       MON_RESPONSE_JAM                  = 0x61,
       MON_RESPONSE_STOPPED              = 0x62,
@@ -438,6 +439,21 @@ namespace RetroDevStudio
                   &&   ( origRequest.Breakpoint != null ) )
                   {
                     origRequest.Breakpoint.RemoteIndex = (int)checkPointNumber;
+                    if ( !string.IsNullOrEmpty( origRequest.Breakpoint.Conditions ) )
+                    {
+                      // set conditions on breakpoint
+                      var requestData = new ByteBuffer();
+                      requestData.AppendU32( checkPointNumber );
+                      requestData.AppendU8( (byte)origRequest.Breakpoint.Conditions.Length );
+
+                      var conditionBytes = System.Text.Encoding.UTF8.GetBytes( origRequest.Breakpoint.Conditions );
+                      requestData.Append( conditionBytes );
+
+                      if ( !SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CONDITION_SET, requestData, origRequest ) )
+                      {
+                        return false;
+                      }
+                    }
 
                     RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, origRequest.Breakpoint ) );
                   }
@@ -541,6 +557,8 @@ namespace RetroDevStudio
 
               m_Request = new RequestData( DebugRequestType.NONE );
             }
+            break;
+          case BinaryMonitorCommandResponse.MON_RESPONSE_CONDITION_SET:
             break;
           default:
             Log( "Unsupported response type " + ( (int)responseType ).ToString( "X2" ) + " received" );
@@ -1640,7 +1658,7 @@ namespace RetroDevStudio
 
     public void Break()
     {
-      StepOver();
+      StepInto();
       RefreshRegistersAndWatches();
       RefreshMemorySections();
       m_State = DebuggerState.PAUSED;
