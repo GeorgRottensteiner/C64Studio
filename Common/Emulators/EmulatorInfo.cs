@@ -27,6 +27,15 @@ namespace RetroDevStudio.Emulators
 
 
 
+    public static bool IsDeniseFamily( string emulatorFilename )
+    {
+      string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
+
+      return uppercaseFilename.StartsWith( "DENISE" );
+    }
+
+
+
     public static bool IsVICEFamily( string emulatorFilename )
     {
       string    uppercaseFilename = GR.Path.GetFileNameWithoutExtension( emulatorFilename ).ToUpper();
@@ -47,6 +56,7 @@ namespace RetroDevStudio.Emulators
     {
       // currently only the VICE family is supported
       if ( ( IsVICEFamily( emulatorFilename ) )
+      ||   ( IsDeniseFamily( emulatorFilename ) )
       ||   ( IsMega65Family( emulatorFilename ) ) )
       {
         return true;

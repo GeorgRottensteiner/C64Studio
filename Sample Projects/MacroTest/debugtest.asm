@@ -22,9 +22,10 @@ jsr test
 
 ldx #0
 -
+stx $d020
 inx
 
-stx $d020
+
 lsmf
 bne -
 

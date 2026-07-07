@@ -217,6 +217,14 @@ namespace RetroDevStudio
         Tool.Name = "CCS64";
         Tool.PassLabelsToEmulator = false;
       }
+      else if ( Emulators.EmulatorInfo.IsDeniseFamily( Tool.Filename ) )
+      {
+        // Denise
+        Tool.Name = "Denise";
+        Tool.PassLabelsToEmulator = false;
+        Tool.PRGArguments = "\"$(RunFilename)\"";
+        Tool.DebugArguments = "-binarymonitor -binarymonitoraddress 127.0.0.1:6510";
+      }
       else if ( Emulators.EmulatorInfo.IsMega65Family( Tool.Filename ) )
       {
         // XMEGA65

@@ -75,6 +75,13 @@ namespace RetroDevStudio
       {
         Debugger = new Tiny64Debugger( Core );
       }
+      else if ( RunTool.Filename.ToUpper().Contains( "DENISE" ) )
+      {
+        Debugger = new DeniseRemoteDebuggerBinaryInterface( Core );
+
+        var deniseDebugger = Debugger as DeniseRemoteDebuggerBinaryInterface;
+        deniseDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
+      }
       else if ( RunTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
       {
         Debugger = new VICERemoteDebuggerBinaryInterface( Core );
