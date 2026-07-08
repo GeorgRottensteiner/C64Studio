@@ -6984,7 +6984,7 @@ namespace RetroDevStudio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.FILL )
             {
-              var result = POFill( lineTokenInfos, lineIndex, info, parseLine, out lineSizeInBytes );
+              var result = POFill( lineTokenInfos, lineIndex, info, parseLine, false, out lineSizeInBytes );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 continue;
@@ -8020,7 +8020,7 @@ namespace RetroDevStudio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.FILL )
           {
-            var result = POFill( lineTokenInfos, lineIndex, info, parseLine, out lineSizeInBytes );
+            var result = POFill( lineTokenInfos, lineIndex, info, parseLine, false, out lineSizeInBytes );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;

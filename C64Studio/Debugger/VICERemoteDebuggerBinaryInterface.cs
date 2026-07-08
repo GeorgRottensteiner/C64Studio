@@ -423,6 +423,7 @@ namespace RetroDevStudio
               bool    hasCondition      = ( m_ReceivedDataBin.ByteAt( packagePos + 21 ) == 1 );
 
               Core.AddToOutputLine( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}" );
+              Debug.Log( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}" );
 
               if ( currentlyHit )
               {
@@ -1763,6 +1764,16 @@ namespace RetroDevStudio
       get
       {
         return Machine.FromType( m_ConnectedMachine );
+      }
+    }
+
+
+
+    public bool RequiresInitialBreakpoint
+    {
+      get
+      {
+        return true;
       }
     }
 

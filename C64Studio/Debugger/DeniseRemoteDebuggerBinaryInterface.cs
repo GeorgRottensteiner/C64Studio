@@ -423,6 +423,7 @@ namespace RetroDevStudio
               bool    hasCondition      = ( m_ReceivedDataBin.ByteAt( packagePos + 21 ) == 1 );
 
               Core.AddToOutputLine( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}" );
+              Debug.Log( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}" );
 
               if ( currentlyHit )
               {
@@ -517,6 +518,10 @@ namespace RetroDevStudio
               if ( origRequest.Type == DebugRequestType.DELETE_BREAKPOINT )
               {
                 // remove from list
+                if ( origRequest.Breakpoint != null )
+                {
+                  Debug.Log( $"Breakpoint {origRequest.Breakpoint.RemoteIndex} for {origRequest.Breakpoint.Address.ToString( "X4" )} deleted" );
+                }
                 foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
                 {
                   if ( breakPoint == m_Request.Breakpoint )
@@ -1148,6 +1153,8 @@ namespace RetroDevStudio
             // byte 6: CPU operation
             //  0x01: load, 0x02: store, 0x04: exec
             // byte 7: temporary
+
+            Debug.Log( "Setting up MON_CMD_CHECKPOINT_SET with address " + Data.Parameter1.ToString( "X4" ) );
 
             var requestData = new ByteBuffer();
             requestData.AppendU16( (ushort)m_Request.Parameter1 );
@@ -1811,6 +1818,16 @@ namespace RetroDevStudio
     public void SetShuttingDown()
     {
       m_ShuttingDown = true;
+    }
+
+
+
+    public bool RequiresInitialBreakpoint
+    {
+      get
+      {
+        return false;
+      }
     }
 
 

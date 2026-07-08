@@ -1697,5 +1697,15 @@ namespace RetroDevStudio
 
 
 
+    public bool RequiresInitialBreakpoint
+    {
+      get
+      {
+        return true;
+      }
+    }
+
+
+
   }
 }

@@ -13,7 +13,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult PODataDWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
+    private ParseLineResult PODataDWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool allowLateEvaluation, bool LittleEndian, out int lineSizeInBytes )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -92,7 +92,7 @@ namespace RetroDevStudio.Parser
             }
           }
         }
-        else if ( AllowNeededExpression )
+        else if ( allowLateEvaluation )
         {
           info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
         }
@@ -107,9 +107,9 @@ namespace RetroDevStudio.Parser
       }
 
       // TODO - this is a ugly check if there was an error or not
-      if ( ( ( AllowNeededExpression )
+      if ( ( ( allowLateEvaluation )
       &&     ( info.NeededParsedExpression == null ) )
-      ||   ( !AllowNeededExpression ) )
+      ||   ( !allowLateEvaluation ) )
       {
         info.LineData = data;
       }

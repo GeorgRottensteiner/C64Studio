@@ -9,7 +9,7 @@ namespace RetroDevStudio.Parser
 {
   public partial class ASMFileParser : ParserBase
   {
-    private ParseLineResult POFill( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, string parseLine, out int lineSizeInBytes )
+    private ParseLineResult POFill( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, string parseLine, bool allowLateEvaluation, out int lineSizeInBytes )
     {
       lineSizeInBytes = 0;
       ClearErrorInfo();
@@ -46,6 +46,7 @@ namespace RetroDevStudio.Parser
       int fillValue = 0;
       GR.Memory.ByteBuffer lineData = null;
 
+      // fill with a [,,] list
       if ( ( lineParams.Count >= 2 )
       &&   ( IsList( lineParams[1] ) ) )
       {

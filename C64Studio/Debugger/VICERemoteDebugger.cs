@@ -1946,6 +1946,16 @@ namespace RetroDevStudio
 
 
 
+    public bool RequiresInitialBreakpoint
+    {
+      get
+      {
+        return true;
+      }
+    }
+
+
+
     public void RefreshMemorySections()
     {
       foreach ( var section in m_LastRefreshSections )

@@ -183,6 +183,7 @@ namespace RetroDevStudio
 
 
 
+    bool RequiresInitialBreakpoint { get; }
     void SetBreakPoints( GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints );
     void AddBreakpoint( Types.Breakpoint BreakPoint );
     void RemoveBreakpoint( int BreakPointIndex );

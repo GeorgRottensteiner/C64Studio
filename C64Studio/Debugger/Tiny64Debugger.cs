@@ -679,6 +679,16 @@ namespace RetroDevStudio
 
 
 
+    public bool RequiresInitialBreakpoint
+    {
+      get
+      {
+        return true;
+      }
+    }
+
+
+
     public void Reset()
     {
       m_Emulator.Reset();
