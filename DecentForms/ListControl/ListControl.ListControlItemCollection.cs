@@ -307,6 +307,9 @@ namespace DecentForms
 
     public void Clear()
     {
+      _Owner.SelectedIndex = -1;
+      _Owner.SelectedItems.Clear();
+      _Owner.CheckedItems.Clear();
       _Items.Clear();
       _Owner.ItemsModified();
     }

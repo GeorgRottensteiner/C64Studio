@@ -11,14 +11,6 @@ namespace RetroDevStudio
     private DecentForms.SortOrder order;
 
 
-    public CompileResultItemComparer()
-    {
-      col = 0;
-      order = DecentForms.SortOrder.ASCENDING;
-    }
-
-
-
     public CompileResultItemComparer( int column, DecentForms.SortOrder order )
     {
       col = column;

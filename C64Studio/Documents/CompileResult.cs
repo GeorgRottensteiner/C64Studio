@@ -22,9 +22,6 @@ namespace RetroDevStudio.Documents
     {
       InitializeComponent();
 
-      listMessages.SortOrder = DecentForms.SortOrder.ASCENDING;
-      listMessages.ListViewItemSorter = new CompileResultItemComparer();
-
       listMessages.Columns.Add( "", 20 );
       listMessages.Columns[0].Sizable = false;
       listMessages.Columns.Add( "Line", 50 );
@@ -73,6 +70,7 @@ namespace RetroDevStudio.Documents
 
       listMessages.BeginUpdate();
       var oldOrder = listMessages.SortOrder;
+      var oldColumn = listMessages.SortColumn;
       listMessages.SortOrder = DecentForms.SortOrder.NONE;
       listMessages.ListViewItemSorter = null; 
 
@@ -199,9 +197,9 @@ namespace RetroDevStudio.Documents
           }
         }
       }
-      listMessages.SortOrder          = oldOrder;
-
-      listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessages.SortColumn, oldOrder );
+      listMessages.SortOrder  = oldOrder;
+      listMessages.SortColumn = oldColumn;
+      listMessages.ListViewItemSorter = new CompileResultItemComparer( oldColumn, oldOrder );
       listMessages.EndUpdate();
     }
 

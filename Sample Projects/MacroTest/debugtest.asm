@@ -3,6 +3,8 @@
 !basic
           jmp fgna
 
+DUMMY = $1000
+
 
 
 * = $2000
@@ -12,7 +14,8 @@ clc
 lda #6
 adc #3 ; Breakpoint hier!
 adc #250
-adc #$A
+          adc #$A
+sta $1000
 
 jsr test
 
