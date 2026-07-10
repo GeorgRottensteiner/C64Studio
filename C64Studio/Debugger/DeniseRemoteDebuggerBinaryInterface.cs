@@ -148,9 +148,18 @@ namespace RetroDevStudio
       }
       _IsCartridge        = IsCartridge;
       _ExternalFileToOpen = externalImageToOpen;
+
+      RequestData initialBreakpointRequest = null;
       try
       {
-        connectResultReceived = false;
+        if ( ( _initialBreakpoints.Count > 0 )
+        &&   ( _initialBreakpoints[0].Breakpoint != null )
+        &&   ( _initialBreakpoints[0].Breakpoint.Initial ) )
+        {
+          initialBreakpointRequest = _initialBreakpoints[0];
+        }
+
+          connectResultReceived = false;
         m_ReceivedDataBin.Clear();
         m_ResponseLines.Clear();
         m_RequestQueue.Clear();
@@ -183,20 +192,11 @@ namespace RetroDevStudio
         m_State = DebuggerState.RUNNING;
 
         // connected, force reset plus add break points now
-        SendBinaryCommand( BinaryMonitorCommand.MON_CMD_PING, null, null );
-        //QueueRequest( DebugRequestType.BREAK_INFO );
-        /*
-        QueueRequest( DebugRequestType.STEP );
-        QueueRequest( DebugRequestType.RESET );
-        if ( !string.IsNullOrEmpty( _ExternalFileToOpen ) )
+        //SendBinaryCommand( BinaryMonitorCommand.MON_CMD_PING, null, null );
+        if ( initialBreakpointRequest != null )
         {
-          QueueRequest( new RequestData( DebugRequestType.OPEN_FILE ) { Info = _ExternalFileToOpen } );
-        }*/
-        /*if ( _IsCartridge )
-        {
-          Log( "Connected - force break" );
-          QueueRequest( DebugRequestType.STEP );
-        }*/
+          QueueRequest( initialBreakpointRequest );
+        }
       }
       return client.Connected;
     }
@@ -301,9 +301,11 @@ namespace RetroDevStudio
 
         var responseType = (BinaryMonitorCommandResponse)m_ReceivedDataBin.ByteAt ( curPos + 6 );
         byte errorCode    = m_ReceivedDataBin.ByteAt ( curPos + 7 );
+        uint requestID = m_ReceivedDataBin.UInt32At( curPos + 8 );
+
         if ( errorCode != 0 )
         {
-          Log( "Error " + errorCode.ToString( "X2" ) + " received, skipped command" );
+          Log( $"Error {errorCode:X2} received for request {requestID}, skipped command" );
           if ( errorCode == 0x80 )
           {
             Log( " -Length of command was wrong" );
@@ -317,7 +319,7 @@ namespace RetroDevStudio
           m_Request = new RequestData( DebugRequestType.NONE );
           continue;
         }
-        uint requestID = m_ReceivedDataBin.UInt32At( curPos + 8 );
+        
 
         // 02 01 16000000 11 00 FFFFFFFF 010000000171A871A801010400010000000000000000
         // 02 01 26000000 31 00 FFFFFFFF 0900 
@@ -423,7 +425,14 @@ namespace RetroDevStudio
               bool    hasCondition      = ( m_ReceivedDataBin.ByteAt( packagePos + 21 ) == 1 );
 
               Core.AddToOutputLine( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}" );
-              Debug.Log( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}" );
+              Debug.Log( $"Breakpoint at address ${startAddress:X2} has ID {checkPointNumber}, enabled {enabled}, temporary {temporary}, currentlyHit {currentlyHit}, _initialStartupState{_initialStartupState}" );
+
+              // initial breakpoint is set up now
+              if ( _initialStartupState == 0 )
+              {
+                Run();
+                _initialStartupState = 1;
+              }
 
               if ( currentlyHit )
               {
@@ -475,32 +484,22 @@ namespace RetroDevStudio
           case BinaryMonitorCommandResponse.MON_RESPONSE_JAM:
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_AUTOSTART:
-            if ( _initialStartupState == 2 )
-            {
-              _initialStartupState = 3;
-            }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_STOPPED:
-            m_State   = DebuggerState.PAUSED;
             m_Request = new RequestData( DebugRequestType.NONE );
-            if ( _initialStartupState == 0 )
+            // initial breakpoint was hit and we stopped, other breakpoints have been added, run again
+            if ( _initialStartupState == 2 )
             {
-              _initialStartupState = 1;
-              Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
-              Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
-              Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
-              // now add all breakpoints
-              foreach ( var initBP in _initialBreakpoints )
-              {
-                QueueRequest( initBP );
-              }
-              _initialBreakpoints.Clear();
-              Core.Debugging.OnInitialBreakpointReached( -1, false );
-
-              QueueRequest( DebugRequestType.RESET );
+              Run();
+              _initialStartupState = 3;
+            }
+            else
+            {
+              m_State = DebuggerState.PAUSED;
             }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_RESUMED:
+            /*
             if ( _initialStartupState == 1 )
             {
               _initialStartupState = 2;
@@ -509,6 +508,7 @@ namespace RetroDevStudio
                 QueueRequest( new RequestData( DebugRequestType.OPEN_FILE ) { Info = _ExternalFileToOpen } );
               }
             }
+            */
             m_Request = new RequestData( DebugRequestType.NONE );
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_CHECKPOINT_DELETE:
@@ -882,6 +882,22 @@ namespace RetroDevStudio
     {
       m_State = DebuggerState.PAUSED;
 
+      if ( _initialStartupState == 1 )
+      {
+        _initialStartupState = 2;
+        Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
+        Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
+        Core.AddToOutputLine( "==========OnInitialBreakpointReached" );
+        // now add all breakpoints
+        foreach ( var initBP in _initialBreakpoints )
+        {
+          QueueRequest( initBP );
+        }
+        _initialBreakpoints.Clear();
+        Core.Debugging.OnInitialBreakpointReached( -1, false );
+      }
+
+
       Log( $"Breakpoint {m_BrokenAtBreakPoint} hit" );
       int breakAddress = -1;
       Types.Breakpoint  brokenBP = null;
@@ -894,11 +910,16 @@ namespace RetroDevStudio
           Log( $"-at address {breakAddress:X}" );
           if ( breakPoint.Temporary )
           {
-            Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
-            QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
             brokenBP = null;
+            m_BreakPoints.Remove( breakPoint );
+            break;
           }
         }
+      }
+
+      if ( _initialStartupState == 2 )
+      {
+        return;
       }
 
       bool skipRefresh = false;
@@ -1826,7 +1847,7 @@ namespace RetroDevStudio
     {
       get
       {
-        return false;
+        return true;
       }
     }
 

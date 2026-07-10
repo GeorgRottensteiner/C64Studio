@@ -12,6 +12,7 @@ namespace RetroDevStudio.Types
     public string             AddressSource = null;
     public int                RemoteIndex = -1;
     public bool               Temporary = false;
+    public bool               Initial = false;
     public bool               IsVirtual = false;
     public List<Breakpoint>   Virtual = new List<Breakpoint>();      // for trace breakpoints
 

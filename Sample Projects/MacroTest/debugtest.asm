@@ -32,7 +32,7 @@ inx
 lsmf
 bne -
 
-
+stx $1000
 
 jmp fgna
 rts

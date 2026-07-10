@@ -291,13 +291,13 @@ namespace RetroDevStudio.Tasks
         // this sets up the initial breakpoint!
         if ( Core.Debugging.Debugger.RequiresInitialBreakpoint )
         {
-          Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart, RemoteIndex = 1 } );
+          Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart, RemoteIndex = 1, Initial = true } );
         }
       }
       else
       {
         // this sets up the initial breakpoint!
-        Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart } );
+        Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart, Initial = true } );
 
         ByteBuffer injectFile;
 
