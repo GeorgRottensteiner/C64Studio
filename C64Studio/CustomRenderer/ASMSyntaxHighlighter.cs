@@ -90,6 +90,7 @@ namespace RetroDevStudio.CustomRenderer
               subRange.SetStyle( StyleIndex.Style11 );
               break;
             case Types.TokenInfo.TokenType.OPERATOR:
+            case Types.TokenInfo.TokenType.SEPARATOR:
               subRange.SetStyle( StyleIndex.Style5 );
               break;
 
