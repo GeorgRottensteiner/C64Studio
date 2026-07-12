@@ -9921,6 +9921,7 @@ namespace RetroDevStudio.Parser
       &&   ( m_AssemblerSettings.PseudoOps.Any( po => ( ( po.Value.Type == MacroInfo.PseudoOpType.IF )
                                                    || ( po.Value.Type == MacroInfo.PseudoOpType.IFDEF )
                                                    || ( po.Value.Type == MacroInfo.PseudoOpType.FOR )
+                                                   || ( po.Value.Type == MacroInfo.PseudoOpType.MACRO )
                                                    || ( po.Value.Type == MacroInfo.PseudoOpType.WHILE )
                                                    || ( po.Value.Type == MacroInfo.PseudoOpType.IFDEF_ARGUMENT )
                                                    || ( po.Value.Type == MacroInfo.PseudoOpType.IFNDEF_ARGUMENT )
@@ -10091,6 +10092,10 @@ namespace RetroDevStudio.Parser
         {
           // there was an error!
           LineIndexInsideMacro = i;
+          if ( string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
+          {
+            m_LastErrorInfo.Message = $"RelabelLocalLabelsForMacro: No tokens found in line {i + 1} of macro {functionName}";
+          }
           return null;
         }
 
@@ -10148,6 +10153,10 @@ namespace RetroDevStudio.Parser
             {
               // there was an error!
               LineIndexInsideMacro = i;
+              if ( string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
+              {
+                m_LastErrorInfo.Message = $"RelabelLocalLabelsForMacro: Could not evaluate tokens in {TokensToExpression( replacementToken )}";
+              }
               return null;
             }
 

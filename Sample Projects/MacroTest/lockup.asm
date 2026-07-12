@@ -24,10 +24,10 @@ DEFINED_SOMETHING = 1
 ;; ******************************
   !if (.someValue = 0) {  ; Comment this line in/out, and restart & rebuild
 ;; ******************************
-;    bit 150
-;  } else {
+    bit 150
+  } else {
     bit 200
-;  }
+  }
 }
 
 ;; Compiler Messages also change when adding/removing the next macro's 5 lines.

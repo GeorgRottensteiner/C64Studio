@@ -1169,6 +1169,25 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroWithLiteral()
+    {
+      string      source = @"    * = $c000
+                              !to ""test.prg"", cbm
+                              !macro ldax16 value
+                                lda #<value
+                                ldx #>value
+                              !end
+
+                              +ldax16 17";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00C0A911A200", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestOpcodeSizeDetectionZeroPage()
     {
       string      source = @"    * = $c000
@@ -1632,6 +1651,32 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "0020A901D0078D20D0608D21D060", assembly.ToString() );
+    }
+
+
+
+
+    [TestMethod]
+    public void TestMacroWithMacroInside()
+    {
+      string      source = @"* = $2000
+
+                          !macro jne label
+
+                            inx
+                            !macro gnu label {
+                              jmp label             
+                            }
+                           !end 
+
+                          +jne .BG
+                            sta $d020
+                            rts   
+                          .BG = $200b";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020E88D20D060", assembly.ToString() );
     }
 
 

@@ -143,7 +143,7 @@ namespace RetroDevStudio.Parser
             &&        ( lineTokenInfos[i].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
             &&        ( lineTokenInfos[i].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
             {
-              AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter name must be formatted like a global label" );
+              AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter name must be formatted like a global or local label" );
               hadError = true;
             }
             else if ( ( !shouldParameterBeAComma )
