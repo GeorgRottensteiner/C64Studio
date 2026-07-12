@@ -2155,7 +2155,12 @@ namespace RetroDevStudio.Documents
         {
           for ( int j = 0; j < map.Tiles.Height; ++j )
           {
-            ++_TileUsageTotal[map.Tiles[i, j]];
+            var tile = map.Tiles[i,j];
+            if ( tile >= m_Project.Tiles.Count )
+            {
+              continue;
+            }
+            ++_TileUsageTotal[tile];
           }
         }
       }
@@ -2176,7 +2181,12 @@ namespace RetroDevStudio.Documents
         {
           for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
           {
-            ++_TileUsageInCurrentMap[m_CurrentMap.Tiles[i, j]];
+            var tile = m_CurrentMap.Tiles[i,j];
+            if ( tile >= m_Project.Tiles.Count )
+            {
+              continue;
+            }
+            ++_TileUsageInCurrentMap[tile];
           }
         }
       }
