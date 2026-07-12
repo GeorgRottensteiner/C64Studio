@@ -14,7 +14,7 @@ namespace RetroDevStudio.Undo
 
     private Dictionary<int, List<GraphicScreenProject.ColorMappingTarget>> _ColorMapping;
     private ColorSettings         _Colors;
-
+    private GraphicScreenProject.CheckType _SelectedCheckType;
 
 
     public UndoGraphicScreenValuesChange( GraphicScreenProject Project, GraphicScreenEditor Editor )
@@ -31,7 +31,8 @@ namespace RetroDevStudio.Undo
         _ColorMapping.Add( entry.Key, newList );
       }
 
-      _Colors       = new ColorSettings( Project.Colors );
+      _Colors             = new ColorSettings( Project.Colors );
+      _SelectedCheckType  = Project.SelectedCheckType;
     }
 
 
@@ -64,7 +65,8 @@ namespace RetroDevStudio.Undo
 
         Project.ColorMapping.Add( entry.Key, newList );
       }
-      Project.Colors        = new ColorSettings( _Colors );
+      Project.Colors            = new ColorSettings( _Colors );
+      Editor.SetCheckType( _SelectedCheckType );
       Editor.ColorValuesChanged();
       Editor.SetModified();
     }

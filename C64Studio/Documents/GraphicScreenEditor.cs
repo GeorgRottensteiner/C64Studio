@@ -1,4 +1,5 @@
-﻿using GR.Image;
+﻿using FastColoredTextBoxNS;
+using GR.Image;
 using GR.Memory;
 using RetroDevStudio.Controls;
 using RetroDevStudio.Converter;
@@ -602,26 +603,7 @@ namespace RetroDevStudio.Documents
 
               Redraw();
             }
-            if ( !string.IsNullOrEmpty( m_Chars[charX + charY * BlockWidth].Error ) )
-            {
-              labelCharInfo.Text = m_Chars[charX + charY * BlockWidth].Error;
-            }
-            else
-            {
-              RetroDevStudio.Formats.CharData usedChar = m_Chars[charX + charY * BlockWidth];
-              if ( usedChar.Replacement != null )
-              {
-                while ( usedChar.Replacement != null )
-                {
-                  usedChar = usedChar.Replacement;
-                }
-                labelCharInfo.Text = $"Duplicate of {usedChar.Index}, color {m_Chars[charX + charY * BlockWidth].Tile.CustomColor}";
-              }
-              else
-              {
-                labelCharInfo.Text = $"Determined index {usedChar.Index}, color {m_Chars[charX + charY * BlockWidth].Tile.CustomColor}";
-              }
-            }
+            UpdateSelectedCharInfo( charX, charY );
             _ColorChooserDlg.ColorChanged( Types.ColorType.CUSTOM_COLOR, m_Chars[charX + charY * BlockWidth].Tile.CustomColor );
             break;
           case PaintTool.FLOOD_FILL:
@@ -760,6 +742,32 @@ namespace RetroDevStudio.Documents
       if ( mouseMoved )
       {
         UpdateCursorInfo();
+      }
+    }
+
+
+
+    private void UpdateSelectedCharInfo( int charX, int charY )
+    {
+      if ( !string.IsNullOrEmpty( m_Chars[charX + charY * BlockWidth].Error ) )
+      {
+        labelCharInfo.Text = m_Chars[charX + charY * BlockWidth].Error;
+      }
+      else
+      {
+        RetroDevStudio.Formats.CharData usedChar = m_Chars[charX + charY * BlockWidth];
+        if ( usedChar.Replacement != null )
+        {
+          while ( usedChar.Replacement != null )
+          {
+            usedChar = usedChar.Replacement;
+          }
+          labelCharInfo.Text = $"Duplicate of {usedChar.Index}, color {m_Chars[charX + charY * BlockWidth].Tile.CustomColor}";
+        }
+        else
+        {
+          labelCharInfo.Text = $"Determined index {usedChar.Index}, color {m_Chars[charX + charY * BlockWidth].Tile.CustomColor}";
+        }
       }
     }
 
@@ -2374,7 +2382,22 @@ namespace RetroDevStudio.Documents
       {
         return;
       }
-      m_GraphicScreenProject.SelectedCheckType  = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
+
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
+
+      SetCheckType( (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex );
+    }
+
+
+
+    public void SetCheckType( RetroDevStudio.Formats.GraphicScreenProject.CheckType newCheckType )
+    {
+      if ( m_GraphicScreenProject.SelectedCheckType == newCheckType )
+      {
+        return;
+      }
+      m_GraphicScreenProject.SelectedCheckType  = newCheckType;
+      comboCheckType.SelectedIndex              = (int)newCheckType;
       m_GraphicScreenProject.Colors.Palette     = PaletteManager.PaletteFromMode( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
 
       charEditor.DisplayPage.Create( CheckBlockWidth, CheckBlockHeight, GR.Drawing.PixelFormat.Format8bppIndexed );
@@ -2405,6 +2428,12 @@ namespace RetroDevStudio.Documents
       charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * CheckBlockWidth, m_SelectedChar.Y * CheckBlockHeight, CheckBlockWidth, CheckBlockHeight );
 
       pictureEditor.Invalidate();
+
+      CheckExportType();
+      if ( m_SelectedChar.X != -1 )
+      {
+        UpdateSelectedCharInfo( m_SelectedChar.X, m_SelectedChar.Y );
+      }
     }
 
 
