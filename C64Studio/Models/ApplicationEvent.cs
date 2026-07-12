@@ -45,7 +45,10 @@ namespace RetroDevStudio.Types
       REPLACE_WITH_HISTORY_UPDATED,
       CLIPBOARD_CHANGED,
       LINES_REMOVED,
-      LINES_INSERTED
+      LINES_INSERTED,
+      DEBUGGER_CHANGED,
+      DEBUGGER_STARTED,
+      DEBUGGER_STOPPED
     }
 
     public Type             EventType = Type.NONE;

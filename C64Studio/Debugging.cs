@@ -976,6 +976,19 @@ namespace RetroDevStudio
 
 
 
+    private void ResetState()
+    {
+      foreach ( var bps in BreakPoints )
+      {
+        foreach ( var bp in bps.Value )
+        {
+          bp.RemoteIndex = -1;
+        }
+      }
+    }
+
+
+
     public void DebugStop()
     {
       Debugger?.SetShuttingDown();
@@ -1041,6 +1054,9 @@ namespace RetroDevStudio
         }
         TempDebuggerBreakpointFilename = "";
       }
+
+      ResetState();
+      Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.DEBUGGER_STOPPED, DebuggedProject ) );
 
       if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
       ||   ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN ) )

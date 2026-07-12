@@ -108,6 +108,7 @@ namespace RetroDevStudio
     delegate void UpdateWatchInfoCallback( RequestData Request, GR.Memory.ByteBuffer Data );
     delegate bool ParseFileCallback( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration );
     public delegate void DocCallback( BaseDocument Document );
+    public delegate void DocumentInfoCallback( DocumentInfo docInfo );
     public delegate void DocShowCallback( BaseDocument Document, bool Activate );
     delegate void DocumentEventHandlerCallback( BaseDocument.DocEvent Event );
     delegate void NotifyAllDocumentsCallback( bool CanToggleBreakpoints );
@@ -1206,10 +1207,7 @@ namespace RetroDevStudio
           break;
         case DebugEvent.UPDATE_WATCH:
           if ( ( IsWatchShowingCurrentDebuggedProject() )
-          || ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
-          /*
-        ||   ( ( Event.Request.Type == DebugRequestType.MEM_DUMP )
-        &&     ( Event.Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition ) ) )*/
+          ||   ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
           {
             UpdateWatchInfo( Event.Request, Event.Data );
           }

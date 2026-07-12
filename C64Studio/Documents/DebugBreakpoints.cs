@@ -1,14 +1,17 @@
-﻿using System;
+﻿using GR.Collections;
+using RetroDevStudio;
+using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using RetroDevStudio;
-using RetroDevStudio.Types;
-using GR.Collections;
+using static RetroDevStudio.MainForm;
+
+
 
 namespace RetroDevStudio.Documents
 {
@@ -492,6 +495,9 @@ namespace RetroDevStudio.Documents
       base.OnApplicationEvent( Event );
       switch ( Event.EventType )
       {
+        case ApplicationEvent.Type.DEBUGGER_STOPPED:
+          UpdateBreakpointsInList( Event.Doc );
+          break;
         case ApplicationEvent.Type.SETTINGS_LOADED:
           Core.Settings.DialogSettings.RestoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
           break;
@@ -499,27 +505,37 @@ namespace RetroDevStudio.Documents
           Core.Settings.DialogSettings.StoreListViewColumns( "Debug.Breakpoints", listBreakpoints );
           break;
         case ApplicationEvent.Type.ACTIVE_DOCUMENT_CHANGED:
-          {
-            listBreakpoints.Items.Clear();
-            if ( ( Event.Doc != null )
-            &&   ( Event.Doc.Project != null ) )
-            {
-              RefillBreakpointList( Event.Doc.Project.Settings.BreakPoints );
-            }
-            else if ( Core.Debugging.Debugger != null )
-            {
-              // projectless debugging, use watches from debugger
-              RefillBreakpointList( Core.Debugging.BreakPoints );
-            }
-            else if ( ( Event.Doc != null )
-            &&        ( Event.Doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
-            {
-              // assembler without project
-              var mappedBreakpoints = ( (SourceASMEx)Event.Doc.BaseDoc ).MapBreakpoints();
-              RefillBreakpointList( mappedBreakpoints );
-            }
-          }
+          UpdateBreakpointsInList( Event.Doc );
           break;
+      }
+    }
+
+
+
+    private void UpdateBreakpointsInList( DocumentInfo doc )
+    {
+      if ( listBreakpoints.InvokeRequired )
+      {
+        Invoke( new DocumentInfoCallback( UpdateBreakpointsInList ), new object[] { doc } );
+        return;
+      }
+      listBreakpoints.Items.Clear();
+      if ( ( doc != null )
+      &&   ( doc.Project != null ) )
+      {
+        RefillBreakpointList( doc.Project.Settings.BreakPoints );
+      }
+      else if ( Core.Debugging.Debugger != null )
+      {
+        // projectless debugging, use watches from debugger
+        RefillBreakpointList( Core.Debugging.BreakPoints );
+      }
+      else if ( ( doc != null )
+      &&        ( doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+      {
+        // assembler without project
+        var mappedBreakpoints = ( (SourceASMEx)doc.BaseDoc ).MapBreakpoints();
+        RefillBreakpointList( mappedBreakpoints );
       }
     }
 
