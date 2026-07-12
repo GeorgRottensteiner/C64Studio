@@ -347,10 +347,12 @@ namespace RetroDevStudio.Dialogs
         {
           Core.MainForm.m_FindReplace.Show( Core.MainForm.panelMain );
         }
+        labelSearchResult.Text = "Search text found";
         return;
       }
       else
       {
+        labelSearchResult.Text = "Search text not found";
         Core.MainForm.WriteToLog( "-not found" );
 
         if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
@@ -1448,9 +1450,9 @@ namespace RetroDevStudio.Dialogs
 
     private void btnSearchBookmark_Click( DecentForms.ControlBase Sender )
     {
+      int numBookmarksFound = 0;
       while ( true )
       {
-        // TODO - das gibt noch eine Endlosschleife!
         if ( !FindNextNew( comboSearchText.Text,
                            radioSearchDirDown.Checked,
                            checkSearchRegExp.Checked,
@@ -1462,12 +1464,14 @@ namespace RetroDevStudio.Dialogs
                            0,
                            LastSearchFound ) )
         {
+          labelSearchResult.Text = $"{numBookmarksFound} occurrences - found";
           return;
         }
         var edit = EditFromDocumentEx( LastSearchFound.FoundInDocument );
         var searchFound =  RangeFromSearchLocation( edit, LastSearchFound );
 
         edit.Bookmarks.Add( searchFound.Start.iLine );
+        ++numBookmarksFound;
       }
     }
 
@@ -1705,10 +1709,12 @@ namespace RetroDevStudio.Dialogs
 
         edit.Navigate( foundRange );
         edit.Selection = foundRange;
+        labelReplaceResult.Text = "Search text found";
         return;
       }
       else
       {
+        labelReplaceResult.Text = "Search text not found";
         Core.MainForm.WriteToLog( "-not found" );
 
         if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
@@ -1817,6 +1823,10 @@ namespace RetroDevStudio.Dialogs
           btnReplaceFindNext_Click( btnReplaceFindNext );
         }
         return;
+      }
+      else
+      {
+        labelReplaceResult.Text = $"Search text not found";
       }
     }
 
@@ -2090,6 +2100,7 @@ namespace RetroDevStudio.Dialogs
                            0,
                            LastSearchFound ) )
         {
+          labelSearchResult.Text = $"Found {occurrences} occurrences";
           if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
           {
             Core.AddToOutput( "A problem occurred: " + _LastErrorMessage + System.Environment.NewLine );
@@ -2113,6 +2124,7 @@ namespace RetroDevStudio.Dialogs
         }
         else if ( firstFoundRange.IsSameLocation( LastSearchFound ) )
         {
+          labelSearchResult.Text = $"Found {occurrences} occurrences";
           Core.AddToOutput( "Found " + occurrences + " occurrences" + System.Environment.NewLine );
           if ( occurrences > 0 )
           {

@@ -44,9 +44,11 @@ namespace RetroDevStudio.Dialogs
       this.checkSearchIgnoreCase = new System.Windows.Forms.CheckBox();
       this.comboSearchTarget = new System.Windows.Forms.ComboBox();
       this.comboSearchText = new System.Windows.Forms.ComboBox();
+      this.labelSearchResult = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
       this.tabReplace = new System.Windows.Forms.TabPage();
+      this.labelReplaceResult = new System.Windows.Forms.Label();
       this.editReplaceWith = new System.Windows.Forms.TextBox();
       this.btnReplaceAll = new DecentForms.Button();
       this.btnReplaceFindNext = new DecentForms.Button();
@@ -79,7 +81,7 @@ namespace RetroDevStudio.Dialogs
       this.tabFindReplace.Location = new System.Drawing.Point(0, 0);
       this.tabFindReplace.Name = "tabFindReplace";
       this.tabFindReplace.SelectedIndex = 0;
-      this.tabFindReplace.Size = new System.Drawing.Size(350, 294);
+      this.tabFindReplace.Size = new System.Drawing.Size(350, 320);
       this.tabFindReplace.TabIndex = 0;
       this.tabFindReplace.SelectedIndexChanged += new System.EventHandler(this.tabFindReplace_SelectedIndexChanged);
       // 
@@ -91,12 +93,13 @@ namespace RetroDevStudio.Dialogs
       this.tabSearch.Controls.Add(this.groupBox1);
       this.tabSearch.Controls.Add(this.comboSearchTarget);
       this.tabSearch.Controls.Add(this.comboSearchText);
+      this.tabSearch.Controls.Add(this.labelSearchResult);
       this.tabSearch.Controls.Add(this.label2);
       this.tabSearch.Controls.Add(this.label1);
       this.tabSearch.Location = new System.Drawing.Point(4, 22);
       this.tabSearch.Name = "tabSearch";
       this.tabSearch.Padding = new System.Windows.Forms.Padding(3);
-      this.tabSearch.Size = new System.Drawing.Size(342, 268);
+      this.tabSearch.Size = new System.Drawing.Size(342, 294);
       this.tabSearch.TabIndex = 0;
       this.tabSearch.Text = "Search";
       this.tabSearch.UseVisualStyleBackColor = true;
@@ -261,6 +264,16 @@ namespace RetroDevStudio.Dialogs
       this.comboSearchText.Size = new System.Drawing.Size(328, 21);
       this.comboSearchText.TabIndex = 0;
       // 
+      // labelSearchResult
+      // 
+      this.labelSearchResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.labelSearchResult.Location = new System.Drawing.Point(3, 235);
+      this.labelSearchResult.Name = "labelSearchResult";
+      this.labelSearchResult.Size = new System.Drawing.Size(329, 17);
+      this.labelSearchResult.TabIndex = 0;
+      this.labelSearchResult.Text = "No text searched for";
+      // 
       // label2
       // 
       this.label2.AutoSize = true;
@@ -281,6 +294,7 @@ namespace RetroDevStudio.Dialogs
       // 
       // tabReplace
       // 
+      this.tabReplace.Controls.Add(this.labelReplaceResult);
       this.tabReplace.Controls.Add(this.editReplaceWith);
       this.tabReplace.Controls.Add(this.btnReplaceAll);
       this.tabReplace.Controls.Add(this.btnReplaceFindNext);
@@ -294,10 +308,20 @@ namespace RetroDevStudio.Dialogs
       this.tabReplace.Location = new System.Drawing.Point(4, 22);
       this.tabReplace.Name = "tabReplace";
       this.tabReplace.Padding = new System.Windows.Forms.Padding(3);
-      this.tabReplace.Size = new System.Drawing.Size(342, 268);
+      this.tabReplace.Size = new System.Drawing.Size(342, 294);
       this.tabReplace.TabIndex = 1;
       this.tabReplace.Text = "Replace";
       this.tabReplace.UseVisualStyleBackColor = true;
+      // 
+      // labelReplaceResult
+      // 
+      this.labelReplaceResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.labelReplaceResult.Location = new System.Drawing.Point(6, 264);
+      this.labelReplaceResult.Name = "labelReplaceResult";
+      this.labelReplaceResult.Size = new System.Drawing.Size(328, 17);
+      this.labelReplaceResult.TabIndex = 8;
+      this.labelReplaceResult.Text = "No text searched for";
       // 
       // editReplaceWith
       // 
@@ -498,7 +522,7 @@ namespace RetroDevStudio.Dialogs
       // FormFindReplace
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(350, 294);
+      this.ClientSize = new System.Drawing.Size(350, 320);
       this.Controls.Add(this.tabFindReplace);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
       this.HideOnClose = true;
@@ -558,5 +582,7 @@ namespace RetroDevStudio.Dialogs
     public System.Windows.Forms.ComboBox comboReplaceSearchText;
     public System.Windows.Forms.ComboBox comboSearchText;
     private System.Windows.Forms.TextBox editReplaceWith;
+    private System.Windows.Forms.Label labelSearchResult;
+    private System.Windows.Forms.Label labelReplaceResult;
   }
 }
