@@ -84,7 +84,7 @@ namespace RetroDevStudio.Dialogs
 
 
 
-    protected override void OnClosing( CancelEventArgs e )
+    protected override void OnFormClosing( FormClosingEventArgs e )
     {
       var prevPrefBase = panelPreferences.Controls.Count > 0
                           ? panelPreferences.Controls[0] as DlgPrefBase
@@ -93,7 +93,7 @@ namespace RetroDevStudio.Dialogs
       {
         prevPrefBase.OnClosing();
       }
-      base.OnClosing( e );
+      base.OnFormClosing( e );
     }
 
 

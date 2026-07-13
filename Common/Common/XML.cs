@@ -572,7 +572,13 @@ namespace GR
         try
         {
           byte[] payload = new byte[ioIn.Length];
-          ioIn.Read( payload, 0, (int)ioIn.Length );
+          int bytesRead = ioIn.Read( payload, 0, (int)ioIn.Length );
+          if ( bytesRead != ioIn.Length )
+          {
+            m_Error = $"Tried to read {ioIn.Length} bytes, but only read {bytesRead} bytes.";
+            ioIn.Close();
+            return false;
+          }
           string   inBytes = System.Text.Encoding.Default.GetString( payload );
           ioIn.Close();
           return Parse( inBytes );

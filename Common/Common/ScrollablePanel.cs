@@ -3,8 +3,9 @@ using System;
 namespace CustomAutoScrollPanel
 {
   using System;
-  using System.Windows.Forms;
+  using System.ComponentModel;
   using System.Runtime.InteropServices;
+  using System.Windows.Forms;
 
 
 
@@ -72,18 +73,21 @@ namespace CustomAutoScrollPanel
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AutoScrollHPos
     {
       get { return GetScrollPos( Handle, (int)SB_HORZ ); }
       set { SetScrollPos( Handle, (int)SB_HORZ, value, true ); }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AutoScrollVPos
     {
       get { return GetScrollPos( Handle, (int)SB_VERT ); }
       set { SetScrollPos( Handle, (int)SB_VERT, value, true ); }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AutoScrollHorizontalMinimum
     {
       get { return autoScrollHorizontalMinimum; }
@@ -94,6 +98,7 @@ namespace CustomAutoScrollPanel
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AutoScrollHorizontalMaximum
     {
       get { return autoScrollHorizontalMaximum; }
@@ -104,6 +109,7 @@ namespace CustomAutoScrollPanel
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AutoScrollVerticalMinimum
     {
       get { return autoScrollVerticalMinimum; }
@@ -114,6 +120,7 @@ namespace CustomAutoScrollPanel
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AutoScrollVerticalMaximum
     {
       get { return autoScrollVerticalMaximum; }
@@ -125,6 +132,7 @@ namespace CustomAutoScrollPanel
     }
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool EnableAutoScrollHorizontal
     {
       get { return enableAutoHorizontal; }
@@ -138,6 +146,7 @@ namespace CustomAutoScrollPanel
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool EnableAutoScrollVertical
     {
       get { return enableAutoVertical; }
@@ -151,6 +160,7 @@ namespace CustomAutoScrollPanel
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool VisibleAutoScrollHorizontal
     {
       get { return visibleAutoHorizontal; }
@@ -161,6 +171,7 @@ namespace CustomAutoScrollPanel
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool VisibleAutoScrollVertical
     {
       get { return visibleAutoVertical; }

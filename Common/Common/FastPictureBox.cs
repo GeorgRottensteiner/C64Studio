@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 #if NET5_0_OR_GREATER
 using System.Runtime.Versioning;
 #endif
@@ -48,10 +49,12 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool AutoResize { get; set; } = false;
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public new GR.Image.MemoryImage     Image
     {
       get
@@ -67,6 +70,7 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public GR.Image.FastImage DisplayPage
     {
       get

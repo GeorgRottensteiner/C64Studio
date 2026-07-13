@@ -75,6 +75,7 @@ namespace DecentForms
 
     private int _ItemHeight = 15;
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemHeight
     {
       get
@@ -93,11 +94,14 @@ namespace DecentForms
     public ListBoxItemCollection          Items { get; private set; }
     public ListBoxItemIndexCollection     SelectedIndices { get; private set; }
     public ListBoxSelectedItemCollection  SelectedItems { get; private set; }
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SelectionMode                  SelectionMode { get; set; }
 
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool ScrollAlwaysVisible 
     {
       get
@@ -114,6 +118,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool HasCheckBoxes
     {
       get
@@ -304,6 +309,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public ListBoxItem SelectedItem
     {
       get
@@ -360,6 +366,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int SelectedIndex 
     {
       get

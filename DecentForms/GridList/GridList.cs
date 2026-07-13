@@ -77,10 +77,14 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemWidth { get; set; } = 32;
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemHeight { get; set; } = 15;
 
     [Description( "If set to true, mouse handling (hover, click) is not done by the control, but sent as events")]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool CustomMouseHandling { get; set; } = false;
 
     private int _itemsPerLine = 1;
@@ -96,11 +100,13 @@ namespace DecentForms
     public GridListItemCollection           Items { get; private set; }
     public GridListItemIndexCollection      SelectedIndices { get; private set; }
     public GridListSelectedItemCollection   SelectedItems { get; private set; }
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SelectionMode                    SelectionMode { get; set; }
 
 
 
-
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool ScrollAlwaysVisible 
     {
       get
@@ -277,6 +283,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public GridListItem SelectedItem
     {
       get
@@ -333,6 +340,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int SelectedIndex 
     {
       get

@@ -57,6 +57,7 @@ namespace FastColoredTextBoxNS
   {
     AutocompleteListView listView;
     public ToolStripControlHost host;
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public Range Fragment
     {
       get;
@@ -66,6 +67,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Regex pattern for search fragment around caret
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string SearchPattern
     {
       get;
@@ -74,6 +76,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Minimum fragment length for popup
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public int MinFragmentLength
     {
       get;
@@ -102,6 +105,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Allow TAB for select menu item
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public bool AllowTabKey
     {
       get
@@ -116,6 +120,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Interval of menu appear (ms)
     /// </summary>
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int AppearInterval
     {
       get
@@ -183,6 +188,7 @@ namespace FastColoredTextBoxNS
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public new Font Font
     {
       get
@@ -255,6 +261,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Minimal size of menu
     /// </summary>
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public new Size MinimumSize
     {
       get
@@ -270,6 +277,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Image list of menu
     /// </summary>
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public new ImageList ImageList
     {
       get
@@ -285,6 +293,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Tooltip duration (ms)
     /// </summary>
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ToolTipDuration
     {
       get
@@ -300,6 +309,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Tooltip
     /// </summary>
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public ToolTip ToolTip
     {
       get
@@ -376,16 +386,19 @@ namespace FastColoredTextBoxNS
     System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
     internal DateTime lastToolTipShowTimestamp = DateTime.Now;
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     internal bool AllowTabKey
     {
       get;
       set;
     }
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public ImageList ImageList
     {
       get;
       set;
     }
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     internal int AppearInterval
     {
       get
@@ -397,22 +410,28 @@ namespace FastColoredTextBoxNS
         timer.Interval = value;
       }
     }
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     internal int ToolTipDuration
     {
       get;
       set;
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public Color SelectedColor
     {
       get;
       set;
     }
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public Color HoveredColor
     {
       get;
       set;
     }
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int FocussedItemIndex
     {
       get
@@ -430,6 +449,7 @@ namespace FastColoredTextBoxNS
       }
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public AutocompleteItem FocussedItem
     {
       get

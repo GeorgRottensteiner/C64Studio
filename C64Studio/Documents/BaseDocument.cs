@@ -801,7 +801,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override void OnClosed( EventArgs e )
+    protected override void OnFormClosed( FormClosedEventArgs e )
     {
       if ( Core.MainForm == null )
       {
@@ -821,6 +821,7 @@ namespace RetroDevStudio.Documents
       {
         Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, DocumentInfo ) );
       }
+      base.OnFormClosed( e );
     }
 
 
@@ -861,7 +862,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override void OnClosing( System.ComponentModel.CancelEventArgs e )
+    protected override void OnFormClosing( FormClosingEventArgs e )
     {
       if ( MainForm.s_SystemShutdown )
       {

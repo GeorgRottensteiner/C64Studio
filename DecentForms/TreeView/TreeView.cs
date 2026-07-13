@@ -158,6 +158,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public System.Windows.Forms.ImageList ImageList
     {
       get
@@ -196,13 +197,19 @@ namespace DecentForms
     [DefaultValue( 16 )]
     public int ItemHeight { get; set; } = 16;
     public TreeNodeCollection Nodes { get; private set; }
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SelectionMode SelectionMode { get; set; }
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool LabelEdit { get; set; } = false;
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool AllowDrag { get; set; } = false;
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool ScrollAlwaysVisible 
     {
       get
@@ -450,6 +457,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public TreeNode SelectedNode
     {
       get

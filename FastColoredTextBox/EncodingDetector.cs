@@ -38,7 +38,12 @@ namespace FastColoredTextBoxNS
 
             //First read only what we need for BOM detection
             byte[] bomBytes = new byte[InputFileStream.Length > 4 ? 4 : InputFileStream.Length];
-            InputFileStream.Read(bomBytes, 0, bomBytes.Length);
+            int bytesRead = InputFileStream.Read(bomBytes, 0, bomBytes.Length);
+            if ( bytesRead < bomBytes.Length )
+            {
+              HasBOM = false;
+              return null;  
+            }
 
             encodingFound = DetectBOMBytes(bomBytes);
 
@@ -55,7 +60,14 @@ namespace FastColoredTextBoxNS
             byte[] sampleBytes = new byte[HeuristicSampleSize > InputFileStream.Length ? InputFileStream.Length : HeuristicSampleSize];
             Array.Copy(bomBytes, sampleBytes, bomBytes.Length);
             if (InputFileStream.Length > bomBytes.Length)
-                InputFileStream.Read(sampleBytes, bomBytes.Length, sampleBytes.Length - bomBytes.Length);
+            {
+              int numBytesRead = InputFileStream.Read(sampleBytes, bomBytes.Length, sampleBytes.Length - bomBytes.Length);
+              if (numBytesRead != sampleBytes.Length - bomBytes.Length )
+              {
+                HasBOM = false;
+                return null;
+              }
+            }
             InputFileStream.Position = originalPos;
 
             //test byte array content
@@ -90,8 +102,9 @@ namespace FastColoredTextBoxNS
             if (BOMBytes[0] == 0xef && BOMBytes[1] == 0xbb && BOMBytes[2] == 0xbf)
                 return Encoding.UTF8;
 
+            // UTF-7
             if (BOMBytes[0] == 0x2b && BOMBytes[1] == 0x2f && BOMBytes[2] == 0x76)
-                return Encoding.UTF7;
+                return Encoding.GetEncoding( 65000 );
 
             if (BOMBytes.Length < 4)
                 return null;

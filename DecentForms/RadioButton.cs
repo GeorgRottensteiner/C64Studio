@@ -1,4 +1,5 @@
 ﻿using GR.Image;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -33,6 +34,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public ContentAlignment CheckAlign
     {
       get
@@ -61,6 +63,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public System.Drawing.Image Image
     {
       get
@@ -76,6 +79,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool Checked
     {
       get
@@ -101,6 +105,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public Appearance Appearance
     {
       get

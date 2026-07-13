@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net3.5;net4.8;net10.0-windows</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <RootNamespace>RetroDevStudio</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -580,11 +580,11 @@
     <PackageReference Include="GeorgRottensteiner.SharpSid" Version="0.9.5" />
   </ItemGroup>
   <!-- required for UIAutomation -->
-  <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows'">
+  <ItemGroup Condition="'$(TargetFramework)'!='net10.0-windows'">
     <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net10.0-windows'">
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>
   <!-- required for UIAutomation end -->
@@ -685,10 +685,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net4.8|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-windows|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
 </Project>

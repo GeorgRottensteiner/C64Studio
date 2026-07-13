@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -31,6 +32,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int Minimum
     {
       get
@@ -50,6 +52,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int Maximum 
     {
       get
@@ -69,6 +72,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int Value 
     {
       get
@@ -96,7 +100,10 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int SmallChange { get; set; } = 1;
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int LargeChange { get; set; } = 10;
 
 
@@ -120,6 +127,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SBDisplayType DisplayType { get; set; }
 
 

@@ -2401,10 +2401,9 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override void OnClosing( CancelEventArgs e )
+    protected override void OnFormClosing( FormClosingEventArgs e )
     {
-      base.OnClosing( e );
-
+      base.OnFormClosing( e );
       if ( !e.Cancel )
       {
         // store folded blocks

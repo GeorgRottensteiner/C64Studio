@@ -1113,6 +1113,7 @@ namespace Be.Windows.Forms
     /// gets/sets the number of digits for the offset on the left side
     /// obviously must be matched to the shown memory size
     /// </summary>
+		[DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int NumDigitsMemorySize
     {
       get
@@ -3081,6 +3082,7 @@ namespace Be.Windows.Forms
     /// <summary>
     /// The font used to display the ASCII view in the hexbox.
     /// </summary>
+		[DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public Font TextFont
     {
       get
@@ -3276,6 +3278,7 @@ namespace Be.Windows.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public ISelectedByteProvider SelectedByteProvider
     {
       get
@@ -3291,6 +3294,7 @@ namespace Be.Windows.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public long DisplayedAddressOffset
     {
       get; set;
@@ -3627,6 +3631,7 @@ namespace Be.Windows.Forms
 		/// Default alpha = 100
 		/// </remarks>
 		[Category("Hex"), Description("Gets or sets the color of the shadow selection.")]
+		[DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
 		public Color ShadowSelectionColor
 		{
 			get { return _shadowSelectionColor; }
@@ -3726,10 +3731,12 @@ namespace Be.Windows.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public Color MarkedForeColor { get; set; }
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int DisplayedByteOffset
     {
       get

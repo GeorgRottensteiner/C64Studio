@@ -23,6 +23,7 @@ namespace FastColoredTextBoxNS
         private bool scrollbarVisible = true;
 
         [Description("Target FastColoredTextBox")]
+        [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
         public FastColoredTextBox Target
         {
             get { return target; }

@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net4.8;net8.0-windows;net8.0</TargetFrameworks>
+    <TargetFrameworks>net3.5;net4.8;net10.0-windows;net10.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
     <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
     <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
-	  <UseWindowsForms Condition="'$(TargetFramework)' != 'net8.0'">true</UseWindowsForms>
-	  <ImportWindowsDesktopTargets Condition="'$(TargetFramework)' != 'net8.0'">true</ImportWindowsDesktopTargets>
+	  <UseWindowsForms Condition="'$(TargetFramework)' != 'net10.0'">true</UseWindowsForms>
+	  <ImportWindowsDesktopTargets Condition="'$(TargetFramework)' != 'net10.0'">true</ImportWindowsDesktopTargets>
 	  <RuntimeIdentifiers>win-x86;win-x64;linux-x64</RuntimeIdentifiers>
     <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsWindows)'=='true'">
     <DefineConstants>OS_WINDOWS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
 	  <DefineConstants>OS_CROSS_PLATFORM</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">

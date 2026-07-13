@@ -1727,11 +1727,18 @@ namespace GR.Image
         return null;
       }
 
+#if NET10_0_OR_GREATER
+      if ( !System.Windows.Forms.Clipboard.TryGetData<System.IO.MemoryStream>( "DeviceIndependentBitmap", out System.IO.MemoryStream ms ) )
+      {
+        return null;
+      }
+#else
       System.IO.MemoryStream ms = System.Windows.Forms.Clipboard.GetData( "DeviceIndependentBitmap" ) as System.IO.MemoryStream;
       if ( ms == null )
       {
         return null;
       }
+#endif
 
       GR.Image.FastImage    ImageData = new GR.Image.FastImage();
 

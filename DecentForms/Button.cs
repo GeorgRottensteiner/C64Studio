@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
+﻿using GR.Image;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
-using GR.Image;
 
 
 
@@ -34,6 +35,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public ButtonStyle ButtonBorder { get;  set; }
 
 
@@ -58,6 +60,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public System.Drawing.Image Image
     {
       get
@@ -72,7 +75,8 @@ namespace DecentForms
     }
 
 
-
+    
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]  
     public DialogResult DialogResult { get; set; } = DialogResult.OK;
 
 

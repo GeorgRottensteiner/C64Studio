@@ -275,7 +275,10 @@ namespace FastColoredTextBoxNS
 
 
     private char[] autoCompleteBracketsList = { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };
+    
 
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public char[] AutoCompleteBracketsList
     {
       get
@@ -305,6 +308,7 @@ namespace FastColoredTextBoxNS
     [Browsable( true )]
     [Description( "Colors of some service visual markers." )]
     [TypeConverter( typeof( ExpandableObjectConverter ) )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public ServiceColors ServiceColors
     {
       get;
@@ -461,6 +465,7 @@ namespace FastColoredTextBoxNS
     /// </summary>
     [Browsable( true )]
     [Description( "ToolTip component." )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public ToolTip ToolTip
     {
       get;
@@ -688,6 +693,7 @@ namespace FastColoredTextBoxNS
     /// Height of char in pixels (includes LineInterval)
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int CharHeight
     {
       get
@@ -732,6 +738,7 @@ namespace FastColoredTextBoxNS
     /// Width of char in pixels
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int CharWidth
     {
       get;
@@ -1082,6 +1089,7 @@ namespace FastColoredTextBoxNS
     /// </summary>
     [Browsable( true )]
     [Description( "Paddings of text area." )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public Padding Paddings
     {
       get;
@@ -1287,6 +1295,7 @@ namespace FastColoredTextBoxNS
     /// Style for rendering Selection area
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SelectionStyle SelectionStyle
     {
       get;
@@ -1297,6 +1306,7 @@ namespace FastColoredTextBoxNS
     /// Style for folded block rendering
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public TextStyle FoldedBlockStyle
     {
       get;
@@ -1307,6 +1317,7 @@ namespace FastColoredTextBoxNS
     /// Style for brackets highlighting
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public MarkerStyle BracketsStyle
     {
       get;
@@ -1317,6 +1328,7 @@ namespace FastColoredTextBoxNS
     /// Style for alternative brackets highlighting
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public MarkerStyle BracketsStyle2
     {
       get;
@@ -1400,6 +1412,7 @@ namespace FastColoredTextBoxNS
     /// Is keyboard in replace mode (wide caret) ?
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public bool IsReplaceMode
     {
       get
@@ -1720,6 +1733,7 @@ namespace FastColoredTextBoxNS
     /// Current selection range
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public Range Selection
     {
       get
@@ -1772,6 +1786,7 @@ namespace FastColoredTextBoxNS
     /// If Null then BackColor is used.
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )] 
     public Brush BackBrush
     {
       get
@@ -1956,6 +1971,7 @@ namespace FastColoredTextBoxNS
     /// Gets or sets char and styleId for given place
     /// This property does not fire OnTextChanged event
     /// </summary>
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public Char this[Place place]
     {
       get
@@ -2178,6 +2194,7 @@ namespace FastColoredTextBoxNS
       Invalidate();
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public new Size AutoScrollMinSize
     {
       set
@@ -6917,6 +6934,7 @@ namespace FastColoredTextBoxNS
     /// Zooming (in percentages)
     /// </summary>
     [Browsable( false )]
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int Zoom
     {
       get

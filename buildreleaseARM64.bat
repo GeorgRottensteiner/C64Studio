@@ -6,6 +6,7 @@ if exist C64StudioRelease3.5ARM.zip del C64StudioRelease3.5ARM.zip
 if exist C64StudioRelease4.8ARM.zip del C64StudioRelease4.8ARM.zip
 if exist C64StudioRelease6.0ARM.zip del C64StudioRelease6.0ARM.zip
 if exist C64StudioRelease8.0ARM.zip del C64StudioRelease8.0ARM.zip
+if exist C64StudioRelease10.0ARM.zip del C64StudioRelease10.0ARM.zip
 
 rem complete archive
 cd "C64StudioRelease\net3.5\ARM64"
@@ -14,8 +15,8 @@ cd ..\..\..
 cd "C64StudioRelease\net4.8\ARM64"
 %winrar% -ibck a -r -afzip ..\..\..\C64StudioReleaseARM.zip -apC64StudioRelease\net4.8 .
 cd ..\..\..
-cd "C64StudioRelease\net8.0-windows\ARM64"
-%winrar% -ibck a -r -afzip ..\..\..\C64StudioReleaseARM.zip -apC64StudioRelease\net8.0-windows .
+cd "C64StudioRelease\net10.0-windows\ARM64"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioReleaseARM.zip -apC64StudioRelease\net10.0-windows .
 cd ..\..\..
 
 cd "C64StudioRelease\net3.5\ARM64"
@@ -24,18 +25,18 @@ cd ..\..\..
 cd "C64StudioRelease\net4.8\ARM64"
 %winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease4.8ARM.zip -apC64StudioRelease\net4.8 .
 cd ..\..\..
-cd "C64StudioRelease\net8.0-windows\ARM64"
-%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease8.0ARM.zip -apC64StudioRelease\net8.0-windows .
+cd "C64StudioRelease\net10.0-windows\ARM64"
+%winrar% -ibck a -r -afzip ..\..\..\C64StudioRelease10.0ARM.zip -apC64StudioRelease\net10.0-windows .
 cd ..\..\..
 
 cd "C64StudioRelease\shared content"
 %winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net3.5 ..\..\C64StudioReleaseARM.zip "*.*" 
 %winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net4.8 ..\..\C64StudioReleaseARM.zip "*.*" 
-%winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net8.0-windows ..\..\C64StudioReleaseARM.zip "*.*" 
+%winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net10.0-windows ..\..\C64StudioReleaseARM.zip "*.*" 
 
 %winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net3.5 ..\..\C64StudioRelease3.5ARM.zip "*.*" 
 %winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net4.8 ..\..\C64StudioRelease4.8ARM.zip "*.*" 
-%winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net8.0-windows ..\..\C64StudioRelease8.0ARM.zip "*.*" 
+%winrar% -ibck a -afzip -r -ep1 -apC64StudioRelease\net10.0-windows ..\..\C64StudioRelease10.0ARM.zip "*.*" 
 cd ..\..
 
 IF "%~1"=="noincbuildno" GOTO buildcomplete

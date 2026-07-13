@@ -169,6 +169,7 @@ namespace DecentForms
                                   ASYNCWINDOWPOS = 0x4000;
     }
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public BorderStyle BorderStyle
     {
       get

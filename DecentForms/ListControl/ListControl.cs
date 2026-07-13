@@ -88,6 +88,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public ImageList ImageList
     {
       get
@@ -103,6 +104,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public System.Collections.IComparer ListViewItemSorter
     {
       get
@@ -118,6 +120,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int SortColumn
     {
       get
@@ -132,6 +135,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SortOrder SortOrder
     {
       get
@@ -182,6 +186,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool CheckBoxes 
     {
       get
@@ -200,6 +205,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool MultiSelected
     {
       get
@@ -323,6 +329,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int HeaderHeight
     {
       get
@@ -342,6 +349,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool HasHeader
     {
       get
@@ -515,6 +523,9 @@ namespace DecentForms
 
     private int _ItemHeight = 15;
 
+
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemHeight
     {
       get
@@ -536,11 +547,14 @@ namespace DecentForms
     public ListControlCheckedItemCollection   CheckedItems { get; private set; }
     // used for sorting
     public List<int>                          ItemIndices { get; private set; } = new List<int>();
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public SelectionMode                      SelectionMode { get; set; }
 
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool ScrollAlwaysVisible 
     {
       get
@@ -557,6 +571,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int FirstVisibleItemIndex
     {
       get
@@ -757,6 +772,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public ListControlItem SelectedItem
     {
       get
@@ -813,6 +829,7 @@ namespace DecentForms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int SelectedIndex 
     {
       get

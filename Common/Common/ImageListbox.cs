@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -214,6 +215,7 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public UInt32 HottrackColor
     {
       get;
@@ -249,6 +251,7 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public GR.Drawing.PixelFormat PixelFormat
     {
       get
@@ -269,8 +272,9 @@ namespace GR.Forms
       }
     }
 
-    
-    
+
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemWidth
     {
       get
@@ -306,6 +310,7 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public int ItemHeight
     {
       get
@@ -336,6 +341,7 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
     public bool AllowPopup
     {
       get; set;
@@ -343,6 +349,7 @@ namespace GR.Forms
 
 
 
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
     public int SelectedIndex
     {
       get

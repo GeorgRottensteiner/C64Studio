@@ -292,9 +292,9 @@ namespace GR
 
         BufferTarget.Resize( (UInt32)( BufferTarget.Length + BytesToReadNow ) );
 
-        m_Stream.Read( BufferTarget.Data(), (int)OriginalLength, (int)BytesToReadNow );
+        int numBytesRead = m_Stream.Read( BufferTarget.Data(), (int)OriginalLength, (int)BytesToReadNow );
 
-        bytesRead += BytesToReadNow;
+        bytesRead += (uint)numBytesRead;
 
         return bytesRead;
       }

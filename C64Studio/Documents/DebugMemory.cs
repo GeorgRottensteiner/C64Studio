@@ -683,12 +683,12 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override void OnClosed( EventArgs e )
+    protected override void OnFormClosed( FormClosedEventArgs e )
     {
       ViewScrolled -= new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
       Core.MainForm.ApplicationEvent -= OnApplicationEvent;
       Core.Debugging.RemoveMemoryView( this );
-      base.OnClosed( e );
+      base.OnFormClosed( e );
     }
 
 

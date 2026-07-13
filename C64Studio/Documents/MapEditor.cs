@@ -539,10 +539,10 @@ namespace RetroDevStudio.Documents
 
 
 
-    protected override void OnClosed( EventArgs e )
+    protected override void OnFormClosed( FormClosedEventArgs e )
     {
       Core.MainForm.ApplicationEvent -= MainForm_ApplicationEvent;
-      base.OnClosed( e );
+      base.OnFormClosed( e );
     }
 
 
