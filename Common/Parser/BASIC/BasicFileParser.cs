@@ -137,6 +137,7 @@ namespace RetroDevStudio.Parser.BASIC
       public GR.Collections.Set<int>  ReferencedLineNumbers = new GR.Collections.Set<int>();
       public string                   Line = "";
       public System.Collections.Generic.List<Token>   Tokens = new List<Token>();
+      public string                   CustomLabelName = ""; 
     };
 
     private GR.Collections.Map<int, LineInfo> m_LineInfos = new GR.Collections.Map<int, LineInfo>();
@@ -1007,7 +1008,6 @@ namespace RetroDevStudio.Parser.BASIC
 
               lineInfo.Tokens.Add( commentToken );
               break;
-              //return lineInfo;
             }
             if ( Settings.BASICDialect.TokenDoesNotParseOtherTokens( basicToken ) )
             {
@@ -1241,7 +1241,6 @@ namespace RetroDevStudio.Parser.BASIC
         &&   ( token.Content.Length > 5 )
         &&   ( char.IsDigit( token.Content[5] ) ) )
         {
-
           token.TokenType = Token.Type.EX_BASIC_TOKEN;
           token.ByteValue = 240;
 
@@ -2012,6 +2011,17 @@ namespace RetroDevStudio.Parser.BASIC
         metaDataType = metaDataType.Substring( 0, sepPos );
       }
 
+      // these metadata types are always handled
+      switch ( metaDataType.ToUpper() )
+      {
+        case "LABEL":
+          if ( !MetaCustomLabel( LineIndex, MetaData, metaDataParams, lineInfo ) )
+          {
+            hadError = true;
+          }
+          return true;
+      }
+
       if ( m_CompileConfig.DoNotExpandStringLiterals )
       {
         return true;
@@ -2680,7 +2690,7 @@ namespace RetroDevStudio.Parser.BASIC
         ProcessLine( lineIndex, lineArg, ref lastLineNumber );
       }
 
-      CheckForAmbigiousVariables();
+      CheckForAmbiguousVariables( LabelMode );
       CheckForMissingReferencedLineNumbers();
     }
 
@@ -2797,31 +2807,34 @@ namespace RetroDevStudio.Parser.BASIC
           else if ( ( tokenIndex + 1 < pureInfo.Tokens.Count )
           &&        ( variable.StartIndex + variable.Content.Length == pureInfo.Tokens[tokenIndex + 1].StartIndex ) )
           {
-            var nextToken = pureInfo.Tokens[tokenIndex + 1];
-            if ( nextToken.Content == "(" )
+            if ( Settings.BASICDialect.VariableRelevantLength != -1 )
             {
-              symbolType = SymbolInfo.Types.VARIABLE_ARRAY;
-              if ( varName.Length > 3 )
+              var nextToken = pureInfo.Tokens[tokenIndex + 1];
+              if ( nextToken.Content == "(" )
+              {
+                symbolType = SymbolInfo.Types.VARIABLE_ARRAY;
+                if ( varName.Length > Settings.BASICDialect.VariableRelevantLength + 1 )
+                {
+                  // cut to signifact characters
+                  varName = varName.Substring( 0, Settings.BASICDialect.VariableRelevantLength );
+                  varNameCutShort = true;
+                }
+                varName += "(";
+              }
+              else if ( varName.Length > Settings.BASICDialect.VariableRelevantLength )
               {
                 // cut to signifact characters
-                varName = varName.Substring( 0, 2 );
+                varName = varName.Substring( 0, Settings.BASICDialect.VariableRelevantLength );
                 varNameCutShort = true;
               }
-              varName += "(";
-            }
-            else if ( varName.Length > 2 )
-            {
-              // cut to signifact characters
-              varName = varName.Substring( 0, 2 );
-              varNameCutShort = true;
             }
           }
-          else
+          else if ( Settings.BASICDialect.VariableRelevantLength != -1 )
           {
-            if ( varName.Length > 2 )
+            if ( varName.Length > Settings.BASICDialect.VariableRelevantLength )
             {
               // cut to signifact characters
-              varName = varName.Substring( 0, 2 );
+              varName = varName.Substring( 0, Settings.BASICDialect.VariableRelevantLength );
               varNameCutShort = true;
             }
           }
@@ -2915,6 +2928,7 @@ namespace RetroDevStudio.Parser.BASIC
       else
       {
         m_LineInfos[info.LineIndex] = info;
+        m_LineInfos[info.LineIndex].CustomLabelName = pureInfo.CustomLabelName;
       }
     }
 
@@ -2981,11 +2995,37 @@ namespace RetroDevStudio.Parser.BASIC
 
 
 
-    private void CheckForAmbigiousVariables()
+    private void CheckForAmbiguousVariables( bool labelMode )
     {
       if ( Settings.BASICDialect.VariableRelevantLength == -1 )
       {
         return;
+      }
+
+      // clear up mapped variables list, so custom labels to not trigger ambiguous variable warnings
+      if ( labelMode )
+      {
+        foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
+        {
+          if ( ( lineInfo.Value.Tokens.Count == 1 )
+          &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+          {
+            // leave as is
+            continue;
+          }
+
+          // detect customized label (how?) - this for now allows only custom labels that contain no BASIC token
+          if ( ( lineInfo.Value.Tokens.Count == 1 )
+          &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.VARIABLE ) )
+          {
+            string labelToReplace = lineInfo.Value.Tokens[0].Content;
+
+            foreach ( var mappedVars in m_ASMFileInfo.MappedVariables )
+            {
+              mappedVars.Value.RemoveAll( mv => mv.String == labelToReplace );
+            }
+          }
+        }
       }
 
       GR.Collections.Set<string>   notifiedMappings = new GR.Collections.Set<string>();
@@ -2998,10 +3038,11 @@ namespace RetroDevStudio.Parser.BASIC
           {
             foreach ( var entry in mappedVars.Value )
             {
-              if ( !notifiedMappings.ContainsValue( entry.Name + "_" + dist ) )
+              if ( ( entry.String == dist )
+              &&   ( !notifiedMappings.ContainsValue( entry.Name + "_" + dist ) ) )
               {
                 notifiedMappings.Add( entry.Name + "_" + dist );
-                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to {Settings.BASICDialect.VariableRelevantLength} characters is ambigious ({dist})",
+                var warning = AddWarning( entry.LineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {entry.Name} truncated to {Settings.BASICDialect.VariableRelevantLength} characters is ambiguous ({dist})",
                                           entry.CharIndex, entry.String.Length );
               }
             }
@@ -3302,6 +3343,22 @@ namespace RetroDevStudio.Parser.BASIC
     {
       StringBuilder sb = new StringBuilder();
       GR.Collections.Map<int,string>     lineNumberReference = new GR.Collections.Map<int, string>();
+
+      var previousDefinedCustomLabel = "";
+      var namedLabels = new GR.Collections.Map<int, string>();
+
+      // build a list of all custom named labels/line numbers
+      foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
+      {
+        if ( ( lineInfo.Value.LineNumber != -1 )
+        &&   ( !string.IsNullOrEmpty( previousDefinedCustomLabel ) ) )
+        {
+          namedLabels[lineInfo.Value.LineNumber] = previousDefinedCustomLabel;
+        }
+        previousDefinedCustomLabel = lineInfo.Value.CustomLabelName;
+      }
+
+      // assign names for line numbers
       foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
       {
         if ( lineInfo.Value.ReferencedLineNumbers.Count > 0 )
@@ -3311,11 +3368,16 @@ namespace RetroDevStudio.Parser.BASIC
             if ( !lineNumberReference.ContainsKey( number ) )
             {
               string    newLabel = "LABEL" + number.ToString();
+              if ( namedLabels.ContainsKey( number ) )
+              {
+                newLabel = namedLabels[number];
+              }
               lineNumberReference[number] = newLabel;
             }
           }
         }
       }
+
 
       foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
       {
@@ -3330,6 +3392,11 @@ namespace RetroDevStudio.Parser.BASIC
             // skip media includes, they are rebuilt
             continue;
           }
+        }
+        if ( !string.IsNullOrEmpty( lineInfo.Value.CustomLabelName ) )
+        {
+          // skip custom label meta lines, they are rebuilt
+          continue;
         }
 
         // remember cut off length so we can properly fill up with blanks below
@@ -3685,10 +3752,22 @@ namespace RetroDevStudio.Parser.BASIC
 
     private void AppendGapTokens( StringBuilder sb, List<Token> Tokens, ref int CurrentTokenIndex, int FirstTokenIndexAfterGap )
     {
-      while ( CurrentTokenIndex + 1 < FirstTokenIndexAfterGap )
+      if ( FirstTokenIndexAfterGap == -1 )
       {
-        sb.Append( Tokens[CurrentTokenIndex + 1].Content );
-        ++CurrentTokenIndex;
+        // append all
+        while ( CurrentTokenIndex + 1 < Tokens.Count )
+        {
+          sb.Append( Tokens[CurrentTokenIndex + 1].Content );
+          ++CurrentTokenIndex;
+        }
+      }
+      else
+      {
+        while ( CurrentTokenIndex + 1 < FirstTokenIndexAfterGap )
+        {
+          sb.Append( Tokens[CurrentTokenIndex + 1].Content );
+          ++CurrentTokenIndex;
+        }
       }
     }
 
@@ -3764,6 +3843,17 @@ namespace RetroDevStudio.Parser.BASIC
           continue;
         }
 
+        // detect customized label (how?) - this for now allows only custom labels that contain no BASIC token
+        if ( ( lineInfo.Value.Tokens.Count == 1 )
+        &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.VARIABLE ) )
+        {
+          string labelToReplace = lineInfo.Value.Tokens[0].Content;
+
+          labelToNumber[labelToReplace] = lineNumber;
+          continue;
+        }
+
+        // a uncustomized label
         if ( ( lineInfo.Value.Tokens.Count > 0 )
         &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.EX_BASIC_TOKEN )
         &&   ( lineInfo.Value.Tokens[0].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue ) )
@@ -3820,12 +3910,26 @@ namespace RetroDevStudio.Parser.BASIC
         int nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
         int nextTokenIndex3 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex2 );
         if ( ( nextTokenIndex != -1 )
+        &&   ( nextTokenIndex2 == -1 ) )
+        {
+          if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.VARIABLE )
+          {
+            // a custom label definition
+            if ( labelToNumber.ContainsKey( lineInfo.Value.Tokens[nextTokenIndex].Content ) )
+            {
+              sb.Append( "#LABEL " );
+              sb.Append( lineInfo.Value.Tokens[nextTokenIndex].Content );
+              sb.AppendLine();
+              ++nextTokenIndex;
+            }
+            continue;
+          }
+        }
+        if ( ( nextTokenIndex != -1 )
         &&   ( nextTokenIndex2 != -1 )
         &&   ( nextTokenIndex3 == -1 ) )
         {
-          if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-          &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
-          &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+          if ( IsNonCustomLineNumberLabel( lineInfo.Value.Tokens, nextTokenIndex, nextTokenIndex2 ) )
           {
             // a label definition
             continue;
@@ -3868,20 +3972,11 @@ namespace RetroDevStudio.Parser.BASIC
               int nextTokenIndexA = FindNextToken( lineInfo.Value.Tokens, nextTokenIndexC );
               int nextTokenIndexB = FindNextToken( lineInfo.Value.Tokens, nextTokenIndexA );
 
-              if ( ( lineInfo.Value.Tokens[nextTokenIndexA].TokenType == Token.Type.EX_BASIC_TOKEN )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndexA].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndexB].TokenType == Token.Type.NUMERIC_LITERAL ) )
+              if ( IsNonCustomLineNumberLabel( lineInfo.Value.Tokens, nextTokenIndexA, nextTokenIndexB ) )
               {
                 sb.Append( token.Content );
 
                 AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndexA );
-                /*
-                while ( nextTokenIndexA - 1 > tokenIndex )
-                {
-                  // there were blanks in between
-                  sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                  ++tokenIndex;
-                }*/
 
                 string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndexB].Content;
 
@@ -3894,6 +3989,25 @@ namespace RetroDevStudio.Parser.BASIC
                   sb.Append( labelToNumber[label].ToString() );
                 }
                 tokenIndex = nextTokenIndexB;
+                continue;
+              }
+              else if ( lineInfo.Value.Tokens[nextTokenIndexA].TokenType == Token.Type.VARIABLE )
+              {
+                sb.Append( token.Content );
+
+                AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndexA );
+
+                string label = lineInfo.Value.Tokens[nextTokenIndexA].Content;
+
+                if ( !labelToNumber.ContainsKey( label ) )
+                {
+                  AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                }
+                else
+                {
+                  sb.Append( labelToNumber[label].ToString() );
+                }
+                tokenIndex = nextTokenIndexA;
                 continue;
               }
             }
@@ -3912,16 +4026,8 @@ namespace RetroDevStudio.Parser.BASIC
               sb.Append( token.Content );
 
               AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
-              /*
-              while ( nextTokenIndex - 1 > tokenIndex )
-              {
-                // there were blanks in between
-                sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
-                ++tokenIndex;
-              }*/
             }
-            while ( ( nextTokenIndex != -1 )
-            &&      ( nextTokenIndex2 != -1 ) )
+            while ( nextTokenIndex != -1 )
             {
               if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.DIRECT_TOKEN )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex].Content == "," ) )
@@ -3929,29 +4035,38 @@ namespace RetroDevStudio.Parser.BASIC
                 // comma is valid
                 sb.Append( "," );
                 AppendGapTokens( sb, lineInfo.Value.Tokens, ref nextTokenIndex, nextTokenIndex2 );
-                /*
-                while ( nextTokenIndex2 - nextTokenIndex > 1 )
-                {
-                  sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
-                  ++nextTokenIndex;
-                }*/
                 nextTokenIndex = nextTokenIndex2;
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
-
                 AppendGapTokens( sb, lineInfo.Value.Tokens, ref nextTokenIndex, nextTokenIndex2 );
-                /*
-                while ( nextTokenIndex2 - nextTokenIndex > 1 )
-                {
-                  sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
-                  ++nextTokenIndex;
-                }*/
+                nextTokenIndex = nextTokenIndex2;
+                nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                 continue;
               }
 
-
-              if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+              // a custom label
+              if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.VARIABLE )
+              {
+                string label = lineInfo.Value.Tokens[nextTokenIndex].Content;
+                if ( !labelToNumber.ContainsKey( label ) )
+                {
+                  AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                }
+                else
+                {
+                  sb.Append( labelToNumber[label].ToString() );
+                }
+                tokenIndex = nextTokenIndex;
+                nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                if ( ( nextTokenIndex == -1 )
+                ||   ( lineInfo.Value.Tokens[nextTokenIndex].Content != "," ) )
+                {
+                  break;
+                }
+                continue;
+              }
+              // an uncustomised line number label (label<number>)
+              if ( ( nextTokenIndex2 != -1 )
+              &&   ( IsNonCustomLineNumberLabel( lineInfo.Value.Tokens, nextTokenIndex, nextTokenIndex2 ) ) )
               {
                 string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
 
@@ -3974,12 +4089,6 @@ namespace RetroDevStudio.Parser.BASIC
                 int nextTokenIndexB = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
 
                 AppendGapTokens( sb, lineInfo.Value.Tokens, ref nextTokenIndex, nextTokenIndexB );
-                /*
-                while ( nextTokenIndexB - nextTokenIndex > 1 )
-                {
-                  sb.Append( lineInfo.Value.Tokens[nextTokenIndex + 1].Content );
-                  ++nextTokenIndex;
-                }*/
                 nextTokenIndex = nextTokenIndexB;
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
               }
@@ -4007,9 +4116,7 @@ namespace RetroDevStudio.Parser.BASIC
             if ( nextTokenIndex != -1 )
             {
               AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
-              if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+              if ( IsNonCustomLineNumberLabel( lineInfo.Value.Tokens, nextTokenIndex, nextTokenIndex2 ) )
               {
                 string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
 
@@ -4034,9 +4141,7 @@ namespace RetroDevStudio.Parser.BASIC
                     nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                     if ( nextTokenIndex != -1 )
                     {
-                      if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-                      &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
-                      &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+                      if ( IsNonCustomLineNumberLabel( lineInfo.Value.Tokens, nextTokenIndex, nextTokenIndex2 ) )
                       {
                         AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
                         label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
@@ -4055,6 +4160,49 @@ namespace RetroDevStudio.Parser.BASIC
                   }
                 }
               }
+              else if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.VARIABLE )
+              {
+                string label = lineInfo.Value.Tokens[nextTokenIndex].Content;
+
+                if ( !labelToNumber.ContainsKey( label ) )
+                {
+                  AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                }
+                else
+                {
+                  sb.Append( labelToNumber[label].ToString() );
+                }
+                tokenIndex = nextTokenIndex;
+
+                nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                if ( nextTokenIndex != -1 )
+                {
+                  if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
+                  {
+                    // a to part
+                    AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
+                    nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+                    if ( nextTokenIndex != -1 )
+                    {
+                      if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.VARIABLE )
+                      {
+                        AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
+                        label = lineInfo.Value.Tokens[nextTokenIndex].Content;
+
+                        if ( !labelToNumber.ContainsKey( label ) )
+                        {
+                          AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                        }
+                        else
+                        {
+                          sb.Append( labelToNumber[label].ToString() );
+                        }
+                        tokenIndex = nextTokenIndex;
+                      }
+                    }
+                  }
+                }
+              }
               else if ( lineInfo.Value.Tokens[nextTokenIndex].Content == "-" )
               {
                 // a to part
@@ -4063,9 +4211,7 @@ namespace RetroDevStudio.Parser.BASIC
                 nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
                 if ( nextTokenIndex != -1 )
                 {
-                  if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-                  &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
-                  &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
+                  if ( IsNonCustomLineNumberLabel( lineInfo.Value.Tokens, nextTokenIndex, nextTokenIndex2 ) )
                   {
                     AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
 
@@ -4081,6 +4227,22 @@ namespace RetroDevStudio.Parser.BASIC
                     }
                     tokenIndex = nextTokenIndex2;
                   }
+                  else if ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.VARIABLE )
+                  {
+                    AppendGapTokens( sb, lineInfo.Value.Tokens, ref tokenIndex, nextTokenIndex );
+
+                    string label = lineInfo.Value.Tokens[nextTokenIndex].Content;
+
+                    if ( !labelToNumber.ContainsKey( label ) )
+                    {
+                      AddError( lineInfo.Value.LineIndex, Types.ErrorCode.E3004_BASIC_MISSING_LABEL, "Unknown label " + label + " encountered" );
+                    }
+                    else
+                    {
+                      sb.Append( labelToNumber[label].ToString() );
+                    }
+                    tokenIndex = nextTokenIndex;
+                  }
                 }
               }
             }
@@ -4089,17 +4251,6 @@ namespace RetroDevStudio.Parser.BASIC
               ++tokenIndex;
             }
             continue;
-          }
-
-
-          if ( token.TokenType == Token.Type.STRING_LITERAL )
-          {
-            if ( ( token.Content.StartsWith( "\"" ) )
-            &&   ( token.Content.EndsWith( "\"" ) ) )
-            {
-              // replace value with char
-              //token.Content = DecompileStringLiteral( token.Content );
-            }
           }
 
           if ( !tokenIsInserted )
@@ -4111,6 +4262,19 @@ namespace RetroDevStudio.Parser.BASIC
         lineNumber += lineNumberStep;
       }
       return sb.ToString();
+    }
+
+
+
+    private bool IsNonCustomLineNumberLabel( List<Token> tokens, int token1, int tokenAfter1 )
+    {
+      if ( ( tokens[token1].TokenType == Token.Type.EX_BASIC_TOKEN )
+      &&   ( tokens[token1].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
+      &&   ( tokens[tokenAfter1].TokenType == Token.Type.NUMERIC_LITERAL ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 

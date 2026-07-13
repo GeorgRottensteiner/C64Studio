@@ -1,7 +1,8 @@
-﻿using System;
-using System.Runtime.Intrinsics.Arm;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RetroDevStudio.Parser;
 using RetroDevStudio.Parser.BASIC;
+using System;
+using System.Runtime.Intrinsics.Arm;
 
 namespace TestProject
 {
@@ -52,6 +53,13 @@ namespace TestProject
 
     private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, ushort StartAddress, bool StripREM = false, bool StripSpaces = false )
     {
+      return TestCompile( Source, BASICDialectName, StartAddress, StripREM, StripSpaces, out var dummy );
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestCompile( string Source, string BASICDialectName, ushort StartAddress, bool StripREM, bool StripSpaces, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo )
+    {
       var parser = CreateParser( BASICDialectName );
 
       RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
@@ -62,7 +70,7 @@ namespace TestProject
       parser.Settings.StripREM    = StripREM;
       parser.Settings.StripSpaces = StripSpaces;
 
-      bool parseResult = parser.Parse( Source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      bool parseResult = parser.Parse( Source, null, config, null, out asmFileInfo );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
@@ -326,6 +334,57 @@ GOTO LABEL10
 
 
     [TestMethod]
+    public void EncodeAndDecodeWithCustomLabels()
+    {
+      string      source = @"#LABEL TEN
+10 PRINT ""HALLO""
+15 GET#2,A$
+20 GOTO 10
+";
+      var parser = CreateParser( "BASIC V2" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.DoNotExpandStringLiterals = true;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"TEN
+PRINT ""HALLO""
+GET#2,A$
+GOTO TEN
+", encoded );
+
+      parser.LabelMode = true;
+
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  decoded = parser.DecodeFromLabels( 10, 5 );
+      Assert.AreEqual( source, decoded );
+    }
+
+
+
+    [TestMethod]
     public void EncodeAndDecodeLowercase()
     {
       string      source = @"10 print ""hallo""
@@ -519,6 +578,63 @@ GET#2, A$:REM HURZ
 
 LABEL20
 ON X GOTO LABEL10, LABEL15, LABEL20
+", encoded );
+
+      parser.LabelMode = true;
+
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  decoded = parser.DecodeFromLabels( 10, 5 );
+      Assert.AreEqual( source, decoded );
+    }
+
+
+
+    [TestMethod]
+    public void EncodeAndDecodeToLabelsWithOnGotoWithCustomLabels()
+    {
+      string      source = @"#LABEL TEN
+10 PRINT ""HALLO""
+#LABEL FFTEEN
+15 GET#2, A$:REM HURZ
+#LABEL TWENTY
+20 ON X GOTO 10, 15, 20
+";
+      var parser = CreateParser( "BASIC V2" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.DoNotExpandStringLiterals = true;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"TEN
+PRINT ""HALLO""
+
+FFTEEN
+GET#2, A$:REM HURZ
+
+TWENTY
+ON X GOTO TEN, FFTEEN, TWENTY
 ", encoded );
 
       parser.LabelMode = true;
@@ -752,6 +868,64 @@ LIST-LABEL50:GOTO LABEL10
 
 
     [TestMethod]
+    public void EncodeAndDecodeToLabelsWithListWithCustomLabels()
+    {
+      string      source = @"#LABEL TEN
+10 LIST 10 - 50:PRINT ""HURZ""
+#LABEL THIRTEEN
+30 LIST30-:REM HURZ
+#LABEL FFTY
+50 LIST-50:GOTO 10
+";
+      var parser = CreateParser( "BASIC V7.0" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.DoNotExpandStringLiterals = true;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"TEN
+LIST TEN - FFTY:PRINT ""HURZ""
+
+THIRTEEN
+LISTTHIRTEEN-:REM HURZ
+
+FFTY
+LIST-FFTY:GOTO TEN
+", encoded );
+
+      // and reverse...
+      parser.LabelMode = true;
+
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  decoded = parser.DecodeFromLabels( 10, 20 );
+      Assert.AreEqual( source, decoded );
+    }
+
+
+
+    [TestMethod]
     public void EncodeAndDecodeToLabelsWithThenPlusBASICToken()
     {
       string      source = @"10 IFA=0THENPOKE1024,1:GOTO 10";
@@ -798,7 +972,7 @@ IFA=0THENPOKE1024,1:GOTO LABEL10
 
 
     [TestMethod]
-    public void EncodeToLabelsONGoto()
+    public void EncodeToLabelsOnGoto()
     {
       string      source = @"10 PRINT ""HALLO""
                           15 GET#2, A$
@@ -823,6 +997,65 @@ GET#2, A$
 LABEL20
 ON X GOTO LABEL10,  LABEL15, LABEL20
 ", encoded );
+    }
+
+
+
+    [TestMethod]
+    public void EncodeToLabelsOnGotoWithCustomLabels()
+    {
+      string      source = @"#LABEL TEN
+10 PRINT ""HALLO""
+#LABEL FFTEEN
+15 GET#2, A$
+#LABEL TWENTY
+20 ON X GOTO 10,  15, 20
+";
+
+      var parser = CreateParser( "BASIC V2" );
+
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null, out RetroDevStudio.Types.ASM.FileInfo asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+        Assert.Fail();
+      }
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"TEN
+PRINT ""HALLO""
+
+FFTEEN
+GET#2, A$
+
+TWENTY
+ON X GOTO TEN,  FFTEEN, TWENTY
+", encoded );
+
+      parser.LabelMode = true;
+      config.DoNotExpandStringLiterals = true;
+
+      parseResult = parser.Parse( encoded, null, config, null, out asmFileInfo );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in asmFileInfo.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+      string  decoded = parser.DecodeFromLabels( 10, 5 );
+      Assert.AreEqual( source, decoded );
     }
 
 
@@ -902,6 +1135,25 @@ GOTO LABEL10
       var result = TestCompile( source, "BASIC V2" );
 
       Assert.AreEqual( "0108110842008BB5284229B3B142A73636000000", result.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void WarningAmbiguousVariables()
+    {
+      string    source = @"10 HAUS=10
+20 HAMMER=17";
+
+      var result = TestCompile( source, "BASIC V2", 0x0801, false, false, out var asmFileInfo );
+
+      Assert.AreEqual( "01080D080A0048415553B23130001B08140048414D4D4552B23137000000", result.ToString() );
+
+      Assert.AreEqual( 2, asmFileInfo.Messages.Count );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, asmFileInfo.Messages.Values[0].Code );
+      Assert.AreEqual( 0, asmFileInfo.Messages.Keys[0] );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, asmFileInfo.Messages.Values[1].Code );
+      Assert.AreEqual( 1, asmFileInfo.Messages.Keys[1] );
     }
 
 

@@ -209,6 +209,10 @@ namespace RetroDevStudio
 
     public void SetASMFileInfo( Types.ASM.FileInfo FileInfo )
     {
+      if ( FileInfo == null )
+      {
+        return;
+      }
       if ( ( _SetASMFileInfoStack.TryGetValue( FullPath, out int stackCount ) )
       &&   ( stackCount > 0 ) )
       {

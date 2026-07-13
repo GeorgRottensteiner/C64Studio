@@ -3488,6 +3488,11 @@ namespace RetroDevStudio.Documents
 
     public void SetLineInfos( Types.ASM.FileInfo FileInfo )
     {
+      if ( FileInfo == null )
+      {
+        return;
+      }
+
       try
       {
         GR.Collections.Set<int>   setLines = new GR.Collections.Set<int>();
