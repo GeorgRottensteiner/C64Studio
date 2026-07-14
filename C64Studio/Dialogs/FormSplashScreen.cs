@@ -16,6 +16,11 @@ namespace RetroDevStudio.Dialogs
       InitializeComponent();
 
       labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion + "." + Version.BuildNumber );
+#if ( NET48_OR_GREATER ) || ( NET10_0_OR_GREATER )
+      labelInfo.Text = labelInfo.Text.Replace( "<rt>", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription );
+#else
+      labelInfo.Text = labelInfo.Text.Replace( "<rt>", ".NET 3.5" );
+#endif
 
       DPIHandler.ResizeControlsForDPI( this );
     }
