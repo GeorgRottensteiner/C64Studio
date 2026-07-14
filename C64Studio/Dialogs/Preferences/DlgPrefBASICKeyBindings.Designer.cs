@@ -32,7 +32,7 @@
       this.btnBindBASICKeyMapBinding = new DecentForms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
-      this.listBASICKeyMap = new RetroDevStudio.Controls.MeasurableListView();
+      this.listBASICKeyMap = new DecentForms.ListControl();
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -98,23 +98,12 @@
       this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader10});
-      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.listBASICKeyMap.FullRowSelect = true;
-      this.listBASICKeyMap.HideSelection = false;
       this.listBASICKeyMap.ItemHeight = 14;
       this.listBASICKeyMap.Location = new System.Drawing.Point(3, 3);
-      this.listBASICKeyMap.MultiSelect = false;
       this.listBASICKeyMap.Name = "listBASICKeyMap";
       this.listBASICKeyMap.Size = new System.Drawing.Size(652, 348);
       this.listBASICKeyMap.TabIndex = 14;
-      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
-      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
-      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
+      this.listBASICKeyMap.SelectedIndexChanged += new DecentForms.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
       // 
       // columnHeader5
       // 
@@ -158,7 +147,7 @@
         private DecentForms.Button btnBindBASICKeyMapBinding;
         private System.Windows.Forms.TextBox editBASICKeyMapBinding;
         private System.Windows.Forms.Label label25;
-        private Controls.MeasurableListView listBASICKeyMap;
+        private DecentForms.ListControl listBASICKeyMap;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;

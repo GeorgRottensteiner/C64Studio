@@ -164,10 +164,11 @@ namespace RetroDevStudio.Dialogs.Preferences
             continue;
           }
 
-          int itemIndex = listIgnoredWarnings.Items.Add( new GR.Generic.Tupel<string, Types.ErrorCode>( GR.EnumHelper.GetDescription( code ), code ) );
+          int itemIndex = listIgnoredWarnings.Items.Add( GR.EnumHelper.GetDescription( code ) );
+          listIgnoredWarnings.Items[itemIndex].Tag = code;
           if ( Core.Settings.IgnoredWarnings.ContainsValue( code ) )
           {
-            listIgnoredWarnings.SetItemChecked( itemIndex, true );
+            listIgnoredWarnings.Items[itemIndex].Checked = true;
           }
         }
       }
@@ -191,10 +192,11 @@ namespace RetroDevStudio.Dialogs.Preferences
             continue;
           }
 
-          int itemIndex = listWarningsAsErrors.Items.Add( new GR.Generic.Tupel<string, Types.ErrorCode>( GR.EnumHelper.GetDescription( code ), code ) );
+          int itemIndex = listWarningsAsErrors.Items.Add( GR.EnumHelper.GetDescription( code ) );
+          listWarningsAsErrors.Items[itemIndex].Tag = code;
           if ( Core.Settings.TreatWarningsAsErrors.ContainsValue( code ) )
           {
-            listWarningsAsErrors.SetItemChecked( itemIndex, true );
+            listWarningsAsErrors.Items[itemIndex].Checked = true;
           }
         }
       }
@@ -203,33 +205,39 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void listIgnoredWarnings_ItemCheck( object sender, ItemCheckEventArgs e )
+    private void listIgnoredWarnings_ItemCheck( DecentForms.ControlBase sender )
     {
-      GR.Generic.Tupel<string, Types.ErrorCode> item = (GR.Generic.Tupel<string, Types.ErrorCode>)listIgnoredWarnings.Items[e.Index];
+      if ( listIgnoredWarnings.SelectedIndex != -1 )
+      {
+        Types.ErrorCode code = (Types.ErrorCode)listIgnoredWarnings.Items[listIgnoredWarnings.SelectedIndex].Tag;
 
-      if ( e.NewValue != CheckState.Checked )
-      {
-        Core.Settings.IgnoredWarnings.Remove( item.second );
-      }
-      else
-      {
-        Core.Settings.IgnoredWarnings.Add( item.second );
+        if ( !listIgnoredWarnings.Items[listIgnoredWarnings.SelectedIndex].Checked )
+        {
+          Core.Settings.IgnoredWarnings.Remove( code );
+        }
+        else
+        {
+          Core.Settings.IgnoredWarnings.Add( code );
+        } 
       }
     }
 
 
 
-    private void listWarningsAsErrors_ItemCheck( object sender, ItemCheckEventArgs e )
+    private void listWarningsAsErrors_ItemCheck( DecentForms.ControlBase sender )
     {
-      GR.Generic.Tupel<string, Types.ErrorCode> item = (GR.Generic.Tupel<string, Types.ErrorCode>)listWarningsAsErrors.Items[e.Index];
+      if ( listWarningsAsErrors.SelectedIndex != -1 )
+      {
+        Types.ErrorCode code = (Types.ErrorCode)listWarningsAsErrors.Items[listWarningsAsErrors.SelectedIndex].Tag;
 
-      if ( e.NewValue != CheckState.Checked )
-      {
-        Core.Settings.TreatWarningsAsErrors.Remove( item.second );
-      }
-      else
-      {
-        Core.Settings.TreatWarningsAsErrors.Add( item.second );
+        if ( !listWarningsAsErrors.Items[listWarningsAsErrors.SelectedIndex].Checked )
+        {
+          Core.Settings.TreatWarningsAsErrors.Remove( code );
+        }
+        else
+        {
+          Core.Settings.TreatWarningsAsErrors.Add( code );
+        }
       }
     }
 

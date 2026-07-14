@@ -28,9 +28,9 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.listWarningsAsErrors = new System.Windows.Forms.CheckedListBox();
+      this.listWarningsAsErrors = new DecentForms.ListBox();
       this.label33 = new System.Windows.Forms.Label();
-      this.listIgnoredWarnings = new System.Windows.Forms.CheckedListBox();
+      this.listIgnoredWarnings = new DecentForms.ListBox();
       this.label20 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
@@ -38,13 +38,16 @@
       // 
       this.listWarningsAsErrors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listWarningsAsErrors.CheckOnClick = true;
-      this.listWarningsAsErrors.FormattingEnabled = true;
+      this.listWarningsAsErrors.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.listWarningsAsErrors.HasCheckBoxes = true;
+      this.listWarningsAsErrors.ItemHeight = 15;
       this.listWarningsAsErrors.Location = new System.Drawing.Point(15, 123);
       this.listWarningsAsErrors.Name = "listWarningsAsErrors";
+      this.listWarningsAsErrors.ScrollAlwaysVisible = false;
+      this.listWarningsAsErrors.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listWarningsAsErrors.Size = new System.Drawing.Size(586, 79);
       this.listWarningsAsErrors.TabIndex = 1;
-      this.listWarningsAsErrors.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listWarningsAsErrors_ItemCheck);
+      this.listWarningsAsErrors.ItemCheck += new DecentForms.EventHandler(this.listWarningsAsErrors_ItemCheck);
       // 
       // label33
       // 
@@ -59,13 +62,16 @@
       // 
       this.listIgnoredWarnings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listIgnoredWarnings.CheckOnClick = true;
-      this.listIgnoredWarnings.FormattingEnabled = true;
+      this.listIgnoredWarnings.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.listIgnoredWarnings.HasCheckBoxes = true;
+      this.listIgnoredWarnings.ItemHeight = 15;
       this.listIgnoredWarnings.Location = new System.Drawing.Point(15, 19);
       this.listIgnoredWarnings.Name = "listIgnoredWarnings";
+      this.listIgnoredWarnings.ScrollAlwaysVisible = false;
+      this.listIgnoredWarnings.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listIgnoredWarnings.Size = new System.Drawing.Size(586, 79);
       this.listIgnoredWarnings.TabIndex = 0;
-      this.listIgnoredWarnings.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listIgnoredWarnings_ItemCheck);
+      this.listIgnoredWarnings.ItemCheck += new DecentForms.EventHandler(this.listIgnoredWarnings_ItemCheck);
       // 
       // label20
       // 
@@ -92,9 +98,9 @@
     }
 
         #endregion
-        private System.Windows.Forms.CheckedListBox listWarningsAsErrors;
+        private DecentForms.ListBox listWarningsAsErrors;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.CheckedListBox listIgnoredWarnings;
+        private DecentForms.ListBox listIgnoredWarnings;
         private System.Windows.Forms.Label label20;
   }
 }

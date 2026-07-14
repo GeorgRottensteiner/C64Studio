@@ -26,7 +26,7 @@ namespace DecentForms
     private bool          _HasCheckBoxes = false;
 
     public event EventHandler       SelectedIndexChanged;
-    public event EventHandler       CheckChanged;
+    public event EventHandler       ItemCheck;
 
 
 
@@ -515,7 +515,7 @@ namespace DecentForms
           &&   ( GetItemCheckRect( SelectedIndex ).Contains( Event.MouseX, Event.MouseY ) ) )
           {
             Items[SelectedIndex].Checked = !Items[SelectedIndex].Checked;
-            CheckChanged?.Invoke( this );
+            ItemCheck?.Invoke( this );
             Invalidate( GetItemRect( SelectedIndex ) );
           }
           Capture = true;
@@ -619,7 +619,7 @@ namespace DecentForms
             &&   ( SelectedIndex != -1 ) )
             {
               Items[SelectedIndex].Checked = !Items[SelectedIndex].Checked;
-              CheckChanged?.Invoke( this );
+              ItemCheck?.Invoke( this );
               Invalidate( GetItemRect( SelectedIndex ) );
             }
           }

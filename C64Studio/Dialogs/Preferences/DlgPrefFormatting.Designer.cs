@@ -221,7 +221,7 @@
       this.listPseudoOpsToIndent.Size = new System.Drawing.Size(323, 139);
       this.listPseudoOpsToIndent.TabIndex = 7;
       this.listPseudoOpsToIndent.Text = "listBox1";
-      this.listPseudoOpsToIndent.CheckChanged += new DecentForms.EventHandler(this.listPseudoOpsToIndent_CheckChanged);
+      this.listPseudoOpsToIndent.ItemCheck += new DecentForms.EventHandler(this.listPseudoOpsToIndent_CheckChanged);
       // 
       // label4
       // 

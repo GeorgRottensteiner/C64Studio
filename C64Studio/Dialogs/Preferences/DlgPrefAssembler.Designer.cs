@@ -28,11 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.listHacks = new System.Windows.Forms.CheckedListBox();
+      this.listHacks = new DecentForms.ListBox();
       this.label34 = new System.Windows.Forms.Label();
-      this.listWarningsAsErrors = new System.Windows.Forms.CheckedListBox();
+      this.listWarningsAsErrors = new DecentForms.ListBox();
       this.label33 = new System.Windows.Forms.Label();
-      this.listIgnoredWarnings = new System.Windows.Forms.CheckedListBox();
+      this.listIgnoredWarnings = new DecentForms.ListBox();
       this.label20 = new System.Windows.Forms.Label();
       this.checkLabelFileSkipAssemblerIDLabels = new System.Windows.Forms.CheckBox();
       this.checkASMAutoTruncateLiteralValues = new System.Windows.Forms.CheckBox();
@@ -42,13 +42,16 @@
       // 
       this.listHacks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listHacks.CheckOnClick = true;
-      this.listHacks.FormattingEnabled = true;
+      this.listHacks.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.listHacks.HasCheckBoxes = true;
+      this.listHacks.ItemHeight = 15;
       this.listHacks.Location = new System.Drawing.Point(15, 231);
       this.listHacks.Name = "listHacks";
+      this.listHacks.ScrollAlwaysVisible = false;
+      this.listHacks.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listHacks.Size = new System.Drawing.Size(586, 79);
       this.listHacks.TabIndex = 2;
-      this.listHacks.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listHacks_ItemCheck);
+      this.listHacks.ItemCheck += new DecentForms.EventHandler(this.listHacks_ItemCheck);
       // 
       // label34
       // 
@@ -63,13 +66,16 @@
       // 
       this.listWarningsAsErrors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listWarningsAsErrors.CheckOnClick = true;
-      this.listWarningsAsErrors.FormattingEnabled = true;
+      this.listWarningsAsErrors.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.listWarningsAsErrors.HasCheckBoxes = true;
+      this.listWarningsAsErrors.ItemHeight = 15;
       this.listWarningsAsErrors.Location = new System.Drawing.Point(15, 123);
       this.listWarningsAsErrors.Name = "listWarningsAsErrors";
+      this.listWarningsAsErrors.ScrollAlwaysVisible = false;
+      this.listWarningsAsErrors.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listWarningsAsErrors.Size = new System.Drawing.Size(586, 79);
       this.listWarningsAsErrors.TabIndex = 1;
-      this.listWarningsAsErrors.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listWarningsAsErrors_ItemCheck);
+      this.listWarningsAsErrors.ItemCheck += new DecentForms.EventHandler(this.listWarningsAsErrors_ItemCheck);
       // 
       // label33
       // 
@@ -84,13 +90,16 @@
       // 
       this.listIgnoredWarnings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.listIgnoredWarnings.CheckOnClick = true;
-      this.listIgnoredWarnings.FormattingEnabled = true;
+      this.listIgnoredWarnings.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.listIgnoredWarnings.HasCheckBoxes = true;
+      this.listIgnoredWarnings.ItemHeight = 15;
       this.listIgnoredWarnings.Location = new System.Drawing.Point(15, 19);
       this.listIgnoredWarnings.Name = "listIgnoredWarnings";
+      this.listIgnoredWarnings.ScrollAlwaysVisible = false;
+      this.listIgnoredWarnings.SelectionMode = DecentForms.SelectionMode.NONE;
       this.listIgnoredWarnings.Size = new System.Drawing.Size(586, 79);
       this.listIgnoredWarnings.TabIndex = 0;
-      this.listIgnoredWarnings.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listIgnoredWarnings_ItemCheck);
+      this.listIgnoredWarnings.ItemCheck += new DecentForms.EventHandler(this.listIgnoredWarnings_ItemCheck);
       // 
       // label20
       // 
@@ -123,7 +132,7 @@
       this.checkASMAutoTruncateLiteralValues.UseVisualStyleBackColor = true;
       this.checkASMAutoTruncateLiteralValues.CheckedChanged += new System.EventHandler(this.checkASMAutoTruncateLiteralValues_CheckedChanged);
       // 
-      // PrefAssembler
+      // DlgPrefAssembler
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -135,7 +144,7 @@
       this.Controls.Add(this.label34);
       this.Controls.Add(this.label33);
       this.Controls.Add(this.listWarningsAsErrors);
-      this.Name = "PrefAssembler";
+      this.Name = "DlgPrefAssembler";
       this.Size = new System.Drawing.Size(628, 394);
       this.ResumeLayout(false);
       this.PerformLayout();
@@ -144,11 +153,11 @@
 
         #endregion
         private System.Windows.Forms.CheckBox checkASMAutoTruncateLiteralValues;
-        private System.Windows.Forms.CheckedListBox listHacks;
+        private DecentForms.ListBox listHacks;
         private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.CheckedListBox listWarningsAsErrors;
+        private DecentForms.ListBox listWarningsAsErrors;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.CheckedListBox listIgnoredWarnings;
+        private DecentForms.ListBox listIgnoredWarnings;
         private System.Windows.Forms.Label label20;
     private System.Windows.Forms.CheckBox checkLabelFileSkipAssemblerIDLabels;
   }

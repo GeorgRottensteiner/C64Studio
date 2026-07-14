@@ -21,6 +21,11 @@ namespace RetroDevStudio.Dialogs.Preferences
     public DlgPrefBASICKeyBindings()
     {
       InitializeComponent();
+
+      listBASICKeyMap.Columns.Add( "C64 Key", 145 );
+      listBASICKeyMap.Columns.Add( "PETSCII", 62 );
+      listBASICKeyMap.Columns.Add( "PC Key", 277 );
+      listBASICKeyMap.Columns.Add( "Display", 138 );
     }
 
 
@@ -30,6 +35,11 @@ namespace RetroDevStudio.Dialogs.Preferences
       _Keywords.AddRange( new string[] { "keys", "binding", "hotkey", "basic" } );
 
       InitializeComponent();
+
+      listBASICKeyMap.Columns.Add( "C64 Key", 145 );
+      listBASICKeyMap.Columns.Add( "PETSCII", 62 );
+      listBASICKeyMap.Columns.Add( "PC Key", 277 );
+      listBASICKeyMap.Columns.Add( "Display", 138 );
     }
 
 
@@ -100,7 +110,7 @@ namespace RetroDevStudio.Dialogs.Preferences
           continue;
         }
 
-        ListViewItem    item = new ListViewItem( realKey.ToString() );
+        var    item = new DecentForms.ListControlItem( realKey.ToString() );
 
         if ( ConstantData.PhysicalKeyInfo[MachineType.C64].ContainsKey( realKey ) )
         {
@@ -258,7 +268,7 @@ namespace RetroDevStudio.Dialogs.Preferences
 
 
 
-    private void listBASICKeyMap_SelectedIndexChanged( object sender, EventArgs e )
+    private void listBASICKeyMap_SelectedIndexChanged( DecentForms.ControlBase sender )
     {
       if ( listBASICKeyMap.SelectedItems.Count == 0 )
       {
