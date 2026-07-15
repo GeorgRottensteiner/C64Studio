@@ -4425,7 +4425,7 @@ namespace RetroDevStudio.Parser
         lineTokenInfos.RemoveAt( 0 );
       }
 
-      // ++labelname should be concattenated
+      // ++labelname should be concatenated
       if ( ( lineTokenInfos.Count >= 2 )
       &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
       &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
@@ -10137,36 +10137,40 @@ namespace RetroDevStudio.Parser
             continue;
           }
 
-          if ( ( j + 3 < tokens.Count )
-          &&   ( IsTokenLabel( tokens[j].Type ) )
-          &&   ( tokens[j + 1].Type == TokenInfo.TokenType.SEPARATOR )
-          &&   ( tokens[j + 1].Content == "#" )
-          &&   ( tokens[j + 2].Type == TokenInfo.TokenType.SEPARATOR )
-          &&   ( tokens[j + 2].Content == "#" )
-          &&   ( paramName.Contains( tokens[j + 3].Content ) ) )
+          // concatenated label?
+          if ( IsTokenLabel( tokens[j].Type ) )
           {
-            int     paramIndex = paramName.IndexOf( tokens[j + 3].Content );
-
-            var replacementToken = ParseTokenInfo( param[paramIndex], 0, param[paramIndex].Length );
-
-            if ( !EvaluateTokens( lineIndex + i, replacementToken, 0, 1, out SymbolInfo resultingToken ) )
+            int   concatOpPos = tokens[j].Content.LastIndexOf( "##" );
+            if ( concatOpPos != -1 )
             {
-              // there was an error!
-              LineIndexInsideMacro = i;
-              if ( string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
+              var parts = tokens[j].Content.Split( new string[] { "##" }, StringSplitOptions.None );
+              for ( int pi = 0; pi < parts.Length; ++pi )
               {
-                m_LastErrorInfo.Message = $"RelabelLocalLabelsForMacro: Could not evaluate tokens in {TokensToExpression( replacementToken )}";
+                var part = parts[pi];
+                int     paramIndex = paramName.IndexOf( part );
+                if ( paramIndex != -1 )
+                {
+                  var replacementToken = ParseTokenInfo( param[paramIndex], 0, param[paramIndex].Length );
+                  if ( !EvaluateTokens( lineIndex + i, replacementToken, 0, 1, out SymbolInfo resultingToken ) )
+                  { 
+                    // there was an error!
+                    LineIndexInsideMacro = i;
+                    if ( string.IsNullOrEmpty( m_LastErrorInfo.Message ) )
+                    {
+                      m_LastErrorInfo.Message = $"RelabelLocalLabelsForMacro: Could not evaluate tokens in {TokensToExpression( replacementToken )}";
+                    }
+                    return null;
+                  }
+                  parts[pi] = resultingToken.ToString();
+
+                  tokens[j].Content = string.Join( "##", parts ); 
+                  j = 0;
+
+                  replacedParam = true;
+                  continue;
+                }
               }
-              return null;
             }
-
-            tokens[j].Content = tokens[j].Content + resultingToken.ToString();
-
-            tokens.RemoveRange( j + 1, 3 );
-            j = 0;
-
-            replacedParam = true;
-            continue;
           }
         }
 
@@ -13052,24 +13056,31 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-      // collapse <label>##<value> (make a single token label name)
-      if ( result.Count >= 4 )
+      // concatenate: collapse <label>##<value>
+      for ( int i = 0; i < result.Count; ++i )
       {
-        for ( int i = 1; i <= result.Count - 3; ++i )
+        if ( ( IsTokenLabel( result[i].Type ) )
+        &&   ( result[i].Content.Contains( "##" ) ) )
         {
-          if ( ( IsTokenLabel( result[i -1].Type ) )
-          &&   ( result[i].Content == "#" )
-          &&   ( result[i + 1].Content == "#" )
-          &&   ( IsTokenLabel( result[i + 2].Type ) ) )
+          attempt_combine_further:;
+          int   concatOpPos = result[i].Content.LastIndexOf( "##" );
+          if ( concatOpPos != -1 )
           {
-            // collapse
-            if ( EvaluateLabel( _ParseContext.LineIndex, result[i + 2].Content, out long labelValue ) )
-            {
-              result[i - 1].Content = result[i - 1].Content + labelValue.ToString();
-              result[i - 1].Length  = result[i - 1].Content.Length;
-              result.RemoveRange( i, 3 );
-              --i;
-              continue;
+            var parts = result[i].Content.Split( new string[] { "##" }, StringSplitOptions.None );
+            for ( int pi = 1; pi < parts.Length; ++pi )
+            {   
+              var part = parts[pi];
+
+              var replacementToken = ParseTokenInfo( part, 0, part.Length );
+              if ( EvaluateTokens( _ParseContext.LineIndex, replacementToken, 0, 1, out SymbolInfo resultingToken ) )
+              {
+                var combinedParts = parts.ToList();
+                combinedParts.RemoveAt( pi );
+                combinedParts[pi - 1] = combinedParts[pi - 1] + resultingToken.ToString();
+
+                result[i].Content = string.Join( "##", combinedParts.ToArray() );
+                goto attempt_combine_further;
+              }
             }
           }
         }

@@ -684,7 +684,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestLabelConcattenation()
+    public void TestLabelConcatenation()
     {
       string      source = @"a = 15
                               * = $2000
@@ -697,6 +697,7 @@ namespace TestProject
 
       var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020A90FA90EA90DA90CA90B", assembly.ToString() );
+      Assert.IsTrue( info.Labels.ContainsKey( "label15" ) );
       Assert.AreEqual( 15, info.Labels["label15"].AddressOrValue );
       Assert.AreEqual( 0, info.Labels["ROW_0"].AddressOrValue );
       Assert.AreEqual( 3, info.Labels["ROW_1"].AddressOrValue );
@@ -708,7 +709,7 @@ namespace TestProject
 
 
     [TestMethod]
-    public void TestLabelConcattenationInMacro()
+    public void TestLabelConcatenationInMacro()
     {
       string      source = @"* = $2000
 
@@ -732,6 +733,10 @@ namespace TestProject
       var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020", assembly.ToString() );
 
+      Assert.IsTrue( info.Labels.ContainsKey( "if_condition1" ) );
+      Assert.IsTrue( info.Labels.ContainsKey( "test1" ) );
+      Assert.IsTrue( info.Labels.ContainsKey( "if_condition2" ) );
+      Assert.IsTrue( info.Labels.ContainsKey( "test2" ) );
       Assert.AreEqual( 2, info.Labels["if_condition1"].AddressOrValue );
       Assert.AreEqual( 17, info.Labels["test1"].AddressOrValue );
       Assert.AreEqual( 3, info.Labels["if_condition2"].AddressOrValue );

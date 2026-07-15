@@ -13,6 +13,8 @@ hurz = 3
 label##hurz
 
 
+C# = 2
+C#3 = 5
 
 a=1
 
