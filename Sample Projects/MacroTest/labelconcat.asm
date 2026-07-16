@@ -1,3 +1,7 @@
+.C# = $11
+.C#3 = $13
+
+
 * = $1000
 
           !for xx = 0 to 5
@@ -16,6 +20,7 @@ label##hurz
 C# = 2
 C#3 = 5
 
+
 a=1
 
 msg="A=" + a ;msg="A=1/$1"
@@ -32,4 +37,6 @@ msg = a + b ;msg = "the value is 1/$1"
 
 !message a + b ;"the value is 1/$1"
 
-!message "CHR_1=",CHR_1
+          !message "CHR_1=", CHR_1
+
+!byte C#,C#3,5

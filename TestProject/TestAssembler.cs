@@ -576,6 +576,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestLocalLabels()
+    {
+      string      source = @"*=$c000
+                            C#1 = 1
+                            .C#2 = 2
+                            @C#3 = 3
+                            !byte C#1,.C#2,@C#3
+                                  ";
+
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out GR.Collections.MultiMap<int, RetroDevStudio.Parser.ParserBase.ParseMessage> messages );
+      Assert.AreEqual( "00C0010203", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestIf()
     {
       string      source = @"*=$c000
