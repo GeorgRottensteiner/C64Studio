@@ -156,6 +156,7 @@
       this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.sampleExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.fileManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.breakpointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -246,7 +247,6 @@
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
       this.timerAutoSave = new System.Windows.Forms.Timer(this.components);
-      this.fileManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -539,7 +539,7 @@
       // 
       this.solutionAddNewProjectToolStripMenuItem.Enabled = false;
       this.solutionAddNewProjectToolStripMenuItem.Name = "solutionAddNewProjectToolStripMenuItem";
-      this.solutionAddNewProjectToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.solutionAddNewProjectToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
       this.solutionAddNewProjectToolStripMenuItem.Text = "Add &new project...";
       this.solutionAddNewProjectToolStripMenuItem.Click += new System.EventHandler(this.solutionAddNewProjectToolStripMenuItem_Click);
       // 
@@ -547,20 +547,20 @@
       // 
       this.solutionAddExistingProjectToolStripMenuItem.Enabled = false;
       this.solutionAddExistingProjectToolStripMenuItem.Name = "solutionAddExistingProjectToolStripMenuItem";
-      this.solutionAddExistingProjectToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.solutionAddExistingProjectToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
       this.solutionAddExistingProjectToolStripMenuItem.Text = "&Add existing project...";
       this.solutionAddExistingProjectToolStripMenuItem.Click += new System.EventHandler(this.solutionAddExistingProjectToolStripMenuItem_Click);
       // 
       // toolStripSeparator18
       // 
       this.toolStripSeparator18.Name = "toolStripSeparator18";
-      this.toolStripSeparator18.Size = new System.Drawing.Size(185, 6);
+      this.toolStripSeparator18.Size = new System.Drawing.Size(186, 6);
       // 
       // solutionRenameToolStripMenuItem
       // 
       this.solutionRenameToolStripMenuItem.Enabled = false;
       this.solutionRenameToolStripMenuItem.Name = "solutionRenameToolStripMenuItem";
-      this.solutionRenameToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.solutionRenameToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
       this.solutionRenameToolStripMenuItem.Text = "&Rename...";
       this.solutionRenameToolStripMenuItem.Click += new System.EventHandler(this.solutionRenameToolStripMenuItem_Click);
       // 
@@ -568,7 +568,7 @@
       // 
       this.solutionCloneToolStripMenuItem.Enabled = false;
       this.solutionCloneToolStripMenuItem.Name = "solutionCloneToolStripMenuItem";
-      this.solutionCloneToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.solutionCloneToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
       this.solutionCloneToolStripMenuItem.Text = "Clone...";
       this.solutionCloneToolStripMenuItem.ToolTipText = "Clone Solution";
       this.solutionCloneToolStripMenuItem.Click += new System.EventHandler(this.solutionCloneToolStripMenuItem_Click);
@@ -577,20 +577,20 @@
       // 
       this.solutionSaveToolStripMenuItem.Enabled = false;
       this.solutionSaveToolStripMenuItem.Name = "solutionSaveToolStripMenuItem";
-      this.solutionSaveToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.solutionSaveToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
       this.solutionSaveToolStripMenuItem.Text = "&Save";
       this.solutionSaveToolStripMenuItem.Click += new System.EventHandler(this.solutionSaveToolStripMenuItem_Click);
       // 
       // toolStripSeparator17
       // 
       this.toolStripSeparator17.Name = "toolStripSeparator17";
-      this.toolStripSeparator17.Size = new System.Drawing.Size(185, 6);
+      this.toolStripSeparator17.Size = new System.Drawing.Size(186, 6);
       // 
       // solutionCloseToolStripMenuItem
       // 
       this.solutionCloseToolStripMenuItem.Enabled = false;
       this.solutionCloseToolStripMenuItem.Name = "solutionCloseToolStripMenuItem";
-      this.solutionCloseToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.solutionCloseToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
       this.solutionCloseToolStripMenuItem.Text = "&Close";
       this.solutionCloseToolStripMenuItem.Click += new System.EventHandler(this.solutionCloseToolStripMenuItem_Click);
       // 
@@ -805,52 +805,52 @@
       // solutionAddNewProjectToolStripMenuItemTop
       // 
       this.solutionAddNewProjectToolStripMenuItemTop.Name = "solutionAddNewProjectToolStripMenuItemTop";
-      this.solutionAddNewProjectToolStripMenuItemTop.Size = new System.Drawing.Size(188, 22);
+      this.solutionAddNewProjectToolStripMenuItemTop.Size = new System.Drawing.Size(189, 22);
       this.solutionAddNewProjectToolStripMenuItemTop.Text = "Add &new project...";
       this.solutionAddNewProjectToolStripMenuItemTop.Click += new System.EventHandler(this.solutionAddNewProjectToolStripMenuItem_Click);
       // 
       // solutionAddExistingProjectToolStripMenuItemTop
       // 
       this.solutionAddExistingProjectToolStripMenuItemTop.Name = "solutionAddExistingProjectToolStripMenuItemTop";
-      this.solutionAddExistingProjectToolStripMenuItemTop.Size = new System.Drawing.Size(188, 22);
+      this.solutionAddExistingProjectToolStripMenuItemTop.Size = new System.Drawing.Size(189, 22);
       this.solutionAddExistingProjectToolStripMenuItemTop.Text = "&Add existing project...";
       this.solutionAddExistingProjectToolStripMenuItemTop.Click += new System.EventHandler(this.solutionAddExistingProjectToolStripMenuItem_Click);
       // 
       // toolStripSeparator21
       // 
       this.toolStripSeparator21.Name = "toolStripSeparator21";
-      this.toolStripSeparator21.Size = new System.Drawing.Size(185, 6);
+      this.toolStripSeparator21.Size = new System.Drawing.Size(186, 6);
       // 
       // solutionRenameToolStripMenuItemTop
       // 
       this.solutionRenameToolStripMenuItemTop.Name = "solutionRenameToolStripMenuItemTop";
-      this.solutionRenameToolStripMenuItemTop.Size = new System.Drawing.Size(188, 22);
+      this.solutionRenameToolStripMenuItemTop.Size = new System.Drawing.Size(189, 22);
       this.solutionRenameToolStripMenuItemTop.Text = "&Rename...";
       this.solutionRenameToolStripMenuItemTop.Click += new System.EventHandler(this.solutionRenameToolStripMenuItem_Click);
       // 
       // solutionCloneToolStripMenuItemTop
       // 
       this.solutionCloneToolStripMenuItemTop.Name = "solutionCloneToolStripMenuItemTop";
-      this.solutionCloneToolStripMenuItemTop.Size = new System.Drawing.Size(188, 22);
+      this.solutionCloneToolStripMenuItemTop.Size = new System.Drawing.Size(189, 22);
       this.solutionCloneToolStripMenuItemTop.Text = "Clone...";
       this.solutionCloneToolStripMenuItemTop.Click += new System.EventHandler(this.solutionCloneToolStripMenuItem_Click);
       // 
       // solutionSaveToolStripMenuItemTop
       // 
       this.solutionSaveToolStripMenuItemTop.Name = "solutionSaveToolStripMenuItemTop";
-      this.solutionSaveToolStripMenuItemTop.Size = new System.Drawing.Size(188, 22);
+      this.solutionSaveToolStripMenuItemTop.Size = new System.Drawing.Size(189, 22);
       this.solutionSaveToolStripMenuItemTop.Text = "&Save";
       this.solutionSaveToolStripMenuItemTop.Click += new System.EventHandler(this.SolutionSaveToolStripMenuItemTop_Click);
       // 
       // toolStripSeparator22
       // 
       this.toolStripSeparator22.Name = "toolStripSeparator22";
-      this.toolStripSeparator22.Size = new System.Drawing.Size(185, 6);
+      this.toolStripSeparator22.Size = new System.Drawing.Size(186, 6);
       // 
       // solutionCloseToolStripMenuItemTop
       // 
       this.solutionCloseToolStripMenuItemTop.Name = "solutionCloseToolStripMenuItemTop";
-      this.solutionCloseToolStripMenuItemTop.Size = new System.Drawing.Size(188, 22);
+      this.solutionCloseToolStripMenuItemTop.Size = new System.Drawing.Size(189, 22);
       this.solutionCloseToolStripMenuItemTop.Text = "&Close";
       this.solutionCloseToolStripMenuItemTop.Click += new System.EventHandler(this.solutionCloseToolStripMenuItem_Click);
       // 
@@ -1262,16 +1262,23 @@
       // disassembleToolsToolStripMenuItem
       // 
       this.disassembleToolsToolStripMenuItem.Name = "disassembleToolsToolStripMenuItem";
-      this.disassembleToolsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.disassembleToolsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
       this.disassembleToolsToolStripMenuItem.Text = "&Disassemble File...";
       this.disassembleToolsToolStripMenuItem.Click += new System.EventHandler(this.disassembleToolsToolStripMenuItem_Click);
       // 
       // sampleExplorerToolStripMenuItem
       // 
       this.sampleExplorerToolStripMenuItem.Name = "sampleExplorerToolStripMenuItem";
-      this.sampleExplorerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.sampleExplorerToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
       this.sampleExplorerToolStripMenuItem.Text = "&Sample Explorer...";
       this.sampleExplorerToolStripMenuItem.Click += new System.EventHandler(this.sampleExplorerToolStripMenuItem_Click);
+      // 
+      // fileManagerToolStripMenuItem
+      // 
+      this.fileManagerToolStripMenuItem.Name = "fileManagerToolStripMenuItem";
+      this.fileManagerToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.fileManagerToolStripMenuItem.Text = "&File Manager...";
+      this.fileManagerToolStripMenuItem.Click += new System.EventHandler(this.fileManagerToolStripMenuItem_Click);
       // 
       // windowToolStripMenuItem
       // 
@@ -1990,7 +1997,6 @@
       // 
       this.debugTools.AutoSize = false;
       this.debugTools.Dock = System.Windows.Forms.DockStyle.None;
-      this.debugTools.Enabled = false;
       this.debugTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainDebugGo,
             this.mainDebugBreak,
@@ -2075,13 +2081,6 @@
       this.timerAutoSave.Interval = 300000;
       this.timerAutoSave.Tick += new System.EventHandler(this.timerAutoSave_Tick);
       // 
-      // fileManagerToolStripMenuItem
-      // 
-      this.fileManagerToolStripMenuItem.Name = "fileManagerToolStripMenuItem";
-      this.fileManagerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-      this.fileManagerToolStripMenuItem.Text = "&File Manager...";
-      this.fileManagerToolStripMenuItem.Click += new System.EventHandler(this.fileManagerToolStripMenuItem_Click);
-      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -2099,6 +2098,7 @@
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
       this.Shown += new System.EventHandler(this.MainForm_Shown);
+      this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
       this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
       this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
       this.mainMenu.ResumeLayout(false);

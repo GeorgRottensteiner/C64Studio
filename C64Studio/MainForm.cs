@@ -671,7 +671,7 @@ namespace RetroDevStudio
 
       //DPIHandler.ResizeControlsForDPI( mainTools );
       //DPIHandler.ResizeControlsForDPI( debugTools  );
-      debugTools.Left = mainTools.Right;
+      AssignDebugToolbarLocation();
 
       // auto-set app mode by checking for existing settings files
       DetermineSettingsPath();
@@ -762,6 +762,7 @@ namespace RetroDevStudio
 
       // place all toolbars
       SetToolPerspective( Perspective.EDIT );
+      SetGUIForDebugging( false );
 
       m_FindReplace.Fill( StudioCore.Settings );
 
@@ -772,8 +773,7 @@ namespace RetroDevStudio
 
       mainTools.Visible = StudioCore.Settings.ToolbarActiveMain;
       debugTools.Visible = StudioCore.Settings.ToolbarActiveDebugger;
-      debugTools.Left = mainTools.Right;
-      debugTools.Top = mainTools.Top;
+      AssignDebugToolbarLocation();
 
       StudioCore.Settings.RefreshDisplayOnAllDocuments( StudioCore );
 
@@ -829,6 +829,28 @@ namespace RetroDevStudio
       if ( StudioCore.Settings.AutoSaveSettings )
       {
         timerAutoSave.Start();
+      }
+    }
+
+
+
+    private void AssignDebugToolbarLocation()
+    {
+      if ( mainTools.Right + debugTools.Width > ClientSize.Width )
+      {
+        debugTools.Left = mainTools.Left;
+        debugTools.Top = mainTools.Bottom;
+
+        panelMain.Top = debugTools.Bottom;
+        panelMain.Height = ClientSize.Height - mainStatus.Height - mainMenu.Height - mainToolBuild.Height - debugTools.Height - 7;
+      }
+      else
+      {
+        debugTools.Left = mainTools.Right;
+        debugTools.Top = mainTools.Top;
+
+        panelMain.Top = debugTools.Bottom;
+        panelMain.Height = ClientSize.Height - mainStatus.Height - mainMenu.Height - mainToolBuild.Height - 7;
       }
     }
 
@@ -1256,7 +1278,7 @@ namespace RetroDevStudio
 
       // restore previous active doc if it exists
       if ( ( previousActiveDoc != null )
-      && ( previousActiveDoc.BaseDoc != null ) )
+      &&   ( previousActiveDoc.BaseDoc != null ) )
       {
         previousActiveDoc.BaseDoc.Show();
       }
@@ -4125,6 +4147,31 @@ namespace RetroDevStudio
 
 
 
+    private void SetToolStripItemsEnabled( ToolStrip toolStrip, bool enabled )
+    {
+      foreach ( ToolStripItem item in toolStrip.Items )
+      {
+        SetItemEnabledRecursive( item, enabled );
+      }
+    }
+
+
+
+    private void SetItemEnabledRecursive( ToolStripItem item, bool enabled )
+    {
+      item.Enabled = enabled;
+
+      if ( item is ToolStripDropDownItem dropDownItem )
+      {
+        foreach ( ToolStripItem subItem in dropDownItem.DropDownItems )
+        {
+          SetItemEnabledRecursive( subItem, enabled );
+        }
+      }
+    }
+
+
+
     public void SetGUIForDebugging( bool DebugModeActive )
     {
       if ( InvokeRequired )
@@ -4135,11 +4182,9 @@ namespace RetroDevStudio
       {
         try
         {
-          debugTools.Enabled = DebugModeActive;
-          debugTools.Left = mainTools.Right;
-          debugTools.Top = mainTools.Top;
-
-          menuWindowToolbarDebugger.Checked = debugTools.Enabled;
+          SetToolStripItemsEnabled( debugTools, DebugModeActive );
+          AssignDebugToolbarLocation();
+          menuWindowToolbarDebugger.Checked = DebugModeActive;
           if ( DebugModeActive )
           {
             SetToolPerspective( Perspective.DEBUG );
@@ -8562,6 +8607,13 @@ namespace RetroDevStudio
       }
       m_FileManager.ShowHint = DockState.Float;
       m_FileManager.Show( panelMain );
+    }
+
+
+
+    private void MainForm_SizeChanged( object sender, EventArgs e )
+    {
+      AssignDebugToolbarLocation();
     }
 
 
