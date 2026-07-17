@@ -1697,12 +1697,20 @@ namespace RetroDevStudio
 
 
 
-    public bool RequiresInitialBreakpoint
+    public void AdvanceFrame()
     {
-      get
-      {
-        return true;
-      }
+    }
+
+
+
+    public void AdvanceOneLine()
+    {
+    }
+
+
+
+    public void AdvanceToLine( int rasterLine )
+    {
     }
 
 

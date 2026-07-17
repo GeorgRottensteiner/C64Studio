@@ -629,6 +629,10 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.DEBUG_STEP_OVER].ToolBarButton = mainDebugStepOver;
       StudioCore.Settings.Functions[Function.DEBUG_STEP_OUT].ToolBarButton = mainDebugStepOut;
       StudioCore.Settings.Functions[Function.DEBUG_STEP].ToolBarButton = mainDebugStepInto;
+      StudioCore.Settings.Functions[Function.DEBUG_ADVANCE_FRAME].ToolBarButton = mainDebugAdvanceFrame;
+      StudioCore.Settings.Functions[Function.DEBUG_ADVANCE_LINE].ToolBarButton = mainDebugAdvanceLine;
+      StudioCore.Settings.Functions[Function.DEBUG_ADVANCE_LINE].MenuItem = mainDebugAdvanceOneLineToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.DEBUG_ADVANCE_TO_LINE].MenuItem = mainDebugAdvanceToLineToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND].MenuItem = searchToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND].ToolBarButton = mainToolFind;
       StudioCore.Settings.Functions[Function.FIND_IN_DOCUMENT].MenuItem = searchInDocumentToolStripMenuItem;
@@ -1503,6 +1507,8 @@ namespace RetroDevStudio
     {
       switch ( Event.EventType )
       {
+        case Types.ApplicationEvent.Type.DEBUGGER_CHANGED:
+          break;
         case Types.ApplicationEvent.Type.MARK_ALL_ASSEMBLIES_AS_DIRTY:
           if ( StudioCore.Navigating.Solution != null )
           {
@@ -1767,7 +1773,7 @@ namespace RetroDevStudio
           bool canToggleBreakpoints = false;
 
           if ( ( StudioCore.State == Types.StudioState.NORMAL )
-          || ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
+          ||   ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             canToggleBreakpoints = true;
           }
@@ -2854,7 +2860,7 @@ namespace RetroDevStudio
           StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
         }
 
-        ToolInfo toolRun = StudioCore.DetermineTool( Document, ToolInfo.ToolType.EMULATOR, ToolUse.EMULATOR );
+        ToolInfo toolRun = StudioCore.DetermineTool( ToolInfo.ToolType.EMULATOR, ToolUse.EMULATOR );
         if ( toolRun == null )
         {
           StudioCore.MessageBox( "No emulator tool has been configured yet!", "Missing emulator tool" );
@@ -3123,7 +3129,7 @@ namespace RetroDevStudio
     private void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
       if ( ( AppState == Types.StudioState.NORMAL )
-      || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
       {
         m_DebugBreakpoints.RemoveBreakpoint( Breakpoint );
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
@@ -3188,14 +3194,14 @@ namespace RetroDevStudio
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_ADDED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             AddBreakpoint( Event.Breakpoint );
           }
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_REMOVED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             if ( ( m_CurrentProject != null )
             && ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
@@ -4187,11 +4193,27 @@ namespace RetroDevStudio
           menuWindowToolbarDebugger.Checked = DebugModeActive;
           if ( DebugModeActive )
           {
+            bool isStoppedInDebugger = AppState == StudioState.DEBUGGING_BROKEN;
+
             SetToolPerspective( Perspective.DEBUG );
             mainDebugGo.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
             mainDebugBreak.Enabled = ( AppState == Types.StudioState.DEBUGGING_RUN );
+            m_DebugRegisters.EnableRegisterOverrides( isStoppedInDebugger );
 
-            m_DebugRegisters.EnableRegisterOverrides( AppState == StudioState.DEBUGGING_BROKEN );
+            if ( isStoppedInDebugger )
+            {
+              mainDebugAdvanceLine.Enabled                      = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_LINE );
+              mainDebugAdvanceOneLineToolStripMenuItem.Enabled  = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_LINE );
+              mainDebugAdvanceToLineToolStripMenuItem.Enabled   = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE );
+              mainDebugAdvanceFrame.Enabled                     = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_FRAME );
+            }
+            else
+            {
+              mainDebugAdvanceLine.Enabled                      = false;
+              mainDebugAdvanceOneLineToolStripMenuItem.Enabled  = false;
+              mainDebugAdvanceToLineToolStripMenuItem.Enabled   = false;
+              mainDebugAdvanceFrame.Enabled                     = false;
+            }
           }
           else
           {
@@ -4503,7 +4525,7 @@ namespace RetroDevStudio
     private void refreshRegistersToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      || ( AppState == Types.StudioState.DEBUGGING_RUN ) )
+      ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
       {
         StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
         if ( AppState == Types.StudioState.DEBUGGING_RUN )
@@ -4692,10 +4714,11 @@ namespace RetroDevStudio
 
           // only update if we're not during closing of debugger
           if ( ( StudioCore.Debugging.Debugger != null )
-          && ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
+          &&   ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
           {
             m_DebugRegisters.SetRegisters( Registers );
             m_DebugRegisters.EnableRegisterOverrides( true );
+            SetGUIForDebugging( true );
             int currentPos = Registers.PC;
             string documentFile = "";
             int documentLine = -1;
@@ -4705,8 +4728,8 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
             {
               if ( ( StudioCore.Debugging.MarkedDocument == null )
-              || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-              || ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
+              ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+              ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
               {
                 var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
                 StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
@@ -5370,6 +5393,22 @@ namespace RetroDevStudio
             }
           }
           break;
+        case Function.DEBUG_ADVANCE_FRAME:
+          StudioCore.Debugging.AdvanceFrame();
+          return true;
+        case Function.DEBUG_ADVANCE_LINE:
+          StudioCore.Debugging.AdvanceOneLine();
+          return true;
+        case Function.DEBUG_ADVANCE_TO_LINE:
+          {
+            var form = new FormAdvanceToLine( StudioCore );
+
+            if ( form.ShowDialog() == DialogResult.OK )
+            {
+              StudioCore.Debugging.AdvanceToLine( form.RasterLine );
+            }
+          }
+          return true;
         case RetroDevStudio.Types.Function.DEBUG_STEP:
           StudioCore.Debugging.DebugStepInto();
           return true;
@@ -8565,7 +8604,7 @@ namespace RetroDevStudio
       {
         StudioCore.Settings.DebuggerToRun = ( (GR.Generic.Tupel<string, ToolInfo>)mainDebugDebugger.SelectedItem ).first.ToUpper();
       }
-
+      RaiseApplicationEvent( new ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DEBUGGER_CHANGED ) );
     }
 
 
@@ -8616,6 +8655,34 @@ namespace RetroDevStudio
       AssignDebugToolbarLocation();
     }
 
+
+
+    private void mainDebugAdvanceFrame_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.DEBUG_ADVANCE_FRAME );
+    }
+
+
+
+    private void mainDebugAdvanceLine_ButtonClick( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.DEBUG_ADVANCE_LINE );
+    }
+
+
+
+    private void mainDebugAdvanceOneLineToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.DEBUG_ADVANCE_LINE );
+    }
+
+
+
+    private void mainDebugAdvanceToLineToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.DEBUG_ADVANCE_TO_LINE );
+    }
+    
 
 
   }

@@ -27,6 +27,7 @@ namespace RetroDevStudio
       MON_CMD_ADVANCE_INSTRUCTION       = 0x71,
       MON_CMD_KEYBOARD_FEED             = 0x72,
       MON_CMD_STEP_OUT                  = 0x73,
+      MON_CMD_ADVANCE_FRAME             = 0x74,
       MON_CMD_PING                      = 0x81,
       MON_CMD_BANKS_AVAILABLE           = 0x82,
       MON_CMD_REGISTERS_AVAILABLE       = 0x83,
@@ -1292,6 +1293,33 @@ namespace RetroDevStudio
 
             return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_MEMORY_GET, requestBody, Data );
           }
+        case DebugRequestType.ADVANCE_FRAME:
+          // advance lines (0x74)
+          // body:
+          // AC | LI LI( little endian, wie alle multi bytes in anderen commands auch )
+          //  AC:
+          //     0->step to next line, 1->step to a specific line( LI), 2->step to next frame
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_FRAME, new ByteBuffer( "020000" ), Data );
+        case DebugRequestType.ADVANCE_LINE:
+          // advance lines (0x74)
+          // body:
+          // AC | LI LI( little endian, wie alle multi bytes in anderen commands auch )
+          //  AC:
+          //     0->step to next line, 1->step to a specific line( LI), 2->step to next frame
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_FRAME, new ByteBuffer( "000000" ), Data );
+        case DebugRequestType.ADVANCE_TO_LINE:
+          {
+            // advance lines (0x74)
+            // body:
+            // AC | LI LI( little endian, wie alle multi bytes in anderen commands auch )
+            //  AC:
+            //     0->step to next line, 1->step to a specific line( LI), 2->step to next frame
+
+            var requestBody = new ByteBuffer( "01" );
+            requestBody.AppendU16( (ushort)Data.Parameter1 );
+
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_FRAME, requestBody, Data );
+          }
       }
       return true;
     }
@@ -1865,12 +1893,23 @@ namespace RetroDevStudio
 
 
 
-    public bool RequiresInitialBreakpoint
+    public void AdvanceFrame()
     {
-      get
-      {
-        return true;
-      }
+      QueueRequest( DebugRequestType.ADVANCE_FRAME );
+    }
+
+
+
+    public void AdvanceOneLine()
+    {
+      QueueRequest( DebugRequestType.ADVANCE_LINE );
+    }
+
+
+
+    public void AdvanceToLine( int rasterLine )
+    {
+      QueueRequest( DebugRequestType.ADVANCE_TO_LINE, rasterLine );
     }
 
 

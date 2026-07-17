@@ -1795,16 +1795,6 @@ namespace RetroDevStudio
 
 
 
-    public bool RequiresInitialBreakpoint
-    {
-      get
-      {
-        return true;
-      }
-    }
-
-
-
     public void RefreshMemorySections()
     {
       foreach ( var section in m_LastRefreshSections )
@@ -1843,6 +1833,24 @@ namespace RetroDevStudio
     public void SetShuttingDown()
     {
       m_ShuttingDown = true;
+    }
+
+
+
+    public void AdvanceFrame()
+    {
+    }
+
+
+
+    public void AdvanceOneLine()
+    {
+    }
+
+
+
+    public void AdvanceToLine( int rasterLine )
+    {
     }
 
 

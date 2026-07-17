@@ -367,6 +367,9 @@ namespace RetroDevStudio
       RegisterFunction( Function.DEBUG_STEP, "Debug Step", FunctionStudioState.DEBUGGER_BROKEN );
       RegisterFunction( Function.DEBUG_STEP_OUT, "Debug Step Out", FunctionStudioState.DEBUGGER_BROKEN );
       RegisterFunction( Function.DEBUG_STEP_OVER, "Debug Step Over", FunctionStudioState.DEBUGGER_BROKEN );
+      RegisterFunction( Function.DEBUG_ADVANCE_FRAME, "Advance Frame", FunctionStudioState.DEBUGGER_BROKEN );
+      RegisterFunction( Function.DEBUG_ADVANCE_LINE, "Advance Line", FunctionStudioState.DEBUGGER_BROKEN );
+      RegisterFunction( Function.DEBUG_ADVANCE_TO_LINE, "Advance to Line", FunctionStudioState.DEBUGGER_BROKEN );
 
       // functions for running/broken debugger
       RegisterFunction( Function.DEBUG_STOP, "Stop Debugging", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.DEBUGGER_RUNNING );

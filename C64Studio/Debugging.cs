@@ -67,22 +67,40 @@ namespace RetroDevStudio
         return;
       }
 
-      if ( RunTool.Filename.ToUpper().Contains( "XMEGA65" ) )
+      Debugger = DebuggerFromTool( RunTool );
+      // default to currently visible memory view
+      Debugger.SetAutoRefreshMemory( MemoryViewSections() );
+      Debugger.SetSetting( DebuggerSetting.STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES, Core.Settings.DebuggerDeniseStepOverJMPAndBranches.ToString() );
+
+      // pass on remembered wathes
+      foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
+      {
+        Debugger.AddWatchEntry( watch );
+      }
+
+      Debugger.DebugEvent += Core.MainForm.Debugger_DebugEvent;
+    }
+
+
+
+    public IDebugger DebuggerFromTool( ToolInfo runTool )
+    {
+      if ( runTool.Filename.ToUpper().Contains( "XMEGA65" ) )
       {
         Debugger = new XMEGA65RemoteDebugger( Core );
       }
-      else if ( RunTool.Name.ToUpper() == "TINY64 INTERNAL DEBUGGER" )
+      else if ( runTool.Name.ToUpper() == "TINY64 INTERNAL DEBUGGER" )
       {
         Debugger = new Tiny64Debugger( Core );
       }
-      else if ( RunTool.Filename.ToUpper().Contains( "DENISE" ) )
+      else if ( runTool.Filename.ToUpper().Contains( "DENISE" ) )
       {
         Debugger = new DeniseRemoteDebuggerBinaryInterface( Core );
 
         var deniseDebugger = Debugger as DeniseRemoteDebuggerBinaryInterface;
         deniseDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
       }
-      else if ( RunTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
+      else if ( runTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
       {
         Debugger = new VICERemoteDebuggerBinaryInterface( Core );
 
@@ -96,17 +114,7 @@ namespace RetroDevStudio
         var viceDebugger = Debugger as VICERemoteDebugger;
         viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
       }
-      // default to currently visible memory view
-      Debugger.SetAutoRefreshMemory( MemoryViewSections() );
-      Debugger.SetSetting( DebuggerSetting.STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES, Core.Settings.DebuggerDeniseStepOverJMPAndBranches.ToString() );
-
-      // pass on remembered wathes
-      foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
-      {
-        Debugger.AddWatchEntry( watch );
-      }
-
-      Debugger.DebugEvent += Core.MainForm.Debugger_DebugEvent;
+      return Debugger;
     }
 
 
@@ -648,24 +656,12 @@ namespace RetroDevStudio
       {
         Core.MainForm.m_DebugMemory.InvalidateAllMemory();
         Debugger.StepOver();
-        // TODO - what? step over ends in running state!
-        /*
-        Debugger.RefreshRegistersAndWatches();
-        Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                       Core.MainForm.m_DebugMemory.MemorySize,
-                                       Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
-        Debugger.RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
-                                Core.MainForm.m_DebugMemory.MemorySize,
-                                Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );*/
 
+        Core.MainForm.SetGUIForDebugging( true );
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN )
         {
           FirstActionAfterBreak = true;
         }
-        /*
-        Core.Executing.BringStudioToForeground();
-        Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
-        Core.MainForm.SetGUIForDebugging( true );*/
       }
     }
 
@@ -1093,6 +1089,96 @@ namespace RetroDevStudio
       Core.MainForm.SetGUIForDebugging( false );
       Core.MainForm.SetGUIForWaitOnExternalTool( false );
       Core.Executing.BringStudioToForeground();
+    }
+
+
+
+    internal void AdvanceFrame()
+    {
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
+
+      if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.AdvanceFrame();
+
+        if ( MarkedDocument != null )
+        {
+          MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo, -1 );
+          MarkedDocument = null;
+        }
+
+        Core.Executing.BringToForeground();
+        Core.MainForm.m_DebugRegisters.EnableRegisterOverrides( false );
+
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
+        FirstActionAfterBreak = false;
+
+        Core.MainForm.SetGUIForDebugging( true );
+      }
+    }
+
+
+
+    internal void AdvanceOneLine()
+    {
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
+
+      if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.AdvanceOneLine();
+
+        if ( MarkedDocument != null )
+        {
+          MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo, -1 );
+          MarkedDocument = null;
+        }
+
+        Core.Executing.BringToForeground();
+        Core.MainForm.m_DebugRegisters.EnableRegisterOverrides( false );
+
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
+        FirstActionAfterBreak = false;
+
+        Core.MainForm.SetGUIForDebugging( true );
+      }
+    }
+
+
+
+    internal void AdvanceToLine( int line )
+    {
+      if ( !CurrentToolSupportsDebugging() )
+      {
+        return;
+      }
+
+      if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.AdvanceToLine( line );
+
+        if ( MarkedDocument != null )
+        {
+          MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo, -1 );
+          MarkedDocument = null;
+        }
+
+        Core.Executing.BringToForeground();
+        Core.MainForm.m_DebugRegisters.EnableRegisterOverrides( false );
+
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
+        FirstActionAfterBreak = false;
+
+        Core.MainForm.SetGUIForDebugging( true );
+      }
     }
 
 

@@ -80,7 +80,10 @@ namespace RetroDevStudio
     RAM_MODE,
     RESET,
     SET_REGISTER,
-    OPEN_FILE
+    OPEN_FILE,
+    ADVANCE_FRAME,
+    ADVANCE_LINE,
+    ADVANCE_TO_LINE
   };
 
   public enum RequestReason
@@ -195,7 +198,9 @@ namespace RetroDevStudio
     void ClearAllBreakpoints();
     void Reset();
 
-
+    void AdvanceFrame();
+    void AdvanceOneLine();
+    void AdvanceToLine( int rasterLine );
 
     void StepInto();
     void StepOver();

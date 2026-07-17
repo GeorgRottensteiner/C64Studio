@@ -60,7 +60,7 @@ namespace RetroDevStudio
 
 
 
-    public ToolInfo DetermineTool( DocumentInfo Document, ToolInfo.ToolType RunType, ToolUse use )
+    public ToolInfo DetermineTool( ToolInfo.ToolType RunType, ToolUse use )
     {
       string    key = Settings.EmulatorToRun;
       if ( ( use == ToolUse.DEBUGGER )

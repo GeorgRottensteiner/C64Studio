@@ -679,16 +679,6 @@ namespace RetroDevStudio
 
 
 
-    public bool RequiresInitialBreakpoint
-    {
-      get
-      {
-        return true;
-      }
-    }
-
-
-
     public void Reset()
     {
       m_Emulator.Reset();
@@ -716,6 +706,24 @@ namespace RetroDevStudio
     public void SetShuttingDown()
     {
       m_ShuttingDown = true;
+    }
+
+
+
+    public void AdvanceFrame()
+    {
+    }
+
+
+
+    public void AdvanceOneLine()
+    {
+    }
+
+
+
+    public void AdvanceToLine( int rasterLine )
+    {
     }
 
 

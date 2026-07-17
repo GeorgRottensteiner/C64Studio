@@ -372,6 +372,9 @@
     <Compile Update="Dialogs\FormCommitChanges.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\FormAdvanceToLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\FormRenameReference.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -602,6 +605,9 @@
     <ProjectReference Include="..\SourceControl\SourceControl.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Dialogs\FormAdvanceToLine.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Documents\SampleExplorer.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
