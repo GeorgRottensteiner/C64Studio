@@ -41,14 +41,14 @@
       this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
       this.btnSetDefaultsFont = new DecentForms.Button();
       this.btnChooseFont = new DecentForms.Button();
-      this.labelFontPreview = new System.Windows.Forms.Label();
       this.editCaretWidth = new System.Windows.Forms.TextBox();
       this.editTabSize = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.label1 = new System.Windows.Forms.Label();
       this.label14 = new System.Windows.Forms.Label();
       this.checkStripTrailingSpaces = new System.Windows.Forms.CheckBox();
       this.checkConvertTabsToSpaces = new System.Windows.Forms.CheckBox();
+      this.checkASMFontNoAntiAliasing = new System.Windows.Forms.CheckBox();
+      this.labelFontPreview = new DecentForms.Label();
       this.SuspendLayout();
       // 
       // checkEditorShowMaxLineLengthIndicator
@@ -57,7 +57,7 @@
       this.checkEditorShowMaxLineLengthIndicator.Location = new System.Drawing.Point(3, 350);
       this.checkEditorShowMaxLineLengthIndicator.Name = "checkEditorShowMaxLineLengthIndicator";
       this.checkEditorShowMaxLineLengthIndicator.Size = new System.Drawing.Size(279, 17);
-      this.checkEditorShowMaxLineLengthIndicator.TabIndex = 12;
+      this.checkEditorShowMaxLineLengthIndicator.TabIndex = 13;
       this.checkEditorShowMaxLineLengthIndicator.Text = "Show max line length indicator";
       this.checkEditorShowMaxLineLengthIndicator.UseVisualStyleBackColor = true;
       this.checkEditorShowMaxLineLengthIndicator.CheckedChanged += new System.EventHandler(this.checkEditorShowMaxLineLengthIndicator_CheckedChanged);
@@ -69,7 +69,7 @@
       this.editMaxLineLengthIndicatorColumn.MaxLength = 3;
       this.editMaxLineLengthIndicatorColumn.Name = "editMaxLineLengthIndicatorColumn";
       this.editMaxLineLengthIndicatorColumn.Size = new System.Drawing.Size(96, 20);
-      this.editMaxLineLengthIndicatorColumn.TabIndex = 13;
+      this.editMaxLineLengthIndicatorColumn.TabIndex = 14;
       this.editMaxLineLengthIndicatorColumn.TextChanged += new System.EventHandler(this.editMaxLineLengthIndicatorColumn_TextChanged);
       // 
       // label2
@@ -89,7 +89,7 @@
       this.comboASMEncoding.Location = new System.Drawing.Point(158, 377);
       this.comboASMEncoding.Name = "comboASMEncoding";
       this.comboASMEncoding.Size = new System.Drawing.Size(294, 21);
-      this.comboASMEncoding.TabIndex = 14;
+      this.comboASMEncoding.TabIndex = 15;
       this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
       // 
       // label35
@@ -107,7 +107,7 @@
       this.checkASMShowAddress.Location = new System.Drawing.Point(3, 320);
       this.checkASMShowAddress.Name = "checkASMShowAddress";
       this.checkASMShowAddress.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowAddress.TabIndex = 11;
+      this.checkASMShowAddress.TabIndex = 12;
       this.checkASMShowAddress.Text = "Show Address";
       this.checkASMShowAddress.UseVisualStyleBackColor = true;
       this.checkASMShowAddress.CheckedChanged += new System.EventHandler(this.checkASMShowAddress_CheckedChanged);
@@ -118,7 +118,7 @@
       this.checkASMShowAutoComplete.Location = new System.Drawing.Point(3, 290);
       this.checkASMShowAutoComplete.Name = "checkASMShowAutoComplete";
       this.checkASMShowAutoComplete.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowAutoComplete.TabIndex = 10;
+      this.checkASMShowAutoComplete.TabIndex = 11;
       this.checkASMShowAutoComplete.Text = "Show Auto-Complete";
       this.checkASMShowAutoComplete.UseVisualStyleBackColor = true;
       this.checkASMShowAutoComplete.CheckedChanged += new System.EventHandler(this.checkASMShowAutoComplete_CheckedChanged);
@@ -129,7 +129,7 @@
       this.checkASMShowMiniMap.Location = new System.Drawing.Point(3, 260);
       this.checkASMShowMiniMap.Name = "checkASMShowMiniMap";
       this.checkASMShowMiniMap.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowMiniMap.TabIndex = 9;
+      this.checkASMShowMiniMap.TabIndex = 10;
       this.checkASMShowMiniMap.Text = "Show Mini View";
       this.checkASMShowMiniMap.UseVisualStyleBackColor = true;
       this.checkASMShowMiniMap.CheckedChanged += new System.EventHandler(this.checkASMShowMiniMap_CheckedChanged);
@@ -140,7 +140,7 @@
       this.checkASMShowSizes.Location = new System.Drawing.Point(3, 230);
       this.checkASMShowSizes.Name = "checkASMShowSizes";
       this.checkASMShowSizes.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowSizes.TabIndex = 8;
+      this.checkASMShowSizes.TabIndex = 9;
       this.checkASMShowSizes.Text = "Show Sizes";
       this.checkASMShowSizes.UseVisualStyleBackColor = true;
       this.checkASMShowSizes.CheckedChanged += new System.EventHandler(this.checkASMShowSizes_CheckedChanged);
@@ -151,7 +151,7 @@
       this.checkASMShowCycles.Location = new System.Drawing.Point(3, 200);
       this.checkASMShowCycles.Name = "checkASMShowCycles";
       this.checkASMShowCycles.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowCycles.TabIndex = 7;
+      this.checkASMShowCycles.TabIndex = 8;
       this.checkASMShowCycles.Text = "Show Cycles";
       this.checkASMShowCycles.UseVisualStyleBackColor = true;
       this.checkASMShowCycles.CheckedChanged += new System.EventHandler(this.checkASMShowCycles_CheckedChanged);
@@ -162,7 +162,7 @@
       this.checkASMShowLineNumbers.Location = new System.Drawing.Point(3, 170);
       this.checkASMShowLineNumbers.Name = "checkASMShowLineNumbers";
       this.checkASMShowLineNumbers.Size = new System.Drawing.Size(279, 24);
-      this.checkASMShowLineNumbers.TabIndex = 6;
+      this.checkASMShowLineNumbers.TabIndex = 7;
       this.checkASMShowLineNumbers.Text = "Show Line Numbers";
       this.checkASMShowLineNumbers.UseVisualStyleBackColor = true;
       this.checkASMShowLineNumbers.CheckedChanged += new System.EventHandler(this.checkASMShowLineNumbers_CheckedChanged);
@@ -173,12 +173,13 @@
       this.btnSetDefaultsFont.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnSetDefaultsFont.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnSetDefaultsFont.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnSetDefaultsFont.DisplayAntiAliased = true;
       this.btnSetDefaultsFont.Image = null;
       this.btnSetDefaultsFont.Location = new System.Drawing.Point(158, 141);
       this.btnSetDefaultsFont.Name = "btnSetDefaultsFont";
       this.btnSetDefaultsFont.Size = new System.Drawing.Size(124, 23);
-      this.btnSetDefaultsFont.TabIndex = 5;
-      this.btnSetDefaultsFont.Text = "Set Default Fonts";
+      this.btnSetDefaultsFont.TabIndex = 6;
+      this.btnSetDefaultsFont.Text = "Set Default Font";
       this.btnSetDefaultsFont.Click += new DecentForms.EventHandler(this.btnSetDefaultsFont_Click);
       // 
       // btnChooseFont
@@ -187,6 +188,7 @@
       this.btnChooseFont.BorderStyle = DecentForms.BorderStyle.FLAT;
       this.btnChooseFont.ButtonBorder = DecentForms.Button.ButtonStyle.RAISED;
       this.btnChooseFont.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnChooseFont.DisplayAntiAliased = true;
       this.btnChooseFont.Image = null;
       this.btnChooseFont.Location = new System.Drawing.Point(158, 112);
       this.btnChooseFont.Name = "btnChooseFont";
@@ -194,14 +196,6 @@
       this.btnChooseFont.TabIndex = 4;
       this.btnChooseFont.Text = "Change Font";
       this.btnChooseFont.Click += new DecentForms.EventHandler(this.btnChooseFont_Click);
-      // 
-      // labelFontPreview
-      // 
-      this.labelFontPreview.Location = new System.Drawing.Point(305, 117);
-      this.labelFontPreview.Name = "labelFontPreview";
-      this.labelFontPreview.Size = new System.Drawing.Size(210, 44);
-      this.labelFontPreview.TabIndex = 18;
-      this.labelFontPreview.Text = "Font Preview";
       // 
       // editCaretWidth
       // 
@@ -229,15 +223,6 @@
       this.label3.Size = new System.Drawing.Size(71, 13);
       this.label3.TabIndex = 14;
       this.label3.Text = "Cursor Width:";
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(3, 117);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(31, 13);
-      this.label1.TabIndex = 14;
-      this.label1.Text = "Font:";
       // 
       // label14
       // 
@@ -270,7 +255,26 @@
       this.checkConvertTabsToSpaces.UseVisualStyleBackColor = true;
       this.checkConvertTabsToSpaces.CheckedChanged += new System.EventHandler(this.checkConvertTabsToSpaces_CheckedChanged);
       // 
-      // PrefASMEditor
+      // checkASMFontNoAntiAliasing
+      // 
+      this.checkASMFontNoAntiAliasing.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMFontNoAntiAliasing.Location = new System.Drawing.Point(20, 141);
+      this.checkASMFontNoAntiAliasing.Name = "checkASMFontNoAntiAliasing";
+      this.checkASMFontNoAntiAliasing.Size = new System.Drawing.Size(132, 24);
+      this.checkASMFontNoAntiAliasing.TabIndex = 5;
+      this.checkASMFontNoAntiAliasing.Text = "No Anti Aliasing";
+      this.checkASMFontNoAntiAliasing.UseVisualStyleBackColor = true;
+      this.checkASMFontNoAntiAliasing.CheckedChanged += new System.EventHandler(this.checkASMFontNoAntiAliasing_CheckedChanged);
+      // 
+      // labelFontPreview
+      // 
+      this.labelFontPreview.Location = new System.Drawing.Point(288, 112);
+      this.labelFontPreview.Name = "labelFontPreview";
+      this.labelFontPreview.Size = new System.Drawing.Size(228, 53);
+      this.labelFontPreview.TabIndex = 18;
+      this.labelFontPreview.Text = "Font Preview";
+      // 
+      // DlgPrefASMEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -282,7 +286,6 @@
       this.Controls.Add(this.comboASMEncoding);
       this.Controls.Add(this.label14);
       this.Controls.Add(this.label35);
-      this.Controls.Add(this.label1);
       this.Controls.Add(this.checkASMShowAddress);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.checkASMShowAutoComplete);
@@ -293,9 +296,10 @@
       this.Controls.Add(this.labelFontPreview);
       this.Controls.Add(this.checkASMShowCycles);
       this.Controls.Add(this.btnChooseFont);
+      this.Controls.Add(this.checkASMFontNoAntiAliasing);
       this.Controls.Add(this.checkASMShowLineNumbers);
       this.Controls.Add(this.btnSetDefaultsFont);
-      this.Name = "PrefASMEditor";
+      this.Name = "DlgPrefASMEditor";
       this.Size = new System.Drawing.Size(528, 418);
       this.ResumeLayout(false);
       this.PerformLayout();
@@ -309,9 +313,7 @@
         private System.Windows.Forms.CheckBox checkConvertTabsToSpaces;
         private DecentForms.Button btnSetDefaultsFont;
         private DecentForms.Button btnChooseFont;
-        private System.Windows.Forms.Label labelFontPreview;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkASMShowAddress;
+    private System.Windows.Forms.CheckBox checkASMShowAddress;
         private System.Windows.Forms.CheckBox checkASMShowAutoComplete;
         private System.Windows.Forms.CheckBox checkASMShowMiniMap;
         private System.Windows.Forms.CheckBox checkASMShowSizes;
@@ -324,5 +326,7 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox editCaretWidth;
     private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.CheckBox checkASMFontNoAntiAliasing;
+    private DecentForms.Label labelFontPreview;
   }
 }

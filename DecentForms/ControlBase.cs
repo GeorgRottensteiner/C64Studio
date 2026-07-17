@@ -30,6 +30,8 @@ namespace DecentForms
     protected int         _ActualWorkWidth = 0;
     protected int         _ActualWorkHeight = 0;
 
+    protected bool        _DisplayAntiAliased = true;
+
 
 
     public ControlBase()
@@ -43,6 +45,25 @@ namespace DecentForms
 
 
     public event CustomDrawEventHandler    CustomDraw;
+
+
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
+    public bool DisplayAntiAliased
+    {
+      get 
+      { 
+        return _DisplayAntiAliased; 
+      }
+      set
+      {
+        if ( _DisplayAntiAliased != value )
+        {
+          _DisplayAntiAliased = value;
+          Invalidate(); 
+        }
+      }
+    }
 
 
 

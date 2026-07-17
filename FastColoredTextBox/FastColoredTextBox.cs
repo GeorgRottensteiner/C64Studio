@@ -21,6 +21,7 @@
 //
 // #define Styles32
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +29,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -36,7 +38,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Microsoft.Win32;
 using Timer = System.Windows.Forms.Timer;
 
 namespace FastColoredTextBoxNS
@@ -72,6 +73,7 @@ namespace FastColoredTextBoxNS
     private Brush backBrush;
     private BaseBookmarks bookmarks;
     private bool caretVisible;
+    private bool _DisplayAntiAliased = true;
     private int _CaretWidth;
     private Color changedLineColor;
     private int charHeight;
@@ -595,6 +597,25 @@ namespace FastColoredTextBoxNS
       get;
       set;
     }
+
+
+    [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
+    public bool DisplayAntiAliased
+    {
+      get
+      {
+        return _DisplayAntiAliased;
+      }
+      set
+      {
+        if ( _DisplayAntiAliased != value )
+        {
+          _DisplayAntiAliased = value;
+          Invalidate();
+        }
+      }
+    }
+
 
 
     Color textAreaBorderColor;
@@ -6029,6 +6050,10 @@ namespace FastColoredTextBoxNS
 #endif
       visibleMarkers.Clear();
       e.Graphics.SmoothingMode = SmoothingMode.None;
+      if ( !_DisplayAntiAliased )
+      {
+        e.Graphics.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
+      }
 
       int charWidth = CharWidth;
       if ( charWidth == 0 )

@@ -289,7 +289,7 @@ namespace RetroDevStudio.Tasks
           return false;
         }
         // this sets up the initial breakpoint!
-        if ( Core.Debugging.Debugger.RequiresInitialBreakpoint )
+        if ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_INITIAL_BREAKPOINT ) )
         {
           Core.Debugging.Debugger.AddBreakpoint( new Breakpoint() { Temporary = true, Address = Core.Debugging.OverrideDebugStart, RemoteIndex = 1, Initial = true } );
         }

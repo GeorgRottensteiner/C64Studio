@@ -49,6 +49,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       checkStripTrailingSpaces.Checked  = Core.Settings.FormatSettings.StripTrailingSpaces;
       editCaretWidth.Text               = Core.Settings.CaretWidth.ToString();  
       labelFontPreview.Font             = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      checkASMFontNoAntiAliasing.Checked  = Core.Settings.SourceFontNoAntiAliasing;
 
       checkASMShowLineNumbers.Checked   = !Core.Settings.ASMHideLineNumbers;
       checkASMShowCycles.Checked        = Core.Settings.ASMShowCycles;
@@ -99,6 +100,7 @@ namespace RetroDevStudio.Dialogs.Preferences
       xmlFont.AddAttribute( "Family", Core.Settings.SourceFontFamily );
       xmlFont.AddAttribute( "Size", Util.DoubleToString( Core.Settings.SourceFontSize ) );
       xmlFont.AddAttribute( "Style", ( (int)Core.Settings.SourceFontStyle ).ToString() );
+      xmlFont.AddAttribute( "NoAntiAliasing", Core.Settings.SourceFontNoAntiAliasing ? "yes" : "no" );
 
       xmlCaret.AddAttribute( "CaretWidth", Core.Settings.CaretWidth.ToString() );
     }
@@ -156,9 +158,10 @@ namespace RetroDevStudio.Dialogs.Preferences
         {
           if ( xmlFont.Attribute( "Type" ) == "ASM" )
           {
-            Core.Settings.SourceFontFamily  = xmlFont.Attribute( "Family" );
-            Core.Settings.SourceFontSize    = (float)Util.StringToDouble( xmlFont.Attribute( "Size" ) );
-            Core.Settings.SourceFontStyle   = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "Style" ) );
+            Core.Settings.SourceFontFamily          = xmlFont.Attribute( "Family" );
+            Core.Settings.SourceFontSize            = (float)Util.StringToDouble( xmlFont.Attribute( "Size" ) );
+            Core.Settings.SourceFontStyle           = (FontStyle)GR.Convert.ToI32( xmlFont.Attribute( "Style" ) );
+            Core.Settings.SourceFontNoAntiAliasing  = IsSettingTrue( xmlFont.Attribute( "NoAntiAliasing" ) );
           }
         }
       }
@@ -214,10 +217,10 @@ namespace RetroDevStudio.Dialogs.Preferences
       {
         if ( fontDialog.ShowDialog() == DialogResult.OK )
         {
-          Core.Settings.SourceFontFamily  = fontDialog.Font.FontFamily.Name;
-          Core.Settings.SourceFontSize    = fontDialog.Font.SizeInPoints;
-          Core.Settings.SourceFontStyle   = fontDialog.Font.Style;
-          labelFontPreview.Font           = fontDialog.Font;
+          Core.Settings.SourceFontFamily          = fontDialog.Font.FontFamily.Name;
+          Core.Settings.SourceFontSize            = fontDialog.Font.SizeInPoints;
+          Core.Settings.SourceFontStyle           = fontDialog.Font.Style;
+          labelFontPreview.Font                   = fontDialog.Font;
 
           RefreshDisplayOnDocuments();
         }
@@ -234,8 +237,10 @@ namespace RetroDevStudio.Dialogs.Preferences
     {
       Core.Settings.SourceFontFamily = "Consolas";
       Core.Settings.SourceFontSize = 9.0f;
+      Core.Settings.SourceFontNoAntiAliasing = false;
 
       labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      checkASMFontNoAntiAliasing.Checked = Core.Settings.SourceFontNoAntiAliasing;
       RefreshDisplayOnDocuments();
     }
 
@@ -352,6 +357,18 @@ namespace RetroDevStudio.Dialogs.Preferences
       &&   ( caretWidth <= 200 ) )
       {
         Core.Settings.CaretWidth = caretWidth;
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
+
+    private void checkASMFontNoAntiAliasing_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( Core.Settings.SourceFontNoAntiAliasing != checkASMFontNoAntiAliasing.Checked )
+      {
+        Core.Settings.SourceFontNoAntiAliasing = checkASMFontNoAntiAliasing.Checked;
+        labelFontPreview.DisplayAntiAliased = !Core.Settings.SourceFontNoAntiAliasing;
         RefreshDisplayOnDocuments();
       }
     }

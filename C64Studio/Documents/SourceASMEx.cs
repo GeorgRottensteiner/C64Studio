@@ -3178,6 +3178,7 @@ namespace RetroDevStudio.Documents
 
       // Font
       editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+      editSource.DisplayAntiAliased = !Core.Settings.SourceFontNoAntiAliasing;
 
       // Colors
       editSource.Language = FastColoredTextBoxNS.Language.Custom;

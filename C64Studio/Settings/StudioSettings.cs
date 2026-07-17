@@ -189,9 +189,11 @@ namespace RetroDevStudio
     public string                               SourceFontFamily = "Consolas";
     public float                                SourceFontSize = 9.0f;
     public FontStyle                            SourceFontStyle = FontStyle.Regular;
+    public bool                                 SourceFontNoAntiAliasing = false;
     public string                               BASICSourceFontFamily = "Consolas";
     public float                                BASICSourceFontSize = 9.0f;
     public FontStyle                            BASICSourceFontStyle = FontStyle.Regular;
+    public bool                                 BASICSourceFontNoAntiAliasing = false;
     public bool                                 BASICUseNonC64Font = false;
     public int                                  BASICShowMaxLineLengthIndicatorLength = 80;
 
@@ -216,6 +218,8 @@ namespace RetroDevStudio
     public bool                                 BASICAutoToggleEntryModeOnPosition = true;
     public bool                                 BASICStripREM = false;
     public bool                                 BASICAlwaysMappedKeyMode = false;
+
+    public bool                                 DebuggerDeniseStepOverJMPAndBranches = false;
 
     public MemoryDisplayType                    MemoryDisplay = MemoryDisplayType.ASCII;
     public MemorySourceType                     MemorySource = MemorySourceType.CPU;
@@ -691,6 +695,8 @@ namespace RetroDevStudio
       chunkFont.AppendI32( (int)BASICSourceFontStyle );
       chunkFont.AppendF32( SourceFontSize );
       chunkFont.AppendF32( BASICSourceFontSize );
+      chunkFont.AppendU8( (byte)( SourceFontNoAntiAliasing ? 1 : 0 ) );
+      chunkFont.AppendU8( (byte)( BASICSourceFontNoAntiAliasing ? 1 : 0 ) );
 
       SettingsData.Append( chunkFont.ToBuffer() );
 
@@ -717,9 +723,10 @@ namespace RetroDevStudio
       chunkRunEmu.AppendString( EmulatorToRun );
       SettingsData.Append( chunkRunEmu.ToBuffer() );
 
-      GR.IO.FileChunk chunkRunDebugger = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_RUN_DEBUGGER );
-      chunkRunDebugger.AppendString( DebuggerToRun );
-      SettingsData.Append( chunkRunDebugger.ToBuffer() );
+      var chunkDebugger = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DEBUGGER );
+      chunkDebugger.AppendString( DebuggerToRun );
+      chunkDebugger.AppendU8( (byte)( DebuggerDeniseStepOverJMPAndBranches ? 1 : 0 ) );
+      SettingsData.Append( chunkDebugger.ToBuffer() );
 
       GR.IO.FileChunk chunkDefaults = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DEFAULTS );
       chunkDefaults.AppendString( DefaultProjectBasePath );
@@ -862,7 +869,6 @@ namespace RetroDevStudio
       chunkLabelExplorer.AppendU8( (byte)( LabelExplorerSorting ) );
       chunkLabelExplorer.AppendString( LabelExplorerFilter );
       SettingsData.Append( chunkLabelExplorer.ToBuffer() );
-
 
       // BASIC settings
       GR.IO.FileChunk chunkBASICParser = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BASIC_PARSER );
@@ -1203,11 +1209,14 @@ namespace RetroDevStudio
               BASICSourceFontFamily   = binIn.ReadString();
               int obsoleteBASICSourceFontSize = binIn.ReadInt32();
 
-              SourceFontStyle         = (FontStyle)binIn.ReadInt32();
-              BASICSourceFontStyle    = (FontStyle)binIn.ReadInt32();
+              SourceFontStyle                 = (FontStyle)binIn.ReadInt32();
+              BASICSourceFontStyle            = (FontStyle)binIn.ReadInt32();
 
-              float sourceFontSize          = binIn.ReadF32();
-              float basicSourceFontSize     = binIn.ReadF32();
+              float sourceFontSize            = binIn.ReadF32();
+              float basicSourceFontSize       = binIn.ReadF32();
+
+              SourceFontNoAntiAliasing        = ( binIn.ReadUInt8() != 0 );
+              BASICSourceFontNoAntiAliasing   = ( binIn.ReadUInt8() != 0 );
 
               if ( obsoleteSourceFontSize == -1 )
               {
@@ -1270,11 +1279,12 @@ namespace RetroDevStudio
               EmulatorToRun = binIn.ReadString();
             }
             break;
-          case FileChunkConstants.SETTINGS_RUN_DEBUGGER:
+          case FileChunkConstants.SETTINGS_DEBUGGER:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              DebuggerToRun = binIn.ReadString();
+              DebuggerToRun                         = binIn.ReadString();
+              DebuggerDeniseStepOverJMPAndBranches  = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_DEFAULTS:

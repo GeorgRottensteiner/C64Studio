@@ -381,6 +381,9 @@
     <Compile Update="Dialogs\FormRenumberBASICLabelMode.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\Preferences\DlgPrefDebugger.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Dialogs\Preferences\DlgPrefBASICWarnings.cs">
       <SubType>UserControl</SubType>
     </Compile>

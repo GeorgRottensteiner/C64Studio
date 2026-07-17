@@ -11,7 +11,16 @@ namespace RetroDevStudio
   {
     REMOTE_MONITOR,
     ADD_BREAKPOINTS_AFTER_STARTUP,
-    REQUIRES_DOUBLE_ACTION_AFTER_BREAK
+    REQUIRES_DOUBLE_ACTION_AFTER_BREAK,
+    REQUIRES_INITIAL_BREAKPOINT,
+    ADVANCE_LINE,
+    ADVANCE_TO_SPECIFIC_LINE,
+    ADVANCE_FRAME
+  };
+
+  public enum DebuggerSetting
+  {
+    STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES
   };
 
   public enum MemorySource
@@ -153,8 +162,10 @@ namespace RetroDevStudio
     }
 
     bool SupportsFeature( DebuggerFeature Feature );
-
     bool CheckEmulatorVersion( ToolInfo ToolRun );
+
+    // returns false if the setting is unknown or invalid
+    bool SetSetting( DebuggerSetting setting, string value );
 
     void Quit();
 
@@ -163,27 +174,19 @@ namespace RetroDevStudio
     bool ConnectToEmulator( bool IsCartridge, string externalImageToOpen );
     void DisconnectFromEmulator();
 
-
-
     void AddLabel( string Name, int Value );
     void ClearLabels();
-
-
 
     void AddWatchEntry( WatchEntry Watch );
     void ClearAllWatchEntries();
     void RemoveWatchEntry( WatchEntry Watch );
     List<WatchEntry> CurrentWatches();
 
-
     // get memory content
     //   returns true if value is directly available
     //           false is value has to be fetched and will be sent per event later
     bool FetchValue( int Address, out byte Content );
 
-
-
-    bool RequiresInitialBreakpoint { get; }
     void SetBreakPoints( GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints );
     void AddBreakpoint( Types.Breakpoint BreakPoint );
     void RemoveBreakpoint( int BreakPointIndex );

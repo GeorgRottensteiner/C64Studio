@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
+using static GR.Image.FastImage;
 
 
 
@@ -316,10 +317,89 @@ namespace DecentForms
 
 
 
+    /// <summary>
+    /// Draws antialiased text similar to TextRenderer.DrawText but using GDI+.
+    /// </summary>
+    public static void DrawNotAliasedText( Graphics g, string text, Font font, Rectangle bounds, Color color, TextFormatFlags flags )
+    {
+      if ( g == null )
+        throw new ArgumentNullException( nameof( g ) );
+      if ( text == null )
+        text = string.Empty;
+      if ( font == null )
+        throw new ArgumentNullException( nameof( font ) );
+
+      // Enable high-quality text rendering
+      //g.TextRenderingHint = TextRenderingHint.AntiAlias;
+      g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
+
+      // Create brush
+      using ( Brush brush = new SolidBrush( color ) )
+      {
+        // Convert TextFormatFlags to StringFormat
+        StringFormat sf = ConvertFlags(flags);
+
+        // Draw the string
+        g.DrawString( text, font, brush, bounds, sf );
+      }
+    }
+
+    /// <summary>
+    /// Converts TextFormatFlags to StringFormat for GDI+.
+    /// </summary>
+    private static StringFormat ConvertFlags( TextFormatFlags flags )
+    {
+      StringFormat sf = new StringFormat();
+
+      // Horizontal alignment
+      if ( ( flags & TextFormatFlags.HorizontalCenter ) != 0 )
+        sf.Alignment = StringAlignment.Center;
+      else if ( ( flags & TextFormatFlags.Right ) != 0 )
+        sf.Alignment = StringAlignment.Far;
+      else
+        sf.Alignment = StringAlignment.Near;
+
+      // Vertical alignment
+      if ( ( flags & TextFormatFlags.VerticalCenter ) != 0 )
+        sf.LineAlignment = StringAlignment.Center;
+      else if ( ( flags & TextFormatFlags.Bottom ) != 0 )
+        sf.LineAlignment = StringAlignment.Far;
+      else
+        sf.LineAlignment = StringAlignment.Near;
+
+      // Word wrapping
+      if ( ( flags & TextFormatFlags.WordBreak ) != 0 )
+        sf.FormatFlags &= ~StringFormatFlags.NoWrap;
+      else
+        sf.FormatFlags |= StringFormatFlags.NoWrap;
+
+      // Ellipsis
+      if ( ( flags & TextFormatFlags.EndEllipsis ) != 0 )
+        sf.Trimming = StringTrimming.EllipsisCharacter;
+      else
+        sf.Trimming = StringTrimming.None;
+
+      // No padding
+      if ( ( flags & TextFormatFlags.NoPadding ) != 0 )
+        sf.FormatFlags |= StringFormatFlags.NoClip;
+
+      return sf;
+    }
+
+
+
     public void DrawText( System.Drawing.Font Font, string Text, int BoundsX, int BoundsY, int Width, int Height, TextAlignment Alignment, int DX = 0, int DY = 0 )
     {
       BoundsX -= _DisplayOffsetX;
       BoundsY -= _DisplayOffsetY;
+
+      if ( !_Control.DisplayAntiAliased )
+      {
+        //_G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixel;
+        //_G.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+        DrawNotAliasedText( _G, Text, Font, new Rectangle( BoundsX + DX, BoundsY + DY, Width, Height ), ToColor( ColorControlText ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
+        return;
+      }
 
       TextRenderer.DrawText( _G, Text, Font, new Rectangle( BoundsX + DX, BoundsY + DY, Width, Height ), ToColor( ColorControlText ), MapAlignmentToFlags( Alignment ) | TextFormatFlags.PreserveGraphicsClipping );
     }
@@ -1661,6 +1741,24 @@ namespace DecentForms
         }
         
         RenderSlider( sliderRect.Left, sliderRect.Top, sliderRect.Width, sliderRect.Height, mouseOverSlider, sliderPushed );
+      }
+    }
+
+
+
+    internal void RenderLabel( bool enabled )
+    {
+      var label = _Control as Label;
+
+      var rect = new GR.Math.Rectangle( 0, 0, _Control.Width, _Control.Height );
+      rect.Offset( -_DisplayOffsetX, -_DisplayOffsetY );
+      if ( enabled )
+      {
+        DrawText( _Control.Text, rect.Left, rect.Top, rect.Width, rect.Height, label.TextAlignment );
+      }
+      else
+      {
+        DrawDisabledText( _Control.Text, rect.Left, rect.Top, rect.Width, rect.Height, label.TextAlignment );
       }
     }
 

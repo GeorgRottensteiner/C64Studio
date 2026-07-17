@@ -16,6 +16,9 @@
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Label.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Button.cs">
       <SubType>Component</SubType>
     </Compile>

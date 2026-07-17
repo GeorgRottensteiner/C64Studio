@@ -91,6 +91,7 @@ namespace RetroDevStudio
     private MachineType               m_ConnectedMachine = MachineType.ANY;
 
     private int                       m_LastRequestID = 0;
+    private bool                      _StepOverIsSteppingOverJMPAndBranches = false;            
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
 
@@ -122,6 +123,19 @@ namespace RetroDevStudio
       //Core.AddToOutput( Message + Environment.NewLine );
       System.Diagnostics.Debug.WriteLine( Message );
       Debug.Log( Message );
+    }
+
+
+
+    public override bool SetSetting( DebuggerSetting setting, string value )
+    {
+      switch ( setting )
+      {
+        case DebuggerSetting.STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES:
+          _StepOverIsSteppingOverJMPAndBranches = GR.Convert.ToBoolean( value );
+          return true;
+      }
+      return base.SetSetting( setting, value );
     }
 
 
@@ -159,7 +173,7 @@ namespace RetroDevStudio
           initialBreakpointRequest = _initialBreakpoints[0];
         }
 
-          connectResultReceived = false;
+        connectResultReceived = false;
         m_ReceivedDataBin.Clear();
         m_ResponseLines.Clear();
         m_RequestQueue.Clear();
@@ -1130,6 +1144,10 @@ namespace RetroDevStudio
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
           // step over
+          if ( _StepOverIsSteppingOverJMPAndBranches )
+          {
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "020100" ), Data );
+          }
           return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "010100" ), Data );
         case DebugRequestType.STEP:
           m_MemoryValues.Clear();
@@ -1713,6 +1731,10 @@ namespace RetroDevStudio
       switch ( Feature )
       {
         case DebuggerFeature.REMOTE_MONITOR:
+        case DebuggerFeature.REQUIRES_INITIAL_BREAKPOINT:
+        case DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE:
+        case DebuggerFeature.ADVANCE_LINE:
+        case DebuggerFeature.ADVANCE_FRAME:
           return true;
       }
       return false;

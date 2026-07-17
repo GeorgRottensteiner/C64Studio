@@ -98,6 +98,8 @@ namespace RetroDevStudio
       }
       // default to currently visible memory view
       Debugger.SetAutoRefreshMemory( MemoryViewSections() );
+      Debugger.SetSetting( DebuggerSetting.STEP_OVER_ALSO_STEPS_OVER_JMP_AND_BRANCHES, Core.Settings.DebuggerDeniseStepOverJMPAndBranches.ToString() );
+
       // pass on remembered wathes
       foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
       {

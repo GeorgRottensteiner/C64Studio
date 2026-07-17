@@ -48,5 +48,12 @@ namespace RetroDevStudio
 
 
 
+    public virtual bool SetSetting( DebuggerSetting setting, string value )
+    {
+      return false;
+    }
+
+
+
   }
 }
