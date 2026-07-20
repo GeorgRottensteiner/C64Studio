@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Tiny64;
 
 namespace RetroDevStudio
 {
@@ -311,11 +312,12 @@ namespace RetroDevStudio
           return false;
         }
 
-        var responseType = (BinaryMonitorCommandResponse)m_ReceivedDataBin.ByteAt ( curPos + 6 );
+        var responseType  = (BinaryMonitorCommandResponse)m_ReceivedDataBin.ByteAt ( curPos + 6 );
         byte errorCode    = m_ReceivedDataBin.ByteAt ( curPos + 7 );
+        uint requestID    = m_ReceivedDataBin.UInt32At( curPos + 8 );
         if ( errorCode != 0 )
         {
-          Log( "Error " + errorCode.ToString( "X2" ) + " received, skipped command" );
+          Log( "Error " + errorCode.ToString( "X2" ) + " received for request " + requestID + ", skipped command" );
           if ( errorCode == 0x80 )
           {
             Log( " -Length of command was wrong" );
@@ -329,7 +331,6 @@ namespace RetroDevStudio
           m_Request = new RequestData( DebugRequestType.NONE );
           continue;
         }
-        uint requestID = m_ReceivedDataBin.UInt32At( curPos + 8 );
 
         // 02 01 16000000 11 00 FFFFFFFF 010000000171A871A801010400010000000000000000
         // 02 01 26000000 31 00 FFFFFFFF 0900 
@@ -1172,7 +1173,14 @@ namespace RetroDevStudio
 
             var requestData = new ByteBuffer();
             requestData.AppendU16( (ushort)m_Request.Parameter1 );
-            requestData.AppendU16( (ushort)m_Request.Parameter1 );
+            if ( m_Request.Parameter2 == -1 )
+            {
+              requestData.AppendU16( (ushort)m_Request.Parameter1 );
+            }
+            else
+            {
+              requestData.AppendU16( (ushort)m_Request.Parameter2 );
+            }
             requestData.AppendU8( 1 );    // stop when hit
             requestData.AppendU8( 1 );    // enabled
 
@@ -1707,6 +1715,7 @@ namespace RetroDevStudio
       {
         case DebuggerFeature.REMOTE_MONITOR:
         case DebuggerFeature.REQUIRES_INITIAL_BREAKPOINT:
+        case DebuggerFeature.ADVANCE_FRAME:
           return true;
       }
       return false;
@@ -1839,6 +1848,14 @@ namespace RetroDevStudio
 
     public void AdvanceFrame()
     {
+      var requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, 0, 0xffff );
+      requData.Breakpoint = new Types.Breakpoint()
+      {
+        Temporary     = true,
+        Conditions    = "( ( RL==$0 ) && ( CY==$0 ) )",
+        Address       = 0
+      };
+      QueueRequest( requData );
     }
 
 
