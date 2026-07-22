@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Types;
 using System;
@@ -60,6 +60,18 @@ namespace RetroDevStudio
 
     };
 
+    private enum BinaryMonitorErrorCode
+    {
+      e_MON_ERR_OK = 0x00,
+      e_MON_ERR_OBJECT_MISSING = 0x01,
+      e_MON_ERR_INVALID_MEMSPACE = 0x02,
+      e_MON_ERR_CMD_INVALID_LENGTH = 0x80,
+      e_MON_ERR_INVALID_PARAMETER = 0x81,
+      e_MON_ERR_CMD_INVALID_API_VERSION = 0x82,
+      e_MON_ERR_CMD_INVALID_TYPE = 0x83,
+      e_MON_ERR_CMD_FAILURE = 0x8f,
+    };
+
     // these are for C64, don't know about others!
     private enum BinaryMonitorBankID
     {
@@ -86,12 +98,16 @@ namespace RetroDevStudio
     private int                       m_BrokenAtBreakPoint = -1;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
     private BinaryMonitorBankID       m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
+    private bool                      _WaitingForConditionResponse = false;
 
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
 
     private MachineType               m_ConnectedMachine = MachineType.ANY;
 
     private int                       m_LastRequestID = 0;
+    private RegisterInfo              m_LastReceivedRegisterInfo = null;
+
+
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
 
@@ -166,6 +182,8 @@ namespace RetroDevStudio
         m_ResponseLines.Clear();
         m_RequestQueue.Clear();
         m_UnansweredBinaryRequests.Clear();
+        m_LastReceivedRegisterInfo = null;
+        _WaitingForConditionResponse = false;
         _initialBreakpoints.Clear();
         _initialStartupState = 0;
 
@@ -317,7 +335,7 @@ namespace RetroDevStudio
         uint requestID    = m_ReceivedDataBin.UInt32At( curPos + 8 );
         if ( errorCode != 0 )
         {
-          Log( "Error " + errorCode.ToString( "X2" ) + " received for request " + requestID + ", skipped command" );
+          Log( $"Error {errorCode:X2}/{(BinaryMonitorErrorCode)errorCode} received for request {requestID}, skipped command" );
           if ( errorCode == 0x80 )
           {
             Log( " -Length of command was wrong" );
@@ -411,6 +429,8 @@ namespace RetroDevStudio
                   }
                 }
 
+                m_LastReceivedRegisterInfo = info;
+
                 var ded       = new DebugEventData();
                 ded.Registers = info;
                 ded.Type = RetroDevStudio.DebugEvent.REGISTER_INFO;
@@ -463,8 +483,10 @@ namespace RetroDevStudio
                       var conditionBytes = System.Text.Encoding.UTF8.GetBytes( origRequest.Breakpoint.Conditions );
                       requestData.Append( conditionBytes );
 
+                      _WaitingForConditionResponse = true;
                       if ( !SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CONDITION_SET, requestData, origRequest ) )
                       {
+                        _WaitingForConditionResponse = false;
                         return false;
                       }
                     }
@@ -566,6 +588,11 @@ namespace RetroDevStudio
             }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_CONDITION_SET:
+            if ( _WaitingForConditionResponse )
+            {
+              _WaitingForConditionResponse = false;
+              Run();
+            }
             break;
           default:
             Log( "Unsupported response type " + ( (int)responseType ).ToString( "X2" ) + " received" );
@@ -887,6 +914,7 @@ namespace RetroDevStudio
       {
         if ( breakPoint.RemoteIndex == m_BrokenAtBreakPoint )
         {
+          m_BreakPoints.Remove( breakPoint );
           brokenBP = breakPoint;
           breakAddress = (int)breakPoint.Address;
           Log( $"-at address {breakAddress:X}" );
@@ -895,6 +923,11 @@ namespace RetroDevStudio
             //Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
             //QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
             brokenBP = null;
+          }
+          if ( breakPoint.InternalTemporary )
+          {
+            Log( "Removing internal temporary breakpoint " + breakPoint.RemoteIndex );
+            QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
           }
           if ( breakPoint.Initial )
           {
@@ -1716,6 +1749,8 @@ namespace RetroDevStudio
         case DebuggerFeature.REMOTE_MONITOR:
         case DebuggerFeature.REQUIRES_INITIAL_BREAKPOINT:
         case DebuggerFeature.ADVANCE_FRAME:
+        case DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE:
+        case DebuggerFeature.ADVANCE_LINE:
           return true;
       }
       return false;
@@ -1862,12 +1897,42 @@ namespace RetroDevStudio
 
     public void AdvanceOneLine()
     {
+      if ( m_LastReceivedRegisterInfo != null )
+      {
+        int   nextLine = m_LastReceivedRegisterInfo.RasterLine + 1;
+        if ( nextLine >= 312 )
+        {
+          nextLine = 0;
+        }
+        var requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, 0, 0xffff );
+        requData.Breakpoint = new Types.Breakpoint()
+        {
+          InternalTemporary = true,
+          //Temporary = true,
+          Conditions = $"rl==${nextLine:X}",
+          Address = 0
+        };
+        m_BreakPoints.Add( requData.Breakpoint );
+        QueueRequest( requData );
+      }
     }
 
 
 
     public void AdvanceToLine( int rasterLine )
     {
+      if ( m_LastReceivedRegisterInfo != null )
+      {
+        var requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, 0, 0xffff );
+        requData.Breakpoint = new Types.Breakpoint()
+        {
+          Temporary = true,
+          Conditions = $"RL==${rasterLine:X}",
+          Address = 0
+        };
+        m_BreakPoints.Add( requData.Breakpoint );
+        QueueRequest( requData );
+      }
     }
 
 

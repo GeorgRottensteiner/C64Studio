@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,11 +11,14 @@ namespace RetroDevStudio.Types
     public int                Address = -1;
     public string             AddressSource = null;
     public int                RemoteIndex = -1;
+    // temporary for vice. Temporary for vice auto continues once they're hit????
     public bool               Temporary = false;
     public bool               Initial = false;
     public bool               IsVirtual = false;
     public List<Breakpoint>   Virtual = new List<Breakpoint>();      // for trace breakpoints
 
+    // temporary for C64Studio (e.g. to delete them once triggered)
+    public bool               InternalTemporary = false;
     public string             Conditions = "";
     public string             Expression = "";     // for trace breakpoints
     public bool               TriggerOnExec = true;
