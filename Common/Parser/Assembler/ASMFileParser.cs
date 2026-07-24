@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10087,6 +10087,7 @@ namespace RetroDevStudio.Parser
       for ( int i = functionInfo.LineIndex + 1; i < functionInfo.LineEnd; ++i )
       {
         var  lineContent = functionInfo.Content[i - functionInfo.LineIndex - 1];
+
         var tokens = ParseTokenInfo( lineContent, 0, lineContent.Length );
         if ( tokens == null )
         {
@@ -10168,6 +10169,40 @@ namespace RetroDevStudio.Parser
 
                   replacedParam = true;
                   continue;
+                }
+                else
+                {
+                  var tokens3 = ParseTokenInfo( part, 0, part.Length );
+                  var token = tokens3[0];
+                  if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+                  ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+                  {
+                    if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+                    {
+                      if ( token.Content[0] == '-' )
+                      {
+                        // TODO - take i in account, 
+                        token.Content += INTERNAL_LOCAL_LABEL_PREFIX + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID();
+                      }
+                    }
+                    else if ( !ScopeInsideLoop() )
+                    {
+                      // uniquefy labels
+                      token.Content = $"_{INTERNAL_LABEL_PREFIX}_{functionName}_{functionInfo.LineIndex.ToString()}_{lineIndex}_{token.Content}";
+                    }
+                    else
+                    {
+                      // need to take loop into account, force new local label!
+                      token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+                                    + $"_{INTERNAL_LABEL_PREFIX}_{functionName}_{functionInfo.LineIndex}_{lineIndex}_{GetLoopGUID()}_{token.Content}";
+                    }
+                    parts[pi] = token.Content;
+
+                    tokens[j].Content = string.Join( "##", parts );
+                    j = 0;
+                    replacedParam = true;
+                    continue;
+                  }
                 }
               }
             }

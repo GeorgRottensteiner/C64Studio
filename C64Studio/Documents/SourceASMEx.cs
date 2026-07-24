@@ -1,4 +1,4 @@
-﻿using FastColoredTextBoxNS;
+using FastColoredTextBoxNS;
 using GR.Collections;
 using GR.Image;
 using GR.IO;
@@ -1898,7 +1898,8 @@ namespace RetroDevStudio.Documents
 
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
-        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        if ( ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        ||   ( entry.Token.Contains( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LABEL_PREFIX ) ) )
         {
           continue;
         }
@@ -1937,7 +1938,8 @@ namespace RetroDevStudio.Documents
       }
       foreach ( var entry in DocumentInfo.KnownTokens )
       {
-        if ( entry.Key.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        if ( ( entry.Key.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        ||   ( entry.Key.Contains( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LABEL_PREFIX ) ) )
         {
           continue;
         }
@@ -2051,7 +2053,8 @@ namespace RetroDevStudio.Documents
       }
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
-        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        if ( ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        ||   ( entry.Token.Contains( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LABEL_PREFIX ) ) )
         {
           // skip internal labels in autocomplete
           continue;
@@ -2061,7 +2064,8 @@ namespace RetroDevStudio.Documents
       GR.Collections.Set<string>    uniqueKeys = DocumentInfo.KnownTokens.GetUniqueKeys();
       foreach ( string entry in uniqueKeys )
       {
-        if ( entry.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        if ( ( entry.StartsWith( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LOCAL_LABEL_PREFIX ) )
+        ||   ( entry.Contains( RetroDevStudio.Parser.ASMFileParser.INTERNAL_LABEL_PREFIX ) ) )
         {
           // skip internal labels in autocomplete
           continue;

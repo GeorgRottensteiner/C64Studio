@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using LibGit2Sharp;
@@ -763,6 +763,60 @@ namespace TestProject
       Assert.AreEqual( "test##if_level>>17/$11", info.Messages.Skip( 1 ).First().Value.Message );
       Assert.AreEqual( "if_condition##if_level>>3/$3", info.Messages.Skip( 2 ).First().Value.Message );
       Assert.AreEqual( "test##if_level>>17/$11", info.Messages.Skip( 3 ).First().Value.Message );
+    }
+
+
+
+    [TestMethod]
+    public void TestLocalLabelConcatenationInMacro()
+    {
+      string      source = @"*=$0801
+                            !basic
+
+                            ifstackptr = 0
+                            iflabelnumber = 0
+
+                            !macro test_PUSHIFSTACK {
+                              iflabelnumber = iflabelnumber + 1
+                              ifstackptr = ifstackptr + 1
+                              ifstack##ifstackptr = iflabelnumber
+                            }
+
+                            !macro test_IF {
+
+                              +test_PUSHIFSTACK
+
+
+                              ; hier ist das PROBLEM !!!!!!!!!!!!!!
+                              .num = ifstack##ifstackptr
+                              bne iflabel##.num
+
+                            }
+                            !macro test_ENDIF {
+                              num = ifstack##ifstackptr
+                              iflabel##num:
+                            }
+
+                            +test_IF
+                              nop
+                              nop
+                            +test_ENDIF
+
+                            rts";
+
+      var assembly = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
+      Assert.AreEqual( "01080B080A009E32303631000000D002EAEA60", assembly.ToString() );
+
+      Assert.IsTrue( info.Labels.ContainsKey( "ifstack1" ) );
+      Assert.IsTrue( info.Labels.ContainsKey( "iflabel1" ) );
+      Assert.IsTrue( info.TempLabelInfo.Any( tl => tl.Name == "iflabelnumber" ) );
+      Assert.IsTrue( info.TempLabelInfo.Any( tl => tl.Name == "ifstackptr" ) );
+      Assert.AreEqual( 1, info.Labels["ifstack1"].AddressOrValue );
+      Assert.AreEqual( 2065, info.Labels["iflabel1"].AddressOrValue );
+      Assert.AreEqual( 0, info.TempLabelInfo.First( tl => tl.Name == "iflabelnumber" ).Symbol.AddressOrValue );
+      Assert.AreEqual( 1, info.TempLabelInfo.Where( tl => tl.Name == "iflabelnumber" ).Skip( 1 ).First().Symbol.AddressOrValue );
+      Assert.AreEqual( 0, info.TempLabelInfo.First( tl => tl.Name == "ifstackptr" ).Symbol.AddressOrValue );
+      Assert.AreEqual( 1, info.TempLabelInfo.Where( tl => tl.Name == "ifstackptr" ).Skip( 1 ).First().Symbol.AddressOrValue );
     }
 
 
