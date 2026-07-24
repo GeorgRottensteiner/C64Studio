@@ -1,6 +1,8 @@
 *=$0801
 !basic
 
+ifstack = 17
+
 ifstackptr = 0
 iflabelnumber = 0
 
@@ -17,13 +19,19 @@ iflabelnumber = 0
 
   ; hier ist das PROBLEM !!!!!!!!!!!!!!
   .num = ifstack##ifstackptr
-  bne iflabel##.num
+          bne iflabel##.num
+
+          bne iflabel##ifstack##ifstackptr
 
 }
 !macro test_ENDIF {
   num = ifstack##ifstackptr
-  iflabel##num:
+  iflabel##num
+
+xxlabel##ifstack##ifstackptr
 }
+
+
 
 +test_IF
   nop
