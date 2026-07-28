@@ -26,6 +26,6 @@
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.10" />
   </ItemGroup>
 </Project>
