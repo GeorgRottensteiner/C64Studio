@@ -50,9 +50,12 @@ namespace RetroDevStudio.Documents
       this.seBtnDelete = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.seBtnCloneSolution = new System.Windows.Forms.ToolStripButton();
-      this.imageListSourceControlOverlay = new System.Windows.Forms.ImageList(this.components);
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-      this.seBtnSortItems = new System.Windows.Forms.ToolStripButton();
+      this.seBtnSortItems = new System.Windows.Forms.ToolStripSplitButton();
+      this.sortAllItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.keepFoldersGroupedOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.keepFoldersGroupedOnBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.imageListSourceControlOverlay = new System.Windows.Forms.ImageList(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -261,16 +264,6 @@ namespace RetroDevStudio.Documents
       this.seBtnCloneSolution.Text = "Clone Solution";
       seBtnCloneSolution.Click +=  seBtnCloneSolution_Click ;
       // 
-      // imageListSourceControlOverlay
-      // 
-      this.imageListSourceControlOverlay.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSourceControlOverlay.ImageStream")));
-      this.imageListSourceControlOverlay.TransparentColor = System.Drawing.Color.Transparent;
-      this.imageListSourceControlOverlay.Images.SetKeyName(0, "se_sc_new.ico");
-      this.imageListSourceControlOverlay.Images.SetKeyName(1, "se_sc_uptodate.ico");
-      this.imageListSourceControlOverlay.Images.SetKeyName(2, "se_sc_changes.ico");
-      this.imageListSourceControlOverlay.Images.SetKeyName(3, "se_sc_ignore.ico");
-      this.imageListSourceControlOverlay.Images.SetKeyName(4, "se_sc_conflict.ico");
-
       // 
       // seBtnAddNewTextFile
       // 
@@ -278,8 +271,6 @@ namespace RetroDevStudio.Documents
       seBtnAddNewTextFile.Size = new System.Drawing.Size( 180, 22 );
       seBtnAddNewTextFile.Text = "Text File";
       seBtnAddNewTextFile.Click += seBtnAddNewTextFile_Click;
-
-      // 
       // toolStripSeparator3
       // 
       this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -289,12 +280,47 @@ namespace RetroDevStudio.Documents
       // 
       this.seBtnSortItems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.seBtnSortItems.Enabled = false;
+      this.seBtnSortItems.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sortAllItemsToolStripMenuItem,
+            this.keepFoldersGroupedOnTopToolStripMenuItem,
+            this.keepFoldersGroupedOnBottomToolStripMenuItem});
       this.seBtnSortItems.Image = ((System.Drawing.Image)(resources.GetObject("seBtnSortItems.Image")));
       this.seBtnSortItems.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.seBtnSortItems.Name = "seBtnSortItems";
-      this.seBtnSortItems.Size = new System.Drawing.Size(23, 22);
-      this.seBtnSortItems.Text = "Sort Item alphabetically";
-      this.seBtnSortItems.Click += new System.EventHandler(this.seBtnSortItems_Click);
+      this.seBtnSortItems.Size = new System.Drawing.Size(32, 22);
+      this.seBtnSortItems.Text = "Sort items alphabetically";
+      this.seBtnSortItems.ButtonClick += new System.EventHandler(this.seBtnSortItems_Click);
+      // 
+      // sortAllItemsToolStripMenuItem
+      // 
+      this.sortAllItemsToolStripMenuItem.Name = "sortAllItemsToolStripMenuItem";
+      this.sortAllItemsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+      this.sortAllItemsToolStripMenuItem.Text = "Sort all items";
+      this.sortAllItemsToolStripMenuItem.Click += new System.EventHandler(this.seBtnSortItems_Click);
+      // 
+      // keepFoldersGroupedOnTopToolStripMenuItem
+      // 
+      this.keepFoldersGroupedOnTopToolStripMenuItem.Name = "keepFoldersGroupedOnTopToolStripMenuItem";
+      this.keepFoldersGroupedOnTopToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+      this.keepFoldersGroupedOnTopToolStripMenuItem.Text = "Keep folders grouped on top";
+      this.keepFoldersGroupedOnTopToolStripMenuItem.Click += new System.EventHandler(this.keepFoldersGroupedOnTopToolStripMenuItem_Click);
+      // 
+      // keepFoldersGroupedOnBottomToolStripMenuItem
+      // 
+      this.keepFoldersGroupedOnBottomToolStripMenuItem.Name = "keepFoldersGroupedOnBottomToolStripMenuItem";
+      this.keepFoldersGroupedOnBottomToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+      this.keepFoldersGroupedOnBottomToolStripMenuItem.Text = "Keep folders grouped on bottom";
+      this.keepFoldersGroupedOnBottomToolStripMenuItem.Click += new System.EventHandler(this.keepFoldersGroupedOnBottomToolStripMenuItem_Click);
+      // 
+      // imageListSourceControlOverlay
+      // 
+      this.imageListSourceControlOverlay.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSourceControlOverlay.ImageStream")));
+      this.imageListSourceControlOverlay.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageListSourceControlOverlay.Images.SetKeyName(0, "se_sc_new.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(1, "se_sc_uptodate.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(2, "se_sc_changes.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(3, "se_sc_ignore.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(4, "se_sc_conflict.ico");
       // 
       // SolutionExplorer
       // 
@@ -336,6 +362,9 @@ namespace RetroDevStudio.Documents
     private System.Windows.Forms.ImageList imageListSourceControlOverlay;
     private System.Windows.Forms.ToolStripMenuItem seBtnAddNewTextFile;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-    private System.Windows.Forms.ToolStripButton seBtnSortItems;
+    private System.Windows.Forms.ToolStripSplitButton seBtnSortItems;
+    private System.Windows.Forms.ToolStripMenuItem sortAllItemsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem keepFoldersGroupedOnTopToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem keepFoldersGroupedOnBottomToolStripMenuItem;
   }
 }

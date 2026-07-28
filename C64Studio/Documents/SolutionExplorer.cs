@@ -157,6 +157,19 @@ namespace RetroDevStudio.Documents
 
 
 
+    private bool IsFolderNode( DecentForms.TreeView.TreeNode node )
+    {
+      ProjectElement nodeElement = ElementFromNode( node );
+      if ( ( nodeElement != null )
+      &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private void treeProject_NodeMouseClick( DecentForms.ControlBase Sender, DecentForms.TreeView.TreeNodeMouseClickEventArgs e )
     {
       if ( e.Button == 2 )//System.Windows.Forms.MouseButtons.Right )
@@ -179,7 +192,7 @@ namespace RetroDevStudio.Documents
 
           ProjectElement nodeElement = ElementFromNode( e.Node );
           if ( ( nodeElement != null )
-          && ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+          &&   ( nodeElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
           {
             isProjectOrFolder = true;
             isFolder = true;
@@ -2881,10 +2894,20 @@ namespace RetroDevStudio.Documents
 
     private void seBtnSortItems_Click( object sender, EventArgs e )
     {
+      SortItems( 0 );
+    }
+
+
+
+    // sortMode =0 -> sort all
+    //          =1 -> sort folders on top
+    //          =2 -> sort folders on bottom
+    private void SortItems( int sortMode )
+    {
       treeProject.BeginUpdate();
       foreach ( var projectNode in treeProject.Nodes )
       {
-        SortItemAlphabeticallyAtLevel( projectNode.Nodes );
+        SortItemAlphabeticallyAtLevel( projectNode.Nodes, sortMode );
       }
       treeProject.EndUpdate();
       Core.Navigating.Solution.Modified = true;
@@ -2896,7 +2919,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    private void SortItemAlphabeticallyAtLevel( DecentForms.TreeView.TreeNodeCollection nodes )
+    private void SortItemAlphabeticallyAtLevel( DecentForms.TreeView.TreeNodeCollection nodes, int sortMode )
     {
       if ( nodes.Count == 0 )
       {
@@ -2904,12 +2927,21 @@ namespace RetroDevStudio.Documents
       }
 
       var nodesAtLevel = new SortedDictionary<string,DecentForms.TreeView.TreeNode>();
+      var nodesAtLevelFolders = new SortedDictionary<string,DecentForms.TreeView.TreeNode>();
 
       var curNode = nodes.First();
       while ( curNode != null )
       {
-        nodesAtLevel.Add( curNode.Text, curNode );
-        SortItemAlphabeticallyAtLevel( curNode.Nodes );
+        if ( ( !IsFolderNode( curNode ) )
+        ||   ( sortMode == 0 ) )
+        {
+          nodesAtLevel.Add( curNode.Text, curNode );
+        }
+        else
+        {
+          nodesAtLevelFolders.Add( curNode.Text, curNode );
+        }
+        SortItemAlphabeticallyAtLevel( curNode.Nodes, sortMode );
 
         curNode = curNode.NextNode;
       }
@@ -2920,10 +2952,38 @@ namespace RetroDevStudio.Documents
         return;
       }
       parentNode.Nodes.Clear();
+      if ( sortMode == 1 )
+      {
+        foreach ( var node in nodesAtLevelFolders )
+        {
+          parentNode.Nodes.Add( node.Value );
+        }
+      }
       foreach ( var node in nodesAtLevel )
       {
         parentNode.Nodes.Add( node.Value );
       }
+      if ( sortMode == 2 )
+      {
+        foreach ( var node in nodesAtLevelFolders )
+        {
+          parentNode.Nodes.Add( node.Value );
+        }
+      }
+    }
+
+
+
+    private void keepFoldersGroupedOnBottomToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SortItems( 2 );
+    }
+
+
+
+    private void keepFoldersGroupedOnTopToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SortItems( 1 );
     }
 
 
