@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -202,6 +202,14 @@ namespace DecentForms
       {
         if ( Nodes.Count > 0 )
         {
+          foreach ( var node in Nodes )
+          {
+            node._Parent      = null;
+            node._Next        = null;
+            node._Previous    = null;
+            node._Index       = -1;
+            node._VisualIndex = -1;
+          }
           Nodes.Clear();
           _OwnerControl?.ItemsModified();
         }

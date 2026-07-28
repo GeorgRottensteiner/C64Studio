@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Dialogs;
+using RetroDevStudio.Dialogs;
 using RetroDevStudio.Types;
 using SourceControl;
 using System;
@@ -61,6 +61,7 @@ namespace RetroDevStudio.Documents
           seBtnAddNewItem.Enabled = false;
           seBtnDelete.Enabled = false;
           seBtnCloneSolution.Enabled = false;
+          seBtnSortItems.Enabled = false;
           treeProject.Nodes.Clear();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
@@ -117,6 +118,7 @@ namespace RetroDevStudio.Documents
             }
           }
           seBtnCloneSolution.Enabled = true;
+          seBtnSortItems.Enabled = true;
           RefreshSourceControlState();
           break;
         case ApplicationEvent.Type.DOCUMENT_SAVED:
@@ -2873,6 +2875,55 @@ namespace RetroDevStudio.Documents
     private void seBtnAddNewTextFile_Click( object sender, EventArgs e )
     {
       AddNewFile( ProjectElement.ElementType.TEXT_FILE, "Text File", treeProject.SelectedNode );
+    }
+
+
+
+    private void seBtnSortItems_Click( object sender, EventArgs e )
+    {
+      treeProject.BeginUpdate();
+      foreach ( var projectNode in treeProject.Nodes )
+      {
+        SortItemAlphabeticallyAtLevel( projectNode.Nodes );
+      }
+      treeProject.EndUpdate();
+      Core.Navigating.Solution.Modified = true;
+      foreach ( var project in Core.Navigating.Solution.Projects )
+      {
+        project.SetModified();
+      }
+    }
+
+
+
+    private void SortItemAlphabeticallyAtLevel( DecentForms.TreeView.TreeNodeCollection nodes )
+    {
+      if ( nodes.Count == 0 )
+      {
+        return;
+      }
+
+      var nodesAtLevel = new SortedDictionary<string,DecentForms.TreeView.TreeNode>();
+
+      var curNode = nodes.First();
+      while ( curNode != null )
+      {
+        nodesAtLevel.Add( curNode.Text, curNode );
+        SortItemAlphabeticallyAtLevel( curNode.Nodes );
+
+        curNode = curNode.NextNode;
+      }
+      var parentNode = nodes.First().Parent;
+      if ( parentNode == null )
+      {
+        // this should not happen!
+        return;
+      }
+      parentNode.Nodes.Clear();
+      foreach ( var node in nodesAtLevel )
+      {
+        parentNode.Nodes.Add( node.Value );
+      }
     }
 
 

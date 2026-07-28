@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio.Documents
+namespace RetroDevStudio.Documents
 {
   partial class SolutionExplorer
   {
@@ -28,244 +28,287 @@
     /// </summary>
     private void InitializeComponent()
     {
-      components = new System.ComponentModel.Container();
+      this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SolutionExplorer));
-      treeProject = new DecentForms.TreeView();
-      imageListExplorer = new System.Windows.Forms.ImageList( components );
-      timerDragDrop = new System.Windows.Forms.Timer( components );
-      toolStrip1 = new System.Windows.Forms.ToolStrip();
-      seBtnAddNewItem = new System.Windows.Forms.ToolStripSplitButton();
-      projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      seBtnAddNewFolder = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewASMFile = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewBASICFile = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewSpriteSet = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewCharacterSet = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewCharScreen = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewGraphicScreen = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddNewMap = new System.Windows.Forms.ToolStripMenuItem();
-      seBtnAddExisting = new System.Windows.Forms.ToolStripButton();
-      seBtnDelete = new System.Windows.Forms.ToolStripButton();
-      toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-      seBtnCloneSolution = new System.Windows.Forms.ToolStripButton();
-      imageListSourceControlOverlay = new System.Windows.Forms.ImageList( components );
-      seBtnAddNewTextFile = new System.Windows.Forms.ToolStripMenuItem();
-      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).BeginInit();
-      toolStrip1.SuspendLayout();
-      SuspendLayout();
+      this.treeProject = new DecentForms.TreeView();
+      this.imageListExplorer = new System.Windows.Forms.ImageList(this.components);
+      this.timerDragDrop = new System.Windows.Forms.Timer(this.components);
+      this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+      this.seBtnAddNewItem = new System.Windows.Forms.ToolStripSplitButton();
+      this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+      this.seBtnAddNewFolder = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewASMFile = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewBASICFile = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewTextFile = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewSpriteSet = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewCharacterSet = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewCharScreen = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewGraphicScreen = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddNewMap = new System.Windows.Forms.ToolStripMenuItem();
+      this.seBtnAddExisting = new System.Windows.Forms.ToolStripButton();
+      this.seBtnDelete = new System.Windows.Forms.ToolStripButton();
+      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.seBtnCloneSolution = new System.Windows.Forms.ToolStripButton();
+      this.imageListSourceControlOverlay = new System.Windows.Forms.ImageList(this.components);
+      this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+      this.seBtnSortItems = new System.Windows.Forms.ToolStripButton();
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
+      this.toolStrip1.SuspendLayout();
+      this.SuspendLayout();
       // 
       // treeProject
       // 
-      treeProject.AllowDrag = true;
-      treeProject.AllowDrop = true;
-      treeProject.Anchor =    System.Windows.Forms.AnchorStyles.Top  |  System.Windows.Forms.AnchorStyles.Bottom   |  System.Windows.Forms.AnchorStyles.Left   |  System.Windows.Forms.AnchorStyles.Right ;
-      treeProject.BorderStyle = DecentForms.BorderStyle.FLAT;
-      treeProject.ImageList = imageListExplorer;
-      treeProject.LabelEdit = true;
-      treeProject.Location = new System.Drawing.Point( 0, 28 );
-      treeProject.Name = "treeProject";
-      treeProject.ScrollAlwaysVisible = false;
-      treeProject.SelectedNode = null;
-      treeProject.SelectionMode = DecentForms.SelectionMode.NONE;
-      treeProject.Size = new System.Drawing.Size( 534, 362 );
-      treeProject.TabIndex = 0;
-      treeProject.Text = "NoDblClkTreeView";
-      treeProject.AfterCollapse +=  treeProject_AfterCollapse ;
-      treeProject.AfterExpand +=  treeProject_AfterExpand ;
-      treeProject.AfterSelect +=  treeProject_AfterSelect ;
-      treeProject.NodeMouseClick +=  treeProject_NodeMouseClick ;
-      treeProject.NodeMouseDoubleClick +=  treeProject_NodeMouseDoubleClick ;
-      treeProject.BeforeLabelEdit +=  treeProject_BeforeLabelEdit ;
-      treeProject.AfterLabelEdit +=  treeProject_AfterLabelEdit ;
-      treeProject.DrawNode +=  treeProject_DrawNode ;
-      treeProject.ItemDrag +=  treeProject_ItemDrag ;
-      treeProject.DragDrop +=  treeProject_DragDrop ;
-      treeProject.DragEnter +=  treeProject_DragEnter ;
-      treeProject.DragOver +=  treeProject_DragOver ;
-      treeProject.QueryContinueDrag +=  treeProject_QueryContinueDrag ;
-      treeProject.KeyDown +=  treeProject_KeyDown ;
-      treeProject.KeyUp +=  treeProject_KeyUp ;
+      this.treeProject.AllowDrag = true;
+      this.treeProject.AllowDrop = true;
+      this.treeProject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.treeProject.BorderStyle = DecentForms.BorderStyle.FLAT;
+      this.treeProject.DisplayAntiAliased = true;
+      this.treeProject.ImageList = this.imageListExplorer;
+      this.treeProject.LabelEdit = true;
+      this.treeProject.Location = new System.Drawing.Point(0, 28);
+      this.treeProject.Name = "treeProject";
+      this.treeProject.ScrollAlwaysVisible = false;
+      this.treeProject.SelectionMode = DecentForms.SelectionMode.NONE;
+      this.treeProject.Size = new System.Drawing.Size(534, 362);
+      this.treeProject.TabIndex = 0;
+      this.treeProject.Text = "NoDblClkTreeView";
+      treeProject.AfterCollapse += treeProject_AfterCollapse;
+      treeProject.AfterExpand += treeProject_AfterExpand;
+      treeProject.AfterSelect += treeProject_AfterSelect;
+      treeProject.NodeMouseClick += treeProject_NodeMouseClick;
+      treeProject.NodeMouseDoubleClick += treeProject_NodeMouseDoubleClick;
+      treeProject.BeforeLabelEdit += treeProject_BeforeLabelEdit;
+      treeProject.AfterLabelEdit += treeProject_AfterLabelEdit;
+      treeProject.DrawNode += treeProject_DrawNode;
+      treeProject.ItemDrag += treeProject_ItemDrag;
+      treeProject.DragDrop += treeProject_DragDrop;
+      treeProject.DragEnter += treeProject_DragEnter;
+      treeProject.DragOver += treeProject_DragOver;
+      treeProject.QueryContinueDrag += treeProject_QueryContinueDrag;
+      treeProject.KeyDown += treeProject_KeyDown;
+      treeProject.KeyUp += treeProject_KeyUp;
       // 
       // imageListExplorer
       // 
-      imageListExplorer.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-      imageListExplorer.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject( "imageListExplorer.ImageStream" );
-      imageListExplorer.TransparentColor = System.Drawing.Color.Transparent;
-      imageListExplorer.Images.SetKeyName( 0, "c64.ico" );
-      imageListExplorer.Images.SetKeyName( 1, "source.ico" );
-      imageListExplorer.Images.SetKeyName( 2, "spriteset.ico" );
-      imageListExplorer.Images.SetKeyName( 3, "charset.ico" );
-      imageListExplorer.Images.SetKeyName( 4, "source_basic.ico" );
-      imageListExplorer.Images.SetKeyName( 5, "graphicscreen.ico" );
-      imageListExplorer.Images.SetKeyName( 6, "charsetscreen.ico" );
-      imageListExplorer.Images.SetKeyName( 7, "mapeditor.ico" );
-      imageListExplorer.Images.SetKeyName( 8, "folder.ico" );
-      imageListExplorer.Images.SetKeyName( 9, "solution.ico" );
-      imageListExplorer.Images.SetKeyName( 10, "project.ico" );
-      imageListExplorer.Images.SetKeyName( 11, "disassembler.ico" );
-      imageListExplorer.Images.SetKeyName( 12, "binary.ico" );
-      imageListExplorer.Images.SetKeyName( 13, "filemanager.ico" );
-      imageListExplorer.Images.SetKeyName( 14, "valuetable.ico" );
-      imageListExplorer.Images.SetKeyName( 15, "icon_textfile.ico" );
+      this.imageListExplorer.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListExplorer.ImageStream")));
+      this.imageListExplorer.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageListExplorer.Images.SetKeyName(0, "c64.ico");
+      this.imageListExplorer.Images.SetKeyName(1, "source.ico");
+      this.imageListExplorer.Images.SetKeyName(2, "spriteset.ico");
+      this.imageListExplorer.Images.SetKeyName(3, "charset.ico");
+      this.imageListExplorer.Images.SetKeyName(4, "source_basic.ico");
+      this.imageListExplorer.Images.SetKeyName(5, "graphicscreen.ico");
+      this.imageListExplorer.Images.SetKeyName(6, "charsetscreen.ico");
+      this.imageListExplorer.Images.SetKeyName(7, "mapeditor.ico");
+      this.imageListExplorer.Images.SetKeyName(8, "folder.ico");
+      this.imageListExplorer.Images.SetKeyName(9, "solution.ico");
+      this.imageListExplorer.Images.SetKeyName(10, "project.ico");
+      this.imageListExplorer.Images.SetKeyName(11, "disassembler.ico");
+      this.imageListExplorer.Images.SetKeyName(12, "binary.ico");
+      this.imageListExplorer.Images.SetKeyName(13, "filemanager.ico");
+      this.imageListExplorer.Images.SetKeyName(14, "valuetable.ico");
+      this.imageListExplorer.Images.SetKeyName(15, "icon_textfile.ico");
       // 
       // toolStrip1
       // 
-      toolStrip1.Items.AddRange( new System.Windows.Forms.ToolStripItem[] { seBtnAddNewItem, seBtnAddExisting, seBtnDelete, toolStripSeparator2, seBtnCloneSolution } );
-      toolStrip1.Location = new System.Drawing.Point( 0, 0 );
-      toolStrip1.Name = "toolStrip1";
-      toolStrip1.Size = new System.Drawing.Size( 534, 25 );
-      toolStrip1.TabIndex = 1;
-      toolStrip1.Text = "toolStrip1";
+      this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.seBtnAddNewItem,
+            this.seBtnAddExisting,
+            this.seBtnDelete,
+            this.toolStripSeparator2,
+            this.seBtnCloneSolution,
+            this.toolStripSeparator3,
+            this.seBtnSortItems});
+      this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+      this.toolStrip1.Name = "toolStrip1";
+      this.toolStrip1.Size = new System.Drawing.Size(534, 25);
+      this.toolStrip1.TabIndex = 1;
+      this.toolStrip1.Text = "toolStrip1";
       // 
       // seBtnAddNewItem
       // 
-      seBtnAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      seBtnAddNewItem.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] { projectToolStripMenuItem, toolStripSeparator1, seBtnAddNewFolder, seBtnAddNewASMFile, seBtnAddNewBASICFile, seBtnAddNewTextFile, seBtnAddNewSpriteSet, seBtnAddNewCharacterSet, seBtnAddNewCharScreen, seBtnAddNewGraphicScreen, seBtnAddNewMap } );
-      seBtnAddNewItem.Enabled = false;
-      seBtnAddNewItem.Image = (System.Drawing.Image)resources.GetObject( "seBtnAddNewItem.Image" );
-      seBtnAddNewItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-      seBtnAddNewItem.Name = "seBtnAddNewItem";
-      seBtnAddNewItem.Size = new System.Drawing.Size( 32, 22 );
-      seBtnAddNewItem.Text = "Add New Item";
+      this.seBtnAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.seBtnAddNewItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.projectToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.seBtnAddNewFolder,
+            this.seBtnAddNewASMFile,
+            this.seBtnAddNewBASICFile,
+            this.seBtnAddNewTextFile,
+            this.seBtnAddNewSpriteSet,
+            this.seBtnAddNewCharacterSet,
+            this.seBtnAddNewCharScreen,
+            this.seBtnAddNewGraphicScreen,
+            this.seBtnAddNewMap});
+      this.seBtnAddNewItem.Enabled = false;
+      this.seBtnAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("seBtnAddNewItem.Image")));
+      this.seBtnAddNewItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.seBtnAddNewItem.Name = "seBtnAddNewItem";
+      this.seBtnAddNewItem.Size = new System.Drawing.Size(32, 22);
+      this.seBtnAddNewItem.Text = "Add New Item";
       // 
       // projectToolStripMenuItem
       // 
-      projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-      projectToolStripMenuItem.Size = new System.Drawing.Size( 180, 22 );
-      projectToolStripMenuItem.Text = "Project";
-      projectToolStripMenuItem.Click +=  projectToolStripMenuItem_Click ;
+      this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
+      this.projectToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+      this.projectToolStripMenuItem.Text = "Project";
+      projectToolStripMenuItem.Click += projectToolStripMenuItem_Click;
       // 
       // toolStripSeparator1
       // 
-      toolStripSeparator1.Name = "toolStripSeparator1";
-      toolStripSeparator1.Size = new System.Drawing.Size( 177, 6 );
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(160, 6);
       // 
       // seBtnAddNewFolder
       // 
-      seBtnAddNewFolder.Name = "seBtnAddNewFolder";
-      seBtnAddNewFolder.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewFolder.Text = "Folder";
+      this.seBtnAddNewFolder.Name = "seBtnAddNewFolder";
+      this.seBtnAddNewFolder.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewFolder.Text = "Folder";
       seBtnAddNewFolder.Click +=  seBtnAddNewFolder_Click ;
       // 
       // seBtnAddNewASMFile
       // 
-      seBtnAddNewASMFile.Name = "seBtnAddNewASMFile";
-      seBtnAddNewASMFile.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewASMFile.Text = "ASM File";
+      this.seBtnAddNewASMFile.Name = "seBtnAddNewASMFile";
+      this.seBtnAddNewASMFile.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewASMFile.Text = "ASM File";
       seBtnAddNewASMFile.Click +=  seBtnAddNewASMFile_Click ;
       // 
       // seBtnAddNewBASICFile
       // 
-      seBtnAddNewBASICFile.Name = "seBtnAddNewBASICFile";
-      seBtnAddNewBASICFile.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewBASICFile.Text = "BASIC File";
+      this.seBtnAddNewBASICFile.Name = "seBtnAddNewBASICFile";
+      this.seBtnAddNewBASICFile.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewBASICFile.Text = "BASIC File";
       seBtnAddNewBASICFile.Click +=  seBtnAddNewBASICFile_Click ;
+      // seBtnAddNewTextFile
+      // 
+      this.seBtnAddNewTextFile.Name = "seBtnAddNewTextFile";
+      this.seBtnAddNewTextFile.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewTextFile.Text = "Text File";
       // 
       // seBtnAddNewSpriteSet
       // 
-      seBtnAddNewSpriteSet.Name = "seBtnAddNewSpriteSet";
-      seBtnAddNewSpriteSet.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewSpriteSet.Text = "Sprite Set";
+      this.seBtnAddNewSpriteSet.Name = "seBtnAddNewSpriteSet";
+      this.seBtnAddNewSpriteSet.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewSpriteSet.Text = "Sprite Set";
       seBtnAddNewSpriteSet.Click +=  seBtnAddNewSpriteSet_Click ;
       // 
       // seBtnAddNewCharacterSet
       // 
-      seBtnAddNewCharacterSet.Name = "seBtnAddNewCharacterSet";
-      seBtnAddNewCharacterSet.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewCharacterSet.Text = "Character Set";
+      this.seBtnAddNewCharacterSet.Name = "seBtnAddNewCharacterSet";
+      this.seBtnAddNewCharacterSet.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewCharacterSet.Text = "Character Set";
       seBtnAddNewCharacterSet.Click +=  seBtnAddNewCharacterSet_Click ;
       // 
       // seBtnAddNewCharScreen
       // 
-      seBtnAddNewCharScreen.Name = "seBtnAddNewCharScreen";
-      seBtnAddNewCharScreen.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewCharScreen.Text = "Character Screen";
+      this.seBtnAddNewCharScreen.Name = "seBtnAddNewCharScreen";
+      this.seBtnAddNewCharScreen.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewCharScreen.Text = "Character Screen";
       seBtnAddNewCharScreen.Click +=  seBtnAddNewCharScreen_Click ;
       // 
       // seBtnAddNewGraphicScreen
       // 
-      seBtnAddNewGraphicScreen.Name = "seBtnAddNewGraphicScreen";
-      seBtnAddNewGraphicScreen.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewGraphicScreen.Text = "Graphic Screen";
+      this.seBtnAddNewGraphicScreen.Name = "seBtnAddNewGraphicScreen";
+      this.seBtnAddNewGraphicScreen.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewGraphicScreen.Text = "Graphic Screen";
       seBtnAddNewGraphicScreen.Click +=  seBtnAddNewGraphicScreen_Click ;
       // 
       // seBtnAddNewMap
       // 
-      seBtnAddNewMap.Name = "seBtnAddNewMap";
-      seBtnAddNewMap.Size = new System.Drawing.Size( 180, 22 );
-      seBtnAddNewMap.Text = "Map";
+      this.seBtnAddNewMap.Name = "seBtnAddNewMap";
+      this.seBtnAddNewMap.Size = new System.Drawing.Size(163, 22);
+      this.seBtnAddNewMap.Text = "Map";
       seBtnAddNewMap.Click +=  seBtnAddNewMap_Click ;
       // 
       // seBtnAddExisting
       // 
-      seBtnAddExisting.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      seBtnAddExisting.Enabled = false;
-      seBtnAddExisting.Image = (System.Drawing.Image)resources.GetObject( "seBtnAddExisting.Image" );
-      seBtnAddExisting.ImageTransparentColor = System.Drawing.Color.Magenta;
-      seBtnAddExisting.Name = "seBtnAddExisting";
-      seBtnAddExisting.Size = new System.Drawing.Size( 23, 22 );
-      seBtnAddExisting.Text = "Add Existing Item";
+      this.seBtnAddExisting.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.seBtnAddExisting.Enabled = false;
+      this.seBtnAddExisting.Image = ((System.Drawing.Image)(resources.GetObject("seBtnAddExisting.Image")));
+      this.seBtnAddExisting.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.seBtnAddExisting.Name = "seBtnAddExisting";
+      this.seBtnAddExisting.Size = new System.Drawing.Size(23, 22);
+      this.seBtnAddExisting.Text = "Add Existing Item";
       seBtnAddExisting.Click +=  seBtnAddExisting_Click ;
       // 
       // seBtnDelete
       // 
-      seBtnDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      seBtnDelete.Enabled = false;
-      seBtnDelete.Image = (System.Drawing.Image)resources.GetObject( "seBtnDelete.Image" );
-      seBtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-      seBtnDelete.Name = "seBtnDelete";
-      seBtnDelete.Size = new System.Drawing.Size( 23, 22 );
-      seBtnDelete.Text = "Remove Item from Project";
+      this.seBtnDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.seBtnDelete.Enabled = false;
+      this.seBtnDelete.Image = ((System.Drawing.Image)(resources.GetObject("seBtnDelete.Image")));
+      this.seBtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.seBtnDelete.Name = "seBtnDelete";
+      this.seBtnDelete.Size = new System.Drawing.Size(23, 22);
+      this.seBtnDelete.Text = "Remove Item from Project";
       seBtnDelete.Click +=  seBtnDelete_Click ;
       // 
       // toolStripSeparator2
       // 
-      toolStripSeparator2.Name = "toolStripSeparator2";
-      toolStripSeparator2.Size = new System.Drawing.Size( 6, 25 );
+      this.toolStripSeparator2.Name = "toolStripSeparator2";
+      this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
       // 
       // seBtnCloneSolution
       // 
-      seBtnCloneSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      seBtnCloneSolution.Enabled = false;
-      seBtnCloneSolution.Image = Properties.Resources.clone;
-      seBtnCloneSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
-      seBtnCloneSolution.Name = "seBtnCloneSolution";
-      seBtnCloneSolution.Size = new System.Drawing.Size( 23, 22 );
-      seBtnCloneSolution.Text = "Clone Solution";
+      this.seBtnCloneSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.seBtnCloneSolution.Enabled = false;
+      this.seBtnCloneSolution.Image = global::RetroDevStudio.Properties.Resources.clone;
+      this.seBtnCloneSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.seBtnCloneSolution.Name = "seBtnCloneSolution";
+      this.seBtnCloneSolution.Size = new System.Drawing.Size(23, 22);
+      this.seBtnCloneSolution.Text = "Clone Solution";
       seBtnCloneSolution.Click +=  seBtnCloneSolution_Click ;
       // 
       // imageListSourceControlOverlay
       // 
-      imageListSourceControlOverlay.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-      imageListSourceControlOverlay.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject( "imageListSourceControlOverlay.ImageStream" );
-      imageListSourceControlOverlay.TransparentColor = System.Drawing.Color.Transparent;
-      imageListSourceControlOverlay.Images.SetKeyName( 0, "se_sc_new.ico" );
-      imageListSourceControlOverlay.Images.SetKeyName( 1, "se_sc_uptodate.ico" );
-      imageListSourceControlOverlay.Images.SetKeyName( 2, "se_sc_changes.ico" );
-      imageListSourceControlOverlay.Images.SetKeyName( 3, "se_sc_ignore.ico" );
-      imageListSourceControlOverlay.Images.SetKeyName( 4, "se_sc_conflict.ico" );
+      this.imageListSourceControlOverlay.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSourceControlOverlay.ImageStream")));
+      this.imageListSourceControlOverlay.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageListSourceControlOverlay.Images.SetKeyName(0, "se_sc_new.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(1, "se_sc_uptodate.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(2, "se_sc_changes.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(3, "se_sc_ignore.ico");
+      this.imageListSourceControlOverlay.Images.SetKeyName(4, "se_sc_conflict.ico");
+
       // 
       // seBtnAddNewTextFile
       // 
       seBtnAddNewTextFile.Name = "seBtnAddNewTextFile";
       seBtnAddNewTextFile.Size = new System.Drawing.Size( 180, 22 );
       seBtnAddNewTextFile.Text = "Text File";
-      seBtnAddNewTextFile.Click +=  seBtnAddNewTextFile_Click ;
+      seBtnAddNewTextFile.Click += seBtnAddNewTextFile_Click;
+
+      // 
+      // toolStripSeparator3
+      // 
+      this.toolStripSeparator3.Name = "toolStripSeparator3";
+      this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+      // 
+      // seBtnSortItems
+      // 
+      this.seBtnSortItems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.seBtnSortItems.Enabled = false;
+      this.seBtnSortItems.Image = ((System.Drawing.Image)(resources.GetObject("seBtnSortItems.Image")));
+      this.seBtnSortItems.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.seBtnSortItems.Name = "seBtnSortItems";
+      this.seBtnSortItems.Size = new System.Drawing.Size(23, 22);
+      this.seBtnSortItems.Text = "Sort Item alphabetically";
+      this.seBtnSortItems.Click += new System.EventHandler(this.seBtnSortItems_Click);
       // 
       // SolutionExplorer
       // 
-      ClientSize = new System.Drawing.Size( 534, 390 );
-      Controls.Add( toolStrip1 );
-      Controls.Add( treeProject );
-      Icon = (System.Drawing.Icon)resources.GetObject( "$this.Icon" );
-      Name = "SolutionExplorer";
-      Text = "Solution Explorer";
-      ( (System.ComponentModel.ISupportInitialize)m_FileWatcher ).EndInit();
-      toolStrip1.ResumeLayout( false );
-      toolStrip1.PerformLayout();
-      ResumeLayout( false );
-      PerformLayout();
+      this.ClientSize = new System.Drawing.Size(534, 390);
+      this.Controls.Add(this.toolStrip1);
+      this.Controls.Add(this.treeProject);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+      this.Name = "SolutionExplorer";
+      this.Text = "Solution Explorer";
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
+      this.toolStrip1.ResumeLayout(false);
+      this.toolStrip1.PerformLayout();
+      this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
@@ -292,5 +335,7 @@
     private System.Windows.Forms.ToolStripButton seBtnCloneSolution;
     private System.Windows.Forms.ImageList imageListSourceControlOverlay;
     private System.Windows.Forms.ToolStripMenuItem seBtnAddNewTextFile;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+    private System.Windows.Forms.ToolStripButton seBtnSortItems;
   }
 }
