@@ -279,6 +279,9 @@ namespace RetroDevStudio.Formats
         _LastError = "sector index out of bounds";
         return false;
       }
+      // BUG: BAM2 (Tracks >= 35) wird hier nicht berücksichtigt – es wird immer
+      // TRACK_BAM und der unveränderte Track-Offset verwendet. Für Tracks >= 35
+      // werden somit falsche BAM-Bits gelesen (vgl. AllocSector/FreeSector).
       Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
 
       byte mask = (byte)( 1 << ( Sector & 7 ) );
@@ -330,7 +333,8 @@ namespace RetroDevStudio.Formats
       byte mask = (byte)( 1 << ( Sector & 7 ) );
       bam.Data.SetU8At( trackIndex * 4 + Sector / 8 + 1, (byte)( bam.Data.ByteAt( trackIndex * 4 + Sector / 8 + 1 ) & ~mask ) );
 
-      Tracks[trackIndex - 1].Sectors[Sector].Free = false;
+      // trackIndex wurde für BAM2-Offset modifiziert, für Tracks[] muss der originale Track-Wert verwendet werden
+      Tracks[Track - 1].Sectors[Sector].Free = false;
     }
 
 
