@@ -50,9 +50,14 @@ namespace RetroDevStudio
       {
         if ( object.ReferenceEquals( y, null ) )
         {
+          // Beide Parameter sind null → IComparer-Vertrag verlangt 0
           returnVal = 0;
         }
-        returnVal = 1;
+        else
+        {
+          // Nur x ist null, y nicht → x gilt als kleiner (IComparer-Konvention)
+          returnVal = 1;
+        }
       }
       else if ( object.ReferenceEquals( y, null ) )
       {
