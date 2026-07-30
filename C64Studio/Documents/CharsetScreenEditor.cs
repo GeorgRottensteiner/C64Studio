@@ -2046,7 +2046,7 @@ namespace RetroDevStudio.Documents
             }
             if ( minY + height > CurrentScreen.Height )
             {
-              height = CurrentScreen.Height - minX;
+              height = CurrentScreen.Height - minY;
             }
             return new GR.Math.Rectangle( minX, minY, width, height );
           }
