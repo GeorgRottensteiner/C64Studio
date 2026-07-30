@@ -1830,7 +1830,6 @@ namespace RetroDevStudio.Documents
           {
             m_CharsetScreen.ExternalCharset = GR.Path.RelativePathTo( filename, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
           }
-          m_CharsetScreen.ExternalCharset = "";
           Modified = true;
           RecalcTileUsages();
           return true;
