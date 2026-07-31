@@ -140,7 +140,7 @@ namespace RetroDevStudio.Parser
           m_TextCodeMappingScr[byteValue] = (byte)( byteValue - 'a' + 1 );
           m_TextCodeMappingPet[byteValue] = (byte)( byteValue - ( 'a' - 'A' ) );
         }
-        else if ( byteValue == (byte)'£' )
+        else if ( byteValue == 0xA3 )
         {
           m_TextCodeMappingScr[byteValue] = (byte)28;
           m_TextCodeMappingPet[byteValue] = (byte)92;
