@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Types;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -1830,6 +1830,7 @@ namespace RetroDevStudio.Documents
           {
             m_CharsetScreen.ExternalCharset = GR.Path.RelativePathTo( filename, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
           }
+          m_CharsetScreen.ExternalCharset = "";
           Modified = true;
           RecalcTileUsages();
           return true;

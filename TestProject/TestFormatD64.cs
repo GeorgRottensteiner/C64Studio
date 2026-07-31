@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -62,6 +62,30 @@ namespace TestProject
 
       var diskWithDeletedFile = disk.Compile();
       BinaryCompare( emptyDisk, diskWithDeletedFile );
+    }
+
+
+
+    [TestMethod]
+    public void TestAddMoreFilesThanFitIntoOneSectorAndDeleteAllFilesInFirstSector()
+    {
+      var disk = new D64();
+      disk.CreateEmptyMedia();
+
+      for ( int i = 0; i < 10; i++ )
+      {
+        var filename = new ByteBuffer( $"4142433{i / 10}3{i % 10}" );
+        var fileContent = new ByteBuffer( $"{i:2}" );
+
+        disk.WriteFile( filename, fileContent, FileTypeNative.COMMODORE_PRG );
+      }
+      for ( int i = 0; i < 8; i++ )
+      {
+        var filename = new ByteBuffer( $"4142433{i / 10}3{i % 10}" );
+        disk.DeleteFile( filename, true );
+      }
+
+      Assert.AreEqual( 2, disk.Files().Count );
     }
 
 
