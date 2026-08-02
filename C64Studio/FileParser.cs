@@ -728,7 +728,7 @@ namespace C64Studio
       }
       else if ( Operator == "<=" )
       {
-        if ( Token1 > Token2 )
+        if ( Token1 <= Token2 )
         {
           Result = 1;
         }
