@@ -1,4 +1,4 @@
-﻿using GR.Image;
+using GR.Image;
 using RetroDevStudio.Audio;
 using RetroDevStudio.Controls;
 using RetroDevStudio.CustomRenderer;
@@ -817,7 +817,7 @@ namespace RetroDevStudio
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
         if ( ( !StudioCore.Settings.LastSolutionWasEmpty )
-        &&   ( StudioCore.Settings.MRUProjects.Count > 0 ) )
+        && ( StudioCore.Settings.MRUProjects.Count > 0 ) )
         {
           var idleRequest = new IdleRequest();
           idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
@@ -1221,31 +1221,6 @@ namespace RetroDevStudio
 
 
 
-    public void Debugger_DebugEvent( DebugEventData Event )
-    {
-      switch ( Event.Type )
-      {
-        case DebugEvent.REGISTER_INFO:
-          SetDebuggerValues( Event.Registers );
-          break;
-        case DebugEvent.EMULATOR_CLOSED:
-          StopDebugging();
-          break;
-        case DebugEvent.UPDATE_WATCH:
-          if ( ( IsWatchShowingCurrentDebuggedProject() )
-          ||   ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
-          {
-            UpdateWatchInfo( Event.Request, Event.Data );
-          }
-          break;
-        case DebugEvent.TRACE_OUTPUT:
-          AddToOutputAndShow( Event.Text );
-          break;
-      }
-    }
-
-
-
     void SetToolPerspective( Perspective NewPerspective )
     {
       if ( m_ActivePerspective == NewPerspective )
@@ -1282,7 +1257,7 @@ namespace RetroDevStudio
 
       // restore previous active doc if it exists
       if ( ( previousActiveDoc != null )
-      &&   ( previousActiveDoc.BaseDoc != null ) )
+      && ( previousActiveDoc.BaseDoc != null ) )
       {
         previousActiveDoc.BaseDoc.Show();
       }
@@ -1368,26 +1343,26 @@ namespace RetroDevStudio
         {
           int itemIndex = mainToolEmulator.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
           if ( ( tool.Name.ToUpper() == StudioCore.Settings.EmulatorToRun )
-          ||   ( oldTool == tool ) )
+          || ( oldTool == tool ) )
           {
             mainToolEmulator.SelectedIndex = itemIndex;
           }
 
           itemIndex = mainDebugDebugger.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
           if ( ( tool.Name.ToUpper() == StudioCore.Settings.DebuggerToRun )
-          ||   ( oldDebugger == tool ) )
+          || ( oldDebugger == tool ) )
           {
             mainDebugDebugger.SelectedIndex = itemIndex;
           }
         }
       }
       if ( ( mainToolEmulator.Items.Count != 0 )
-      &&   ( mainToolEmulator.SelectedIndex == -1 ) )
+      && ( mainToolEmulator.SelectedIndex == -1 ) )
       {
         mainToolEmulator.SelectedIndex = 0;
       }
       if ( ( mainDebugDebugger.Items.Count != 0 )
-      &&   ( mainDebugDebugger.SelectedIndex == -1 ) )
+      && ( mainDebugDebugger.SelectedIndex == -1 ) )
       {
         mainDebugDebugger.SelectedIndex = 0;
       }
@@ -1773,7 +1748,7 @@ namespace RetroDevStudio
           bool canToggleBreakpoints = false;
 
           if ( ( StudioCore.State == Types.StudioState.NORMAL )
-          ||   ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
+          || ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             canToggleBreakpoints = true;
           }
@@ -2250,9 +2225,9 @@ namespace RetroDevStudio
           if ( Document?.Element == null )
           {
             if ( ( StudioCore.Compiling.m_LastBuildInfo != null )
-            &&   ( Document != null )
-            &&   ( Document.FullPath != null )
-            &&   ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
+            && ( Document != null )
+            && ( Document.FullPath != null )
+            && ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) ) )
             {
               targetFilename = lastBuildInfoOfThisFile.TargetFile;
             }
@@ -2265,7 +2240,7 @@ namespace RetroDevStudio
               targetFilename = Document?.Element.CompileTargetFile;
             }
             if ( ( string.IsNullOrEmpty( targetFilename ) )
-            &&   ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+            && ( Document?.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
             {
               targetFilename = GR.Path.RenameExtension( fullDocPath, ".prg" );
             }
@@ -2293,7 +2268,7 @@ namespace RetroDevStudio
 
           // alternative run file name
           if ( ( FillForRunning )
-          &&   ( Document?.Element != null ) )
+          && ( Document?.Element != null ) )
           {
             ProjectElement.PerConfigSettings configSettingRun = Document.Element.Settings[Document.Project.Settings.CurrentConfig.Name];
             if ( !string.IsNullOrEmpty( configSettingRun.DebugFile ) )
@@ -2325,7 +2300,7 @@ namespace RetroDevStudio
           int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
           {
             if ( ( Document?.Project != null )
-            &&   ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+            && ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
             {
               int   dummy = -1;
               if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out dummy ) )
@@ -2423,14 +2398,14 @@ namespace RetroDevStudio
               break;
             case "SolutionName":
               if ( ( StudioCore.Navigating.Solution != null )
-              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              && ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
               {
                 valueToInsert = StudioCore.Navigating.Solution.Name;
               }
               break;
             case "SolutionPath":
               if ( ( StudioCore.Navigating.Solution != null )
-              &&   ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
+              && ( !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) ) )
               {
                 valueToInsert = GR.Path.GetDirectoryName( StudioCore.Navigating.Solution.Filename );
               }
@@ -2876,7 +2851,7 @@ namespace RetroDevStudio
 
         // check file version (WinVICE remote debugger changes)
         if ( ( StudioCore.Debugging.Debugger != null )
-        &&   ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
+        && ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
         {
           return false;
         }
@@ -2907,8 +2882,8 @@ namespace RetroDevStudio
         }
 
         if ( ( Document != null )
-        &&   ( Document.ASMFileInfo != null )
-        &&   ( toolRun.PassLabelsToEmulator ) )
+        && ( Document.ASMFileInfo != null )
+        && ( toolRun.PassLabelsToEmulator ) )
         {
           string labelInfo = Document.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
           if ( labelInfo.Length > 0 )
@@ -3027,7 +3002,7 @@ namespace RetroDevStudio
         return;
       }
       if ( ( baseDoc.DocumentInfo.Project != null )
-      && ( baseDoc.DocumentInfo.Project.Modified ) )
+      &&   ( baseDoc.DocumentInfo.Project.Modified ) )
       {
         if ( !SaveProject( baseDoc.DocumentInfo.Project ) )
         {
@@ -3129,7 +3104,7 @@ namespace RetroDevStudio
     private void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
       if ( ( AppState == Types.StudioState.NORMAL )
-      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+      || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
       {
         m_DebugBreakpoints.RemoveBreakpoint( Breakpoint );
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
@@ -3194,14 +3169,14 @@ namespace RetroDevStudio
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_ADDED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             AddBreakpoint( Event.Breakpoint );
           }
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_REMOVED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             if ( ( m_CurrentProject != null )
             && ( m_CurrentProject.Settings.BreakPoints.ContainsKey( Event.Breakpoint.DocumentFilename ) ) )
@@ -3992,16 +3967,16 @@ namespace RetroDevStudio
         type = ProjectElement.ElementType.GRAPHIC_SCREEN;
       }
       else if ( ( newFileExtension == ".BAS" )
-      ||        ( newFileExtension == ".B" ) )
+      || ( newFileExtension == ".B" ) )
       {
         type = ProjectElement.ElementType.BASIC_SOURCE;
       }
       else if ( ( newFileExtension == ".TXT" )
-      ||        ( newFileExtension == ".CFG" )
-      ||        ( newFileExtension == ".HTML" )
-      ||        ( newFileExtension == ".HTM" )
-      ||        ( newFileExtension == ".BAT" )
-      ||        ( newFileExtension == ".PS1" ) )
+      || ( newFileExtension == ".CFG" )
+      || ( newFileExtension == ".HTML" )
+      || ( newFileExtension == ".HTM" )
+      || ( newFileExtension == ".BAT" )
+      || ( newFileExtension == ".PS1" ) )
       {
         type = ProjectElement.ElementType.TEXT_FILE;
       }
@@ -4197,28 +4172,30 @@ namespace RetroDevStudio
 
             SetToolPerspective( Perspective.DEBUG );
             mainDebugGo.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
+            mainDebugGoRunForOneSecondToolStripMenuItem.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
             mainDebugBreak.Enabled = ( AppState == Types.StudioState.DEBUGGING_RUN );
             m_DebugRegisters.EnableRegisterOverrides( isStoppedInDebugger );
 
             if ( isStoppedInDebugger )
             {
-              mainDebugAdvanceLine.Enabled                      = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_LINE );
-              mainDebugAdvanceOneLineToolStripMenuItem.Enabled  = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_LINE );
-              mainDebugAdvanceToLineToolStripMenuItem.Enabled   = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE );
-              mainDebugAdvanceFrame.Enabled                     = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_FRAME );
+              mainDebugAdvanceLine.Enabled = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_LINE );
+              mainDebugAdvanceOneLineToolStripMenuItem.Enabled = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_LINE );
+              mainDebugAdvanceToLineToolStripMenuItem.Enabled = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_TO_SPECIFIC_LINE );
+              mainDebugAdvanceFrame.Enabled = StudioCore.Debugging.Debugger.SupportsFeature( DebuggerFeature.ADVANCE_FRAME );
             }
             else
             {
-              mainDebugAdvanceLine.Enabled                      = false;
-              mainDebugAdvanceOneLineToolStripMenuItem.Enabled  = false;
-              mainDebugAdvanceToLineToolStripMenuItem.Enabled   = false;
-              mainDebugAdvanceFrame.Enabled                     = false;
+              mainDebugAdvanceLine.Enabled = false;
+              mainDebugAdvanceOneLineToolStripMenuItem.Enabled = false;
+              mainDebugAdvanceToLineToolStripMenuItem.Enabled = false;
+              mainDebugAdvanceFrame.Enabled = false;
             }
           }
           else
           {
             SetToolPerspective( Perspective.EDIT );
             mainDebugGo.Enabled = true;
+            mainDebugGoRunForOneSecondToolStripMenuItem.Enabled = true;
             m_DebugRegisters.EnableRegisterOverrides( false );
           }
         }
@@ -4435,8 +4412,6 @@ namespace RetroDevStudio
         StudioCore.Debugging.FirstActionAfterBreak = false;
 
         StudioCore.MainForm.SetGUIForDebugging( true );
-        //mainDebugGo.Enabled = false;
-        //mainDebugBreak.Enabled = true;
 
         Types.Breakpoint tempBP = new RetroDevStudio.Types.Breakpoint();
         tempBP.Address = DebugAddress;
@@ -4475,7 +4450,14 @@ namespace RetroDevStudio
 
     private void mainDebugGo_Click( object sender, EventArgs e )
     {
-      StudioCore.Debugging.DebugGo();
+      if ( AppState == Types.StudioState.NORMAL )
+      {
+        ApplyFunction( RetroDevStudio.Types.Function.BUILD_AND_DEBUG );
+      }
+      else
+      {
+        ApplyFunction( RetroDevStudio.Types.Function.DEBUG_GO );
+      }
     }
 
 
@@ -4525,7 +4507,7 @@ namespace RetroDevStudio
     private void refreshRegistersToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
+      || ( AppState == Types.StudioState.DEBUGGING_RUN ) )
       {
         StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
         if ( AppState == Types.StudioState.DEBUGGING_RUN )
@@ -4714,7 +4696,7 @@ namespace RetroDevStudio
 
           // only update if we're not during closing of debugger
           if ( ( StudioCore.Debugging.Debugger != null )
-          &&   ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
+          && ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
           {
             m_DebugRegisters.SetRegisters( Registers );
             m_DebugRegisters.EnableRegisterOverrides( true );
@@ -4728,8 +4710,8 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
             {
               if ( ( StudioCore.Debugging.MarkedDocument == null )
-              ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-              ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
+              || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+              || ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
               {
                 var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
                 StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
@@ -4754,6 +4736,7 @@ namespace RetroDevStudio
             }
           }
           mainDebugGo.Enabled = true;
+          mainDebugGoRunForOneSecondToolStripMenuItem.Enabled = true;
           mainDebugBreak.Enabled = false;
         }
         catch ( System.Exception ex )
@@ -5047,14 +5030,14 @@ namespace RetroDevStudio
             return;
           }
           else if ( ( Doc.ASMFileInfo.AssemblerSettings != null )
-          &&        ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
+          && ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
           {
             m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
             return;
           }
           else if ( ( Doc.ASMFileInfo.AssemblerSettings != null )
-          &&        ( Doc.ASMFileInfo.AssemblerSettings.POPrefix != null )
-          &&        ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Doc.ASMFileInfo.AssemblerSettings.POPrefix + Keyword.ToUpper() ) ) )
+          && ( Doc.ASMFileInfo.AssemblerSettings.POPrefix != null )
+          && ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Doc.ASMFileInfo.AssemblerSettings.POPrefix + Keyword.ToUpper() ) ) )
           {
             m_Help.NavigateTo( "asm_macro.html#" + Keyword.ToLower() );
             return;
@@ -5113,7 +5096,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5129,8 +5112,8 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            &&   ( curDoc.BaseDoc != null )
-            &&   ( curDoc.ContainsCode ) )
+            && ( curDoc.BaseDoc != null )
+            && ( curDoc.ContainsCode ) )
             {
               if ( curDoc.BaseDoc.ApplyFunction( Function ) )
               {
@@ -5343,8 +5326,8 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            &&   ( curDoc.BaseDoc != null )
-            &&   ( curDoc.ContainsCode ) )
+            && ( curDoc.BaseDoc != null )
+            && ( curDoc.ContainsCode ) )
             {
               return curDoc.BaseDoc.ApplyFunction( Function );
             }
@@ -5381,7 +5364,7 @@ namespace RetroDevStudio
             // save current document
             BaseDocument curDoc = ActiveContent;
             if ( ( curDoc != null )
-            &&   ( !curDoc.DocumentInfo.ContainsCode ) )
+            && ( !curDoc.DocumentInfo.ContainsCode ) )
             {
               curDoc = ActiveDocument;
             }
@@ -5424,12 +5407,15 @@ namespace RetroDevStudio
         case RetroDevStudio.Types.Function.DEBUG_GO:
           StudioCore.Debugging.DebugGo();
           return true;
+        case Function.DEBUG_RUN_FOR_SPECIFIC_TIME:
+          StudioCore.Debugging.DebugRunForSpecificTime();
+          return true;
         case RetroDevStudio.Types.Function.DEBUG_BREAK:
           StudioCore.Debugging.DebugBreak();
           return true;
         case RetroDevStudio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5480,7 +5466,7 @@ namespace RetroDevStudio
             foreach ( BaseDocument doc in panelMain.Documents )
             {
               if ( ( doc.DocumentInfo.Element == null )
-              && ( doc.Modified ) )
+              &&   ( doc.Modified ) )
               {
                 doc.Save( BaseDocument.SaveMethod.SAVE );
               }
@@ -5505,7 +5491,7 @@ namespace RetroDevStudio
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            ||   ( !docToSave.IsSaveable ) )
+            ||  ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5538,12 +5524,12 @@ namespace RetroDevStudio
             // save current document as
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            && ( !docToSave.IsSaveable ) )
+            &&   ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            || ( !docToSave.IsSaveable ) )
+            ||   ( !docToSave.IsSaveable ) )
             {
               break;
             }
@@ -5827,14 +5813,14 @@ namespace RetroDevStudio
     public void AddWatchEntry( WatchEntry Watch )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_RUN )
-      || ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      || ( AppState == Types.StudioState.NORMAL ) )
+      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN )
+      ||   ( AppState == Types.StudioState.NORMAL ) )
       {
         m_DebugWatch.AddWatchEntry( Watch );
 
         m_CurrentProject?.Settings.WatchEntries.Add( Watch );
 
-        if ( IsWatchShowingCurrentDebuggedProject() )
+        if ( StudioCore.Debugging.IsWatchShowingCurrentDebuggedProject() )
         {
           StudioCore.Debugging.Debugger?.AddWatchEntry( Watch );
 
@@ -5848,23 +5834,11 @@ namespace RetroDevStudio
 
 
 
-    private bool IsWatchShowingCurrentDebuggedProject()
-    {
-      if ( ( StudioCore.Debugging.Debugger != null )
-      && ( StudioCore.Debugging.DebuggedProject == m_CurrentProject ) )
-      {
-        return true;
-      }
-      return false;
-    }
-
-
-
     public void RemoveWatchEntry( WatchEntry Watch )
     {
       m_CurrentProject?.Settings.WatchEntries.Remove( Watch );
       m_DebugWatch.RemoveWatchEntry( Watch );
-      if ( IsWatchShowingCurrentDebuggedProject() )
+      if ( StudioCore.Debugging.IsWatchShowingCurrentDebuggedProject() )
       {
         StudioCore.Debugging.Debugger?.RemoveWatchEntry( Watch );
       }
@@ -5872,7 +5846,7 @@ namespace RetroDevStudio
 
 
 
-    private void UpdateWatchInfo( RequestData Request, GR.Memory.ByteBuffer Data )
+    public void UpdateWatchInfo( RequestData Request, GR.Memory.ByteBuffer Data )
     {
       if ( InvokeRequired )
       {
@@ -6273,9 +6247,9 @@ namespace RetroDevStudio
       foreach ( BaseDocument doc in panelMain.Documents )
       {
         if ( ( !StudioCore.ShuttingDownDeniedSaveDocs.Contains( doc ) )
-        &&   ( doc.Modified )
-        &&   ( doc.DocumentInfo.Project == null )
-        &&   ( doc.DocumentInfo.Element == null ) )
+        && ( doc.Modified )
+        && ( doc.DocumentInfo.Project == null )
+        && ( doc.DocumentInfo.Element == null ) )
         {
 
           itemsWithChanges.Add( doc.Name );
@@ -6480,7 +6454,7 @@ namespace RetroDevStudio
       StudioCore.Navigating.Solution.DuringLoad = false;
 
       if ( ( StudioCore.Navigating.Project == null )
-      &&   ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
+      && ( StudioCore.Navigating.Solution.Projects.Count > 0 ) )
       {
         StudioCore.Navigating.Project = StudioCore.Navigating.Solution.Projects[0];
       }
@@ -6550,7 +6524,7 @@ namespace RetroDevStudio
 
       Project  project;
       if ( ( StudioCore.Navigating.Solution != null )
-      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
+      && ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -6559,7 +6533,7 @@ namespace RetroDevStudio
       // file already opened?
       var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( Filename );
       if ( ( docInfo != null )
-      &&   ( docInfo.BaseDoc != null ) )
+      && ( docInfo.BaseDoc != null ) )
       {
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         docInfo.BaseDoc.Show();
@@ -6592,7 +6566,7 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".CHARSETPROJECT" )
-      ||        ( extension == ".CHR" ) )
+      || ( extension == ".CHR" ) )
       {
         document = new CharsetEditor( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6603,15 +6577,15 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".GRAPHICSCREEN" )
-      ||        ( extension == ".IFF" )
-      ||        ( extension == ".KOA" )
-      ||        ( extension == ".KLA" ) )
+      || ( extension == ".IFF" )
+      || ( extension == ".KOA" )
+      || ( extension == ".KLA" ) )
       {
         document = new GraphicScreenEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".BAS" )
-      ||        ( extension == ".B" ) )
+      || ( extension == ".B" ) )
       {
         document = new SourceBasicEx( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6644,11 +6618,11 @@ namespace RetroDevStudio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".TXT" )
-      ||        ( extension == ".CFG" )
-      ||        ( extension == ".BAT" )
-      ||        ( extension == ".PS1" )
-      ||        ( extension == ".HTML" )
-      ||        ( extension == ".HTM" ) )
+      || ( extension == ".CFG" )
+      || ( extension == ".BAT" )
+      || ( extension == ".PS1" )
+      || ( extension == ".HTML" )
+      || ( extension == ".HTM" ) )
       {
         document = new TextFile( StudioCore );
         document.ShowHint = DockState.Document;
@@ -6670,7 +6644,7 @@ namespace RetroDevStudio
           editor.ImportIFFPicture( GR.IO.File.ReadAllBytes( Filename ) );
         }
         else if ( ( extension == ".KLA" )
-        ||        ( extension == ".KOA" ) )
+        || ( extension == ".KOA" ) )
         {
           var editor = (GraphicScreenEditor)document;
 
@@ -8463,7 +8437,7 @@ namespace RetroDevStudio
     private void dumpSourceInfoToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( ( ActiveDocumentInfo != null )
-      &&   ( ActiveDocumentInfo.ASMFileInfo != null ) )
+      && ( ActiveDocumentInfo.ASMFileInfo != null ) )
       {
         foreach ( KeyValuePair<int, Types.ASM.SourceInfo> pair in ActiveDocumentInfo.ASMFileInfo.SourceInfo )
         {
@@ -8682,7 +8656,14 @@ namespace RetroDevStudio
     {
       ApplyFunction( Function.DEBUG_ADVANCE_TO_LINE );
     }
-    
+
+
+
+    private void mainDebugGoRunForOneSecondToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( Function.DEBUG_RUN_FOR_SPECIFIC_TIME );
+    }
+
 
 
   }

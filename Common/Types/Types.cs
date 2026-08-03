@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -190,7 +190,8 @@ namespace RetroDevStudio.Types
     REPLACE_IN_DOCUMENT,
     DEBUG_ADVANCE_FRAME,
     DEBUG_ADVANCE_LINE,
-    DEBUG_ADVANCE_TO_LINE
+    DEBUG_ADVANCE_TO_LINE,
+    DEBUG_RUN_FOR_SPECIFIC_TIME
   }
 
   public enum StudioState

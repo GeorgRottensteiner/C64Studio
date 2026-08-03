@@ -1,9 +1,10 @@
-﻿using RetroDevStudio.Debugger;
+using RetroDevStudio.Debugger;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Windows.Forms;
 using GR.Memory;
 using RetroDevStudio.Types;
 using RetroDevStudio.Documents;
@@ -44,7 +45,13 @@ namespace RetroDevStudio
 
     public CompileTargetType    DebugType = CompileTargetType.NONE;
 
+    // Timer used for DEBUG_RUN_FOR_SPECIFIC_TIME functionality
+    private Timer                m_RunForSpecificTimeTimer = null;
+    // default interval in milliseconds (1 second)
+    private int                  m_RunForSpecificTimeInterval = 1000;
+
     internal bool               InitialBreakpointIsTemporary;
+    private bool                m_RunForSpecificTimeEnabled = false;        
 
 
 
@@ -78,7 +85,7 @@ namespace RetroDevStudio
         Debugger.AddWatchEntry( watch );
       }
 
-      Debugger.DebugEvent += Core.MainForm.Debugger_DebugEvent;
+      Debugger.DebugEvent += Debugger_DebugEvent;
     }
 
 
@@ -615,6 +622,8 @@ namespace RetroDevStudio
           FirstActionAfterBreak = true;
         }
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+        Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_PAUSED } );
+
 
         Core.MainForm.SetGUIForDebugging( true );
       }
@@ -720,6 +729,7 @@ namespace RetroDevStudio
 
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
         FirstActionAfterBreak = false;
+        Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_RESUMED } );
 
         Core.MainForm.SetGUIForDebugging( true );
       }
@@ -729,6 +739,8 @@ namespace RetroDevStudio
 
     internal void DebugBreak()
     {
+      // stop any run-for-specific-time timer when a break is requested
+      StopRunForSpecificTimeTimer();
       if ( Debugger == null )
       {
         Core.AddToOutput( "No debugger attached" );
@@ -755,6 +767,7 @@ namespace RetroDevStudio
         }
 
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+        Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_PAUSED } );
         FirstActionAfterBreak = true;
         Core.MainForm.SetGUIForDebugging( true );
       }
@@ -840,6 +853,7 @@ namespace RetroDevStudio
           }
           Core.Executing.BringStudioToForeground();
           Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+          Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_PAUSED } );
           Core.MainForm.SetGUIForDebugging( true );
         }
       }
@@ -989,6 +1003,8 @@ namespace RetroDevStudio
 
     public void DebugStop()
     {
+      // ensure timer is stopped when debugging stops
+      StopRunForSpecificTimeTimer();
       Debugger?.SetShuttingDown();
       /*
       if ( CurrentToolSupportsDebugging() )
@@ -1116,6 +1132,7 @@ namespace RetroDevStudio
 
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
         FirstActionAfterBreak = false;
+        Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_RESUMED } );
 
         Core.MainForm.SetGUIForDebugging( true );
       }
@@ -1146,6 +1163,7 @@ namespace RetroDevStudio
 
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
         FirstActionAfterBreak = false;
+        Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_RESUMED } );
 
         Core.MainForm.SetGUIForDebugging( true );
       }
@@ -1176,10 +1194,116 @@ namespace RetroDevStudio
 
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
         FirstActionAfterBreak = false;
+        Debugger_DebugEvent( new DebugEventData() { Type = DebugEvent.EMULATOR_RESUMED } );
 
         Core.MainForm.SetGUIForDebugging( true );
       }
     }
+
+
+
+    internal void DebugRunForSpecificTime()
+    {
+      // start/trigger optional timer (defaults to 1 second)
+      try
+      {
+        if ( m_RunForSpecificTimeTimer == null )
+        {
+          m_RunForSpecificTimeTimer = new Timer();
+          m_RunForSpecificTimeTimer.Tick += ( s, e ) =>
+          {
+            try
+            {
+              // stop timer to avoid reentrancy
+              DebugBreak();
+            }
+            catch ( Exception ex )
+            {
+              Core.AddToOutput( "Exception in run-for-specific-time timer: " + ex.Message + Environment.NewLine );
+            }
+          };
+        }
+        m_RunForSpecificTimeEnabled = true;
+        m_RunForSpecificTimeTimer.Interval = m_RunForSpecificTimeInterval;
+        m_RunForSpecificTimeTimer.Start();
+      }
+      catch ( Exception ex )
+      {
+        Core.AddToOutput( "Failed to start run-for-specific-time timer: " + ex.Message + Environment.NewLine );
+      }
+
+      if ( Core.State == Types.StudioState.NORMAL )
+      {
+        Core.MainForm.ApplyFunction( RetroDevStudio.Types.Function.BUILD_AND_DEBUG );
+      }
+      else
+      {
+        Core.MainForm.ApplyFunction( RetroDevStudio.Types.Function.DEBUG_GO );
+      }
+    }
+
+
+
+    private void StopRunForSpecificTimeTimer()
+    {
+      m_RunForSpecificTimeEnabled = false;
+      try
+      {
+        if ( m_RunForSpecificTimeTimer != null )
+        {
+          m_RunForSpecificTimeTimer.Stop();
+          m_RunForSpecificTimeTimer.Dispose();
+          m_RunForSpecificTimeTimer = null;
+        }
+      }
+      catch
+      {
+      }
+    }
+
+
+
+    public bool IsWatchShowingCurrentDebuggedProject()
+    {
+      if ( DebuggedProject == Core.MainForm.CurrentProject )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    public void Debugger_DebugEvent( DebugEventData Event )
+    {
+      switch ( Event.Type )
+      {
+        case DebugEvent.REGISTER_INFO:
+          Core.MainForm.SetDebuggerValues( Event.Registers );
+          break;
+        case DebugEvent.EMULATOR_CLOSED:
+          Core.MainForm.StopDebugging();
+          break;
+        case DebugEvent.UPDATE_WATCH:
+          if ( ( IsWatchShowingCurrentDebuggedProject() )
+          ||   ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
+          {
+            Core.MainForm.UpdateWatchInfo( Event.Request, Event.Data );
+          }
+          break;
+        case DebugEvent.TRACE_OUTPUT:
+          Core.MainForm.AddToOutputAndShow( Event.Text );
+          break;
+        case DebugEvent.EMULATOR_PAUSED:
+          if ( m_RunForSpecificTimeEnabled )
+          {
+            m_RunForSpecificTimeEnabled = false;
+            DebugRunForSpecificTime();
+          }
+          break;
+      }
+    }
+
 
 
 

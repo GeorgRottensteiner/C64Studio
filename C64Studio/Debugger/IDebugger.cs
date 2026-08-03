@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -37,7 +37,9 @@ namespace RetroDevStudio
     EMULATOR_CLOSED,
     REGISTER_INFO,
     TRACE_OUTPUT,
-    UPDATE_BREAKPOINT
+    UPDATE_BREAKPOINT,
+    EMULATOR_PAUSED,
+    EMULATOR_RESUMED
   };
 
   public enum DebuggerState
