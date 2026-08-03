@@ -1,4 +1,4 @@
-﻿using GR.Memory;
+using GR.Memory;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Types;
 using System;
@@ -95,6 +95,7 @@ namespace RetroDevStudio
     private bool                      _StepOverIsSteppingOverJMPAndBranches = false;            
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
+    private bool                      m_SendResumeAfterConditionResponse = false;            
 
 
 
@@ -579,6 +580,11 @@ namespace RetroDevStudio
             }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_CONDITION_SET:
+            if ( m_SendResumeAfterConditionResponse )
+            {
+              m_SendResumeAfterConditionResponse = false;
+              QueueRequest( DebugRequestType.EXIT );
+            }
             break;
           default:
             Log( "Unsupported response type " + ( (int)responseType ).ToString( "X2" ) + " received" );
@@ -1198,7 +1204,14 @@ namespace RetroDevStudio
 
             var requestData = new ByteBuffer();
             requestData.AppendU16( (ushort)m_Request.Parameter1 );
-            requestData.AppendU16( (ushort)m_Request.Parameter1 );
+            if ( m_Request.Parameter2 == -1 )
+            {
+              requestData.AppendU16( (ushort)m_Request.Parameter1 );
+            }
+            else
+            {
+              requestData.AppendU16( (ushort)m_Request.Parameter2 );
+            }
             requestData.AppendU8( 1 );    // stop when hit
             requestData.AppendU8( 1 );    // enabled
 
@@ -1895,7 +1908,21 @@ namespace RetroDevStudio
 
     public void AdvanceFrame()
     {
-      QueueRequest( DebugRequestType.ADVANCE_FRAME );
+      var requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, 0, 0xffff );
+      requData.Breakpoint = new Types.Breakpoint()
+      {
+        Temporary = true,
+        Conditions = "( ( VPOS==$0 ) && ( HPOS>=$0 ) && ( HPOS<=$3 ) )",
+        //Conditions = "( ( VPOS==$0 ) && ( HPOS==$0 ) )",
+        //Conditions = "VPOS==$0",
+        Address = 0
+      };
+      requData.Parameter2 = 0xffff;
+      QueueRequest( requData );
+      m_SendResumeAfterConditionResponse = true;
+      //QueueRequest( DebugRequestType.EXIT );
+
+      //QueueRequest( DebugRequestType.ADVANCE_FRAME );
     }
 
 

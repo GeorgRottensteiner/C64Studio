@@ -1888,6 +1888,10 @@ namespace RetroDevStudio.Documents
 
     bool CanNodeBeInProject( DecentForms.TreeView.TreeNode dragTarget, DecentForms.TreeView.TreeNode draggedNode )
     {
+      if ( draggedNode == null )
+      {
+        return false;
+      }
       if ( draggedNode.Level == 0 )
       {
         // dragging a project
