@@ -9625,13 +9625,15 @@ namespace RetroDevStudio.Parser
         return ParseLineResult.ERROR_ABORT;
       }
 
-      int nextLineIndex = _ParseContext.LineIndex + 1;
-      if ( nextLineIndex >= Lines.Length )
+      // find matching loop end and copy lines now (to avoid auto-inserting macros only in the first iteration)
+      int nextLineIndex = FindLoopEnd( Lines, _ParseContext.LineIndex + 1, _ParseContext.CurrentTextMapping );
+      if ( nextLineIndex == -1 )
       {
-        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "REPEAT at end of code encountered" );
+        AddError( _ParseContext.LineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "Missing loop end" );
         return ParseLineResult.ERROR_ABORT;
       }
-      int loopLength = 1;
+
+      int loopLength = nextLineIndex - _ParseContext.LineIndex - 1;
       string[] tempContent = new string[loopLength * ( numRepeats - 1 )];
 
       for ( int i = 0; i < numRepeats - 1; ++i )
@@ -9647,7 +9649,8 @@ namespace RetroDevStudio.Parser
       System.Array.Copy( replacementLines, 0, newLines, _ParseContext.LineIndex + 1 + loopLength, replacementLines.Length );
 
       // replaces the REPEND
-      System.Array.Copy( Lines, nextLineIndex + 1, newLines, _ParseContext.LineIndex + 1 + loopLength + replacementLines.Length, Lines.Length - nextLineIndex - 1 );
+      newLines[_ParseContext.LineIndex + 1 + loopLength + replacementLines.Length] = "";
+      System.Array.Copy( Lines, nextLineIndex + 1, newLines, _ParseContext.LineIndex + 1 + loopLength + replacementLines.Length + 1, Lines.Length - nextLineIndex - 1 );
 
       // adjust source infos to make lookup work correctly
       string outerFilename = "";
