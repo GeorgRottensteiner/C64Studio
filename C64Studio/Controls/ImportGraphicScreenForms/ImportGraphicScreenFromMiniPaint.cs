@@ -71,9 +71,12 @@ namespace RetroDevStudio.Controls
       var image = new MemoryImage( 160, 192, GR.Drawing.PixelFormat.Format8bppIndexed );
       PaletteManager.ApplyPalette( image, Core.Imaging.PaletteFromMachine( MachineType.VIC20 ) );
       int widthInBytes = 160 / 8;
-      byte auxColor     = (byte)( data.ByteAt( 15 ) >> 4 );
-      byte borderColor  = (byte)( data.ByteAt( 16 ) & 0x07 );
-      byte bgColor      = (byte)( data.ByteAt( 16 ) >> 4 );
+      // $900E (byte 15): lower nibble = volume, upper nibble = screen origin (not a color!)
+      // $900F (byte 16): lower nibble = border color, upper nibble = background color
+      // On the VIC-20 the auxiliary color is identical to the background color
+      byte auxColor     = (byte)( data.ByteAt( 16 ) >> 4 );   // $900F upper nibble = auxiliary/background color
+      byte borderColor  = (byte)( data.ByteAt( 16 ) & 0x07 ); // $900F lower nibble = border color
+      byte bgColor      = (byte)( data.ByteAt( 16 ) >> 4 );   // $900F upper nibble = background color
       for ( int x = 0; x < widthInBytes; ++x )
       {
         for ( int y = 0; y < 192; ++y )
