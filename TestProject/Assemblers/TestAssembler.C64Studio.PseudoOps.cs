@@ -342,6 +342,27 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestPORepeat()
+    {
+      string      source = @"* = $2000
+                             !repeat 5
+                             nop
+                             inx
+                             !end
+                             iny
+                             !repeat 5
+                             nop
+                             dex
+                             !end";
+
+      var output = TestAssemble( RetroDevStudio.Types.AssemblerType.C64_STUDIO, source, out RetroDevStudio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0020EAE8EAE8EAE8EAE8EAE8C8EACAEACAEACAEACAEACA", output.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestHex()
     {
       string      source = @"  * = $c000
