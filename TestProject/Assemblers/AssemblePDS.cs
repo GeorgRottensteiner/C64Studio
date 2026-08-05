@@ -119,6 +119,21 @@ TOGGLETAB EQU 5
 
 
 
+    [TestMethod]
+    public void TestPDSRepeat()
+    {
+      // do not shift the lines, they need to be on the very left
+      string      source = @"  ORG $d000
+   REPEAT 5
+     lda #2";
+
+      var assembly = TestAssemblePDS( source );
+
+      Assert.AreEqual( "00D0A802", assembly.ToString() );
+    }
+
+
+
 
   }
 }
