@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -183,10 +183,11 @@ namespace DecentForms
         if ( _Items.Count > 0 )
         {
           var oldItems = _Items;
-          while ( _Items.Count > 0 )
+          for ( int i = 0; i < oldItems.Count; ++i )
           {
-            _Items[0].Checked = false;
+            oldItems[i].Checked = false;
           }
+          _Items.Clear();
         }
       }
 
