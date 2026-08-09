@@ -2127,6 +2127,10 @@ namespace RetroDevStudio.Documents
 
     private void comboSprite_SelectedIndexChanged( object sender, EventArgs e )
     {
+      if ( DoNotUpdateFromControls )
+      {
+        return;
+      }
       if ( listLayerSprites.SelectedIndices.Count > 0 )
       {
         Formats.SpriteProject.LayerSprite sprite = (Formats.SpriteProject.LayerSprite)listLayerSprites.SelectedItems[0].Tag;
@@ -3850,9 +3854,9 @@ namespace RetroDevStudio.Documents
       }
 
       // now fill all other entries
-      byte    insertSpriteIndex = 0;
+      int     insertSpriteIndex = 0;
       int     spritePos = 0;
-      while ( spritePos < 256 )
+      while ( spritePos < m_SpriteProject.TotalNumberOfSprites )
       {
         // already inserted, skip
         if ( spriteMapNewToOld[spritePos] != -1 )
@@ -3880,20 +3884,29 @@ namespace RetroDevStudio.Documents
 
     public void ShiftSprites( int[] OldToNew, int[] NewToOld )
     {
+      // Validate the maps before mutating anything (P3): both must be valid
+      // permutations of 0..TotalNumberOfSprites-1. Otherwise an out-of-bounds
+      // access or corrupted layer indices could occur; bail out without changing state.
+      int   numSprites = m_SpriteProject.TotalNumberOfSprites;
+      if ( !IsValidSpriteMap( OldToNew, numSprites )
+      ||   !IsValidSpriteMap( NewToOld, numSprites ) )
+      {
+        return;
+      }
+
       // ..and sprites
       List<SpriteProject.SpriteData>    origSpriteData = new List<SpriteProject.SpriteData>();
       List<GR.Forms.ImageListbox.ImageListItem>    origListItems = new List<GR.Forms.ImageListbox.ImageListItem>();
-      List<GR.Forms.ImageListbox.ImageListItem>    origListItems2 = new List<GR.Forms.ImageListbox.ImageListItem>();
-
-      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+  
+      for ( int i = 0; i < numSprites; ++i )
       {
         origSpriteData.Add( m_SpriteProject.Sprites[i] );
         origListItems.Add( panelSprites.Items[i] );
       }
 
-      bool currentSpriteModified = NewToOld.Contains( m_CurrentSprite );
+      bool currentSpriteModified = ( OldToNew[m_CurrentSprite] != m_CurrentSprite );
 
-      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      for ( int i = 0; i < numSprites; ++i )
       {
         m_SpriteProject.Sprites[i]  = origSpriteData[NewToOld[i]];
         panelSprites.Items[i]       = origListItems[NewToOld[i]];
@@ -3902,10 +3915,31 @@ namespace RetroDevStudio.Documents
       {
         foreach ( var entry in layer.Sprites )
         {
-          entry.Index = OldToNew[entry.Index];
+          // only re-map valid indices; leave already corrupted entries untouched
+          if ( ( entry.Index >= 0 ) && ( entry.Index < numSprites ) )
+          {
+            entry.Index = OldToNew[entry.Index];
+          }
         }
       }
-      comboSprite.SelectedIndex = OldToNew[comboSprite.SelectedIndex];
+      // Re-map combo selection without triggering comboSprite_SelectedIndexChanged,
+      // which would otherwise clobber the just-remapped layer sprite index.
+      DoNotUpdateFromControls = true;
+      if ( comboSprite.SelectedIndex != -1 )
+      {
+        comboSprite.SelectedIndex = OldToNew[comboSprite.SelectedIndex];
+      }
+      DoNotUpdateFromControls = false;
+      // Re-map panel selection. This fires panelSprites_SelectedIndexChanged,
+      // which updates m_CurrentSprite and pictureEditor.Image consistently.
+      if ( panelSprites.SelectedIndex != -1 )
+      {
+        panelSprites.SelectedIndex = OldToNew[panelSprites.SelectedIndex];
+      }
+      else
+      {
+        m_CurrentSprite = OldToNew[m_CurrentSprite];
+      }
       panelSprites.Invalidate();
 
       if ( currentSpriteModified )
@@ -3914,6 +3948,27 @@ namespace RetroDevStudio.Documents
       }
       RedrawPreviewLayer();
       pictureEditor.Invalidate();
+    }
+
+
+
+    private bool IsValidSpriteMap( int[] Map, int Size )
+    {
+      // a valid map is a permutation of 0..Size-1: every value in range, each exactly once
+      if ( ( Map == null ) || ( Map.Length != Size ) )
+      {
+        return false;
+      }
+      bool[]  seen = new bool[Size];
+      foreach ( var value in Map )
+      {
+        if ( ( value < 0 ) || ( value >= Size ) || seen[value] )
+        {
+          return false;
+        }
+        seen[value] = true;
+      }
+      return true;
     }
 
 
