@@ -1,4 +1,4 @@
-﻿using RetroDevStudio.Displayer;
+using RetroDevStudio.Displayer;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -3888,8 +3888,8 @@ namespace RetroDevStudio.Documents
       // permutations of 0..TotalNumberOfSprites-1. Otherwise an out-of-bounds
       // access or corrupted layer indices could occur; bail out without changing state.
       int   numSprites = m_SpriteProject.TotalNumberOfSprites;
-      if ( !IsValidSpriteMap( OldToNew, numSprites )
-      ||   !IsValidSpriteMap( NewToOld, numSprites ) )
+      if ( ( !IsValidSpriteMap( OldToNew, numSprites ) )
+      ||   ( !IsValidSpriteMap( NewToOld, numSprites ) ) )
       {
         return;
       }
@@ -3916,7 +3916,8 @@ namespace RetroDevStudio.Documents
         foreach ( var entry in layer.Sprites )
         {
           // only re-map valid indices; leave already corrupted entries untouched
-          if ( ( entry.Index >= 0 ) && ( entry.Index < numSprites ) )
+          if ( ( entry.Index >= 0 ) 
+          &&   ( entry.Index < numSprites ) )
           {
             entry.Index = OldToNew[entry.Index];
           }
@@ -3955,14 +3956,17 @@ namespace RetroDevStudio.Documents
     private bool IsValidSpriteMap( int[] Map, int Size )
     {
       // a valid map is a permutation of 0..Size-1: every value in range, each exactly once
-      if ( ( Map == null ) || ( Map.Length != Size ) )
+      if ( ( Map == null ) 
+      ||   ( Map.Length != Size ) )
       {
         return false;
       }
       bool[]  seen = new bool[Size];
       foreach ( var value in Map )
       {
-        if ( ( value < 0 ) || ( value >= Size ) || seen[value] )
+        if ( ( value < 0 ) 
+        ||   ( value >= Size ) 
+        ||   ( seen[value] ) )
         {
           return false;
         }
