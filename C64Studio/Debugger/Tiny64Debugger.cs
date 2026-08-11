@@ -27,6 +27,10 @@ namespace RetroDevStudio
 
     GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<RetroDevStudio.Types.Breakpoint>();
 
+    // Synchronisiert alle Zugriffe auf m_BreakPoints, m_WatchEntries,
+    // m_MemoryValues und m_RequestedMemoryValues zwischen Emulator-Thread und UI-Thread.
+    private readonly object            m_Lock = new object();
+
     private bool                      m_InitialBreakpointHit = false;
     private bool                      _breakPointHit = false;
 
@@ -78,6 +82,11 @@ namespace RetroDevStudio
       {
         RemoveBreakpoint( breakpoint.Index );
       }
+      // Kein lock ( m_Lock ) hier: RefreshRegistersAndWatches()/RefreshMemorySections()
+      // beruehren keine der geschuetzten Collections, feuern aber synchron DebugEvent,
+      // dessen Handler per blockierendem Control.Invoke in den UI-Thread marshallen
+      // (MainForm.SetDebuggerValues/UpdateWatchInfo). Ein Invoke unter gehaltenem Lock
+      // kann mit UI-seitigen m_Lock-Zugriffen (z. B. FetchValue) deadlocken.
       RefreshRegistersAndWatches();
       RefreshMemorySections();
     }
@@ -86,7 +95,14 @@ namespace RetroDevStudio
 
     public void RefreshMemorySections()
     {
-      foreach ( var section in m_LastRefreshSections )
+      // Snapshot der Section-Liste unter Lock: SetAutoRefreshMemory (UI-Thread)
+      // ersetzt die Referenz ohne Lock; die Iteration laeuft ueber eine stabile Kopie.
+      List<MemoryRefreshSection> sections;
+      lock ( m_Lock )
+      {
+        sections = new List<MemoryRefreshSection>( m_LastRefreshSections );
+      }
+      foreach ( var section in sections )
       {
         RefreshMemory( section.StartAddress, section.Size, section.Source );
       }
@@ -145,9 +161,12 @@ namespace RetroDevStudio
 
     public void ClearCaches()
     {
-      m_RequestedMemoryValues.Clear();
-      m_MemoryValues.Clear();
-      //m_WatchEntries.Clear();
+      lock ( m_Lock )
+      {
+        m_RequestedMemoryValues.Clear();
+        m_MemoryValues.Clear();
+        //m_WatchEntries.Clear();
+      }
     }
 
 
@@ -230,8 +249,15 @@ namespace RetroDevStudio
       {
         QueueRequest( DebugRequestType.READ_REGISTERS );
 
+        // Snapshot der Watch-Liste unter Lock, damit der Lock nicht waehrend
+        // der Request-Erzeugung gehalten wird.
+        List<WatchEntry> watchSnapshot;
+        lock ( m_Lock )
+        {
+          watchSnapshot = new List<WatchEntry>( m_WatchEntries );
+        }
         int gnu = 0;
-        foreach ( WatchEntry watchEntry in m_WatchEntries )
+        foreach ( WatchEntry watchEntry in watchSnapshot )
         {
           if ( watchEntry.DisplayMemory )
           {
@@ -319,21 +345,30 @@ namespace RetroDevStudio
 
     public void AddWatchEntry( WatchEntry Watch )
     {
-      m_WatchEntries.AddLast( Watch );
+      lock ( m_Lock )
+      {
+        m_WatchEntries.AddLast( Watch );
+      }
     }
 
 
 
     public void ClearAllWatchEntries()
     {
-      m_WatchEntries.Clear();
+      lock ( m_Lock )
+      {
+        m_WatchEntries.Clear();
+      }
     }
 
 
 
     public void RemoveWatchEntry( WatchEntry Watch )
     {
-      m_WatchEntries.Remove( Watch );
+      lock ( m_Lock )
+      {
+        m_WatchEntries.Remove( Watch );
+      }
     }
 
 
@@ -345,21 +380,28 @@ namespace RetroDevStudio
       {
         return false;
       }
-      if ( !m_RequestedMemoryValues[Address] )
+      RequestData requData = null;
+      lock ( m_Lock )
       {
-        m_RequestedMemoryValues[Address] = true;
-        m_MemoryValues.Remove( Address );
+        if ( !m_RequestedMemoryValues[Address] )
+        {
+          m_RequestedMemoryValues[Address] = true;
+          m_MemoryValues.Remove( Address );
 
-        RequestData requData = new RequestData( DebugRequestType.MEM_DUMP );
-        requData.Parameter1 = Address;
-        requData.Parameter2 = Address + 1 - 1;
-        requData.Info = "";
-        QueueRequest( requData );
+          requData = new RequestData( DebugRequestType.MEM_DUMP );
+          requData.Parameter1 = Address;
+          requData.Parameter2 = Address + 1 - 1;
+          requData.Info = "";
+        }
+        else if ( m_MemoryValues.ContainsKey( Address ) )
+        {
+          Content = m_MemoryValues[Address];
+          return true;
+        }
       }
-      else if ( m_MemoryValues.ContainsKey( Address ) )
+      if ( requData != null )
       {
-        Content = m_MemoryValues[Address];
-        return true;
+        QueueRequest( requData );
       }
       return false;
     }
@@ -368,14 +410,17 @@ namespace RetroDevStudio
 
     public void SetBreakPoints( GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints )
     {
-      m_BreakPoints.Clear();
-      foreach ( var key in BreakPoints.Keys )
+      lock ( m_Lock )
       {
-        foreach ( Types.Breakpoint breakPoint in BreakPoints[key] )
+        m_BreakPoints.Clear();
+        foreach ( var key in BreakPoints.Keys )
         {
-          if ( breakPoint.Address != -1 )
+          foreach ( Types.Breakpoint breakPoint in BreakPoints[key] )
           {
-            m_BreakPoints.Add( breakPoint );
+            if ( breakPoint.Address != -1 )
+            {
+              m_BreakPoints.Add( breakPoint );
+            }
           }
         }
       }
@@ -385,26 +430,29 @@ namespace RetroDevStudio
 
     public void AddBreakpoint( Types.Breakpoint BreakPoint )
     {
-      if ( ( !BreakPoint.Temporary )
-      &&   ( m_BreakPoints.ContainsValue( BreakPoint ) ) )
+      lock ( m_Lock )
       {
-        return;
-      }
-
-      bool  added = false;
-      foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
-      {
-        if ( breakPoint.Address == BreakPoint.Address )
+        if ( ( !BreakPoint.Temporary )
+        &&   ( m_BreakPoints.ContainsValue( BreakPoint ) ) )
         {
-          // there is already a breakpoint here
-          breakPoint.Virtual.Add( BreakPoint );
-          added = true;
-          break;
+          return;
         }
-      }
-      if ( !added )
-      {
-        m_BreakPoints.Add( BreakPoint );
+
+        bool  added = false;
+        foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
+        {
+          if ( breakPoint.Address == BreakPoint.Address )
+          {
+            // there is already a breakpoint here
+            breakPoint.Virtual.Add( BreakPoint );
+            added = true;
+            break;
+          }
+        }
+        if ( !added )
+        {
+          m_BreakPoints.Add( BreakPoint );
+        }
       }
       BreakPoint.RemoteIndex = m_Emulator.AddBreakpoint( (ushort)BreakPoint.Address, BreakPoint.TriggerOnLoad, BreakPoint.TriggerOnStore, BreakPoint.TriggerOnExec, BreakPoint.Temporary );
     }
@@ -413,12 +461,15 @@ namespace RetroDevStudio
 
     public void RemoveBreakpoint( int BreakPointIndex )
     {
-      foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
+      lock ( m_Lock )
       {
-        if ( breakPoint.RemoteIndex == BreakPointIndex )
+        foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
         {
-          m_BreakPoints.Remove( breakPoint );
-          break;
+          if ( breakPoint.RemoteIndex == BreakPointIndex )
+          {
+            m_BreakPoints.Remove( breakPoint );
+            break;
+          }
         }
       }
       if ( m_Emulator.State != Tiny64.EmulatorState.RUNNING )
@@ -431,38 +482,41 @@ namespace RetroDevStudio
 
     public void ClearAllBreakpoints()
     {
-      foreach ( var breakPoint in m_BreakPoints )
+      lock ( m_Lock )
       {
+        m_BreakPoints.Clear();
       }
-      m_BreakPoints.Clear();
     }
 
 
 
     public void RemoveBreakpoint( int BreakPointIndex, Types.Breakpoint BP )
     {
-      foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
+      lock ( m_Lock )
       {
-        if ( breakPoint.RemoteIndex == BreakPointIndex )
+        foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
         {
-          breakPoint.Virtual.Remove( BP );
-          if ( breakPoint.Virtual.Count == 0 )
+          if ( breakPoint.RemoteIndex == BreakPointIndex )
           {
-            m_BreakPoints.Remove( breakPoint );
-            break;
-          }
-          if ( ( breakPoint.LineIndex == BP.LineIndex )
-          &&   ( breakPoint.IsVirtual == BP.IsVirtual )
-          &&   ( breakPoint.Expression == BP.Expression )
-          &&   ( breakPoint.Conditions == BP.Conditions )
-          &&   ( breakPoint.DocumentFilename == BP.DocumentFilename ) )
-          {
-            // the main bp is the one to be removed (copy virtual up)
-            breakPoint.LineIndex = breakPoint.Virtual[0].LineIndex;
-            breakPoint.DocumentFilename = breakPoint.Virtual[0].DocumentFilename;
-            breakPoint.IsVirtual = breakPoint.Virtual[0].IsVirtual;
-            breakPoint.Expression = breakPoint.Virtual[0].Expression;
-            breakPoint.Conditions = breakPoint.Virtual[0].Conditions;
+            breakPoint.Virtual.Remove( BP );
+            if ( breakPoint.Virtual.Count == 0 )
+            {
+              m_BreakPoints.Remove( breakPoint );
+              break;
+            }
+            if ( ( breakPoint.LineIndex == BP.LineIndex )
+            &&   ( breakPoint.IsVirtual == BP.IsVirtual )
+            &&   ( breakPoint.Expression == BP.Expression )
+            &&   ( breakPoint.Conditions == BP.Conditions )
+            &&   ( breakPoint.DocumentFilename == BP.DocumentFilename ) )
+            {
+              // the main bp is the one to be removed (copy virtual up)
+              breakPoint.LineIndex = breakPoint.Virtual[0].LineIndex;
+              breakPoint.DocumentFilename = breakPoint.Virtual[0].DocumentFilename;
+              breakPoint.IsVirtual = breakPoint.Virtual[0].IsVirtual;
+              breakPoint.Expression = breakPoint.Virtual[0].Expression;
+              breakPoint.Conditions = breakPoint.Virtual[0].Conditions;
+            }
           }
         }
       }
