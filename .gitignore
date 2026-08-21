@@ -367,12 +367,11 @@
 /Sample Projects/DebugTest/Secondary/c64.prg
 /Sample Projects/DebugTest/Secondary/secondary.prg
 /Sample Projects/MacroTest/macro_plus_across.prg
-/TestMediaTool/bin/Debug
 /TestMediaTool/obj
 /DecentForms.Base/bin
 /DecentForms.Base/obj
 /Sample Projects/MacroTest/macro_syntax_error.prg
-/DecentForms/bin/Debug
+/DecentForms/bin
 /DecentForms/obj
 /Sample Projects/MacroTest/cheaplabels3.prg
 /Sample Projects/MacroTest/auto-complete-order.prg
@@ -384,3 +383,4 @@
 /Sample Projects/MacroTest/labelconcat2.prg
 /Sample Projects/MacroTest/labelconcat3.prg
 /Sample Projects/MacroTest/renumbertest5.prg
+/TestMediaTool/bin

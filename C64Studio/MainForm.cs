@@ -2851,7 +2851,7 @@ namespace RetroDevStudio
 
         // check file version (WinVICE remote debugger changes)
         if ( ( StudioCore.Debugging.Debugger != null )
-        && ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
+        &&   ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
         {
           return false;
         }
@@ -2882,8 +2882,8 @@ namespace RetroDevStudio
         }
 
         if ( ( Document != null )
-        && ( Document.ASMFileInfo != null )
-        && ( toolRun.PassLabelsToEmulator ) )
+        &&   ( Document.ASMFileInfo != null )
+        &&   ( toolRun.PassLabelsToEmulator ) )
         {
           string labelInfo = Document.ASMFileInfo.LabelsAsFile( Emulators.EmulatorInfo.LabelFormat( toolRun.Filename ) );
           if ( labelInfo.Length > 0 )
@@ -4101,6 +4101,7 @@ namespace RetroDevStudio
         mainToolToggleTrueDrive.Enabled = !Wait;
         mainToolEmulator.Enabled = !Wait;
         mainDebugDebugger.Enabled = !Wait;
+        mainDebugGo.Enabled = !Wait;
 
         if ( Wait )
         {
@@ -4114,8 +4115,8 @@ namespace RetroDevStudio
         {
           // leave Window and Help submenu intact!
           if ( ( subMenu.Text != "&Window" )
-          && ( subMenu.Text != "&Help" )
-          && ( subMenu.Text != "&Edit" ) )
+          &&   ( subMenu.Text != "&Help" )
+          &&   ( subMenu.Text != "&Edit" ) )
           {
             subMenu.Enabled = !Wait;
           }
@@ -4171,7 +4172,7 @@ namespace RetroDevStudio
             bool isStoppedInDebugger = AppState == StudioState.DEBUGGING_BROKEN;
 
             SetToolPerspective( Perspective.DEBUG );
-            mainDebugGo.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
+            mainDebugGo.Enabled = ( ( AppState == Types.StudioState.DEBUGGING_BROKEN ) || ( AppState == StudioState.NORMAL ) );
             mainDebugGoRunForOneSecondToolStripMenuItem.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
             mainDebugBreak.Enabled = ( AppState == Types.StudioState.DEBUGGING_RUN );
             m_DebugRegisters.EnableRegisterOverrides( isStoppedInDebugger );
@@ -4696,7 +4697,7 @@ namespace RetroDevStudio
 
           // only update if we're not during closing of debugger
           if ( ( StudioCore.Debugging.Debugger != null )
-          && ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
+          &&   ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
           {
             m_DebugRegisters.SetRegisters( Registers );
             m_DebugRegisters.EnableRegisterOverrides( true );
@@ -5096,7 +5097,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -5112,8 +5113,8 @@ namespace RetroDevStudio
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            && ( curDoc.BaseDoc != null )
-            && ( curDoc.ContainsCode ) )
+            &&   ( curDoc.BaseDoc != null )
+            &&   ( curDoc.ContainsCode ) )
             {
               if ( curDoc.BaseDoc.ApplyFunction( Function ) )
               {
@@ -5415,7 +5416,7 @@ namespace RetroDevStudio
           return true;
         case RetroDevStudio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
